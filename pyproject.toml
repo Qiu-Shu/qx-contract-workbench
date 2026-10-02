@@ -7,10 +7,10 @@ name = "qx-contract-workbench"
 version = "0.1.0"
 description = "群兴律所内部合同审查工程 受限开发版本"
 requires-python = ">=3.12,<3.13"
-dependencies = ["pydantic==2.13.5"]
+dependencies = ["pydantic==2.13.5", "SQLAlchemy==2.0.54", "fastapi==0.142.2", "pwdlib[argon2]==0.3.1"]
 
 [project.optional-dependencies]
-test = ["pytest==8.4.2"]
+test = ["pytest==9.0.3", "httpx==0.28.1"]
 scraping = ["scrapling[fetchers]==0.4.15"]
 
 [project.scripts]

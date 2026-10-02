@@ -1,6 +1,6 @@
 # 群兴合同审查工作台
 
-当前已完成 T00 来源与许可门、T01 统一领域类型/默认配置/schema/工程CLI，并按用户要求安装 Scrapling 开发工具。**四类合同审查闭环正在建设，不能上传真实材料、签发正式意见或作为生产软件使用。**
+当前已完成 T00 来源与许可门、T01 统一领域类型/schema/CLI、T02 案件权限/不可变版本/追加审计，并已安装 Scrapling 开发工具。**四类合同审查闭环正在建设，不能上传真实材料、签发正式意见或作为生产软件使用。**
 
 现有目录最初为空 Git 仓库；用户确认无其他代码。本次为增量初始化，没有整仓替换、删除用户文件或复制A包运行文本。
 
@@ -11,6 +11,7 @@
 - [来源锁](sources/upstream.lock.json) 与 [复用记录](docs/reuse/)
 - [T00测试证据](docs/testing/T00.md)
 - [T01模型与审阅](docs/testing/T01-domain.md) 与 [独立审阅](docs/testing/T01-review.md)
+- [T02权限和事务](docs/testing/T02.md) 与 [独立安全审阅](docs/testing/T02-review.md)
 - [Scrapling安装与使用](docs/tools/SCRAPLING.md)
 
 在当前 Windows 项目目录运行：
@@ -40,6 +41,8 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --no-build-isolation --no-deps -e .
 ```
 
-当前验证editable安装；应用/测试11包、build1包的wheel hash和许可证据见[运行依赖审计](docs/reuse/RUNTIME-dependencies.md)。生产批准仍为空，独立wheel分发和部署未验收。Scrapling可按其专用锁另外安装，不要求审材料流程加载浏览器。
+当前验证editable安装；应用/测试锁已扩展为28包，build1包单独锁，wheel hash及许可见[T02依赖审计](docs/reuse/T02-dependencies.md)。生产批准仍为空，独立wheel分发和部署未验收。Scrapling可按其专用锁另外安装，不要求审材料流程加载浏览器。
 
-下一任务T02：案件授权、不可变版本与追加审计；后续先完成四类虚构合同、关闭QCC的审查闭环，再实现受控外查和批准版本的修订。法律规则、真实账户、数据政策和上线批准分别登记。
+T02实际全套200项通过，包含42个新权限/事务用例；独立攻击审阅已关闭事务清理与缓存状态缺陷。HTTP测试保留1条上游TestClient/httpx弃用警告。基础服务用法见T02报告；正式签发仍阻断。
+
+下一任务T03：安全DOCX/PDF读取、部件盘点和精确锚点；后续先完成四类虚构合同、关闭QCC的审查闭环，再实现受控外查和批准版本的修订。法律规则、真实账户、数据政策和上线批准分别登记。
