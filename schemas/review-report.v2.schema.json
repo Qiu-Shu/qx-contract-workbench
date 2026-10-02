@@ -1,0 +1,568 @@
+{
+  "$defs": {
+    "ContractType": {
+      "enum": [
+        "sales",
+        "service",
+        "lease",
+        "nda",
+        "unknown"
+      ],
+      "title": "ContractType",
+      "type": "string"
+    },
+    "CoverageId": {
+      "enum": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "title": "CoverageId",
+      "type": "string"
+    },
+    "CoverageItem": {
+      "additionalProperties": false,
+      "properties": {
+        "coverage_id": {
+          "$ref": "#/$defs/CoverageId"
+        },
+        "status": {
+          "$ref": "#/$defs/CoverageStatus"
+        },
+        "examined_anchor_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Examined Anchor Ids",
+          "type": "array"
+        },
+        "rule_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Rule Ids",
+          "type": "array"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rationale"
+        },
+        "finding_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Finding Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "coverage_id",
+        "status",
+        "examined_anchor_ids",
+        "rule_ids",
+        "rationale",
+        "finding_ids"
+      ],
+      "title": "CoverageItem",
+      "type": "object"
+    },
+    "CoverageStatus": {
+      "enum": [
+        "reviewed_issue",
+        "reviewed_no_issue",
+        "insufficient_material",
+        "unsupported",
+        "not_applicable"
+      ],
+      "title": "CoverageStatus",
+      "type": "string"
+    },
+    "ErrorCode": {
+      "enum": [
+        "STATE_CONFLICT",
+        "VERSION_CONFLICT",
+        "FILE_UNSUPPORTED",
+        "FILE_LIMIT",
+        "BASELINE_REQUIRED",
+        "CROSS_MATTER_DENIED",
+        "FACTS_UNCONFIRMED",
+        "RULE_SCOPE_UNSUPPORTED",
+        "PARTY_AMBIGUOUS",
+        "TOOL_UNBOUND",
+        "PRICE_UNKNOWN",
+        "PLAN_CHANGED",
+        "PLAN_EXPIRED",
+        "BUDGET_EXCEEDED",
+        "QUERY_STATE_UNKNOWN",
+        "MODEL_OUTPUT_INVALID",
+        "UNRESOLVED_HARD_GATE",
+        "APPROVAL_STALE",
+        "AUTHORIZATION_REQUIRED",
+        "SOURCE_UNLOCKED",
+        "LICENSE_UNAPPROVED",
+        "RULE_UNAPPROVED",
+        "DATA_POLICY_UNAPPROVED",
+        "NOT_IMPLEMENTED",
+        "NOT_SUPPORTED",
+        "BLOCKED_LIVE"
+      ],
+      "title": "ErrorCode",
+      "type": "string"
+    },
+    "EvidenceState": {
+      "enum": [
+        "confirmed",
+        "unconfirmed",
+        "missing",
+        "conflicting"
+      ],
+      "title": "EvidenceState",
+      "type": "string"
+    },
+    "Finding": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "coverage_ids": {
+          "items": {
+            "$ref": "#/$defs/CoverageId"
+          },
+          "minItems": 1,
+          "title": "Coverage Ids",
+          "type": "array"
+        },
+        "issue_type": {
+          "minLength": 1,
+          "title": "Issue Type",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "evidence_state": {
+          "$ref": "#/$defs/EvidenceState"
+        },
+        "anchor_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Anchor Ids",
+          "type": "array"
+        },
+        "cross_anchor_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Cross Anchor Ids",
+          "type": "array"
+        },
+        "rule_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Rule Ids",
+          "type": "array"
+        },
+        "authority_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Authority Ids",
+          "type": "array"
+        },
+        "analysis": {
+          "minLength": 1,
+          "title": "Analysis",
+          "type": "string"
+        },
+        "business_effect": {
+          "minLength": 1,
+          "title": "Business Effect",
+          "type": "string"
+        },
+        "recommendation": {
+          "minLength": 1,
+          "title": "Recommendation",
+          "type": "string"
+        },
+        "replacement_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Replacement Text"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Fallback"
+        },
+        "human_decision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HumanDecision"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "run_id",
+        "coverage_ids",
+        "issue_type",
+        "severity",
+        "evidence_state",
+        "anchor_ids",
+        "cross_anchor_ids",
+        "rule_ids",
+        "authority_ids",
+        "analysis",
+        "business_effect",
+        "recommendation",
+        "replacement_text",
+        "fallback",
+        "human_decision"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "HumanDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "$ref": "#/$defs/HumanDecisionKind"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "actor_id": {
+          "format": "uuid",
+          "title": "Actor Id",
+          "type": "string"
+        },
+        "decided_at": {
+          "format": "date-time",
+          "title": "Decided At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision",
+        "reason",
+        "actor_id",
+        "decided_at"
+      ],
+      "title": "HumanDecision",
+      "type": "object"
+    },
+    "HumanDecisionKind": {
+      "enum": [
+        "accept",
+        "edit",
+        "reject",
+        "request_info",
+        "refer"
+      ],
+      "title": "HumanDecisionKind",
+      "type": "string"
+    },
+    "ModelUsage": {
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "minLength": 1,
+          "title": "Provider",
+          "type": "string"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "operation": {
+          "minLength": 1,
+          "title": "Operation",
+          "type": "string"
+        },
+        "request_id": {
+          "minLength": 1,
+          "title": "Request Id",
+          "type": "string"
+        },
+        "input_tokens": {
+          "minimum": 0,
+          "title": "Input Tokens",
+          "type": "integer"
+        },
+        "output_tokens": {
+          "minimum": 0,
+          "title": "Output Tokens",
+          "type": "integer"
+        },
+        "cost": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            }
+          ],
+          "ge": 0,
+          "title": "Cost"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "model",
+        "operation",
+        "request_id",
+        "input_tokens",
+        "output_tokens",
+        "cost",
+        "unit"
+      ],
+      "title": "ModelUsage",
+      "type": "object"
+    },
+    "RunManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "contract_type": {
+          "$ref": "#/$defs/ContractType"
+        },
+        "document_hashes": {
+          "additionalProperties": {
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "propertyNames": {
+            "format": "uuid"
+          },
+          "title": "Document Hashes",
+          "type": "object"
+        },
+        "fact_snapshot_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Fact Snapshot Sha256",
+          "type": "string"
+        },
+        "rules_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Rules Sha256",
+          "type": "string"
+        },
+        "policy_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Policy Sha256",
+          "type": "string"
+        },
+        "model_config_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Model Config Sha256",
+          "type": "string"
+        },
+        "config_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Config Sha256",
+          "type": "string"
+        },
+        "model_provider": {
+          "default": "mock",
+          "minLength": 1,
+          "title": "Model Provider",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contract_type",
+        "document_hashes",
+        "fact_snapshot_sha256",
+        "rules_sha256",
+        "policy_sha256",
+        "model_config_sha256",
+        "config_sha256"
+      ],
+      "title": "RunManifest",
+      "type": "object"
+    },
+    "RunStatus": {
+      "enum": [
+        "queued",
+        "running",
+        "completed",
+        "failed",
+        "superseded"
+      ],
+      "title": "RunStatus",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "info"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+    },
+    "matter_id": {
+      "format": "uuid",
+      "title": "Matter Id",
+      "type": "string"
+    },
+    "manifest": {
+      "$ref": "#/$defs/RunManifest"
+    },
+    "status": {
+      "$ref": "#/$defs/RunStatus"
+    },
+    "coverage": {
+      "items": {
+        "$ref": "#/$defs/CoverageItem"
+      },
+      "maxItems": 18,
+      "minItems": 18,
+      "title": "Coverage",
+      "type": "array"
+    },
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/Finding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "limitations": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "model_usage": {
+      "items": {
+        "$ref": "#/$defs/ModelUsage"
+      },
+      "title": "Model Usage",
+      "type": "array"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "finished_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Finished At"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ErrorCode"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "matter_id",
+    "manifest",
+    "status",
+    "coverage",
+    "findings",
+    "limitations",
+    "model_usage",
+    "started_at",
+    "finished_at",
+    "error_code"
+  ],
+  "title": "ReviewRun",
+  "type": "object"
+}

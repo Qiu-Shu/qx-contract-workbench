@@ -6,7 +6,9 @@
 |---|---|---|---|
 |T00|ENGINEERING_PASS；PRODUCTION_BLOCKED|现状表、附件成员哈希核对、13来源51目标文件、许可全文证据、复用记录、来源校验器及28个用例|G11许可未批准；G05npm来源链未闭合；实际纳入的G10传递依赖/浏览器许可及生产批准待定；下一任务T01|
 |新增Scrapling安装|LOCAL_TOOL_VERIFIED|0.4.15+fetchers，Chromium，CSS/XPath/HTTP/动态JS4项通过；28个wheel独立重算hash|仅开发工具，未集成业务流程，未测试真实网站|
-|T01–T06|NOT_STARTED|尚无应用业务代码|下一阶段实现统一模型、权限、解析、事实、规则和四类虚构合同闭环；QCC保持关闭|
+|T01|ENGINEERING_PASS；PRODUCTION_BLOCKED|83个领域/嵌套模型、精确类型与UTC、四角色、18维与四类型schema、默认hash和已安装CLI；全套158 passed，独立审阅缺陷全部修复|只是数据/工程入口；运行依赖与build使用范围/安全/源供应链未生产批准；下一任务T02|
+|T02|PREPARED / NOT_STARTED|权限及版本细化计划、依赖只读准备，尚无通过的T02实现|建立SQLite权限、不可变版本、追加审计与本地认证；不启用真实账户|
+|T03–T06|NOT_STARTED|尚无解析/事实/规则/审查闭环|实现四类虚构合同离线演示；QCC保持关闭|
 |T07–T10|NOT_STARTED|候选来源可读，不代表接口已实现|真实外查缺账户、工具、价格、许可；修订和UI未实现|
 |T11–T12|NOT_STARTED|已核对规格含84个唯一编号，不是84项测试通过|实际回归映射、律师金标准、部署/恢复未实现|
 |T13|BLOCKED_LIVE / NOT_STARTED|没有真实联调或上线决定|账户/许可/规则批准/金标准/模型数据政策/环境与预算缺失|
@@ -41,6 +43,22 @@
 - 用户新增Scrapling安装要求覆盖规格对G10暂缓安装的默认建议；只安装为开发工具，未自动启用法源批量抓取、QCC或真实资料处理。
 - source锁的read_verified表示选取文件与许可证据可读，不能替代依赖、实际效果或律师批准。G11根CC许可不能替代目标AGPL，GNU通用许可全文也不能替代授权。
 - 许可指纹只能防已知完整副本和已登记片段进入常见运行目录；不能认定任意改写、短片段或未知来源已获许可。未来新增运行目录必须纳入扫描。
+- T01的Pydantic类型校验不能替代实际权限、来源批准、费用或签发；标准JSON往返保持事实Decimal/日期类型。全部默认参数来自同一JSON，并生成实测配置hash。
 - 未实现：审查API/UI、18维业务审查、四类样本闭环、预算网关、Word报告与原生修订、OCR、真实MCP/QCC联调、法律样本测评和生产部署。
+
+## T01实际执行
+
+|命令/验证|退出码|实际结果|
+|---|---:|---|
+|领域/配置/CLI首次RED|1|领域56 failed；配置/CLI14 failed，功能缺失断言|
+|独立审阅修正RED→GREEN|1→0|修复--file被忽略、非规范角色、事实JSON丢类型/单位、ModelRequest别名往返；逐轮失败与通过记录在T01-domain/config/review|
+|`python -m pytest -q --tb=short --junitxml=docs/testing/T01-results.xml`|0|158 passed；111领域、19配置/CLI、28来源门|
+|`python -m cn_contract.cli schema`及`schema --check`|0/0|保存schema来自唯一ReviewRun模型，实际核对一致|
+|`scripts/verify_defaults.py --file config/defaults.json`|0|hash与v2.0完全一致|
+|可编辑安装、控制台help/config、pip check|0|实际安装qx-contract-workbench0.1.0，console及模块入口可用|
+|两个锁本地wheelhouse dry-run hash验证|0/0|应用/测试11包与build1包分别可解析；没有称完整重装|
+|独立定向审阅|0|50 passed/61 deselected；4规范角色、7类值/Decision16次往返、Decimal单位、alias、schema修正均核对|
+
+运行依赖的12个wheel、32份许可/NOTICE已保留证据，全部development/read_verified；这不构成生产批准。83个模型能生成schema不等于83项业务功能已实现。详细记录见`docs/testing/T01-domain.md`、`T01-config.md`、`T01-review.md`及`docs/reuse/RUNTIME-dependencies.md`。
 
 本阶段已本地提交：`ef8b5ac`（T00与Scrapling工具），`a0d7ec4`（Windows检出保留证据字节）；提交作者为Codex，不改全局Git身份，不推送或对外发布。第三方原始证据中的尾随空格保持原样，不清理而破坏来源hash。

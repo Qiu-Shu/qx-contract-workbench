@@ -31,7 +31,7 @@
 每项以规格第13节的输入、接口和验收断言为准，顺序为失败测试 → 确认失败 → 最小实现 → 目标测试及受影响回归 → TASK_STATUS实测记录。
 
 - [x] T00：`scripts/verify_sources.py` 的 `verify_manifest(path, mode)`；13项锁、许可证据、复用记录、ADR；28项测试通过；实际发布保持依赖/批准阻断，记录于TASK_STATUS。
-- [ ] T01：domain/config/schema/CLI；四类、18项、extra禁止、默认配置哈希。
+- [x] T01：domain/config/schema/CLI；四类、18项、extra禁止、默认配置哈希；158项实际通过，独立审阅修正四个问题并通过；生产批准仍阻断。
 - [ ] T02：SQLAlchemy案件/权限/版本/审计；跨案同哈希、admin非成员、版本不可变、日志去敏。
 - [ ] T03：安全上传、DOCX部件与PDF逐页、锚点；宏、压缩炸弹、越界路径、文本框、重复原文、扫描页。
 - [ ] T04：事实候选与人工确认、Decimal计算、客户立场与主体消歧。

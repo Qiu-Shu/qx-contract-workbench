@@ -1,0 +1,6 @@
+# T01 build backend only; kept separate from application + test dependencies.
+# Windows AMD64 / CPython 3.12 target wheel measured; development scope.
+# Use --require-hashes when installing this lock before --no-build-isolation.
+--only-binary=:all:
+
+setuptools==84.0.0 --hash=sha256:51a52592b3b99e102b609654876bd65f19f999935166d1352678931132b0c670
