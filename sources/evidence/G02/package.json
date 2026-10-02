@@ -1,0 +1,22 @@
+{
+  "name": "ai-legal-review-skillkit",
+  "version": "0.1.0",
+  "description": "Public skillkit for structured, human-reviewed AI-assisted Chinese contract review workflows.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "lint": "node scripts/check-sensitive-content.mjs",
+    "demo": "node scripts/print-skill-summary.mjs"
+  },
+  "files": [
+    "skills",
+    "rules",
+    "taxonomies",
+    "schemas",
+    "templates",
+    "profiles",
+    "fixtures",
+    "README.md",
+    "LICENSE"
+  ]
+}

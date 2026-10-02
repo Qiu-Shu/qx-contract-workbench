@@ -1,0 +1,29 @@
+{
+  "state": "ready_for_parent_materialization",
+  "manifest": ".audit-local/upstream-audit/upstream.lock.draft.json",
+  "verification": ".audit-local/upstream-audit/verification.json",
+  "registry_summary": ".audit-local/upstream-audit/registry-summary.json",
+  "result": {"sources": 13, "selected_target_hash_checks": 51, "passed": 51, "failed": 0, "production_approved": 0, "G11_target_Skill_stored": false},
+  "recommended_minimal_runtime_candidates": {
+    "document_parsers": ["pdfplumber==0.11.10", "python-docx==1.2.0"],
+    "protocol_later_T07": "mcp==2.2.0 (read-verified fixed release; not installed or QCC-tested by audit)",
+    "optional_development_tool_requested_by_user": "scrapling[fetchers]==0.4.15; installation and browser tests supplied by separate install agent",
+    "base_stack_registry_observed": ["fastapi==0.142.2", "pydantic==2.13.5", "sqlalchemy==2.1.2"],
+    "note": "Registry observation is not an instruction to upgrade existing chosen locks. Parent must generate platform-specific complete dependency hashes and test compatibility. Avoid installing all optional reference projects or FastAPI standard/telemetry extras automatically."
+  },
+  "findings": [
+    {"id": "G04", "finding": "Source pyproject reports 0.2.0; latest release tag v0.2.0 predates current audit commit. PyPI legal-redline-tools returns 404. Use explicit audited commit for any later build, after target-anchor adapter tests. README explicitly restricts complex objects and Latin-1 PDF output.", "url": "https://github.com/evolsb/legal-redline-tools/releases/tag/v0.2.0"},
+    {"id": "G05", "finding": "Official QCC guide names npm qcc-agent-cli. npm current 1.0.10 tarball integrity verified; repository/homepage absent. Published gitHead is not resolved in candidate GitHub repo (HTTP422). GitHub package.json is 1.0.9. The chain between official named package and this source repository is still incomplete; no package installed or paid query sent.", "urls": ["https://agent.qcc.com/guide", "https://registry.npmjs.org/qcc-agent-cli/1.0.10", "https://github.com/duhu2000/qcc-agent-cli"]},
+    {"id": "G10", "finding": "PyPI0.4.15 project_urls links D4Vinci/Scrapling; v0.4.15 fixed commit333fa22b7a5821194ce66b59b11f4b16a6484f02; selected BSD3 license and project metadata saved; wheel SHA verified. Optional development tool scope only, outside contract workflow.", "urls": ["https://pypi.org/project/scrapling/0.4.15/", "https://github.com/D4Vinci/Scrapling/releases/tag/v0.4.15"]},
+    {"id": "G11", "finding": "Root license is CC-BY-NC-ND-4.0; target AGPL assertion comes from supplied spec only because target Skill text was not fetched. Root-license hash is a separate field; target license_text_sha256 remains null. Generic GNU AGPL3 full text saved solely for license audit and does not establish target license grant. Exact version/or-later and A package equivalence remain unverified.", "urls": ["https://github.com/lawve-ai/awesome-legal-skills", "https://www.gnu.org/licenses/agpl-3.0.txt"]},
+    {"id": "G13", "finding": "Fixed v2.2.0 commit9972c21aa42054fb1450c5fc614761ed11847ec6 and same-tag streamable_basic example both audited. v2 still supports ClientSession; sample streamable_http_client yields 2 streams. Do not transplant v1 3-item tuple, removed alias, or camelCase field examples. QCC endpoint/handshake/schema compatibility remains T07 not_run.", "urls": ["https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.2.0", "https://py.sdk.modelcontextprotocol.io/migration/"]}
+  ],
+  "materialization": {
+    "files": "Copy only each sources[*].files[*].local_target and preserve measured hash; remap local_target to committed sources/evidence path.",
+    "licenses": "Copy source license evidence to third-party-notices. G11 root CC and generic GNU AGPL are distinct documents, neither may be relabeled as audited target Skill license.",
+    "extra_evidence": "G10 registry_package contains selected wheel metadata/license paths and measured wheel hash. G05 npm_provenance contains selected published LICENSE/package.json and unresolved gitHead check. Keep supporting JSON in sources/evidence if used in docs claims.",
+    "avoid": "Do not copy G11 target Skill; do not label any record production_approved; do not equate read_verified with tested."
+  },
+  "reproduce": ["audit_public_sources.py", "supplement_registry.py", "refine_audit.py", "finalize_audit.py"],
+  "ordinary_network_failures": ["web GNU endpoint failed but direct public HTTPS fetch succeeded", "npmjs webpage403 but public registry metadata/tarball succeeded", "python-docx GitHub latest-release404 but fixed v1.2.0 commit and PyPI available", "legal-redline-tools PyPI404"]
+}

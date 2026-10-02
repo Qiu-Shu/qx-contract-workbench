@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Legal Review Report",
+  "type": "object",
+  "required": ["scope", "summary", "findings", "human_review_required"],
+  "properties": {
+    "scope": {
+      "type": "object",
+      "required": ["contract_type", "review_language"],
+      "properties": {
+        "contract_type": {
+          "type": "string",
+          "enum": ["general", "sales", "epc_engineering", "tender_package", "unknown"]
+        },
+        "review_language": {
+          "type": "string",
+          "const": "zh-CN"
+        },
+        "source_notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["risk_level", "risk_type", "contract_basis", "risk_explanation", "suggested_action"],
+        "properties": {
+          "risk_level": {
+            "type": "string",
+            "enum": ["high", "medium", "low", "to_confirm"]
+          },
+          "risk_type": { "type": "string" },
+          "contract_basis": { "type": "string" },
+          "risk_explanation": { "type": "string" },
+          "suggested_action": { "type": "string" },
+          "human_review_note": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "human_review_required": {
+      "type": "boolean",
+      "const": true
+    }
+  },
+  "additionalProperties": false
+}

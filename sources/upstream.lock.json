@@ -1,0 +1,1528 @@
+{
+  "schema_version": "2.0",
+  "sources": [
+    {
+      "id": "G01",
+      "repo": "https://github.com/anthropics/knowledge-work-plugins",
+      "status": "read_verified",
+      "commit": "8444efcd48f7012f09797778a36a33e73d0861f4",
+      "release": null,
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "a6946284993aeec75c7d75906064b66210c46051e562077efb30eb6dcfe72e26",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G01/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/8444efcd48f7012f09797778a36a33e73d0861f4/LICENSE",
+          "bytes": 11607
+        },
+        {
+          "path": "legal/skills/review-contract/SKILL.md",
+          "sha256": "3a6413475f51adedbff130f4d5aabbeeacfb2abd323e0338bc91c21937fbfb76",
+          "usage": "method",
+          "local_target": "sources/evidence/G01/legal/skills/review-contract/SKILL.md",
+          "upstream_url": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/8444efcd48f7012f09797778a36a33e73d0861f4/legal/skills/review-contract/SKILL.md",
+          "bytes": 16708
+        }
+      ],
+      "license_expression": "Apache-2.0",
+      "license_text_sha256": "a6946284993aeec75c7d75906064b66210c46051e562077efb30eb6dcfe72e26",
+      "dependency_review": "not_runtime_dependency",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:32:14.620050+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "foreign_law_defaults_and_connector_permissions_excluded"
+      ],
+      "adoption": "method",
+      "evidence_urls": [
+        "https://api.github.com/repos/anthropics/knowledge-work-plugins/commits?per_page=1",
+        "https://api.github.com/repos/anthropics/knowledge-work-plugins/git/trees/8444efcd48f7012f09797778a36a33e73d0861f4?recursive=1"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-10-01T21:59:31Z",
+      "license_path": "LICENSE",
+      "dependency_metadata": {},
+      "included_in_runtime": false,
+      "approved_at": null
+    },
+    {
+      "id": "G02",
+      "repo": "https://github.com/Xigua9xi/ai-legal-review-skillkit",
+      "status": "read_verified",
+      "commit": "4a1e417a3152cef15df2aa410235099d35dee43c",
+      "release": null,
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "1126322e2cc8d165adc4c792eeb195717de2bcc7b39be1ce77959d78e87ef685",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G02/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/Xigua9xi/ai-legal-review-skillkit/4a1e417a3152cef15df2aa410235099d35dee43c/LICENSE",
+          "bytes": 1056
+        },
+        {
+          "path": "rules/general-contract-review.md",
+          "sha256": "e6741c11b669ccd46b68cb7db02f0cde114061388c275fed645a0fe93438bd02",
+          "usage": "method",
+          "local_target": "sources/evidence/G02/rules/general-contract-review.md",
+          "upstream_url": "https://raw.githubusercontent.com/Xigua9xi/ai-legal-review-skillkit/4a1e417a3152cef15df2aa410235099d35dee43c/rules/general-contract-review.md",
+          "bytes": 1951
+        },
+        {
+          "path": "rules/sales-contract-review.md",
+          "sha256": "1e912be56fceac5f94de0c699d6f98bd61eba443236c69911b74e5cbf4354d07",
+          "usage": "method",
+          "local_target": "sources/evidence/G02/rules/sales-contract-review.md",
+          "upstream_url": "https://raw.githubusercontent.com/Xigua9xi/ai-legal-review-skillkit/4a1e417a3152cef15df2aa410235099d35dee43c/rules/sales-contract-review.md",
+          "bytes": 1631
+        },
+        {
+          "path": "profiles/company-review-preferences.template.md",
+          "sha256": "d162379cd317f9fd0ff77c422012f0c09a17d7f14fd27f22e1a078f850f9d9d5",
+          "usage": "method",
+          "local_target": "sources/evidence/G02/profiles/company-review-preferences.template.md",
+          "upstream_url": "https://raw.githubusercontent.com/Xigua9xi/ai-legal-review-skillkit/4a1e417a3152cef15df2aa410235099d35dee43c/profiles/company-review-preferences.template.md",
+          "bytes": 1943
+        },
+        {
+          "path": "schemas/review-report.schema.json",
+          "sha256": "5756fa54b4dc3501bcadab0fbbab132972fd1a36e3600ad56545abdca6156b21",
+          "usage": "code",
+          "local_target": "sources/evidence/G02/schemas/review-report.schema.json",
+          "upstream_url": "https://raw.githubusercontent.com/Xigua9xi/ai-legal-review-skillkit/4a1e417a3152cef15df2aa410235099d35dee43c/schemas/review-report.schema.json",
+          "bytes": 1594
+        },
+        {
+          "path": "package.json",
+          "sha256": "b521da5292163f0e15ca4fe3a13c15dcc029ceaef4191eef663557be84ede7e4",
+          "usage": "code",
+          "local_target": "sources/evidence/G02/package.json",
+          "upstream_url": "https://raw.githubusercontent.com/Xigua9xi/ai-legal-review-skillkit/4a1e417a3152cef15df2aa410235099d35dee43c/package.json",
+          "bytes": 525
+        },
+        {
+          "path": "fixtures/synthetic-contracts/epc-change-order-risk.md",
+          "sha256": "6b9794064e30a573ccd89abefbf0dc7389643d82518aab5cd97ed77a324dd459",
+          "usage": "method",
+          "local_target": "sources/evidence/G02/fixtures/synthetic-contracts/epc-change-order-risk.md",
+          "upstream_url": "https://raw.githubusercontent.com/Xigua9xi/ai-legal-review-skillkit/4a1e417a3152cef15df2aa410235099d35dee43c/fixtures/synthetic-contracts/epc-change-order-risk.md",
+          "bytes": 661
+        }
+      ],
+      "license_expression": "MIT",
+      "license_text_sha256": "1126322e2cc8d165adc4c792eeb195717de2bcc7b39be1ce77959d78e87ef685",
+      "dependency_review": "not_runtime_dependency",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:32:14.620050+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "upstream_contract_type_enum_requires_service_lease_nda_extension",
+        "to_confirm_is_not_risk_severity",
+        "legal_rules_require_independent_source_and_lawyer_approval"
+      ],
+      "adoption": "method",
+      "evidence_urls": [
+        "https://api.github.com/repos/Xigua9xi/ai-legal-review-skillkit/commits?per_page=1",
+        "https://api.github.com/repos/Xigua9xi/ai-legal-review-skillkit/git/trees/4a1e417a3152cef15df2aa410235099d35dee43c?recursive=1"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-06-02T08:00:59Z",
+      "license_path": "LICENSE",
+      "dependency_metadata": {
+        "version": "0.1.0"
+      },
+      "included_in_runtime": false,
+      "approved_at": null
+    },
+    {
+      "id": "G03",
+      "repo": "https://github.com/evolsb/claude-legal-skill",
+      "status": "read_verified",
+      "commit": "bca0d2e9d5ec81298ddfbfde78fa4f38fb4589b0",
+      "release": null,
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "a26fb63ec9f3b94576ca618144671fa79d7208170c8dc9be6c90742d540fac09",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G03/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/evolsb/claude-legal-skill/bca0d2e9d5ec81298ddfbfde78fa4f38fb4589b0/LICENSE",
+          "bytes": 1076
+        },
+        {
+          "path": "skill.md",
+          "sha256": "82e890a13fe0219d0852b2815a778d906ee3c197c3db277337802dce625be5ea",
+          "usage": "method",
+          "local_target": "sources/evidence/G03/skill.md",
+          "upstream_url": "https://raw.githubusercontent.com/evolsb/claude-legal-skill/bca0d2e9d5ec81298ddfbfde78fa4f38fb4589b0/skill.md",
+          "bytes": 14501
+        },
+        {
+          "path": "README.md",
+          "sha256": "3d58a1d0807f7b25eb11820daf7ce3ec4cbcacdd63468c759c7d2b27413e4db5",
+          "usage": "method",
+          "local_target": "sources/evidence/G03/README.md",
+          "upstream_url": "https://raw.githubusercontent.com/evolsb/claude-legal-skill/bca0d2e9d5ec81298ddfbfde78fa4f38fb4589b0/README.md",
+          "bytes": 7853
+        }
+      ],
+      "license_expression": "MIT",
+      "license_text_sha256": "a26fb63ec9f3b94576ca618144671fa79d7208170c8dc9be6c90742d540fac09",
+      "dependency_review": "not_runtime_dependency",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:32:14.620050+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "market_benchmarks_and_thresholds_not_verified",
+        "uploaded_B_package_not_byte_compared"
+      ],
+      "adoption": "method",
+      "evidence_urls": [
+        "https://api.github.com/repos/evolsb/claude-legal-skill/commits?per_page=1",
+        "https://api.github.com/repos/evolsb/claude-legal-skill/git/trees/bca0d2e9d5ec81298ddfbfde78fa4f38fb4589b0?recursive=1"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-07-23T20:07:40Z",
+      "license_path": "LICENSE",
+      "dependency_metadata": {},
+      "included_in_runtime": false,
+      "approved_at": null
+    },
+    {
+      "id": "G04",
+      "repo": "https://github.com/evolsb/legal-redline-tools",
+      "status": "read_verified",
+      "commit": "1dbc70ddfdf594fc4699c31b9077d15e74be56a0",
+      "release": null,
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "9b7d4477ab2bce70684d9efa4827c4777f36f669b14a3025d31fb73f9503b11d",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G04/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/evolsb/legal-redline-tools/1dbc70ddfdf594fc4699c31b9077d15e74be56a0/LICENSE",
+          "bytes": 1070
+        },
+        {
+          "path": "README.md",
+          "sha256": "3fe120504502f7cfcb2f2c2a2d10c638b37e4fd9594e5d080e64bfd227cf077b",
+          "usage": "method",
+          "local_target": "sources/evidence/G04/README.md",
+          "upstream_url": "https://raw.githubusercontent.com/evolsb/legal-redline-tools/1dbc70ddfdf594fc4699c31b9077d15e74be56a0/README.md",
+          "bytes": 12710
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "fe6a8e59e8c602251bde762876c738b90333be577de0037470a0058b71ae53dd",
+          "usage": "code",
+          "local_target": "sources/evidence/G04/pyproject.toml",
+          "upstream_url": "https://raw.githubusercontent.com/evolsb/legal-redline-tools/1dbc70ddfdf594fc4699c31b9077d15e74be56a0/pyproject.toml",
+          "bytes": 1295
+        },
+        {
+          "path": "legal_redline/__init__.py",
+          "sha256": "2f70af28ab7cf4e3d282bfa69880b6455bedd04e80e3543ceed27771213f76be",
+          "usage": "code",
+          "local_target": "sources/evidence/G04/legal_redline/__init__.py",
+          "upstream_url": "https://raw.githubusercontent.com/evolsb/legal-redline-tools/1dbc70ddfdf594fc4699c31b9077d15e74be56a0/legal_redline/__init__.py",
+          "bytes": 573
+        },
+        {
+          "path": "legal_redline/apply.py",
+          "sha256": "9b94e9f0cfce5bb1d1fad5e5efca17d0ba62c0adbaffd198e1dee2fcfe6f8d54",
+          "usage": "code",
+          "local_target": "sources/evidence/G04/legal_redline/apply.py",
+          "upstream_url": "https://raw.githubusercontent.com/evolsb/legal-redline-tools/1dbc70ddfdf594fc4699c31b9077d15e74be56a0/legal_redline/apply.py",
+          "bytes": 15558
+        },
+        {
+          "path": "legal_redline/cli.py",
+          "sha256": "e70745e417faf0ef245d1ec0670dc431e26a1b39607b5ae7dfbec17f2305a082",
+          "usage": "code",
+          "local_target": "sources/evidence/G04/legal_redline/cli.py",
+          "upstream_url": "https://raw.githubusercontent.com/evolsb/legal-redline-tools/1dbc70ddfdf594fc4699c31b9077d15e74be56a0/legal_redline/cli.py",
+          "bytes": 11358
+        },
+        {
+          "path": "legal_redline/compare.py",
+          "sha256": "9fede5b065a792b8d0f0790b9912077cbdfedad68f57e25fa5ffe8e7cef96b6b",
+          "usage": "code",
+          "local_target": "sources/evidence/G04/legal_redline/compare.py",
+          "upstream_url": "https://raw.githubusercontent.com/evolsb/legal-redline-tools/1dbc70ddfdf594fc4699c31b9077d15e74be56a0/legal_redline/compare.py",
+          "bytes": 8226
+        }
+      ],
+      "license_expression": "MIT",
+      "license_text_sha256": "9b7d4477ab2bce70684d9efa4827c4777f36f669b14a3025d31fb73f9503b11d",
+      "dependency_review": "direct_metadata_reviewed_transitive_lock_pending",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:32:14.620050+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "table_textbox_image_nested_list_targeting_not_supported",
+        "disable_upstream_Latin1_PDF_export",
+        "upstream_normalized_text_matching_requires_unique_structural_anchor_adapter",
+        "PyPI_package_not_found_installation_route_requires_explicit_commit_build"
+      ],
+      "adoption": "runtime_candidate",
+      "evidence_urls": [
+        "https://api.github.com/repos/evolsb/legal-redline-tools/commits?per_page=1",
+        "https://api.github.com/repos/evolsb/legal-redline-tools/git/trees/1dbc70ddfdf594fc4699c31b9077d15e74be56a0?recursive=1"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-07-23T20:07:41Z",
+      "path_resolution_notes": {
+        "absent_original_candidates": [
+          "legal_redline/docx.py",
+          "src/legal_redline/__init__.py"
+        ]
+      },
+      "license_path": "LICENSE",
+      "dependency_metadata": {
+        "version": "0.2.0",
+        "requires-python": ">=3.9",
+        "dependencies": [
+          "python-docx>=1.0",
+          "lxml>=4.9",
+          "fpdf2>=2.7"
+        ],
+        "optional-dependencies": {
+          "dev": [
+            "pytest>=7.0"
+          ]
+        }
+      },
+      "release_candidate": "v0.2.0",
+      "included_in_runtime": false,
+      "approved_at": null
+    },
+    {
+      "id": "G05",
+      "repo": "https://github.com/duhu2000/qcc-agent-cli",
+      "status": "read_verified",
+      "commit": "30194cceeb315bde0d42ffe1e7ec0c6addd69548",
+      "release": null,
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "26e0d1929275b46d985c28ec5b4885f4e6fc207d0ad9277773d58c4c13df3bba",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G05/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/duhu2000/qcc-agent-cli/30194cceeb315bde0d42ffe1e7ec0c6addd69548/LICENSE",
+          "bytes": 1055
+        },
+        {
+          "path": "README.md",
+          "sha256": "6e2992397df3de631ef9df54f1c77a0b7816903c7a87d7d7c25d1f504612d68e",
+          "usage": "method",
+          "local_target": "sources/evidence/G05/README.md",
+          "upstream_url": "https://raw.githubusercontent.com/duhu2000/qcc-agent-cli/30194cceeb315bde0d42ffe1e7ec0c6addd69548/README.md",
+          "bytes": 13069
+        },
+        {
+          "path": "package.json",
+          "sha256": "4b1ad1f16a644cc9135015677572ac36ae5cba7d67adc0d0ae407f27d0802178",
+          "usage": "code",
+          "local_target": "sources/evidence/G05/package.json",
+          "upstream_url": "https://raw.githubusercontent.com/duhu2000/qcc-agent-cli/30194cceeb315bde0d42ffe1e7ec0c6addd69548/package.json",
+          "bytes": 855
+        }
+      ],
+      "license_expression": "MIT",
+      "license_text_sha256": "26e0d1929275b46d985c28ec5b4885f4e6fc207d0ad9277773d58c4c13df3bba",
+      "dependency_review": "not_runtime_dependency",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:32:14.620050+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "QCC_off_real_endpoints_not_called",
+        "npm_package_missing_repository_and_homepage_metadata",
+        "npm_1.0.10_vs_GitHub_package_1.0.9_source_chain_requires_followup",
+        "paid_retry_and_budget_controls_are_project_responsibility",
+        "Node_chain_not_installed"
+      ],
+      "adoption": "reference_only",
+      "evidence_urls": [
+        "https://api.github.com/repos/duhu2000/qcc-agent-cli/commits?per_page=1",
+        "https://api.github.com/repos/duhu2000/qcc-agent-cli/git/trees/30194cceeb315bde0d42ffe1e7ec0c6addd69548?recursive=1"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-08-06T12:28:38Z",
+      "license_path": "LICENSE",
+      "dependency_metadata": {
+        "version": "1.0.9",
+        "dependencies": {
+          "axios": "^1.6.0",
+          "chalk": "^4.1.2",
+          "commander": "^11.1.0",
+          "officecrypto-tool": "^0.0.19",
+          "pdf-lib": "^1.17.1",
+          "update-notifier": "^7.3.1"
+        },
+        "engines": {
+          "node": ">=18"
+        }
+      },
+      "npm_provenance": {
+        "url": "https://registry.npmjs.org/qcc-agent-cli/latest",
+        "local_target": "sources/evidence/audit/registry/npm-qcc-latest.json",
+        "sha256": "16b9d1030eb045b5fdcd244024dc98e9754bcda1e7c1f4b1426337187831e9a8",
+        "verified_at": "2026-10-02T12:34:24.957792+00:00",
+        "name": "qcc-agent-cli",
+        "version": "1.0.10",
+        "repository": null,
+        "homepage": null,
+        "license": "MIT",
+        "gitHead": "876c731c8492e010d98e021b8d89e8f5824fcb7f",
+        "engines": {
+          "node": ">=18"
+        },
+        "dependencies": {
+          "axios": "^1.6.0",
+          "chalk": "^4.1.2",
+          "pdf-lib": "^1.17.1",
+          "commander": "^11.1.0",
+          "update-notifier": "^7.3.1",
+          "officecrypto-tool": "^0.0.19"
+        },
+        "_npmUser": {
+          "name": "sunhh",
+          "email": "sunhh3221@163.com"
+        },
+        "maintainers": [
+          {
+            "name": "sunhh",
+            "email": "sunhh3221@163.com"
+          },
+          {
+            "name": "duhu2000",
+            "email": "dlaohu2008@gmail.com"
+          }
+        ],
+        "dist": {
+          "shasum": "1196d8dde5ad020d15763789c1d178568104dc8e",
+          "tarball": "https://registry.npmjs.org/qcc-agent-cli/-/qcc-agent-cli-1.0.10.tgz",
+          "fileCount": 26,
+          "integrity": "sha512-AM14sv5LX39xugg3F2RtjhZUtedS0itd5Eo1LPk1BD5RQxt9XWsn0qcjwJw9Rz8HnOKSPI84bRxdOeUWnkdzJQ==",
+          "signatures": [
+            {
+              "sig": "MEUCIF7oK9KKUQ61bcqEwzhi9cxKymS6IsBkkWzleobsvbL0AiEA43DDyn1e+9bLdi0SDckSMmKFApdsZrk6l9vmvTeQN3o=",
+              "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+            }
+          ],
+          "unpackedSize": 194158
+        },
+        "tarball_sha256": "d14ed4b926bf106835d9228a61f63f9fc75d07272ac26b5e424e79db8fdaa142",
+        "tarball_integrity_verified": true,
+        "selected_published_files": [
+          {
+            "path": "package/package.json",
+            "local_target": "sources/evidence/audit/registry/npm-published/package/package.json",
+            "sha256": "658042723e33e8573b4b30c1576476817255154b46b12a05f55b73d40d8defb2"
+          },
+          {
+            "path": "package/LICENSE",
+            "local_target": "sources/evidence/audit/registry/npm-published/package/LICENSE",
+            "sha256": "7cf63d94c3e7c003ff12536afc5fe0ba21413f9378d45db14655ff4a9940a2e7"
+          }
+        ],
+        "official_guide_url": "https://agent.qcc.com/guide",
+        "official_guide_package_name_verified": true,
+        "githead_found_in_candidate_repo": false,
+        "githead_check_error": "HTTP Error 422: Unprocessable Entity"
+      },
+      "included_in_runtime": false,
+      "approved_at": null
+    },
+    {
+      "id": "G06",
+      "repo": "https://github.com/jsvine/pdfplumber",
+      "status": "read_verified",
+      "commit": "7d4f2f582f2d99f9e60ba522fdf7afd2f6d54c62",
+      "release": "v0.11.10",
+      "files": [
+        {
+          "path": "LICENSE.txt",
+          "sha256": "0d48994da4d1321e395b5e64a724ed4dec63fb96b88ac5b88fc014771e690821",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G06/LICENSE.txt",
+          "upstream_url": "https://raw.githubusercontent.com/jsvine/pdfplumber/7d4f2f582f2d99f9e60ba522fdf7afd2f6d54c62/LICENSE.txt",
+          "bytes": 1086
+        },
+        {
+          "path": "README.md",
+          "sha256": "14dfb8d559bc533be876402984e04ec3f5ac7f0a05e150103f2becdc967e6a2e",
+          "usage": "method",
+          "local_target": "sources/evidence/G06/README.md",
+          "upstream_url": "https://raw.githubusercontent.com/jsvine/pdfplumber/7d4f2f582f2d99f9e60ba522fdf7afd2f6d54c62/README.md",
+          "bytes": 42610
+        },
+        {
+          "path": "pdfplumber/page.py",
+          "sha256": "ef423b47ed5a2a467275277f4a672ac2a1b8a1af103aa424248f85d5a0be4bba",
+          "usage": "code",
+          "local_target": "sources/evidence/G06/pdfplumber/page.py",
+          "upstream_url": "https://raw.githubusercontent.com/jsvine/pdfplumber/7d4f2f582f2d99f9e60ba522fdf7afd2f6d54c62/pdfplumber/page.py",
+          "bytes": 25391
+        },
+        {
+          "path": "pdfplumber/__init__.py",
+          "sha256": "dfee537d1da4de9b6f5dabf5bee84d5278d74fec787ef6bdd6179cd2b349817c",
+          "usage": "code",
+          "local_target": "sources/evidence/G06/pdfplumber/__init__.py",
+          "upstream_url": "https://raw.githubusercontent.com/jsvine/pdfplumber/7d4f2f582f2d99f9e60ba522fdf7afd2f6d54c62/pdfplumber/__init__.py",
+          "bytes": 267
+        }
+      ],
+      "license_expression": "MIT",
+      "license_text_sha256": "0d48994da4d1321e395b5e64a724ed4dec63fb96b88ac5b88fc014771e690821",
+      "dependency_review": "direct_metadata_reviewed_transitive_lock_pending",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:36:29.600000+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "no_OCR_native_text_only",
+        "per_page_quality_and_unsupported_objects_required"
+      ],
+      "adoption": "runtime_candidate",
+      "evidence_urls": [
+        "https://api.github.com/repos/jsvine/pdfplumber/commits?per_page=1",
+        "https://api.github.com/repos/jsvine/pdfplumber/git/trees/4c64b92d5caccd71c645e98e0fabb0c4dba7ff45?recursive=1",
+        "https://api.github.com/repos/jsvine/pdfplumber/commits/v0.11.10"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-06-15T03:27:33Z",
+      "path_resolution_notes": {
+        "absent_original_candidates": [
+          "pyproject.toml"
+        ]
+      },
+      "license_path": "LICENSE.txt",
+      "discovery_commit": "4c64b92d5caccd71c645e98e0fabb0c4dba7ff45",
+      "dependency_metadata": {},
+      "registry_package": {
+        "name": "pdfplumber",
+        "version": "0.11.10",
+        "requires_python": ">=3.8",
+        "requires_dist": [
+          "pdfminer.six==20260107",
+          "Pillow>=12.2.0",
+          "pypdfium2>=5.9.0"
+        ],
+        "artifact_candidates": [
+          {
+            "filename": "pdfplumber-0.11.10-py3-none-any.whl",
+            "url": "https://files.pythonhosted.org/packages/a2/9a/07d658e1e7fad860f1c541ab941348125dbdab773be3a0afaf32361866c7/pdfplumber-0.11.10-py3-none-any.whl",
+            "digests": {
+              "blake2b_256": "a29a07d658e1e7fad860f1c541ab941348125dbdab773be3a0afaf32361866c7",
+              "md5": "24fbb30da1676af7090c3304385885fe",
+              "sha256": "7741ea81bf165b474b153e6789d10d18e06b6ddcf3ec84289c3ef2fed6802580"
+            },
+            "upload_time_iso_8601": "2026-06-15T03:31:29.702225Z",
+            "yanked": false
+          },
+          {
+            "filename": "pdfplumber-0.11.10.tar.gz",
+            "url": "https://files.pythonhosted.org/packages/05/56/6f450312ba05a27d7713b73857c1a25100dbda04fbc1331b13fb227a607d/pdfplumber-0.11.10.tar.gz",
+            "digests": {
+              "blake2b_256": "05566f450312ba05a27d7713b73857c1a25100dbda04fbc1331b13fb227a607d",
+              "md5": "f6cf970e104017ec8b16fca2992662f7",
+              "sha256": "b95b2d28c66efb0a794a83b88c6c6aea5987532a445d20a1cbcfa657022e6e57"
+            },
+            "upload_time_iso_8601": "2026-06-15T03:31:31.035940Z",
+            "yanked": false
+          }
+        ]
+      },
+      "included_in_runtime": false,
+      "approved_at": null
+    },
+    {
+      "id": "G07",
+      "repo": "https://github.com/PaddlePaddle/PaddleOCR",
+      "status": "read_verified",
+      "commit": "dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf",
+      "release": null,
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "3840c5c0c61c294264d2dd77b8777be6ddd90121ef4e0e64abcd22edea581d6e",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G07/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/LICENSE",
+          "bytes": 11376
+        },
+        {
+          "path": "README.md",
+          "sha256": "63d76041f1dcb84e1dd141d45dc8dec5d86a3e357fe98bf8432ad2721c0ced90",
+          "usage": "method",
+          "local_target": "sources/evidence/G07/README.md",
+          "upstream_url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/README.md",
+          "bytes": 25918
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "63e8bfa19e197e47649a95dad422bcb09c1d2959367cafd40b0a7f19e4452412",
+          "usage": "code",
+          "local_target": "sources/evidence/G07/pyproject.toml",
+          "upstream_url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/pyproject.toml",
+          "bytes": 2707
+        },
+        {
+          "path": "requirements.txt",
+          "sha256": "d33da5c48e908fc328b48569098e52c4a9df4529a177fe09920c1ccb4531a9ef",
+          "usage": "method",
+          "local_target": "sources/evidence/G07/requirements.txt",
+          "upstream_url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf/requirements.txt",
+          "bytes": 254
+        }
+      ],
+      "license_expression": "Apache-2.0",
+      "license_text_sha256": "3840c5c0c61c294264d2dd77b8777be6ddd90121ef4e0e64abcd22edea581d6e",
+      "dependency_review": "not_runtime_dependency",
+      "model_license_review": "pending",
+      "verified_at": "2026-10-02T12:32:14.620050+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "OCR_deferred_no_model_download",
+        "model_licenses_and_Paddle_dependency_tree_pending",
+        "OCR_unavailable_must_be_explicit_unsupported"
+      ],
+      "adoption": "reference_only",
+      "evidence_urls": [
+        "https://api.github.com/repos/PaddlePaddle/PaddleOCR/commits?per_page=1",
+        "https://api.github.com/repos/PaddlePaddle/PaddleOCR/git/trees/dab3fe35379033fdcb2d0e9572fac0b36c9a9ebf?recursive=1"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-09-16T03:30:53Z",
+      "license_path": "LICENSE",
+      "dependency_metadata": {
+        "requires-python": ">=3.8",
+        "dependencies": [
+          "paddlex[ocr-core]>=3.7.0,<3.8.0",
+          "PyYAML>=6",
+          "requests",
+          "aiohttp>=3.8.0",
+          "typing-extensions>=4.12"
+        ],
+        "optional-dependencies": {
+          "doc-parser": [
+            "paddlex[ocr,genai-client]>=3.7.0,<3.8.0"
+          ],
+          "ie": [
+            "paddlex[ie]>=3.7.0,<3.8.0"
+          ],
+          "trans": [
+            "paddlex[trans]>=3.7.0,<3.8.0"
+          ],
+          "doc2md": [
+            "python-docx>=0.8.11",
+            "python-pptx>=0.6.21",
+            "openpyxl>=3.0.0",
+            "pylatexenc>=2.10,<3"
+          ],
+          "all": [
+            "paddlex[ocr,genai-client,ie,trans]>=3.7.0,<3.8.0",
+            "python-docx>=0.8.11",
+            "python-pptx>=0.6.21",
+            "openpyxl>=3.0.0"
+          ]
+        }
+      },
+      "included_in_runtime": false,
+      "approved_at": null
+    },
+    {
+      "id": "G08",
+      "repo": "https://github.com/python-openxml/python-docx",
+      "status": "read_verified",
+      "commit": "e45454602b53e8e572b179ccf1c91093ec9f4ed7",
+      "release": "v1.2.0",
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "7652f271e46d0d533e9dc463f3b5fcbdcacf4d6a9c8d6b554d15efd0f37f6132",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G08/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/python-openxml/python-docx/e45454602b53e8e572b179ccf1c91093ec9f4ed7/LICENSE",
+          "bytes": 1104
+        },
+        {
+          "path": "README.md",
+          "sha256": "10447f1839657020110fca80c630041cae09f1e9db9755cb25059846d39e2ef1",
+          "usage": "method",
+          "local_target": "sources/evidence/G08/README.md",
+          "upstream_url": "https://raw.githubusercontent.com/python-openxml/python-docx/e45454602b53e8e572b179ccf1c91093ec9f4ed7/README.md",
+          "bytes": 642
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e112290ddc85add6834c9cc5299c86e837b7b2e2e8b69e49784b4bfe6ea33625",
+          "usage": "code",
+          "local_target": "sources/evidence/G08/pyproject.toml",
+          "upstream_url": "https://raw.githubusercontent.com/python-openxml/python-docx/e45454602b53e8e572b179ccf1c91093ec9f4ed7/pyproject.toml",
+          "bytes": 3744
+        },
+        {
+          "path": "src/docx/api.py",
+          "sha256": "d77539ea23d2336b4c44311bd373a64994240c03e6c068dfc68b189164b6b5c7",
+          "usage": "code",
+          "local_target": "sources/evidence/G08/src/docx/api.py",
+          "upstream_url": "https://raw.githubusercontent.com/python-openxml/python-docx/e45454602b53e8e572b179ccf1c91093ec9f4ed7/src/docx/api.py",
+          "bytes": 1350
+        },
+        {
+          "path": "src/docx/document.py",
+          "sha256": "b54354a7f068191e37dc9b4256480f0222665b60d22951f365402b0a7b46d9ce",
+          "usage": "code",
+          "local_target": "sources/evidence/G08/src/docx/document.py",
+          "upstream_url": "https://raw.githubusercontent.com/python-openxml/python-docx/e45454602b53e8e572b179ccf1c91093ec9f4ed7/src/docx/document.py",
+          "bytes": 11194
+        }
+      ],
+      "license_expression": "MIT",
+      "license_text_sha256": "7652f271e46d0d533e9dc463f3b5fcbdcacf4d6a9c8d6b554d15efd0f37f6132",
+      "dependency_review": "direct_metadata_reviewed_transitive_lock_pending",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:36:29.600000+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "not_full_OOXML_coverage",
+        "paragraph_list_excludes_revision_marks_and_tables_require_separate_traversal",
+        "native_revision_support_requires_separate_adapter"
+      ],
+      "adoption": "runtime_candidate",
+      "evidence_urls": [
+        "https://api.github.com/repos/python-openxml/python-docx/commits?per_page=1",
+        "https://api.github.com/repos/python-openxml/python-docx/git/trees/e45454602b53e8e572b179ccf1c91093ec9f4ed7?recursive=1",
+        "https://api.github.com/repos/python-openxml/python-docx/commits/v1.2.0"
+      ],
+      "errors": [],
+      "commit_committed_at": "2025-06-16T21:24:39Z",
+      "license_path": "LICENSE",
+      "discovery_commit": "e45454602b53e8e572b179ccf1c91093ec9f4ed7",
+      "dependency_metadata": {
+        "requires-python": ">=3.9",
+        "dependencies": [
+          "lxml>=3.1.0",
+          "typing_extensions>=4.9.0"
+        ]
+      },
+      "registry_package": {
+        "name": "python-docx",
+        "version": "1.2.0",
+        "requires_python": ">=3.9",
+        "requires_dist": [
+          "lxml>=3.1.0",
+          "typing_extensions>=4.9.0"
+        ],
+        "artifact_candidates": [
+          {
+            "filename": "python_docx-1.2.0-py3-none-any.whl",
+            "url": "https://files.pythonhosted.org/packages/d0/00/1e03a4989fa5795da308cd774f05b704ace555a70f9bf9d3be057b680bcf/python_docx-1.2.0-py3-none-any.whl",
+            "digests": {
+              "blake2b_256": "d0001e03a4989fa5795da308cd774f05b704ace555a70f9bf9d3be057b680bcf",
+              "md5": "f0e72a7afdf7947db39802e23b22dc13",
+              "sha256": "3fd478f3250fbbbfd3b94fe1e985955737c145627498896a8a6bf81f4baf66c7"
+            },
+            "upload_time_iso_8601": "2025-06-16T20:46:22.506016Z",
+            "yanked": false
+          },
+          {
+            "filename": "python_docx-1.2.0.tar.gz",
+            "url": "https://files.pythonhosted.org/packages/a9/f7/eddfe33871520adab45aaa1a71f0402a2252050c14c7e3009446c8f4701c/python_docx-1.2.0.tar.gz",
+            "digests": {
+              "blake2b_256": "a9f7eddfe33871520adab45aaa1a71f0402a2252050c14c7e3009446c8f4701c",
+              "md5": "33e6052d6583dcb0092d0c80057354aa",
+              "sha256": "7bc9d7b7d8a69c9c02ca09216118c86552704edc23bac179283f2e38f86220ce"
+            },
+            "upload_time_iso_8601": "2025-06-16T20:46:27.921066Z",
+            "yanked": false
+          }
+        ]
+      },
+      "included_in_runtime": false,
+      "approved_at": null
+    },
+    {
+      "id": "G09",
+      "repo": "https://github.com/docling-project/docling",
+      "status": "read_verified",
+      "commit": "a25aa1dedccf74572df0385cde0cf02fb059b92c",
+      "release": null,
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "edb765d1e3e60d0c7a7d5fba5f2bb2c3c29f7465cecb5c22cf1185c884954e4c",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G09/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/docling-project/docling/a25aa1dedccf74572df0385cde0cf02fb059b92c/LICENSE",
+          "bytes": 1072
+        },
+        {
+          "path": "README.md",
+          "sha256": "4f55583e9c57442b635a2bdf0c718a9919752a73a18b710b0b5cb57ef23c0aed",
+          "usage": "method",
+          "local_target": "sources/evidence/G09/README.md",
+          "upstream_url": "https://raw.githubusercontent.com/docling-project/docling/a25aa1dedccf74572df0385cde0cf02fb059b92c/README.md",
+          "bytes": 8535
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "2527b4484f2b6716fe26dce21f1689711e89996b002901a1d09625053a6bf939",
+          "usage": "code",
+          "local_target": "sources/evidence/G09/pyproject.toml",
+          "upstream_url": "https://raw.githubusercontent.com/docling-project/docling/a25aa1dedccf74572df0385cde0cf02fb059b92c/pyproject.toml",
+          "bytes": 16154
+        }
+      ],
+      "license_expression": "MIT",
+      "license_text_sha256": "edb765d1e3e60d0c7a7d5fba5f2bb2c3c29f7465cecb5c22cf1185c884954e4c",
+      "dependency_review": "not_runtime_dependency",
+      "model_license_review": "pending",
+      "verified_at": "2026-10-02T12:32:14.620050+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "deferred_pending_same_sample_benchmark",
+        "model_download_dependency_and_license_reviews_pending"
+      ],
+      "adoption": "reference_only",
+      "evidence_urls": [
+        "https://api.github.com/repos/docling-project/docling/commits?per_page=1",
+        "https://api.github.com/repos/docling-project/docling/git/trees/a25aa1dedccf74572df0385cde0cf02fb059b92c?recursive=1"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-10-02T08:45:04Z",
+      "license_path": "LICENSE",
+      "dependency_metadata": {
+        "version": "2.132.0",
+        "requires-python": ">=3.10,<4.0",
+        "dependencies": [
+          "pydantic>=2.0.0,<3.0.0",
+          "docling-core>=2.98.0,<3.0.0",
+          "pydantic-settings>=2.3.0,<3.0.0",
+          "filetype>=1.2.0,<2.0.0",
+          "requests>=2.32.2,<3.0.0",
+          "certifi>=2024.7.4",
+          "pluggy>=1.0.0,<2.0.0",
+          "tqdm>=4.65.0,<5.0.0",
+          "langcodes>=3.5.0,<4.0.0"
+        ],
+        "optional-dependencies": {
+          "convert-core": [
+            "numpy>=1.24.0,<3.0.0",
+            "pillow>=10.0.0,<13.0.0",
+            "rtree>=1.3.0,<2.0.0",
+            "scipy>=1.6.0,<2.0.0"
+          ],
+          "extract-core": [
+            "docling-slim[convert-core]",
+            "polyfactory>=2.22.2"
+          ],
+          "format-pdf-pypdfium2": [
+            "pypdfium2>=4.30.0,!=4.30.1,<6.0.0"
+          ],
+          "format-pdf-docling": [
+            "docling-parse>=7.22.1,<8.0.0"
+          ],
+          "format-pdf": [
+            "docling-slim[format-pdf-pypdfium2,format-pdf-docling]"
+          ],
+          "format-docx": [
+            "python-docx>=1.2.0,<2.0.0"
+          ],
+          "format-pptx": [
+            "python-pptx>=1.0.2,<2.0.0"
+          ],
+          "format-xlsx": [
+            "openpyxl>=3.1.5,<4.0.0"
+          ],
+          "format-office": [
+            "docling-slim[format-docx,format-pptx,format-xlsx]"
+          ],
+          "format-opendocument": [
+            "odfdo>=3.22.0,<4.0.0"
+          ],
+          "format-html": [
+            "beautifulsoup4>=4.12.3,<5.0.0"
+          ],
+          "format-markdown": [
+            "marko>=2.1.2,<3.0.0"
+          ],
+          "format-web": [
+            "docling-slim[format-html,format-markdown]"
+          ],
+          "format-latex": [
+            "pylatexenc>=2.10,<3.0"
+          ],
+          "format-email": [
+            "docling-slim[format-html]",
+            "mail-parser>=4.1.4,<5.0.0",
+            "python-oxmsg>=0.0.2,<0.1.0"
+          ],
+          "format-iwork": [
+            "defusedxml>=0.7.1,<0.8.0"
+          ],
+          "format-xml-jats": [
+            "docling-slim[format-html]",
+            "lxml>=4.0.0,<7.0.0"
+          ],
+          "format-xml-uspto": [
+            "docling-slim[format-html]",
+            "defusedxml>=0.7.1,<0.8.0"
+          ],
+          "format-xml-xbrl": [
+            "arelle-release>=2.38.17,<3.0.0"
+          ],
+          "format-html-render": [
+            "playwright>=1.58.0"
+          ],
+          "format-audio": [
+            "mlx-whisper>=0.4.3 ; python_version >= \"3.10\" and sys_platform == \"darwin\" and platform_machine == \"arm64\"",
+            "openai-whisper>=20250625",
+            "numba>=0.63.0",
+            "whisper-s2t-reborn>=1.7.1,<2.0.0 ; sys_platform != \"darwin\" or platform_machine != \"arm64\""
+          ],
+          "format-video": [
+            "docling-slim[format-audio]",
+            "resemblyzer>=0.1.4,<0.2.0",
+            "soundfile>=0.12.1,<1.0.0",
+            "scikit-learn>=1.3.0,<2.0.0",
+            "librosa>=0.10.0,<1.0.0"
+          ],
+          "feat-ocr-rapidocr": [
+            "rapidocr>=3.9.1,<4.0.0"
+          ],
+          "feat-ocr-rapidocr-onnx": [
+            "rapidocr>=3.9.1,<4.0.0",
+            "onnxruntime>=1.7.0,<1.24 ; python_version < \"3.11\"",
+            "onnxruntime>=1.7.0,<2.0.0 ; python_version >= \"3.11\" and python_version < \"3.14\"",
+            "onnxruntime>=1.24.1,<2.0.0 ; python_version >= \"3.14\""
+          ],
+          "feat-ocr-easyocr": [
+            "easyocr>=1.7,<2.0",
+            "scikit-image>=0.19"
+          ],
+          "feat-ocr-tesserocr": [
+            "tesserocr>=2.7.1,<3.0.0",
+            "pandas>=2.1.4,<4.0.0"
+          ],
+          "feat-ocr-mac": [
+            "ocrmac>=1.0.0,<2.0.0 ; sys_platform == \"darwin\""
+          ],
+          "feat-ocr-nemotron": [
+            "nemotron-ocr>=2.0.0 ; python_version == \"3.12\" and sys_platform == \"linux\" and platform_machine == \"x86_64\""
+          ],
+          "models-local": [
+            "torch>=2.2.2,<3.0.0",
+            "torchvision>=0,<1",
+            "docling-ibm-models>=4.0.2,<5",
+            "accelerate>=1.0.0,<2",
+            "huggingface_hub>=0.23,<2",
+            "defusedxml>=0.7.1,<0.8.0"
+          ],
+          "models-remote": [
+            "tritonclient[grpc]>=2.65.0,<3.0.0"
+          ],
+          "models-onnxruntime": [
+            "onnxruntime<1.24 ; python_version < \"3.11\" and sys_platform == \"darwin\"",
+            "onnxruntime<2.0.0 ; python_version >= \"3.11\" and python_version < \"3.14\" and sys_platform == \"darwin\"",
+            "onnxruntime>=1.24.1,<2.0.0 ; python_version >= \"3.14\" and sys_platform == \"darwin\"",
+            "onnxruntime-gpu<1.24 ; python_version < \"3.11\" and (sys_platform == \"linux\" or sys_platform == \"win32\")",
+            "onnxruntime-gpu<2.0.0 ; python_version >= \"3.11\" and python_version < \"3.14\" and (sys_platform == \"linux\" or sys_platform == \"win32\")",
+            "onnxruntime-gpu>=1.24.1,<2.0.0 ; python_version >= \"3.14\" and (sys_platform == \"linux\" or sys_platform == \"win32\")"
+          ],
+          "models-vlm-inline": [
+            "transformers>=4.42.0,<6.0.0,!=5.0.*,!=5.1.*,!=5.2.*,!=5.3.*,!=5.9.*,!=5.10.*,!=5.11.*,!=5.12.*,!=5.13.*,!=5.14.*,!=5.15.* ; sys_platform == \"darwin\"",
+            "transformers>=4.42.0,<6.0.0,!=5.0.*,!=5.1.*,!=5.2.*,!=5.3.*,!=5.13.0 ; sys_platform != \"darwin\"",
+            "accelerate>=1.2.1,<2.0.0",
+            "einops>=0.8.1,<1.0.0",
+            "open-clip-torch>=3.2.0,<4.0.0",
+            "timm>=1.0.22,<2.0.0",
+            "mlx-vlm>=0.6.17,<1.0.0 ; python_version >= \"3.10\" and sys_platform == \"darwin\" and platform_machine == \"arm64\"",
+            "qwen-vl-utils>=0.0.11",
+            "peft>=0.18.1"
+          ],
+          "feat-chunking": [
+            "docling-core[chunking]>=2.98.0,<3.0.0"
+          ],
+          "service-client": [
+            "httpx>=0.28,<1.0.0",
+            "websockets>=14.0,<17.0",
+            "typer>=0.19.0,<0.27.0",
+            "rich>=13.0.0",
+            "python-dotenv~=1.0"
+          ],
+          "cli": [
+            "typer>=0.19.0,<0.27.0",
+            "rich>=13.0.0",
+            "python-dotenv~=1.0"
+          ],
+          "standard": [
+            "docling-slim[format-pdf,models-local,feat-ocr-rapidocr,format-office,format-web,format-latex,format-email,format-iwork,feat-chunking,extract-core,service-client,cli]"
+          ],
+          "all": [
+            "docling-slim[standard,models-vlm-inline,format-audio,format-html-render,format-xml-jats,format-xml-uspto,format-xml-xbrl,models-remote,models-onnxruntime,feat-ocr-easyocr,feat-ocr-tesserocr,feat-ocr-mac]"
+          ]
+        }
+      },
+      "included_in_runtime": false,
+      "approved_at": null
+    },
+    {
+      "id": "G10",
+      "repo": "https://github.com/D4Vinci/Scrapling",
+      "status": "read_verified",
+      "commit": "333fa22b7a5821194ce66b59b11f4b16a6484f02",
+      "release": "v0.4.15",
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "5c782ef0346e4fbfe0dc76fd435f181a0f1e4a1a7a6b13c169c6e74314ff5964",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G10/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/D4Vinci/Scrapling/333fa22b7a5821194ce66b59b11f4b16a6484f02/LICENSE",
+          "bytes": 1499
+        },
+        {
+          "path": "README.md",
+          "sha256": "85c8c7f3c998a8fc2a0811d2b82aee9b17b271607349930e21f0c68491115564",
+          "usage": "method",
+          "local_target": "sources/evidence/G10/README.md",
+          "upstream_url": "https://raw.githubusercontent.com/D4Vinci/Scrapling/333fa22b7a5821194ce66b59b11f4b16a6484f02/README.md",
+          "bytes": 36254
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "0d124f6e5af885e5b189fed7a3b7f0c7c87ee7e10fb145c6250906f286e45a27",
+          "usage": "code",
+          "local_target": "sources/evidence/G10/pyproject.toml",
+          "upstream_url": "https://raw.githubusercontent.com/D4Vinci/Scrapling/333fa22b7a5821194ce66b59b11f4b16a6484f02/pyproject.toml",
+          "bytes": 3846
+        }
+      ],
+      "license_expression": "BSD-3-Clause",
+      "license_text_sha256": "5c782ef0346e4fbfe0dc76fd435f181a0f1e4a1a7a6b13c169c6e74314ff5964",
+      "dependency_review": "direct_registry_metadata_reviewed_transitive_lock_and_browser_licenses_pending",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:38:10.629379+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_production_approval",
+        "no_QCC_scraping_or_access_restriction_bypass",
+        "explicit_user_install_request_2026_10_02",
+        "installation_and_fetch_tests_owned_by_parent_install_agent",
+        "not_integrated_into_contract_workflow",
+        "local_synthetic_smoke_only_no_live_site_or_legal_effectiveness_test"
+      ],
+      "adoption": "runtime_tool",
+      "evidence_urls": [
+        "https://api.github.com/repos/D4Vinci/Scrapling/commits?per_page=1",
+        "https://api.github.com/repos/D4Vinci/Scrapling/git/trees/971d5edb9c01f000dd4befcd21742e9b22260dc7?recursive=1",
+        "https://api.github.com/repos/D4Vinci/Scrapling/commits/v0.4.15"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-08-23T19:43:08Z",
+      "license_path": "LICENSE",
+      "dependency_metadata": {
+        "version": "0.4.15",
+        "requires-python": ">=3.10",
+        "dependencies": [
+          "lxml>=6.1.1",
+          "cssselect>=1.5.0",
+          "orjson>=3.11.8",
+          "tld>=0.13.2",
+          "w3lib>=2.4.1",
+          "typing_extensions"
+        ],
+        "optional-dependencies": {
+          "fetchers": [
+            "click>=8.3.0",
+            "curl_cffi>=0.16.1",
+            "playwright>=1.62.0",
+            "patchright>=1.62.1",
+            "browserforge>=1.2.4",
+            "apify-fingerprint-datapoints>=0.15.0",
+            "msgspec>=0.21.1",
+            "anyio>=4.14.0",
+            "protego>=0.6.2"
+          ],
+          "rag": [
+            "markdownify>=1.2.0",
+            "scrapling[fetchers]"
+          ],
+          "ai": [
+            "mcp>=2.0.0",
+            "markdownify>=1.2.0",
+            "scrapling[fetchers]"
+          ],
+          "shell": [
+            "IPython>=8.37",
+            "markdownify>=1.2.0",
+            "scrapling[fetchers]"
+          ],
+          "all": [
+            "scrapling[ai,shell]"
+          ]
+        }
+      },
+      "discovery_commit": "971d5edb9c01f000dd4befcd21742e9b22260dc7",
+      "registry_package": {
+        "name": "scrapling",
+        "version": "0.4.15",
+        "requires_python": ">=3.10",
+        "requires_dist": [
+          "lxml>=6.1.1",
+          "cssselect>=1.5.0",
+          "orjson>=3.11.8",
+          "tld>=0.13.2",
+          "w3lib>=2.4.1",
+          "typing_extensions",
+          "click>=8.3.0; extra == \"fetchers\"",
+          "curl_cffi>=0.16.1; extra == \"fetchers\"",
+          "playwright>=1.62.0; extra == \"fetchers\"",
+          "patchright>=1.62.1; extra == \"fetchers\"",
+          "browserforge>=1.2.4; extra == \"fetchers\"",
+          "apify-fingerprint-datapoints>=0.15.0; extra == \"fetchers\"",
+          "msgspec>=0.21.1; extra == \"fetchers\"",
+          "anyio>=4.14.0; extra == \"fetchers\"",
+          "protego>=0.6.2; extra == \"fetchers\"",
+          "markdownify>=1.2.0; extra == \"rag\"",
+          "scrapling[fetchers]; extra == \"rag\"",
+          "mcp>=2.0.0; extra == \"ai\"",
+          "markdownify>=1.2.0; extra == \"ai\"",
+          "scrapling[fetchers]; extra == \"ai\"",
+          "IPython>=8.37; extra == \"shell\"",
+          "markdownify>=1.2.0; extra == \"shell\"",
+          "scrapling[fetchers]; extra == \"shell\"",
+          "scrapling[ai,shell]; extra == \"all\""
+        ],
+        "license": "BSD 3-Clause License\n        \n        Copyright (c) 2024, Karim shoair\n        \n        Redistribution and use in source and binary forms, with or without\n        modification, are permitted provided that the following conditions are met:\n        \n        1. Redistributions of source code must retain the above copyright notice, this\n           list of conditions and the following disclaimer.\n        \n        2. Redistributions in binary form must reproduce the above copyright notice,\n           this list of conditions and the following disclaimer in the documentation\n           and/or other materials provided with the distribution.\n        \n        3. Neither the name of the copyright holder nor the names of its\n           contributors may be used to endorse or promote products derived from\n           this software without specific prior written permission.\n        \n        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\n        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\n        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\n        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\n        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n        ",
+        "license_expression": null,
+        "project_urls": {
+          "Bug Tracker": "https://github.com/D4Vinci/Scrapling/issues",
+          "Changelog": "https://github.com/D4Vinci/Scrapling/releases",
+          "Discord": "https://discord.gg/EMgGbDceNQ",
+          "Documentation": "https://scrapling.readthedocs.io/en/latest/",
+          "Homepage": "https://github.com/D4Vinci/Scrapling",
+          "Release Notes": "https://github.com/D4Vinci/Scrapling/releases",
+          "Repository": "https://github.com/D4Vinci/Scrapling"
+        },
+        "url": "https://pypi.org/pypi/scrapling/0.4.15/json",
+        "local_target": "sources/evidence/audit/registry/pypi-scrapling-0.4.15.json",
+        "sha256": "fd740f58668589970ad81f62826472c9ed1fbd6ecf59f382e0df7cedf5c319da",
+        "wheel": {
+          "filename": "scrapling-0.4.15-py3-none-any.whl",
+          "url": "https://files.pythonhosted.org/packages/87/68/bdccc7c459eb90d442cbc89a028c893381cf363165c7c58f024307b8d9ed/scrapling-0.4.15-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "8768bdccc7c459eb90d442cbc89a028c893381cf363165c7c58f024307b8d9ed",
+            "md5": "57bcd73319a3807c4350de8c6475117e",
+            "sha256": "ae66bde9f63afb793ad6f93bd76b451e29f1631347465a553c4e7765c0ecc1f2"
+          },
+          "upload_time_iso_8601": "2026-08-23T19:43:47.569905Z",
+          "yanked": false,
+          "downloaded_sha256": "ae66bde9f63afb793ad6f93bd76b451e29f1631347465a553c4e7765c0ecc1f2",
+          "sha256_verified": true
+        },
+        "selected_wheel_files": [
+          {
+            "path": "scrapling-0.4.15.dist-info/licenses/LICENSE",
+            "local_target": "sources/evidence/audit/registry/G10/wheel-selected/scrapling-0.4.15.dist-info/licenses/LICENSE",
+            "sha256": "5c782ef0346e4fbfe0dc76fd435f181a0f1e4a1a7a6b13c169c6e74314ff5964"
+          },
+          {
+            "path": "scrapling-0.4.15.dist-info/METADATA",
+            "local_target": "sources/evidence/audit/registry/G10/wheel-selected/scrapling-0.4.15.dist-info/METADATA",
+            "sha256": "706652c64fa9bdabc38a0a1d794379b925fdc91a8c20727a05427edec3168c04"
+          }
+        ]
+      },
+      "adoption_scope": "optional_development_fetch_tool_outside_contract_workflow",
+      "included_in_runtime": true,
+      "approved_at": null,
+      "development_test_status": "installed_local_smoke_passed_not_workflow_integrated"
+    },
+    {
+      "id": "G11",
+      "repo": "https://github.com/lawve-ai/awesome-legal-skills",
+      "status": "candidate",
+      "commit": "180fd1582cc56fb0fc122a8e734ff3a1a666b87a",
+      "release": null,
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "7683cdb3058c3d76e486995bf5c9d92f0268aaa4bbda924f8644a26fc908174f",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G11/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/lawve-ai/awesome-legal-skills/180fd1582cc56fb0fc122a8e734ff3a1a666b87a/LICENSE",
+          "bytes": 19122
+        }
+      ],
+      "license_expression": "AGPL-3.0 (declaration per supplied specification; exact target declaration unverified)",
+      "license_text_sha256": null,
+      "dependency_review": "not_runtime_dependency",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:32:14.620050+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "AGPL_skill_not_copied_or_loaded",
+        "license_approval_required_before_any_use",
+        "uploaded_A_package_not_byte_compared",
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "root_CC_BY_NC_ND_is_not_target_AGPL_license",
+        "target_Skill_license_header_not_fetched",
+        "exact_AGPL_version_and_or_later_option_unverified"
+      ],
+      "adoption": "reference_only",
+      "evidence_urls": [
+        "https://api.github.com/repos/lawve-ai/awesome-legal-skills/commits?per_page=1",
+        "https://api.github.com/repos/lawve-ai/awesome-legal-skills/git/trees/180fd1582cc56fb0fc122a8e734ff3a1a666b87a?recursive=1"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-09-04T10:20:33Z",
+      "quarantine_metadata": {
+        "path": "skills/tech-contract-review-parth-desai/SKILL.md",
+        "blob_metadata": {
+          "path": "skills/tech-contract-review-parth-desai/SKILL.md",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "d0d5fb5217f86e91432eba037996862e346c41ad",
+          "size": 16349,
+          "url": "https://api.github.com/repos/lawve-ai/awesome-legal-skills/git/blobs/d0d5fb5217f86e91432eba037996862e346c41ad"
+        },
+        "skill_text_downloaded": false,
+        "license_expression_basis": "specification assertion; target Skill content not copied or independently read by this collector"
+      },
+      "dependency_metadata": {},
+      "root_license_expression": "CC-BY-NC-ND-4.0",
+      "root_license_text_sha256": "7683cdb3058c3d76e486995bf5c9d92f0268aaa4bbda924f8644a26fc908174f",
+      "root_license_path": "LICENSE",
+      "license_reference": {
+        "url": "https://www.gnu.org/licenses/agpl-3.0.txt",
+        "local_target": "sources/evidence/audit/registry/gnu-agpl.txt",
+        "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+        "verified_at": "2026-10-02T12:34:24.957792+00:00"
+      },
+      "included_in_runtime": false,
+      "approved_at": null,
+      "restricted_fingerprint_file": "sources/restricted-content/G11.fingerprints.json",
+      "restricted_fingerprint_sha256": "0ae7b1815920b13543674913a58a7c6da0ec4bac9e437a4f15bb39d489894522",
+      "restricted_file_sha256": [
+        "a94061af97fa59c679af1bbb084001c66da4fc79933ae1df1c761bec05c47e3f",
+        "3662bdfbde1633c3b5d2e1815397d10c1616c63a8496d7eca701fbefdef737a8",
+        "5ef5d38002a37674a53f0994cbd5b5cbbae3554d6c36942cc0a83685231d372f",
+        "ee01d25d6fa46b159e4f1c3c49d8c762427a6a3069753a64ef14d0859b48d413",
+        "5595452cdb1d97d941c62cc638215f73965b1121bc3601f3340375c95334557c"
+      ],
+      "upload_declaration_verified": "A SKILL.md L6: agpl-3.0; target upstream header not independently fetched"
+    },
+    {
+      "id": "G12",
+      "repo": "https://github.com/anthropics/claude-for-legal",
+      "status": "read_verified",
+      "commit": "4a6c651889c97cc9140580363c73e0eb17379c2b",
+      "release": null,
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G12/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/anthropics/claude-for-legal/4a6c651889c97cc9140580363c73e0eb17379c2b/LICENSE",
+          "bytes": 11358
+        },
+        {
+          "path": "README.md",
+          "sha256": "2dee4ff1a199c663fa42e9518d9716a9eff3c6c570b4fb766582c477e09f551c",
+          "usage": "method",
+          "local_target": "sources/evidence/G12/README.md",
+          "upstream_url": "https://raw.githubusercontent.com/anthropics/claude-for-legal/4a6c651889c97cc9140580363c73e0eb17379c2b/README.md",
+          "bytes": 53485
+        }
+      ],
+      "license_expression": "Apache-2.0",
+      "license_text_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "dependency_review": "not_runtime_dependency",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:32:14.620050+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "governance_reference_only_not_foreign_law_rule_source"
+      ],
+      "adoption": "method",
+      "evidence_urls": [
+        "https://api.github.com/repos/anthropics/claude-for-legal/commits?per_page=1",
+        "https://api.github.com/repos/anthropics/claude-for-legal/git/trees/4a6c651889c97cc9140580363c73e0eb17379c2b?recursive=1"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-07-23T00:46:01Z",
+      "license_path": "LICENSE",
+      "dependency_metadata": {},
+      "included_in_runtime": false,
+      "approved_at": null
+    },
+    {
+      "id": "G13",
+      "repo": "https://github.com/modelcontextprotocol/python-sdk",
+      "status": "read_verified",
+      "commit": "9972c21aa42054fb1450c5fc614761ed11847ec6",
+      "release": "v2.2.0",
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d",
+          "usage": "text",
+          "local_target": "sources/third-party-notices/G13/LICENSE",
+          "upstream_url": "https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/9972c21aa42054fb1450c5fc614761ed11847ec6/LICENSE",
+          "bytes": 1071
+        },
+        {
+          "path": "README.md",
+          "sha256": "87df4643ed5cb0e962c235ab19487fc9490f79392a63adc46427d5126d207259",
+          "usage": "method",
+          "local_target": "sources/evidence/G13/README.md",
+          "upstream_url": "https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/9972c21aa42054fb1450c5fc614761ed11847ec6/README.md",
+          "bytes": 5724
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "b9e5a5946687eeb815203f7bb2e5226dd6b03cc9a871e98ae0d25fce95c7148e",
+          "usage": "code",
+          "local_target": "sources/evidence/G13/pyproject.toml",
+          "upstream_url": "https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/9972c21aa42054fb1450c5fc614761ed11847ec6/pyproject.toml",
+          "bytes": 12686
+        },
+        {
+          "path": "src/mcp/client/__init__.py",
+          "sha256": "f1631552bc74d9e42e2815d4ead0f57846c69f14409ea4d68417861df0487c39",
+          "usage": "code",
+          "local_target": "sources/evidence/G13/src/mcp/client/__init__.py",
+          "upstream_url": "https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/9972c21aa42054fb1450c5fc614761ed11847ec6/src/mcp/client/__init__.py",
+          "bytes": 1033
+        },
+        {
+          "path": "src/mcp/client/session.py",
+          "sha256": "fb1365c908c0dfc65ad9b59f63d1f5d433153c5da050725f5f98450871fc9a39",
+          "usage": "code",
+          "local_target": "sources/evidence/G13/src/mcp/client/session.py",
+          "upstream_url": "https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/9972c21aa42054fb1450c5fc614761ed11847ec6/src/mcp/client/session.py",
+          "bytes": 69388
+        },
+        {
+          "path": "src/mcp/client/streamable_http.py",
+          "sha256": "c907dd5009892a63b8dad420978e93031e1d41712bc4c51ba9e412121f5cacb9",
+          "usage": "code",
+          "local_target": "sources/evidence/G13/src/mcp/client/streamable_http.py",
+          "upstream_url": "https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/9972c21aa42054fb1450c5fc614761ed11847ec6/src/mcp/client/streamable_http.py",
+          "bytes": 35582
+        },
+        {
+          "path": "examples/snippets/clients/streamable_basic.py",
+          "sha256": "37b8dbeccfc45a146c31a0f2ff734e07c336d14d7dad252202ceb888ff4318ae",
+          "usage": "code",
+          "local_target": "sources/evidence/G13/examples/snippets/clients/streamable_basic.py",
+          "upstream_url": "https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/9972c21aa42054fb1450c5fc614761ed11847ec6/examples/snippets/clients/streamable_basic.py",
+          "bytes": 775
+        }
+      ],
+      "license_expression": "MIT",
+      "license_text_sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d",
+      "dependency_review": "direct_metadata_reviewed_transitive_lock_pending",
+      "model_license_review": "not_applicable",
+      "verified_at": "2026-10-02T12:36:29.600000+00:00",
+      "approved_by": null,
+      "approved_scope": [],
+      "known_limits": [
+        "selected_file_audit_only",
+        "no_runtime_or_legal_effectiveness_test",
+        "no_production_approval",
+        "QCC_endpoint_transport_and_schema_not_verified",
+        "protocol_handshake_and_tool_schema_mock_contract_test_required_T07",
+        "opentelemetry_dependency_no_exporter_or_real_data_approved",
+        "v2_ClientSession_supported_but_use_same_tag_API_two_stream_tuple_and_snake_case",
+        "v1_streamablehttp_client_alias_three_item_tuple_and_camelCase_examples_not_compatible"
+      ],
+      "adoption": "runtime_candidate",
+      "evidence_urls": [
+        "https://api.github.com/repos/modelcontextprotocol/python-sdk/commits?per_page=1",
+        "https://api.github.com/repos/modelcontextprotocol/python-sdk/git/trees/08095791f0c8b8e6a0e8a137ca5ab4a511259ec7?recursive=1",
+        "https://api.github.com/repos/modelcontextprotocol/python-sdk/commits/v2.2.0"
+      ],
+      "errors": [],
+      "commit_committed_at": "2026-09-07T15:40:21Z",
+      "example_candidates": [
+        "examples/clients/simple-auth-client/mcp_simple_auth_client/__init__.py",
+        "examples/clients/simple-auth-client/mcp_simple_auth_client/main.py",
+        "examples/clients/simple-chatbot/mcp_simple_chatbot/main.py",
+        "examples/clients/sse-polling-client/mcp_sse_polling_client/__init__.py",
+        "examples/clients/sse-polling-client/mcp_sse_polling_client/main.py",
+        "examples/snippets/clients/__init__.py",
+        "examples/snippets/clients/completion_client.py",
+        "examples/snippets/clients/display_utilities.py",
+        "examples/snippets/clients/identity_assertion_client.py",
+        "examples/snippets/clients/oauth_client.py",
+        "examples/snippets/clients/pagination_client.py",
+        "examples/snippets/clients/parsing_tool_results.py",
+        "examples/snippets/clients/stdio_client.py",
+        "examples/snippets/clients/streamable_basic.py",
+        "examples/snippets/clients/url_elicitation_client.py"
+      ],
+      "path_resolution_notes": {
+        "absent_original_candidates": [
+          "examples/clients/simple-client/main.py"
+        ]
+      },
+      "license_path": "LICENSE",
+      "discovery_commit": "08095791f0c8b8e6a0e8a137ca5ab4a511259ec7",
+      "dependency_metadata": {
+        "requires-python": ">=3.10",
+        "optional-dependencies": {
+          "rich": [
+            "rich>=13.9.4"
+          ],
+          "cli": [
+            "typer>=0.16.0",
+            "python-dotenv>=1.0.0"
+          ]
+        },
+        "dynamic_dependencies": [
+          "anyio>=4.10; python_version >= '3.14'",
+          "anyio>=4.9; python_version < '3.14'",
+          "httpx2>=2.5.0",
+          "mcp-types=={{ version }}",
+          "pydantic>=2.12.0",
+          "starlette>=0.48.0; python_version >= '3.14'",
+          "starlette>=0.27; python_version < '3.14'",
+          "python-multipart>=0.0.9",
+          "sse-starlette>=3.0.0",
+          "uvicorn>=0.31.1; sys_platform != 'emscripten'",
+          "jsonschema>=4.20.0",
+          "pywin32>=311; sys_platform == 'win32'",
+          "pyjwt[crypto]>=2.10.1",
+          "typing-extensions>=4.13.0",
+          "typing-inspection>=0.4.1",
+          "opentelemetry-api>=1.28.0"
+        ]
+      },
+      "registry_package": {
+        "name": "mcp",
+        "version": "2.2.0",
+        "requires_python": ">=3.10",
+        "requires_dist": [
+          "anyio>=4.10; python_version >= \"3.14\"",
+          "anyio>=4.9; python_version < \"3.14\"",
+          "httpx2>=2.5.0",
+          "jsonschema>=4.20.0",
+          "mcp-types==2.2.0",
+          "opentelemetry-api>=1.28.0",
+          "pydantic>=2.12.0",
+          "pyjwt[crypto]>=2.10.1",
+          "python-multipart>=0.0.9",
+          "pywin32>=311; sys_platform == \"win32\"",
+          "sse-starlette>=3.0.0",
+          "starlette>=0.27; python_version < \"3.14\"",
+          "starlette>=0.48.0; python_version >= \"3.14\"",
+          "typing-extensions>=4.13.0",
+          "typing-inspection>=0.4.1",
+          "uvicorn>=0.31.1; sys_platform != \"emscripten\"",
+          "python-dotenv>=1.0.0; extra == \"cli\"",
+          "typer>=0.16.0; extra == \"cli\"",
+          "rich>=13.9.4; extra == \"rich\""
+        ],
+        "artifact_candidates": [
+          {
+            "filename": "mcp-2.2.0-py3-none-any.whl",
+            "url": "https://files.pythonhosted.org/packages/1b/ff/8e7eade68b8a28f7da0ed1085544341b51f9c935dbf6b95c76b7edfea6a0/mcp-2.2.0-py3-none-any.whl",
+            "digests": {
+              "blake2b_256": "1bff8e7eade68b8a28f7da0ed1085544341b51f9c935dbf6b95c76b7edfea6a0",
+              "md5": "f2d69d7d659eec959630db342b37e9a8",
+              "sha256": "bde982589473a060ae145e3406e9a5333fe538c97229ba841f5a7f92be004f81"
+            },
+            "upload_time_iso_8601": "2026-09-07T16:06:19.711091Z",
+            "yanked": false
+          },
+          {
+            "filename": "mcp-2.2.0.tar.gz",
+            "url": "https://files.pythonhosted.org/packages/76/31/ac54fb0fdd5b37de704486e288bba4fbbb463f24cfcfedbede407b854513/mcp-2.2.0.tar.gz",
+            "digests": {
+              "blake2b_256": "7631ac54fb0fdd5b37de704486e288bba4fbbb463f24cfcfedbede407b854513",
+              "md5": "2dc22b1a108781b3135f9d664aa532b8",
+              "sha256": "2dc37ecb1974becdcebdbf7561e7c15a07dbbf20ba21ba16c3593b3038b3afbd"
+            },
+            "upload_time_iso_8601": "2026-09-07T16:06:23.439276Z",
+            "yanked": false
+          }
+        ]
+      },
+      "sdk_line": "v2",
+      "example_line": "v2_from_same_v2.2.0_tag",
+      "example_match_evidence": {
+        "README_high_level_client": "from mcp import Client",
+        "same_tag_streamable_sample": "examples/snippets/clients/streamable_basic.py",
+        "sample_imports": [
+          "from mcp import ClientSession",
+          "from mcp.client.streamable_http import streamable_http_client"
+        ],
+        "transport_stream_tuple_arity": 2,
+        "calls": [
+          "initialize",
+          "list_tools"
+        ],
+        "contract_test": "not_run_T07"
+      },
+      "included_in_runtime": false,
+      "approved_at": null
+    }
+  ],
+  "audit_at": "2026-10-02T12:38:10.629379+00:00",
+  "approved_for_production": false,
+  "audit_scope": "public source metadata and selected files only; no paid services, model downloads, package execution, or production approval",
+  "prepared_at": "2026-10-02T12:43:29.277475+00:00",
+  "scope": "T00 selected public-source evidence; no production approval"
+}
