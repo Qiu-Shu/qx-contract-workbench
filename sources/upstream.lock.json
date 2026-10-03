@@ -497,19 +497,20 @@
       ],
       "license_expression": "MIT",
       "license_text_sha256": "0d48994da4d1321e395b5e64a724ed4dec63fb96b88ac5b88fc014771e690821",
-      "dependency_review": "direct_metadata_reviewed_transitive_lock_pending",
+      "dependency_review": "development_wheel_closure_reviewed_native_approval_pending",
       "model_license_review": "not_applicable",
       "verified_at": "2026-10-02T12:36:29.600000+00:00",
       "approved_by": null,
       "approved_scope": [],
       "known_limits": [
         "selected_file_audit_only",
-        "no_runtime_or_legal_effectiveness_test",
+        "synthetic_native_parsing_tested_no_legal_effectiveness_test",
         "no_production_approval",
         "no_OCR_native_text_only",
-        "per_page_quality_and_unsupported_objects_required"
+        "per_page_quality_and_unsupported_objects_required",
+        "no_complete_visual_equivalence_or_pdf_decode_process_sandbox"
       ],
-      "adoption": "runtime_candidate",
+      "adoption": "runtime_dependency",
       "evidence_urls": [
         "https://api.github.com/repos/jsvine/pdfplumber/commits?per_page=1",
         "https://api.github.com/repos/jsvine/pdfplumber/git/trees/4c64b92d5caccd71c645e98e0fabb0c4dba7ff45?recursive=1",
@@ -559,8 +560,22 @@
           }
         ]
       },
-      "included_in_runtime": false,
-      "approved_at": null
+      "included_in_runtime": true,
+      "approved_at": null,
+      "adoption_scope": "development_synthetic_pdf_parsing_only",
+      "dependency_evidence": "sources/runtime-dependencies.lock.json",
+      "selected_wheel_source_matches": [
+        {
+          "path": "pdfplumber/page.py",
+          "sha256": "ef423b47ed5a2a467275277f4a672ac2a1b8a1af103aa424248f85d5a0be4bba",
+          "matches_fixed_commit": true
+        },
+        {
+          "path": "pdfplumber/__init__.py",
+          "sha256": "dfee537d1da4de9b6f5dabf5bee84d5278d74fec787ef6bdd6179cd2b349817c",
+          "matches_fixed_commit": true
+        }
+      ]
     },
     {
       "id": "G07",
