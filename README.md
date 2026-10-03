@@ -1,6 +1,6 @@
 # 群兴合同审查工作台
 
-当前已完成 T00–T10 的来源、统一类型、权限、解析、事实、规则批准门、四类虚构合同闭环、本机 MCP、持久预算、草案修订及中文页面；Scrapling 已安装。T11 的固定评测与40份工程材料已实际运行，能力缺口和法律 gold 保留阻断。T12 受控备份恢复与发布门已实测。T13 守卫和受限内部交付已完成已执行的工程范围，当前完整回归815项/零警告；真实联调及生产仍阻断。**仅限虚构工程演示；不能上传真实材料、签发正式意见或作为生产软件使用。**
+当前已完成 T00–T10 的来源、统一类型、权限、解析、事实、规则批准门、四类虚构合同闭环、本机 MCP、持久预算、草案修订及中文页面；Scrapling 已安装。T11 的固定评测与40份工程材料已实际运行，能力缺口和法律 gold 保留阻断。T12 受控备份恢复与发布门已实测。T13 守卫和受限内部交付已完成已执行的工程范围；新增 DeepSeek 首批纯离线契约，当前完整回归936项/零警告。真实联调及生产仍阻断。**仅限虚构工程演示；不能上传真实材料、签发正式意见或作为生产软件使用。**
 
 现有目录最初为空 Git 仓库；用户确认无其他代码。本次为增量初始化，没有整仓替换、删除用户文件或复制A包运行文本。
 
@@ -22,6 +22,7 @@
 - [T10作者接口与任务实测](docs/testing/T10.md)、[模板依赖实际采用](docs/reuse/T10-dependencies.md)与[HTTP/任务接入决策](docs/adr/0005-http-jobs-and-synthetic-ui.md)
 - [T11固定评测与实际范围](docs/testing/T11.md)、[T12安全恢复实测](docs/testing/T12.md)、[安全说明](docs/SECURITY_RUNBOOK.md)与[运维说明](docs/OPERATIONS_RUNBOOK.md)
 - [Scrapling安装与使用](docs/tools/SCRAPLING.md)
+- [DeepSeek离线适配](docs/testing/DEEPSEEK-offline.md)、[根回归与实际范围](docs/testing/DEEPSEEK-parent-checks.md)、[协议独审](docs/testing/DEEPSEEK-offline-review.md)与[边界独审](docs/testing/DEEPSEEK-boundary-review.md)
 
 在当前 Windows 项目目录运行：
 
@@ -108,4 +109,16 @@ T12 的恢复只到新目录，旧会话撤销、queued/running 隔离、unknown
 
 T13只添加真实查询前的拒绝门和上线判断，不启用真实请求。`qcc-smoke --approval-id <内部UUID> --plan-id <内部UUID>` 当前缺现实后端认证/批准信任根时非零退出，0供应商请求；没有force、密钥或mock升级选项。任意文件GO/PASS和六类refs非空均不能授权上线；当前现实批准解析缺失，维持BLOCKED。实际费用硬事件由后端账本给NO_GO，其他现实验收未建立。
 
-受限交付和解除条件见[真实联调准备](docs/LIVE_READINESS.md)、[影子记录与测量方法](docs/SHADOW_RUN_REPORT.md)、[上线决定](docs/GO_NO_GO.md)及[T13实际记录](docs/testing/T13.md)。当前源码实际84项评测仍为5能力PASS/36 NOT_RUN/16 NOT_IMPLEMENTED/7 NOT_SUPPORTED/20 BLOCKED，58 guard另列；40个新工程run实际39 PASS/1 NOT_SUPPORTED。真实live和影子均未执行，法律gold/指标、真实成本与律师分钟未知，不将工程mock/guard通过写成现实上线。
+受限交付和解除条件见[真实联调准备](docs/LIVE_READINESS.md)、[影子记录与测量方法](docs/SHADOW_RUN_REPORT.md)、[上线决定](docs/GO_NO_GO.md)及[T13实际记录](docs/testing/T13.md)。T13阶段实际84项评测为5能力PASS/36 NOT_RUN/16 NOT_IMPLEMENTED/7 NOT_SUPPORTED/20 BLOCKED，58 guard另列；40个新工程run实际39 PASS/1 NOT_SUPPORTED。DeepSeek本批未重跑该材料CLI，不把历史报告当新增完整能力通过。真实live和影子均未执行，法律gold/指标、真实成本与律师分钟未知，不将工程mock/guard通过写成现实上线。
+
+## DeepSeek 首批纯离线契约
+
+用户已批准仅完成接入与离线验证、真实调用暂不开始。`review/deepseek_codec.py`提供请求字典构造、人工JSON响应解析和显式合成USD计价三个纯函数；新增业务DTO仅在domain.py。返回固定`OFFLINE_ONLY / protocol_only`，未知费用为None，不生成ModelResponse、真实账单、批准或律师意见。现有页面/CLI仍使用mock且QCC关闭，不能把离线响应传入审查workflow。
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m pytest tests/unit/test_deepseek_codec.py -q
+```
+
+本批121正式目标、308关联回归、两独审138与25均实际通过，根全套936项与原生JUnit逐项相等、0警告。四份登记虚构DOCX的12组离线数据示例实际通过，response/token/rates均人工构造；不是供应商返回或12次法律审查。完整输入666项前后零漂移、314原始文件不变，无新SDK或密钥配置，真实供应商请求0。
+
+最终目标是[ChatGPT插件](docs/reuse/CHATGPT-plugin-target-map.md)，当前方案仅PLANNING_ONLY；对外工作台MCP、宿主安装、身份与文件桥、ChatGPT连接尚未实施。真实DeepSeek transport、持久模型费用账本、价格/数据政策/有限调用批准仍缺失或阻断。

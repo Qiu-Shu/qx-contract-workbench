@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import hashlib
 from datetime import date, datetime, timezone
-from decimal import Decimal
+from decimal import Decimal, DecimalException
 from enum import StrEnum
 from typing import Annotated, Literal, Mapping, Union
 from uuid import UUID
@@ -1129,6 +1129,76 @@ class ModelResponse(DomainModel):
     model: NonEmpty
     request_id: NonEmpty
     status: ProviderStatus
+
+
+def _bounded_synthetic_decimal(value: object) -> Decimal:
+    """Small exact offline numbers; no account-price or currency inference."""
+    if type(value) not in (str, int, Decimal) or len(str(value)) > 80:
+        raise ValueError('bounded exact synthetic Decimal required')
+    try:
+        parsed = Decimal(value)
+    except DecimalException as exc:
+        raise ValueError('valid synthetic Decimal required') from exc
+    if not parsed.is_finite():
+        raise ValueError('finite synthetic Decimal required')
+    parts = parsed.as_tuple()
+    if len(parts.digits) > 30 or not -18 <= parts.exponent <= 6 or not 0 <= parsed <= 1000000:
+        raise ValueError('synthetic Decimal outside offline bounds')
+    return parsed
+
+
+SyntheticDecimal = Annotated[Decimal, BeforeValidator(_bounded_synthetic_decimal)]
+DeepSeekModelId = Literal['deepseek-flash', 'deepseek-v4-pro']
+DeepSeekOperation = Literal['extract_facts', 'review_chunk', 'review_cross_clauses']
+
+
+class DeepSeekOfflineUsage(DomainModel):
+    """Vendor-reported counts; unknown cost is never replaced by zero."""
+    prompt_tokens: Annotated[int, Field(strict=True, ge=0, le=4096)]
+    prompt_cache_hit_tokens: Annotated[int, Field(strict=True, ge=0, le=4096)]
+    prompt_cache_miss_tokens: Annotated[int, Field(strict=True, ge=0, le=4096)]
+    completion_tokens: Annotated[int, Field(strict=True, ge=0, le=1024)]
+    total_tokens: Annotated[int, Field(strict=True, ge=0, le=5120)]
+    cached_tokens: Annotated[int, Field(strict=True, ge=0, le=4096)] | None
+    reasoning_tokens: Annotated[int, Field(strict=True, ge=0, le=1024)] | None
+    cost: Credits | None
+    unit: Literal['USD'] = 'USD'
+    pricing_status: Literal['unknown', 'estimated_synthetic'] = 'unknown'
+
+    @model_validator(mode='after')
+    def consistent_offline_usage(self) -> DeepSeekOfflineUsage:
+        if self.prompt_tokens != self.prompt_cache_hit_tokens + self.prompt_cache_miss_tokens:
+            raise ValueError('prompt count must equal cache hit plus cache miss')
+        if self.total_tokens != self.prompt_tokens + self.completion_tokens:
+            raise ValueError('total count must equal prompt plus completion')
+        if self.cached_tokens is not None and self.cached_tokens != self.prompt_cache_hit_tokens:
+            raise ValueError('cached count must equal cache hit count')
+        if self.reasoning_tokens is not None and self.reasoning_tokens > self.completion_tokens:
+            raise ValueError('reasoning count exceeds completion count')
+        if (self.pricing_status == 'unknown') != (self.cost is None):
+            raise ValueError('cost and synthetic pricing status must agree')
+        return self
+
+
+class DeepSeekOfflineReply(DomainModel):
+    """Protocol parsing only: no legal validation, approval, or paid receipt."""
+    provider: Literal['deepseek'] = 'deepseek'
+    model: DeepSeekModelId
+    operation: DeepSeekOperation
+    request_id: Annotated[str, StringConstraints(min_length=1, max_length=256)]
+    payload: dict[str, JsonValue]
+    usage: DeepSeekOfflineUsage
+    status: Literal['OFFLINE_ONLY'] = 'OFFLINE_ONLY'
+    validation_scope: Literal['protocol_only'] = 'protocol_only'
+
+
+class DeepSeekSyntheticRates(DomainModel):
+    """Explicit invented USD-per-million prices for offline arithmetic only."""
+    input_hit_per_million: SyntheticDecimal
+    input_miss_per_million: SyntheticDecimal
+    output_per_million: SyntheticDecimal
+    unit: Literal['USD'] = 'USD'
+    pricing_status: Literal['synthetic'] = 'synthetic'
 
 
 class ProviderConfig(DomainModel):
