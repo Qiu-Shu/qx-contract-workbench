@@ -267,7 +267,7 @@
       ],
       "license_expression": "MIT",
       "license_text_sha256": "9b7d4477ab2bce70684d9efa4827c4777f36f669b14a3025d31fb73f9503b11d",
-      "dependency_review": "direct_metadata_reviewed_transitive_lock_pending",
+      "dependency_review": "not_applicable",
       "model_license_review": "not_applicable",
       "verified_at": "2026-10-02T12:32:14.620050+00:00",
       "approved_by": null,
@@ -279,9 +279,11 @@
         "table_textbox_image_nested_list_targeting_not_supported",
         "disable_upstream_Latin1_PDF_export",
         "upstream_normalized_text_matching_requires_unique_structural_anchor_adapter",
-        "PyPI_package_not_found_installation_route_requires_explicit_commit_build"
+        "PyPI_package_not_found_installation_route_requires_explicit_commit_build",
+        "T09_independent_exact_anchor_OOXML_ins_del_method_only",
+        "upstream_package_fuzzy_compare_and_Latin1_PDF_not_installed_or_executed"
       ],
-      "adoption": "runtime_candidate",
+      "adoption": "incorporated_method",
       "evidence_urls": [
         "https://api.github.com/repos/evolsb/legal-redline-tools/commits?per_page=1",
         "https://api.github.com/repos/evolsb/legal-redline-tools/git/trees/1dbc70ddfdf594fc4699c31b9077d15e74be56a0?recursive=1"
@@ -310,7 +312,7 @@
         }
       },
       "release_candidate": "v0.2.0",
-      "included_in_runtime": false,
+      "included_in_runtime": true,
       "approved_at": null
     },
     {
@@ -726,7 +728,7 @@
       ],
       "license_expression": "MIT",
       "license_text_sha256": "7652f271e46d0d533e9dc463f3b5fcbdcacf4d6a9c8d6b554d15efd0f37f6132",
-      "dependency_review": "direct_metadata_reviewed_transitive_lock_pending",
+      "dependency_review": "development_wheel_closure_reviewed_native_approval_pending",
       "model_license_review": "not_applicable",
       "verified_at": "2026-10-02T12:36:29.600000+00:00",
       "approved_by": null,
@@ -737,9 +739,11 @@
         "no_production_approval",
         "not_full_OOXML_coverage",
         "paragraph_list_excludes_revision_marks_and_tables_require_separate_traversal",
-        "native_revision_support_requires_separate_adapter"
+        "native_revision_support_requires_separate_adapter",
+        "T09_fixed_python_docx_1_2_0_development_only",
+        "lxml_components_and_native_production_approval_pending"
       ],
-      "adoption": "runtime_candidate",
+      "adoption": "runtime_dependency",
       "evidence_urls": [
         "https://api.github.com/repos/python-openxml/python-docx/commits?per_page=1",
         "https://api.github.com/repos/python-openxml/python-docx/git/trees/e45454602b53e8e572b179ccf1c91093ec9f4ed7?recursive=1",
@@ -789,7 +793,7 @@
           }
         ]
       },
-      "included_in_runtime": false,
+      "included_in_runtime": true,
       "approved_at": null
     },
     {

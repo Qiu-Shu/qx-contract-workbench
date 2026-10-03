@@ -14,7 +14,8 @@
 |T06|ENGINEERING_PASS；BLOCKED_RULE_APPROVAL / PRODUCTION_BLOCKED|80目标/511全套；独立77攻击探针；四份实际虚构DOCX CLI各18维、9JSON/SQLite、QCC0|规则未现实批准；mock不能正式签发；Word/PDF待T09；下一任务T07|
 |T07|ENGINEERING_PASS；BLOCKED_LIVE / PRODUCTION_BLOCKED|固定SDK实际本机MCP握手/发现/调用、批准绑定/实时漂移、安全raw；46目标/557全套、独立66攻击/17授权通过|51正式包/92许可/76边实际核对；账户/官方schema/真实价格/许可缺失，真实外发0；下一任务T08|
 |T08|ENGINEERING_PASS；BLOCKED_LIVE / PRODUCTION_BLOCKED|持久预留/发送标记/短事务Factory、原子预算/幂等/未知恢复/账单对账；52目标/609全套、独立58探针/78关联回归通过|真实账户/价格/许可/律师批准缺失；未知扣费不自动重试；下一任务T09|
-|T09–T10|NOT_STARTED|只读预检/候选不代表接口已实现|原生修订和UI未实现，候选未安装|
+|T09|ENGINEERING_PASS；BLOCKED_LIVE / PRODUCTION_BLOCKED|37目标/646全套、独立61探针/136关联回归；三类新报告/内部精确原生修订；Word六轮十页与接受拒绝全文实际通过|复杂及对外原件包修改人工；QCC报告消费者/全合同补丁后语义重审未实现；真实批准与许可缺失；下一T10|
+|T10|NOT_STARTED|只读预检/候选不代表接口已实现|完整UI未实现，Jinja候选未安装|
 |T11–T12|NOT_STARTED|已核对规格含84个唯一编号，不是84项测试通过|实际回归映射、律师金标准、部署/恢复未实现|
 |T13|BLOCKED_LIVE / NOT_STARTED|没有真实联调或上线决定|账户/许可/规则批准/金标准/模型数据政策/环境与预算缺失|
 
@@ -49,7 +50,7 @@
 - source锁的read_verified表示选取文件与许可证据可读，不能替代依赖、实际效果或律师批准。G11根CC许可不能替代目标AGPL，GNU通用许可全文也不能替代授权。
 - 许可指纹只能防已知完整副本和已登记片段进入常见运行目录；不能认定任意改写、短片段或未知来源已获许可。未来新增运行目录必须纳入扫描。
 - T01的Pydantic类型校验不能替代实际权限、来源批准、费用或签发；标准JSON往返保持事实Decimal/日期类型。全部默认参数来自同一JSON，并生成实测配置hash。
-- 未实现：完整审查API/UI、真实模型与法律规则审查、Word报告与原生修订、OCR、真实QCC联调、法律样本测评和生产部署。T06四类虚构/mock闭环、T07固定SDK本机模拟及T08模拟预算网关已实现，不等于上述真实能力。
+- 未实现：完整审查API/UI、真实模型与法律规则审查、OCR、QCC收据报告消费者与真实联调、补丁后全合同法律/数值语义重审、法律样本测评和生产部署。T06四类虚构/mock闭环、T07固定SDK本机模拟、T08模拟预算网关及T09受限草案/原生修订已实现；工程通过不等于真实能力或法律验收。
 
 ## T01实际执行
 
@@ -74,7 +75,7 @@ T02最终父节点实际`pytest -q --tb=short --junitxml=docs/testing/T02-result
 
 本阶段已本地提交：`ef8b5ac`（T00与Scrapling工具），`a0d7ec4`（Windows检出保留证据字节）；提交作者为Codex，不改全局Git身份，不推送或对外发布。第三方原始证据中的尾随空格保持原样，不清理而破坏来源hash。
 
-后续本地阶段提交：`ca230d6`（T01）、`f30ea73`（T02）、`15c7a6a`（T03）、`2c980b3`（T04）、`8ffa6b1`（T05）、`032d5d7`（T06）、`fe7c988`（固定虚构provenance提交字节）及`687c571`（T07）。各阶段保留自己的实际测试分母；未推送。T08验收通过，沿同一分支继续T09。
+后续本地阶段提交：`ca230d6`（T01）、`f30ea73`（T02）、`15c7a6a`（T03）、`2c980b3`（T04）、`8ffa6b1`（T05）、`032d5d7`（T06）、`fe7c988`（固定虚构provenance提交字节）、`687c571`（T07）与`e48e83c`（T08）。各阶段保留自己的实际测试分母；未推送。T09验收通过，沿同一分支继续T10。
 
 ## T03 实际执行
 
@@ -122,4 +123,12 @@ T07/T08细化和T08/T09只读预检仅PLANNING_ONLY。Word安装/COM注册已读
 
 父节点最终pytest/JUnit退出0：557 passed、零警告、94.57秒。独立46目标/66攻击探针/17授权回归均退出0、零警告，81冻结文件bytes/SHA匹配。defaults/schema/pipcheck/13来源development/diff检查退出0；release实际G06/G10/G13的6阻断退出1。详细实际命令、辅助错误和边界见T07.md、T07-review.md、T07-parent-checks.md及T07-dependency-review.md。
 
-真实QCC/费用/模型/批准未启用。安全raw与未知状态不宣称全量核查/无风险；本机协议JSON/stateless子集不代表官方QCC兼容。caller rollback模拟收据仍可撤销，付费预留及发送标记持久性将在T08以显式Database短事务解决。未来T09/T10候选未安装、Word未启动、UI未实现；沿顺序继续T08。
+真实QCC/费用/模型/批准未启用。安全raw与未知状态不宣称全量核查/无风险；本机协议JSON/stateless子集不代表官方QCC兼容。caller rollback模拟收据仍可撤销，付费预留及发送标记持久性将在T08以显式Database短事务解决。此为T07当时记录：未来T09/T10候选未安装、Word未启动、UI未实现；沿顺序继续T08。
+
+## T09 实际执行
+
+37目标、646全套（173.18秒）、独立37目标/61探针/136关联回归、作者192关联回归全部exit0、0警告。75冻结源/测试/证据hash初终一致；53正式包/95主许可/78边、3423安装RECORD及36依赖冻结实际核验，环境69仅新增python-docx，lxml已原安装。
+
+三类新中文报告、内部精确跨run修订、不可变批准/制品/current读取、savepoint与文件清理、hash-only审计完成；双当前文件的anchor/version归属真实RED修复。Word实际六轮/十页检查，原生Accept/Reject各完整五段exact，重复段与原件不变。详情见T09作者/独审/Word/父节点记录。
+
+复杂与对外原件包自动修订保留人工表；QCC收据报告消费者/完整补丁后法律与数值语义重审未实现。mock正式签发实际BLOCKED_LIVE；发布门exit1/9实际阻断。法律金标准、真实试点和生产仍独立阻断。沿同分支继续T10，Jinja/MarkupSafe候选仅静态核查，不能整份覆盖当前正式53记录。

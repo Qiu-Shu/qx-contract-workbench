@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "scope": "T07 installed MCP SDK/application/test closure; Windows CPython3.12 development only; 51 package metadata verified; production unapproved",
+  "scope": "T09 fixed development application/test closure; BUSINESS_TEST_PENDING; no production approval",
   "target": {
     "implementation": "CPython",
     "python_version": "3.12",
@@ -29,7 +29,8 @@
       "pwdlib",
       "pdfplumber",
       "defusedxml",
-      "mcp"
+      "mcp",
+      "python-docx"
     ],
     "test": [
       "pytest",
@@ -16585,6 +16586,720 @@
       "groups": [
         "base"
       ]
+    },
+    {
+      "name": "python-docx",
+      "version": "1.2.0",
+      "artifact_filename": "python_docx-1.2.0-py3-none-any.whl",
+      "artifact_url": "https://files.pythonhosted.org/packages/d0/00/1e03a4989fa5795da308cd774f05b704ace555a70f9bf9d3be057b680bcf/python_docx-1.2.0-py3-none-any.whl",
+      "artifact_sha256": "3fd478f3250fbbbfd3b94fe1e985955737c145627498896a8a6bf81f4baf66c7",
+      "artifact_bytes": 252987,
+      "artifact_hash_evidence": "official_target_wheel_bytes_downloaded_and_measured",
+      "artifact_origin": "https://files.pythonhosted.org/packages/d0/00/1e03a4989fa5795da308cd774f05b704ace555a70f9bf9d3be057b680bcf/python_docx-1.2.0-py3-none-any.whl",
+      "artifact_tags": [
+        "py3-none-any"
+      ],
+      "registry_url": "https://pypi.org/pypi/python-docx/1.2.0/json",
+      "registry_sha256": "7dc6149fa5a8f34d922a1bfe6730be72bbb889bd879cba60776dccd597fac775",
+      "registry_cache": "sources/evidence/runtime/T09/registry/python-docx-1.2.0.json",
+      "wheel_cache": ".audit-local/t09-dependencies/wheelhouse/python_docx-1.2.0-py3-none-any.whl",
+      "metadata_sha256": "4c4cc819ebe6de4aca44daccfd3f9173e6f46d9ed900ad1c388ff9efb7b6b1d7",
+      "metadata_cache": "sources/evidence/runtime/T09/metadata/python-docx-1.2.0.METADATA",
+      "requires_python": ">=3.9",
+      "license_expression": "unknown",
+      "declared_license": "MIT",
+      "declared_license_classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ],
+      "license_evidence": [
+        {
+          "path": "python_docx-1.2.0.dist-info/licenses/LICENSE",
+          "local_target": "sources/third-party-notices/runtime/python-docx-1.2.0/python_docx-1.2.0.dist-info/licenses/LICENSE",
+          "sha256": "7652f271e46d0d533e9dc463f3b5fcbdcacf4d6a9c8d6b554d15efd0f37f6132",
+          "bytes": 1104,
+          "artifact_url": "https://files.pythonhosted.org/packages/d0/00/1e03a4989fa5795da308cd774f05b704ace555a70f9bf9d3be057b680bcf/python_docx-1.2.0-py3-none-any.whl"
+        }
+      ],
+      "license_review": "read_evidence_only_not_approved",
+      "transitive_requires": [
+        "lxml>=3.1.0",
+        "typing_extensions>=4.9.0"
+      ],
+      "resolved_dependencies": [
+        {
+          "name": "lxml",
+          "version": "6.1.3",
+          "requirement": "lxml>=3.1.0",
+          "extras": []
+        },
+        {
+          "name": "typing-extensions",
+          "version": "4.16.0",
+          "requirement": "typing_extensions>=4.9.0",
+          "extras": []
+        }
+      ],
+      "excluded_requirements": [],
+      "enabled_extras": [],
+      "groups": [
+        "base"
+      ],
+      "scope": "development_runtime_only",
+      "review_status": "read_verified_candidate",
+      "approved_by": null,
+      "approved_at": null,
+      "approved_scope": [],
+      "installed_metadata_verified": true,
+      "installed_metadata_status": "T09_actual_project_installed_metadata_byte_verified",
+      "registry_vulnerabilities": [],
+      "bundled_code_license_declarations": [],
+      "native_member_evidence": {
+        "native_members": [],
+        "startup_or_postinstall_members": [],
+        "classification": "archive_bytes_only",
+        "executed_by_auditor": false
+      },
+      "known_limits": [
+        "no_production_approval",
+        "no_native_or_Word_execution",
+        "not_entire_source_or_build_reproducibility_review"
+      ],
+      "installed_version": "1.2.0"
+    },
+    {
+      "name": "lxml",
+      "version": "6.1.3",
+      "artifact_filename": "lxml-6.1.3-cp312-cp312-win_amd64.whl",
+      "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl",
+      "artifact_sha256": "3e9a00d1c2c30936f7add097c41afc5da6556c580909104aafd382cac92a855c",
+      "artifact_bytes": 4005999,
+      "artifact_hash_evidence": "preexisting_project_cache_rehashed_against_official_version_metadata",
+      "artifact_origin": ".audit-local/scrapling-wheelhouse/lxml-6.1.3-cp312-cp312-win_amd64.whl",
+      "artifact_tags": [
+        "cp312-cp312-win_amd64"
+      ],
+      "registry_url": "https://pypi.org/pypi/lxml/6.1.3/json",
+      "registry_sha256": "1f03dafdc0bd6c308a1e69aff7caef27f6d7c586eadd34e02229703a8541fe61",
+      "registry_cache": "sources/evidence/runtime/T09/registry/lxml-6.1.3.json",
+      "wheel_cache": ".audit-local/t09-dependencies/wheelhouse/lxml-6.1.3-cp312-cp312-win_amd64.whl",
+      "metadata_sha256": "4038f4e4decac1c15eb5fd883abf1370f2df9b176b53bd172dd709d4542e2a48",
+      "metadata_cache": "sources/evidence/runtime/T09/metadata/lxml-6.1.3.METADATA",
+      "requires_python": ">=3.8",
+      "license_expression": "unknown",
+      "declared_license": "BSD-3-Clause",
+      "declared_license_classifiers": [],
+      "license_evidence": [
+        {
+          "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+          "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+          "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+          "bytes": 1538,
+          "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+        },
+        {
+          "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+          "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+          "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+          "bytes": 6348,
+          "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+        }
+      ],
+      "license_review": "read_evidence_only_not_approved",
+      "transitive_requires": [
+        "cssselect>=0.7; extra == \"cssselect\"",
+        "html5lib; extra == \"html5\"",
+        "BeautifulSoup4; extra == \"htmlsoup\"",
+        "lxml_html_clean; extra == \"html-clean\""
+      ],
+      "resolved_dependencies": [],
+      "excluded_requirements": [
+        "cssselect>=0.7; extra == \"cssselect\"",
+        "html5lib; extra == \"html5\"",
+        "BeautifulSoup4; extra == \"htmlsoup\"",
+        "lxml_html_clean; extra == \"html-clean\""
+      ],
+      "enabled_extras": [],
+      "groups": [
+        "base"
+      ],
+      "scope": "development_runtime_only",
+      "review_status": "read_verified_candidate",
+      "approved_by": null,
+      "approved_at": null,
+      "approved_scope": [],
+      "installed_metadata_verified": true,
+      "installed_metadata_status": "T09_actual_project_installed_metadata_byte_verified",
+      "registry_vulnerabilities": [],
+      "bundled_code_license_declarations": [
+        {
+          "name": "libxml2",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "MIT full grant in LICENSES.txt; per-source copyright exceptions remain",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [
+            {
+              "path": "lxml/includes/libxml/xmlversion.h",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/includes/libxml/xmlversion.h",
+              "sha256": "0d8266c772dedb12e43e3f5d4607fa14053e2f4f3d26f8a72a2d2cdf3379f664",
+              "bytes": 9833,
+              "scope": "complete wheel member data, never imported/executed"
+            }
+          ],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        },
+        {
+          "name": "libxslt",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "MIT full grant in LICENSES.txt",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [
+            {
+              "path": "lxml/includes/libxslt/xsltconfig.h",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/includes/libxslt/xsltconfig.h",
+              "sha256": "2b9b220fc3c4f7b0923f8982725641094bfbb9ffee54284dced9283d5c405e71",
+              "bytes": 3060,
+              "scope": "complete wheel member data, never imported/executed"
+            }
+          ],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        },
+        {
+          "name": "libexslt",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "MIT full grant in LICENSES.txt",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        },
+        {
+          "name": "zlib",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "zlib-license declaration/link; full component/source notice not separately verified",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        },
+        {
+          "name": "iconv",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "LGPL 2.1 declaration/link; exact grant only/or-later, source/build/linkage and obligations not verified",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        },
+        {
+          "name": "ElementTree/cElementTree",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "derived code declaration; referenced original text not separately present in wheel notices",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        },
+        {
+          "name": "CPython xml.etree/difflib",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "PSF v2 declaration/link; exact source version not verified",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        },
+        {
+          "name": "isoschematron ISO RNG",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "inline resource copyright/grant saved whole; usage/distribution scope not approved",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [
+            {
+              "path": "lxml/isoschematron/resources/rng/iso-schematron.rng",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/rng/iso-schematron.rng",
+              "sha256": "702338aa97ee4d8015b6e923c65a1b3cc949f2767e6aeec380e352da0e2b60ee",
+              "bytes": 19046,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/RNG2Schtrn.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/RNG2Schtrn.xsl",
+              "sha256": "832f84eb1476a77e522bdc1715386b68f24423d35da084cd1dde319aacbba316",
+              "bytes": 3247,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/XSD2Schtrn.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/XSD2Schtrn.xsl",
+              "sha256": "430791ac820cfb315c820f7c19703609a59f21b8151345ca11e6127efbfaec0d",
+              "bytes": 4563,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_abstract_expand.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_abstract_expand.xsl",
+              "sha256": "492519900916845606fd8347bd6f5453a5fcb6630e1f5bdda519b3aaed25e103",
+              "bytes": 12015,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_dsdl_include.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_dsdl_include.xsl",
+              "sha256": "659f9def6af14250027ebb381266836316916f177480f6be0cf2d195557a4118",
+              "bytes": 41116,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_message.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_message.xsl",
+              "sha256": "3506a5e33dc4b99ff9415a0c15b26a99ad922a0e3e8739bf0dbdbcdfed25d245",
+              "bytes": 2069,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_skeleton_for_xslt1.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_skeleton_for_xslt1.xsl",
+              "sha256": "568d45e7bea875191d2c19ae1045ab2dae4b17748c4d7f41e841069f151bbfff",
+              "bytes": 73560,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_svrl_for_xslt1.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_svrl_for_xslt1.xsl",
+              "sha256": "508ef11f1d2578d5d2f41694e9cc90e021de7e5b9f2a6004fb38ceae286e1fe1",
+              "bytes": 20970,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/readme.txt",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/readme.txt",
+              "sha256": "3862e216cc2e2c9116e443d828e7a86aeb8224512d55aea3cb3044d4e70923df",
+              "bytes": 3310,
+              "scope": "complete wheel member data, never imported/executed"
+            }
+          ],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        },
+        {
+          "name": "isoschematron skeleton XSLT",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "inline XSL resources saved whole; exact component version/source grant not independently reviewed",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [
+            {
+              "path": "lxml/isoschematron/resources/rng/iso-schematron.rng",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/rng/iso-schematron.rng",
+              "sha256": "702338aa97ee4d8015b6e923c65a1b3cc949f2767e6aeec380e352da0e2b60ee",
+              "bytes": 19046,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/RNG2Schtrn.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/RNG2Schtrn.xsl",
+              "sha256": "832f84eb1476a77e522bdc1715386b68f24423d35da084cd1dde319aacbba316",
+              "bytes": 3247,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/XSD2Schtrn.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/XSD2Schtrn.xsl",
+              "sha256": "430791ac820cfb315c820f7c19703609a59f21b8151345ca11e6127efbfaec0d",
+              "bytes": 4563,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_abstract_expand.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_abstract_expand.xsl",
+              "sha256": "492519900916845606fd8347bd6f5453a5fcb6630e1f5bdda519b3aaed25e103",
+              "bytes": 12015,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_dsdl_include.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_dsdl_include.xsl",
+              "sha256": "659f9def6af14250027ebb381266836316916f177480f6be0cf2d195557a4118",
+              "bytes": 41116,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_message.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_message.xsl",
+              "sha256": "3506a5e33dc4b99ff9415a0c15b26a99ad922a0e3e8739bf0dbdbcdfed25d245",
+              "bytes": 2069,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_skeleton_for_xslt1.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_skeleton_for_xslt1.xsl",
+              "sha256": "568d45e7bea875191d2c19ae1045ab2dae4b17748c4d7f41e841069f151bbfff",
+              "bytes": 73560,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_svrl_for_xslt1.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_svrl_for_xslt1.xsl",
+              "sha256": "508ef11f1d2578d5d2f41694e9cc90e021de7e5b9f2a6004fb38ceae286e1fe1",
+              "bytes": 20970,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/readme.txt",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/readme.txt",
+              "sha256": "3862e216cc2e2c9116e443d828e7a86aeb8224512d55aea3cb3044d4e70923df",
+              "bytes": 3310,
+              "scope": "complete wheel member data, never imported/executed"
+            }
+          ],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        },
+        {
+          "name": "RNG2Schtrn/XSD2Schtrn",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "LICENSES.txt explicitly describes these as unlicensed; actual resource bytes preserved, not enabled by candidate",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [
+            {
+              "path": "lxml/isoschematron/resources/rng/iso-schematron.rng",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/rng/iso-schematron.rng",
+              "sha256": "702338aa97ee4d8015b6e923c65a1b3cc949f2767e6aeec380e352da0e2b60ee",
+              "bytes": 19046,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/RNG2Schtrn.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/RNG2Schtrn.xsl",
+              "sha256": "832f84eb1476a77e522bdc1715386b68f24423d35da084cd1dde319aacbba316",
+              "bytes": 3247,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/XSD2Schtrn.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/XSD2Schtrn.xsl",
+              "sha256": "430791ac820cfb315c820f7c19703609a59f21b8151345ca11e6127efbfaec0d",
+              "bytes": 4563,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_abstract_expand.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_abstract_expand.xsl",
+              "sha256": "492519900916845606fd8347bd6f5453a5fcb6630e1f5bdda519b3aaed25e103",
+              "bytes": 12015,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_dsdl_include.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_dsdl_include.xsl",
+              "sha256": "659f9def6af14250027ebb381266836316916f177480f6be0cf2d195557a4118",
+              "bytes": 41116,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_message.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_message.xsl",
+              "sha256": "3506a5e33dc4b99ff9415a0c15b26a99ad922a0e3e8739bf0dbdbcdfed25d245",
+              "bytes": 2069,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_skeleton_for_xslt1.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_skeleton_for_xslt1.xsl",
+              "sha256": "568d45e7bea875191d2c19ae1045ab2dae4b17748c4d7f41e841069f151bbfff",
+              "bytes": 73560,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_svrl_for_xslt1.xsl",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_svrl_for_xslt1.xsl",
+              "sha256": "508ef11f1d2578d5d2f41694e9cc90e021de7e5b9f2a6004fb38ceae286e1fe1",
+              "bytes": 20970,
+              "scope": "complete wheel member data, never imported/executed"
+            },
+            {
+              "path": "lxml/isoschematron/resources/xsl/iso-schematron-xslt1/readme.txt",
+              "local_target": "sources/evidence/runtime/T09/embedded-evidence/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/readme.txt",
+              "sha256": "3862e216cc2e2c9116e443d828e7a86aeb8224512d55aea3cb3044d4e70923df",
+              "bytes": 3310,
+              "scope": "complete wheel member data, never imported/executed"
+            }
+          ],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        },
+        {
+          "name": "GPL test.py declaration",
+          "version": null,
+          "source_commit": null,
+          "license_expression": "unknown",
+          "declaration": "LICENSES.txt mentions GPL test runner; test.py not a wheel member, no adoption of this declared source-only test runner",
+          "license_evidence": [
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+              "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69",
+              "bytes": 1538,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            },
+            {
+              "path": "lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "local_target": "sources/third-party-notices/runtime/lxml-6.1.3/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+              "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398",
+              "bytes": 6348,
+              "artifact_url": "https://files.pythonhosted.org/packages/3a/5b/6ed903e4e6278a020c8a6f0dbbe78030d041840a6b4a64ea441a1e414077/lxml-6.1.3-cp312-cp312-win_amd64.whl"
+            }
+          ],
+          "embedded_evidence": [],
+          "scope": "candidate wheel content/declaration only; no use or distribution approval",
+          "approved_by": null,
+          "approved_at": null,
+          "approved_scope": []
+        }
+      ],
+      "native_member_evidence": {
+        "native_members": [
+          {
+            "path": "lxml/_elementpath.cp312-win_amd64.pyd",
+            "bytes": 147456,
+            "sha256": "02d38ab4cc4ac2ed7398828990dd7a0a9f70b0b9e06ad6aabdc485181beb9b5a"
+          },
+          {
+            "path": "lxml/builder.cp312-win_amd64.pyd",
+            "bytes": 88064,
+            "sha256": "d5b94837735c1c2876ac31ee21db2aed6dcdb8fb6908869c8ce2e03b92276ecc"
+          },
+          {
+            "path": "lxml/etree.cp312-win_amd64.pyd",
+            "bytes": 4035584,
+            "sha256": "b42ee5cb764ab38afb290d5aa62fa4c81ee0bdbe09b1bf06d906b02d9a56e170"
+          },
+          {
+            "path": "lxml/objectify.cp312-win_amd64.pyd",
+            "bytes": 1744896,
+            "sha256": "5b982fc392ca4873adf97eb6c22df0b76402be9bae680e441ce99ea9723ff790"
+          },
+          {
+            "path": "lxml/sax.cp312-win_amd64.pyd",
+            "bytes": 120320,
+            "sha256": "370ae45beb6468ac769299ec6fa7130d74f66d3bfbe5e0a082328b85bc04be69"
+          },
+          {
+            "path": "lxml/html/_difflib.cp312-win_amd64.pyd",
+            "bytes": 365056,
+            "sha256": "e97ae331afc8c9725469656b7438704cdeab0b70e3471a6e96d52c120f156e6d"
+          },
+          {
+            "path": "lxml/html/diff.cp312-win_amd64.pyd",
+            "bytes": 230912,
+            "sha256": "7e949b2749bcb20a3c8f53d8fd3b2d0466b92b74965dc75a94d3f69058ef6331"
+          }
+        ],
+        "startup_or_postinstall_members": [],
+        "classification": "archive_bytes_only",
+        "executed_by_auditor": false
+      },
+      "known_limits": [
+        "no_production_approval",
+        "no_native_or_Word_execution",
+        "not_entire_source_or_build_reproducibility_review",
+        "iconv_LGPL_full_grant_linkage_and_source_distribution_scope_pending",
+        "lxml_resources_explicit_unlicensed_declarations_not_runtime_approved",
+        "included_header_versions_not_proof_of_binary_linked_versions",
+        "CPython_ElementTree_zlib_notice_source_scope_pending"
+      ],
+      "installed_version": "6.1.3"
     }
   ],
   "build_packages": [
@@ -17441,7 +18156,8 @@
       "pwdlib[argon2]==0.3.1",
       "pdfplumber==0.11.10",
       "defusedxml==0.7.1",
-      "mcp==2.2.0"
+      "mcp==2.2.0",
+      "python-docx==1.2.0"
     ],
     "test": [
       "pytest==9.0.3",
@@ -17647,7 +18363,7 @@
     "resolution_package_count": 51,
     "installed_by_this_command": false
   },
-  "candidate_status": "candidate_history_preserved_not_current_application_status",
+  "candidate_status": "T09_development_installed_BUSINESS_TEST_PENDING",
   "T07_installed_verification": {
     "local_cache": ".audit-local/t07-dependencies/post-install-verification.json",
     "sha256": "b39effc650cb538d30bc0dc2e0a16522b21f8bd42255b55d1a34cde055deeb4e",
@@ -17658,5 +18374,29 @@
     "automatic_site_bootstrap_observed": true,
     "native_member_evidence_is_historical_static_audit_only": true,
     "whole_native_build_verified": false
+  },
+  "T09_candidate_history": {
+    "manifest_sha256": "cc1c244946be42b734a77b9588039c01c67225918fe93cffc0bdb9ef4b47474c",
+    "lock_sha256": "bf5ea9ec4157a9388a1afcb131002d80b71c952e94eab8d671425e2b4ea4dbb5",
+    "old_51_records_preserved_exactly": true,
+    "candidate_freeze_valid_at_original_audit_only": true,
+    "author_verify_refresh": "verify.py rerun refreshed verification checked_at; old seal not rewritten",
+    "packages": 53,
+    "main_notices": 95,
+    "active_edges": 78,
+    "lxml_native_components": 11,
+    "lxml_resource_members": 12,
+    "real_accounts": 0,
+    "production_approval": null
+  },
+  "T09_actual_installation": {
+    "local_cache": ".audit-local/t09-author-dependencies/installed-verification.json",
+    "sha256": "56f01f3e4b6c450e0b6d6df492b7b2bd2d71fbe750204806c13bc68fb6e3d68c",
+    "install_report_sha256": "585c2e6cfea9963c7c5f73dba8eff78a536340bea7090380b971efecb3be0a3f",
+    "pip_inspect_sha256": "c5372fa4cbeabdaae3f806e729cfbd1e6e371aee1e9dc3b0fd79509410232e39",
+    "pip_check_sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf",
+    "actual_installed_environment": 69,
+    "new_packages": 1,
+    "production_approval": null
   }
 }

@@ -1,6 +1,6 @@
 # 群兴合同审查工作台
 
-当前已完成 T00–T06 的来源、统一类型、权限、解析、事实、规则批准门及四类虚构合同审查闭环，以及 T07 固定 SDK 本机 MCP 模拟、T08 原子预算与持久幂等网关，并已安装 Scrapling 开发工具。**仅限虚构工程演示；不能上传真实材料、签发正式意见或作为生产软件使用。**
+当前已完成 T00–T06 的来源、统一类型、权限、解析、事实、规则批准门及四类虚构合同审查闭环，以及 T07 固定 SDK 本机 MCP 模拟、T08 持久预算网关、T09 三类草案与精确原生正文修订，并已安装 Scrapling 开发工具。**仅限虚构工程演示；不能上传真实材料、签发正式意见或作为生产软件使用。**
 
 现有目录最初为空 Git 仓库；用户确认无其他代码。本次为增量初始化，没有整仓替换、删除用户文件或复制A包运行文本。
 
@@ -18,6 +18,7 @@
 - [T06实际四案演示](docs/testing/T06-demo.md)、[父节点验收](docs/testing/T06-parent-checks.md)与[独立攻击审阅](docs/testing/T06-review.md)
 - [T07本机SDK实测](docs/testing/T07.md)、[父节点验收](docs/testing/T07-parent-checks.md)与[独立攻击审阅](docs/testing/T07-review.md)
 - [T08预算网关实测](docs/testing/T08.md)、[父节点验收](docs/testing/T08-parent-checks.md)与[独立账本审阅](docs/testing/T08-review.md)
+- [T09导出实测](docs/testing/T09.md)、[独立审阅](docs/testing/T09-review.md)、[实际Word十页验收](docs/testing/T09-word-visual.md)与[父节点验收](docs/testing/T09-parent-checks.md)
 - [Scrapling安装与使用](docs/tools/SCRAPLING.md)
 
 在当前 Windows 项目目录运行：
@@ -33,7 +34,7 @@
 .\.venv\Scripts\python.exe scripts/scrapling_smoke.py
 ```
 
-development模式核对实际文件和许可隔离，候选仍有生产警告。release目前必须返回非零：实际采用的G06 PDF解析组件、G10开发工具和G13 MCP SDK尚未完成生产使用范围/原生依赖/浏览器许可等审批，不能靠安装成功解除门禁。来源测试绿灯只表示门禁被测行为通过。
+development模式核对实际文件和许可隔离，保留13项生产批准警告。release目前必须返回非零：实际采用的G04修订方法、G06 PDF解析、G08 DOCX组件、G10开发工具和G13 MCP SDK的使用范围、依赖或生产审批存在9个实际阻断，不能靠安装成功解除门禁。
 
 Scrapling安装在本项目 `.venv`，Chromium在 `.local/scrapling/browsers`，后续公开网页任务可复用。四项本地虚构HTML验证通过；另实际读取六页公开Microsoft Word API文档，保留TLS校验与原CA字节，详见工具记录。未接入QCC或处理真实合同。
 
@@ -47,7 +48,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --no-build-isolation --no-deps -e .
 ```
 
-当前验证editable安装；应用/测试锁已扩展为51包，build1包单独锁，wheel hash及92份应用许可见[T07依赖审计](docs/reuse/T07-dependencies.md)。生产批准仍为空，独立wheel分发和部署未验收。Scrapling可按其专用锁另外安装，不要求审材料流程加载浏览器。
+当前验证editable安装；应用/测试锁已扩展为53包，build1包单独锁，53 wheel/95主许可/78依赖边见[T09依赖审计](docs/reuse/T09-dependencies.md)。生产批准仍为空，独立wheel分发和部署未验收。Scrapling可按其专用锁另外安装，不要求审材料流程加载浏览器。
 
 T02实际全套200项通过，包含42个新权限/事务用例；独立攻击审阅已关闭事务清理与缓存状态缺陷。HTTP测试保留1条上游TestClient/httpx弃用警告。基础服务用法见T02报告；正式签发仍阻断。
 
@@ -69,4 +70,6 @@ T07全套557项通过、零警告；独立46目标/66攻击探针/17授权回归
 
 T08全套609项通过、零警告；独立52目标/58探针/78关联回归通过。预留、发送标记与收据采用显式Database短事务；网络等待期间无持写Session。超时或未知扣费保持预算预留与次数，不自动重试；对账追加新收据，不伪造成功送达。三组独立缺陷均已复验关闭。
 
-下一任务T09：原生修订、三类草案报告和实际Word视觉验证。法律规则、真实账户、数据政策和上线批准分别登记。T09/T10依赖候选未安装，原生修订与完整UI尚未实现。
+T09全套646项通过、零警告；独立37目标/61探针/136关联回归通过。内部、客户、合同对方三类新报告及内部精确正文原生修订，实际Word六轮/十页检查通过；接受、拒绝各五段全文精确核对，同句未误改，原件不变。复杂对象及对外原件包修订保留人工项；mock正式签发仍BLOCKED_LIVE。
+
+下一任务T10：中文律师页面、14接口与持久任务。Jinja/MarkupSafe仅审计候选，尚未安装，UI尚未实现。QCC收据报告消费者、补丁后完整法律/数值语义重审、真实法律规则、律师金标准、账号/数据政策/上线批准仍分别未实现或阻断。
