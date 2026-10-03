@@ -1388,7 +1388,7 @@
       ],
       "license_expression": "MIT",
       "license_text_sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d",
-      "dependency_review": "direct_metadata_reviewed_transitive_lock_pending",
+      "dependency_review": "development_closure_hashes_and_license_evidence_verified_production_scope_pending",
       "model_license_review": "not_applicable",
       "verified_at": "2026-10-02T12:36:29.600000+00:00",
       "approved_by": null,
@@ -1401,9 +1401,10 @@
         "protocol_handshake_and_tool_schema_mock_contract_test_required_T07",
         "opentelemetry_dependency_no_exporter_or_real_data_approved",
         "v2_ClientSession_supported_but_use_same_tag_API_two_stream_tuple_and_snake_case",
-        "v1_streamablehttp_client_alias_three_item_tuple_and_camelCase_examples_not_compatible"
+        "v1_streamablehttp_client_alias_three_item_tuple_and_camelCase_examples_not_compatible",
+        "T07_51_package_development_hash_lock_92_notice_evidence_pywin32_LGPL_usage_and_production_approval_pending"
       ],
-      "adoption": "runtime_candidate",
+      "adoption": "runtime_dependency",
       "evidence_urls": [
         "https://api.github.com/repos/modelcontextprotocol/python-sdk/commits?per_page=1",
         "https://api.github.com/repos/modelcontextprotocol/python-sdk/git/trees/08095791f0c8b8e6a0e8a137ca5ab4a511259ec7?recursive=1",
@@ -1531,7 +1532,7 @@
         ],
         "contract_test": "not_run_T07"
       },
-      "included_in_runtime": false,
+      "included_in_runtime": true,
       "approved_at": null
     }
   ],

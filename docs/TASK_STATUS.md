@@ -12,7 +12,9 @@
 |T04|ENGINEERING_PASS；PRODUCTION_BLOCKED|事实候选/原件信任核验、完整版本确认、Decimal AST/单位/真步长计算、主体明确选择；76目标/345全套 passed|独立76目标/31探针/181回归通过；来源污染P2闭合；模型/外部收据/正式签发仍未支持；下一任务T05|
 |T05|ENGINEERING_PASS；BLOCKED_RULE_APPROVAL / PRODUCTION_BLOCKED|14草案/9pending法源索引、来源证据/负责人批准门、时际/例外/版本冲突与客户政策隔离；86目标/431全套passed|独立86目标/45探针/124核心回归通过；实际法源及律师规则批准缺失，草案不能参与法律结论；下一任务T06|
 |T06|ENGINEERING_PASS；BLOCKED_RULE_APPROVAL / PRODUCTION_BLOCKED|80目标/511全套；独立77攻击探针；四份实际虚构DOCX CLI各18维、9JSON/SQLite、QCC0|规则未现实批准；mock不能正式签发；Word/PDF待T09；下一任务T07|
-|T07–T10|NOT_STARTED|候选来源可读，不代表接口已实现|真实外查缺账户、工具、价格、许可；修订和UI未实现|
+|T07|ENGINEERING_PASS；BLOCKED_LIVE / PRODUCTION_BLOCKED|固定SDK实际本机MCP握手/发现/调用、批准绑定/实时漂移、安全raw；46目标/557全套、独立66攻击/17授权通过|51正式包/92许可/76边实际核对；账户/官方schema/真实价格/许可缺失，真实外发0；下一任务T08|
+|T08|READY_TO_IMPLEMENT|T07接口/短事务交接已核对，预算实现尚未运行|原子预算/幂等/未知恢复待实施|
+|T09–T10|NOT_STARTED|只读预检/候选不代表接口已实现|原生修订和UI未实现，候选未安装|
 |T11–T12|NOT_STARTED|已核对规格含84个唯一编号，不是84项测试通过|实际回归映射、律师金标准、部署/恢复未实现|
 |T13|BLOCKED_LIVE / NOT_STARTED|没有真实联调或上线决定|账户/许可/规则批准/金标准/模型数据政策/环境与预算缺失|
 
@@ -47,7 +49,7 @@
 - source锁的read_verified表示选取文件与许可证据可读，不能替代依赖、实际效果或律师批准。G11根CC许可不能替代目标AGPL，GNU通用许可全文也不能替代授权。
 - 许可指纹只能防已知完整副本和已登记片段进入常见运行目录；不能认定任意改写、短片段或未知来源已获许可。未来新增运行目录必须纳入扫描。
 - T01的Pydantic类型校验不能替代实际权限、来源批准、费用或签发；标准JSON往返保持事实Decimal/日期类型。全部默认参数来自同一JSON，并生成实测配置hash。
-- 未实现：审查API/UI、真实模型与法律规则的审查、预算网关、Word报告与原生修订、OCR、真实MCP/QCC联调、法律样本测评和生产部署。T06四类虚构/mock闭环与完整18维技术结果已实现，不等于上述真实能力。
+- 未实现：审查API/UI、真实模型与法律规则的审查、预算网关、Word报告与原生修订、OCR、真实QCC联调、法律样本测评和生产部署。T06四类虚构/mock闭环与完整18维技术结果、T07固定SDK本机模拟已实现，不等于上述真实能力。
 
 ## T01实际执行
 
@@ -72,7 +74,7 @@ T02最终父节点实际`pytest -q --tb=short --junitxml=docs/testing/T02-result
 
 本阶段已本地提交：`ef8b5ac`（T00与Scrapling工具），`a0d7ec4`（Windows检出保留证据字节）；提交作者为Codex，不改全局Git身份，不推送或对外发布。第三方原始证据中的尾随空格保持原样，不清理而破坏来源hash。
 
-后续本地阶段提交：`ca230d6`（T01）、`f30ea73`（T02）、`15c7a6a`（T03）、`2c980b3`（T04）、`8ffa6b1`（T05）。各阶段保留自己的实际测试分母；未推送。T06验收通过，沿同一分支继续T07。
+后续本地阶段提交：`ca230d6`（T01）、`f30ea73`（T02）、`15c7a6a`（T03）、`2c980b3`（T04）、`8ffa6b1`（T05）、`032d5d7`（T06）及`fe7c988`（固定虚构provenance提交字节）。各阶段保留自己的实际测试分母；未推送。T07验收通过，沿同一分支继续T08。
 
 ## T03 实际执行
 
@@ -111,3 +113,13 @@ T07/T08细化和T08/T09只读预检仅PLANNING_ONLY。Word安装/COM注册已读
 四类实际文件路径demo均退出0：sales/service/lease/nda各完整18维和validation ok，分别3/6/5/4意见、3/1/2/1候选事实，明确确认版本2；每份审查3次和确认前候选1次mock，全部16次raw hash核对，QCC合计0。9JSON、受保护SQLite和原件实际存在并核对，未生成Word/PDF，未上传真实材料。未批准法律维度保持材料不足，mock不能正式签发。
 
 接下来T07固定SDK与独立本地MCP模拟，随后T08预算和T09原生修订。T10–T13细化/只读预检只是PLANNING_ONLY；法律验收、真实账户/价格/数据政策、许可与部署继续阻断，不把规划或工程demo算生产完成。
+
+## T07 实际执行
+
+先审计并实际离线安装正式51包完整闭包，固定mcp/mcp-types2.2.0、httpx2/httpcore2 2.13.1。92许可、76依赖边和3120安装文件hash核对通过，环境68、旧53版本不变；所有production approval为空，build单独保留。15新安装真实执行，旧click已有；辅助35包no-op及候选dry-run未计51安装通过。
+
+首批11真实功能失败后增量实现，不重写T00–T06/唯一DTO。实际SDK调用独立本机127.0.0.1 MCPServer，完整schema/价格/绑定批准由后端核验，管理与本案使用权限分离。独立实证P2包括普通律师权限、partial/error状态与raw保留、外部dynamic schema引用、首次lazy logger秘密反射；全部真实失败/实现/复验关闭，没有已知未闭合P1/P2。
+
+父节点最终pytest/JUnit退出0：557 passed、零警告、94.57秒。独立46目标/66攻击探针/17授权回归均退出0、零警告，81冻结文件bytes/SHA匹配。defaults/schema/pipcheck/13来源development/diff检查退出0；release实际G06/G10/G13的6阻断退出1。详细实际命令、辅助错误和边界见T07.md、T07-review.md、T07-parent-checks.md及T07-dependency-review.md。
+
+真实QCC/费用/模型/批准未启用。安全raw与未知状态不宣称全量核查/无风险；本机协议JSON/stateless子集不代表官方QCC兼容。caller rollback模拟收据仍可撤销，付费预留及发送标记持久性将在T08以显式Database短事务解决。未来T09/T10候选未安装、Word未启动、UI未实现；沿顺序继续T08。

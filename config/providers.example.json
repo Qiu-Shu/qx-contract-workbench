@@ -1,0 +1,18 @@
+{
+  "status": "SYNTHETIC_DEVELOPMENT_ONLY",
+  "provider": {
+    "endpoint": "mock://synthetic-t07",
+    "transport": "mock",
+    "secret_ref": null,
+    "approved_by": null,
+    "approved_at": null
+  },
+  "requires_server_registration": true,
+  "live_qcc": "BLOCKED_LIVE",
+  "limitations": [
+    "Independent fictional schema; no official QCC compatibility claim",
+    "No real account, official price, region/data policy or production approval",
+    "T08 budget gateway required before any future real query",
+    "stdio and sse are unsupported; configuration cannot start processes"
+  ]
+}
