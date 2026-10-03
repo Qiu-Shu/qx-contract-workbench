@@ -22,6 +22,9 @@ def main(argv=None) -> int:
     demo.add_argument('--provider',default='mock')
     demo.add_argument('--qcc',default='off')
     demo.add_argument('--output-root',type=Path,default=None)
+    server=commands.add_parser('demo-server',help='显式启动本机独立虚构合同演示服务；不接收真实材料')
+    server.add_argument('--port',type=int,default=8765)
+    server.add_argument('--directory',type=Path,default=None,help='必须是本项目.local内全新目录')
     args = parser.parse_args(argv)
     try:
         if args.command == 'config-validate':
@@ -41,6 +44,10 @@ def main(argv=None) -> int:
                 args.output.parent.mkdir(parents=True, exist_ok=True)
                 args.output.write_text(json.dumps(generated, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
             print(json.dumps({'ok': True, 'schema_path': str(args.output), 'operation': 'check' if args.check else 'generate'}))
+        elif args.command=='demo-server':
+            from cn_contract.web.demo_server import serve
+            serve(port=args.port,directory=args.directory)
+            return 0
         elif args.command=='demo':
             from cn_contract.review.demo import run_demo
             from cn_contract.security import ServiceError

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "scope": "T09 fixed development application/test closure; BUSINESS_TEST_PENDING; no production approval",
+  "scope": "T10 development templates installed; BUSINESS_TEST_PENDING; production blocked",
   "target": {
     "implementation": "CPython",
     "python_version": "3.12",
@@ -30,7 +30,8 @@
       "pdfplumber",
       "defusedxml",
       "mcp",
-      "python-docx"
+      "python-docx",
+      "jinja2"
     ],
     "test": [
       "pytest",
@@ -17300,6 +17301,167 @@
         "CPython_ElementTree_zlib_notice_source_scope_pending"
       ],
       "installed_version": "6.1.3"
+    },
+    {
+      "name": "jinja2",
+      "version": "3.1.6",
+      "artifact_filename": "jinja2-3.1.6-py3-none-any.whl",
+      "artifact_sha256": "85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67",
+      "artifact_bytes": 134899,
+      "artifact_url": "https://files.pythonhosted.org/packages/62/a1/3d680cbfd5f4b8f15abc1d571870c5fc3e594bb582bc3b64ea099db13e56/jinja2-3.1.6-py3-none-any.whl",
+      "artifact_hash_evidence": "fixed official wheel actual bytes measured",
+      "wheel_cache": ".audit-local/t10-dependencies/wheelhouse/jinja2-3.1.6-py3-none-any.whl",
+      "artifact_tags": [
+        "py3-none-any"
+      ],
+      "registry_url": "https://pypi.org/pypi/jinja2/3.1.6/json",
+      "registry_cache": "sources/evidence/runtime/T10/registry/jinja2-3.1.6.json",
+      "registry_sha256": "1bc757d7065f3e67d3a49e72ebc731d0774055575732592eede9820c136329cc",
+      "metadata_cache": "sources/evidence/runtime/T10/metadata/jinja2-3.1.6.METADATA",
+      "metadata_sha256": "68c5548fb67c4132a13898d9b31ec50c6bea2abdd915d921f214355c3a6499c8",
+      "requires_python": ">=3.7",
+      "license_expression": "unknown",
+      "declared_license": null,
+      "license_evidence": [
+        {
+          "path": "jinja2-3.1.6.dist-info/licenses/LICENSE.txt",
+          "local_target": "sources/third-party-notices/runtime/jinja2-3.1.6/jinja2-3.1.6.dist-info/licenses/LICENSE.txt",
+          "sha256": "3b49dcee4105eb37bac10faf1be260408fe85d252b8e9df2e0979fc1e094437b",
+          "bytes": 1475,
+          "artifact_url": "https://files.pythonhosted.org/packages/62/a1/3d680cbfd5f4b8f15abc1d571870c5fc3e594bb582bc3b64ea099db13e56/jinja2-3.1.6-py3-none-any.whl"
+        }
+      ],
+      "transitive_requires": [
+        "MarkupSafe>=2.0",
+        "Babel>=2.7 ; extra == \"i18n\""
+      ],
+      "resolved_dependencies": [
+        {
+          "name": "markupsafe",
+          "version": "3.0.4",
+          "requirement": "MarkupSafe>=2.0",
+          "extras": []
+        }
+      ],
+      "excluded_requirements": [
+        "Babel>=2.7 ; extra == \"i18n\""
+      ],
+      "enabled_extras": [],
+      "groups": [
+        "base"
+      ],
+      "scope": "development_runtime_only",
+      "review_status": "development_fixed_wheel_closure_reviewed_production_blocked",
+      "approved_by": null,
+      "approved_at": null,
+      "approved_scope": [],
+      "installed_metadata_verified": true,
+      "registry_vulnerabilities": [],
+      "native_member_evidence": {
+        "native_members": [],
+        "startup_or_postinstall_members": [],
+        "C_source_members": [],
+        "executed_by_auditor": false,
+        "whole_native_build_verified": false
+      },
+      "bundled_code_license_declarations": [],
+      "known_limits": [
+        "no_production_approval",
+        "no_runtime_UI_or_business_tests",
+        "no_upstream_commit_or_reproducible_build_verification",
+        "autoescape_and_trusted_templates_must_be_tested_by_T10_author"
+      ],
+      "installed_metadata_status": "T10_actual_installed_metadata_byte_verified",
+      "installed_version": "3.1.6"
+    },
+    {
+      "name": "markupsafe",
+      "version": "3.0.4",
+      "artifact_filename": "markupsafe-3.0.4-cp312-cp312-win_amd64.whl",
+      "artifact_sha256": "11935df9bf455ed0c04eb87bcd720f02b1fe5e02128a9430f23aed6f93336fc7",
+      "artifact_bytes": 14303,
+      "artifact_url": "https://files.pythonhosted.org/packages/3f/bf/62495e180b7000aaf30000fff849e933f74264638057176cf46852500adc/markupsafe-3.0.4-cp312-cp312-win_amd64.whl",
+      "artifact_hash_evidence": "fixed official wheel actual bytes measured",
+      "wheel_cache": ".audit-local/t10-dependencies/wheelhouse/markupsafe-3.0.4-cp312-cp312-win_amd64.whl",
+      "artifact_tags": [
+        "cp312-cp312-win_amd64"
+      ],
+      "registry_url": "https://pypi.org/pypi/markupsafe/3.0.4/json",
+      "registry_cache": "sources/evidence/runtime/T10/registry/markupsafe-3.0.4.json",
+      "registry_sha256": "85cd5bce3f85e67ab0b921be9c9ba144a7cc01a2d02b85ad65b1f8dabeac4c57",
+      "metadata_cache": "sources/evidence/runtime/T10/metadata/markupsafe-3.0.4.METADATA",
+      "metadata_sha256": "08fa79954ab288d778b0fee4f0e6c7dbc869e545a415747d1324622465d3b08d",
+      "requires_python": ">=3.9",
+      "license_expression": "BSD-3-Clause",
+      "declared_license": null,
+      "license_evidence": [
+        {
+          "path": "markupsafe-3.0.4.dist-info/licenses/LICENSE.txt",
+          "local_target": "sources/third-party-notices/runtime/markupsafe-3.0.4/markupsafe-3.0.4.dist-info/licenses/LICENSE.txt",
+          "sha256": "4631ec0db5fd90a547e336817264c6798214338146f8ac94b4a57f96ee8c9ec4",
+          "bytes": 1503,
+          "artifact_url": "https://files.pythonhosted.org/packages/3f/bf/62495e180b7000aaf30000fff849e933f74264638057176cf46852500adc/markupsafe-3.0.4-cp312-cp312-win_amd64.whl"
+        }
+      ],
+      "transitive_requires": [],
+      "resolved_dependencies": [],
+      "excluded_requirements": [],
+      "enabled_extras": [],
+      "groups": [
+        "base"
+      ],
+      "scope": "development_runtime_only",
+      "review_status": "development_fixed_wheel_closure_reviewed_production_blocked",
+      "approved_by": null,
+      "approved_at": null,
+      "approved_scope": [],
+      "installed_metadata_verified": true,
+      "registry_vulnerabilities": [],
+      "native_member_evidence": {
+        "native_members": [
+          {
+            "path": "markupsafe/_speedups.cp312-win_amd64.pyd",
+            "sha256": "a1bf1fb566f920b5670dca3b31acb0148636cfff8aa8108d938f91550358b231",
+            "bytes": 11776
+          }
+        ],
+        "startup_or_postinstall_members": [],
+        "C_source_members": [
+          {
+            "path": "markupsafe/_speedups.c",
+            "local_target": "sources/evidence/runtime/T10/native-metadata/markupsafe/markupsafe/_speedups.c",
+            "sha256": "79f73a6b3739d166cac523629f1578ae4b485f6c7359f2ac2ef9dc0bc67723fc",
+            "bytes": 4527
+          }
+        ],
+        "executed_by_auditor": false,
+        "whole_native_build_verified": false,
+        "static_PE_import_evidence": {
+          "member": "markupsafe/_speedups.cp312-win_amd64.pyd",
+          "sha256": "a1bf1fb566f920b5670dca3b31acb0148636cfff8aa8108d938f91550358b231",
+          "PE_machine": "0x8664",
+          "PE_magic": "0x20b",
+          "imported_DLL_names": [
+            "python312.dll",
+            "KERNEL32.dll",
+            "VCRUNTIME140.dll",
+            "api-ms-win-crt-runtime-l1-1-0.dll"
+          ],
+          "evidence_scope": "PE import directory names only; no DLL load/runtime/native source build proof",
+          "bundled_DLL_members": [],
+          "executed": false
+        }
+      },
+      "bundled_code_license_declarations": [],
+      "known_limits": [
+        "no_production_approval",
+        "no_runtime_UI_or_business_tests",
+        "no_upstream_commit_or_reproducible_build_verification",
+        "autoescape_and_trusted_templates_must_be_tested_by_T10_author",
+        "PE_import_names_do_not_verify_system_runtime_licenses_or_native_build"
+      ],
+      "installed_metadata_status": "T10_actual_installed_metadata_byte_verified",
+      "installed_version": "3.0.4"
     }
   ],
   "build_packages": [
@@ -18157,7 +18319,8 @@
       "pdfplumber==0.11.10",
       "defusedxml==0.7.1",
       "mcp==2.2.0",
-      "python-docx==1.2.0"
+      "python-docx==1.2.0",
+      "jinja2==3.1.6"
     ],
     "test": [
       "pytest==9.0.3",
@@ -18397,6 +18560,32 @@
     "pip_check_sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf",
     "actual_installed_environment": 69,
     "new_packages": 1,
+    "production_approval": null
+  },
+  "T10_template_component": {
+    "packages": [
+      "jinja2==3.1.6",
+      "markupsafe==3.0.4"
+    ],
+    "source_kind": "fixed_official_package_bytes",
+    "source_id": null,
+    "G09_unchanged_reference_only": true,
+    "autoescape_required": true,
+    "templates": "independent_project_local_templates",
+    "production_approval": null,
+    "candidate_freeze_sha256": "9ffcf028854f41c5b336311739f8f2af3a75a2d7acdd31e6918068ad55f0174f",
+    "current_53_full_objects_preserved": true
+  },
+  "T10_actual_installation": {
+    "local_cache": ".audit-local/t10-author-dependencies/installed-verification.json",
+    "sha256": "0e5c3893e53fc9921b2c462b98d3f97ceca3df5254deae95260128d43836211c",
+    "install_report_sha256": "b61d94abbaa40edb4dde5523f11ca2b4d37c5a27f663af86bfd05b5203ae226e",
+    "pip_inspect_sha256": "672d0760c8ac51bfc269d02b9d2c10acee418046d2b614aee799671f194b1a4f",
+    "pip_check_sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf",
+    "actual_installed_environment": 71,
+    "actual_new_packages": 2,
+    "normal_site_bootstrap_enabled": true,
+    "manual_postinstall": false,
     "production_approval": null
   }
 }

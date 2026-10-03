@@ -1245,6 +1245,78 @@ class JobStatus(DomainModel):
     result_ref: NonEmpty | None
 
 
+# HTTP inputs share the domain vocabulary. Server identity, time, IDs and
+# approval status are intentionally absent from client write inputs.
+class LoginInput(DomainModel):
+    username: Annotated[str, StringConstraints(min_length=1, max_length=128)]
+    password: Annotated[str, StringConstraints(min_length=1, max_length=256)]
+
+
+class MatterCreateInput(DomainModel):
+    title: Annotated[NonEmpty, Field(max_length=300)]
+    contract_type: ContractType
+    review_mode: ReviewMode
+    position: Position
+    objectives: Annotated[tuple[NonEmpty, ...], Field(min_length=1, max_length=10)]
+    reviewer_username: Annotated[NonEmpty, Field(max_length=128)] | None = None
+
+
+class PositionInput(DomainModel):
+    position: Position
+    objectives: Annotated[tuple[NonEmpty, ...], Field(min_length=1, max_length=10)]
+
+
+class FactsConfirmInput(DomainModel):
+    fact_version: PositiveInt
+    decisions: Annotated[tuple[FactDecision, ...], Field(min_length=1, max_length=1000)]
+
+
+class ReviewStartInput(DomainModel):
+    fact_version: PositiveInt
+    document_hashes: Mapping[UUID, SHA256]
+
+
+class FindingDecisionInput(DomainModel):
+    run_id: UUID
+    run_sha256: SHA256
+    decision: HumanDecisionKind
+    reason: Annotated[NonEmpty, Field(max_length=2000)]
+
+
+class PatchApproveInput(DomainModel):
+    run_id: UUID
+    run_sha256: SHA256
+    finding_id: UUID
+    anchor_id: UUID
+    new_text: Annotated[str, Field(min_length=1, max_length=10000)]
+    reason: Annotated[NonEmpty, Field(max_length=2000)]
+    audiences: Annotated[tuple[Audience, ...], Field(min_length=1, max_length=3)]
+
+
+class ExportPreviewInput(DomainModel):
+    run_id: UUID
+    run_sha256: SHA256
+    audience: Audience
+    patch_ids: Annotated[tuple[UUID, ...], Field(max_length=1000)]
+
+
+class FormalApprovalInput(DomainModel):
+    bundle_id: UUID
+    artifact_manifest_hash: SHA256
+    review_snapshot_hash: SHA256
+    scope: Audience
+
+
+class PlanApproveInput(DomainModel):
+    plan_sha256: SHA256
+
+
+class PartySelectionInput(DomainModel):
+    party_id: UUID
+    candidate_id: UUID
+    reason: Annotated[NonEmpty, Field(max_length=2000)]
+
+
 class AcceptanceCase(DomainModel):
     test_id: NonEmpty
     fixture: NonEmpty

@@ -82,6 +82,6 @@ def run_demo(fixture,*,provider='mock',qcc='off',output_root=None):
         'model_attempt_count':len(attempts),'model_cost':'0','model_cost_unit':'mock_credit',
         'intake_attempt_count':sum(len(i['attempts']) for i in intakes),
         'output_directory':str(root.resolve()),'outputs':paths,'limitations':list(run.limitations),
-        'formal_artifacts':'T09未实施；本次仅JSON与受保护数据库证据'}
+        'formal_artifacts':'本命令仅生成JSON与受保护数据库证据；Word草案使用导出服务，mock不可正式签发'}
     with (root/'summary.json').open('x',encoding='utf-8') as output:output.write(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
     return summary

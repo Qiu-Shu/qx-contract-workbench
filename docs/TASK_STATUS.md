@@ -15,7 +15,7 @@
 |T07|ENGINEERING_PASS；BLOCKED_LIVE / PRODUCTION_BLOCKED|固定SDK实际本机MCP握手/发现/调用、批准绑定/实时漂移、安全raw；46目标/557全套、独立66攻击/17授权通过|51正式包/92许可/76边实际核对；账户/官方schema/真实价格/许可缺失，真实外发0；下一任务T08|
 |T08|ENGINEERING_PASS；BLOCKED_LIVE / PRODUCTION_BLOCKED|持久预留/发送标记/短事务Factory、原子预算/幂等/未知恢复/账单对账；52目标/609全套、独立58探针/78关联回归通过|真实账户/价格/许可/律师批准缺失；未知扣费不自动重试；下一任务T09|
 |T09|ENGINEERING_PASS；BLOCKED_LIVE / PRODUCTION_BLOCKED|37目标/646全套、独立61探针/136关联回归；三类新报告/内部精确原生修订；Word六轮十页与接受拒绝全文实际通过|复杂及对外原件包修改人工；QCC报告消费者/全合同补丁后语义重审未实现；真实批准与许可缺失；下一T10|
-|T10|NOT_STARTED|只读预检/候选不代表接口已实现|完整UI未实现，Jinja候选未安装|
+|T10|ENGINEERING_PASS（已执行范围）；PRODUCTION_BLOCKED|六类中文页面/14端点/持久任务；37 API+4 API旅程+22依赖门，全套709/0警告；独立80+41+195；根普通浏览器四类/各18维、五种处置、16实际下载、四次mock拒签；55包/环境71保留旧53证据|完整浏览器网络捕获NOT_RUN，声明资源均本地/应用console0/QCC账本0另证；source发布9/runtime发布59阻断；法律gold、真实外查、正式签发正例和生产仍阻断|
 |T11–T12|NOT_STARTED|已核对规格含84个唯一编号，不是84项测试通过|实际回归映射、律师金标准、部署/恢复未实现|
 |T13|BLOCKED_LIVE / NOT_STARTED|没有真实联调或上线决定|账户/许可/规则批准/金标准/模型数据政策/环境与预算缺失|
 
@@ -50,7 +50,7 @@
 - source锁的read_verified表示选取文件与许可证据可读，不能替代依赖、实际效果或律师批准。G11根CC许可不能替代目标AGPL，GNU通用许可全文也不能替代授权。
 - 许可指纹只能防已知完整副本和已登记片段进入常见运行目录；不能认定任意改写、短片段或未知来源已获许可。未来新增运行目录必须纳入扫描。
 - T01的Pydantic类型校验不能替代实际权限、来源批准、费用或签发；标准JSON往返保持事实Decimal/日期类型。全部默认参数来自同一JSON，并生成实测配置hash。
-- 未实现：完整审查API/UI、真实模型与法律规则审查、OCR、QCC收据报告消费者与真实联调、补丁后全合同法律/数值语义重审、法律样本测评和生产部署。T06四类虚构/mock闭环、T07固定SDK本机模拟、T08模拟预算网关及T09受限草案/原生修订已实现；工程通过不等于真实能力或法律验收。
+- 未实现：真实模型与获批法律规则审查、OCR、QCC收据报告消费者与真实联调、补丁后全合同法律/数值语义重审、法律样本测评和生产部署。T06四类虚构/mock闭环、T07固定SDK本机模拟、T08模拟预算网关、T09受限草案/原生修订及T10 API/本机中文UI已实现；工程通过不等于真实能力或法律验收。
 
 ## T01实际执行
 
@@ -132,3 +132,13 @@ T07/T08细化和T08/T09只读预检仅PLANNING_ONLY。Word安装/COM注册已读
 三类新中文报告、内部精确跨run修订、不可变批准/制品/current读取、savepoint与文件清理、hash-only审计完成；双当前文件的anchor/version归属真实RED修复。Word实际六轮/十页检查，原生Accept/Reject各完整五段exact，重复段与原件不变。详情见T09作者/独审/Word/父节点记录。
 
 复杂与对外原件包自动修订保留人工表；QCC收据报告消费者/完整补丁后法律与数值语义重审未实现。mock正式签发实际BLOCKED_LIVE；发布门exit1/9实际阻断。法律金标准、真实试点和生产仍独立阻断。沿同分支继续T10，Jinja/MarkupSafe候选仅静态核查，不能整份覆盖当前正式53记录。
+
+## T10 实际执行
+
+保留T00–T09服务，薄接入14个指定HTTP端点、实际cookie/CSRF/成员权限、版本/批准/费用与幂等核验。后台任务持久保存输入/状态/事件，实际本机SDK网络期间释放请求事务；failed review不被记completed，旧规则证据和被撤销patch不能复用缓存成功。真实P2均先功能失败再修复复验，收集、fixture、定位和封证辅助错误单独保留。
+
+父节点全套命令`.venv/Scripts/python.exe -X utf8 -m pytest -q --tb=short --junitxml=docs/testing/T10-results.xml`实际exit0：709 passed、0警告、203.00秒。作者最终332目标/关联；独审80独立+41正式+195关联，均exit0/0失败错误跳过。作者190封证文件在父七项检查前后全部同hash；schema仅既有CRLF/LF差异、JSON/LF规范化等于HEAD，默认与四原DOCX/provenance原bytes不变。
+
+父普通CUA浏览器从新demo目录`.local/t10-browser-final/20261003T082500Z`实际建四案/chooser上传/逐项确认版本2/mock18维/五种处置/精确patch三范围/三audience预览，16份实际下载逐一比数据库hash、ZIP CRC、报告文字和内部w:ins/w:del原新全文；原件逐一等于固定fixture。四次虚构复核者正式按钮均BLOCKED_LIVE，正式approvals0，QCC ledger0，一条query_record仅Q0 plan_approval不是供应商调用。额外一个无上传DOM文字canary，实际img节点0/执行标记null；不能冒充全面XSS或法律评测。
+
+55固定wheel/97主许可/79边/3467 RECORD、环境71、旧69版本/53完整对象/build1/17/T09安装证据保留。仅新增Jinja2/MarkupSafe两包，依赖门22正式/42独立实际通过；最后模板9项静态补证与作者4输入一致。defaults/schema/pip/source13开发/runtime55+build1开发均exit0；source release exit1/9、runtime release exit1/59为实际预期阻断，非生产PASS。完整浏览器网络捕获因CUA不可用明确NOT_RUN；仅声明资源/本地链接、应用console0和后端0厂商调用分别实证。六类页面可运行不代表真实律师金标准、OCR/国产渲染部署、完整补丁后重审或生产完成。详情T10作者/独审/依赖/父/browser记录，继续T11–T13。
