@@ -1324,12 +1324,23 @@ class AcceptanceCase(DomainModel):
     entrypoint: NonEmpty
     owner: NonEmpty
     status: AcceptanceStatus
+    input_scene: NonEmpty | None = None
+    source: NonEmpty | None = None
+    responsible_tasks: tuple[NonEmpty, ...] = ()
+    fixture_id: NonEmpty | None = None
+    fixture_sha256: SHA256 | None = None
+    limitations: tuple[NonEmpty, ...] = ()
 
 
 class EvaluationCaseResult(DomainModel):
     test_id: NonEmpty
     status: AcceptanceStatus
     details: tuple[NonEmpty, ...]
+    guard_status: AcceptanceStatus = 'NOT_RUN'
+    guard_details: tuple[NonEmpty, ...] = ()
+    partial_status: AcceptanceStatus = 'NOT_RUN'
+    hard_gate: bool = False
+    evidence_refs: tuple[NonEmpty, ...] = ()
 
 
 class ExecutionEvidence(DomainModel):
@@ -1338,6 +1349,68 @@ class ExecutionEvidence(DomainModel):
     executed_at: UTCDatetime
     passed: NonNegativeInt
     failed: NonNegativeInt
+    argv: tuple[NonEmpty, ...] = ()
+    completed_at: UTCDatetime | None = None
+    skipped: NonNegativeInt = 0
+    errors: NonNegativeInt = 0
+    junit_ref: NonEmpty | None = None
+    junit_sha256: SHA256 | None = None
+    collection_ref: NonEmpty | None = None
+    collection_sha256: SHA256 | None = None
+    output_ref: NonEmpty | None = None
+    output_sha256: SHA256 | None = None
+    source_hashes: dict[NonEmpty, SHA256] = Field(default_factory=dict)
+    source_stable: bool = False
+
+
+class SyntheticAcceptanceSample(DomainModel):
+    id: NonEmpty
+    path: NonEmpty
+    sha256: SHA256
+    byte_size: PositiveInt
+    family: NonEmpty
+    template_ref: NonEmpty
+    template_sha256: SHA256
+    partition: Literal['development', 'blind']
+    contract_type: ContractType
+    boundary: bool
+    origin: Literal['project_authored_independent_synthetic']
+    limitations: tuple[NonEmpty, ...]
+    scenario_ids: tuple[NonEmpty, ...]
+
+
+class AcceptanceGold(DomainModel):
+    status: Literal['pending'] = 'pending'
+    reviewer_1: UUID | None = None
+    reviewer_2: UUID | None = None
+    disagreements: Literal['pending'] = 'pending'
+
+
+class UnmeasuredLegalMetrics(DomainModel):
+    major_recall: None = None
+    precision: None = None
+    anchor_accuracy: None = None
+    legal_accuracy: None = None
+
+
+class SampleEvaluationResult(DomainModel):
+    sample_id: NonEmpty
+    family: NonEmpty
+    partition: Literal['development', 'blind']
+    contract_type: ContractType
+    fixture_sha256: SHA256
+    status: AcceptanceStatus
+    parse_status: Literal['NOT_RUN', 'completed', 'failed']
+    facts_confirmed: NonNegativeInt = 0
+    coverage_count: NonNegativeInt = 0
+    unsupported_parts: NonNegativeInt = 0
+    model_usage: tuple[ModelUsage, ...] = ()
+    attempts: NonNegativeInt = 0
+    run_id: UUID | None = None
+    error_code: ErrorCode | None = None
+    evidence_ref: NonEmpty | None = None
+    evidence_sha256: SHA256 | None = None
+    limitations: tuple[NonEmpty, ...] = ()
 
 
 class EvaluationReport(DomainModel):
@@ -1346,6 +1419,24 @@ class EvaluationReport(DomainModel):
     executions: tuple[ExecutionEvidence, ...]
     denominator: PositiveInt
     limitations: tuple[NonEmpty, ...]
+    counts: dict[AcceptanceStatus, NonNegativeInt] = Field(default_factory=dict)
+    readiness: Literal['GO', 'NO_GO', 'BLOCKED'] = 'BLOCKED'
+    gold: AcceptanceGold = Field(default_factory=AcceptanceGold)
+    legal_metrics: UnmeasuredLegalMetrics = Field(default_factory=UnmeasuredLegalMetrics)
+    real_provider_requests: Literal[0] = 0
+    cost: Credits | None = None
+    human_review_minutes: ExactDecimal | None = None
+    sample_denominator: NonNegativeInt = 0
+    samples_reviewed: NonNegativeInt = 0
+    sample_results: tuple[SampleEvaluationResult, ...] = ()
+    sample_type_counts: dict[ContractType, NonNegativeInt] = Field(default_factory=dict)
+    sample_partition_counts: dict[NonEmpty, NonNegativeInt] = Field(default_factory=dict)
+    sample_family_counts: dict[NonEmpty, NonNegativeInt] = Field(default_factory=dict)
+    registry_sha256: SHA256 | None = None
+    fixture_manifest_sha256: SHA256 | None = None
+    full_capability_numerator: NonNegativeInt = 0
+    guard_numerator: NonNegativeInt = 0
+    guard_denominator: NonNegativeInt = 0
 
 
 class ReleaseConfig(DomainModel):

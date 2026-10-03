@@ -25,6 +25,10 @@ def main(argv=None) -> int:
     server=commands.add_parser('demo-server',help='显式启动本机独立虚构合同演示服务；不接收真实材料')
     server.add_argument('--port',type=int,default=8765)
     server.add_argument('--directory',type=Path,default=None,help='必须是本项目.local内全新目录')
+    evaluate=commands.add_parser('evaluate',help='84固定映射与40独立虚构工程材料；法律gold未批准')
+    evaluate.add_argument('--suite',type=Path,required=True)
+    evaluate.add_argument('--offline',action='store_true',help='仅运行离线工程断言和mock材料处理')
+    evaluate.add_argument('--output',type=Path,required=True,help='项目内新的JSON制品，不覆盖已有结果')
     args = parser.parse_args(argv)
     try:
         if args.command == 'config-validate':
@@ -44,6 +48,22 @@ def main(argv=None) -> int:
                 args.output.parent.mkdir(parents=True, exist_ok=True)
                 args.output.write_text(json.dumps(generated, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
             print(json.dumps({'ok': True, 'schema_path': str(args.output), 'operation': 'check' if args.check else 'generate'}))
+        elif args.command=='evaluate':
+            from cn_contract.acceptance.registry import load_cases
+            from cn_contract.acceptance.runner import evaluate_suite
+            if not args.offline:raise ValueError('REAL_EVALUATION_UNAPPROVED')
+            cases=load_cases(args.suite)
+            output=args.output if args.output.is_absolute() else PROJECT_ROOT/args.output
+            if not output.resolve().is_relative_to(PROJECT_ROOT) or output.suffix!='.json' or output.exists():
+                raise ValueError('NEW_LOCAL_ARTIFACT_REQUIRED')
+            output.parent.mkdir(parents=True,exist_ok=True)
+            report=evaluate_suite(cases,'offline',output_root=PROJECT_ROOT/'.local/evaluation')
+            with output.open('x',encoding='utf-8') as stream:stream.write(report.model_dump_json(indent=2)+'\n')
+            print(json.dumps({'mode':report.mode,'denominator':report.denominator,'counts':dict(report.counts),
+                'samples_reviewed':report.samples_reviewed,'sample_denominator':report.sample_denominator,
+                'readiness':report.readiness,'legal_gold':report.gold.status,'real_provider_requests':0,
+                'output':str(output)},ensure_ascii=False))
+            return 0 if report.full_capability_numerator==84 and report.readiness=='GO' else 1
         elif args.command=='demo-server':
             from cn_contract.web.demo_server import serve
             serve(port=args.port,directory=args.directory)
@@ -59,7 +79,7 @@ def main(argv=None) -> int:
             print(json.dumps(summary,ensure_ascii=False))
             return 0 if summary['validation_ok'] and summary['run_status']=='completed' else 1
     except (OSError, ValueError, ValidationError) as error:
-        code = 'CONFIG_INVALID' if args.command == 'config-validate' else 'DEMO_INVALID' if args.command=='demo' else 'SCHEMA_INVALID'
+        code = 'CONFIG_INVALID' if args.command == 'config-validate' else 'DEMO_INVALID' if args.command=='demo' else 'EVALUATION_INVALID' if args.command=='evaluate' else 'SCHEMA_INVALID'
         print(f'{code}:{type(error).__name__}', file=sys.stderr)
         return 1
     return 0

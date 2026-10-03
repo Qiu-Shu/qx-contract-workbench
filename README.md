@@ -88,3 +88,11 @@ T10已接入六类中文页面、第11节14接口、原文定位、完整事实�
 以lawyer建案，可明确填写复核用户名reviewer。上传仅接受`tests/fixtures/synthetic/`的sales_basic.docx、service_basic.docx、lease_basic.docx、nda_basic.docx四个服务器登记虚构hash；选择基线，逐项核对事实，再开始mock审查。人工处置与整段修改批准是两个操作；明确选定内部/客户/对方范围后生成草案，下载由后端核验当前版本和hash。mock请求正式签发始终显示BLOCKED_LIVE。Q0只登记并选择待人工明确名称的虚构原文候选，不发送请求或收费。
 
 QCC收据报告消费者、补丁后完整法律/数值语义重审、真实法律规则、律师金标准、账号/数据政策/上线批准仍分别未实现或阻断。
+
+T11新增固定84项工程评测登记、40份独立短虚构材料、家族完整开发24/预留盲测16和真实mock工程sampler。能力状态、部分断言和guard分别记录；40材料运行不代表84项全部实现或独立律师盲测。法律金标准两名reviewer及法律指标仍null/pending；实际费用与人工复核时间未测。运行协议与当前实际验证见[评测协议](docs/EVALUATION_PROTOCOL.md)和[T11作者记录](docs/testing/T11.md)。
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m cn_contract.cli evaluate --suite tests/acceptance/cases.json --offline --output .local/evaluation-new.json
+```
+
+每次使用新的项目内JSON路径以保留旧证据。当前完整能力与真实法律批准未满足，生成实际报告后退出码为1且readiness为BLOCKED；不据此宣称生产完成。离线只使用本机独立模拟服务，实际模型和QCC请求为0，web/demo材料范围保持原四个登记hash。
