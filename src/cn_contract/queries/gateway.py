@@ -36,7 +36,7 @@ def authenticate_execution(database,token,csrf,*,matter_id):
     return actor
 
 
-async def execute_plan(plan_id,actor,transport=None,*,database,matter_id):
+async def execute_plan(plan_id,actor,transport=None,*,database,matter_id,expected_plan_sha256=None):
     if not isinstance(database,Database): raise TypeError('explicit Database required')
     if transport is None: transport=FactoryQccTransport(database,actor=actor,matter_id=matter_id)
     with s.factory_transaction(database,actor,matter_id) as db:
@@ -47,6 +47,10 @@ async def execute_plan(plan_id,actor,transport=None,*,database,matter_id):
         from ..ops.storage import require_active
         require_active(db)
         plan=planner.read_plan(plan_id,actor,matter_id=matter_id,db=db,require_approved=False)
+        # Optional server caller restriction binds a previously checked smoke
+        # snapshot. This only narrows execution, and is checked before reserve.
+        if expected_plan_sha256 is not None and plan.plan_sha256!=expected_plan_sha256:
+            raise ServiceError('PLAN_CHANGED',409)
         if plan.scope=='Q0': return []
         plan=planner.read_plan(plan_id,actor,matter_id=matter_id,db=db,require_approved=True)
     results=[]

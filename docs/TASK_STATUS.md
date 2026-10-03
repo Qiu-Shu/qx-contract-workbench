@@ -18,7 +18,9 @@
 |T10|ENGINEERING_PASS（已执行范围）；PRODUCTION_BLOCKED|六类中文页面/14端点/持久任务；37 API+4 API旅程+22依赖门，全套709/0警告；独立80+41+195；根普通浏览器四类/各18维、五种处置、16实际下载、四次mock拒签；55包/环境71保留旧53证据|完整浏览器网络捕获NOT_RUN，声明资源均本地/应用console0/QCC账本0另证；source发布9/runtime发布59阻断；法律gold、真实外查、正式签发正例和生产仍阻断|
 |T11|ENGINEERING_PASS（评测机制）；LEGAL_BENCHMARK_BLOCKED / PRODUCTION_BLOCKED|37目标、独立64+37及316参数；根全套746/0警告；真实CLI84能力5PASS/36NOT_RUN/16NOT_IMPLEMENTED/7NOT_SUPPORTED/20BLOCKED，58guard单列；40独立虚构材料实际审查39工程PASS/1NOT_SUPPORTED，16家族/24dev16预留blind；最终644输入零漂移|发现的材料/执行证据/硬门缺陷均真实RED修复且同探针闭合；84项没有全部通过，两律师gold缺失、法律指标null；CLI真实exit1/BLOCKED；下一任务T12|
 |T12|ENGINEERING_PASS（已执行范围）；PRODUCTION_BLOCKED|44正式目标、两独审68与54；根全套790/0警告；根新目录4类原件+5草案制品/2原生XML、38表/未知15剩5且0重发；623输入封证/314原始bytes不变|development发布75阻断/production实际exit1；国内host/HTTPS/OS隔离/真实key custody与数据政策NOT_RUN/未批准，当前全部法律能力/gold仍阻断；下一T13|
-|T13|BLOCKED_LIVE / NOT_STARTED|没有真实联调或上线决定|账户/许可/规则批准/金标准/模型数据政策/环境与预算缺失|
+|T13|ENGINEERING_PASS（守卫与受限交付）；BLOCKED_LIVE / PRODUCTION_BLOCKED|25正式目标、31费用恢复关联；两独审29与43；根当前815全套/0警告；当前84能力5PASS/58guard单列、40虚构材料实际审查；qcc-smoke真实CLI拒绝、开发发布75阻断/生产exit1|真实联调与影子NOT_RUN；账户/许可/现实批准信任根/完整法律硬失败登记/金标准/模型数据政策/国内环境缺失；真实供应商及真实资料外传0，没有上线批准|
+
+当前阶段记录：[T13实际测试](testing/T13.md)、[父最终815/84与证据核验](testing/T13-parent-checks.md)、[独立调用审阅29项](testing/T13-live-review-final.md)、[独立上线证据审阅43项](testing/T13-readiness-actual-review.md)。受限交付、逐项解除条件与上线决定分别见[LIVE_READINESS](LIVE_READINESS.md)、[SHADOW_RUN_REPORT](SHADOW_RUN_REPORT.md)、[GO_NO_GO](GO_NO_GO.md)。84项当前真实5PASS/36NOT_RUN/16NOT_IMPLEMENTED/7NOT_SUPPORTED/20BLOCKED；815参数用例通过不等于84项能力、双律师验收或生产完成。
 
 ## T00实际执行
 

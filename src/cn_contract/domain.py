@@ -1562,10 +1562,18 @@ class ReadinessDecision(DomainModel):
     decision: ReadinessStatus
     reasons: dict[NonEmpty, NonEmpty]
     evidence: ReadinessEvidence | None
+    scope: Literal['restricted_engineering'] = 'restricted_engineering'
+    real_evidence_trust: Literal['NOT_IMPLEMENTED'] = 'NOT_IMPLEMENTED'
+    evidence_hashes: dict[NonEmpty, SHA256] = Field(default_factory=dict)
+    evidence_currentness: dict[NonEmpty, NonEmpty] = Field(default_factory=dict)
+    server_gate_counts: dict[NonEmpty, NonNegativeInt] = Field(default_factory=dict)
+    real_provider_requests: Literal[0] = 0
+    assessed_at: UTCDatetime | None = None
 
     @model_validator(mode='after')
     def go_needs_evidence(self) -> ReadinessDecision:
         if self.decision == ReadinessStatus.GO:
             if self.evidence is None or any(not getattr(self.evidence, name) for name in ReadinessEvidence.model_fields):
                 raise ValueError('GO requires every category of readiness evidence')
+            raise ValueError('REAL_READINESS_TRUST_NOT_IMPLEMENTED')
         return self

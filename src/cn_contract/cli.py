@@ -35,9 +35,24 @@ def main(argv=None) -> int:
     release.add_argument('--rule-evidence',action='append',default=[])
     release.add_argument('--test-evidence',action='append',default=[])
     release.add_argument('--deployment-evidence',action='append',default=[])
+    smoke=commands.add_parser('qcc-smoke',help='真实最小查询批准门；当前缺可信现实批准时阻断且不发请求')
+    from uuid import UUID
+    smoke.add_argument('--approval-id',type=UUID,required=True,help='内部批准ID，不是密钥')
+    smoke.add_argument('--plan-id',type=UUID,required=True,help='已批准的exact单项单页计划ID')
     args = parser.parse_args(argv)
     try:
-        if args.command == 'config-validate':
+        if args.command == 'qcc-smoke':
+            import asyncio
+            from cn_contract.live.guards import run_live_smoke
+            from cn_contract.security import ServiceError
+            try:
+                asyncio.run(run_live_smoke(args.approval_id,args.plan_id,None))
+            except ServiceError:
+                print(json.dumps({'ok':False,'code':'BLOCKED_LIVE','reason':'AUTHENTICATED_BACKEND_AND_REAL_APPROVAL_TRUST_NOT_CONFIGURED',
+                    'real_provider_requests':0,'paid_requests':0,'material_uploads':0},ensure_ascii=False))
+                return 1
+            raise ValueError('UNEXPECTED_REAL_SMOKE_RESULT')
+        elif args.command == 'config-validate':
             settings = load_settings(args.path)
             print(json.dumps({'ok': True, 'config_sha256': settings.config_sha256,
                               'qcc_enabled': settings.qcc_enabled_default,
