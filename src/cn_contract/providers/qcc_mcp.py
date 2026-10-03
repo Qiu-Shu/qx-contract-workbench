@@ -106,3 +106,108 @@ class QccTransport:
         self._current(binding)
         return ProviderResult(status=status, trace_id=trace, raw_ref=row.ref, raw_sha256=row.sha256,
             billing_known=True, charged_credits=Decimal('0'))
+
+
+class FactoryQccTransport:
+    """T08 explicit Database factory: short checks, session-free network, raw save.
+
+    Only this concrete registered adapter is accepted by the budget gateway;
+    no arbitrary provider/subclass or caller Session can dispatch paid work.
+    Synthetic billing profiles are trusted admin development configuration.
+    """
+    def __init__(self,database,*,actor,matter_id,secrets=None):
+        from ..persistence import Database
+        if not isinstance(database,Database): raise TypeError('explicit Database required')
+        self.database=database; self.actor=actor; self.matter_id=matter_id; self.secrets=secrets
+        self.dispatch_count=0
+
+    def _prepare(self,binding):
+        from ..queries import storage as s
+        from .storage import latest
+        with s.factory_transaction(self.database,self.actor,self.matter_id) as db:
+            s.authorize_query(self.actor,self.matter_id,db)
+            ref=registry.binding_reference(binding,actor=self.actor,matter_id=self.matter_id,db=db)
+            current=registry.read_binding(ref,actor=self.actor,matter_id=self.matter_id,db=db)
+            if not current.enabled or current!=binding: raise ServiceError('TOOL_UNBOUND',403)
+            endpoint=registry.read_case_endpoint(binding.endpoint_config_ref,actor=self.actor,matter_id=self.matter_id,db=db)
+            if not endpoint['synthetic'] or endpoint['live_allowed'] or endpoint['provider'] not in {'synthetic_mock_qcc','synthetic_mcp_loopback'}:
+                raise ServiceError('BLOCKED_LIVE',403)
+            price=registry.read_current_price(binding.endpoint_config_ref,actor=self.actor,matter_id=self.matter_id,db=db)
+            amount=s.decimal(price['unit_price'])
+            if price['unit']!='synthetic_credit/call': raise ServiceError('PRICE_UNKNOWN',403)
+            behavior=latest('query_behavior',binding.endpoint_config_ref,db)
+            profile=json.loads(behavior.payload) if behavior else {'mode':'success','delay_seconds':0}
+            return endpoint,price,amount,profile
+
+    async def invoke(self,binding,arguments,correlation_id,*,dispatch_entry_id=None,dispatch_token=None):
+        import asyncio
+        from ..queries import storage as s
+        from ..queries import ledger
+        if not isinstance(dispatch_entry_id,UUID) or not isinstance(dispatch_token,str):
+            raise ServiceError('QUERY_STATE_UNKNOWN',403)
+        initial=self.dispatch_count
+        endpoint,price,amount,profile=self._prepare(binding)
+        registry.schema_validator(binding.input_schema_snapshot).validate(arguments)
+        raw=None; status='sent_unknown'; known=False; charge=None; error_code=None
+        def before_dispatch():
+            current=self._prepare(binding)
+            if current[1]!=price: raise ServiceError('PLAN_CHANGED',409)
+            with s.factory_transaction(self.database,self.actor,self.matter_id) as db:
+                ledger._claim_send(dispatch_entry_id,dispatch_token,binding,arguments,self.actor,self.matter_id,db)
+            self.dispatch_count+=1
+        def on_catalog(catalog):
+            with s.factory_transaction(self.database,self.actor,self.matter_id) as db:
+                registry.accept_discovered_catalog(binding.endpoint_config_ref,catalog,actor=self.actor,matter_id=self.matter_id,db=db)
+        try:
+            if endpoint['provider']=='synthetic_mock_qcc':
+                from .mock_qcc import catalog
+                from .storage import latest
+                with s.factory_transaction(self.database,self.actor,self.matter_id) as db:
+                    variant=latest('variant',binding.endpoint_config_ref,db)
+                    current_catalog=catalog(json.loads(variant.payload)['variant'] if variant else 'base')
+                on_catalog(current_catalog)
+                if profile['mode']=='before_send': raise ServiceError('PROVIDER_BEFORE_SEND',502)
+                before_dispatch()
+                # There is deliberately no active Session across this await.
+                await asyncio.sleep(profile['delay_seconds'])
+                if profile['mode']=='timeout': raise TimeoutError()
+                raw=await MockQccTransport().invoke(binding.tool_name,arguments,correlation_id)
+                raw['state']='success' if profile['mode'] in {'success','overcharge','zero','success_billing_unknown'} else 'unknown'
+                if profile['mode']=='failed_unknown': raw['state']='failed'
+                status='success' if raw['state']=='success' else 'failed' if raw['state']=='failed' else 'sent_unknown'
+                known=profile['mode'] in {'success','overcharge','zero'}
+                charge=Decimal('25') if profile['mode']=='overcharge' else Decimal('0') if profile['mode']=='zero' else amount if known else None
+            else:
+                from .mcp_client import invoke
+                raw=await invoke(ProviderConfig.model_validate(endpoint['config']),binding,arguments,secrets=self.secrets,
+                    before_dispatch=before_dispatch,on_catalog=on_catalog)
+                structured=raw.get('structured')
+                status='failed' if raw['is_error'] else 'sent_unknown'
+                if isinstance(structured,dict) and structured.get('synthetic') is True and not raw['is_error']:
+                    state=structured.get('state')
+                    if state in {'success','failed'}: status=state
+                # Protocol-only loopback service has an explicitly fixed zero
+                # synthetic price; nonzero billing is never inferred from it.
+                known=amount==0 and status in {'success','failed'}
+                charge=Decimal('0') if known else None
+        except Exception as exc:
+            if self.dispatch_count==initial:
+                error=ServiceError(getattr(exc,'code','PROVIDER_BEFORE_SEND'),502)
+                with s.factory_transaction(self.database,self.actor,self.matter_id) as db:
+                    error._certified_before_send=ledger._certify_unsent(dispatch_entry_id,dispatch_token,db)
+                raise error from None
+            error_code=getattr(exc,'code','PROVIDER_ERROR')
+            raw=getattr(exc,'_protected_raw',None) or {'synthetic':True,'state':'unknown','error_code':error_code}
+            status='sent_unknown';known=False;charge=None
+        if raw is None: raw={'synthetic':True,'state':'unknown'}
+        with self.database.session() as db:
+            # Internal continuation preserves received evidence after revocation.
+            with db.begin_nested():
+                row=append('raw',binding.endpoint_config_ref,raw,self.actor.user_id,db,matter_id=self.matter_id)
+                append('invoke',binding.endpoint_config_ref,{'correlation_id':str(correlation_id),'status':status,
+                    'raw_ref':row.ref,'raw_sha256':row.sha256,'billing_known':known,
+                    'charged_credits':str(charge) if charge is not None else None,'unit':'synthetic_credit',
+                    'dispatch_count':self.dispatch_count-initial,'input_sha256':s.sha(arguments),'synthetic':True,
+                    'error_code':error_code},self.actor.user_id,db,matter_id=self.matter_id)
+        return ProviderResult(status=status,trace_id=str(correlation_id),raw_ref=row.ref,raw_sha256=row.sha256,
+            billing_known=known,charged_credits=charge)

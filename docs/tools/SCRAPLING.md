@@ -2,6 +2,8 @@
 
 已于2026-10-02在本项目虚拟环境安装 `scrapling[fetchers]==0.4.15`，并完成四项本地合成页面验证。它目前是开发工具，尚未接入合同审查、法源库或企业查询流程。该安装按用户新增的明确要求执行；项目主依赖锁和来源批准状态另由T00维护。
 
+2026-10-03另实际用Fetcher读取六页Microsoft Learn公开Word COM文档，六页HTTP200；这是开发参考采集，不是企查查或业务外查。[接口及命令记录](../superpowers/plans/2026-10-03-T09-word-reference.md)。Windows中文CA路径在UTF8进程中首尝试curl77失败；同certifi证书bytes复制到ASCII临时路径、通过`verify=<ca path>`保持TLS验证后成功。没有禁用TLS或修改第三方包，未用代理/stealth绕过访问限制。首次失败与成功分别保留；该结果不代表全部公网目标兼容。
+
 | 项目 | 实际结果 |
 |---|---|
 | 项目目录 | `D:\Documents\ChatGPT\律所项目` |
