@@ -159,7 +159,7 @@ def _remove_created(path: Path, root: Path):
 
 
 class Database:
-    def __init__(self, url: str, storage_root: Path, settings: Settings):
+    def __init__(self, url: str, storage_root: Path, settings: Settings, *, initialize_schema: bool = True):
         if not url.startswith('sqlite:'):
             raise ValueError('T02 supports local SQLite only; migration requires review')
         # model_copy does not validate Pydantic values or recompute private hashes.
@@ -180,14 +180,15 @@ class Database:
         def serialize(connection):
             connection.exec_driver_sql('BEGIN IMMEDIATE')
 
-        Base.metadata.create_all(self.engine)
-        with self.engine.begin() as connection:
-            for table in ('document_versions', 'audit_events', 'parse_snapshots', 'fact_snapshots'):
-                for operation in ('UPDATE', 'DELETE'):
-                    connection.exec_driver_sql(
-                        f'CREATE TRIGGER IF NOT EXISTS immutable_{table}_{operation.lower()} '
-                        f'BEFORE {operation} ON {table} BEGIN '
-                        "SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
+        if initialize_schema:
+            Base.metadata.create_all(self.engine)
+            with self.engine.begin() as connection:
+                for table in ('document_versions', 'audit_events', 'parse_snapshots', 'fact_snapshots'):
+                    for operation in ('UPDATE', 'DELETE'):
+                        connection.exec_driver_sql(
+                            f'CREATE TRIGGER IF NOT EXISTS immutable_{table}_{operation.lower()} '
+                            f'BEFORE {operation} ON {table} BEGIN '
+                            "SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
         self.session_factory = sessionmaker(bind=self.engine, expire_on_commit=False,
                                            info={'database': self})
 

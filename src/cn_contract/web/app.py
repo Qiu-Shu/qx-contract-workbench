@@ -48,7 +48,8 @@ def initialize_storage(database):
     from ..providers.storage import initialize_storage as providers
     from ..queries.storage import initialize_storage as queries
     from ..exports.storage import initialize_storage as exports
-    for init in (authorities,rules,facts,reviews,providers,queries,exports,s.initialize_storage):init(database)
+    from ..ops.storage import initialize_storage as operations
+    for init in (authorities,rules,facts,reviews,providers,queries,exports,s.initialize_storage,operations):init(database)
 
 
 def same_origin(request):

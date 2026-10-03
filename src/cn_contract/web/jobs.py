@@ -30,6 +30,8 @@ def start_job(input,actor,*,database,parameters,idempotency_key):
         if input.job_type not in {'parse','review','query'}:raise ServiceError('NOT_SUPPORTED',409)
         with database.session() as db:
             authorize(actor,input.matter_id,{'parse':'upload','review':'review','query':'confirm_facts'}[input.job_type],db)
+            from ..ops.storage import require_active
+            require_active(db)
             previous=s.find_idempotent(input.matter_id,actor,input.job_type,idempotency_key,s.sha(parameters),db)
             if input.job_type=='parse':
                 if set(parameters)!={'version_id'}:raise ServiceError('VERSION_CONFLICT',409)
@@ -64,6 +66,8 @@ def start_job(input,actor,*,database,parameters,idempotency_key):
 def claim_next_job(database):
     s.require_storage(database)
     with database.session() as db:
+        from ..ops.storage import quarantined
+        if quarantined(db):return None
         row=db.scalar(select(s.JobRow).where(s.JobRow.state=='queued').order_by(s.JobRow.timestamp,s.JobRow.id).limit(1))
         if row is None:return None
         row.state='running';row.stage='正在执行';s.event(row,db)

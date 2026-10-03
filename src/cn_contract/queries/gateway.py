@@ -44,6 +44,8 @@ async def execute_plan(plan_id,actor,transport=None,*,database,matter_id):
                 or transport.actor.user_id != actor.user_id or transport.actor.session_id != actor.session_id
                 or transport.matter_id != matter_id):
             raise ServiceError('BLOCKED_LIVE',403)
+        from ..ops.storage import require_active
+        require_active(db)
         plan=planner.read_plan(plan_id,actor,matter_id=matter_id,db=db,require_approved=False)
         if plan.scope=='Q0': return []
         plan=planner.read_plan(plan_id,actor,matter_id=matter_id,db=db,require_approved=True)

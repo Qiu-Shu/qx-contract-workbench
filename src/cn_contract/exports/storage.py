@@ -89,6 +89,8 @@ def latest(kind,parent,db):
 def load_run(run,actor,db):
     from ..review.storage import read_run
     authorize(actor,run.matter_id,db,write=True)
+    from ..ops.storage import require_active
+    require_active(db)
     actual=read_run(run.matter_id,run.id,actor,db=db,current=True)
     try:checked=ReviewRun.model_validate_json(run.model_dump_json())
     except Exception:raise ServiceError('VERSION_CONFLICT',409) from None
@@ -98,6 +100,8 @@ def load_run(run,actor,db):
 
 def load_patch(matter_id,patch,actor,db,*,audience=None,write=True):
     authorize(actor,matter_id,db,write=write)
+    from ..ops.storage import require_active
+    require_active(db)
     try:patch=Patch.model_validate_json(patch.model_dump_json())
     except Exception:raise ServiceError('VERSION_CONFLICT',409) from None
     row=latest('patch_approval',patch.id,db)
@@ -144,6 +148,8 @@ def redirected(path):
 
 
 def checked_bytes(path,digest,db):
+    from ..ops.storage import relocation
+    path=relocation(path,digest,db)
     actual_root=file_root(db);root=actual_root.resolve();candidate=Path(path)
     if redirected(actual_root) or redirected(candidate) or candidate.stat().st_nlink>1 or not candidate.resolve().is_relative_to(root) or candidate.resolve().parent!=root:
         raise ServiceError('VERSION_CONFLICT',409)

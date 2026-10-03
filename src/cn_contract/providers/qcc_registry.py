@@ -158,6 +158,8 @@ async def discover_tools(endpoint_ref, *, actor, matter_id, db, secrets=None):
             raise ServiceError('BLOCKED_LIVE', 403)
     endpoint = read_endpoint(endpoint_ref, actor=actor, db=db)
     authorize(actor, matter_id, 'read', db)
+    from ..ops.storage import require_active
+    require_active(db)
     if endpoint['provider'] == 'synthetic_mock_qcc':
         variant = latest('variant', endpoint_ref, db)
         catalog = mock_catalog(json.loads(variant.payload)['variant'] if variant else 'base')

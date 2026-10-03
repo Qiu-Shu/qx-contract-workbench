@@ -29,6 +29,12 @@ def main(argv=None) -> int:
     evaluate.add_argument('--suite',type=Path,required=True)
     evaluate.add_argument('--offline',action='store_true',help='仅运行离线工程断言和mock材料处理')
     evaluate.add_argument('--output',type=Path,required=True,help='项目内新的JSON制品，不覆盖已有结果')
+    release=commands.add_parser('release-manifest',help='绑定当前本机证据；缺生产批准时明确阻断')
+    release.add_argument('--mode',choices=('development','production'),default='development')
+    release.add_argument('--output',type=Path,required=True,help='本项目.local内全新JSON')
+    release.add_argument('--rule-evidence',action='append',default=[])
+    release.add_argument('--test-evidence',action='append',default=[])
+    release.add_argument('--deployment-evidence',action='append',default=[])
     args = parser.parse_args(argv)
     try:
         if args.command == 'config-validate':
@@ -64,6 +70,22 @@ def main(argv=None) -> int:
                 'readiness':report.readiness,'legal_gold':report.gold.status,'real_provider_requests':0,
                 'output':str(output)},ensure_ascii=False))
             return 0 if report.full_capability_numerator==84 and report.readiness=='GO' else 1
+        elif args.command=='release-manifest':
+            from cn_contract.domain import ReleaseConfig
+            from cn_contract.ops.release import build_release_manifest
+            from cn_contract.ops.backup import checked_root
+            output=args.output if args.output.is_absolute() else PROJECT_ROOT/args.output
+            if output.suffix!='.json' or output.exists() or not output.absolute().is_relative_to(PROJECT_ROOT/'.local'):
+                raise ValueError('NEW_LOCAL_ARTIFACT_REQUIRED')
+            config=ReleaseConfig(source_lock_ref='sources/upstream.lock.json',rule_version_refs=tuple(args.rule_evidence),
+                config_ref='config/defaults.json',test_evidence_refs=tuple(args.test_evidence),deployment_evidence_refs=tuple(args.deployment_evidence))
+            manifest=build_release_manifest(config,mode=args.mode)
+            parent=checked_root(output.parent,create=True)
+            output=parent/output.name
+            if not output.is_relative_to((PROJECT_ROOT/'.local').resolve()):raise ValueError('NEW_LOCAL_ARTIFACT_REQUIRED')
+            with output.open('x',encoding='utf-8') as stream:stream.write(manifest.model_dump_json(indent=2)+'\n')
+            print(json.dumps({'mode':manifest.mode,'approved':False,'blockers':len(manifest.blockers),'output':str(output)},ensure_ascii=False))
+            return 0
         elif args.command=='demo-server':
             from cn_contract.web.demo_server import serve
             serve(port=args.port,directory=args.directory)
@@ -79,7 +101,7 @@ def main(argv=None) -> int:
             print(json.dumps(summary,ensure_ascii=False))
             return 0 if summary['validation_ok'] and summary['run_status']=='completed' else 1
     except (OSError, ValueError, ValidationError) as error:
-        code = 'CONFIG_INVALID' if args.command == 'config-validate' else 'DEMO_INVALID' if args.command=='demo' else 'EVALUATION_INVALID' if args.command=='evaluate' else 'SCHEMA_INVALID'
+        code = 'CONFIG_INVALID' if args.command == 'config-validate' else 'DEMO_INVALID' if args.command=='demo' else 'EVALUATION_INVALID' if args.command=='evaluate' else 'RELEASE_BLOCKED' if args.command=='release-manifest' else 'SCHEMA_INVALID'
         print(f'{code}:{type(error).__name__}', file=sys.stderr)
         return 1
     return 0

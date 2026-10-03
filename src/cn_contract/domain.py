@@ -1455,6 +1455,11 @@ class ReleaseManifest(DomainModel):
     deployment_evidence_sha256: SHA256
     approved_by: UUID | None
     approved_at: UTCDatetime | None
+    mode: Literal['development', 'production'] = 'development'
+    blockers: tuple[NonEmpty, ...] = ()
+    evidence_hashes: dict[NonEmpty, SHA256] = Field(default_factory=dict)
+    evidence_currentness: dict[NonEmpty, NonEmpty] = Field(default_factory=dict)
+    created_at: UTCDatetime | None = None
 
 
 class EgressPolicy(DomainModel):
@@ -1474,6 +1479,74 @@ class BackupReport(DomainModel):
     restored_at: UTCDatetime
     ok: bool
     differences: tuple[NonEmpty, ...]
+    archive_sha256: SHA256 | None = None
+    manifest_sha256: SHA256 | None = None
+    restored_root: NonEmpty | None = None
+    restored_database_sha256: SHA256 | None = None
+    verified_file_count: NonNegativeInt = 0
+    source_table_counts: dict[NonEmpty, NonNegativeInt] = Field(default_factory=dict)
+    quarantine_ref: UUID | None = None
+    limitations: tuple[NonEmpty, ...] = ()
+
+
+class BackupArchiveHeader(DomainModel):
+    version: PositiveInt
+    archive_id: UUID
+    key_ref: Annotated[str, StringConstraints(pattern=r'^synthetic-[a-z0-9-]{1,100}$')]
+    synthetic_only: Annotated[bool, Field(strict=True)]
+
+    @model_validator(mode='after')
+    def independent_format(self):
+        if self.version != 1 or self.synthetic_only is not True:
+            raise ValueError('independent fictional backup format required')
+        return self
+
+
+class BackupFileEvidence(DomainModel):
+    logical_ref: NonEmpty
+    physical_ref: NonEmpty
+    sha256: SHA256
+    size: NonNegativeInt
+    record_ref: UUID
+    kind: Literal['original', 'export', 'patch']
+    matter_id: UUID
+
+
+class BackupTableEvidence(DomainModel):
+    count: NonNegativeInt
+    sha256: SHA256
+
+
+class BackupManifestEvidence(DomainModel):
+    version: PositiveInt
+    archive_id: UUID
+    synthetic_only: Annotated[bool, Field(strict=True)]
+    created_at: UTCDatetime
+    source_database_sha256: SHA256
+    schema_sha256: SHA256
+    tables: dict[NonEmpty, BackupTableEvidence]
+    files: tuple[BackupFileEvidence, ...]
+    retention_days: PositiveInt
+    latest_external_checkpoint: None
+    limitations: tuple[NonEmpty, ...]
+
+    @model_validator(mode='after')
+    def independent_format(self):
+        if self.version != 1 or self.synthetic_only is not True:
+            raise ValueError('independent fictional backup manifest required')
+        return self
+
+
+class SecretFinding(DomainModel):
+    path: NonEmpty
+    reason: NonEmpty
+
+
+class SecretScanReport(DomainModel):
+    ok: bool
+    findings: tuple[SecretFinding, ...]
+    checked_files: NonNegativeInt
+    scope: NonEmpty = 'explicit candidate bytes only; pattern scan, manual classification pending'
 
 
 class ReadinessEvidence(DomainModel):

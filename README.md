@@ -1,6 +1,6 @@
 # 群兴合同审查工作台
 
-当前已完成 T00–T06 的来源、统一类型、权限、解析、事实、规则批准门及四类虚构合同审查闭环，以及 T07 固定 SDK 本机 MCP 模拟、T08 持久预算网关、T09 三类草案与精确原生正文修订，并已安装 Scrapling 开发工具。T10 已接入中文页面、接口和持久任务，正在完成最终普通浏览器、独立审阅和全套验证，实际状态见任务记录。**仅限虚构工程演示；不能上传真实材料、签发正式意见或作为生产软件使用。**
+当前已完成 T00–T10 的来源、统一类型、权限、解析、事实、规则批准门、四类虚构合同闭环、本机 MCP、持久预算、草案修订及中文页面；Scrapling 已安装。T11 的固定评测与40份工程材料已实际运行，能力缺口和法律 gold 保留阻断。T12 已实现受控备份恢复与发布门，正在收口最终目标、独立审阅和父全套，实际状态见任务记录。**仅限虚构工程演示；不能上传真实材料、签发正式意见或作为生产软件使用。**
 
 现有目录最初为空 Git 仓库；用户确认无其他代码。本次为增量初始化，没有整仓替换、删除用户文件或复制A包运行文本。
 
@@ -20,6 +20,7 @@
 - [T08预算网关实测](docs/testing/T08.md)、[父节点验收](docs/testing/T08-parent-checks.md)与[独立账本审阅](docs/testing/T08-review.md)
 - [T09导出实测](docs/testing/T09.md)、[独立审阅](docs/testing/T09-review.md)、[实际Word十页验收](docs/testing/T09-word-visual.md)与[父节点验收](docs/testing/T09-parent-checks.md)
 - [T10作者接口与任务实测](docs/testing/T10.md)、[模板依赖实际采用](docs/reuse/T10-dependencies.md)与[HTTP/任务接入决策](docs/adr/0005-http-jobs-and-synthetic-ui.md)
+- [T11固定评测与实际范围](docs/testing/T11.md)、[T12安全恢复实测](docs/testing/T12.md)、[安全说明](docs/SECURITY_RUNBOOK.md)与[运维说明](docs/OPERATIONS_RUNBOOK.md)
 - [Scrapling安装与使用](docs/tools/SCRAPLING.md)
 
 在当前 Windows 项目目录运行：
@@ -96,3 +97,11 @@ T11新增固定84项工程评测登记、40份独立短虚构材料、家族完�
 ```
 
 每次使用新的项目内JSON路径以保留旧证据。当前完整能力与真实法律批准未满足，生成实际报告后退出码为1且readiness为BLOCKED；不据此宣称生产完成。离线只使用本机独立模拟服务，实际模型和QCC请求为0，web/demo材料范围保持原四个登记hash。
+
+T12 的恢复只到新目录，旧会话撤销、queued/running 隔离、unknown 积分与调用次数保留；历史制品按原记录/hash从新 root 读取，当前修订和所有发送保持隔离。备份 key resolver 仅接受显式公开虚构测试材料，生产密钥管理未批准。应用出站门、pattern secret 扫描与真实 Git index 扫描不等同操作系统沙箱或全面敏感分类。
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m cn_contract.cli release-manifest --mode development --output .local/release-new.json
+```
+
+该开发清单绑定当前实际源/config与明确引用的证据 bytes，批准字段为空；`--mode production` 当前实际非零。T11历史评测的时间/hash/源范围保留，新增T12不能把旧84结果冒称当前全面通过。生产许可、律师 gold、真实账户/数据政策、国内host、TLS、OS隔离和最新外部发送高水位仍分别阻断。

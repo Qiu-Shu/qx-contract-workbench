@@ -15,6 +15,8 @@ class QccTransport:
         self.db = db; self.secrets = secrets; self.dispatch_count = 0
 
     def _current(self, binding):
+        from ..ops.storage import require_active
+        require_active(self.db)
         endpoint = registry.read_case_endpoint(self.endpoint_ref, actor=self.actor, matter_id=self.matter_id, db=self.db)
         if not endpoint['synthetic'] or endpoint['live_allowed'] or endpoint['provider'] not in {'synthetic_mock_qcc', 'synthetic_mcp_loopback'}:
             raise ServiceError('BLOCKED_LIVE', 403)
@@ -126,6 +128,8 @@ class FactoryQccTransport:
         from .storage import latest
         with s.factory_transaction(self.database,self.actor,self.matter_id) as db:
             s.authorize_query(self.actor,self.matter_id,db)
+            from ..ops.storage import require_active
+            require_active(db)
             ref=registry.binding_reference(binding,actor=self.actor,matter_id=self.matter_id,db=db)
             current=registry.read_binding(ref,actor=self.actor,matter_id=self.matter_id,db=db)
             if not current.enabled or current!=binding: raise ServiceError('TOOL_UNBOUND',403)
@@ -147,6 +151,12 @@ class FactoryQccTransport:
             raise ServiceError('QUERY_STATE_UNKNOWN',403)
         initial=self.dispatch_count
         endpoint,price,amount,profile=self._prepare(binding)
+        if endpoint['provider']=='synthetic_mcp_loopback':
+            from ..ops.egress import check_egress,SyntheticEndpointRegistry
+            from ..domain import EgressPolicy
+            destination=endpoint['config']['endpoint']
+            check_egress(destination,EgressPolicy(allowed_endpoints=(destination,),allowed_regions=(),allowed_data_types=('contract_text',)),
+                registry=SyntheticEndpointRegistry(self.database,self.actor,self.matter_id,binding.endpoint_config_ref))
         registry.schema_validator(binding.input_schema_snapshot).validate(arguments)
         raw=None; status='sent_unknown'; known=False; charge=None; error_code=None
         def before_dispatch():

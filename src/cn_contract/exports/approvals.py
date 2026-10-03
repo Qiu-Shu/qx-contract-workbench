@@ -15,6 +15,8 @@ from .report_docx import build
 
 def approve_patch(matter_id,run_id,patch,actor,*,db,audiences=('internal',),exception_authorization_id=None):
     s.authorize(actor,matter_id,db,write=True)
+    from ..ops.storage import require_active
+    require_active(db)
     run=read_run(matter_id,run_id,actor,db=db,current=True)
     if run.status!='completed':raise ServiceError('VERSION_CONFLICT',409)
     try:patch=Patch.model_validate_json(patch.model_dump_json())
@@ -138,6 +140,8 @@ def _bundle(bundle_id,actor,db):
     row=s.latest('bundle',bundle_id,db)
     if not row:raise ServiceError('CROSS_MATTER_DENIED',403)
     s.authorize(actor,UUID(row.matter_id),db)
+    from ..ops.storage import require_active
+    require_active(db)
     value=json.loads(row.payload);bundle=ArtifactBundle.model_validate(value['bundle'])
     digest=s.sha({'bundle':bundle.model_dump(mode='json',exclude={'manifest_sha256'}),'metadata':value['metadata']})
     if digest!=bundle.manifest_sha256:raise ServiceError('VERSION_CONFLICT',409)
@@ -153,7 +157,10 @@ def _bundle(bundle_id,actor,db):
     return bundle,actual
 
 
-def read_bundle(bundle_id,actor,*,db):return _bundle(bundle_id,actor,db)[0]
+def read_bundle(bundle_id,actor,*,db):
+    from ..ops.storage import require_active
+    require_active(db)
+    return _bundle(bundle_id,actor,db)[0]
 
 
 def approve_bundle(bundle_id,expected_hash,actor,*,db,exception_authorization_id=None):

@@ -17,7 +17,7 @@
 |T09|ENGINEERING_PASS；BLOCKED_LIVE / PRODUCTION_BLOCKED|37目标/646全套、独立61探针/136关联回归；三类新报告/内部精确原生修订；Word六轮十页与接受拒绝全文实际通过|复杂及对外原件包修改人工；QCC报告消费者/全合同补丁后语义重审未实现；真实批准与许可缺失；下一T10|
 |T10|ENGINEERING_PASS（已执行范围）；PRODUCTION_BLOCKED|六类中文页面/14端点/持久任务；37 API+4 API旅程+22依赖门，全套709/0警告；独立80+41+195；根普通浏览器四类/各18维、五种处置、16实际下载、四次mock拒签；55包/环境71保留旧53证据|完整浏览器网络捕获NOT_RUN，声明资源均本地/应用console0/QCC账本0另证；source发布9/runtime发布59阻断；法律gold、真实外查、正式签发正例和生产仍阻断|
 |T11|ENGINEERING_PASS（评测机制）；LEGAL_BENCHMARK_BLOCKED / PRODUCTION_BLOCKED|37目标、独立64+37及316参数；根全套746/0警告；真实CLI84能力5PASS/36NOT_RUN/16NOT_IMPLEMENTED/7NOT_SUPPORTED/20BLOCKED，58guard单列；40独立虚构材料实际审查39工程PASS/1NOT_SUPPORTED，16家族/24dev16预留blind；最终644输入零漂移|发现的材料/执行证据/硬门缺陷均真实RED修复且同探针闭合；84项没有全部通过，两律师gold缺失、法律指标null；CLI真实exit1/BLOCKED；下一任务T12|
-|T12|NOT_STARTED|单实例恢复/出站/发布门已有细化计划，未运行|部署环境、OS隔离/地域批准和真实资料处理仍阻断|
+|T12|ENGINEERING_PASS（已执行范围）；PRODUCTION_BLOCKED|44正式目标、两独审68与54；根全套790/0警告；根新目录4类原件+5草案制品/2原生XML、38表/未知15剩5且0重发；623输入封证/314原始bytes不变|development发布75阻断/production实际exit1；国内host/HTTPS/OS隔离/真实key custody与数据政策NOT_RUN/未批准，当前全部法律能力/gold仍阻断；下一T13|
 |T13|BLOCKED_LIVE / NOT_STARTED|没有真实联调或上线决定|账户/许可/规则批准/金标准/模型数据政策/环境与预算缺失|
 
 ## T00实际执行

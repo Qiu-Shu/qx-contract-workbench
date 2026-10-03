@@ -107,6 +107,8 @@ def _change(row,status,actor_id,db,*,confirmed=None,reconciliation_ref=None,call
 
 
 def _mark_send(entry_id,plan,actor,db):
+    from ..ops.storage import require_active
+    require_active(db)
     current=planner.read_plan(plan.id,actor,matter_id=plan.matter_id,db=db,require_approved=True)
     if current != plan: raise ServiceError('PLAN_CHANGED',409)
     row=_get(entry_id,db); value=BudgetEntry.model_validate_json(row.payload)
@@ -121,6 +123,8 @@ def _mark_send(entry_id,plan,actor,db):
 def _claim_send(entry_id,token,binding,parameters,actor,matter_id,db):
     """Internal single-use durable grant consumed before the actual tool call."""
     s.authorize_query(actor,matter_id,db)
+    from ..ops.storage import require_active
+    require_active(db)
     row=_get(entry_id,db); value=BudgetEntry.model_validate_json(row.payload)
     if (row.matter_id!=str(matter_id) or value.status!='dispatching' or row.send_claimed
             or row.dispatch_token_sha256!=hashlib.sha256(token.encode()).hexdigest()):
