@@ -18,6 +18,6 @@
 
 父节点原始CLI stdout/退出码和辅助JSON留在忽略目录`.audit-local/t06-parent-demo-commands.json`、`t06-parent-demo-verification.json`及`t06-parent-checks.json`。辅助读不存在CHANGELOG_IMPLEMENTATION.md和Windows glob错误均实际exit1，后按rg发现真实CHANGELOG.md及目录检索；与功能测试无关，未当PASS/RED。验收脚本仅检查本轮已执行结果，没有添加镜像实现的正式测试。
 
-首次stage提示provenance.json的CRLF会转LF；该文件属于固定bytes/hash证据，已新增`.gitattributes`虚构fixture路径的`-text`属性并重新stage，防止新检出破坏登记hash。此为证据字节保留修复，业务文件没有再变；索引blob与实际文件独立核对。
+首次stage提示provenance.json的CRLF会转LF；已新增`.gitattributes`虚构fixture路径的`-text`属性，但普通add沿用了原缓存blob。第一次索引hash检查实际exit1，父节点错误地继续提交032d5d7；工作区原文件及四份DOCX未变。随后逐项确认只有provenance索引hash不一致，`git add --renormalize -- tests/fixtures/synthetic/provenance.json`后5/5索引hash检查exit0，再补提交保留真实字节。没有把第一次失败写PASS，业务代码及此前511/四CLI通过结果未变。
 
 mock字节计数不代表真实供应商tokenizer或真实费用；0使用mock_credit单位。失败使用留证在调用者提交后持久；外层事务整体回滚仍回滚技术记录，真实付费提供者尚未开放，不能声称已完成真实费用耐久保证。真实律师规则批准、法律金标准、试点、正式签发、Word/PDF及生产仍各自待完成。
