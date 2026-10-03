@@ -19,6 +19,8 @@
 |T11|ENGINEERING_PASS（评测机制）；LEGAL_BENCHMARK_BLOCKED / PRODUCTION_BLOCKED|37目标、独立64+37及316参数；根全套746/0警告；真实CLI84能力5PASS/36NOT_RUN/16NOT_IMPLEMENTED/7NOT_SUPPORTED/20BLOCKED，58guard单列；40独立虚构材料实际审查39工程PASS/1NOT_SUPPORTED，16家族/24dev16预留blind；最终644输入零漂移|发现的材料/执行证据/硬门缺陷均真实RED修复且同探针闭合；84项没有全部通过，两律师gold缺失、法律指标null；CLI真实exit1/BLOCKED；下一任务T12|
 |T12|ENGINEERING_PASS（已执行范围）；PRODUCTION_BLOCKED|44正式目标、两独审68与54；根全套790/0警告；根新目录4类原件+5草案制品/2原生XML、38表/未知15剩5且0重发；623输入封证/314原始bytes不变|development发布75阻断/production实际exit1；国内host/HTTPS/OS隔离/真实key custody与数据政策NOT_RUN/未批准，当前全部法律能力/gold仍阻断；下一T13|
 |T13|ENGINEERING_PASS（守卫与受限交付）；BLOCKED_LIVE / PRODUCTION_BLOCKED|25正式目标、31费用恢复关联；两独审29与43；根当前815全套/0警告；当前84能力5PASS/58guard单列、40虚构材料实际审查；qcc-smoke真实CLI拒绝、开发发布75阻断/生产exit1|真实联调与影子NOT_RUN；账户/许可/现实批准信任根/完整法律硬失败登记/金标准/模型数据政策/国内环境缺失；真实供应商及真实资料外传0，没有上线批准|
+|DeepSeek接续|DESIGN_PENDING；REAL_CALLS_DISABLED|用户已指定DeepSeek并明确仅接入与离线验证；现协议/Mock注册门/费用差距与公开官方API预检完成|首批具体设计待确认；新增功能测试NOT_RUN，不配置密钥、不发真实请求，真实费用/数据/批准链仍阻断|
+|ChatGPT插件目标|TARGET_CONFIRMED；PLANNING_ONLY|用户明确最终交付为ChatGPT插件；现服务复用/薄MCP/身份与文件桥方案已整理，已装MCP2.2.0只读导入exit0|工作台对外MCP/宿主安装/ChatGPT真实连接均未实现或NOT_RUN；不建账户、付费托管、隧道或发布|
 
 当前阶段记录：[T13实际测试](testing/T13.md)、[父最终815/84与证据核验](testing/T13-parent-checks.md)、[独立调用审阅29项](testing/T13-live-review-final.md)、[独立上线证据审阅43项](testing/T13-readiness-actual-review.md)。受限交付、逐项解除条件与上线决定分别见[LIVE_READINESS](LIVE_READINESS.md)、[SHADOW_RUN_REPORT](SHADOW_RUN_REPORT.md)、[GO_NO_GO](GO_NO_GO.md)。84项当前真实5PASS/36NOT_RUN/16NOT_IMPLEMENTED/7NOT_SUPPORTED/20BLOCKED；815参数用例通过不等于84项能力、双律师验收或生产完成。
 
