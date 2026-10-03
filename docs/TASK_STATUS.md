@@ -11,7 +11,7 @@
 |T03|ENGINEERING_PASS；PRODUCTION_BLOCKED|安全DOCX/PDF摄取、受限XML、部件/逐页盘点、精确版本锚点；69目标/269全套 passed；独立69目标+14攻击探针 passed|OCR/全面视觉等价/PDF解码进程沙箱未部署；G06运行采用已登记；G06/G10生产门禁仍阻断；下一任务T04|
 |T04|ENGINEERING_PASS；PRODUCTION_BLOCKED|事实候选/原件信任核验、完整版本确认、Decimal AST/单位/真步长计算、主体明确选择；76目标/345全套 passed|独立76目标/31探针/181回归通过；来源污染P2闭合；模型/外部收据/正式签发仍未支持；下一任务T05|
 |T05|ENGINEERING_PASS；BLOCKED_RULE_APPROVAL / PRODUCTION_BLOCKED|14草案/9pending法源索引、来源证据/负责人批准门、时际/例外/版本冲突与客户政策隔离；86目标/431全套passed|独立86目标/45探针/124核心回归通过；实际法源及律师规则批准缺失，草案不能参与法律结论；下一任务T06|
-|T06|NOT_STARTED|只读接口/测试预检和细化计划就绪，尚无审查闭环|T05完成后继续四类虚构合同离线演示；QCC保持关闭；真实规则批准缺失|
+|T06|ENGINEERING_PASS；BLOCKED_RULE_APPROVAL / PRODUCTION_BLOCKED|80目标/511全套；独立77攻击探针；四份实际虚构DOCX CLI各18维、9JSON/SQLite、QCC0|规则未现实批准；mock不能正式签发；Word/PDF待T09；下一任务T07|
 |T07–T10|NOT_STARTED|候选来源可读，不代表接口已实现|真实外查缺账户、工具、价格、许可；修订和UI未实现|
 |T11–T12|NOT_STARTED|已核对规格含84个唯一编号，不是84项测试通过|实际回归映射、律师金标准、部署/恢复未实现|
 |T13|BLOCKED_LIVE / NOT_STARTED|没有真实联调或上线决定|账户/许可/规则批准/金标准/模型数据政策/环境与预算缺失|
@@ -47,7 +47,7 @@
 - source锁的read_verified表示选取文件与许可证据可读，不能替代依赖、实际效果或律师批准。G11根CC许可不能替代目标AGPL，GNU通用许可全文也不能替代授权。
 - 许可指纹只能防已知完整副本和已登记片段进入常见运行目录；不能认定任意改写、短片段或未知来源已获许可。未来新增运行目录必须纳入扫描。
 - T01的Pydantic类型校验不能替代实际权限、来源批准、费用或签发；标准JSON往返保持事实Decimal/日期类型。全部默认参数来自同一JSON，并生成实测配置hash。
-- 未实现：审查API/UI、18维业务审查、四类样本闭环、预算网关、Word报告与原生修订、OCR、真实MCP/QCC联调、法律样本测评和生产部署。
+- 未实现：审查API/UI、真实模型与法律规则的审查、预算网关、Word报告与原生修订、OCR、真实MCP/QCC联调、法律样本测评和生产部署。T06四类虚构/mock闭环与完整18维技术结果已实现，不等于上述真实能力。
 
 ## T01实际执行
 
@@ -72,7 +72,7 @@ T02最终父节点实际`pytest -q --tb=short --junitxml=docs/testing/T02-result
 
 本阶段已本地提交：`ef8b5ac`（T00与Scrapling工具），`a0d7ec4`（Windows检出保留证据字节）；提交作者为Codex，不改全局Git身份，不推送或对外发布。第三方原始证据中的尾随空格保持原样，不清理而破坏来源hash。
 
-后续本地阶段提交：`ca230d6`（T01）、`f30ea73`（T02）、`15c7a6a`（T03）、`2c980b3`（T04）。各阶段保留自己的实际测试分母；未推送。T05最终验证通过，沿同一分支继续T06。
+后续本地阶段提交：`ca230d6`（T01）、`f30ea73`（T02）、`15c7a6a`（T03）、`2c980b3`（T04）、`8ffa6b1`（T05）。各阶段保留自己的实际测试分母；未推送。T06验收通过，沿同一分支继续T07。
 
 ## T03 实际执行
 
@@ -101,3 +101,13 @@ PDF read 仅指已提取文字层；扫描页、图片、交互注释、不可�
 真实规则批准仍BLOCKED_RULE_APPROVAL。默认14卡全draft、LAW/无authority，科技关闭；9条官方法源索引pending，无伪正文/hash/日期。来源候选门和虚构测试身份只证明技术授权/算法，不证明现实法源真实性、法律效力或执业许可。政策按具体案件隔离，内容hash与运行批准依赖hash分开；T06从完整真实snapshot选规则，模型只接收实际applied。原件事实重算继续复用T04，没有重写T00–T04或安装新依赖。
 
 T07/T08细化和T08/T09只读预检仅PLANNING_ONLY。Word安装/COM注册已读，render_docx→soffice路径实测缺工具；Word离线候选尚未运行。T07候选51包尚未安装/SDK运行。下一步先T06四类独立虚构DOCX实际审查、18维/manifest、QCC调用0，再外查及修订，不跳阶段。
+
+## T06 实际执行
+
+正式首批15项先实际failed/0 errors，包括六个指定场景及严格raw JSON；后增修复、权限、原件/来源、逐块/跨条款、失败留证、约束/方向和数学精度边界。独立六组P2已真实RED→GREEN关闭：深层JSON异常、重复意见、候选/收尾失败丢usage、无谈判目标、义务方向与双通知遗漏、Decimal高精度及全局trap。实际原始返回最多一次修复，不是调用特殊dict替代JSON。
+
+父节点最终`.venv/Scripts/python.exe -X utf8 -m pytest --junitxml=docs/testing/T06-results.xml -q`退出0：511 passed、1条既有Starlette/httpx弃用警告、75.18秒。独立80目标/77攻击探针/42权限CLI+22计算回归退出0，作者80目标/161受影响回归退出0；23冻结文件SHA/bytes全匹配。defaults/schema/pipcheck/来源开发门退出0，release实际G06/G10阻断退出1，详细命令/分母/辅助错误保存在T06.md、T06-review.md及T06-parent-checks.md。
+
+四类实际文件路径demo均退出0：sales/service/lease/nda各完整18维和validation ok，分别3/6/5/4意见、3/1/2/1候选事实，明确确认版本2；每份审查3次和确认前候选1次mock，全部16次raw hash核对，QCC合计0。9JSON、受保护SQLite和原件实际存在并核对，未生成Word/PDF，未上传真实材料。未批准法律维度保持材料不足，mock不能正式签发。
+
+接下来T07固定SDK与独立本地MCP模拟，随后T08预算和T09原生修订。T10–T13细化/只读预检只是PLANNING_ONLY；法律验收、真实账户/价格/数据政策、许可与部署继续阻断，不把规划或工程demo算生产完成。

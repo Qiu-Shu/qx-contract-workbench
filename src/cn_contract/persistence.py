@@ -427,6 +427,18 @@ def transition_matter(matter_id: UUID, target: MatterStatus, actor: Actor, db: S
     return read_matter(matter_id, actor, db)
 
 
+def review_status_changed(matter_id: UUID, actor: Actor, db: Session, *, success: bool) -> Matter:
+    """Narrow review completion service; joins caller's atomic savepoint."""
+    from .security import ServiceError, authorize
+    authorize(actor,matter_id,'review',db)
+    if type(success) is not bool: raise ValueError('bool required')
+    row=db.get(MatterRow,str(matter_id),populate_existing=True)
+    if row.status!='ready_for_review': raise ServiceError('STATE_CONFLICT',409)
+    row.status='awaiting_lawyer' if success else 'failed'
+    _audit_change(matter_id,actor,'state_changed','matter',db)
+    return read_matter(matter_id,actor,db)
+
+
 def _editable(matter_id: UUID, db: Session):
     from .security import ServiceError
     row = db.get(MatterRow, str(matter_id), populate_existing=True)

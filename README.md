@@ -1,6 +1,6 @@
 # 群兴合同审查工作台
 
-当前已完成 T00 来源与许可门、T01 统一领域类型/schema/CLI、T02 案件权限/不可变版本/追加审计、T03 安全 DOCX/PDF 读取和锚点、T04 事实确认/精确计算/主体歧义、T05 规则来源/批准门与客户政策隔离，并已安装 Scrapling 开发工具。**四类合同审查闭环正在建设，不能上传真实材料、签发正式意见或作为生产软件使用。**
+当前已完成 T00–T05 的来源、统一类型、权限、解析、事实和规则批准门，以及 T06 四类虚构合同的 QCC-off/mock 审查闭环，并已安装 Scrapling 开发工具。**仅限虚构工程演示；不能上传真实材料、签发正式意见或作为生产软件使用。**
 
 现有目录最初为空 Git 仓库；用户确认无其他代码。本次为增量初始化，没有整仓替换、删除用户文件或复制A包运行文本。
 
@@ -15,6 +15,7 @@
 - [T03解析和锚点](docs/testing/T03.md) 与 [独立攻击审阅](docs/testing/T03-review.md)
 - [T04事实与计算](docs/testing/T04.md) 与 [独立信任根审阅](docs/testing/T04-review.md)
 - [T05规则与政策](docs/testing/T05.md) 与 [独立攻击审阅](docs/testing/T05-review.md)
+- [T06实际四案演示](docs/testing/T06-demo.md)、[父节点验收](docs/testing/T06-parent-checks.md)与[独立攻击审阅](docs/testing/T06-review.md)
 - [Scrapling安装与使用](docs/tools/SCRAPLING.md)
 
 在当前 Windows 项目目录运行：
@@ -54,4 +55,12 @@ T04 全套345项通过；独立76目标/31攻击探针通过。事实确认/主�
 
 T05 全套431项通过；独立86目标/45攻击探针通过。法源证据精确绑定服务端取得bytes、正文及元信息hash；适用日期、例外、负责人权限和政策版本由后端核验。14卡仍全draft、9条法源索引pending，现实法律规则批准仍BLOCKED_RULE_APPROVAL。
 
-下一任务T06：四类虚构合同、关闭QCC的实际审查闭环，随后实现受控外查和批准版本的修订。法律规则、真实账户、数据政策和上线批准分别登记。T07依赖/T08预算/T09 Word预检目前只是准备，未安装SDK、运行外查或生成修订件。
+T06全套511项通过；独立80目标/77攻击探针通过。四份独立虚构DOCX的实际CLI各输出18维、9个JSON文件和受保护SQLite证据；审查12次、确认前候选抽取4次mock调用均保留usage/raw hash，QCC为0。未批准法律规则的维度如实不足，mock不得正式签发；没有Word/PDF制品。
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m cn_contract.cli demo --fixture tests/fixtures/synthetic/sales_basic.docx --provider mock --qcc off
+```
+
+其余三个实际fixture为service_basic.docx、lease_basic.docx和nda_basic.docx。输出目录为本次实际生成的`.local/review-demo`子目录，不允许通过该演示入口处理其他材料。
+
+下一任务T07：固定SDK的本地MCP模拟发现/绑定；随后T08费用网关、T09原生修订。法律规则、真实账户、数据政策和上线批准分别登记。T07依赖/T08预算/T09 Word预检仍只是准备，尚未安装SDK、运行外查或生成修订件。

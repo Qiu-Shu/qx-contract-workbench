@@ -11,8 +11,8 @@ from .persistence import AuditRow
 ALLOWED_ACTIONS = frozenset({'authorization_denied', 'csrf_denied', 'document_created',
                              'parse_saved', 'facts_changed', 'position_changed', 'state_changed', 'baseline_selected', 'party_changed',
                              'authority_registered','authority_verified','rule_registered','rule_approved','rule_recheck',
-                             'policy_changed','policy_approved'})
-ALLOWED_ENTITIES = frozenset({'matter', 'document', 'facts', 'parse', 'party','authority','rule','policy'})
+                             'policy_changed','policy_approved','review_saved','intake_saved'})
+ALLOWED_ENTITIES = frozenset({'matter', 'document', 'facts', 'parse', 'party','authority','rule','policy','review'})
 
 
 def append_event(event: AuditEvent, db: Session) -> UUID:

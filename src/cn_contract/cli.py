@@ -17,6 +17,11 @@ def main(argv=None) -> int:
     schema = commands.add_parser('schema', help='从唯一领域模型生成报告schema')
     schema.add_argument('--output', type=Path, default=PROJECT_ROOT / 'schemas/review-report.v2.schema.json')
     schema.add_argument('--check', action='store_true', help='比较保存schema与当前领域模型，不写文件')
+    demo=commands.add_parser('demo',help='四类独立虚构DOCX离线工程演示')
+    demo.add_argument('--fixture',required=True,help='sales/service/lease/nda或已登记虚构DOCX路径')
+    demo.add_argument('--provider',default='mock')
+    demo.add_argument('--qcc',default='off')
+    demo.add_argument('--output-root',type=Path,default=None)
     args = parser.parse_args(argv)
     try:
         if args.command == 'config-validate':
@@ -36,8 +41,18 @@ def main(argv=None) -> int:
                 args.output.parent.mkdir(parents=True, exist_ok=True)
                 args.output.write_text(json.dumps(generated, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
             print(json.dumps({'ok': True, 'schema_path': str(args.output), 'operation': 'check' if args.check else 'generate'}))
+        elif args.command=='demo':
+            from cn_contract.review.demo import run_demo
+            from cn_contract.security import ServiceError
+            try:
+                summary=run_demo(args.fixture,provider=args.provider,qcc=args.qcc,output_root=args.output_root)
+            except ServiceError as error:
+                print(json.dumps({'ok':False,'error_code':error.code,'qcc_calls':0,'model_sends':0},ensure_ascii=False))
+                return 1
+            print(json.dumps(summary,ensure_ascii=False))
+            return 0 if summary['validation_ok'] and summary['run_status']=='completed' else 1
     except (OSError, ValueError, ValidationError) as error:
-        code = 'CONFIG_INVALID' if args.command == 'config-validate' else 'SCHEMA_INVALID'
+        code = 'CONFIG_INVALID' if args.command == 'config-validate' else 'DEMO_INVALID' if args.command=='demo' else 'SCHEMA_INVALID'
         print(f'{code}:{type(error).__name__}', file=sys.stderr)
         return 1
     return 0
