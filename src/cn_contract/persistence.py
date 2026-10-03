@@ -380,6 +380,14 @@ def _material_changed(matter_id: UUID, db: Session, target_status: str):
     db.execute(update(ExportRow).where(ExportRow.matter_id == str(matter_id)).values(superseded=True))
 
 
+def party_material_changed(matter_id: UUID, actor: Actor, db: Session) -> None:
+    """Narrow party service integration: real case permission and existing invalidation."""
+    from .security import authorize
+    authorize(actor, matter_id, 'candidate_facts', db)
+    _editable(matter_id, db)
+    _material_changed(matter_id, db, 'awaiting_fact_confirmation')
+
+
 _TRANSITIONS = {
     'intake': {'parsed', 'failed', 'archived'},
     'parsed': {'awaiting_fact_confirmation', 'failed', 'archived'},
