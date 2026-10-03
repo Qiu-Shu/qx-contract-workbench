@@ -1,0 +1,598 @@
+{
+  "schema_version": "2.0",
+  "authorship": "independently authored project draft; no copied statutory text",
+  "cards": [
+    {
+      "rule": {
+        "id": "91f7d190-6b09-51fd-9f5b-602ac03322cb",
+        "version": 1,
+        "contract_types": [
+          "sales",
+          "service",
+          "lease",
+          "nda"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b",
+          "customer",
+          "provider",
+          "lessor",
+          "lessee",
+          "discloser",
+          "recipient",
+          "mutual"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "交易主体、授权与许可资料待核实；不能据单项经营描述推断效力。",
+        "coverage_ids": [
+          "C01",
+          "C02",
+          "C03"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-GEN-SCOPE",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "8b0fed5a-fab4-51a2-95b3-12c5fb416463",
+        "version": 1,
+        "contract_types": [
+          "sales",
+          "service",
+          "lease",
+          "nda"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b",
+          "customer",
+          "provider",
+          "lessor",
+          "lessee",
+          "discloser",
+          "recipient",
+          "mutual"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "责任类型、损害条件和商业金额约定分别登记，效力待核实。",
+        "coverage_ids": [
+          "C10",
+          "C11"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-GEN-LIABILITY",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "d7c624dd-a107-505b-af90-a05f71fe7fd4",
+        "version": 1,
+        "contract_types": [
+          "sales",
+          "service",
+          "lease",
+          "nda"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b",
+          "customer",
+          "provider",
+          "lessor",
+          "lessee",
+          "discloser",
+          "recipient",
+          "mutual"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "比例、价款和损失是不同输入；不把30%视为统一合同总价法律上限，待核实。",
+        "coverage_ids": [
+          "C09"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-GEN-LIQUIDATED",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "3b088a7b-abc0-55bb-bd77-56770168e4ae",
+        "version": 1,
+        "contract_types": [
+          "sales",
+          "service",
+          "lease",
+          "nda"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b",
+          "customer",
+          "provider",
+          "lessor",
+          "lessee",
+          "discloser",
+          "recipient",
+          "mutual"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "争议程序与签署、争议事件日期分别登记，新旧适用待核实。",
+        "coverage_ids": [
+          "C15",
+          "C16"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-GEN-ARBITRATION",
+        "jurisdiction": "CN-mainland",
+        "event_field": "dispute_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "bab97d7e-e598-5a24-a6cf-08dbf384265a",
+        "version": 1,
+        "contract_types": [
+          "sales",
+          "service",
+          "lease",
+          "nda"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b",
+          "customer",
+          "provider",
+          "lessor",
+          "lessee",
+          "discloser",
+          "recipient",
+          "mutual"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "事件主体、级别、通知对象和时间单位需逐项确认，待核实。",
+        "coverage_ids": [
+          "C13",
+          "C14"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-DATA-NOTICE",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "bf52bc71-0a08-5aa1-a544-57273b9470b1",
+        "version": 1,
+        "contract_types": [
+          "sales",
+          "service",
+          "lease",
+          "nda"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b",
+          "customer",
+          "provider",
+          "lessor",
+          "lessee",
+          "discloser",
+          "recipient",
+          "mutual"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "劳动关系竞业线索转劳动专项；约定期限及单位待核实。",
+        "coverage_ids": [
+          "C12"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-LABOR-NONCOMPETE",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": "labor",
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "176d4161-84ea-564b-90e0-f06736bcd891",
+        "version": 1,
+        "contract_types": [
+          "sales",
+          "service",
+          "lease",
+          "nda"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b",
+          "customer",
+          "provider",
+          "lessor",
+          "lessee",
+          "discloser",
+          "recipient",
+          "mutual"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "条款提供方、提示与协商过程分别取证，待核实。",
+        "coverage_ids": [
+          "C04"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-GEN-FORM",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "5d88bae2-7efb-539c-a4cd-c7735df31818",
+        "version": 1,
+        "contract_types": [
+          "sales",
+          "service",
+          "lease",
+          "nda"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b",
+          "customer",
+          "provider",
+          "lessor",
+          "lessee",
+          "discloser",
+          "recipient",
+          "mutual"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "付款名称、返还及履行安排分别登记，不因比例自动定性，待核实。",
+        "coverage_ids": [
+          "C06",
+          "C07"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-GEN-DEPOSIT",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "ff71eeec-ded7-52ed-8623-2932b3f37ed5",
+        "version": 1,
+        "contract_types": [
+          "sales",
+          "service",
+          "lease",
+          "nda"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b",
+          "customer",
+          "provider",
+          "lessor",
+          "lessee",
+          "discloser",
+          "recipient",
+          "mutual"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "第三人承诺、授权、期限与范围分别核对，待核实。",
+        "coverage_ids": [
+          "C17"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-GEN-GUARANTEE",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "2d5c60b5-9572-5012-972a-5ace464c28aa",
+        "version": 1,
+        "contract_types": [
+          "sales"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "交付、签收、质量检验、异议与后续瑕疵资料分别登记，待核实。",
+        "coverage_ids": [
+          "C05",
+          "C08"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-SALES-ACCEPT",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "e1af1d5e-e44e-5d90-9572-c631523bb7c6",
+        "version": 1,
+        "contract_types": [
+          "service"
+        ],
+        "positions": [
+          "customer",
+          "provider",
+          "party_a",
+          "party_b"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "服务任务、成果、变更、验收与后续使用资料形成交易记录，待核实。",
+        "coverage_ids": [
+          "C05",
+          "C08",
+          "C18"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-SERVICE-OUTPUT",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "b61bb91a-f6b8-55fb-9e1a-b511d742fd35",
+        "version": 1,
+        "contract_types": [
+          "lease"
+        ],
+        "positions": [
+          "lessor",
+          "lessee",
+          "party_a",
+          "party_b"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "用途、出租依据、交付、维修与退出资料分别登记，待核实。",
+        "coverage_ids": [
+          "C05",
+          "C07",
+          "C18"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-LEASE-USE",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "4d43e433-feb6-5a3a-a0ef-cf94f87ff778",
+        "version": 1,
+        "contract_types": [
+          "nda"
+        ],
+        "positions": [
+          "discloser",
+          "recipient",
+          "mutual",
+          "party_a",
+          "party_b"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "信息范围、授权用途、公开原因、存续及返还资料分别登记，待核实。",
+        "coverage_ids": [
+          "C12",
+          "C14",
+          "C18"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-NDA-SCOPE",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": true,
+        "specialist": null,
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    },
+    {
+      "rule": {
+        "id": "6dc78f5f-49b2-5236-90c2-24bb9d194b0c",
+        "version": 1,
+        "contract_types": [
+          "sales",
+          "service",
+          "lease",
+          "nda"
+        ],
+        "positions": [
+          "buyer",
+          "seller",
+          "party_a",
+          "party_b",
+          "customer",
+          "provider",
+          "lessor",
+          "lessee",
+          "discloser",
+          "recipient",
+          "mutual"
+        ],
+        "trigger_facts": [],
+        "exception_facts": [],
+        "basis_kind": "law",
+        "authority_ids": [],
+        "finding_template": "科技专项关闭；数据、输入、输出与训练许可分别取证，待核实。",
+        "coverage_ids": [
+          "C13",
+          "C14",
+          "C18"
+        ],
+        "status": "draft",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "metadata": {
+        "slug": "CN-TECH-TRAINING",
+        "jurisdiction": "CN-mainland",
+        "event_field": "signed_at",
+        "enabled": false,
+        "specialist": "technology",
+        "note": "本项目独立交易观察草案，无已核验法源，无法律批准。"
+      }
+    }
+  ]
+}

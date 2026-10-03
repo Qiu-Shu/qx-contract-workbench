@@ -154,3 +154,40 @@ def verify_csrf(actor: Actor, token: str | None, matter_id: UUID, db: Session) -
     session = db.get(SessionRow, str(actor.session_id), populate_existing=True)
     if not token or len(token) > 256 or session is None or not hmac.compare_digest(session.csrf_hash, _hash(token)):
         deny(actor, matter_id, 'csrf_denied', db)
+
+
+def provision_rule_manager_grant(user_id: UUID, db: Session) -> None:
+    """Trusted server provisioning only; deliberately absent from HTTP routes.
+
+    Grant records prove engineering authorization, never a lawyer's license or
+    a substantive rule approval. Default databases have no such grant.
+    """
+    from .authorities.storage import RuleManagerGrantRow, require_storage
+    require_storage(db)
+    user = db.get(UserRow, str(user_id), populate_existing=True)
+    if user is None or user.disabled or not set(json.loads(user.roles)) & {'handling_lawyer','reviewing_lawyer'}:
+        raise ServiceError('RULE_UNAPPROVED',403)
+    db.add(RuleManagerGrantRow(user_id=str(user_id),enabled='yes',timestamp=datetime.now(timezone.utc)))
+    db.flush()
+
+
+def revoke_rule_manager_grant(user_id: UUID, db: Session) -> None:
+    """Append a trusted revocation, preserving historical grant evidence."""
+    from .authorities.storage import RuleManagerGrantRow, require_storage
+    require_storage(db)
+    db.add(RuleManagerGrantRow(user_id=str(user_id),enabled='no',timestamp=datetime.now(timezone.utc)))
+    db.flush()
+
+
+def rule_reviewer_valid(user_id: UUID, db: Session) -> bool:
+    from .authorities.storage import current_grant
+    user=db.get(UserRow,str(user_id),populate_existing=True)
+    return bool(user and not user.disabled and set(json.loads(user.roles)) &
+        {'handling_lawyer','reviewing_lawyer'} and current_grant(user_id,db))
+
+
+def authorize_rule_manager(actor: Actor, matter_id: UUID, db: Session) -> None:
+    """Re-read session, server roles, membership, then the server-owned grant."""
+    authorize(actor,matter_id,'confirm_facts',db)
+    if not rule_reviewer_valid(actor.user_id,db):
+        raise ServiceError('RULE_UNAPPROVED',403)

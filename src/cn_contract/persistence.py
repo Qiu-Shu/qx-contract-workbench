@@ -388,6 +388,17 @@ def party_material_changed(matter_id: UUID, actor: Actor, db: Session) -> None:
     _material_changed(matter_id, db, 'awaiting_fact_confirmation')
 
 
+def policy_material_changed(matter_id: UUID, version: int, actor: Actor, db: Session) -> None:
+    """Case-scoped policy activation: no propagation to another client's cases."""
+    from .security import authorize
+    authorize(actor,matter_id,'confirm_facts',db)
+    row=_editable(matter_id,db)
+    payload=json.loads(row.payload)
+    payload['active_policy_version']=version
+    row.payload=Matter.model_validate(payload).model_dump_json()
+    _material_changed(matter_id,db,'awaiting_fact_confirmation')
+
+
 _TRANSITIONS = {
     'intake': {'parsed', 'failed', 'archived'},
     'parsed': {'awaiting_fact_confirmation', 'failed', 'archived'},
