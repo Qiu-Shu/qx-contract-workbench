@@ -1,8 +1,8 @@
 # ChatGPT 合同审查插件目标与复用映射
 
-状态：**LOCAL_OFFLINE_PROTOTYPE；CHATGPT_CONNECTION_NOT_RUN**。最新核验时间：2026-10-04 UTC。用户确认最终交付目标是 ChatGPT 插件，已增量完成 DeepSeek 纯离线适配及本机两工具 MCP；本文件保留后续接入方案，不是运行 Skill、插件清单、安装或发布证据。沿当前 T00–T13 后端建设，既有审批与权限继续由后端核验。
+状态：**LOCAL_SOURCE_PACKAGE_VERIFIED；HOST_NOT_RUN；CHATGPT_CONNECTION_NOT_RUN**。最新核验时间：2026-10-04 UTC。用户确认最终交付目标是 ChatGPT 插件，已增量完成 DeepSeek 纯离线适配、本机两工具 MCP 及连接源包；本文件保留后续接入方案，实际清单在 `plugins/qx-contract-offline-local`，本映射不是运行 Skill、宿主安装或发布证据。沿当前 T00–T13 后端建设，既有审批与权限继续由后端核验。
 
-2026-10-04接续：用户在具体两工具设计及未完成说明后“继续”，本轮已实施空参数workbench_status和固定fixture/op/model的deepseek_offline_example。本机STDIO实际启动/发现/24组合及4拒绝验证通过；80目标/348关联、两独审144与92、父全套1016均通过，实际缺陷及修复见[MCP父验收](../testing/MCP-offline-parent.md)。936属于上批结果，纯SDK内存探针仍不作宿主或插件验收；真实案件工具、身份/文件桥、插件包装安装和ChatGPT连接均未实施或NOT_RUN。
+2026-10-04先前接续：用户在具体两工具设计及未完成说明后“继续”，已实施空参数workbench_status和固定fixture/op/model的deepseek_offline_example。本机STDIO实际启动/发现/24组合及4拒绝验证通过；80目标/348关联、两独审144与92、父全套1016均通过，实际缺陷及修复见[MCP父验收](../testing/MCP-offline-parent.md)。随后本轮“继续”已封装七文件本机连接源包，两种解压配置4状态/48示例/12拒绝、80目标复跑、独立18格式及75边界检查通过，见[源包验收](../testing/PLUGIN-local-package.md)。未新增业务行为或重跑1016；SDK及文件检查不作宿主验收，真实案件工具、身份/文件桥、宿主安装和ChatGPT连接仍未实施或NOT_RUN。
 
 ## 已核实的本机基础
 
@@ -30,7 +30,7 @@
 
 ## 本机 Codex 与 ChatGPT 的验收分别进行
 
-本轮已复用原runtime完成受控STDIO两工具验证；后续插件源包、portable清单、MCP配置和说明仍未建立。案件工具还须实际验证跨案/撤销拒绝及输出最小化，宿主安装验收也需另做。Windows本地STDIO可运行不等于ChatGPT网页已连接。
+现已复用原runtime完成受控STDIO两工具及本机连接源包验证；通用清单、同步Codex兼容清单、MCP配置、64px图标和说明已建立。runtime仍由原仓库/.venv提供，90项绑定hash供核对但清单不自动执行hash门；异机独立分发未验收。完整官方包验证器在本机不可用，结构检查不冒称官方schema或安装解析。案件工具还须实际验证跨案/撤销拒绝及输出最小化，宿主安装验收也需另做。Windows本地STDIO可运行不等于ChatGPT网页已连接。
 
 ChatGPT 开发模式可连接公有 HTTPS Streamable HTTP，或者通过 Secure MCP Tunnel 接私有 stdio/HTTP MCP。必须在目标宿主实际发现工具和运行测试，才可记录已连接；开发模式受账户和工作区政策约束。[官方连接与测试](https://developers.openai.com/plugins/deploy/connect-chatgpt)
 
@@ -44,7 +44,7 @@ ChatGPT 开发模式可连接公有 HTTPS Streamable HTTP，或者通过 Secure 
 
 未来 ChatGPT 文件输入可按 `_meta["openai/fileParams"]` 声明顶层字段，文件对象声明 download_url/file_id/mime_type/file_name，仅前两者 required；可选文件库能力须检查支持。宿主授权文件 URL 仍需后端限制来源、大小、格式与归属，不能接收任意 URL；现 Windows storage_ref 不是 ChatGPT 下载链接。草案下载桥应独立验证，不能因已有 DOCX 导出就声称宿主文件传递完成。[官方文件 API 与 schema](https://developers.openai.com/plugins/reference)
 
-已完成DeepSeek纯离线适配及固定虚构两工具STDIO。后续顺序：插件封装与本机宿主虚构验收 → 目标ChatGPT接入权限与传输方案 → 虚构数据实际连接验收。新增案件读取或写操作前，分别落实可信身份、案件授权、文件桥和相应权限测试；真实模型、真实材料、QCC、影子和生产各自批准，不由离线原型自动开启。
+已完成DeepSeek纯离线适配、固定虚构两工具STDIO和本机连接源包；源包没有安装或上传。后续顺序：本机宿主安装及虚构验收 → 目标ChatGPT接入权限与传输方案 → 虚构数据实际连接验收。新增案件读取或写操作前，分别落实可信身份、案件授权、文件桥和相应权限测试；真实模型、真实材料、QCC、影子和生产各自批准，不由源包自动开启。
 
 ## 只读证据
 

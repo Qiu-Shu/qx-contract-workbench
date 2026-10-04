@@ -121,7 +121,7 @@ T13只添加真实查询前的拒绝门和上线判断，不启用真实请求�
 
 本批121正式目标、308关联回归、两独审138与25均实际通过，根全套936项与原生JUnit逐项相等、0警告。四份登记虚构DOCX的12组离线数据示例实际通过，response/token/rates均人工构造；不是供应商返回或12次法律审查。完整输入666项前后零漂移、314原始文件不变，无新SDK或密钥配置，真实供应商请求0。
 
-最终目标是[ChatGPT插件](docs/reuse/CHATGPT-plugin-target-map.md)。已实现下述本机离线两工具原型；真实案件的工作台MCP、宿主安装、身份与文件桥、ChatGPT连接尚未实施。真实DeepSeek transport、持久模型费用账本、价格/数据政策/有限调用批准仍缺失或阻断。
+最终目标是[ChatGPT插件](docs/reuse/CHATGPT-plugin-target-map.md)。已实现下述本机离线两工具原型及[本机连接源包](plugins/qx-contract-offline-local/README.md)；真实案件的工作台MCP、宿主安装、身份与文件桥、ChatGPT连接尚未实施。真实DeepSeek transport、持久模型费用账本、价格/数据政策/有限调用批准仍缺失或阻断。
 
 ## 本机两工具 MCP 离线入口
 
@@ -140,4 +140,10 @@ T13只添加真实查询前的拒绝门和上线判断，不启用真实请求�
 
 本轮80目标、348关联、独立144与92、父实际24组合+4拒绝及完整1016回归均通过；失败和修复过程见[父验收](docs/testing/MCP-offline-parent.md)、[作者初版](docs/testing/MCP-offline-author.md)及[修复](docs/testing/MCP-offline-author-repair.md)。完整1016包含新80和原936，不把不同回归分母相加，也不代替T13原84能力或律师验收。
 
-只验证当前editable仓库的受控本机虚构入口，未打包/安装插件、没有案件身份或文件桥、未连接任何宿主；帧大小及OS CPU/内存硬限制仍未建立。真实模型/QCC、法律gold、影子试点和生产继续关闭。普通依赖初始化读取与工具不读取凭据分别记录，不宣称整个Python进程没有环境继承。
+上一阶段验证当前editable仓库的受控本机虚构入口；帧大小及OS CPU/内存硬限制仍未建立。真实模型/QCC、法律gold、影子试点和生产继续关闭。普通依赖初始化读取与工具不读取凭据分别记录，不宣称整个Python进程没有环境继承。
+
+## 本机离线插件连接源包
+
+本机七文件源包在 `plugins/qx-contract-offline-local`，包含通用及同步Codex兼容清单、64px图标、说明与90项运行绑定hash。交付ZIP为 `dist/qx-contract-offline-local-0.1.0.zip`（10,399 bytes）；运行仍依赖当前仓库 `.venv` 和固定虚构样本，包内没有复制runtime、合同或依赖。
+
+本批从解压配置实际启动两种清单，4次状态、48组固定示例及12次拒绝通过，80项既有目标回归通过；独立格式检查18项和边界实际调用通过。没有新增业务行为或重跑全套1016；实际命令、hash及限制见[源包验收](docs/testing/PLUGIN-local-package.md)。本机CLI没有完整插件包校验命令，结构检查不作官方验证。宿主安装/工具选择与ChatGPT连接仍NOT_RUN，没有案件身份或文件桥。

@@ -1,0 +1,18 @@
+{
+  "name": "qx-contract-offline-local",
+  "version": "0.1.0",
+  "description": "群兴合同审查工作台的本机离线连接源包；仅提供状态及固定虚构合同的协议示例，依赖当前仓库环境。",
+  "author": { "name": "群兴合同审查工作台项目" },
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "群兴合同审查·离线示例",
+    "shortDescription": "本机状态与固定虚构协议示例",
+    "longDescription": "连接当前 Windows 项目中已安装的两工具 STDIO 服务：查看能力与阻断状态，以及四类固定虚构合同的 DeepSeek 人工协议示例。示例仅验证离线协议，费用未知，不是供应商调用、法律意见或案件审查。源包依赖现有仓库和虚拟环境，未安装宿主或连接 ChatGPT；真实模型、企查查、正式签发及生产继续阻断。",
+    "developerName": "群兴合同审查工作台项目",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "查看本机离线能力与阻断状态。",
+    "composerIcon": "./assets/offline-document.svg",
+    "logo": "./assets/offline-document.svg"
+  }
+}
