@@ -129,6 +129,18 @@ def deepseek_offline_example(fixture: McpOfflineFixture, operation: DeepSeekOper
         raise MCPError(code=INVALID_PARAMS, message=_UNAVAILABLE) from None
 
 
+def _finite_tool_metadata(metadata) -> bool:
+    """Local profile: empty metadata or a bounded integer progress token only.
+
+    The low-level callbacks never pass metadata to a business handler or emit
+    progress notifications. String tokens and other MCP metadata stay closed.
+    """
+    return type(metadata) is dict and (not metadata or (
+        metadata.keys() == {'progressToken'}
+        and type(metadata['progressToken']) is int
+        and 0 <= metadata['progressToken'] <= 2**63 - 1))
+
+
 async def _offline_boundary(ctx, call_next):
     """Validate exact raw inbound arguments before any SDK coercion or handler."""
     if ctx.request_id is None:
@@ -144,7 +156,7 @@ async def _offline_boundary(ctx, call_next):
             params = ctx.params
             if (type(params) is not dict or not {'name'} <= params.keys()
                     or params.keys() - {'name', 'arguments', '_meta'}
-                    or ('_meta' in params and (type(params['_meta']) is not dict or params['_meta']))):
+                    or ('_meta' in params and not _finite_tool_metadata(params['_meta']))):
                 raise ValueError('rejected')
             name = params['name']
             arguments = params.get('arguments', {})
@@ -159,9 +171,15 @@ async def _offline_boundary(ctx, call_next):
                 raise ValueError('rejected')
         elif ctx.method in ('tools/list', 'ping'):
             params = ctx.params
-            if (params is not None and (type(params) is not dict or params.keys() - {'_meta'}
-                    or ('_meta' in params and (type(params['_meta']) is not dict or params['_meta'])))):
-                raise ValueError('rejected')
+            if params is not None:
+                if type(params) is not dict or params.keys() - {'_meta'}:
+                    raise ValueError('rejected')
+                if '_meta' in params:
+                    metadata = params['_meta']
+                    valid = (_finite_tool_metadata(metadata) if ctx.method == 'tools/list'
+                             else type(metadata) is dict and not metadata)
+                    if not valid:
+                        raise ValueError('rejected')
         elif ctx.method != 'initialize':
             # Resource, prompt, subscriptions, HTTP and custom methods are not exposed.
             raise ValueError('rejected')
@@ -186,7 +204,7 @@ def create_server() -> MCPServer:
         instructions='OFFLINE_ONLY：仅受控本机虚构示例；未连接ChatGPT，不作法律审查或正式签发。',
         log_level='ERROR')
     # The documented public list controls the complete chain. This tiny surface
-    # supports no requestState or nonempty trace metadata, so neither SDK OTel nor its
+    # supports no requestState or trace metadata, so neither SDK OTel nor its
     # request-state middleware is retained; no private manager is patched.
     server.middleware[:] = [_offline_boundary]
     return server

@@ -1,0 +1,32 @@
+{
+  "name": "qx-contract-local",
+  "interface": {
+    "displayName": "群兴合同审查·本机离线"
+  },
+  "plugins": [
+    {
+      "name": "qx-contract-offline-local",
+      "source": {
+        "source": "local",
+        "path": "./plugins/qx-contract-offline-local"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "qx-contract-offline-codex",
+      "source": {
+        "source": "local",
+        "path": "./plugins/qx-contract-offline-codex"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

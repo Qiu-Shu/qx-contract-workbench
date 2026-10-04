@@ -92,7 +92,7 @@ def test_empty_sdk_protocol_metadata_is_accepted_without_relaxing_arguments():
 
 
 @pytest.mark.parametrize('metadata', [None, True, 1, '', [], {'traceparent': CANARY}, {'private': CANARY}])
-def test_metadata_must_be_an_empty_protocol_object(metadata):
+def test_nonprotocol_metadata_is_rejected(metadata):
     api()
     with child() as (process, send, stderr):
         initialize(send)

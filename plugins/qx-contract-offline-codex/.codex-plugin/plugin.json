@@ -1,0 +1,20 @@
+{
+  "name": "qx-contract-offline-codex",
+  "version": "0.1.1",
+  "description": "当前 Windows Codex 宿主的本机离线适配包；只连接两个固定虚构示例工具。",
+  "author": {
+    "name": "群兴合同审查工作台项目"
+  },
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "群兴合同审查·本机离线",
+    "shortDescription": "本机状态与固定虚构协议示例",
+    "longDescription": "仅适配当前 Windows Codex 宿主与现有仓库环境。提供能力状态和四类固定虚构合同的人工 DeepSeek 协议示例；费用未知，示例不构成法律意见或真实模型调用。网页 ChatGPT 连接、真实模型、企查查、正式签发及生产继续阻断。",
+    "developerName": "群兴合同审查工作台项目",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "查看本机离线能力与阻断状态。",
+    "composerIcon": "./assets/offline-document.svg",
+    "logo": "./assets/offline-document.svg"
+  }
+}
