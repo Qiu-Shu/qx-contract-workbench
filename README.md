@@ -1,6 +1,6 @@
 # 群兴合同审查工作台
 
-当前已完成 T00–T10 的来源、统一类型、权限、解析、事实、规则批准门、四类虚构合同闭环、本机 MCP、持久预算、草案修订及中文页面；Scrapling 已安装。T11 的固定评测与40份工程材料已实际运行，能力缺口和法律 gold 保留阻断。T12 受控备份恢复与发布门已实测。T13 守卫和受限内部交付已完成已执行的工程范围；新增 DeepSeek 首批纯离线契约，当前完整回归936项/零警告。真实联调及生产仍阻断。**仅限虚构工程演示；不能上传真实材料、签发正式意见或作为生产软件使用。**
+当前已完成 T00–T10 的来源、统一类型、权限、解析、事实、规则批准门、四类虚构合同闭环、本机 MCP、持久预算、草案修订及中文页面；Scrapling 已安装。T11 的固定评测与40份工程材料已实际运行，能力缺口和法律 gold 保留阻断。T12 受控备份恢复与发布门已实测。T13 守卫和受限内部交付已完成已执行的工程范围；新增 DeepSeek 首批纯离线契约及受控本机两工具 MCP，当前完整回归1016项/零警告。真实联调、ChatGPT连接及生产仍阻断。**仅限虚构工程演示；不能上传真实材料、签发正式意见或作为生产软件使用。**
 
 现有目录最初为空 Git 仓库；用户确认无其他代码。本次为增量初始化，没有整仓替换、删除用户文件或复制A包运行文本。
 
@@ -121,4 +121,23 @@ T13只添加真实查询前的拒绝门和上线判断，不启用真实请求�
 
 本批121正式目标、308关联回归、两独审138与25均实际通过，根全套936项与原生JUnit逐项相等、0警告。四份登记虚构DOCX的12组离线数据示例实际通过，response/token/rates均人工构造；不是供应商返回或12次法律审查。完整输入666项前后零漂移、314原始文件不变，无新SDK或密钥配置，真实供应商请求0。
 
-最终目标是[ChatGPT插件](docs/reuse/CHATGPT-plugin-target-map.md)，当前方案仅PLANNING_ONLY；对外工作台MCP、宿主安装、身份与文件桥、ChatGPT连接尚未实施。真实DeepSeek transport、持久模型费用账本、价格/数据政策/有限调用批准仍缺失或阻断。
+最终目标是[ChatGPT插件](docs/reuse/CHATGPT-plugin-target-map.md)。已实现下述本机离线两工具原型；真实案件的工作台MCP、宿主安装、身份与文件桥、ChatGPT连接尚未实施。真实DeepSeek transport、持久模型费用账本、价格/数据政策/有限调用批准仍缺失或阻断。
+
+## 本机两工具 MCP 离线入口
+
+2026-10-04已实际验证本机STDIO入口，复用固定MCP2.2.0和现有codec，无新增依赖。此入口供MCP客户端通过标准输入/输出调用，启动后等待协议输入；它不会打开网页或自动连接ChatGPT。
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m cn_contract.mcp.offline_server
+```
+
+|工具|允许参数|实际范围|
+|---|---|---|
+|workbench_status|空对象|能力和阻断状态；不读取案件|
+|deepseek_offline_example|fixture：sales/service/lease/nda；operation：extract_facts/review_chunk/review_cross_clauses；model：deepseek-flash/deepseek-v4-pro|服务器自行读取固定登记虚构文件，返回请求与人工固定响应；协议验证，不是法律审查|
+
+例如工具参数`{"fixture":"sales","operation":"review_chunk","model":"deepseek-flash"}`。拒绝额外原文、路径、URL、密钥、token、价格、身份和批准；返回费用None/unknown/USD，不生成真实账单或法律结论。目录及祖先链接读取前拒绝，协议错误固定脱敏，服务端默认OTel禁用。
+
+本轮80目标、348关联、独立144与92、父实际24组合+4拒绝及完整1016回归均通过；失败和修复过程见[父验收](docs/testing/MCP-offline-parent.md)、[作者初版](docs/testing/MCP-offline-author.md)及[修复](docs/testing/MCP-offline-author-repair.md)。完整1016包含新80和原936，不把不同回归分母相加，也不代替T13原84能力或律师验收。
+
+只验证当前editable仓库的受控本机虚构入口，未打包/安装插件、没有案件身份或文件桥、未连接任何宿主；帧大小及OS CPU/内存硬限制仍未建立。真实模型/QCC、法律gold、影子试点和生产继续关闭。普通依赖初始化读取与工具不读取凭据分别记录，不宣称整个Python进程没有环境继承。

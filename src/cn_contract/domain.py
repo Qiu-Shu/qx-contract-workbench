@@ -1201,6 +1201,49 @@ class DeepSeekSyntheticRates(DomainModel):
     pricing_status: Literal['synthetic'] = 'synthetic'
 
 
+McpOfflineFixture = Literal['sales', 'service', 'lease', 'nda']
+
+
+class McpOfflineExampleArguments(DomainModel):
+    """The complete offline tool input; no material, identity or approval fields."""
+    fixture: McpOfflineFixture
+    operation: DeepSeekOperation
+    model: DeepSeekModelId
+
+    @field_validator('fixture', 'operation', 'model', mode='before')
+    @classmethod
+    def exact_enum_text(cls, value: object) -> object:
+        if type(value) is not str:
+            raise ValueError('exact enum text required')
+        return value
+
+
+class McpOfflineStatus(DomainModel):
+    synthetic: Literal[True] = True
+    status: Literal['OFFLINE_ONLY'] = 'OFFLINE_ONLY'
+    real_models_enabled: Literal[False] = False
+    qcc_enabled: Literal[False] = False
+    production_status: Literal['PRODUCTION_BLOCKED'] = 'PRODUCTION_BLOCKED'
+    transport_frame_limit: Literal['NOT_ESTABLISHED'] = 'NOT_ESTABLISHED'
+    os_cpu_memory_sandbox: Literal['NOT_ESTABLISHED'] = 'NOT_ESTABLISHED'
+    legal_review_available: Literal[False] = False
+    chatgpt_connection_verified: Literal[False] = False
+    scope: Literal['controlled_local_process_synthetic_data_only'] = 'controlled_local_process_synthetic_data_only'
+
+
+class McpOfflineExample(DomainModel):
+    fixture: McpOfflineFixture
+    fixture_sha256: SHA256
+    request: dict[str, JsonValue]
+    reply: DeepSeekOfflineReply
+    synthetic: Literal[True] = True
+    status: Literal['OFFLINE_ONLY'] = 'OFFLINE_ONLY'
+    response_origin: Literal['manually_constructed_not_supplier'] = 'manually_constructed_not_supplier'
+    token_origin: Literal['invented_example_counts_not_supplier'] = 'invented_example_counts_not_supplier'
+    legal_opinion: Literal[False] = False
+    notice: Literal['独立虚构材料；响应及token人工构造，非供应商结果，非法律意见。'] = '独立虚构材料；响应及token人工构造，非供应商结果，非法律意见。'
+
+
 class ProviderConfig(DomainModel):
     endpoint: NonEmpty
     transport: Literal['stdio', 'streamable_http', 'sse', 'mock']
