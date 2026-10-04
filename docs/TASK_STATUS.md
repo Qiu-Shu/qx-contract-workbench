@@ -1,6 +1,6 @@
 # 任务实际状态
 
-记录日期：2026-10-03，显示时区Asia/Shanghai；历史阶段记录保持原日期，证据时间使用UTC。原仓库为空，用户已确认继续本目录。开发分支`codex/contract-review-v2`。
+记录日期：2026-10-04，显示时区Asia/Shanghai；历史阶段记录保持原日期，证据时间使用UTC。原仓库为空，用户已确认继续本目录。开发分支`codex/contract-review-v2`。
 
 |任务|工程状态|实际完成|阻断/下一步|
 |---|---|---|---|
@@ -21,8 +21,9 @@
 |T13|ENGINEERING_PASS（守卫与受限交付）；BLOCKED_LIVE / PRODUCTION_BLOCKED|25正式目标、31费用恢复关联；两独审29与43；T13根815全套/0警告；T13阶段84能力5PASS/58guard单列、40虚构材料实际审查；qcc-smoke真实CLI拒绝、开发发布75阻断/生产exit1|真实联调与影子NOT_RUN；账户/许可/现实批准信任根/完整法律硬失败登记/金标准/模型数据政策/国内环境缺失；真实供应商及真实资料外传0，没有上线批准|
 |DeepSeek接续|ENGINEERING_PASS（首批纯离线）；REAL_CALLS_DISABLED|用户2026-10-03实际“确认”有限设计；请求/响应/token/币种纯codec、唯一domain三DTO；121正式目标/308关联、两独审138与25；根936全套/0警告/exit0，native collection=JUnit；四份虚构DOCX的12组人工离线示例、666输入前后零漂移/314原始bytes不变|不配置密钥、不发真实请求、不放开mock注册门；response固定OFFLINE_ONLY/protocol_only，未知费用None或显式合成估价；真实transport/费用ledger/价格/数据/批准仍缺失或阻断|
 |ChatGPT插件目标|TARGET_CONFIRMED；PLANNING_ONLY|用户明确最终交付为ChatGPT插件；现服务复用/薄MCP/身份与文件桥方案已整理，已装MCP2.2.0只读导入exit0|工作台对外MCP/宿主安装/ChatGPT真实连接均未实现或NOT_RUN；不建账户、付费托管、隧道或发布|
+|首批本机离线MCP|PRECHECK_COMPLETE；DESIGN_CONFIRMATION_PENDING|两独立只读预检；已装SDK6/6与固定wheel相同；现T07 MCP20项兼容复跑通过，首轮10 setup errors及探针harness失误保留；公共middleware额外字段拒绝可行；新产品测试0/NOT_RUN|两工具短设计已提交待确认；新增入口/STDIO产品测试尚未开始，不安装插件、不连ChatGPT；帧/OS硬限制未建立，真实模型/QCC与生产继续阻断|
 
-当前阶段记录：[DeepSeek首批离线](testing/DEEPSEEK-offline.md)、[根936回归与实际材料](testing/DEEPSEEK-parent-checks.md)、[独立协议138项](testing/DEEPSEEK-offline-review.md)和[独立边界25项](testing/DEEPSEEK-boundary-review.md)。T13历史记录：[815/84与证据核验](testing/T13-parent-checks.md)、[独立调用29项](testing/T13-live-review-final.md)、[独立上线43项](testing/T13-readiness-actual-review.md)。受限交付、逐项解除条件与上线决定分别见[LIVE_READINESS](LIVE_READINESS.md)、[SHADOW_RUN_REPORT](SHADOW_RUN_REPORT.md)、[GO_NO_GO](GO_NO_GO.md)。T13实际84项为5PASS/36NOT_RUN/16NOT_IMPLEMENTED/7NOT_SUPPORTED/20BLOCKED；本批未重跑该CLI和40材料审查，新936参数通过不等于84项完整能力、双律师验收或生产完成。
+当前阶段记录：[本机离线MCP只读预检](testing/MCP-offline-preflight.md)。已完成上一批：[DeepSeek首批离线](testing/DEEPSEEK-offline.md)、[根936回归与实际材料](testing/DEEPSEEK-parent-checks.md)、[独立协议138项](testing/DEEPSEEK-offline-review.md)和[独立边界25项](testing/DEEPSEEK-boundary-review.md)。T13历史记录：[815/84与证据核验](testing/T13-parent-checks.md)、[独立调用29项](testing/T13-live-review-final.md)、[独立上线43项](testing/T13-readiness-actual-review.md)。受限交付、逐项解除条件与上线决定分别见[LIVE_READINESS](LIVE_READINESS.md)、[SHADOW_RUN_REPORT](SHADOW_RUN_REPORT.md)、[GO_NO_GO](GO_NO_GO.md)。T13实际84项为5PASS/36NOT_RUN/16NOT_IMPLEMENTED/7NOT_SUPPORTED/20BLOCKED；本轮未重跑该CLI/40材料审查或936全套，20项旧MCP兼容测试不算新增原型通过，参数用例通过不等于84项完整能力、双律师验收或生产完成。
 
 ## T00实际执行
 

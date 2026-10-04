@@ -2,6 +2,8 @@
 
 状态：**PLANNING_ONLY**。核验时间：2026-10-03 UTC。用户确认最终交付目标是 ChatGPT 插件，本轮先做 DeepSeek 的离线适配与验证；本文件是后续接入方案，不是运行 Skill、插件清单、安装或发布证据。沿当前 T00–T13 后端增量建设，既有审批与权限继续由后端核验。
 
+2026-10-04接续：DeepSeek首批纯离线适配已在`382850d`完成，936回归属于上一批实际结果。新本机MCP只读预检已完成，具体结果见[MCP-offline-preflight](../testing/MCP-offline-preflight.md)。本次聊天已提交无案件status与固定四虚构fixture/op/model的离线例两工具短设计，确认尚待回复；工作台server/两工具/STDIO产品验证仍NOT_IMPLEMENTED或NOT_RUN，未安装或连接宿主，不把纯SDK内存探针当新插件验收。
+
 ## 已核实的本机基础
 
 - 项目 Python 3.12 环境固定 `mcp==2.2.0`，实际只读导入成功，服务端入口为 `mcp.server.MCPServer`，不能套用旧 FastMCP 示例。已安装 SDK 提供 `tool/add_tool/resource/run/streamable_http_app`，支持 stdio 和 Streamable HTTP。未启动新的 MCP 服务、未进行新的协议调用。
