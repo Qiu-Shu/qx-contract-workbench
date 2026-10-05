@@ -5,3 +5,12 @@ tests/fixtures/synthetic/** -text -whitespace
 tests/fixtures/acceptance/** -text -whitespace
 tests/acceptance/cases.json -text -whitespace
 requirements*.lock -text -whitespace
+# Startup source binding and registered fiction depend on exact byte hashes.
+src/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+config/defaults.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+schemas/review-report.v2.schema.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+pyproject.toml -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+plugins/qx-contract-offline-codex/.mcp.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+plugins/qx-contract-offline-codex/.codex-plugin/plugin.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+plugins/qx-contract-offline-codex/runtime-binding.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/fixtures/assisted-v1/** -text -whitespace

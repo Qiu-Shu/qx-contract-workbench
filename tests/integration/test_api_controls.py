@@ -52,11 +52,13 @@ def test_facts_idempotent_explicit_key_advances_one_snapshot(api):
 def test_decision_preview_and_patch_replay_once_current_authorization(api):
     client,database,ids,_=api;matter,run,headers,sent=reviewed_case(api)
     finding=next(f for f in run['findings'] if f['severity']!='high')
-    body={'run_id':run['id'],'run_sha256':run['run_sha256'],'decision':'edit','reason':'虚构核对'}
+    body={'run_id':run['id'],'run_sha256':run['run_sha256'],'decision':'edit','reason':'虚构核对',
+        'edited_analysis':'独立虚构明确分析','edited_recommendation':'独立虚构明确建议',
+        'edited_replacement_text':'独立虚构精确替换'}
     h={**headers,'Idempotency-Key':'decision-1'};path=f'/api/matters/{matter}/findings/{finding["id"]}/decision'
     first=client.post(path,headers=h,json=body);second=client.post(path,headers=h,json=body)
     assert first.status_code==201 and second.json()==first.json()
-    assert client.post(path,headers=h,json={**body,'decision':'reject'}).status_code==409
+    assert client.post(path,headers=h,json={**body,'reason':'虚构核对后再次修改'}).status_code==409
     anchors=client.get(f'/api/matters/{matter}/documents/{sent["version_id"]}/anchors').json()['anchors']
     anchor=next(a for a in anchors if a['id'] in finding['anchor_ids']+finding['cross_anchor_ids'])
     patchbody={'run_id':run['id'],'run_sha256':run['run_sha256'],'finding_id':finding['id'],'anchor_id':anchor['id'],

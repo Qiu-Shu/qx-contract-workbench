@@ -115,6 +115,14 @@ def load_patch(matter_id,patch,actor,db,*,audience=None,write=True):
     if sha(run.model_dump(mode='json'))!=value['run_sha256']:raise ServiceError('APPROVAL_STALE',409)
     finding=next((f for f in run.findings if f.id==patch.finding_id),None)
     if finding is None:raise ServiceError('APPROVAL_STALE',409)
+    from ..review.decisions import read_snapshot,finding_fingerprint,check_patch_disposition
+    snapshot=read_snapshot(matter_id,run.id,actor,db=db)
+    check_patch_disposition(snapshot,patch)
+    fingerprint=value.get('finding_decision_sha256')
+    if fingerprint is None:
+        if any(r.finding_id==patch.finding_id for r in snapshot.ordered_decisions) or finding.human_decision is not None:
+            raise ServiceError('APPROVAL_STALE',409)
+    elif fingerprint!=finding_fingerprint(snapshot,patch.finding_id):raise ServiceError('APPROVAL_STALE',409)
     if finding.severity=='high':
         from ..review.storage import ReviewRunRow
         run_row=db.get(ReviewRunRow,str(run.id),populate_existing=True)

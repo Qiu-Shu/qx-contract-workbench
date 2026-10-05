@@ -23,6 +23,7 @@ def _table(document,head,rows):
 
 def build(projection):
     doc=Document()
+    watermark=projection.get('watermark','DRAFT MOCK 模拟材料 不构成正式法律意见')
     doc.settings.odd_and_even_pages_header_footer=False
     section=doc.sections[0];section.different_first_page_header_footer=False;section.page_width=Cm(21);section.page_height=Cm(29.7)
     section.top_margin=section.bottom_margin=Cm(2);section.left_margin=section.right_margin=Cm(2.2)
@@ -39,7 +40,7 @@ def build(projection):
     doc.styles['Heading 1'].font.size=Pt(14)
     for name in ('Heading 1','Heading 2'):doc.styles[name].paragraph_format.keep_with_next=True
     for container in (section.header,section.footer):
-        paragraph=container.paragraphs[0];paragraph.text='DRAFT MOCK 模拟材料 不构成正式法律意见'
+        paragraph=container.paragraphs[0];paragraph.text=watermark
         for run in paragraph.runs:run.font.size=Pt(9)
     doc.add_paragraph(projection['title'],'Title')
     doc.add_paragraph(projection['opening'])
@@ -58,7 +59,7 @@ def build(projection):
         doc.add_heading('材料观察与人工复核事项',1)
         for index,item in enumerate(projection['observations'],1):
             doc.add_heading(f'复核事项 {index}',2)
-            for key in ('analysis','effect','recommendation','fallback'):
+            for key in ('decision_status','analysis','effect','recommendation','replacement','fallback','original','history'):
                 if key in item:doc.add_paragraph(item[key])
     doc.add_heading('已批准的模拟修改文字',1)
     _table(doc,('原文','建议新文','修改说明'),[(p['old'],p['new'],p['reason']) for p in projection['patches']])
@@ -69,7 +70,8 @@ def build(projection):
     if not projection['manual']:doc.add_paragraph('本次所列修改没有未写入的人工项。其他材料及法律判断仍须律师复核。')
     core=doc.core_properties
     core.title=projection['title'];core.subject='独立虚构模拟合同草案';core.author='群兴工程模拟';core.last_modified_by='群兴工程模拟'
-    core.comments='DRAFT MOCK 非正式法律意见';core.keywords='DRAFT MOCK'
+    core.comments=watermark if 'watermark' in projection else 'DRAFT MOCK 非正式法律意见'
+    core.keywords='DRAFT MANUAL-SYNTHETIC' if 'watermark' in projection else 'DRAFT MOCK'
     from datetime import datetime,timezone
     core.created=core.modified=datetime.now(timezone.utc)
     output=BytesIO();doc.save(output);return output.getvalue()

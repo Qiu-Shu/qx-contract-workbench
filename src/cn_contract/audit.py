@@ -12,7 +12,7 @@ ALLOWED_ACTIONS = frozenset({'authorization_denied', 'csrf_denied', 'document_cr
                              'parse_saved', 'facts_changed', 'position_changed', 'state_changed', 'baseline_selected', 'party_changed',
                              'authority_registered','authority_verified','rule_registered','rule_approved','rule_recheck',
                              'policy_changed','policy_approved','review_saved','intake_saved',
-                             'patch_approved','patch_revoked','export_prepared'})
+                             'patch_approved','patch_revoked','export_prepared','finding_decided','working_draft_confirmed'})
 ALLOWED_ENTITIES = frozenset({'matter', 'document', 'facts', 'parse', 'party','authority','rule','policy','review'})
 
 

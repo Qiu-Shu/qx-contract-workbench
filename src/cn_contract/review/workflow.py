@@ -14,7 +14,7 @@ from ..domain import (CoverageId,CoverageItem,Finding,ModelRequest,ModelUsageLim
 from ..persistence import (DocumentRow,configured_database,read_matter,read_version,get_parse_result,
     get_fact_snapshot,fact_snapshot_sha256,review_status_changed)
 from ..security import authorize,ServiceError
-from ..facts.storage import trusted_parse
+from ..facts.storage import trusted_parse, require_fact_sources, source_anchor_is_eligible
 from ..facts.extract import build_fact_candidates
 from ..facts.calculate import calculate_expression
 from ..rules.loader import read_rule_snapshot,read_policy,policy_runtime_sha256
@@ -50,6 +50,16 @@ def current_manifest(context,actor,db,config,*,allow_finished=False):
     if context.allowed_scope!=SCOPE: raise ServiceError('VERSION_CONFLICT',409)
     if config.get('prompts')!=prompt_configuration(config)['prompts']:
         raise ServiceError('VERSION_CONFLICT',409)
+    from .proposals import require_policy,assisted_configuration,is_assisted
+    provider='mock'
+    if config.get('provider')=='assisted_manual':
+        policy=require_policy(db)
+        if config!=assisted_configuration(policy):raise ServiceError('VERSION_CONFLICT',409)
+        if any(v.sha256 not in policy.document_hashes for v in context.document_versions):
+            raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+        provider='assisted_manual'
+    elif is_assisted(db):
+        raise ServiceError('DATA_POLICY_UNAPPROVED',409)
     current_ids=set(db.scalars(select(DocumentRow.id).where(DocumentRow.matter_id==str(matter.id))))
     superseded=set(db.scalars(select(DocumentRow.supersedes_id).where(DocumentRow.matter_id==str(matter.id),DocumentRow.supersedes_id.is_not(None))))
     current_ids-=superseded
@@ -75,6 +85,11 @@ def current_manifest(context,actor,db,config,*,allow_finished=False):
         if f.provenance_type=='external' or f.receipt_ids: raise ServiceError('NOT_SUPPORTED',409)
         if not set(f.anchor_ids).issubset(anchors) or f.provenance_type=='document' and not f.anchor_ids:
             raise ServiceError('VERSION_CONFLICT',409)
+    require_fact_sources(matter.id, tuple(f for f in facts.facts if f.confirmation_status != 'rejected'), actor, db)
+    # Unverified page text remains available at intake as a candidate, but must
+    # not become a model citation, finding or automated replacement source.
+    anchors = {anchor.id: anchor for parsed in parses for anchor in parsed.anchors
+        if source_anchor_is_eligible(anchor, parsed)}
     snapshot=read_rule_snapshot(actor,matter_id=matter.id,db=db)
     policy=read_policy(matter.active_policy_version,actor,matter_id=matter.id,db=db)
     actual_context=ReviewContext(**{**context.model_dump(mode='python'),'matter':matter})
@@ -82,7 +97,7 @@ def current_manifest(context,actor,db,config,*,allow_finished=False):
     policy_hash=policy_runtime_sha256(policy,actor,matter_id=matter.id,db=db)
     manifest=RunManifest(contract_type=matter.contract_type,document_hashes={v.id:v.sha256 for v in context.document_versions},
         fact_snapshot_sha256=facts.sha256,rules_sha256=snapshot.sha256,policy_sha256=policy_hash,
-        model_config_sha256=_hash(config),config_sha256=configured_database(db).settings.config_sha256,model_provider='mock')
+        model_config_sha256=_hash(config),config_sha256=configured_database(db).settings.config_sha256,model_provider=provider)
     return manifest,anchors,tuple(parses),selection,actual_context
 
 

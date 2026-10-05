@@ -22,6 +22,29 @@ class ReviewRunRow(Base):
     timestamp:Mapped[datetime]=mapped_column(UTCDateTime())
 
 
+class ReviewProposalRow(Base):
+    __tablename__='review_proposals'
+    id:Mapped[str]=mapped_column(String(36),primary_key=True)
+    run_id:Mapped[str]=mapped_column(ForeignKey('review_runs.id'),unique=True)
+    matter_id:Mapped[str]=mapped_column(ForeignKey('matters.id'))
+    actor_id:Mapped[str]=mapped_column(ForeignKey('users.id'))
+    payload:Mapped[str]=mapped_column(Text)
+    sha256:Mapped[str]=mapped_column(String(64))
+    timestamp:Mapped[datetime]=mapped_column(UTCDateTime())
+
+
+class FindingDecisionRow(Base):
+    __tablename__ = 'web_finding_decisions'
+    sequence: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[str] = mapped_column(String(36), unique=True)
+    matter_id: Mapped[str] = mapped_column(ForeignKey('matters.id'))
+    run_id: Mapped[str] = mapped_column(ForeignKey('review_runs.id'))
+    finding_id: Mapped[str] = mapped_column(String(36))
+    run_sha256: Mapped[str] = mapped_column(String(64))
+    actor_id: Mapped[str] = mapped_column(ForeignKey('users.id'))
+    payload: Mapped[str] = mapped_column(Text)
+
+
 class ModelAttemptRow(Base):
     __tablename__='review_model_attempts'
     id:Mapped[str]=mapped_column(String(36),primary_key=True)
@@ -52,7 +75,7 @@ class OperationAttemptRow(Base):
 
 def initialize_storage(database):
     if not isinstance(database,Database): raise TypeError('explicit Database required')
-    tables=[ReviewRunRow.__table__,ModelAttemptRow.__table__,ModelOperationRecordRow.__table__,OperationAttemptRow.__table__]
+    tables=[ReviewRunRow.__table__,ReviewProposalRow.__table__,FindingDecisionRow.__table__,ModelAttemptRow.__table__,ModelOperationRecordRow.__table__,OperationAttemptRow.__table__]
     with database.engine.begin() as connection:
         Base.metadata.create_all(connection,tables=tables)
         for table in tables:
@@ -80,8 +103,12 @@ def read_run(matter_id,run_id,actor,*,db,current=True):
     if current:
         from .workflow import current_manifest
         ctx=ReviewContext.model_validate_json(row.context_json)
-        manifest=current_manifest(ctx,actor,db,json.loads(row.config_json),allow_finished=True)[0]
+        state=current_manifest(ctx,actor,db,json.loads(row.config_json),allow_finished=True)
+        manifest=state[0]
         if manifest!=run.manifest: raise ServiceError('APPROVAL_STALE',409)
+        if run.manifest.model_provider=='assisted_manual':
+            from .proposals import validate_saved_run
+            validate_saved_run(run,row,actor,db,state=state)
     return run
 
 

@@ -2,12 +2,12 @@
 import json
 import hashlib
 from uuid import UUID, uuid4
-from sqlalchemy import select
+from sqlalchemy import select, update
 
 from ..domain import (Matter, Role, PolicySnapshot, FactSnapshot, ReviewContext, CoverageId,
     Patch, HumanDecision, PartyCandidate, Party, PartyDecision)
 from ..persistence import (provision_matter, read_matter, DocumentRow, read_version, get_parse_result,
-    get_fact_snapshot, save_fact_snapshot, fact_snapshot_sha256, MatterRow, transition_matter)
+    get_fact_snapshot, save_fact_snapshot, fact_snapshot_sha256, MatterRow, transition_matter, ExportRow, ApprovalRow)
 from ..security import ServiceError, authorize, deny
 from ..rules.loader import register_default_cards, save_policy, read_rule_snapshot, read_policy
 from ..rules.storage import policy_sha256
@@ -65,7 +65,13 @@ def candidate_parse(matter_id, version_id, actor, db):
     if version.id not in {v.id for v in current_versions(matter_id, actor, db)}:
         raise ServiceError('VERSION_CONFLICT', 409)
     parsed = parse_document(version, None, actor=actor, db=db)
-    facts = extract_document_candidates(parsed, MockProvider(), matter_id=matter_id, actor=actor, db=db)
+    from ..review.proposals import is_assisted,require_policy
+    if is_assisted(db):
+        policy=require_policy(db)
+        if version.sha256 not in policy.document_hashes:raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+        facts=()
+    else:
+        facts = extract_document_candidates(parsed, MockProvider(), matter_id=matter_id, actor=actor, db=db)
     matter = read_matter(matter_id, actor, db)
     next_version = (matter.active_fact_version or 0) + 1
     old = get_fact_snapshot(matter_id, matter.active_fact_version, actor, db).facts if matter.active_fact_version else ()
@@ -105,6 +111,8 @@ def verify_review_input(matter_id, value, actor, db):
 
 
 def review(matter_id, value, actor, db):
+    from ..review.proposals import is_assisted
+    if is_assisted(db):raise ServiceError('NOT_SUPPORTED',409)
     ctx = verify_review_input(matter_id, value, actor, db)
     return str(run_review(ctx, MockProvider(), actor=actor, db=db).id)
 
@@ -116,22 +124,33 @@ def current_run(matter_id, run_id, digest, actor, db):
 
 
 def decisions(matter_id, run_id, actor, db):
-    read_run(matter_id, run_id, actor, db=db)
-    return [{'id':r.id, 'finding_id':r.finding_id, 'decision':json.loads(r.payload)} for r in
-        db.scalars(select(s.FindingDecisionRow).where(s.FindingDecisionRow.matter_id==str(matter_id),
-            s.FindingDecisionRow.run_id==str(run_id)).order_by(s.FindingDecisionRow.sequence))]
+    from ..review.decisions import read_history
+    _, history = read_history(matter_id, run_id, actor, db=db)
+    return [{'id':str(r.id), 'finding_id':str(r.finding_id), 'decision':r.decision.model_dump(mode='json')} for r in history]
 
 
 def save_decision(matter_id, finding_id, value, actor, db):
     authorize(actor,matter_id,'confirm_facts',db)
     run = current_run(matter_id,value.run_id,value.run_sha256,actor,db)
     if run.status!='completed' or finding_id not in {f.id for f in run.findings}: raise ServiceError('VERSION_CONFLICT',409)
-    decision = HumanDecision(decision=value.decision, reason=value.reason, actor_id=actor.user_id, decided_at=s.now())
+    decision = HumanDecision(decision=value.decision, reason=value.reason, actor_id=actor.user_id, decided_at=s.now(),
+        edited_analysis=value.edited_analysis, edited_recommendation=value.edited_recommendation,
+        edited_replacement_text=value.edited_replacement_text)
     identifier=uuid4()
     with db.begin_nested():
         db.add(s.FindingDecisionRow(id=str(identifier), matter_id=str(matter_id), run_id=str(run.id),
             finding_id=str(finding_id), run_sha256=value.run_sha256,actor_id=str(actor.user_id),payload=decision.model_dump_json()))
         db.flush()
+        for row in db.scalars(select(ExportRow).where(ExportRow.matter_id==str(matter_id))):
+            if json.loads(row.payload)['run_id'] == str(run.id): row.superseded=True
+        # Approval has no run_id; a changed conclusion invalidates this matter's
+        # valid approval candidates without changing facts or case state.
+        db.execute(update(ApprovalRow).where(ApprovalRow.matter_id==str(matter_id),
+            ApprovalRow.status=='valid').values(status='stale'))
+        from ..review.decisions import read_snapshot
+        snapshot=read_snapshot(matter_id,run.id,actor,db=db,require_authority=False)
+        exports_storage.audit(actor,matter_id,'finding_decided','FINDING_DECISION_RECORDED',db,
+            entity_id=identifier,after_hash=snapshot.sha256)
     return {'id':str(identifier),'finding_id':str(finding_id),'decision':decision.model_dump(mode='json')}
 
 

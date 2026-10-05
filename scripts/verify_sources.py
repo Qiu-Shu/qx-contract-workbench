@@ -9,7 +9,7 @@ from typing import Literal, NamedTuple
 
 REQUIRED_IDS = {f'G{i:02}' for i in range(1, 14)}
 STATUSES = {'candidate', 'read_verified', 'license_reviewed', 'tested', 'production_approved', 'rejected'}
-RUNTIME_DIRS = ('src', 'prompts', 'rules', '.agents/skills', 'scripts')
+RUNTIME_DIRS = ('src', 'prompts', 'rules', '.agents/skills', 'scripts', 'plugins')
 SHA256 = re.compile(r'^[0-9a-f]{64}$')
 COMMIT = re.compile(r'^[0-9a-f]{40}$')
 

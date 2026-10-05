@@ -24,6 +24,13 @@ def validate_findings(run,evidence,*,actor,db):
         if not referenced.issubset(anchors): errors.append('ANCHOR_OUTSIDE_CURRENT_ORIGINAL')
         if any(aid not in anchors or value!=anchors[aid] for aid,value in evidence.anchors.items()): errors.append('ANCHOR_EVIDENCE_MISMATCH')
         if not referenced.issubset(evidence.anchors): errors.append('ANCHOR_EVIDENCE_MISSING')
+        if run.manifest.model_provider=='assisted_manual':
+            from .proposals import validate_saved_run
+            validate_saved_run(run,row,actor,db,state=(manifest,anchors,parses,selection,actual))
+            return ValidationResult(ok=not errors,errors=tuple(dict.fromkeys(errors)),
+                warnings=('离线人工候选工程校验；真实推理未运行，不构成法律核验、批准或正式签发。',),
+                checked=('18维及双向finding结构','受保护不可变proposal/run','当前原件/事实/立场/规则/政策/辅助政策',
+                    '明确检查的锚点和待核依据，未覆盖维度保留不足'))
         attempts=read_attempts(run.matter_id,run.id,actor,db=db)
         processed=set(json.loads(row.processed_json))
         actual_processed={aid for a in attempts if a['operation']=='review_chunk' and a['valid'] for aid in a['anchor_ids']}

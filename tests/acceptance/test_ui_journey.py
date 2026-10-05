@@ -10,7 +10,9 @@ def test_four_types_journey(api,kind):
     assert len(run['coverage'])==18
     finding=next(f for f in run['findings'] if f['severity']!='high')
     decision=client.post(f'/api/matters/{matter}/findings/{finding["id"]}/decision',headers=headers,
-        json={'run_id':run['id'],'run_sha256':run['run_sha256'],'decision':'edit','reason':'虚构数据人工核对后拟订草案'})
+        json={'run_id':run['id'],'run_sha256':run['run_sha256'],'decision':'edit','reason':'虚构数据人工核对后拟订草案',
+            'edited_analysis':'虚构数据经人工核对后的明确分析。','edited_recommendation':'虚构测试：由双方书面确认具体安排。',
+            'edited_replacement_text':'虚构测试：由双方书面确认具体安排。'})
     assert decision.status_code==201,decision.text
     anchors=client.get(f'/api/matters/{matter}/documents/{sent["version_id"]}/anchors').json()['anchors']
     anchor=next(a for a in anchors if a['id'] in finding['anchor_ids']+finding['cross_anchor_ids'])

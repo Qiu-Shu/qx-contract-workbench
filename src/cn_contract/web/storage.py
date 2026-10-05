@@ -10,6 +10,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from ..domain import Actor, JobStatus, HumanDecision
 from ..persistence import Base, Database, UTCDateTime, SessionRow, DocumentRow, read_matter
 from ..security import ServiceError, authorize, _principal
+from ..review.storage import FindingDecisionRow
 
 
 class JobRow(Base):
@@ -38,18 +39,6 @@ class JobEventRow(Base):
     state: Mapped[str] = mapped_column(String(20))
     error_code: Mapped[str | None] = mapped_column(String(80))
     timestamp: Mapped[datetime] = mapped_column(UTCDateTime())
-
-
-class FindingDecisionRow(Base):
-    __tablename__ = 'web_finding_decisions'
-    sequence: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    id: Mapped[str] = mapped_column(String(36), unique=True)
-    matter_id: Mapped[str] = mapped_column(ForeignKey('matters.id'))
-    run_id: Mapped[str] = mapped_column(ForeignKey('review_runs.id'))
-    finding_id: Mapped[str] = mapped_column(String(36))
-    run_sha256: Mapped[str] = mapped_column(String(64))
-    actor_id: Mapped[str] = mapped_column(ForeignKey('users.id'))
-    payload: Mapped[str] = mapped_column(Text)
 
 
 class HttpWriteRow(Base):

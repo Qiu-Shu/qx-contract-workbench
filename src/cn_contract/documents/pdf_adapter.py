@@ -5,30 +5,13 @@ from uuid import UUID
 
 import pdfplumber
 import pdfplumber.pdf as pdf_api
-from pdfplumber.page import PDFPageAggregatorWithMarkedContent
-from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 
 from ..domain import AnchorKind, ParseResult
 from ..security import ServiceError
 from .anchors import make_anchor
 from .ocr_adapter import unavailable
-
-
-class _VisibilityAggregator(PDFPageAggregatorWithMarkedContent):
-    """Observe parsed PDF text state while building the same native page layout.
-
-    Modes 3 and 7 paint no visible glyphs; clipping modes also require visual
-    review. This checks PDF operators after decoding, including Form XObjects,
-    rather than looking for byte patterns that may occur in compressed streams.
-    It does not prove visual equivalence, alpha/occlusion or font correctness.
-    """
-    needs_visual_review = False
-
-    def render_string(self, textstate, seq, ncs, graphicstate):
-        if textstate.render not in {0, 1, 2}:
-            self.needs_visual_review = True
-        return super().render_string(textstate, seq, ncs, graphicstate)
+from .pdf_visibility import VisibilityAggregator, VisibilityInterpreter, outside_visible_page
 
 
 def parse_pdf(data, version, settings):
@@ -56,13 +39,16 @@ def parse_pdf(data, version, settings):
                     quality.append(f'ANNOTATIONS_NOT_READ:page:{number}')
                 if any(key != 'Annots' for key in page_extras):
                     unsupported.append(f'page:{number}:interactive_or_embedded_parts')
-                device = _VisibilityAggregator(pdf.rsrcmgr, pageno=number, laparams=pdf.laparams)
-                PDFPageInterpreter(pdf.rsrcmgr, device).process_page(page.page_obj)
+                device = VisibilityAggregator(pdf.rsrcmgr, pageno=number, laparams=pdf.laparams)
+                VisibilityInterpreter(pdf.rsrcmgr, device).process_page(page.page_obj)
                 page._layout = device.get_result()
-                rendering_requires_review = device.needs_visual_review
+                if page.page_obj.attrs.get('Group'):
+                    device.visual_reasons.add('PDF_DRAWING_EFFECT_REQUIRES_CONFIRMATION')
+                rendering_requires_review = bool(device.visual_reasons)
                 if rendering_requires_review:
-                    unsupported.append(f'page:{number}:text_rendering')
-                    quality.append(f'TEXT_RENDERING_REQUIRES_CONFIRMATION:page:{number}')
+                    suffix = 'text_rendering' if 'TEXT_RENDERING_REQUIRES_CONFIRMATION' in device.visual_reasons else 'visual_check'
+                    unsupported.append(f'page:{number}:{suffix}')
+                    quality.extend(f'{reason}:page:{number}' for reason in sorted(device.visual_reasons))
                 chars = page.chars
                 quote = page.extract_text(layout=False) or ''
                 if not chars or not quote.strip():
@@ -82,6 +68,10 @@ def parse_pdf(data, version, settings):
                     continue
                 low_quality = '\ufffd' in quote or '(cid:' in quote or any(ord(char) < 32 and char not in '\n\t\r' for char in quote)
                 manual = bool(page_extras) or low_quality or rendering_requires_review
+                if outside_visible_page(chars, page):
+                    manual = True
+                    quality.append(f'PDF_TEXT_OUTSIDE_VISIBLE_PAGE:page:{number}')
+                    unsupported.append(f'page:{number}:visible_page_bounds')
                 if low_quality:
                     quality.append(f'TEXT_QUALITY_REQUIRES_CONFIRMATION:page:{number}')
                     unsupported.append(f'page:{number}:text_quality')

@@ -11,6 +11,7 @@ from io import BytesIO
 import json
 from pathlib import Path
 import stat
+from unicodedata import category
 from uuid import NAMESPACE_URL, UUID, uuid5
 from zipfile import ZipFile
 
@@ -134,7 +135,8 @@ def _finite_tool_metadata(metadata, *, allow_thread_id=False) -> bool:
 
     The low-level callbacks never pass metadata to a business handler or emit
     progress notifications. A thread UUID is inert host metadata, not identity
-    or approval. String progress tokens and other MCP metadata stay closed.
+    or approval. Tokens are opaque integers or bounded strict UTF-8 strings;
+    controls and all other MCP metadata stay closed. Strings stay unnormalized.
     """
     if type(metadata) is not dict:
         return False
@@ -143,7 +145,15 @@ def _finite_tool_metadata(metadata, *, allow_thread_id=False) -> bool:
         return False
     if 'progressToken' in metadata:
         token = metadata['progressToken']
-        if type(token) is not int or not 0 <= token <= 2**63 - 1:
+        if type(token) is str:
+            if len(token) > 128 or any(category(char) in ('Cc', 'Cf') for char in token):
+                return False
+            try:
+                if len(token.encode('utf-8')) > 512:
+                    return False
+            except UnicodeEncodeError:
+                return False
+        elif type(token) is not int or not 0 <= token <= 2**63 - 1:
             return False
     if 'threadId' in metadata:
         thread_id = metadata['threadId']

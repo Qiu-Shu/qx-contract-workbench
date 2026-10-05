@@ -1,6 +1,7 @@
 """Bounded OOXML extraction; archive bytes never get extracted onto the filesystem."""
 from io import BytesIO
 from pathlib import PurePosixPath
+import posixpath
 import stat
 import struct
 import unicodedata
@@ -14,11 +15,193 @@ from xml.etree.ElementTree import ParseError
 from ..domain import AnchorKind, BaselineView, ParseResult
 from ..security import ServiceError
 from .anchors import make_anchor
+from .docx_styles import EffectiveStyles, StyleDependencyError
 
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 R = 'http://schemas.openxmlformats.org/package/2006/relationships'
 CT = 'http://schemas.openxmlformats.org/package/2006/content-types'
 MAIN_TYPE = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml'
+O = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/'
+A = 'http://schemas.openxmlformats.org/drawingml/2006/main'
+B = 'http://schemas.openxmlformats.org/officeDocument/2006/bibliography'
+C = 'http://schemas.openxmlformats.org/officeDocument/2006/customXml'
+
+# A deliberately finite structural subset. Unknown elements remain unread even
+# in a correctly named, declared and related Office auxiliary part.
+STYLE_TAGS = set(('styles style docDefaults pPrDefault rPrDefault latentStyles lsdException '
+                 'basedOn name next link qFormat uiPriority semiHidden unhideWhenUsed rsid '
+                 'rPr pPr b bCs i iCs color contextualSpacing keepLines keepNext kern lang '
+                 'rFonts sz szCs smallCaps u spacing ind outlineLvl numPr numId ilvl '
+                 'pBdr top bottom left right insideH insideV shd tab tabs tblPr tblBorders '
+                 'tblCellMar tblInd tblStyleColBandSize tblStyleRowBandSize tblStylePr tcPr '
+                 'tcBorders vanish webHidden').split())
+SETTINGS_TAGS = set(('settings zoom proofState defaultTabStop characterSpacingControl '
+                    'savePreviewPicture doNotAutoCompressPictures compat compatSetting rsids '
+                    'rsidRoot rsid themeFontLang clrSchemeMapping decimalSymbol listSeparator '
+                    'shapeDefaults useFELayout').split())
+THEME_TAGS = set(('theme themeElements clrScheme dk1 dk2 lt1 lt2 accent1 accent2 accent3 '
+                 'accent4 accent5 accent6 hlink folHlink sysClr srgbClr fontScheme majorFont '
+                 'minorFont latin ea cs font fmtScheme fillStyleLst solidFill schemeClr '
+                 'gradFill gsLst gs tint shade satMod alpha lin path fillToRect lnStyleLst '
+                 'ln prstDash effectStyleLst effectStyle effectLst outerShdw scene3d camera '
+                 'lightRig rot sp3d bevelT bgFillStyleLst objectDefaults spDef spPr bodyPr '
+                 'lstStyle style lnRef fillRef effectRef fontRef lnDef extraClrSchemeLst').split())
+NUMBERING_TAGS = set(('numbering abstractNum abstractNumId num numId lvl ilvl start numFmt '
+                     'lvlText lvlJc multiLevelType nsid tmpl pStyle pPr rPr tabs tab ind '
+                     'rFonts lvlOverride startOverride numStyleLink styleLink suff isLgl '
+                     'lvlRestart b i color sz vanish webHidden').split())
+
+
+def _tags(root, namespace, names):
+    permitted = {f'{{{namespace}}}{name}' for name in names}
+    return root is not None and all(node.tag in permitted and not (node.text or '').strip()
+                                    and not (node.tail or '').strip() for node in root.iter())
+
+
+def _auxiliary_content(role, root, data):
+    if role in {'styles', 'stylesWithEffects'}:
+        return (_tags(root, W, STYLE_TAGS)
+                and all(node.tag in {f'{{{W}}}style', f'{{{W}}}docDefaults', f'{{{W}}}latentStyles'}
+                        for node in root))
+    if role == 'numbering':
+        return _tags(root, W, NUMBERING_TAGS)
+    if role == 'settings':
+        permitted = {f'{{{W}}}{name}' for name in SETTINGS_TAGS}
+        permitted |= {f'{{http://schemas.openxmlformats.org/officeDocument/2006/math}}{name}'
+                      for name in 'mathPr mathFont brkBin brkBinSub smallFrac dispDef lMargin rMargin defJc wrapIndent intLim naryLim'.split()}
+        permitted |= {f'{{http://schemas.microsoft.com/office/word/2010/wordml}}{name}' for name in ('docId', 'defaultImageDpi')}
+        permitted |= {f'{{urn:schemas-microsoft-com:office:office}}{name}' for name in ('shapedefaults', 'shapelayout', 'idmap')}
+        return root is not None and all(node.tag in permitted and not (node.text or '').strip()
+                                        and not (node.tail or '').strip() for node in root.iter())
+    if role == 'webSettings':
+        return _tags(root, W, {'webSettings', 'allowPNG', 'doNotSaveAsSingleFile'})
+    if role == 'fontTable':
+        return _tags(root, W, {'fonts', 'font', 'charset', 'family', 'notTrueType', 'panose1', 'pitch', 'sig'})
+    if role == 'theme':
+        return _tags(root, A, THEME_TAGS)
+    if role == 'customXml':
+        # Only the known empty bibliography store is auxiliary in this slice.
+        return root is not None and root.tag == f'{{{B}}}Sources' and not len(root) and not (root.text or '').strip()
+    if role == 'customXmlProps':
+        return (_tags(root, C, {'datastoreItem', 'schemaRefs', 'schemaRef'})
+                and all(node.get(f'{{{C}}}uri') == B for node in root.iter(f'{{{C}}}schemaRef')))
+    if role == 'core':
+        cp = 'http://schemas.openxmlformats.org/package/2006/metadata/core-properties'
+        permitted = {f'{{{cp}}}{name}' for name in 'coreProperties category contentStatus contentType keywords lastModifiedBy lastPrinted revision version'.split()}
+        permitted |= {f'{{http://purl.org/dc/elements/1.1/}}{name}' for name in 'creator description identifier language subject title'.split()}
+        permitted |= {f'{{http://purl.org/dc/terms/}}{name}' for name in ('created', 'modified')}
+        return root is not None and all(node.tag in permitted for node in root.iter())
+    if role in {'app', 'custom'}:
+        ns = f'http://schemas.openxmlformats.org/officeDocument/2006/{"extended-properties" if role == "app" else "custom-properties"}'
+        names = 'Properties Template Manager Company Pages Words Characters PresentationFormat Lines Paragraphs Slides Notes TotalTime HiddenSlides MMClips ScaleCrop HeadingPairs TitlesOfParts LinksUpToDate CharactersWithSpaces SharedDoc HyperlinkBase HLinks HyperlinksChanged DigSig Application AppVersion DocSecurity' if role == 'app' else 'Properties property'
+        permitted = {f'{{{ns}}}{name}' for name in names.split()}
+        permitted |= {f'{{http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes}}{name}' for name in 'vector variant lpstr lpwstr bstr i1 i2 i4 i8 int ui1 ui2 ui4 ui8 uint r4 r8 decimal bool date filetime empty null'.split()}
+        return root is not None and all(node.tag in permitted for node in root.iter())
+    if role == 'thumbnail':
+        end = data.rfind(b'\xff\xd9')
+        # The installed Office template has one zero padding byte after EOI.
+        if (not data.startswith(b'\xff\xd8\xff') or end < 0
+                or len(data[end + 2:]) > 16 or any(data[end + 2:])):
+            return False
+        # Pillow is already locked by the existing PDF runtime. Verify the
+        # declared preview image only; no extraction or visual-equivalence claim.
+        from PIL import Image
+        try:
+            with Image.open(BytesIO(data)) as preview:
+                if preview.format != 'JPEG' or max(preview.size) > 4096 or min(preview.size) < 1:
+                    return False
+                preview.verify()
+            return True
+        except (OSError, ValueError, Image.DecompressionBombError):
+            return False
+    return False
+
+
+def _classify_auxiliaries(package, xml_parts):
+    defaults, overrides = {}, {}
+    for node in xml_parts['[Content_Types].xml']:
+        if node.tag == f'{{{CT}}}Default':
+            key, target = node.get('Extension'), defaults
+        elif node.tag == f'{{{CT}}}Override':
+            key, target = node.get('PartName'), overrides
+        else:
+            _unsupported()
+        if not key or key in target or not node.get('ContentType'):
+            _unsupported()
+        target[key] = node.get('ContentType')
+
+    def content_type(name):
+        return overrides.get('/' + name, defaults.get(name.rsplit('.', 1)[-1]))
+
+    # role, relationship type, content type, root, source. Names are derived
+    # from validated relationship targets, never used as an auxiliary allowlist.
+    prefix = 'application/vnd.openxmlformats-officedocument.'
+    roles = [
+        ('styles', O + 'styles', prefix + 'wordprocessingml.styles+xml', f'{{{W}}}styles', 'word/document.xml'),
+        ('stylesWithEffects', 'http://schemas.microsoft.com/office/2007/relationships/stylesWithEffects', 'application/vnd.ms-word.stylesWithEffects+xml', f'{{{W}}}styles', 'word/document.xml'),
+        ('settings', O + 'settings', prefix + 'wordprocessingml.settings+xml', f'{{{W}}}settings', 'word/document.xml'),
+        ('webSettings', O + 'webSettings', prefix + 'wordprocessingml.webSettings+xml', f'{{{W}}}webSettings', 'word/document.xml'),
+        ('fontTable', O + 'fontTable', prefix + 'wordprocessingml.fontTable+xml', f'{{{W}}}fonts', 'word/document.xml'),
+        ('theme', O + 'theme', prefix + 'theme+xml', f'{{{A}}}theme', 'word/document.xml'),
+        ('numbering', O + 'numbering', prefix + 'wordprocessingml.numbering+xml', f'{{{W}}}numbering', 'word/document.xml'),
+        ('customXml', O + 'customXml', 'application/xml', f'{{{B}}}Sources', 'word/document.xml'),
+        ('customXmlProps', O + 'customXmlProps', prefix + 'customXmlProperties+xml', f'{{{C}}}datastoreItem', None),
+        ('core', R + '/metadata/core-properties', 'application/vnd.openxmlformats-package.core-properties+xml', '{http://schemas.openxmlformats.org/package/2006/metadata/core-properties}coreProperties', ''),
+        ('app', O + 'extended-properties', prefix + 'extended-properties+xml', '{http://schemas.openxmlformats.org/officeDocument/2006/extended-properties}Properties', ''),
+        ('custom', O + 'custom-properties', prefix + 'custom-properties+xml', '{http://schemas.openxmlformats.org/officeDocument/2006/custom-properties}Properties', ''),
+        ('thumbnail', R + '/metadata/thumbnail', 'image/jpeg', None, ''),
+    ]
+    binding = any(node.tag == f'{{{W}}}dataBinding' for root in xml_parts.values() for node in root.iter())
+    safe = {'[Content_Types].xml'}
+    edges, rels, identified = [], {}, {}
+    for name, root in xml_parts.items():
+        if not name.endswith('.rels'):
+            continue
+        path = PurePosixPath(name)
+        source = '' if name == '_rels/.rels' else str(path.parent.parent / path.name[:-5])
+        valid = (content_type(name) == 'application/vnd.openxmlformats-package.relationships+xml'
+                 and root.tag == f'{{{R}}}Relationships' and (source == '' or source in package))
+        seen = set()
+        for node in root:
+            identifier, target = node.get('Id'), node.get('Target', '')
+            if (node.tag != f'{{{R}}}Relationship' or not identifier or identifier in seen
+                    or not node.get('Type') or not target or node.get('TargetMode') not in {None, 'Internal', 'External'}):
+                valid = False
+            seen.add(identifier)
+            if node.get('TargetMode') == 'External' or any(char in target for char in '\\:%?#'):
+                valid = False
+                continue
+            destination = posixpath.normpath(posixpath.join(posixpath.dirname(source), target))
+            if destination.startswith('/') or destination not in package:
+                valid = False
+                continue
+            edges.append((name, source, destination, node.get('Type')))
+        rels[name] = valid
+    for name, source, target, relationship in edges:
+        if source == '' and target == 'word/document.xml' and relationship == O + 'officeDocument':
+            continue
+        root = xml_parts.get(target)
+        matched = False
+        for role, relation_type, mime, expected_root, expected_source in roles:
+            if relationship != relation_type or content_type(target) != mime:
+                continue
+            if expected_source is not None and source != expected_source:
+                continue
+            if role == 'customXmlProps' and not any(edge[1] == 'word/document.xml' and edge[2] == source and edge[3] == O + 'customXml' for edge in edges):
+                continue
+            if expected_root is not None and (root is None or root.tag != expected_root):
+                continue
+            if role in {'customXml', 'customXmlProps'} and binding:
+                continue
+            if _auxiliary_content(role, root, package[target]):
+                safe.add(target)
+                identified.setdefault(role, []).append(target)
+                matched = True
+                break
+        if not matched:
+            rels[name] = False
+    safe.update(name for name, valid in rels.items() if valid)
+    return safe, identified
 
 
 def _unsupported():
@@ -30,6 +213,23 @@ def _xml(data):
         return ElementTree.fromstring(data, forbid_dtd=True, forbid_entities=True, forbid_external=True)
     except (ParseError, DefusedXmlException, ValueError, RecursionError):
         _unsupported()
+
+
+def _empty_metadata_records(root, namespace, name, records):
+    """OPC manifests/relations contain attributes and empty direct records only."""
+    if (root.tag != f'{{{namespace}}}{name}' or root.attrib
+            or (root.text or '').strip() or (root.tail or '').strip()):
+        return False
+    for node in root:
+        schema = records.get(node.tag)
+        if (schema is None or len(node) or (node.text or '').strip()
+                or (node.tail or '').strip()):
+            return False
+        required, optional = schema
+        if (not required <= node.attrib.keys() or not node.attrib.keys() <= required | optional
+                or any(not value for value in node.attrib.values())):
+            return False
+    return True
 
 
 def read_package(data, settings):
@@ -121,6 +321,14 @@ def read_package(data, settings):
             _unsupported()
         xml_parts = {name: _xml(content) for name, content in result.items() if name.endswith(('.xml', '.rels'))}
         types = xml_parts['[Content_Types].xml']
+        if not _empty_metadata_records(types, CT, 'Types', {
+                f'{{{CT}}}Default': ({'Extension', 'ContentType'}, set()),
+                f'{{{CT}}}Override': ({'PartName', 'ContentType'}, set())}):
+            _unsupported()
+        for name, root in xml_parts.items():
+            if name.endswith('.rels') and not _empty_metadata_records(root, R, 'Relationships', {
+                    f'{{{R}}}Relationship': ({'Id', 'Type', 'Target'}, {'TargetMode'})}):
+                _unsupported()
         if (types.tag != f'{{{CT}}}Types' or any('macroenabled' in value.lower() or 'vba' in value.lower()
                                               for node in types.iter() for value in node.attrib.values())
                 or not any(node.get('PartName') == '/word/document.xml' and node.get('ContentType') == MAIN_TYPE for node in types)):
@@ -150,12 +358,25 @@ def parse_docx(data, version, settings):
     package, xml_parts = read_package(data, settings)
     body = xml_parts['word/document.xml'].find(f'{{{W}}}body')
     part, unsupported, quality, anchors = 'word/document.xml', set(), [], []
+    safe_metadata, identified = _classify_auxiliaries(package, xml_parts)
+    style_names = identified.get('styles', [])
+    effect_names = identified.get('stylesWithEffects', [])
+    style_parts_present = any(root.tag == f'{{{W}}}styles' for root in xml_parts.values())
+    style_unavailable = (len(style_names) > 1 or len(effect_names) > 1
+                         or (style_parts_present and not style_names))
+    # Untrusted declared style dependencies cannot safely supply default
+    # visibility merely because the remaining paragraphs have no pStyle tag.
+    style_unavailable |= any(root.tag == f'{{{W}}}styles' and name not in safe_metadata
+                             for name, root in xml_parts.items())
+    styles = [EffectiveStyles(xml_parts[style_names[0]] if style_names else None,
+                              unavailable=style_unavailable)]
+    styles.extend(EffectiveStyles(xml_parts[name], fallback=styles[0]) for name in effect_names)
+    numbering_roots = [root for root in xml_parts.values() if root.tag == f'{{{W}}}numbering']
     inventory = []
     for name in package:
         if name == part:
             inventory.append(f'{name}:read')
-        elif name in {'[Content_Types].xml', '_rels/.rels', 'word/_rels/document.xml.rels',
-                      'docProps/core.xml', 'docProps/app.xml', 'docProps/custom.xml'}:
+        elif name in safe_metadata:
             inventory.append(f'{name}:metadata_read')
         else:
             inventory.append(f'{name}:unsupported')
@@ -176,7 +397,13 @@ def parse_docx(data, version, settings):
         return ParseResult(version_id=version.id, anchors=(), pages=(), parts=tuple(inventory),
                            unsupported_parts=tuple(sorted(unsupported)), quality_issues=tuple(quality))
 
-    def text(node):
+    def style_gap(path):
+        unsupported.add(f'{part}:style_dependency:{path}:manual_required')
+        issue = f'STYLE_DEPENDENCY_REQUIRES_CONFIRMATION:{path}'
+        if issue not in quality:
+            quality.append(issue)
+
+    def text(node, paragraph, path):
         local = node.tag.removeprefix(f'{{{W}}}')
         if node.tag == f'{{{W}}}ins' and version.baseline_view != BaselineView.ACCEPTED_VIEW:
             return ''
@@ -188,10 +415,15 @@ def parse_docx(data, version, settings):
         if local == 'object':
             unsupported.add(f'{part}:embedded_objects:manual_required')
             return ''
-        if local == 'r' and any(prop.tag in {f'{{{W}}}vanish', f'{{{W}}}webHidden'} and prop.get(f'{{{W}}}val', 'true') not in {'0', 'false', 'off'}
-                                for prop in node.findall(f'{{{W}}}rPr/*')):
-            unsupported.add(f'{part}:hidden:manual_required')
-            return ''
+        if local == 'r':
+            try:
+                hidden = any(style.run_hidden(paragraph, node) for style in styles)
+            except StyleDependencyError:
+                style_gap(path)
+                return ''
+            if hidden:
+                unsupported.add(f'{part}:hidden:{path}:manual_required')
+                return ''
         if local in {'t', 'delText'}:
             return node.text or ''
         if local == 'tab':
@@ -203,7 +435,7 @@ def parse_docx(data, version, settings):
         if local not in {'p', 'r', 'hyperlink', 'ins', 'del'}:
             unsupported.add(f'{part}:unknown_objects:{local}:manual_required')
             return ''
-        return ''.join(text(child) for child in node)
+        return ''.join(text(child, paragraph, path) for child in node)
 
     table_count = 0
 
@@ -215,7 +447,14 @@ def parse_docx(data, version, settings):
             counts[local] = counts.get(local, 0) + 1
             child_path = f'{path}/{local}[{counts[local]}]'
             if child.tag == f'{{{W}}}p':
-                quote = text(child)
+                try:
+                    if any(style.numbering_used(child, numbering_roots) for style in styles):
+                        unsupported.add(f'{part}:numbering:{child_path}:manual_required')
+                        quality.append(f'NUMBERING_NOT_SUPPORTED:{child_path}')
+                except StyleDependencyError:
+                    style_gap(child_path)
+                    continue
+                quote = text(child, child, child_path)
                 if quote:
                     kwargs = {} if coords is None else dict(zip(('table', 'row', 'cell'), coords))
                     anchors.append(make_anchor(version, part, child_path, quote,
@@ -223,6 +462,14 @@ def parse_docx(data, version, settings):
             elif child.tag == f'{{{W}}}tbl':
                 table = table_count
                 table_count += 1
+                try:
+                    table_hidden = any(style.table_hidden(child) for style in styles)
+                except StyleDependencyError:
+                    style_gap(child_path)
+                    continue
+                if table_hidden:
+                    unsupported.add(f'{part}:hidden:{child_path}:manual_required')
+                    continue
                 for row, tr in enumerate(child.findall(f'{{{W}}}tr')):
                     for item in tr:
                         if item.tag not in {f'{{{W}}}tc', f'{{{W}}}trPr'}:

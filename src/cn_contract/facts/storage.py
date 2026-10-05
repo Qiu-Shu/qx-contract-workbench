@@ -90,3 +90,59 @@ def trusted_parse(matter_id, version_id, actor, db, expected):
     if expected != result:
         raise ServiceError('VERSION_CONFLICT',409)
     return result
+
+
+def source_anchor_is_eligible(anchor, parsed):
+    """Whole-page PDF anchors are original evidence only on native read pages.
+
+    Manual/OCR/unsupported text remains an uncertain candidate. This slice has
+    no visual-confirmation record or independent lawyer-transcript provenance;
+    a FactDecision reason cannot authorize risky extracted text as original.
+    DOCX source classification is handled by its own adapter and is unchanged.
+    """
+    if anchor.kind != 'pdf_span':
+        return True
+    return (anchor.page is not None and f'page:{anchor.page}:read' in parsed.parts
+        and not any(part == f'page:{anchor.page}' or part.startswith(f'page:{anchor.page}:')
+            for part in parsed.unsupported_parts))
+
+
+def require_fact_sources(matter_id, facts, actor, db, *, visual_fact_ids=None):
+    """Rebuild source trust before consuming facts, including historic snapshots.
+
+    Caller-supplied/saved parse DTOs never prove eligibility. All latest stored
+    parses are checked against immutable bytes under real case authorization.
+    Optional IDs identify decisions that assert visibility; rejecting a valid
+    but visually uncertain candidate is allowed. Integrity checks still apply.
+    """
+    from sqlalchemy import select
+    from ..domain import ParseResult
+    from ..persistence import DocumentRow, ParseRow
+    from ..security import ServiceError
+    facts = tuple(facts)
+    sources, seen = {}, set()
+    rows = db.execute(select(ParseRow, DocumentRow.id).join(DocumentRow,
+        ParseRow.document_version_id == DocumentRow.id).where(DocumentRow.matter_id == str(matter_id))
+        .order_by(ParseRow.id.desc())).all()
+    for row, document_id in rows:
+        if document_id in seen:
+            continue
+        seen.add(document_id)
+        parsed = ParseResult.model_validate_json(row.payload)
+        if str(parsed.version_id) != document_id:
+            raise ServiceError('VERSION_CONFLICT', 409)
+        parsed = trusted_parse(matter_id, parsed.version_id, actor, db, parsed)
+        sources.update((anchor.id, (anchor, parsed)) for anchor in parsed.anchors)
+    visual_ids = ({fact.id for fact in facts if fact.confirmation_status != 'rejected'}
+        if visual_fact_ids is None else set(visual_fact_ids))
+    for fact in facts:
+        if fact.matter_id != matter_id:
+            raise ServiceError('VERSION_CONFLICT', 409)
+        if fact.provenance_type == 'external' or fact.receipt_ids:
+            raise ServiceError('NOT_SUPPORTED', 409)
+        if (len(set(fact.anchor_ids)) != len(fact.anchor_ids) or not set(fact.anchor_ids).issubset(sources)
+            or fact.provenance_type == 'document' and not fact.anchor_ids):
+            raise ServiceError('VERSION_CONFLICT', 409)
+        if fact.id in visual_ids and any(not source_anchor_is_eligible(*sources[identifier]) for identifier in fact.anchor_ids):
+            raise ServiceError('SOURCE_VISUAL_CONFIRMATION_REQUIRED', 409)
+    return sources

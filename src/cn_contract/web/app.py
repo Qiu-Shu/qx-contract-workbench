@@ -30,6 +30,7 @@ from ..review.storage import read_run
 from ..queries import planner, ledger
 from ..queries.gateway import authenticate_execution
 from ..exports import approvals
+from ..exports.audience_filter import DIMENSIONS
 from . import services, storage as s
 from .jobs import start_job, run_next_job, claim_next_job, recover_jobs
 from .storage import get_job
@@ -37,6 +38,7 @@ from .dependencies import service_error_handler
 
 TEMPLATES=Path(__file__).with_name('templates')
 STATIC=Path(__file__).with_name('static')
+COVERAGE_LABELS=tuple(zip((item.value for item in d.CoverageId),DIMENSIONS,strict=True))
 
 
 def initialize_storage(database):
@@ -102,24 +104,30 @@ async def body_input(request,model):
         raise ServiceError('STATE_CONFLICT',422) from None
 
 
-def project_bundle(bundle):
+def project_bundle(bundle,*,purpose='mock_demo'):
     return {**bundle.model_dump(mode='json',exclude={'artifacts'}),'draft':True,
         'artifacts':[a.model_dump(mode='json',exclude={'storage_ref'}) for a in bundle.artifacts],
-        'limitations':['虚构/mock草案，不能正式签发','对外原件包修改需人工；完整补丁后法律与数值重审未实现']}
+        'limitations':['独立虚构/离线人工候选工作稿，真实模型推理未运行，不能正式签发' if purpose=='assisted_draft' else '虚构/mock草案，不能正式签发',
+            '对外原件包修改需人工；完整补丁后法律与数值重审未实现']}
 
 
 def create_app(settings: Settings, *, database: Database, synthetic_upload_hashes=None, synthetic_loopback_endpoints=(),
-               synthetic_signing_user_ids=()):
+               synthetic_signing_user_ids=(), purpose='mock_demo', assisted_policy=None):
     if not isinstance(database,Database):raise TypeError('explicit Database required')
     settings=Settings.model_validate(settings.model_dump(mode='python'))
     if settings.model_dump()!=database.settings.model_dump():raise ValueError('configured Settings mismatch')
     s.require_storage(database)
-    allowed=frozenset(synthetic_upload_hashes) if synthetic_upload_hashes is not None else frozenset(EXPECTED_HASHES.values())
+    from ..review import proposals
+    policy=proposals.configure(database,purpose,assisted_policy)
+    if policy is not None and synthetic_upload_hashes is not None:
+        raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+    allowed=frozenset(policy.document_hashes) if policy is not None else (frozenset(synthetic_upload_hashes) if synthetic_upload_hashes is not None else frozenset(EXPECTED_HASHES.values()))
     if not allowed or any(not isinstance(v,str) or len(v)!=64 for v in allowed):raise ValueError('fixed synthetic hash registry required')
     environment=Environment(loader=FileSystemLoader(str(TEMPLATES)),autoescape=True,undefined=StrictUndefined)
     app=FastAPI(title='群兴合同审查工作台 · 独立虚构演示',docs_url=None,redoc_url=None,openapi_url=None)
     app.state.database=database;app.state.template_environment=environment
     app.state.synthetic_upload_hashes=allowed
+    app.state.purpose=purpose
     loopbacks=frozenset(synthetic_loopback_endpoints)
     signing=frozenset(str(v) for v in synthetic_signing_user_ids)
     from ..providers.qcc_registry import allowed_synthetic_endpoint
@@ -180,9 +188,16 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
                     elif action=='preview':
                         services.current_run(actual_matter,value.run_id,value.run_sha256,actor,db)
                         bundle=approvals.read_bundle(UUID(response['id']),actor,db=db)
-                        if project_bundle(bundle)!=response:raise ServiceError('APPROVAL_STALE',409)
+                        if project_bundle(bundle,purpose=purpose)!=response:raise ServiceError('APPROVAL_STALE',409)
                     elif action.startswith('decision:'):
                         services.current_run(actual_matter,value.run_id,value.run_sha256,actor,db)
+                    elif action=='assisted_proposal':
+                        current=read_run(actual_matter,UUID(response['id']),actor,db=db,current=True)
+                        if current.model_dump(mode='json')!=response:raise ServiceError('APPROVAL_STALE',409)
+                    elif action=='working_draft_confirm':
+                        from ..exports.draft_confirmation import read_working_draft_confirmation
+                        confirmation=read_working_draft_confirmation(actual_matter,UUID(response['id']),actor,db=db)
+                        if confirmation.model_dump(mode='json')!=response:raise ServiceError('APPROVAL_STALE',409)
                     elif action=='query_plan' or action.startswith('query_approve:'):
                         plan=planner.read_plan(UUID(response['id']),actor,matter_id=actual_matter,db=db)
                         if plan.plan_sha256!=response['plan_sha256']:raise ServiceError('PLAN_CHANGED',409)
@@ -250,7 +265,9 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
             actor=actor_in(request,db,matter_id)
             return {'matter':read_matter(matter_id,actor,db).model_dump(mode='json'),
                     'documents':[services.public_version(v) for v in services.current_versions(matter_id,actor,db)],
-                    'synthetic':True,'qcc_enabled':False,'model_provider':'mock'}
+                    'synthetic':True,'qcc_enabled':False,'purpose':purpose,
+                    'model_provider':'assisted_manual' if purpose=='assisted_draft' else 'mock',
+                    'model_inference':'NOT_RUN' if purpose=='assisted_draft' else 'MOCK_ONLY'}
 
     @app.post('/api/matters/{matter_id}/position')
     async def position_api(matter_id:UUID,request:Request):
@@ -302,7 +319,12 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
             if version.id not in {v.id for v in services.current_versions(matter_id,actor,db)}:raise ServiceError('VERSION_CONFLICT',409)
             parsed=get_parse_result(matter_id,version_id,actor,db)
             if parsed is None:raise ServiceError('FACTS_UNCONFIRMED',409)
-            return trusted_parse(matter_id,version_id,actor,db,parsed)
+            parsed=trusted_parse(matter_id,version_id,actor,db,parsed)
+            if purpose=='assisted_draft':
+                from ..facts.storage import source_anchor_is_eligible
+                return {**parsed.model_dump(mode='json'),
+                    'eligible_anchor_ids':[str(a.id) for a in parsed.anchors if source_anchor_is_eligible(a,parsed)]}
+            return parsed
 
     @app.get('/api/matters/{matter_id}/facts')
     def facts_api(matter_id:UUID,request:Request):
@@ -321,9 +343,32 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
             return snapshot
         return write(request,matter_id,'facts_confirm',value,operation)
 
+    @app.post('/api/matters/{matter_id}/facts/candidates',status_code=201)
+    async def candidate_facts_api(matter_id:UUID,request:Request):
+        authenticate_first(request,matter_id,'candidate_facts')
+        with database.session() as db:proposals.require_policy(db)
+        value=await body_input(request,d.AssistedFactsInput)
+        return write(request,matter_id,'assisted_facts',value,
+            lambda actor,db:proposals.submit_fact_candidates(matter_id,value,actor,db),permission='candidate_facts')
+
+    @app.get('/api/matters/{matter_id}/review-context')
+    def assisted_context_api(matter_id:UUID,request:Request):
+        with database.session() as db:
+            actor=actor_in(request,db,matter_id,'review')
+            return proposals.review_context(matter_id,actor,db)
+
+    @app.post('/api/matters/{matter_id}/review-proposals',status_code=201)
+    async def proposal_api(matter_id:UUID,request:Request):
+        authenticate_first(request,matter_id,'review')
+        with database.session() as db:proposals.require_policy(db)
+        value=await body_input(request,d.AssistedReviewInput)
+        return write(request,matter_id,'assisted_proposal',value,
+            lambda actor,db:proposals.submit_proposal(matter_id,value,actor,db),permission='review')
+
     @app.post('/api/matters/{matter_id}/reviews',status_code=202)
     async def review_api(matter_id:UUID,request:Request):
         authenticate_first(request,matter_id,'review');value=await body_input(request,d.ReviewStartInput)
+        if purpose=='assisted_draft':raise ServiceError('NOT_SUPPORTED',409)
         with database.session() as db:
             actor=actor_in(request,db,matter_id,'review',write=True)
             payload=value.model_dump(mode='json');key=request.headers.get('Idempotency-Key')
@@ -340,8 +385,13 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     def review_read_api(matter_id:UUID,run_id:UUID,request:Request):
         with database.session() as db:
             actor=actor_in(request,db,matter_id);run=read_run(matter_id,run_id,actor,db=db)
-            return {**run.model_dump(mode='json'),'run_sha256':s.sha(run.model_dump(mode='json')),
-                    'decisions':services.decisions(matter_id,run_id,actor,db)}
+            from ..review.decisions import read_snapshot,read_authority
+            snapshot=read_snapshot(matter_id,run_id,actor,db=db,require_authority=False)
+            extra={'proposal':proposals.read_proposal(matter_id,run_id,actor,db).model_dump(mode='json')} if run.manifest.model_provider=='assisted_manual' else {}
+            return {**run.model_dump(mode='json'),**extra,'run_sha256':s.sha(run.model_dump(mode='json')),
+                    'decisions':services.decisions(matter_id,run_id,actor,db),
+                    'decision_snapshot':snapshot.model_dump(mode='json'),
+                    'decision_authority':read_authority(snapshot,db=db).model_dump(mode='json')}
 
     @app.get('/api/matters/{matter_id}/reviews')
     def run_list_api(matter_id:UUID,request:Request):
@@ -367,7 +417,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
         def operation(actor,db):
             run=services.current_run(matter_id,value.run_id,value.run_sha256,actor,db)
             patches=services.approved_patches(matter_id,value.patch_ids,actor,db)
-            return project_bundle(approvals.prepare_exports(run,value.audience,patches,actor,db=db))
+            return project_bundle(approvals.prepare_exports(run,value.audience,patches,actor,db=db),purpose=purpose)
         return write(request,matter_id,'preview',value,operation)
 
     @app.get('/api/matters/{matter_id}/patches')
@@ -492,7 +542,8 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
             actor=actor_in(request,db,matter_id)
             matter=read_matter(matter_id,actor,db) if matter_id else None
         return HTMLResponse(environment.get_template('workbench.html').render(section=section,matter=matter,
-            matter_id=str(matter_id) if matter_id else '',synthetic=True))
+            matter_id=str(matter_id) if matter_id else '',synthetic=True,purpose=purpose,
+            coverage_dimensions=COVERAGE_LABELS))
 
     @app.get('/',response_class=HTMLResponse)
     def index(request:Request):
@@ -518,4 +569,6 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     def static_file(name:str):
         if name not in {'workbench.js','workbench.css'}:raise ServiceError('NOT_SUPPORTED',404)
         return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith('.js') else 'text/css')
+    from .draft_confirmation import register_routes
+    register_routes(app,database,authenticate_first,body_input,write)
     return app

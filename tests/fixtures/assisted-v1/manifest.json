@@ -1,0 +1,286 @@
+{
+  "format": 1,
+  "scope": "ENGINEERING_FICTION_ONLY",
+  "created_utc": "2026-10-05T00:00:00Z",
+  "model_inference": "NOT_RUN",
+  "legal_gold": "NOT_APPROVED",
+  "journey_status": "NOT_RUN",
+  "cases": [
+    {
+      "id": "sales-01",
+      "contract_type": "sales",
+      "position": "buyer",
+      "path": "tests/fixtures/assisted-v1/sales-01.docx",
+      "sha256": "9065f6665d0ec2d724c06b147ce322a74b40cf149acbc32e5d05086a59f2ab5d",
+      "bytes": 37123,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_amount",
+        "value": "14067",
+        "unit": "元",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": true,
+      "contains_instruction_as_data": false
+    },
+    {
+      "id": "sales-02",
+      "contract_type": "sales",
+      "position": "buyer",
+      "path": "tests/fixtures/assisted-v1/sales-02.docx",
+      "sha256": "ea08234635c265387fedd823c09b6bec21c6b7d4187bb9ccfc29d603f5e38ece",
+      "bytes": 37133,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_amount",
+        "value": "2.35",
+        "unit": "万元",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": false,
+      "contains_instruction_as_data": false
+    },
+    {
+      "id": "sales-03",
+      "contract_type": "sales",
+      "position": "buyer",
+      "path": "tests/fixtures/assisted-v1/sales-03.docx",
+      "sha256": "54792cf0055ae8c5e1a78f52a21979cd53cbf724c0fef47be0fc30c37d4b6cd8",
+      "bytes": 37215,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_amount",
+        "value": "14701",
+        "unit": "元",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": false,
+      "contains_instruction_as_data": true
+    },
+    {
+      "id": "service-01",
+      "contract_type": "service",
+      "position": "customer",
+      "path": "tests/fixtures/assisted-v1/service-01.docx",
+      "sha256": "05685f9a2be578ffa1a2c1dc8ceec0faa0f56983b22f07258f3c532e3057044a",
+      "bytes": 37120,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_amount",
+        "value": "14067",
+        "unit": "元",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": true,
+      "contains_instruction_as_data": false
+    },
+    {
+      "id": "service-02",
+      "contract_type": "service",
+      "position": "customer",
+      "path": "tests/fixtures/assisted-v1/service-02.docx",
+      "sha256": "fca117dd3eb1ae0b81a37e7eeb838474a09cdc83fd4b8abbf29a5f8a5cea43d3",
+      "bytes": 37130,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_amount",
+        "value": "2.35",
+        "unit": "万元",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": false,
+      "contains_instruction_as_data": false
+    },
+    {
+      "id": "service-03",
+      "contract_type": "service",
+      "position": "customer",
+      "path": "tests/fixtures/assisted-v1/service-03.docx",
+      "sha256": "6622efda0070456422634345990229a76f9f23430a032eafc0c23f8185ee6633",
+      "bytes": 37213,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_amount",
+        "value": "14701",
+        "unit": "元",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": false,
+      "contains_instruction_as_data": true
+    },
+    {
+      "id": "lease-01",
+      "contract_type": "lease",
+      "position": "lessee",
+      "path": "tests/fixtures/assisted-v1/lease-01.docx",
+      "sha256": "feeb463c9c3b00d013bc712e163722a448ff0448b96bb32457841f8a41d557ff",
+      "bytes": 37124,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_amount",
+        "value": "14067",
+        "unit": "元",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": true,
+      "contains_instruction_as_data": false
+    },
+    {
+      "id": "lease-02",
+      "contract_type": "lease",
+      "position": "lessee",
+      "path": "tests/fixtures/assisted-v1/lease-02.docx",
+      "sha256": "3b45be5f8b291049713f4d87edd2b0fb39d10e22c7eef602e988f60323fc0e2b",
+      "bytes": 37134,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_amount",
+        "value": "2.35",
+        "unit": "万元",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": false,
+      "contains_instruction_as_data": false
+    },
+    {
+      "id": "lease-03",
+      "contract_type": "lease",
+      "position": "lessee",
+      "path": "tests/fixtures/assisted-v1/lease-03.docx",
+      "sha256": "9fb43d4e84fe60fba78380a338be58f36f0753e04e6c84b5db91dd9df257683a",
+      "bytes": 37214,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_amount",
+        "value": "14701",
+        "unit": "元",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": false,
+      "contains_instruction_as_data": true
+    },
+    {
+      "id": "nda-01",
+      "contract_type": "nda",
+      "position": "recipient",
+      "path": "tests/fixtures/assisted-v1/nda-01.docx",
+      "sha256": "60d73c692704198fa9087bd79eb92c7b3491fff46d2fa2f92b1878bbb0073b78",
+      "bytes": 37121,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_duration",
+        "value": "13",
+        "unit": "个月",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": true,
+      "contains_instruction_as_data": false
+    },
+    {
+      "id": "nda-02",
+      "contract_type": "nda",
+      "position": "recipient",
+      "path": "tests/fixtures/assisted-v1/nda-02.docx",
+      "sha256": "86e2ad2d3fe62db471adcbb924964b6925b14981adb8a6836302378d2dd1b2c5",
+      "bytes": 37129,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_duration",
+        "value": "14",
+        "unit": "个月",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": false,
+      "contains_instruction_as_data": false
+    },
+    {
+      "id": "nda-03",
+      "contract_type": "nda",
+      "position": "recipient",
+      "path": "tests/fixtures/assisted-v1/nda-03.docx",
+      "sha256": "1f17a83240ede72d864d5747dab4977a545c4688a87e8e77a593dd30809d3955",
+      "bytes": 37210,
+      "fictional": true,
+      "office_kind": "python-docx standard package",
+      "source": "independently authored project fiction; no client material",
+      "numeric_source": {
+        "field": "synthetic_duration",
+        "value": "15",
+        "unit": "个月",
+        "paragraph_index": 3
+      },
+      "repeated_paragraph_indices": [
+        5,
+        6
+      ],
+      "same_name_distinct_parties": false,
+      "contains_instruction_as_data": true
+    }
+  ]
+}

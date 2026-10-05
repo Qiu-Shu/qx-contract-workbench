@@ -111,6 +111,7 @@
         "BASELINE_REQUIRED",
         "CROSS_MATTER_DENIED",
         "FACTS_UNCONFIRMED",
+        "SOURCE_VISUAL_CONFIRMATION_REQUIRED",
         "RULE_SCOPE_UNSUPPORTED",
         "PARTY_AMBIGUOUS",
         "TOOL_UNBOUND",
@@ -297,6 +298,48 @@
           "format": "date-time",
           "title": "Decided At",
           "type": "string"
+        },
+        "edited_analysis": {
+          "anyOf": [
+            {
+              "maxLength": 20000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Edited Analysis"
+        },
+        "edited_recommendation": {
+          "anyOf": [
+            {
+              "maxLength": 20000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Edited Recommendation"
+        },
+        "edited_replacement_text": {
+          "anyOf": [
+            {
+              "maxLength": 20000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Edited Replacement Text"
         }
       },
       "required": [

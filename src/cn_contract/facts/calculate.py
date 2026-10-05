@@ -4,6 +4,7 @@ from ..domain import (SafeExpression, LiteralExpression, VariableExpression, Bin
     CalculationInput, RoundingSpec, CalculationResult)
 from ..persistence import read_matter, get_fact_snapshot
 from ..security import ServiceError
+from .storage import require_fact_sources
 
 _MAX_NODES = 128
 _MAX_DEPTH = 32
@@ -85,6 +86,7 @@ def calculate_expression(expr, values, *, inputs=None, rounding=None, assumption
             raise ServiceError('FACTS_UNCONFIRMED',409)
         snapshot = get_fact_snapshot(matter_id,version,actor,db)
         facts = {f.id:f for f in snapshot.facts}
+        consumed = []
         for item in bound:
             for identifier in item.fact_ids:
                 fact = facts.get(identifier)
@@ -93,6 +95,8 @@ def calculate_expression(expr, values, *, inputs=None, rounding=None, assumption
                     or fact.typed_value.kind!='decimal' or fact.unit!=item.unit
                     or fact.typed_value.value!=item.value):
                     raise ServiceError('FACTS_UNCONFIRMED',409)
+                consumed.append(fact)
+        require_fact_sources(matter_id, consumed, actor, db)
         notes += (f'输入事实快照版本{version}，sha256={snapshot.sha256}',)
     if not metadata or any(not i.fact_ids for i in metadata):
         notes += ('未绑定全部已确认事实；数学结果不能直接作为合同结论；输出单位由调用者声明',)
@@ -182,6 +186,7 @@ def payment_base_facts(matter_id, *, actor, db, fact_version=None):
         or period.typed_value.kind not in {'text','date'} or not period.typed_value.value):
         raise ServiceError('FACTS_UNCONFIRMED',409)
     _decimal(amount.typed_value.value,input_value=True)
+    require_fact_sources(matter_id, (amount, period), actor, db)
     return amount,period
 
 

@@ -13,7 +13,7 @@ from .app import create_app, initialize_storage, recover_jobs, run_next_job
 DEMO_PASSWORD='synthetic-only-12345'
 
 
-def build_demo(directory=None):
+def build_demo(directory=None,*,purpose='mock_demo',assisted_policy=None):
     root=Path(directory).resolve() if directory else (PROJECT_ROOT/'.local/http-demo'/uuid4().hex).resolve()
     approved=(PROJECT_ROOT/'.local').resolve()
     if not root.is_relative_to(approved) or root==approved or root.exists():
@@ -26,7 +26,8 @@ def build_demo(directory=None):
         for name,role in [('lawyer',Role.HANDLING_LAWYER),('reviewer',Role.REVIEWING_LAWYER),
                           ('assistant',Role.ASSISTANT),('admin',Role.ADMIN)]:
             users[name]=provision_user(name,DEMO_PASSWORD,{role},db)
-    app=create_app(load_settings(),database=database,synthetic_signing_user_ids={users['reviewer']})
+    app=create_app(load_settings(),database=database,synthetic_signing_user_ids={users['reviewer']},
+        purpose=purpose,assisted_policy=assisted_policy)
     stop=Event()
 
     def worker():

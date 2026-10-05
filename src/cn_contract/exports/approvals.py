@@ -11,6 +11,7 @@ from . import storage as s
 from . import redline_adapter as redline
 from .audience_filter import project,allow_original_copy,AUDIENCES
 from .report_docx import build
+from ..review.decisions import read_snapshot,read_history,finding_fingerprint,check_patch_disposition
 
 
 def approve_patch(matter_id,run_id,patch,actor,*,db,audiences=('internal',),exception_authorization_id=None):
@@ -27,6 +28,8 @@ def approve_patch(matter_id,run_id,patch,actor,*,db,audiences=('internal',),exce
     finding=next((f for f in run.findings if f.id==patch.finding_id),None)
     if finding is None or patch.anchor_id not in (*finding.anchor_ids,*finding.cross_anchor_ids) or patch.document_version_id not in run.manifest.document_hashes:
         raise ServiceError('VERSION_CONFLICT',409)
+    snapshot=read_snapshot(matter_id,run_id,actor,db=db)
+    check_patch_disposition(snapshot,patch)
     run_row=db.get(ReviewRunRow,str(run.id))
     if finding.severity=='high':
         if run_row.actor_id==str(actor.user_id):raise ServiceError('UNRESOLVED_HARD_GATE',403)
@@ -42,7 +45,8 @@ def approve_patch(matter_id,run_id,patch,actor,*,db,audiences=('internal',),exce
     with db.begin_nested():
         if s.latest('patch_approval',patch.id,db):raise ServiceError('VERSION_CONFLICT',409)
         record=s.append('patch_approval',patch.id,{'run_id':str(run.id),'run_sha256':s.sha(run.model_dump(mode='json')),
-            'patch':approved.model_dump(mode='json'),'audiences':list(audiences),'approval_session_id':str(actor.session_id),'synthetic':True},actor,matter_id,db)
+            'patch':approved.model_dump(mode='json'),'audiences':list(audiences),'approval_session_id':str(actor.session_id),
+            'finding_decision_sha256':finding_fingerprint(snapshot,patch.finding_id),'synthetic':True},actor,matter_id,db)
         s.audit(actor,matter_id,'patch_approved','EXACT_DRAFT_PATCH_APPROVAL',db,entity_id=patch.id,after_hash=record.sha256)
     return approved
 
@@ -76,7 +80,8 @@ def _scope(run,actor,db):
     scope=['本次审查记录：'+str(run.id)+'；完成时间（UTC）：'+str(run.finished_at),
         '事实快照：'+run.manifest.fact_snapshot_sha256,'法律规则快照：'+run.manifest.rules_sha256,
         '客户政策快照：'+run.manifest.policy_sha256,
-        '本次仅采用本地模拟模型；未关联企业查询收据，未采用任何原始企业查询材料。未查询不能解释为无风险。']
+        ('本次采用离线人工/合成候选；真实模型推理NOT_RUN，真实模型调用0；' if run.manifest.model_provider=='assisted_manual'
+         else '本次仅采用本地模拟模型；')+'未关联企业查询收据，未采用任何原始企业查询材料。未查询不能解释为无风险。']
     for identifier,digest in run.manifest.document_hashes.items():
         version=read_version(run.matter_id,identifier,actor,db)
         parsed=_parse(read_original(run.matter_id,identifier,actor,db),version,configured_database(db).settings)
@@ -97,6 +102,8 @@ def _scope(run,actor,db):
 
 def prepare_exports(run,audience,patches,actor,*,db):
     run=s.load_run(run,actor,db)
+    snapshot=read_snapshot(run.matter_id,run.id,actor,db=db)
+    _,history=read_history(run.matter_id,run.id,actor,db=db)
     if audience not in AUDIENCES:raise ServiceError('NOT_SUPPORTED',422)
     if len({p.id for p in patches})!=len(patches) or len({(p.document_version_id,p.anchor_id) for p in patches})!=len(patches):
         raise ServiceError('VERSION_CONFLICT',409)
@@ -121,18 +128,25 @@ def prepare_exports(run,audience,patches,actor,*,db):
                 if error.code!='NOT_SUPPORTED':raise
                 manual.extend(_manual(anchor,patch,'已有页眉页脚需要人工保真处理') for patch,anchor in values)
             else:artifacts.append(_artifact(raw,'redline_contract_docx',run,audience,actor,db))
-        report=_artifact(build(project(run,audience,patches,manual,scope=scope,internal=internal)),'review_report_docx',run,audience,actor,db)
+        report=_artifact(build(project(run,audience,patches,manual,scope=scope,internal=internal,
+            snapshot=snapshot,decision_history=history)),'review_report_docx',run,audience,actor,db)
         artifacts.insert(0,report)
         identifier=uuid4()
         metadata={'run_sha256':s.sha(run.model_dump(mode='json')),'patch_set_sha256':s.sha(approvals),
-            'patch_approvals':approvals,'manual':manual,'synthetic':True,'mode':'draft'}
+            'patch_approvals':approvals,'manual':manual,'synthetic':True,'mode':'draft',
+            'decision_snapshot_sha256':snapshot.sha256,'decision_snapshot_version':snapshot.version,
+            'projection_version':2}
         bundle=ArtifactBundle(id=identifier,matter_id=run.matter_id,run_id=run.id,audience=audience,artifacts=tuple(artifacts),manifest_sha256='0'*64)
         digest=s.sha({'bundle':bundle.model_dump(mode='json',exclude={'manifest_sha256'}),'metadata':metadata})
         bundle=bundle.model_copy(update={'manifest_sha256':digest})
+        s.append('decision_snapshot',identifier,snapshot.model_dump(mode='json'),actor,run.matter_id,db)
         s.append('bundle',identifier,{'bundle':bundle.model_dump(mode='json'),'metadata':metadata},actor,run.matter_id,db)
         s.audit(actor,run.matter_id,'export_prepared','DRAFT_EXPORT_PREPARED',db,entity_id=identifier,after_hash=bundle.manifest_sha256)
         # End check before any generated bytes can become committed candidate.
         s.load_run(run,actor,db)
+        if read_snapshot(run.matter_id,run.id,actor,db=db).sha256!=snapshot.sha256:
+            raise ServiceError('APPROVAL_STALE',409)
+        for patch in patches:s.load_patch(run.matter_id,patch,actor,db,audience=audience)
     return bundle
 
 
@@ -147,6 +161,17 @@ def _bundle(bundle_id,actor,db):
     if digest!=bundle.manifest_sha256:raise ServiceError('VERSION_CONFLICT',409)
     actual=read_run(bundle.matter_id,bundle.run_id,actor,db=db,current=True)
     if s.sha(actual.model_dump(mode='json'))!=value['metadata']['run_sha256']:raise ServiceError('APPROVAL_STALE',409)
+    snapshot=read_snapshot(bundle.matter_id,bundle.run_id,actor,db=db)
+    saved_hash=value['metadata'].get('decision_snapshot_sha256')
+    if (saved_hash is None and snapshot.version!=0) or (saved_hash is not None and saved_hash!=snapshot.sha256):
+        raise ServiceError('APPROVAL_STALE',409)
+    if saved_hash is not None:
+        frozen=s.latest('decision_snapshot',bundle_id,db)
+        from ..domain import ReviewDecisionSnapshot
+        if not frozen or frozen.matter_id!=str(bundle.matter_id):raise ServiceError('APPROVAL_STALE',409)
+        try:stored=ReviewDecisionSnapshot.model_validate_json(frozen.payload)
+        except ValueError:raise ServiceError('APPROVAL_STALE',409) from None
+        if stored!=snapshot:raise ServiceError('APPROVAL_STALE',409)
     for approval in value['metadata']['patch_approvals']:
         patch_row=s.latest('patch_approval',approval['patch_id'],db)
         if not patch_row or patch_row.ref!=approval['ref'] or patch_row.sha256!=approval['sha256']:

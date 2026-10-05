@@ -2,12 +2,9 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 from ..domain import Fact, FactDecision, FactSnapshot
-from sqlalchemy import select
-from ..persistence import (read_matter, get_fact_snapshot, save_fact_snapshot, fact_snapshot_sha256,
-    DocumentRow, ParseRow)
-from ..domain import ParseResult
+from ..persistence import read_matter, get_fact_snapshot, save_fact_snapshot, fact_snapshot_sha256
 from ..security import ServiceError, authorize
-from .storage import FactDecisionRow, require_storage, trusted_parse
+from .storage import FactDecisionRow, require_storage, require_fact_sources
 
 
 def confirm_facts(matter_id, version, decisions, actor, *, db):
@@ -24,30 +21,6 @@ def confirm_facts(matter_id, version, decisions, actor, *, db):
     if not validated or len({d.fact_id for d in validated}) != len(validated):
         raise ServiceError('STATE_CONFLICT',409)
     old = {f.id:f for f in previous.facts}
-    # Snapshot storage accepts candidate DTOs directly, so confirmation is a
-    # separate trust boundary. Only latest saved parses of this case's immutable
-    # document versions may supply anchors; receipts have no trusted store yet.
-    anchors = set()
-    seen_versions = set()
-    rows = db.execute(select(ParseRow,DocumentRow.id).join(DocumentRow,
-        ParseRow.document_version_id==DocumentRow.id).where(DocumentRow.matter_id==str(matter_id))
-        .order_by(ParseRow.id.desc())).all()
-    for row,document_id in rows:
-        if document_id in seen_versions:
-            continue
-        seen_versions.add(document_id)
-        parsed = ParseResult.model_validate_json(row.payload)
-        if str(parsed.version_id)!=document_id:
-            raise ServiceError('VERSION_CONFLICT',409)
-        trusted_parse(matter_id,parsed.version_id,actor,db,parsed)
-        anchors.update(a.id for a in parsed.anchors)
-    for fact in previous.facts:
-        if fact.provenance_type=='external' or fact.receipt_ids:
-            raise ServiceError('NOT_SUPPORTED',409)
-        if (len(set(fact.anchor_ids))!=len(fact.anchor_ids)
-            or not set(fact.anchor_ids).issubset(anchors)
-            or (fact.provenance_type=='document' and not fact.anchor_ids)):
-            raise ServiceError('VERSION_CONFLICT',409)
     for decision in validated:
         fact = old.get(decision.fact_id)
         if fact is None or fact.matter_id != matter_id or fact.version != version:
@@ -57,6 +30,9 @@ def confirm_facts(matter_id, version, decisions, actor, *, db):
         if decision.decision != 'corrected' and decision.confirmed_value != fact.typed_value:
             raise ValueError('confirmed/rejected cannot change candidate value')
     chosen = {d.fact_id:d for d in validated}
+    visual_ids = {f.id for f in previous.facts if
+        (chosen[f.id].decision if f.id in chosen else f.confirmation_status) in {'confirmed', 'corrected'}}
+    require_fact_sources(matter_id, previous.facts, actor, db, visual_fact_ids=visual_ids)
     now = datetime.now(timezone.utc)
     facts = []
     for fact in previous.facts:

@@ -9,6 +9,7 @@ state changes. Decimal fields accept exact strings/integers, never binary floats
 from __future__ import annotations
 
 import hashlib
+import json
 from datetime import date, datetime, timezone
 from decimal import Decimal, DecimalException
 from enum import StrEnum
@@ -91,6 +92,7 @@ class ErrorCode(StrEnum):
     BASELINE_REQUIRED = 'BASELINE_REQUIRED'
     CROSS_MATTER_DENIED = 'CROSS_MATTER_DENIED'
     FACTS_UNCONFIRMED = 'FACTS_UNCONFIRMED'
+    SOURCE_VISUAL_CONFIRMATION_REQUIRED = 'SOURCE_VISUAL_CONFIRMATION_REQUIRED'
     RULE_SCOPE_UNSUPPORTED = 'RULE_SCOPE_UNSUPPORTED'
     PARTY_AMBIGUOUS = 'PARTY_AMBIGUOUS'
     TOOL_UNBOUND = 'TOOL_UNBOUND'
@@ -642,11 +644,33 @@ class Rule(DomainModel):
         return self
 
 
+def _validate_edit_fields(value):
+    fields = (value.edited_analysis, value.edited_recommendation, value.edited_replacement_text)
+    if value.decision != HumanDecisionKind.EDIT and any(v is not None for v in fields):
+        raise ValueError('only edit may carry explicit edited text')
+    if any(v is not None for v in fields) and (value.edited_analysis is None or value.edited_recommendation is None):
+        raise ValueError('explicit edit requires analysis and recommendation')
+    if value.edited_replacement_text is not None and not value.edited_replacement_text.strip():
+        raise ValueError('explicit replacement cannot be blank')
+    return value
+
+
 class HumanDecision(DomainModel):
     decision: HumanDecisionKind
     reason: NonEmpty
     actor_id: UUID
     decided_at: UTCDatetime
+    edited_analysis: Annotated[NonEmpty, Field(max_length=20000)] | None = None
+    edited_recommendation: Annotated[NonEmpty, Field(max_length=20000)] | None = None
+    edited_replacement_text: Annotated[str, Field(min_length=1, max_length=20000)] | None = None
+
+    @model_validator(mode='after')
+    def explicit_edit(self) -> HumanDecision:
+        return _validate_edit_fields(self)
+
+    @property
+    def pending_edit(self) -> bool:
+        return self.decision == HumanDecisionKind.EDIT and self.edited_analysis is None
 
 
 class Finding(DomainModel):
@@ -671,6 +695,65 @@ class Finding(DomainModel):
     def distinct_dimensions(self) -> Finding:
         if len(set(self.coverage_ids)) != len(self.coverage_ids):
             raise ValueError('finding coverage_ids cannot be duplicated')
+        return self
+
+
+class FindingDecisionRecord(DomainModel):
+    id: UUID
+    sequence: PositiveInt
+    matter_id: UUID
+    run_id: UUID
+    finding_id: UUID
+    run_sha256: SHA256
+    decision: HumanDecision
+
+
+class ReviewDecisionSnapshot(DomainModel):
+    matter_id: UUID
+    run_id: UUID
+    run_sha256: SHA256
+    version: NonNegativeInt
+    ordered_decisions: tuple[FindingDecisionRecord, ...]
+    resolved_findings: tuple[Finding, ...]
+    actor_id: UUID
+    timestamp: UTCDatetime
+    sha256: SHA256
+
+    @model_validator(mode='after')
+    def consistent_decisions(self) -> ReviewDecisionSnapshot:
+        ids = {f.id for f in self.resolved_findings}
+        if len(ids) != len(self.resolved_findings) or any(f.run_id != self.run_id for f in self.resolved_findings):
+            raise ValueError('snapshot findings must identify this run')
+        sequences = [r.sequence for r in self.ordered_decisions]
+        if sequences != sorted(set(sequences)) or len({r.finding_id for r in self.ordered_decisions}) != len(sequences):
+            raise ValueError('snapshot decisions must be ordered and latest per finding')
+        if any(r.matter_id != self.matter_id or r.run_id != self.run_id or r.run_sha256 != self.run_sha256
+               or r.finding_id not in ids for r in self.ordered_decisions):
+            raise ValueError('snapshot decision object binding differs')
+        if self.version != max(sequences, default=0):
+            raise ValueError('snapshot version must identify last decision sequence')
+        payload = self.model_dump(mode='json', exclude={'sha256'})
+        digest = hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False,
+            separators=(',', ':'), allow_nan=False).encode()).hexdigest()
+        if digest != self.sha256:
+            raise ValueError('snapshot hash differs')
+        return self
+
+
+class ReviewDecisionAuthorityStatus(DomainModel):
+    """Live internal qualification view; never an approval or frozen snapshot."""
+    matter_id: UUID
+    run_id: UUID
+    decision_snapshot_sha256: SHA256
+    status: Literal['current', 'recheck_required']
+    recheck_finding_ids: tuple[UUID, ...]
+
+    @model_validator(mode='after')
+    def consistent_recheck(self) -> ReviewDecisionAuthorityStatus:
+        if len(set(self.recheck_finding_ids)) != len(self.recheck_finding_ids):
+            raise ValueError('recheck findings cannot be duplicated')
+        if (self.status == 'recheck_required') != bool(self.recheck_finding_ids):
+            raise ValueError('authority status must identify required rechecks')
         return self
 
 
@@ -1389,11 +1472,207 @@ class ReviewStartInput(DomainModel):
     document_hashes: Mapping[UUID, SHA256]
 
 
+class SyntheticAssistedPolicy(DomainModel):
+    """Trusted server fiction registry, never supplied by a contract or HTTP body."""
+    policy_id: Annotated[NonEmpty, Field(max_length=128)]
+    purpose: Literal['assisted_draft']
+    document_hashes: Annotated[tuple[SHA256, ...], Field(min_length=1, max_length=128)]
+    candidate_source: Literal['manual_synthetic']
+
+    @field_validator('document_hashes')
+    @classmethod
+    def distinct_registry(cls, values):
+        if len(set(values)) != len(values): raise ValueError('registry hashes cannot be repeated')
+        return values
+
+
+class AssistedFactCandidate(DomainModel):
+    field: Annotated[NonEmpty, Field(max_length=100)]
+    typed_value: FactValue
+    unit: Annotated[NonEmpty, Field(max_length=32)] | None
+    anchor_ids: Annotated[tuple[UUID, ...], Field(min_length=1, max_length=8)]
+
+    @model_validator(mode='after')
+    def bounded_candidate(self):
+        if len(set(self.anchor_ids)) != len(self.anchor_ids): raise ValueError('candidate anchors cannot repeat')
+        if isinstance(self.typed_value, DecimalFactValue) and self.unit is None:
+            raise ValueError('decimal candidate requires a unit')
+        if len(self.typed_value.model_dump_json().encode('utf-8')) > 4000:
+            raise ValueError('bounded candidate value required')
+        return self
+
+
+class AssistedFactsInput(DomainModel):
+    document_version_id: UUID
+    document_sha256: SHA256
+    fact_version: PositiveInt
+    candidates: Annotated[tuple[AssistedFactCandidate, ...], Field(min_length=1, max_length=64)]
+
+
+class AssistedOpinionCandidate(DomainModel):
+    coverage_ids: Annotated[tuple[CoverageId, ...], Field(min_length=1, max_length=18)]
+    issue_type: Annotated[NonEmpty, Field(max_length=100)]
+    severity: Severity
+    evidence_state: Literal['unconfirmed', 'missing', 'conflicting']
+    anchor_ids: Annotated[tuple[UUID, ...], Field(min_length=1, max_length=8)]
+    analysis: Annotated[NonEmpty, Field(max_length=4000)]
+    business_effect: Annotated[NonEmpty, Field(max_length=4000)]
+    recommendation: Annotated[NonEmpty, Field(max_length=4000)]
+    basis_kind: Literal['material_observation', 'business_preference', 'pending_authority']
+    authority_refs: Annotated[tuple[Annotated[NonEmpty, Field(max_length=300)], ...], Field(max_length=8)]
+    unknowns: Annotated[tuple[Annotated[NonEmpty, Field(max_length=500)], ...], Field(max_length=10)]
+
+    @model_validator(mode='after')
+    def distinct_references(self):
+        if any(len(set(value)) != len(value) for value in (self.coverage_ids, self.anchor_ids, self.authority_refs, self.unknowns)):
+            raise ValueError('candidate references cannot repeat')
+        if self.authority_refs and self.basis_kind != 'pending_authority':
+            raise ValueError('unverified legal references must stay pending')
+        return self
+
+
+class AssistedReviewInput(DomainModel):
+    context_sha256: SHA256
+    fact_version: PositiveInt
+    document_hashes: Mapping[UUID, SHA256]
+    examined_anchor_ids: Annotated[tuple[UUID, ...], Field(min_length=1, max_length=512)]
+    opinions: Annotated[tuple[AssistedOpinionCandidate, ...], Field(min_length=1, max_length=32)]
+
+    @field_validator('document_hashes')
+    @classmethod
+    def readonly_hashes(cls, value):
+        return _FrozenDict(value)
+
+    @field_serializer('document_hashes')
+    def serialize_hashes(self, value):
+        return {str(key): digest for key, digest in value.items()}
+
+    @model_validator(mode='after')
+    def bounded_distinct_input(self):
+        if not 1 <= len(self.document_hashes) <= 32: raise ValueError('bounded document set required')
+        if len(set(self.examined_anchor_ids)) != len(self.examined_anchor_ids): raise ValueError('examined anchors cannot repeat')
+        values = [value.model_dump_json() for value in self.opinions]
+        if len(set(values)) != len(values): raise ValueError('duplicate candidate opinions')
+        return self
+
+
+class AssistedReviewContextView(DomainModel):
+    matter_id: UUID
+    purpose: Literal['assisted_draft']
+    context_sha256: SHA256
+    policy_sha256: SHA256
+    fact_version: PositiveInt
+    document_hashes: Mapping[UUID, SHA256]
+    eligible_anchor_ids: tuple[UUID, ...]
+    candidate_source: Literal['manual_synthetic']
+    real_model_calls: Literal[0] = 0
+    qcc_calls: Literal[0] = 0
+    model_inference: Literal['NOT_RUN'] = 'NOT_RUN'
+
+    @field_validator('document_hashes')
+    @classmethod
+    def readonly_hashes(cls, value):
+        return _FrozenDict(value)
+
+    @field_serializer('document_hashes')
+    def serialize_hashes(self, value):
+        return {str(key): digest for key, digest in value.items()}
+
+
+class ManualCandidateReceipt(DomainModel):
+    source: Literal['manual_synthetic']
+    submitted_by: UUID
+    submitted_at: UTCDatetime
+    real_model_calls: Literal[0] = 0
+    qcc_calls: Literal[0] = 0
+    model_inference: Literal['NOT_RUN'] = 'NOT_RUN'
+
+
+class ReviewProposal(DomainModel):
+    id: UUID
+    matter_id: UUID
+    run_id: UUID
+    policy_sha256: SHA256
+    context_sha256: SHA256
+    input_sha256: SHA256
+    input: AssistedReviewInput
+    finding_ids: tuple[UUID, ...]
+    execution_receipt: ManualCandidateReceipt
+    sha256: SHA256
+
+    @model_validator(mode='after')
+    def immutable_proposal_binding(self):
+        if len(self.finding_ids) != len(self.input.opinions) or len(set(self.finding_ids)) != len(self.finding_ids):
+            raise ValueError('proposal findings must correspond one to one')
+        def digest(value):
+            return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False,
+                separators=(',', ':'), allow_nan=False).encode()).hexdigest()
+        if self.context_sha256 != self.input.context_sha256 or self.input_sha256 != digest(self.input.model_dump(mode='json')):
+            raise ValueError('proposal input binding differs')
+        if self.sha256 != digest(self.model_dump(mode='json', exclude={'sha256'})):
+            raise ValueError('proposal content hash differs')
+        return self
+
+
+class WorkingDraftConfirmationInput(DomainModel):
+    bundle_id: UUID
+    bundle_manifest_sha256: SHA256
+    decision_snapshot_sha256: SHA256
+    audience: Audience
+    acknowledged_unresolved_finding_ids: Annotated[tuple[UUID, ...], Field(max_length=128)]
+    reason: Annotated[NonEmpty, Field(max_length=2000)]
+
+    @field_validator('acknowledged_unresolved_finding_ids')
+    @classmethod
+    def distinct_unresolved(cls, values):
+        if len(set(values)) != len(values):raise ValueError('unresolved findings cannot repeat')
+        return values
+
+
+class WorkingDraftConfirmation(DomainModel):
+    id: UUID
+    matter_id: UUID
+    run_id: UUID
+    bundle_id: UUID
+    bundle_manifest_sha256: SHA256
+    decision_snapshot_sha256: SHA256
+    audience: Audience
+    artifact_hashes: Mapping[UUID, SHA256]
+    acknowledged_unresolved_finding_ids: tuple[UUID, ...]
+    reason: Annotated[NonEmpty, Field(max_length=2000)]
+    actor_id: UUID
+    confirmed_at: UTCDatetime
+    purpose: Literal['working_draft'] = 'working_draft'
+    formal_signoff: Literal[False] = False
+
+    @field_validator('artifact_hashes')
+    @classmethod
+    def readonly_hashes(cls, value):
+        return _FrozenDict(value)
+
+    @field_serializer('artifact_hashes')
+    def serialize_hashes(self, value):
+        return {str(key): digest for key, digest in value.items()}
+
+    @model_validator(mode='after')
+    def bounded_confirmation(self):
+        if not self.artifact_hashes or len(set(self.acknowledged_unresolved_finding_ids)) != len(self.acknowledged_unresolved_finding_ids):
+            raise ValueError('confirmation must bind distinct artifacts and unresolved findings')
+        return self
+
+
 class FindingDecisionInput(DomainModel):
     run_id: UUID
     run_sha256: SHA256
     decision: HumanDecisionKind
     reason: Annotated[NonEmpty, Field(max_length=2000)]
+    edited_analysis: Annotated[NonEmpty, Field(max_length=20000)] | None = None
+    edited_recommendation: Annotated[NonEmpty, Field(max_length=20000)] | None = None
+    edited_replacement_text: Annotated[str, Field(min_length=1, max_length=20000)] | None = None
+
+    @model_validator(mode='after')
+    def explicit_edit(self) -> FindingDecisionInput:
+        return _validate_edit_fields(self)
 
 
 class PatchApproveInput(DomainModel):

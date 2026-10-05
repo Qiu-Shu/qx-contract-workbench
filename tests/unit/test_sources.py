@@ -236,3 +236,64 @@ def test_g11_invalid_file_elements_do_not_crash_license_scan(tmp_path, element):
     result = verifier()(manifest(tmp_path, {'G11': {'files': [element]}}), 'development')
     assert not result.ok
     assert any('FILES_INVALID:G11' in e for e in result.errors)
+
+
+@pytest.mark.parametrize('mode', ['development', 'release'])
+@pytest.mark.parametrize('plugin_path', [
+    'plugins/synthetic/skills/probe/SKILL.md',
+    'plugins/synthetic/prompts/review.md',
+    'plugins/synthetic/server.py',
+    'plugins/synthetic/.codex-plugin/plugin.json',
+    'plugins/synthetic/.mcp.json',
+    'plugins/synthetic/runtime-binding.json',
+])
+def test_g11_plugin_delivery_rejects_restricted_copy(tmp_path, mode, plugin_path):
+    restricted = b'Independent F13 synthetic restricted bytes; no upstream material.'
+    for relative_path in ('src/probe.txt', plugin_path):
+        target = tmp_path / relative_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(restricted)
+    path = manifest(tmp_path, {'G11': {
+        'restricted_file_sha256': [hashlib.sha256(restricted).hexdigest()],
+    }})
+
+    result = verifier()(path, mode)
+
+    assert not result.ok
+    assert set(result.errors) == {
+        'LICENSE_BLOCKED:G11:src/probe.txt',
+        f'LICENSE_BLOCKED:G11:{plugin_path}',
+    }
+
+
+@pytest.mark.parametrize('mode', ['development', 'release'])
+def test_g11_isolated_source_evidence_is_not_runtime(tmp_path, mode):
+    restricted = b'Independent F13 quarantined evidence; no upstream material.'
+    path = manifest(tmp_path, {'G11': {'files': [{
+        'path': 'SKILL.md', 'sha256': hashlib.sha256(restricted).hexdigest(),
+        'usage': 'text', 'local_target': 'sources/evidence/G11/SKILL.md',
+    }]}})
+    evidence = path.parent / 'evidence' / 'G11' / 'SKILL.md'
+    evidence.parent.mkdir(parents=True)
+    evidence.write_bytes(restricted)
+
+    result = verifier()(path, mode)
+
+    assert result.ok
+    assert result.errors == []
+
+
+@pytest.mark.parametrize('mode', ['development', 'release'])
+def test_plugin_runtime_target_cannot_hide_behind_reference_flag(tmp_path, mode):
+    target = tmp_path / 'plugins' / 'synthetic' / 'server.py'
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b'pass  # Independent F13 synthetic plugin implementation\n')
+    path = manifest(tmp_path, {'G04': {'files': [{
+        'path': 'upstream.py', 'sha256': hashlib.sha256(target.read_bytes()).hexdigest(),
+        'usage': 'code', 'local_target': 'plugins/synthetic/server.py',
+    }]}})
+
+    result = verifier()(path, mode)
+
+    assert not result.ok
+    assert 'ADOPTION_CONFLICT:G04:runtime_target_marked_excluded' in result.errors

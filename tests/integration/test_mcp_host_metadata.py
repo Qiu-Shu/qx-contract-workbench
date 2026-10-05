@@ -47,7 +47,7 @@ def test_host_integer_progress_token_allows_discovery_and_fixed_tools(token):
 
 def test_progress_metadata_cannot_carry_content_or_expand_business_arguments():
     invalid = [None, True, 1, [], '', {'progressToken': True}, {'progressToken': -1},
-        {'progressToken': 2**63}, {'progressToken': 1.0}, {'progressToken': CANARY},
+        {'progressToken': 2**63}, {'progressToken': 1.0}, {'progressToken': CANARY + '\x00'},
         {'progressToken': None}, {'progressToken': []}, {'progressToken': {'raw': CANARY}},
         {'progressToken': 1, 'raw': CANARY}, {'progressToken': 1, 'traceparent': CANARY},
         {'progressToken': 1, 'io.modelcontextprotocol/protocolVersion': CANARY}]
@@ -76,8 +76,9 @@ def test_progress_metadata_cannot_carry_content_or_expand_business_arguments():
     assert process.returncode == 0 and ''.join(stderr) == ''
 
 
-@pytest.mark.parametrize('token', [None, 0, 1, 2**63 - 1],
-                         ids=['thread-only', 'thread-progress-zero', 'thread-progress-one', 'thread-progress-max'])
+@pytest.mark.parametrize('token', [None, 0, 1, 2**63 - 1, '', 'opaque-42', '进度令牌'],
+                         ids=['thread-only', 'thread-progress-zero', 'thread-progress-one', 'thread-progress-max',
+                              'thread-progress-empty', 'thread-progress-ascii', 'thread-progress-chinese'])
 @pytest.mark.parametrize('thread_id', [SYNTHETIC_THREAD_ID, 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'],
                          ids=['canonical-v4', 'canonical-v7'])
 def test_host_thread_metadata_is_ignored_by_both_fixed_tool_results(token, thread_id):
@@ -117,7 +118,7 @@ def test_thread_metadata_rejects_types_noncanonical_values_and_other_content():
         'gggggggg-gggg-4ggg-8ggg-gggggggggggg']
     invalid = [{'threadId': value} for value in invalid_values]
     invalid += [{'threadId': SYNTHETIC_THREAD_ID, 'progressToken': value}
-                for value in [None, True, -1, 2**63, 1.0, CANARY, [], {}]]
+                for value in [None, True, -1, 2**63, 1.0, CANARY + '\x00', [], {}]]
     invalid += [{'threadId': SYNTHETIC_THREAD_ID, key: CANARY}
                 for key in ['raw', 'text', 'actor', 'approval', 'traceparent', 'tracestate',
                             'io.modelcontextprotocol/protocolVersion']]
@@ -145,7 +146,8 @@ def test_thread_metadata_is_call_only_and_cannot_expand_business_arguments():
         initialize_like_local_host(send)
         for index, metadata in enumerate([
             {'threadId': SYNTHETIC_THREAD_ID},
-            {'threadId': SYNTHETIC_THREAD_ID, 'progressToken': 1}], 2):
+            {'threadId': SYNTHETIC_THREAD_ID, 'progressToken': 1},
+            {'threadId': SYNTHETIC_THREAD_ID, 'progressToken': 'opaque-42'}], 2):
             for method in ('tools/list', 'ping', 'resources/list', 'prompts/list'):
                 response = send(method, {'_meta': metadata}, request_id=index)
                 assert response['error'] == {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}
