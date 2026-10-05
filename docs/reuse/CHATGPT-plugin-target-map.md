@@ -46,7 +46,7 @@ ChatGPT 开发模式可连接公有 HTTPS Streamable HTTP，或者通过 Secure 
 
 未来 ChatGPT 文件输入可按 `_meta["openai/fileParams"]` 声明顶层字段，文件对象声明 download_url/file_id/mime_type/file_name，仅前两者 required；可选文件库能力须检查支持。宿主授权文件 URL 仍需后端限制来源、大小、格式与归属，不能接收任意 URL；现 Windows storage_ref 不是 ChatGPT 下载链接。草案下载桥应独立验证，不能因已有 DOCX 导出就声称宿主文件传递完成。[官方文件 API 与 schema](https://developers.openai.com/plugins/reference)
 
-已完成DeepSeek纯离线适配、固定虚构两工具STDIO、本机Legacy适配安装和工具发现；没有外部上传。后续顺序：现有宿主聊天实际调用与模型选择验收 → 目标ChatGPT接入权限与传输方案 → 虚构数据实际网页连接验收。新增案件读取或写操作前，分别落实可信身份、案件授权、文件桥和相应权限测试；真实模型、真实材料、QCC、影子和生产各自批准，不由源包自动开启。
+已完成DeepSeek纯离线适配、固定虚构两工具STDIO、本机Legacy适配安装/发现及受限threadId调用metadata修复，最新94目标/全套1030通过；没有外部上传。源包0.1.2已准备/宿主read确认；本轮独立host使用旧0.1.1缓存，其声明仍指向仓库入口，新缓存尚未物化。本聊天已加载根未验证且目标工具仍不可见。用户确认插件设置有刷新入口，刷新完成未确认。[当前接入与实际结果](../testing/PLUGIN-chat-call-compat.md)分别记录这些状态；准备的26固定调用/8提示均未发送。后续顺序：刷新后验收现有宿主聊天实际调用与模型选择 → 核验目标ChatGPT接入权限与传输方案 → 虚构数据实际网页连接验收。当前匿名虚构两工具不需要提前实现案件OAuth/文件桥；新增案件读取或写操作前再落实可信身份、案件授权、文件桥及权限测试。真实模型、真实材料、QCC、影子和生产各自批准，不由源包自动开启。
 
 ## 只读证据
 

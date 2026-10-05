@@ -1,6 +1,6 @@
 # 任务实际状态
 
-记录日期：2026-10-04，显示时区Asia/Shanghai；历史阶段记录保持原日期，证据时间使用UTC。原仓库为空，用户已确认继续本目录。开发分支`codex/contract-review-v2`。
+记录日期：2026-10-05，显示时区Asia/Shanghai；历史阶段记录保持原日期，证据时间使用UTC。原仓库为空，用户已确认继续本目录。开发分支`codex/contract-review-v2`。
 
 |任务|工程状态|实际完成|阻断/下一步|
 |---|---|---|---|
@@ -24,8 +24,9 @@
 |首批本机离线MCP|ENGINEERING_PASS（受控两工具）；HOST_NOT_RUN / PRODUCTION_BLOCKED|用户在具体设计及状态说明后“继续”；新STDIO两工具、domain新增3DTO；80目标/348关联，两独审144与92，父SDK24成功+4拒绝、全套1016/0警告/native=JUnit；协议前置反射及目录/祖先link实际RED修复闭合|仅当前仓库固定虚构示例，不是法律审查；不打包安装插件、不连ChatGPT；帧/OS硬限未建立，真实模型/QCC/gold/许可及生产继续阻断|
 |本机插件连接源包|HISTORICAL_PACKAGE_VERIFIED；PORTABLE_HOST_REJECTED / PRODUCTION_BLOCKED|历史七文件通用/兼容清单及图标/90绑定hash，ZIP10399bytes；解压两配置4状态/48示例/12拒绝；80目标回归native=JUnit，独立18结构/75边界检查及38请求自然退出0；该阶段业务源码不变|后续实际宿主拒绝portable绝对入口；原源包及ZIP保留历史，入口旧绑定hash过时；不把结构/SDK验收称宿主解析通过，当前适配见下一行|
 |本机Codex安装与发现|LOCAL_HOST_INSTALLED；DISCOVERY_VERIFIED；CHAT_INVOCATION_NOT_RUN / PRODUCTION_BLOCKED|五文件Legacy适配0.1.1，项目目录/启用配置及宿主缓存；原包禁用，全局配置不变；元数据4真实RED后84目标/全套1020零警告，独审113边界/32格式；实际native恰两工具、SDK24示例2状态12拒绝、新90绑定匹配|独立host无已加载线程、活动proxy socket连接失败，聊天调用/模型选择NOT_RUN；不新建/resume线程或启动模型turn。网页连接、真实模型/QCC/案件身份与文件桥/法律gold/OS硬限/生产仍阻断|
+|本机调用元数据兼容|WIRE_ENGINEERING_PASS；SOURCE_0.1.2_READY；CHAT_INVOCATION_NOT_RUN / PRODUCTION_BLOCKED|仅entry核验tools/call的惰性canonical UUID threadId，可与旧整数token共存；真实wire先4失败6通过，94目标/根1030零警告；独审246边界/242请求、24保全、7 native复核；90绑定匹配，源0.1.2/read与独立host缓存0.1.1/两工具发现分别实证|新cache0.1.2 NOT_MATERIALIZED；本聊天loaded root未验证，用户看到插件/刷新入口但完成未确认，工具inventory仍无目标两工具；原生chat call/模型选择/ChatGPT连接NOT_RUN。trace元数据仍拒绝，真实模型/QCC和生产仍阻断|
 
-当前阶段记录：[本机安装与协议验收](testing/PLUGIN-local-host.md)；仅入口受限整数progressToken兼容及独立Legacy清单，84目标/完整1020实际通过，宿主安装与发现通过，聊天调用另记NOT_RUN，未重跑原84能力/40材料/Word/浏览器。历史[插件源包验收](testing/PLUGIN-local-package.md)保留当时80目标及HOST_NOT_RUN范围，其18结构检查未证明portable解析。[本机离线MCP父验收](testing/MCP-offline-parent.md)、[作者初版](testing/MCP-offline-author.md)、[实际修复](testing/MCP-offline-author-repair.md)保留上一阶段的实际全套1016与独审范围；此前[只读预检](testing/MCP-offline-preflight.md)保留其当时未实施范围。此前已完成：[DeepSeek首批离线](testing/DEEPSEEK-offline.md)、[根936回归与实际材料](testing/DEEPSEEK-parent-checks.md)、[独立协议138项](testing/DEEPSEEK-offline-review.md)和[独立边界25项](testing/DEEPSEEK-boundary-review.md)。T13历史记录：[815/84与证据核验](testing/T13-parent-checks.md)、[独立调用29项](testing/T13-live-review-final.md)、[独立上线43项](testing/T13-readiness-actual-review.md)。受限交付、逐项解除条件与上线决定分别见[LIVE_READINESS](LIVE_READINESS.md)、[SHADOW_RUN_REPORT](SHADOW_RUN_REPORT.md)、[GO_NO_GO](GO_NO_GO.md)。T13历史84项为5PASS/36NOT_RUN/16NOT_IMPLEMENTED/7NOT_SUPPORTED/20BLOCKED；工程回归通过不等于84项完整能力、双律师验收或生产完成。上阶段首次full因独审缺陷主动中止，未记PASS；全部初始失败/最终复验均保留。
+当前阶段记录：[调用兼容与当前接入状态](testing/PLUGIN-chat-call-compat.md)，94目标/完整1030实际通过，受限threadId仅call边界核验，当前源0.1.2与新独立宿主选择的旧缓存0.1.1分别记录；本聊天已加载根未验证；聊天调用、网页连接和新缓存验收未完成，开发源门通过、release来源9和环境59阻断。本轮完整pytest不替代原84能力/40材料/Word/浏览器的独立阶段验收。历史[本机安装与协议验收](testing/PLUGIN-local-host.md)保留84目标/完整1020及当时安装/发现通过范围；[插件源包验收](testing/PLUGIN-local-package.md)保留80目标及HOST_NOT_RUN，其18结构检查未证明portable解析。[本机离线MCP父验收](testing/MCP-offline-parent.md)、[作者初版](testing/MCP-offline-author.md)、[实际修复](testing/MCP-offline-author-repair.md)保留全套1016与独审范围；[只读预检](testing/MCP-offline-preflight.md)保留当时未实施范围。此前[DeepSeek首批离线](testing/DEEPSEEK-offline.md)、[根936回归与实际材料](testing/DEEPSEEK-parent-checks.md)、[独立协议138项](testing/DEEPSEEK-offline-review.md)及[边界25项](testing/DEEPSEEK-boundary-review.md)继续保留。T13[815/84与证据核验](testing/T13-parent-checks.md)、[调用29项](testing/T13-live-review-final.md)与[上线43项](testing/T13-readiness-actual-review.md)为历史；当前[LIVE_READINESS](LIVE_READINESS.md)、[SHADOW_RUN_REPORT](SHADOW_RUN_REPORT.md)、[GO_NO_GO](GO_NO_GO.md)未解除。T13历史84项仍5PASS/36NOT_RUN/16NOT_IMPLEMENTED/7NOT_SUPPORTED/20BLOCKED；工程回归不等于84完整能力、双律师验收或生产完成。全部初始失败与最终复验保留。
 
 ## T00实际执行
 

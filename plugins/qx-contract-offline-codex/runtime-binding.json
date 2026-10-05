@@ -1,9 +1,9 @@
 {
   "format_version": 1,
   "scope": "LOCAL_CODEX_HOST_COMPATIBILITY_METADATA_ONLY",
-  "utc_generated": "2026-10-04T15:15:40.415516+00:00",
+  "utc_generated": "2026-10-05T03:35:50.470431+00:00",
   "repository_root": "D:/Documents/ChatGPT/律所项目",
-  "runtime_base_commit": "4551f052a8801eec299879371a8f675d5b205a39",
+  "runtime_base_commit": "54adbdac281ce139735f9cda03a250d823a035e6",
   "entry_module": "cn_contract.mcp.offline_server",
   "entry_file": "src/cn_contract/mcp/offline_server.py",
   "python_version": "3.12.14",
@@ -59,7 +59,7 @@
     "src/cn_contract/live/guards.py": "e2d6e4c57304f734f633094f238081492d85587f67a7311503a11c6ca60250de",
     "src/cn_contract/live/readiness.py": "d2d6164772e18cee79e8538f14e5208cbc0d92840713132205206bda06a2dfb6",
     "src/cn_contract/mcp/__init__.py": "230f6ed32f7ea2112c354bff47cdae1376ed1aa2a2d261b6f88ebac64276a1f1",
-    "src/cn_contract/mcp/offline_server.py": "bea040305629ddc23dfa05a5a9dd2ad17696d08bfa77b4ff93981f86bdfd9076",
+    "src/cn_contract/mcp/offline_server.py": "c58f45457e98f52008c5033e6cbf953be5e43583b16c3694214bd1b4a504a47f",
     "src/cn_contract/ops/__init__.py": "3ffd7f6c1db4c30ece7dcb95df360f427c4cbe3a1d10edae5fafa54e12238c1c",
     "src/cn_contract/ops/backup.py": "95a70581c92dd452306b5a95edc761e0c71d655a6d4ae5f9f2d3f6d8f464c2d2",
     "src/cn_contract/ops/egress.py": "01f784e8a4eca4f92ed32a58faa121b0137501c5b63ead56ea9732ba903ef40c",
@@ -123,5 +123,6 @@
   "runtime_changes_from_base": [
     "src/cn_contract/mcp/offline_server.py"
   ],
-  "adapter_version": "0.1.1"
+  "adapter_version": "0.1.2",
+  "host_metadata_profile": "tools/call only: lowercase canonical 36-character UUID threadId and optional existing bounded integer progressToken; all other metadata closed"
 }

@@ -11,7 +11,7 @@ from io import BytesIO
 import json
 from pathlib import Path
 import stat
-from uuid import NAMESPACE_URL, uuid5
+from uuid import NAMESPACE_URL, UUID, uuid5
 from zipfile import ZipFile
 
 import anyio
@@ -129,16 +129,32 @@ def deepseek_offline_example(fixture: McpOfflineFixture, operation: DeepSeekOper
         raise MCPError(code=INVALID_PARAMS, message=_UNAVAILABLE) from None
 
 
-def _finite_tool_metadata(metadata) -> bool:
-    """Local profile: empty metadata or a bounded integer progress token only.
+def _finite_tool_metadata(metadata, *, allow_thread_id=False) -> bool:
+    """Local profile: bounded progress token and call-only canonical thread UUID.
 
     The low-level callbacks never pass metadata to a business handler or emit
-    progress notifications. String tokens and other MCP metadata stay closed.
+    progress notifications. A thread UUID is inert host metadata, not identity
+    or approval. String progress tokens and other MCP metadata stay closed.
     """
-    return type(metadata) is dict and (not metadata or (
-        metadata.keys() == {'progressToken'}
-        and type(metadata['progressToken']) is int
-        and 0 <= metadata['progressToken'] <= 2**63 - 1))
+    if type(metadata) is not dict:
+        return False
+    allowed = {'progressToken', 'threadId'} if allow_thread_id else {'progressToken'}
+    if metadata.keys() - allowed:
+        return False
+    if 'progressToken' in metadata:
+        token = metadata['progressToken']
+        if type(token) is not int or not 0 <= token <= 2**63 - 1:
+            return False
+    if 'threadId' in metadata:
+        thread_id = metadata['threadId']
+        if type(thread_id) is not str or len(thread_id) != 36:
+            return False
+        try:
+            if str(UUID(thread_id)) != thread_id:
+                return False
+        except ValueError:
+            return False
+    return True
 
 
 async def _offline_boundary(ctx, call_next):
@@ -156,7 +172,7 @@ async def _offline_boundary(ctx, call_next):
             params = ctx.params
             if (type(params) is not dict or not {'name'} <= params.keys()
                     or params.keys() - {'name', 'arguments', '_meta'}
-                    or ('_meta' in params and not _finite_tool_metadata(params['_meta']))):
+                    or ('_meta' in params and not _finite_tool_metadata(params['_meta'], allow_thread_id=True))):
                 raise ValueError('rejected')
             name = params['name']
             arguments = params.get('arguments', {})
