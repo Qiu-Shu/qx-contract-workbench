@@ -1,0 +1,10 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_account_maintenance_requires_stopped_workspace _____________
+tests\integration\test_local_workbench.py:115: in test_account_maintenance_requires_stopped_workspace
+    with pytest.raises(ValueError, match='WORKSPACE_IN_USE'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+=========================== short test summary info ===========================
+FAILED tests/integration/test_local_workbench.py::test_account_maintenance_requires_stopped_workspace
+1 failed, 20 deselected in 1.62s

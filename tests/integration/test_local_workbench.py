@@ -108,6 +108,32 @@ def test_initialization_never_overwrites_existing_workspace(local):
     assert (root / 'workbench.db').read_bytes() == before
 
 
+def test_account_maintenance_requires_stopped_workspace(local):
+    module, root = local
+    module.initialize_workspace(root, 'local-lawyer', PASSWORD)
+    with TestClient(module.build_local_app(root)):
+        with pytest.raises(ValueError, match='WORKSPACE_IN_USE'):
+            module.add_local_user(root, 'new-assistant', PASSWORD, Role.ASSISTANT)
+    module.add_local_user(root, 'new-assistant', PASSWORD, Role.ASSISTANT)
+
+
+def test_bridge_only_attaches_to_default_port_and_directory(local):
+    module, root = local
+    module.initialize_workspace(root, 'local-lawyer', PASSWORD)
+    with TestClient(module.build_local_app(root, port=18767)) as client:
+        assert not hasattr(client.app.state, 'case_bridge')
+    custom = root.parent / 'other-workspace'
+    module.initialize_workspace(custom, 'other-lawyer', PASSWORD)
+    with TestClient(module.build_local_app(custom)) as client:
+        assert not hasattr(client.app.state, 'case_bridge')
+    with TestClient(module.build_local_app(root)) as client:
+        assert hasattr(client.app.state, 'case_bridge')
+        # Stale credentials from an earlier server are never carried forward.
+        path = root / 'selected-case.json'
+        path.write_text('{}', encoding='utf8')
+    assert not path.exists()
+
+
 @pytest.mark.parametrize('username,password', [('', PASSWORD), ('x' * 129, PASSWORD),
     ('new\nline', PASSWORD), ('local-lawyer', 'short'), ('local-lawyer', 'x' * 257)])
 def test_invalid_initial_credentials_leave_no_partial_workspace(local, username, password):

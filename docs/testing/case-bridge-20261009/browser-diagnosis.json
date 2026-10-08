@@ -1,0 +1,18 @@
+{
+  "stage": "browser-diagnosis",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    ".audit-local/case-bridge-20261009/test_browser.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T22:40:53.712459+00:00",
+  "finished_utc": "2026-10-08T22:41:03.143325+00:00",
+  "seconds": 9.422,
+  "exit_code": 1,
+  "output_sha256": "f3951f4f09c597d4c2e11f6e58a920eea5a5fbd8df7963606ea30b9d43afbde8"
+}

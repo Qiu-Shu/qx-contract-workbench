@@ -125,14 +125,17 @@ def initialize_workspace(directory, username, password):
 def add_local_user(directory, username, password, role):
     _credentials(username, password)
     role = Role(role)
-    database = _database(_open_workspace(directory))
-    try:
-        with database.session() as db:
-            if db.scalar(select(UserRow).where(UserRow.username == username)):
-                raise ValueError('LOCAL_ACCOUNT_EXISTS')
-            return provision_user(username, password, {role}, db)
-    finally:
-        database.engine.dispose()
+    root = _open_workspace(directory)
+    # Maintenance runs in another process; stop the server so all grants expire.
+    with _worker_lock(root):
+        database = _database(root)
+        try:
+            with database.session() as db:
+                if db.scalar(select(UserRow).where(UserRow.username == username)):
+                    raise ValueError('LOCAL_ACCOUNT_EXISTS')
+                return provision_user(username, password, {role}, db)
+        finally:
+            database.engine.dispose()
 
 
 @contextmanager
@@ -162,12 +165,16 @@ def _worker_lock(root):
                 fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
 
 
-def build_local_app(directory):
+def build_local_app(directory, *, port=8767):
     root = _open_workspace(directory)
     database = _database(root)
     try:
         app = create_app(load_settings(), database=database, purpose='assisted_draft',
                          assisted_policy=load_seed_policy())
+        bridge = None
+        if root == (PROJECT_ROOT / '.local' / 'workbench').resolve() and port == 8767:
+            from .case_bridge import attach_case_bridge
+            bridge = attach_case_bridge(app, database, root / 'selected-case.json')
         # Hold the OS lock until the worker exits; force-stopping the process
         # releases the OS lock naturally and recovery runs on the next startup.
         attach_job_worker(app, database, shutdown_timeout=None)
@@ -180,8 +187,12 @@ def build_local_app(directory):
     async def lifespan(application):
         try:
             with _worker_lock(root):
-                async with worker_lifespan(application):
-                    yield
+                if bridge: bridge.close()
+                try:
+                    async with worker_lifespan(application):
+                        yield
+                finally:
+                    if bridge: bridge.close()
         finally:
             database.engine.dispose()
 
@@ -227,7 +238,7 @@ def main(argv=None):
                 username = input('首次使用，请设置本机用户名：')
                 initialize_workspace(args.directory, username, _prompt_password())
             import uvicorn
-            app = build_local_app(args.directory)
+            app = build_local_app(args.directory, port=args.port)
             print(f'本机工作台：http://127.0.0.1:{args.port}/login', flush=True)
             print('案件原地保存；仅登记虚构材料；真实模型与企查查关闭。', flush=True)
             uvicorn.run(app, host='127.0.0.1', port=args.port, workers=1, access_log=False, log_level='warning')

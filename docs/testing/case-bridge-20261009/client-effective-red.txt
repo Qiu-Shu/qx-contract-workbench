@@ -1,0 +1,143 @@
+FFFFFFFFFF                                                               [100%]
+================================== FAILURES ===================================
+________________ test_missing_selection_is_not_network_request ________________
+tests\unit\test_case_bridge_client.py:25: in test_missing_selection_is_not_network_request
+    module = implementation()
+             ^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:12: in implementation
+    assert importlib.util.find_spec('cn_contract.mcp.case_client'), 'selected case MCP client is missing'
+E   AssertionError: selected case MCP client is missing
+E   assert None
+E    +  where None = <function find_spec at 0x000001C191875D00>('cn_contract.mcp.case_client')
+E    +    where <function find_spec at 0x000001C191875D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+______________ test_invalid_credential_never_connects[payload0] _______________
+tests\unit\test_case_bridge_client.py:35: in test_invalid_credential_never_connects
+    module, _ = credential(tmp_path, monkeypatch, payload)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:17: in credential
+    module = implementation()
+             ^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:12: in implementation
+    assert importlib.util.find_spec('cn_contract.mcp.case_client'), 'selected case MCP client is missing'
+E   AssertionError: selected case MCP client is missing
+E   assert None
+E    +  where None = <function find_spec at 0x000001C191875D00>('cn_contract.mcp.case_client')
+E    +    where <function find_spec at 0x000001C191875D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+______________ test_invalid_credential_never_connects[payload1] _______________
+tests\unit\test_case_bridge_client.py:35: in test_invalid_credential_never_connects
+    module, _ = credential(tmp_path, monkeypatch, payload)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:17: in credential
+    module = implementation()
+             ^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:12: in implementation
+    assert importlib.util.find_spec('cn_contract.mcp.case_client'), 'selected case MCP client is missing'
+E   AssertionError: selected case MCP client is missing
+E   assert None
+E    +  where None = <function find_spec at 0x000001C191875D00>('cn_contract.mcp.case_client')
+E    +    where <function find_spec at 0x000001C191875D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+______________ test_invalid_credential_never_connects[payload2] _______________
+tests\unit\test_case_bridge_client.py:35: in test_invalid_credential_never_connects
+    module, _ = credential(tmp_path, monkeypatch, payload)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:17: in credential
+    module = implementation()
+             ^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:12: in implementation
+    assert importlib.util.find_spec('cn_contract.mcp.case_client'), 'selected case MCP client is missing'
+E   AssertionError: selected case MCP client is missing
+E   assert None
+E    +  where None = <function find_spec at 0x000001C191875D00>('cn_contract.mcp.case_client')
+E    +    where <function find_spec at 0x000001C191875D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+______________ test_invalid_credential_never_connects[payload3] _______________
+tests\unit\test_case_bridge_client.py:35: in test_invalid_credential_never_connects
+    module, _ = credential(tmp_path, monkeypatch, payload)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:17: in credential
+    module = implementation()
+             ^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:12: in implementation
+    assert importlib.util.find_spec('cn_contract.mcp.case_client'), 'selected case MCP client is missing'
+E   AssertionError: selected case MCP client is missing
+E   assert None
+E    +  where None = <function find_spec at 0x000001C191875D00>('cn_contract.mcp.case_client')
+E    +    where <function find_spec at 0x000001C191875D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+______ test_fixed_route_no_proxy_redirect_and_sanitized_response[schema] ______
+tests\unit\test_case_bridge_client.py:42: in test_fixed_route_no_proxy_redirect_and_sanitized_response
+    module, _ = credential(tmp_path, monkeypatch)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:17: in credential
+    module = implementation()
+             ^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:12: in implementation
+    assert importlib.util.find_spec('cn_contract.mcp.case_client'), 'selected case MCP client is missing'
+E   AssertionError: selected case MCP client is missing
+E   assert None
+E    +  where None = <function find_spec at 0x000001C191875D00>('cn_contract.mcp.case_client')
+E    +    where <function find_spec at 0x000001C191875D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_____ test_fixed_route_no_proxy_redirect_and_sanitized_response[oversize] _____
+tests\unit\test_case_bridge_client.py:42: in test_fixed_route_no_proxy_redirect_and_sanitized_response
+    module, _ = credential(tmp_path, monkeypatch)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:17: in credential
+    module = implementation()
+             ^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:12: in implementation
+    assert importlib.util.find_spec('cn_contract.mcp.case_client'), 'selected case MCP client is missing'
+E   AssertionError: selected case MCP client is missing
+E   assert None
+E    +  where None = <function find_spec at 0x000001C191875D00>('cn_contract.mcp.case_client')
+E    +    where <function find_spec at 0x000001C191875D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_____ test_fixed_route_no_proxy_redirect_and_sanitized_response[non-json] _____
+tests\unit\test_case_bridge_client.py:42: in test_fixed_route_no_proxy_redirect_and_sanitized_response
+    module, _ = credential(tmp_path, monkeypatch)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:17: in credential
+    module = implementation()
+             ^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:12: in implementation
+    assert importlib.util.find_spec('cn_contract.mcp.case_client'), 'selected case MCP client is missing'
+E   AssertionError: selected case MCP client is missing
+E   assert None
+E    +  where None = <function find_spec at 0x000001C191875D00>('cn_contract.mcp.case_client')
+E    +    where <function find_spec at 0x000001C191875D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+______________________ test_credential_hardlink_rejected ______________________
+tests\unit\test_case_bridge_client.py:69: in test_credential_hardlink_rejected
+    module, path = credential(tmp_path, monkeypatch)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:17: in credential
+    module = implementation()
+             ^^^^^^^^^^^^^^^^
+tests\unit\test_case_bridge_client.py:12: in implementation
+    assert importlib.util.find_spec('cn_contract.mcp.case_client'), 'selected case MCP client is missing'
+E   AssertionError: selected case MCP client is missing
+E   assert None
+E    +  where None = <function find_spec at 0x000001C191875D00>('cn_contract.mcp.case_client')
+E    +    where <function find_spec at 0x000001C191875D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_____________ test_mcp_new_tool_is_no_argument_read_only[asyncio] _____________
+tests\unit\test_case_bridge_client.py:80: in test_mcp_new_tool_is_no_argument_read_only
+    assert len(selected) == 1, 'MCP selected-case tool is missing'
+E   AssertionError: MCP selected-case tool is missing
+E   assert 0 == 1
+E    +  where 0 = len([])
+=========================== short test summary info ===========================
+FAILED tests/unit/test_case_bridge_client.py::test_missing_selection_is_not_network_request
+FAILED tests/unit/test_case_bridge_client.py::test_invalid_credential_never_connects[payload0]
+FAILED tests/unit/test_case_bridge_client.py::test_invalid_credential_never_connects[payload1]
+FAILED tests/unit/test_case_bridge_client.py::test_invalid_credential_never_connects[payload2]
+FAILED tests/unit/test_case_bridge_client.py::test_invalid_credential_never_connects[payload3]
+FAILED tests/unit/test_case_bridge_client.py::test_fixed_route_no_proxy_redirect_and_sanitized_response[schema]
+FAILED tests/unit/test_case_bridge_client.py::test_fixed_route_no_proxy_redirect_and_sanitized_response[oversize]
+FAILED tests/unit/test_case_bridge_client.py::test_fixed_route_no_proxy_redirect_and_sanitized_response[non-json]
+FAILED tests/unit/test_case_bridge_client.py::test_credential_hardlink_rejected
+FAILED tests/unit/test_case_bridge_client.py::test_mcp_new_tool_is_no_argument_read_only[asyncio]
+10 failed in 1.15s

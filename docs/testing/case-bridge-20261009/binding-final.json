@@ -1,0 +1,20 @@
+{
+  "stage": "binding-final",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/unit/test_mcp_bound_entry.py",
+    "tests/integration/test_case_bridge.py",
+    "-k",
+    "bound or template",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/case-bridge-20261009/binding-final.xml"
+  ],
+  "started_utc": "2026-10-08T22:42:00.164926+00:00",
+  "finished_utc": "2026-10-08T22:42:11.999499+00:00",
+  "seconds": 11.844,
+  "exit_code": 0,
+  "output_sha256": "42e33804b9e844ec5169ca54f284594719a15345b396bd9eab28360dcedae4e6"
+}

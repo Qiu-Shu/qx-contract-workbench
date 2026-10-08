@@ -1,0 +1,12 @@
+................F.                                                       [100%]
+================================== FAILURES ===================================
+__________________ test_no_cookie_fallback_or_case_override ___________________
+tests\integration\test_case_bridge.py:112: in test_no_cookie_fallback_or_case_override
+    assert client.delete(f'/api/matters/{other}/case-bridge', headers=csrf).status_code == 409
+E   AssertionError: assert 204 == 409
+E    +  where 204 = <Response [204 No Content]>.status_code
+E    +    where <Response [204 No Content]> = delete('/api/matters/14defbaa-e4f7-41ec-bd6b-a119ef1d96ef/case-bridge', headers={'X-CSRF-Token': 'AooEZFHr96MN-pX8H1NGvngj82o6IZnDagClL3CaDi4'})
+E    +      where delete = <starlette.testclient.TestClient object at 0x0000023C0DF8AED0>.delete
+=========================== short test summary info ===========================
+FAILED tests/integration/test_case_bridge.py::test_no_cookie_fallback_or_case_override
+1 failed, 17 passed in 36.88s

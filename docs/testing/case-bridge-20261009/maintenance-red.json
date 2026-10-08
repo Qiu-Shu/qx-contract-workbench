@@ -1,0 +1,18 @@
+{
+  "stage": "maintenance-red",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/integration/test_local_workbench.py",
+    "-k",
+    "account_maintenance",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T22:38:25.184676+00:00",
+  "finished_utc": "2026-10-08T22:38:27.469709+00:00",
+  "seconds": 2.282,
+  "exit_code": 1,
+  "output_sha256": "fa20b3fe77984a2c14d872a5ddba7509b0f2ccb914a24fd62b0381efa686d28e"
+}

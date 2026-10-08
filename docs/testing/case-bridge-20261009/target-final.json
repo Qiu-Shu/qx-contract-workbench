@@ -1,0 +1,19 @@
+{
+  "stage": "target-final",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/integration/test_case_bridge.py",
+    "tests/unit/test_case_bridge_client.py",
+    "tests/integration/test_local_workbench.py",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/case-bridge-20261009/target-final.xml"
+  ],
+  "started_utc": "2026-10-08T22:38:52.304839+00:00",
+  "finished_utc": "2026-10-08T22:40:00.304317+00:00",
+  "seconds": 68.0,
+  "exit_code": 0,
+  "output_sha256": "3d91b2dd105c953ef1abc913b7f25131be29e4c507bd85c1ed7872319bc66899"
+}

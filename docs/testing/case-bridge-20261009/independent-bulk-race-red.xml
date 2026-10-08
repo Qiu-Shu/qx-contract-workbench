@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="11.556" timestamp="2026-10-09T06:36:22.938984+08:00" hostname="PC-20260920HQJZ"><testcase classname=".audit-local.case-bridge-review-20261009.test_review_probes" name="test_bulk_authority_restore_must_not_restore_consent[membership]" time="2.774"><failure message="AssertionError: bulk authority restore reused consent: 200&#10;assert 200 == 401&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code">selected = (&lt;starlette.testclient.TestClient object at 0x000001E3BF42D700&gt;, &lt;cn_contract.persistence.Database object at 0x000001E...nistrator/pytest-555/test_bulk_authority_restore_mu0/selected-case.json'), '2521fcc2-4b04-4fe2-89ce-e1a7bdfccdda', ...)
+kind = 'membership'
+
+    @pytest.mark.parametrize('kind', ['membership', 'roles', 'session'])
+    def test_bulk_authority_restore_must_not_restore_consent(selected, kind):
+        from sqlalchemy import delete, insert, update
+        client, database, ids, bridge, path, matter, _, _ = selected
+        _, auth = grant(selected)
+        with database.session() as db:
+            actor = authenticate(client.cookies['qx_session'], db)
+            if kind == 'membership':
+                db.execute(delete(MembershipRow).where(MembershipRow.matter_id == matter,
+                    MembershipRow.user_id == str(ids['lawyer'])))
+                db.execute(insert(MembershipRow).values(matter_id=matter,
+                    user_id=str(ids['lawyer']), can_sign=False))
+            elif kind == 'roles':
+                db.execute(update(UserRow).where(UserRow.id == str(ids['lawyer'])).values(roles='["assistant"]'))
+                db.execute(update(UserRow).where(UserRow.id == str(ids['lawyer'])).values(roles='["handling_lawyer"]'))
+            else:
+                db.execute(update(SessionRow).where(SessionRow.id == str(actor.session_id)).values(revoked=True))
+                db.execute(update(SessionRow).where(SessionRow.id == str(actor.session_id)).values(revoked=False))
+        response = client.get('/api/case-bridge/context', headers=auth)
+&gt;       assert response.status_code == 401, 'bulk authority restore reused consent: ' + str(response.status_code)
+E       AssertionError: bulk authority restore reused consent: 200
+E       assert 200 == 401
+E        +  where 200 = &lt;Response [200 OK]&gt;.status_code
+
+.audit-local\case-bridge-review-20261009\test_review_probes.py:110: AssertionError</failure></testcase><testcase classname=".audit-local.case-bridge-review-20261009.test_review_probes" name="test_bulk_authority_restore_must_not_restore_consent[roles]" time="2.667"><failure message="AssertionError: bulk authority restore reused consent: 200&#10;assert 200 == 401&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code">selected = (&lt;starlette.testclient.TestClient object at 0x000001E3C0D8BFB0&gt;, &lt;cn_contract.persistence.Database object at 0x000001E...nistrator/pytest-555/test_bulk_authority_restore_mu1/selected-case.json'), 'cafae411-3f45-47b6-9eb3-5db41af2881c', ...)
+kind = 'roles'
+
+    @pytest.mark.parametrize('kind', ['membership', 'roles', 'session'])
+    def test_bulk_authority_restore_must_not_restore_consent(selected, kind):
+        from sqlalchemy import delete, insert, update
+        client, database, ids, bridge, path, matter, _, _ = selected
+        _, auth = grant(selected)
+        with database.session() as db:
+            actor = authenticate(client.cookies['qx_session'], db)
+            if kind == 'membership':
+                db.execute(delete(MembershipRow).where(MembershipRow.matter_id == matter,
+                    MembershipRow.user_id == str(ids['lawyer'])))
+                db.execute(insert(MembershipRow).values(matter_id=matter,
+                    user_id=str(ids['lawyer']), can_sign=False))
+            elif kind == 'roles':
+                db.execute(update(UserRow).where(UserRow.id == str(ids['lawyer'])).values(roles='["assistant"]'))
+                db.execute(update(UserRow).where(UserRow.id == str(ids['lawyer'])).values(roles='["handling_lawyer"]'))
+            else:
+                db.execute(update(SessionRow).where(SessionRow.id == str(actor.session_id)).values(revoked=True))
+                db.execute(update(SessionRow).where(SessionRow.id == str(actor.session_id)).values(revoked=False))
+        response = client.get('/api/case-bridge/context', headers=auth)
+&gt;       assert response.status_code == 401, 'bulk authority restore reused consent: ' + str(response.status_code)
+E       AssertionError: bulk authority restore reused consent: 200
+E       assert 200 == 401
+E        +  where 200 = &lt;Response [200 OK]&gt;.status_code
+
+.audit-local\case-bridge-review-20261009\test_review_probes.py:110: AssertionError</failure></testcase><testcase classname=".audit-local.case-bridge-review-20261009.test_review_probes" name="test_bulk_authority_restore_must_not_restore_consent[session]" time="2.669"><failure message="AssertionError: bulk authority restore reused consent: 200&#10;assert 200 == 401&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code">selected = (&lt;starlette.testclient.TestClient object at 0x000001E3C18E51C0&gt;, &lt;cn_contract.persistence.Database object at 0x000001E...nistrator/pytest-555/test_bulk_authority_restore_mu2/selected-case.json'), 'c24ba72b-e64e-40d6-a1a6-cd62ade45970', ...)
+kind = 'session'
+
+    @pytest.mark.parametrize('kind', ['membership', 'roles', 'session'])
+    def test_bulk_authority_restore_must_not_restore_consent(selected, kind):
+        from sqlalchemy import delete, insert, update
+        client, database, ids, bridge, path, matter, _, _ = selected
+        _, auth = grant(selected)
+        with database.session() as db:
+            actor = authenticate(client.cookies['qx_session'], db)
+            if kind == 'membership':
+                db.execute(delete(MembershipRow).where(MembershipRow.matter_id == matter,
+                    MembershipRow.user_id == str(ids['lawyer'])))
+                db.execute(insert(MembershipRow).values(matter_id=matter,
+                    user_id=str(ids['lawyer']), can_sign=False))
+            elif kind == 'roles':
+                db.execute(update(UserRow).where(UserRow.id == str(ids['lawyer'])).values(roles='["assistant"]'))
+                db.execute(update(UserRow).where(UserRow.id == str(ids['lawyer'])).values(roles='["handling_lawyer"]'))
+            else:
+                db.execute(update(SessionRow).where(SessionRow.id == str(actor.session_id)).values(revoked=True))
+                db.execute(update(SessionRow).where(SessionRow.id == str(actor.session_id)).values(revoked=False))
+        response = client.get('/api/case-bridge/context', headers=auth)
+&gt;       assert response.status_code == 401, 'bulk authority restore reused consent: ' + str(response.status_code)
+E       AssertionError: bulk authority restore reused consent: 200
+E       assert 200 == 401
+E        +  where 200 = &lt;Response [200 OK]&gt;.status_code
+
+.audit-local\case-bridge-review-20261009\test_review_probes.py:110: AssertionError</failure></testcase><testcase classname=".audit-local.case-bridge-review-20261009.test_review_probes" name="test_old_read_cleanup_must_not_erase_new_grant" time="2.381"><failure message="AssertionError: older read cleared freshly granted consent: 401&#10;assert 401 == 200&#10; +  where 401 = &lt;Response [401 Unauthorized]&gt;.status_code">selected = (&lt;starlette.testclient.TestClient object at 0x000001E3C11FBAA0&gt;, &lt;cn_contract.persistence.Database object at 0x000001E...nistrator/pytest-555/test_old_read_cleanup_must_not0/selected-case.json'), 'ddd96267-fe0b-4e30-b8b9-7bbbc7c6615c', ...)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001E3C1B9CF50&gt;
+
+    def test_old_read_cleanup_must_not_erase_new_grant(selected, monkeypatch):
+        from datetime import datetime, timedelta, timezone
+        client, _, _, bridge, path, matter, _, _ = selected
+        _, old_auth = grant(selected)
+        bridge.now = lambda: datetime.now(timezone.utc) + timedelta(minutes=16)
+        close = bridge.close
+        newer = []
+        def interleaved_close():
+            monkeypatch.setattr(bridge, 'close', close)
+            newer.append(grant(selected))
+            close()
+        monkeypatch.setattr(bridge, 'close', interleaved_close)
+        assert client.get('/api/case-bridge/context', headers=old_auth).status_code == 401
+        assert len(newer) == 1
+        response = client.get('/api/case-bridge/context', headers=newer[0][1])
+&gt;       assert response.status_code == 200, 'older read cleared freshly granted consent: ' + str(response.status_code)
+E       AssertionError: older read cleared freshly granted consent: 401
+E       assert 401 == 200
+E        +  where 401 = &lt;Response [401 Unauthorized]&gt;.status_code
+
+.audit-local\case-bridge-review-20261009\test_review_probes.py:128: AssertionError</failure></testcase></testsuite></testsuites>

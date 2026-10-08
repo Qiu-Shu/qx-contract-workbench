@@ -1,0 +1,21 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________________ test_browser_consent_and_revoke _______________________
+.audit-local\case-bridge-20261009\test_browser.py:36: in test_browser_consent_and_revoke
+    try: expect(page.locator('#case-bridge-status')).to_contain_text('本案只读连接已开放')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Locator expected to contain text '本案只读连接已开放'
+E   Actual value: 尚未在此页面开放连接。重新开放将替换此前选案；退出登录、权限或版本变化后失效。 
+E   Call log:
+E     - Expect "to_contain_text" locator("#case-bridge-status") with timeout 5000ms
+E     - waiting for locator("#case-bridge-status")
+E       14 × locator resolved to <p role="status" id="case-bridge-status">尚未在此页面开放连接。重新开放将替换此前选案；退出登录、权限或版本变化后失效。</p>
+E          - unexpected value "尚未在此页面开放连接。重新开放将替换此前选案；退出登录、权限或版本变化后失效。"
+E   
+E   Aria snapshot:
+E   - status: 尚未在此页面开放连接。重新开放将替换此前选案；退出登录、权限或版本变化后失效。
+---------------------------- Captured stdout call -----------------------------
+{'message': '请先完成事实确认并刷新当前审查页面。', 'errors': []}
+=========================== short test summary info ===========================
+FAILED .audit-local/case-bridge-20261009/test_browser.py::test_browser_consent_and_revoke
+1 failed in 8.81s

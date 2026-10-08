@@ -1,0 +1,166 @@
+EEEEEEEEEEEEEEEEEE                                                       [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_selected_read_contains_bound_sources_and_no_credentials _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_grant_cannot_survive_authority_or_context_change[logout] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_grant_cannot_survive_authority_or_context_change[membership] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_grant_cannot_survive_authority_or_context_change[membership_restore] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_grant_cannot_survive_authority_or_context_change[disabled] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_grant_cannot_survive_authority_or_context_change[role] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_grant_cannot_survive_authority_or_context_change[expired] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_grant_cannot_survive_authority_or_context_change[version] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_grant_cannot_survive_authority_or_context_change[revoke] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_grant_cannot_survive_authority_or_context_change[restart] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_selection_requires_explicit_current_authority[no_csrf] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_selection_requires_explicit_current_authority[origin] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_selection_requires_explicit_current_authority[consent] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_selection_requires_explicit_current_authority[context] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_selection_requires_explicit_current_authority[unknown] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_selection_requires_explicit_current_authority[assistant] _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_________ ERROR at setup of test_no_cookie_fallback_or_case_override __________
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ ERROR at setup of test_reselect_replaces_token_and_template_has_explicit_consent _
+tests\integration\test_case_bridge.py:20: in selected
+    assert importlib.util.find_spec('cn_contract.web.case_bridge'), 'case bridge is not implemented'
+E   AssertionError: case bridge is not implemented
+E   assert None
+E    +  where None = <function find_spec at 0x0000028C50345D00>('cn_contract.web.case_bridge')
+E    +    where <function find_spec at 0x0000028C50345D00> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+=========================== short test summary info ===========================
+ERROR tests/integration/test_case_bridge.py::test_selected_read_contains_bound_sources_and_no_credentials
+ERROR tests/integration/test_case_bridge.py::test_grant_cannot_survive_authority_or_context_change[logout]
+ERROR tests/integration/test_case_bridge.py::test_grant_cannot_survive_authority_or_context_change[membership]
+ERROR tests/integration/test_case_bridge.py::test_grant_cannot_survive_authority_or_context_change[membership_restore]
+ERROR tests/integration/test_case_bridge.py::test_grant_cannot_survive_authority_or_context_change[disabled]
+ERROR tests/integration/test_case_bridge.py::test_grant_cannot_survive_authority_or_context_change[role]
+ERROR tests/integration/test_case_bridge.py::test_grant_cannot_survive_authority_or_context_change[expired]
+ERROR tests/integration/test_case_bridge.py::test_grant_cannot_survive_authority_or_context_change[version]
+ERROR tests/integration/test_case_bridge.py::test_grant_cannot_survive_authority_or_context_change[revoke]
+ERROR tests/integration/test_case_bridge.py::test_grant_cannot_survive_authority_or_context_change[restart]
+ERROR tests/integration/test_case_bridge.py::test_selection_requires_explicit_current_authority[no_csrf]
+ERROR tests/integration/test_case_bridge.py::test_selection_requires_explicit_current_authority[origin]
+ERROR tests/integration/test_case_bridge.py::test_selection_requires_explicit_current_authority[consent]
+ERROR tests/integration/test_case_bridge.py::test_selection_requires_explicit_current_authority[context]
+ERROR tests/integration/test_case_bridge.py::test_selection_requires_explicit_current_authority[unknown]
+ERROR tests/integration/test_case_bridge.py::test_selection_requires_explicit_current_authority[assistant]
+ERROR tests/integration/test_case_bridge.py::test_no_cookie_fallback_or_case_override
+ERROR tests/integration/test_case_bridge.py::test_reselect_replaces_token_and_template_has_explicit_consent
+18 errors in 6.95s

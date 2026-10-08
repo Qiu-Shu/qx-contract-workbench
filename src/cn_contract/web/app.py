@@ -556,7 +556,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
             matter=read_matter(matter_id,actor,db) if matter_id else None
         return HTMLResponse(environment.get_template('workbench.html').render(section=section,matter=matter,
             matter_id=str(matter_id) if matter_id else '',synthetic=True,purpose=purpose,
-            coverage_dimensions=COVERAGE_LABELS))
+            coverage_dimensions=COVERAGE_LABELS, case_bridge_enabled=hasattr(app.state, 'case_bridge')))
 
     @app.get('/',response_class=HTMLResponse)
     def index(request:Request):

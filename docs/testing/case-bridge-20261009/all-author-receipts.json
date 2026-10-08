@@ -1,0 +1,341 @@
+[
+  {
+    "stage": "backend-first",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_case_bridge.py",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:29:02.097796+00:00",
+    "finished_utc": "2026-10-08T22:29:39.961075+00:00",
+    "seconds": 37.859,
+    "exit_code": 1,
+    "output_sha256": "a59332c181e853f05ab99f853268cd4c62057030a00af370edd064f3bc926dda"
+  },
+  {
+    "stage": "backend-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_case_bridge.py",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:27:24.232807+00:00",
+    "finished_utc": "2026-10-08T22:27:31.763845+00:00",
+    "seconds": 7.532,
+    "exit_code": 1,
+    "output_sha256": "e4a45162388a850594d192c460b2c792070ebd6a6195aa8ed4cb2cf715dbcfde"
+  },
+  {
+    "stage": "binding-final",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/unit/test_mcp_bound_entry.py",
+      "tests/integration/test_case_bridge.py",
+      "-k",
+      "bound or template",
+      "-q",
+      "--tb=short",
+      "--junitxml=.audit-local/case-bridge-20261009/binding-final.xml"
+    ],
+    "started_utc": "2026-10-08T22:42:00.164926+00:00",
+    "finished_utc": "2026-10-08T22:42:11.999499+00:00",
+    "seconds": 11.844,
+    "exit_code": 0,
+    "output_sha256": "42e33804b9e844ec5169ca54f284594719a15345b396bd9eab28360dcedae4e6"
+  },
+  {
+    "stage": "browser-diagnosis",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      ".audit-local/case-bridge-20261009/test_browser.py",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:40:53.712459+00:00",
+    "finished_utc": "2026-10-08T22:41:03.143325+00:00",
+    "seconds": 9.422,
+    "exit_code": 1,
+    "output_sha256": "f3951f4f09c597d4c2e11f6e58a920eea5a5fbd8df7963606ea30b9d43afbde8"
+  },
+  {
+    "stage": "browser-green",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      ".audit-local/case-bridge-20261009/test_browser.py",
+      "-q",
+      "--tb=short",
+      "--junitxml=.audit-local/case-bridge-20261009/browser-green.xml"
+    ],
+    "started_utc": "2026-10-08T22:41:18.805627+00:00",
+    "finished_utc": "2026-10-08T22:41:25.071609+00:00",
+    "seconds": 6.281,
+    "exit_code": 0,
+    "output_sha256": "dc575793b42d9c2e98cb481fe3a19cb52fd5a7dd453c87c95d3c0a5dd7aff673"
+  },
+  {
+    "stage": "browser",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      ".audit-local/case-bridge-20261009/test_browser.py",
+      "-q",
+      "--tb=short",
+      "--junitxml=.audit-local/case-bridge-20261009/browser.xml"
+    ],
+    "started_utc": "2026-10-08T22:39:40.322381+00:00",
+    "finished_utc": "2026-10-08T22:39:51.062713+00:00",
+    "seconds": 10.734,
+    "exit_code": 1,
+    "output_sha256": "8cfd400419a4d248afe39d38f49011ec8bdc263023e2832b6facad07068eec74"
+  },
+  {
+    "stage": "client-effective-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/unit/test_case_bridge_client.py",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:30:32.032059+00:00",
+    "finished_utc": "2026-10-08T22:30:33.735765+00:00",
+    "seconds": 1.703,
+    "exit_code": 1,
+    "output_sha256": "4f59802adf002e4e94542944c2764d489f000b3880f17ce1f262463e82f1e90d"
+  },
+  {
+    "stage": "client-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/unit/test_case_bridge_client.py",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:29:58.615099+00:00",
+    "finished_utc": "2026-10-08T22:30:00.660475+00:00",
+    "seconds": 2.047,
+    "exit_code": 1,
+    "output_sha256": "dcef0827567c41d6beecf8360cd16f06cfa51c75ddfd40cdeae986ae877db66b"
+  },
+  {
+    "stage": "dependencies",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pip",
+      "check"
+    ],
+    "started_utc": "2026-10-08T22:42:46.005552+00:00",
+    "finished_utc": "2026-10-08T22:42:46.416595+00:00",
+    "seconds": 0.422,
+    "exit_code": 0,
+    "output_sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf"
+  },
+  {
+    "stage": "entry-check",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "src/cn_contract/mcp/bound_entry.py",
+      "--check"
+    ],
+    "started_utc": "2026-10-08T22:42:45.627382+00:00",
+    "finished_utc": "2026-10-08T22:42:45.962433+00:00",
+    "seconds": 0.344,
+    "exit_code": 0,
+    "output_sha256": "3c60e13a378192d5384400dd05de1beacd2d892c07ba24cabef145110640a001"
+  },
+  {
+    "stage": "maintenance-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_local_workbench.py",
+      "-k",
+      "account_maintenance",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:38:25.184676+00:00",
+    "finished_utc": "2026-10-08T22:38:27.469709+00:00",
+    "seconds": 2.282,
+    "exit_code": 1,
+    "output_sha256": "fa20b3fe77984a2c14d872a5ddba7509b0f2ccb914a24fd62b0381efa686d28e"
+  },
+  {
+    "stage": "mcp-regression",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/unit/test_mcp_offline.py",
+      "tests/unit/test_mcp_bound_entry.py",
+      "tests/unit/test_mcp_chat_metadata.py",
+      "tests/unit/test_mcp_progress_unicode.py",
+      "tests/integration/test_mcp_offline_stdio.py",
+      "tests/integration/test_mcp_host_metadata.py",
+      "tests/integration/test_mcp_progress_tokens.py",
+      "tests/integration/test_mcp_chat_envelope.py",
+      "-q",
+      "--tb=short",
+      "--junitxml=.audit-local/case-bridge-20261009/mcp-regression.xml"
+    ],
+    "started_utc": "2026-10-08T22:34:43.484897+00:00",
+    "finished_utc": "2026-10-08T22:35:50.907708+00:00",
+    "seconds": 67.422,
+    "exit_code": 0,
+    "output_sha256": "90efdc830a18d3039fb1da270e92ac007beeb582d191461de895223fe1e60483"
+  },
+  {
+    "stage": "pdf-scope",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_case_bridge.py",
+      "-k",
+      "pdf_transcription",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:34:07.896586+00:00",
+    "finished_utc": "2026-10-08T22:34:10.709104+00:00",
+    "seconds": 2.812,
+    "exit_code": 1,
+    "output_sha256": "bd303f79497945e9a2aa573eb29c76bfe0737ba8cfd7cdf40aa5165f69c686b6"
+  },
+  {
+    "stage": "review-fixes",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_case_bridge.py",
+      "-k",
+      "bulk_authority or old_read_cleanup",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:37:38.502915+00:00",
+    "finished_utc": "2026-10-08T22:37:49.402831+00:00",
+    "seconds": 10.906,
+    "exit_code": 0,
+    "output_sha256": "147ae25798029c7481fac2211fd468c08e90f13bc82cd1607ea1f31bc4fe3701"
+  },
+  {
+    "stage": "target-and-related",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_case_bridge.py",
+      "tests/unit/test_case_bridge_client.py",
+      "tests/integration/test_local_workbench.py",
+      "tests/integration/test_assisted_review.py",
+      "tests/integration/test_assisted_confirmation.py",
+      "-q",
+      "--tb=short",
+      "--junitxml=.audit-local/case-bridge-20261009/target-and-related.xml"
+    ],
+    "started_utc": "2026-10-08T22:34:23.924085+00:00",
+    "finished_utc": "2026-10-08T22:42:10.305213+00:00",
+    "seconds": 466.375,
+    "exit_code": 0,
+    "output_sha256": "f22dc20805f475f603d8d7300be2abb2749d897b906ed65f55fc034de0e6bb58"
+  },
+  {
+    "stage": "target-final",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_case_bridge.py",
+      "tests/unit/test_case_bridge_client.py",
+      "tests/integration/test_local_workbench.py",
+      "-q",
+      "--tb=short",
+      "--junitxml=.audit-local/case-bridge-20261009/target-final.xml"
+    ],
+    "started_utc": "2026-10-08T22:38:52.304839+00:00",
+    "finished_utc": "2026-10-08T22:40:00.304317+00:00",
+    "seconds": 68.0,
+    "exit_code": 0,
+    "output_sha256": "3d91b2dd105c953ef1abc913b7f25131be29e4c507bd85c1ed7872319bc66899"
+  },
+  {
+    "stage": "target-first",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_case_bridge.py",
+      "tests/unit/test_case_bridge_client.py",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:30:56.498935+00:00",
+    "finished_utc": "2026-10-08T22:31:35.598064+00:00",
+    "seconds": 39.094,
+    "exit_code": 0,
+    "output_sha256": "b72ef1c7e1fb52841edfe878642c6a103ed0ab8f1131c8c3e9eef94bb24b9e03"
+  },
+  {
+    "stage": "transport-and-boundaries",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_case_bridge.py",
+      "-k",
+      "actual_loopback or oversize or tampering",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:32:32.991895+00:00",
+    "finished_utc": "2026-10-08T22:32:42.938511+00:00",
+    "seconds": 9.953,
+    "exit_code": 1,
+    "output_sha256": "ba0d56158202ba33142962bebb527b28075cc79ed898aaddad94ff3327fd47cf"
+  },
+  {
+    "stage": "transport-boundaries-fixed",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_case_bridge.py",
+      "-k",
+      "actual_loopback or oversize or tampering",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-08T22:33:28.759978+00:00",
+    "finished_utc": "2026-10-08T22:33:39.097760+00:00",
+    "seconds": 10.328,
+    "exit_code": 1,
+    "output_sha256": "39817b438c29df12cc5a08bd8c0ba0b629cb397436e4ab000ee7af810413fd48"
+  }
+]

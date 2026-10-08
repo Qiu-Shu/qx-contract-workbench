@@ -1698,6 +1698,49 @@ class AssistedReviewContextView(DomainModel):
         return {str(key): digest for key, digest in value.items()}
 
 
+class CaseBridgeConsent(DomainModel):
+    context_sha256: SHA256
+    share_with_chat: Literal[True]
+
+    @field_validator('share_with_chat', mode='before')
+    @classmethod
+    def explicit_consent(cls, value):
+        if value is not True: raise ValueError('explicit consent required')
+        return value
+
+
+class CaseBridgeGrant(DomainModel):
+    id: UUID
+    matter_id: UUID
+    context_sha256: SHA256
+    expires_at: UTCDatetime
+    read_only: Literal[True] = True
+
+
+class CaseBridgeReadingScope(DomainModel):
+    version_id: UUID
+    pages: tuple[PositiveInt, ...]
+    parts: tuple[NonEmpty, ...]
+    unsupported_parts: tuple[NonEmpty, ...]
+    quality_issues: tuple[NonEmpty, ...]
+    excluded_anchor_count: NonNegativeInt
+
+
+class CaseBridgeContext(DomainModel):
+    grant: CaseBridgeGrant
+    context: AssistedReviewContextView
+    title: NonEmpty
+    contract_type: ContractType
+    position: Position
+    facts: tuple[Fact, ...]
+    anchors: tuple[Anchor, ...]
+    source_verifications: tuple[PageVerification, ...]
+    reading_scope: tuple[CaseBridgeReadingScope, ...]
+    limitations: tuple[NonEmpty, ...]
+    synthetic: Literal[True] = True
+    read_only: Literal[True] = True
+
+
 class ManualCandidateReceipt(DomainModel):
     source: Literal['manual_synthetic']
     submitted_by: UUID

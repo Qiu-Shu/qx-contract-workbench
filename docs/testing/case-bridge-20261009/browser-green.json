@@ -1,0 +1,19 @@
+{
+  "stage": "browser-green",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    ".audit-local/case-bridge-20261009/test_browser.py",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/case-bridge-20261009/browser-green.xml"
+  ],
+  "started_utc": "2026-10-08T22:41:18.805627+00:00",
+  "finished_utc": "2026-10-08T22:41:25.071609+00:00",
+  "seconds": 6.281,
+  "exit_code": 0,
+  "output_sha256": "dc575793b42d9c2e98cb481fe3a19cb52fd5a7dd453c87c95d3c0a5dd7aff673"
+}

@@ -1,0 +1,18 @@
+{
+  "stage": "review-fixes",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/integration/test_case_bridge.py",
+    "-k",
+    "bulk_authority or old_read_cleanup",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T22:37:38.502915+00:00",
+  "finished_utc": "2026-10-08T22:37:49.402831+00:00",
+  "seconds": 10.906,
+  "exit_code": 0,
+  "output_sha256": "147ae25798029c7481fac2211fd468c08e90f13bc82cd1607ea1f31bc4fe3701"
+}

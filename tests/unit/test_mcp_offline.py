@@ -28,9 +28,9 @@ def run(awaitable):
     return anyio.run(execute)
 
 
-def test_discovery_exposes_exact_two_strict_tools():
+def test_discovery_exposes_exact_three_strict_tools():
     tools = run(api().create_server().list_tools())
-    assert {tool.name for tool in tools} == {'workbench_status', 'deepseek_offline_example'}
+    assert {tool.name for tool in tools} == {'workbench_status', 'deepseek_offline_example', 'read_selected_case'}
     schemas = {tool.name: tool.input_schema for tool in tools}
     assert schemas['workbench_status']['properties'] == {}
     for schema in schemas.values():

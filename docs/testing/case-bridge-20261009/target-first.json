@@ -1,0 +1,17 @@
+{
+  "stage": "target-first",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/integration/test_case_bridge.py",
+    "tests/unit/test_case_bridge_client.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T22:30:56.498935+00:00",
+  "finished_utc": "2026-10-08T22:31:35.598064+00:00",
+  "seconds": 39.094,
+  "exit_code": 0,
+  "output_sha256": "b72ef1c7e1fb52841edfe878642c6a103ed0ab8f1131c8c3e9eef94bb24b9e03"
+}

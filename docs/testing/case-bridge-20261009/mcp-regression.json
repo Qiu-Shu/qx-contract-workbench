@@ -1,0 +1,24 @@
+{
+  "stage": "mcp-regression",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/unit/test_mcp_offline.py",
+    "tests/unit/test_mcp_bound_entry.py",
+    "tests/unit/test_mcp_chat_metadata.py",
+    "tests/unit/test_mcp_progress_unicode.py",
+    "tests/integration/test_mcp_offline_stdio.py",
+    "tests/integration/test_mcp_host_metadata.py",
+    "tests/integration/test_mcp_progress_tokens.py",
+    "tests/integration/test_mcp_chat_envelope.py",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/case-bridge-20261009/mcp-regression.xml"
+  ],
+  "started_utc": "2026-10-08T22:34:43.484897+00:00",
+  "finished_utc": "2026-10-08T22:35:50.907708+00:00",
+  "seconds": 67.422,
+  "exit_code": 0,
+  "output_sha256": "90efdc830a18d3039fb1da270e92ac007beeb582d191461de895223fe1e60483"
+}
