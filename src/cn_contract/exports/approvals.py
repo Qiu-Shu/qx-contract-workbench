@@ -1,5 +1,5 @@
 """Current server snapshots, exact patch approvals and frozen draft bundles."""
-import hashlib,json
+import hashlib,json,re
 from io import BytesIO
 from uuid import UUID,uuid4
 from sqlalchemy import select
@@ -73,7 +73,37 @@ def _manual(anchor,patch,reason):
             'old':patch.old_text,'new':patch.new_text,'explanation':patch.reason}
 
 
-def _scope(run,actor,db):
+def _page_ranges(pages):
+    ranges=[]
+    for page in sorted(set(pages)):
+        if ranges and page==ranges[-1][1]+1:ranges[-1][1]=page
+        else:ranges.append([page,page])
+    return '、'.join(str(start) if start==end else f'{start}–{end}' for start,end in ranges)
+
+
+def _client_scope_labels(values):
+    # Display known inventories only; unknown diagnostics remain verbatim.
+    patterns=(
+        (r'page:([1-9][0-9]*)', '第{}页'),
+        (r'page:([1-9][0-9]*):read', '已提取文字：第{}页'),
+        (r'page:([1-9][0-9]*):manual', '需人工核对：第{}页'),
+        (r'page:([1-9][0-9]*):unsupported', '自动解析未取得可用文字：第{}页'),
+        (r'OCR_NOT_DEPLOYED:page:([1-9][0-9]*)', '自动解析未取得文字：第{}页（按页识别和人工来源核对另行记录）'),
+    )
+    groups={};items=[]
+    for value in values:
+        for pattern,label in patterns:
+            match=re.fullmatch(pattern,value)
+            if match:
+                if label not in groups:
+                    groups[label]=[];items.append((label,True))
+                groups[label].append(int(match[1]))
+                break
+        else:items.append((value,False))
+    return '；'.join(label.format(_page_ranges(groups[label])) if grouped else label for label,grouped in items)
+
+
+def _scope(run,actor,db,*,audience='internal'):
     from ..persistence import read_matter,read_original
     from ..documents.ingest import _parse
     matter=read_matter(run.matter_id,actor,db)
@@ -82,14 +112,16 @@ def _scope(run,actor,db):
         '客户政策快照：'+run.manifest.policy_sha256,
         ('本次采用离线人工/合成候选；真实模型推理NOT_RUN，真实模型调用0；' if run.manifest.model_provider=='assisted_manual'
          else '本次仅采用本地模拟模型；')+'未关联企业查询收据，未采用任何原始企业查询材料。未查询不能解释为无风险。']
+    if audience=='client':scope=[scope[0],scope[-1]]
+    labels=_client_scope_labels if audience=='client' else '、'.join
     for identifier,digest in run.manifest.document_hashes.items():
         version=read_version(run.matter_id,identifier,actor,db)
         parsed=_parse(read_original(run.matter_id,identifier,actor,db),version,configured_database(db).settings)
         scope.extend(['读取文件：'+version.original_name+'；SHA256：'+digest+'；基线：'+version.baseline_view.value,
-          '读取部件：'+('、'.join(parsed.parts) or '无可读部件')+'；结构锚点：'+str(len(parsed.anchors)),
-          '页码范围：'+('、'.join(map(str,parsed.pages)) if parsed.pages else 'DOCX未进行分页定位，页码须原生Word复核'),
-          '未支持或未读项：'+('、'.join(parsed.unsupported_parts) or '结构解析未报告未支持部件；这不代表所有材料均获法律核验'),
-          '解析质量限制：'+('、'.join(parsed.quality_issues) or '未报告结构质量问题')])
+          '读取部件：'+(labels(parsed.parts) or '无可读部件')+'；结构锚点：'+str(len(parsed.anchors)),
+          '页码范围：'+((_page_ranges(parsed.pages) if audience=='client' else '、'.join(map(str,parsed.pages))) if parsed.pages else 'DOCX未进行分页定位，页码须原生Word复核'),
+          '未支持或未读项：'+(labels(parsed.unsupported_parts) or '结构解析未报告未支持部件；这不代表所有材料均获法律核验'),
+          '解析质量限制：'+(labels(parsed.quality_issues) or '未报告结构质量问题')])
     internal=['本案确认立场：'+(matter.position.value if matter.position else '待确认'),
         *['本案内部目标与底线：'+item for item in matter.objectives],
         '复核任务：核对保证附件、补充材料及全部未完成维度；模拟建议尚未成为合同变更。']
@@ -119,7 +151,7 @@ def prepare_exports(run,audience,patches,actor,*,db):
             manual.append(_manual(anchor,patch,'对外草案仅生成新文件 原件全包内容尚无独立对外范围核验 请按已批准文字人工修改'))
         else:
             baseline[version.id]=data;changes.setdefault(version.id,[]).append((checked,anchor))
-    scope,internal=_scope(run,actor,db)
+    scope,internal=_scope(run,actor,db,audience=audience)
     with db.begin_nested():
         artifacts=[]
         for version_id,values in changes.items():

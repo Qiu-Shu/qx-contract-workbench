@@ -1,0 +1,17 @@
+{
+  "stage": "binding-regression",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/unit/test_mcp_bound_entry.py",
+    "-q",
+    "-W",
+    "error"
+  ],
+  "started_utc": "2026-10-08T21:08:45.304409+00:00",
+  "finished_utc": "2026-10-08T21:08:51.139410+00:00",
+  "seconds": 5.844,
+  "exit_code": 0,
+  "output_sha256": "3ca2f04664e28abb566d4d7674917e06b5e0b3d8ed5609dcf86c0d662c07850c"
+}

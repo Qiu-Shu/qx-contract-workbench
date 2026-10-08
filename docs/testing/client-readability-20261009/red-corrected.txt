@@ -1,0 +1,272 @@
+FFFFFFFF                                                                 [100%]
+================================== FAILURES ===================================
+___________________ test_page_ranges_preserve_gaps[pages0-] ___________________
+
+pages = [], expected = ''
+
+    @pytest.mark.parametrize('pages,expected', [
+        ([], ''), ([1], '1'), ([3, 1, 2, 2, 5, 7, 8], '1每3﹜5﹜7每8'),
+        (list(range(1, 49)), '1每48'),
+    ])
+    def test_page_ranges_preserve_gaps(pages, expected):
+>       assert api()._page_ranges(pages) == expected
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.exports.approvals' has no attribute '_page_ranges'
+
+tests\integration\test_client_scope.py:14: AttributeError
+__________________ test_page_ranges_preserve_gaps[pages1-1] ___________________
+
+pages = [1], expected = '1'
+
+    @pytest.mark.parametrize('pages,expected', [
+        ([], ''), ([1], '1'), ([3, 1, 2, 2, 5, 7, 8], '1每3﹜5﹜7每8'),
+        (list(range(1, 49)), '1每48'),
+    ])
+    def test_page_ranges_preserve_gaps(pages, expected):
+>       assert api()._page_ranges(pages) == expected
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.exports.approvals' has no attribute '_page_ranges'
+
+tests\integration\test_client_scope.py:14: AttributeError
+____ test_page_ranges_preserve_gaps[pages2-1\u20133\u30015\u30017\u20138] _____
+
+pages = [3, 1, 2, 2, 5, 7, ...], expected = '1每3﹜5﹜7每8'
+
+    @pytest.mark.parametrize('pages,expected', [
+        ([], ''), ([1], '1'), ([3, 1, 2, 2, 5, 7, 8], '1每3﹜5﹜7每8'),
+        (list(range(1, 49)), '1每48'),
+    ])
+    def test_page_ranges_preserve_gaps(pages, expected):
+>       assert api()._page_ranges(pages) == expected
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.exports.approvals' has no attribute '_page_ranges'
+
+tests\integration\test_client_scope.py:14: AttributeError
+______________ test_page_ranges_preserve_gaps[pages3-1\u201348] _______________
+
+pages = [1, 2, 3, 4, 5, 6, ...], expected = '1每48'
+
+    @pytest.mark.parametrize('pages,expected', [
+        ([], ''), ([1], '1'), ([3, 1, 2, 2, 5, 7, 8], '1每3﹜5﹜7每8'),
+        (list(range(1, 49)), '1每48'),
+    ])
+    def test_page_ranges_preserve_gaps(pages, expected):
+>       assert api()._page_ranges(pages) == expected
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.exports.approvals' has no attribute '_page_ranges'
+
+tests\integration\test_client_scope.py:14: AttributeError
+_______________ test_client_labels_preserve_unknown_diagnostics _______________
+
+    def test_client_labels_preserve_unknown_diagnostics():
+        values = ['page:1:unsupported', 'page:3:unsupported', 'page:4:unsupported',
+                  'page:2:images', 'page:01:unsupported', 'page:0:unsupported',
+                  'OCR_NOT_DEPLOYED:page:1', 'OCR_NOT_DEPLOYED:page:3',
+                  'PDF_COORDINATES_UNRELIABLE:page:2', 'unknown:page:5']
+>       text = api()._client_scope_labels(values)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.exports.approvals' has no attribute '_client_scope_labels'
+
+tests\integration\test_client_scope.py:22: AttributeError
+____ test_scope_presentation_keeps_audience_and_source_boundaries[client] _____
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-517/test_scope_presentation_keeps_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DACAE8B950>
+audience = 'client'
+
+    @pytest.mark.parametrize('audience', ['client', 'internal', 'counterparty'])
+    def test_scope_presentation_keeps_audience_and_source_boundaries(tmp_path, monkeypatch, audience):
+        world = setup(tmp_path)
+        database, actor, _, _, _, parsed, run = world
+        # Simulates the automatic parser's inventory, not an OCR or legal quality test.
+        inventory = parsed.model_copy(update={
+            'parts': tuple(f'page:{p}:unsupported' for p in range(1, 49)),
+            'pages': tuple(range(1, 49)),
+            'unsupported_parts': tuple(f'page:{p}' for p in range(1, 49)),
+            'quality_issues': tuple(f'OCR_NOT_DEPLOYED:page:{p}' for p in range(1, 49)) + ('UNKNOWN_DIAGNOSTIC',),
+        })
+        monkeypatch.setattr(importlib.import_module('cn_contract.documents.ingest'), '_parse', lambda *args: inventory)
+>       bundle = package(world, audience)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_client_scope.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\helpers\synthetic_exports.py:87: in package
+    return api().prepare_exports(run,audience,patches or [],actor,db=db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\exports\approvals.py:104: in prepare_exports
+    run=s.load_run(run,actor,db)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\exports\storage.py:94: in load_run
+    actual=read_run(run.matter_id,run.id,actor,db=db,current=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\review\storage.py:106: in read_run
+    state=current_manifest(ctx,actor,db,json.loads(row.config_json),allow_finished=True)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\review\workflow.py:74: in current_manifest
+    parsed=trusted_parse(matter.id,actual.id,actor,db,parsed)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+matter_id = UUID('b9863bdd-b43e-4858-a114-77bb309897d3')
+version_id = UUID('2d18dcba-6b85-4099-9c61-6e0da5126ff9')
+actor = Actor(user_id=UUID('fb8646f7-000f-4c94-b82f-a19a40fc2b18'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('19a4b66e-bdae-444c-9641-db88c2f10c1c'))
+db = <sqlalchemy.orm.session.Session object at 0x000001DACB753F20>
+expected = ParseResult(version_id=UUID('2d18dcba-6b85-4099-9c61-6e0da5126ff9'), anchors=(Anchor(id=UUID('e5b3c9d7-495c-5b73-9e9b-...s].xml:metadata_read', '_rels/.rels:metadata_read', 'word/document.xml:read'), unsupported_parts=(), quality_issues=())
+
+    def trusted_parse(matter_id, version_id, actor, db, expected):
+        """Reconstruct complete provenance from immutable bytes, without saving parses.
+    
+        T02's upload-authorized parse storage is an append-only record, not a proof
+        that its content came from the parser. The T03 pure adapter dispatcher is
+        reused here; all original reads still cross T02's real authorization gate.
+        """
+        from ..documents.ingest import _parse
+        from ..persistence import read_version, read_original
+        from ..security import ServiceError
+        version = read_version(matter_id,version_id,actor,db)
+        original = read_original(matter_id,version_id,actor,db)
+        result = _parse(original,version,configured_database(db).settings)
+        if expected != result:
+>           raise ServiceError('VERSION_CONFLICT',409)
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\facts\storage.py:91: ServiceError
+___ test_scope_presentation_keeps_audience_and_source_boundaries[internal] ____
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-517/test_scope_presentation_keeps_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DACB82B920>
+audience = 'internal'
+
+    @pytest.mark.parametrize('audience', ['client', 'internal', 'counterparty'])
+    def test_scope_presentation_keeps_audience_and_source_boundaries(tmp_path, monkeypatch, audience):
+        world = setup(tmp_path)
+        database, actor, _, _, _, parsed, run = world
+        # Simulates the automatic parser's inventory, not an OCR or legal quality test.
+        inventory = parsed.model_copy(update={
+            'parts': tuple(f'page:{p}:unsupported' for p in range(1, 49)),
+            'pages': tuple(range(1, 49)),
+            'unsupported_parts': tuple(f'page:{p}' for p in range(1, 49)),
+            'quality_issues': tuple(f'OCR_NOT_DEPLOYED:page:{p}' for p in range(1, 49)) + ('UNKNOWN_DIAGNOSTIC',),
+        })
+        monkeypatch.setattr(importlib.import_module('cn_contract.documents.ingest'), '_parse', lambda *args: inventory)
+>       bundle = package(world, audience)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_client_scope.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\helpers\synthetic_exports.py:87: in package
+    return api().prepare_exports(run,audience,patches or [],actor,db=db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\exports\approvals.py:104: in prepare_exports
+    run=s.load_run(run,actor,db)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\exports\storage.py:94: in load_run
+    actual=read_run(run.matter_id,run.id,actor,db=db,current=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\review\storage.py:106: in read_run
+    state=current_manifest(ctx,actor,db,json.loads(row.config_json),allow_finished=True)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\review\workflow.py:74: in current_manifest
+    parsed=trusted_parse(matter.id,actual.id,actor,db,parsed)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+matter_id = UUID('91291dba-d73b-4c22-b249-b0c13151e2b5')
+version_id = UUID('574fa533-14e2-4945-9c06-bc0e0c217121')
+actor = Actor(user_id=UUID('439cc331-f7d0-49ac-b0ed-5f907490a335'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('415106c6-ea89-4ce3-96ab-f9e950ae717d'))
+db = <sqlalchemy.orm.session.Session object at 0x000001DACBA4B0E0>
+expected = ParseResult(version_id=UUID('574fa533-14e2-4945-9c06-bc0e0c217121'), anchors=(Anchor(id=UUID('d7b89c08-6012-5e6b-a458-...s].xml:metadata_read', '_rels/.rels:metadata_read', 'word/document.xml:read'), unsupported_parts=(), quality_issues=())
+
+    def trusted_parse(matter_id, version_id, actor, db, expected):
+        """Reconstruct complete provenance from immutable bytes, without saving parses.
+    
+        T02's upload-authorized parse storage is an append-only record, not a proof
+        that its content came from the parser. The T03 pure adapter dispatcher is
+        reused here; all original reads still cross T02's real authorization gate.
+        """
+        from ..documents.ingest import _parse
+        from ..persistence import read_version, read_original
+        from ..security import ServiceError
+        version = read_version(matter_id,version_id,actor,db)
+        original = read_original(matter_id,version_id,actor,db)
+        result = _parse(original,version,configured_database(db).settings)
+        if expected != result:
+>           raise ServiceError('VERSION_CONFLICT',409)
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\facts\storage.py:91: ServiceError
+_ test_scope_presentation_keeps_audience_and_source_boundaries[counterparty] __
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-517/test_scope_presentation_keeps_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DACBABEDB0>
+audience = 'counterparty'
+
+    @pytest.mark.parametrize('audience', ['client', 'internal', 'counterparty'])
+    def test_scope_presentation_keeps_audience_and_source_boundaries(tmp_path, monkeypatch, audience):
+        world = setup(tmp_path)
+        database, actor, _, _, _, parsed, run = world
+        # Simulates the automatic parser's inventory, not an OCR or legal quality test.
+        inventory = parsed.model_copy(update={
+            'parts': tuple(f'page:{p}:unsupported' for p in range(1, 49)),
+            'pages': tuple(range(1, 49)),
+            'unsupported_parts': tuple(f'page:{p}' for p in range(1, 49)),
+            'quality_issues': tuple(f'OCR_NOT_DEPLOYED:page:{p}' for p in range(1, 49)) + ('UNKNOWN_DIAGNOSTIC',),
+        })
+        monkeypatch.setattr(importlib.import_module('cn_contract.documents.ingest'), '_parse', lambda *args: inventory)
+>       bundle = package(world, audience)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_client_scope.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\helpers\synthetic_exports.py:87: in package
+    return api().prepare_exports(run,audience,patches or [],actor,db=db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\exports\approvals.py:104: in prepare_exports
+    run=s.load_run(run,actor,db)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\exports\storage.py:94: in load_run
+    actual=read_run(run.matter_id,run.id,actor,db=db,current=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\review\storage.py:106: in read_run
+    state=current_manifest(ctx,actor,db,json.loads(row.config_json),allow_finished=True)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\review\workflow.py:74: in current_manifest
+    parsed=trusted_parse(matter.id,actual.id,actor,db,parsed)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+matter_id = UUID('e99fbbbb-1a9f-4c0c-bffa-e9acbdbf9065')
+version_id = UUID('b9fd2986-965b-4d93-824c-c45b003d23f9')
+actor = Actor(user_id=UUID('8bab6748-a3b9-457e-9b07-c8b040733ad4'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('73de5343-1e75-438f-98ab-7407f71760db'))
+db = <sqlalchemy.orm.session.Session object at 0x000001DACB8F4CE0>
+expected = ParseResult(version_id=UUID('b9fd2986-965b-4d93-824c-c45b003d23f9'), anchors=(Anchor(id=UUID('9ec8f62a-4cde-5047-aeec-...s].xml:metadata_read', '_rels/.rels:metadata_read', 'word/document.xml:read'), unsupported_parts=(), quality_issues=())
+
+    def trusted_parse(matter_id, version_id, actor, db, expected):
+        """Reconstruct complete provenance from immutable bytes, without saving parses.
+    
+        T02's upload-authorized parse storage is an append-only record, not a proof
+        that its content came from the parser. The T03 pure adapter dispatcher is
+        reused here; all original reads still cross T02's real authorization gate.
+        """
+        from ..documents.ingest import _parse
+        from ..persistence import read_version, read_original
+        from ..security import ServiceError
+        version = read_version(matter_id,version_id,actor,db)
+        original = read_original(matter_id,version_id,actor,db)
+        result = _parse(original,version,configured_database(db).settings)
+        if expected != result:
+>           raise ServiceError('VERSION_CONFLICT',409)
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\facts\storage.py:91: ServiceError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_client_scope.py::test_page_ranges_preserve_gaps[pages0-]
+FAILED tests/integration/test_client_scope.py::test_page_ranges_preserve_gaps[pages1-1]
+FAILED tests/integration/test_client_scope.py::test_page_ranges_preserve_gaps[pages2-1\u20133\u30015\u30017\u20138]
+FAILED tests/integration/test_client_scope.py::test_page_ranges_preserve_gaps[pages3-1\u201348]
+FAILED tests/integration/test_client_scope.py::test_client_labels_preserve_unknown_diagnostics
+FAILED tests/integration/test_client_scope.py::test_scope_presentation_keeps_audience_and_source_boundaries[client]
+FAILED tests/integration/test_client_scope.py::test_scope_presentation_keeps_audience_and_source_boundaries[internal]
+FAILED tests/integration/test_client_scope.py::test_scope_presentation_keeps_audience_and_source_boundaries[counterparty]
+8 failed in 3.11s

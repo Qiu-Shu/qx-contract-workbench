@@ -1,0 +1,269 @@
+[
+  {
+    "stage": "binding-regression",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/unit/test_mcp_bound_entry.py",
+      "-q",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T21:08:45.304409+00:00",
+    "finished_utc": "2026-10-08T21:08:51.139410+00:00",
+    "seconds": 5.844,
+    "exit_code": 0,
+    "output_sha256": "3ca2f04664e28abb566d4d7674917e06b5e0b3d8ed5609dcf86c0d662c07850c"
+  },
+  {
+    "stage": "bound-entry",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "D:/Documents/ChatGPT/律所项目/src/cn_contract/mcp/bound_entry.py",
+      "--check"
+    ],
+    "started_utc": "2026-10-08T21:13:18.608864+00:00",
+    "finished_utc": "2026-10-08T21:13:18.979323+00:00",
+    "seconds": 0.375,
+    "exit_code": 0,
+    "output_sha256": "f0d6c14f597c9eae6d9a19d2eeb90d81f0e6e741beed64fca29d00e2be9a6384"
+  },
+  {
+    "stage": "dependencies",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pip",
+      "check"
+    ],
+    "started_utc": "2026-10-08T21:07:37.804902+00:00",
+    "finished_utc": "2026-10-08T21:07:38.249109+00:00",
+    "seconds": 0.453,
+    "exit_code": 0,
+    "output_sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf"
+  },
+  {
+    "stage": "generate",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      ".audit-local/client-readability-20261009/generate.py"
+    ],
+    "started_utc": "2026-10-08T21:08:12.108693+00:00",
+    "finished_utc": "2026-10-08T21:08:18.900715+00:00",
+    "seconds": 6.797,
+    "exit_code": 0,
+    "output_sha256": "6d2d6f3407fa0cfa5a8d00ab26b9d1c39456d4a186212d009aaaf4b2f9a6e905"
+  },
+  {
+    "stage": "green",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_client_scope.py",
+      "-q"
+    ],
+    "started_utc": "2026-10-08T21:06:42.609368+00:00",
+    "finished_utc": "2026-10-08T21:06:47.901658+00:00",
+    "seconds": 5.297,
+    "exit_code": 0,
+    "output_sha256": "f2320d29874aeb1bed463056f8040e72cffe4fbf3cd0ff6f6a241506acdff73d"
+  },
+  {
+    "stage": "markers-client",
+    "argv": [
+      "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      ".audit-local/t09_png_marker_diag.py",
+      ".audit-local/t09-word-qa/20261008T210829Z-08265288-c0df-4b9c-a736-bcff893697eb"
+    ],
+    "started_utc": "2026-10-08T21:09:27.956615+00:00",
+    "finished_utc": "2026-10-08T21:09:28.066189+00:00",
+    "seconds": 0.109,
+    "exit_code": 0,
+    "output_sha256": "29823e61ba2fdf85016876e6ee8c0961250b24201a953f84ac41850a6e52baa0"
+  },
+  {
+    "stage": "markers-internal",
+    "argv": [
+      "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      ".audit-local/t09_png_marker_diag.py",
+      ".audit-local/t09-word-qa/20261008T210835Z-bea7ca88-945a-47d9-bf27-a05f16e5b9af"
+    ],
+    "started_utc": "2026-10-08T21:09:28.125220+00:00",
+    "finished_utc": "2026-10-08T21:09:28.245680+00:00",
+    "seconds": 0.125,
+    "exit_code": 0,
+    "output_sha256": "d3f58c9b04b899030fffe7169ae443d1b477e5a362e27898cba575d6a634b9e5"
+  },
+  {
+    "stage": "red-corrected",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_client_scope.py",
+      "-q"
+    ],
+    "started_utc": "2026-10-08T21:05:52.373375+00:00",
+    "finished_utc": "2026-10-08T21:05:56.119309+00:00",
+    "seconds": 3.75,
+    "exit_code": 1,
+    "output_sha256": "ad0ddf85f558865d095544ab06e5a4c488b84445be11d47ee6e79e9aaaa85ff4"
+  },
+  {
+    "stage": "red-final",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_client_scope.py",
+      "-q"
+    ],
+    "started_utc": "2026-10-08T21:06:37.233677+00:00",
+    "finished_utc": "2026-10-08T21:06:42.203489+00:00",
+    "seconds": 4.969,
+    "exit_code": 1,
+    "output_sha256": "3ed5941df22efb73d19f3d5d04a424f07876a7557f6c03ba137afb088975e9eb"
+  },
+  {
+    "stage": "red-valid",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_client_scope.py",
+      "-q"
+    ],
+    "started_utc": "2026-10-08T21:06:06.831271+00:00",
+    "finished_utc": "2026-10-08T21:06:11.903012+00:00",
+    "seconds": 5.078,
+    "exit_code": 1,
+    "output_sha256": "5476691d7f30800a1fe2885f8eec4003782f8f439950fe376edfe2291180ab0f"
+  },
+  {
+    "stage": "red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_client_scope.py",
+      "-q"
+    ],
+    "started_utc": "2026-10-08T21:05:43.222814+00:00",
+    "finished_utc": "2026-10-08T21:05:47.097124+00:00",
+    "seconds": 3.875,
+    "exit_code": 1,
+    "output_sha256": "53224efb78af45335e230a392b430ad7ace7eebefa068f52d05ffcd22ef25e2f"
+  },
+  {
+    "stage": "related",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/integration/test_client_scope.py",
+      "tests/integration/test_exports.py",
+      "tests/integration/test_decision_exports.py",
+      "tests/integration/test_pdf_proofreading.py",
+      "tests/integration/test_assisted_confirmation.py",
+      "-q"
+    ],
+    "started_utc": "2026-10-08T21:06:55.289181+00:00",
+    "finished_utc": "2026-10-08T21:12:40.823511+00:00",
+    "seconds": 345.547,
+    "exit_code": 0,
+    "output_sha256": "4babe94ba01dbf948c7f3f573889de9b4a2d95dbda95dd2a55a2857be48c69de"
+  },
+  {
+    "stage": "render-pages",
+    "argv": [
+      "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      ".audit-local/t09_render_pdf_pages.py",
+      "20261008T210829Z-08265288-c0df-4b9c-a736-bcff893697eb",
+      "20261008T210835Z-bea7ca88-945a-47d9-bf27-a05f16e5b9af"
+    ],
+    "started_utc": "2026-10-08T21:09:05.771979+00:00",
+    "finished_utc": "2026-10-08T21:09:07.660884+00:00",
+    "seconds": 1.89,
+    "exit_code": 0,
+    "output_sha256": "9dfa05ff7a735cd760fefaff06b7abf5177ce1ddd80bd5a4e0cb18fd8cb98a56"
+  },
+  {
+    "stage": "seal-diagnosis",
+    "argv": [
+      "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      ".audit-local/client-readability-20261009/seal.py"
+    ],
+    "started_utc": "2026-10-08T21:10:21.756157+00:00",
+    "finished_utc": "2026-10-08T21:10:22.055506+00:00",
+    "seconds": 0.297,
+    "exit_code": 1,
+    "output_sha256": "b01e072b7068310e8a44394ea8f143974c2cbbcb222b8675b831b885d6115b65"
+  },
+  {
+    "stage": "seal-final",
+    "argv": [
+      "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      ".audit-local/client-readability-20261009/seal.py"
+    ],
+    "started_utc": "2026-10-08T21:10:38.943278+00:00",
+    "finished_utc": "2026-10-08T21:10:39.274499+00:00",
+    "seconds": 0.329,
+    "exit_code": 1,
+    "output_sha256": "3c7adb889b15d66055f9875089be9455f09db1ca43a4665e602fde1a14772458"
+  },
+  {
+    "stage": "seal-verified",
+    "argv": [
+      "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      ".audit-local/client-readability-20261009/seal.py"
+    ],
+    "started_utc": "2026-10-08T21:11:18.678147+00:00",
+    "finished_utc": "2026-10-08T21:11:19.364030+00:00",
+    "seconds": 0.687,
+    "exit_code": 0,
+    "output_sha256": "61f26ac286e01b371afb0061d48288bb291b0f8e009eaef88ec0dbeea57c7a7d"
+  },
+  {
+    "stage": "seal",
+    "argv": [
+      "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      ".audit-local/client-readability-20261009/seal.py"
+    ],
+    "started_utc": "2026-10-08T21:10:07.071940+00:00",
+    "finished_utc": "2026-10-08T21:10:07.391105+00:00",
+    "seconds": 0.313,
+    "exit_code": 1,
+    "output_sha256": "28a6d84d386434aa823f18468828ac5794310d143e5f51aca4177f37019e5aae"
+  },
+  {
+    "stage": "word-client",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      ".audit-local/t09_word_driver.py",
+      ".audit-local/client-readability-20261009/client.docx"
+    ],
+    "started_utc": "2026-10-08T21:08:29.040192+00:00",
+    "finished_utc": "2026-10-08T21:08:35.624026+00:00",
+    "seconds": 6.594,
+    "exit_code": 0,
+    "output_sha256": "8f3032428a7478167f58057fc43a52616f7a9b0bceb765666e9b1b92f944435f"
+  },
+  {
+    "stage": "word-internal",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      ".audit-local/t09_word_driver.py",
+      ".audit-local/client-readability-20261009/internal.docx"
+    ],
+    "started_utc": "2026-10-08T21:08:35.675290+00:00",
+    "finished_utc": "2026-10-08T21:08:42.559379+00:00",
+    "seconds": 6.89,
+    "exit_code": 0,
+    "output_sha256": "d4f4e3b9f5bac6509e80fc83ccc9b59eb5778d7a04813bdb8ba84e4444163991"
+  }
+]
