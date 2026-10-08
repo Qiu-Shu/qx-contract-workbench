@@ -1,0 +1,20 @@
+{
+  "stage": "related",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_local_workbench.py",
+    "tests/integration/test_api.py",
+    "tests/integration/test_api_query_jobs.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T21:44:12.623944+00:00",
+  "finished_utc": "2026-10-08T21:44:37.657458+00:00",
+  "seconds": 25.031,
+  "exit_code": 0,
+  "output_sha256": "53ce10a46374a3c8ffbde925099ee42f033a66202cc6e88efd508574d2841139"
+}

@@ -10,6 +10,7 @@ from hashlib import sha256
 from io import BytesIO
 import json
 from pathlib import Path
+import re
 import stat
 from unicodedata import category
 from uuid import NAMESPACE_URL, UUID, uuid5
@@ -130,19 +131,67 @@ def deepseek_offline_example(fixture: McpOfflineFixture, operation: DeepSeekOper
         raise MCPError(code=INVALID_PARAMS, message=_UNAVAILABLE) from None
 
 
-def _finite_tool_metadata(metadata, *, allow_thread_id=False) -> bool:
-    """Local profile: bounded progress token and call-only canonical thread UUID.
+def _bounded_turn_metadata(value) -> bool:
+    """Opaque Codex telemetry, discarded before handlers; never identity/approval.
 
-    The low-level callbacks never pass metadata to a business handler or emit
-    progress notifications. A thread UUID is inert host metadata, not identity
-    or approval. Tokens are opaque integers or bounded strict UTF-8 strings;
-    controls and all other MCP metadata stay closed. Strings stay unnormalized.
+    Codex permits client-specific keys inside this object. Bound the whole tree
+    instead of interpreting those keys or retaining workspace paths/remote URLs.
     """
+    remaining = 256
+
+    def finite(node, depth=0):
+        nonlocal remaining
+        remaining -= 1
+        if remaining < 0 or depth > 4:
+            return False
+        if type(node) is dict:
+            return len(node) <= 64 and all(type(k) is str and finite(k, depth + 1)
+                and finite(v, depth + 1) for k, v in node.items())
+        if type(node) is list:
+            return len(node) <= 64 and all(finite(v, depth + 1) for v in node)
+        if type(node) is str:
+            return len(node) <= 2048 and not any(category(c) in ('Cc', 'Cf') for c in node)
+        return node is None or type(node) is bool or (type(node) is int and -(2**63) <= node < 2**63)
+
+    if type(value) is not dict or not finite(value):
+        return False
+    try:
+        return len(json.dumps(value, ensure_ascii=False, separators=(',', ':')).encode('utf-8')) <= 8192
+    except (UnicodeEncodeError, ValueError):
+        return False
+
+
+def _finite_tool_metadata(metadata, *, allow_thread_id=False) -> bool:
+    """Finite transport-only profile; callbacks discard all metadata."""
     if type(metadata) is not dict:
         return False
-    allowed = {'progressToken', 'threadId'} if allow_thread_id else {'progressToken'}
+    host_ids = {'callId', 'itemId', 'windowId', 'plugin_id', 'codex_bridge_mcp_call_id'}
+    allowed = {'progressToken', 'traceparent', 'tracestate'}
+    if allow_thread_id:
+        allowed |= host_ids | {'threadId', 'sessionId', 'x-codex-turn-metadata'}
     if metadata.keys() - allowed:
         return False
+    for key in host_ids & metadata.keys():
+        if type(metadata[key]) is not str or not re.fullmatch(r'[A-Za-z0-9_.:/@+\-]{1,256}', metadata[key]):
+            return False
+    if 'x-codex-turn-metadata' in metadata and not _bounded_turn_metadata(metadata['x-codex-turn-metadata']):
+        return False
+    if 'traceparent' in metadata:
+        parent = metadata['traceparent']
+        if type(parent) is not str or not re.fullmatch(r'00-[0-9a-f]{32}-[0-9a-f]{16}-0[01]', parent):
+            return False
+        if parent[3:35] == '0' * 32 or parent[36:52] == '0' * 16:
+            return False
+    if 'tracestate' in metadata:
+        state = metadata['tracestate']
+        if 'traceparent' not in metadata or type(state) is not str or not 1 <= len(state) <= 512:
+            return False
+        members = state.split(',')
+        if len(members) > 32 or len({m.split('=')[0].strip() for m in members}) != len(members):
+            return False
+        if any(not re.fullmatch(r' *[a-z0-9][a-z0-9_*/@.\-]{0,255}=[\x21-\x2b\x2d-\x3c\x3e-\x7e ]{1,256} *', m)
+               for m in members):
+            return False
     if 'progressToken' in metadata:
         token = metadata['progressToken']
         if type(token) is str:
@@ -155,8 +204,8 @@ def _finite_tool_metadata(metadata, *, allow_thread_id=False) -> bool:
                 return False
         elif type(token) is not int or not 0 <= token <= 2**63 - 1:
             return False
-    if 'threadId' in metadata:
-        thread_id = metadata['threadId']
+    for key in {'threadId', 'sessionId'} & metadata.keys():
+        thread_id = metadata[key]
         if type(thread_id) is not str or len(thread_id) != 36:
             return False
         try:
@@ -229,9 +278,8 @@ def create_server() -> MCPServer:
     server = MCPServer('qx-contract-offline', version='0.1.0', tools=tools,
         instructions='OFFLINE_ONLY：仅受控本机虚构示例；未连接ChatGPT，不作法律审查或正式签发。',
         log_level='ERROR')
-    # The documented public list controls the complete chain. This tiny surface
-    # supports no requestState or trace metadata, so neither SDK OTel nor its
-    # request-state middleware is retained; no private manager is patched.
+    # Metadata is checked then discarded, never propagated to SDK telemetry or
+    # request-state middleware. No private SDK manager is patched.
     server.middleware[:] = [_offline_boundary]
     return server
 

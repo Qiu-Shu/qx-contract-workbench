@@ -1,0 +1,11 @@
+.F............                                                           [100%]
+================================== FAILURES ===================================
+__________ test_document_worker_original_and_anchors_survive_restart __________
+tests\integration\test_local_workbench.py:77: in test_document_worker_original_and_anchors_survive_restart
+    assert uploaded.status_code == 202, uploaded.text
+E   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"3ee83e66-46a7-47c9-bb1c-600ac1709ec8","retryable":false}
+E   assert 422 == 202
+E    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/integration/test_local_workbench.py::test_document_worker_original_and_anchors_survive_restart
+1 failed, 13 passed in 3.00s

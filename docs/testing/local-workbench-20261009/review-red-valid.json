@@ -1,0 +1,18 @@
+{
+  "stage": "review-red-valid",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_local_workbench.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T21:42:53.583032+00:00",
+  "finished_utc": "2026-10-08T21:42:59.389950+00:00",
+  "seconds": 5.813,
+  "exit_code": 1,
+  "output_sha256": "217900748acb17d9d2b6188a1ddeceda77b4a5b2f0b59ca734ea07fd2bb08a0d"
+}

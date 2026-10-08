@@ -28,6 +28,12 @@ def build_demo(directory=None,*,purpose='mock_demo',assisted_policy=None):
             users[name]=provision_user(name,DEMO_PASSWORD,{role},db)
     app=create_app(load_settings(),database=database,synthetic_signing_user_ids={users['reviewer']},
         purpose=purpose,assisted_policy=assisted_policy)
+    attach_job_worker(app,database)
+    return app,root
+
+
+def attach_job_worker(app,database,*,shutdown_timeout=10):
+    """Shared single worker lifecycle for explicit local startup paths."""
     stop=Event()
 
     def worker():
@@ -41,11 +47,10 @@ def build_demo(directory=None,*,purpose='mock_demo',assisted_policy=None):
         application.state.worker_thread=thread;thread.start()
         try:yield
         finally:
-            stop.set();thread.join(timeout=10)
+            stop.set();thread.join(timeout=shutdown_timeout)
             if thread.is_alive():raise RuntimeError('worker still running; shutdown incomplete')
             database.engine.dispose()
     app.router.lifespan_context=lifespan
-    return app,root
 
 
 def serve(*,port=8765,directory=None):

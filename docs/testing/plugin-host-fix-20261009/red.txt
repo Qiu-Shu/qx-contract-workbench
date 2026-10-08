@@ -1,0 +1,23 @@
+FF.F                                                                     [100%]
+================================== FAILURES ===================================
+_ test_model_turn_metadata_is_discarded_without_changing_either_tool[required-turn-fields] _
+tests\integration\test_mcp_chat_envelope.py:43: in test_model_turn_metadata_is_discarded_without_changing_either_tool
+    assert 'result' in actual, actual
+E   AssertionError: {'error': {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}, 'id': 3, 'jsonrpc': '2.0'}
+E   assert 'result' in {'error': {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}, 'id': 3, 'jsonrpc': '2.0'}
+_ test_model_turn_metadata_is_discarded_without_changing_either_tool[complete-turn-envelope] _
+tests\integration\test_mcp_chat_envelope.py:43: in test_model_turn_metadata_is_discarded_without_changing_either_tool
+    assert 'result' in actual, actual
+E   AssertionError: {'error': {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}, 'id': 3, 'jsonrpc': '2.0'}
+E   assert 'result' in {'error': {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}, 'id': 3, 'jsonrpc': '2.0'}
+_______ test_malformed_chat_metadata_is_sanitized_and_session_recovers ________
+tests\integration\test_mcp_chat_envelope.py:84: in test_malformed_chat_metadata_is_sanitized_and_session_recovers
+    result = send('tools/call', {'name': 'workbench_status', 'arguments': {},
+tests\helpers\offline_mcp_child.py:45: in send
+    process.stdin.write(json.dumps(message, ensure_ascii=False) + '\n')
+E   UnicodeEncodeError: 'utf-8' codec can't encode character '\ud800' in position 143: surrogates not allowed
+=========================== short test summary info ===========================
+FAILED tests/integration/test_mcp_chat_envelope.py::test_model_turn_metadata_is_discarded_without_changing_either_tool[required-turn-fields]
+FAILED tests/integration/test_mcp_chat_envelope.py::test_model_turn_metadata_is_discarded_without_changing_either_tool[complete-turn-envelope]
+FAILED tests/integration/test_mcp_chat_envelope.py::test_malformed_chat_metadata_is_sanitized_and_session_recovers
+3 failed, 1 passed in 4.60s

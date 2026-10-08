@@ -1,0 +1,19 @@
+{
+  "stage": "red-valid",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_mcp_chat_envelope.py",
+    "tests/unit/test_mcp_chat_metadata.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T21:30:08.129111+00:00",
+  "finished_utc": "2026-10-08T21:30:14.188836+00:00",
+  "seconds": 6.062,
+  "exit_code": 1,
+  "output_sha256": "74d6bd27cb3f2b16d88fe16b8ae1aef272c69e595ebd2ca22c44ca1866eab166"
+}

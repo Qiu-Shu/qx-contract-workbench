@@ -1,0 +1,22 @@
+FF.F....                                                                 [100%]
+================================== FAILURES ===================================
+_ test_model_turn_metadata_is_discarded_without_changing_either_tool[required-turn-fields] _
+tests\integration\test_mcp_chat_envelope.py:43: in test_model_turn_metadata_is_discarded_without_changing_either_tool
+    assert 'result' in actual, actual
+E   AssertionError: {'error': {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}, 'id': 3, 'jsonrpc': '2.0'}
+E   assert 'result' in {'error': {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}, 'id': 3, 'jsonrpc': '2.0'}
+_ test_model_turn_metadata_is_discarded_without_changing_either_tool[complete-turn-envelope] _
+tests\integration\test_mcp_chat_envelope.py:43: in test_model_turn_metadata_is_discarded_without_changing_either_tool
+    assert 'result' in actual, actual
+E   AssertionError: {'error': {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}, 'id': 3, 'jsonrpc': '2.0'}
+E   assert 'result' in {'error': {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}, 'id': 3, 'jsonrpc': '2.0'}
+_______ test_malformed_chat_metadata_is_sanitized_and_session_recovers ________
+tests\integration\test_mcp_chat_envelope.py:87: in test_malformed_chat_metadata_is_sanitized_and_session_recovers
+    assert 'result' in send('tools/call', {'name': 'workbench_status', 'arguments': {},
+E   AssertionError: assert 'result' in {'error': {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}, 'id': 3, 'jsonrpc': '2.0'}
+E    +  where {'error': {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}, 'id': 3, 'jsonrpc': '2.0'} = <function child.<locals>.send at 0x000002A1791D3380>('tools/call', {'_meta': {'callId': 'call_synthetic_1', 'codex_bridge_mcp_call_id': 'mcp-synthetic-1', 'itemId': 'item_synthetic_1', 'plugin_id': 'qx-contract-offline-codex@qx-contract-local', ...}, 'arguments': {}, 'name': 'workbench_status'}, request_id=3)
+=========================== short test summary info ===========================
+FAILED tests/integration/test_mcp_chat_envelope.py::test_model_turn_metadata_is_discarded_without_changing_either_tool[required-turn-fields]
+FAILED tests/integration/test_mcp_chat_envelope.py::test_model_turn_metadata_is_discarded_without_changing_either_tool[complete-turn-envelope]
+FAILED tests/integration/test_mcp_chat_envelope.py::test_malformed_chat_metadata_is_sanitized_and_session_recovers
+3 failed, 5 passed in 5.51s

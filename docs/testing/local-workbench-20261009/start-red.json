@@ -1,0 +1,20 @@
+{
+  "stage": "start-red",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_local_workbench.py",
+    "-k",
+    "start_prompts",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T21:45:30.190962+00:00",
+  "finished_utc": "2026-10-08T21:45:32.091368+00:00",
+  "seconds": 1.907,
+  "exit_code": 1,
+  "output_sha256": "33e974a583a49848bb293fa4ac7e6f7da7a699b19d1e26c791b953fa4182ead3"
+}

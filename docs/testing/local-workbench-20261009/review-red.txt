@@ -1,0 +1,29 @@
+..............FFFF                                                       [100%]
+================================== FAILURES ===================================
+_______ test_corrupt_or_replaced_database_never_rebuilt_on_start[empty] _______
+tests\integration\test_local_workbench.py:205: in test_corrupt_or_replaced_database_never_rebuilt_on_start
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+___ test_corrupt_or_replaced_database_never_rebuilt_on_start[missing-table] ___
+tests\integration\test_local_workbench.py:199: in test_corrupt_or_replaced_database_never_rebuilt_on_start
+    db.execute('DROP TABLE http_writes')
+E   sqlite3.OperationalError: no such table: http_writes
+_ test_corrupt_or_replaced_database_never_rebuilt_on_start[different-workspace] _
+tests\integration\test_local_workbench.py:205: in test_corrupt_or_replaced_database_never_rebuilt_on_start
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+___________ test_shutdown_retains_lock_until_active_worker_finishes ___________
+tests\integration\test_local_workbench.py:244: in test_shutdown_retains_lock_until_active_worker_finishes
+    assert not exited.wait(.1), 'host exited while its worker was still running'
+E   AssertionError: host exited while its worker was still running
+E   assert not True
+E    +  where True = wait(0.1)
+E    +    where wait = <threading.Event at 0x1edc7aead20: set>.wait
+=========================== short test summary info ===========================
+FAILED tests/integration/test_local_workbench.py::test_corrupt_or_replaced_database_never_rebuilt_on_start[empty]
+FAILED tests/integration/test_local_workbench.py::test_corrupt_or_replaced_database_never_rebuilt_on_start[missing-table]
+FAILED tests/integration/test_local_workbench.py::test_corrupt_or_replaced_database_never_rebuilt_on_start[different-workspace]
+FAILED tests/integration/test_local_workbench.py::test_shutdown_retains_lock_until_active_worker_finishes
+4 failed, 14 passed in 5.19s

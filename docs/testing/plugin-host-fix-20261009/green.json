@@ -1,0 +1,19 @@
+{
+  "stage": "green",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_mcp_chat_envelope.py",
+    "tests/unit/test_mcp_chat_metadata.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T21:30:46.866448+00:00",
+  "finished_utc": "2026-10-08T21:30:52.939383+00:00",
+  "seconds": 6.078,
+  "exit_code": 0,
+  "output_sha256": "8571cd8a419cce797959b5983d248a0b45628b42920b998ceff291c42644f1ab"
+}

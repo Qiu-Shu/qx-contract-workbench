@@ -1,0 +1,26 @@
+{
+  "stage": "regression",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/unit/test_mcp_offline.py",
+    "tests/unit/test_mcp_progress_unicode.py",
+    "tests/unit/test_mcp_bound_entry.py",
+    "tests/unit/test_mcp_chat_metadata.py",
+    "tests/integration/test_mcp_chat_envelope.py",
+    "tests/integration/test_mcp_transport.py",
+    "tests/integration/test_mcp_progress_tokens.py",
+    "tests/integration/test_mcp_offline_stdio.py",
+    "tests/integration/test_mcp_host_metadata.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T21:31:24.700114+00:00",
+  "finished_utc": "2026-10-08T21:32:34.306221+00:00",
+  "seconds": 69.609,
+  "exit_code": 0,
+  "output_sha256": "ce50ea1e61494867a48142e3cf2fb6640d686b7bfc611e34de06bfb78a431dc8"
+}

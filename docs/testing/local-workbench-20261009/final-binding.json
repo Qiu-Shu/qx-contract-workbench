@@ -1,0 +1,20 @@
+{
+  "stage": "final-binding",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/unit/test_mcp_bound_entry.py",
+    "tests/unit/test_mcp_chat_metadata.py",
+    "tests/integration/test_mcp_chat_envelope.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T21:47:59.092685+00:00",
+  "finished_utc": "2026-10-08T21:48:09.369801+00:00",
+  "seconds": 10.281,
+  "exit_code": 0,
+  "output_sha256": "949a961c5891b1c51c7934a74f0960007369837ffdd7ad0c642da239d18504dc"
+}

@@ -1,0 +1,45 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_start_prompts_once_then_reopens_without_password_reset _________
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\argparse.py:1943: in _parse_known_args2
+    namespace, args = self._parse_known_args(args, namespace, intermixed)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\argparse.py:2165: in _parse_known_args
+    positionals_end_index = consume_positionals(start_index)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\argparse.py:2141: in consume_positionals
+    take_action(action, args)
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\argparse.py:2003: in take_action
+    argument_values = self._get_values(action, argument_strings)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\argparse.py:2523: in _get_values
+    self._check_value(action, value[0])
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\argparse.py:2573: in _check_value
+    raise ArgumentError(action, msg % args)
+E   argparse.ArgumentError: argument command: invalid choice: 'start' (choose from init, add-user, serve)
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_local_workbench.py:270: in test_start_prompts_once_then_reopens_without_password_reset
+    assert module.main(['start', '--directory', str(root)]) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:210: in main
+    args = parser.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\argparse.py:1904: in parse_args
+    args, argv = self.parse_known_args(args, namespace)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\argparse.py:1914: in parse_known_args
+    return self._parse_known_args2(args, namespace, intermixed=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\argparse.py:1945: in _parse_known_args2
+    self.error(str(err))
+src\cn_contract\web\local_server.py:195: in error
+    self.exit(2, '参数无效；使用 --help，密码仅在本机隐藏输入。\n')
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\argparse.py:2637: in exit
+    _sys.exit(status)
+E   SystemExit: 2
+---------------------------- Captured stderr call -----------------------------
+参数无效；使用 --help，密码仅在本机隐藏输入。
+=========================== short test summary info ===========================
+FAILED tests/integration/test_local_workbench.py::test_start_prompts_once_then_reopens_without_password_reset
+1 failed, 18 deselected in 1.23s

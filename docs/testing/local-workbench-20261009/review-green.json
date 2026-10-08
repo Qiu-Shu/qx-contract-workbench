@@ -1,0 +1,18 @@
+{
+  "stage": "review-green",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_local_workbench.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T21:43:26.756866+00:00",
+  "finished_utc": "2026-10-08T21:43:32.773455+00:00",
+  "seconds": 6.016,
+  "exit_code": 0,
+  "output_sha256": "cb0e65b1fa4259a85176c9be7227bc007599b92dc4e0dd4106144506ef0897c9"
+}

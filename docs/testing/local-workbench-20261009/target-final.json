@@ -1,0 +1,18 @@
+{
+  "stage": "target-final",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_local_workbench.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-08T21:40:11.359928+00:00",
+  "finished_utc": "2026-10-08T21:40:15.233780+00:00",
+  "seconds": 3.875,
+  "exit_code": 1,
+  "output_sha256": "cd506f3bfafaf9b3be6d369e1796a17adb9e4c10c4f5e991b0c80644e418e8cb"
+}
