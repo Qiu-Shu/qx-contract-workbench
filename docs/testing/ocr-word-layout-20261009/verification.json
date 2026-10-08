@@ -1,0 +1,148 @@
+{
+  "checked_utc": "2026-10-08T20:56:31.564107+00:00",
+  "status": "NATIVE_WORD_TWO_FICTIONAL_DRAFTS_EIGHT_PAGES_VISUALLY_CHECKED",
+  "records": [
+    {
+      "file": "docs/testing/ocr-quality-20261009/browser-final-draft.docx",
+      "sha256": "79dc9c3146ca52ce180c314681d947d4bb577ac620923bac4c97f1508a71f36d",
+      "pages": 4,
+      "paragraphs_preserved": 34,
+      "table_cells_preserved": 38,
+      "word_version": "16.0",
+      "word_build": "16.0.20430",
+      "original_unchanged": true,
+      "header_footer_all_pages": true,
+      "visual_review": "All four page PNGs opened and inspected; no clipping, overlap, missing Chinese glyphs or broken table observed. Dense diagnostic codes remain a readability limitation."
+    },
+    {
+      "file": "docs/testing/ocr-quality-20261009/browser-manual-draft.docx",
+      "sha256": "e382265658875ba0769233c3dcb56b8c8e1fc9bbe1cf1636e4ae689b56ffc93a",
+      "pages": 4,
+      "paragraphs_preserved": 34,
+      "table_cells_preserved": 38,
+      "word_version": "16.0",
+      "word_build": "16.0.20430",
+      "original_unchanged": true,
+      "header_footer_all_pages": true,
+      "visual_review": "All four page PNGs opened and inspected; no clipping, overlap, missing Chinese glyphs or broken table observed. Dense diagnostic codes remain a readability limitation."
+    }
+  ],
+  "pages_total": 8,
+  "source_docx_edits": 0,
+  "product_code_changes": 0,
+  "new_packages": 0,
+  "real_model_or_qcc_calls": 0,
+  "native_renderer": "installed Microsoft Word; existing T09 isolated read-only helper",
+  "canonical_renderer": "BLOCKED_MISSING_SOFFICE",
+  "receipts": [
+    {
+      "stage": "packaged-renderer",
+      "argv": [
+        "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "-X",
+        "utf8",
+        "C:/Users/Administrator/.codex/plugins/cache/openai-primary-runtime/documents/26.1007.11041/skills/documents/render_docx.py",
+        "docs/testing/ocr-quality-20261009/browser-final-draft.docx",
+        "--output_dir",
+        ".audit-local/word-layout-20261009/packaged",
+        "--verbose"
+      ],
+      "started_utc": "2026-10-08T20:53:59.774777+00:00",
+      "finished_utc": "2026-10-08T20:53:59.862803+00:00",
+      "seconds": 0.078,
+      "exit_code": 1,
+      "output_sha256": "52bd5632fd543565c0f36ee281898a1665202c8eeb2205fbe7c488271404a241"
+    },
+    {
+      "stage": "native-final",
+      "argv": [
+        "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "-X",
+        "utf8",
+        ".audit-local/t09_word_driver.py",
+        "docs/testing/ocr-quality-20261009/browser-final-draft.docx"
+      ],
+      "started_utc": "2026-10-08T20:54:00.105337+00:00",
+      "finished_utc": "2026-10-08T20:54:00.162796+00:00",
+      "seconds": 0.047,
+      "exit_code": 1,
+      "output_sha256": "e81a9135106f67d53248e26a8290ddc56dc359ffcf7cfbcd5a21d92ba3369003"
+    },
+    {
+      "stage": "native-final-retry",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        ".audit-local/t09_word_driver.py",
+        "docs/testing/ocr-quality-20261009/browser-final-draft.docx"
+      ],
+      "started_utc": "2026-10-08T20:54:10.457331+00:00",
+      "finished_utc": "2026-10-08T20:54:18.261138+00:00",
+      "seconds": 7.813,
+      "exit_code": 0,
+      "output_sha256": "0ab48f514345d4fb84368bab6048e8a1448ed0b4c21fac88aeba6013e6ebec2e"
+    },
+    {
+      "stage": "native-manual",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        ".audit-local/t09_word_driver.py",
+        "docs/testing/ocr-quality-20261009/browser-manual-draft.docx"
+      ],
+      "started_utc": "2026-10-08T20:54:22.087553+00:00",
+      "finished_utc": "2026-10-08T20:54:28.585648+00:00",
+      "seconds": 6.484,
+      "exit_code": 0,
+      "output_sha256": "a0251ec06b52513dacf463660e9120039ed555c0f56ff716c555803090db8c76"
+    },
+    {
+      "stage": "rasterize",
+      "argv": [
+        "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "-X",
+        "utf8",
+        ".audit-local/t09_render_pdf_pages.py",
+        "20261008T205410Z-c32c37e7-0505-4324-991c-07ddd9442bab",
+        "20261008T205422Z-c5c17718-6035-4216-a105-16f28bfd79c7"
+      ],
+      "started_utc": "2026-10-08T20:54:33.565596+00:00",
+      "finished_utc": "2026-10-08T20:54:35.786547+00:00",
+      "seconds": 2.219,
+      "exit_code": 0,
+      "output_sha256": "25b49fccd5d83cab1453646d23cc4fa7c677c755dfab5b4880fe66685ce1494f"
+    },
+    {
+      "stage": "markers-final",
+      "argv": [
+        "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "-X",
+        "utf8",
+        ".audit-local/t09_png_marker_diag.py",
+        ".audit-local/t09-word-qa/20261008T205410Z-c32c37e7-0505-4324-991c-07ddd9442bab"
+      ],
+      "started_utc": "2026-10-08T20:55:38.458831+00:00",
+      "finished_utc": "2026-10-08T20:55:38.590940+00:00",
+      "seconds": 0.141,
+      "exit_code": 0,
+      "output_sha256": "d3f58c9b04b899030fffe7169ae443d1b477e5a362e27898cba575d6a634b9e5"
+    },
+    {
+      "stage": "markers-manual",
+      "argv": [
+        "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "-X",
+        "utf8",
+        ".audit-local/t09_png_marker_diag.py",
+        ".audit-local/t09-word-qa/20261008T205422Z-c5c17718-6035-4216-a105-16f28bfd79c7"
+      ],
+      "started_utc": "2026-10-08T20:55:38.458831+00:00",
+      "finished_utc": "2026-10-08T20:55:38.590940+00:00",
+      "seconds": 0.141,
+      "exit_code": 0,
+      "output_sha256": "d3f58c9b04b899030fffe7169ae443d1b477e5a362e27898cba575d6a634b9e5"
+    }
+  ]
+}
