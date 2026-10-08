@@ -1,5 +1,5 @@
 """Explicit 48-page LOCAL synthetic engineering observation, never legal gold."""
-import argparse,hashlib,json,time
+import argparse,hashlib,json,re,time
 from datetime import datetime,timezone
 from io import BytesIO
 from pathlib import Path
@@ -52,6 +52,19 @@ def generate(destination):
     return manifest
 
 
+def critical_fields_match(recognized, expected_fields):
+    """Fixed-fixture field check, not full-text or legal accuracy evaluation."""
+    blocks=[recognized] if isinstance(recognized,str) else recognized
+    recognized='\n'.join(''.join(block.split()) for block in blocks)
+    for expected in expected_fields:
+        field=''.join(expected.split())
+        if any(ch.isdecimal() for ch in field):
+            # A substring of a longer, signed or fractional value is not a match.
+            if not re.search(r'(?<![\d.,+\-])'+re.escape(field)+r'(?![\d.,]|-\d)',recognized):return False
+        elif field not in recognized:return False
+    return True
+
+
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--output',type=Path,required=True);parser.add_argument('--generate-only',action='store_true')
     args=parser.parse_args();root=args.output.resolve()
@@ -71,7 +84,7 @@ def main():
             result=run_ocr_page(raw,source.model_dump(mode='python'))
             (root/f"result-{row['page']:02}.json").write_text(result.model_dump_json(indent=2),encoding='utf-8')
             recognized=''.join(''.join(block.raw_text.split()) for block in result.blocks)
-            correct=all(''.join(expected.split()) in recognized for expected in row['expected'])
+            correct=critical_fields_match([block.raw_text for block in result.blocks],row['expected'])
             observation.update(status='CORRECT' if correct else 'INCORRECT_CANDIDATE',recognized=recognized,blocks=len(result.blocks))
         except ServiceError as error:observation.update(status='BLOCKED',code=error.code)
         except Exception as error:observation.update(status='ERROR',error_type=type(error).__name__)

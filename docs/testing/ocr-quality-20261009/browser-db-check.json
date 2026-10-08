@@ -1,0 +1,257 @@
+{
+  "old_download_service": {
+    "code": "VERSION_CONFLICT",
+    "status": 409
+  },
+  "new_download_matches_browser": true,
+  "candidate_source_link_verified": true,
+  "candidate_blocks_unverified": true,
+  "counts": {
+    "users": 4,
+    "matters": 1,
+    "audit_events": 34,
+    "provider_records": 0,
+    "sessions": 1,
+    "matter_memberships": 1,
+    "document_versions": 1,
+    "fact_snapshots": 5,
+    "approvals": 0,
+    "party_snapshots": 0,
+    "authority_snapshots": 0,
+    "rule_manager_grants": 0,
+    "rule_snapshots": 14,
+    "policy_snapshots": 1,
+    "review_runs": 2,
+    "review_operation_records": 0,
+    "query_plan_versions": 0,
+    "query_records": 0,
+    "export_records": 6,
+    "web_http_writes": 14,
+    "parse_snapshots": 1,
+    "exports": 2,
+    "fact_decisions": 3,
+    "party_decisions": 0,
+    "source_attestations": 0,
+    "source_evidence": 0,
+    "rule_approvals": 0,
+    "rule_invalidations": 0,
+    "policy_approvals": 0,
+    "review_proposals": 2,
+    "web_finding_decisions": 2,
+    "review_model_attempts": 0,
+    "review_operation_attempts": 0,
+    "query_ledger": 0,
+    "web_jobs": 1,
+    "authority_verifications": 0,
+    "web_job_events": 3,
+    "ops_restore_fences": 0,
+    "ops_file_relocations": 0,
+    "page_verifications": 2,
+    "ocr_candidates": 1
+  },
+  "sources": [
+    {
+      "id": "57f1008a-cc9c-46ed-a70d-37a1cfdc3f40",
+      "matter_id": "95701fd1-d2fb-4f39-9540-81bdd5d12e64",
+      "fact_id": "6017f60b-0d61-4851-933a-6c6b17e6c8af",
+      "actor_id": "a7980ddc-70c9-4181-a7e2-b30359d8b430",
+      "created_at": "2026-10-08T19:31:35.416403Z",
+      "input": {
+        "document_version_id": "31737ca1-165c-40c8-b6c7-68ca13947675",
+        "document_sha256": "017866f3c56b2fad241fc048e6440e30314db41bef53391eabd7bc706117ae9b",
+        "fact_version": 1,
+        "page": 1,
+        "source_kind": "lawyer_transcription",
+        "observed_text": "不得自动验收 2026-10-10",
+        "field": "other_literal",
+        "typed_value": {
+          "kind": "text",
+          "value": "不得自动验收"
+        },
+        "unit": null,
+        "reason": "独立虚构界面验收：对照第1页可见否定词，人工转录，不作真实法律确认",
+        "original_page_checked": true,
+        "previous_id": null,
+        "candidate_id": null,
+        "candidate_sha256": null
+      },
+      "sha256": "939b9e605a68ca54e875a14036e2f70cd6203abc7d8464a18a9a733b05067b0c"
+    },
+    {
+      "id": "b17b8fc7-825b-4021-93da-a8a2fb5d94ee",
+      "matter_id": "95701fd1-d2fb-4f39-9540-81bdd5d12e64",
+      "fact_id": "497b7d17-7c3b-4ca6-8963-258f6108654a",
+      "actor_id": "a7980ddc-70c9-4181-a7e2-b30359d8b430",
+      "created_at": "2026-10-08T19:46:58.954503Z",
+      "input": {
+        "document_version_id": "31737ca1-165c-40c8-b6c7-68ca13947675",
+        "document_sha256": "017866f3c56b2fad241fc048e6440e30314db41bef53391eabd7bc706117ae9b",
+        "fact_version": 3,
+        "page": 1,
+        "source_kind": "visible_original",
+        "observed_text": "价款28473元",
+        "field": "total_price",
+        "typed_value": {
+          "kind": "decimal",
+          "value": "28473"
+        },
+        "unit": "元",
+        "reason": "仅独立虚构工程验收；已对照第1页金额，关联本机实际OCR原始候选，不表示法律验收。",
+        "original_page_checked": true,
+        "previous_id": null,
+        "candidate_id": "d8a0da4a-d2a8-4738-8c1b-b5c3b4e9d2f4",
+        "candidate_sha256": "26b10c7712eaf10e5b1649b533868790944353b0efb251e6d2ef74676696c20d"
+      },
+      "sha256": "3618c05276987fd3f8dca3358d3567871d56562bf04fb999ed945b1c87224a1e"
+    }
+  ],
+  "candidates": [
+    {
+      "matter_id": "95701fd1-d2fb-4f39-9540-81bdd5d12e64",
+      "actor_id": "a7980ddc-70c9-4181-a7e2-b30359d8b430",
+      "result": {
+        "id": "d8a0da4a-d2a8-4738-8c1b-b5c3b4e9d2f4",
+        "source": {
+          "document_version_id": "31737ca1-165c-40c8-b6c7-68ca13947675",
+          "document_sha256": "017866f3c56b2fad241fc048e6440e30314db41bef53391eabd7bc706117ae9b",
+          "page": 1,
+          "page_width_points": 600.0,
+          "page_height_points": 200.0,
+          "bitmap_width": 2400,
+          "bitmap_height": 800,
+          "bitmap_sha256": "fdcf813d8e0020e82039970e3e00129446b98a261e13c654687304262ad70909",
+          "coordinate_space": "rendered_page_top_left"
+        },
+        "created_at": "2026-10-08T19:43:39.672814Z",
+        "engine": "PaddleOCR-3.7.0/PaddleX-3.7.0/PaddlePaddle-3.3.0-CPU",
+        "asset_manifest_sha256": "f64178ccbd67fc75c6757ff0185fb6d672b97c17028fb26218a049a73105a73b",
+        "raw_output_sha256": "92ecc4bef3c64bd5cdea64ea8e53d6806fdad326314180407cad87235ec5752c",
+        "blocks": [
+          {
+            "raw_text": "独立虚构材料1",
+            "polygon": [
+              [
+                45.0,
+                41.0
+              ],
+              [
+                615.0,
+                39.0
+              ],
+              [
+                615.0,
+                150.0
+              ],
+              [
+                45.0,
+                152.0
+              ]
+            ],
+            "confidence": 0.9902378916740417,
+            "alternatives": [],
+            "verification_state": "unverified"
+          },
+          {
+            "raw_text": "价款28473元",
+            "polygon": [
+              [
+                46.0,
+                232.0
+              ],
+              [
+                591.0,
+                232.0
+              ],
+              [
+                591.0,
+                343.0
+              ],
+              [
+                46.0,
+                343.0
+              ]
+            ],
+            "confidence": 0.9989014863967896,
+            "alternatives": [],
+            "verification_state": "unverified"
+          },
+          {
+            "raw_text": "不得自动验收2026-10-10",
+            "polygon": [
+              [
+                45.0,
+                443.0
+              ],
+              [
+                1012.0,
+                439.0
+              ],
+              [
+                1012.0,
+                548.0
+              ],
+              [
+                45.0,
+                552.0
+              ]
+            ],
+            "confidence": 0.9898247122764587,
+            "alternatives": [],
+            "verification_state": "unverified"
+          }
+        ],
+        "bitmap_to_page": [
+          0.25,
+          0.0,
+          0.0,
+          0.25,
+          0.0,
+          0.0
+        ],
+        "reasons": [
+          "OCR_IS_UNVERIFIED",
+          "AMOUNTS_DATES_NEGATIONS_REQUIRE_LAWYER_CHECK"
+        ]
+      },
+      "sha256": "26b10c7712eaf10e5b1649b533868790944353b0efb251e6d2ef74676696c20d"
+    }
+  ],
+  "working_draft_confirmations": [
+    {
+      "acknowledged_unresolved_finding_ids": [],
+      "actor_id": "a7980ddc-70c9-4181-a7e2-b30359d8b430",
+      "artifact_hashes": {
+        "a5c16694-1d1c-491c-8246-2a96b15cd087": "e382265658875ba0769233c3dcb56b8c8e1fc9bbe1cf1636e4ae689b56ffc93a"
+      },
+      "audience": "client",
+      "bundle_id": "cf844c79-d7a4-4d14-bfe7-cf509f218add",
+      "bundle_manifest_sha256": "de0b3856d66625a8dd58b029789a7526e57c2af5473100f978325199f3b8a133",
+      "confirmed_at": "2026-10-08T19:36:57.381424Z",
+      "decision_snapshot_sha256": "43ed0bf199287b574e4fc3a069b5ff8230c3aa8a7bd9a04a9b0775e827febc4c",
+      "formal_signoff": false,
+      "id": "5d76a114-886e-440f-bc53-e53d6c1b0760",
+      "matter_id": "95701fd1-d2fb-4f39-9540-81bdd5d12e64",
+      "purpose": "working_draft",
+      "reason": "虚构工程验收：已读取实际下载DOCX，核对否定词、律师转录标记、来源及限制；仅内容核验，Word视觉版式未验，不作正式签发。",
+      "run_id": "d6d615f2-fd08-4682-86e9-95dc6a67beb3"
+    },
+    {
+      "acknowledged_unresolved_finding_ids": [],
+      "actor_id": "a7980ddc-70c9-4181-a7e2-b30359d8b430",
+      "artifact_hashes": {
+        "08363003-e614-4a6b-8ac2-6353d08d8ea3": "79dc9c3146ca52ce180c314681d947d4bb577ac620923bac4c97f1508a71f36d"
+      },
+      "audience": "client",
+      "bundle_id": "3e4aed9f-8876-4b3b-af73-397fe4b3d0e8",
+      "bundle_manifest_sha256": "a5af002668c4853220e4e71cf6599800967e96717bc7348a510f58d17d0b9fff",
+      "confirmed_at": "2026-10-08T19:49:37.064785Z",
+      "decision_snapshot_sha256": "f623194305412c384e1ba0dd557f3bffcf2efc7c08743e37aed1cfb37dca74a6",
+      "formal_signoff": false,
+      "id": "d147e14d-bc73-4b08-9b88-ac5c5bf2bbf6",
+      "matter_id": "95701fd1-d2fb-4f39-9540-81bdd5d12e64",
+      "purpose": "working_draft",
+      "reason": "已实际下载并读取虚构DOCX，核对28473元、独立来源ID及原件校验值。仅工程内容验收；Word视觉版式未验，真实法律、正式签发未批准。",
+      "run_id": "24d08640-4349-4db5-89e4-f282f5a8ddff"
+    }
+  ]
+}

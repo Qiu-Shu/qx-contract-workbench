@@ -1,0 +1,73 @@
+- banner:
+  - paragraph: 群兴律所
+  - strong: 合同审查工作台
+  - button "退出登录"
+- complementary:
+  - navigation:
+    - link "案件列表":
+      - /url: /
+    - link "接待与文件":
+      - /url: /matters/95701fd1-d2fb-4f39-9540-81bdd5d12e64
+    - link "原文与事实确认":
+      - /url: /matters/95701fd1-d2fb-4f39-9540-81bdd5d12e64/facts
+    - link "18维意见与证据":
+      - /url: /matters/95701fd1-d2fb-4f39-9540-81bdd5d12e64/review
+    - link "查询计划与费用":
+      - /url: /matters/95701fd1-d2fb-4f39-9540-81bdd5d12e64/queries
+    - link "修改预览与签发":
+      - /url: /matters/95701fd1-d2fb-4f39-9540-81bdd5d12e64/exports
+- main:
+  - paragraph: 独立虚构材料 · 离线人工候选 · 真实语言模型推理未运行 · 逐案核对工作稿 · 不能正式签发
+  - heading "20261009独立虚构OCR校对验收" [level=1]
+  - paragraph: 当前阶段：待律师处置 · 签署前 · 事实版本：3
+  - status: 已保存当前工作稿的版本核对记录；内容或处置变化后需要重新生成和核对。
+  - heading "精确修改草案" [level=2]
+  - paragraph: 确认整段原文与替换文，再单独批准草案。接受意见不等于批准修改；高风险需与审查发起者不同的本案复核成员。复杂修改仍需人工。
+  - text: 待修改意见
+  - combobox "待修改意见":
+    - option "待核对意见（低风险）" [selected]
+  - text: 该意见的精确原文
+  - combobox "该意见的精确原文"
+  - blockquote: 无可用原文，需人工核对
+  - text: 替换整段文字
+  - textbox "替换整段文字"
+  - text: 修改理由
+  - textbox "修改理由": 已核对虚构原文和拟订文字
+  - group "明确批准的使用范围":
+    - generic: 明确批准的使用范围
+    - checkbox "内部" [checked]
+    - text: 内部
+    - checkbox "客户"
+    - text: 客户
+    - checkbox "对方"
+    - text: 对方
+  - button "批准精确草案修改"
+  - heading "报告与修改预览" [level=2]
+  - paragraph: 三类报告按受众裁剪；仅内部适用原件副本原生修订，对外与复杂情形生成同位置人工修改表。QCC收据报告消费者及整份修改后的法律与数值重审未实现。
+  - text: 受众
+  - combobox "受众":
+    - option "内部"
+    - option "客户" [selected]
+    - option "对方"
+  - button "生成草案预览"
+  - heading "草案预览 · 客户" [level=3]
+  - paragraph: 草案未正式签发。
+  - link "下载审查报告（DOCX）":
+    - /url: /api/matters/95701fd1-d2fb-4f39-9540-81bdd5d12e64/exports/a5c16694-1d1c-491c-8246-2a96b15cd087/download
+  - paragraph: 独立虚构/离线人工候选工作稿，真实模型推理未运行，不能正式签发
+  - paragraph: 对外原件包修改需人工；完整补丁后法律与数值重审未实现
+  - generic "校验清单"
+  - button "请求正式签发（mock始终阻断）"
+  - heading "核对这一版工作稿" [level=2]
+  - paragraph: 下载并逐项核对本次实际文件。这里只确认当前工作稿版本与待办范围，不能替代法源核验、正式签发或发送批准。所有意见须先完成明确处置；未完成编辑不能确认。
+  - checkbox "我已打开并核对本次实际草案文件及内容" [checked]
+  - text: 我已打开并核对本次实际草案文件及内容
+  - paragraph: 本版没有处置为待补资料或转专项的意见；其他材料、法源及法律限制仍保留。
+  - checkbox "我已核对所列待补资料、转专项事项及本次工作稿的限制" [checked]
+  - text: 我已核对所列待补资料、转专项事项及本次工作稿的限制
+  - text: 本次核对理由
+  - textbox "本次核对理由": 虚构工程验收：已读取实际下载DOCX，核对否定词、律师转录标记、来源及限制；仅内容核验，Word视觉版式未验，不作正式签发。
+  - button "保存这一版工作稿核对记录"
+  - status:
+    - paragraph: 这一版工作稿已记录核对（非正式签发）。
+    - paragraph: 核对记录：5d76a114-886e-440f-bc53-e53d6c1b0760

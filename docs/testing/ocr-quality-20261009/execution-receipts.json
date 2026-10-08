@@ -1,0 +1,411 @@
+[
+  {
+    "stage": "baseline-page1",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      ".audit-local/ocr-quality-20261009/probe_resolution.py",
+      "1",
+      "2"
+    ],
+    "started_utc": "2026-10-08T19:21:12.477826+00:00",
+    "finished_utc": "2026-10-08T19:21:13.211263+00:00",
+    "seconds": 0.719,
+    "exit_code": 1,
+    "output_sha256": "a4b67b09d0c98133acd8f7a9cada05973fe3bc0e5ac7bfd2bcd09fb5c39fac21",
+    "test_summary": null
+  },
+  {
+    "stage": "baseline-page1-retry",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      ".audit-local/ocr-quality-20261009/probe_resolution.py",
+      "1",
+      "2"
+    ],
+    "started_utc": "2026-10-08T19:21:24.078030+00:00",
+    "finished_utc": "2026-10-08T19:21:48.145591+00:00",
+    "seconds": 24.063,
+    "exit_code": 0,
+    "output_sha256": "ae2e6986cf65bbc2f61b30dd9deaa77c1c17ff554f4975c2a21b6de4c5c0c919",
+    "test_summary": null
+  },
+  {
+    "stage": "resolution-page1",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      ".audit-local/ocr-quality-20261009/probe_resolution.py",
+      "1",
+      "4"
+    ],
+    "started_utc": "2026-10-08T19:21:53.161680+00:00",
+    "finished_utc": "2026-10-08T19:22:12.687532+00:00",
+    "seconds": 19.531,
+    "exit_code": 0,
+    "output_sha256": "bd903ad83f5afee39c24377f86c99089c13bc61034b01a23163ce107be66dae6",
+    "test_summary": null
+  },
+  {
+    "stage": "resolution-page8",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      ".audit-local/ocr-quality-20261009/probe_resolution.py",
+      "8",
+      "4"
+    ],
+    "started_utc": "2026-10-08T19:23:14.962445+00:00",
+    "finished_utc": "2026-10-08T19:23:34.527531+00:00",
+    "seconds": 19.562,
+    "exit_code": 0,
+    "output_sha256": "757506443a1d76aa51d4b4c11f1bcf57925b3d0637c15e435ff59844594e961b",
+    "test_summary": null
+  },
+  {
+    "stage": "render-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_page_rendering.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:24:21.729745+00:00",
+    "finished_utc": "2026-10-08T19:24:22.996285+00:00",
+    "seconds": 1.266,
+    "exit_code": 1,
+    "output_sha256": "8242ceb02bc80c51f1e58a2b2294c8226eb73f1168f13518c8821dba311a765f",
+    "test_summary": "9 failed, 9 passed in 0.71s"
+  },
+  {
+    "stage": "huge-dimension-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_page_rendering.py",
+      "-k",
+      "1e+308",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:24:39.448161+00:00",
+    "finished_utc": "2026-10-08T19:24:40.529973+00:00",
+    "seconds": 1.078,
+    "exit_code": 1,
+    "output_sha256": "f64298df6f2aeb314eccdc5e6352834bb72a97f2e81865b6abd91a96be72b665",
+    "test_summary": "1 failed, 18 deselected in 0.63s"
+  },
+  {
+    "stage": "render-green",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_page_rendering.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:24:55.666705+00:00",
+    "finished_utc": "2026-10-08T19:24:56.687794+00:00",
+    "seconds": 1.015,
+    "exit_code": 0,
+    "output_sha256": "c395e68fb3f39ec64f98ba7edb34f4ea22dfdcd5da0aac15b84e4be896ea96a0",
+    "test_summary": "19 passed in 0.58s"
+  },
+  {
+    "stage": "fixed-48-regression",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-u",
+      "-X",
+      "utf8",
+      ".audit-local/ocr-quality-20261009/run_fixed_48.py"
+    ],
+    "started_utc": "2026-10-08T19:25:47.397168+00:00",
+    "finished_utc": "2026-10-08T19:41:38.044571+00:00",
+    "seconds": 950.656,
+    "exit_code": 0,
+    "output_sha256": "ace6f81ca9a71695aadb131b9155cd2ecef0b5d4c02ea8054a61287121fd61db",
+    "test_summary": null
+  },
+  {
+    "stage": "related-regression",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_page_rendering.py",
+      "tests/integration/test_pdf_original_viewer.py",
+      "tests/integration/test_pdf_proofreading.py",
+      "tests/integration/test_ocr_worker.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:25:57.563945+00:00",
+    "finished_utc": "2026-10-08T19:26:26.385190+00:00",
+    "seconds": 28.829,
+    "exit_code": 1,
+    "output_sha256": "144eaaee4ea604c02685dee72f0e0b426de28df1601a866602a86b5e8e164c59",
+    "test_summary": "1 failed, 60 passed in 24.03s"
+  },
+  {
+    "stage": "related-green",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_page_rendering.py",
+      "tests/integration/test_pdf_original_viewer.py",
+      "tests/integration/test_pdf_proofreading.py",
+      "tests/integration/test_ocr_worker.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:27:02.446486+00:00",
+    "finished_utc": "2026-10-08T19:27:31.416401+00:00",
+    "seconds": 28.969,
+    "exit_code": 0,
+    "output_sha256": "1f99fc2aea29819a049f1985dc189a4e0bb257cc760ce31e1aa6c5f6da2e6032",
+    "test_summary": "61 passed in 27.60s"
+  },
+  {
+    "stage": "binding-regression",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_mcp_bound_entry.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:29:38.187058+00:00",
+    "finished_utc": "2026-10-08T19:29:43.530419+00:00",
+    "seconds": 5.344,
+    "exit_code": 0,
+    "output_sha256": "990e177b6b1e5b43f94aa6f2f24071dc70fbfa585e0165dfa68c5e81deb484e7",
+    "test_summary": "69 passed in 4.75s"
+  },
+  {
+    "stage": "bound-entry",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "D:/Documents/ChatGPT/律所项目/src/cn_contract/mcp/bound_entry.py",
+      "--check"
+    ],
+    "started_utc": "2026-10-08T19:30:51.974728+00:00",
+    "finished_utc": "2026-10-08T19:30:52.330479+00:00",
+    "seconds": 0.359,
+    "exit_code": 0,
+    "output_sha256": "fb60f533016be136514b53421e4f632161dba666fad2eacb688455c58e3c570d",
+    "test_summary": null
+  },
+  {
+    "stage": "scoring-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_acceptance_scoring.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:33:56.829420+00:00",
+    "finished_utc": "2026-10-08T19:33:57.958939+00:00",
+    "seconds": 1.125,
+    "exit_code": 1,
+    "output_sha256": "d3f10c6d675ea29e6288690664bad5aa3d07b68da2e7b5cfe3e338b2a4d0bb6f",
+    "test_summary": "8 failed in 0.69s"
+  },
+  {
+    "stage": "numeric-scoring-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_acceptance_scoring.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:34:39.166657+00:00",
+    "finished_utc": "2026-10-08T19:34:40.340458+00:00",
+    "seconds": 1.172,
+    "exit_code": 1,
+    "output_sha256": "cfda39609a893146ba28fa04ce1486eaefa853055207fd4261fd43d7feb61a5f",
+    "test_summary": "4 failed, 4 passed in 0.71s"
+  },
+  {
+    "stage": "scoring-boundaries-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_acceptance_scoring.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:35:22.149435+00:00",
+    "finished_utc": "2026-10-08T19:35:23.328435+00:00",
+    "seconds": 1.187,
+    "exit_code": 1,
+    "output_sha256": "286d756f3800802f03c1679911fa8696a6c9b92547be88ee2361361046f40d1d",
+    "test_summary": "8 failed, 4 passed in 0.67s"
+  },
+  {
+    "stage": "scoring-green",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_acceptance_scoring.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:35:23.677792+00:00",
+    "finished_utc": "2026-10-08T19:35:24.855831+00:00",
+    "seconds": 1.187,
+    "exit_code": 0,
+    "output_sha256": "b009b78b20979f92b4d07d66b991f232a60944ebe4c83263a7525462033e1cf2",
+    "test_summary": "12 passed in 0.65s"
+  },
+  {
+    "stage": "scoring-block-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_acceptance_scoring.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:40:52.188546+00:00",
+    "finished_utc": "2026-10-08T19:40:53.439589+00:00",
+    "seconds": 1.25,
+    "exit_code": 1,
+    "output_sha256": "b564d02a9b5c1d005b2e2389bf0623df26ff78ae782077e4ca9154e65168a466",
+    "test_summary": "2 failed, 12 passed in 0.73s"
+  },
+  {
+    "stage": "scoring-block-green",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/unit/test_ocr_acceptance_scoring.py",
+      "-W",
+      "error"
+    ],
+    "started_utc": "2026-10-08T19:40:53.806399+00:00",
+    "finished_utc": "2026-10-08T19:40:54.926689+00:00",
+    "seconds": 1.11,
+    "exit_code": 0,
+    "output_sha256": "89d8e64348c9afc6cf52301904d79e55b8c0bb153377fe0d2162131e2c6a7747",
+    "test_summary": "14 passed in 0.61s"
+  },
+  {
+    "stage": "numeric-boundary-rescore",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      ".audit-local/ocr-quality-20261009/rescore.py"
+    ],
+    "started_utc": "2026-10-08T19:42:08.706894+00:00",
+    "finished_utc": "2026-10-08T19:42:09.502656+00:00",
+    "seconds": 0.797,
+    "exit_code": 0,
+    "output_sha256": "5d360043692e396728fcad5dd4cac228017c5fb1619ab044f603edba18d97a9b",
+    "test_summary": null
+  },
+  {
+    "stage": "browser-backend",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      ".audit-local/ocr-quality-20261009/check_browser.py"
+    ],
+    "started_utc": "2026-10-08T19:49:42.032525+00:00",
+    "finished_utc": "2026-10-08T19:49:42.749486+00:00",
+    "seconds": 0.719,
+    "exit_code": 1,
+    "output_sha256": "f9706c2ba7306d8288fc9d4c97c5a95763b96945edb45727fbd00c7ac65e4734",
+    "test_summary": null
+  },
+  {
+    "stage": "browser-backend-retry",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      ".audit-local/ocr-quality-20261009/check_browser.py"
+    ],
+    "started_utc": "2026-10-08T19:49:55.944519+00:00",
+    "finished_utc": "2026-10-08T19:49:57.629509+00:00",
+    "seconds": 1.688,
+    "exit_code": 0,
+    "output_sha256": "610f3d48c57ed413ec9716711dbdd756dbba5e7bc022fa4c7fc99806d5660c56",
+    "test_summary": null
+  },
+  {
+    "stage": "browser-evidence-final",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      ".audit-local/ocr-quality-20261009/check_browser.py"
+    ],
+    "started_utc": "2026-10-08T19:50:36.244978+00:00",
+    "finished_utc": "2026-10-08T19:50:37.828101+00:00",
+    "seconds": 1.578,
+    "exit_code": 0,
+    "output_sha256": "610f3d48c57ed413ec9716711dbdd756dbba5e7bc022fa4c7fc99806d5660c56",
+    "test_summary": null
+  }
+]

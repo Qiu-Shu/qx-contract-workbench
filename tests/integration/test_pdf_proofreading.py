@@ -210,7 +210,8 @@ def test_ocr_wait_releases_database_and_rechecks_revoked_member(assisted_api,mon
         source=OCRPageSource.model_validate(metadata);entered.set();assert release.wait(25)
         return OCRResult(id=uuid4(),source=source,created_at=datetime.now(timezone.utc),
             engine='PaddleOCR-3.7.0/PaddleX-3.7.0/PaddlePaddle-3.3.0-CPU',asset_manifest_sha256='0'*64,
-            raw_output_sha256='1'*64,blocks=(),bitmap_to_page=(.5,0,0,.5,0,0),reasons=('CI_STUB',))
+            raw_output_sha256='1'*64,blocks=(),
+            bitmap_to_page=(source.page_width_points/source.bitmap_width,0,0,source.page_height_points/source.bitmap_height,0,0),reasons=('CI_STUB',))
     monkeypatch.setattr(ocr_candidates,'run_ocr_page',pending_ocr)
     client,database,ids,headers,matter,_,value=setup(assisted_api)
     request={k:value[k] for k in ('document_version_id','document_sha256','page')}

@@ -43,9 +43,15 @@ def page_bitmap(original,page):
         try:
             width,height=current.get_size()
             if not all(math.isfinite(x) and x>0 for x in (width,height)):raise ServiceError('FILE_LIMIT',413)
-            bw,bh=math.ceil(width*2),math.ceil(height*2)
-            if max(bw,bh)>8192 or bw*bh>16000000:raise ServiceError('FILE_LIMIT',413)
-            bitmap=current.render(scale=2)
+            # Reject before multiplication (even a finite dimension can overflow).
+            if max(width,height)>4096:raise ServiceError('FILE_LIMIT',413)
+            # Higher-resolution sampling reduces observed JPEG-page omissions.
+            # Preserve the old supported page envelope without cropping any page.
+            for scale in (4,2):
+                bw,bh=math.ceil(width*scale),math.ceil(height*scale)
+                if max(bw,bh)<=8192 and bw*bh<=16000000:break
+            else:raise ServiceError('FILE_LIMIT',413)
+            bitmap=current.render(scale=scale)
             try:
                 image=bitmap.to_pil();buffer=BytesIO();image.save(buffer,format='PNG')
                 return buffer.getvalue(),width,height,image.width,image.height
