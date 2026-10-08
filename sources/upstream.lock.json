@@ -676,7 +676,18 @@
         }
       },
       "included_in_runtime": false,
-      "approved_at": null
+      "approved_at": null,
+      "supplemental_runtime_adoption": {
+        "date": "2026-10-08",
+        "scope": "LOCAL_SYNTHETIC_CPU_OCR_ONLY",
+        "distribution": "PaddleOCR 3.7.0 / PaddleX 3.7.0 / PaddlePaddle 3.3.0",
+        "assets_lock": "sources/ocr-assets.lock.json",
+        "environment_lock": "sources/ocr-environment.lock.json",
+        "notices": "sources/third-party-notices/ocr",
+        "record": "docs/tools/OFFLINE-OCR.md",
+        "production_approved": false,
+        "historical_selected_source_record_unchanged": true
+      }
     },
     {
       "id": "G08",

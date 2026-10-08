@@ -51,7 +51,9 @@ def initialize_storage(database):
     from ..queries.storage import initialize_storage as queries
     from ..exports.storage import initialize_storage as exports
     from ..ops.storage import initialize_storage as operations
-    for init in (authorities,rules,facts,reviews,providers,queries,exports,s.initialize_storage,operations):init(database)
+    from ..documents.proofreading import initialize_storage as proofreading
+    from ..documents.ocr_candidates import initialize_storage as ocr_candidates
+    for init in (authorities,rules,facts,reviews,providers,queries,exports,s.initialize_storage,operations,proofreading,ocr_candidates):init(database)
 
 
 def same_origin(request):
@@ -159,7 +161,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
                 deny(actor,UUID(int=0),'authorization_denied',db)
             return actor
 
-    def write(request,matter_id,action,value,operation,*,permission='confirm_facts',result_matter=None):
+    def write(request,matter_id,action,value,operation,*,permission='confirm_facts',result_matter=None,prepare_only=False):
         key=request.headers.get('Idempotency-Key');payload=value.model_dump(mode='json')
         with database.session() as db:
             actor=actor_in(request,db,None if matter_id.int==0 else matter_id,permission,write=True)
@@ -198,12 +200,23 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
                         from ..exports.draft_confirmation import read_working_draft_confirmation
                         confirmation=read_working_draft_confirmation(actual_matter,UUID(response['id']),actor,db=db)
                         if confirmation.model_dump(mode='json')!=response:raise ServiceError('APPROVAL_STALE',409)
+                    elif action=='page_verification':
+                        from ..documents.proofreading import read_current_verification
+                        record=read_current_verification(actual_matter,UUID(response['id']),actor,db)
+                        if record.model_dump(mode='json')!=response:raise ServiceError('APPROVAL_STALE',409)
+                    elif action=='page_ocr':
+                        from ..documents.ocr_candidates import read_candidate
+                        candidate=read_candidate(actual_matter,UUID(response['result']['id']),actor,db)
+                        if candidate.model_dump(mode='json')!=response:raise ServiceError('APPROVAL_STALE',409)
                     elif action=='query_plan' or action.startswith('query_approve:'):
                         plan=planner.read_plan(UUID(response['id']),actor,matter_id=actual_matter,db=db)
                         if plan.plan_sha256!=response['plan_sha256']:raise ServiceError('PLAN_CHANGED',409)
                     return response
             with db.begin_nested():
                 result=operation(actor,db)
+                # OCR preflight reads trusted bytes then closes this transaction.
+                # Long native work must never hold the global SQLite write lock.
+                if prepare_only:return result
                 response=result.model_dump(mode='json') if isinstance(result,d.DomainModel) else result
                 if key:
                     target=UUID(response['id']) if result_matter=='created' else matter_id
@@ -567,8 +580,10 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
 
     @app.get('/static/{name}')
     def static_file(name:str):
-        if name not in {'workbench.js','workbench.css'}:raise ServiceError('NOT_SUPPORTED',404)
-        return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith('.js') else 'text/css')
+        if name not in {'workbench.js','workbench.css','pdf-review.mjs'}:raise ServiceError('NOT_SUPPORTED',404)
+        return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith(('.js','.mjs')) else 'text/css')
     from .draft_confirmation import register_routes
     register_routes(app,database,authenticate_first,body_input,write)
+    from .pdf_review import register_routes as register_pdf_routes
+    register_pdf_routes(app,database,actor_in,authenticate_first,body_input,write)
     return app

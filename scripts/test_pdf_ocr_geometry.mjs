@@ -1,0 +1,24 @@
+// Actual Node geometry check, independent of browser screenshot verification.
+import assert from 'node:assert/strict';
+globalThis.document={getElementById(){return null;}};
+const {ocrViewportPolygon}=await import('../src/cn_contract/web/static/pdf-review.mjs');
+const source={bitmap_width:200,bitmap_height:100,page_width_points:100,page_height_points:50};
+const points=[[0,0],[200,0],[200,100],[0,100]];
+assert.deepEqual(ocrViewportPolygon(points,source,100,50,0,2),[[0,0],[200,0],[200,100],[0,100]]);
+assert.deepEqual(ocrViewportPolygon(points,source,100,50,90,1),[[50,0],[50,100],[0,100],[0,0]]);
+assert.deepEqual(ocrViewportPolygon(points,source,100,50,180,1),[[100,50],[0,50],[0,0],[100,0]]);
+assert.deepEqual(ocrViewportPolygon(points,source,100,50,270,1),[[0,100],[0,0],[50,0],[50,100]]);
+assert.equal(ocrViewportPolygon(points,source,90,50,0,1),null);
+assert.equal(ocrViewportPolygon([[NaN,0],...points.slice(1)],source,100,50,0,1),null);
+console.log('6 geometry checks passed; browser rendering is a separate observation');
+const {nativeAnchorCanHighlight,preservedOCRSelection,ocrReference}=await import('../src/cn_contract/web/static/pdf-review.mjs');
+const box=[72,182,240,195],view=[0,0,612,700];
+assert.equal(nativeAnchorCanHighlight(box,view,0,{media:[0,0,612,792],crop:view}),false);
+assert.equal(nativeAnchorCanHighlight(box,view,0,{media:view,crop:view}),true);
+assert.equal(nativeAnchorCanHighlight(box,view,0,null),false);
+const records=[{result:{id:'a'},sha256:'hash-a'}];
+const selection=preservedOCRSelection('a','page1','page1',records);
+assert.deepEqual(ocrReference(records,selection),{candidate_id:'a',candidate_sha256:'hash-a'});
+assert.equal(preservedOCRSelection('a','page1','page2',records),'');
+assert.equal(preservedOCRSelection('a','page1','page1',[]),'');
+console.log('3 crop guards and 3 OCR linkage checks passed');

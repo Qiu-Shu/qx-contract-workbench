@@ -138,6 +138,10 @@ def require_fact_sources(matter_id, facts, actor, db, *, visual_fact_ids=None):
     for fact in facts:
         if fact.matter_id != matter_id:
             raise ServiceError('VERSION_CONFLICT', 409)
+        if fact.provenance_type == 'source_verification':
+            from ..documents.proofreading import require_verified_fact
+            require_verified_fact(matter_id,fact,actor,db)
+            continue
         if fact.provenance_type == 'external' or fact.receipt_ids:
             raise ServiceError('NOT_SUPPORTED', 409)
         if (len(set(fact.anchor_ids)) != len(fact.anchor_ids) or not set(fact.anchor_ids).issubset(sources)

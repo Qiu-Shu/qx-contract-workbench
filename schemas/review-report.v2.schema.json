@@ -185,6 +185,15 @@
           "title": "Anchor Ids",
           "type": "array"
         },
+        "verification_ids": {
+          "default": [],
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Verification Ids",
+          "type": "array"
+        },
         "cross_anchor_ids": {
           "items": {
             "format": "uuid",

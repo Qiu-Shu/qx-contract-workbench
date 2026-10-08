@@ -27,6 +27,8 @@ def confirm_facts(matter_id, version, decisions, actor, *, db):
             raise ServiceError('VERSION_CONFLICT',409)
         if decision.confirmed_value.kind != fact.typed_value.kind:
             raise ValueError('correction must preserve value kind and unit')
+        if fact.provenance_type == 'source_verification' and decision.confirmed_value != fact.typed_value:
+            raise ServiceError('SOURCE_VERIFICATION_UPDATE_REQUIRED',409)
         if decision.decision != 'corrected' and decision.confirmed_value != fact.typed_value:
             raise ValueError('confirmed/rejected cannot change candidate value')
     chosen = {d.fact_id:d for d in validated}

@@ -33,10 +33,10 @@
 
 **Interfaces:** `register_routes(app,database,actor_in)`注册受保护GET原件接口；`GET /api/matters/{matter_id}/documents/{version_id}/original?sha256=...`只返回相符且当前的PDF bytes。`GET /static/pdfjs/{path}`仅提供受锁资产，不接收文件路径或远程URL。前端`showPdf(version,page,bbox)`由现有事实页/锚点按钮调用。
 
-- [ ] 取得官方固定tgz，校验npm integrity、完整清单、安全解包边界与许可，记录实际采用；浏览器仅复制运行所需完整资源集。
-- [ ] 写失败测试：原件接口404→授权200/exactbytes/no-store；未登录/跨案/撤权403或401；stale/hash篡改409；DOCX拒绝；资产缺失/损坏拒绝、目录穿越404。
-- [ ] 实现原件只读接口与精确资源白名单；不放开整目录静态挂载。
-- [ ] 接入PDF.js原页+文字侧栏，25%–300%缩放、90度旋转、翻页和锚点定位；禁脚本/动作/外链；尺寸超限明确拒绝。
+- [x] 取得官方固定tgz，校验npm integrity、完整清单、安全解包边界与许可，记录实际采用；浏览器仅复制运行所需完整资源集。
+- [x] 写失败测试：原件接口404→授权200/exactbytes/no-store；未登录/跨案/撤权403或401；stale/hash篡改409；DOCX拒绝；资产缺失/损坏拒绝、目录穿越404。
+- [x] 实现原件只读接口与精确资源白名单；不放开整目录静态挂载。
+- [x] 接入PDF.js原页+文字侧栏，25%–300%缩放、90度旋转、翻页和锚点定位；禁脚本/动作/外链；尺寸超限明确拒绝。
 - [ ] 运行 `pytest -q tests/integration/test_pdf_original_viewer.py tests/unit/test_pdfjs_assets.py -W error`；实际浏览器加载独立多页PDF及缩放/旋转/定位，保存截图和同源资源观察。
 - [ ] 记录目标/关联结果并本地提交；不把单页或DOM成功记为全面视觉验收。
 
@@ -46,12 +46,12 @@
 
 **Interfaces:** `verify_ocr_assets(root,manifest)`验证完整模型/环境资产；`run_ocr_page(image_bytes,source_metadata,*,worker_config)`只接受后端生成的本地位图和来源DTO，返回OCRResult或明确ServiceError。worker没有案件DB/凭据/任意shell参数。`OCRResult`与`OCRBlock`在domain.py定义，所有识别文本初始unverified。
 
-- [ ] 公共发行wheel-only解析并锁定完整依赖；不运行sdist构建，实际下载hash及包内许可检查；获得全部采用证据后安装专用环境。
-- [ ] 获取两固定revision模型的完整资产；校验LFS声明及实算hash。缺模型/损坏/混版本/额外文件/逃逸目录真实失败测试，然后实现校验门。
-- [ ] 独立虚构worker探针验证AppContainer无网络能力与Job Object内存/进程组/超时；不能创建限制则拒绝，不回退。
-- [ ] 先真实失败测试再实现单页CPU输出至唯一DTO；仅显式本地模型路径；禁用自动模型选择和非必需预处理。
-- [ ] 实际单页预测、缺资产、外网/loopback尝试、超时/超内存/子进程清理；记录原始输出与退出码。
-- [ ] 运行 `pytest -q tests/unit/test_ocr_assets.py tests/integration/test_ocr_worker.py -W error`。OS或依赖阻断时明确记录未运行真实OCR的项目，保留可独立完成的viewer成果。
+- [x] 公共发行wheel-only解析并锁定完整依赖；不运行sdist构建，实际下载hash及包内许可检查；获得全部采用证据后安装专用环境。
+- [x] 获取两固定revision模型的完整资产；校验LFS声明及实算hash。缺模型/损坏/混版本/额外文件/逃逸目录真实失败测试，然后实现校验门。
+- [x] 独立虚构worker探针验证AppContainer无网络能力与Job Object内存/进程组/超时；不能创建限制则拒绝，不回退。
+- [x] 先真实失败测试再实现单页CPU输出至唯一DTO；仅显式本地模型路径；禁用自动模型选择和非必需预处理。
+- [x] 实际单页预测、缺资产、外网/loopback尝试、超时/超内存/子进程清理；记录原始输出与退出码。
+- [x] 运行 `pytest -q tests/unit/test_ocr_assets.py tests/integration/test_ocr_worker.py -W error`。OS或依赖阻断时明确记录未运行真实OCR的项目，保留可独立完成的viewer成果。
 
 ### Task 3: 来源核对、事实消费与48页工程验收
 
@@ -59,16 +59,22 @@
 
 **Interfaces:** `submit_page_verification(matter_id,input,actor,db)`保存来源区分的不可变核对记录；`read_current_verification(...)`校验原件/候选/当前权限/版本；OCR和转录不能直接作为PDF_SPAN伪锚点。现有事实服务消费核对来源后仍要求完整事实确认。
 
-- [ ] 定义原页核对输入/输出DTO与存储：source_kind三枚举、原件及候选hash、值/理由/服务端用户与UTC、前版本；测试缺字段和来源伪装拒绝。
-- [ ] 按失败测试实现事务/幂等/重放/撤权/版本失效，采用候选后失效旧事实与成果；原始OCR数据不覆盖。
+- [x] 定义原页核对输入/输出DTO与存储：source_kind三枚举、原件及候选hash、值/理由/服务端用户与UTC、前版本；测试缺字段和来源伪装拒绝。
+- [x] 按失败测试实现事务/幂等/重放/撤权/版本失效，采用候选后失效旧事实与成果；原始OCR数据不覆盖。
 - [ ] 前端显示原页、原始候选、已确认值及来源类型；律师转录和提供者澄清不能显示为扫描文字层。
 - [ ] 生成六类各8页独立虚构输入及关键字段/位置观察清单。实际执行48页；清晰印刷必须有真实正确正例；阻断和识别正确分别统计，未运行填NOT_RUN。
 - [ ] 运行 `pytest -q tests/integration/test_pdf_proofreading.py -W error`，以及事实/审查/决定/导出关联回归；新目录浏览器完成实际工作稿确认路径。
-- [ ] 按改动运行完整工程回归，核对原生清单与JUnit；更新实际采用来源、启动绑定和Git字节一致性。独立审阅本轮整体改动，修复重要发现并保存证据。
-- [ ] 更新TASK_STATUS/ASSISTED_SCOPE、阶段测试记录和Obsidian；本地提交，真实模型/外查/法源/生产状态单列。
+- [x] 按改动运行完整工程回归，核对原生清单与JUnit；更新实际采用来源、启动绑定和Git字节一致性。独立审阅本轮整体改动，修复重要发现并保存证据。
+- [x] 更新TASK_STATUS/ASSISTED_SCOPE、阶段测试记录和Obsidian；本地提交，真实模型/外查/法源/生产状态单列。
 
 ## 计划自检与执行记录
 
 Task1生产的版本绑定原件接口供Task3校对页面使用；Task2的OCRResult供Task3使用，DTO由主助手单点修改。资产校验门与原件/候选校验门职责不同，不能互相代替。Task2若发生真实隔离/资产阻断，可继续Task1及Task3的独立手工来源记录，但不能称全套OCR通过；必须在账本记录实际边界。
 
 执行账本：`.audit-local/ocr-proofreading-20261008/progress.md`。证据保留遵从项目AGENTS要求，不按通用技能删除。待执行项不计完成。
+
+## 2026-10-08 实际执行状态
+
+Task1代码与目标API/资产验证完成，较早原页浏览器验证完成；后续裁剪修复及来源表单浏览器复验受客户端阻断。Task2已完成真实CPU单页预测、受限环境与实际网络/内存/超时探针；Intel附加许可得到用户仅限本机虚构批准。Task3来源至工作稿和失效链已由真实OCR候选+实际API执行；48 PNG组件37对/8错/3异常（保留初始异常），48 JPEG-PDF实际渲染20对/28错/0异常、清晰页0/8，质量门FAIL。独立无损PDF首1页真实正确并走通完整API链，另账不替代48结果。
+
+独审3项Important已以RED→GREEN修复：长事务阻碍撤权、CropBox误高亮、同页OCR选择丢失。12 Node几何/关联检查、目标47、原件API9通过；最终完整工程回归1421 passed，exit0，923.594秒；原生收集与JUnit逐项一致，0失败/0错误/0跳过。当前不将全部计划勾选为完成；浏览器和质量门缺口明确保留，当前分支/证据不清理。详细命令与结果见 docs/testing/OCR-proofreading-20261008.md。

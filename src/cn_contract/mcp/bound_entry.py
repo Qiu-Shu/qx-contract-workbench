@@ -29,10 +29,12 @@ _OFFLINE_MODULE = 'cn_contract.mcp.offline_server'
 _MCP_FILE = 'plugins/qx-contract-offline-codex/.mcp.json'
 _PLUGIN_FILE = 'plugins/qx-contract-offline-codex/.codex-plugin/plugin.json'
 _ADAPTER_VERSION = '0.1.3'
-_SOURCE_EXTENSIONS = frozenset({'.py', '.js', '.css', '.html'})
+_SOURCE_EXTENSIONS = frozenset({'.py', '.js', '.mjs', '.css', '.html'})
 _FIXED_FILES = frozenset({
     'config/defaults.json', 'pyproject.toml', 'requirements.lock',
     'requirements-build.lock', 'sources/runtime-dependencies.lock.json',
+    'sources/pdfjs-assets.lock.json',
+      'sources/ocr-assets.lock.json','sources/ocr-environment.lock.json','requirements-ocr-windows-py312.lock',
     'tests/fixtures/synthetic/sales_basic.docx',
     'tests/fixtures/synthetic/service_basic.docx',
     'tests/fixtures/synthetic/lease_basic.docx',

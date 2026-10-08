@@ -1,0 +1,109 @@
+{
+  "matter_id": "81ff6524-9c32-46f7-a0ab-02b752007911",
+  "actor_id": "e71b484a-efb4-4804-ad00-0c4e952f6ffa",
+  "result": {
+    "id": "7b9f6808-1605-45f2-8698-60aa92c309bd",
+    "source": {
+      "document_version_id": "078180ef-549f-4225-ae8e-2eba1e6a125f",
+      "document_sha256": "1ddde57b93f945b25092828164f74e70c3973a83aa53935c189dc2ac6262ec2b",
+      "page": 1,
+      "page_width_points": 600.0,
+      "page_height_points": 200.0,
+      "bitmap_width": 1200,
+      "bitmap_height": 400,
+      "bitmap_sha256": "806d26926fdefc52957cb26e60489ecf736c52e2d133f209af21b5f93cabd0e5",
+      "coordinate_space": "rendered_page_top_left"
+    },
+    "created_at": "2026-10-08T06:43:04.982224Z",
+    "engine": "PaddleOCR-3.7.0/PaddleX-3.7.0/PaddlePaddle-3.3.0-CPU",
+    "asset_manifest_sha256": "f64178ccbd67fc75c6757ff0185fb6d672b97c17028fb26218a049a73105a73b",
+    "raw_output_sha256": "9ca727927cae40af4be6d314789758141597c9cb047d13c6df8b68db7d236c1b",
+    "blocks": [
+      {
+        "raw_text": "独立虚构材料1",
+        "polygon": [
+          [
+            26.0,
+            25.0
+          ],
+          [
+            304.0,
+            23.0
+          ],
+          [
+            304.0,
+            70.0
+          ],
+          [
+            26.0,
+            72.0
+          ]
+        ],
+        "confidence": 0.9773159623146057,
+        "alternatives": [],
+        "verification_state": "unverified"
+      },
+      {
+        "raw_text": "价款 28473 元",
+        "polygon": [
+          [
+            27.0,
+            120.0
+          ],
+          [
+            292.0,
+            120.0
+          ],
+          [
+            292.0,
+            167.0
+          ],
+          [
+            27.0,
+            167.0
+          ]
+        ],
+        "confidence": 0.9455264806747437,
+        "alternatives": [],
+        "verification_state": "unverified"
+      },
+      {
+        "raw_text": "不得自动验收 2026-10-10",
+        "polygon": [
+          [
+            28.0,
+            224.0
+          ],
+          [
+            501.0,
+            222.0
+          ],
+          [
+            501.0,
+            269.0
+          ],
+          [
+            28.0,
+            271.0
+          ]
+        ],
+        "confidence": 0.9913396239280701,
+        "alternatives": [],
+        "verification_state": "unverified"
+      }
+    ],
+    "bitmap_to_page": [
+      0.5,
+      0.0,
+      0.0,
+      0.5,
+      0.0,
+      0.0
+    ],
+    "reasons": [
+      "OCR_IS_UNVERIFIED",
+      "AMOUNTS_DATES_NEGATIONS_REQUIRE_LAWYER_CHECK"
+    ]
+  },
+  "sha256": "a0eef05b6b67e1c41947cda9f88fae8509c4f8bd5aa2b0e9f02e91611a31b8a0"
+}

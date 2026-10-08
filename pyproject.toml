@@ -20,4 +20,4 @@ cn-contract = "cn_contract.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-"cn_contract.web" = ["templates/*.html", "static/*.css", "static/*.js"]
+"cn_contract.web" = ["templates/*.html", "static/*.css", "static/*.js", "static/*.mjs"]

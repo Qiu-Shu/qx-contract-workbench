@@ -14,3 +14,7 @@ plugins/qx-contract-offline-codex/.mcp.json -text whitespace=blank-at-eol,blank-
 plugins/qx-contract-offline-codex/.codex-plugin/plugin.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 plugins/qx-contract-offline-codex/runtime-binding.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 tests/fixtures/assisted-v1/** -text -whitespace
+
+# Independent OCR fixtures and observed test receipts retain measured bytes.
+tests/fixtures/ocr-proofreading/** -text -whitespace
+docs/testing/ocr-proofreading-20261008/*.json -text -whitespace

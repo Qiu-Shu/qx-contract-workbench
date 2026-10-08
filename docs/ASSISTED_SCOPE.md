@@ -1,5 +1,7 @@
 # 律师辅助工作稿：范围与实际进度
 
+2026-10-08增量见 [OCR与原页实际记录](testing/OCR-proofreading-20261008.md)、[本机操作及依赖范围](tools/OFFLINE-OCR.md)。B2/B3已从预检进入真实离线识别、原页和独立来源实施；最终完整工程回归1421 passed，exit0，923.594秒；原生收集与JUnit逐项一致，0失败/0错误/0跳过；PDF渲染48页20对/28错/0异常，质量门FAIL；独立无损首1页正确。新增浏览器旅程及Word版式未验。下列首轮表格保留2026-10-05历史状态，不代表本轮未实施。
+
 2026-10-05 用户明确接受首轮 CR-01 路线，详细决定见 [ADR 0006](adr/0006-assisted-review-scope.md)。当前本机首轮文件/校对入口使用已有工作台；最终目标仍为 ChatGPT 薄插件。真实推理、企查查、真实合同、正式签发和生产关闭。
 
 ## 首轮路径
@@ -34,7 +36,7 @@
 |宿主入口|当前源、活动缓存、进程、实际工具调用|SDK与发现不能替代当前聊天/ChatGPT连接|
 |生产批准|现实身份、许可、隔离、部署、法律验收|本轮无生产批准，不称上线完成|
 
-完整工程当前实测1346项、0失败/错误/跳过/警告，原生清单与JUnit逐项匹配。父验收见 [本轮实际记录](testing/ASSISTED-parent.md)。正在实施、预检、候选方案和阻断不计 PASS。独立审计 F01–F16 初始核验及后续状态见 [回件映射](audit/2026-10-05-audit-return.md)。
+2026-10-05首轮完整工程实测1346项、0失败/错误/跳过/警告，原生清单与JUnit逐项匹配。父验收见 [本轮实际记录](testing/ASSISTED-parent.md)。正在实施、预检、候选方案和阻断不计 PASS。独立审计 F01–F16 初始核验及后续状态见 [回件映射](audit/2026-10-05-audit-return.md)。
 
 已闭合切片的实际分母、失败过程和限制分别见 [C1决定版本链](testing/AUDIT-C1-decisions.md)、[B1a普通DOCX](testing/AUDIT-B1-DOCX.md)、[B1b PDF来源](testing/AUDIT-B1-PDF.md)、[F13来源扫描](testing/AUDIT-F13-source-scan.md)、[A3协议](testing/AUDIT-A3-progress.md)。这些是不同执行范围，不相加，也不替代根完整回归或12份新材料旅程。
 

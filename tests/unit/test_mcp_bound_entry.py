@@ -57,6 +57,9 @@ def repository(tmp_path):
     put(root, 'pyproject.toml', '[project]\nname="qx-contract-workbench"\nversion="0.1.0"\n')
     put(root, 'requirements.lock', b'fictional runtime lock bytes')
     put(root, 'requirements-build.lock', b'fictional build lock bytes')
+    put(root, 'sources/pdfjs-assets.lock.json', b'fictional viewer asset lock')
+    for name in ('sources/ocr-assets.lock.json','sources/ocr-environment.lock.json','requirements-ocr-windows-py312.lock'):
+        put(root,name,b'fictional OCR lock')
     jput(root, 'config/defaults.json', {'model_provider_default': 'mock',
                                      'qcc_enabled_default': False})
     jput(root, 'sources/runtime-dependencies.lock.json', {
@@ -85,6 +88,8 @@ def fixture_payload(root):
                  or p.relative_to(root).as_posix() in {
                      'config/defaults.json', 'pyproject.toml', 'requirements.lock',
                      'requirements-build.lock', 'sources/runtime-dependencies.lock.json',
+                     'sources/pdfjs-assets.lock.json',
+      'sources/ocr-assets.lock.json','sources/ocr-environment.lock.json','requirements-ocr-windows-py312.lock',
                      'plugins/qx-contract-offline-codex/.mcp.json',
                      'plugins/qx-contract-offline-codex/.codex-plugin/plugin.json'}
                  or p.relative_to(root).as_posix().startswith('tests/fixtures/synthetic/'))}
@@ -110,6 +115,21 @@ def fixture_payload(root):
     return payload
 
 
+def test_module_scripts_are_part_of_startup_binding(repository):
+    put(repository,'src/cn_contract/web/static/proof.mjs',b'// independent browser module')
+    result=api().inventory_repository_files(repository)
+    assert 'src/cn_contract/web/static/proof.mjs' in result
+
+
+def test_pdf_viewer_lock_is_required_in_startup_inventory():
+    assert 'sources/pdfjs-assets.lock.json' in api()._FIXED_FILES
+
+
+@pytest.mark.parametrize('name',['sources/ocr-assets.lock.json','sources/ocr-environment.lock.json','requirements-ocr-windows-py312.lock'])
+def test_ocr_locks_are_required_in_startup_inventory(name):
+    assert name in api()._FIXED_FILES
+
+
 def verify(root, payload=None, **context_changes):
     module = api()
     jput(root, BINDING, payload or fixture_payload(root))
@@ -126,7 +146,7 @@ def test_verified_fictional_binding_has_no_business_or_sdk_import(repository):
     before = set(sys.modules)
     result = verify(repository)
     assert result.build_id == fixture_payload(repository)['build_id']
-    assert result.file_count == 20
+    assert result.file_count == 24
     assert result.dependency_count == 3
     assert not any(name == 'mcp' or name.startswith('mcp.')
                    or name == 'cn_contract' or name.startswith('cn_contract.')

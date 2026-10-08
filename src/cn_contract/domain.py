@@ -190,6 +190,7 @@ class AnchorKind(StrEnum):
 
 
 class ProvenanceType(StrEnum):
+    SOURCE_VERIFICATION = 'source_verification'
     DOCUMENT = 'document'
     EXTERNAL = 'external'
     CLIENT_STATEMENT = 'client_statement'
@@ -542,9 +543,15 @@ class Fact(DomainModel):
     confirmation_status: ConfirmationStatus
     confirmed_by: UUID | None
     confirmed_at: UTCDatetime | None
+    verification_ids: tuple[UUID, ...] = Field(default=(), exclude_if=lambda value: not value)
 
     @model_validator(mode='after')
     def confirmed_requires_evidence(self) -> Fact:
+        if self.provenance_type == 'source_verification':
+            if len(self.verification_ids) != 1 or self.anchor_ids or self.receipt_ids:
+                raise ValueError('independent source verification required; not a PDF anchor')
+        elif self.verification_ids:
+            raise ValueError('verification cannot impersonate document provenance')
         if isinstance(self.typed_value, DecimalFactValue) and self.unit is None:
             raise ValueError('Decimal facts require an explicit unit')
         if self.confirmation_status in {ConfirmationStatus.CONFIRMED, ConfirmationStatus.CORRECTED}:
@@ -681,6 +688,7 @@ class Finding(DomainModel):
     severity: Severity
     evidence_state: EvidenceState
     anchor_ids: tuple[UUID, ...]
+    verification_ids: tuple[UUID, ...] = Field(default=(), exclude_if=lambda value:not value)
     cross_anchor_ids: tuple[UUID, ...]
     rule_ids: tuple[UUID, ...]
     authority_ids: tuple[UUID, ...]
@@ -1486,6 +1494,111 @@ class SyntheticAssistedPolicy(DomainModel):
         return values
 
 
+FiniteCoordinate = Annotated[float, Field(allow_inf_nan=False, ge=0)]
+
+
+class OCRPageSource(DomainModel):
+    document_version_id: UUID
+    document_sha256: SHA256
+    page: Annotated[int, Field(strict=True, ge=1, le=200)]
+    page_width_points: Annotated[float, Field(gt=0, allow_inf_nan=False)]
+    page_height_points: Annotated[float, Field(gt=0, allow_inf_nan=False)]
+    bitmap_width: Annotated[int, Field(strict=True, gt=0, le=8192)]
+    bitmap_height: Annotated[int, Field(strict=True, gt=0, le=8192)]
+    bitmap_sha256: SHA256
+    coordinate_space: Literal['rendered_page_top_left']
+
+    @model_validator(mode='after')
+    def bounded_image(self):
+        if self.bitmap_width*self.bitmap_height>16000000:raise ValueError('page pixels exceed limit')
+        return self
+
+
+class OCRBlock(DomainModel):
+    raw_text: Annotated[str, Field(strict=True, max_length=4000)]
+    polygon: Annotated[tuple[tuple[FiniteCoordinate,FiniteCoordinate],...],Field(min_length=4,max_length=4)]
+    confidence: Annotated[float,Field(ge=0,le=1,allow_inf_nan=False)] | None
+    alternatives: tuple[str,...] = ()
+    verification_state: Literal['unverified'] = 'unverified'
+
+
+class OCRResult(DomainModel):
+    id: UUID
+    source: OCRPageSource
+    created_at: UTCDatetime
+    engine: Literal['PaddleOCR-3.7.0/PaddleX-3.7.0/PaddlePaddle-3.3.0-CPU']
+    asset_manifest_sha256: SHA256
+    raw_output_sha256: SHA256
+    blocks: Annotated[tuple[OCRBlock,...],Field(max_length=2000)]
+    bitmap_to_page: tuple[float,float,float,float,float,float]
+    reasons: tuple[NonEmpty,...]
+
+    @model_validator(mode='after')
+    def coordinates_match_source(self):
+        s=self.source
+        if self.bitmap_to_page!=(s.page_width_points/s.bitmap_width,0,0,s.page_height_points/s.bitmap_height,0,0):
+            raise ValueError('coordinate transform mismatch')
+        if any(x>s.bitmap_width or y>s.bitmap_height for block in self.blocks for x,y in block.polygon):
+            raise ValueError('OCR polygon outside source bitmap')
+        return self
+
+
+class PageOCRInput(DomainModel):
+    document_version_id: UUID
+    document_sha256: SHA256
+    page: Annotated[int,Field(strict=True,ge=1,le=200)]
+
+
+class OCRCandidate(DomainModel):
+    matter_id: UUID
+    actor_id: UUID
+    result: OCRResult
+    sha256: SHA256
+
+
+class PageVerificationInput(DomainModel):
+    document_version_id: UUID
+    document_sha256: SHA256
+    fact_version: PositiveInt
+    page: Annotated[int, Field(strict=True, ge=1, le=200)]
+    source_kind: Literal['visible_original', 'lawyer_transcription', 'provider_clarification']
+    observed_text: Annotated[NonEmpty, Field(max_length=4000)]
+    field: Annotated[NonEmpty, Field(max_length=100)]
+    typed_value: FactValue
+    unit: Annotated[NonEmpty, Field(max_length=32)] | None
+    reason: Annotated[NonEmpty, Field(max_length=2000)]
+    original_page_checked: Literal[True]
+    previous_id: UUID | None
+    candidate_id: UUID | None
+    candidate_sha256: SHA256 | None
+
+    @field_validator('original_page_checked', mode='before')
+    @classmethod
+    def explicit_check(cls, value):
+        if value is not True: raise ValueError('explicit page check required')
+        return value
+
+    @model_validator(mode='after')
+    def bounded_value(self):
+        if isinstance(self.typed_value, DecimalFactValue) and self.unit is None:
+            raise ValueError('decimal source value requires unit')
+        if len(self.typed_value.model_dump_json().encode()) > 4000:
+            raise ValueError('source value too large')
+        if (self.candidate_id is None) != (self.candidate_sha256 is None):
+            raise ValueError('candidate id and digest required together')
+        return self
+
+
+class PageVerification(DomainModel):
+    id: UUID
+    matter_id: UUID
+    fact_id: UUID
+    actor_id: UUID
+    created_at: UTCDatetime
+    input: PageVerificationInput
+    sha256: SHA256
+
+
 class AssistedFactCandidate(DomainModel):
     field: Annotated[NonEmpty, Field(max_length=100)]
     typed_value: FactValue
@@ -1514,7 +1627,8 @@ class AssistedOpinionCandidate(DomainModel):
     issue_type: Annotated[NonEmpty, Field(max_length=100)]
     severity: Severity
     evidence_state: Literal['unconfirmed', 'missing', 'conflicting']
-    anchor_ids: Annotated[tuple[UUID, ...], Field(min_length=1, max_length=8)]
+    anchor_ids: Annotated[tuple[UUID, ...], Field(max_length=8)]
+    verification_ids: Annotated[tuple[UUID, ...], Field(max_length=8)] = Field(default=(), exclude_if=lambda value:not value)
     analysis: Annotated[NonEmpty, Field(max_length=4000)]
     business_effect: Annotated[NonEmpty, Field(max_length=4000)]
     recommendation: Annotated[NonEmpty, Field(max_length=4000)]
@@ -1524,7 +1638,8 @@ class AssistedOpinionCandidate(DomainModel):
 
     @model_validator(mode='after')
     def distinct_references(self):
-        if any(len(set(value)) != len(value) for value in (self.coverage_ids, self.anchor_ids, self.authority_refs, self.unknowns)):
+        if not self.anchor_ids and not self.verification_ids:raise ValueError('verified source reference required')
+        if any(len(set(value)) != len(value) for value in (self.coverage_ids, self.anchor_ids, self.verification_ids,self.authority_refs, self.unknowns)):
             raise ValueError('candidate references cannot repeat')
         if self.authority_refs and self.basis_kind != 'pending_authority':
             raise ValueError('unverified legal references must stay pending')
@@ -1535,7 +1650,8 @@ class AssistedReviewInput(DomainModel):
     context_sha256: SHA256
     fact_version: PositiveInt
     document_hashes: Mapping[UUID, SHA256]
-    examined_anchor_ids: Annotated[tuple[UUID, ...], Field(min_length=1, max_length=512)]
+    examined_anchor_ids: Annotated[tuple[UUID, ...], Field(max_length=512)]
+    examined_verification_ids: Annotated[tuple[UUID, ...], Field(max_length=256)] = Field(default=(), exclude_if=lambda value:not value)
     opinions: Annotated[tuple[AssistedOpinionCandidate, ...], Field(min_length=1, max_length=32)]
 
     @field_validator('document_hashes')
@@ -1549,6 +1665,8 @@ class AssistedReviewInput(DomainModel):
 
     @model_validator(mode='after')
     def bounded_distinct_input(self):
+        if not self.examined_anchor_ids and not self.examined_verification_ids:raise ValueError('examined source required')
+        if len(set(self.examined_verification_ids))!=len(self.examined_verification_ids):raise ValueError('duplicate source record')
         if not 1 <= len(self.document_hashes) <= 32: raise ValueError('bounded document set required')
         if len(set(self.examined_anchor_ids)) != len(self.examined_anchor_ids): raise ValueError('examined anchors cannot repeat')
         values = [value.model_dump_json() for value in self.opinions]
@@ -1564,6 +1682,7 @@ class AssistedReviewContextView(DomainModel):
     fact_version: PositiveInt
     document_hashes: Mapping[UUID, SHA256]
     eligible_anchor_ids: tuple[UUID, ...]
+    eligible_verification_ids: tuple[UUID, ...] = Field(default=(), exclude_if=lambda value:not value)
     candidate_source: Literal['manual_synthetic']
     real_model_calls: Literal[0] = 0
     qcc_calls: Literal[0] = 0

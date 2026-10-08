@@ -131,7 +131,18 @@ def review_context(matter_id, actor, db):
     return AssistedReviewContextView(matter_id=matter_id,purpose='assisted_draft',
         context_sha256=context_digest(actual,manifest,policy),policy_sha256=digest(policy.model_dump(mode='json')),
         fact_version=ctx.fact_snapshot.version,document_hashes=manifest.document_hashes,
-        eligible_anchor_ids=tuple(anchors),candidate_source='manual_synthetic')
+        eligible_anchor_ids=tuple(anchors),eligible_verification_ids=verified_source_ids(actual),candidate_source='manual_synthetic')
+
+
+def verified_source_ids(context):
+    return tuple(identifier for fact in context.fact_snapshot.facts
+        if fact.confirmation_status in ('confirmed','corrected') for identifier in fact.verification_ids)
+
+
+def source_records(proposal,actor,db):
+    from ..documents.proofreading import read_current_verification
+    return {identifier:read_current_verification(proposal.matter_id,identifier,actor,db)
+        for identifier in proposal.input.examined_verification_ids}
 
 
 def _validate_input(value,context,manifest,anchors,policy):
@@ -143,10 +154,13 @@ def _validate_input(value,context,manifest,anchors,policy):
     if not examined.issubset(anchors):raise ServiceError('VERSION_CONFLICT',409)
     if any(not set(item.anchor_ids).issubset(examined) for item in value.opinions):
         raise ServiceError('VERSION_CONFLICT',409)
+    verified=set(value.examined_verification_ids)
+    if not verified.issubset(verified_source_ids(context)) or any(not set(item.verification_ids).issubset(verified) for item in value.opinions):
+        raise ServiceError('VERSION_CONFLICT',409)
     return value
 
 
-def proposal_findings(proposal):
+def proposal_findings(proposal,records=None):
     labels={'material_observation':'材料观察（待律师核对）','business_preference':'商业偏好（待律师确认）',
         'pending_authority':'法源依据待核'}
     findings=[]
@@ -154,9 +168,15 @@ def proposal_findings(proposal):
         effect=item.business_effect+'\n候选来源：离线人工/合成；依据类型：'+labels[item.basis_kind]
         effect+='\n待核引用：'+('；'.join(item.authority_refs) if item.authority_refs else '未提供，未形成已核法律依据')
         effect+='\n未知项：'+('；'.join(item.unknowns) if item.unknowns else '本候选未另列；不能据此认定完整或无风险')
+        for source_id in item.verification_ids:
+            source=records[source_id]
+            label={'visible_original':'可见原文核对','lawyer_transcription':'律师转录','provider_clarification':'提供者澄清'}[source.input.source_kind]
+            effect+='\n独立来源：'+label+'；第 '+str(source.input.page)+' 页；记录 '+str(source.id)+'；原件 SHA256 '+source.input.document_sha256
+            effect+='\n核对内容（非PDF文字层）：'+source.input.observed_text
+            effect+='\n远程法律语言模型未运行；离线OCR如有，仅作为未核候选。'
         findings.append(Finding(id=identifier,run_id=proposal.run_id,coverage_ids=item.coverage_ids,
             issue_type=item.issue_type,severity=item.severity,evidence_state=item.evidence_state,
-            anchor_ids=item.anchor_ids,cross_anchor_ids=(),rule_ids=(),authority_ids=(),
+            anchor_ids=item.anchor_ids,verification_ids=item.verification_ids,cross_anchor_ids=(),rule_ids=(),authority_ids=(),
             analysis=item.analysis,business_effect=effect,recommendation=item.recommendation,
             replacement_text=None,fallback='待律师核对人工候选、来源状态及未完成维度。',human_decision=None))
     return tuple(findings)
@@ -189,7 +209,7 @@ def submit_proposal(matter_id, value, actor, db):
         'input':value.model_dump(mode='json'),'finding_ids':[str(v) for v in payload['finding_ids']],
         'execution_receipt':payload['execution_receipt'].model_dump(mode='json')}
     proposal=ReviewProposal(**payload,sha256=digest(encoded))
-    findings=proposal_findings(proposal)
+    findings=proposal_findings(proposal,source_records(proposal,actor,db))
     run=ReviewRun(id=run_id,matter_id=matter_id,manifest=manifest,status='completed',
         coverage=coverage_for(actual,findings,value.examined_anchor_ids,parses),findings=findings,
         limitations=LIMITATIONS+('本轮明确检查的原文锚点：'+str(len(value.examined_anchor_ids))+
@@ -236,7 +256,7 @@ def validate_saved_run(run,row,actor,db,*,state=None):
     manifest,anchors,parses,_,actual=state
     proposal=read_proposal(run.matter_id,run.id,actor,db)
     value=_validate_input(proposal.input,actual,manifest,anchors,policy)
-    findings=proposal_findings(proposal)
+    findings=proposal_findings(proposal,source_records(proposal,actor,db))
     expected=ReviewRun(id=run.id,matter_id=run.matter_id,manifest=manifest,status='completed',
         coverage=coverage_for(actual,findings,value.examined_anchor_ids,parses),findings=findings,
         limitations=LIMITATIONS+('本轮明确检查的原文锚点：'+str(len(value.examined_anchor_ids))+

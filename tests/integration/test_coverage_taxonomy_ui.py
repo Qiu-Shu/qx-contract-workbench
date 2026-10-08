@@ -81,7 +81,9 @@ class FormData {
 }
 const context=vm.createContext({document:{body:{dataset:{section:'taxonomy_test',matter:'synthetic-case',purpose:input.purpose}},
   cookie:'',getElementById:id=>nodes[id]||null,createElement:tag=>new Element(tag)},FormData,
-  fetch:async()=>({ok:true,json:async()=>({matter:{status:'ready_for_review',review_mode:'pre_sign'},documents:[]})}),
+  window:{addEventListener(){}},
+  fetch:async url=>({ok:true,json:async()=>String(url).endsWith('/page-verifications')?[]:
+    ({matter:{status:'ready_for_review',review_mode:'pre_sign'},documents:[],eligible_verification_ids:[]})}),
   crypto:{randomUUID:()=> 'synthetic-id'},setTimeout,console});
 vm.runInContext(input.script,context);
 (async()=>{
