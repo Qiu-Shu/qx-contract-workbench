@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-09",
+  "scope": "current_Codex_chat_registered_fiction_only",
+  "native_calls": 8,
+  "successes": 5,
+  "expected_rejections": 3,
+  "read": {
+    "matter_id": "fdad1fa3-ba7f-481f-b8a9-e2daf6f8a489",
+    "fixture": "sales-01",
+    "anchors": 8,
+    "facts": 1,
+    "real_model_calls": 0,
+    "qcc_calls": 0
+  },
+  "submission": {
+    "grant_id": "852cde30-895e-4ffc-9081-bf054fb687ef",
+    "matter_id": "fdad1fa3-ba7f-481f-b8a9-e2daf6f8a489",
+    "context_sha256": "94d86d5b41016dd9752df78da6ba96ba8ae5e7a69daa15b05663687ab848f351",
+    "input_sha256": "b5cd243700579d0e7a9c54c64d4a0e81886e6e38b3e2400f4ffa815c640e4fbe",
+    "run_id": "9760e25b-0741-4363-a503-640ca6de58c6",
+    "finding_ids": [
+      "4cae9812-dd64-41f5-9ee4-46ed700bb7d7"
+    ],
+    "source": "local_plugin_unverified",
+    "disposition": "awaiting_lawyer"
+  },
+  "identical_replay_equal": true,
+  "different_round_rejected": true,
+  "revoked_read_rejected": true,
+  "revoked_submit_rejected": true,
+  "example_origin": "manually_constructed_not_supplier",
+  "web_ChatGPT_verified": false,
+  "production_complete": false
+}
