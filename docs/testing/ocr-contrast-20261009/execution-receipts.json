@@ -1,0 +1,98 @@
+[
+  {
+    "stage": "corrected-render-red",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/unit/test_ocr_page_rendering.py",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-09T09:01:27.766910+00:00",
+    "finished_utc": "2026-10-09T09:01:28.966230+00:00",
+    "seconds": 1.203,
+    "exit_code": 1,
+    "output_sha256": "ded7345fcdf73f1f92dfb5c4d7bdb6236bb7cc7f30a6d60371bf5ea4bc0a065c"
+  },
+  {
+    "stage": "render-green-final",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/unit/test_ocr_page_rendering.py",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-09T09:01:58.482144+00:00",
+    "finished_utc": "2026-10-09T09:01:59.585617+00:00",
+    "seconds": 1.094,
+    "exit_code": 0,
+    "output_sha256": "440365db2a15e32c4c5de54a593a09bf6f2777a15aae30b748d416746cad5ac8"
+  },
+  {
+    "stage": "related-regression",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/unit/test_ocr_page_rendering.py",
+      "tests/unit/test_ocr_acceptance_scoring.py",
+      "tests/unit/test_ocr_assets.py",
+      "tests/unit/test_windows_ocr_cleanup.py",
+      "tests/integration/test_ocr_worker.py",
+      "tests/integration/test_pdf_proofreading.py",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-09T09:02:48.706510+00:00",
+    "finished_utc": "2026-10-09T09:03:08.710590+00:00",
+    "seconds": 20.0,
+    "exit_code": 0,
+    "output_sha256": "b1cb977b3c1fdc734a95f946f7471dd324b7af2a8126976054f8a57509ca04d7"
+  },
+  {
+    "stage": "binding-regression",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "tests/unit/test_mcp_bound_entry.py",
+      "-q",
+      "--tb=short"
+    ],
+    "started_utc": "2026-10-09T09:03:25.481851+00:00",
+    "finished_utc": "2026-10-09T09:03:30.756188+00:00",
+    "seconds": 5.266,
+    "exit_code": 0,
+    "output_sha256": "b22b0b45658dfb7f6fac3c7522556a1c99f89b6581eb67a047f6b57e92fba599"
+  },
+  {
+    "stage": "bound-entry",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "D:/Documents/ChatGPT/律所项目/src/cn_contract/mcp/bound_entry.py",
+      "--check"
+    ],
+    "started_utc": "2026-10-09T09:03:15.375465+00:00",
+    "finished_utc": "2026-10-09T09:03:15.791298+00:00",
+    "seconds": 0.422,
+    "exit_code": 0,
+    "output_sha256": "798731eb2d712f34e286956d9dcda163c389aa85b0e643c5ed2302907ca7b4dc"
+  },
+  {
+    "stage": "changed-page-regression",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-X",
+      "utf8",
+      ".audit-local/ocr-followup-20261009/changed_pages.py"
+    ],
+    "started_utc": "2026-10-09T09:01:59.946791+00:00",
+    "finished_utc": "2026-10-09T09:07:20.654817+00:00",
+    "seconds": 320.703,
+    "exit_code": 0,
+    "output_sha256": "656d63d3e69f82fd12e9041c857b035bb0671b35d0fd25f7ab0d067f7eadf5ed"
+  }
+]

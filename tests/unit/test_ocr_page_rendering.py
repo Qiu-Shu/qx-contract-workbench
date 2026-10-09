@@ -2,7 +2,7 @@
 from io import BytesIO
 import math
 
-from PIL import Image
+from PIL import Image, ImageOps
 import pypdfium2 as pdfium
 import pytest
 
@@ -40,6 +40,8 @@ def fake_page(monkeypatch, width, height):
         def close(self): calls.append('document_closed')
 
     monkeypatch.setattr(module.pdfium, 'PdfDocument', Document)
+    # Allocation tests use a fake raster; real pixel behavior is checked below.
+    monkeypatch.setattr(ImageOps, 'autocontrast', lambda image: image)
     return calls
 
 
@@ -83,3 +85,49 @@ def test_actual_pdf_raster_preserves_rotated_fractional_page_mapping(rotation):
     # Source mapping uses actual dimensions, including the raster edge rounding.
     assert bw*(w/bw) == pytest.approx(w)
     assert bh*(h/bh) == pytest.approx(h)
+
+
+@pytest.mark.parametrize('ink,paper', [(208, 224), (24, 40)])
+def test_faint_ink_is_enhanced_without_moving_its_page_position(ink, paper):
+    image = Image.new('RGB', (100, 60), (paper,)*3)
+    image.paste((ink,)*3, (20, 10, 60, 40))
+    original = BytesIO()
+    image.save(original, format='PDF', resolution=144)
+    before = original.getvalue()
+    raw, w, h, bw, bh = module.page_bitmap(before, 1)
+    with Image.open(BytesIO(raw)) as raster:
+        assert (w, h, bw, bh) == (50, 30, 200, 120)
+        # PDF image encoding introduces edge ringing; require useful separation,
+        # not artificial pure-black/pure-white interior pixels.
+        assert min(raster.getpixel((180, 100))) - max(raster.getpixel((80, 40))) >= 160
+        # Contrast changes values, never the location or extent of the ink.
+        assert raster.getpixel((80, 40)) < raster.getpixel((10, 40))
+    assert original.getvalue() == before
+
+
+@pytest.mark.parametrize('value', [0, 220, 255])
+def test_uniform_page_remains_uniform_and_has_no_invented_ink(value):
+    original = BytesIO()
+    Image.new('RGB', (100, 60), (value,)*3).save(original, format='PDF')
+    raw, *_ = module.page_bitmap(original.getvalue(), 1)
+    with Image.open(BytesIO(raw)) as raster:
+        assert raster.getextrema() == ((value, value),)*3
+
+
+def test_full_range_color_raster_keeps_exact_pixels():
+    original = BytesIO()
+    image = Image.new('RGB', (100, 60), 'white')
+    image.paste('black', (10, 10, 30, 40))
+    image.paste('red', (60, 10, 90, 40))
+    image.save(original, format='PDF')
+    raw, *_ = module.page_bitmap(original.getvalue(), 1)
+    document = pdfium.PdfDocument(original.getvalue())
+    page = document[0]
+    bitmap = page.render(scale=4)
+    try:
+        with Image.open(BytesIO(raw)) as raster:
+            assert raster.tobytes() == bitmap.to_pil().tobytes()
+    finally:
+        bitmap.close()
+        page.close()
+        document.close()

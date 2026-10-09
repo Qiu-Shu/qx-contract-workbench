@@ -4,6 +4,7 @@ from hashlib import sha256
 from io import BytesIO
 import math
 from uuid import UUID
+from PIL import ImageOps
 import pypdfium2 as pdfium
 from sqlalchemy import ForeignKey,String,Text,select
 from sqlalchemy.orm import Mapped,mapped_column
@@ -53,7 +54,8 @@ def page_bitmap(original,page):
             else:raise ServiceError('FILE_LIMIT',413)
             bitmap=current.render(scale=scale)
             try:
-                image=bitmap.to_pil();buffer=BytesIO();image.save(buffer,format='PNG')
+                # Enhance faint ink for OCR only; preserve every pixel's position.
+                image=ImageOps.autocontrast(bitmap.to_pil());buffer=BytesIO();image.save(buffer,format='PNG')
                 return buffer.getvalue(),width,height,image.width,image.height
             finally:bitmap.close()
         finally:current.close()
