@@ -1,0 +1,20 @@
+{
+  "stage": "final-binding",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/unit/test_mcp_bound_entry.py",
+    "tests/integration/test_plugin_candidates.py",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/plugin-candidates-20261009/final-binding.xml"
+  ],
+  "started_utc": "2026-10-09T02:01:59.988124+00:00",
+  "finished_utc": "2026-10-09T02:03:23.693001+00:00",
+  "seconds": 83.703,
+  "exit_code": 0,
+  "output_sha256": "aba03e7b8e4a58efc20fb1db4e5bec18f836b1d045544b4afb7c84259b23cf52"
+}

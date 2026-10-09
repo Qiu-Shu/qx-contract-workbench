@@ -76,7 +76,7 @@ def repository(tmp_path):
                      (root / 'src/cn_contract/mcp/bound_entry.py').as_posix()],
             'cwd': root.as_posix(), 'enabled': True}}})
     jput(root, 'plugins/qx-contract-offline-codex/.codex-plugin/plugin.json', {
-        'name': 'qx-contract-offline-codex', 'version': '0.1.4',
+        'name': 'qx-contract-offline-codex', 'version': '0.1.5',
         'mcpServers': './.mcp.json'})
     return root
 
@@ -95,7 +95,7 @@ def fixture_payload(root):
                  or p.relative_to(root).as_posix().startswith('tests/fixtures/synthetic/'))}
     payload = {
         'format_version': 2, 'scope': 'LOCAL_CODEX_SOURCE_RUNTIME_STARTUP_BINDING',
-        'adapter_version': '0.1.4', 'repository_root': root.as_posix(),
+        'adapter_version': '0.1.5', 'repository_root': root.as_posix(),
         'entry_file': 'src/cn_contract/mcp/bound_entry.py',
         'offline_module': 'cn_contract.mcp.offline_server',
         'offline_file': 'src/cn_contract/mcp/offline_server.py',
@@ -105,13 +105,13 @@ def fixture_payload(root):
         'runtime_bundled': False, 'startup_hashes_enforced': True,
         'hash_scope': 'SOURCE_FILES_AND_SELECTED_LOCKS_NOT_DEPENDENCY_BYTES_OR_OS_ATTESTATION',
         'repository_file_hashes': dict(sorted(files.items())),
-        'expected_tools': ['workbench_status', 'deepseek_offline_example', 'read_selected_case'],
+        'expected_tools': ['workbench_status', 'deepseek_offline_example', 'read_selected_case', 'submit_selected_candidates'],
         'real_models_enabled': False, 'qcc_enabled': False,
         'host_installation': 'NOT_RUN', 'chatgpt_connection': 'NOT_RUN',
         'production': 'BLOCKED'}
     digest = sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True,
                                separators=(',', ':')).encode('utf-8')).hexdigest()
-    payload['build_id'] = 'qx-offline-source-0.1.4-' + digest[:32]
+    payload['build_id'] = 'qx-offline-source-0.1.5-' + digest[:32]
     return payload
 
 
@@ -204,7 +204,7 @@ def test_binding_shape_and_policy_mismatch_are_rejected(repository, mutation):
     elif mutation == 'tools': payload['expected_tools'].append(CANARY)
     elif mutation == 'false_enforcement': payload['startup_hashes_enforced'] = False
     elif mutation == 'build_canary': payload['build_id'] = CANARY + '\n'
-    elif mutation == 'build_label': payload['build_id'] = 'qx-offline-source-0.1.4-arbitrary-label'
+    elif mutation == 'build_label': payload['build_id'] = 'qx-offline-source-0.1.5-arbitrary-label'
     elif mutation == 'binding_version': payload['adapter_version'] = '0.1.2'
     elif mutation == 'dependency_missing': del payload['installed_versions']['mcp']
     elif mutation == 'dependency_extra': payload['installed_versions'][CANARY] = '1.0'
@@ -316,7 +316,7 @@ def test_capture_is_deterministic_read_only_and_covers_added_source(repository, 
     assert not (repository / BINDING).exists()
     first['expected_tools'].append('not-an-enabled-tool')
     assert module.build_binding_snapshot(repository)['expected_tools'] == [
-        'workbench_status', 'deepseek_offline_example', 'read_selected_case']
+        'workbench_status', 'deepseek_offline_example', 'read_selected_case', 'submit_selected_candidates']
     put(repository, 'src/cn_contract/extra.py', '# extra runtime source')
     second = module.build_binding_snapshot(repository)
     assert second['build_id'] != first['build_id']
@@ -326,7 +326,7 @@ def test_capture_is_deterministic_read_only_and_covers_added_source(repository, 
 
 def test_check_only_outputs_fixed_safe_status_without_importing_tools(monkeypatch, capsys):
     module = api()
-    result = module.BindingVerification('qx-offline-source-0.1.4-' + '0' * 32, 20, 3)
+    result = module.BindingVerification('qx-offline-source-0.1.5-' + '0' * 32, 20, 3)
     monkeypatch.setattr(module, 'verify_runtime_binding', lambda root: result)
     monkeypatch.setattr(module, 'import_module', lambda name: pytest.fail('check must not import tools'))
     assert module.main(['--check']) == 0
@@ -338,7 +338,7 @@ def test_check_only_outputs_fixed_safe_status_without_importing_tools(monkeypatc
 def test_guard_succeeds_before_import_and_stdio_has_no_startup_stdout(monkeypatch, capsys):
     module = api()
     sequence = []
-    result = module.BindingVerification('qx-offline-source-0.1.4-' + '0' * 32, 20, 3)
+    result = module.BindingVerification('qx-offline-source-0.1.5-' + '0' * 32, 20, 3)
     def check(root):
         assert root == ROOT
         sequence.append('verified')

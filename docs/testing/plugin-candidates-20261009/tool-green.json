@@ -1,0 +1,19 @@
+{
+  "stage": "tool-green",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/unit/test_plugin_candidate_tool.py",
+    "tests/unit/test_case_bridge_client.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-09T01:43:22.353188+00:00",
+  "finished_utc": "2026-10-09T01:43:24.245243+00:00",
+  "seconds": 1.891,
+  "exit_code": 0,
+  "output_sha256": "f1bc41d5e5863d29ae6139275d62c47291c4a68347dac66a0a027412cd960c4b"
+}

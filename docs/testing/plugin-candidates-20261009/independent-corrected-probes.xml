@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="5" time="19.385" timestamp="2026-10-09T09:48:43.982794+08:00" hostname="PC-20260920HQJZ"><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_read_after_submit_does_not_destroy_replay" time="3.556"><failure message="AssertionError: (409, '{&quot;code&quot;:&quot;STATE_CONFLICT&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;8bc5650a-3007-4634-99df-a5b604b5abe3&quot;,&quot;r...QUIRED&quot;,&quot;message&quot;:&quot;request not authorized&quot;,&quot;correlation_id&quot;:&quot;90d026e1-5351-437a-b645-4e834c90fe8b&quot;,&quot;retryable&quot;:false}')&#10;assert (401 == 201)&#10; +  where 401 = &lt;Response [401 Unauthorized]&gt;.status_code">selected = (&lt;starlette.testclient.TestClient object at 0x000002D2C55A34A0&gt;, &lt;cn_contract.persistence.Database object at 0x000002D...nistrator/pytest-572/test_read_after_submit_does_no0/selected-case.json'), '57da9d54-bf8f-4739-914b-1e824e86d904', ...)
+
+    def test_read_after_submit_does_not_destroy_replay(selected):
+        client = selected[0]
+        body = input_body(selected)
+        _, auth = open_write(selected)
+        first = post(client, auth, body)
+        assert first.status_code == 201
+        read = client.get('/api/case-bridge/context', headers=auth)
+        replay = post(client, auth, body)
+&gt;       assert replay.status_code == 201 and replay.json() == first.json(), (read.status_code, read.text, replay.status_code, replay.text)
+E       AssertionError: (409, '{"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"8bc5650a-3007-4634-99df-a5b604b5abe3","r...QUIRED","message":"request not authorized","correlation_id":"90d026e1-5351-437a-b645-4e834c90fe8b","retryable":false}')
+E       assert (401 == 201)
+E        +  where 401 = &lt;Response [401 Unauthorized]&gt;.status_code
+
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:22: AssertionError</failure></testcase><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_write_grant_read_does_not_claim_manual_model_origin" time="2.696"><failure message="AssertionError: assert 'manual_synthetic' not in '内容会进入调用插件的聊...数值重审及生产均未完成。'&#10;  &#10;  'manual_synthetic' is contained here:&#10;    源：离线人工/合成（manual_synthetic）；真实模型推理NOT_RUN，真实模型调用0。&#10;  ?           ++++++++++++++++&#10;    QCC关闭，查询调用0；未查询不能解释为现实记录不存在或无风险。&#10;    每项人工候选与待核依据须由律师核对；待核引用未登记为已批准法源或规则。&#10;    未涉及的维度保持材料不足；法律gold、完整补丁后法律与数值重审及生产均未完成。">selected = (&lt;starlette.testclient.TestClient object at 0x000002D2C6E4B500&gt;, &lt;cn_contract.persistence.Database object at 0x000002D...nistrator/pytest-572/test_write_grant_read_does_not0/selected-case.json'), 'f7a5e1e9-bed0-4d28-bf36-67cbd24c6d92', ...)
+
+    def test_write_grant_read_does_not_claim_manual_model_origin(selected):
+        client = selected[0]
+        _, auth = open_write(selected)
+        response = client.get('/api/case-bridge/context', headers=auth)
+        assert response.status_code == 200
+&gt;       assert 'manual_synthetic' not in '\n'.join(response.json()['limitations'])
+E       AssertionError: assert 'manual_synthetic' not in '内容会进入调用插件的聊...数值重审及生产均未完成。'
+E         
+E         'manual_synthetic' is contained here:
+E           源：离线人工/合成（manual_synthetic）；真实模型推理NOT_RUN，真实模型调用0。
+E         ?           ++++++++++++++++
+E           QCC关闭，查询调用0；未查询不能解释为现实记录不存在或无风险。
+E           每项人工候选与待核依据须由律师核对；待核引用未登记为已批准法源或规则。
+E           未涉及的维度保持材料不足；法律gold、完整补丁后法律与数值重审及生产均未完成。
+
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:30: AssertionError</failure></testcase><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_commit_failure_leaves_no_ghost_receipt" time="4.905" /><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_revocation_between_validation_and_write_blocks" time="2.596" /><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_reopened_database_retains_receipt_but_not_grant" time="4.686" /></testsuite></testsuites>

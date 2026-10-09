@@ -107,10 +107,15 @@ def _scope(run,actor,db,*,audience='internal'):
     from ..persistence import read_matter,read_original
     from ..documents.ingest import _parse
     matter=read_matter(run.matter_id,actor,db)
+    plugin_source=False
+    if run.manifest.model_provider=='assisted_manual':
+        from ..review.proposals import read_proposal
+        plugin_source=read_proposal(run.matter_id,run.id,actor,db).execution_receipt.source=='local_plugin_unverified'
     scope=['本次审查记录：'+str(run.id)+'；完成时间（UTC）：'+str(run.finished_at),
         '事实快照：'+run.manifest.fact_snapshot_sha256,'法律规则快照：'+run.manifest.rules_sha256,
         '客户政策快照：'+run.manifest.policy_sha256,
-        ('本次采用离线人工/合成候选；真实模型推理NOT_RUN，真实模型调用0；' if run.manifest.model_provider=='assisted_manual'
+        ('本次采用本机插件候选；模型身份与推理来源未核验，工作台远程模型调用0；' if plugin_source else
+         '本次采用离线人工/合成候选；真实模型推理NOT_RUN，真实模型调用0；' if run.manifest.model_provider=='assisted_manual'
          else '本次仅采用本地模拟模型；')+'未关联企业查询收据，未采用任何原始企业查询材料。未查询不能解释为无风险。']
     if audience=='client':scope=[scope[0],scope[-1]]
     labels=_client_scope_labels if audience=='client' else '、'.join
@@ -134,6 +139,10 @@ def _scope(run,actor,db,*,audience='internal'):
 
 def prepare_exports(run,audience,patches,actor,*,db):
     run=s.load_run(run,actor,db)
+    candidate_source=None
+    if run.manifest.model_provider=='assisted_manual':
+        from ..review.proposals import read_proposal
+        candidate_source=read_proposal(run.matter_id,run.id,actor,db).execution_receipt.source
     snapshot=read_snapshot(run.matter_id,run.id,actor,db=db)
     _,history=read_history(run.matter_id,run.id,actor,db=db)
     if audience not in AUDIENCES:raise ServiceError('NOT_SUPPORTED',422)
@@ -161,7 +170,7 @@ def prepare_exports(run,audience,patches,actor,*,db):
                 manual.extend(_manual(anchor,patch,'已有页眉页脚需要人工保真处理') for patch,anchor in values)
             else:artifacts.append(_artifact(raw,'redline_contract_docx',run,audience,actor,db))
         report=_artifact(build(project(run,audience,patches,manual,scope=scope,internal=internal,
-            snapshot=snapshot,decision_history=history)),'review_report_docx',run,audience,actor,db)
+            snapshot=snapshot,decision_history=history,candidate_source=candidate_source)),'review_report_docx',run,audience,actor,db)
         artifacts.insert(0,report)
         identifier=uuid4()
         metadata={'run_sha256':s.sha(run.model_dump(mode='json')),'patch_set_sha256':s.sha(approvals),

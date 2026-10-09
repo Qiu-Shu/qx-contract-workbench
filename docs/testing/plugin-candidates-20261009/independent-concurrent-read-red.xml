@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="4.946" timestamp="2026-10-09T10:00:00.552766+08:00" hostname="PC-20260920HQJZ"><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_read_during_submit_does_not_use_precommit_finished_flag" time="3.860"><failure message="cn_contract.security.ServiceError: request blocked">selected = (&lt;starlette.testclient.TestClient object at 0x000001913CB79A00&gt;, &lt;cn_contract.persistence.Database object at 0x0000019...nistrator/pytest-578/test_read_during_submit_does_n0/selected-case.json'), 'e7f12d3f-517d-453f-a0b6-eb76e2f98a0c', ...)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001913DF07A70&gt;
+
+    def test_read_during_submit_does_not_use_precommit_finished_flag(selected, monkeypatch):
+        from threading import current_thread
+        from cn_contract.review import proposals
+        client, database, _, bridge, _, _, _, _ = selected
+        body = input_body(selected)
+        _, auth = open_write(selected)
+        writing, release_write, read_context = Event(), Event(), Event()
+        original_audit, original_context = bridge._audit, proposals._context_state
+        def audit(action, *args):
+            original_audit(action, *args)
+            if action == 'case_bridge_submitted':
+                writing.set()
+                assert release_write.wait(5)
+        def context(*args, **kwargs):
+            if current_thread().name.startswith('reader'):
+                read_context.set()
+            return original_context(*args, **kwargs)
+        monkeypatch.setattr(bridge, '_audit', audit)
+        monkeypatch.setattr(proposals, '_context_state', context)
+        def read():
+            with database.session() as db:
+                return bridge.read(auth['Authorization'], db)
+        with ThreadPoolExecutor(max_workers=1, thread_name_prefix='writer') as writer, ThreadPoolExecutor(max_workers=1, thread_name_prefix='reader') as reader:
+            submitted = writer.submit(post, client, auth, body)
+            assert writing.wait(5)
+            pending_read = reader.submit(read)
+            read_context.wait(1)
+            release_write.set()
+            first = submitted.result(timeout=5)
+            assert first.status_code == 201, first.text
+&gt;           result = pending_read.result(timeout=5)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:172: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:163: in read
+    return bridge.read(auth['Authorization'], db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\case_bridge.py:175: in read
+    policy, _, _, state = proposals._context_state(grant.matter_id, actor, db, allow_finished=finished)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:158: in context
+    return original_context(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\review\proposals.py:125: in _context_state
+    state=current_manifest(ctx,actor,db,config,allow_finished=allow_finished)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+context = ReviewContext(matter=Matter(id=UUID('e7f12d3f-517d-453f-a0b6-eb76e2f98a0c'), client_ref='SYNTHETIC-d0f2024090594dba98a...ageId.C14: 'C14'&gt;, &lt;CoverageId.C15: 'C15'&gt;, &lt;CoverageId.C16: 'C16'&gt;, &lt;CoverageId.C17: 'C17'&gt;, &lt;CoverageId.C18: 'C18'&gt;))
+actor = Actor(user_id=UUID('9aa09f68-5e81-44de-8869-4d3dd215558e'), roles=frozenset({&lt;Role.HANDLING_LAWYER: 'handling_lawyer'&gt;}), session_id=UUID('17c5d1c9-6c84-4fd6-b934-dfb84e54f91c'))
+db = &lt;sqlalchemy.orm.session.Session object at 0x000001913E9F87A0&gt;
+config = {'candidate_source': 'manual_synthetic', 'chunk_anchors': 32, 'engine': 'assisted-manual-v1', 'policy_sha256': '8b5614675ca583562987e765cc432eb4da964ead212e7eff8066273b09e6b4cb', ...}
+
+    def current_manifest(context,actor,db,config,*,allow_finished=False):
+        authorize(actor,context.matter.id,'review' if not allow_finished else 'read',db)
+        context=ReviewContext.model_validate_json(context.model_dump_json())
+        matter=read_matter(context.matter.id,actor,db)
+        statuses={'ready_for_review','awaiting_lawyer','failed'} if allow_finished else {'ready_for_review'}
+&gt;       if matter.status not in statuses: raise ServiceError('STATE_CONFLICT',409)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\review\workflow.py:46: ServiceError</failure></testcase></testsuite></testsuites>

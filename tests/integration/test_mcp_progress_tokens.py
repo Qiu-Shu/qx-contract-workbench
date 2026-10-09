@@ -17,7 +17,7 @@ def test_bounded_opaque_string_progress_token_allows_discovery_and_fixed_tools(t
         listing = send('tools/list', {'_meta': metadata}, request_id=2)
         assert 'result' in listing, listing
         assert {item['name'] for item in listing['result']['tools']} == {
-            'workbench_status', 'deepseek_offline_example', 'read_selected_case'}
+            'workbench_status', 'deepseek_offline_example', 'read_selected_case', 'submit_selected_candidates'}
         status = send('tools/call', {'name': 'workbench_status', 'arguments': {},
                                     '_meta': metadata}, request_id=3)
         assert 'result' in status, status
@@ -86,5 +86,5 @@ def test_string_progress_token_does_not_expand_other_methods_or_business_argumen
             assert response['error'] == {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}
             assert 'opaque-42' not in json.dumps(response['error'])
         listing = send('tools/list', {'_meta': metadata}, request_id=100)
-        assert len(listing['result']['tools']) == 3
+        assert len(listing['result']['tools']) == 4
     assert process.returncode == 0 and ''.join(stderr) == ''

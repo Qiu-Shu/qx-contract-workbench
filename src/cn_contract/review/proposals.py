@@ -6,7 +6,8 @@ from uuid import uuid4
 from sqlalchemy import select
 
 from ..domain import (SyntheticAssistedPolicy, AssistedFactsInput, AssistedReviewInput,
-    AssistedReviewContextView, Fact, FactSnapshot, Finding, ManualCandidateReceipt, ReviewProposal, ReviewRun)
+    AssistedReviewContextView, Fact, FactSnapshot, Finding, ManualCandidateReceipt, PluginCandidateReceipt,
+    ReviewProposal, ReviewRun)
 from ..persistence import (configured_database, read_matter, read_version, get_parse_result,
     get_fact_snapshot, fact_snapshot_sha256, save_fact_snapshot, review_status_changed)
 from ..security import ServiceError, authorize
@@ -125,8 +126,8 @@ def _context_state(matter_id,actor,db,*,allow_finished=False):
     return policy,ctx,config,state
 
 
-def review_context(matter_id, actor, db):
-    policy,ctx,_,state=_context_state(matter_id,actor,db)
+def review_context(matter_id, actor, db, *, allow_finished=False):
+    policy,ctx,_,state=_context_state(matter_id,actor,db,allow_finished=allow_finished)
     manifest,anchors,_,_,actual=state
     return AssistedReviewContextView(matter_id=matter_id,purpose='assisted_draft',
         context_sha256=context_digest(actual,manifest,policy),policy_sha256=digest(policy.model_dump(mode='json')),
@@ -160,12 +161,23 @@ def _validate_input(value,context,manifest,anchors,policy):
     return value
 
 
+def proposal_limitations(proposal):
+    if proposal.execution_receipt.source == 'manual_synthetic': return LIMITATIONS
+    return PLUGIN_LIMITATIONS
+
+
+PLUGIN_LIMITATIONS = (LIMITATIONS[0], '候选来源：本机插件提交；模型身份和推理来源未核验（local_plugin_unverified）。',
+    '工作台未调用远程模型；插件来源不是律师已采纳、已核法源或法律质量证明。', LIMITATIONS[2],
+    '每项插件候选与待核依据须由律师核对；待核引用未登记为已批准法源或规则。', LIMITATIONS[4])
+
+
 def proposal_findings(proposal,records=None):
     labels={'material_observation':'材料观察（待律师核对）','business_preference':'商业偏好（待律师确认）',
         'pending_authority':'法源依据待核'}
     findings=[]
     for identifier,item in zip(proposal.finding_ids,proposal.input.opinions):
-        effect=item.business_effect+'\n候选来源：离线人工/合成；依据类型：'+labels[item.basis_kind]
+        origin = '离线人工/合成' if proposal.execution_receipt.source == 'manual_synthetic' else '本机插件提交，模型来源未核验'
+        effect=item.business_effect+'\n候选来源：'+origin+'；依据类型：'+labels[item.basis_kind]
         effect+='\n待核引用：'+('；'.join(item.authority_refs) if item.authority_refs else '未提供，未形成已核法律依据')
         effect+='\n未知项：'+('；'.join(item.unknowns) if item.unknowns else '本候选未另列；不能据此认定完整或无风险')
         for source_id in item.verification_ids:
@@ -173,12 +185,14 @@ def proposal_findings(proposal,records=None):
             label={'visible_original':'可见原文核对','lawyer_transcription':'律师转录','provider_clarification':'提供者澄清'}[source.input.source_kind]
             effect+='\n独立来源：'+label+'；第 '+str(source.input.page)+' 页；记录 '+str(source.id)+'；原件 SHA256 '+source.input.document_sha256
             effect+='\n核对内容（非PDF文字层）：'+source.input.observed_text
-            effect+='\n远程法律语言模型未运行；离线OCR如有，仅作为未核候选。'
+            effect+= ('\n远程法律语言模型未运行；离线OCR如有，仅作为未核候选。' if proposal.execution_receipt.source == 'manual_synthetic'
+                else '\n工作台未调用远程法律语言模型；离线OCR如有，仅作为未核候选。')
         findings.append(Finding(id=identifier,run_id=proposal.run_id,coverage_ids=item.coverage_ids,
             issue_type=item.issue_type,severity=item.severity,evidence_state=item.evidence_state,
             anchor_ids=item.anchor_ids,verification_ids=item.verification_ids,cross_anchor_ids=(),rule_ids=(),authority_ids=(),
             analysis=item.analysis,business_effect=effect,recommendation=item.recommendation,
-            replacement_text=None,fallback='待律师核对人工候选、来源状态及未完成维度。',human_decision=None))
+            replacement_text=None,fallback=('待律师核对人工候选、来源状态及未完成维度。' if proposal.execution_receipt.source == 'manual_synthetic'
+                else '待律师核对插件候选、来源状态及未完成维度。'),human_decision=None))
     return tuple(findings)
 
 
@@ -191,7 +205,7 @@ def _save_proposal(proposal,actor,db):
     db.flush()
 
 
-def submit_proposal(matter_id, value, actor, db):
+def submit_proposal(matter_id, value, actor, db, *, bridge_grant=None):
     from .workflow import current_manifest,coverage_for
     from .storage import _save
     from ..ops.storage import require_active
@@ -200,10 +214,16 @@ def submit_proposal(matter_id, value, actor, db):
     manifest,anchors,parses,_,actual=state
     value=_validate_input(value,actual,manifest,anchors,policy)
     started=datetime.now(timezone.utc);run_id=uuid4()
+    receipt = ManualCandidateReceipt(source='manual_synthetic',submitted_by=actor.user_id,submitted_at=started)
+    if bridge_grant is not None:
+        if (bridge_grant.read_only or bridge_grant.matter_id != matter_id
+                or bridge_grant.context_sha256 != value.context_sha256 or bridge_grant.expires_at <= started):
+            raise ServiceError('AUTHENTICATION_REQUIRED', 403)
+        receipt = PluginCandidateReceipt(submitted_by=actor.user_id, submitted_at=started, grant_id=bridge_grant.id)
     payload={'id':uuid4(),'matter_id':matter_id,'run_id':run_id,'policy_sha256':digest(policy.model_dump(mode='json')),
         'context_sha256':value.context_sha256,'input_sha256':digest(value.model_dump(mode='json')),
         'input':value,'finding_ids':tuple(uuid4() for _ in value.opinions),
-        'execution_receipt':ManualCandidateReceipt(source='manual_synthetic',submitted_by=actor.user_id,submitted_at=started)}
+        'execution_receipt':receipt}
     # Hash the exact typed JSON payload before constructing its frozen model.
     encoded={**payload,'id':str(payload['id']),'matter_id':str(matter_id),'run_id':str(run_id),
         'input':value.model_dump(mode='json'),'finding_ids':[str(v) for v in payload['finding_ids']],
@@ -212,7 +232,7 @@ def submit_proposal(matter_id, value, actor, db):
     findings=proposal_findings(proposal,source_records(proposal,actor,db))
     run=ReviewRun(id=run_id,matter_id=matter_id,manifest=manifest,status='completed',
         coverage=coverage_for(actual,findings,value.examined_anchor_ids,parses),findings=findings,
-        limitations=LIMITATIONS+('本轮明确检查的原文锚点：'+str(len(value.examined_anchor_ids))+
+        limitations=proposal_limitations(proposal)+('本轮明确检查的原文锚点：'+str(len(value.examined_anchor_ids))+
             '；当前可消费锚点：'+str(len(anchors))+'；不声明全文已经法律审查。',),
         model_usage=(),started_at=started,finished_at=datetime.now(timezone.utc),error_code=None)
     with db.begin_nested():
@@ -259,7 +279,7 @@ def validate_saved_run(run,row,actor,db,*,state=None):
     findings=proposal_findings(proposal,source_records(proposal,actor,db))
     expected=ReviewRun(id=run.id,matter_id=run.matter_id,manifest=manifest,status='completed',
         coverage=coverage_for(actual,findings,value.examined_anchor_ids,parses),findings=findings,
-        limitations=LIMITATIONS+('本轮明确检查的原文锚点：'+str(len(value.examined_anchor_ids))+
+        limitations=proposal_limitations(proposal)+('本轮明确检查的原文锚点：'+str(len(value.examined_anchor_ids))+
             '；当前可消费锚点：'+str(len(anchors))+'；不声明全文已经法律审查。',),
         model_usage=(),started_at=proposal.execution_receipt.submitted_at,finished_at=run.finished_at,error_code=None)
     if (proposal.policy_sha256!=digest(policy.model_dump(mode='json')) or run!=expected

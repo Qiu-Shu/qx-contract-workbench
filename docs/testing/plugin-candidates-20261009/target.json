@@ -1,0 +1,22 @@
+{
+  "stage": "target",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_plugin_candidates.py",
+    "tests/integration/test_case_bridge.py",
+    "tests/unit/test_plugin_candidate_tool.py",
+    "tests/unit/test_case_bridge_client.py",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/plugin-candidates-20261009/target.xml"
+  ],
+  "started_utc": "2026-10-09T01:43:53.215546+00:00",
+  "finished_utc": "2026-10-09T01:45:46.086374+00:00",
+  "seconds": 112.859,
+  "exit_code": 0,
+  "output_sha256": "143ec1344529aa6ae33a3f395b1f49a518b2b668509dfd734667f375c6cc1b5f"
+}

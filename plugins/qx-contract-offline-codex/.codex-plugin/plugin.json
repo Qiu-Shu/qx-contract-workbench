@@ -1,15 +1,15 @@
 {
   "name": "qx-contract-offline-codex",
-  "version": "0.1.4",
-  "description": "本机离线 source 适配包；启动先核验项目源绑定，再提供固定虚构示例及明确选案只读工具。",
+  "version": "0.1.5",
+  "description": "本机离线 source 适配包；启动核验项目源绑定，提供固定虚构示例、明确选案读取和单独授权的一轮待核候选提交。",
   "author": {
     "name": "群兴合同审查工作台项目"
   },
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "群兴合同审查·本机离线",
-    "shortDescription": "本机状态、虚构示例与临时选案只读",
-    "longDescription": "仅适配当前 Windows Codex 宿主与现有仓库环境。提供能力状态、四类固定虚构合同的人工 DeepSeek 协议示例，以及律师在工作台明确开放的15分钟案件只读连接；费用未知，示例不构成法律意见或真实模型调用。网页 ChatGPT 连接、真实模型、企查查、正式签发及生产继续阻断。",
+    "shortDescription": "虚构选案读取与明确授权的待核候选提交",
+    "longDescription": "仅适配当前 Windows Codex 宿主与现有仓库环境。提供能力状态、固定虚构合同的人工 DeepSeek 协议示例，以及工作台明确开放的15分钟选案连接；默认为只读，另行勾选授权后可提交一轮待律师处置候选。插件模型身份及推理未核验，后台远程模型关闭，不自动采纳或批准。网页 ChatGPT 连接、真实模型、企查查、正式签发及生产继续阻断。",
     "developerName": "群兴合同审查工作台项目",
     "category": "Productivity",
     "capabilities": [],

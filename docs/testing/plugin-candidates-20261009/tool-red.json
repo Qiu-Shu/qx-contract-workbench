@@ -1,0 +1,18 @@
+{
+  "stage": "tool-red",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/unit/test_plugin_candidate_tool.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-09T01:42:43.457944+00:00",
+  "finished_utc": "2026-10-09T01:42:45.145976+00:00",
+  "seconds": 1.688,
+  "exit_code": 1,
+  "output_sha256": "69adb4c8785041bd7d88e0e9e10b7b0bd4e99794f858cff52de07c7deb510833"
+}

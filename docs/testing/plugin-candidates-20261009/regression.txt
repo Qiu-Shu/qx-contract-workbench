@@ -1,0 +1,15 @@
+.......................................F................................ [ 26%]
+........................................................................ [ 53%]
+........................................................................ [ 79%]
+.......................................................                  [100%]
+================================== FAILURES ===================================
+___ test_assisted_bootstrap_uses_exact_twelve_sources_and_loopback_fiction ____
+tests\integration\test_assisted_review.py:422: in test_assisted_bootstrap_uses_exact_twelve_sources_and_loopback_fiction
+    assert '离线人工候选' in client.get('/').text
+E   assert '离线人工候选' in '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initi...案件</button></form></section><section><h2>我有权限的案件</h2><div id="cases"></div></section>\n\n\n</main></div></body></html>'
+E    +  where '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initi...案件</button></form></section><section><h2>我有权限的案件</h2><div id="cases"></div></section>\n\n\n</main></div></body></html>' = <Response [200 OK]>.text
+E    +    where <Response [200 OK]> = get('/')
+E    +      where get = <starlette.testclient.TestClient object at 0x0000026C063B4800>.get
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assisted_review.py::test_assisted_bootstrap_uses_exact_twelve_sources_and_loopback_fiction
+1 failed, 270 passed in 484.27s (0:08:04)

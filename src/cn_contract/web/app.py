@@ -109,7 +109,7 @@ async def body_input(request,model):
 def project_bundle(bundle,*,purpose='mock_demo'):
     return {**bundle.model_dump(mode='json',exclude={'artifacts'}),'draft':True,
         'artifacts':[a.model_dump(mode='json',exclude={'storage_ref'}) for a in bundle.artifacts],
-        'limitations':['独立虚构/离线人工候选工作稿，真实模型推理未运行，不能正式签发' if purpose=='assisted_draft' else '虚构/mock草案，不能正式签发',
+        'limitations':['独立虚构辅助工作稿，候选来源以稿内记录为准；工作台远程模型关闭，不能正式签发' if purpose=='assisted_draft' else '虚构/mock草案，不能正式签发',
             '对外原件包修改需人工；完整补丁后法律与数值重审未实现']}
 
 

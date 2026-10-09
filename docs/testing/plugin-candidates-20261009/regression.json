@@ -1,0 +1,28 @@
+{
+  "stage": "regression",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_assisted_review.py",
+    "tests/integration/test_assisted_confirmation.py",
+    "tests/integration/test_pdf_proofreading.py",
+    "tests/unit/test_mcp_offline.py",
+    "tests/unit/test_mcp_bound_entry.py",
+    "tests/unit/test_mcp_chat_metadata.py",
+    "tests/integration/test_mcp_offline_stdio.py",
+    "tests/integration/test_mcp_host_metadata.py",
+    "tests/integration/test_mcp_progress_tokens.py",
+    "tests/integration/test_mcp_chat_envelope.py",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/plugin-candidates-20261009/regression.xml"
+  ],
+  "started_utc": "2026-10-09T01:46:59.342282+00:00",
+  "finished_utc": "2026-10-09T01:55:06.023720+00:00",
+  "seconds": 486.672,
+  "exit_code": 1,
+  "output_sha256": "45fe469cff4e18bb2a8af5e74871ddd7801a92ef4fb5b7536e9c3593469373f1"
+}

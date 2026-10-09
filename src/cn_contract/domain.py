@@ -18,7 +18,7 @@ from uuid import UUID
 
 from pydantic import (
     AfterValidator, AwareDatetime, BaseModel, BeforeValidator, ConfigDict,
-    Field, JsonValue, StringConstraints, field_serializer, field_validator,
+    Field, JsonValue, StrictBool, StringConstraints, field_serializer, field_validator,
     model_validator,
 )
 
@@ -1683,10 +1683,10 @@ class AssistedReviewContextView(DomainModel):
     document_hashes: Mapping[UUID, SHA256]
     eligible_anchor_ids: tuple[UUID, ...]
     eligible_verification_ids: tuple[UUID, ...] = Field(default=(), exclude_if=lambda value:not value)
-    candidate_source: Literal['manual_synthetic']
+    candidate_source: Literal['manual_synthetic', 'local_plugin_unverified']
     real_model_calls: Literal[0] = 0
     qcc_calls: Literal[0] = 0
-    model_inference: Literal['NOT_RUN'] = 'NOT_RUN'
+    model_inference: Literal['NOT_RUN', 'NOT_ATTESTED'] = 'NOT_RUN'
 
     @field_validator('document_hashes')
     @classmethod
@@ -1701,6 +1701,7 @@ class AssistedReviewContextView(DomainModel):
 class CaseBridgeConsent(DomainModel):
     context_sha256: SHA256
     share_with_chat: Literal[True]
+    allow_candidate_submission: StrictBool = False
 
     @field_validator('share_with_chat', mode='before')
     @classmethod
@@ -1714,7 +1715,7 @@ class CaseBridgeGrant(DomainModel):
     matter_id: UUID
     context_sha256: SHA256
     expires_at: UTCDatetime
-    read_only: Literal[True] = True
+    read_only: StrictBool = True
 
 
 class CaseBridgeReadingScope(DomainModel):
@@ -1750,6 +1751,28 @@ class ManualCandidateReceipt(DomainModel):
     model_inference: Literal['NOT_RUN'] = 'NOT_RUN'
 
 
+class PluginCandidateReceipt(DomainModel):
+    source: Literal['local_plugin_unverified'] = 'local_plugin_unverified'
+    submitted_by: UUID
+    submitted_at: UTCDatetime
+    grant_id: UUID
+    model_identity: Literal['UNVERIFIED'] = 'UNVERIFIED'
+    model_inference: Literal['NOT_ATTESTED'] = 'NOT_ATTESTED'
+    backend_model_calls: Literal[0] = 0
+    qcc_calls: Literal[0] = 0
+
+
+class PluginCandidateSubmission(DomainModel):
+    grant_id: UUID
+    matter_id: UUID
+    context_sha256: SHA256
+    input_sha256: SHA256
+    run_id: UUID
+    finding_ids: tuple[UUID, ...]
+    source: Literal['local_plugin_unverified'] = 'local_plugin_unverified'
+    disposition: Literal['awaiting_lawyer'] = 'awaiting_lawyer'
+
+
 class ReviewProposal(DomainModel):
     id: UUID
     matter_id: UUID
@@ -1759,7 +1782,7 @@ class ReviewProposal(DomainModel):
     input_sha256: SHA256
     input: AssistedReviewInput
     finding_ids: tuple[UUID, ...]
-    execution_receipt: ManualCandidateReceipt
+    execution_receipt: Annotated[Union[ManualCandidateReceipt, PluginCandidateReceipt], Field(discriminator='source')]
     sha256: SHA256
 
     @model_validator(mode='after')

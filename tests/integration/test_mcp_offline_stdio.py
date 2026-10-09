@@ -20,7 +20,7 @@ def test_stdlib_child_handshake_discovery_calls_and_clean_shutdown():
         init = initialize(send)
         assert init['serverInfo']['name'] == 'qx-contract-offline'
         tools = send('tools/list', {}, request_id=2)['result']['tools']
-        assert {tool['name'] for tool in tools} == {'workbench_status', 'deepseek_offline_example', 'read_selected_case'}
+        assert {tool['name'] for tool in tools} == {'workbench_status', 'deepseek_offline_example', 'read_selected_case', 'submit_selected_candidates'}
         status = send('tools/call', {'name': 'workbench_status', 'arguments': {}}, request_id=3)
         assert status['result']['structuredContent']['status'] == 'OFFLINE_ONLY'
         example = send('tools/call', {'name': 'deepseek_offline_example', 'arguments': {
@@ -83,7 +83,7 @@ def test_empty_sdk_protocol_metadata_is_accepted_without_relaxing_arguments():
     with child() as (process, send, stderr):
         initialize(send)
         listing = send('tools/list', {'_meta': {}}, request_id=2)
-        assert len(listing['result']['tools']) == 3
+        assert len(listing['result']['tools']) == 4
         status = send('tools/call', {'name': 'workbench_status', 'arguments': {}, '_meta': {}}, request_id=3)
         assert status['result']['structuredContent']['status'] == 'OFFLINE_ONLY'
         rejected = send('tools/call', {'name': 'workbench_status', 'arguments': {'_meta': {}}}, request_id=4)
@@ -131,7 +131,7 @@ runpy.run_module("cn_contract.mcp.offline_server", run_name="__main__")
 '''
     with child(launch_code=launch_code) as (process, send, stderr):
         initialize(send)
-        assert len(send('tools/list', {}, request_id=2)['result']['tools']) == 3
+        assert len(send('tools/list', {}, request_id=2)['result']['tools']) == 4
         response = send('tools/call', {'name': CANARY, 'arguments': {}}, request_id=3)
         assert response['error']['message'] == 'OFFLINE_REQUEST_REJECTED'
         result = send('tools/call', {'name': 'deepseek_offline_example', 'arguments': {
@@ -150,7 +150,7 @@ def test_installed_sdk_client_actual_stdio_roundtrip_and_refusal():
                 async with ClientSession(*streams) as session:
                     await session.initialize()
                     tools = await session.list_tools()
-                    assert len(tools.tools) == 3
+                    assert len(tools.tools) == 4
                     result = await session.call_tool('deepseek_offline_example', {
                         'fixture': 'sales', 'operation': 'extract_facts', 'model': 'deepseek-flash'})
                     assert result.structured_content['response_origin'] == 'manually_constructed_not_supplier'

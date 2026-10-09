@@ -1,0 +1,19 @@
+{
+  "stage": "browser",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    ".audit-local/plugin-candidates-20261009/test_browser.py",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/plugin-candidates-20261009/browser.xml"
+  ],
+  "started_utc": "2026-10-09T01:59:40.794157+00:00",
+  "finished_utc": "2026-10-09T01:59:51.308921+00:00",
+  "seconds": 10.515,
+  "exit_code": 0,
+  "output_sha256": "b364bf983083c1ceab487fdb80c2127bbfdad9056d50d5072ed065aaf97d5cdb"
+}

@@ -1,0 +1,10 @@
+.F..........                                                             [100%]
+================================== FAILURES ===================================
+_________ test_plugin_source_persists_as_unverified_and_awaits_lawyer _________
+tests\integration\test_plugin_candidates.py:60: in test_plugin_source_persists_as_unverified_and_awaits_lawyer
+    assert client.get(f'/api/matters/{matter}').json()['status'] == 'awaiting_lawyer'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'status'
+=========================== short test summary info ===========================
+FAILED tests/integration/test_plugin_candidates.py::test_plugin_source_persists_as_unverified_and_awaits_lawyer
+1 failed, 11 passed in 32.58s

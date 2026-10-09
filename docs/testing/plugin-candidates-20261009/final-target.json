@@ -1,0 +1,23 @@
+{
+  "stage": "final-target",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_plugin_candidates.py",
+    "tests/integration/test_case_bridge.py",
+    "tests/unit/test_plugin_candidate_tool.py",
+    "tests/unit/test_case_bridge_client.py",
+    "tests/integration/test_assisted_review.py::test_assisted_bootstrap_uses_exact_twelve_sources_and_loopback_fiction",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/plugin-candidates-20261009/final-target.xml"
+  ],
+  "started_utc": "2026-10-09T01:58:56.579007+00:00",
+  "finished_utc": "2026-10-09T02:01:14.927809+00:00",
+  "seconds": 138.344,
+  "exit_code": 0,
+  "output_sha256": "28eaf3208ecfdaa819f757aa394ea93e953c13240dc020fbb9a600d12ed7c370"
+}

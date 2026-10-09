@@ -1,0 +1,18 @@
+{
+  "stage": "backend-green",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_plugin_candidates.py",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-09T01:42:33.274667+00:00",
+  "finished_utc": "2026-10-09T01:43:06.776698+00:00",
+  "seconds": 33.5,
+  "exit_code": 1,
+  "output_sha256": "5b668d1217616214275dbc0bc96b997b34b021a395fdeeae19191d466f16db8f"
+}

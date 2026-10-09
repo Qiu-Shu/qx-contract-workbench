@@ -1,0 +1,101 @@
+FFFFFFFFFF..                                                             [100%]
+================================== FAILURES ===================================
+______________________ test_read_only_grant_cannot_write ______________________
+tests\integration\test_plugin_candidates.py:41: in test_read_only_grant_cannot_write
+    assert response.status_code == 403, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"4679d4c2-bbfd-4d8a-865f-635e7ff5dd5f","retryable":false}
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+_________ test_plugin_source_persists_as_unverified_and_awaits_lawyer _________
+tests\integration\test_plugin_candidates.py:48: in test_plugin_source_persists_as_unverified_and_awaits_lawyer
+    grant, auth = open_write(selected)
+                  ^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_plugin_candidates.py:27: in open_write
+    assert response.status_code == 201, response.text
+E   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"a5c5bff3-1f60-40a5-b5e7-859dd91ab493","retryable":false}
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+___________ test_one_grant_one_round_and_same_input_replays_receipt ___________
+tests\integration\test_plugin_candidates.py:71: in test_one_grant_one_round_and_same_input_replays_receipt
+    body = input_body(selected); _, auth = open_write(selected)
+                                           ^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_plugin_candidates.py:27: in open_write
+    assert response.status_code == 201, response.text
+E   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"fd5e95e7-9f36-4d73-b298-350eff6cebd1","retryable":false}
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+___________ test_stale_or_untrusted_submission_is_rejected[expired] ___________
+tests\integration\test_plugin_candidates.py:85: in test_stale_or_untrusted_submission_is_rejected
+    body = input_body(selected); _, auth = open_write(selected)
+                                           ^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_plugin_candidates.py:27: in open_write
+    assert response.status_code == 201, response.text
+E   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"62dbc732-b108-4522-80e5-e49a157731d3","retryable":false}
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+___________ test_stale_or_untrusted_submission_is_rejected[revoked] ___________
+tests\integration\test_plugin_candidates.py:85: in test_stale_or_untrusted_submission_is_rejected
+    body = input_body(selected); _, auth = open_write(selected)
+                                           ^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_plugin_candidates.py:27: in open_write
+    assert response.status_code == 201, response.text
+E   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"d2c93590-8f2f-4eba-a8eb-8adcab178932","retryable":false}
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+___________ test_stale_or_untrusted_submission_is_rejected[version] ___________
+tests\integration\test_plugin_candidates.py:85: in test_stale_or_untrusted_submission_is_rejected
+    body = input_body(selected); _, auth = open_write(selected)
+                                           ^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_plugin_candidates.py:27: in open_write
+    assert response.status_code == 201, response.text
+E   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"d7a79f7d-2069-4917-9aab-863dd6d9de14","retryable":false}
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+________ test_stale_or_untrusted_submission_is_rejected[wrong_anchor] _________
+tests\integration\test_plugin_candidates.py:85: in test_stale_or_untrusted_submission_is_rejected
+    body = input_body(selected); _, auth = open_write(selected)
+                                           ^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_plugin_candidates.py:27: in open_write
+    assert response.status_code == 201, response.text
+E   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"ab55c30a-4ac3-4a33-a1ba-2f3527236811","retryable":false}
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+________ test_stale_or_untrusted_submission_is_rejected[fake_receipt] _________
+tests\integration\test_plugin_candidates.py:85: in test_stale_or_untrusted_submission_is_rejected
+    body = input_body(selected); _, auth = open_write(selected)
+                                           ^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_plugin_candidates.py:27: in open_write
+    assert response.status_code == 201, response.text
+E   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"03b58603-e1e4-4189-a26e-f17e7017231a","retryable":false}
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+_________ test_stale_or_untrusted_submission_is_rejected[fake_actor] __________
+tests\integration\test_plugin_candidates.py:85: in test_stale_or_untrusted_submission_is_rejected
+    body = input_body(selected); _, auth = open_write(selected)
+                                           ^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_plugin_candidates.py:27: in open_write
+    assert response.status_code == 201, response.text
+E   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"32aafcb9-702c-4ce9-ad18-bb5458465dc5","retryable":false}
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+____________ test_stale_or_untrusted_submission_is_rejected[query] ____________
+tests\integration\test_plugin_candidates.py:85: in test_stale_or_untrusted_submission_is_rejected
+    body = input_body(selected); _, auth = open_write(selected)
+                                           ^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_plugin_candidates.py:27: in open_write
+    assert response.status_code == 201, response.text
+E   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"2aca3526-1e20-4663-8a7d-d3ecda806365","retryable":false}
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/integration/test_plugin_candidates.py::test_read_only_grant_cannot_write
+FAILED tests/integration/test_plugin_candidates.py::test_plugin_source_persists_as_unverified_and_awaits_lawyer
+FAILED tests/integration/test_plugin_candidates.py::test_one_grant_one_round_and_same_input_replays_receipt
+FAILED tests/integration/test_plugin_candidates.py::test_stale_or_untrusted_submission_is_rejected[expired]
+FAILED tests/integration/test_plugin_candidates.py::test_stale_or_untrusted_submission_is_rejected[revoked]
+FAILED tests/integration/test_plugin_candidates.py::test_stale_or_untrusted_submission_is_rejected[version]
+FAILED tests/integration/test_plugin_candidates.py::test_stale_or_untrusted_submission_is_rejected[wrong_anchor]
+FAILED tests/integration/test_plugin_candidates.py::test_stale_or_untrusted_submission_is_rejected[fake_receipt]
+FAILED tests/integration/test_plugin_candidates.py::test_stale_or_untrusted_submission_is_rejected[fake_actor]
+FAILED tests/integration/test_plugin_candidates.py::test_stale_or_untrusted_submission_is_rejected[query]
+10 failed, 2 passed in 22.31s

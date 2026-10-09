@@ -1,0 +1,10 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_lawyer_disposition_and_export_preserve_plugin_origin __________
+tests\integration\test_plugin_candidates.py:171: in test_lawyer_disposition_and_export_preserve_plugin_origin
+    assert all('插件候选' in s.header.paragraphs[0].text and '未核验' in s.footer.paragraphs[0].text for s in doc.sections)
+E   assert False
+E    +  where False = all(<generator object test_lawyer_disposition_and_export_preserve_plugin_origin.<locals>.<genexpr> at 0x0000022916CA60C0>)
+=========================== short test summary info ===========================
+FAILED tests/integration/test_plugin_candidates.py::test_lawyer_disposition_and_export_preserve_plugin_origin
+1 failed, 15 deselected in 10.23s

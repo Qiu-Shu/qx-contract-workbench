@@ -1,0 +1,21 @@
+{
+  "stage": "concurrency-fix",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_plugin_candidates.py",
+    "-k",
+    "read_during_submit or concurrent_identical or read_after_submit",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/plugin-candidates-20261009/concurrency-fix.xml"
+  ],
+  "started_utc": "2026-10-09T02:01:04.626748+00:00",
+  "finished_utc": "2026-10-09T02:01:20.531546+00:00",
+  "seconds": 15.89,
+  "exit_code": 0,
+  "output_sha256": "091b0140be97630720cd40d7350c2aa5cd63842c95c01d2d4e0f240819865a20"
+}

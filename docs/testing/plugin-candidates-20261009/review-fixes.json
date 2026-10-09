@@ -1,0 +1,19 @@
+{
+  "stage": "review-fixes",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    ".audit-local/plugin-candidates-review-20261009/test_review_probes.py",
+    "-q",
+    "--tb=short",
+    "--junitxml=.audit-local/plugin-candidates-20261009/review-fixes.xml"
+  ],
+  "started_utc": "2026-10-09T01:55:59.367772+00:00",
+  "finished_utc": "2026-10-09T01:56:32.906804+00:00",
+  "seconds": 33.547,
+  "exit_code": 0,
+  "output_sha256": "fca05371ee85e52073eda6e9069258a4f5b6e05c9549cb029a4991dd29f78707"
+}

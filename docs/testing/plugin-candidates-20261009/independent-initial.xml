@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="5" time="18.244" timestamp="2026-10-09T09:48:07.366965+08:00" hostname="PC-20260920HQJZ"><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_read_after_submit_does_not_destroy_replay" time="3.621"><failure message="AssertionError: (409, '{&quot;code&quot;:&quot;STATE_CONFLICT&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;2aaad420-3f11-4119-bfd3-b336f36d6dd6&quot;,&quot;r...QUIRED&quot;,&quot;message&quot;:&quot;request not authorized&quot;,&quot;correlation_id&quot;:&quot;b7489120-8dd0-4705-a940-7c3675cbf241&quot;,&quot;retryable&quot;:false}')&#10;assert (401 == 201)&#10; +  where 401 = &lt;Response [401 Unauthorized]&gt;.status_code">selected = (&lt;starlette.testclient.TestClient object at 0x000001A9A1548530&gt;, &lt;cn_contract.persistence.Database object at 0x000001A...nistrator/pytest-571/test_read_after_submit_does_no0/selected-case.json'), '95672f40-1ff6-4f15-b880-b17ce518a26b', ...)
+
+    def test_read_after_submit_does_not_destroy_replay(selected):
+        client = selected[0]
+        body = input_body(selected)
+        _, auth = open_write(selected)
+        first = post(client, auth, body)
+        assert first.status_code == 201
+        read = client.get('/api/case-bridge/context', headers=auth)
+        replay = post(client, auth, body)
+&gt;       assert replay.status_code == 201 and replay.json() == first.json(), (read.status_code, read.text, replay.status_code, replay.text)
+E       AssertionError: (409, '{"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"2aaad420-3f11-4119-bfd3-b336f36d6dd6","r...QUIRED","message":"request not authorized","correlation_id":"b7489120-8dd0-4705-a940-7c3675cbf241","retryable":false}')
+E       assert (401 == 201)
+E        +  where 401 = &lt;Response [401 Unauthorized]&gt;.status_code
+
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:22: AssertionError</failure></testcase><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_write_grant_read_does_not_claim_manual_model_origin" time="2.702"><failure message="AssertionError: assert 'manual_synthetic' not in '内容会进入调用插件的聊...数值重审及生产均未完成。'&#10;  &#10;  'manual_synthetic' is contained here:&#10;    源：离线人工/合成（manual_synthetic）；真实模型推理NOT_RUN，真实模型调用0。&#10;  ?           ++++++++++++++++&#10;    QCC关闭，查询调用0；未查询不能解释为现实记录不存在或无风险。&#10;    每项人工候选与待核依据须由律师核对；待核引用未登记为已批准法源或规则。&#10;    未涉及的维度保持材料不足；法律gold、完整补丁后法律与数值重审及生产均未完成。">selected = (&lt;starlette.testclient.TestClient object at 0x000001A9A3610AA0&gt;, &lt;cn_contract.persistence.Database object at 0x000001A...nistrator/pytest-571/test_write_grant_read_does_not0/selected-case.json'), 'f3573192-cc81-40a8-ba34-fd055521fd4a', ...)
+
+    def test_write_grant_read_does_not_claim_manual_model_origin(selected):
+        client = selected[0]
+        _, auth = open_write(selected)
+        response = client.get('/api/case-bridge/context', headers=auth)
+        assert response.status_code == 200
+&gt;       assert 'manual_synthetic' not in '\n'.join(response.json()['limitations'])
+E       AssertionError: assert 'manual_synthetic' not in '内容会进入调用插件的聊...数值重审及生产均未完成。'
+E         
+E         'manual_synthetic' is contained here:
+E           源：离线人工/合成（manual_synthetic）；真实模型推理NOT_RUN，真实模型调用0。
+E         ?           ++++++++++++++++
+E           QCC关闭，查询调用0；未查询不能解释为现实记录不存在或无风险。
+E           每项人工候选与待核依据须由律师核对；待核引用未登记为已批准法源或规则。
+E           未涉及的维度保持材料不足；法律gold、完整补丁后法律与数值重审及生产均未完成。
+
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:30: AssertionError</failure></testcase><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_commit_failure_leaves_no_ghost_receipt" time="4.850" /><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_revocation_between_validation_and_write_blocks" time="2.544"><failure message="AttributeError: 'ServiceError' object has no attribute 'status'">selected = (&lt;starlette.testclient.TestClient object at 0x000001A9A547EF30&gt;, &lt;cn_contract.persistence.Database object at 0x000001A...nistrator/pytest-571/test_revocation_between_valida0/selected-case.json'), '872d63d7-4d12-4fb1-bdf7-1a9ed488cf22', ...)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001A9A3BE0A70&gt;
+
+    def test_revocation_between_validation_and_write_blocks(selected, monkeypatch):
+        from cn_contract.review import proposals
+        client, database, _, bridge, _, _, _, _ = selected
+        value = AssistedReviewInput.model_validate(input_body(selected))
+        _, auth = open_write(selected)
+        arrived, release = Event(), Event()
+        original = proposals._context_state
+        def pause(*args, **kwargs):
+            result = original(*args, **kwargs)
+            arrived.set()
+            assert release.wait(5)
+            return result
+        monkeypatch.setattr(proposals, '_context_state', pause)
+        def submit():
+            with database.session() as db:
+                return bridge.submit(auth['Authorization'], value, db)
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            pending = pool.submit(submit)
+            assert arrived.wait(5)
+            bridge.close()
+            release.set()
+            with pytest.raises(ServiceError) as error: pending.result(timeout=5)
+&gt;           assert error.value.status == 401
+                   ^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'ServiceError' object has no attribute 'status'
+
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:78: AttributeError</failure></testcase><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_reopened_database_retains_receipt_but_not_grant" time="3.553"><failure message="RuntimeError: initialize_storage(database) required explicitly">selected = (&lt;starlette.testclient.TestClient object at 0x000001A9A31EF1D0&gt;, &lt;cn_contract.persistence.Database object at 0x000001A...nistrator/pytest-571/test_reopened_database_retains0/selected-case.json'), 'ac554b03-84c1-43fb-a249-ff4d8dea65fe', ...)
+
+    def test_reopened_database_retains_receipt_but_not_grant(selected):
+        from cn_contract.persistence import Database
+        from cn_contract.web.case_bridge import CaseBridge
+        from cn_contract.web.app import create_app
+        from fastapi.testclient import TestClient
+        client, database, _, bridge, path, matter, _, _ = selected
+        body = input_body(selected)
+        _, auth = open_write(selected)
+        first = post(client, auth, body)
+        assert first.status_code == 201
+        reopened = Database(str(database.engine.url), database.storage_root, database.settings, initialize_schema=False)
+&gt;       app = create_app(database.settings, database=reopened, purpose='assisted_draft', assisted_policy=database._assisted_policy)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\app.py:121: in create_app
+    s.require_storage(database)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+database = &lt;cn_contract.persistence.Database object at 0x000001A9A3211850&gt;
+
+    def require_storage(database):
+        if not getattr(database, '_web_storage_initialized', False):
+&gt;           raise RuntimeError('initialize_storage(database) required explicitly')
+E           RuntimeError: initialize_storage(database) required explicitly
+
+src\cn_contract\web\storage.py:81: RuntimeError</failure></testcase></testsuite></testsuites>

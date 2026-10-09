@@ -71,7 +71,7 @@ def build(projection):
     core=doc.core_properties
     core.title=projection['title'];core.subject='独立虚构模拟合同草案';core.author='群兴工程模拟';core.last_modified_by='群兴工程模拟'
     core.comments=watermark if 'watermark' in projection else 'DRAFT MOCK 非正式法律意见'
-    core.keywords='DRAFT MANUAL-SYNTHETIC' if 'watermark' in projection else 'DRAFT MOCK'
+    core.keywords=projection.get('keywords','DRAFT MANUAL-SYNTHETIC' if 'watermark' in projection else 'DRAFT MOCK')
     from datetime import datetime,timezone
     core.created=core.modified=datetime.now(timezone.utc)
     output=BytesIO();doc.save(output);return output.getvalue()

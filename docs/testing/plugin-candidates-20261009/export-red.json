@@ -1,0 +1,20 @@
+{
+  "stage": "export-red",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_plugin_candidates.py",
+    "-k",
+    "lawyer_disposition",
+    "-q",
+    "--tb=short"
+  ],
+  "started_utc": "2026-10-09T01:45:03.972604+00:00",
+  "finished_utc": "2026-10-09T01:45:14.977580+00:00",
+  "seconds": 11.0,
+  "exit_code": 1,
+  "output_sha256": "cf30ac8210135e0bbb0b2ff4418b591ea3383e6884c76ef8ff315a246da1a88f"
+}

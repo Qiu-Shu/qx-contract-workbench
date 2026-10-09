@@ -7,7 +7,7 @@ DIMENSIONS=('主体身份','签署授权','许可资格','交易性质','标的�
 STATES={'reviewed_issue':'已发现待复核事项','reviewed_no_issue':'已核对未发现问题','insufficient_material':'材料不足','unsupported':'需专项人工审阅','not_applicable':'不适用'}
 
 
-def project(run,audience,patches,manual,*,scope=None,internal=None,snapshot=None,decision_history=()):
+def project(run,audience,patches,manual,*,scope=None,internal=None,snapshot=None,decision_history=(),candidate_source=None):
     if audience not in AUDIENCES:raise ServiceError('NOT_SUPPORTED',422)
     findings=snapshot.resolved_findings if snapshot else tuple(resolved(f) for f in run.findings)
     # This pure projection is not an authorization interface. It still must not
@@ -26,6 +26,12 @@ def project(run,audience,patches,manual,*,scope=None,internal=None,snapshot=None
         common['opening']='本工作稿列明独立虚构合同的离线人工候选及律师处置。待核依据仍待核验；请逐项核对实际文件，不能用作正式法律意见或签发文件。'
         common['limitations'][0]=common['watermark']
         common['limitations'][2]='现实法源及法律验收未获批准 人工候选和处置不构成已核法律结论'
+        if candidate_source=='local_plugin_unverified':
+            common['watermark']='DRAFT 插件候选 模型来源未核验 非正式法律意见'
+            common['opening']='本工作稿列明独立虚构合同的插件候选及律师处置。模型身份与推理来源未核验；待核依据仍须核验，不能用作正式法律意见或签发文件。'
+            common['limitations'][0]=common['watermark']
+            common['limitations'][2]='现实法源及法律验收未获批准 插件候选和处置不构成已核法律结论'
+            common['keywords']='DRAFT PLUGIN-UNVERIFIED'
     if audience!='counterparty':
         common['limitations'].extend(run.limitations)
         common['coverage']=[{'dimension':c.coverage_id.value+' '+DIMENSIONS[int(c.coverage_id.value[1:])-1],'status':STATES[c.status.value]} for c in run.coverage]

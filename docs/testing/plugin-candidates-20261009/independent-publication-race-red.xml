@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="5.002" timestamp="2026-10-09T10:00:44.975710+08:00" hostname="PC-20260920HQJZ"><testcase classname=".audit-local.plugin-candidates-review-20261009.test_review_probes" name="test_identical_replay_waits_for_postcommit_receipt_publication" time="3.869"><failure message="cn_contract.security.ServiceError: request blocked">selected = (&lt;starlette.testclient.TestClient object at 0x000002A2EB38F890&gt;, &lt;cn_contract.persistence.Database object at 0x000002A...nistrator/pytest-579/test_identical_replay_waits_fo0/selected-case.json'), '64ff700b-fe29-46b3-a262-e55790a243ee', ...)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002A2ED9D72C0&gt;
+
+    def test_identical_replay_waits_for_postcommit_receipt_publication(selected, monkeypatch):
+        from threading import current_thread
+        from cn_contract.review import proposals
+        client, database, _, bridge, _, _, _, _ = selected
+        value = AssistedReviewInput.model_validate(input_body(selected))
+        _, auth = open_write(selected)
+        committed, publish, second_context = Event(), Event(), Event()
+        original_commit = database.session_factory.class_.commit
+        original_context = proposals._context_state
+        def commit(db):
+            result = original_commit(db)
+            if current_thread().name.startswith('first') and not committed.is_set():
+                committed.set()
+                assert publish.wait(5)
+            return result
+        def context(*args, **kwargs):
+            if current_thread().name.startswith('second'):
+                second_context.set()
+            return original_context(*args, **kwargs)
+        monkeypatch.setattr(database.session_factory.class_, 'commit', commit)
+        monkeypatch.setattr(proposals, '_context_state', context)
+        def submit():
+            with database.session() as db:
+                return bridge.submit(auth['Authorization'], value, db)
+        with ThreadPoolExecutor(max_workers=1, thread_name_prefix='first') as first_pool, ThreadPoolExecutor(max_workers=1, thread_name_prefix='second') as second_pool:
+            first = first_pool.submit(submit)
+            assert committed.wait(5)
+            second = second_pool.submit(submit)
+            second_context.wait(1)
+            publish.set()
+&gt;           assert first.result(timeout=5) == second.result(timeout=5)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:201: in submit
+    return bridge.submit(auth['Authorization'], value, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\case_bridge.py:145: in submit
+    policy, _, _, state = proposals._context_state(grant.matter_id, actor, db, allow_finished=previous is not None)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.audit-local\plugin-candidates-review-20261009\test_review_probes.py:196: in context
+    return original_context(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\review\proposals.py:125: in _context_state
+    state=current_manifest(ctx,actor,db,config,allow_finished=allow_finished)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+context = ReviewContext(matter=Matter(id=UUID('64ff700b-fe29-46b3-a262-e55790a243ee'), client_ref='SYNTHETIC-3ac2f5fd2ccf4c3aa45...ageId.C14: 'C14'&gt;, &lt;CoverageId.C15: 'C15'&gt;, &lt;CoverageId.C16: 'C16'&gt;, &lt;CoverageId.C17: 'C17'&gt;, &lt;CoverageId.C18: 'C18'&gt;))
+actor = Actor(user_id=UUID('09ecc61b-8248-4319-991b-bb52f54a2ec5'), roles=frozenset({&lt;Role.HANDLING_LAWYER: 'handling_lawyer'&gt;}), session_id=UUID('3bee2c7a-c322-47c0-afd3-2b2c1117f1ec'))
+db = &lt;sqlalchemy.orm.session.Session object at 0x000002A2ECEDA690&gt;
+config = {'candidate_source': 'manual_synthetic', 'chunk_anchors': 32, 'engine': 'assisted-manual-v1', 'policy_sha256': '8b5614675ca583562987e765cc432eb4da964ead212e7eff8066273b09e6b4cb', ...}
+
+    def current_manifest(context,actor,db,config,*,allow_finished=False):
+        authorize(actor,context.matter.id,'review' if not allow_finished else 'read',db)
+        context=ReviewContext.model_validate_json(context.model_dump_json())
+        matter=read_matter(context.matter.id,actor,db)
+        statuses={'ready_for_review','awaiting_lawyer','failed'} if allow_finished else {'ready_for_review'}
+&gt;       if matter.status not in statuses: raise ServiceError('STATE_CONFLICT',409)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\review\workflow.py:46: ServiceError</failure></testcase></testsuite></testsuites>

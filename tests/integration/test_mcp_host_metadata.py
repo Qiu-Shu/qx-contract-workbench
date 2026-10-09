@@ -30,7 +30,7 @@ def test_host_integer_progress_token_allows_discovery_and_fixed_tools(token):
         listing = send('tools/list', {'_meta': metadata}, request_id=2)
         assert 'result' in listing, listing
         assert {item['name'] for item in listing['result']['tools']} == {
-            'workbench_status', 'deepseek_offline_example', 'read_selected_case'}
+            'workbench_status', 'deepseek_offline_example', 'read_selected_case', 'submit_selected_candidates'}
         status = send('tools/call', {'name': 'workbench_status', 'arguments': {},
                                     '_meta': metadata}, request_id=3)
         body = status['result']['structuredContent']
@@ -162,7 +162,7 @@ def test_thread_metadata_is_call_only_and_cannot_expand_business_arguments():
             response = send(method, params, request_id=50)
             assert response['error'] == {'code': -32602, 'message': 'OFFLINE_REQUEST_REJECTED'}
         listing = send('tools/list', {'_meta': {'progressToken': 1}}, request_id=100)
-        assert len(listing['result']['tools']) == 3
+        assert len(listing['result']['tools']) == 4
         status = send('tools/call', {'name': 'workbench_status', 'arguments': {},
             '_meta': {'progressToken': 1}}, request_id=101)
         assert status['result']['structuredContent']['status'] == 'OFFLINE_ONLY'

@@ -28,7 +28,7 @@ _OFFLINE_FILE = 'src/cn_contract/mcp/offline_server.py'
 _OFFLINE_MODULE = 'cn_contract.mcp.offline_server'
 _MCP_FILE = 'plugins/qx-contract-offline-codex/.mcp.json'
 _PLUGIN_FILE = 'plugins/qx-contract-offline-codex/.codex-plugin/plugin.json'
-_ADAPTER_VERSION = '0.1.4'
+_ADAPTER_VERSION = '0.1.5'
 _SOURCE_EXTENSIONS = frozenset({'.py', '.js', '.mjs', '.css', '.html'})
 _FIXED_FILES = frozenset({
     'config/defaults.json', 'pyproject.toml', 'requirements.lock',
@@ -52,7 +52,7 @@ _CONSTANT_FIELDS = {
     'offline_file': _OFFLINE_FILE, 'runtime_bundled': False,
     'startup_hashes_enforced': True,
     'hash_scope': 'SOURCE_FILES_AND_SELECTED_LOCKS_NOT_DEPENDENCY_BYTES_OR_OS_ATTESTATION',
-    'expected_tools': ['workbench_status', 'deepseek_offline_example', 'read_selected_case'],
+    'expected_tools': ['workbench_status', 'deepseek_offline_example', 'read_selected_case', 'submit_selected_candidates'],
     'real_models_enabled': False, 'qcc_enabled': False,
     'host_installation': 'NOT_RUN', 'chatgpt_connection': 'NOT_RUN',
     'production': 'BLOCKED'}
@@ -256,7 +256,7 @@ def _payload_build_id(payload: dict) -> str:
     canonical = json.dumps({key: value for key, value in payload.items() if key != 'build_id'},
                            ensure_ascii=False, sort_keys=True, separators=(',', ':'),
                            allow_nan=False).encode('utf-8')
-    return 'qx-offline-source-0.1.4-' + sha256(canonical).hexdigest()[:32]
+    return 'qx-offline-source-0.1.5-' + sha256(canonical).hexdigest()[:32]
 
 
 def _verify(root: Path, context: RuntimeContext | None) -> BindingVerification:
