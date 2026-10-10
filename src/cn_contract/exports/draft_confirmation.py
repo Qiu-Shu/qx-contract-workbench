@@ -1,21 +1,35 @@
 """Current working-draft bytes acknowledged by a case lawyer; never signoff."""
 from uuid import UUID, uuid4
+import json
 
 from .. import domain as d
 from ..security import ServiceError
 from ..review.proposals import require_assisted_policy
 from ..review.decisions import read_snapshot, disposition
 from . import storage as s
-from .approvals import _bundle, download_artifact
+from .approvals import _bundle, require_current_artifact
 
 KIND = 'working_draft_confirmation'
 
 
+def _effective_review(bundle, identifier, actor, db):
+    row = s.latest('bundle', bundle.id, db)
+    has_patches = bool(json.loads(row.payload)['metadata']['patch_approvals'])
+    if identifier is None:
+        if has_patches:
+            raise ServiceError('STATE_CONFLICT', 409)
+        return None
+    from .effective_text import read_effective_review
+    review = read_effective_review(bundle.matter_id, identifier, actor, db=db)
+    if review.bundle_id != bundle.id:
+        raise ServiceError('APPROVAL_STALE', 409)
+    return review
+
+
 def _artifact_rows(bundle, actor, db):
-    # Reuse the actual download gate as well as frozen bundle bytes: a mutable
-    # artifact row may have been superseded or may differ from that bundle.
+    # _bundle already checked authorization and every byte; now validate mutable rows.
     for artifact in bundle.artifacts:
-        download_artifact(artifact.id, actor, db=db)
+        require_current_artifact(artifact, db)
 
 
 def _current(matter_id, bundle_id, actor, db):
@@ -42,12 +56,15 @@ def confirm_working_draft(matter_id, value, actor, *, db):
     if (len(set(value.acknowledged_unresolved_finding_ids)) != len(value.acknowledged_unresolved_finding_ids)
             or set(value.acknowledged_unresolved_finding_ids) != set(unresolved)):
         raise ServiceError('STATE_CONFLICT', 409)
+    review = _effective_review(bundle, value.effective_text_review_id, actor, db)
     receipt = d.WorkingDraftConfirmation(id=uuid4(), matter_id=matter_id, run_id=bundle.run_id,
         bundle_id=bundle.id, bundle_manifest_sha256=bundle.manifest_sha256,
         decision_snapshot_sha256=snapshot.sha256, audience=bundle.audience,
         artifact_hashes={a.id: a.content_sha256 for a in bundle.artifacts},
         acknowledged_unresolved_finding_ids=unresolved, reason=value.reason,
-        actor_id=actor.user_id, confirmed_at=s.now(), purpose='working_draft', formal_signoff=False)
+        actor_id=actor.user_id, confirmed_at=s.now(), purpose='working_draft', formal_signoff=False,
+        effective_text_review_id=review.id if review else None,
+        effective_text_review_status=review.status if review else None)
     with db.begin_nested():
         row = s.append(KIND, receipt.id, receipt.model_dump(mode='json'), actor, matter_id, db)
         s.audit(actor, matter_id, 'working_draft_confirmed', 'SPECIFIC_WORKING_DRAFT_ACKNOWLEDGED', db,
@@ -76,6 +93,9 @@ def read_working_draft_confirmation(matter_id, identifier, actor, *, db):
     # write. Bundle checks still include latest decision-author qualification.
     bundle, run = _bundle(receipt.bundle_id, actor, db)
     _artifact_rows(bundle, actor, db)
+    review = _effective_review(bundle, receipt.effective_text_review_id, actor, db)
+    if receipt.effective_text_review_status != (review.status if review else None):
+        raise ServiceError('APPROVAL_STALE', 409)
     snapshot = read_snapshot(matter_id, run.id, actor, db=db)
     unresolved = tuple(f.id for f in snapshot.resolved_findings
         if disposition(f) in {'request_info', 'refer'})

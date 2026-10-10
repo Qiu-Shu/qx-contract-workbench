@@ -1852,6 +1852,70 @@ class ReviewProposal(DomainModel):
         return self
 
 
+class EffectiveParagraph(DomainModel):
+    anchor_id: UUID
+    location: NonEmpty
+    kind: AnchorKind
+    original_text: str
+    text: str
+    patch_id: UUID | None = None
+
+
+class EffectiveDocument(DomainModel):
+    version_id: UUID
+    original_sha256: SHA256
+    original_name: NonEmpty
+    baseline_view: BaselineView
+    artifact_id: UUID | None = None
+    paragraphs: tuple[EffectiveParagraph, ...]
+    limitations: tuple[NonEmpty, ...]
+
+
+class EffectiveTextSignal(DomainModel):
+    kind: Literal['number', 'deadline', 'reference', 'old_value_remaining']
+    document_version_id: UUID
+    anchor_id: UUID
+    quote: NonEmpty
+
+
+class EffectiveTextSnapshot(DomainModel):
+    bundle_id: UUID
+    matter_id: UUID
+    run_id: UUID
+    bundle_manifest_sha256: SHA256
+    decision_snapshot_sha256: SHA256
+    artifact_hashes: Mapping[UUID, SHA256]
+    documents: tuple[EffectiveDocument, ...]
+    signals: tuple[EffectiveTextSignal, ...]
+    limitations: tuple[NonEmpty, ...]
+    algorithm: Literal['effective-text-v1'] = 'effective-text-v1'
+    sha256: SHA256
+
+
+class EffectiveReviewDimension(DomainModel):
+    status: Literal['reviewed', 'pending']
+    reason: Annotated[NonEmpty, Field(max_length=2000)]
+
+
+class EffectiveTextReviewInput(DomainModel):
+    bundle_id: UUID
+    effective_text_sha256: SHA256
+    legal: EffectiveReviewDimension
+    amounts: EffectiveReviewDimension
+    deadlines: EffectiveReviewDimension
+    attachments: EffectiveReviewDimension
+    definitions_references: EffectiveReviewDimension
+
+
+class EffectiveTextReview(EffectiveTextReviewInput):
+    id: UUID
+    matter_id: UUID
+    actor_id: UUID
+    reviewed_at: UTCDatetime
+    status: Literal['pending', 'reviewed_within_read_scope']
+    formal_signoff: Literal[False] = False
+
+
 class WorkingDraftConfirmationInput(DomainModel):
     bundle_id: UUID
     bundle_manifest_sha256: SHA256
@@ -1859,6 +1923,7 @@ class WorkingDraftConfirmationInput(DomainModel):
     audience: Audience
     acknowledged_unresolved_finding_ids: Annotated[tuple[UUID, ...], Field(max_length=128)]
     reason: Annotated[NonEmpty, Field(max_length=2000)]
+    effective_text_review_id: UUID | None = Field(default=None, exclude_if=lambda value:value is None)
 
     @field_validator('acknowledged_unresolved_finding_ids')
     @classmethod
@@ -1882,6 +1947,8 @@ class WorkingDraftConfirmation(DomainModel):
     confirmed_at: UTCDatetime
     purpose: Literal['working_draft'] = 'working_draft'
     formal_signoff: Literal[False] = False
+    effective_text_review_id: UUID | None = Field(default=None, exclude_if=lambda value:value is None)
+    effective_text_review_status: Literal['pending', 'reviewed_within_read_scope'] | None = Field(default=None, exclude_if=lambda value:value is None)
 
     @field_validator('artifact_hashes')
     @classmethod

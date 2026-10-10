@@ -110,7 +110,7 @@ def project_bundle(bundle,*,purpose='mock_demo'):
     return {**bundle.model_dump(mode='json',exclude={'artifacts'}),'draft':True,
         'artifacts':[a.model_dump(mode='json',exclude={'storage_ref'}) for a in bundle.artifacts],
         'limitations':['独立虚构辅助工作稿，候选来源以稿内记录为准；工作台远程模型关闭，不能正式签发' if purpose=='assisted_draft' else '虚构/mock草案，不能正式签发',
-            '对外原件包修改需人工；完整补丁后法律与数值重审未实现']}
+            '对外原件包修改需人工；内部有效全文需律师逐维复审，自动线索不证明法律或数值正确']}
 
 
 def create_app(settings: Settings, *, database: Database, synthetic_upload_hashes=None, synthetic_loopback_endpoints=(),
@@ -196,6 +196,10 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
                     elif action=='assisted_proposal':
                         current=read_run(actual_matter,UUID(response['id']),actor,db=db,current=True)
                         if current.model_dump(mode='json')!=response:raise ServiceError('APPROVAL_STALE',409)
+                    elif action=='effective_text_review':
+                        from ..exports.effective_text import read_effective_review
+                        review=read_effective_review(actual_matter,UUID(response['id']),actor,db=db)
+                        if review.model_dump(mode='json')!=response:raise ServiceError('APPROVAL_STALE',409)
                     elif action=='working_draft_confirm':
                         from ..exports.draft_confirmation import read_working_draft_confirmation
                         confirmation=read_working_draft_confirmation(actual_matter,UUID(response['id']),actor,db=db)

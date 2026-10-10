@@ -150,16 +150,26 @@ def build_redline(data,changes,settings):
     return output.getvalue()
 
 
+def _revision_text(node,accept):
+    if node.tag==f'{{{W}}}del' and accept or node.tag==f'{{{W}}}ins' and not accept:return ''
+    if node.tag in {f'{{{W}}}t',f'{{{W}}}delText'}:return node.text or ''
+    return ''.join(_revision_text(child,accept) for child in node)
+
+
+def verify_plain_changes(raw,changes,settings):
+    """Only ordinary paragraphs already admitted by preconditions use this oracle."""
+    package=read_package(raw,settings)[0];root=xml(package['word/document.xml'])
+    for patch,anchor in changes:
+        node=_node(root,anchor)
+        if (node is None or _revision_text(node,False)!=patch.old_text
+                or _revision_text(node,True)!=patch.new_text):
+            raise ServiceError('VERSION_CONFLICT',409)
+
+
 def baseline_texts(raw,*,accept):
     """Structural oracle only; native Word accept/reject is separate validation."""
     with zipfile.ZipFile(BytesIO(raw)) as archive:root=xml(archive.read('word/document.xml'))
-    result=[]
-    def text(node):
-        if node.tag==f'{{{W}}}del' and accept or node.tag==f'{{{W}}}ins' and not accept:return ''
-        if node.tag in {f'{{{W}}}t',f'{{{W}}}delText'}:return node.text or ''
-        return ''.join(text(child) for child in node)
-    for node in root.findall('w:body/w:p',NS):result.append(text(node))
-    return result
+    return [_revision_text(node,accept) for node in root.findall('w:body/w:p',NS)]
 
 
 def apply_patch(version,patch,*,actor,db):
