@@ -388,6 +388,7 @@ def parse_docx(data, version, settings):
     if has_revisions(xml_parts):
         unsupported.add(f'{part}:revisions:manual_required')
     document = xml_parts[part]
+    parents = {child: parent for parent in document.iter() for child in parent}
     for child in document:
         if child is not body:
             unsupported.add(f'{part}:unknown_objects:{child.tag}:manual_required')
@@ -424,6 +425,26 @@ def parse_docx(data, version, settings):
             if hidden:
                 unsupported.add(f'{part}:hidden:{path}:manual_required')
                 return ''
+            backgrounds = [document.find(f'{{{W}}}background')]
+            table_color_uncertain = False
+            ancestor = parents.get(paragraph)
+            while ancestor is not None:
+                if ancestor.tag in {f'{{{W}}}tc', f'{{{W}}}tbl'}:
+                    name = 'tcPr' if ancestor.tag == f'{{{W}}}tc' else 'tblPr'
+                    backgrounds.insert(1, ancestor.find(f'{{{W}}}{name}'))
+                    if ancestor.tag == f'{{{W}}}tbl':
+                        # Explicit and default conditional table colors are unresolved.
+                        try:
+                            chains = [n for style in styles for n in style.table_chain(ancestor)]
+                            if any(n.tag in {f'{{{W}}}color', f'{{{W}}}shd'} for root in chains for n in root.iter()):
+                                table_color_uncertain = True
+                        except StyleDependencyError:
+                            style_gap(path)
+                ancestor = parents.get(ancestor)
+            if table_color_uncertain or any(style.color_uncertain(paragraph, node, backgrounds) for style in styles):
+                issue = f'DOCX_VISIBILITY_UNCERTAIN:{path}'
+                if issue not in quality: quality.append(issue)
+                unsupported.add(f'{part}:visibility:{path}:manual_required')
         if local in {'t', 'delText'}:
             return node.text or ''
         if local == 'tab':

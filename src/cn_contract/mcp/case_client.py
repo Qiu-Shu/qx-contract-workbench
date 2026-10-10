@@ -5,6 +5,7 @@ from pathlib import Path
 import re
 import stat
 from urllib.request import Request, ProxyHandler, HTTPRedirectHandler, build_opener
+from urllib.error import HTTPError
 from uuid import UUID
 
 from ..domain import CaseBridgeContext, AssistedReviewInput, PluginCandidateSubmission
@@ -13,12 +14,22 @@ CREDENTIAL_PATH = Path(__file__).absolute().parents[3] / '.local' / 'workbench' 
 MAX_RESPONSE_BYTES = 256 * 1024
 
 
+class CaseBridgeUnavailable(ValueError):
+    pass
+
+
+class SubmissionUnconfirmed(ValueError):
+    def __init__(self):
+        super().__init__('CANDIDATE_SUBMISSION_UNCONFIRMED_CHECK_WORKBENCH')
+
+
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
 
 
 def _exchange(candidate=None):
+    started = False
     try:
         path = CREDENTIAL_PATH
         for part in (*reversed(path.parents), path):
@@ -41,14 +52,18 @@ def _exchange(candidate=None):
         route = 'context' if candidate is None else 'candidates'
         request = Request('http://127.0.0.1:8767/api/case-bridge/' + route, data=data,
             headers={'Authorization': 'Bearer ' + credential['token'], 'Accept': 'application/json', 'Content-Type': 'application/json'})
-        with build_opener(ProxyHandler({}), NoRedirect()).open(request, timeout=10) as response:
+        opener = build_opener(ProxyHandler({}), NoRedirect())
+        started = True
+        with opener.open(request, timeout=10) as response:
             if response.status != (200 if candidate is None else 201) or response.headers.get('Content-Type', '').split(';')[0] != 'application/json':
                 raise ValueError('response')
             raw = response.read(MAX_RESPONSE_BYTES + 1)
         if len(raw) > MAX_RESPONSE_BYTES: raise ValueError('size')
         return credential, raw
-    except Exception:
-        raise ValueError('CASE_BRIDGE_UNAVAILABLE') from None
+    except Exception as error:
+        if candidate is not None and started and not (isinstance(error, HTTPError) and 400 <= error.code < 500):
+            raise SubmissionUnconfirmed() from None
+        raise CaseBridgeUnavailable('CASE_BRIDGE_UNAVAILABLE') from None
 
 
 def read_selected_case() -> CaseBridgeContext:
@@ -68,8 +83,8 @@ def read_selected_case() -> CaseBridgeContext:
 
 def submit_selected_candidates(candidate: AssistedReviewInput) -> PluginCandidateSubmission:
     """仅经工作台另行允许后提交一轮候选，非律师采纳。仅虚构案；来源未核验。超时须去工作台核实，不自动重试。"""
+    value = AssistedReviewInput.model_validate_json(candidate.model_dump_json()) if isinstance(candidate, AssistedReviewInput) else AssistedReviewInput.model_validate(candidate)
     try:
-        value = AssistedReviewInput.model_validate_json(candidate.model_dump_json()) if isinstance(candidate, AssistedReviewInput) else AssistedReviewInput.model_validate(candidate)
         credential, raw = _exchange(value)
         result = PluginCandidateSubmission.model_validate_json(raw)
         from ..review.proposals import digest
@@ -77,5 +92,7 @@ def submit_selected_candidates(candidate: AssistedReviewInput) -> PluginCandidat
                 or result.input_sha256 != digest(value.model_dump(mode='json'))):
             raise ValueError('binding')
         return result
+    except CaseBridgeUnavailable:
+        raise
     except Exception:
-        raise ValueError('CANDIDATE_SUBMISSION_UNCONFIRMED_CHECK_WORKBENCH') from None
+        raise SubmissionUnconfirmed() from None

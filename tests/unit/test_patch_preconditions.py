@@ -61,6 +61,40 @@ def test_standalone_redline_read_rechecks_patch_revocation(tmp_path):
 def test_complex_paragraph_has_explicit_manual_without_contract_copy(tmp_path,structure):
     from tests.helpers.synthetic_exports import BODY,package
     body=BODY.replace(BODY[BODY.index('<w:p><w:r><w:rPr>'):BODY.index('<w:p><w:r><w:t xml:space')],'<w:p>'+structure+'</w:p>')
+    if '<w:vanish' in structure:
+        from hashlib import sha256
+        from unittest.mock import patch
+        from uuid import uuid4
+        from cn_contract.domain import EvidenceBundle,Patch
+        from cn_contract.facts.storage import source_anchor_is_eligible
+        from cn_contract.persistence import read_original
+        from cn_contract.review.model_adapter import MockProvider
+        from cn_contract.review.validator import validate_findings
+        from cn_contract.review.workflow import run_review
+        from tests.helpers.synthetic_documents import docx
+        from tests.helpers.synthetic_review import prepare
+        # Hidden paragraphs now stop at the source gate, before patch creation.
+        raw=docx(body)
+        with patch('tests.helpers.synthetic_review.docx',lambda _:raw):
+            _,_,database,actor,matter,context,parsed=prepare(tmp_path)
+        api('storage').initialize_storage(database)
+        anchor=parsed.anchors[2]
+        assert not source_anchor_is_eligible(anchor,parsed)
+        with database.session() as db:
+            run=run_review(context,MockProvider(),actor=actor,db=db)
+            assert run.status=='completed'
+            assert all(anchor.id not in (*f.anchor_ids,*f.cross_anchor_ids) for f in run.findings)
+            assert all(anchor.id not in c.examined_anchor_ids for c in run.coverage)
+            evidence=EvidenceBundle(anchors={a.id:a for a in parsed.anchors if source_anchor_is_eligible(a,parsed)},authorities={},receipts={})
+            assert validate_findings(run,evidence,actor=actor,db=db).ok
+            value=Patch(id=uuid4(),finding_id=run.findings[0].id,document_version_id=anchor.document_version_id,
+                anchor_id=anchor.id,old_text=anchor.quote,new_text=NEW,old_text_sha256=sha256(anchor.quote.encode()).hexdigest(),
+                status='proposed',reason='虚构隐藏段落不得自动修订',approved_by=None)
+            with pytest.raises(ServiceError) as rejected:
+                api().approve_patch(matter.id,run.id,value,actor,db=db)
+            assert rejected.value.code=='VERSION_CONFLICT'
+            assert read_original(matter.id,anchor.document_version_id,actor,db)==raw
+        return
     world=setup(tmp_path,body=body);value=approved(world,suggestion(world))
     with world[0].session() as db:
         result=api('redline_adapter').apply_patch(world[4].document_versions[0],value,actor=world[1],db=db)

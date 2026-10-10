@@ -271,40 +271,6 @@ def test_read_during_submit_does_not_use_precommit_finished_flag(selected, monke
 def test_identical_replay_waits_for_postcommit_receipt_publication(selected, monkeypatch):
     from threading import current_thread, Event
     from concurrent.futures import ThreadPoolExecutor
-    from cn_contract.review import proposals
-    client, database, _, bridge, _, _, _, _ = selected
-    value = AssistedReviewInput.model_validate(input_body(selected))
-    _, auth = open_write(selected)
-    committed, publish, second_context = Event(), Event(), Event()
-    original_commit = database.session_factory.class_.commit
-    original_context = proposals._context_state
-    def commit(db):
-        result = original_commit(db)
-        if current_thread().name.startswith('first') and not committed.is_set():
-            committed.set()
-            assert publish.wait(5)
-        return result
-    def context(*args, **kwargs):
-        if current_thread().name.startswith('second'):
-            second_context.set()
-        return original_context(*args, **kwargs)
-    monkeypatch.setattr(database.session_factory.class_, 'commit', commit)
-    monkeypatch.setattr(proposals, '_context_state', context)
-    def submit():
-        with database.session() as db:
-            return bridge.submit(auth['Authorization'], value, db)
-    with ThreadPoolExecutor(max_workers=1, thread_name_prefix='first') as first_pool, ThreadPoolExecutor(max_workers=1, thread_name_prefix='second') as second_pool:
-        first = first_pool.submit(submit)
-        assert committed.wait(5)
-        second = second_pool.submit(submit)
-        second_context.wait(1)
-        publish.set()
-        assert first.result(timeout=5) == second.result(timeout=5)
-
-
-def test_identical_replay_waits_for_postcommit_receipt_publication(selected, monkeypatch):
-    from threading import current_thread, Event
-    from concurrent.futures import ThreadPoolExecutor
     from cn_contract.domain import AssistedReviewInput
     from cn_contract.review import proposals
     client, database, _, bridge, _, _, _, _ = selected

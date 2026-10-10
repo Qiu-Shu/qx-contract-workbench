@@ -70,8 +70,13 @@ def register_routes(app, database, actor_in, authenticate_first, body_input, wri
             version = read_version(matter_id, version_id, actor, db)
             if version.id not in {item.id for item in current_versions(matter_id, actor, db)} or sha256 != version.sha256:
                 raise ServiceError('VERSION_CONFLICT', 409)
-            if version.mime != 'application/pdf': raise ServiceError('FILE_UNSUPPORTED', 415)
+            from ..documents.ingest import DOCX_MIME
+            if version.mime not in ('application/pdf', DOCX_MIME): raise ServiceError('FILE_UNSUPPORTED', 415)
             data = read_original(matter_id, version_id, actor, db)
+        if version.mime == DOCX_MIME:
+            return Response(data, media_type=DOCX_MIME, headers={
+                'Content-Disposition':'attachment; filename="original.docx"', 'X-Content-SHA256':version.sha256,
+                'Cache-Control':'no-store'})
         return Response(data, media_type='application/pdf', headers={
             'Content-Disposition':'inline; filename="original.pdf"', 'X-Content-SHA256':version.sha256,
             'X-QX-PDF-Geometry':__import__('json').dumps(pdf_page_geometry(data),separators=(',',':'),allow_nan=False)})

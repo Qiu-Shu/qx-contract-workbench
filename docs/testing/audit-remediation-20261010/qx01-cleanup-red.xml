@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="4.134" timestamp="2026-10-10T13:03:56.330601+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_bridge_revocation_race" name="test_expired_old_read_does_not_cancel_unpublished_new_selection" time="3.095"><failure message="cn_contract.security.ServiceError: request not authorized">tests\integration\test_bridge_revocation_race.py:91: in test_expired_old_read_does_not_cancel_unpublished_new_selection
+    new_grant=selection.result(timeout=10)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_bridge_revocation_race.py:83: in select_new
+    return bridge.select(UUID(matter),CaseBridgeConsent(context_sha256=context['context_sha256'],
+src\cn_contract\web\case_bridge.py:94: in select
+    return self._select(matter_id, consent, actor, db, intent, epoch)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\case_bridge.py:114: in _select
+    raise ServiceError('AUTHENTICATION_REQUIRED', 401)
+E   cn_contract.security.ServiceError: request not authorized</failure></testcase></testsuite></testsuites>

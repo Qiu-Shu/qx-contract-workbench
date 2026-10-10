@@ -72,13 +72,16 @@ def test_original_read_rechecks_live_authority_and_version(assisted_api, change)
     assert not response.content.startswith(b'%PDF')
 
 
-def test_original_rejects_docx_without_leaking_path(assisted_api):
+def test_original_docx_download_is_an_attachment_bound_to_current_hash(assisted_api):
     from tests.integration.test_assisted_review import parsed_case
     client, _, _, _ = assisted_api
     matter, sent, *_ = parsed_case(assisted_api)
     response = client.get(f'/api/matters/{matter}/documents/{sent["version_id"]}/original?sha256={sent["sha256"]}')
-    assert response.status_code == 415
-    assert 'storage_ref' not in response.text and '.docx' not in response.text
+    assert response.status_code == 200
+    assert response.headers['content-disposition']=='attachment; filename="original.docx"'
+    assert response.headers['x-content-sha256']==sent['sha256']
+    import hashlib
+    assert hashlib.sha256(response.content).hexdigest()==sent['sha256']
 
 
 def test_fact_page_offers_same_origin_pdf_panel(assisted_api):

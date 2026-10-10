@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="53" time="152.341" timestamp="2026-10-10T12:56:57.217180+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[revoke-False]" time="2.128"><failure message="ValueError: unknown audit action/entity type">tests\integration\test_bridge_revocation_race.py:44: in test_pending_consent_cancellation
+    response = client.delete(f'/api/matters/{target}/case-bridge', headers=csrf)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:1311: in delete
+    return self.request(
+.venv\Lib\site-packages\starlette\testclient.py:463: in request
+    return super().request(
+.venv\Lib\site-packages\httpx2\_client.py:797: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:980: in send
+    response = self._send_handling_auth(
+.venv\Lib\site-packages\httpx2\_client.py:1008: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv\Lib\site-packages\httpx2\_client.py:1043: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:1076: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\testclient.py:360: in handle_request
+    raise exc
+.venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\base.py:197: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\app.py:149: in headers
+    response=await call_next(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\middleware\base.py:173: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv\Lib\site-packages\starlette\middleware\base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:676: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:2786: in app
+    await route.handle(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:282: in handle
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\routing.py:727: in app
+    raw_response = await run_endpoint_function(
+.venv\Lib\site-packages\fastapi\routing.py:362: in run_endpoint_function
+    return await run_in_threadpool(
+.venv\Lib\site-packages\starlette\concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\telemetry\_api.py:240: in _run_sync_endpoint
+    return function(**arguments)
+           ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\case_bridge.py:258: in revoke_case
+    bridge.revoke(matter_id, actor, db)
+src\cn_contract\web\case_bridge.py:150: in revoke
+    append_event(AuditEvent(id=uuid4(), matter_id=matter_id, actor_id=actor.user_id,
+src\cn_contract\audit.py:22: in append_event
+    raise ValueError('unknown audit action/entity type')
+E   ValueError: unknown audit action/entity type</failure></testcase><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[revoke-True]" time="1.994"><failure message="ValueError: unknown audit action/entity type">tests\integration\test_bridge_revocation_race.py:44: in test_pending_consent_cancellation
+    response = client.delete(f'/api/matters/{target}/case-bridge', headers=csrf)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:1311: in delete
+    return self.request(
+.venv\Lib\site-packages\starlette\testclient.py:463: in request
+    return super().request(
+.venv\Lib\site-packages\httpx2\_client.py:797: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:980: in send
+    response = self._send_handling_auth(
+.venv\Lib\site-packages\httpx2\_client.py:1008: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv\Lib\site-packages\httpx2\_client.py:1043: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:1076: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\testclient.py:360: in handle_request
+    raise exc
+.venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\base.py:197: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\app.py:149: in headers
+    response=await call_next(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\middleware\base.py:173: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv\Lib\site-packages\starlette\middleware\base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:676: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:2786: in app
+    await route.handle(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:282: in handle
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\routing.py:727: in app
+    raw_response = await run_endpoint_function(
+.venv\Lib\site-packages\fastapi\routing.py:362: in run_endpoint_function
+    return await run_in_threadpool(
+.venv\Lib\site-packages\starlette\concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\telemetry\_api.py:240: in _run_sync_endpoint
+    return function(**arguments)
+           ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\case_bridge.py:258: in revoke_case
+    bridge.revoke(matter_id, actor, db)
+src\cn_contract\web\case_bridge.py:150: in revoke
+    append_event(AuditEvent(id=uuid4(), matter_id=matter_id, actor_id=actor.user_id,
+src\cn_contract\audit.py:22: in append_event
+    raise ValueError('unknown audit action/entity type')
+E   ValueError: unknown audit action/entity type</failure></testcase><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[other_matter-False]" time="2.038" /><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[other_matter-True]" time="2.050" /><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[revoke_then_reselect-False]" time="2.030"><failure message="ValueError: unknown audit action/entity type">tests\integration\test_bridge_revocation_race.py:44: in test_pending_consent_cancellation
+    response = client.delete(f'/api/matters/{target}/case-bridge', headers=csrf)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:1311: in delete
+    return self.request(
+.venv\Lib\site-packages\starlette\testclient.py:463: in request
+    return super().request(
+.venv\Lib\site-packages\httpx2\_client.py:797: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:980: in send
+    response = self._send_handling_auth(
+.venv\Lib\site-packages\httpx2\_client.py:1008: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv\Lib\site-packages\httpx2\_client.py:1043: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:1076: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\testclient.py:360: in handle_request
+    raise exc
+.venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\base.py:197: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\app.py:149: in headers
+    response=await call_next(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\middleware\base.py:173: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv\Lib\site-packages\starlette\middleware\base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:676: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:2786: in app
+    await route.handle(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:282: in handle
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\routing.py:727: in app
+    raw_response = await run_endpoint_function(
+.venv\Lib\site-packages\fastapi\routing.py:362: in run_endpoint_function
+    return await run_in_threadpool(
+.venv\Lib\site-packages\starlette\concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\telemetry\_api.py:240: in _run_sync_endpoint
+    return function(**arguments)
+           ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\case_bridge.py:258: in revoke_case
+    bridge.revoke(matter_id, actor, db)
+src\cn_contract\web\case_bridge.py:150: in revoke
+    append_event(AuditEvent(id=uuid4(), matter_id=matter_id, actor_id=actor.user_id,
+src\cn_contract\audit.py:22: in append_event
+    raise ValueError('unknown audit action/entity type')
+E   ValueError: unknown audit action/entity type</failure></testcase><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[revoke_then_reselect-True]" time="2.099"><failure message="ValueError: unknown audit action/entity type">tests\integration\test_bridge_revocation_race.py:44: in test_pending_consent_cancellation
+    response = client.delete(f'/api/matters/{target}/case-bridge', headers=csrf)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:1311: in delete
+    return self.request(
+.venv\Lib\site-packages\starlette\testclient.py:463: in request
+    return super().request(
+.venv\Lib\site-packages\httpx2\_client.py:797: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:980: in send
+    response = self._send_handling_auth(
+.venv\Lib\site-packages\httpx2\_client.py:1008: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv\Lib\site-packages\httpx2\_client.py:1043: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx2\_client.py:1076: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\testclient.py:360: in handle_request
+    raise exc
+.venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\base.py:197: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\app.py:149: in headers
+    response=await call_next(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\middleware\base.py:173: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv\Lib\site-packages\starlette\middleware\base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:676: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:2786: in app
+    await route.handle(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:282: in handle
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\routing.py:727: in app
+    raw_response = await run_endpoint_function(
+.venv\Lib\site-packages\fastapi\routing.py:362: in run_endpoint_function
+    return await run_in_threadpool(
+.venv\Lib\site-packages\starlette\concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\telemetry\_api.py:240: in _run_sync_endpoint
+    return function(**arguments)
+           ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\case_bridge.py:258: in revoke_case
+    bridge.revoke(matter_id, actor, db)
+src\cn_contract\web\case_bridge.py:150: in revoke
+    append_event(AuditEvent(id=uuid4(), matter_id=matter_id, actor_id=actor.user_id,
+src\cn_contract\audit.py:22: in append_event
+    raise ValueError('unknown audit action/entity type')
+E   ValueError: unknown audit action/entity type</failure></testcase><testcase classname="tests.integration.test_case_bridge" name="test_selected_read_contains_bound_sources_and_no_credentials" time="2.920" /><testcase classname="tests.integration.test_case_bridge" name="test_grant_cannot_survive_authority_or_context_change[logout]" time="2.075" /><testcase classname="tests.integration.test_case_bridge" name="test_grant_cannot_survive_authority_or_context_change[membership]" time="1.994" /><testcase classname="tests.integration.test_case_bridge" name="test_grant_cannot_survive_authority_or_context_change[membership_restore]" time="2.023" /><testcase classname="tests.integration.test_case_bridge" name="test_grant_cannot_survive_authority_or_context_change[disabled]" time="2.070" /><testcase classname="tests.integration.test_case_bridge" name="test_grant_cannot_survive_authority_or_context_change[role]" time="1.955" /><testcase classname="tests.integration.test_case_bridge" name="test_grant_cannot_survive_authority_or_context_change[expired]" time="2.041" /><testcase classname="tests.integration.test_case_bridge" name="test_grant_cannot_survive_authority_or_context_change[version]" time="2.042" /><testcase classname="tests.integration.test_case_bridge" name="test_grant_cannot_survive_authority_or_context_change[revoke]" time="2.134" /><testcase classname="tests.integration.test_case_bridge" name="test_grant_cannot_survive_authority_or_context_change[restart]" time="2.005" /><testcase classname="tests.integration.test_case_bridge" name="test_selection_requires_explicit_current_authority[no_csrf]" time="1.663" /><testcase classname="tests.integration.test_case_bridge" name="test_selection_requires_explicit_current_authority[origin]" time="1.802" /><testcase classname="tests.integration.test_case_bridge" name="test_selection_requires_explicit_current_authority[consent]" time="1.635" /><testcase classname="tests.integration.test_case_bridge" name="test_selection_requires_explicit_current_authority[context]" time="2.017" /><testcase classname="tests.integration.test_case_bridge" name="test_selection_requires_explicit_current_authority[unknown]" time="1.749" /><testcase classname="tests.integration.test_case_bridge" name="test_selection_requires_explicit_current_authority[assistant]" time="1.715" /><testcase classname="tests.integration.test_case_bridge" name="test_no_cookie_fallback_or_case_override" time="2.806" /><testcase classname="tests.integration.test_case_bridge" name="test_reselect_replaces_token_and_template_has_explicit_consent" time="3.144" /><testcase classname="tests.integration.test_case_bridge" name="test_actual_loopback_mcp_read_and_revocation" time="5.494" /><testcase classname="tests.integration.test_case_bridge" name="test_oversize_rejected_without_truncation" time="2.688" /><testcase classname="tests.integration.test_case_bridge" name="test_original_tampering_invalidates_read" time="2.015" /><testcase classname="tests.integration.test_case_bridge" name="test_pdf_transcription_is_separate_from_eligible_text" time="1.014" /><testcase classname="tests.integration.test_case_bridge" name="test_bulk_authority_restore_must_not_restore_consent[membership]" time="2.009" /><testcase classname="tests.integration.test_case_bridge" name="test_bulk_authority_restore_must_not_restore_consent[roles]" time="2.031" /><testcase classname="tests.integration.test_case_bridge" name="test_bulk_authority_restore_must_not_restore_consent[session]" time="2.187" /><testcase classname="tests.integration.test_case_bridge" name="test_old_read_cleanup_must_not_erase_new_grant" time="3.050" /><testcase classname="tests.integration.test_plugin_candidates" name="test_read_only_grant_cannot_write" time="2.895" /><testcase classname="tests.integration.test_plugin_candidates" name="test_plugin_source_persists_as_unverified_and_awaits_lawyer" time="4.531" /><testcase classname="tests.integration.test_plugin_candidates" name="test_one_grant_one_round_and_same_input_replays_receipt" time="4.305" /><testcase classname="tests.integration.test_plugin_candidates" name="test_stale_or_untrusted_submission_is_rejected[expired]" time="2.273" /><testcase classname="tests.integration.test_plugin_candidates" name="test_stale_or_untrusted_submission_is_rejected[revoked]" time="2.232" /><testcase classname="tests.integration.test_plugin_candidates" name="test_stale_or_untrusted_submission_is_rejected[version]" time="2.915" /><testcase classname="tests.integration.test_plugin_candidates" name="test_stale_or_untrusted_submission_is_rejected[wrong_anchor]" time="2.794" /><testcase classname="tests.integration.test_plugin_candidates" name="test_stale_or_untrusted_submission_is_rejected[fake_receipt]" time="2.192" /><testcase classname="tests.integration.test_plugin_candidates" name="test_stale_or_untrusted_submission_is_rejected[fake_actor]" time="2.204" /><testcase classname="tests.integration.test_plugin_candidates" name="test_stale_or_untrusted_submission_is_rejected[query]" time="2.200" /><testcase classname="tests.integration.test_plugin_candidates" name="test_manual_endpoint_cannot_claim_plugin_provenance" time="1.898" /><testcase classname="tests.integration.test_plugin_candidates" name="test_write_consent_is_strict_boolean" time="1.657" /><testcase classname="tests.integration.test_plugin_candidates" name="test_concurrent_identical_submission_persists_once" time="3.912" /><testcase classname="tests.integration.test_plugin_candidates" name="test_failed_transaction_leaves_no_receipt_or_candidate" time="5.065" /><testcase classname="tests.integration.test_plugin_candidates" name="test_replay_after_revocation_is_denied" time="3.598" /><testcase classname="tests.integration.test_plugin_candidates" name="test_lawyer_disposition_and_export_preserve_plugin_origin" time="9.206" /><testcase classname="tests.integration.test_plugin_candidates" name="test_actual_stdio_candidate_submission_over_loopback" time="5.488" /><testcase classname="tests.integration.test_plugin_candidates" name="test_read_after_submit_does_not_destroy_replay" time="4.944" /><testcase classname="tests.integration.test_plugin_candidates" name="test_write_grant_read_does_not_claim_manual_model_origin" time="2.926" /><testcase classname="tests.integration.test_plugin_candidates" name="test_read_during_submit_does_not_use_precommit_finished_flag" time="6.422" /><testcase classname="tests.integration.test_plugin_candidates" name="test_identical_replay_waits_for_postcommit_receipt_publication" time="5.834" /></testsuite></testsuites>

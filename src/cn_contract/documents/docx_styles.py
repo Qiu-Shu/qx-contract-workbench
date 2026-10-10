@@ -91,7 +91,7 @@ class EffectiveStyles:
                         return True
         return False
 
-    def run_hidden(self, paragraph, run):
+    def run_properties(self, paragraph, run):
         if len(run.findall(f'{{{W}}}rPr')) > 1:
             raise StyleDependencyError('ambiguous_run_properties')
         chain = self.paragraph_chain(paragraph)
@@ -107,9 +107,54 @@ class EffectiveStyles:
             properties.append(self.root.find(f'{{{W}}}docDefaults/{{{W}}}rPrDefault/{{{W}}}rPr'))
         properties.extend(node for node in chain)
         properties.append(run.find(f'{{{W}}}rPr'))
-        return self.hidden(properties)
+        return properties
 
-    def table_hidden(self, table):
+    def run_hidden(self, paragraph, run):
+        return self.hidden(self.run_properties(paragraph, run))
+
+    def color_uncertain(self, paragraph, run, backgrounds=()):
+        """Finite color subset; unresolved themes/patterns require source checking.
+
+        This is a conservative extraction gate, not a Word renderer. A 4.5
+        contrast cutoff routes low-contrast text to independent lawyer records.
+        """
+        foreground, background = '000000', 'FFFFFF'
+        properties = [node.find(f'{{{W}}}rPr') if node is not None and node.tag == f'{{{W}}}style' else node
+                      for node in self.run_properties(paragraph, run)]
+        paragraph_props = [node.find(f'{{{W}}}pPr') for node in self.paragraph_chain(paragraph)]
+        paragraph_props.append(paragraph.find(f'{{{W}}}pPr'))
+        for prop in (*backgrounds, *paragraph_props, *properties):
+            if prop is None:
+                continue
+            for node in prop.iter():
+                name = node.tag.removeprefix(f'{{{W}}}')
+                if name not in ('color', 'shd', 'highlight', 'background'):
+                    continue
+                if any('theme' in key.lower() for key in node.attrib):
+                    return True
+                if name == 'highlight':
+                    if node.get(f'{{{W}}}val') != 'none': return True
+                    continue
+                if name == 'shd' and node.get(f'{{{W}}}val', 'clear') not in ('clear', 'nil'):
+                    return True
+                key = 'val' if name == 'color' else ('color' if name == 'background' else 'fill')
+                value = node.get(f'{{{W}}}{key}', 'auto')
+                if value == 'auto':
+                    # Automatic color depends on the rendering environment.
+                    if name == 'color': foreground = '000000'
+                    else: return True
+                elif len(value) != 6 or any(c not in '0123456789abcdefABCDEF' for c in value):
+                    return True
+                elif name == 'color': foreground = value
+                else: background = value
+        def luminance(value):
+            channels = [int(value[i:i+2], 16) / 255 for i in (0, 2, 4)]
+            linear = [v / 12.92 if v <= .04045 else ((v + .055) / 1.055) ** 2.4 for v in channels]
+            return sum(v * weight for v, weight in zip(linear, (.2126, .7152, .0722)))
+        light, dark = sorted((luminance(foreground), luminance(background)), reverse=True)
+        return (light + .05) / (dark + .05) < 4.5
+
+    def table_chain(self, table):
         if len(table.findall(f'{{{W}}}tblPr')) > 1:
             raise StyleDependencyError('ambiguous_table_properties')
         references = table.findall(f'{{{W}}}tblPr/{{{W}}}tblStyle')
@@ -118,9 +163,12 @@ class EffectiveStyles:
         identifier = references[0].get(f'{{{W}}}val') if references else self.defaults.get('table')
         if references and not identifier:
             raise StyleDependencyError('missing_table_style')
+        return self.chain(identifier, 'table')
+
+    def table_hidden(self, table):
         # Conditional table style regions are not rendered; any visibility flag
         # in the referenced chain conservatively makes the table manual.
-        return self.hidden(self.chain(identifier, 'table'))
+        return self.hidden(self.table_chain(table))
 
     def numbering_used(self, paragraph, numbering_roots):
         chain = self.paragraph_chain(paragraph)

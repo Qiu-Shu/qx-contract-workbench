@@ -190,7 +190,9 @@ def _file_references(db):
 def _registered_hashes():
     from ..review.synthetic import EXPECTED_HASHES
     from ..acceptance.registry import load_dataset
-    return set(EXPECTED_HASHES.values()) | {s.sha256 for s in load_dataset()}
+    from ..acceptance.assisted_registry import load_seed_policy
+    return (set(EXPECTED_HASHES.values()) | {s.sha256 for s in load_dataset()}
+            | set(load_seed_policy().document_hashes))
 
 
 def _collect_files(db):

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.059" timestamp="2026-10-10T12:59:21.966032+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assisted_backup" name="test_current_seed_inventory_is_backed_by_backup_registry" time="0.081"><failure message="AssertionError: assert {'05685f9a2be...5ee6633', ...} &lt;= {'1006b00404a...fed7193', ...}&#10;  &#10;  Extra items in the left set:&#10;  '9fb43d4e84fe60fba78380a338be58f36f0753e04e6c84b5db91dd9df257683a'&#10;  '86e2ad2d3fe62db471adcbb924964b6925b14981adb8a6836302378d2dd1b2c5'&#10;  'feeb463c9c3b00d013bc712e163722a448ff0448b96bb32457841f8a41d557ff'&#10;  'ea08234635c265387fedd823c09b6bec21c6b7d4187bb9ccfc29d603f5e38ece'&#10;  '1f17a83240ede72d864d5747dab4977a545c4688a87e8e77a593dd30809d3955'...&#10;  &#10;  ...Full output truncated (7 lines hidden), use '-vv' to show">tests\integration\test_assisted_backup.py:14: in test_current_seed_inventory_is_backed_by_backup_registry
+    assert set(load_seed_policy().document_hashes) &lt;= _registered_hashes()
+E   AssertionError: assert {'05685f9a2be...5ee6633', ...} &lt;= {'1006b00404a...fed7193', ...}
+E     
+E     Extra items in the left set:
+E     '9fb43d4e84fe60fba78380a338be58f36f0753e04e6c84b5db91dd9df257683a'
+E     '86e2ad2d3fe62db471adcbb924964b6925b14981adb8a6836302378d2dd1b2c5'
+E     'feeb463c9c3b00d013bc712e163722a448ff0448b96bb32457841f8a41d557ff'
+E     'ea08234635c265387fedd823c09b6bec21c6b7d4187bb9ccfc29d603f5e38ece'
+E     '1f17a83240ede72d864d5747dab4977a545c4688a87e8e77a593dd30809d3955'...
+E     
+E     ...Full output truncated (7 lines hidden), use '-vv' to show</failure></testcase></testsuite></testsuites>

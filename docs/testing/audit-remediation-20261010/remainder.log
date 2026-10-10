@@ -1,0 +1,17 @@
+........................................................................ [ 21%]
+.................................F...................................... [ 43%]
+........................................................................ [ 65%]
+........................................................................ [ 87%]
+........................................                                 [100%]
+================================== FAILURES ===================================
+__ test_complex_paragraph_has_explicit_manual_without_contract_copy[hidden] ___
+tests\unit\test_patch_preconditions.py:64: in test_complex_paragraph_has_explicit_manual_without_contract_copy
+    world=setup(tmp_path,body=body);value=approved(world,suggestion(world))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\helpers\synthetic_exports.py:62: in setup
+    assert validate_findings(run,evidence,actor=actor,db=db).ok
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_patch_preconditions.py::test_complex_paragraph_has_explicit_manual_without_contract_copy[hidden]
+1 failed, 327 passed in 76.45s (0:01:16)

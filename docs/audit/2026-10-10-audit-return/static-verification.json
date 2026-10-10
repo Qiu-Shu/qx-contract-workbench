@@ -1,0 +1,33 @@
+{
+  "scorer_8_examples": {
+    "correct": true,
+    "wrong_ascii_number": false,
+    "conflicting_amount": true,
+    "duplicate_amount": true,
+    "cross_box_digit": true,
+    "unicode_negative": true,
+    "fullwidth_decimal": true,
+    "wrong_unit": true
+  },
+  "duplicate_tests": [
+    {
+      "path": "tests/integration/test_plugin_candidates.py",
+      "scope": "<module>",
+      "name": "test_identical_replay_waits_for_postcommit_receipt_publication",
+      "lines": [
+        271,
+        305
+      ]
+    }
+  ],
+  "ocr_manifest_totals": {
+    "assets_files": 84,
+    "assets_bytes": 240096312,
+    "environment_files": 15973,
+    "environment_bytes": 758162503,
+    "per_job_model_files": 12,
+    "per_job_model_bytes": 22138943
+  },
+  "ocr_model_runs": 0,
+  "elapsed_performance_not_measured": true
+}

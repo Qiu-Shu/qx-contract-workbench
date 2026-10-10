@@ -32,7 +32,9 @@ from ..domain import (DeepSeekModelId, DeepSeekOperation, McpOfflineExample,
     McpOfflineExampleArguments, McpOfflineFixture, McpOfflineStatus,
     ModelRequest, ModelUsageLimit, ReviewContext, AssistedReviewInput)
 from ..review.deepseek_codec import build_chat_request, decode_chat_response
-from .case_client import read_selected_case, submit_selected_candidates
+from .case_client import read_selected_case, SubmissionUnconfirmed
+from . import case_client
+from ..domain import PluginCandidateSubmission
 
 
 _FIXTURE_DIRECTORY = Path(__file__).resolve().parents[3] / 'tests' / 'fixtures' / 'synthetic'
@@ -46,6 +48,22 @@ _W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 _MAX_FIXTURE_BYTES = 16384
 _MAX_XML_BYTES = 8192
 _MAX_OUTPUT_TOKENS = 128
+
+_UNKNOWN_CODE = -32001
+_UNKNOWN_MESSAGE = 'CANDIDATE_SUBMISSION_UNCONFIRMED_CHECK_WORKBENCH'
+
+
+class _UnknownSubmission(MCPError):
+    def __init__(self):
+        super().__init__(code=_UNKNOWN_CODE, message=_UNKNOWN_MESSAGE)
+
+
+def submit_selected_candidates(candidate: AssistedReviewInput) -> PluginCandidateSubmission:
+    """提交一轮待律师处置候选；结果未知时去工作台核实，不重发、不自动采纳。"""
+    try:
+        return case_client.submit_selected_candidates(candidate)
+    except SubmissionUnconfirmed:
+        raise _UnknownSubmission() from None
 
 
 def workbench_status() -> McpOfflineStatus:
@@ -267,6 +285,8 @@ async def _offline_boundary(ctx, call_next):
         if isinstance(result, dict) and result.get('isError'):
             raise ValueError('rejected')
         return result
+    except _UnknownSubmission:
+        raise _UnknownSubmission() from None
     except Exception:
         raise MCPError(code=INVALID_PARAMS, message=_REJECTED) from None
 
@@ -302,8 +322,12 @@ class _SanitizedWriteStream:
 
     async def send(self, item: SessionMessage) -> None:
         if isinstance(item.message, JSONRPCError):
+            unknown = (item.message.error.code == _UNKNOWN_CODE
+                       and item.message.error.message == _UNKNOWN_MESSAGE
+                       and item.message.error.data is None)
             item = SessionMessage(JSONRPCError(jsonrpc='2.0', id=item.message.id,
-                error=ErrorData(code=INVALID_PARAMS, message=_REJECTED)), metadata=item.metadata)
+                error=ErrorData(code=_UNKNOWN_CODE if unknown else INVALID_PARAMS,
+                    message=_UNKNOWN_MESSAGE if unknown else _REJECTED)), metadata=item.metadata)
         await self._stream.send(item)
 
     async def aclose(self) -> None:

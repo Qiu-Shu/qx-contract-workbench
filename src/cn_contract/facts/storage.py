@@ -98,10 +98,14 @@ def source_anchor_is_eligible(anchor, parsed):
     Manual/OCR/unsupported text remains an uncertain candidate. This slice has
     no visual-confirmation record or independent lawyer-transcript provenance;
     a FactDecision reason cannot authorize risky extracted text as original.
-    DOCX source classification is handled by its own adapter and is unchanged.
+    DOCX color and hidden-text gaps block their affected paragraph, without
+    silently deleting characters and promoting the remainder to trusted text.
     """
     if anchor.kind != 'pdf_span':
-        return True
+        return not any(part.startswith(f'{anchor.part_name}:{kind}:') and
+            (part == f'{anchor.part_name}:{kind}:{anchor.element_id}:manual_required'
+             or anchor.element_id.startswith(part.removeprefix(f'{anchor.part_name}:{kind}:').removesuffix(':manual_required') + '/'))
+            for kind in ('visibility', 'hidden', 'style_dependency') for part in parsed.unsupported_parts)
     return (anchor.page is not None and f'page:{anchor.page}:read' in parsed.parts
         and not any(part == f'page:{anchor.page}' or part.startswith(f'page:{anchor.page}:')
             for part in parsed.unsupported_parts))

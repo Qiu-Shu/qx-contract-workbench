@@ -142,11 +142,13 @@ def test_example_never_uses_environment_database_or_network(monkeypatch):
     import sqlite3
     def forbidden(*args, **kwargs):
         raise AssertionError('offline example cannot use an external dependency')
-    monkeypatch.setattr(os, 'getenv', forbidden)
-    monkeypatch.setattr(type(os.environ), '__getitem__', forbidden)
-    monkeypatch.setattr(socket.socket, 'connect', forbidden)
-    monkeypatch.setattr(sqlite3, 'connect', forbidden)
-    assert module.deepseek_offline_example('sales', 'extract_facts', 'deepseek-flash').synthetic is True
+    # Restore process globals before pytest's reporter reads its environment.
+    with monkeypatch.context() as isolated:
+        isolated.setattr(os, 'getenv', forbidden)
+        isolated.setattr(type(os.environ), '__getitem__', forbidden)
+        isolated.setattr(socket.socket, 'connect', forbidden)
+        isolated.setattr(sqlite3, 'connect', forbidden)
+        assert module.deepseek_offline_example('sales', 'extract_facts', 'deepseek-flash').synthetic is True
 
 
 @pytest.mark.parametrize('linked_parent', ['fixture_directory', 'ancestor_directory'])

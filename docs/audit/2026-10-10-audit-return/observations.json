@@ -1,0 +1,59 @@
+{
+  "pending-read-grant-revoke-observation.json": {
+    "scope": "registered_fiction_in_process_real_SQLite",
+    "revoke_status": 204,
+    "authority_epoch_before": 4,
+    "authority_epoch_after_revoke": 4,
+    "grant_published_after_revoke": true,
+    "credential_exists_after_revoke": true,
+    "read_status_after_revoke": 200,
+    "returned_anchor_count": 8,
+    "returned_facts_count": 1,
+    "candidate_submission_status_after_revoke": null,
+    "candidate_disposition_after_revoke": null
+  },
+  "pending-write-grant-revoke-observation.json": {
+    "scope": "registered_fiction_in_process_real_SQLite",
+    "revoke_status": 204,
+    "authority_epoch_before": 4,
+    "authority_epoch_after_revoke": 4,
+    "grant_published_after_revoke": true,
+    "credential_exists_after_revoke": true,
+    "read_status_after_revoke": 200,
+    "returned_anchor_count": 8,
+    "returned_facts_count": 1,
+    "candidate_submission_status_after_revoke": 201,
+    "candidate_disposition_after_revoke": "awaiting_lawyer"
+  },
+  "lost-response-observation.json": {
+    "scope": "real_in_process_API_persistence_MCP_dispatch_emulated_lost_response",
+    "exchange_attempts": 1,
+    "stored_proposal_count": 1,
+    "stored_submission_status": "awaiting_lawyer",
+    "mcp_error_code": -32602,
+    "mcp_error_message": "OFFLINE_REQUEST_REJECTED",
+    "mcp_error_data": null,
+    "contains_unknown_outcome_instruction": false
+  },
+  "expiry-during-read-observation.json": {
+    "scope": "registered_fiction_in_process_clock_seam",
+    "returned_after_expiration": true,
+    "returned_anchor_count": 8,
+    "returned_fact_count": 1,
+    "grant_still_active": true,
+    "clock_at_precheck": "2026-10-10T04:59:41.639286+00:00",
+    "grant_expiration": "2026-10-10T04:59:41.739286+00:00",
+    "clock_at_return": "2026-10-10T04:59:41.839286+00:00"
+  },
+  "white-digit": {
+    "raw_document_sha256": "91a7ccb3cf378bb674e9a8d79b774e809374d179f47358906ee09a452dae15e6",
+    "actual_candidate_status": 201,
+    "visible_price_expected": "28473 CNY",
+    "extracted_price": "128473 CNY",
+    "fact_confirmation_status": 200,
+    "anchor_eligible_in_review_context": true,
+    "proposal_status": 201,
+    "export_status": 200,
+    "export_contains_incorrect_amount": true
+  }
+}

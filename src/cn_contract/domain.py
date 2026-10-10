@@ -1560,7 +1560,9 @@ class PageVerificationInput(DomainModel):
     document_version_id: UUID
     document_sha256: SHA256
     fact_version: PositiveInt
-    page: Annotated[int, Field(strict=True, ge=1, le=200)]
+    page: Annotated[int, Field(strict=True, ge=1, le=200)] | None
+    # Omit absent DOCX locator to preserve historical PDF record digests.
+    source_anchor_id: UUID | None = Field(default=None, exclude_if=lambda value: value is None)
     source_kind: Literal['visible_original', 'lawyer_transcription', 'provider_clarification']
     observed_text: Annotated[NonEmpty, Field(max_length=4000)]
     field: Annotated[NonEmpty, Field(max_length=100)]
@@ -1580,6 +1582,10 @@ class PageVerificationInput(DomainModel):
 
     @model_validator(mode='after')
     def bounded_value(self):
+        if (self.page is None) == (self.source_anchor_id is None):
+            raise ValueError('exactly one PDF page or DOCX anchor required')
+        if self.source_anchor_id is not None and self.candidate_id is not None:
+            raise ValueError('OCR candidates are PDF only')
         if isinstance(self.typed_value, DecimalFactValue) and self.unit is None:
             raise ValueError('decimal source value requires unit')
         if len(self.typed_value.model_dump_json().encode()) > 4000:

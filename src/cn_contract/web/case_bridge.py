@@ -39,6 +39,7 @@ class CaseBridge:
         self.database, self.path = database, safe_credential_path(path)
         self.active = None
         self.submission = None
+        self.pending = {}
         self.lock, self.authority_epoch = Lock(), 0
         self.now = lambda: datetime.now(timezone.utc)
         event.listen(database.session_factory, 'before_flush', self._authority_changed)
@@ -48,6 +49,7 @@ class CaseBridge:
         with self.lock:
             self.authority_epoch += 1
             self.active = None
+            self.pending.clear()
 
     def _before_execute(self, connection, statement, multiparams, params, execution_options):
         table = getattr(statement, 'table', None)
@@ -72,8 +74,11 @@ class CaseBridge:
         with self.lock:
             if expected is not None and self.active is not expected:
                 return
-            self.authority_epoch += 1
+            if expected is None:
+                self.authority_epoch += 1
+                self.pending.clear()
             self.active = None
+            self.submission = None
             self._erase()
 
     def _audit(self, action, grant, actor, db):
@@ -83,7 +88,17 @@ class CaseBridge:
             reason=str(grant.id), correlation_id=uuid4()), db)
 
     def select(self, matter_id, consent, actor, db):
-        epoch = self.authority_epoch
+        intent = uuid4()
+        with self.lock:
+            epoch = self.authority_epoch
+            self.pending[intent] = (matter_id, actor.session_id)
+        try:
+            return self._select(matter_id, consent, actor, db, intent, epoch)
+        finally:
+            with self.lock:
+                self.pending.pop(intent, None)
+
+    def _select(self, matter_id, consent, actor, db, intent, epoch):
         context = proposals.review_context(matter_id, actor, db)
         if consent.context_sha256 != context.context_sha256:
             raise ServiceError('VERSION_CONFLICT', 409)
@@ -96,7 +111,8 @@ class CaseBridge:
         temporary = self.path.with_name(self.path.name + '.' + uuid4().hex + '.tmp')
         # Never hold this lock while waiting for a database transaction.
         with self.lock:
-            if self.authority_epoch != epoch:
+            if (self.authority_epoch != epoch or intent not in self.pending
+                    or self.now() >= grant.expires_at):
                 raise ServiceError('AUTHENTICATION_REQUIRED', 401)
             try:
                 safe_credential_path(self.path)
@@ -114,14 +130,29 @@ class CaseBridge:
         return grant
 
     def revoke(self, matter_id, actor, db):
-        if self.active is None:
-            self._erase()
-            return
-        grant, owner, _ = self.active
-        if grant.matter_id != matter_id or owner.session_id != actor.session_id:
-            raise ServiceError('STATE_CONFLICT', 409)
-        self._audit('case_bridge_revoked', grant, actor, db)
-        self.close()
+        # Cancel only this matter/session, including consent still awaiting publication.
+        # Never acquire a database transaction while holding the publication lock.
+        with self.lock:
+            cancelled = [key for key, scope in self.pending.items()
+                         if scope == (matter_id, actor.session_id)]
+            active = self.active
+            owned = active is not None and (active[0].matter_id, active[1].session_id) == (matter_id, actor.session_id)
+            if not owned and not cancelled and (active is not None or self.pending):
+                raise ServiceError('STATE_CONFLICT', 409)
+            for key in cancelled:
+                del self.pending[key]
+            if owned:
+                self.active = None
+                self.submission = None
+            if owned or (active is None and not self.pending):
+                self._erase()
+        if owned:
+            self._audit('case_bridge_revoked', active[0], actor, db)
+        for intent in cancelled:
+            append_event(AuditEvent(id=uuid4(), matter_id=matter_id, actor_id=actor.user_id,
+                action='case_bridge_selection_cancelled', entity_type='matter', entity_id=matter_id,
+                before_hash=None, after_hash=None, timestamp=self.now(), reason=str(intent),
+                correlation_id=uuid4()), db)
 
     def authorized(self, authorization):
         active = self.active
@@ -202,7 +233,7 @@ class CaseBridge:
             raw = payload.model_dump_json().encode('utf-8')
             if len(raw) > MAX_RESPONSE_BYTES:
                 raise ServiceError('FILE_LIMIT', 413)
-            if self.active is not active:
+            if self.active is not active or self.now() >= grant.expires_at:
                 raise ServiceError('AUTHENTICATION_REQUIRED', 401)
             self._audit('case_bridge_read', grant, actor, db)
             return raw

@@ -1,0 +1,52 @@
+{
+  "manifest_entries_verified": 57,
+  "historical_auditor_xml": {
+    "security/baseline.xml": {
+      "tests": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "documents/existing-documents.xml": {
+      "tests": 116,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "documents/targeted-source-confirmation.xml": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "legacy_ops_regression.xml": {
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "security/probes_final.xml": {
+      "tests": 4,
+      "failures": 4,
+      "errors": 0,
+      "skipped": 0
+    },
+    "documents/white-digit-red.xml": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "current_backup_scope.xml": {
+      "tests": 2,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "adaptations": [
+    "DOCX probe ROOT uses actual repository",
+    "helper retains only reviewed make_docx, no audit main or rendering loop"
+  ],
+  "external_scripts_automatically_executed": false
+}

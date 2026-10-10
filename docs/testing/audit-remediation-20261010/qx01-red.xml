@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="6" time="14.008" timestamp="2026-10-10T12:56:26.020819+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[revoke-False]" time="2.152"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">tests\integration\test_bridge_revocation_race.py:55: in test_pending_consent_cancellation
+    with pytest.raises(ServiceError) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;</failure></testcase><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[revoke-True]" time="2.037"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">tests\integration\test_bridge_revocation_race.py:55: in test_pending_consent_cancellation
+    with pytest.raises(ServiceError) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;</failure></testcase><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[other_matter-False]" time="2.073" /><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[other_matter-True]" time="1.958" /><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[revoke_then_reselect-False]" time="2.407"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">tests\integration\test_bridge_revocation_race.py:55: in test_pending_consent_cancellation
+    with pytest.raises(ServiceError) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;</failure></testcase><testcase classname="tests.integration.test_bridge_revocation_race" name="test_pending_consent_cancellation[revoke_then_reselect-True]" time="2.406"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">tests\integration\test_bridge_revocation_race.py:55: in test_pending_consent_cancellation
+    with pytest.raises(ServiceError) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;</failure></testcase></testsuite></testsuites>

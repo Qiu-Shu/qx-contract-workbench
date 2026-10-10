@@ -40,13 +40,19 @@ def _document(matter_id, value, actor, db):
         raise ServiceError('VERSION_CONFLICT',409)
     if any(v.sha256 not in policy.document_hashes for v in current):
         raise ServiceError('DATA_POLICY_UNAPPROVED',409)
-    if version.mime != 'application/pdf': raise ServiceError('FILE_UNSUPPORTED',415)
+    from .ingest import DOCX_MIME
+    if version.mime not in ('application/pdf', DOCX_MIME): raise ServiceError('FILE_UNSUPPORTED',415)
     read_original(matter_id,version.id,actor,db)
     from ..facts.storage import trusted_parse
     parsed = get_parse_result(matter_id,version.id,actor,db)
     if parsed is None: raise ServiceError('FACTS_UNCONFIRMED',409)
     parsed = trusted_parse(matter_id,version.id,actor,db,parsed)
-    if value.page not in parsed.pages: raise ServiceError('VERSION_CONFLICT',409)
+    source_anchor_id = getattr(value, 'source_anchor_id', None)  # PageOCRInput shares the PDF guard.
+    if version.mime == 'application/pdf':
+        if source_anchor_id is not None or value.page not in parsed.pages:
+            raise ServiceError('VERSION_CONFLICT',409)
+    elif (value.page is not None or source_anchor_id not in {a.id for a in parsed.anchors}):
+        raise ServiceError('VERSION_CONFLICT',409)
 
 
 def history(matter_id, actor, db):
@@ -94,8 +100,8 @@ def submit_page_verification(matter_id, value, actor, db):
         raise ServiceError('VERSION_CONFLICT',409)
     _candidate(matter_id,value,actor,db)
     records=history(matter_id,actor,db)
-    same=[r for r in records if (r.input.document_version_id,r.input.page,r.input.field)==
-          (value.document_version_id,value.page,value.field)]
+    same=[r for r in records if (r.input.document_version_id,r.input.page,r.input.source_anchor_id,r.input.field)==
+          (value.document_version_id,value.page,value.source_anchor_id,value.field)]
     latest=next((r for r in same if not any(other.input.previous_id==r.id for other in same)),None)
     if value.previous_id!=(latest.id if latest else None): raise ServiceError('VERSION_CONFLICT',409)
     identifier,fact_id=uuid4(),uuid4()

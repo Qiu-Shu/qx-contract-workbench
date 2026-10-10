@@ -183,8 +183,10 @@ def proposal_findings(proposal,records=None):
         for source_id in item.verification_ids:
             source=records[source_id]
             label={'visible_original':'可见原文核对','lawyer_transcription':'律师转录','provider_clarification':'提供者澄清'}[source.input.source_kind]
-            effect+='\n独立来源：'+label+'；第 '+str(source.input.page)+' 页；记录 '+str(source.id)+'；原件 SHA256 '+source.input.document_sha256
-            effect+='\n核对内容（非PDF文字层）：'+source.input.observed_text
+            location = ('第 '+str(source.input.page)+' 页' if source.input.page is not None
+                        else 'DOCX段落 '+str(source.input.source_anchor_id))
+            effect+='\n独立来源：'+label+'；'+location+'；记录 '+str(source.id)+'；原件 SHA256 '+source.input.document_sha256
+            effect+='\n核对内容（独立人工记录，非自动提取原文）：'+source.input.observed_text
             effect+= ('\n远程法律语言模型未运行；离线OCR如有，仅作为未核候选。' if proposal.execution_receipt.source == 'manual_synthetic'
                 else '\n工作台未调用远程法律语言模型；离线OCR如有，仅作为未核候选。')
         findings.append(Finding(id=identifier,run_id=proposal.run_id,coverage_ids=item.coverage_ids,
