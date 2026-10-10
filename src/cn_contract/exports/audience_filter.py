@@ -42,6 +42,9 @@ def project(run,audience,patches,manual,*,scope=None,internal=None,snapshot=None
             if audience=='client' and state=='reject':continue
             item={'analysis':finding.analysis,'effect':finding.business_effect,'recommendation':finding.recommendation,
                 'severity':finding.severity.value,'evidence':finding.evidence_state.value,'decision_status':labels[state]}
+            if finding.human_decision and finding.human_decision.basis_review:
+                from ..review.basis import describe
+                item['basis_review']=describe(finding.human_decision.basis_review,internal=audience=='internal')
             if audience=='client' and state in {'pending_edit','request_info','refer'}:
                 item['analysis']=labels[state]+'：本事项尚未形成有效律师建议。'
                 item['recommendation']={'pending_edit':'请律师补齐明确的分析和建议文字后重新确认。',

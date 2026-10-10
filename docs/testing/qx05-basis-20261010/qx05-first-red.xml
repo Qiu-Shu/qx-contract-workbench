@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.714" timestamp="2026-10-10T16:00:53.930722+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_finding_basis_review" name="test_accept_does_not_promote_unverified_source_and_export_is_explicit" time="0.778"><failure message="pydantic_core._pydantic_core.ValidationError: 1 validation error for FindingDecisionInput&#10;basis_review&#10;  Extra inputs are not permitted [type=extra_forbidden, input_value={'authority_id': 'a7eba8b...e0e7187957ba696034793f'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden">tests\integration\test_finding_basis_review.py:31: in test_accept_does_not_promote_unverified_source_and_export_is_explicit
+    saved=decide(world,'accept',basis_review=basis(world,source))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_decision_exports.py:41: in decide
+    value = FindingDecisionInput.model_validate(payload)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 1 validation error for FindingDecisionInput
+E   basis_review
+E     Extra inputs are not permitted [type=extra_forbidden, input_value={'authority_id': 'a7eba8b...e0e7187957ba696034793f'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden</failure></testcase></testsuite></testsuites>

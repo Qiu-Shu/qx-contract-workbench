@@ -133,7 +133,10 @@ def save_decision(matter_id, finding_id, value, actor, db):
     authorize(actor,matter_id,'confirm_facts',db)
     run = current_run(matter_id,value.run_id,value.run_sha256,actor,db)
     if run.status!='completed' or finding_id not in {f.id for f in run.findings}: raise ServiceError('VERSION_CONFLICT',409)
+    from ..review.basis import check_basis
+    basis=check_basis(value.basis_review,run,actor,db) if value.basis_review else None
     decision = HumanDecision(decision=value.decision, reason=value.reason, actor_id=actor.user_id, decided_at=s.now(),
+        basis_review=basis,
         edited_analysis=value.edited_analysis, edited_recommendation=value.edited_recommendation,
         edited_replacement_text=value.edited_replacement_text)
     identifier=uuid4()

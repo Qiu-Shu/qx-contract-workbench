@@ -80,10 +80,55 @@ async function loadFacts(){clear('anchors');await anchors();const snapshot=await
       return {fact_id:f.id,decision,confirmed_value:typed,reason:c.querySelector('[name=reason]').value};});const saved=await api(base+'/facts/confirm',{method:'POST',body:{fact_version:snapshot.version,decisions},idempotency:key()});await loadFacts();tell('事实已保存为新版本 '+saved.version+'。可进入18维审查。');});}
 async function latestRun(){const list=await api(base+'/reviews');if(!list.length)return null;run=await api(base+'/reviews/'+encodeURIComponent(list[0].id));return run;}
 function coverage(){const host=clear('coverage');if(!host)return;for(const item of run.coverage){const c=el('div',undefined,'card');c.append(el('strong',item.coverage_id+' '+(coverageNames.get(item.coverage_id)||'待核对维度')),el('p',coverageStates[item.status]||item.status));if(item.rationale)c.append(el('p',item.rationale,'muted'));host.append(c);}}
+function basisEditor(form,previous,sources,nextCursor){
+  const details=el('details'),summary=el('summary','本条意见的法源核验与谈判标准');details.append(summary);
+  const enabled=el('input');enabled.type='checkbox';enabled.checked=!!previous;enabled.name='basis_enabled';
+  const enabledLabel=el('label','随本次律师处置保存核验记录');enabledLabel.prepend(enabled);details.append(enabledLabel);
+  details.append(el('p','仅核对所选的一条法源。来源真实性、命题支持、案件适用分别记录；采纳意见不会自动核验法源。退让与升级条件仅进入内部稿。','muted'));
+  const fields={};
+  function field(name,title,options=null){const label=el('label',title),input=el(options?'select':'textarea');input.name='basis_'+name;
+    if(options)for(const [v,t] of options){const option=el('option',t);option.value=v;input.append(option);}else{input.rows=2;input.maxLength=name==='quote'?8000:2000;}
+    if(previous?.[name]!=null)input.value=previous[name];fields[name]=input;label.append(input);details.append(label);return input;}
+  const kind=field('kind','依据类型',[['law','法源核验'],['business_preference','商业偏好（非法律命令）']]);
+  const sourceLabel=s=>s.title+' · '+(s.superseded?'已有后继版本':s.current_verified?'当前受控核验有效':'真实性未核验')+' · '+s.id.slice(0,8);
+  const source=field('authority_id','本案已登记来源',[['','请选择来源'],...sources.map(s=>[s.id,sourceLabel(s)])]);
+  const more=el('button','加载更多法源');more.type='button';more.hidden=!nextCursor;
+  more.addEventListener('click',guard(async()=>{const page=await api(base+'/authority-sources?after='+encodeURIComponent(nextCursor));
+    for(const item of page.items){if(!sources.some(s=>s.id===item.id))sources.push(item);if(![...source.options].some(o=>o.value===item.id)){const option=el('option',sourceLabel(item));option.value=item.id;source.append(option);}}
+    nextCursor=page.next_cursor;more.hidden=!nextCursor;}));details.append(more);
+  const original=el('pre');original.className='quote';details.append(original);
+  const showSource=()=>{original.textContent=sources.find(s=>s.id===source.value)?.text_snapshot||'未选法源；可在页面上方登记本机原文。';};source.addEventListener('change',showSource);showSource();
+  field('quote','所引原文（须与登记快照逐字一致）');field('proposition','本次核对的命题或商业要求');
+  field('support','原文是否支持命题',[['pending','待核'],['supported','支持'],['not_supported','不支持']]);field('support_reason','支持关系核对理由');
+  field('applicability','是否适用于本案',[['pending','待核'],['applies','适用'],['not_applies','不适用']]);field('applicability_reason','适用范围、例外及案件事实说明');
+  const dateLabel=el('label','核对的法律适用时点'),date=el('input');date.type='date';date.name='basis_event_date';date.value=previous?.event_date||'';fields.event_date=date;dateLabel.append(date);details.append(dateLabel);
+  field('standard_position','标准立场（商业偏好必填）');field('fallback_position','退让方案（商业偏好必填）');field('escalation_conditions','升级复核条件（商业偏好必填）');
+  const toggle=()=>{for(const [name,input] of Object.entries(fields))input.disabled=!enabled.checked||(kind.value==='business_preference'&&['authority_id','quote','support','applicability','event_date'].includes(name));if(kind.value==='law'){if(!fields.support.value)fields.support.value='pending';if(!fields.applicability.value)fields.applicability.value='pending';}};enabled.addEventListener('change',toggle);kind.addEventListener('change',toggle);toggle();form.append(details);
+  return ()=>{if(!enabled.checked)return null;const result={kind:kind.value,policy_sha256:run.manifest.policy_sha256};
+    for(const name of ['proposition','support_reason','applicability_reason','standard_position','fallback_position','escalation_conditions'])result[name]=fields[name].value.trim()||null;
+    if(['proposition','support_reason','applicability_reason'].some(n=>!result[n]))throw new Error('请填写命题、支持理由和适用说明。');
+    if(kind.value==='law'){const selected=sources.find(s=>s.id===source.value);if(!selected||!fields.quote.value.trim()||!date.value)throw new Error('请选择法源并填写原文摘录和适用时点。');Object.assign(result,{authority_id:selected.id,source_sha256:selected.snapshot_sha256,quote:fields.quote.value, event_date:date.value,support:fields.support.value,applicability:fields.applicability.value});}
+    else{if(['standard_position','fallback_position','escalation_conditions'].some(n=>!result[n]))throw new Error('商业偏好须填写标准立场、退让方案和升级条件。');Object.assign(result,{support:'not_applicable',applicability:'not_applicable'});}return result;};
+}
+function sourceRegistration(host){
+  const box=el('details');box.id='authority-registration';box.append(el('summary','登记本案法源原文（本机保存，真实性待核）'));
+  box.append(el('p','粘贴已取得的原文和来源信息。系统不会访问所填网址，也不会把登记或文本长度当作真实性核验。'));
+  const form=el('form'),fields={};
+  for(const [name,title,type] of [['title','名称','text'],['issuer','发布机关','text'],['url','来源网址','url'],['article','条号或定位','text'],['text_snapshot','原文快照','textarea'],['promulgated_at','公布日期（可留空）','date'],['effective_from','生效日期（可留空）','date'],['effective_to','失效日期（可留空）','date'],['jurisdiction','适用地域','text']]){
+    const label=el('label',title),input=el(type==='textarea'?'textarea':'input');if(type!=='textarea')input.type=type;else input.rows=6;input.name='source_'+name;input.required=!['article','promulgated_at','effective_from','effective_to'].includes(name);input.maxLength=type==='textarea'?100000:2000;label.append(input);form.append(label);fields[name]=input;}
+  const rankLabel=el('label','效力层级'),rank=el('select');rank.name='source_legal_rank';for(const [value,title] of [['law','法律'],['administrative_regulation','行政法规'],['judicial_interpretation','司法解释'],['departmental_rule','部门规章'],['local_regulation','地方性法规'],['unknown','待核']]){const option=el('option',title);option.value=value;rank.append(option);}rank.value='unknown';rankLabel.append(rank);form.append(rankLabel);
+  const save=el('button','保存未核验来源');save.type='submit';form.append(save);
+  form.addEventListener('submit',guard(async()=>{const body={};for(const [name,input] of Object.entries(fields))body[name]=input.value||null;
+    const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(body.text_snapshot));body.snapshot_sha256=[...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('');
+    Object.assign(body,{legal_rank:rank.value,fetch_status:'fetched',fetched_at:new Date().toISOString(),verification_status:'unverified',verified_by:null,verified_at:null});
+    await api(base+'/authority-sources',{method:'POST',idempotency:key(),body});await loadReview();tell('法源原文已在本案登记；真实性仍待核验，可在意见处置中记录支持关系与适用性。');}));box.append(form);host.append(box);
+}
 async function loadReview(){
   const info=await loadMatter();if(assisted)await setupCandidateOpinions(info.matter.status);if(!await latestRun())return;coverage();const host=clear('findings');
+  const sourcePage=await api(base+'/authority-sources'),authoritySources=sourcePage.items;
+  for(const finding of run.decision_snapshot.resolved_findings){const id=finding.human_decision?.basis_review?.authority_id;if(id&&!authoritySources.some(s=>s.id===id))authoritySources.push(await api(base+'/authority-sources/'+encodeURIComponent(id)));}sourceRegistration(host);
   const rechecks=new Set(run.decision_authority.recheck_finding_ids);
-  if(rechecks.size)host.append(el('p','处置作者资格发生变化：标记的意见须由当前律师逐条重新核对；完成全部复核前不能生成或下载当前成果。','notice'));
+  if(rechecks.size)host.append(el('p','处置作者资格或法源核验记录发生变化：标记的意见须由当前律师逐条重新核对；完成全部复核前不能生成或下载当前成果。','notice'));
   for(const f of run.findings){
     const current=run.decision_snapshot.resolved_findings.find(item=>item.id===f.id);
     const decision=current.human_decision;
@@ -112,8 +157,11 @@ async function loadReview(){
     select.addEventListener('change',toggle);toggle();form.append(edits);
     const rl=el('label','处置理由（保留在内部历史，不能代替改文）'),reason=el('input');reason.name='reason';reason.required=true;reason.maxLength=2000;reason.value='独立虚构材料核对';rl.append(reason);form.append(rl);
     const button=el('button','保存人工处置');button.type='submit';form.append(button);
+    const readBasis=basisEditor(form,decision?.basis_review,authoritySources,sourcePage.next_cursor);
+    if(decision?.basis_review)c.append(el('p','本条依据：'+({verified:'法源有受控核验记录',unverified:'法源真实性未核验',not_legal_basis:'商业偏好，非法律命令'}[decision.basis_review.source_status])+'；支持：'+({pending:'待核',supported:'记录支持',not_supported:'不支持',not_applicable:'不适用'}[decision.basis_review.support])+'；适用：'+({pending:'待核',applies:'记录适用',not_applies:'不适用',not_applicable:'商业选择'}[decision.basis_review.applicability]),'notice'));
     form.addEventListener('submit',guard(async()=>{
       const body={run_id:run.id,run_sha256:run.run_sha256,decision:select.value,reason:reason.value};
+      body.basis_review=readBasis();
       if(select.value==='edit')for(const [name,input] of Object.entries(inputs))body[name]=(name==='edited_replacement_text'?input.value:input.value.trim())||null;
       await api(base+'/findings/'+encodeURIComponent(f.id)+'/decision',{method:'POST',idempotency:key(),body});
       latestBundle=null;await loadReview();tell(run.decision_authority.status==='recheck_required'

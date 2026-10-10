@@ -59,6 +59,11 @@ def read_snapshot(matter_id, run_id, actor, *, db, require_authority=True):
     run, history = read_history(matter_id, run_id, actor, db=db)
     latest = {record.finding_id: record for record in history}
     ordered = tuple(sorted(latest.values(), key=lambda record: record.sequence))
+    if require_authority:
+        from .basis import ensure_current
+        for record in ordered:
+            if record.decision.basis_review:
+                ensure_current(record.decision.basis_review,run,actor,db)
     findings = tuple(resolved(Finding.model_validate({**finding.model_dump(mode='python'),
         'human_decision': latest[finding.id].decision}) if finding.id in latest else finding) for finding in run.findings)
     row = db.get(ReviewRunRow, str(run_id), populate_existing=True)
@@ -88,10 +93,12 @@ def read_authority(snapshot, *, db):
     """
     recheck=[]
     for record in snapshot.ordered_decisions:
+        from .basis import current_source
         user_id=str(record.decision.actor_id)
         user=db.get(UserRow,user_id,populate_existing=True)
         member=db.get(MembershipRow,(str(snapshot.matter_id),user_id),populate_existing=True)
-        if not user or user.disabled or not member or not set(json.loads(user.roles)) & {'handling_lawyer','reviewing_lawyer'}:
+        if (not user or user.disabled or not member or not set(json.loads(user.roles)) & {'handling_lawyer','reviewing_lawyer'}
+            or record.decision.basis_review and not current_source(record.decision.basis_review,snapshot.matter_id,db)):
             recheck.append(record.finding_id)
     return ReviewDecisionAuthorityStatus(matter_id=snapshot.matter_id,run_id=snapshot.run_id,
         decision_snapshot_sha256=snapshot.sha256,status='recheck_required' if recheck else 'current',

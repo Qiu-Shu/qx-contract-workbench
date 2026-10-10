@@ -59,7 +59,7 @@ def build(projection):
         doc.add_heading('材料观察与人工复核事项',1)
         for index,item in enumerate(projection['observations'],1):
             doc.add_heading(f'复核事项 {index}',2)
-            for key in ('decision_status','analysis','effect','recommendation','replacement','fallback','original','history'):
+            for key in ('decision_status','analysis','effect','recommendation','basis_review','replacement','fallback','original','history'):
                 if key in item:doc.add_paragraph(item[key])
     doc.add_heading('已批准的模拟修改文字',1)
     _table(doc,('原文','建议新文','修改说明'),[(p['old'],p['new'],p['reason']) for p in projection['patches']])

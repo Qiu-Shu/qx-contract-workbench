@@ -364,6 +364,38 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
         return write(request,matter_id,'assisted_facts',value,
             lambda actor,db:proposals.submit_fact_candidates(matter_id,value,actor,db),permission='candidate_facts')
 
+    def source_view(identifier,matter_id,actor,db):
+        from ..authorities.registry import read_authority,authority_is_verified,authority_dependency
+        item=read_authority(identifier,actor,matter_id=matter_id,db=db)
+        return d.AuthoritySourceView(**item.model_dump(mode='python'),
+            current_verified=authority_is_verified(identifier,matter_id,db),
+            superseded=bool(authority_dependency(identifier,matter_id,db)['successors']))
+
+    @app.get('/api/matters/{matter_id}/authority-sources')
+    def authority_sources_api(matter_id:UUID,request:Request,after:UUID|None=None):
+        from ..authorities.storage import AuthoritySnapshotRow
+        with database.session() as db:
+            actor=actor_in(request,db,matter_id)
+            query=select(AuthoritySnapshotRow.id).where(AuthoritySnapshotRow.matter_id==str(matter_id))
+            if after:query=query.where(AuthoritySnapshotRow.id>str(after))
+            ids=db.scalars(query.order_by(AuthoritySnapshotRow.id).limit(101)).all()
+            return d.AuthoritySourcePage(items=tuple(source_view(UUID(identifier),matter_id,actor,db) for identifier in ids[:100]),
+                next_cursor=UUID(ids[99]) if len(ids)>100 else None)
+
+    @app.get('/api/matters/{matter_id}/authority-sources/{authority_id}')
+    def authority_source_api(matter_id:UUID,authority_id:UUID,request:Request):
+        with database.session() as db:
+            actor=actor_in(request,db,matter_id)
+            return source_view(authority_id,matter_id,actor,db)
+
+    @app.post('/api/matters/{matter_id}/authority-sources',status_code=201)
+    async def register_authority_api(matter_id:UUID,request:Request):
+        from ..authorities.registry import register_authority
+        authenticate_first(request,matter_id,'confirm_facts')
+        value=await body_input(request,d.AuthorityInput)
+        return write(request,matter_id,'authority_register',value,
+            lambda actor,db:register_authority(value,actor,matter_id=matter_id,db=db))
+
     @app.get('/api/matters/{matter_id}/review-context')
     def assisted_context_api(matter_id:UUID,request:Request):
         with database.session() as db:

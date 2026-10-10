@@ -287,6 +287,195 @@
       "title": "Finding",
       "type": "object"
     },
+    "FindingBasisReview": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "default": "law",
+          "enum": [
+            "law",
+            "business_preference"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "authority_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Authority Id"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Sha256"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "maxLength": 8000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quote"
+        },
+        "proposition": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Proposition",
+          "type": "string"
+        },
+        "support": {
+          "enum": [
+            "pending",
+            "supported",
+            "not_supported",
+            "not_applicable"
+          ],
+          "title": "Support",
+          "type": "string"
+        },
+        "support_reason": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Support Reason",
+          "type": "string"
+        },
+        "applicability": {
+          "enum": [
+            "pending",
+            "applies",
+            "not_applies",
+            "not_applicable"
+          ],
+          "title": "Applicability",
+          "type": "string"
+        },
+        "applicability_reason": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Applicability Reason",
+          "type": "string"
+        },
+        "event_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Event Date"
+        },
+        "policy_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Policy Sha256",
+          "type": "string"
+        },
+        "standard_position": {
+          "anyOf": [
+            {
+              "maxLength": 2000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Standard Position"
+        },
+        "fallback_position": {
+          "anyOf": [
+            {
+              "maxLength": 2000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fallback Position"
+        },
+        "escalation_conditions": {
+          "anyOf": [
+            {
+              "maxLength": 2000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Escalation Conditions"
+        },
+        "source_status": {
+          "enum": [
+            "verified",
+            "unverified",
+            "not_legal_basis"
+          ],
+          "title": "Source Status",
+          "type": "string"
+        },
+        "source_dependency_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Dependency Sha256"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        }
+      },
+      "required": [
+        "proposition",
+        "support",
+        "support_reason",
+        "applicability",
+        "applicability_reason",
+        "policy_sha256",
+        "source_status",
+        "source_dependency_sha256",
+        "position"
+      ],
+      "title": "FindingBasisReview",
+      "type": "object"
+    },
     "HumanDecision": {
       "additionalProperties": false,
       "properties": {
@@ -307,6 +496,17 @@
           "format": "date-time",
           "title": "Decided At",
           "type": "string"
+        },
+        "basis_review": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FindingBasisReview"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "edited_analysis": {
           "anyOf": [
@@ -435,6 +635,23 @@
       ],
       "title": "ModelUsage",
       "type": "object"
+    },
+    "Position": {
+      "enum": [
+        "buyer",
+        "seller",
+        "customer",
+        "provider",
+        "lessor",
+        "lessee",
+        "discloser",
+        "recipient",
+        "mutual",
+        "party_a",
+        "party_b"
+      ],
+      "title": "Position",
+      "type": "string"
     },
     "RunManifest": {
       "additionalProperties": false,

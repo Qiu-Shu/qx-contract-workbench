@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="2.388" timestamp="2026-10-10T16:02:49.185084+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_finding_basis_review" name="test_http_register_source_and_record_basis_without_source_fetch" time="1.427"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;ab64d0a0-4ea7-4093-a6b2-355e1097d007&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 201&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_finding_basis_review.py:110: in test_http_register_source_and_record_basis_without_source_fetch
+    assert response.status_code==201,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"ab64d0a0-4ea7-4093-a6b2-355e1097d007","retryable":false}
+E   assert 404 == 201
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase></testsuite></testsuites>

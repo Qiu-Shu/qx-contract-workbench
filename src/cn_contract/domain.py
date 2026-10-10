@@ -624,6 +624,16 @@ class Authority(AuthorityInput):
     id: UUID
 
 
+class AuthoritySourceView(Authority):
+    current_verified: bool
+    superseded: bool
+
+
+class AuthoritySourcePage(DomainModel):
+    items: tuple[AuthoritySourceView, ...]
+    next_cursor: UUID | None
+
+
 class Rule(DomainModel):
     id: UUID
     version: PositiveInt
@@ -662,11 +672,48 @@ def _validate_edit_fields(value):
     return value
 
 
+class FindingBasisReviewInput(DomainModel):
+    kind: Literal['law', 'business_preference'] = 'law'
+    authority_id: UUID | None = None
+    source_sha256: SHA256 | None = None
+    quote: Annotated[NonEmpty, Field(max_length=8000)] | None = None
+    proposition: Annotated[NonEmpty, Field(max_length=2000)]
+    support: Literal['pending', 'supported', 'not_supported', 'not_applicable']
+    support_reason: Annotated[NonEmpty, Field(max_length=2000)]
+    applicability: Literal['pending', 'applies', 'not_applies', 'not_applicable']
+    applicability_reason: Annotated[NonEmpty, Field(max_length=2000)]
+    event_date: date | None = None
+    policy_sha256: SHA256
+    standard_position: Annotated[NonEmpty, Field(max_length=2000)] | None = None
+    fallback_position: Annotated[NonEmpty, Field(max_length=2000)] | None = None
+    escalation_conditions: Annotated[NonEmpty, Field(max_length=2000)] | None = None
+
+    @model_validator(mode='after')
+    def distinguish_law_and_preference(self):
+        if self.kind == 'law':
+            if any(v is None for v in (self.authority_id,self.source_sha256,self.quote,self.event_date)):
+                raise ValueError('law review requires exact source and event date')
+            if self.support == 'not_applicable' or self.applicability == 'not_applicable':
+                raise ValueError('law review requires separate support and applicability outcomes')
+        elif (any(v is not None for v in (self.authority_id,self.source_sha256,self.quote,self.event_date))
+              or self.support != 'not_applicable' or self.applicability != 'not_applicable'
+              or any(v is None for v in (self.standard_position,self.fallback_position,self.escalation_conditions))):
+            raise ValueError('business standards are not legal authority')
+        return self
+
+
+class FindingBasisReview(FindingBasisReviewInput):
+    source_status: Literal['verified', 'unverified', 'not_legal_basis']
+    source_dependency_sha256: SHA256 | None
+    position: Position
+
+
 class HumanDecision(DomainModel):
     decision: HumanDecisionKind
     reason: NonEmpty
     actor_id: UUID
     decided_at: UTCDatetime
+    basis_review: FindingBasisReview | None = Field(default=None, exclude_if=lambda value:value is None)
     edited_analysis: Annotated[NonEmpty, Field(max_length=20000)] | None = None
     edited_recommendation: Annotated[NonEmpty, Field(max_length=20000)] | None = None
     edited_replacement_text: Annotated[str, Field(min_length=1, max_length=20000)] | None = None
@@ -1857,6 +1904,7 @@ class FindingDecisionInput(DomainModel):
     run_sha256: SHA256
     decision: HumanDecisionKind
     reason: Annotated[NonEmpty, Field(max_length=2000)]
+    basis_review: FindingBasisReviewInput | None = Field(default=None, exclude_if=lambda value:value is None)
     edited_analysis: Annotated[NonEmpty, Field(max_length=20000)] | None = None
     edited_recommendation: Annotated[NonEmpty, Field(max_length=20000)] | None = None
     edited_replacement_text: Annotated[str, Field(min_length=1, max_length=20000)] | None = None

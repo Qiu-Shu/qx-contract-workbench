@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="2.995" timestamp="2026-10-10T16:07:19.867784+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_finding_basis_review" name="test_source_index_paginates_all_records_and_separates_live_status" time="2.084"><failure message="TypeError: list indices must be integers or slices, not str">tests\integration\test_finding_basis_review.py:131: in test_source_index_paginates_all_records_and_separates_live_status
+    assert len(first['items'])==100 and first['next_cursor']
+               ^^^^^^^^^^^^^^
+E   TypeError: list indices must be integers or slices, not str</failure></testcase></testsuite></testsuites>
