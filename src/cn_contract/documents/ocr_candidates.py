@@ -13,7 +13,7 @@ from ..persistence import Base,UTCDateTime,read_original
 from ..security import ServiceError,authorize
 from ..review.proposals import digest
 from .proofreading import _document
-from .ocr_process import run_ocr_page
+from .ocr_process import run_prepared_ocr_page
 
 
 class OCRCandidateRow(Base):
@@ -73,11 +73,15 @@ def prepare_page_ocr(matter_id,value,actor,db):
 
 
 def predict_page(original,value):
-    raw,width,height,bw,bh=page_bitmap(original,value.page)
-    source=OCRPageSource(document_version_id=value.document_version_id,document_sha256=value.document_sha256,
-        page=value.page,page_width_points=width,page_height_points=height,bitmap_width=bw,bitmap_height=bh,
-        bitmap_sha256=sha256(raw).hexdigest(),coordinate_space='rendered_page_top_left')
-    result=run_ocr_page(raw,source.model_dump(mode='python'))
+    source=None
+    def prepare():
+        nonlocal source
+        raw,width,height,bw,bh=page_bitmap(original,value.page)
+        source=OCRPageSource(document_version_id=value.document_version_id,document_sha256=value.document_sha256,
+            page=value.page,page_width_points=width,page_height_points=height,bitmap_width=bw,bitmap_height=bh,
+            bitmap_sha256=sha256(raw).hexdigest(),coordinate_space='rendered_page_top_left')
+        return raw,source.model_dump(mode='python')
+    result=run_prepared_ocr_page(prepare)
     if result.source!=source:raise ServiceError('OCR_OUTPUT_INVALID',409)
     return result
 

@@ -1,0 +1,50 @@
+{
+  "scope": "one local synthetic job, instrumented current code; not cold/warm benchmark or legal quality acceptance",
+  "started_utc": "2026-10-11T08:02:40.621947+00:00",
+  "total_seconds": 24.768734,
+  "busy_code": "OCR_BUSY",
+  "busy_seconds": 3.3e-05,
+  "phases": [
+    {
+      "phase": "require_ocr_runtime",
+      "seconds": 13.706443,
+      "thread": 20644
+    },
+    {
+      "phase": "page_bitmap",
+      "seconds": 0.029509,
+      "thread": 20644
+    },
+    {
+      "phase": "stage_models",
+      "seconds": 0.035338,
+      "thread": 20644
+    },
+    {
+      "phase": "run_sandboxed",
+      "seconds": 10.98942,
+      "thread": 20644
+    },
+    {
+      "phase": "decode_output",
+      "seconds": 0.000976,
+      "thread": 20644
+    }
+  ],
+  "native": [
+    {
+      "exit_code": 0,
+      "timed_out": false,
+      "appcontainer": true,
+      "memory_limit": 2147483648
+    }
+  ],
+  "failure": null,
+  "model_copy_bytes": 22138943,
+  "job_directory_retained": true,
+  "real_predictions_returned": 1,
+  "source_sha256": {
+    "src/cn_contract/documents/ocr_process.py": "b1332d25564b52baa9d0a5c7d27490ab232e5b645278018e1bf9911b0b1430c7",
+    "src/cn_contract/documents/ocr_candidates.py": "4a9ecf53e7775ccfacb966bc6ea67984a52fa3d7935196e9434f0fd0855e483f"
+  }
+}

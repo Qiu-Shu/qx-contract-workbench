@@ -141,7 +141,7 @@ def test_ocr_candidate_must_be_server_owned_and_lawyer_verified(assisted_api,mon
             engine='PaddleOCR-3.7.0/PaddleX-3.7.0/PaddlePaddle-3.3.0-CPU',asset_manifest_sha256='0'*64,raw_output_sha256='1'*64,
             blocks=(OCRBlock(raw_text='SYNTHETIC CI ONLY',confidence=.99,polygon=((1,1),(30,1),(30,15),(1,15))),),
             bitmap_to_page=(source.page_width_points/source.bitmap_width,0,0,source.page_height_points/source.bitmap_height,0,0),reasons=('CI_STUB_ONLY',))
-    monkeypatch.setattr(ocr_candidates,'run_ocr_page',fake)
+    monkeypatch.setattr(ocr_candidates,'run_prepared_ocr_page',lambda prepare:fake(*prepare()))
     client,_,_,headers,matter,sent,value=setup(assisted_api)
     request={k:value[k] for k in ('document_version_id','document_sha256','page')}
     response=client.post(f'/api/matters/{matter}/page-ocr',headers={**headers,'Idempotency-Key':'ocr-1'},json=request)
@@ -212,7 +212,7 @@ def test_ocr_wait_releases_database_and_rechecks_revoked_member(assisted_api,mon
             engine='PaddleOCR-3.7.0/PaddleX-3.7.0/PaddlePaddle-3.3.0-CPU',asset_manifest_sha256='0'*64,
             raw_output_sha256='1'*64,blocks=(),
             bitmap_to_page=(source.page_width_points/source.bitmap_width,0,0,source.page_height_points/source.bitmap_height,0,0),reasons=('CI_STUB',))
-    monkeypatch.setattr(ocr_candidates,'run_ocr_page',pending_ocr)
+    monkeypatch.setattr(ocr_candidates,'run_prepared_ocr_page',lambda prepare:pending_ocr(*prepare()))
     client,database,ids,headers,matter,_,value=setup(assisted_api)
     request={k:value[k] for k in ('document_version_id','document_sha256','page')}
     with ThreadPoolExecutor(max_workers=1) as pool:

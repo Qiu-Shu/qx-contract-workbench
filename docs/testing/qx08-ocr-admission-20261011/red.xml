@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.690" timestamp="2026-10-11T16:01:03.547048+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_ocr_admission" name="test_busy_request_does_not_verify_runtime" time="0.005"><failure message="AssertionError: assert 'OCR_ASSETS_INVALID' == 'OCR_BUSY'&#10;  &#10;  - OCR_BUSY&#10;  + OCR_ASSETS_INVALID">tests\integration\test_ocr_admission.py:23: in test_busy_request_does_not_verify_runtime
+    assert busy.value.code=='OCR_BUSY'
+E   AssertionError: assert 'OCR_ASSETS_INVALID' == 'OCR_BUSY'
+E     
+E     - OCR_BUSY
+E     + OCR_ASSETS_INVALID</failure></testcase></testsuite></testsuites>

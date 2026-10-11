@@ -1,0 +1,12 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________ test_busy_request_does_not_verify_runtime __________________
+tests\integration\test_ocr_admission.py:23: in test_busy_request_does_not_verify_runtime
+    assert busy.value.code=='OCR_BUSY'
+E   AssertionError: assert 'OCR_ASSETS_INVALID' == 'OCR_BUSY'
+E     
+E     - OCR_BUSY
+E     + OCR_ASSETS_INVALID
+=========================== short test summary info ===========================
+FAILED tests/integration/test_ocr_admission.py::test_busy_request_does_not_verify_runtime
+1 failed in 0.72s

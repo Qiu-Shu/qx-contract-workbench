@@ -1,0 +1,14 @@
+{
+  "command": [
+    "git",
+    "-c",
+    "safe.directory=D:/Documents/ChatGPT/律所项目",
+    "-c",
+    "core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol",
+    "diff",
+    "--cached",
+    "--check"
+  ],
+  "exit_code": 2,
+  "reason": "Original pytest RED logs/XML retain diagnostic trailing spaces. Subsequent format check excludes raw .log/.xml in this evidence directory, preserving source evidence bytes."
+}

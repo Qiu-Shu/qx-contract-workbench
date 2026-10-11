@@ -1,0 +1,20 @@
+[
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_ocr_admission.py -q --tb=short --junitxml=.audit-local/qx08-red.xml",
+    "exit_code": 1,
+    "failed": 1,
+    "phase": "pre-fix RED, initial test only"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_ocr_admission.py tests/integration/test_ocr_worker.py -q --tb=short",
+    "exit_code": 0,
+    "passed": 11,
+    "phase": "first GREEN, before additional cases"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_ocr_admission.py tests/integration/test_ocr_worker.py tests/unit/test_ocr_page_rendering.py tests/unit/test_windows_ocr_cleanup.py tests/integration/test_pdf_proofreading.py -q --tb=short --junitxml=.audit-local/qx08-target.xml",
+    "exit_code": 0,
+    "passed": 70,
+    "phase": "target regression"
+  }
+]

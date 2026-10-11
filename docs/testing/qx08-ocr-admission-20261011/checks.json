@@ -1,0 +1,55 @@
+[
+  {
+    "command": [
+      "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "scripts/verify_sources.py"
+    ],
+    "exit_code": 0,
+    "seconds": 1.328,
+    "log": "check-1.log",
+    "sha256": "dd6536e31ce1c1887cf8fd66091ebe0265b3d4c5f38d27f7766cdbcd30c6963b"
+  },
+  {
+    "command": [
+      "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "scripts/verify_defaults.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.313,
+    "log": "check-2.log",
+    "sha256": "1327e54ae343c27bb7f378bb915d826995396db5b801813b2e139b57d7aefeb6"
+  },
+  {
+    "command": [
+      "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "src/cn_contract/mcp/bound_entry.py",
+      "--check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.343,
+    "log": "check-3.log",
+    "sha256": "462c19d8cb5b0db323d44f84afbdc46af69b46bb369ae5c9342c1b26e596c1bd"
+  },
+  {
+    "command": [
+      "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "compileall",
+      "-q",
+      "src/cn_contract/documents/ocr_process.py",
+      "src/cn_contract/documents/ocr_candidates.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.047,
+    "log": "check-4.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

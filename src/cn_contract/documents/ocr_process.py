@@ -17,49 +17,57 @@ _SERIAL=threading.Lock()
 
 
 def run_ocr_page(image_bytes, source_metadata):
-    require_ocr_runtime()
-    source=OCRPageSource.model_validate(source_metadata)
+    return run_prepared_ocr_page(lambda:(image_bytes,source_metadata))
+
+
+def run_prepared_ocr_page(prepare):
+    """Admit before verification/rendering; prepare is an internal callable, not request data."""
     if os.name!='nt':raise ServiceError('OCR_ISOLATION_UNAVAILABLE',503)
+    if not _SERIAL.acquire(blocking=False):raise ServiceError('OCR_BUSY',409)
+    try:
+        parent=PROJECT_ROOT/'.local/ocr-jobs';parent.mkdir(parents=True,exist_ok=True);_regular(parent,directory=True)
+        import msvcrt
+        lock_path=parent/'worker.lock'
+        if lock_path.exists():_regular(lock_path)
+        with lock_path.open('a+b') as lock_file:
+            # Windows permits locking beyond EOF, avoiding a competing initialization write.
+            lock_file.seek(0)
+            try:msvcrt.locking(lock_file.fileno(),msvcrt.LK_NBLCK,1)
+            except OSError:raise ServiceError('OCR_BUSY',409) from None
+            try:
+                require_ocr_runtime()
+                image_bytes,source_metadata=prepare()
+                return _run_admitted_page(parent,image_bytes,source_metadata)
+            finally:
+                lock_file.seek(0);msvcrt.locking(lock_file.fileno(),msvcrt.LK_UNLCK,1)
+    finally:
+        _SERIAL.release()
+
+
+def _run_admitted_page(parent,image_bytes,source_metadata):
+    source=OCRPageSource.model_validate(source_metadata)
     if not isinstance(image_bytes,bytes) or len(image_bytes)>50*1024**2 or sha256(image_bytes).hexdigest()!=source.bitmap_sha256:
         raise ServiceError('OCR_INPUT_INVALID',422)
     with Image.open(BytesIO(image_bytes)) as image:
         if image.format!='PNG' or image.size!=(source.bitmap_width,source.bitmap_height):
             raise ServiceError('OCR_INPUT_INVALID',422)
         image.verify()
-    if not _SERIAL.acquire(blocking=False):raise ServiceError('OCR_BUSY',409)
-    lock_file=None
-    try:
-        parent=PROJECT_ROOT/'.local/ocr-jobs';parent.mkdir(parents=True,exist_ok=True);_regular(parent,directory=True)
-        import msvcrt
-        lock_path=parent/'worker.lock'
-        if lock_path.exists():_regular(lock_path)
-        lock_file=lock_path.open('a+b')
-        if lock_file.seek(0,2)==0:lock_file.write(b'0');lock_file.flush()
-        lock_file.seek(0)
-        try:msvcrt.locking(lock_file.fileno(),msvcrt.LK_NBLCK,1)
-        except OSError:
-            lock_file.close();lock_file=None
-            raise ServiceError('OCR_BUSY',409) from None
-        work=parent/uuid4().hex;work.mkdir()
-        (work/'input.png').write_bytes(image_bytes)
-        (work/'worker.py').write_bytes(Path(__file__).with_name('ocr_worker.py').read_bytes())
-        models=PROJECT_ROOT/'.local/ocr-assets/models'
-        stage_models(work)
-        (work/'request.json').write_text(json.dumps({'image':'input.png','model_root':str(models)}),encoding='utf-8')
-        from ._windows_ocr import run_sandboxed
-        try:status=run_sandboxed(work,PROJECT_ROOT/'.local/ocr-worker/python',models)
-        except (OSError,ValueError):raise ServiceError('OCR_ISOLATION_UNAVAILABLE',503) from None
-        if status['timed_out']:raise ServiceError('OCR_TIMEOUT',409)
-        output=work/'output.json'
-        if status['exit_code'] or not output.is_file():raise ServiceError('OCR_WORKER_FAILED',409)
-        _regular(output)
-        if output.stat().st_size>2_000_000:raise ServiceError('OCR_OUTPUT_INVALID',409)
-        raw=output.read_bytes()
-        return decode_output(raw,source)
-    finally:
-        if lock_file:
-            lock_file.seek(0);msvcrt.locking(lock_file.fileno(),msvcrt.LK_UNLCK,1);lock_file.close()
-        _SERIAL.release()
+    work=parent/uuid4().hex;work.mkdir()
+    (work/'input.png').write_bytes(image_bytes)
+    (work/'worker.py').write_bytes(Path(__file__).with_name('ocr_worker.py').read_bytes())
+    models=PROJECT_ROOT/'.local/ocr-assets/models'
+    stage_models(work)
+    (work/'request.json').write_text(json.dumps({'image':'input.png','model_root':str(models)}),encoding='utf-8')
+    from ._windows_ocr import run_sandboxed
+    try:status=run_sandboxed(work,PROJECT_ROOT/'.local/ocr-worker/python',models)
+    except (OSError,ValueError):raise ServiceError('OCR_ISOLATION_UNAVAILABLE',503) from None
+    if status['timed_out']:raise ServiceError('OCR_TIMEOUT',409)
+    output=work/'output.json'
+    if status['exit_code'] or not output.is_file():raise ServiceError('OCR_WORKER_FAILED',409)
+    _regular(output)
+    if output.stat().st_size>2_000_000:raise ServiceError('OCR_OUTPUT_INVALID',409)
+    raw=output.read_bytes()
+    return decode_output(raw,source)
 
 
 def stage_models(work):
