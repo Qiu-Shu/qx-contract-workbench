@@ -13,6 +13,10 @@ class CAP(c.Structure): _fields_=[('sid',P),('caps',P),('count',D),('reserved',D
 class BASIC(c.Structure): _fields_=[('process_time',c.c_int64),('job_time',c.c_int64),('flags',D),('minws',Z),('maxws',Z),('active',D),('affinity',Z),('priority',D),('scheduling',D)]
 class IO(c.Structure): _fields_=[(n,c.c_uint64) for n in ('readops','writeops','otherops','readbytes','writebytes','otherbytes')]
 class LIMIT(c.Structure): _fields_=[('basic',BASIC),('io',IO),('processmem',Z),('jobmem',Z),('peakprocess',Z),('peakjob',Z)]
+class ACCOUNTING(c.Structure):
+    _fields_=[(n,c.c_int64) for n in ('user','kernel','period_user','period_kernel')]+[(n,D) for n in ('faults','total','active','terminated')]
+class SandboxCleanupError(OSError):
+    """Do not delete the job directory when isolation cleanup is unconfirmed."""
 def api(lib,name,args,result=w.BOOL):
     f=getattr(lib,name); f.argtypes=args; f.restype=result; return f
 createprofile=api(u,'CreateAppContainerProfile',[w.LPCWSTR,w.LPCWSTR,w.LPCWSTR,P,D,c.POINTER(P)],c.c_long)
@@ -23,6 +27,7 @@ update=api(k,'UpdateProcThreadAttribute',[P,D,Z,P,Z,P,P])
 deleteattrs=api(k,'DeleteProcThreadAttributeList',[P],None)
 createjob=api(k,'CreateJobObjectW',[P,w.LPCWSTR],P)
 setjob=api(k,'SetInformationJobObject',[P,c.c_int,P,D])
+queryjob=api(k,'QueryInformationJobObject',[P,c.c_int,P,D,P])
 assign=api(k,'AssignProcessToJobObject',[P,P])
 createprocess=api(k,'CreateProcessW',[w.LPCWSTR,w.LPWSTR,P,P,w.BOOL,D,P,w.LPCWSTR,P,c.POINTER(PI)])
 resume=api(k,'ResumeThread',[P],D)
@@ -42,6 +47,7 @@ def run_sandboxed(workdir, runtime, models, *, timeout=60, memory=2*1024**3):
     from pathlib import Path
     from ..config import PROJECT_ROOT
     from .pdfjs_assets import _regular
+    from .ocr_workspace import require_budget
     expected=PROJECT_ROOT/'.local'
     for path in (workdir,runtime,models):_regular(path,directory=True)
     if (runtime!=expected/'ocr-worker/python' or models!=expected/'ocr-assets/models'
@@ -52,8 +58,10 @@ def run_sandboxed(workdir, runtime, models, *, timeout=60, memory=2*1024**3):
     sid_text=w.LPWSTR(); text_sid=api(a,'ConvertSidToStringSidW',[P,c.POINTER(w.LPWSTR)])
     localfree=api(k,'LocalFree',[P],P);terminatejob=api(k,'TerminateJobObject',[P,w.UINT])
     def acl(path,*arguments):
-        result=subprocess.run([os.path.join(os.environ['SystemRoot'],'System32','icacls.exe'),str(path),*arguments],
-            capture_output=True,creationflags=0x8000000,timeout=30)
+        try:
+            result=subprocess.run([os.path.join(os.environ['SystemRoot'],'System32','icacls.exe'),str(path),*arguments],
+                capture_output=True,creationflags=0x8000000,timeout=30)
+        except subprocess.TimeoutExpired:raise OSError('private sandbox ACL timeout') from None
         if result.returncode:raise OSError(result.returncode,'private sandbox ACL')
     try:
         hr=createprofile(name,name,'Local synthetic OCR only',None,0,c.byref(sid))
@@ -61,7 +69,8 @@ def run_sandboxed(workdir, runtime, models, *, timeout=60, memory=2*1024**3):
         created=True;check(text_sid(sid,c.byref(sid_text)),'ConvertSidToStringSid')
         principal='*'+sid_text.value
         for path,rights in ((runtime,'RX'),(models,'RX'),(workdir,'M')):
-            acl(path,'/grant',principal+':(OI)(CI)('+rights+')');granted.append(path)
+            granted.append(path)
+            acl(path,'/grant',principal+':(OI)(CI)('+rights+')')
         acl(workdir,'/setintegritylevel','(OI)(CI)L')
         size=Z();init(None,1,0,c.byref(size));attrs=c.create_string_buffer(size.value)
         check(init(attrs,1,0,c.byref(size)),'InitializeProcThreadAttributeList');initialized=True
@@ -89,6 +98,7 @@ def run_sandboxed(workdir, runtime, models, *, timeout=60, memory=2*1024**3):
         started=time.monotonic()
         while True:
             state=wait(pi.process,50)
+            require_budget(workdir,workdir.parent)
             if state==0:break
             check(state==258,'WaitForSingleObject')
             if time.monotonic()-started>timeout:
@@ -97,13 +107,26 @@ def run_sandboxed(workdir, runtime, models, *, timeout=60, memory=2*1024**3):
         code=D();check(exitcode(pi.process,c.byref(code)),'GetExitCodeProcess')
         return {'exit_code':code.value,'timed_out':False,'appcontainer':True,'memory_limit':memory}
     finally:
-        if job:terminatejob(job,125)
-        # A failed assignment leaves a suspended child outside the job.
-        if pi.process:terminate(pi.process,125)
-        for handle in (token,pi.thread,pi.process,job):
-            if handle:close(handle)
-        if initialized:deleteattrs(attrs)
         cleanup_error=None
+        if job and not terminatejob(job,125):cleanup_error=SandboxCleanupError('job termination unconfirmed')
+        # A failed assignment leaves a suspended child outside the job.
+        if pi.process:
+            terminate(pi.process,125)
+            if wait(pi.process,5000)!=0:cleanup_error=SandboxCleanupError('child termination unconfirmed')
+        for handle in (token,pi.thread,pi.process):
+            if handle:close(handle)
+        if job:
+            deadline=time.monotonic()+5
+            while True:
+                accounting=ACCOUNTING()
+                if not queryjob(job,1,c.byref(accounting),c.sizeof(accounting),None):
+                    cleanup_error=SandboxCleanupError('job accounting unavailable');break
+                if accounting.active==0:break
+                if time.monotonic()>=deadline:
+                    cleanup_error=SandboxCleanupError('job processes still active');break
+                time.sleep(.05)
+            close(job)
+        if initialized:deleteattrs(attrs)
         for path in reversed(granted):
             try:acl(path,'/remove:g','*'+sid_text.value)
             except OSError as error:cleanup_error=error
@@ -112,4 +135,4 @@ def run_sandboxed(workdir, runtime, models, *, timeout=60, memory=2*1024**3):
         if created:
             hr=deleteprofile(name)
             if hr<0:cleanup_error=OSError(hr,'DeleteAppContainerProfile')
-        if cleanup_error:raise cleanup_error
+        if cleanup_error:raise SandboxCleanupError('sandbox cleanup unconfirmed') from None

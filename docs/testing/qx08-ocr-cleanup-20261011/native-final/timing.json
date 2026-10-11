@@ -1,0 +1,57 @@
+{
+  "scope": "one local synthetic job, instrumented current code; not cold/warm benchmark or legal quality acceptance",
+  "started_utc": "2026-10-11T08:46:13.398467+00:00",
+  "total_seconds": 20.782643,
+  "busy_code": "OCR_BUSY",
+  "busy_seconds": 2e-05,
+  "phases": [
+    {
+      "phase": "require_ocr_runtime",
+      "seconds": 9.041912,
+      "thread": 29036
+    },
+    {
+      "phase": "page_bitmap",
+      "seconds": 0.029204,
+      "thread": 29036
+    },
+    {
+      "phase": "stage_models",
+      "seconds": 0.035314,
+      "thread": 29036
+    },
+    {
+      "phase": "run_sandboxed",
+      "seconds": 11.64258,
+      "thread": 29036
+    },
+    {
+      "phase": "decode_output",
+      "seconds": 0.000251,
+      "thread": 29036
+    },
+    {
+      "phase": "cleanup",
+      "seconds": 0.016402,
+      "thread": 29036
+    }
+  ],
+  "native": [
+    {
+      "exit_code": 0,
+      "timed_out": false,
+      "appcontainer": true,
+      "memory_limit": 2147483648
+    }
+  ],
+  "failure": null,
+  "model_copy_bytes": 22138943,
+  "job_directory_retained": false,
+  "real_predictions_returned": 1,
+  "source_sha256": {
+    "src/cn_contract/documents/ocr_process.py": "9e834eb8e1929a15cb0f0ded5b602a70190344fa3ff7fed13b9a5438fb68d20e",
+    "src/cn_contract/documents/ocr_candidates.py": "4a9ecf53e7775ccfacb966bc6ea67984a52fa3d7935196e9434f0fd0855e483f",
+    "src/cn_contract/documents/_windows_ocr.py": "42217009e919157b82092e5672c4cd61dc8414af1b72a4eb96862dc84e183a2b",
+    "src/cn_contract/documents/ocr_workspace.py": "7430bee4a4abe7637c6479e186540b6a12ef674dc837768c5edb2ca0f2a4d5e8"
+  }
+}

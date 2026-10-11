@@ -1,0 +1,73 @@
+[
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_ocr_workspace.py -q --tb=short --junitxml=.audit-local/qx08-cleanup-red.xml",
+    "exit_code": 1,
+    "failed": 1,
+    "scope": "initial cleanup RED"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_ocr_workspace.py -q --tb=short",
+    "exit_code": 1,
+    "passed": 1,
+    "failed": 1,
+    "scope": "residue RED"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/unit/test_windows_ocr_cleanup.py -k grant -q --tb=short",
+    "exit_code": 1,
+    "failed": 2,
+    "deselected": 6,
+    "scope": "review finding RED"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_ocr_workspace.py tests/integration/test_ocr_admission.py tests/integration/test_ocr_worker.py tests/unit/test_ocr_page_rendering.py tests/unit/test_windows_ocr_cleanup.py tests/integration/test_pdf_proofreading.py -q --tb=short --junitxml=.audit-local/qx08-cleanup-target-final.xml",
+    "exit_code": 0,
+    "passed": 91,
+    "seconds": 33.13,
+    "scope": "final target regression"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 .audit-local/qx08_cleanup_timing.py",
+    "exit_code": 0,
+    "real_predictions_returned": 1,
+    "scope": "intermediate native observation"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 .audit-local/qx08_cleanup_native_final.py",
+    "exit_code": 0,
+    "real_predictions_returned": 1,
+    "scope": "final native observation"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_ocr_workspace.py tests/integration/test_ocr_admission.py -q --tb=short",
+    "exit_code": 0,
+    "passed": 10,
+    "scope": "intermediate console-observed regression, not final source; individual output not separately archived"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_ocr_workspace.py tests/integration/test_ocr_admission.py -q --tb=short",
+    "exit_code": 0,
+    "passed": 11,
+    "scope": "intermediate console-observed regression, not final source; individual output not separately archived"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_ocr_workspace.py tests/integration/test_ocr_admission.py tests/unit/test_windows_ocr_cleanup.py -q --tb=short",
+    "exit_code": 0,
+    "passed": 26,
+    "scope": "intermediate console-observed regression, not final source; individual output not separately archived"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/unit/test_windows_ocr_cleanup.py -q --tb=short",
+    "exit_code": 0,
+    "passed": 6,
+    "scope": "intermediate console-observed regression, not final source; individual output not separately archived"
+  },
+  {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_ocr_workspace.py tests/integration/test_ocr_admission.py tests/integration/test_ocr_worker.py tests/unit/test_ocr_page_rendering.py tests/unit/test_windows_ocr_cleanup.py tests/integration/test_pdf_proofreading.py -q --tb=short --junitxml=.audit-local/qx08-cleanup-target.xml",
+    "exit_code": 0,
+    "passed": 86,
+    "seconds": 21.29,
+    "scope": "intermediate target regression, before final added ACL cases",
+    "log": "target.log"
+  }
+]

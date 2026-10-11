@@ -1,0 +1,18 @@
+.F                                                                       [100%]
+================================== FAILURES ===================================
+_____________ test_residue_rejects_before_expensive_verification ______________
+tests\integration\test_ocr_workspace.py:47: in test_residue_rejects_before_expensive_verification
+    with pytest.raises(ServiceError) as error:ocr_process.run_ocr_page(raw,source)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\documents\ocr_process.py:20: in run_ocr_page
+    return run_prepared_ocr_page(lambda:(image_bytes,source_metadata))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\documents\ocr_process.py:38: in run_prepared_ocr_page
+    require_ocr_runtime()
+tests\integration\test_ocr_workspace.py:45: in forbidden
+    def forbidden():pytest.fail('residue must block before runtime verification')
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: residue must block before runtime verification
+=========================== short test summary info ===========================
+FAILED tests/integration/test_ocr_workspace.py::test_residue_rejects_before_expensive_verification
+1 failed, 1 passed in 0.68s

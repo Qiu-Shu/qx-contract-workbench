@@ -6,7 +6,7 @@ from cn_contract.documents import _windows_ocr as native
 from cn_contract.config import PROJECT_ROOT
 
 
-@pytest.mark.parametrize('fault',['assign','wait','cleanup'])
+@pytest.mark.parametrize('fault',['assign','wait','cleanup','acl_timeout','accounting','active','resource','grant_timeout','grant_failed','grant_and_revoke_failed'])
 def test_launch_failure_kills_child_and_attempts_all_cleanup(monkeypatch,fault):
     events=[]
     monkeypatch.setattr('cn_contract.documents.pdfjs_assets._regular',lambda *a,**k:None)
@@ -14,6 +14,15 @@ def test_launch_failure_kills_child_and_attempts_all_cleanup(monkeypatch,fault):
     monkeypatch.setattr(native,'deleteprofile',lambda *a:events.append('profile') or 0)
     monkeypatch.setattr(native,'createjob',lambda *a:42)
     monkeypatch.setattr(native,'setjob',lambda *a:True)
+    def accounting(*args):
+        events.append('accounting')
+        if fault=='active':ctypes.cast(args[2],ctypes.POINTER(native.ACCOUNTING)).contents.active=1
+        return fault!='accounting'
+    monkeypatch.setattr(native,'queryjob',accounting)
+    from cn_contract.security import ServiceError
+    def budget(*args):
+        if fault=='resource':raise ServiceError('OCR_STORAGE_LIMIT',503)
+    monkeypatch.setattr('cn_contract.documents.ocr_workspace.require_budget',budget)
     monkeypatch.setattr(native,'init',lambda *a:True)
     monkeypatch.setattr(native,'update',lambda *a:True)
     monkeypatch.setattr(native,'deleteattrs',lambda *a:events.append('attrs'))
@@ -47,13 +56,22 @@ def test_launch_failure_kills_child_and_attempts_all_cleanup(monkeypatch,fault):
     import subprocess
     def acl(args,**kwargs):
         from types import SimpleNamespace
+        if '/grant' in args:
+            if fault=='grant_timeout':raise subprocess.TimeoutExpired(args,30)
+            if fault in ('grant_failed','grant_and_revoke_failed'):return SimpleNamespace(returncode=1)
         if '/remove:g' in args:
             events.append('acl')
-            if fault=='cleanup':return SimpleNamespace(returncode=1)
+            if fault=='acl_timeout':raise subprocess.TimeoutExpired(args,30)
+            if fault in ('cleanup','grant_and_revoke_failed'):return SimpleNamespace(returncode=1)
         return SimpleNamespace(returncode=0)
     monkeypatch.setattr(subprocess,'run',acl)
-    with pytest.raises(OSError):
+    with pytest.raises(ServiceError if fault=='resource' else OSError) as caught:
         native.run_sandboxed(PROJECT_ROOT/'.local/ocr-jobs/fake',PROJECT_ROOT/'.local/ocr-worker/python',PROJECT_ROOT/'.local/ocr-assets/models')
-    assert 'child' in events
-    assert events.count('acl')==3
+    if fault=='resource':assert caught.value.code=='OCR_STORAGE_LIMIT'
+    if fault in ('accounting','active','cleanup','acl_timeout','grant_and_revoke_failed'):
+        assert isinstance(caught.value,native.SandboxCleanupError)
+    assert events.count('acl')==(1 if fault.startswith('grant_') else 3)
+    if not fault.startswith('grant_'):
+        assert 'child' in events
+        assert events.index('child')<events.index('accounting')<events.index('acl')
     assert 'profile' in events

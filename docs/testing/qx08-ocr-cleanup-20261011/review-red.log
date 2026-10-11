@@ -1,0 +1,18 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+___ test_launch_failure_kills_child_and_attempts_all_cleanup[grant_timeout] ___
+tests\unit\test_windows_ocr_cleanup.py:67: in test_launch_failure_kills_child_and_attempts_all_cleanup
+    assert events.count('acl')==(1 if fault.startswith('grant_') else 3)
+E   AssertionError: assert 0 == 1
+E    +  where 0 = <built-in method count of list object at 0x000002CFC18D4F40>('acl')
+E    +    where <built-in method count of list object at 0x000002CFC18D4F40> = ['profile'].count
+___ test_launch_failure_kills_child_and_attempts_all_cleanup[grant_failed] ____
+tests\unit\test_windows_ocr_cleanup.py:67: in test_launch_failure_kills_child_and_attempts_all_cleanup
+    assert events.count('acl')==(1 if fault.startswith('grant_') else 3)
+E   AssertionError: assert 0 == 1
+E    +  where 0 = <built-in method count of list object at 0x000002CFC196F5C0>('acl')
+E    +    where <built-in method count of list object at 0x000002CFC196F5C0> = ['profile'].count
+=========================== short test summary info ===========================
+FAILED tests/unit/test_windows_ocr_cleanup.py::test_launch_failure_kills_child_and_attempts_all_cleanup[grant_timeout]
+FAILED tests/unit/test_windows_ocr_cleanup.py::test_launch_failure_kills_child_and_attempts_all_cleanup[grant_failed]
+2 failed, 6 deselected in 0.69s
