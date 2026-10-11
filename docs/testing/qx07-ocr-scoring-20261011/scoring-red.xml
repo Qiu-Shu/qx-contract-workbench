@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="0.374" timestamp="2026-10-11T14:24:10.109162+08:00" hostname="PC-20260920HQJZ"><testcase classname="" name="tests.unit.test_ocr_scoring_v2" time="0.000"><error message="collection failure">ImportError while importing test module 'D:\Documents\ChatGPT\律所项目\tests\unit\test_ocr_scoring_v2.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_ocr_scoring_v2.py:4: in &lt;module&gt;
+    from cn_contract.acceptance.ocr_scoring import score_page
+E   ModuleNotFoundError: No module named 'cn_contract.acceptance.ocr_scoring'</error></testcase></testsuite></testsuites>

@@ -1,0 +1,6 @@
+{"scope": "synthetic mocked runtime call-order repro, not latency or model evidence", "source_sha256": "398c4bf35ad08d11bb1f8dc70aa89a7f6d185871be9f0cd5a9a4310be8c3b6b7", "model_calls": 0, "observations": [{"expected_code": "OCR_BUSY", "actual_code": "OCR_BUSY", "expected_pre_busy_runtime_verifications": 0, "actual_pre_busy_runtime_verifications": 1, "seconds": 0.0}, {"expected_code": "OCR_BUSY", "actual_code": "OCR_BUSY", "expected_pre_busy_runtime_verifications": 0, "actual_pre_busy_runtime_verifications": 1, "seconds": 0.0}]}
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\.audit-local\qx08_admission_probe.py", line 46, in <module>
+    assert all(row['actual_code'] == 'OCR_BUSY' and row['actual_pre_busy_runtime_verifications'] == 0 for row in rows)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

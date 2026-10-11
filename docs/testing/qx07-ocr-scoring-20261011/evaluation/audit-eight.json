@@ -1,0 +1,699 @@
+[
+  {
+    "name": "correct",
+    "blocks": [
+      "价款28473元",
+      "不得自动验收2026-10-15"
+    ],
+    "expected_v2": true,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "28473",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 0,
+              "text": "28473元",
+              "value": "28473",
+              "unit": "元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": true,
+          "sign_match": true,
+          "unit_match": true,
+          "match": true
+        },
+        "date": {
+          "expected": "2026-10-15",
+          "observed": [
+            "2026-10-15"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得自动验收",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "28473": 1,
+            "2026-10-15": 1
+          },
+          "observed": {
+            "28473": 1,
+            "2026-10-15": 1
+          },
+          "match": true
+        }
+      },
+      "fields_match": true,
+      "full_text": {
+        "raw": {
+          "distance": 0,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "reference_characters": 25,
+          "recognized_characters": 25,
+          "cer": "0",
+          "exact": true
+        },
+        "layout_normalized": {
+          "distance": 0,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "reference_characters": 24,
+          "recognized_characters": 24,
+          "cer": "0",
+          "exact": true
+        }
+      }
+    },
+    "legacy_v1": true
+  },
+  {
+    "name": "wrong_ascii_number",
+    "blocks": [
+      "价款128473元",
+      "不得自动验收2026-10-15"
+    ],
+    "expected_v2": false,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "28473",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 0,
+              "text": "128473元",
+              "value": "128473",
+              "unit": "元",
+              "sign": "+",
+              "value_match": false,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": false,
+          "sign_match": true,
+          "unit_match": true,
+          "match": false
+        },
+        "date": {
+          "expected": "2026-10-15",
+          "observed": [
+            "2026-10-15"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得自动验收",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "28473": 1,
+            "2026-10-15": 1
+          },
+          "observed": {
+            "128473": 1,
+            "2026-10-15": 1
+          },
+          "match": false
+        }
+      },
+      "fields_match": false,
+      "full_text": {
+        "raw": {
+          "distance": 1,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 1,
+          "reference_characters": 25,
+          "recognized_characters": 26,
+          "cer": "0.04",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 1,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 1,
+          "reference_characters": 24,
+          "recognized_characters": 25,
+          "cer": "0.04166666666666666666666666667",
+          "exact": false
+        }
+      }
+    },
+    "legacy_v1": false
+  },
+  {
+    "name": "conflicting_amount",
+    "blocks": [
+      "价款28473元",
+      "价款284730元",
+      "不得自动验收2026-10-15"
+    ],
+    "expected_v2": false,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "28473",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 0,
+              "text": "28473元",
+              "value": "28473",
+              "unit": "元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": true
+            },
+            {
+              "block": 1,
+              "text": "284730元",
+              "value": "284730",
+              "unit": "元",
+              "sign": "+",
+              "value_match": false,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": false,
+          "value_match": false,
+          "sign_match": false,
+          "unit_match": false,
+          "match": false
+        },
+        "date": {
+          "expected": "2026-10-15",
+          "observed": [
+            "2026-10-15"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得自动验收",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "28473": 1,
+            "2026-10-15": 1
+          },
+          "observed": {
+            "28473": 1,
+            "284730": 1,
+            "2026-10-15": 1
+          },
+          "match": false
+        }
+      },
+      "fields_match": false,
+      "full_text": {
+        "raw": {
+          "distance": 10,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 10,
+          "reference_characters": 25,
+          "recognized_characters": 35,
+          "cer": "0.4",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 9,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 9,
+          "reference_characters": 24,
+          "recognized_characters": 33,
+          "cer": "0.375",
+          "exact": false
+        }
+      }
+    },
+    "legacy_v1": true
+  },
+  {
+    "name": "duplicate_amount",
+    "blocks": [
+      "价款28473元",
+      "价款28473元",
+      "不得自动验收2026-10-15"
+    ],
+    "expected_v2": false,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "28473",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 0,
+              "text": "28473元",
+              "value": "28473",
+              "unit": "元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": true
+            },
+            {
+              "block": 1,
+              "text": "28473元",
+              "value": "28473",
+              "unit": "元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": false,
+          "value_match": false,
+          "sign_match": false,
+          "unit_match": false,
+          "match": false
+        },
+        "date": {
+          "expected": "2026-10-15",
+          "observed": [
+            "2026-10-15"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得自动验收",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "28473": 1,
+            "2026-10-15": 1
+          },
+          "observed": {
+            "28473": 2,
+            "2026-10-15": 1
+          },
+          "match": false
+        }
+      },
+      "fields_match": false,
+      "full_text": {
+        "raw": {
+          "distance": 9,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 9,
+          "reference_characters": 25,
+          "recognized_characters": 34,
+          "cer": "0.36",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 8,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 8,
+          "reference_characters": 24,
+          "recognized_characters": 32,
+          "cer": "0.3333333333333333333333333333",
+          "exact": false
+        }
+      }
+    },
+    "legacy_v1": true
+  },
+  {
+    "name": "cross_box_digit",
+    "blocks": [
+      "价款28473元",
+      "不得自动验收2",
+      "2026-10-15"
+    ],
+    "expected_v2": false,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "28473",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 0,
+              "text": "28473元",
+              "value": "28473",
+              "unit": "元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": true,
+          "sign_match": true,
+          "unit_match": true,
+          "match": true
+        },
+        "date": {
+          "expected": "2026-10-15",
+          "observed": [
+            "2026-10-15"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得自动验收",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "28473": 1,
+            "2026-10-15": 1
+          },
+          "observed": {
+            "28473": 1,
+            "2": 1,
+            "2026-10-15": 1
+          },
+          "match": false
+        }
+      },
+      "fields_match": false,
+      "full_text": {
+        "raw": {
+          "distance": 2,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 2,
+          "reference_characters": 25,
+          "recognized_characters": 27,
+          "cer": "0.08",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 1,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 1,
+          "reference_characters": 24,
+          "recognized_characters": 25,
+          "cer": "0.04166666666666666666666666667",
+          "exact": false
+        }
+      }
+    },
+    "legacy_v1": true
+  },
+  {
+    "name": "unicode_negative",
+    "blocks": [
+      "价款−28473元",
+      "不得自动验收2026-10-15"
+    ],
+    "expected_v2": false,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "28473",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 0,
+              "text": "-28473元",
+              "value": "-28473",
+              "unit": "元",
+              "sign": "-",
+              "value_match": true,
+              "sign_match": false,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": true,
+          "sign_match": false,
+          "unit_match": true,
+          "match": false
+        },
+        "date": {
+          "expected": "2026-10-15",
+          "observed": [
+            "2026-10-15"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得自动验收",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "28473": 1,
+            "2026-10-15": 1
+          },
+          "observed": {
+            "-28473": 1,
+            "2026-10-15": 1
+          },
+          "match": false
+        }
+      },
+      "fields_match": false,
+      "full_text": {
+        "raw": {
+          "distance": 1,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 1,
+          "reference_characters": 25,
+          "recognized_characters": 26,
+          "cer": "0.04",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 1,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 1,
+          "reference_characters": 24,
+          "recognized_characters": 25,
+          "cer": "0.04166666666666666666666666667",
+          "exact": false
+        }
+      }
+    },
+    "legacy_v1": true
+  },
+  {
+    "name": "fullwidth_decimal",
+    "blocks": [
+      "价款28473．9元",
+      "不得自动验收2026-10-15"
+    ],
+    "expected_v2": false,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "28473",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 0,
+              "text": "28473.9元",
+              "value": "28473.9",
+              "unit": "元",
+              "sign": "+",
+              "value_match": false,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": false,
+          "sign_match": true,
+          "unit_match": true,
+          "match": false
+        },
+        "date": {
+          "expected": "2026-10-15",
+          "observed": [
+            "2026-10-15"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得自动验收",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "28473": 1,
+            "2026-10-15": 1
+          },
+          "observed": {
+            "28473.9": 1,
+            "2026-10-15": 1
+          },
+          "match": false
+        }
+      },
+      "fields_match": false,
+      "full_text": {
+        "raw": {
+          "distance": 2,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 2,
+          "reference_characters": 25,
+          "recognized_characters": 27,
+          "cer": "0.08",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 2,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 2,
+          "reference_characters": 24,
+          "recognized_characters": 26,
+          "cer": "0.08333333333333333333333333333",
+          "exact": false
+        }
+      }
+    },
+    "legacy_v1": true
+  },
+  {
+    "name": "wrong_unit",
+    "blocks": [
+      "价款28473万元",
+      "不得自动验收2026-10-15"
+    ],
+    "expected_v2": false,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "28473",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 0,
+              "text": "28473万元",
+              "value": "28473",
+              "unit": "万元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": false
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": true,
+          "sign_match": true,
+          "unit_match": false,
+          "match": false
+        },
+        "date": {
+          "expected": "2026-10-15",
+          "observed": [
+            "2026-10-15"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得自动验收",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "28473": 1,
+            "2026-10-15": 1
+          },
+          "observed": {
+            "28473": 1,
+            "2026-10-15": 1
+          },
+          "match": true
+        }
+      },
+      "fields_match": false,
+      "full_text": {
+        "raw": {
+          "distance": 1,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 1,
+          "reference_characters": 25,
+          "recognized_characters": 26,
+          "cer": "0.04",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 1,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 1,
+          "reference_characters": 24,
+          "recognized_characters": 25,
+          "cer": "0.04166666666666666666666666667",
+          "exact": false
+        }
+      }
+    },
+    "legacy_v1": true
+  }
+]

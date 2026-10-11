@@ -1,0 +1,584 @@
+[
+  {
+    "page": 1,
+    "group": "clear",
+    "source": {
+      "document_version_id": "85e0ea86-60d0-49db-933b-e605663f444f",
+      "document_sha256": "901d264d6c0052edf0fa923dacb828793d21e8cbce1930ec9cd33defc3738d70",
+      "page": 1,
+      "page_width_points": 600.0,
+      "page_height_points": 260.0,
+      "bitmap_width": 2400,
+      "bitmap_height": 1040,
+      "bitmap_sha256": "ec0ebc87174210949ef1a606eb1d0f230608366459f33478937322b77072d602",
+      "coordinate_space": "rendered_page_top_left"
+    },
+    "ocr_call_attempted": true,
+    "ocr_result_returned": true,
+    "status": "SCORED",
+    "prediction": "executed_this_run",
+    "result_sha256": "49ea9a7b1ac116fddc792fe3e8eecacbe0362f7478ad5bddecbb91f1416b3f45",
+    "legacy_v1": true,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "83233",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 1,
+              "text": "83233元",
+              "value": "83233",
+              "unit": "元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": true,
+          "sign_match": true,
+          "unit_match": true,
+          "match": true
+        },
+        "date": {
+          "expected": "2027-06-16",
+          "observed": [
+            "2027-06-16"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "未经确认不得付款",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "83233": 1,
+            "2027-06-16": 1
+          },
+          "observed": {
+            "83233": 1,
+            "2027-06-16": 1
+          },
+          "match": true
+        }
+      },
+      "fields_match": true,
+      "full_text": {
+        "raw": {
+          "distance": 4,
+          "substitutions": 0,
+          "deletions": 4,
+          "insertions": 0,
+          "reference_characters": 47,
+          "recognized_characters": 43,
+          "cer": "0.08510638297872340425531914894",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 0,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "reference_characters": 40,
+          "recognized_characters": 40,
+          "cer": "0",
+          "exact": true
+        }
+      }
+    },
+    "seconds": 21.859
+  },
+  {
+    "page": 2,
+    "group": "clear_decimal_wanyuan",
+    "source": {
+      "document_version_id": "85e0ea86-60d0-49db-933b-e605663f444f",
+      "document_sha256": "901d264d6c0052edf0fa923dacb828793d21e8cbce1930ec9cd33defc3738d70",
+      "page": 2,
+      "page_width_points": 600.0,
+      "page_height_points": 260.0,
+      "bitmap_width": 2400,
+      "bitmap_height": 1040,
+      "bitmap_sha256": "fe36128d938f70d2669baa8715ff8307a8a67c9770f45cb247f0fdaa874b3907",
+      "coordinate_space": "rendered_page_top_left"
+    },
+    "ocr_call_attempted": true,
+    "ocr_result_returned": true,
+    "status": "SCORED",
+    "prediction": "executed_this_run",
+    "result_sha256": "a22e6d63c4e1fdb024a08e25cc334647a6c6ff390b9a78e68349143090a67ef1",
+    "legacy_v1": true,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "73151.25",
+            "unit": "万元"
+          },
+          "observed": [
+            {
+              "block": 1,
+              "text": "73151.25万元",
+              "value": "73151.25",
+              "unit": "万元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": true,
+          "sign_match": true,
+          "unit_match": true,
+          "match": true
+        },
+        "date": {
+          "expected": "2027-05-02",
+          "observed": [
+            "2027-05-02"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得默示同意续期",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "73151.25": 1,
+            "2027-05-02": 1
+          },
+          "observed": {
+            "73151.25": 1,
+            "2027-05-02": 1
+          },
+          "match": true
+        }
+      },
+      "fields_match": true,
+      "full_text": {
+        "raw": {
+          "distance": 4,
+          "substitutions": 0,
+          "deletions": 4,
+          "insertions": 0,
+          "reference_characters": 51,
+          "recognized_characters": 47,
+          "cer": "0.07843137254901960784313725490",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 0,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "reference_characters": 44,
+          "recognized_characters": 44,
+          "cer": "0",
+          "exact": true
+        }
+      }
+    },
+    "seconds": 20.859
+  },
+  {
+    "page": 3,
+    "group": "skew",
+    "source": {
+      "document_version_id": "85e0ea86-60d0-49db-933b-e605663f444f",
+      "document_sha256": "901d264d6c0052edf0fa923dacb828793d21e8cbce1930ec9cd33defc3738d70",
+      "page": 3,
+      "page_width_points": 600.0,
+      "page_height_points": 260.0,
+      "bitmap_width": 2400,
+      "bitmap_height": 1040,
+      "bitmap_sha256": "f9055db722a88b68cd8572e7c33f13272ca763192198db4b0fd5516d30fefd21",
+      "coordinate_space": "rendered_page_top_left"
+    },
+    "ocr_call_attempted": true,
+    "ocr_result_returned": true,
+    "status": "SCORED",
+    "prediction": "executed_this_run",
+    "result_sha256": "4eedf35699033f365309d23eb58125843894195d9f2d0dc05fb3f4d0e52c5106",
+    "legacy_v1": true,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "53621",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 1,
+              "text": "53621元",
+              "value": "53621",
+              "unit": "元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": true,
+          "sign_match": true,
+          "unit_match": true,
+          "match": true
+        },
+        "date": {
+          "expected": "2027-06-16",
+          "observed": [
+            "2027-06-16"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "未经确认不得付款",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "53621": 1,
+            "2027-06-16": 1
+          },
+          "observed": {
+            "53621": 1,
+            "2027-06-16": 1
+          },
+          "match": true
+        }
+      },
+      "fields_match": true,
+      "full_text": {
+        "raw": {
+          "distance": 4,
+          "substitutions": 0,
+          "deletions": 4,
+          "insertions": 0,
+          "reference_characters": 47,
+          "recognized_characters": 43,
+          "cer": "0.08510638297872340425531914894",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 0,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "reference_characters": 40,
+          "recognized_characters": 40,
+          "cer": "0",
+          "exact": true
+        }
+      }
+    },
+    "seconds": 21.219
+  },
+  {
+    "page": 4,
+    "group": "blur",
+    "source": {
+      "document_version_id": "85e0ea86-60d0-49db-933b-e605663f444f",
+      "document_sha256": "901d264d6c0052edf0fa923dacb828793d21e8cbce1930ec9cd33defc3738d70",
+      "page": 4,
+      "page_width_points": 600.0,
+      "page_height_points": 260.0,
+      "bitmap_width": 2400,
+      "bitmap_height": 1040,
+      "bitmap_sha256": "1a7fdef25575e5d96326e9efe9615dc2bf9aa5685f662c855e60a7a7f0306d05",
+      "coordinate_space": "rendered_page_top_left"
+    },
+    "ocr_call_attempted": true,
+    "ocr_result_returned": true,
+    "status": "SCORED",
+    "prediction": "executed_this_run",
+    "result_sha256": "0a25912956f93f5e813a49b0bc603d79d5db2d8d1339329eb275722a96254f6a",
+    "legacy_v1": true,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "53436.25",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 1,
+              "text": "53436.25元",
+              "value": "53436.25",
+              "unit": "元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": true,
+          "sign_match": true,
+          "unit_match": true,
+          "match": true
+        },
+        "date": {
+          "expected": "2027-01-23",
+          "observed": [
+            "2027-01-23"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得默示同意续期",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "53436.25": 1,
+            "2027-01-23": 1
+          },
+          "observed": {
+            "53436.25": 1,
+            "2027-01-23": 1
+          },
+          "match": true
+        }
+      },
+      "fields_match": true,
+      "full_text": {
+        "raw": {
+          "distance": 4,
+          "substitutions": 0,
+          "deletions": 4,
+          "insertions": 0,
+          "reference_characters": 50,
+          "recognized_characters": 46,
+          "cer": "0.08",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 0,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "reference_characters": 43,
+          "recognized_characters": 43,
+          "cer": "0",
+          "exact": true
+        }
+      }
+    },
+    "seconds": 21.813
+  },
+  {
+    "page": 5,
+    "group": "low_contrast",
+    "source": {
+      "document_version_id": "85e0ea86-60d0-49db-933b-e605663f444f",
+      "document_sha256": "901d264d6c0052edf0fa923dacb828793d21e8cbce1930ec9cd33defc3738d70",
+      "page": 5,
+      "page_width_points": 600.0,
+      "page_height_points": 260.0,
+      "bitmap_width": 2400,
+      "bitmap_height": 1040,
+      "bitmap_sha256": "2edf380cc196bfa9ea8933b353c585c433f6a607664dfbc65a5843244e2e80e7",
+      "coordinate_space": "rendered_page_top_left"
+    },
+    "ocr_call_attempted": true,
+    "ocr_result_returned": true,
+    "status": "SCORED",
+    "prediction": "executed_this_run",
+    "result_sha256": "66d578e43d4034028eaae1d2329577b0c8c0f498227973e2c63636e4fd7ff366",
+    "legacy_v1": true,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "73628",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 1,
+              "text": "73628元",
+              "value": "73628",
+              "unit": "元",
+              "sign": "+",
+              "value_match": true,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": true,
+          "sign_match": true,
+          "unit_match": true,
+          "match": true
+        },
+        "date": {
+          "expected": "2027-04-22",
+          "observed": [
+            "2027-04-22"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "未经确认不得付款",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "73628": 1,
+            "2027-04-22": 1
+          },
+          "observed": {
+            "73628": 1,
+            "2027-04-22": 1
+          },
+          "match": true
+        }
+      },
+      "fields_match": true,
+      "full_text": {
+        "raw": {
+          "distance": 4,
+          "substitutions": 0,
+          "deletions": 4,
+          "insertions": 0,
+          "reference_characters": 47,
+          "recognized_characters": 43,
+          "cer": "0.08510638297872340425531914894",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 0,
+          "substitutions": 0,
+          "deletions": 0,
+          "insertions": 0,
+          "reference_characters": 40,
+          "recognized_characters": 40,
+          "cer": "0",
+          "exact": true
+        }
+      }
+    },
+    "seconds": 21.343
+  },
+  {
+    "page": 6,
+    "group": "occluded",
+    "source": {
+      "document_version_id": "85e0ea86-60d0-49db-933b-e605663f444f",
+      "document_sha256": "901d264d6c0052edf0fa923dacb828793d21e8cbce1930ec9cd33defc3738d70",
+      "page": 6,
+      "page_width_points": 600.0,
+      "page_height_points": 260.0,
+      "bitmap_width": 2400,
+      "bitmap_height": 1040,
+      "bitmap_sha256": "ad670f76dac4811e236b04efb235993803047406c4191dc969121a12ffe2e11d",
+      "coordinate_space": "rendered_page_top_left"
+    },
+    "ocr_call_attempted": true,
+    "ocr_result_returned": true,
+    "status": "SCORED",
+    "prediction": "executed_this_run",
+    "result_sha256": "abbef6b55a0fbb6d7da9ff7cb65f44de3c356a706aa42c4a9fe429f1c8c9c563",
+    "legacy_v1": false,
+    "score_v2": {
+      "version": "synthetic-ocr-v2",
+      "scope": "annotated_single_amount_synthetic_page_only",
+      "fields": {
+        "amount": {
+          "expected": {
+            "value": "85777",
+            "unit": "元"
+          },
+          "observed": [
+            {
+              "block": 2,
+              "text": "77元",
+              "value": "77",
+              "unit": "元",
+              "sign": "+",
+              "value_match": false,
+              "sign_match": true,
+              "unit_match": true
+            }
+          ],
+          "single_occurrence": true,
+          "value_match": false,
+          "sign_match": true,
+          "unit_match": true,
+          "match": false
+        },
+        "date": {
+          "expected": "2027-03-16",
+          "observed": [
+            "2027-03-16"
+          ],
+          "match": true
+        },
+        "prohibition": {
+          "expected": "不得默示同意续期",
+          "occurrences": 1,
+          "match": true
+        },
+        "numeric_inventory": {
+          "expected": {
+            "85777": 1,
+            "2027-03-16": 1
+          },
+          "observed": {
+            "77": 1,
+            "2027-03-16": 1
+          },
+          "match": false
+        }
+      },
+      "fields_match": false,
+      "full_text": {
+        "raw": {
+          "distance": 7,
+          "substitutions": 1,
+          "deletions": 6,
+          "insertions": 0,
+          "reference_characters": 47,
+          "recognized_characters": 41,
+          "cer": "0.1489361702127659574468085106",
+          "exact": false
+        },
+        "layout_normalized": {
+          "distance": 3,
+          "substitutions": 0,
+          "deletions": 3,
+          "insertions": 0,
+          "reference_characters": 40,
+          "recognized_characters": 37,
+          "cer": "0.075",
+          "exact": false
+        }
+      }
+    },
+    "seconds": 21.922
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "version": "synthetic-ocr-v2",
+  "pages": 6,
+  "scored_pages": 6,
+  "unscored_pages": 0,
+  "field_matches": 5,
+  "field_matches_by_kind": {
+    "amount": 5,
+    "date": 6,
+    "prohibition": 6,
+    "numeric_inventory": 5
+  },
+  "full_text": {
+    "raw": {
+      "distance": 27,
+      "substitutions": 1,
+      "deletions": 26,
+      "insertions": 0,
+      "reference_characters": 289,
+      "recognized_characters": 263,
+      "cer": "0.09342560553633217993079584775",
+      "exact_pages": 0
+    },
+    "layout_normalized": {
+      "distance": 3,
+      "substitutions": 0,
+      "deletions": 3,
+      "insertions": 0,
+      "reference_characters": 247,
+      "recognized_characters": 244,
+      "cer": "0.01214574898785425101214574899",
+      "exact_pages": 5
+    }
+  },
+  "dataset": "new_synthetic_holdout_6",
+  "prediction_attempts": 6,
+  "ocr_results_returned": 6,
+  "legacy_version": "synthetic-field-hit-v1",
+  "legacy_field_hits": 5,
+  "blocked": 0,
+  "errors": 0
+}

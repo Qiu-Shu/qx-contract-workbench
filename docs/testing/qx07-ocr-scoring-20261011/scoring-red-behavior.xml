@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="8" time="0.304" timestamp="2026-10-11T14:24:15.502513+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_ocr_scoring_v2" name="test_eight_audit_examples_have_strict_expectations[correct]" time="0.001"><failure message="NotImplementedError: versioned scorer not implemented">tests\unit\test_ocr_scoring_v2.py:22: in test_eight_audit_examples_have_strict_expectations
+    result = score_page(blocks, reference_blocks=REFERENCE, amount='28473', unit='元',
+src\cn_contract\acceptance\ocr_scoring.py:5: in score_page
+    raise NotImplementedError('versioned scorer not implemented')
+E   NotImplementedError: versioned scorer not implemented</failure></testcase><testcase classname="tests.unit.test_ocr_scoring_v2" name="test_eight_audit_examples_have_strict_expectations[wrong_ascii_number]" time="0.001"><failure message="NotImplementedError: versioned scorer not implemented">tests\unit\test_ocr_scoring_v2.py:22: in test_eight_audit_examples_have_strict_expectations
+    result = score_page(blocks, reference_blocks=REFERENCE, amount='28473', unit='元',
+src\cn_contract\acceptance\ocr_scoring.py:5: in score_page
+    raise NotImplementedError('versioned scorer not implemented')
+E   NotImplementedError: versioned scorer not implemented</failure></testcase><testcase classname="tests.unit.test_ocr_scoring_v2" name="test_eight_audit_examples_have_strict_expectations[conflicting_amount]" time="0.001"><failure message="NotImplementedError: versioned scorer not implemented">tests\unit\test_ocr_scoring_v2.py:22: in test_eight_audit_examples_have_strict_expectations
+    result = score_page(blocks, reference_blocks=REFERENCE, amount='28473', unit='元',
+src\cn_contract\acceptance\ocr_scoring.py:5: in score_page
+    raise NotImplementedError('versioned scorer not implemented')
+E   NotImplementedError: versioned scorer not implemented</failure></testcase><testcase classname="tests.unit.test_ocr_scoring_v2" name="test_eight_audit_examples_have_strict_expectations[duplicate_amount]" time="0.000"><failure message="NotImplementedError: versioned scorer not implemented">tests\unit\test_ocr_scoring_v2.py:22: in test_eight_audit_examples_have_strict_expectations
+    result = score_page(blocks, reference_blocks=REFERENCE, amount='28473', unit='元',
+src\cn_contract\acceptance\ocr_scoring.py:5: in score_page
+    raise NotImplementedError('versioned scorer not implemented')
+E   NotImplementedError: versioned scorer not implemented</failure></testcase><testcase classname="tests.unit.test_ocr_scoring_v2" name="test_eight_audit_examples_have_strict_expectations[cross_box_digit]" time="0.001"><failure message="NotImplementedError: versioned scorer not implemented">tests\unit\test_ocr_scoring_v2.py:22: in test_eight_audit_examples_have_strict_expectations
+    result = score_page(blocks, reference_blocks=REFERENCE, amount='28473', unit='元',
+src\cn_contract\acceptance\ocr_scoring.py:5: in score_page
+    raise NotImplementedError('versioned scorer not implemented')
+E   NotImplementedError: versioned scorer not implemented</failure></testcase><testcase classname="tests.unit.test_ocr_scoring_v2" name="test_eight_audit_examples_have_strict_expectations[unicode_negative]" time="0.001"><failure message="NotImplementedError: versioned scorer not implemented">tests\unit\test_ocr_scoring_v2.py:22: in test_eight_audit_examples_have_strict_expectations
+    result = score_page(blocks, reference_blocks=REFERENCE, amount='28473', unit='元',
+src\cn_contract\acceptance\ocr_scoring.py:5: in score_page
+    raise NotImplementedError('versioned scorer not implemented')
+E   NotImplementedError: versioned scorer not implemented</failure></testcase><testcase classname="tests.unit.test_ocr_scoring_v2" name="test_eight_audit_examples_have_strict_expectations[fullwidth_decimal]" time="0.001"><failure message="NotImplementedError: versioned scorer not implemented">tests\unit\test_ocr_scoring_v2.py:22: in test_eight_audit_examples_have_strict_expectations
+    result = score_page(blocks, reference_blocks=REFERENCE, amount='28473', unit='元',
+src\cn_contract\acceptance\ocr_scoring.py:5: in score_page
+    raise NotImplementedError('versioned scorer not implemented')
+E   NotImplementedError: versioned scorer not implemented</failure></testcase><testcase classname="tests.unit.test_ocr_scoring_v2" name="test_eight_audit_examples_have_strict_expectations[wrong_unit]" time="0.000"><failure message="NotImplementedError: versioned scorer not implemented">tests\unit\test_ocr_scoring_v2.py:22: in test_eight_audit_examples_have_strict_expectations
+    result = score_page(blocks, reference_blocks=REFERENCE, amount='28473', unit='元',
+src\cn_contract\acceptance\ocr_scoring.py:5: in score_page
+    raise NotImplementedError('versioned scorer not implemented')
+E   NotImplementedError: versioned scorer not implemented</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,164 @@
+{
+  "scope": "actual commands and PowerShell tool exit codes, JUnit contains native test counts; initial collection error is not a behavioral failure",
+  "runs": [
+    {
+      "evidence": "scoring-red.xml",
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_ocr_scoring_v2.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=docs/testing/qx07-ocr-scoring-20261011/scoring-red.xml"
+      ],
+      "observed_shell_exit_code": 1
+    },
+    {
+      "evidence": "scoring-red-behavior.xml",
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_ocr_scoring_v2.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=docs/testing/qx07-ocr-scoring-20261011/scoring-red-behavior.xml"
+      ],
+      "observed_shell_exit_code": 1
+    },
+    {
+      "evidence": "scoring-green.xml",
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_ocr_scoring_v2.py",
+        "tests/unit/test_ocr_acceptance_scoring.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=docs/testing/qx07-ocr-scoring-20261011/scoring-green.xml"
+      ],
+      "observed_shell_exit_code": 0
+    },
+    {
+      "evidence": "details-red.xml",
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_ocr_scoring_v2.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=docs/testing/qx07-ocr-scoring-20261011/details-red.xml"
+      ],
+      "observed_shell_exit_code": 1
+    },
+    {
+      "evidence": "details-green.xml",
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_ocr_scoring_v2.py",
+        "tests/unit/test_ocr_acceptance_scoring.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=docs/testing/qx07-ocr-scoring-20261011/details-green.xml"
+      ],
+      "observed_shell_exit_code": 0
+    },
+    {
+      "evidence": "boundaries-red.xml",
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_ocr_scoring_v2.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=docs/testing/qx07-ocr-scoring-20261011/boundaries-red.xml"
+      ],
+      "observed_shell_exit_code": 1
+    },
+    {
+      "evidence": "boundaries-green.xml",
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_ocr_scoring_v2.py",
+        "tests/unit/test_ocr_acceptance_scoring.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=docs/testing/qx07-ocr-scoring-20261011/boundaries-green.xml"
+      ],
+      "observed_shell_exit_code": 0
+    },
+    {
+      "evidence": "review-red.xml",
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_ocr_scoring_v2.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=docs/testing/qx07-ocr-scoring-20261011/review-red.xml"
+      ],
+      "observed_shell_exit_code": 1
+    },
+    {
+      "evidence": "review-green.xml",
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_ocr_scoring_v2.py",
+        "tests/unit/test_ocr_acceptance_scoring.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=docs/testing/qx07-ocr-scoring-20261011/review-green.xml"
+      ],
+      "observed_shell_exit_code": 0
+    },
+    {
+      "evidence": "related.xml",
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_ocr_scoring_v2.py",
+        "tests/unit/test_ocr_acceptance_scoring.py",
+        "tests/unit/test_ocr_page_rendering.py",
+        "tests/unit/test_ocr_assets.py",
+        "tests/unit/test_windows_ocr_cleanup.py",
+        "tests/integration/test_ocr_worker.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=docs/testing/qx07-ocr-scoring-20261011/related.xml"
+      ],
+      "observed_shell_exit_code": 0
+    }
+  ]
+}

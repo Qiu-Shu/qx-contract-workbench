@@ -9,6 +9,9 @@ from cn_contract.documents.ocr_process import run_ocr_page
 from cn_contract.domain import OCRPageSource
 from cn_contract.security import ServiceError
 from cn_contract.documents.ocr_candidates import page_bitmap
+from cn_contract.acceptance.ocr_scoring import score_page,summarize_scores
+
+LEGACY_SCORER_VERSION='synthetic-field-hit-v1'
 
 DIGITS={
  '0':[(2,0),(0,2),(0,8),(2,10),(5,10),(7,8),(7,2),(5,0),(2,0)],
@@ -53,7 +56,7 @@ def generate(destination):
 
 
 def critical_fields_match(recognized, expected_fields):
-    """Fixed-fixture field check, not full-text or legal accuracy evaluation."""
+    """Historical v1 field hit only; known blind spots kept for comparability."""
     blocks=[recognized] if isinstance(recognized,str) else recognized
     recognized='\n'.join(''.join(block.split()) for block in blocks)
     for expected in expected_fields:
@@ -85,7 +88,12 @@ def main():
             (root/f"result-{row['page']:02}.json").write_text(result.model_dump_json(indent=2),encoding='utf-8')
             recognized=''.join(''.join(block.raw_text.split()) for block in result.blocks)
             correct=critical_fields_match([block.raw_text for block in result.blocks],row['expected'])
-            observation.update(status='CORRECT' if correct else 'INCORRECT_CANDIDATE',recognized=recognized,blocks=len(result.blocks))
+            amount,prohibition,date=row['expected']
+            score=score_page([block.raw_text for block in result.blocks],
+                reference_blocks=['独立虚构材料 '+str(row['page']),'价款 '+amount+' 元',prohibition+' '+date],
+                amount=amount,unit='元',date=date,prohibition=prohibition)
+            observation.update(status='CORRECT' if correct else 'INCORRECT_CANDIDATE',recognized=recognized,blocks=len(result.blocks),
+                legacy_scorer_version=LEGACY_SCORER_VERSION,score_v2=score)
         except ServiceError as error:observation.update(status='BLOCKED',code=error.code)
         except Exception as error:observation.update(status='ERROR',error_type=type(error).__name__)
         observation['seconds']=round(time.monotonic()-started,3);observations.append(observation)
@@ -95,6 +103,9 @@ def main():
         'incorrect':sum(r['status']=='INCORRECT_CANDIDATE' for r in observations),'blocked':sum(r['status']=='BLOCKED' for r in observations),
         'errors':sum(r['status']=='ERROR' for r in observations),'finished_utc':datetime.now(timezone.utc).isoformat()}
     summary['clear_positive']=sum(r['group']=='clear' and r['status']=='CORRECT' for r in observations)
+    summary['legacy_scorer_version']=LEGACY_SCORER_VERSION
+    summary['legacy_status_scope']='CORRECT means v1 field hit only, not full-text accuracy'
+    summary['score_v2']=summarize_scores([r.get('score_v2') for r in observations])
     (root/'summary.json').write_text(json.dumps(summary,indent=2));print(json.dumps(summary))
     raise SystemExit(0 if summary['clear_positive'] and not summary['errors'] else 1)
 
