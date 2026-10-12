@@ -33,11 +33,13 @@ def _hash(value: str) -> str:
     return hashlib.sha256(value.encode('utf-8')).hexdigest()
 
 
-def provision_user(username: str, password: str, roles: set[Role], db: Session) -> UUID:
+def provision_user(username: str, password: str, roles: set[Role], db: Session,
+                   *, local_workbench_password: bool = False) -> UUID:
     """Explicit trusted server initialization; never exposed to cookie clients."""
     roles = frozenset(Role(role) for role in roles)
-    if not username.strip() or len(password) < 12 or not roles:
-        raise ValueError('username, at least 12 password characters and known roles required')
+    password_valid = 6 <= len(password) <= 12 if local_workbench_password else len(password) >= 12
+    if type(local_workbench_password) is not bool or not username.strip() or not password_valid or not roles:
+        raise ValueError('username, valid password length and known roles required')
     identifier = uuid4()
     db.add(UserRow(id=str(identifier), username=username, password_hash=PASSWORD_HASH.hash(password),
                    roles=json.dumps(sorted(role.value for role in roles)), disabled=False))

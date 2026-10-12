@@ -38,7 +38,7 @@ def _workspace_path(directory):
 def _credentials(username, password):
     if (type(username) is not str or not 1 <= len(username) <= 128 or username != username.strip()
             or any(category(c) in ('Cc', 'Cf') for c in username)
-            or type(password) is not str or not 12 <= len(password) <= 256):
+            or type(password) is not str or not 6 <= len(password) <= 12):
         raise ValueError('LOCAL_CREDENTIALS_INVALID')
 
 
@@ -107,7 +107,7 @@ def initialize_workspace(directory, username, password):
     database = _database(root)
     try:
         with database.session() as db:
-            provision_user(username, password, {Role.HANDLING_LAWYER}, db)
+            provision_user(username, password, {Role.HANDLING_LAWYER}, db, local_workbench_password=True)
         marker['workspace_id'] = str(uuid4())
         with closing(sqlite3.connect(root / 'workbench.db')) as db:
             with db:
@@ -133,7 +133,7 @@ def add_local_user(directory, username, password, role):
             with database.session() as db:
                 if db.scalar(select(UserRow).where(UserRow.username == username)):
                     raise ValueError('LOCAL_ACCOUNT_EXISTS')
-                return provision_user(username, password, {role}, db)
+                return provision_user(username, password, {role}, db, local_workbench_password=True)
         finally:
             database.engine.dispose()
 
@@ -209,7 +209,7 @@ class _Parser(argparse.ArgumentParser):
 def _prompt_password():
     if not sys.stdin.isatty():
         raise ValueError('INTERACTIVE_PASSWORD_REQUIRED')
-    password = getpass.getpass('本机账户密码（至少12位，不显示）：')
+    password = getpass.getpass('本机账户密码（6–12位，不显示）：')
     if password != getpass.getpass('再次输入：'):
         raise ValueError('PASSWORD_MISMATCH')
     return password
@@ -250,8 +250,15 @@ def main(argv=None):
                 add_local_user(args.directory, args.username, password, args.role)
             print('本机账户已建立；密码不保存为明文、不进入日志。')
         return 0
-    except (ValueError, OSError, ServiceError):
-        print('LOCAL_WORKBENCH_REJECTED：检查目录、账户或密码输入；已有数据不会重置。', file=sys.stderr)
+    except (ValueError, OSError, ServiceError) as error:
+        # Only fixed messages may be shown; exception text can contain secrets.
+        hints = {
+            'PASSWORD_MISMATCH': '两次密码不一致，请重新启动后输入相同密码。',
+            'LOCAL_CREDENTIALS_INVALID': '密码须为6–12位；用户名须为1–128位，不能有首尾空格或控制字符。',
+            'INTERACTIVE_PASSWORD_REQUIRED': '请在本机交互窗口运行启动工作台.cmd，并在隐藏提示中输入密码。',
+        }
+        hint = hints.get(str(error), '检查目录、账户或密码输入。') if type(error) is ValueError else '检查目录、账户或密码输入。'
+        print(f'LOCAL_WORKBENCH_REJECTED：{hint}已有数据不会重置。', file=sys.stderr)
         return 1
 
 

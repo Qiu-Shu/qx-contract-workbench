@@ -7,6 +7,18 @@ import pytest
 from test_matter_access import world
 
 
+def test_short_password_policy_requires_explicit_local_workbench_scope(tmp_path):
+    from cn_contract.domain import Role
+    p, s, database, *_ = world(tmp_path)
+    with database.session() as db:
+        with pytest.raises(ValueError):
+            s.provision_user('ordinary-account', 'test06', {Role.HANDLING_LAWYER}, db)
+        with pytest.raises(ValueError):
+            s.provision_user('invalid-mode', 'test06', {Role.HANDLING_LAWYER}, db,
+                             local_workbench_password='yes')
+        assert db.query(p.UserRow).filter(p.UserRow.username.in_(['ordinary-account', 'invalid-mode'])).count() == 0
+
+
 def test_password_hash_argon2_and_bad_password_rejected(tmp_path):
     p, s, database, actor, _, _, _, token, _ = world(tmp_path)
     with database.session() as db:

@@ -17,7 +17,7 @@ from cn_contract.persistence import UserRow
 from tests.integration.test_api import create_case
 
 
-PASSWORD = 'fictional-local-account-12345'
+PASSWORD = 'local-test12'
 
 
 @pytest.fixture
@@ -173,7 +173,7 @@ def test_add_explicit_account_preserves_least_privilege_and_duplicate_password(l
     module.initialize_workspace(root, 'local-lawyer', PASSWORD)
     module.add_local_user(root, 'local-assistant', PASSWORD, Role.ASSISTANT)
     with pytest.raises(ValueError):
-        module.add_local_user(root, 'local-assistant', 'another-fictional-password', Role.ADMIN)
+        module.add_local_user(root, 'local-assistant', 'another-test', Role.ADMIN)
     with TestClient(module.build_local_app(root)) as client:
         headers = login(client, 'local-assistant')
         assert client.get('/api/session').json()['roles'] == ['assistant']
@@ -299,3 +299,72 @@ def test_start_prompts_once_then_reopens_without_password_reset(local, monkeypat
     assert all(c['host'] == '127.0.0.1' and c['workers'] == 1 and not c['access_log'] for c in calls)
     output = capsys.readouterr()
     assert PASSWORD not in output.out + output.err
+
+
+@pytest.mark.parametrize('answers,expected', [
+    ((PASSWORD, PASSWORD + '-different'), '两次密码不一致'),
+    (('short', 'short'), '密码须为6–12位'),
+    (('x' * 13, 'x' * 13), '密码须为6–12位'),
+])
+def test_start_explains_invalid_input_without_echoing_password(local, monkeypatch, capsys, answers, expected):
+    import uvicorn
+    module, root = local
+    monkeypatch.setattr(uvicorn, 'run', lambda *args, **kwargs: None)
+    monkeypatch.setattr(module.sys.stdin, 'isatty', lambda: True)
+    monkeypatch.setattr('builtins.input', lambda prompt: 'local-lawyer')
+    values = iter(answers)
+    monkeypatch.setattr(module.getpass, 'getpass', lambda prompt: next(values))
+    assert module.main(['start', '--directory', str(root)]) == 1
+    output = capsys.readouterr()
+    assert expected in output.err
+    assert all(value not in output.out + output.err for value in answers)
+    assert not root.exists()
+
+
+def test_start_unknown_error_does_not_echo_exception_details(local, monkeypatch, capsys):
+    module, root = local
+    def fail(directory):
+        raise ValueError('private-detail-' + PASSWORD)
+    monkeypatch.setattr(module, '_workspace_path', fail)
+    assert module.main(['start', '--directory', str(root)]) == 1
+    output = capsys.readouterr()
+    assert 'LOCAL_WORKBENCH_REJECTED' in output.err
+    assert 'private-detail' not in output.out + output.err
+    assert PASSWORD not in output.out + output.err
+
+
+@pytest.mark.parametrize('password', ['test06', 'local-test12'])
+def test_local_password_boundaries_create_and_add_accounts_that_can_login(local, password):
+    module, root = local
+    module.initialize_workspace(root, 'local-lawyer', password)
+    module.add_local_user(root, 'local-assistant', password, Role.ASSISTANT)
+    with TestClient(module.build_local_app(root)) as client:
+        login(client, password=password)
+        login(client, username='local-assistant', password=password)
+
+
+@pytest.mark.parametrize('password', ['abcde', 'abcdefghijklm'])
+def test_local_password_outside_range_rejected_without_changing_store(local, password):
+    module, root = local
+    with pytest.raises(ValueError):
+        module.initialize_workspace(root, 'local-lawyer', password)
+    assert not root.exists()
+    module.initialize_workspace(root, 'local-lawyer', PASSWORD)
+    before = (root / 'workbench.db').read_bytes()
+    with pytest.raises(ValueError):
+        module.add_local_user(root, 'local-assistant', password, Role.ASSISTANT)
+    assert (root / 'workbench.db').read_bytes() == before
+
+
+def test_existing_long_password_still_logs_in(local):
+    from cn_contract.security import provision_user
+    module, root = local
+    module.initialize_workspace(root, 'local-lawyer', PASSWORD)
+    database = module._database(root)
+    try:
+        with database.session() as db:
+            provision_user('existing-account', 'fictional-existing-long-password', {Role.HANDLING_LAWYER}, db)
+    finally:
+        database.engine.dispose()
+    with TestClient(module.build_local_app(root)) as client:
+        login(client, 'existing-account', 'fictional-existing-long-password')
