@@ -50,13 +50,12 @@ def current_manifest(context,actor,db,config,*,allow_finished=False):
     if context.allowed_scope!=SCOPE: raise ServiceError('VERSION_CONFLICT',409)
     if config.get('prompts')!=prompt_configuration(config)['prompts']:
         raise ServiceError('VERSION_CONFLICT',409)
-    from .proposals import require_policy,assisted_configuration,is_assisted
+    from .proposals import require_policy,assisted_configuration,is_assisted,require_documents
     provider='mock'
     if config.get('provider')=='assisted_manual':
-        policy=require_policy(db)
+        policy=require_policy(db,matter.id)
         if config!=assisted_configuration(policy):raise ServiceError('VERSION_CONFLICT',409)
-        if any(v.sha256 not in policy.document_hashes for v in context.document_versions):
-            raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+        require_documents(policy,context.document_versions,actor,db)
         provider='assisted_manual'
     elif is_assisted(db):
         raise ServiceError('DATA_POLICY_UNAPPROVED',409)

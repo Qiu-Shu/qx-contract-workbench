@@ -35,13 +35,17 @@ def create_matter(value, actor, db):
         reviewer=db.scalar(select(UserRow).where(UserRow.username==value.reviewer_username))
         if reviewer is None or reviewer.disabled or 'reviewing_lawyer' not in json.loads(reviewer.roles):
             raise ServiceError('AUTHORIZATION_REQUIRED',403)
-    matter = Matter(id=uuid4(), client_ref='SYNTHETIC-'+uuid4().hex, title=value.title,
+    local_materials = value.material_mode == 'local'
+    matter = Matter(id=uuid4(), client_ref=('LOCAL-' if local_materials else 'SYNTHETIC-')+uuid4().hex, title=value.title,
         jurisdiction='CN-mainland', contract_type=value.contract_type, review_mode=value.review_mode,
         position=value.position, objectives=value.objectives,
         member_ids={principal.user_id}|({UUID(reviewer.id)} if reviewer else set()), status='intake',
         active_fact_version=None, active_policy_version=None, gate_issues=())
     with db.begin_nested():
         provision_matter(matter, db)
+        if local_materials:
+            from ..documents.local_materials import record_case
+            record_case(matter.id, principal, db)
         register_default_cards(principal, matter_id=matter.id, db=db)
         policy = PolicySnapshot(client_ref=matter.client_ref, version=1, sha256=policy_sha256(matter.client_ref,1,()),
             preferences=(), approved_by=None, approved_at=None)
@@ -64,11 +68,11 @@ def candidate_parse(matter_id, version_id, actor, db):
     version = read_version(matter_id, version_id, actor, db)
     if version.id not in {v.id for v in current_versions(matter_id, actor, db)}:
         raise ServiceError('VERSION_CONFLICT', 409)
-    parsed = parse_document(version, None, actor=actor, db=db)
-    from ..review.proposals import is_assisted,require_policy
+    from ..review.proposals import is_assisted,require_policy,require_documents
     if is_assisted(db):
-        policy=require_policy(db)
-        if version.sha256 not in policy.document_hashes:raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+        require_documents(require_policy(db,matter_id),(version,),actor,db)
+    parsed = parse_document(version, None, actor=actor, db=db)
+    if is_assisted(db):
         facts=()
     else:
         facts = extract_document_candidates(parsed, MockProvider(), matter_id=matter_id, actor=actor, db=db)

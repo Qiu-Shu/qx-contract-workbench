@@ -1510,6 +1510,7 @@ class MatterCreateInput(DomainModel):
     position: Position
     objectives: Annotated[tuple[NonEmpty, ...], Field(min_length=1, max_length=10)]
     reviewer_username: Annotated[NonEmpty, Field(max_length=128)] | None = None
+    material_mode: Literal['synthetic', 'local'] = Field(default='synthetic', exclude_if=lambda value:value == 'synthetic')
 
 
 class PositionInput(DomainModel):
@@ -1539,6 +1540,15 @@ class SyntheticAssistedPolicy(DomainModel):
     def distinct_registry(cls, values):
         if len(set(values)) != len(values): raise ValueError('registry hashes cannot be repeated')
         return values
+
+
+class LocalMaterialPolicy(DomainModel):
+    """Local human workpapers; never authorizes a supplier or chat connection."""
+    policy_id: Literal['local-workpaper-v1'] = 'local-workpaper-v1'
+    purpose: Literal['assisted_draft'] = 'assisted_draft'
+    candidate_source: Literal['manual_local'] = 'manual_local'
+    allowed_mime: Literal['application/vnd.openxmlformats-officedocument.wordprocessingml.document'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    external_processing: Literal[False] = False
 
 
 FiniteCoordinate = Annotated[float, Field(allow_inf_nan=False, ge=0)]
@@ -1736,7 +1746,7 @@ class AssistedReviewContextView(DomainModel):
     document_hashes: Mapping[UUID, SHA256]
     eligible_anchor_ids: tuple[UUID, ...]
     eligible_verification_ids: tuple[UUID, ...] = Field(default=(), exclude_if=lambda value:not value)
-    candidate_source: Literal['manual_synthetic', 'local_plugin_unverified']
+    candidate_source: Literal['manual_synthetic', 'manual_local', 'local_plugin_unverified']
     real_model_calls: Literal[0] = 0
     qcc_calls: Literal[0] = 0
     model_inference: Literal['NOT_RUN', 'NOT_ATTESTED'] = 'NOT_RUN'
@@ -1796,7 +1806,7 @@ class CaseBridgeContext(DomainModel):
 
 
 class ManualCandidateReceipt(DomainModel):
-    source: Literal['manual_synthetic']
+    source: Literal['manual_synthetic', 'manual_local']
     submitted_by: UUID
     submitted_at: UTCDatetime
     real_model_calls: Literal[0] = 0

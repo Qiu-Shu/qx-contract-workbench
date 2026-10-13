@@ -6,6 +6,7 @@ from sqlalchemy import select
 from ..domain import Patch,ArtifactBundle,ExportArtifact
 from ..persistence import ExportRow,configured_database,read_version
 from ..security import ServiceError
+from ..documents import local_materials
 from ..review.storage import read_run,ReviewRunRow
 from . import storage as s
 from . import redline_adapter as redline
@@ -46,7 +47,7 @@ def approve_patch(matter_id,run_id,patch,actor,*,db,audiences=('internal',),exce
         if s.latest('patch_approval',patch.id,db):raise ServiceError('VERSION_CONFLICT',409)
         record=s.append('patch_approval',patch.id,{'run_id':str(run.id),'run_sha256':s.sha(run.model_dump(mode='json')),
             'patch':approved.model_dump(mode='json'),'audiences':list(audiences),'approval_session_id':str(actor.session_id),
-            'finding_decision_sha256':finding_fingerprint(snapshot,patch.finding_id),'synthetic':True},actor,matter_id,db)
+            'finding_decision_sha256':finding_fingerprint(snapshot,patch.finding_id),'synthetic':not local_materials.is_local(matter_id,db)},actor,matter_id,db)
         s.audit(actor,matter_id,'patch_approved','EXACT_DRAFT_PATCH_APPROVAL',db,entity_id=patch.id,after_hash=record.sha256)
     return approved
 
@@ -114,7 +115,8 @@ def _scope(run,actor,db,*,audience='internal'):
     scope=['本次审查记录：'+str(run.id)+'；完成时间（UTC）：'+str(run.finished_at),
         '事实快照：'+run.manifest.fact_snapshot_sha256,'法律规则快照：'+run.manifest.rules_sha256,
         '客户政策快照：'+run.manifest.policy_sha256,
-        ('本次采用本机插件候选；模型身份与推理来源未核验，工作台远程模型调用0；' if plugin_source else
+        ('本次采用本机人工候选；真实模型未运行，真实模型调用0；' if local_materials.is_local(run.matter_id,db) else
+         '本次采用本机插件候选；模型身份与推理来源未核验，工作台远程模型调用0；' if plugin_source else
          '本次采用离线人工/合成候选；真实模型推理NOT_RUN，真实模型调用0；' if run.manifest.model_provider=='assisted_manual'
          else '本次仅采用本地模拟模型；')+'未关联企业查询收据，未采用任何原始企业查询材料。未查询不能解释为无风险。']
     if audience=='client':scope=[scope[0],scope[-1]]
@@ -164,7 +166,7 @@ def prepare_exports(run,audience,patches,actor,*,db):
     with db.begin_nested():
         artifacts=[];applied={}
         for version_id,values in changes.items():
-            try:raw=redline.build_redline(baseline[version_id],values,configured_database(db).settings)
+            try:raw=redline.build_redline(baseline[version_id],values,configured_database(db).settings,local_material=candidate_source=='manual_local')
             except ServiceError as error:
                 if error.code!='NOT_SUPPORTED':raise
                 manual.extend(_manual(anchor,patch,'已有页眉页脚需要人工保真处理') for patch,anchor in values)
@@ -176,7 +178,7 @@ def prepare_exports(run,audience,patches,actor,*,db):
         artifacts.insert(0,report)
         identifier=uuid4()
         metadata={'run_sha256':s.sha(run.model_dump(mode='json')),'patch_set_sha256':s.sha(approvals),
-            'patch_approvals':approvals,'manual':manual,'synthetic':True,'mode':'draft',
+            'patch_approvals':approvals,'manual':manual,'synthetic':candidate_source!='manual_local','mode':'draft',
             'decision_snapshot_sha256':snapshot.sha256,'decision_snapshot_version':snapshot.version,
             'projection_version':2}
         bundle=ArtifactBundle(id=identifier,matter_id=run.matter_id,run_id=run.id,audience=audience,artifacts=tuple(artifacts),manifest_sha256='0'*64)

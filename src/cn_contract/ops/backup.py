@@ -221,7 +221,12 @@ def backup_and_verify(config, *, database, actor, key_resolver, restore_parent):
     if not isinstance(database, Database) or type(key_resolver) is not SyntheticKeyStore:
         raise ServiceError('DATA_POLICY_UNAPPROVED', 409)
     key = key_resolver.resolve(config.key_ref)  # Reject before creating anything.
-    with database.session() as db: _admin(actor, db)
+    with database.session() as db:
+        _admin(actor, db)
+        from ..persistence import MatterRow
+        from ..documents.local_materials import is_local
+        if any(is_local(identifier,db) for identifier in db.scalars(select(MatterRow.id))):
+            raise ServiceError('DATA_POLICY_UNAPPROVED',409)
     root = checked_root(config.storage_ref, create=True)
     restore_root = checked_root(restore_parent, create=True)
     if root.is_relative_to(database.storage_root) or restore_root.is_relative_to(database.storage_root):

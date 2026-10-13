@@ -32,6 +32,14 @@ def project(run,audience,patches,manual,*,scope=None,internal=None,snapshot=None
             common['limitations'][0]=common['watermark']
             common['limitations'][2]='现实法源及法律验收未获批准 插件候选和处置不构成已核法律结论'
             common['keywords']='DRAFT PLUGIN-UNVERIFIED'
+    if candidate_source=='manual_local':
+        common['title']=f'合同审查{AUDIENCES[audience]}工作稿'
+        common['opening']='本工作稿列明本机材料的人工候选及律师处置。真实模型未运行，法源与未覆盖事项仍须逐项核对；不能用作正式法律意见或签发文件。'
+        common['watermark']='DRAFT 本机人工工作稿 真实模型未运行 非正式法律意见'
+        common['limitations'][0]=common['watermark']
+        common['keywords']='DRAFT MANUAL-LOCAL'
+        common['subject']='本机合同人工辅助工作稿'
+        common['author']='本机合同工作台'
     if audience!='counterparty':
         common['limitations'].extend(run.limitations)
         common['coverage']=[{'dimension':c.coverage_id.value+' '+DIMENSIONS[int(c.coverage_id.value[1:])-1],'status':STATES[c.status.value]} for c in run.coverage]

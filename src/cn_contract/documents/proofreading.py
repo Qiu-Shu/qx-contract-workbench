@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from ..domain import Fact, FactSnapshot, PageVerification, PageVerificationInput
 from ..persistence import (Base, UTCDateTime, read_matter, read_version, read_original,
     get_parse_result, get_fact_snapshot, save_fact_snapshot, fact_snapshot_sha256)
-from ..review.proposals import digest, require_policy
+from ..review.proposals import digest, require_policy, require_documents
 from ..security import ServiceError, authorize
 
 
@@ -30,7 +30,7 @@ def initialize_storage(database):
 
 def _document(matter_id, value, actor, db):
     from ..web.services import current_versions
-    policy = require_policy(db)
+    policy = require_policy(db,matter_id)
     from ..persistence import DocumentRow
     row=db.get(DocumentRow,str(value.document_version_id))
     if row is None or row.matter_id!=str(matter_id): raise ServiceError('CROSS_MATTER_DENIED',403)
@@ -38,8 +38,7 @@ def _document(matter_id, value, actor, db):
     current = current_versions(matter_id, actor, db)
     if version.id not in {v.id for v in current} or version.sha256 != value.document_sha256:
         raise ServiceError('VERSION_CONFLICT',409)
-    if any(v.sha256 not in policy.document_hashes for v in current):
-        raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+    require_documents(policy,current,actor,db)
     from .ingest import DOCX_MIME
     if version.mime not in ('application/pdf', DOCX_MIME): raise ServiceError('FILE_UNSUPPORTED',415)
     read_original(matter_id,version.id,actor,db)

@@ -100,6 +100,8 @@ class CaseBridge:
 
     def _select(self, matter_id, consent, actor, db, intent, epoch):
         context = proposals.review_context(matter_id, actor, db)
+        if context.candidate_source != 'manual_synthetic':
+            raise ServiceError('DATA_POLICY_UNAPPROVED',409)
         if consent.context_sha256 != context.context_sha256:
             raise ServiceError('VERSION_CONFLICT', 409)
         grant = CaseBridgeGrant(id=uuid4(), matter_id=matter_id,

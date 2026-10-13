@@ -85,16 +85,16 @@ def _revision_id(package):
     return max(used|{0})+1
 
 
-def _replace(node,patch,next_id):
+def _replace(node,patch,next_id,*,author='群兴工程 模拟修改建议'):
     runs=node.findall(f'{{{W}}}r')
-    deleted=etree.Element(f'{{{W}}}del',attrib={f'{{{W}}}id':str(next_id),f'{{{W}}}author':'群兴工程 模拟修改建议',
+    deleted=etree.Element(f'{{{W}}}del',attrib={f'{{{W}}}id':str(next_id),f'{{{W}}}author':author,
         f'{{{W}}}date':s.now().isoformat().replace('+00:00','Z')})
     for original in runs:
         run=copy.deepcopy(original)
         for text in run.findall(f'{{{W}}}t'):
             text.tag=f'{{{W}}}delText';text.set(XMLSPACE,'preserve')
         deleted.append(run)
-    inserted=etree.Element(f'{{{W}}}ins',attrib={f'{{{W}}}id':str(next_id+1),f'{{{W}}}author':'群兴工程 模拟修改建议',
+    inserted=etree.Element(f'{{{W}}}ins',attrib={f'{{{W}}}id':str(next_id+1),f'{{{W}}}author':author,
         f'{{{W}}}date':s.now().isoformat().replace('+00:00','Z')})
     run=etree.SubElement(inserted,f'{{{W}}}r')
     if runs and runs[0].find(f'{{{W}}}rPr') is not None:run.append(copy.deepcopy(runs[0].find(f'{{{W}}}rPr')))
@@ -104,14 +104,14 @@ def _replace(node,patch,next_id):
     node.insert(index,deleted);node.insert(index+1,inserted)
 
 
-def _watermark(package,root):
+def _watermark(package,root,*,label='DRAFT MOCK 模拟材料 不构成正式法律意见'):
     name='t09Draft'
     header=f'word/{name}Header.xml';footer=f'word/{name}Footer.xml'
     if header in package or footer in package:raise ServiceError('VERSION_CONFLICT',409)
     for part,tag in [(header,'hdr'),(footer,'ftr')]:
         item=etree.Element(f'{{{W}}}{tag}',nsmap={'w':W})
         p=etree.SubElement(item,f'{{{W}}}p');run=etree.SubElement(p,f'{{{W}}}r')
-        text=etree.SubElement(run,f'{{{W}}}t');text.text='DRAFT MOCK 模拟材料 不构成正式法律意见'
+        text=etree.SubElement(run,f'{{{W}}}t');text.text=label
         package[part]=etree.tostring(item,encoding='UTF-8',xml_declaration=True,standalone=True)
     relationships=xml(package.get('word/_rels/document.xml.rels',f'<Relationships xmlns="{REL}"/>'.encode()))
     used={n.get('Id') for n in relationships}
@@ -134,14 +134,14 @@ def _watermark(package,root):
     package['[Content_Types].xml']=etree.tostring(types,encoding='UTF-8',xml_declaration=True,standalone=True)
 
 
-def build_redline(data,changes,settings):
+def build_redline(data,changes,settings,*,local_material=False):
     package=read_package(data,settings)[0]
     root=xml(package['word/document.xml']);next_id=_revision_id(package)
     for patch,anchor in changes:
         node=_node(root,anchor)
         if node is None:raise ServiceError('VERSION_CONFLICT',409)
-        _replace(node,patch,next_id);next_id+=2
-    _watermark(package,root)
+        _replace(node,patch,next_id,author='本机人工修改建议' if local_material else '群兴工程 模拟修改建议');next_id+=2
+    _watermark(package,root,label='DRAFT 本机人工工作稿 非正式法律意见' if local_material else 'DRAFT MOCK 模拟材料 不构成正式法律意见')
     package['word/document.xml']=etree.tostring(root,encoding='UTF-8',xml_declaration=True,standalone=True)
     output=BytesIO()
     with zipfile.ZipFile(BytesIO(data)) as original,zipfile.ZipFile(output,'w') as target:
@@ -178,11 +178,13 @@ def apply_patch(version,patch,*,actor,db):
         if manual:
             s.append('patch_result',patch.id,{'status':'manual_required','reason':manual,'target_sha256':None},actor,version.matter_id,db)
             return PatchResult(status='manual_required',reason=manual,target_sha256=None)
-        try:raw=build_redline(data,[(patch,anchor)],configured_database(db).settings)
+        from ..documents.local_materials import is_local
+        local=is_local(version.matter_id,db)
+        try:raw=build_redline(data,[(patch,anchor)],configured_database(db).settings,local_material=local)
         except ServiceError as error:
             if error.code!='NOT_SUPPORTED':raise
             return PatchResult(status='manual_required',reason='已有页眉页脚结构需要人工保真处理',target_sha256=None)
         digest=hashlib.sha256(raw).hexdigest();path=s.store_bytes(raw,uuid4(),db)
-        s.append('patch_result',patch.id,{'status':'applied','reason':'完整正文锚点 原生模拟修订',
+        s.append('patch_result',patch.id,{'status':'applied','reason':'完整正文锚点 本机人工修订' if local else '完整正文锚点 原生模拟修订',
             'target_sha256':digest,'storage_ref':path},actor,version.matter_id,db)
-        return PatchResult(status='applied',reason='完整正文锚点 原生模拟修订',target_sha256=digest)
+        return PatchResult(status='applied',reason='完整正文锚点 本机人工修订' if local else '完整正文锚点 原生模拟修订',target_sha256=digest)

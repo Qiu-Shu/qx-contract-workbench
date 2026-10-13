@@ -69,7 +69,8 @@ def build(projection):
         '原文：'+m['old']+'\n建议新文：'+m['new']+'\n批准修改说明：'+m['explanation']+'\n人工处理原因：'+m['reason']) for m in projection['manual']])
     if not projection['manual']:doc.add_paragraph('本次所列修改没有未写入的人工项。其他材料及法律判断仍须律师复核。')
     core=doc.core_properties
-    core.title=projection['title'];core.subject='独立虚构模拟合同草案';core.author='群兴工程模拟';core.last_modified_by='群兴工程模拟'
+    core.title=projection['title'];core.subject=projection.get('subject','独立虚构模拟合同草案')
+    core.author=projection.get('author','群兴工程模拟');core.last_modified_by=core.author
     core.comments=watermark if 'watermark' in projection else 'DRAFT MOCK 非正式法律意见'
     core.keywords=projection.get('keywords','DRAFT MANUAL-SYNTHETIC' if 'watermark' in projection else 'DRAFT MOCK')
     from datetime import datetime,timezone

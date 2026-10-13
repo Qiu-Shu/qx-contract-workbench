@@ -170,7 +170,7 @@ def build_local_app(directory, *, port=8767):
     database = _database(root)
     try:
         app = create_app(load_settings(), database=database, purpose='assisted_draft',
-                         assisted_policy=load_seed_policy())
+                         assisted_policy=load_seed_policy(), local_materials_enabled=True)
         bridge = None
         if root == (PROJECT_ROOT / '.local' / 'workbench').resolve() and port == 8767:
             from .case_bridge import attach_case_bridge

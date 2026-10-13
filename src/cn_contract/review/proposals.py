@@ -48,12 +48,24 @@ def is_assisted(db):
     return getattr(configured_database(db), '_review_purpose', 'mock_demo') == 'assisted_draft'
 
 
-def require_policy(db):
+def require_policy(db, matter_id=None):
+    from ..documents import local_materials
+    if matter_id is not None and local_materials.is_local(matter_id,db):
+        return local_materials.require_policy(matter_id,db)
     database = configured_database(db)
     policy = getattr(database, '_assisted_policy', None)
     if not is_assisted(db) or not isinstance(policy, SyntheticAssistedPolicy):
         raise ServiceError('DATA_POLICY_UNAPPROVED', 409)
     return SyntheticAssistedPolicy.model_validate_json(policy.model_dump_json())
+
+
+def require_documents(policy, versions, actor, db):
+    from ..domain import LocalMaterialPolicy
+    if isinstance(policy,LocalMaterialPolicy):
+        from ..documents.local_materials import require_versions
+        require_versions(versions,actor,db)
+    elif any(v.sha256 not in policy.document_hashes for v in versions):
+        raise ServiceError('DATA_POLICY_UNAPPROVED',409)
 
 
 def require_assisted_policy(db):
@@ -66,7 +78,7 @@ def submit_fact_candidates(matter_id, value, actor, db):
     from ..ops.storage import require_active
     require_active(db)
     from ..web.services import current_versions
-    policy=require_policy(db)
+    policy=require_policy(db,matter_id)
     value=AssistedFactsInput.model_validate_json(value.model_dump_json())
     matter=read_matter(matter_id,actor,db)
     if matter.active_fact_version!=value.fact_version:raise ServiceError('VERSION_CONFLICT',409)
@@ -74,8 +86,7 @@ def submit_fact_candidates(matter_id, value, actor, db):
     versions=current_versions(matter_id,actor,db)
     if version.id not in {v.id for v in versions} or version.sha256!=value.document_sha256:
         raise ServiceError('VERSION_CONFLICT',409)
-    if any(v.sha256 not in policy.document_hashes for v in versions):
-        raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+    require_documents(policy,versions,actor,db)
     parsed=get_parse_result(matter_id,version.id,actor,db)
     if parsed is None:raise ServiceError('FACTS_UNCONFIRMED',409)
     parsed=trusted_parse(matter_id,version.id,actor,db,parsed)
@@ -97,14 +108,14 @@ def submit_fact_candidates(matter_id, value, actor, db):
     snapshot=FactSnapshot(version=value.fact_version+1,facts=facts,sha256=fact_snapshot_sha256(facts))
     with db.begin_nested():
         save_fact_snapshot(matter_id,snapshot,actor,db)
-        require_policy(db)
+        require_policy(db,matter_id)
         authorize(actor,matter_id,'candidate_facts',db)
     return snapshot
 
 
 def assisted_configuration(policy):
     from .workflow import prompt_configuration
-    return {**prompt_configuration({'provider':'assisted_manual','candidate_source':'manual_synthetic',
+    return {**prompt_configuration({'provider':'assisted_manual','candidate_source':policy.candidate_source,
         'policy_sha256':digest(policy.model_dump(mode='json'))}), 'engine':'assisted-manual-v1'}
 
 
@@ -119,7 +130,7 @@ def _context_state(matter_id,actor,db,*,allow_finished=False):
     from ..web.services import context
     from .workflow import current_manifest
     authorize(actor,matter_id,'read' if allow_finished else 'review',db)
-    policy=require_policy(db)
+    policy=require_policy(db,matter_id)
     ctx=context(matter_id,actor,db)
     config=assisted_configuration(policy)
     state=current_manifest(ctx,actor,db,config,allow_finished=allow_finished)
@@ -132,7 +143,7 @@ def review_context(matter_id, actor, db, *, allow_finished=False):
     return AssistedReviewContextView(matter_id=matter_id,purpose='assisted_draft',
         context_sha256=context_digest(actual,manifest,policy),policy_sha256=digest(policy.model_dump(mode='json')),
         fact_version=ctx.fact_snapshot.version,document_hashes=manifest.document_hashes,
-        eligible_anchor_ids=tuple(anchors),eligible_verification_ids=verified_source_ids(actual),candidate_source='manual_synthetic')
+        eligible_anchor_ids=tuple(anchors),eligible_verification_ids=verified_source_ids(actual),candidate_source=policy.candidate_source)
 
 
 def verified_source_ids(context):
@@ -163,6 +174,9 @@ def _validate_input(value,context,manifest,anchors,policy):
 
 def proposal_limitations(proposal):
     if proposal.execution_receipt.source == 'manual_synthetic': return LIMITATIONS
+    if proposal.execution_receipt.source == 'manual_local':
+        return ('本机材料；人工辅助工作稿，不构成正式法律意见或签发。',
+            '候选来源：本机人工（manual_local）；真实模型推理未运行，真实模型调用0。', *LIMITATIONS[2:])
     return PLUGIN_LIMITATIONS
 
 
@@ -176,7 +190,7 @@ def proposal_findings(proposal,records=None):
         'pending_authority':'法源依据待核'}
     findings=[]
     for identifier,item in zip(proposal.finding_ids,proposal.input.opinions):
-        origin = '离线人工/合成' if proposal.execution_receipt.source == 'manual_synthetic' else '本机插件提交，模型来源未核验'
+        origin = {'manual_synthetic':'离线人工/合成','manual_local':'本机人工','local_plugin_unverified':'本机插件提交，模型来源未核验'}[proposal.execution_receipt.source]
         effect=item.business_effect+'\n候选来源：'+origin+'；依据类型：'+labels[item.basis_kind]
         effect+='\n待核引用：'+('；'.join(item.authority_refs) if item.authority_refs else '未提供，未形成已核法律依据')
         effect+='\n未知项：'+('；'.join(item.unknowns) if item.unknowns else '本候选未另列；不能据此认定完整或无风险')
@@ -216,8 +230,9 @@ def submit_proposal(matter_id, value, actor, db, *, bridge_grant=None):
     manifest,anchors,parses,_,actual=state
     value=_validate_input(value,actual,manifest,anchors,policy)
     started=datetime.now(timezone.utc);run_id=uuid4()
-    receipt = ManualCandidateReceipt(source='manual_synthetic',submitted_by=actor.user_id,submitted_at=started)
+    receipt = ManualCandidateReceipt(source=policy.candidate_source,submitted_by=actor.user_id,submitted_at=started)
     if bridge_grant is not None:
+        if policy.candidate_source != 'manual_synthetic':raise ServiceError('DATA_POLICY_UNAPPROVED',409)
         if (bridge_grant.read_only or bridge_grant.matter_id != matter_id
                 or bridge_grant.context_sha256 != value.context_sha256 or bridge_grant.expires_at <= started):
             raise ServiceError('AUTHENTICATION_REQUIRED', 403)
@@ -239,7 +254,7 @@ def submit_proposal(matter_id, value, actor, db, *, bridge_grant=None):
         model_usage=(),started_at=started,finished_at=datetime.now(timezone.utc),error_code=None)
     with db.begin_nested():
         end=current_manifest(ctx,actor,db,config)
-        if end[0]!=manifest or context_digest(end[4],end[0],require_policy(db))!=value.context_sha256:
+        if end[0]!=manifest or context_digest(end[4],end[0],require_policy(db,matter_id))!=value.context_sha256:
             raise ServiceError('VERSION_CONFLICT',409)
         _save(run,actual,config,value.examined_anchor_ids,[],actor,db)
         _save_proposal(proposal,actor,db)
@@ -272,7 +287,7 @@ def validate_saved_run(run,row,actor,db,*,state=None):
     from ..domain import ReviewContext
     row=row or db.get(ReviewRunRow,str(run.id))
     if row is None or run!=ReviewRun.model_validate_json(row.payload):raise ServiceError('VERSION_CONFLICT',409)
-    policy=require_policy(db);ctx=ReviewContext.model_validate_json(row.context_json)
+    policy=require_policy(db,run.matter_id);ctx=ReviewContext.model_validate_json(row.context_json)
     config=json.loads(row.config_json)
     state=state or current_manifest(ctx,actor,db,config,allow_finished=True)
     manifest,anchors,parses,_,actual=state

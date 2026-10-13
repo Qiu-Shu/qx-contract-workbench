@@ -111,6 +111,8 @@ def authorize_query(actor, matter_id, db, *, write=True):
     require_storage(db)
     try:
         registry.authorize_case(actor, matter_id, db)
+        from ..documents.local_materials import is_local
+        if is_local(matter_id,db):raise ServiceError('DATA_POLICY_UNAPPROVED',409)
         principal = _principal(db.get(SessionRow, str(actor.session_id), populate_existing=True), db, user_id=actor.user_id)
         if write and not principal.roles & {Role.HANDLING_LAWYER, Role.REVIEWING_LAWYER}:
             raise ServiceError('CROSS_MATTER_DENIED', 403)

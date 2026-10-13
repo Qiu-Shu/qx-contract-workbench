@@ -25,6 +25,7 @@ from ..facts.confirm import confirm_facts
 from ..facts.storage import trusted_parse
 from ..facts.party import resolve_party
 from ..documents.ingest import ingest
+from ..documents import local_materials
 from ..review.synthetic import EXPECTED_HASHES
 from ..review.storage import read_run
 from ..queries import planner, ledger
@@ -106,21 +107,24 @@ async def body_input(request,model):
         raise ServiceError('STATE_CONFLICT',422) from None
 
 
-def project_bundle(bundle,*,purpose='mock_demo'):
+def project_bundle(bundle,*,purpose='mock_demo',local_material=False):
     return {**bundle.model_dump(mode='json',exclude={'artifacts'}),'draft':True,
         'artifacts':[a.model_dump(mode='json',exclude={'storage_ref'}) for a in bundle.artifacts],
-        'limitations':['独立虚构辅助工作稿，候选来源以稿内记录为准；工作台远程模型关闭，不能正式签发' if purpose=='assisted_draft' else '虚构/mock草案，不能正式签发',
+        'limitations':['本机人工工作稿，真实模型未运行；不能正式签发' if local_material else '独立虚构辅助工作稿，候选来源以稿内记录为准；工作台远程模型关闭，不能正式签发' if purpose=='assisted_draft' else '虚构/mock草案，不能正式签发',
             '对外原件包修改需人工；内部有效全文需律师逐维复审，自动线索不证明法律或数值正确']}
 
 
 def create_app(settings: Settings, *, database: Database, synthetic_upload_hashes=None, synthetic_loopback_endpoints=(),
-               synthetic_signing_user_ids=(), purpose='mock_demo', assisted_policy=None):
+               synthetic_signing_user_ids=(), purpose='mock_demo', assisted_policy=None, local_materials_enabled=False):
     if not isinstance(database,Database):raise TypeError('explicit Database required')
     settings=Settings.model_validate(settings.model_dump(mode='python'))
     if settings.model_dump()!=database.settings.model_dump():raise ValueError('configured Settings mismatch')
     s.require_storage(database)
     from ..review import proposals
     policy=proposals.configure(database,purpose,assisted_policy)
+    if type(local_materials_enabled) is not bool or local_materials_enabled and purpose != 'assisted_draft':
+        raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+    database._local_materials_enabled=local_materials_enabled
     if policy is not None and synthetic_upload_hashes is not None:
         raise ServiceError('DATA_POLICY_UNAPPROVED',409)
     allowed=frozenset(policy.document_hashes) if policy is not None else (frozenset(synthetic_upload_hashes) if synthetic_upload_hashes is not None else frozenset(EXPECTED_HASHES.values()))
@@ -190,7 +194,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
                     elif action=='preview':
                         services.current_run(actual_matter,value.run_id,value.run_sha256,actor,db)
                         bundle=approvals.read_bundle(UUID(response['id']),actor,db=db)
-                        if project_bundle(bundle,purpose=purpose)!=response:raise ServiceError('APPROVAL_STALE',409)
+                        if project_bundle(bundle,purpose=purpose,local_material=local_materials.is_local(matter_id,db))!=response:raise ServiceError('APPROVAL_STALE',409)
                     elif action.startswith('decision:'):
                         services.current_run(actual_matter,value.run_id,value.run_sha256,actor,db)
                     elif action=='assisted_proposal':
@@ -282,7 +286,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
             actor=actor_in(request,db,matter_id)
             return {'matter':read_matter(matter_id,actor,db).model_dump(mode='json'),
                     'documents':[services.public_version(v) for v in services.current_versions(matter_id,actor,db)],
-                    'synthetic':True,'qcc_enabled':False,'purpose':purpose,
+                    'synthetic':not local_materials.is_local(matter_id,db),'qcc_enabled':False,'purpose':purpose,
                     'model_provider':'assisted_manual' if purpose=='assisted_draft' else 'mock',
                     'model_inference':'NOT_RUN' if purpose=='assisted_draft' else 'MOCK_ONLY'}
 
@@ -302,13 +306,19 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
         authenticate_first(request,matter_id,'upload')
         await bounded_body(request,settings.upload_max_file_mib*1024*1024+64*1024)
         try:
-            form=await request.form(max_files=1,max_fields=4,max_part_size=64*1024)
+            form=await request.form(max_files=1,max_fields=6,max_part_size=64*1024)
             file=form.get('file')
             if file is None or not hasattr(file,'read'):raise ServiceError('FILE_UNSUPPORTED',400)
             data=await file.read(settings.upload_max_file_mib*1024*1024+1)
             if len(data)>settings.upload_max_file_mib*1024*1024:raise ServiceError('FILE_LIMIT',413)
             digest=hashlib.sha256(data).hexdigest()
-            if digest not in allowed:raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+            with database.session() as db:
+                local_case=local_materials.is_local(matter_id,db)
+                if local_case:
+                    actor=actor_in(request,db,matter_id,'upload',write=True)
+                    local_materials.confirm_upload(matter_id,file.content_type,form.get('local_processing_confirmed'),
+                        form.get('local_policy_id'),actor,db)
+                elif digest not in allowed:raise ServiceError('DATA_POLICY_UNAPPROVED',409)
             meta=d.UploadMeta(matter_id=matter_id,original_name=file.filename,mime=file.content_type,
                 baseline_view=form.get('baseline_view') or None,supersedes_id=form.get('supersedes_id') or None)
         except (ValueError,ValidationError):raise ServiceError('FILE_UNSUPPORTED',400) from None
@@ -316,15 +326,18 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
             if 'form' in locals():await form.close()
         key=request.headers.get('Idempotency-Key')
         parameters={**meta.model_dump(mode='json'),'content_sha256':digest}
+        if local_case:parameters['local_policy_id']='local-workpaper-v1'
         with database.session() as db:
             actor=actor_in(request,db,matter_id,'upload',write=True)
             previous=s.find_idempotent(matter_id,actor,'parse',key,s.sha(parameters),db)
             if previous:
                 saved=json.loads(previous.payload);version=read_version(matter_id,UUID(saved['version_id']),actor,db)
                 if version.id not in {v.id for v in services.current_versions(matter_id,actor,db)}:raise ServiceError('APPROVAL_STALE',409)
+                if local_case:local_materials.require_versions((version,),actor,db)
                 return {'job_id':previous.id,'version_id':str(version.id),'sha256':version.sha256}
             with db.begin_nested():
                 version=ingest(BytesIO(data),meta,actor,db=db)
+                if local_case:local_materials.record_admission(version,actor,db)
                 row=s.enqueue(matter_id,actor,'parse',key,{'version_id':str(version.id)},db,digest=s.sha(parameters))
                 result={'job_id':row.id,'version_id':str(version.id),'sha256':version.sha256}
             return result
@@ -466,7 +479,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
         def operation(actor,db):
             run=services.current_run(matter_id,value.run_id,value.run_sha256,actor,db)
             patches=services.approved_patches(matter_id,value.patch_ids,actor,db)
-            return project_bundle(approvals.prepare_exports(run,value.audience,patches,actor,db=db),purpose=purpose)
+            return project_bundle(approvals.prepare_exports(run,value.audience,patches,actor,db=db),purpose=purpose,local_material=local_materials.is_local(matter_id,db))
         return write(request,matter_id,'preview',value,operation)
 
     @app.get('/api/matters/{matter_id}/patches')
@@ -590,18 +603,20 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
         with database.session() as db:
             actor=actor_in(request,db,matter_id)
             matter=read_matter(matter_id,actor,db) if matter_id else None
+            local_case=local_materials.is_local(matter_id,db) if matter_id else False
         return HTMLResponse(environment.get_template('workbench.html').render(section=section,matter=matter,
-            matter_id=str(matter_id) if matter_id else '',synthetic=True,purpose=purpose,
-            coverage_dimensions=COVERAGE_LABELS, case_bridge_enabled=hasattr(app.state, 'case_bridge')))
+            matter_id=str(matter_id) if matter_id else '',synthetic=not local_case,purpose=purpose,
+            local_materials_enabled=local_materials_enabled,
+            coverage_dimensions=COVERAGE_LABELS, case_bridge_enabled=hasattr(app.state, 'case_bridge') and not local_case))
 
     @app.get('/',response_class=HTMLResponse)
     def index(request:Request):
         if not request.cookies.get('qx_session'):
-            return HTMLResponse(environment.get_template('login.html').render())
+            return HTMLResponse(environment.get_template('login.html').render(local_materials_enabled=local_materials_enabled))
         return page(request)
 
     @app.get('/login',response_class=HTMLResponse)
-    def login_page(request:Request):return HTMLResponse(environment.get_template('login.html').render())
+    def login_page(request:Request):return HTMLResponse(environment.get_template('login.html').render(local_materials_enabled=local_materials_enabled))
 
     @app.get('/matters/{matter_id}',response_class=HTMLResponse)
     def intake_page(matter_id:UUID,request:Request):return page(request,matter_id,'intake')
