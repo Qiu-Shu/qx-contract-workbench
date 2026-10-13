@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="8.953" timestamp="2026-10-13T15:15:02.297359+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_local_materials" name="test_local_manual_opinion_to_word_has_honest_source_and_old_draft_invalidates" time="7.124"><failure message="AssertionError: assert 'DRAFT MANUAL-SYNTHETIC' == 'DRAFT MANUAL-LOCAL'&#10;  &#10;  - DRAFT MANUAL-LOCAL&#10;  + DRAFT MANUAL-SYNTHETIC">tests\integration\test_local_materials.py:103: in test_local_manual_opinion_to_word_has_honest_source_and_old_draft_invalidates
+    assert document.core_properties.keywords == 'DRAFT MANUAL-LOCAL'
+E   AssertionError: assert 'DRAFT MANUAL-SYNTHETIC' == 'DRAFT MANUAL-LOCAL'
+E     
+E     - DRAFT MANUAL-LOCAL
+E     + DRAFT MANUAL-SYNTHETIC</failure></testcase><testcase classname="tests.integration.test_local_materials" name="test_explicit_local_case_import_preserves_original_and_parses_without_mock" time="0.902" /></testsuite></testsuites>

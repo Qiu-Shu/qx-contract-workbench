@@ -336,7 +336,10 @@ def run_review(context,model,*,actor,db,usage_limit=None,require_legal_rules=Fal
 
 def extract_document_candidates(parsed,model,*,matter_id,actor,db):
     """Explicit intake before confirmation; real raw parsing and T04 candidates."""
-    authorize(actor,matter_id,'candidate_facts',db);require_provider(model);require_storage(db)
+    authorize(actor,matter_id,'candidate_facts',db)
+    from ..documents.local_materials import is_local
+    if is_local(matter_id,db):raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+    require_provider(model);require_storage(db)
     stored=get_parse_result(matter_id,parsed.version_id,actor,db)
     if parsed!=stored: raise ServiceError('VERSION_CONFLICT',409)
     trusted_parse(matter_id,parsed.version_id,actor,db,stored)

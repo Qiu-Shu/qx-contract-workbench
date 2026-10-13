@@ -201,13 +201,13 @@ def proposal_findings(proposal,records=None):
                         else 'DOCX段落 '+str(source.input.source_anchor_id))
             effect+='\n独立来源：'+label+'；'+location+'；记录 '+str(source.id)+'；原件 SHA256 '+source.input.document_sha256
             effect+='\n核对内容（独立人工记录，非自动提取原文）：'+source.input.observed_text
-            effect+= ('\n远程法律语言模型未运行；离线OCR如有，仅作为未核候选。' if proposal.execution_receipt.source == 'manual_synthetic'
+            effect+= ('\n远程法律语言模型未运行；离线OCR如有，仅作为未核候选。' if proposal.execution_receipt.source in {'manual_synthetic','manual_local'}
                 else '\n工作台未调用远程法律语言模型；离线OCR如有，仅作为未核候选。')
         findings.append(Finding(id=identifier,run_id=proposal.run_id,coverage_ids=item.coverage_ids,
             issue_type=item.issue_type,severity=item.severity,evidence_state=item.evidence_state,
             anchor_ids=item.anchor_ids,verification_ids=item.verification_ids,cross_anchor_ids=(),rule_ids=(),authority_ids=(),
             analysis=item.analysis,business_effect=effect,recommendation=item.recommendation,
-            replacement_text=None,fallback=('待律师核对人工候选、来源状态及未完成维度。' if proposal.execution_receipt.source == 'manual_synthetic'
+            replacement_text=None,fallback=('待律师核对人工候选、来源状态及未完成维度。' if proposal.execution_receipt.source in {'manual_synthetic','manual_local'}
                 else '待律师核对插件候选、来源状态及未完成维度。'),human_decision=None))
     return tuple(findings)
 

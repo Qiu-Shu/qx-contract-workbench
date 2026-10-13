@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="20.282" timestamp="2026-10-13T15:41:57.628244+08:00" hostname="PC-20260920HQJZ"><testcase classname=".audit-local.local-materials-20261013.standards-review.test_worker_lock" name="test_worker_survives_real_database_lock_then_processes_new_upload" time="19.286"><failure message="AssertionError: {'errors': [{'error': '(sqlite3.OperationalError) database is locked&#10;  [SQL: BEGIN IMMEDIATE]&#10;  (Background on this erro...lError'}], 'held_real_sqlite_lock_seconds': 16.453, 'job_after_unlock': 'queued', 'upload_after_unlock_http': 202, ...}&#10;assert False&#10; +  where False = is_alive()&#10; +    where is_alive = &lt;Thread(synthetic-single-worker, stopped daemon 28076)&gt;.is_alive&#10; +      where &lt;Thread(synthetic-single-worker, stopped daemon 28076)&gt; = &lt;starlette.datastructures.State object at 0x0000028C34BECC80&gt;.worker_thread&#10; +        where &lt;starlette.datastructures.State object at 0x0000028C34BECC80&gt; = &lt;fastapi.applications.FastAPI object at 0x0000028C34BEC650&gt;.state">.audit-local\local-materials-20261013\standards-review\test_worker_lock.py:57: in test_worker_survives_real_database_lock_then_processes_new_upload
+    assert app.state.worker_thread.is_alive(), result
+E   AssertionError: {'errors': [{'error': '(sqlite3.OperationalError) database is locked
+E     [SQL: BEGIN IMMEDIATE]
+E     (Background on this erro...lError'}], 'held_real_sqlite_lock_seconds': 16.453, 'job_after_unlock': 'queued', 'upload_after_unlock_http': 202, ...}
+E   assert False
+E    +  where False = is_alive()
+E    +    where is_alive = &lt;Thread(synthetic-single-worker, stopped daemon 28076)&gt;.is_alive
+E    +      where &lt;Thread(synthetic-single-worker, stopped daemon 28076)&gt; = &lt;starlette.datastructures.State object at 0x0000028C34BECC80&gt;.worker_thread
+E    +        where &lt;starlette.datastructures.State object at 0x0000028C34BECC80&gt; = &lt;fastapi.applications.FastAPI object at 0x0000028C34BEC650&gt;.state</failure></testcase></testsuite></testsuites>

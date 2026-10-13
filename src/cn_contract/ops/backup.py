@@ -242,6 +242,8 @@ def backup_and_verify(config, *, database, actor, key_resolver, restore_parent):
         snapshot = Path(temp)/'database.db'
         with database.session() as db:
             _admin(actor, db)
+            if any(is_local(identifier,db) for identifier in db.scalars(select(MatterRow.id))):
+                raise ServiceError('DATA_POLICY_UNAPPROVED',409)
             files, refs = _collect_files(db)
             with closing(sqlite3.connect(source_path)) as source, closing(sqlite3.connect(snapshot)) as target:
                 source.backup(target)

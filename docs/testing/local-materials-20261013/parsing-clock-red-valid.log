@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\.audit-local\local-materials-20261013\parsing_clock_probe.py", line 20, in <module>
+    subject.test_parse_appends_without_overwriting_original(Path(folder))
+  File "D:\Documents\ChatGPT\律所项目\tests\integration\test_parsing.py", line 39, in test_parse_appends_without_overwriting_original
+    assert p.read_original(matter.id, version.id, actor, db) == docx()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

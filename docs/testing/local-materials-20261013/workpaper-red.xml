@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="2.855" timestamp="2026-10-13T15:13:30.211794+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_local_materials" name="test_local_manual_opinion_to_word_has_honest_source_and_old_draft_invalidates" time="1.108"><failure message="AssertionError: {&quot;code&quot;:&quot;DATA_POLICY_UNAPPROVED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;a70d980a-499e-41a7-bcbf-a234d48958f1&quot;,&quot;retryable&quot;:false}&#10;assert 409 == 201&#10; +  where 409 = &lt;Response [409 Conflict]&gt;.status_code">local = (&lt;module 'cn_contract.web.local_server' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\local_server.py'&gt;, ...Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-667/test_local_manual_opinion_to_w0/.local/workbench'))
+
+    def test_local_manual_opinion_to_word_has_honest_source_and_old_draft_invalidates(local):
+        module, root = local
+        module.initialize_workspace(root, 'local-lawyer', PASSWORD)
+        with TestClient(module.build_local_app(root)) as client:
+            headers = login(client)
+            matter = new_local_case(client, headers)
+            base = f'/api/matters/{matter}'
+            sent = upload_and_parse(client, headers, matter, independent_docx())
+&gt;           anchor, facts, context = ready_local(client, headers, matter, sent)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_local_materials.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+client = &lt;starlette.testclient.TestClient object at 0x00000180DA58F4D0&gt;
+headers = {'X-CSRF-Token': '-9-ChxbFO8iO3xba5yc-MXIGjiTHkFuAPU2wO2H5aso'}
+matter = 'fb10266b-7952-4aed-a989-78b7fd7ec3fa'
+sent = {'job_id': 'b5b3f4ac-2506-4fd9-9e1b-9d0064155b8e', 'sha256': '8bfd596a673a05f7c508f5f2e661429b2557bb1ec089f45be0bfe419bad735d0', 'version_id': '8997c353-2ddf-4c77-b41b-4f2504984e91'}
+
+    def ready_local(client, headers, matter, sent):
+        base = f'/api/matters/{matter}'
+        parsed = client.get(base + f'/documents/{sent["version_id"]}/anchors').json()
+        anchor = next(a for a in parsed['anchors'] if '12345' in a['quote'])
+        facts = client.get(base + '/facts').json()
+        response = client.post(base + '/facts/candidates', headers=headers, json={
+            'document_version_id': sent['version_id'], 'document_sha256': sent['sha256'],
+            'fact_version': facts['version'], 'candidates': [{'field': 'total_price',
+                'typed_value': {'kind': 'decimal', 'value': '12345'}, 'unit': '元', 'anchor_ids': [anchor['id']]}]})
+&gt;       assert response.status_code == 201, response.text
+E       AssertionError: {"code":"DATA_POLICY_UNAPPROVED","message":"request blocked","correlation_id":"a70d980a-499e-41a7-bcbf-a234d48958f1","retryable":false}
+E       assert 409 == 201
+E        +  where 409 = &lt;Response [409 Conflict]&gt;.status_code
+
+tests\integration\test_local_materials.py:56: AssertionError</failure></testcase><testcase classname="tests.integration.test_local_materials" name="test_explicit_local_case_import_preserves_original_and_parses_without_mock" time="0.847" /></testsuite></testsuites>

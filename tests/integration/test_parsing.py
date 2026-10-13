@@ -31,12 +31,13 @@ def test_pdf_table_native_cells_keep_exact_coordinates(tmp_path):
 
 
 def test_parse_appends_without_overwriting_original(tmp_path):
-    documents, p, database, actor, matter, version, result = parsed(tmp_path)
+    original = docx()
+    documents, p, database, actor, matter, version, result = parsed(tmp_path, original)
     with database.session() as db:
         again = documents.parse_document(version, database.settings, actor=actor, db=db)
         assert again == result
         assert db.query(p.ParseRow).count() == 2
-        assert p.read_original(matter.id, version.id, actor, db) == docx()
+        assert p.read_original(matter.id, version.id, actor, db) == original
         assert p.read_version(matter.id, version.id, actor, db).parse_status == 'pending'
 
 

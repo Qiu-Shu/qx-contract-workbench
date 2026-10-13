@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="15.909" timestamp="2026-10-13T15:23:39.347089+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_local_materials" name="test_local_manual_opinion_to_word_has_honest_source_and_old_draft_invalidates" time="14.911"><failure message="AssertionError: assert '模拟' not in 'DRAFT MOCK 模拟材料 不构成正式法律意见'&#10;  &#10;  '模拟' is contained here:&#10;    DRAFT MOCK 模拟材料 不构成正式法律意见&#10;  ?            ++">tests\integration\test_local_materials.py:124: in test_local_manual_opinion_to_word_has_honest_source_and_old_draft_invalidates
+    assert '模拟' not in Document(BytesIO(redline.content)).sections[0].header.paragraphs[0].text
+E   AssertionError: assert '模拟' not in 'DRAFT MOCK 模拟材料 不构成正式法律意见'
+E     
+E     '模拟' is contained here:
+E       DRAFT MOCK 模拟材料 不构成正式法律意见
+E     ?            ++</failure></testcase></testsuite></testsuites>

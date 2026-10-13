@@ -1,8 +1,8 @@
 # 群兴合同审查工作台
 
-**接手入口（2026-10-13）：** [项目说明](docs/PROJECT_OVERVIEW.md) · [交接文档](docs/HANDOVER.md) · [本次上传核验](docs/testing/GITHUB-HANDOVER-20261013.md)。[GitHub 私有仓库](https://github.com/Qiu-Shu/qx-contract-workbench)沿 `codex/contract-review-v2` 保留完整开发历史。当前为受限开发版本，真实合同产品准入尚未开放；后续差距见[本机真实工作稿方案](docs/plans/2026-10-12-real-use-gap.md)。以下保留各阶段历史说明，最新进度以 TASK_STATUS 顶部及交接文档为准。
+**接手入口（2026-10-13）：** [项目说明](docs/PROJECT_OVERVIEW.md) · [交接文档](docs/HANDOVER.md) · [本次上传核验](docs/testing/GITHUB-HANDOVER-20261013.md)。[GitHub 私有仓库](https://github.com/Qiu-Shu/qx-contract-workbench)沿 `codex/contract-review-v2` 保留完整开发历史。当前支持逐份确认后的本机 DOCX 人工工作稿；真实模型、QCC、插件外发与正式签发继续关闭。见[本机操作说明](docs/LOCAL_WORKBENCH.md)及[本轮验证](docs/testing/LOCAL-MATERIALS-20261013.md)。以下保留各阶段历史说明，最新进度以 TASK_STATUS 顶部及交接文档为准。
 
-按用户已确认的 CR-01 律师辅助工作稿路线，已有新虚构合同、原文核对、离线OCR、候选意见、律师处置、工作稿及具体版本确认。2026-10-09新增个人本机账户与持久案件库入口，并修复插件对宿主聊天请求的兼容；新加载独审会话原生两工具调用成功，父旧活动会话仍未恢复。网页ChatGPT案件/身份/文件桥尚未完成。**只接受显式登记的独立虚构材料；真实模型/QCC、真实合同处理和生产使用尚未获准。**最新实际结果见 [任务状态](docs/TASK_STATUS.md)，历史全套结果不作为本轮成绩。
+按用户已确认的 CR-01 律师辅助工作稿路线，已有新虚构合同、原文核对、离线OCR、候选意见、律师处置、工作稿及具体版本确认。2026-10-09新增个人本机账户与持久案件库入口，并修复插件对宿主聊天请求的兼容；新加载独审会话原生两工具调用成功，父旧活动会话仍未恢复。网页ChatGPT案件/身份/文件桥尚未完成。该段为2026-10-09历史范围；2026-10-13已新增本机 DOCX 人工工作稿模式，其他外部处理及生产边界仍保留。最新实际结果见 [任务状态](docs/TASK_STATUS.md)，历史全套结果不作为本轮成绩。
 
 持续使用入口：双击根目录 `启动工作台.cmd`，首次在本机设置用户名和密码，以后继续同一案件库；地址为 http://127.0.0.1:8767/login 。见 [启动与账户说明](docs/LOCAL_WORKBENCH.md) 和 [本轮实际验证](docs/testing/LOCAL-workbench-20261009.md)。原8766试用服务与试用库保留，不自动迁移或覆盖。
 

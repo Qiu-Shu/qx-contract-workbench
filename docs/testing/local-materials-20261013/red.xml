@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.409" timestamp="2026-10-13T15:09:15.509098+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_local_materials" name="test_explicit_local_case_import_preserves_original_and_parses_without_mock" time="0.460"><failure message="AssertionError: {&quot;code&quot;:&quot;STATE_CONFLICT&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;ce1d7978-010e-4258-8507-ba32f60c95ac&quot;,&quot;retryable&quot;:false}&#10;assert 422 == 201&#10; +  where 422 = &lt;Response [422 Unprocessable Content]&gt;.status_code">local = (&lt;module 'cn_contract.web.local_server' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\local_server.py'&gt;, ...Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-662/test_explicit_local_case_impor0/.local/workbench'))
+
+    def test_explicit_local_case_import_preserves_original_and_parses_without_mock(local):
+        module, root = local
+        module.initialize_workspace(root, 'local-lawyer', PASSWORD)
+        raw = independent_docx()
+        with TestClient(module.build_local_app(root)) as client:
+            headers = login(client)
+&gt;           matter = new_local_case(client, headers)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_local_materials.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+client = &lt;starlette.testclient.TestClient object at 0x000002B4A7942BA0&gt;
+headers = {'X-CSRF-Token': 'Qfs3Wbh8QLZYDI-p9JEZDtMK0Ucj1xnM7JG51Rf0mSw'}
+
+    def new_local_case(client, headers):
+        response = client.post('/api/matters', headers=headers, json={
+            'title': '独立虚构本机材料验收', 'contract_type': 'sales',
+            'review_mode': 'pre_sign', 'position': 'buyer',
+            'objectives': ['核对本份虚构材料'], 'material_mode': 'local'})
+&gt;       assert response.status_code == 201, response.text
+E       AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"ce1d7978-010e-4258-8507-ba32f60c95ac","retryable":false}
+E       assert 422 == 201
+E        +  where 422 = &lt;Response [422 Unprocessable Content]&gt;.status_code
+
+tests\integration\test_local_materials.py:16: AssertionError</failure></testcase></testsuite></testsuites>

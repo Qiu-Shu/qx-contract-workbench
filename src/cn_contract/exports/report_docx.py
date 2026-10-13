@@ -61,9 +61,9 @@ def build(projection):
             doc.add_heading(f'复核事项 {index}',2)
             for key in ('decision_status','analysis','effect','recommendation','basis_review','replacement','fallback','original','history'):
                 if key in item:doc.add_paragraph(item[key])
-    doc.add_heading('已批准的模拟修改文字',1)
+    doc.add_heading(projection.get('patch_heading','已批准的模拟修改文字'),1)
     _table(doc,('原文','建议新文','修改说明'),[(p['old'],p['new'],p['reason']) for p in projection['patches']])
-    if not projection['patches']:doc.add_paragraph('当前没有经模拟复核身份批准的修改文字。')
+    if not projection['patches']:doc.add_paragraph(projection.get('empty_patches','当前没有经模拟复核身份批准的修改文字。'))
     doc.add_heading('需要人工处理的修改',1)
     _table(doc,('位置与状态','已批准文字及人工处理说明'),[(m['location']+'\n需人工处理',
         '原文：'+m['old']+'\n建议新文：'+m['new']+'\n批准修改说明：'+m['explanation']+'\n人工处理原因：'+m['reason']) for m in projection['manual']])

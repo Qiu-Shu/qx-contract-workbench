@@ -40,6 +40,8 @@ def project(run,audience,patches,manual,*,scope=None,internal=None,snapshot=None
         common['keywords']='DRAFT MANUAL-LOCAL'
         common['subject']='本机合同人工辅助工作稿'
         common['author']='本机合同工作台'
+        common['patch_heading']='已批准的人工修改文字'
+        common['empty_patches']='当前没有经本案律师批准的修改文字。'
     if audience!='counterparty':
         common['limitations'].extend(run.limitations)
         common['coverage']=[{'dimension':c.coverage_id.value+' '+DIMENSIONS[int(c.coverage_id.value[1:])-1],'status':STATES[c.status.value]} for c in run.coverage]
@@ -69,7 +71,7 @@ def project(run,audience,patches,manual,*,scope=None,internal=None,snapshot=None
                     ('；拟替换文字：'+d.edited_replacement_text if d.edited_replacement_text else '') for d in history)
             common['observations'].append(item)
     else:
-        common['opening']='本草案仅列经模拟复核身份明确批准对外范围的模拟修改及说明。请逐项核对文字；未形成正式合同变更或法律意见。'
+        common['opening']=('本草案仅列经本案律师明确批准对外范围的人工修改及说明。真实模型未运行；请逐项核对文字，未形成正式合同变更或法律意见。' if candidate_source=='manual_local' else '本草案仅列经模拟复核身份明确批准对外范围的模拟修改及说明。请逐项核对文字；未形成正式合同变更或法律意见。')
     return common
 
 

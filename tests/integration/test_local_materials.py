@@ -108,6 +108,15 @@ def test_local_manual_opinion_to_word_has_honest_source_and_old_draft_invalidate
             [cell.text for table in document.tables for row in table.rows for cell in row.cells])
         assert opinion['analysis'] in text and opinion['recommendation'] in text
         assert '离线人工/合成' not in text
+        assert '模拟' not in text
+        for audience in ('internal', 'counterparty'):
+            exported = client.post(base + '/exports/preview', headers=headers, json={
+                'run_id': run['id'], 'run_sha256': run['run_sha256'], 'audience': audience, 'patch_ids': []})
+            assert exported.status_code == 201, exported.text
+            payload = client.get(base + '/exports/' + exported.json()['artifacts'][0]['id'] + '/download')
+            assert payload.status_code == 200
+            report = Document(BytesIO(payload.content))
+            assert all('模拟' not in p.text and '插件候选' not in p.text for p in report.paragraphs)
         approved = client.post(base + '/patches/approve', headers=headers, json={
             'run_id': run['id'], 'run_sha256': run['run_sha256'], 'finding_id': finding['id'],
             'anchor_id': anchor['id'], 'new_text': '虚构甲方向虚构乙方采购测试设备，总价人民币12345元，价款包含安装。',
@@ -196,6 +205,8 @@ def test_local_forms_require_file_consent_and_hide_plugin_action(local):
         assert intake.xpath('//input[@name="local_policy_id"][@value="local-workpaper-v1"]')
         review = html.fromstring(client.get('/matters/' + matter + '/review').text)
         assert not review.xpath('//form[@id="case-bridge-form"]')
+        exports = html.fromstring(client.get('/matters/' + matter + '/exports').text)
+        assert exports.xpath('//form[@id="patch-form"]//input[@name="reason"]/@value') == ['']
 
 
 def test_demo_server_cannot_enable_local_case_from_http(assisted_api):

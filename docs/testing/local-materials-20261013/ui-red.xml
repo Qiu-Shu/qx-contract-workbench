@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.440" timestamp="2026-10-13T15:19:04.387293+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_local_materials" name="test_local_forms_require_file_consent_and_hide_plugin_action" time="0.471"><failure message="assert []&#10; +  where [] = xpath('//select[@name=&quot;material_mode&quot;]/option[@value=&quot;local&quot;]')&#10; +    where xpath = &lt;Element html at 0x25a8c1b6490&gt;.xpath">tests\integration\test_local_materials.py:175: in test_local_forms_require_file_consent_and_hide_plugin_action
+    assert cases.xpath('//select[@name="material_mode"]/option[@value="local"]')
+E   assert []
+E    +  where [] = xpath('//select[@name="material_mode"]/option[@value="local"]')
+E    +    where xpath = &lt;Element html at 0x25a8c1b6490&gt;.xpath</failure></testcase></testsuite></testsuites>

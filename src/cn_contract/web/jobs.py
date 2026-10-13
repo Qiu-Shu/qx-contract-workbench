@@ -5,6 +5,8 @@ Query network work always uses T08's Database Factory with no request Session.
 """
 import asyncio
 import json
+import sqlite3
+from sqlalchemy.exc import OperationalError
 from uuid import UUID
 from sqlalchemy import select
 
@@ -88,7 +90,15 @@ def recover_jobs(database):
 
 
 def run_next_job(database):
-    identifier=claim_next_job(database)
+    try:
+        identifier=claim_next_job(database)
+    except OperationalError as error:
+        # Only retry an unclaimed transaction after SQLite has rolled it back.
+        # Never replay work that may already have performed an external action.
+        code=getattr(error.orig,'sqlite_errorcode',None)
+        if isinstance(error.orig,sqlite3.OperationalError) and isinstance(code,int) and code & 255 == sqlite3.SQLITE_BUSY:
+            return None
+        raise
     if identifier is None:return None
     try:
         with database.session() as db:

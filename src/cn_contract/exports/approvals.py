@@ -131,7 +131,7 @@ def _scope(run,actor,db,*,audience='internal'):
           '解析质量限制：'+(labels(parsed.quality_issues) or '未报告结构质量问题')])
     internal=['本案确认立场：'+(matter.position.value if matter.position else '待确认'),
         *['本案内部目标与底线：'+item for item in matter.objectives],
-        '复核任务：核对保证附件、补充材料及全部未完成维度；模拟建议尚未成为合同变更。']
+        ('复核任务：核对保证附件、补充材料及全部未完成维度；人工建议尚未成为合同变更。' if local_materials.is_local(run.matter_id,db) else '复核任务：核对保证附件、补充材料及全部未完成维度；模拟建议尚未成为合同变更。')]
     from ..rules.loader import read_policy,policy_is_approved
     if matter.active_policy_version:
         policy=read_policy(matter.active_policy_version,actor,matter_id=matter.id,db=db)

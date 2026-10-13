@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="11.690" timestamp="2026-10-13T15:11:20.514230+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_local_materials" name="test_explicit_local_case_import_preserves_original_and_parses_without_mock" time="10.781"><failure message="AssertionError: {'error_code': 'DATA_POLICY_UNAPPROVED', 'id': '179327ab-a4e8-45fe-b96c-d87b2ef19117', 'result_ref': None, 'stage': '需要补充或重新授权', ...}&#10;assert 'blocked' == 'completed'&#10;  &#10;  - completed&#10;  + blocked">local = (&lt;module 'cn_contract.web.local_server' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\local_server.py'&gt;, ...Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-665/test_explicit_local_case_impor0/.local/workbench'))
+
+    def test_explicit_local_case_import_preserves_original_and_parses_without_mock(local):
+        module, root = local
+        module.initialize_workspace(root, 'local-lawyer', PASSWORD)
+        raw = independent_docx()
+        with TestClient(module.build_local_app(root)) as client:
+            headers = login(client)
+            matter = new_local_case(client, headers)
+            sent = client.post(f'/api/matters/{matter}/documents', headers={**headers, 'Idempotency-Key': 'local-upload'},
+                files={'file': ('independent.docx', raw, DOCX_MIME)},
+                data={'baseline_view': 'original', 'local_processing_confirmed': 'yes',
+                      'local_policy_id': 'local-workpaper-v1'})
+            assert sent.status_code == 202, sent.text
+            assert client.get(f'/api/matters/{matter}').json()['synthetic'] is False
+            deadline = time.monotonic() + 10
+            while time.monotonic() &lt; deadline:
+                status = client.get('/api/jobs/' + sent.json()['job_id']).json()
+                if status['state'] in ('completed', 'failed'):
+                    break
+                time.sleep(.02)
+&gt;           assert status['state'] == 'completed', status
+E           AssertionError: {'error_code': 'DATA_POLICY_UNAPPROVED', 'id': '179327ab-a4e8-45fe-b96c-d87b2ef19117', 'result_ref': None, 'stage': '需要补充或重新授权', ...}
+E           assert 'blocked' == 'completed'
+E             
+E             - completed
+E             + blocked
+
+tests\integration\test_local_materials.py:50: AssertionError</failure></testcase></testsuite></testsuites>

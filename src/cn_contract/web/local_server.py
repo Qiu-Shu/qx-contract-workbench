@@ -216,7 +216,7 @@ def _prompt_password():
 
 
 def main(argv=None):
-    parser = _Parser(description='群兴持久工作台：个人本机账户、案件原地保存，当前仅登记虚构材料')
+    parser = _Parser(description='群兴持久工作台：个人本机账户、案件原地保存，本机DOCX须逐份确认')
     commands = parser.add_subparsers(dest='command', required=True)
     for command in ('init', 'add-user', 'serve', 'start'):
         item = commands.add_parser(command)
@@ -240,7 +240,7 @@ def main(argv=None):
             import uvicorn
             app = build_local_app(args.directory, port=args.port)
             print(f'本机工作台：http://127.0.0.1:{args.port}/login', flush=True)
-            print('案件原地保存；仅登记虚构材料；真实模型与企查查关闭。', flush=True)
+            print('案件原地保存；本机DOCX逐份确认后供人工工作稿；真实模型与企查查关闭。', flush=True)
             uvicorn.run(app, host='127.0.0.1', port=args.port, workers=1, access_log=False, log_level='warning')
         else:
             password = _prompt_password()
