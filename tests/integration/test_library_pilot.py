@@ -16,7 +16,7 @@ pytestmark = pytest.mark.skipif(not PILOT_PYTHON, reason='explicit isolated Duck
 
 
 @pytest.mark.parametrize('mismatch', [False, True])
-def test_pilot_readonly_mapping_or_explicit_mismatch(tmp_path, mismatch):
+def test_pilot_readonly_mapping_or_explicit_mismatch(tmp_path, mismatch, monkeypatch):
     assert importlib.util.find_spec('cn_contract.library.pilot'), 'pilot import adapter missing'
     module = importlib.import_module('cn_contract.library.pilot')
     incoming = tmp_path / 'input'
@@ -52,6 +52,16 @@ c.close()
         assert record.body_sha256 == values[-1]
         assert module.import_pilot(root, pilot, incoming, python_executable=Path(PILOT_PYTHON))['mapped'] == 1
         assert len(list(catalog.iter_records(root))) == 1
+        with catalog.connection(root) as db:
+            state = db.execute('SELECT next_ordinal,next_byte,header_json FROM import_states').fetchone()
+        assert state is not None, 'pilot header should be persisted without advancing full-import checkpoint'
+        assert tuple(state[:2]) == (1, len(header))
+        originals = importlib.import_module('cn_contract.library.originals')
+        def unexpected_whole_file_hash(path):
+            raise AssertionError('single-record original lookup reread whole CSV')
+        monkeypatch.setattr(originals, 'file_hash', unexpected_whole_file_hash)
+        with originals.OriginalReader(root) as reader:
+            assert reader.read(record)[0] == '完全虚构None正文'
     else:
         assert len(list(catalog.iter_records(root))) == 0
         assert result['issues'][0]['reason'] == 'PILOT_BYTES_MISMATCH'

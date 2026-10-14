@@ -39,7 +39,7 @@ def main(argv=None):
     search.add_argument('--query', default='')
     search.add_argument('--kind', choices=['all', 'case_csv', 'law_markdown'], default='all')
     search.add_argument('--mode', choices=['phrase', 'all'], default='all')
-    for name in ('case-no', 'court', 'cause', 'province', 'date-from', 'date-to', 'cursor'):
+    for name in ('case-no', 'court', 'cause', 'province', 'document-type', 'date-from', 'date-to', 'cursor'):
         search.add_argument('--' + name)
     search.add_argument('--limit', type=int, default=20)
     show = commands.add_parser('show')

@@ -49,6 +49,8 @@ def _cursor_decode(cursor, generation_id, query_hash):
         raise ValueError('CURSOR_STALE_OR_DIFFERENT_QUERY')
     if type(value[2]) is not int or not 0 <= value[2] <= 10000000:
         raise ValueError('CURSOR_INVALID')
+    if value[2] >= 2000:
+        raise ValueError('CURSOR_TOO_DEEP')
     return value[2]
 
 
@@ -68,7 +70,7 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
     if query.kind != 'all':
         predicates.append('u.kind=?')
         args.append(query.kind)
-    for name in ('case_no', 'court', 'cause', 'province'):
+    for name in ('case_no', 'court', 'cause', 'province', 'document_type'):
         value = getattr(query, name)
         if value is not None:
             predicates.append('u.' + name + '=?')
@@ -84,7 +86,7 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
         sql += ' JOIN search ON search.rowid=u.rowid'
     if predicates:
         sql += ' WHERE ' + ' AND '.join(predicates)
-    sql += ' ORDER BY score,u.unit_id LIMIT -1 OFFSET ?'
+    sql += (' ORDER BY score,u.unit_id' if expression else ' ORDER BY u.unit_id') + ' LIMIT -1 OFFSET ?'
     args.append(offset)
     database = generation_path(root, generation_id) / 'search.sqlite'
     db = sqlite3.connect(database.as_uri() + '?mode=ro', uri=True)
@@ -109,8 +111,8 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
                 text, _, _ = reader.read(record)
                 section = text[row['start']:row['end']]
                 normalized, mapping = normalize(section, with_map=True)
-                title = normalize(row['title'])
-                if any(term not in normalized and term not in title for term in terms):
+                titles = [normalize(value) for value in [row['title'], *json.loads(row['title_aliases'])]]
+                if any(term not in normalized and all(term not in title for title in titles) for term in terms):
                     continue
                 starts = [(normalized.find(term), term) for term in terms if term in normalized]
                 if starts:

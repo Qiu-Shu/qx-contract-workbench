@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>法律资料库 · 群兴工作台</title><link rel="stylesheet" href="/static/library.css"><script src="/static/library.js" defer></script></head>
+<body><a class="skip" href="#query">跳到检索</a>
+<header><a href="/" class="brand">群兴工作台</a><nav aria-label="工作区"><a href="/">合同与案件</a><a href="/library" aria-current="page">法律资料库</a></nav><a href="/login">登录账户</a></header>
+<main><div class="heading"><div><h1>法律资料库</h1><p>检索案例与法规，回到同一版本的原文核对。</p></div><p id="coverage" role="status">正在读取收录范围…</p></div>
+<p class="notice">资料待核验。法规日期与版本关系为整理线索，尚未确认官方出处及现行效力。</p>
+<div class="workspace">
+<aside class="filters" aria-label="检索条件"><form id="search-form">
+<label for="query">关键词</label><input id="query" name="text" maxlength="200" placeholder="例如：离婚 财产分割" autocomplete="off">
+<label for="mode">匹配方式</label><select id="mode" name="mode"><option value="all">全部关键词（空格分开）</option><option value="phrase">连续短语</option></select>
+<label for="kind">资料类型</label><select id="kind" name="kind"><option value="all">案例与法规</option><option value="case_csv">裁判文书</option><option value="law_markdown">法律法规</option></select>
+<label for="province">地域</label><input id="province" name="province" placeholder="例如：吉林省" maxlength="200" list="regions"><datalist id="regions"><option value="吉林省"><option value="全国"></datalist>
+<details><summary>更多案例条件</summary>
+<label for="case-no">案号</label><input id="case-no" name="case_no" maxlength="200" placeholder="完整案号">
+<label for="court">法院</label><input id="court" name="court" maxlength="200" placeholder="法院全称">
+<label for="cause">案由</label><input id="cause" name="cause" maxlength="200" placeholder="完整案由">
+<label for="document-type">文书类型</label><input id="document-type" name="document_type" maxlength="200" placeholder="例如：判决书">
+<label for="date-from">裁判日期起</label><input id="date-from" name="date_from" type="date">
+<label for="date-to">裁判日期止</label><input id="date-to" name="date_to" type="date"><p class="muted">使用日期条件时，资料类型请选择裁判文书。</p></details>
+<button type="submit" id="search-button">检索资料</button><button type="reset" class="secondary">清空条件</button></form>
+<p class="muted">中文词至少两个字。案号、法院、案由和地域按完整字段筛选；正文保留原样。</p></aside>
+<section class="results" aria-labelledby="results-title"><div class="toolbar"><h2 id="results-title">检索结果</h2><button id="export-results" class="secondary" disabled>导出本页</button></div><p id="message" role="status" aria-live="polite">输入关键词或筛选条件，开始查找资料。</p><div id="results"></div><button id="next-page" class="secondary" hidden>下一页</button></section>
+<section class="original" aria-labelledby="original-title"><div class="toolbar"><h2 id="original-title">原文核对</h2><label class="size-label" for="font-size">字号<select id="font-size"><option value="normal">标准</option><option value="large">大</option><option value="larger">更大</option></select></label><button id="close-original" class="secondary" disabled>收起</button></div>
+<p id="original-state" role="status">选择一条结果，查看原文、版本和来源。</p><div id="original-content" hidden><h3 id="source-title" tabindex="-1"></h3><dl id="source-details"></dl><details><summary>完整来源和原始字段</summary><pre id="source-raw"></pre></details><button id="export-original" class="secondary">导出原文与来源</button><pre id="original-text" tabindex="0"></pre></div></section>
+</div></main></body></html>

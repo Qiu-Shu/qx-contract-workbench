@@ -15,6 +15,8 @@ from .originals import OriginalReader
 from .budget import check_budget
 from .text import TOKENIZER_VERSION, normalize, tokens
 
+INDEX_FORMAT = 2
+
 
 def generation_path(root, generation_id):
     root = ensure_root(root)
@@ -24,9 +26,9 @@ def generation_path(root, generation_id):
 
 
 def _catalog_fingerprint(root, selected):
-    value = hashlib.sha256(TOKENIZER_VERSION.encode('utf-8'))
+    value = hashlib.sha256((TOKENIZER_VERSION + ':' + str(INDEX_FORMAT)).encode('utf-8'))
     with connection(root) as db:
-        for row in db.execute('SELECT source_id,sha256 FROM sources ORDER BY source_id'):
+        for row in db.execute('SELECT source_id,source_json FROM sources ORDER BY source_id'):
             value.update(canonical(list(row)).encode('utf-8'))
         for row in db.execute('SELECT record_id,record_json FROM records ORDER BY source_id,ordinal'):
             if selected is None or row[0] in selected:
@@ -81,10 +83,15 @@ def build_generation(root: Path, record_ids=None, *, resume=None, batch_size=500
                     version_id TEXT NOT NULL, kind TEXT NOT NULL, title TEXT NOT NULL,
                     case_no TEXT, court TEXT, cause TEXT, province TEXT, decision_date TEXT,
                     fragment_id TEXT, start INTEGER NOT NULL, end INTEGER NOT NULL,
-                    article TEXT, ambiguous INTEGER NOT NULL
+                    article TEXT, ambiguous INTEGER NOT NULL, document_type TEXT, title_aliases TEXT NOT NULL
                 );
                 CREATE INDEX IF NOT EXISTS ix_units_case ON units(case_no);
                 CREATE INDEX IF NOT EXISTS ix_units_filters ON units(kind,province,decision_date);
+                CREATE INDEX IF NOT EXISTS ix_units_court ON units(court,unit_id);
+                CREATE INDEX IF NOT EXISTS ix_units_cause ON units(cause,unit_id);
+                CREATE INDEX IF NOT EXISTS ix_units_province ON units(province,unit_id);
+                CREATE INDEX IF NOT EXISTS ix_units_type ON units(document_type,unit_id);
+                CREATE INDEX IF NOT EXISTS ix_units_date ON units(decision_date,unit_id);
                 CREATE VIRTUAL TABLE IF NOT EXISTS search USING fts5(title_tokens,body_tokens,content='',detail=full,
                     tokenize='unicode61 remove_diacritics 0');
             ''')
@@ -100,25 +107,30 @@ def build_generation(root: Path, record_ids=None, *, resume=None, batch_size=500
                     record = LibraryRecord.model_validate_json(row[0])
                     if selected is not None and record.record_id not in selected:
                         continue
-                    original, _, _ = reader.read(record)
+                    original, _, source = reader.read(record)
                     if record.kind == 'law_markdown':
                         fragments = [LibraryFragment.model_validate_json(row[0]) for row in
                                      catalog.execute('SELECT fragment_json FROM fragments WHERE record_id=? ORDER BY ordinal', (record.record_id,))]
                     else:
                         fragments = [None]
                     title = record.fields.get('title') or record.fields.get('case_no') or '未命名资料'
-                    title_tokens = ' '.join(tokens(normalize(title)))
+                    aliases = []
+                    if record.kind == 'law_markdown':
+                        from .law_sections import law_fields
+                        aliases = sorted({law_fields(Path(alias), '')[0]['title'] for alias in source.aliases} - {title})
+                    title_tokens = ' b '.join(' '.join(tokens(normalize(name))) for name in [title, *aliases])
                     for fragment in fragments:
                         start, end = (fragment.start, fragment.end) if fragment else (0, len(original))
                         if fragment and digest(original[start:end].encode('utf-8')) != fragment.text_sha256:
                             raise ValueError('FRAGMENT_HASH_MISMATCH')
                         unit_id = fragment.fragment_id if fragment else record.record_id
-                        cursor = db.execute('INSERT INTO units(unit_id,record_id,version_id,kind,title,case_no,court,cause,province,decision_date,fragment_id,start,end,article,ambiguous) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                        cursor = db.execute('INSERT INTO units(unit_id,record_id,version_id,kind,title,case_no,court,cause,province,decision_date,fragment_id,start,end,article,ambiguous,document_type,title_aliases) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
                             (unit_id, record.record_id, record.version_id, record.kind, title,
                              record.fields.get('case_no'), record.fields.get('court'), record.fields.get('cause'),
                              record.fields.get('province') or record.fields.get('region_candidate'), record.fields.get('decision_date'),
                              fragment.fragment_id if fragment else None, start, end,
-                             fragment.article if fragment else None, int(fragment.ambiguous) if fragment else 0))
+                             fragment.article if fragment else None, int(fragment.ambiguous) if fragment else 0,
+                             record.fields.get('document_type'), canonical(aliases)))
                         db.execute('INSERT INTO search(rowid,title_tokens,body_tokens) VALUES(?,?,?)',
                                    (cursor.lastrowid, title_tokens, ' '.join(tokens(normalize(original[start:end])))))
                         counts['units'] += 1
@@ -137,6 +149,7 @@ def build_generation(root: Path, record_ids=None, *, resume=None, batch_size=500
             db.close()
         info = database_path.stat()
         manifest = {'generation_id': generation_id, 'state': 'ready', 'tokenizer': TOKENIZER_VERSION,
+                    'index_format': INDEX_FORMAT,
                     'catalog_fingerprint': fingerprint,
                     'coverage': counts, 'index_sha256': file_hash(database_path), 'index_bytes': info.st_size,
                     'index_mtime_ns': info.st_mtime_ns, 'created_at': datetime.now(timezone.utc).isoformat()}
@@ -150,7 +163,7 @@ def validate_generation(root, generation_id):
     if not path.is_file() or path.stat().st_size > 65536:
         raise ValueError('INDEX_NOT_READY')
     manifest = json.loads(path.read_text(encoding='utf-8'))
-    if manifest.get('generation_id') != generation_id or manifest.get('state') != 'ready' or manifest.get('tokenizer') != TOKENIZER_VERSION:
+    if manifest.get('generation_id') != generation_id or manifest.get('state') != 'ready' or manifest.get('tokenizer') != TOKENIZER_VERSION or manifest.get('index_format') != INDEX_FORMAT:
         raise ValueError('INDEX_NOT_READY')
     database = checked_path(directory / 'search.sqlite')
     if database.stat().st_size != manifest['index_bytes'] or file_hash(database) != manifest['index_sha256']:
@@ -195,7 +208,7 @@ def current_generation(root):
     if digest(raw) != pointer['manifest_sha256']:
         raise ValueError('INDEX_MANIFEST_CHANGED')
     manifest = json.loads(raw)
-    if manifest.get('state') != 'ready' or manifest.get('tokenizer') != TOKENIZER_VERSION:
+    if manifest.get('state') != 'ready' or manifest.get('tokenizer') != TOKENIZER_VERSION or manifest.get('index_format') != INDEX_FORMAT:
         raise ValueError('INDEX_NOT_READY')
     info = checked_path(directory / 'search.sqlite').stat()
     if info.st_size != manifest['index_bytes'] or info.st_mtime_ns != manifest['index_mtime_ns']:

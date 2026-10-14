@@ -10,7 +10,7 @@ import subprocess
 from uuid import uuid4
 
 from .assets import MAX_READ, asset_path, file_hash, register_source
-from .catalog import checked_path, connection, digest, ensure_root, validate_locations, writer_lock
+from .catalog import canonical, checked_path, connection, digest, ensure_root, validate_locations, writer_lock
 from .csv_source import read_header, record_from_values
 
 
@@ -50,7 +50,16 @@ def import_pilot(root: Path, pilot_root: Path, source_root: Path, *, python_exec
             issues, mapped, seen = [], 0, 0
             with writer_lock(root), connection(root, writable=True) as db, ExitStack() as stack:
                 files = {key: stack.enter_context(asset_path(root, src).open('rb')) for key, src in sources.items()}
-                headers = {key: read_header(stream)[0] for key, stream in files.items()}
+                header_positions = {key: read_header(stream) for key, stream in files.items()}
+                headers = {key: value[0] for key, value in header_positions.items()}
+                for key, (header, first) in header_positions.items():
+                    # A pilot can be noncontiguous. Record the verified header but
+                    # leave the full-file import at its very first record.
+                    existing = db.execute('SELECT header_json FROM import_states WHERE source_id=?', (sources[key].source_id,)).fetchone()
+                    if existing and json.loads(existing[0]) != header:
+                        raise ValueError('SOURCE_CHANGED_HEADER')
+                    db.execute('INSERT OR IGNORE INTO import_states VALUES(?,?,?,?,?)',
+                               (sources[key].source_id, 1, first, canonical(header), 'partial'))
                 for line in incoming:
                     seen += 1
                     if seen > manifest['count']:

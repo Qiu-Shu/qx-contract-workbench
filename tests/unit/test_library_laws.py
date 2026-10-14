@@ -107,3 +107,29 @@ def test_undecodable_file_is_reported_without_stopping_good_law(tmp_path):
     report = module.import_laws(tmp_path / 'library', incoming, 'fiction-laws')
     assert report['files'] == 2 and report['failed'] == 1 and report['unique_records'] == 1
     assert report['issues'][0]['reason'] == 'LAW_DECODE_FAILED'
+
+
+def test_bulk_laws_committed_batch_survives_resource_stop(tmp_path, monkeypatch):
+    module = api()
+    incoming = tmp_path / 'laws'
+    incoming.mkdir()
+    for i in range(7):
+        (incoming / f'虚构{i}.md').write_text(f'第一条 虚构第{i}个规则', encoding='utf-8')
+    root = tmp_path / 'library'
+    assert hasattr(module, 'check_budget'), 'law durable batch boundary missing'
+    real = module.check_budget
+    calls = 0
+    def stop(path, **kwargs):
+        nonlocal calls
+        calls += 1
+        if calls == 3:
+            raise ValueError('LIBRARY_DISK_BUDGET')
+        return real(path, **kwargs)
+    monkeypatch.setattr(module, 'check_budget', stop)
+    with pytest.raises(ValueError, match='BUDGET'):
+        module.import_laws(root, incoming, 'fiction-laws', batch_size=2)
+    catalog = importlib.import_module('cn_contract.library.catalog')
+    assert len(list(catalog.iter_records(root))) == 4
+    monkeypatch.setattr(module, 'check_budget', real)
+    result = module.import_laws(root, incoming, 'fiction-laws', batch_size=2)
+    assert result['unique_records'] == 7 and result['inserted'] == 3

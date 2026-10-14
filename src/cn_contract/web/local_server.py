@@ -165,12 +165,15 @@ def _worker_lock(root):
                 fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
 
 
-def build_local_app(directory, *, port=8767):
+def build_local_app(directory, *, port=8767, library_root=None):
     root = _open_workspace(directory)
     database = _database(root)
     try:
         app = create_app(load_settings(), database=database, purpose='assisted_draft',
                          assisted_policy=load_seed_policy(), local_materials_enabled=True)
+        if library_root is not None:
+            from .library import attach_library
+            attach_library(app, database, library_root)
         bridge = None
         if root == (PROJECT_ROOT / '.local' / 'workbench').resolve() and port == 8767:
             from .case_bridge import attach_case_bridge
@@ -227,6 +230,7 @@ def main(argv=None):
             item.add_argument('--role', choices=[r.value for r in Role], required=True)
         if command in ('serve', 'start'):
             item.add_argument('--port', type=int, default=8767)
+            item.add_argument('--library-directory', type=Path)
     args = parser.parse_args(argv)
     try:
         if args.command in ('serve', 'start'):
@@ -238,7 +242,7 @@ def main(argv=None):
                 username = input('首次使用，请设置本机用户名：')
                 initialize_workspace(args.directory, username, _prompt_password())
             import uvicorn
-            app = build_local_app(args.directory, port=args.port)
+            app = build_local_app(args.directory, port=args.port, library_root=args.library_directory)
             print(f'本机工作台：http://127.0.0.1:{args.port}/login', flush=True)
             print('案件原地保存；本机DOCX逐份确认后供人工工作稿；真实模型与企查查关闭。', flush=True)
             uvicorn.run(app, host='127.0.0.1', port=args.port, workers=1, access_log=False, log_level='warning')

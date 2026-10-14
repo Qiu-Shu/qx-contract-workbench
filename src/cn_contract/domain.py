@@ -2360,6 +2360,7 @@ class LibraryQuery(DomainModel):
     case_no: str | None = None
     court: str | None = None
     cause: str | None = None
+    document_type: str | None = None
     province: str | None = None
     date_from: date | None = None
     date_to: date | None = None

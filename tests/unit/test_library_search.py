@@ -18,10 +18,10 @@ def world(tmp_path):
     bodies = ['这是虚构资料，离\u200b婚后处理租赁。', '虚构离婚租赁连续短语。', '只有虚构租赁，不含别的词。']
     with incoming.open('w', encoding='utf-8', newline='') as stream:
         writer = csv.writer(stream)
-        writer.writerow(['标题', '案号', '法院', '省', '判决时间', '文书内容'])
+        writer.writerow(['标题', '案号', '法院', '省', '判决时间', '文书内容', '文书类型', '案由'])
         for i, body in enumerate(bodies, 1):
             writer.writerow(['租赁标题' if i == 3 else '虚构案' + str(i), f'（２０２５）吉虚{i}号',
-                             '虚构法院', '吉林省', '2025-01-02', body])
+                             '虚构法院', '吉林省', '2025-01-02', body, '判决书', '租赁合同纠纷'])
     root = tmp_path / 'library'
     api('csv_source').import_case_file(root, incoming, 'fiction')
     generation = index.build_generation(root)
@@ -146,3 +146,37 @@ def test_timeout_is_explicit_not_empty_success(tmp_path, monkeypatch):
     monkeypatch.setattr(service, 'time', SimpleNamespace(monotonic=lambda: next(clock)))
     result = service.search(root, query(text='离婚'))
     assert result.state == 'timeout' and result.total_matches is None
+
+
+def test_structured_filters_use_indexes_and_document_type(tmp_path):
+    import sqlite3
+    root, generation = world(tmp_path)
+    assert len(api('service').search(root, query(document_type='判决书')).hits) == 3
+    assert not api('service').search(root, query(document_type='裁定书')).hits
+    with sqlite3.connect(root / 'generations' / generation / 'search.sqlite') as db:
+        for field, value in [('court', '虚构法院'), ('cause', '租赁合同纠纷'), ('province', '吉林省'), ('document_type', '判决书'), ('decision_date', '2025-01-02')]:
+            plan = db.execute(f'EXPLAIN QUERY PLAN SELECT unit_id FROM units WHERE {field}=? ORDER BY unit_id', (value,)).fetchall()
+            assert 'SEARCH' in str(plan) and 'INDEX' in str(plan), plan
+
+
+def test_identical_law_alias_title_is_searchable(tmp_path):
+    laws = tmp_path / 'laws'
+    laws.mkdir()
+    for title in ['甲地出租规定', '乙地商业租赁细则']:
+        (laws / (title + '.md')).write_text('第一条 完全虚构的相同正文。', encoding='utf-8')
+    root = tmp_path / 'library'
+    api('law_sections').import_laws(root, laws, 'fiction')
+    api('index').activate_generation(root, api('index').build_generation(root))
+    assert api('service').search(root, query(text='出租')).hits
+    assert api('service').search(root, query(text='商业租赁')).hits
+
+
+def test_deep_cursor_rejected_with_narrow_query_hint(tmp_path):
+    root, generation = world(tmp_path)
+    service = api('service')
+    q = query(text='租赁')
+    from cn_contract.library.catalog import canonical, digest
+    fingerprint = digest(canonical(q.model_dump(mode='json', exclude={'cursor'})).encode('utf-8'))
+    deep = service._cursor_encode(generation, fingerprint, 2000)
+    with pytest.raises(ValueError, match='CURSOR_TOO_DEEP'):
+        service.search(root, q.model_copy(update={'cursor': deep}))

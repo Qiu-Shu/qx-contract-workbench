@@ -7,7 +7,8 @@ import re
 import unicodedata
 
 from ..domain import LibraryFragment, LibraryRecord
-from .assets import MAX_READ, read_asset, register_source
+from .assets import MAX_READ, asset_path, _register_source_in_transaction
+from .budget import check_budget
 from .catalog import canonical, checked_path, connection, digest, validate_locations, writer_lock
 
 INVISIBLE = '\u200b\u200c\u200d\u2060\ufeff'
@@ -117,7 +118,9 @@ def iter_fragments(root: Path, record_id: str | None = None):
             yield LibraryFragment.model_validate_json(row[0])
 
 
-def import_laws(root: Path, input_dir: Path, batch_id: str) -> dict:
+def import_laws(root: Path, input_dir: Path, batch_id: str, *, batch_size=100) -> dict:
+    if type(batch_size) is not int or not 1 <= batch_size <= 1000:
+        raise ValueError('IMPORT_LIMIT_INVALID')
     input_dir = checked_path(input_dir)
     validate_locations(root, input_dir)
     if not input_dir.is_dir():
@@ -130,42 +133,47 @@ def import_laws(root: Path, input_dir: Path, batch_id: str) -> dict:
             if Path(filename).suffix.lower() == '.md':
                 paths.append(checked_path(Path(directory) / filename))
     unique, issues, inserted = set(), [], 0
-    for path in sorted(paths):
-        source = register_source(root, path, batch_id, 'law_markdown')
-        if source.size > MAX_READ:
-            reason = 'LAW_TOO_LARGE'
-        else:
-            try:
-                raw = read_asset(root, source.source_id, 0, source.size)
-                original = raw.decode('utf-8-sig', errors='strict')
-                reason = None
-            except UnicodeDecodeError:
-                reason = 'LAW_DECODE_FAILED'
-        if reason:
-            issues.append({'file': str(path.relative_to(input_dir)), 'reason': reason})
-            with writer_lock(root), connection(root, writable=True) as db:
+    with writer_lock(root) as root, connection(root, writable=True) as db:
+        check_budget(root, force=True)
+        for position, path in enumerate(sorted(paths), 1):
+            source = _register_source_in_transaction(root, path, batch_id, 'law_markdown', db)
+            if source.size > MAX_READ:
+                reason = 'LAW_TOO_LARGE'
+            else:
+                try:
+                    raw = asset_path(root, source).read_bytes()
+                    if digest(raw) != source.sha256:
+                        raise ValueError('ASSET_HASH_MISMATCH')
+                    original = raw.decode('utf-8-sig', errors='strict')
+                    reason = None
+                except UnicodeDecodeError:
+                    reason = 'LAW_DECODE_FAILED'
+            if reason:
+                issues.append({'file': str(path.relative_to(input_dir)), 'reason': reason})
                 db.execute('INSERT OR IGNORE INTO failures VALUES(?,?,?,?)', (source.source_id, 1, 0, reason))
-            continue
-        fields, warnings = law_fields(path, original)
-        body_hash = digest(original.encode('utf-8'))
-        record = LibraryRecord(
-            record_id=digest(canonical(['qx-library-v1', source.batch_id, source.sha256, 1]).encode('utf-8')),
-            source_id=source.source_id, kind='law_markdown', ordinal=1, byte_start=0, byte_end=source.size,
-            raw_sha256=source.sha256, body_sha256=body_hash, version_id=body_hash,
-            fields=fields, warnings=warnings, body_status='body_present_unverified' if original.strip() else 'catalog_only')
-        unique.add(record.record_id)
-        with writer_lock(root), connection(root, writable=True) as db:
-            previous = db.execute('SELECT raw_sha256 FROM records WHERE record_id=?', (record.record_id,)).fetchone()
-            if previous:
-                if previous[0] != record.raw_sha256:
-                    raise ValueError('RECORD_REPLAY_MISMATCH')
-                continue
-            db.execute('INSERT INTO records VALUES(?,?,?,?,?)',
-                       (record.record_id, source.source_id, 1, source.sha256, record.model_dump_json()))
-            fragments = split_law(record, original)
-            db.executemany('INSERT INTO fragments VALUES(?,?,?,?)',
-                           [(f.fragment_id, f.record_id, f.ordinal, f.model_dump_json()) for f in fragments])
-            db.execute('INSERT INTO import_states VALUES(?,?,?,?,?)', (source.source_id, 2, source.size, '[]', 'complete'))
-            inserted += 1
+            else:
+                fields, warnings = law_fields(path, original)
+                body_hash = digest(original.encode('utf-8'))
+                record = LibraryRecord(
+                    record_id=digest(canonical(['qx-library-v1', source.batch_id, source.sha256, 1]).encode('utf-8')),
+                    source_id=source.source_id, kind='law_markdown', ordinal=1, byte_start=0, byte_end=source.size,
+                    raw_sha256=source.sha256, body_sha256=body_hash, version_id=body_hash,
+                    fields=fields, warnings=warnings, body_status='body_present_unverified' if original.strip() else 'catalog_only')
+                unique.add(record.record_id)
+                previous = db.execute('SELECT raw_sha256 FROM records WHERE record_id=?', (record.record_id,)).fetchone()
+                if previous:
+                    if previous[0] != record.raw_sha256:
+                        raise ValueError('RECORD_REPLAY_MISMATCH')
+                else:
+                    db.execute('INSERT INTO records VALUES(?,?,?,?,?)',
+                               (record.record_id, source.source_id, 1, source.sha256, record.model_dump_json()))
+                    fragments = split_law(record, original)
+                    db.executemany('INSERT INTO fragments VALUES(?,?,?,?)',
+                                   [(f.fragment_id, f.record_id, f.ordinal, f.model_dump_json()) for f in fragments])
+                    db.execute('INSERT INTO import_states VALUES(?,?,?,?,?)', (source.source_id, 2, source.size, '[]', 'complete'))
+                    inserted += 1
+            if position % batch_size == 0:
+                db.commit()
+                check_budget(root)
     return {'files': len(paths), 'unique_records': len(unique), 'inserted': inserted,
             'failed': len(issues), 'issues': issues}

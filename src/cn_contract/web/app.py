@@ -607,6 +607,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
         return HTMLResponse(environment.get_template('workbench.html').render(section=section,matter=matter,
             matter_id=str(matter_id) if matter_id else '',synthetic=not local_case,purpose=purpose,
             local_materials_enabled=local_materials_enabled,
+            library_enabled=hasattr(app.state, 'library_root'),
             coverage_dimensions=COVERAGE_LABELS, case_bridge_enabled=hasattr(app.state, 'case_bridge') and not local_case))
 
     @app.get('/',response_class=HTMLResponse)
@@ -631,7 +632,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
 
     @app.get('/static/{name}')
     def static_file(name:str):
-        if name not in {'workbench.js','workbench.css','pdf-review.mjs'}:raise ServiceError('NOT_SUPPORTED',404)
+        if name not in {'workbench.js','workbench.css','pdf-review.mjs','library.js','library.css'}:raise ServiceError('NOT_SUPPORTED',404)
         return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith(('.js','.mjs')) else 'text/css')
     from .draft_confirmation import register_routes
     register_routes(app,database,authenticate_first,body_input,write)
