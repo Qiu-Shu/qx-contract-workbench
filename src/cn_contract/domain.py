@@ -2285,3 +2285,48 @@ class ReadinessDecision(DomainModel):
                 raise ValueError('GO requires every category of readiness evidence')
             raise ValueError('REAL_READINESS_TRUST_NOT_IMPLEMENTED')
         return self
+
+
+# Public-library snapshots are separate from approved legal authorities and cases.
+class LibrarySource(DomainModel):
+    source_id: SHA256
+    batch_id: Annotated[str, StringConstraints(pattern=r'^[A-Za-z0-9_.-]{1,80}$')]
+    sha256: SHA256
+    size: NonNegativeInt
+    asset_key: Annotated[str, StringConstraints(pattern=r'^[a-f0-9]{64}/original$')]
+    kind: Literal['case_csv', 'law_markdown']
+    aliases: tuple[NonEmpty, ...]
+    registered_at: UTCDatetime
+
+
+class LibraryReviewEvent(DomainModel):
+    subject_id: SHA256
+    version_id: SHA256
+    operator: NonEmpty
+    recorded_at: UTCDatetime
+    field: Literal['text_integrity', 'source_provenance', 'version_relation']
+    value: Literal['needs_review', 'text_checked', 'source_candidate']
+    reason: NonEmpty
+
+
+class LibraryRecord(DomainModel):
+    record_id: SHA256
+    source_id: SHA256
+    kind: Literal['case_csv', 'law_markdown']
+    ordinal: PositiveInt
+    byte_start: NonNegativeInt
+    byte_end: NonNegativeInt
+    raw_sha256: SHA256
+    body_sha256: SHA256 | None
+    version_id: SHA256
+    fields: dict[str, str | None]
+    warnings: tuple[str, ...] = ()
+    body_status: Literal['body_present_unverified', 'catalog_only', 'damaged_record']
+    cleaning_version: Literal['qx-clean-v1'] = 'qx-clean-v1'
+    verification_status: Literal['unverified'] = 'unverified'
+
+    @model_validator(mode='after')
+    def valid_library_range(self):
+        if self.byte_end < self.byte_start or self.byte_end - self.byte_start > 32 * 1024 * 1024:
+            raise ValueError('LIBRARY_RECORD_RANGE_INVALID')
+        return self
