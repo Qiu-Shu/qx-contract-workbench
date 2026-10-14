@@ -20,6 +20,7 @@ def _call(operation, *args):
     except (ValueError, OSError, sqlite3.Error) as error:
         code = str(error) if type(error) is ValueError else ''
         hints = {
+            'QUERY_TOO_LONG_AFTER_NORMALIZATION': '规范化后的检索词过长，请缩短到200字以内。',
             'QUERY_TOO_SHORT_OR_PUNCTUATION': '请输入至少两个连续汉字或完整的英文、数字词。',
             'QUERY_EMPTY': '请输入关键词，或使用案号等筛选条件。',
             'VERSION_MISMATCH': '资料版本已变化，请重新检索并打开原文。',

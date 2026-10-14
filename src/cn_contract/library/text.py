@@ -3,6 +3,7 @@ import unicodedata
 
 INVISIBLE = frozenset('\u200b\u200c\u200d\u2060\ufeff')
 TOKENIZER_VERSION = 'qx-bigram-v1'
+MAX_QUERY_CHARACTERS = 200
 
 
 def normalize(text: str, *, with_map=False):
@@ -54,6 +55,8 @@ def tokens(normalized: str) -> list[str]:
 
 def query_terms(text: str, mode: str):
     normalized = normalize(text).strip()
+    if len(normalized) > MAX_QUERY_CHARACTERS:
+        raise ValueError('QUERY_TOO_LONG_AFTER_NORMALIZATION')
     if not normalized:
         return [], None
     terms = normalized.split() if mode == 'all' else [normalized]

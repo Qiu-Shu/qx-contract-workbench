@@ -180,3 +180,53 @@ def test_deep_cursor_rejected_with_narrow_query_hint(tmp_path):
     deep = service._cursor_encode(generation, fingerprint, 2000)
     with pytest.raises(ValueError, match='CURSOR_TOO_DEEP'):
         service.search(root, q.model_copy(update={'cursor': deep}))
+
+
+def law_world(tmp_path, files):
+    laws = tmp_path / 'laws'
+    laws.mkdir()
+    for filename, body in files.items():
+        (laws / filename).write_text(body, encoding='utf-8')
+    root = tmp_path / 'library'
+    api('law_sections').import_laws(root, laws, 'fiction')
+    api('index').activate_generation(root, api('index').build_generation(root))
+    return root
+
+
+@pytest.mark.parametrize('invisible', ['', '\u200b' * 300])
+def test_phrase_crossing_fragment_boundary_is_found_once(tmp_path, invisible):
+    body = '第一条 ' + '甲' * 3995 + '租' + invisible + '赁乙乙乙乙'
+    root = law_world(tmp_path, {'虚构边界规定.md': body})
+    page = api('service').search(root, query(text='租赁'))
+    assert len(page.hits) == 1
+    hit = page.hits[0]
+    assert body[hit.match_start:hit.match_end] == '租' + invisible + '赁'
+    original = api('service').read_fragment(root, hit.fragment_id)
+    assert original.fragment.start <= hit.match_start < original.fragment.end
+    assert hit.match_end > original.fragment.end
+
+
+def test_fragment_role_survives_search_and_original_export(tmp_path):
+    root = law_world(tmp_path, {'虚构角色.md': '目录\n第一条 租赁\n\n第一章 总则\n第一条 租赁正文。\n> 第二条 租赁引述。'})
+    hits = api('service').search(root, query(text='租赁')).hits
+    assert {hit.fragment_role for hit in hits} >= {'contents_candidate', 'article_candidate', 'quoted_candidate'}
+    for hit in hits:
+        original = api('service').read_fragment(root, hit.fragment_id)
+        assert hit.model_dump()['fragment_role'] == original.fragment.role
+
+
+def test_title_results_are_one_per_version_before_body_locations(tmp_path):
+    root = law_world(tmp_path, {
+        '虚构租赁办法_20250101.md': '\n'.join(f'第{i}条 虚构短文。' for i in range(1, 2002)),
+        '虚构租赁办法_20200101.md': '第一条 ' + '虚构旧文。' * 100,
+    })
+    page = api('service').search(root, query(text='虚构租赁办法', limit=2))
+    assert len({hit.version_id for hit in page.hits}) == 2
+    assert all(hit.match_field == 'title' and hit.fragment_id is None for hit in page.hits)
+    following = api('service').search(root, query(text='虚构租赁办法', limit=2, cursor=page.next_cursor))
+    assert not following.hits
+    metadata = api('service').search(root, query(kind='law_markdown', limit=100))
+    assert len(metadata.hits) == 2
+    # Multiword title + body searches still retain the matching body location.
+    mixed = api('service').search(root, query(text='租赁 旧文'))
+    assert len(mixed.hits) == 1 and mixed.hits[0].fragment_id

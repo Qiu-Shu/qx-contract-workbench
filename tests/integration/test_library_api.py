@@ -54,9 +54,14 @@ def test_library_versions_paths_and_passive_text(library_client):
     assert '<script>alert' not in page.text
     result = client.post('/api/library/search', json={'text': '租赁'}, headers=headers).json()
     hit = result['hits'][0]
+    assert hit['fragment_id'] is None and hit['match_field'] == 'title'
     original = client.get(f"/api/library/records/{hit['record_id']}?version_id={hit['version_id']}")
     assert original.status_code == 200 and '<script>' in original.json()['text']
-    assert client.get(f"/api/library/fragments/{hit['fragment_id']}").status_code == 200
+    fragment_hit = next(item for item in result['hits'] if item['fragment_id'])
+    fragment = client.get(f"/api/library/fragments/{fragment_hit['fragment_id']}")
+    assert fragment.status_code == 200
+    assert fragment.json()['fragment']['role'] == fragment_hit['fragment_role'] == 'article_candidate'
+    assert '目录候选' in js and '引述候选' in js and '片段性质' in js
     assert client.get(f"/api/library/records/{hit['record_id']}?version_id=" + 'f' * 64).status_code == 409
     assert client.get('/api/library/records/file?version_id=file').status_code == 422
     assert client.post('/api/library/search', json={'text': '租赁', 'path': 'C:/Windows'}, headers=headers).status_code == 422

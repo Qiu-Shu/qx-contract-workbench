@@ -1,6 +1,8 @@
 'use strict';
 (() => {
   const $ = (id) => document.getElementById(id);
+  const roleLabel = (role) => ({paragraph: '原文段落', article_candidate: '正文条款候选',
+    contents_candidate: '目录候选', quoted_candidate: '引述候选'}[role] || '资料全文');
   let page = null, original = null, currentQuery = null, queryEpoch = 0, originalEpoch = 0;
   let queryController = null, originalController = null;
   const csrf = () => decodeURIComponent(document.cookie.split('; ').find((part) => part.startsWith('qx_csrf='))?.slice(8) || '');
@@ -60,6 +62,7 @@
       details('本机来源', data.source.aliases.join('\n'));
       details('官方出处', data.record.fields.source_url || '尚未核实官方来源');
       details('定位', data.fragment ? `原文第 ${data.fragment.line_start}—${data.fragment.line_end} 行${data.fragment.ambiguous ? ' · 条号有歧义' : ''}` : `来源第 ${data.record.ordinal} 条记录`);
+      details('片段性质', roleLabel(data.fragment?.role));
       $('source-raw').textContent = JSON.stringify({source: data.source, record: data.record, raw_fields: data.raw_fields}, null, 2);
       // Python locations count Unicode code points, not UTF-16 code units.
       const chars = Array.from(data.text);
@@ -105,7 +108,7 @@
       article.append(heading, node('p', meta.filter(Boolean).join(' · ') || '来源字段待补核', 'result-meta'),
         node('span', `待核验${hit.body_status === 'catalog_only' ? ' · 仅目录' : ''}`, 'status-label'), node('p', hit.snippet));
       for (const item of hits.filter((h) => h.fragment_id)) {
-        const button = node('button', `${item.article || '原文段落'}${item.ambiguous ? '（条号有歧义）' : ''}`, 'secondary fragment-button');
+        const button = node('button', `${item.article || '原文段落'} · ${roleLabel(item.fragment_role)}${item.ambiguous ? '（条号有歧义）' : ''}`, 'secondary fragment-button');
         button.type = 'button';
         button.addEventListener('click', () => showOriginal(item, article));
         article.append(button);

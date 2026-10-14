@@ -67,6 +67,15 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
     if expression:
         predicates.append('search MATCH ?')
         args.append(expression)
+        # A law title gets exactly one record/version result. Fragment
+        # candidates must also contain at least one queried body term; keep
+        # title + body multiword queries without repeating title-only matches.
+        body_expression = ' OR '.join('(' + query_terms(term, 'phrase')[1] + ')' for term in terms)
+        predicates.append("(u.kind!='law_markdown' OR u.fragment_id IS NULL OR u.rowid IN "
+                          "(SELECT rowid FROM search WHERE search MATCH ?))")
+        args.append('body_tokens : (' + body_expression + ')')
+    else:
+        predicates.append("(u.kind!='law_markdown' OR u.fragment_id IS NULL)")
     if query.kind != 'all':
         predicates.append('u.kind=?')
         args.append(query.kind)
@@ -86,7 +95,8 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
         sql += ' JOIN search ON search.rowid=u.rowid'
     if predicates:
         sql += ' WHERE ' + ' AND '.join(predicates)
-    sql += (' ORDER BY score,u.unit_id' if expression else ' ORDER BY u.unit_id') + ' LIMIT -1 OFFSET ?'
+    sql += (" ORDER BY CASE WHEN u.kind='law_markdown' AND u.fragment_id IS NULL THEN 0 ELSE 1 END,score,u.unit_id"
+            if expression else ' ORDER BY u.unit_id') + ' LIMIT -1 OFFSET ?'
     args.append(offset)
     database = generation_path(root, generation_id) / 'search.sqlite'
     db = sqlite3.connect(database.as_uri() + '?mode=ro', uri=True)
@@ -119,17 +129,19 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
                     start, term = min(starts)
                     match_start = row['start'] + mapping[start]
                     match_end = row['start'] + mapping[start + len(term) - 1] + 1
+                    if match_start >= row['core_end']:
+                        continue  # The following source fragment owns this hit.
                     field = 'body'
                 else:
                     match_start = match_end = None
                     field = 'title' if terms else 'metadata'
                 excerpt_start = max(row['start'], (match_start or row['start']) - 60)
-                snippet = text[excerpt_start:min(row['end'], excerpt_start + 220)]
+                snippet = text[excerpt_start:min(row['end'] or len(text), excerpt_start + 220)]
                 hits.append(LibraryHit(record_id=record.record_id, version_id=record.version_id,
                     fragment_id=row['fragment_id'], kind=record.kind, title=row['title'], snippet=snippet,
                     match_start=match_start, match_end=match_end, match_field=field, score=row['score'],
                     fields=record.fields, body_status=record.body_status,
-                    article=row['article'], ambiguous=bool(row['ambiguous'])))
+                    article=row['article'], ambiguous=bool(row['ambiguous']), fragment_role=row['fragment_role']))
                 if len(hits) >= query.limit:
                     more = True
                     break

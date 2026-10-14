@@ -2392,6 +2392,7 @@ class LibraryHit(DomainModel):
     body_status: str
     article: str | None = None
     ambiguous: StrictBool = False
+    fragment_role: Literal['paragraph', 'article_candidate', 'contents_candidate', 'quoted_candidate'] | None = None
 
 
 class LibraryPage(DomainModel):

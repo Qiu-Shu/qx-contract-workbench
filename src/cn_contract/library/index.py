@@ -1,5 +1,6 @@
 """Derived, immutable search generations; a small pointer is the publication unit."""
 from datetime import datetime, timezone
+from bisect import bisect_left
 import json
 import hashlib
 import os
@@ -13,9 +14,9 @@ from .assets import file_hash
 from .catalog import canonical, checked_path, connection, digest, ensure_root, iter_records, writer_lock
 from .originals import OriginalReader
 from .budget import check_budget
-from .text import TOKENIZER_VERSION, normalize, tokens
+from .text import MAX_QUERY_CHARACTERS, TOKENIZER_VERSION, normalize, tokens
 
-INDEX_FORMAT = 2
+INDEX_FORMAT = 3
 
 
 def generation_path(root, generation_id):
@@ -83,7 +84,8 @@ def build_generation(root: Path, record_ids=None, *, resume=None, batch_size=500
                     version_id TEXT NOT NULL, kind TEXT NOT NULL, title TEXT NOT NULL,
                     case_no TEXT, court TEXT, cause TEXT, province TEXT, decision_date TEXT,
                     fragment_id TEXT, start INTEGER NOT NULL, end INTEGER NOT NULL,
-                    article TEXT, ambiguous INTEGER NOT NULL, document_type TEXT, title_aliases TEXT NOT NULL
+                    article TEXT, ambiguous INTEGER NOT NULL, document_type TEXT, title_aliases TEXT NOT NULL,
+                    core_end INTEGER NOT NULL, fragment_role TEXT
                 );
                 CREATE INDEX IF NOT EXISTS ix_units_case ON units(case_no);
                 CREATE INDEX IF NOT EXISTS ix_units_filters ON units(kind,province,decision_date);
@@ -109,8 +111,9 @@ def build_generation(root: Path, record_ids=None, *, resume=None, batch_size=500
                         continue
                     original, _, source = reader.read(record)
                     if record.kind == 'law_markdown':
-                        fragments = [LibraryFragment.model_validate_json(row[0]) for row in
+                        fragments = [None] + [LibraryFragment.model_validate_json(row[0]) for row in
                                      catalog.execute('SELECT fragment_json FROM fragments WHERE record_id=? ORDER BY ordinal', (record.record_id,))]
+                        _, original_map = normalize(original, with_map=True)
                     else:
                         fragments = [None]
                     title = record.fields.get('title') or record.fields.get('case_no') or '未命名资料'
@@ -121,16 +124,26 @@ def build_generation(root: Path, record_ids=None, *, resume=None, batch_size=500
                     title_tokens = ' b '.join(' '.join(tokens(normalize(name))) for name in [title, *aliases])
                     for fragment in fragments:
                         start, end = (fragment.start, fragment.end) if fragment else (0, len(original))
+                        title_only = record.kind == 'law_markdown' and fragment is None
+                        if title_only:
+                            end = 0
+                        core_end = end
                         if fragment and digest(original[start:end].encode('utf-8')) != fragment.text_sha256:
                             raise ValueError('FRAGMENT_HASH_MISMATCH')
+                        if fragment and end < len(original):
+                            # Right overlap is measured after normalization, so
+                            # invisible characters cannot conceal boundary words.
+                            overlap_end = bisect_left(original_map, end) + MAX_QUERY_CHARACTERS - 1
+                            end = original_map[overlap_end] if overlap_end < len(original_map) else len(original)
                         unit_id = fragment.fragment_id if fragment else record.record_id
-                        cursor = db.execute('INSERT INTO units(unit_id,record_id,version_id,kind,title,case_no,court,cause,province,decision_date,fragment_id,start,end,article,ambiguous,document_type,title_aliases) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                        cursor = db.execute('INSERT INTO units(unit_id,record_id,version_id,kind,title,case_no,court,cause,province,decision_date,fragment_id,start,end,article,ambiguous,document_type,title_aliases,core_end,fragment_role) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
                             (unit_id, record.record_id, record.version_id, record.kind, title,
                              record.fields.get('case_no'), record.fields.get('court'), record.fields.get('cause'),
                              record.fields.get('province') or record.fields.get('region_candidate'), record.fields.get('decision_date'),
                              fragment.fragment_id if fragment else None, start, end,
                              fragment.article if fragment else None, int(fragment.ambiguous) if fragment else 0,
-                             record.fields.get('document_type'), canonical(aliases)))
+                             record.fields.get('document_type'), canonical(aliases), core_end,
+                             fragment.role if fragment else None))
                         db.execute('INSERT INTO search(rowid,title_tokens,body_tokens) VALUES(?,?,?)',
                                    (cursor.lastrowid, title_tokens, ' '.join(tokens(normalize(original[start:end])))))
                         counts['units'] += 1
