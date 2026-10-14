@@ -8,6 +8,7 @@ from uuid import uuid4
 
 from ..domain import LibrarySource
 from .catalog import canonical, checked_path, connection, digest, ensure_root, get_source, validate_locations, writer_lock
+from .budget import check_budget
 
 MAX_READ = 32 * 1024 * 1024
 
@@ -42,6 +43,7 @@ def register_source(root: Path, path: Path, batch_id: str, kind: str) -> Library
         raise ValueError('SOURCE_FORMAT_INVALID')
     with writer_lock(root) as root, connection(root, writable=True) as db:
         before = path.stat()
+        check_budget(root, additional_bytes=before.st_size)
         temporary = root / ('.incoming-' + uuid4().hex)
         try:
             sha256, size = _copy_snapshot(path, temporary)

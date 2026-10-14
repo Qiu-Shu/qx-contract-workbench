@@ -115,9 +115,11 @@ def _commit_batch(db, source, records, header):
 
 
 def import_case_file(root: Path, path: Path, batch_id: str, *, limit: int | None = None, batch_size=1000):
+    from .budget import check_budget
     if limit is not None and (type(limit) is not int or limit < 1) or type(batch_size) is not int or not 1 <= batch_size <= 10000:
         raise ValueError('IMPORT_LIMIT_INVALID')
     root, path = Path(root), checked_path(path)
+    check_budget(root, force=True)
     source = None
     if (root / 'library.json').exists():
         with connection(root) as db:
@@ -158,6 +160,7 @@ def import_case_file(root: Path, path: Path, batch_id: str, *, limit: int | None
                     if len(batch) >= batch_size:
                         inserted += _commit_batch(db, source, batch, header)
                         batch = []
+                        check_budget(root)
                 inserted += _commit_batch(db, source, batch, header)
                 position = db.execute('SELECT next_byte FROM import_states WHERE source_id=?', (source.source_id,)).fetchone()[0]
                 if reached_eof or position == source.size:

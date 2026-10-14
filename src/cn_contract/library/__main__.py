@@ -26,6 +26,14 @@ def main(argv=None):
     build = commands.add_parser('build-index')
     build.add_argument('--library-root', required=True, type=Path)
     build.add_argument('--activate', action='store_true')
+    build.add_argument('--resume', help='继续未发布的索引代际')
+    for name in ('verify', 'activate', 'export-manifest'):
+        maintenance = commands.add_parser(name)
+        maintenance.add_argument('--library-root', required=True, type=Path)
+        if name == 'activate':
+            maintenance.add_argument('--generation-id', required=True)
+        if name == 'export-manifest':
+            maintenance.add_argument('--destination', required=True, type=Path)
     search = commands.add_parser('search')
     search.add_argument('--library-root', required=True, type=Path)
     search.add_argument('--query', default='')
@@ -42,10 +50,24 @@ def main(argv=None):
     try:
         if args.command == 'build-index':
             from .index import build_generation, activate_generation
-            generation = build_generation(args.library_root)
+            generation = build_generation(args.library_root, resume=args.resume)
             if args.activate:
                 activate_generation(args.library_root, generation)
             print(json.dumps({'generation_id': generation, 'activated': args.activate}))
+            return 0
+        if args.command == 'activate':
+            from .index import activate_generation
+            activate_generation(args.library_root, args.generation_id)
+            print(json.dumps({'activated': True, 'generation_id': args.generation_id}))
+            return 0
+        if args.command == 'verify':
+            from .portability import relocate_library
+            print(json.dumps(relocate_library(args.library_root)))
+            return 0
+        if args.command == 'export-manifest':
+            from .portability import export_manifest
+            export_manifest(args.library_root, args.destination)
+            print(json.dumps({'exported': True}))
             return 0
         if args.command == 'search':
             from ..domain import LibraryQuery
@@ -79,7 +101,9 @@ def main(argv=None):
     except (ValueError, OSError) as error:
         # Never reflect original rows, credentials or arbitrary exception paths.
         safe = {'SOURCE_CHANGED', 'LIBRARY_BUSY', 'HEADER_INVALID', 'ASSET_HASH_MISMATCH',
-                'IMPORT_LIMIT_INVALID', 'RECORD_REPLAY_MISMATCH', 'SOURCE_OUTPUT_OVERLAP', 'REDIRECTED_PATH'}
+                'IMPORT_LIMIT_INVALID', 'RECORD_REPLAY_MISMATCH', 'SOURCE_OUTPUT_OVERLAP', 'REDIRECTED_PATH',
+                'LIBRARY_DISK_BUDGET', 'LIBRARY_MEMORY_BUDGET', 'LIBRARY_DERIVED_BUDGET',
+                'CATALOG_CHANGED_SINCE_BUILD', 'GENERATION_NOT_PENDING'}
         code = str(error) if type(error) is ValueError and str(error) in safe else 'LIBRARY_OPERATION_REJECTED'
         print(json.dumps({'ok': False, 'code': code}), file=sys.stderr)
         return 1

@@ -1,16 +1,18 @@
 """Derived, immutable search generations; a small pointer is the publication unit."""
 from datetime import datetime, timezone
 import json
+import hashlib
 import os
 from pathlib import Path
 import re
 import sqlite3
 from uuid import uuid4
 
-from ..domain import LibraryFragment
+from ..domain import LibraryFragment, LibraryRecord
 from .assets import file_hash
 from .catalog import canonical, checked_path, connection, digest, ensure_root, iter_records, writer_lock
 from .originals import OriginalReader
+from .budget import check_budget
 from .text import TOKENIZER_VERSION, normalize, tokens
 
 
@@ -21,34 +23,81 @@ def generation_path(root, generation_id):
     return checked_path(root / 'generations' / generation_id)
 
 
-def build_generation(root: Path, record_ids=None) -> str:
+def _catalog_fingerprint(root, selected):
+    value = hashlib.sha256(TOKENIZER_VERSION.encode('utf-8'))
+    with connection(root) as db:
+        for row in db.execute('SELECT source_id,sha256 FROM sources ORDER BY source_id'):
+            value.update(canonical(list(row)).encode('utf-8'))
+        for row in db.execute('SELECT record_id,record_json FROM records ORDER BY source_id,ordinal'):
+            if selected is None or row[0] in selected:
+                value.update(row[1].encode('utf-8'))
+        for row in db.execute('SELECT record_id,fragment_json FROM fragments ORDER BY record_id,ordinal'):
+            if selected is None or row[0] in selected:
+                value.update(row[1].encode('utf-8'))
+    value.update(canonical(sorted(selected) if selected is not None else None).encode('utf-8'))
+    return value.hexdigest()
+
+
+def _checkpoint(db, counts, source_id, ordinal):
+    db.execute('UPDATE build_state SET counts_json=?,source_id=?,ordinal=? WHERE id=1',
+               (canonical(counts), source_id, ordinal))
+    db.commit()
+
+
+def build_generation(root: Path, record_ids=None, *, resume=None, batch_size=500) -> str:
+    if type(batch_size) is not int or not 1 <= batch_size <= 10000:
+        raise ValueError('INDEX_BATCH_INVALID')
     with writer_lock(root) as root:
-        generation_id = uuid4().hex
+        check_budget(root, force=True)
+        generation_id = resume or uuid4().hex
         directory = generation_path(root, generation_id)
-        directory.mkdir(parents=True)
         selected = set(record_ids) if record_ids is not None else None
+        fingerprint = _catalog_fingerprint(root, selected)
+        if resume:
+            if not directory.is_dir() or (directory / 'manifest.json').exists():
+                raise ValueError('GENERATION_NOT_PENDING')
+        else:
+            directory.mkdir(parents=True)
         database_path = directory / 'search.sqlite'
+        if resume and not checked_path(database_path).is_file():
+            raise ValueError('GENERATION_NOT_PENDING')
+        checked_path(directory / 'search.sqlite-journal')
         db = sqlite3.connect(database_path)
         counts = {'records': 0, 'case_csv': 0, 'law_markdown': 0, 'units': 0}
         try:
+            if not resume:
+                db.executescript('''
+                    CREATE TABLE build_state (id INTEGER PRIMARY KEY CHECK(id=1), fingerprint TEXT NOT NULL,
+                        counts_json TEXT NOT NULL,source_id TEXT NOT NULL,ordinal INTEGER NOT NULL);
+                ''')
+                db.execute('INSERT INTO build_state VALUES(1,?,?,?,?)', (fingerprint, canonical(counts), '', 0))
+                db.commit()
             db.executescript('''
                 PRAGMA journal_mode=DELETE;
                 PRAGMA synchronous=FULL;
                 PRAGMA cache_size=-65536;
-                CREATE TABLE units (
+                CREATE TABLE IF NOT EXISTS units (
                     rowid INTEGER PRIMARY KEY, unit_id TEXT NOT NULL UNIQUE, record_id TEXT NOT NULL,
                     version_id TEXT NOT NULL, kind TEXT NOT NULL, title TEXT NOT NULL,
                     case_no TEXT, court TEXT, cause TEXT, province TEXT, decision_date TEXT,
                     fragment_id TEXT, start INTEGER NOT NULL, end INTEGER NOT NULL,
                     article TEXT, ambiguous INTEGER NOT NULL
                 );
-                CREATE INDEX ix_units_case ON units(case_no);
-                CREATE INDEX ix_units_filters ON units(kind,province,decision_date);
-                CREATE VIRTUAL TABLE search USING fts5(title_tokens,body_tokens,content='',detail=full,
+                CREATE INDEX IF NOT EXISTS ix_units_case ON units(case_no);
+                CREATE INDEX IF NOT EXISTS ix_units_filters ON units(kind,province,decision_date);
+                CREATE VIRTUAL TABLE IF NOT EXISTS search USING fts5(title_tokens,body_tokens,content='',detail=full,
                     tokenize='unicode61 remove_diacritics 0');
             ''')
+            state = db.execute('SELECT fingerprint,counts_json,source_id,ordinal FROM build_state WHERE id=1').fetchone()
+            if not state or state[0] != fingerprint:
+                raise ValueError('CATALOG_CHANGED_SINCE_BUILD')
+            counts = json.loads(state[1])
+            last_source, last_ordinal = state[2:]
             with OriginalReader(root, preload=True) as reader, connection(root) as catalog:
-                for record in iter_records(root):
+                rows = catalog.execute('SELECT record_json FROM records WHERE (source_id,ordinal)>(?,?) ORDER BY source_id,ordinal',
+                                       (last_source, last_ordinal))
+                for row in rows:
+                    record = LibraryRecord.model_validate_json(row[0])
                     if selected is not None and record.record_id not in selected:
                         continue
                     original, _, _ = reader.read(record)
@@ -75,9 +124,11 @@ def build_generation(root: Path, record_ids=None) -> str:
                         counts['units'] += 1
                     counts['records'] += 1
                     counts[record.kind] += 1
-                    if counts['records'] % 500 == 0:
-                        db.commit()
-            db.commit()
+                    last_source, last_ordinal = record.source_id, record.ordinal
+                    if counts['records'] % batch_size == 0:
+                        _checkpoint(db, counts, last_source, last_ordinal)
+                        check_budget(root)
+            _checkpoint(db, counts, last_source, last_ordinal)
             db.execute("INSERT INTO search(search) VALUES('integrity-check')")
             db.commit()
             if db.execute('PRAGMA quick_check').fetchone()[0] != 'ok':
@@ -86,6 +137,7 @@ def build_generation(root: Path, record_ids=None) -> str:
             db.close()
         info = database_path.stat()
         manifest = {'generation_id': generation_id, 'state': 'ready', 'tokenizer': TOKENIZER_VERSION,
+                    'catalog_fingerprint': fingerprint,
                     'coverage': counts, 'index_sha256': file_hash(database_path), 'index_bytes': info.st_size,
                     'index_mtime_ns': info.st_mtime_ns, 'created_at': datetime.now(timezone.utc).isoformat()}
         (directory / 'manifest.json').write_text(canonical(manifest), encoding='utf-8')
