@@ -121,6 +121,11 @@ def connection(root: Path, *, writable=False):
                 CREATE TABLE IF NOT EXISTS record_aliases (
                     alias TEXT PRIMARY KEY, record_id TEXT NOT NULL REFERENCES records(record_id)
                 );
+                CREATE TABLE IF NOT EXISTS fragments (
+                    fragment_id TEXT PRIMARY KEY, record_id TEXT NOT NULL REFERENCES records(record_id),
+                    ordinal INTEGER NOT NULL, fragment_json TEXT NOT NULL,
+                    UNIQUE(record_id,ordinal)
+                );
                 CREATE TRIGGER IF NOT EXISTS review_no_update BEFORE UPDATE ON reviews
                 BEGIN SELECT RAISE(ABORT,'APPEND_ONLY'); END;
                 CREATE TRIGGER IF NOT EXISTS review_no_delete BEFORE DELETE ON reviews

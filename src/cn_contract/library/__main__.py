@@ -19,6 +19,10 @@ def main(argv=None):
     pilot.add_argument('--pilot-root', required=True, type=Path)
     pilot.add_argument('--source-root', required=True, type=Path)
     pilot.add_argument('--batch-id', default='cases-2025')
+    laws = commands.add_parser('import-laws')
+    laws.add_argument('--library-root', required=True, type=Path)
+    laws.add_argument('--input', required=True, type=Path)
+    laws.add_argument('--batch-id', required=True)
     args = parser.parse_args(argv)
     try:
         if args.command == 'import-cases':
@@ -32,6 +36,11 @@ def main(argv=None):
             result = import_pilot(args.library_root, args.pilot_root, args.source_root, batch_id=args.batch_id)
             print(json.dumps(result, ensure_ascii=False))
             return 0 if not result['mismatched'] else 2
+        if args.command == 'import-laws':
+            from .law_sections import import_laws
+            result = import_laws(args.library_root, args.input, args.batch_id)
+            print(json.dumps(result, ensure_ascii=False))
+            return 0 if not result['failed'] else 2
     except (ValueError, OSError) as error:
         # Never reflect original rows, credentials or arbitrary exception paths.
         safe = {'SOURCE_CHANGED', 'LIBRARY_BUSY', 'HEADER_INVALID', 'ASSET_HASH_MISMATCH',

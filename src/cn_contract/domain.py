@@ -2330,3 +2330,24 @@ class LibraryRecord(DomainModel):
         if self.byte_end < self.byte_start or self.byte_end - self.byte_start > 32 * 1024 * 1024:
             raise ValueError('LIBRARY_RECORD_RANGE_INVALID')
         return self
+
+
+class LibraryFragment(DomainModel):
+    fragment_id: SHA256
+    record_id: SHA256
+    version_id: SHA256
+    ordinal: PositiveInt
+    start: NonNegativeInt
+    end: NonNegativeInt
+    line_start: PositiveInt
+    line_end: PositiveInt
+    text_sha256: SHA256
+    role: Literal['paragraph', 'article_candidate', 'contents_candidate', 'quoted_candidate']
+    article: str | None
+    ambiguous: StrictBool = False
+
+    @model_validator(mode='after')
+    def valid_fragment_range(self):
+        if self.end < self.start or self.line_end < self.line_start:
+            raise ValueError('FRAGMENT_RANGE_INVALID')
+        return self
