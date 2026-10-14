@@ -2351,3 +2351,60 @@ class LibraryFragment(DomainModel):
         if self.end < self.start or self.line_end < self.line_start:
             raise ValueError('FRAGMENT_RANGE_INVALID')
         return self
+
+
+class LibraryQuery(DomainModel):
+    text: Annotated[str, StringConstraints(max_length=200)] = ''
+    kind: Literal['all', 'case_csv', 'law_markdown'] = 'all'
+    mode: Literal['phrase', 'all'] = 'all'
+    case_no: str | None = None
+    court: str | None = None
+    cause: str | None = None
+    province: str | None = None
+    date_from: date | None = None
+    date_to: date | None = None
+    limit: Annotated[int, Field(strict=True, ge=1, le=100)] = 20
+    cursor: Annotated[str, StringConstraints(max_length=2048)] | None = None
+
+    @model_validator(mode='after')
+    def library_filters(self):
+        if (self.date_from or self.date_to) and self.kind != 'case_csv':
+            raise ValueError('DATE_FILTER_CASES_ONLY')
+        if self.date_from and self.date_to and self.date_from > self.date_to:
+            raise ValueError('DATE_RANGE_INVALID')
+        return self
+
+
+class LibraryHit(DomainModel):
+    record_id: SHA256
+    version_id: SHA256
+    fragment_id: SHA256 | None
+    kind: Literal['case_csv', 'law_markdown']
+    title: str
+    snippet: str
+    match_start: NonNegativeInt | None
+    match_end: NonNegativeInt | None
+    match_field: Literal['body', 'title', 'metadata']
+    score: float
+    fields: dict[str, str | None]
+    verification_status: Literal['unverified'] = 'unverified'
+    body_status: str
+    article: str | None = None
+    ambiguous: StrictBool = False
+
+
+class LibraryPage(DomainModel):
+    hits: tuple[LibraryHit, ...] = ()
+    generation_id: str | None = None
+    coverage: dict[str, NonNegativeInt] = Field(default_factory=dict)
+    state: Literal['ready', 'timeout', 'not_ready']
+    next_cursor: str | None = None
+    total_matches: NonNegativeInt | None = None
+
+
+class LibraryOriginal(DomainModel):
+    record: LibraryRecord
+    source: LibrarySource
+    text: str
+    raw_fields: dict[str, JsonValue]
+    fragment: LibraryFragment | None = None

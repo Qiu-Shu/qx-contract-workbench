@@ -23,8 +23,43 @@ def main(argv=None):
     laws.add_argument('--library-root', required=True, type=Path)
     laws.add_argument('--input', required=True, type=Path)
     laws.add_argument('--batch-id', required=True)
+    build = commands.add_parser('build-index')
+    build.add_argument('--library-root', required=True, type=Path)
+    build.add_argument('--activate', action='store_true')
+    search = commands.add_parser('search')
+    search.add_argument('--library-root', required=True, type=Path)
+    search.add_argument('--query', default='')
+    search.add_argument('--kind', choices=['all', 'case_csv', 'law_markdown'], default='all')
+    search.add_argument('--mode', choices=['phrase', 'all'], default='all')
+    for name in ('case-no', 'court', 'cause', 'province', 'date-from', 'date-to', 'cursor'):
+        search.add_argument('--' + name)
+    search.add_argument('--limit', type=int, default=20)
+    show = commands.add_parser('show')
+    show.add_argument('--library-root', required=True, type=Path)
+    show.add_argument('--record-id', required=True)
+    show.add_argument('--version-id', required=True)
     args = parser.parse_args(argv)
     try:
+        if args.command == 'build-index':
+            from .index import build_generation, activate_generation
+            generation = build_generation(args.library_root)
+            if args.activate:
+                activate_generation(args.library_root, generation)
+            print(json.dumps({'generation_id': generation, 'activated': args.activate}))
+            return 0
+        if args.command == 'search':
+            from ..domain import LibraryQuery
+            from .service import search as search_library
+            values = vars(args).copy()
+            for name in ('command', 'library_root', 'query'):
+                values.pop(name)
+            result = search_library(args.library_root, LibraryQuery(text=args.query, **values))
+            print(result.model_dump_json())
+            return 0 if result.state == 'ready' else 2
+        if args.command == 'show':
+            from .service import read_original
+            print(read_original(args.library_root, args.record_id, args.version_id).model_dump_json())
+            return 0
         if args.command == 'import-cases':
             from .csv_source import import_case_file
             result = import_case_file(args.library_root, args.input, args.batch_id,
