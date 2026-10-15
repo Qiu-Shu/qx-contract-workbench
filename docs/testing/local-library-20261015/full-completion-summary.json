@@ -1,0 +1,100 @@
+{
+  "checked_at": "2026-10-15T13:03:30.612139+00:00",
+  "engineering_accepted": true,
+  "generation": "2a04480becee4f1893d235a08b525e91",
+  "coverage": {
+    "case_csv": 3837307,
+    "law_markdown": 17182,
+    "records": 3854489,
+    "units": 4541207
+  },
+  "law_original_files": 17184,
+  "law_fragments": 686718,
+  "index_bytes": 21451407360,
+  "index_sha256": "aa97884101a43142992c829f9c3730444025e925d5e1fe6d442c6778869688f3",
+  "catalog_fingerprint": "dba89bf673afb1d921ec36b298692ff4ec71ca244e16c8e60d3eb3177d62a14b",
+  "known_samples": 40,
+  "extended_samples": 26,
+  "http": {
+    "first_query_after_process_start": {
+      "count": 1,
+      "p95": 0.18345880000015313,
+      "all_ready": true
+    },
+    "warm": {
+      "count": 60,
+      "p95": 0.6508314999991853,
+      "all_ready": true
+    },
+    "ten_authenticated_http_clients": {
+      "count": 50,
+      "p95": 0.27000279999992927,
+      "all_ready": true
+    },
+    "first_query_after_restart": {
+      "count": 1,
+      "p95": 0.1741505000009056,
+      "all_ready": true
+    }
+  },
+  "server_observed_peak_bytes": 193503232,
+  "physical_cold_cache": "NOT_CONTROLLED",
+  "backup": {
+    "copied_files": 17204,
+    "core_bytes": 48265475051,
+    "seconds": 745.0,
+    "restored_auxiliary_tables": {
+      "reviews": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "equal": true
+      },
+      "import_states": {
+        "rows": 17195,
+        "sha256": "f17d9cec9c412f5fb6184725d207bc2cd8e191cf55e1ddc30bf81c0cb76551fe",
+        "equal": true
+      },
+      "failures": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "equal": true
+      },
+      "record_aliases": {
+        "rows": 10000,
+        "sha256": "a68c347097b26482c657875c145c1738a4cf1f78e9d4822aa88657457800a7b9",
+        "equal": true
+      }
+    }
+  },
+  "accounting": {
+    "records": {
+      "total": 3854489,
+      "missing": 0,
+      "mismatched": 0
+    },
+    "fragments": {
+      "total": 686718,
+      "missing": 0,
+      "mismatched": 0
+    },
+    "indexed_units": 4541207,
+    "fts_rows": 4541207,
+    "seconds": 277.04699999999866
+  },
+  "evidence_sha256": {
+    "full-quality.json": "6f65c8e223ff18df53751bb7def6cfef06d7aefc14a55563913807a18a8e409e",
+    "full-acceptance.json": "db16debcc9fa3b312b83bdec683c65e3887a861ecc5b0636c3b0d8f25db2ad81",
+    "full-http-acceptance.json": "571f5f311192a077aa8573fc292e06303ad2a6cfd80851254410b1c11b50ca48",
+    "full-backup-restore.json": "aca743d984fb0fb3164ce6ad1d052b796ffbc86d07b3d96174fc41e723422a3b",
+    "full-index-accounting.json": "7a937a125f66d0d79180d96ff0a2cf1acb6d0a0db8f5bff7921aac9de6fec620",
+    "full-backup-restore-process-result.json": "1e33d2d0f50404d49f7ef7a38f20e02f3fb4570fdc1f0cb3a88685db6486f580",
+    "full-index-accounting-process-result.json": "242f434f42b0b1082b527fe63966efcccc9095710c7cfe0c60675015f8f39af7",
+    "edge-2a04480becee4f1893d235a08b525e91.json": "99f636f636737f874ba97bdedb94ac6704615571f23b11297108f84a3cc782d0"
+  },
+  "limitations": [
+    "legal_source_validity_and_applicability_unverified",
+    "1985_2024_not_downloaded",
+    "cloud_not_deployed",
+    "source_environment_launcher_not_standalone_installer"
+  ]
+}
