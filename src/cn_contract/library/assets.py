@@ -84,6 +84,14 @@ def _register_source_in_transaction(root: Path, path: Path, batch_id: str, kind:
 
 def asset_path(root: Path, source: LibrarySource) -> Path:
     root = ensure_root(root)
+    return _asset_path_in_root(root, source)
+
+
+def _asset_path_in_root(root: Path, source: LibrarySource) -> Path:
+    """Internal: root format checked by the enclosing catalog transaction.
+
+    The concrete asset and all ancestors are still checked on every open.
+    """
     source = LibrarySource.model_validate(source.model_dump(mode='json'))
     path = checked_path(root / 'assets' / source.asset_key)
     if not path.is_file() or path.stat().st_size != source.size:

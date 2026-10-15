@@ -6,7 +6,7 @@ import sqlite3
 import time
 
 from ..domain import LibraryFragment, LibraryHit, LibraryOriginal, LibraryPage, LibraryQuery
-from .catalog import canonical, connection, digest, get_record
+from .catalog import canonical, connection, digest
 from .cleaning import normalize_case
 from .index import current_generation, generation_path
 from .originals import OriginalReader
@@ -14,10 +14,10 @@ from .text import normalize, query_terms
 
 
 def read_original(root: Path, record_id: str, version_id: str) -> LibraryOriginal:
-    record = get_record(root, record_id)
-    if record.version_id != version_id:
-        raise ValueError('VERSION_MISMATCH')
     with OriginalReader(root) as reader:
+        record = reader.get_record(record_id)
+        if record.version_id != version_id:
+            raise ValueError('VERSION_MISMATCH')
         text, fields, source = reader.read(record)
     return LibraryOriginal(record=record, source=source, text=text, raw_fields=fields)
 
@@ -115,7 +115,7 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
                 if row is None:
                     break
                 consumed += 1
-                record = get_record(root, row['record_id'])
+                record = reader.get_record(row['record_id'])
                 if record.version_id != row['version_id']:
                     raise ValueError('INDEX_VERSION_MISMATCH')
                 text, _, _ = reader.read(record)

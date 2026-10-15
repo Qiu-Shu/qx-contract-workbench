@@ -3,48 +3,60 @@ from collections import OrderedDict
 import csv
 import io
 import json
+from pathlib import Path
+import sys
 
 from ..domain import LibrarySource
-from .assets import asset_path, file_hash
-from .catalog import connection, digest, get_source
+from .assets import _asset_path_in_root, file_hash
+from .catalog import connection, digest, _get_source, _get_record
 from .csv_source import read_header
 
 
 class OriginalReader:
     def __init__(self, root, *, preload=False):
-        self.root = root
+        self.root = Path(root)
         self.sources = {}
         self.streams = OrderedDict()
         self.headers = {}
-        self.expected_headers = {}
-        with connection(root) as db:
-            for row in db.execute('SELECT source_id,header_json FROM import_states'):
-                self.expected_headers[row[0]] = json.loads(row[1])
-            if preload:
-                self.sources = {row[0]: LibrarySource.model_validate_json(row[1])
-                                for row in db.execute('SELECT source_id,source_json FROM sources')}
+        self.preload = preload
 
     def __enter__(self):
+        self._catalog = connection(self.root)
+        self.db = self._catalog.__enter__()
+        try:
+            if self.preload:
+                self.sources = {row[0]: LibrarySource.model_validate_json(row[1])
+                                for row in self.db.execute('SELECT source_id,source_json FROM sources')}
+        except BaseException:
+            self._catalog.__exit__(*sys.exc_info())
+            raise
         return self
 
     def __exit__(self, *args):
-        for stream in self.streams.values():
-            stream.close()
+        try:
+            for stream in self.streams.values():
+                stream.close()
+        finally:
+            self._catalog.__exit__(*args)
+
+    def get_record(self, record_id):
+        return _get_record(self.db, record_id)
 
     def read(self, record):
         source = self.sources.get(record.source_id)
         if source is None:
-            source = self.sources[record.source_id] = get_source(self.root, record.source_id)
+            source = self.sources[record.source_id] = _get_source(self.db, record.source_id)
         if record.byte_end > source.size:
             raise ValueError('ASSET_RANGE_INVALID')
         stream = self.streams.pop(source.source_id, None)
         if stream is None:
-            path = asset_path(self.root, source)
+            path = _asset_path_in_root(self.root, source)
             stream = path.open('rb')
             try:
                 if source.kind == 'case_csv':
                     header, _ = read_header(stream)
-                    expected = self.expected_headers.get(source.source_id)
+                    state = self.db.execute('SELECT header_json FROM import_states WHERE source_id=?', (source.source_id,)).fetchone()
+                    expected = json.loads(state[0]) if state else None
                     if expected is None:
                         if file_hash(path) != source.sha256:
                             raise ValueError('ASSET_HASH_MISMATCH')

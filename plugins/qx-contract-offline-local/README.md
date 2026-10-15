@@ -8,6 +8,8 @@
 |---|---|---|
 |`workbench_status`|空对象|离线能力与阻断状态，不读取案件|
 |`deepseek_offline_example`|fixture：sales/service/lease/nda；operation：extract_facts/review_chunk/review_cross_clauses；model：deepseek-flash/deepseek-v4-pro|服务器选择四个登记虚构文件；请求与响应均为离线人工协议示例，费用为 None/unknown/USD，legal_opinion 为 false|
+|`read_selected_case`|当前服务声明的参数|只读律师在工作台临时选定的案件，仍须通过当前授权检查|
+|`submit_selected_candidates`|当前服务声明的参数|在另行允许后提交一轮未核验来源候选，不自动采纳或确认|
 
 例如 `{"fixture":"sales","operation":"review_chunk","model":"deepseek-flash"}`。额外原文、路径、URL、密钥、token、价格、身份和批准不受支持；固定示例不能启动案件审查或真实供应商请求。
 
@@ -25,7 +27,7 @@
 
 `plugin.json`/`mcp.json` 是通用清单；`.codex-plugin/plugin.json`/`.mcp.json` 是同步的 Codex 兼容清单，图标为本项目新作的简单文档 SVG。没有新增 Skill、案件权限、账户映射、文件桥、生命周期钩子或外部服务 URL。元数据中的项目名不是外部平台已验证的发布者身份。
 
-准备接入宿主时，需要分别核验初始化、仅发现两个工具、状态调用、虚构示例、非法参数拒绝和正常停止。直接启动后等待协议输入，不会打开网页。源包检验及当前具体限制记录在项目的 `docs/testing/PLUGIN-local-package.md`；该报告在仓库中，不在 ZIP 内。
+准备接入宿主时，需要分别核验初始化、发现上述四个工具、状态调用、虚构示例、选案授权边界、非法参数拒绝和正常停止。直接启动后等待协议输入，不会打开网页。源包检验及当前具体限制记录在项目的 `docs/testing/PLUGIN-local-package.md`；该历史报告在仓库中，不在 ZIP 内。本目录仍是旧式连接元数据，不能套用`qx-contract-offline-codex`专用入口的启动摘要强制检查结论。
 
 ## 仍待完成
 

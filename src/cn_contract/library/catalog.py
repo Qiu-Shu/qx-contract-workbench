@@ -142,10 +142,14 @@ def connection(root: Path, *, writable=False):
 
 
 def get_source(root: Path, source_id: str) -> LibrarySource:
+    with connection(root) as db:
+        return _get_source(db, source_id)
+
+
+def _get_source(db, source_id: str) -> LibrarySource:
     if not isinstance(source_id, str) or len(source_id) != 64 or any(c not in '0123456789abcdef' for c in source_id):
         raise ValueError('SOURCE_ID_INVALID')
-    with connection(root) as db:
-        row = db.execute('SELECT source_json FROM sources WHERE source_id=?', (source_id,)).fetchone()
+    row = db.execute('SELECT source_json FROM sources WHERE source_id=?', (source_id,)).fetchone()
     if row is None:
         raise ValueError('SOURCE_NOT_FOUND')
     return LibrarySource.model_validate_json(row[0])
@@ -176,9 +180,13 @@ def iter_records(root: Path, source_id: str | None = None):
 
 def get_record(root: Path, record_id: str) -> LibraryRecord:
     with connection(root) as db:
-        row = db.execute('SELECT record_json FROM records WHERE record_id=?', (record_id,)).fetchone()
-        if row is None:
-            row = db.execute('SELECT r.record_json FROM records r JOIN record_aliases a ON a.record_id=r.record_id WHERE a.alias=?', (record_id,)).fetchone()
+        return _get_record(db, record_id)
+
+
+def _get_record(db, record_id: str) -> LibraryRecord:
+    row = db.execute('SELECT record_json FROM records WHERE record_id=?', (record_id,)).fetchone()
+    if row is None:
+        row = db.execute('SELECT r.record_json FROM records r JOIN record_aliases a ON a.record_id=r.record_id WHERE a.alias=?', (record_id,)).fetchone()
     if row is None:
         raise ValueError('RECORD_NOT_FOUND')
     return LibraryRecord.model_validate_json(row[0])
