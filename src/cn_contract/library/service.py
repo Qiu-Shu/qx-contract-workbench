@@ -1,8 +1,12 @@
 """Read-only retrieval shared by CLI and authenticated workbench routes."""
 import base64
+from collections import OrderedDict
+from concurrent.futures import Future
 import json
 from pathlib import Path
 import sqlite3
+import sys
+from threading import Lock
 import time
 
 from ..domain import LibraryFragment, LibraryHit, LibraryOriginal, LibraryPage, LibraryQuery
@@ -11,6 +15,51 @@ from .cleaning import normalize_case
 from .index import current_generation, generation_path
 from .originals import OriginalReader
 from .text import normalize, query_terms
+
+
+_RANK_CACHE = OrderedDict()
+_RANK_INFLIGHT = {}
+_RANK_LOCK = Lock()
+_RANK_CACHE_BYTES = 32 * 1024 * 1024
+
+
+def _candidate_rows(db, database, sql, args, deadline):
+    """Share bounded ranking work; every caller still verifies live originals."""
+    stat = database.stat()
+    key = (str(database), stat.st_mtime_ns, stat.st_size, sql, tuple(args))
+    with _RANK_LOCK:
+        cached = _RANK_CACHE.get(key)
+        if cached is not None:
+            _RANK_CACHE.move_to_end(key)
+            return cached[0]
+        pending = _RANK_INFLIGHT.get(key)
+        owner = pending is None
+        if owner:
+            pending = _RANK_INFLIGHT[key] = Future()
+    if not owner:
+        return pending.result(timeout=max(0, deadline - time.monotonic()))
+    try:
+        rows = tuple(db.execute(sql, args))
+        if time.monotonic() >= deadline:
+            raise TimeoutError()
+        size = sys.getsizeof(rows) + sum(sys.getsizeof(row) + sys.getsizeof(tuple(row))
+            + sum(sys.getsizeof(value) for value in row) for row in rows)
+    except BaseException as error:
+        # Waiters have later deadlines; share the owner's timeout explicitly.
+        if isinstance(error, sqlite3.OperationalError) and time.monotonic() >= deadline:
+            error = TimeoutError()
+        with _RANK_LOCK:
+            _RANK_INFLIGHT.pop(key, None)
+            pending.set_exception(error)
+        raise error
+    with _RANK_LOCK:
+        if size <= _RANK_CACHE_BYTES:
+            _RANK_CACHE[key] = (rows, size)
+            while len(_RANK_CACHE) > 16 or sum(item[1] for item in _RANK_CACHE.values()) > _RANK_CACHE_BYTES:
+                _RANK_CACHE.popitem(last=False)
+        _RANK_INFLIGHT.pop(key, None)
+        pending.set_result(rows)
+    return rows
 
 
 def read_original(root: Path, record_id: str, version_id: str) -> LibraryOriginal:
@@ -61,7 +110,11 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
     if manifest is None:
         return LibraryPage(state='not_ready')
     generation_id = manifest['generation_id']
-    query_hash = digest(canonical(query.model_dump(mode='json', exclude={'cursor'})).encode('utf-8'))
+    scoped_case = bool(expression) and query.case_no is not None
+    query_identity = query.model_dump(mode='json', exclude={'cursor'})
+    if scoped_case:
+        query_identity['ranking_version'] = 'case-title-v1'
+    query_hash = digest(canonical(query_identity).encode('utf-8'))
     offset = _cursor_decode(query.cursor, generation_id, query_hash)
     predicates, args = [], []
     if expression:
@@ -89,30 +142,46 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
         if value is not None:
             predicates.append('u.decision_date' + op + '?')
             args.append(value.isoformat())
-    rank = 'bm25(search,8.0,1.0)' if expression else '0.0'
+    # Exact case lookup must not scan the corpus to calculate global phrase
+    # frequencies. Rank its small candidate set by title matches, then stable ID.
+    rank = ('case_title_score(u.title,u.title_aliases)' if scoped_case else
+            'bm25(search,8.0,1.0)' if expression else '0.0')
     sql = 'SELECT u.*,' + rank + ' AS score FROM units u'
+    if scoped_case:
+        sql += ' INDEXED BY ix_units_case'
     if expression:
-        sql += ' JOIN search ON search.rowid=u.rowid'
+        sql += (' CROSS JOIN search' if scoped_case else ' JOIN search') + ' ON search.rowid=u.rowid'
     if predicates:
         sql += ' WHERE ' + ' AND '.join(predicates)
+    # Match the existing cursor window so SQLite can use a bounded top-N sort.
+    candidate_limit = 2000 - offset
     sql += (" ORDER BY CASE WHEN u.kind='law_markdown' AND u.fragment_id IS NULL THEN 0 ELSE 1 END,score,u.unit_id"
-            if expression else ' ORDER BY u.unit_id') + ' LIMIT -1 OFFSET ?'
-    args.append(offset)
+            if expression else ' ORDER BY u.unit_id') + ' LIMIT ? OFFSET ?'
+    args.extend((candidate_limit, offset))
     database = generation_path(root, generation_id) / 'search.sqlite'
     db = sqlite3.connect(database.as_uri() + '?mode=ro', uri=True)
     db.row_factory = sqlite3.Row
+    if scoped_case:
+        def title_score(title, aliases):
+            titles = [normalize(value) for value in [title, *json.loads(aliases)]]
+            return -float(sum(any(term in value for value in titles) for term in terms))
+        db.create_function('case_title_score', 2, title_score, deterministic=True)
     deadline = time.monotonic() + 2.0
     db.set_progress_handler(lambda: int(time.monotonic() >= deadline), 5000)
     hits, consumed, more, state = [], 0, False, 'ready'
     try:
         with OriginalReader(root) as reader:
-            cursor = db.execute(sql, args)
+            cursor = iter(_candidate_rows(db, database, sql, args, deadline)
+                          if expression and not scoped_case else db.execute(sql, args))
             while True:
                 if time.monotonic() >= deadline:
                     state, more = 'timeout', True
                     break
-                row = cursor.fetchone()
+                row = next(cursor, None)
                 if row is None:
+                    more = consumed == candidate_limit
+                    if more and not hits:
+                        raise ValueError('CURSOR_TOO_DEEP')
                     break
                 consumed += 1
                 record = reader.get_record(row['record_id'])
@@ -145,6 +214,8 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
                 if len(hits) >= query.limit:
                     more = True
                     break
+    except TimeoutError:
+        state, more = 'timeout', True
     except sqlite3.OperationalError:
         if time.monotonic() < deadline:
             raise

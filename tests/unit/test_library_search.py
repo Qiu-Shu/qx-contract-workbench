@@ -58,6 +58,40 @@ def test_case_number_filters_and_title_ranking(tmp_path):
     assert not service.search(root, query(text='租赁', province='不存在的省')).hits
 
 
+def test_exact_case_ranking_is_independent_of_unrelated_corpus(tmp_path):
+    root = tmp_path / 'library'
+    scoped = tmp_path / 'scoped.csv'
+    with scoped.open('w', encoding='utf-8', newline='') as stream:
+        writer = csv.writer(stream)
+        writer.writerow(['标题', '案号', '法院', '文书内容'])
+        writer.writerow(['虚构租赁流程', '(2025)吉虚1号', '虚构法院', '虚构事实说明。'])
+        writer.writerow(['虚构材料乙', '(2025)吉虚1号', '虚构法院', '租赁。' + '虚构补充内容。' * 10])
+    api('csv_source').import_case_file(root, scoped, 'fiction-scoped')
+    index, service = api('index'), api('service')
+    index.activate_generation(root, index.build_generation(root))
+    request = query(text='租赁', case_no='（２０２５）吉虚1号', court='虚构法院', kind='case_csv')
+    before = service.search(root, request)
+    assert before.state == 'ready' and len(before.hits) == 2
+    assert before.hits[0].title == '虚构租赁流程'
+
+    unrelated = tmp_path / 'unrelated.csv'
+    with unrelated.open('w', encoding='utf-8', newline='') as stream:
+        writer = csv.writer(stream)
+        writer.writerow(['标题', '案号', '法院', '文书内容'])
+        for number in range(80):
+            writer.writerow(['虚构其他资料', f'(2025)吉外{number}号', '虚构法院',
+                             '租赁。范围外专有词。' + '虚构无关内容。' * 200])
+    api('csv_source').import_case_file(root, unrelated, 'fiction-unrelated')
+    index.activate_generation(root, index.build_generation(root))
+    after = service.search(root, request)
+    assert [(h.record_id, h.score) for h in after.hits] == [(h.record_id, h.score) for h in before.hits]
+    assert not service.search(root, request.model_copy(update={'text': '范围外专有词'})).hits
+    assert not service.search(root, request.model_copy(update={'court': '不同虚构法院'})).hits
+    first = service.search(root, request.model_copy(update={'limit': 1}))
+    second = service.search(root, request.model_copy(update={'limit': 1, 'cursor': first.next_cursor}))
+    assert [first.hits[0].record_id, second.hits[0].record_id] == [h.record_id for h in after.hits]
+
+
 def test_control_characters_do_not_inject_queries_and_single_han_is_explicit(tmp_path):
     root, _ = world(tmp_path)
     service = api('service')
@@ -81,6 +115,17 @@ def test_cursor_is_bound_to_query_and_generation(tmp_path):
     api('index').activate_generation(root, new_generation)
     with pytest.raises(ValueError, match='CURSOR_'):
         service.search(root, query(text='租赁', limit=1, cursor=first.next_cursor))
+
+
+def test_exact_case_cursor_from_global_ranking_is_rejected(tmp_path):
+    from cn_contract.library.catalog import canonical, digest
+    root, generation = world(tmp_path)
+    service = api('service')
+    request = query(text='租赁', case_no='(2025)吉虚1号', limit=1)
+    legacy_hash = digest(canonical(request.model_dump(mode='json', exclude={'cursor'})).encode('utf-8'))
+    legacy_cursor = service._cursor_encode(generation, legacy_hash, 1)
+    with pytest.raises(ValueError, match='CURSOR_STALE_OR_DIFFERENT_QUERY'):
+        service.search(root, request.model_copy(update={'cursor': legacy_cursor}))
 
 
 def test_source_hash_and_version_must_match(tmp_path):
@@ -180,6 +225,67 @@ def test_deep_cursor_rejected_with_narrow_query_hint(tmp_path):
     deep = service._cursor_encode(generation, fingerprint, 2000)
     with pytest.raises(ValueError, match='CURSOR_TOO_DEEP'):
         service.search(root, q.model_copy(update={'cursor': deep}))
+
+
+def test_candidate_window_stops_at_cursor_boundary_without_false_total(tmp_path):
+    incoming = tmp_path / 'many.csv'
+    with incoming.open('w', encoding='utf-8', newline='') as stream:
+        writer = csv.writer(stream)
+        writer.writerow(['标题', '案号', '法院', '文书内容'])
+        for number in range(2002):
+            writer.writerow(['虚构租赁', f'(2025)吉虚{number}号', '虚构法院', '租赁虚构正文。'])
+    root = tmp_path / 'library'
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+    index, service = api('index'), api('service')
+    generation = index.build_generation(root)
+    index.activate_generation(root, generation)
+    from cn_contract.library.catalog import canonical, digest
+    request = query(text='租赁', kind='case_csv', limit=100)
+    fingerprint = digest(canonical(request.model_dump(mode='json', exclude={'cursor'})).encode('utf-8'))
+    cursor = service._cursor_encode(generation, fingerprint, 1999)
+    page = service.search(root, request.model_copy(update={'cursor': cursor}))
+    assert page.state == 'ready' and len(page.hits) == 1
+    assert page.total_matches is None and page.next_cursor
+    with pytest.raises(ValueError, match='CURSOR_TOO_DEEP'):
+        service.search(root, request.model_copy(update={'cursor': page.next_cursor}))
+
+
+def test_filtered_candidate_window_does_not_claim_no_match(tmp_path):
+    incoming = tmp_path / 'candidates.csv'
+    with incoming.open('w', encoding='utf-8', newline='') as stream:
+        writer = csv.writer(stream)
+        writer.writerow(['标题', '案号', '文书内容'])
+        for number in range(2001):
+            body = '租赁，事项。' if number < 2000 else '租赁-事项。' + '虚构长文。' * 50
+            writer.writerow(['虚构资料', f'(2025)吉虚{number}号', body])
+    root = tmp_path / 'library'
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+    index = api('index')
+    index.activate_generation(root, index.build_generation(root))
+    with pytest.raises(ValueError, match='CURSOR_TOO_DEEP'):
+        api('service').search(root, query(text='租赁-事项', mode='phrase'))
+
+
+def test_repeat_ranking_reused_but_original_bytes_rechecked(tmp_path, monkeypatch):
+    import sqlite3
+    root, _ = world(tmp_path)
+    statements = []
+    connect = sqlite3.connect
+    def traced(*args, **kwargs):
+        db = connect(*args, **kwargs)
+        db.set_trace_callback(lambda sql: statements.append(sql) if sql.startswith('SELECT u.*,') else None)
+        return db
+    monkeypatch.setattr(sqlite3, 'connect', traced)
+    service = api('service')
+    request = query(text='租赁', kind='case_csv')
+    first = service.search(root, request)
+    assert service.search(root, request) == first
+    assert len(statements) == 1
+    original = service.read_original(root, first.hits[0].record_id, first.hits[0].version_id)
+    source = root / 'assets' / original.source.asset_key
+    source.write_bytes(source.read_bytes().replace('租赁'.encode(), '假文'.encode()))
+    with pytest.raises(ValueError, match='HASH_MISMATCH'):
+        service.search(root, request)
 
 
 def law_world(tmp_path, files):
