@@ -11,7 +11,6 @@ from ..persistence import (MatterRow, configured_database, create_version, read_
                            read_version, save_parse_result)
 from ..security import ServiceError, authorize
 from .docx_adapter import has_revisions, parse_docx, read_package
-from .pdf_adapter import parse_pdf
 
 DOCX_MIME = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 
@@ -70,6 +69,10 @@ def ingest(file, meta, actor, *, db):
         if revisions or meta.baseline_view in {BaselineView.ACCEPTED_VIEW, BaselineView.REJECTED_VIEW, BaselineView.CONFIRMED_CUSTOM}:
             authorize(actor, meta.matter_id, 'confirm_baseline', db)
     else:
+        # Keep the PDF engine out of core/DOCX startup; static imports remain
+        # discoverable by the desktop packager.
+        from .pdf_adapter import parse_pdf
+
         # Validate every page before admitting a PDF original. No placeholder version
         # is persisted: adapter only needs a UUID for its discarded preview anchors.
         parse_pdf(data, uuid4(), settings)
@@ -90,6 +93,8 @@ def _parse(data, version, settings):
     kind = _type(data, version.original_name, version.mime)
     if kind == 'docx':
         return parse_docx(data, version, settings)
+    from .pdf_adapter import parse_pdf
+
     return parse_pdf(data, version, settings)
 
 

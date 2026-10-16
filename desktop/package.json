@@ -18,6 +18,7 @@
     "appId": "cn.qunxing.workbench.validation",
     "productName": "群兴法律工作台验证版",
     "asar": true,
+    "electronLanguages": ["zh-CN", "zh-TW", "en-US"],
     "electronDist": "node_modules/electron/dist",
     "directories": {"output": "../dist/desktop"},
     "files": ["main.cjs", "backend.cjs", "maintenance.cjs", "policy.cjs", "preload.cjs", "setup.html", "setup.css", "setup.js", "package.json"],

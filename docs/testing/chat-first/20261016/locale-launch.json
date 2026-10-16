@@ -1,0 +1,30 @@
+{
+  "checks": [
+    {
+      "requested": "zh-CN",
+      "locale": "zh-CN",
+      "setupUsable": true,
+      "rendererLanguage": "zh-CN"
+    },
+    {
+      "requested": "zh-TW",
+      "locale": "zh-TW",
+      "setupUsable": true,
+      "rendererLanguage": "zh-TW"
+    },
+    {
+      "requested": "en-US",
+      "locale": "en-US",
+      "setupUsable": true,
+      "rendererLanguage": "en-US"
+    },
+    {
+      "requested": "fr-FR",
+      "locale": "zh-CN",
+      "setupUsable": true,
+      "rendererLanguage": "zh-CN"
+    }
+  ],
+  "status": "PASS",
+  "scope": "setup launch only; no assertion that every Chromium native string is translated"
+}

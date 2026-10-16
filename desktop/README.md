@@ -53,6 +53,8 @@
 
 Electron 44.8.0 / electron-builder 26.15.3 由 `package-lock.json` 固定，npm 12.2.0 tarball 用固定 SHA512 校验；Electron 官方 GitHub zip 对照 npm 包内 SHA256 校验。PyInstaller 6.22.3 及构建依赖由 `requirements-build.lock` 固定并校验哈希。NSIS 和 7-Zip 由固定 electron-builder 的构建工具配置下载校验。无签名账号或付费服务。
 
+后续构建仅收集 Chromium 的简体中文、繁体中文和 en-US 回退语言资源，使用固定 electron-builder 的 `electronLanguages` 配置；不删除字体、ICU、安全组件或许可通知。产品页面仍以中文提供，其他系统语言采用可用回退；这不是新增多语言产品界面。现有已安装 0.4.1 不会因源码配置变化而被修改，后续候选须单独验证后交付。
+
 打包仅包含显式代码、界面、固定配置、已登记虚构样本、规则草稿及依赖许可文本；不会收录 `.local` 工作区、法律库、密钥或真实案件。Python 的第三方许可放在安装目录 `resources/backend/_internal/third-party-licenses`，Electron 的许可随运行组件附带。
 
 `QX_DESKTOP_DATA_PARENT` 仅供由操作系统启动的维护/验收进程指定隔离资料目录，网页不能修改。合成验收脚本位于 `desktop/tests`，使用本机 Playwright Electron 驱动；`PLAYWRIGHT_MODULE` 可指向已安装模块绝对路径。无需最终用户安装 Python、Node 或设计技能。

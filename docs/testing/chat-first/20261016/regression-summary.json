@@ -1,0 +1,65 @@
+{
+  "recorded_utc": "2026-10-16T16:01:24.808523+00:00",
+  "base_commit": "c0f9ae466344e5d585c04d6a9e3ff959a2b7b798",
+  "full": {
+    "cases": 1905,
+    "passed": 1903,
+    "skipped": 2,
+    "failures": 0,
+    "errors": 0,
+    "exit_code": 0,
+    "pytest_seconds": 1629.46,
+    "junit_seconds": 1629.266
+  },
+  "supplement": {
+    "passed": 2,
+    "exit_code": 0,
+    "pytest_seconds": 1.58,
+    "cases": [
+      "tests.integration.test_library_pilot::test_pilot_readonly_mapping_or_explicit_mismatch[False]",
+      "tests.integration.test_library_pilot::test_pilot_readonly_mapping_or_explicit_mismatch[True]"
+    ]
+  },
+  "distinct_cases_covered": 1905,
+  "unresolved_cases": [],
+  "development_checks": {
+    "schema": 0,
+    "defaults": 0,
+    "sources": 0,
+    "dependencies": 0
+  },
+  "evidence": {
+    "full-results.xml": {
+      "path": ".local\\chat-first-20261016\\full-results.xml",
+      "sha256": "c566e9f1c8ca5b12795eb2e7448d215bb01480aceef2230f9c1d8f7da4d5db5f"
+    },
+    "full-tests.log": {
+      "path": ".local\\chat-first-20261016\\full-tests.log",
+      "sha256": "a01fb93b49f2fd4215f232bf98cde79b6fd48684ab2664e673bd5b4b92270362"
+    },
+    "pilot-results.xml": {
+      "path": ".local\\chat-first-20261016\\pilot-results.xml",
+      "sha256": "0ca0c7226d50021e429aace84a654e6844581d6bd3b8f8a8bf129f94a0d0a9a5"
+    },
+    "pilot-tests.log": {
+      "path": ".local\\chat-first-20261016\\pilot-tests.log",
+      "sha256": "ad233ef54e7a4197aaa1655bc3c42083a5b7a6c48393e715c68b57d4b44037c1"
+    },
+    "schema-check.log": {
+      "path": ".local\\chat-first-20261016\\schema-check.log",
+      "sha256": "b3494934d75e6ca7988134d1390fadcf95566b3ce3ce05563d5615da874c3303"
+    },
+    "defaults-check.log": {
+      "path": ".local\\chat-first-20261016\\defaults-check.log",
+      "sha256": "1327e54ae343c27bb7f378bb915d826995396db5b801813b2e139b57d7aefeb6"
+    },
+    "sources-check.log": {
+      "path": ".local\\chat-first-20261016\\sources-check.log",
+      "sha256": "dd6536e31ce1c1887cf8fd66091ebe0265b3d4c5f38d27f7766cdbcd30c6963b"
+    },
+    "dependencies-check.log": {
+      "path": ".local\\chat-first-20261016\\dependencies-check.log",
+      "sha256": "32ddd58b8e25f73d17f1156ff1803b833eb5abe0e289a9f7db5f77d92203cc3a"
+    }
+  }
+}
