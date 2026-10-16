@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+<title>群兴法律工作台 · 本机设置</title><link rel="stylesheet" href="setup.css"><script src="setup.js" defer></script></head>
+<body><main><h1>群兴法律工作台</h1><p class="intro">本机资料，原文可查。</p>
+<p id="status" role="status" aria-live="polite">正在打开工作台…</p>
+<form id="setup" hidden><h2>建立本机账户</h2>
+<label for="username">用户名</label><input id="username" name="username" required maxlength="128" autocomplete="username">
+<label for="password">密码</label><input id="password" name="password" type="password" required minlength="6" maxlength="12" autocomplete="new-password" aria-describedby="password-help">
+<p id="password-help" class="hint">6–12 位。请妥善保存，当前版本不提供自助找回。</p>
+<label for="confirm">再次输入密码</label><input id="confirm" name="confirm" type="password" required minlength="6" maxlength="12" autocomplete="new-password">
+<div class="library"><h2>法律资料库 <span>可稍后连接</span></h2><p id="library-path">尚未连接。已有案例、法规库可直接选择目录。</p><button id="library" type="button" class="secondary">选择资料库目录</button></div>
+<p id="validation" role="alert" hidden></p><button type="submit">建立账户并打开工作台</button></form>
+<button id="retry" hidden>重新打开工作台</button>
+<footer><p>本机验证版 · 真实模型与企查查关闭，工作稿需由律师核验。</p><details><summary>资料保存位置</summary><p id="data-path"></p><p>案件资料独立保存；重新安装程序不会主动清空资料。</p></details></footer>
+</main></body></html>

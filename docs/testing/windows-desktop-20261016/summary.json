@@ -1,0 +1,161 @@
+{
+  "status": "WIN02_LOCAL_VALIDATION_PASS",
+  "utc": "2026-10-16T09:26:56.794443+00:00",
+  "installer": {
+    "path": "D:\\Documents\\ChatGPT\\律所项目\\dist\\desktop\\Qunxing-Workbench-0.2.0-Setup.exe",
+    "bytes": 154392733,
+    "sha256": "ec26ef336312dbd402aa57e5427277d87ad17a28b241191c8f87956b3a41f14e",
+    "signature": "NotSigned",
+    "install_exit_code": 0,
+    "installed_path": "D:\\Documents\\群兴桌面验证\\程序 安装",
+    "installed_bytes": 482436562
+  },
+  "versions": {
+    "electron": "44.8.0",
+    "electron_builder": "26.15.3",
+    "pyinstaller": "6.22.3",
+    "python": "3.12.14",
+    "node_build": "24.19.0",
+    "npm_build": "12.2.0"
+  },
+  "python_suites": [
+    {
+      "file": "targeted.xml",
+      "tests": 126,
+      "exit_code": 0
+    },
+    {
+      "file": "rules-stdio.xml",
+      "tests": 99,
+      "exit_code": 0
+    }
+  ],
+  "python_unique_tests": 225,
+  "node_tests": 3,
+  "installed_ui": {
+    "packaged": true,
+    "checks": [
+      "restart-menu-before-account",
+      "setup-password-confirmation",
+      "login",
+      "node-disabled",
+      "setup-ipc-denied-to-business-page",
+      "ui-create-case",
+      "ui-import-docx",
+      "original-anchor",
+      "ui-fact-candidate-and-confirm",
+      "api-opinion-and-disposition",
+      "ui-preview",
+      "authenticated-docx-download",
+      "owned-server-stopped",
+      "restart-keeps-case-and-anchors"
+    ],
+    "started": "2026-10-16T09:18:14.210Z",
+    "startupIncludingSetupMs": 2335,
+    "export": {
+      "bytes": 40814,
+      "sha256": "d4f705e12d012b838fa213ca4fb02d2efc7f2e4e53ce49ded5ec64cd3938adfe"
+    },
+    "windowChecks": [
+      {
+        "width": 744,
+        "scrollWidth": 729,
+        "height": 695,
+        "zoom": 1
+      },
+      {
+        "width": 595,
+        "scrollWidth": 583,
+        "height": 556,
+        "zoom": 1.25
+      },
+      {
+        "width": 496,
+        "scrollWidth": 486,
+        "height": 463,
+        "zoom": 1.5
+      }
+    ],
+    "consoleErrors": [],
+    "restartToLoginAndSubmitMs": 1381,
+    "status": "PASS"
+  },
+  "installed_recovery": {
+    "checks": [
+      "failed-settings-write-atomic-and-redacted",
+      "missing-library-no-write",
+      "disconnect-restores-account-login"
+    ],
+    "status": "PASS"
+  },
+  "library_lifecycle": {
+    "checks": [
+      "installed-library-connection",
+      "full-generation-ready",
+      "jilin-law-ui-original",
+      "jilin-case-search",
+      "backend-crash-visible",
+      "backend-restart-keeps-case",
+      "parent-crash-stops-owned-backend",
+      "published-library-pointer-unchanged"
+    ],
+    "generation": "2a04480becee4f1893d235a08b525e91",
+    "coverage": {
+      "case_csv": 3837307,
+      "law_markdown": 17182,
+      "records": 3854489,
+      "units": 4541207
+    },
+    "caseHits": 5,
+    "electronMetrics": [
+      {
+        "type": "Browser",
+        "pid": 20400,
+        "workingSetKB": 96044
+      },
+      {
+        "type": "GPU",
+        "pid": 5568,
+        "workingSetKB": 86844
+      },
+      {
+        "type": "Utility",
+        "pid": 21820,
+        "workingSetKB": 44948
+      },
+      {
+        "type": "Tab",
+        "pid": 2032,
+        "workingSetKB": 123632
+      }
+    ],
+    "backendWorkingSetBytes": 114814976,
+    "status": "PASS"
+  },
+  "same_version_reinstall": {
+    "ExitCode": 0,
+    "MarkerUnchanged": true,
+    "Scope": "same-version reinstall, isolated synthetic userData",
+    "loginAndPriorCase": "PASS"
+  },
+  "working_set_observation_bytes": 474718208,
+  "memory_scope": "sum of process working sets after first library query; shared memory may be counted twice, not idle minimum",
+  "source_binding": "qx-offline-source-0.1.5-f1968d2d28a4559b9a4755ad5073848c",
+  "review": {
+    "important_findings": 4,
+    "fixed": 4,
+    "remaining": 0,
+    "independent_fix_checks": true
+  },
+  "limits": [
+    "unsigned validation installer",
+    "not a clean second machine",
+    "Administrator OS account, Chinese data/install paths only",
+    "application zoom, not OS DPI switch",
+    "PDF.js/OCR assets omitted from minimal DOCX bundle",
+    "no cross-version updater or interruption test",
+    "no SMS/invitation/device management or password recovery",
+    "legal validity still unverified",
+    "no cloud upload or publishing"
+  ]
+}

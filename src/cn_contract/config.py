@@ -2,12 +2,13 @@
 from decimal import Decimal
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, PrivateAttr, field_validator
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(sys._MEIPASS) if getattr(sys, 'frozen', False) else Path(__file__).resolve().parents[2]
 DEFAULTS_PATH = PROJECT_ROOT / 'config/defaults.json'
 SPEC_DEFAULTS_SHA256 = '0e4acba46c67b731cd9662d7b118217ddc55047ab69315961c7f78dfcfa9c887'
 

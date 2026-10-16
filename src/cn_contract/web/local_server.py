@@ -23,13 +23,14 @@ from .assisted_demo_server import load_seed_policy, SEED_MANIFEST_SHA256
 from .demo_server import attach_job_worker
 
 
-def _workspace_path(directory):
+def _workspace_path(directory, *, data_parent=None):
     path = Path(directory).absolute()
     for item in (path, *path.parents):
         if (item.exists() or item.is_symlink()) and redirected(item):
             raise ValueError('REDIRECTED_WORKSPACE')
     path = path.resolve()
-    parent = (PROJECT_ROOT / '.local').resolve()
+    # Only trusted native entry points may supply a parent; HTTP never does.
+    parent = Path(data_parent).resolve() if data_parent is not None else (PROJECT_ROOT / '.local').resolve()
     if not path.is_relative_to(parent) or path == parent:
         raise ValueError('PROJECT_LOCAL_DIRECTORY_REQUIRED')
     return path
@@ -54,8 +55,8 @@ def _safe_file(path):
             raise ValueError('REDIRECTED_WORKSPACE')
 
 
-def _open_workspace(directory):
-    root = _workspace_path(directory)
+def _open_workspace(directory, *, data_parent=None):
+    root = _workspace_path(directory, data_parent=data_parent)
     for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
                  'workbench.db-journal', 'protected', 'worker.lock'):
         _safe_file(root / name)
@@ -97,9 +98,9 @@ def _database(root):
         raise
 
 
-def initialize_workspace(directory, username, password):
+def initialize_workspace(directory, username, password, *, data_parent=None):
     _credentials(username, password)
-    root = _workspace_path(directory)
+    root = _workspace_path(directory, data_parent=data_parent)
     marker = _marker()
     if root.exists():
         raise ValueError('WORKSPACE_ALREADY_EXISTS')
@@ -165,8 +166,8 @@ def _worker_lock(root):
                 fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
 
 
-def build_local_app(directory, *, port=8767, library_root=None):
-    root = _open_workspace(directory)
+def build_local_app(directory, *, port=8767, library_root=None, data_parent=None):
+    root = _open_workspace(directory, data_parent=data_parent)
     database = _database(root)
     try:
         app = create_app(load_settings(), database=database, purpose='assisted_draft',

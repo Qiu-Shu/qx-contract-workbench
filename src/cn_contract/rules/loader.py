@@ -6,6 +6,7 @@ import re
 from uuid import UUID
 from sqlalchemy import select
 from ..domain import Rule,RuleSnapshot,PolicySnapshot
+from ..config import PROJECT_ROOT
 from ..persistence import (read_matter,_editable,_audit_change as audit_change,
     policy_material_changed,_material_changed,MembershipRow)
 from ..security import authorize,authorize_rule_manager,rule_reviewer_valid,ServiceError
@@ -14,7 +15,6 @@ from ..authorities.storage import digest
 from .storage import (RuleSnapshotRow,RuleApprovalRow,RuleInvalidationRow,PolicySnapshotRow,PolicyApprovalRow,
     require_storage,rule_sha256,policy_sha256)
 
-PROJECT_ROOT=Path(__file__).resolve().parents[3]
 DEFAULT_CARDS=PROJECT_ROOT/'rules'/'default-draft-cards.json'
 BLOCKED_RULE_APPROVAL='BLOCKED_RULE_APPROVAL'
 _FIELD=re.compile(r'^[A-Za-z][A-Za-z0-9_]*$')
