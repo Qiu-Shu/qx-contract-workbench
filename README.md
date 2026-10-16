@@ -1,5 +1,7 @@
 # 群兴合同审查工作台
 
+**最新进展（2026-10-16）：** Windows 验证版 0.4.1 已在本机安装，包含统一工作区、获案接待、本地法律资料检索、口令加密备份和只读恢复核对；Word 样式读取及旧案件重新读取已修复，完整回归 1,901 项通过。见 [安装与使用](desktop/README.md)、[任务实际状态](docs/TASK_STATUS.md)、[Word 兼容验收](docs/testing/DOCX-COMPATIBILITY-20261016.md)及[本次 GitHub 同步](docs/testing/GITHUB-UPLOAD-20261016.md)。仓库保存源码与工程证据，安装程序及本地资料库单独保留；真实模型、正式签发、账号设备及云端完整交付仍未完成。下文旧日期内容为历史记录。
+
 **接手入口（2026-10-13）：** [项目说明](docs/PROJECT_OVERVIEW.md) · [交接文档](docs/HANDOVER.md) · [本次上传核验](docs/testing/GITHUB-HANDOVER-20261013.md)。[GitHub 私有仓库](https://github.com/Qiu-Shu/qx-contract-workbench)沿 `codex/contract-review-v2` 保留完整开发历史。当前支持逐份确认后的本机 DOCX 人工工作稿；真实模型、QCC、插件外发与正式签发继续关闭。见[本机操作说明](docs/LOCAL_WORKBENCH.md)及[本轮验证](docs/testing/LOCAL-MATERIALS-20261013.md)。以下保留各阶段历史说明，最新进度以 TASK_STATUS 顶部及交接文档为准。
 
 按用户已确认的 CR-01 律师辅助工作稿路线，已有新虚构合同、原文核对、离线OCR、候选意见、律师处置、工作稿及具体版本确认。2026-10-09新增个人本机账户与持久案件库入口，并修复插件对宿主聊天请求的兼容；新加载独审会话原生两工具调用成功，父旧活动会话仍未恢复。网页ChatGPT案件/身份/文件桥尚未完成。该段为2026-10-09历史范围；2026-10-13已新增本机 DOCX 人工工作稿模式，其他外部处理及生产边界仍保留。最新实际结果见 [任务状态](docs/TASK_STATUS.md)，历史全套结果不作为本轮成绩。
