@@ -92,6 +92,74 @@ def candidate_parse(matter_id, version_id, actor, db):
     return str(version_id)
 
 
+def verify_reparse_input(matter_id, value, actor, db):
+    from ..domain import DocumentReparseInput
+    from ..ops.storage import require_active
+    from ..review.proposals import require_policy, require_documents
+    authorize(actor, matter_id, 'upload', db)
+    authorize(actor, matter_id, 'confirm_facts', db)
+    require_active(db)
+    value = DocumentReparseInput.model_validate_json(value.model_dump_json())
+    if not value.reconfirmation_acknowledged:
+        raise ServiceError('STATE_CONFLICT', 422)
+    matter = read_matter(matter_id, actor, db)
+    versions = current_versions(matter_id, actor, db)
+    if matter.status == 'archived':
+        raise ServiceError('STATE_CONFLICT', 409)
+    if (value.fact_version != (matter.active_fact_version or 0)
+            or value.document_hashes != {v.id: v.sha256 for v in versions}):
+        raise ServiceError('VERSION_CONFLICT', 409)
+    require_documents(require_policy(db, matter_id), versions, actor, db)
+    return versions
+
+
+def reparse_documents(matter_id, value, actor, db):
+    """Append all current parses together; previous evidence stays historical."""
+    from ..domain import AuditEvent
+    from ..audit import append_event
+    from ..documents.proofreading import history, require_verified_fact
+    from datetime import datetime, timezone
+    versions = verify_reparse_input(matter_id, value, actor, db)
+    old = get_fact_snapshot(matter_id, value.fact_version, actor, db).facts if value.fact_version else ()
+    previous = {v.id: get_parse_result(matter_id, v.id, actor, db) for v in versions}
+    old_anchors = {a.id: a for p in previous.values() if p for a in p.anchors}
+    parsed = [parse_document(version, None, actor=actor, db=db) for version in versions]
+    # IDs bind location only; improved extraction can change text at that location.
+    unchanged = {a.id for p in parsed for a in p.anchors if old_anchors.get(a.id) == a}
+    current = {p.version_id: p for p in parsed}
+    verifications = ({r.id: r for r in history(matter_id, actor, db)}
+        if any(f.provenance_type == 'source_verification' for f in old) else {})
+    retained = []
+    for fact in old:
+        if fact.provenance_type == 'source_verification':
+            record = verifications.get(fact.verification_ids[0])
+            if record is None:
+                raise ServiceError('VERSION_CONFLICT', 409)
+            source = record.input
+            if source.source_anchor_id is not None:
+                if source.source_anchor_id not in unchanged:
+                    continue
+            else:
+                before, after = previous.get(source.document_version_id), current.get(source.document_version_id)
+                if not before or not after or source.page not in before.pages or source.page not in after.pages:
+                    continue
+            require_verified_fact(matter_id, fact, actor, db)
+        elif not set(fact.anchor_ids) <= unchanged:
+            continue
+        retained.append(fact)
+    next_version = value.fact_version + 1
+    facts = tuple(type(f).model_validate({**f.model_dump(mode='python'), 'version': next_version,
+        'confirmation_status': 'unconfirmed', 'confirmed_by': None, 'confirmed_at': None})
+        for f in retained)
+    save_fact_snapshot(matter_id, FactSnapshot(version=next_version, facts=facts,
+        sha256=fact_snapshot_sha256(facts)), actor, db)
+    append_event(AuditEvent(id=uuid4(), matter_id=matter_id, actor_id=actor.user_id,
+        action='documents_reparsed', entity_type='matter', entity_id=matter_id,
+        before_hash=s.sha(value.model_dump(mode='json')), after_hash=fact_snapshot_sha256(facts),
+        timestamp=datetime.now(timezone.utc), reason=value.reason, correlation_id=uuid4()), db)
+    return str(matter_id)
+
+
 def context(matter_id, actor, db):
     matter = read_matter(matter_id, actor, db)
     if matter.active_fact_version is None or matter.position is None:

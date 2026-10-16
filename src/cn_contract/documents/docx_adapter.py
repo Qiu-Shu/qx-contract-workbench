@@ -15,7 +15,7 @@ from xml.etree.ElementTree import ParseError
 from ..domain import AnchorKind, BaselineView, ParseResult
 from ..security import ServiceError
 from .anchors import make_anchor
-from .docx_styles import EffectiveStyles, StyleDependencyError
+from .docx_styles import EffectiveStyles, StyleDependencyError, W14, text_fill_supported
 
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 R = 'http://schemas.openxmlformats.org/package/2006/relationships'
@@ -60,9 +60,22 @@ def _tags(root, namespace, names):
 
 def _auxiliary_content(role, root, data):
     if role in {'styles', 'stylesWithEffects'}:
-        return (_tags(root, W, STYLE_TAGS)
-                and all(node.tag in {f'{{{W}}}style', f'{{{W}}}docDefaults', f'{{{W}}}latentStyles'}
-                        for node in root))
+        if root is None or any(node.tag not in {f'{{{W}}}style', f'{{{W}}}docDefaults', f'{{{W}}}latentStyles'}
+                               for node in root):
+            return False
+        permitted = {f'{{{W}}}{name}' for name in STYLE_TAGS}
+        pending = [(root, None)]
+        while pending:
+            node, parent_tag = pending.pop()
+            if node.tag == f'{{{W14}}}textFill':
+                if parent_tag != f'{{{W}}}rPr' or not text_fill_supported(node):
+                    return False
+                continue
+            if (node.tag not in permitted or (node.text or '').strip() or (node.tail or '').strip()
+                    or len(node.findall(f'{{{W14}}}textFill')) > 1):
+                return False
+            pending.extend((child, node.tag) for child in node)
+        return True
     if role == 'numbering':
         return _tags(root, W, NUMBERING_TAGS)
     if role == 'settings':
@@ -436,7 +449,8 @@ def parse_docx(data, version, settings):
                         # Explicit and default conditional table colors are unresolved.
                         try:
                             chains = [n for style in styles for n in style.table_chain(ancestor)]
-                            if any(n.tag in {f'{{{W}}}color', f'{{{W}}}shd'} for root in chains for n in root.iter()):
+                            if any(n.tag in {f'{{{W}}}color', f'{{{W}}}shd'} or not n.tag.startswith(f'{{{W}}}')
+                                   for root in chains for n in root.iter()):
                                 table_color_uncertain = True
                         except StyleDependencyError:
                             style_gap(path)

@@ -343,6 +343,15 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
                 result={'job_id':row.id,'version_id':str(version.id),'sha256':version.sha256}
             return result
 
+    @app.post('/api/matters/{matter_id}/documents/reparse',status_code=202)
+    async def reparse_api(matter_id:UUID,request:Request):
+        actor=authenticate_first(request,matter_id,'confirm_facts')
+        value=await body_input(request,d.DocumentReparseInput)
+        parameters=value.model_dump(mode='json')
+        status=start_job(d.JobInput(matter_id=matter_id,job_type='reparse',parameters_sha256=s.sha(parameters)),
+            actor,database=database,parameters=parameters,idempotency_key=request.headers.get('Idempotency-Key'))
+        return {'job_id':str(status.id)}
+
     @app.get('/api/matters/{matter_id}/documents/{version_id}/anchors')
     def anchors_api(matter_id:UUID,version_id:UUID,request:Request):
         with database.session() as db:

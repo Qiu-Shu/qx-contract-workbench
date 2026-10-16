@@ -24,6 +24,7 @@ const audienceNames={internal:'内部',client:'客户',counterparty:'对方'};
 const partyStateNames={unresolved:'待人工明确',ambiguous:'有多项候选，待明确',confirmed:'已明确选择原文候选'};
 const decisionNames={accept:'接受意见',edit:'拟订修改',reject:'拒绝意见',request_info:'补充材料',refer:'转专项复核'};
 let run=null, documents=[], allAnchors=[], selectedPatches=[], latestBundle=null;
+let reparseSnapshot=null;
 let candidateOpinions=[],candidateContext=null;
 let effectiveText=null,effectiveReview=null;
 const effectiveDimensions={legal:'法律依据与修订后的权利义务',amounts:'总价、分期、比例与单位',deadlines:'起算、期限与日期冲突',attachments:'正文与附件旧值',definitions_references:'定义及条款交叉引用'};
@@ -40,11 +41,54 @@ function guard(fn){return async event=>{event.preventDefault();tell('');const bu
 function on(id,event,fn){const n=document.getElementById(id);if(n)n['on'+event]=guard(fn);}
 function link(text,path){const n=el('a',text);n.href=path;return n;}
 function detail(parent,label,value){const d=el('details');d.append(el('summary',label),el('pre',typeof value==='string'?value:JSON.stringify(value,null,2)));parent.append(d);}
-async function poll(jobId){const display=document.getElementById('job-status');for(let i=0;i<120;i++){const status=await api('/api/jobs/'+encodeURIComponent(jobId));if(display)display.textContent=status.stage+'（'+(stateNames[status.state]||'需核对')+'）';if(status.state==='completed')return status;if(['failed','blocked','cancelled'].includes(status.state))throw new Error(messages[status.error_code]||'任务受阻，需人工核对。');await new Promise(resolve=>setTimeout(resolve,500));}throw new Error('任务仍在运行；刷新查看，不自动重发请求。');}
-async function loadMatter(){const data=await api(base);documents=data.documents;const summary=document.getElementById('matter-summary');if(summary)summary.textContent='当前阶段：'+(stateNames[data.matter.status]||'需核对')+' · '+(data.matter.review_mode==='post_sign'?'签署后，仅履约或补充建议':'签署前')+' · 事实版本：'+(data.matter.active_fact_version||'待抽取');return data;}
+async function poll(jobId,displayId='job-status'){const display=document.getElementById(displayId);for(let i=0;i<120;i++){const status=await api('/api/jobs/'+encodeURIComponent(jobId));if(display)display.textContent=status.stage+'（'+(stateNames[status.state]||'需核对')+'）';if(status.state==='completed')return status;if(['failed','blocked','cancelled'].includes(status.state))throw new Error(messages[status.error_code]||'任务受阻，需人工核对。');await new Promise(resolve=>setTimeout(resolve,500));}throw new Error('任务仍在运行；刷新查看，不自动重发请求。');}
+async function loadMatter(){const data=await api(base);documents=data.documents;reparseSnapshot={document_hashes:Object.fromEntries(documents.map(v=>[v.id,v.sha256])),fact_version:data.matter.active_fact_version||0};const reparsePanel=document.getElementById('reparse-panel');if(reparsePanel)reparsePanel.hidden=!documents.length||data.matter.status==='archived';const summary=document.getElementById('matter-summary');if(summary)summary.textContent='当前阶段：'+(stateNames[data.matter.status]||'需核对')+' · '+(data.matter.review_mode==='post_sign'?'签署后，仅履约或补充建议':'签署前')+' · 事实版本：'+(data.matter.active_fact_version||'待抽取');return data;}
 async function loadCases(){const host=clear('cases');for(const m of await api('/api/matters')){const c=el('div',undefined,'card');c.append(link(m.title,'/matters/'+encodeURIComponent(m.id)),el('p','类型：'+typeNames[m.contract_type]+' · 阶段：'+stateNames[m.status],'muted'));host.append(c);}if(!host.children.length)host.append(el('p','暂无有权限的案件。'));}
 async function loadDocuments(){await loadMatter();const host=clear('documents');for(const v of documents){const c=el('div',undefined,'card');c.append(el('strong',v.original_name),el('p','基线：'+baselineNames[v.baseline_view]+' · 上传 '+v.byte_size+' 字节（解析状态另见原文页面）'));detail(c,'版本和内容校验详情',{id:v.id,sha256:v.sha256});host.append(c);}}
-async function anchors(){await loadMatter();allAnchors=[];for(const v of documents){const parsed=await api(base+'/documents/'+encodeURIComponent(v.id)+'/anchors');allAnchors.push(...parsed.anchors.map(a=>({...a,sourceEligible:!assisted||parsed.eligible_anchor_ids.includes(a.id)})));const host=document.getElementById('anchors');if(host){host.append(el('h3',v.original_name));if(v.mime==='application/pdf'){const preview=el('button','查看受保护PDF原页');preview.type='button';preview.onclick=()=>window.dispatchEvent(new CustomEvent('qx-pdf-view',{detail:{version:v,page:1}}));host.append(preview);}for(const a of parsed.anchors){const c=el('div',a.quote,'card anchor');c.id='anchor-'+a.id;if(v.mime==='application/pdf'&&a.page){const locate=el('button','回到原页位置');locate.type='button';locate.onclick=()=>window.dispatchEvent(new CustomEvent('qx-pdf-view',{detail:{version:v,page:a.page,bbox:a.bbox}}));c.append(locate);}if(assisted&&v.mime!=='application/pdf'){docxSourceButton(c,v,a,parsed.eligible_anchor_ids.includes(a.id));}detail(c,'精确位置详情',{id:a.id,part_name:a.part_name,element_id:a.element_id,start:a.start,end:a.end,page:a.page});host.append(c);}for(const item of parsed.unsupported_parts||[])host.append(el('p','未读/不支持：'+String(item)));detail(host,'解析范围与质量记录',parsed);}}return allAnchors;}
+function readingSummary(host,parsed){
+  const gaps=parsed.unsupported_parts||[];
+  host.append(el('p',parsed.anchors.length?'已提取 '+parsed.anchors.length+' 处文字；提取结果仍须与原件核对。':'尚未提取到可定位文字。请先打开原件核对，不能视为已读完。',gaps.length?'notice':'muted'));
+  if(gaps.length){
+    const groups=new Map();
+    for(const value of gaps){
+      const label=value.includes(':style_dependency:')?'样式依赖待处理':value.includes(':visibility:')||value.includes(':hidden:')?'文字可见性待核对':value.includes(':numbering:')?'自动编号待核对':'其他部件或内容待核对';
+      groups.set(label,(groups.get(label)||0)+1);
+    }
+    const list=el('ul');for(const [label,count] of groups)list.append(el('li',label+'：'+count+' 项'));
+    host.append(list,el('p','这些是文件读取限制，与是否运行大模型无关。请核对原件及下列缺口后再确认事实。','muted'));
+    detail(host,'查看全部读取缺口（'+gaps.length+' 项）',gaps.join('\n'));
+  }
+}
+async function anchors(){
+  await loadMatter();allAnchors=[];const host=clear('anchors');
+  for(const v of documents){
+    if(host){
+      host.append(el('h3',v.original_name),link('下载这一版本的原件核对',base+'/documents/'+encodeURIComponent(v.id)+'/original?sha256='+encodeURIComponent(v.sha256)));
+    }
+    let parsed;
+    try{parsed=await api(base+'/documents/'+encodeURIComponent(v.id)+'/anchors');}
+    catch(error){
+      if(!host||error.code!=='VERSION_CONFLICT')throw error;
+      host.append(el('p','已保存的读取结果与当前解析结果或材料版本不一致。请刷新核对；若仍提示，请使用“重新读取当前文件”。历史记录会保留，事实需要重新确认。','notice'));
+      continue;
+    }
+    allAnchors.push(...parsed.anchors.map(a=>({...a,sourceEligible:!assisted||parsed.eligible_anchor_ids.includes(a.id)})));
+    if(!host)continue;
+    readingSummary(host,parsed);
+    if(v.mime==='application/pdf'){
+      const preview=el('button','查看受保护PDF原页');preview.type='button';preview.onclick=()=>window.dispatchEvent(new CustomEvent('qx-pdf-view',{detail:{version:v,page:1}}));host.append(preview);
+    }
+    for(const a of parsed.anchors){
+      const c=el('div',a.quote,'card anchor');c.id='anchor-'+a.id;
+      if(v.mime==='application/pdf'&&a.page){const locate=el('button','回到原页位置');locate.type='button';locate.onclick=()=>window.dispatchEvent(new CustomEvent('qx-pdf-view',{detail:{version:v,page:a.page,bbox:a.bbox}}));c.append(locate);}
+      if(assisted&&v.mime!=='application/pdf')docxSourceButton(c,v,a,parsed.eligible_anchor_ids.includes(a.id));
+      detail(c,'精确位置详情',{id:a.id,part_name:a.part_name,element_id:a.element_id,start:a.start,end:a.end,page:a.page});host.append(c);
+    }
+    detail(host,'解析范围与质量记录',parsed);
+  }
+  return allAnchors;
+}
+
 function populateCandidateAnchors(id){const choice=clear(id);if(!choice)return;for(const a of allAnchors){const option=el('option',(a.sourceEligible?'':'需原页核对，当前不可消费 · ')+a.quote+'（位置 '+a.element_id+'）');option.value=a.id;option.disabled=!a.sourceEligible;choice.append(option);}}
 function docxSourceButton(card,version,anchor,eligible){
   if(!eligible)card.append(el('p','此段存在可见性疑点，提取文字不能直接作为事实依据。请下载原件，用本机Word/WPS核对，另录独立来源；本工作台不宣称已验证其排版。','notice'));
@@ -223,6 +267,14 @@ on('logout','click',async()=>{await api('/api/logout',{method:'POST'});location.
 on('case-bridge-form','submit',async event=>{const element=event.currentTarget;const form=new FormData(element);if(form.get('share_with_chat')!=='on')throw new Error('请先明确同意开放本案虚构材料。');if(!candidateContext)throw new Error('请先完成事实确认并刷新当前审查页面。');const context=candidateContext;const saved=await api(base+'/case-bridge',{method:'POST',body:{context_sha256:context.context_sha256,share_with_chat:true,allow_candidate_submission:form.get('allow_candidate_submission')==='on'}});element.reset();clear('case-bridge-status').append(el('p',(saved.read_only?'本案只读连接已开放，至 ':'本案读取及一轮候选提交已开放，至 ')+new Date(saved.expires_at).toLocaleString('zh-CN')+'。可在已加载新工具的聊天调用 read_selected_case。'));tell(saved.read_only?'仅开放当前版本读取；尚未提交意见。':'仅允许一轮候选提交；提交后请刷新本页，由律师逐条处置。');});
 on('case-bridge-revoke','click',async()=>{await api(base+'/case-bridge',{method:'DELETE'});clear('case-bridge-status').append(el('p','本次连接已撤销。'));tell('插件不能继续读取本次连接。');});
 on('create-form','submit',async event=>{const form=new FormData(event.currentTarget);const saved=await api('/api/matters',{method:'POST',idempotency:key(),body:{title:form.get('title'),contract_type:form.get('contract_type'),position:form.get('position'),review_mode:form.get('review_mode'),objectives:[form.get('objectives')],reviewer_username:form.get('reviewer_username')||null,...(form.has('material_mode')?{material_mode:form.get('material_mode')}:{})}});location.assign('/matters/'+encodeURIComponent(saved.id));});
+on('reparse-form','submit',async event=>{
+  if(!reparseSnapshot||!documents.length)throw new Error('请先读取本案当前材料。');
+  const form=event.currentTarget,data=new FormData(form);
+  const sent=await api(base+'/documents/reparse',{method:'POST',idempotency:key(),body:{...reparseSnapshot,reason:data.get('reason'),reconfirmation_acknowledged:data.get('reconfirmation_acknowledged')==='on'}});
+  await poll(sent.job_id,'reparse-status');form.reset();
+  if(section==='facts')await loadFacts();else await loadDocuments();
+  tell('当前文件已重新读取，历史记录保留。仍有读取疑点的内容须核对原件；事实已回到待确认。');
+});
 on('upload-form','submit',async event=>{const form=event.currentTarget;const saved=await api(base+'/documents',{method:'POST',body:new FormData(form),idempotency:key()});await poll(saved.job_id);if(localMaterial)form.elements.local_processing_confirmed.checked=false;tell(localMaterial?'本机原文已保存；请核对原文并录入人工事实，模型未运行。':assisted?'虚构合同原文已保存；请录入原文绑定的候选事实，再逐项确认。':'虚构合同已解析，候选事实待逐项确认。');await loadDocuments();});
 on('start-review','click',async()=>{await loadMatter();const facts=await api(base+'/facts');const hashes=Object.fromEntries(documents.map(v=>[v.id,v.sha256]));const saved=await api(base+'/reviews',{method:'POST',idempotency:key(),body:{fact_version:facts.version,document_hashes:hashes}});await poll(saved.job_id);tell('mock审查已完成；法律规则待批，仍需律师核对。');await loadReview();});
 on('party-candidates','click',async()=>{await api(base+'/parties/candidates',{method:'POST',idempotency:key()});await loadParties();});

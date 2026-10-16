@@ -92,7 +92,7 @@ def fingerprint(matter_id, actor, db):
 def valid_actor(row, db):
     actor = _principal(db.get(SessionRow, row.session_id, populate_existing=True), db, user_id=UUID(row.actor_id))
     if actor is None: raise ServiceError('AUTHORIZATION_REQUIRED', 401)
-    authorize(actor, UUID(row.matter_id), {'parse':'upload','review':'review','query':'confirm_facts'}[row.kind], db)
+    authorize(actor, UUID(row.matter_id), {'parse':'upload','reparse':'confirm_facts','review':'review','query':'confirm_facts'}[row.kind], db)
     return actor
 
 

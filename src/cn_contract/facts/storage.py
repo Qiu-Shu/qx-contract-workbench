@@ -114,8 +114,9 @@ def source_anchor_is_eligible(anchor, parsed):
 def require_fact_sources(matter_id, facts, actor, db, *, visual_fact_ids=None):
     """Rebuild source trust before consuming facts, including historic snapshots.
 
-    Caller-supplied/saved parse DTOs never prove eligibility. All latest stored
-    parses are checked against immutable bytes under real case authorization.
+    Caller-supplied/saved parse DTOs never prove eligibility. Current documents'
+    latest parses are checked against immutable bytes under case authorization.
+    Superseded document anchors cannot become evidence for current facts.
     Optional IDs identify decisions that assert visibility; rejecting a valid
     but visually uncertain candidate is allowed. Integrity checks still apply.
     """
@@ -125,11 +126,13 @@ def require_fact_sources(matter_id, facts, actor, db, *, visual_fact_ids=None):
     from ..security import ServiceError
     facts = tuple(facts)
     sources, seen = {}, set()
+    superseded = set(db.scalars(select(DocumentRow.supersedes_id).where(
+        DocumentRow.matter_id == str(matter_id), DocumentRow.supersedes_id.is_not(None))))
     rows = db.execute(select(ParseRow, DocumentRow.id).join(DocumentRow,
         ParseRow.document_version_id == DocumentRow.id).where(DocumentRow.matter_id == str(matter_id))
         .order_by(ParseRow.id.desc())).all()
     for row, document_id in rows:
-        if document_id in seen:
+        if document_id in seen or document_id in superseded:
             continue
         seen.add(document_id)
         parsed = ParseResult.model_validate_json(row.payload)

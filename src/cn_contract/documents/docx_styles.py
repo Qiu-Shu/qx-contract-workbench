@@ -3,7 +3,56 @@
 Positive visibility flags anywhere in the effective style chain remain manual.
 Conflicting toggle/override combinations are deliberately not declared visible.
 """
+import re
+
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+W14 = 'http://schemas.microsoft.com/office/word/2010/wordml'
+
+
+def text_fill_supported(root):
+    """Recognize a finite CT_FillTextEffect structure, never certify visibility."""
+    if (root.tag != f'{{{W14}}}textFill' or root.attrib or len(root) > 1
+            or any((node.text or '').strip() or (node.tail or '').strip() for node in root.iter())):
+        return False
+    if not len(root):
+        return True
+    fill = root[0]
+    if fill.tag == f'{{{W14}}}noFill':
+        return not fill.attrib and not len(fill)
+    if fill.tag != f'{{{W14}}}solidFill' or fill.attrib or len(fill) > 1:
+        return False
+    if not len(fill):
+        return True
+    color = fill[0]
+    value_key = f'{{{W14}}}val'
+    if set(color.attrib) != {value_key}:
+        return False
+    value = color.get(value_key)
+    if color.tag == f'{{{W14}}}srgbClr':
+        if not re.fullmatch(r'[0-9a-fA-F]{6}', value):
+            return False
+    elif color.tag == f'{{{W14}}}schemeClr':
+        if value not in {'bg1', 'tx1', 'bg2', 'tx2', 'accent1', 'accent2', 'accent3',
+                         'accent4', 'accent5', 'accent6', 'hlink', 'folHlink',
+                         'dk1', 'lt1', 'dk2', 'lt2', 'phClr'}:
+            return False
+    else:
+        return False
+    # shortcut: only integer lumMod/lumOff/alpha transforms; extend after schema
+    # validation and visibility tests, never by ignoring additional effects.
+    for transform in color:
+        if (transform.tag not in {f'{{{W14}}}{name}' for name in ('lumMod', 'lumOff', 'alpha')}
+                or len(transform) or set(transform.attrib) != {value_key}):
+            return False
+        value = transform.get(value_key)
+        if not re.fullmatch(r'[+-]?[0-9]{1,10}', value):
+            return False
+        number = int(value)
+        if not -2147483648 <= number <= 2147483647:
+            return False
+        if transform.tag == f'{{{W14}}}alpha' and not 0 <= number <= 100000:
+            return False
+    return True
 
 
 class StyleDependencyError(ValueError):
@@ -127,6 +176,11 @@ class EffectiveStyles:
             if prop is None:
                 continue
             for node in prop.iter():
+                # Extensions can override w:color (including no fill/alpha).
+                # Known structure is not rendered; unknown direct effects also
+                # remain candidates rather than silently becoming evidence.
+                if not node.tag.startswith(f'{{{W}}}') or node.tag == f'{{{W}}}textFill':
+                    return True
                 name = node.tag.removeprefix(f'{{{W}}}')
                 if name not in ('color', 'shd', 'highlight', 'background'):
                     continue

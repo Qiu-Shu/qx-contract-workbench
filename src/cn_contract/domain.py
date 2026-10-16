@@ -1496,6 +1496,13 @@ class JobStatus(DomainModel):
     result_ref: NonEmpty | None
 
 
+class DocumentReparseInput(DomainModel):
+    document_hashes: Annotated[dict[UUID, SHA256], Field(min_length=1, max_length=100)]
+    fact_version: Annotated[int, Field(strict=True, ge=0)]
+    reason: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=2000)]
+    reconfirmation_acknowledged: StrictBool
+
+
 # HTTP inputs share the domain vocabulary. Server identity, time, IDs and
 # approval status are intentionally absent from client write inputs.
 class LoginInput(DomainModel):

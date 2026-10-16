@@ -10,7 +10,7 @@ from sqlalchemy.exc import OperationalError
 from uuid import UUID
 from sqlalchemy import select
 
-from ..domain import ReviewStartInput,JobInput
+from ..domain import ReviewStartInput,JobInput,DocumentReparseInput
 from ..security import ServiceError,authorize
 from ..queries.gateway import execute_plan
 from ..providers.qcc_mcp import FactoryQccTransport
@@ -29,9 +29,9 @@ def start_job(input,actor,*,database,parameters,idempotency_key):
         input=JobInput.model_validate_json(input.model_dump_json())
         if not isinstance(parameters,dict) or s.sha(parameters)!=input.parameters_sha256:
             raise ServiceError('VERSION_CONFLICT',409)
-        if input.job_type not in {'parse','review','query'}:raise ServiceError('NOT_SUPPORTED',409)
+        if input.job_type not in {'parse','reparse','review','query'}:raise ServiceError('NOT_SUPPORTED',409)
         with database.session() as db:
-            authorize(actor,input.matter_id,{'parse':'upload','review':'review','query':'confirm_facts'}[input.job_type],db)
+            authorize(actor,input.matter_id,{'parse':'upload','reparse':'confirm_facts','review':'review','query':'confirm_facts'}[input.job_type],db)
             from ..ops.storage import require_active
             require_active(db)
             previous=s.find_idempotent(input.matter_id,actor,input.job_type,idempotency_key,s.sha(parameters),db)
@@ -40,6 +40,11 @@ def start_job(input,actor,*,database,parameters,idempotency_key):
                 from ..persistence import read_version
                 version=read_version(input.matter_id,UUID(parameters['version_id']),actor,db)
                 if version.id not in {v.id for v in services.current_versions(input.matter_id,actor,db)}:raise ServiceError('VERSION_CONFLICT',409)
+            elif input.job_type=='reparse':
+                value=DocumentReparseInput.model_validate(parameters)
+                if previous:
+                    authorize(actor,input.matter_id,'upload',db)
+                else:services.verify_reparse_input(input.matter_id,value,actor,db)
             elif input.job_type=='review':
                 if previous:
                     if s.fingerprint(input.matter_id,actor,db)!=previous.matter_sha256:raise ServiceError('APPROVAL_STALE',409)
@@ -129,6 +134,7 @@ def run_next_job(database):
                 row=db.get(s.JobRow,str(identifier));actor=s.valid_actor(row,db)
                 if s.fingerprint(matter_id,actor,db)!=row.matter_sha256:raise ServiceError('VERSION_CONFLICT',409)
                 if kind=='parse':result=services.candidate_parse(matter_id,UUID(payload['version_id']),actor,db)
+                elif kind=='reparse':result=services.reparse_documents(matter_id,DocumentReparseInput.model_validate(payload),actor,db)
                 elif kind=='review':result=services.review(matter_id,ReviewStartInput.model_validate(payload),actor,db)
                 else:raise ServiceError('NOT_SUPPORTED',409)
                 s.valid_actor(row,db)
@@ -145,12 +151,14 @@ def run_next_job(database):
             elif kind=='review':
                 from ..review.storage import read_run
                 run=read_run(matter_id,UUID(result),actor,db=db,current=True)
-            elif kind=='parse':
+            elif kind in {'parse','reparse'}:
                 if s.fingerprint(matter_id,actor,db)!=post_fingerprint:raise ServiceError('VERSION_CONFLICT',409)
-                if UUID(result) not in {v.id for v in services.current_versions(matter_id,actor,db)}:raise ServiceError('VERSION_CONFLICT',409)
+                versions=services.current_versions(matter_id,actor,db)
+                if kind=='parse' and UUID(result) not in {v.id for v in versions}:raise ServiceError('VERSION_CONFLICT',409)
                 from ..persistence import get_parse_result
                 from ..facts.storage import trusted_parse
-                trusted_parse(matter_id,UUID(result),actor,db,get_parse_result(matter_id,UUID(result),actor,db))
+                for version in versions if kind=='reparse' else (next(v for v in versions if v.id==UUID(result)),):
+                    trusted_parse(matter_id,version.id,actor,db,get_parse_result(matter_id,version.id,actor,db))
             # T06 deliberately persists failed runs/usage/attempts. Its return
             # value certifies evidence storage, not successful model output.
             if kind=='review' and run.status=='failed':
