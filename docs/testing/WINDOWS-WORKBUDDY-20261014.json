@@ -1,0 +1,93 @@
+{
+  "verified_at_utc": "2026-10-14T09:59:17.293830+00:00",
+  "environment": "Windows 10 Pro 10.0.19045 x64",
+  "contract_head": "27fd2bb63b1ac63e24b044e5770a8d227ad5465a",
+  "registered_config_paths_exist": true,
+  "native_connected": true,
+  "chat_probe_tasks": 1,
+  "registered_script_tasks": 3,
+  "registered_tools": [
+    "workbuddy_status",
+    "workbuddy_start",
+    "workbuddy_wait",
+    "workbuddy_cancel"
+  ],
+  "registered_events_completed": [
+    "Read",
+    "Write",
+    "Read",
+    "Edit",
+    "WebSearch",
+    "WebFetch"
+  ],
+  "script_exit_code": 0,
+  "independent_output_check": "PASS",
+  "workbuddy_raw_report_sha256": "e4756046e6543203a94afc994153196e2e53bea5fe782ac4847b57a7886035a5",
+  "script_sha256": "7d8225d9e2eb24a88ab368fd67e1d1b462d7f9b5bd452a54872691ac6d64a516",
+  "bridge_sha256": "4aa7d3b568dc5b63ef864b17f4f79bda392d20ef8b723148965a9a5b1fb963d8",
+  "not_verified": [
+    "commercial_legal_connectors",
+    "Windows_installer",
+    "cancellation",
+    "second_machine",
+    "legal_quality"
+  ],
+  "existing_login_check_error": "URLError",
+  "source_csv_count": 13,
+  "source_total_bytes": 16452507459,
+  "database_check": {
+    "checked_at_utc": "2026-10-14T09:56:29.092411+00:00",
+    "database": "D:\\Documents\\裁判文书数据库试点2025\\data\\judgments.duckdb",
+    "rows": 10000,
+    "jilin_records": 86,
+    "missing_document_type_literal_none": 408,
+    "size_mtime_unchanged": true
+  },
+  "jilin_entry_probes": [
+    {
+      "url": "https://www.jlrd.gov.cn/jlsjk/202311/t20231102_8827369.html",
+      "retrieved_at_utc": "2026-10-14T09:58:48.261696+00:00",
+      "review_status": "unverified",
+      "scope": "source_entry_probe_not_complete_law",
+      "http_status": 200,
+      "bytes": 45342,
+      "sha256": "9cbe4ce3da63b7a8711250078e06d0902588170b2ca9b862de845cf49a1fd524",
+      "titles": [
+        "吉林省法规规章规范性文件数据库"
+      ]
+    },
+    {
+      "url": "https://www.jl.gov.cn/gb/2022/zb_202201/",
+      "retrieved_at_utc": "2026-10-14T09:58:49.147656+00:00",
+      "review_status": "unverified",
+      "scope": "source_entry_probe_not_complete_law",
+      "http_status": 200,
+      "bytes": 92119,
+      "sha256": "017437feebead4ee50da67b6059ae11c97b1faed6cdddc9a1ef35dde91312805",
+      "titles": [
+        "吉林省人民政府公报"
+      ]
+    }
+  ],
+  "attachments": [
+    {
+      "name": "群兴法律工作台现有仓库审查与整合任务书.docx",
+      "sha256": "b8a91c13f3698cd05f3892abb67b42976ed06947cb949e4c6ccf1cf90b3972d9"
+    },
+    {
+      "name": "群兴法律工作台项目统筹总纲及MiroFish评估.docx",
+      "sha256": "ca3cd7a8570da46b0f2785085b6ad27236ea49d78f57838c5cc6a3f66a36591e"
+    }
+  ],
+  "document_review": {
+    "task_id": "wb-aecf3684542b",
+    "state": "completed",
+    "files_read": 4,
+    "files_written": 1,
+    "findings_count": 0,
+    "scope": "document_consistency_only",
+    "review_sha256": "6d9033230ea461133255349940ecf824218fe94c3a9fe0cb44e81c8a5cfadf8f"
+  },
+  "all_workbuddy_tasks_this_turn": 5,
+  "dependencies_installed_this_turn": 0
+}
