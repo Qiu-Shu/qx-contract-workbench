@@ -11,7 +11,7 @@ from ..domain import LibraryQuery
 from ..library import service
 from ..library.catalog import ensure_root
 from ..library.index import current_generation
-from .app import actor_in, bounded_body
+from .request_context import actor_in, bounded_body
 
 
 def _call(operation, *args):

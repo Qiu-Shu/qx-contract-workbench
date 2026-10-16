@@ -7,7 +7,7 @@ from ..exports.draft_confirmation import confirm_working_draft, read_working_dra
 
 
 def register_routes(app, database, authenticate_first, body_input, write):
-    from .app import actor_in
+    from .request_context import actor_in
     from ..exports.effective_text import read_effective_text, record_effective_review, read_effective_review
 
     @app.get('/api/matters/{matter_id}/bundles/{bundle_id}/effective-text')

@@ -1,0 +1,112 @@
+{
+  "recorded_utc": "2026-10-16T16:11:54.081296+00:00",
+  "base_commit": "7b58b92865f0370687427d987fbc8fa42a96c205",
+  "suites": {
+    "storage": {
+      "passed": 69,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "pytest_seconds": 127.52
+    },
+    "request": {
+      "passed": 99,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "pytest_seconds": 320.61
+    }
+  },
+  "distinct_cases": 167,
+  "schema_preserved": {
+    "raw_sha256": "2c622bf427fb9ac8c93329862b0fb4acfc45cf7d07349e82800ee51090167ba0",
+    "normalized_sha256": "cf9282bd4d8b60df107ba98a72c6c116435c3b553294ad135027e1f9e1bf26f4"
+  },
+  "frozen_build_exit": 0,
+  "frozen_probe": {
+    "scope": "independent synthetic new frozen backend; not Electron installer acceptance",
+    "checks": [
+      "auth_same_origin_workspace",
+      "auth_same_origin_workspace",
+      "frozen_backup_verified",
+      "frozen_restore_quarantined",
+      "restored_auth_same_origin_workspace"
+    ],
+    "count": 5,
+    "exe_sha256": "eeb2ae31a5cdf10ff964ab769325488731c898caf968ddad6ef44612ed35fd63",
+    "archive_sha256": "ed9e5f904410e0a0cbe60c2984f152fcd164ea384961204f1996829ed4978c45",
+    "restored_quarantined": true,
+    "exit_code": 0
+  },
+  "development_checks": {
+    "schema": 0,
+    "defaults": 0,
+    "sources": 0,
+    "dependencies": 0
+  },
+  "review": {
+    "spec_findings": 0,
+    "standards_violations": 0,
+    "standards_suggestions": 0
+  },
+  "evidence": {
+    "storage-targeted.xml": {
+      "path": ".local\\chat-first-boundaries-20261017\\storage-targeted.xml",
+      "sha256": "9d08b37fa9e92a58b92d1d801df1b0e0c57f0132daed778f617c9bde988aa14d"
+    },
+    "storage-targeted.log": {
+      "path": ".local\\chat-first-boundaries-20261017\\storage-targeted.log",
+      "sha256": "d7d2027fb4558e1f6e7358ded823d5917e7be582f2663b35cee999fc9ab48253"
+    },
+    "request-targeted.xml": {
+      "path": ".local\\chat-first-boundaries-20261017\\request-targeted.xml",
+      "sha256": "c5c287fc590ad6a611cf52796cfee4495c55cc15818f379cb3920e20e87be549"
+    },
+    "request-targeted.log": {
+      "path": ".local\\chat-first-boundaries-20261017\\request-targeted.log",
+      "sha256": "c3d19075985b38165e828570b4a24e68c09b1316f3238ca98d6c29a91a2c41d0"
+    },
+    "storage-red.xml": {
+      "path": ".local\\chat-first-boundaries-20261017\\storage-red.xml",
+      "sha256": "aced6d6dee5d936c6a86581f65e365e7b040b519a759878596a97b8cc990b8d3"
+    },
+    "request-red.xml": {
+      "path": ".local\\chat-first-boundaries-20261017\\request-red.xml",
+      "sha256": "7ceb6c891debfcbb50a9f02d37b5bb6e429e954dfa8228b3c3e385e56ba06c42"
+    },
+    "frozen-build.log": {
+      "path": ".local\\chat-first-boundaries-20261017\\frozen-build.log",
+      "sha256": "40bdf59bedfa8875ec4372b7fadc8e2170d98988590f7500b2a320d34fdb05ea"
+    },
+    "frozen_smoke.py": {
+      "path": ".local\\chat-first-boundaries-20261017\\frozen_smoke.py",
+      "sha256": "fa49fd472505419fb5a70fca889cd9b21442c2273fd67015e2d3c88784e71cd7"
+    },
+    "frozen-smoke.log": {
+      "path": ".local\\chat-first-boundaries-20261017\\frozen-smoke.log",
+      "sha256": "ad252b8887bee92c1b2836494cf69e28753ad92571e6207526e7a78c25a89416"
+    },
+    "frozen-smoke-first-failure.log": {
+      "path": ".local\\chat-first-boundaries-20261017\\frozen-smoke-first-failure.log",
+      "sha256": "70f37ba1b5fd827be5d1b0ec72d083f73374abf323c044ed9da52621f6407728"
+    },
+    "schema-check.log": {
+      "path": ".local\\chat-first-boundaries-20261017\\schema-check.log",
+      "sha256": "b3494934d75e6ca7988134d1390fadcf95566b3ce3ce05563d5615da874c3303"
+    },
+    "defaults-check.log": {
+      "path": ".local\\chat-first-boundaries-20261017\\defaults-check.log",
+      "sha256": "1327e54ae343c27bb7f378bb915d826995396db5b801813b2e139b57d7aefeb6"
+    },
+    "sources-check.log": {
+      "path": ".local\\chat-first-boundaries-20261017\\sources-check.log",
+      "sha256": "dd6536e31ce1c1887cf8fd66091ebe0265b3d4c5f38d27f7766cdbcd30c6963b"
+    },
+    "dependencies-check.log": {
+      "path": ".local\\chat-first-boundaries-20261017\\dependencies-check.log",
+      "sha256": "32ddd58b8e25f73d17f1156ff1803b833eb5abe0e289a9f7db5f77d92203cc3a"
+    }
+  }
+}

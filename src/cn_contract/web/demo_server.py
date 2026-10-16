@@ -8,7 +8,9 @@ from ..config import PROJECT_ROOT, load_settings
 from ..domain import Role
 from ..persistence import Database
 from ..security import provision_user
-from .app import create_app, initialize_storage, recover_jobs, run_next_job
+from ..storage_bootstrap import initialize_storage
+from .app import create_app
+from .jobs import recover_jobs, run_next_job
 
 DEMO_PASSWORD='synthetic-only-12345'
 

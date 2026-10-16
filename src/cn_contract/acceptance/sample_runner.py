@@ -15,7 +15,7 @@ from ..facts.confirm import confirm_facts
 from ..review.model_adapter import MockProvider
 from ..review.workflow import run_review
 from ..review.storage import read_attempts,read_intakes
-from ..web.app import initialize_storage
+from ..storage_bootstrap import initialize_storage
 from ..web.services import create_matter,candidate_parse,context
 from .registry import validate_dataset,safe_file,BASE,hash_bytes
 

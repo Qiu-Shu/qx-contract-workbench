@@ -18,7 +18,8 @@ from ..domain import Role
 from ..ops.backup import redirected
 from ..persistence import Database, UserRow
 from ..security import ServiceError, provision_user
-from .app import create_app, initialize_storage
+from ..storage_bootstrap import initialize_storage
+from .app import create_app
 from .assisted_demo_server import load_seed_policy, SEED_MANIFEST_SHA256
 from .demo_server import attach_job_worker
 

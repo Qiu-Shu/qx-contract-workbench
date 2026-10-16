@@ -1,0 +1,15 @@
+{
+  "scope": "independent synthetic new frozen backend; not Electron installer acceptance",
+  "checks": [
+    "auth_same_origin_workspace",
+    "auth_same_origin_workspace",
+    "frozen_backup_verified",
+    "frozen_restore_quarantined",
+    "restored_auth_same_origin_workspace"
+  ],
+  "count": 5,
+  "exe_sha256": "eeb2ae31a5cdf10ff964ab769325488731c898caf968ddad6ef44612ed35fd63",
+  "archive_sha256": "ed9e5f904410e0a0cbe60c2984f152fcd164ea384961204f1996829ed4978c45",
+  "restored_quarantined": true,
+  "exit_code": 0
+}

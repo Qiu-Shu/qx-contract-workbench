@@ -141,7 +141,7 @@ def _tables(connection):
 
 
 def schema_reference(settings):
-    from ..web.app import initialize_storage
+    from ..storage_bootstrap import initialize_storage
     with TemporaryDirectory(prefix='cn-synthetic-schema-') as temp:
         root = Path(temp)
         database = Database('sqlite:///'+str(root/'reference.db'), root/'files', settings)

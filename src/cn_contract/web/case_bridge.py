@@ -19,7 +19,7 @@ from ..ops.backup import redirected
 from ..persistence import UserRow, SessionRow, MembershipRow
 from ..review import proposals
 from ..security import ServiceError
-from .app import actor_in, body_input
+from .request_context import actor_in, body_input
 
 MAX_RESPONSE_BYTES = 256 * 1024
 

@@ -6,7 +6,6 @@ from io import BytesIO
 import json
 from pathlib import Path
 from uuid import UUID, uuid4
-from urllib.parse import urlsplit
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -17,10 +16,11 @@ from sqlalchemy import select
 from starlette.exceptions import HTTPException
 
 from ..config import Settings
+from ..storage_bootstrap import initialize_storage
 from .. import domain as d
 from ..persistence import (Database, MembershipRow, MatterRow, read_matter, read_version, get_parse_result,
     get_fact_snapshot, transition_matter, set_position, _material_changed)
-from ..security import (ServiceError, authenticate, authorize, verify_csrf, login, revoke_session)
+from ..security import (ServiceError, authorize, login, revoke_session)
 from ..facts.confirm import confirm_facts
 from ..facts.storage import trusted_parse
 from ..facts.party import resolve_party
@@ -36,76 +36,11 @@ from . import services, storage as s
 from .jobs import start_job, run_next_job, claim_next_job, recover_jobs
 from .storage import get_job
 from .dependencies import service_error_handler
+from .request_context import same_origin, actor_in, bounded_body, unique, body_input
 
 TEMPLATES=Path(__file__).with_name('templates')
 STATIC=Path(__file__).with_name('static')
 COVERAGE_LABELS=tuple(zip((item.value for item in d.CoverageId),DIMENSIONS,strict=True))
-
-
-def initialize_storage(database):
-    # Explicitly register each existing storage family. App import is pure.
-    from ..authorities.storage import initialize_storage as authorities
-    from ..rules.storage import initialize_storage as rules
-    from ..facts.storage import initialize_storage as facts
-    from ..review.storage import initialize_storage as reviews
-    from ..providers.storage import initialize_storage as providers
-    from ..queries.storage import initialize_storage as queries
-    from ..exports.storage import initialize_storage as exports
-    from ..ops.storage import initialize_storage as operations
-    from ..documents.proofreading import initialize_storage as proofreading
-    from ..documents.ocr_candidates import initialize_storage as ocr_candidates
-    from ..intake.schema import initialize_storage as intake
-    for init in (authorities,rules,facts,reviews,providers,queries,exports,s.initialize_storage,operations,proofreading,ocr_candidates,intake):init(database)
-
-
-def same_origin(request):
-    origin=request.headers.get('origin')
-    if origin:
-        parsed=urlsplit(origin)
-        if parsed.scheme not in ('http','https') or origin.rstrip('/')!=str(request.base_url).rstrip('/'):
-            raise ServiceError('CROSS_MATTER_DENIED',403)
-    if request.headers.get('sec-fetch-site') in {'cross-site','same-site'}:
-        raise ServiceError('CROSS_MATTER_DENIED',403)
-
-
-def actor_in(request,db,matter_id=None,action='read',*,write=False):
-    actor=authenticate(request.cookies.get('qx_session'),db)
-    if write:
-        same_origin(request);verify_csrf(actor,request.headers.get('X-CSRF-Token'),matter_id or UUID(int=0),db)
-    if matter_id is not None:authorize(actor,matter_id,action,db)
-    return actor
-
-
-async def bounded_body(request,limit):
-    data=bytearray()
-    async for chunk in request.stream():
-        if len(data)+len(chunk)>limit:raise ServiceError('FILE_LIMIT',413)
-        data.extend(chunk)
-    request._body=bytes(data)
-    return bytes(data)
-
-
-def unique(pairs):
-    result={}
-    for k,v in pairs:
-        if k in result:raise ValueError('duplicate key')
-        result[k]=v
-    return result
-
-
-async def body_input(request,model):
-    try:
-        raw=await bounded_body(request,256*1024)
-        payload=json.loads(raw,object_pairs_hook=unique,parse_constant=lambda v: (_ for _ in ()).throw(ValueError('nonfinite')))
-        todo=[(payload,0)]
-        while todo:
-            value,depth=todo.pop()
-            if depth>30:raise ValueError('depth')
-            if isinstance(value,dict):todo.extend((v,depth+1) for v in value.values())
-            elif isinstance(value,list):todo.extend((v,depth+1) for v in value)
-        return model.model_validate(payload)
-    except (ValueError,TypeError,RecursionError,UnicodeDecodeError,ValidationError):
-        raise ServiceError('STATE_CONFLICT',422) from None
 
 
 def project_bundle(bundle,*,purpose='mock_demo',local_material=False):

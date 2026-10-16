@@ -7,7 +7,7 @@ from sqlalchemy import text
 
 from .. import domain as d
 from ..intake import service
-from .app import actor_in, body_input
+from .request_context import actor_in, body_input
 
 
 def register_routes(app,database):

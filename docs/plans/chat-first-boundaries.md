@@ -2,6 +2,8 @@
 
 Design baseline: [v2.1 specification](chat-first-architecture-v2.1.md), sections 6.4-6.6, 12.6-12.8. This map records intended interfaces, not completed modules.
 
+2026-10-17 implemented subset: storage initialization now lives in `storage_bootstrap.py`; HTTP request guards/parser helpers in `web/request_context.py`. Old app import aliases remain. This removes backup and five route modules' reverse dependencies on app composition while preserving the schema and guards. [167-case/frozen validation](../testing/chat-first/20261017/README.md) covers this extraction. Other entries below remain design targets.
+
 | Owner | Responsibility | Dependency boundary |
 |---|---|---|
 | Electron | Windows and owned backend lifecycle | HTTP/local settings, not business SQL or provider secrets |

@@ -11,7 +11,7 @@ from ..persistence import MatterRow, MembershipRow, DocumentRow, ExportRow, read
 from ..exports.storage import ExportRecordRow
 from ..ops.storage import quarantined, read_historical_artifact
 from ..security import ServiceError, authorize
-from .app import actor_in
+from .request_context import actor_in
 
 
 def attach_recovery(app, database):
