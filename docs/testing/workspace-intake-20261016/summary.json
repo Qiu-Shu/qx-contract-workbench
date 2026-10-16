@@ -1,0 +1,243 @@
+{
+  "phase": "workspace-intake-first-release",
+  "status": "LOCAL_ENGINEERING_AND_INSTALLED_ACCEPTANCE_PASS",
+  "version": "0.3.0",
+  "utc_recorded": "2026-10-16T11:27:45.255104+00:00",
+  "base_commit": "a2a89ac",
+  "installer": {
+    "path": "D:\\Documents\\ChatGPT\\律所项目\\dist\\desktop\\Qunxing-Workbench-0.3.0-Setup.exe",
+    "bytes": 154421612,
+    "sha256": "ff67b5852a31988df8251c56ab3aed717042e9cef5464eaa6ba74a566379e259",
+    "signature": "NotSigned",
+    "install_exit_code": 0
+  },
+  "tests": {
+    "python_runs": {
+      "targeted": {
+        "tests": 77,
+        "exit_code": 0
+      },
+      "associated": {
+        "tests": 178,
+        "exit_code": 0
+      },
+      "binding-sources": {
+        "tests": 113,
+        "exit_code": 0
+      },
+      "review-green": {
+        "tests": 18,
+        "exit_code": 0
+      }
+    },
+    "unique_passed": 369,
+    "full_repository_suite": false,
+    "node_passed": 4
+  },
+  "installed": {
+    "upgrade": {
+      "packaged": true,
+      "checks": [
+        "clipboard-read-remains-denied",
+        "legacy-upgrade-login-and-cases",
+        "ui-register-followup-materials-and-version",
+        "unsaved-export-disabled",
+        "separate-client-internal-clipboard",
+        "actual-electron-two-word-downloads",
+        "complete-original-snapshot-history",
+        "full-page-intake-switch-isolation",
+        "ui-convert-existing-contract-engine",
+        "converted-snapshot-readonly",
+        "restart-retains-intakes-and-old-cases"
+      ],
+      "started": "2026-10-16T11:22:28.030Z",
+      "version": "0.3.0",
+      "oldMatterIds": [
+        "f398a349-3a76-4042-be88-201c84b3b5b6"
+      ],
+      "intakeId": "178f36e8-d3ad-4f3a-b946-0df32e5d9ca9",
+      "viewports": [
+        {
+          "width": 744,
+          "scroll": 729
+        },
+        {
+          "width": 496,
+          "scroll": 486
+        }
+      ],
+      "convertedMatter": "e0211aeb-7b94-4ce0-9270-79d18ab167d2",
+      "consoleErrors": [],
+      "status": "PASS",
+      "finished": "2026-10-16T11:22:33.962Z"
+    },
+    "fresh": {
+      "packaged": true,
+      "checks": [
+        "clipboard-read-remains-denied",
+        "ui-register-followup-materials-and-version",
+        "unsaved-export-disabled",
+        "separate-client-internal-clipboard",
+        "actual-electron-two-word-downloads",
+        "complete-original-snapshot-history",
+        "full-page-intake-switch-isolation",
+        "ui-convert-existing-contract-engine",
+        "converted-snapshot-readonly",
+        "restart-retains-intakes-and-old-cases"
+      ],
+      "started": "2026-10-16T11:23:44.933Z",
+      "version": "0.3.0",
+      "oldMatterIds": [],
+      "intakeId": "44440173-9d2e-455a-8c87-c2ea6cc604f5",
+      "viewports": [
+        {
+          "width": 744,
+          "scroll": 729
+        },
+        {
+          "width": 496,
+          "scroll": 486
+        }
+      ],
+      "convertedMatter": "dd27eca8-7447-49e3-a5aa-3dc7f2b15434",
+      "consoleErrors": [],
+      "status": "PASS",
+      "finished": "2026-10-16T11:23:51.006Z"
+    },
+    "contract_regression": {
+      "packaged": true,
+      "checks": [
+        "restart-menu-before-account",
+        "setup-password-confirmation",
+        "login",
+        "node-disabled",
+        "setup-ipc-denied-to-business-page",
+        "ui-create-case",
+        "ui-import-docx",
+        "original-anchor",
+        "ui-fact-candidate-and-confirm",
+        "api-opinion-and-disposition",
+        "ui-preview",
+        "authenticated-docx-download",
+        "owned-server-stopped",
+        "restart-keeps-case-and-anchors"
+      ],
+      "started": "2026-10-16T11:22:58.391Z",
+      "startupIncludingSetupMs": 2008,
+      "export": {
+        "bytes": 40819,
+        "sha256": "81d9e13c2834af6497e0efc60920dba0d071a6a9ffc4d3a8eeaf114527ac6eb6"
+      },
+      "windowChecks": [
+        {
+          "width": 744,
+          "scrollWidth": 729,
+          "height": 695,
+          "zoom": 1
+        },
+        {
+          "width": 595,
+          "scrollWidth": 583,
+          "height": 556,
+          "zoom": 1.25
+        },
+        {
+          "width": 496,
+          "scrollWidth": 486,
+          "height": 463,
+          "zoom": 1.5
+        }
+      ],
+      "consoleErrors": [],
+      "restartToLoginAndSubmitMs": 1582,
+      "status": "PASS"
+    },
+    "library_lifecycle": {
+      "checks": [
+        "installed-library-connection",
+        "full-generation-ready",
+        "jilin-law-ui-original",
+        "jilin-case-search",
+        "backend-crash-visible",
+        "backend-restart-keeps-case",
+        "parent-crash-stops-owned-backend",
+        "published-library-pointer-unchanged"
+      ],
+      "generation": "2a04480becee4f1893d235a08b525e91",
+      "coverage": {
+        "case_csv": 3837307,
+        "law_markdown": 17182,
+        "records": 3854489,
+        "units": 4541207
+      },
+      "caseHits": 5,
+      "electronMetrics": [
+        {
+          "type": "Browser",
+          "pid": 21532,
+          "workingSetKB": 93492
+        },
+        {
+          "type": "GPU",
+          "pid": 21060,
+          "workingSetKB": 85060
+        },
+        {
+          "type": "Utility",
+          "pid": 18668,
+          "workingSetKB": 45060
+        },
+        {
+          "type": "Tab",
+          "pid": 20552,
+          "workingSetKB": 121176
+        }
+      ],
+      "backendWorkingSetBytes": 116998144,
+      "status": "PASS"
+    },
+    "data_verification": {
+      "old_protected_unchanged": 2,
+      "workspace_identity_preserved": true,
+      "backup_sha256_match": true,
+      "integrity_check": "ok",
+      "foreign_key_errors": 0,
+      "exports": {
+        "client": {
+          "bytes": 36928,
+          "sha256": "0ba97b7eae4e92925ca0573ba33da41a113157b662403aba5abc500bf1e43874",
+          "paragraphs": 4,
+          "audience_separation": "PASS"
+        },
+        "internal": {
+          "bytes": 37250,
+          "sha256": "b2c72523769eaed815534638804b9247339d935ae2d93d73ceabc02e3f67fabc",
+          "paragraphs": 17,
+          "audience_separation": "PASS"
+        }
+      }
+    },
+    "word_visual_pages": {
+      "client": 1,
+      "internal": 1
+    },
+    "word_original_bytes_unchanged": true,
+    "source_assets_match": {
+      "desktop": 7,
+      "frozen_web": 13
+    }
+  },
+  "source_binding": {
+    "build_id": "qx-offline-source-0.1.5-a4d02dbc2d0a780a43c61275f41f244c",
+    "files": 152
+  },
+  "review": {
+    "distinct_findings": 2,
+    "open_findings": 0,
+    "standards": "1 P2 fixed and independently rechecked",
+    "spec": "1 P1 same task leak +1 P2 history fields fixed; history installed UI verified"
+  },
+  "workbuddy_connected": false,
+  "production_complete": false,
+  "evidence_note": "review-red.xml trace trailing whitespace normalized; raw copy retained in .local/desktop-acceptance"
+}

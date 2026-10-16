@@ -34,7 +34,8 @@ async function login() {
   await page.locator('[name=username]').fill('桌面合成律师');
   await page.locator('[name=password]').fill('fiction123');
   await page.getByRole('button',{name:'登录',exact:true}).click();
-  await page.waitForURL(/127\.0\.0\.1:\d+\/$/);
+  await page.waitForURL(/127\.0\.0\.1:\d+\/workspace$/);
+  await page.getByRole('link',{name:'合同审查',exact:true}).click();
 }
 (async()=>{
  try {

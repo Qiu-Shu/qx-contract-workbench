@@ -7,7 +7,7 @@ const data=path.join(output,'中文 用户资料');
 const currentBefore=fs.readFileSync(path.join(library,'current.json'));
 const launch=()=>_electron.launch({executablePath:exe,args:[],env:{...process.env,QX_DESKTOP_DATA_PARENT:data},timeout:60000});
 let application,page;const report={checks:[]};
-async function login(){await page.waitForURL(/\/login$/,{timeout:60000});await page.locator('[name=username]').fill('桌面合成律师');await page.locator('[name=password]').fill('fiction123');await page.getByRole('button',{name:'登录',exact:true}).click();await page.waitForURL(/127\.0\.0\.1:\d+\/$/);}
+async function login(){await page.waitForURL(/\/login$/,{timeout:60000});await page.locator('[name=username]').fill('桌面合成律师');await page.locator('[name=password]').fill('fiction123');await page.getByRole('button',{name:'登录',exact:true}).click();await page.waitForURL(/127\.0\.0\.1:\d+\/workspace$/);}
 async function api(url,body){return page.evaluate(async({url,body})=>{const csrf=decodeURIComponent(document.cookie.split('; ').find(x=>x.startsWith('qx_csrf='))?.slice(8)||'');const r=await fetch(url,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json','X-CSRF-Token':csrf}:{},body:body?JSON.stringify(body):undefined});if(!r.ok)throw new Error('HTTP '+r.status);return r.json();},{url,body});}
 async function childPid(){const mainPid=await application.evaluate(()=>process.pid);return Number(execFileSync('powershell.exe',['-NoProfile','-Command',`(Get-CimInstance Win32_Process -Filter "Name='qx-backend.exe' AND ParentProcessId=${mainPid}").ProcessId`],{encoding:'utf8',windowsHide:true}).trim());}
 (async()=>{try{

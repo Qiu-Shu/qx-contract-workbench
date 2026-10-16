@@ -54,7 +54,8 @@ def initialize_storage(database):
     from ..ops.storage import initialize_storage as operations
     from ..documents.proofreading import initialize_storage as proofreading
     from ..documents.ocr_candidates import initialize_storage as ocr_candidates
-    for init in (authorities,rules,facts,reviews,providers,queries,exports,s.initialize_storage,operations,proofreading,ocr_candidates):init(database)
+    from ..intake.schema import initialize_storage as intake
+    for init in (authorities,rules,facts,reviews,providers,queries,exports,s.initialize_storage,operations,proofreading,ocr_candidates,intake):init(database)
 
 
 def same_origin(request):
@@ -632,10 +633,12 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
 
     @app.get('/static/{name}')
     def static_file(name:str):
-        if name not in {'workbench.js','workbench.css','pdf-review.mjs','library.js','library.css'}:raise ServiceError('NOT_SUPPORTED',404)
+        if name not in {'workbench.js','workbench.css','pdf-review.mjs','library.js','library.css','workspace.js','workspace.css'}:raise ServiceError('NOT_SUPPORTED',404)
         return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith(('.js','.mjs')) else 'text/css')
     from .draft_confirmation import register_routes
     register_routes(app,database,authenticate_first,body_input,write)
     from .pdf_review import register_routes as register_pdf_routes
     register_pdf_routes(app,database,actor_in,authenticate_first,body_input,write)
+    from .intake import register_routes as register_intake_routes
+    register_intake_routes(app,database)
     return app

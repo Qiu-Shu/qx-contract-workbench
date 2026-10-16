@@ -74,9 +74,10 @@ def _open_workspace(directory, *, data_parent=None):
             raise ValueError('WORKSPACE_ID_INVALID')
         # Read-only validation precedes any create_all/trigger initialization.
         with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+            from .workspace_upgrade import pending_matches
             if (db.execute('PRAGMA quick_check').fetchall() != [('ok',)]
                     or db.execute('SELECT id FROM local_workspace_identity').fetchall() != [(payload['workspace_id'],)]
-                    or _schema_hash(db) != payload['schema_sha256']):
+                    or (_schema_hash(db) != payload['schema_sha256'] and not pending_matches(db,root,payload))):
                 raise ValueError('WORKSPACE_DATABASE_MISMATCH')
     except (sqlite3.Error, TypeError, AttributeError):
         raise ValueError('WORKSPACE_DATABASE_INVALID') from None
@@ -129,6 +130,8 @@ def add_local_user(directory, username, password, role):
     root = _open_workspace(directory)
     # Maintenance runs in another process; stop the server so all grants expire.
     with _worker_lock(root):
+        from .workspace_upgrade import upgrade
+        upgrade(root)
         database = _database(root)
         try:
             with database.session() as db:
@@ -168,7 +171,10 @@ def _worker_lock(root):
 
 def build_local_app(directory, *, port=8767, library_root=None, data_parent=None):
     root = _open_workspace(directory, data_parent=data_parent)
-    database = _database(root)
+    with _worker_lock(root):
+        from .workspace_upgrade import upgrade
+        upgrade(root)
+        database = _database(root)
     try:
         app = create_app(load_settings(), database=database, purpose='assisted_draft',
                          assisted_policy=load_seed_policy(), local_materials_enabled=True)

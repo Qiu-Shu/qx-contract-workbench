@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.580" timestamp="2026-10-16T19:18:54.308510+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_intake" name="test_task_overview_respects_role_revocation_with_membership_retained" time="0.622"><failure message="AssertionError: assert [{'id': '3c13...queued', ...}] == []&#10;  &#10;  Left contains one more item: {'id': '3c1396de-eaa5-422b-8f6a-f59a49288e08', 'matter_id': 'cbdb625f-845a-42d2-a543-1e6ab6ea5cb0', 'stage': '已排队', 'state': 'queued', ...}&#10;  Use -v to get more diff">tests\integration\test_intake.py:188: in test_task_overview_respects_role_revocation_with_membership_retained
+    assert client.get('/api/workspace/tasks').json()==[]
+E   AssertionError: assert [{'id': '3c13...queued', ...}] == []
+E
+E     Left contains one more item: {'id': '3c1396de-eaa5-422b-8f6a-f59a49288e08', 'matter_id': 'cbdb625f-845a-42d2-a543-1e6ab6ea5cb0', 'stage': '已排队', 'state': 'queued', ...}
+E     Use -v to get more diff</failure></testcase></testsuite></testsuites>

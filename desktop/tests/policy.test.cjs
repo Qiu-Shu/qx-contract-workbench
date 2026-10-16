@@ -29,3 +29,14 @@ test('only owned loopback origin and exact setup document are allowed', () => {
   assert.equal(setupSenderAllowed(setup, setup, false), false);
   assert.equal(setupSenderAllowed(setup + '?redirect=1', setup, true), false);
 });
+test('clipboard permits writing only from the owned main frame, never reading', () => {
+  const { clipboardWriteAllowed } = require('../policy.cjs');
+  const own='http://127.0.0.1:18922';
+  assert.equal(typeof clipboardWriteAllowed,'function');
+  assert.equal(clipboardWriteAllowed('clipboard-sanitized-write',own+'/intakes/123',own,true),true);
+  for(const permission of ['clipboard-read','deprecated-sync-clipboard-read','media','notifications'])
+    assert.equal(clipboardWriteAllowed(permission,own+'/',own,true),false);
+  assert.equal(clipboardWriteAllowed('clipboard-sanitized-write',own+'/',own,false),false);
+  assert.equal(clipboardWriteAllowed('clipboard-sanitized-write','file:///setup',own,true),false);
+  assert.equal(clipboardWriteAllowed('clipboard-sanitized-write','https://example.com',own,true),false);
+});

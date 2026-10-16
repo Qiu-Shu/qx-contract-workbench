@@ -17,4 +17,8 @@ function validLibraryRoot(root) {
     });
   } catch { return false; }
 }
-module.exports = { navigationAllowed, setupSenderAllowed, validLibraryRoot };
+function clipboardWriteAllowed(permission, url, origin, isMainFrame) {
+  return permission === 'clipboard-sanitized-write' && isMainFrame === true
+    && navigationAllowed(url, origin, '');
+}
+module.exports = { navigationAllowed, setupSenderAllowed, validLibraryRoot, clipboardWriteAllowed };

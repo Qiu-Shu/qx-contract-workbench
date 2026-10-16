@@ -1513,6 +1513,65 @@ class MatterCreateInput(DomainModel):
     material_mode: Literal['synthetic', 'local'] = Field(default='synthetic', exclude_if=lambda value:value == 'synthetic')
 
 
+def _intake_text(value: str) -> str:
+    # Word/XML and browser renderers share the same accepted text alphabet.
+    if any(not (c in '\t\n\r' or '\u0020' <= c <= '\ud7ff' or '\ue000' <= c <= '\ufffd'
+                or '\U00010000' <= c <= '\U0010ffff') for c in value):
+        raise ValueError('unsupported text character')
+    return value
+
+
+IntakeText = Annotated[str, StringConstraints(max_length=12000), AfterValidator(_intake_text)]
+IntakeLabel = Annotated[NonEmpty, Field(max_length=300), AfterValidator(_intake_text)]
+
+
+class IntakeMaterial(DomainModel):
+    name: IntakeLabel
+    state: Literal['needed', 'received', 'checked'] = 'needed'
+
+
+class IntakeDraft(DomainModel):
+    title: IntakeLabel
+    contact: Annotated[IntakeText, Field(max_length=300)] = ''
+    consultation: IntakeText = ''
+    questions: Annotated[tuple[IntakeLabel, ...], Field(max_length=30)] = ()
+    materials: Annotated[tuple[IntakeMaterial, ...], Field(max_length=30)] = ()
+    follow_up_at: UTCDatetime | None = None
+    follow_up_note: Annotated[IntakeText, Field(max_length=2000)] = ''
+    status: Literal['open', 'waiting', 'closed'] = 'open'
+    client_reply: IntakeText = ''
+    internal_notes: IntakeText = ''
+
+
+class IntakeCreateInput(DomainModel):
+    request_id: UUID
+    draft: IntakeDraft
+
+
+class IntakeUpdateInput(DomainModel):
+    expected_revision: PositiveInt
+    draft: IntakeDraft
+
+
+class IntakeConvertInput(DomainModel):
+    expected_revision: PositiveInt
+    matter: MatterCreateInput
+
+
+class IntakeExportInput(DomainModel):
+    revision: PositiveInt
+    audience: Literal['client', 'internal']
+    text_checked: StrictBool = False
+
+
+class IntakeRecord(IntakeDraft):
+    id: UUID
+    revision: PositiveInt
+    saved_at: UTCDatetime
+    matter_id: UUID | None
+    verification_status: Literal['unverified'] = 'unverified'
+
+
 class PositionInput(DomainModel):
     position: Position
     objectives: Annotated[tuple[NonEmpty, ...], Field(min_length=1, max_length=10)]

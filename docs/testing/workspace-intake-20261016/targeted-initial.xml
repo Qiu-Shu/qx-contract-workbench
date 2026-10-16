@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="2" failures="5" skipped="0" tests="77" time="53.591" timestamp="2026-10-16T19:12:31.419150+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_intake" name="test_roundtrip_history_conflict_and_immutable_snapshot" time="0.564" /><testcase classname="tests.integration.test_intake" name="test_other_identity_cannot_access_or_export_or_convert[reviewer]" time="0.491" /><testcase classname="tests.integration.test_intake" name="test_other_identity_cannot_access_or_export_or_convert[assistant]" time="0.496" /><testcase classname="tests.integration.test_intake" name="test_other_identity_cannot_access_or_export_or_convert[admin]" time="0.475" /><testcase classname="tests.integration.test_intake" name="test_csrf_origin_roles_unknown_fields_and_login" time="0.523" /><testcase classname="tests.integration.test_intake" name="test_creation_replay_and_payload_conflict" time="0.417" /><testcase classname="tests.integration.test_intake" name="test_export_only_explicit_current_audience" time="0.474" /><testcase classname="tests.integration.test_intake" name="test_conversion_atomic_replay_and_membership_revocation" time="0.524" /><testcase classname="tests.integration.test_intake" name="test_conversion_service_failure_rolls_back_created_matter" time="0.453" /><testcase classname="tests.integration.test_intake" name="test_closed_and_local_disabled_cannot_convert" time="0.429" /><testcase classname="tests.integration.test_intake" name="test_limits_and_xml_controls_rejected" time="0.398" /><testcase classname="tests.integration.test_intake" name="test_page_escape_and_two_simultaneous_conversion_requests" time="0.537" /><testcase classname="tests.integration.test_workspace_upgrade" name="test_upgrade_keeps_identity_login_case_and_independent_backup" time="0.657" /><testcase classname="tests.integration.test_workspace_upgrade" name="test_marker_write_failure_recovers_without_rerunning_migration" time="0.564" /><testcase classname="tests.integration.test_workspace_upgrade" name="test_unknown_schema_change_not_accepted" time="0.401" /><testcase classname="tests.integration.test_workspace_upgrade" name="test_migration_transaction_failure_leaves_legacy_schema" time="0.456" /><testcase classname="tests.integration.test_workspace_upgrade" name="test_recovery_refuses_changed_extension_or_backup" time="0.522" /><testcase classname="tests.integration.test_local_workbench" name="test_restart_preserves_accounts_cases_and_current_session" time="0.611" /><testcase classname="tests.integration.test_local_workbench" name="test_document_worker_original_and_anchors_survive_restart" time="1.194" /><testcase classname="tests.integration.test_local_workbench" name="test_initialization_never_overwrites_existing_workspace" time="0.206" /><testcase classname="tests.integration.test_local_workbench" name="test_account_maintenance_requires_stopped_workspace" time="0.281"><failure message="ValueError: WORKSPACE_IN_USE">tests\integration\test_local_workbench.py:117: in test_account_maintenance_requires_stopped_workspace
+    module.add_local_user(root, 'new-assistant', PASSWORD, Role.ASSISTANT)
+src\cn_contract\web\local_server.py:137: in add_local_user
+    database = _database(root)
+               ^^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:95: in _database
+    with _worker_lock(root):
+         ^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:163: in _worker_lock
+    raise ValueError('WORKSPACE_IN_USE') from None
+E   ValueError: WORKSPACE_IN_USE</failure></testcase><testcase classname="tests.integration.test_local_workbench" name="test_bridge_only_attaches_to_default_port_and_directory" time="0.581" /><testcase classname="tests.integration.test_local_workbench" name="test_invalid_initial_credentials_leave_no_partial_workspace[-local-test12]" time="0.002" /><testcase classname="tests.integration.test_local_workbench" name="test_invalid_initial_credentials_leave_no_partial_workspace[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-local-test12]" time="0.002" /><testcase classname="tests.integration.test_local_workbench" name="test_invalid_initial_credentials_leave_no_partial_workspace[new\nline-local-test12]" time="0.002" /><testcase classname="tests.integration.test_local_workbench" name="test_invalid_initial_credentials_leave_no_partial_workspace[local-lawyer-short]" time="0.002" /><testcase classname="tests.integration.test_local_workbench" name="test_invalid_initial_credentials_leave_no_partial_workspace[local-lawyer-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx]" time="0.002" /><testcase classname="tests.integration.test_local_workbench" name="test_foreign_or_incomplete_workspace_is_not_created_or_repaired" time="0.004" /><testcase classname="tests.integration.test_local_workbench" name="test_policy_marker_tamper_is_rejected_before_database_open" time="0.217" /><testcase classname="tests.integration.test_local_workbench" name="test_add_explicit_account_preserves_least_privilege_and_duplicate_password" time="0.223"><failure message="ValueError: WORKSPACE_IN_USE">tests\integration\test_local_workbench.py:174: in test_add_explicit_account_preserves_least_privilege_and_duplicate_password
+    module.add_local_user(root, 'local-assistant', PASSWORD, Role.ASSISTANT)
+src\cn_contract\web\local_server.py:137: in add_local_user
+    database = _database(root)
+               ^^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:95: in _database
+    with _worker_lock(root):
+         ^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:163: in _worker_lock
+    raise ValueError('WORKSPACE_IN_USE') from None
+E   ValueError: WORKSPACE_IN_USE</failure></testcase><testcase classname="tests.integration.test_local_workbench" name="test_second_running_workspace_is_rejected_and_lock_released" time="0.373" /><testcase classname="tests.integration.test_local_workbench" name="test_outside_project_and_local_root_are_rejected" time="0.004" /><testcase classname="tests.integration.test_local_workbench" name="test_cli_password_never_accepted_as_argument_or_noninteractive_input" time="0.003" /><testcase classname="tests.integration.test_local_workbench" name="test_corrupt_or_replaced_database_never_rebuilt_on_start[empty]" time="0.226" /><testcase classname="tests.integration.test_local_workbench" name="test_corrupt_or_replaced_database_never_rebuilt_on_start[missing-table]" time="0.222" /><testcase classname="tests.integration.test_local_workbench" name="test_corrupt_or_replaced_database_never_rebuilt_on_start[different-workspace]" time="0.412" /><testcase classname="tests.integration.test_local_workbench" name="test_shutdown_retains_lock_until_active_worker_finishes" time="0.372" /><testcase classname="tests.integration.test_local_workbench" name="test_start_prompts_once_then_reopens_without_password_reset" time="0.442" /><testcase classname="tests.integration.test_local_workbench" name="test_start_explains_invalid_input_without_echoing_password[answers0-\u4e24\u6b21\u5bc6\u7801\u4e0d\u4e00\u81f4]" time="0.003" /><testcase classname="tests.integration.test_local_workbench" name="test_start_explains_invalid_input_without_echoing_password[answers1-\u5bc6\u7801\u987b\u4e3a6\u201312\u4f4d]" time="0.004" /><testcase classname="tests.integration.test_local_workbench" name="test_start_explains_invalid_input_without_echoing_password[answers2-\u5bc6\u7801\u987b\u4e3a6\u201312\u4f4d]" time="0.003" /><testcase classname="tests.integration.test_local_workbench" name="test_start_unknown_error_does_not_echo_exception_details" time="0.003" /><testcase classname="tests.integration.test_local_workbench" name="test_local_password_boundaries_create_and_add_accounts_that_can_login[test06]" time="0.295"><failure message="ValueError: WORKSPACE_IN_USE">tests\integration\test_local_workbench.py:340: in test_local_password_boundaries_create_and_add_accounts_that_can_login
+    module.add_local_user(root, 'local-assistant', password, Role.ASSISTANT)
+src\cn_contract\web\local_server.py:137: in add_local_user
+    database = _database(root)
+               ^^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:95: in _database
+    with _worker_lock(root):
+         ^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:163: in _worker_lock
+    raise ValueError('WORKSPACE_IN_USE') from None
+E   ValueError: WORKSPACE_IN_USE</failure></testcase><testcase classname="tests.integration.test_local_workbench" name="test_local_password_boundaries_create_and_add_accounts_that_can_login[local-test12]" time="0.217"><failure message="ValueError: WORKSPACE_IN_USE">tests\integration\test_local_workbench.py:340: in test_local_password_boundaries_create_and_add_accounts_that_can_login
+    module.add_local_user(root, 'local-assistant', password, Role.ASSISTANT)
+src\cn_contract\web\local_server.py:137: in add_local_user
+    database = _database(root)
+               ^^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:95: in _database
+    with _worker_lock(root):
+         ^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:163: in _worker_lock
+    raise ValueError('WORKSPACE_IN_USE') from None
+E   ValueError: WORKSPACE_IN_USE</failure></testcase><testcase classname="tests.integration.test_local_workbench" name="test_local_password_outside_range_rejected_without_changing_store[abcde]" time="0.207" /><testcase classname="tests.integration.test_local_workbench" name="test_local_password_outside_range_rejected_without_changing_store[abcdefghijklm]" time="0.208" /><testcase classname="tests.integration.test_local_workbench" name="test_existing_long_password_still_logs_in" time="0.374" /><testcase classname="tests.integration.test_desktop_runtime" name="test_external_user_data_round_trip_and_default_boundary" time="0.439" /><testcase classname="tests.integration.test_desktop_runtime" name="test_explicit_data_parent_still_rejects_escape[..]" time="0.003" /><testcase classname="tests.integration.test_desktop_runtime" name="test_explicit_data_parent_still_rejects_escape[../outside]" time="0.002" /><testcase classname="tests.integration.test_desktop_runtime" name="test_explicit_data_parent_still_rejects_escape[.]" time="0.003" /><testcase classname="tests.integration.test_desktop_runtime" name="test_desktop_protocol_readiness_auth_restart_and_eof" time="3.131" /><testcase classname="tests.integration.test_desktop_runtime" name="test_desktop_rejects_partial_workspace_without_repair" time="0.940" /><testcase classname="tests.integration.test_desktop_runtime" name="test_frozen_rules_resolve_from_same_asset_root_as_settings" time="0.580" /><testcase classname="tests.integration.test_desktop_runtime" name="test_parent_eof_during_initialization_has_bounded_exit" time="15.336" /><testcase classname="tests.integration.test_local_material_boundaries" name="test_local_direct_mock_intake_is_denied" time="0.849" /><testcase classname="tests.integration.test_local_material_boundaries" name="test_backup_rechecks_local_case_at_snapshot_transaction" time="0.471" /><testcase classname="tests.integration.test_local_material_boundaries" name="test_upload_auth_csrf_cross_case_preserves_originals" time="0.211"><failure message="ValueError: WORKSPACE_IN_USE">tests\integration\test_local_material_boundaries.py:62: in test_upload_auth_csrf_cross_case_preserves_originals
+    module.add_local_user(root, 'other-lawyer', PASSWORD, Role.HANDLING_LAWYER)
+src\cn_contract\web\local_server.py:137: in add_local_user
+    database = _database(root)
+               ^^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:95: in _database
+    with _worker_lock(root):
+         ^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:163: in _worker_lock
+    raise ValueError('WORKSPACE_IN_USE') from None
+E   ValueError: WORKSPACE_IN_USE</failure></testcase><testcase classname="tests.integration.test_library_api" name="test_library_requires_login_csrf_and_same_origin" time="0.454"><error message="failed on setup with &quot;ValueError: WORKSPACE_IN_USE&quot;">tests\integration\test_library_api.py:24: in library_client
+    local_server.add_local_user(workspace, 'library-reader', PASSWORD, Role.ASSISTANT)
+src\cn_contract\web\local_server.py:137: in add_local_user
+    database = _database(root)
+               ^^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:95: in _database
+    with _worker_lock(root):
+         ^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:163: in _worker_lock
+    raise ValueError('WORKSPACE_IN_USE') from None
+E   ValueError: WORKSPACE_IN_USE</error></testcase><testcase classname="tests.integration.test_library_api" name="test_library_versions_paths_and_passive_text" time="0.441"><error message="failed on setup with &quot;ValueError: WORKSPACE_IN_USE&quot;">tests\integration\test_library_api.py:24: in library_client
+    local_server.add_local_user(workspace, 'library-reader', PASSWORD, Role.ASSISTANT)
+src\cn_contract\web\local_server.py:137: in add_local_user
+    database = _database(root)
+               ^^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:95: in _database
+    with _worker_lock(root):
+         ^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+src\cn_contract\web\local_server.py:163: in _worker_lock
+    raise ValueError('WORKSPACE_IN_USE') from None
+E   ValueError: WORKSPACE_IN_USE</error></testcase><testcase classname="tests.integration.test_library_api" name="test_library_disabled_by_default" time="0.322" /><testcase classname="tests.integration.test_api" name="test_app_import_and_construction_do_not_start_worker_or_provision_users" time="0.344" /><testcase classname="tests.integration.test_api" name="test_cookie_login_csrf_no_store_and_same_origin" time="0.470" /><testcase classname="tests.integration.test_api" name="test_create_requires_actual_lawyer_role[assistant]" time="0.398" /><testcase classname="tests.integration.test_api" name="test_create_requires_actual_lawyer_role[admin]" time="0.399" /><testcase classname="tests.integration.test_api" name="test_raw_real_or_unregistered_upload_blocked_before_original" time="0.481" /><testcase classname="tests.integration.test_api" name="test_idempotent_upload_one_original_conflicting_bytes" time="0.483" /><testcase classname="tests.integration.test_api" name="test_cross_case_job_version_and_admin_do_not_reveal" time="0.579" /><testcase classname="tests.integration.test_api" name="test_decisions_append_server_identity_and_preserve_original[accept]" time="1.527" /><testcase classname="tests.integration.test_api" name="test_decisions_append_server_identity_and_preserve_original[edit]" time="1.435" /><testcase classname="tests.integration.test_api" name="test_decisions_append_server_identity_and_preserve_original[reject]" time="1.468" /><testcase classname="tests.integration.test_api" name="test_decisions_append_server_identity_and_preserve_original[request_info]" time="1.439" /><testcase classname="tests.integration.test_api" name="test_decisions_append_server_identity_and_preserve_original[refer]" time="1.415" /><testcase classname="tests.integration.test_api" name="test_mock_cannot_sign_and_qcc_off_review_continues" time="1.903" /><testcase classname="tests.integration.test_api" name="test_restart_running_jobs_blocked_never_auto_resend" time="0.496" /><testcase classname="tests.integration.test_api" name="test_revoked_actor_worker_cannot_parse_or_write_candidates" time="0.566" /><testcase classname="tests.integration.test_api" name="test_six_pages_escape_untrusted_title_and_no_external_resources" time="0.583" /></testsuite></testsuites>

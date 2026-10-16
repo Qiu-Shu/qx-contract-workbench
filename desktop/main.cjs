@@ -4,7 +4,7 @@ const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { randomUUID } = require('node:crypto');
 const { Backend } = require('./backend.cjs');
-const { navigationAllowed, setupSenderAllowed, validLibraryRoot } = require('./policy.cjs');
+const { navigationAllowed, setupSenderAllowed, validLibraryRoot, clipboardWriteAllowed } = require('./policy.cjs');
 
 app.setName('群兴法律工作台验证版');
 // An OS-supplied override supports isolated acceptance; never supplied by a page.
@@ -97,8 +97,10 @@ else {
       } catch { state = {mode:'error',message:'资料库设置无法读取。请保留资料目录并联系维护人员。'}; }
     }
     const isolated = session.fromPartition('qx-'+randomUUID());
-    isolated.setPermissionRequestHandler((_wc,_permission,callback)=>callback(false));
-    isolated.setPermissionCheckHandler(()=>false);
+    const canWriteClipboard = (wc,permission,details) => Boolean(win && !win.isDestroyed() && win.isFocused()
+      && wc === win.webContents && clipboardWriteAllowed(permission,details.requestingUrl,origin,details.isMainFrame));
+    isolated.setPermissionRequestHandler((wc,permission,callback,details)=>callback(canWriteClipboard(wc,permission,details)));
+    isolated.setPermissionCheckHandler((wc,permission,_requestingOrigin,details)=>canWriteClipboard(wc,permission,details));
     isolated.on('will-download', (event,item) => {
       const url = item.getURL();
       if (!navigationAllowed(url,origin,'') && !(origin && url.startsWith('blob:'+origin+'/'))) { event.preventDefault(); return; }
