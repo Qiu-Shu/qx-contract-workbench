@@ -24,7 +24,7 @@ from ..domain import WorkspaceBackupManifest
 from ..persistence import Database, SessionRow
 from . import storage
 from .backup import (checked_root, digest, encode, strict_json, safe_relative, redirected,
-                     _schema, schema_reference, _file_references, _mark_storage_flags)
+                     _file_references, _mark_storage_flags)
 
 MAGIC = b'QX_LOCAL_WORKSPACE_1\n'
 LIMIT = 2 * 1024**3
@@ -112,12 +112,12 @@ def _validate_database(root):
     if (type(marker) is not dict or set(marker) != set(expected)|{'workspace_id','schema_sha256'}
             or any(marker[k] != v for k,v in expected.items())):
         raise ValueError('WORKSPACE_POLICY_MISMATCH')
-    reference = schema_reference(load_settings())
-    reference.append(('table','local_workspace_identity','local_workspace_identity',
-                      'CREATE TABLE local_workspace_identity (id TEXT PRIMARY KEY NOT NULL)'))
+    from ..storage_schema import identify_schema
     with closing(sqlite3.connect((root/'workbench.db').as_uri()+'?mode=ro', uri=True)) as connection:
         connection.execute('PRAGMA trusted_schema=OFF')
-        if _schema(connection) != sorted(reference): raise ValueError('WORKSPACE_SCHEMA_MISMATCH')
+        rows = connection.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall()
+        try: identify_schema(rows, native=True)
+        except ValueError: raise ValueError('WORKSPACE_SCHEMA_MISMATCH') from None
         if (_schema_hash(connection) != marker['schema_sha256']
                 or connection.execute('SELECT id FROM local_workspace_identity').fetchall() != [(marker['workspace_id'],)]
                 or connection.execute('PRAGMA integrity_check').fetchall() != [('ok',)]
@@ -302,9 +302,12 @@ def _fence(root, refs, archive_hash, manifest_hash):
             pending = list(db.scalars(select(JobRow).where(JobRow.state.in_(('queued','running')))))
             for job in pending:
                 job.state='blocked'; job.stage='恢复副本仅供核对'; job.error_code='BLOCKED_LIVE'; event(job,db)
+            from ..assistant.service import quarantine_runs
+            assistant_jobs = quarantine_runs(db)
             db.add(storage.RestoreFenceRow(ref=str(uuid4()),archive_sha256=archive_hash,
                 manifest_sha256=manifest_hash,payload=encode({'restored_at':datetime.now(timezone.utc).isoformat(),
                 'state':'quarantined','old_sessions_revoked':True,'jobs_quarantined':len(pending),
+                'assistant_jobs_quarantined':assistant_jobs,
                 'live_egress':False,'current_approvals_valid':False,'external_highwater':None}).decode()))
             grouped = {}
             for item in refs:
@@ -333,6 +336,12 @@ def restore_workspace_backup(archive, restore_parent, passphrase):
         _decrypt(archive,plain,passphrase)
         root = stage/'workspace'
         manifest, manifest_hash, refs = _unpack(plain,root)
+        # _unpack also verifies newly created backups: it must never migrate.
+        # Here all historical bytes/references have passed validation, and only
+        # an isolated restore copy is upgraded under the native maintenance lock.
+        from ..web.local_server import _worker_lock
+        from ..web.workspace_upgrade import upgrade
+        with _worker_lock(root): upgrade(root)
         _fence(root,refs,summary['sha256'],manifest_hash)
         _validate_database(root)
         if _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16) != summary:

@@ -125,7 +125,9 @@ def test_missing_original_and_unknown_schema_rejected(source, tmp_path):
         marker = json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256'] = local_server._schema_hash(db)
     (root/'workspace.json').write_text(json.dumps(marker), encoding='utf-8')
-    with pytest.raises(ValueError, match='SCHEMA'):
+    # Exact version validation now rejects this at _open_workspace, before
+    # the archive-specific validator has an opportunity to see the database.
+    with pytest.raises(ValueError, match='WORKSPACE_DATABASE_MISMATCH'):
         module.create_workspace_backup(root, tmp_path/'schema.qxbak', PASSPHRASE, data_parent=parent)
 
 

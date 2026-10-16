@@ -18,7 +18,9 @@ from ..domain import Role
 from ..ops.backup import redirected
 from ..persistence import Database, UserRow
 from ..security import ServiceError, provision_user
-from ..storage_bootstrap import initialize_storage
+from ..storage_bootstrap import initialize_storage, mark_storage_initialized
+from ..storage_schema import CURRENT_VERSION, identify_schema
+from ..schema_migrations import database_rows
 from .app import create_app
 from .assisted_demo_server import load_seed_policy, SEED_MANIFEST_SHA256
 from .demo_server import attach_job_worker
@@ -76,7 +78,12 @@ def _open_workspace(directory, *, data_parent=None):
         # Read-only validation precedes any create_all/trigger initialization.
         with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
             from .workspace_upgrade import pending_matches
+            try:
+                identify_schema(database_rows(db), native=True)
+            except ValueError:
+                raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
             if (db.execute('PRAGMA quick_check').fetchall() != [('ok',)]
+                    or db.execute('PRAGMA foreign_key_check').fetchall()
                     or db.execute('SELECT id FROM local_workspace_identity').fetchall() != [(payload['workspace_id'],)]
                     or (_schema_hash(db) != payload['schema_sha256'] and not pending_matches(db,root,payload))):
                 raise ValueError('WORKSPACE_DATABASE_MISMATCH')
@@ -90,10 +97,18 @@ def _schema_hash(db):
     return hashlib.sha256(json.dumps(rows, ensure_ascii=False, separators=(',', ':')).encode('utf-8')).hexdigest()
 
 
-def _database(root):
-    database = Database('sqlite:///' + str(root / 'workbench.db'), root / 'protected', load_settings())
+def _database(root, *, initialize=False):
+    if not initialize:
+        with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as connection:
+            if identify_schema(database_rows(connection), native=True) != CURRENT_VERSION:
+                raise ValueError('WORKSPACE_DATABASE_MISMATCH')
+    database = Database('sqlite:///' + str(root / 'workbench.db'), root / 'protected', load_settings(),
+                        initialize_schema=initialize)
     try:
-        initialize_storage(database)
+        if initialize:
+            initialize_storage(database)
+        else:
+            mark_storage_initialized(database)
         return database
     except BaseException:
         database.engine.dispose()
@@ -107,7 +122,7 @@ def initialize_workspace(directory, username, password, *, data_parent=None):
     if root.exists():
         raise ValueError('WORKSPACE_ALREADY_EXISTS')
     root.mkdir(parents=True, exist_ok=False)
-    database = _database(root)
+    database = _database(root, initialize=True)
     try:
         with database.session() as db:
             provision_user(username, password, {Role.HANDLING_LAWYER}, db, local_workbench_password=True)

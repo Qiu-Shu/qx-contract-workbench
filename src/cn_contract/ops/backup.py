@@ -141,14 +141,8 @@ def _tables(connection):
 
 
 def schema_reference(settings):
-    from ..storage_bootstrap import initialize_storage
-    with TemporaryDirectory(prefix='cn-synthetic-schema-') as temp:
-        root = Path(temp)
-        database = Database('sqlite:///'+str(root/'reference.db'), root/'files', settings)
-        try:
-            initialize_storage(database)
-            with closing(sqlite3.connect(root/'reference.db')) as connection: return _schema(connection)
-        finally: database.engine.dispose()
+    from ..storage_schema import CURRENT_VERSION, normalized_schema
+    return normalized_schema(CURRENT_VERSION)
 
 
 def validate_raw_database(path, settings, *, expected_schema=None):
@@ -313,8 +307,10 @@ def restore_backup(backup_ref, *, key_resolver, restore_parent, settings):
     except (BadZipFile, RuntimeError, KeyError, TypeError, UnicodeError, EOFError):
         raise ValueError('INVALID_ARCHIVE') from None
     if digest(payloads['database.db']) != manifest['source_database_sha256']: raise ValueError('DATABASE_HASH_MISMATCH')
-    schema = schema_reference(settings)
-    if digest(encode(schema)) != manifest['schema_sha256']: raise ValueError('DATABASE_SCHEMA_MISMATCH')
+    from ..storage_schema import SUPPORTED_VERSIONS, normalized_schema
+    schema = next((reference for version in SUPPORTED_VERSIONS
+                   if digest(encode(reference := normalized_schema(version))) == manifest['schema_sha256']), None)
+    if schema is None: raise ValueError('DATABASE_SCHEMA_MISMATCH')
     # All byte/hash/schema validation completes in a temporary root before the
     # new restore directory is allocated. No historical database is overwritten.
     with TemporaryDirectory(prefix='cn-synthetic-restore-check-') as temp:
@@ -346,6 +342,12 @@ def restore_backup(backup_ref, *, key_resolver, restore_parent, settings):
             target = protected/safe_relative(name[6:]); target.parent.mkdir(parents=True, exist_ok=True)
             with target.open('xb') as stream: stream.write(file_raw)
             target.chmod(stat.S_IREAD)
+        # Only this fully verified staging copy may change; old table counts and
+        # archive bytes were checked before any schema upgrade.
+        from ..schema_migrations import upgrade_database
+        with closing(sqlite3.connect(database_path)) as connection:
+            upgrade_database(connection)
+        validate_raw_database(database_path, settings)
         restored = Database('sqlite:///'+str(database_path), protected, settings, initialize_schema=False)
         _mark_storage_flags(restored)
         fence = uuid4()
@@ -356,8 +358,11 @@ def restore_backup(backup_ref, *, key_resolver, restore_parent, settings):
                 jobs = list(db.scalars(select(JobRow).where(JobRow.state.in_(('queued', 'running')))))
                 for job in jobs:
                     job.state = 'blocked'; job.stage = '恢复隔离，外部发送高水位待人工核对'; job.error_code = 'BLOCKED_LIVE'; event(job, db)
+                from ..assistant.service import quarantine_runs
+                assistant_jobs = quarantine_runs(db)
                 storage_payload = {'restored_at': datetime.now(timezone.utc).isoformat(), 'state': 'quarantined', 'external_highwater': None,
-                    'old_sessions_revoked': True, 'jobs_quarantined': len(jobs), 'live_egress': False, 'current_approvals_valid': False}
+                    'old_sessions_revoked': True, 'jobs_quarantined': len(jobs), 'assistant_jobs_quarantined': assistant_jobs,
+                    'live_egress': False, 'current_approvals_valid': False}
                 db.add(storage.RestoreFenceRow(ref=str(fence), archive_sha256=digest(raw), manifest_sha256=digest(manifest_raw), payload=encode(storage_payload).decode()))
                 grouped = {}
                 for item in refs:

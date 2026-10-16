@@ -86,6 +86,7 @@ class DomainModel(BaseModel):
 
 class ErrorCode(StrEnum):
     STATE_CONFLICT = 'STATE_CONFLICT'
+    ASSISTANT_BUSY = 'ASSISTANT_BUSY'
     VERSION_CONFLICT = 'VERSION_CONFLICT'
     FILE_UNSUPPORTED = 'FILE_UNSUPPORTED'
     FILE_LIMIT = 'FILE_LIMIT'
@@ -2490,3 +2491,97 @@ class LibraryOriginal(DomainModel):
     text: str
     raw_fields: dict[str, JsonValue]
     fragment: LibraryFragment | None = None
+
+
+# Conversation input is source material, never a confirmed fact or issued opinion.
+AssistantSkill = Literal['client_reply', 'material_organize', 'contract_review',
+                         'content_draft', 'legal_research']
+AssistantRunState = Literal['queued', 'preparing', 'routing', 'retrieving', 'generating',
+                            'persisting', 'completed', 'cancelled', 'failed',
+                            'interrupted', 'awaiting_input', 'blocked']
+AssistantText = Annotated[str, StringConstraints(strict=True, max_length=20000), AfterValidator(_intake_text)]
+
+
+class AssistantScope(DomainModel):
+    scope_kind: Literal['conversation', 'intake', 'matter'] = 'conversation'
+    scope_ref: UUID | None = None
+
+    @model_validator(mode='after')
+    def explicit_scope_reference(self):
+        if (self.scope_kind == 'conversation') != (self.scope_ref is None):
+            raise ValueError('conversation has no reference; intake and matter require one')
+        return self
+
+
+class ScopeSnapshot(AssistantScope):
+    workspace_id: UUID
+    conversation_id: UUID
+    binding_revision: PositiveInt
+    input_revision: NonNegativeInt
+    materials_revision: NonNegativeInt
+
+
+class AssistantConversationCreateInput(AssistantScope):
+    request_id: UUID
+    display_title: IntakeLabel = '新对话'
+
+
+class AssistantDraftInput(DomainModel):
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+    content: AssistantText
+
+
+class AssistantMessageInput(AssistantDraftInput):
+    request_id: UUID
+    requested_skill: AssistantSkill | None = None
+    attachment_ids: Annotated[tuple[UUID, ...], Field(max_length=20)] = ()
+
+    @field_validator('content')
+    @classmethod
+    def nonblank_message(cls, value):
+        if not value.strip():
+            raise ValueError('message text required')
+        return value
+
+
+class AssistantMessageView(DomainModel):
+    id: UUID
+    role: Literal['user', 'assistant']
+    content: AssistantText
+    source_revision: PositiveInt
+    created_at: UTCDatetime
+
+
+class AssistantConversationView(DomainModel):
+    scope: ScopeSnapshot
+    display_title: IntakeLabel
+    composer_revision: NonNegativeInt
+    draft_input: AssistantText
+    projection_intake_id: UUID | None
+    created_at: UTCDatetime
+    archived_at: UTCDatetime | None
+    messages: tuple[AssistantMessageView, ...]
+
+
+class AssistantRunEvent(DomainModel):
+    seq: PositiveInt
+    event_type: NonEmpty
+    audience: Literal['internal', 'client']
+    payload: dict[str, JsonValue]
+    created_at: UTCDatetime
+
+
+class AssistantRunView(DomainModel):
+    id: UUID
+    message_id: UUID
+    request_id: UUID
+    request_sha256: SHA256
+    scope: ScopeSnapshot
+    state: AssistantRunState
+    requested_skill: AssistantSkill | None
+    selected_provider: str | None
+    selected_model: str | None
+    cancel_requested: StrictBool
+    created_at: UTCDatetime
+    events: tuple[AssistantRunEvent, ...]
