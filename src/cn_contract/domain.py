@@ -2241,6 +2241,20 @@ class BackupConfig(DomainModel):
     retention_days: PositiveInt
 
 
+class WorkspaceBackupFile(DomainModel):
+    path: NonEmpty
+    size: NonNegativeInt
+    sha256: SHA256
+
+
+class WorkspaceBackupManifest(DomainModel):
+    format: Literal['qx-local-workspace-v1']
+    archive_id: UUID
+    workspace_id: UUID
+    created_at: UTCDatetime
+    files: tuple[WorkspaceBackupFile, ...]
+
+
 class BackupReport(DomainModel):
     backup_ref: NonEmpty
     restored_at: UTCDatetime

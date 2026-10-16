@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="2.752" timestamp="2026-10-16T19:55:38.865405+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_workspace_backup" name="test_plaintext_staging_stays_inside_workspace" time="1.712"><failure message="AssertionError: plaintext reached backup destination&#10;assert False&#10; +  where False = is_relative_to(WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-776/test_plaintext_staging_stays_i0/中文 账户/workspaces/main'))&#10; +    where is_relative_to = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-776/test_plaintext_staging_stays_i0/portable/.qx-backup-_820p9uu/archive.zip').is_relative_to">tests\integration\test_workspace_backup.py:193: in test_plaintext_staging_stays_inside_workspace
+    module.create_workspace_backup(root,destination/'encrypted.qxbak',PASSPHRASE,data_parent=parent)
+src\cn_contract\ops\workspace_backup.py:266: in create_workspace_backup
+    encrypted = stage/'archive.qxbak'; _encrypt(plain,encrypted,passphrase)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_workspace_backup.py:189: in inspect
+    assert plain.is_relative_to(root), 'plaintext reached backup destination'
+E   AssertionError: plaintext reached backup destination
+E   assert False
+E    +  where False = is_relative_to(WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-776/test_plaintext_staging_stays_i0/中文 账户/workspaces/main'))
+E    +    where is_relative_to = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-776/test_plaintext_staging_stays_i0/portable/.qx-backup-_820p9uu/archive.zip').is_relative_to</failure></testcase></testsuite></testsuites>

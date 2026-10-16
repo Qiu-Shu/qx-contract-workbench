@@ -1,0 +1,200 @@
+{
+  "phase": "local-workspace-encrypted-backup-and-readonly-recovery",
+  "status": "LOCAL_ENGINEERING_AND_INSTALLED_ACCEPTANCE_PASS",
+  "version": "0.4.0",
+  "utc_recorded": "2026-10-16T12:19:01.068936+00:00",
+  "base_commit": "42ffddc",
+  "installer": {
+    "path": "D:\\Documents\\ChatGPT\\律所项目\\dist\\desktop\\Qunxing-Workbench-0.4.0-Setup.exe",
+    "bytes": 154448183,
+    "sha256": "90838d532a0c9947ecf93bab38319bbc15207248ce42cf8f8b73a812df2fa506",
+    "signature": "NotSigned",
+    "install_exit_code": 0
+  },
+  "tests": {
+    "full": {
+      "collected": 1825,
+      "passed": 1823,
+      "failed": 0,
+      "skipped": [
+        {
+          "class": "tests.integration.test_library_pilot",
+          "name": "test_pilot_readonly_mapping_or_explicit_mismatch[False]",
+          "reason": "explicit isolated DuckDB test runtime required"
+        },
+        {
+          "class": "tests.integration.test_library_pilot",
+          "name": "test_pilot_readonly_mapping_or_explicit_mismatch[True]",
+          "reason": "explicit isolated DuckDB test runtime required"
+        }
+      ],
+      "seconds": 1502.097
+    },
+    "final_engine": {
+      "collected": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": [],
+      "seconds": 38.201
+    },
+    "pilot_supplement": {
+      "collected": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": [],
+      "seconds": 1.814
+    },
+    "additional_test_names": [
+      [
+        "tests.integration.test_workspace_backup",
+        "test_plaintext_staging_stays_inside_workspace"
+      ]
+    ],
+    "unique_passed_across_runs": 1826,
+    "collection_matched": true,
+    "node_passed": 4
+  },
+  "installed": {
+    "contract": {
+      "packaged": true,
+      "checks": [
+        "restart-menu-before-account",
+        "setup-password-confirmation",
+        "login",
+        "node-disabled",
+        "setup-ipc-denied-to-business-page",
+        "ui-create-case",
+        "ui-import-docx",
+        "original-anchor",
+        "ui-fact-candidate-and-confirm",
+        "api-opinion-and-disposition",
+        "ui-preview",
+        "authenticated-docx-download",
+        "owned-server-stopped",
+        "restart-keeps-case-and-anchors"
+      ],
+      "started": "2026-10-16T12:00:02.587Z",
+      "startupIncludingSetupMs": 2553,
+      "export": {
+        "bytes": 40815,
+        "sha256": "d27b80835f364a29a94445ac1e743b4864873da29e51ab5befaf14cf30657ab0"
+      },
+      "windowChecks": [
+        {
+          "width": 744,
+          "scrollWidth": 729,
+          "height": 695,
+          "zoom": 1
+        },
+        {
+          "width": 595,
+          "scrollWidth": 583,
+          "height": 556,
+          "zoom": 1.25
+        },
+        {
+          "width": 496,
+          "scrollWidth": 486,
+          "height": 463,
+          "zoom": 1.5
+        }
+      ],
+      "consoleErrors": [],
+      "restartToLoginAndSubmitMs": 1633,
+      "status": "PASS"
+    },
+    "backup": {
+      "packaged": true,
+      "checks": [
+        "business-page-cannot-maintain",
+        "native-password-encrypted-verified-backup",
+        "existing-backup-not-overwritten",
+        "wrong-password-no-published-copy",
+        "restored-login-and-backend-readonly",
+        "historical-word-byte-equality",
+        "original-download",
+        "intake-history-readable",
+        "small-window-reading",
+        "return-original-workspace"
+      ],
+      "started": "2026-10-16T12:00:44.294Z",
+      "version": "0.4.0",
+      "archiveSha256": "1bba4ec41829e7d884437e95b269f31cb0e2db3ccda1a1cbad9d9a33d93658e2",
+      "restoredWorkspace": "recovered/1f160d13-f558-4d11-8249-7b731837446d",
+      "originalSha256": "9065f6665d0ec2d724c06b147ce322a74b40cf149acbc32e5d05086a59f2ab5d",
+      "historicalSha256": "d27b80835f364a29a94445ac1e743b4864873da29e51ab5befaf14cf30657ab0",
+      "status": "PASS",
+      "finished": "2026-10-16T12:01:01.826Z"
+    },
+    "library": {
+      "checks": [
+        "installed-library-connection",
+        "full-generation-ready",
+        "jilin-law-ui-original",
+        "jilin-case-search",
+        "backend-crash-visible",
+        "backend-restart-keeps-case",
+        "parent-crash-stops-owned-backend",
+        "published-library-pointer-unchanged"
+      ],
+      "generation": "2a04480becee4f1893d235a08b525e91",
+      "coverage": {
+        "case_csv": 3837307,
+        "law_markdown": 17182,
+        "records": 3854489,
+        "units": 4541207
+      },
+      "caseHits": 5,
+      "electronMetrics": [
+        {
+          "type": "Browser",
+          "pid": 19232,
+          "workingSetKB": 97180
+        },
+        {
+          "type": "GPU",
+          "pid": 22836,
+          "workingSetKB": 90424
+        },
+        {
+          "type": "Utility",
+          "pid": 21660,
+          "workingSetKB": 45052
+        },
+        {
+          "type": "Tab",
+          "pid": 20136,
+          "workingSetKB": 113880
+        }
+      ],
+      "backendWorkingSetBytes": 116805632,
+      "status": "PASS"
+    }
+  },
+  "source_binding": {
+    "id": "qx-offline-source-0.1.5-d84a142189fdb42388cba5ff5babd4c3",
+    "files": 155
+  },
+  "installed_source_comparison": {
+    "version": "0.4.0",
+    "desktopFiles": 8,
+    "webAssets": 14,
+    "status": "PASS"
+  },
+  "review": {
+    "distinct_findings": 3,
+    "closed": 3,
+    "open": 0,
+    "parent_plaintext_fix_supplement_reviewed": true
+  },
+  "limits": [
+    "Synthetic materials only in acceptance",
+    "Read-only recovery, no writable disaster recovery activation",
+    "2 GiB total, 512 MiB each, 20000 files; near-limit performance untested",
+    "NTFS hard-link publication required; FAT/exFAT untested",
+    "Unsigned installer, default icon",
+    "No second-PC, actual system-DPI or Chinese-account acceptance",
+    "WorkBuddy current endpoint disconnected",
+    "Aliyun, invitations/SMS, device management and online updates incomplete"
+  ]
+}

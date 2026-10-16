@@ -1,0 +1,48 @@
+{
+  "packaged": true,
+  "checks": [
+    "restart-menu-before-account",
+    "setup-password-confirmation",
+    "login",
+    "node-disabled",
+    "setup-ipc-denied-to-business-page",
+    "ui-create-case",
+    "ui-import-docx",
+    "original-anchor",
+    "ui-fact-candidate-and-confirm",
+    "api-opinion-and-disposition",
+    "ui-preview",
+    "authenticated-docx-download",
+    "owned-server-stopped",
+    "restart-keeps-case-and-anchors"
+  ],
+  "started": "2026-10-16T12:00:02.587Z",
+  "startupIncludingSetupMs": 2553,
+  "export": {
+    "bytes": 40815,
+    "sha256": "d27b80835f364a29a94445ac1e743b4864873da29e51ab5befaf14cf30657ab0"
+  },
+  "windowChecks": [
+    {
+      "width": 744,
+      "scrollWidth": 729,
+      "height": 695,
+      "zoom": 1
+    },
+    {
+      "width": 595,
+      "scrollWidth": 583,
+      "height": 556,
+      "zoom": 1.25
+    },
+    {
+      "width": 496,
+      "scrollWidth": 486,
+      "height": 463,
+      "zoom": 1.5
+    }
+  ],
+  "consoleErrors": [],
+  "restartToLoginAndSubmitMs": 1633,
+  "status": "PASS"
+}

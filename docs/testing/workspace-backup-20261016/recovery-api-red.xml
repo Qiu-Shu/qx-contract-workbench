@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="5.045" timestamp="2026-10-16T19:51:19.772771+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_workspace_backup" name="test_restored_workspace_http_is_read_only_and_has_clear_entry" time="4.063"><failure message="AssertionError: assert 200 == 409&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code&#10; +    where &lt;Response [200 OK]&gt; = get((('/api/matters/' + '5b3a439a-25a9-4b64-99bb-e56274f63309') + '/reviews'))&#10; +      where get = &lt;starlette.testclient.TestClient object at 0x0000022240693B60&gt;.get">tests\integration\test_workspace_backup.py:81: in test_restored_workspace_http_is_read_only_and_has_clear_entry
+    assert client.get('/api/matters/'+matter+'/reviews').status_code==409
+E   AssertionError: assert 200 == 409
+E    +  where 200 = &lt;Response [200 OK]&gt;.status_code
+E    +    where &lt;Response [200 OK]&gt; = get((('/api/matters/' + '5b3a439a-25a9-4b64-99bb-e56274f63309') + '/reviews'))
+E    +      where get = &lt;starlette.testclient.TestClient object at 0x0000022240693B60&gt;.get</failure></testcase></testsuite></testsuites>

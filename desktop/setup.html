@@ -12,5 +12,13 @@
 <div class="library"><h2>法律资料库 <span>可稍后连接</span></h2><p id="library-path">尚未连接。已有案例、法规库可直接选择目录。</p><button id="library" type="button" class="secondary">选择资料库目录</button></div>
 <p id="validation" role="alert" hidden></p><button type="submit">建立账户并打开工作台</button></form>
 <button id="retry" hidden>重新打开工作台</button>
+<form id="maintenance" hidden><h2 id="maintenance-title">案件资料备份</h2>
+<p>包含当前工作区的全部账户、案件、接待记录、原件和历史导出。法律资料库另行备份。当前上限 2 GiB、20,000 个文件。</p>
+<label for="backup-secret">备份口令</label><input id="backup-secret" type="password" required minlength="12" maxlength="128" autocomplete="off" aria-describedby="backup-help">
+<p id="backup-help" class="hint">12–128 字符，与登录密码独立。口令不会保存；遗失后无法解密备份。</p>
+<div id="backup-confirmation"><label for="backup-confirm">再次输入备份口令</label><input id="backup-confirm" type="password" minlength="12" maxlength="128" autocomplete="off"></div>
+<p id="backup-validation" role="alert" hidden></p><button id="maintenance-submit" type="submit">选择位置并备份</button></form>
+<section id="maintenance-result" hidden><p id="result-detail"></p><p id="result-path"></p></section>
+<button id="resume" class="secondary" hidden>打开工作台</button>
 <footer><p>本机验证版 · 真实模型与企查查关闭，工作稿需由律师核验。</p><details><summary>资料保存位置</summary><p id="data-path"></p><p>案件资料独立保存；重新安装程序不会主动清空资料。</p></details></footer>
 </main></body></html>

@@ -1,6 +1,6 @@
 {
   "name": "qunxing-workbench-desktop",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "群兴法律工作台 Windows 本机验证版",
   "author": "群兴法律工作台项目",
@@ -20,7 +20,7 @@
     "asar": true,
     "electronDist": "node_modules/electron/dist",
     "directories": {"output": "../dist/desktop"},
-    "files": ["main.cjs", "backend.cjs", "policy.cjs", "preload.cjs", "setup.html", "setup.css", "setup.js", "package.json"],
+    "files": ["main.cjs", "backend.cjs", "maintenance.cjs", "policy.cjs", "preload.cjs", "setup.html", "setup.css", "setup.js", "package.json"],
     "extraResources": [{"from": "../dist/qx-backend", "to": "backend"}],
     "win": {"target": "nsis", "signAndEditExecutable": false, "artifactName": "Qunxing-Workbench-${version}-Setup.${ext}"},
     "nsis": {"oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "deleteAppDataOnUninstall": false, "runAfterFinish": false, "createDesktopShortcut": false, "createStartMenuShortcut": true}

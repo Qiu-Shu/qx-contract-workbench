@@ -1,0 +1,187 @@
+{
+  "standards_archive": [
+    {
+      "case": "parent_path",
+      "rejected": true,
+      "error": "ValueError",
+      "no_publish": true
+    },
+    {
+      "case": "case_collision",
+      "rejected": true,
+      "error": "ValueError",
+      "no_publish": true
+    },
+    {
+      "case": "missing_original",
+      "rejected": true,
+      "error": "ValueError",
+      "no_publish": true
+    },
+    {
+      "case": "false_hash",
+      "rejected": true,
+      "error": "ValueError",
+      "no_publish": true
+    },
+    {
+      "case": "unknown_file",
+      "rejected": true,
+      "error": "ValueError",
+      "no_publish": true
+    },
+    {
+      "case": "rebackup_recovered",
+      "passed": true
+    }
+  ],
+  "standards_unsaved": {
+    "checks": [
+      "cancel-maintenance-keeps-unsaved-page-and-live-backend",
+      "retained-page-can-save-to-server",
+      "saved-page-enters-maintenance"
+    ],
+    "status": "PASS"
+  },
+  "standards_publish": {
+    "source": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\qx-review-publish-45f23280-34a0-431d-b047-0664d80bf30b\\中文 账户\\workspaces\\main",
+    "evidence": "D:\\Documents\\ChatGPT\\律所项目\\.local\\review-backup-standards-20261016\\publish-45f23280-34a0-431d-b047-0664d80bf30b",
+    "results": [
+      {
+        "case": "C-to-D-complete-backup-restore",
+        "passed": true,
+        "plaintext_inside_source": true
+      },
+      {
+        "case": "partial_copy_failure",
+        "passed": true,
+        "unrelated_preserved": true
+      },
+      {
+        "case": "target_race",
+        "passed": true,
+        "unrelated_preserved": true
+      },
+      {
+        "case": "wrong_summary",
+        "passed": true,
+        "unrelated_preserved": true
+      }
+    ]
+  },
+  "spec_authorization": {
+    "checks": [
+      "old-session-revoked",
+      "current-review-api-quarantined",
+      "historical-export-relocated-bytes",
+      "current-export-blocked",
+      "other-lawyer-denied",
+      "member-admin-denied"
+    ],
+    "passed": 6
+  },
+  "spec_readonly": {
+    "requests": [
+      {
+        "url": "/api/session",
+        "status": 200
+      },
+      {
+        "url": "/api/matters",
+        "status": 200
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/documents/7a5f3fe8-959a-4b6a-9447-a954bd084483/anchors",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/facts",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/authority-sources",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/review-context",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/reviews/f9e38b20-1810-4098-b5df-180602943879",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/reviews",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/patches?run_id=f9e38b20-1810-4098-b5df-180602943879",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/exports/bcc3b85a-4c16-4f9f-8c25-ef1fc2bccdb1/download",
+        "status": 409
+      },
+      {
+        "url": "/api/jobs/83d2ac09-79c5-4748-82b0-7ab2f94ed28a",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/query-status",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/parties",
+        "status": 409
+      },
+      {
+        "url": "/api/intakes",
+        "status": 200
+      },
+      {
+        "url": "/api/intakes/a91618de-d5d7-4cfd-94da-d4f4af01c50b",
+        "status": 200
+      },
+      {
+        "url": "/api/intakes/a91618de-d5d7-4cfd-94da-d4f4af01c50b/revisions/1",
+        "status": 200
+      },
+      {
+        "url": "/api/workspace/tasks",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/page-ocr",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/page-verifications",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/documents/7a5f3fe8-959a-4b6a-9447-a954bd084483/original?sha256=816b34542bf5837dc93acd4d8dcc288060e7e1ab3ebeca06a4123420c62734ae",
+        "status": 409
+      },
+      {
+        "url": "/api/matters/cd3423c0-dcd6-4aaa-ae15-558a2eb5aaff/bundles/f0b76ebe-3237-48fb-9665-82266a0de990/effective-text",
+        "status": 409
+      }
+    ],
+    "tables_unchanged": true
+  },
+  "spec_settings_failure": {
+    "rejection": null,
+    "messages": [
+      "未能保存工作区设置。请检查资料目录的可写权限和可用空间；原设置已保留。"
+    ],
+    "stderr": [],
+    "settings": {
+      "workspace": "recovered/17a6a090-67bb-4c59-9673-3273cad5de60"
+    },
+    "url": "http://127.0.0.1:50788/recovery"
+  }
+}

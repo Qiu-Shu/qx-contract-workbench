@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="10" time="9.761" timestamp="2026-10-16T19:36:38.745225+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_workspace_backup" name="test_full_local_roundtrip_separate_root_and_old_sessions_revoked" time="0.970"><failure message="AssertionError: full local backup missing&#10;assert None&#10; +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')&#10; +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_workspace_backup.py:43: in test_full_local_roundtrip_separate_root_and_old_sessions_revoked
+    backup = feature()
+             ^^^^^^^^^
+tests\integration\test_workspace_backup.py:23: in feature
+    assert importlib.util.find_spec('cn_contract.ops.workspace_backup'), 'full local backup missing'
+E   AssertionError: full local backup missing
+E   assert None
+E    +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')
+E    +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_workspace_backup" name="test_bad_archive_never_publishes_restore[password]" time="0.826"><failure message="AssertionError: full local backup missing&#10;assert None&#10; +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')&#10; +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_workspace_backup.py:71: in test_bad_archive_never_publishes_restore
+    module = feature(); parent, root, *_ = source
+             ^^^^^^^^^
+tests\integration\test_workspace_backup.py:23: in feature
+    assert importlib.util.find_spec('cn_contract.ops.workspace_backup'), 'full local backup missing'
+E   AssertionError: full local backup missing
+E   assert None
+E    +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')
+E    +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_workspace_backup" name="test_bad_archive_never_publishes_restore[header]" time="0.883"><failure message="AssertionError: full local backup missing&#10;assert None&#10; +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')&#10; +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_workspace_backup.py:71: in test_bad_archive_never_publishes_restore
+    module = feature(); parent, root, *_ = source
+             ^^^^^^^^^
+tests\integration\test_workspace_backup.py:23: in feature
+    assert importlib.util.find_spec('cn_contract.ops.workspace_backup'), 'full local backup missing'
+E   AssertionError: full local backup missing
+E   assert None
+E    +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')
+E    +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_workspace_backup" name="test_bad_archive_never_publishes_restore[ciphertext]" time="0.866"><failure message="AssertionError: full local backup missing&#10;assert None&#10; +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')&#10; +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_workspace_backup.py:71: in test_bad_archive_never_publishes_restore
+    module = feature(); parent, root, *_ = source
+             ^^^^^^^^^
+tests\integration\test_workspace_backup.py:23: in feature
+    assert importlib.util.find_spec('cn_contract.ops.workspace_backup'), 'full local backup missing'
+E   AssertionError: full local backup missing
+E   assert None
+E    +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')
+E    +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_workspace_backup" name="test_bad_archive_never_publishes_restore[tag]" time="0.872"><failure message="AssertionError: full local backup missing&#10;assert None&#10; +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')&#10; +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_workspace_backup.py:71: in test_bad_archive_never_publishes_restore
+    module = feature(); parent, root, *_ = source
+             ^^^^^^^^^
+tests\integration\test_workspace_backup.py:23: in feature
+    assert importlib.util.find_spec('cn_contract.ops.workspace_backup'), 'full local backup missing'
+E   AssertionError: full local backup missing
+E   assert None
+E    +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')
+E    +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_workspace_backup" name="test_bad_archive_never_publishes_restore[truncated]" time="0.846"><failure message="AssertionError: full local backup missing&#10;assert None&#10; +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')&#10; +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_workspace_backup.py:71: in test_bad_archive_never_publishes_restore
+    module = feature(); parent, root, *_ = source
+             ^^^^^^^^^
+tests\integration\test_workspace_backup.py:23: in feature
+    assert importlib.util.find_spec('cn_contract.ops.workspace_backup'), 'full local backup missing'
+E   AssertionError: full local backup missing
+E   assert None
+E    +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')
+E    +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_workspace_backup" name="test_busy_workspace_and_existing_destination_are_preserved" time="0.843"><failure message="AssertionError: full local backup missing&#10;assert None&#10; +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')&#10; +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_workspace_backup.py:88: in test_busy_workspace_and_existing_destination_are_preserved
+    module = feature(); parent, root, *_ = source
+             ^^^^^^^^^
+tests\integration\test_workspace_backup.py:23: in feature
+    assert importlib.util.find_spec('cn_contract.ops.workspace_backup'), 'full local backup missing'
+E   AssertionError: full local backup missing
+E   assert None
+E    +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')
+E    +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_workspace_backup" name="test_missing_original_and_unknown_schema_rejected" time="0.894"><failure message="AssertionError: full local backup missing&#10;assert None&#10; +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')&#10; +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_workspace_backup.py:99: in test_missing_original_and_unknown_schema_rejected
+    module = feature(); parent, root, _, document, *_ = source
+             ^^^^^^^^^
+tests\integration\test_workspace_backup.py:23: in feature
+    assert importlib.util.find_spec('cn_contract.ops.workspace_backup'), 'full local backup missing'
+E   AssertionError: full local backup missing
+E   assert None
+E    +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')
+E    +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_workspace_backup" name="test_weak_passphrase_and_archive_inside_source_rejected" time="0.812"><failure message="AssertionError: full local backup missing&#10;assert None&#10; +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')&#10; +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_workspace_backup.py:114: in test_weak_passphrase_and_archive_inside_source_rejected
+    module = feature(); parent, root, *_ = source
+             ^^^^^^^^^
+tests\integration\test_workspace_backup.py:23: in feature
+    assert importlib.util.find_spec('cn_contract.ops.workspace_backup'), 'full local backup missing'
+E   AssertionError: full local backup missing
+E   assert None
+E    +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')
+E    +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_workspace_backup" name="test_extra_protected_files_preserved_and_hardlinks_rejected" time="0.846"><failure message="AssertionError: full local backup missing&#10;assert None&#10; +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')&#10; +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_workspace_backup.py:122: in test_extra_protected_files_preserved_and_hardlinks_rejected
+    module = feature(); parent, root, *_ = source
+             ^^^^^^^^^
+tests\integration\test_workspace_backup.py:23: in feature
+    assert importlib.util.find_spec('cn_contract.ops.workspace_backup'), 'full local backup missing'
+E   AssertionError: full local backup missing
+E   assert None
+E    +  where None = &lt;function find_spec at 0x0000026A86A15D00&gt;('cn_contract.ops.workspace_backup')
+E    +    where &lt;function find_spec at 0x0000026A86A15D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase></testsuite></testsuites>
