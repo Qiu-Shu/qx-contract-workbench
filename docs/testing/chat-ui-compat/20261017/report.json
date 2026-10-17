@@ -1,0 +1,172 @@
+{
+  "time": "2026-10-17T02:48:25.834836+00:00",
+  "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
+  "checks": [
+    {
+      "name": "shift_enter_newline",
+      "calls": 0,
+      "text": "第一行\nx",
+      "messages": []
+    },
+    {
+      "name": "skill_click",
+      "calls": 0,
+      "text": "保留草稿",
+      "messages": []
+    },
+    {
+      "name": "enter_send",
+      "calls": 1,
+      "text": "",
+      "messages": [
+        {
+          "role": "user",
+          "text": "保留草稿"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        }
+      ]
+    },
+    {
+      "name": "failed_send",
+      "calls": 2,
+      "text": "",
+      "messages": [
+        {
+          "role": "user",
+          "text": "保留草稿"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        },
+        {
+          "role": "user",
+          "text": "失败草稿"
+        }
+      ]
+    },
+    {
+      "name": "supported_defaultInput_restore",
+      "calls": 2,
+      "text": "失败草稿",
+      "messages": []
+    },
+    {
+      "name": "composition_started_enter",
+      "calls": 2,
+      "text": "选字内容",
+      "messages": []
+    },
+    {
+      "name": "composition_end_enter_229",
+      "calls": 3,
+      "text": "",
+      "messages": [
+        {
+          "role": "user",
+          "text": "选字内容"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        }
+      ]
+    },
+    {
+      "name": "isComposing_without_start",
+      "calls": 4,
+      "text": "",
+      "messages": [
+        {
+          "role": "user",
+          "text": "选字内容"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        },
+        {
+          "role": "user",
+          "text": "只有isComposing"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        }
+      ]
+    },
+    {
+      "name": "repeat_key",
+      "calls": 5,
+      "text": "",
+      "messages": [
+        {
+          "role": "user",
+          "text": "选字内容"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        },
+        {
+          "role": "user",
+          "text": "只有isComposing"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        },
+        {
+          "role": "user",
+          "text": "重复键"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        }
+      ]
+    }
+  ],
+  "network": [
+    "http://127.0.0.1:62832/index.html",
+    "http://127.0.0.1:62832/fixture.css",
+    "http://127.0.0.1:62832/fixture-default.js",
+    "http://127.0.0.1:62832/package/dist/deepChat.bundle.js",
+    "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+  ],
+  "console": [
+    {
+      "type": "error",
+      "text": "Loading the stylesheet 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap' violates the following Content Security Policy directive: \"style-src 'self'\". Note that 'style-src-elem' was not explicitly set, so 'style-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "type": "error",
+      "text": "合成失败"
+    }
+  ],
+  "errors": [],
+  "violations": [
+    {
+      "directive": "style-src-elem",
+      "blocked": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap",
+      "sample": ""
+    }
+  ],
+  "aria": "- button \"审查合同\"\n- paragraph: 选字内容\n- paragraph: 合成回复\n- paragraph: 只有isComposing\n- paragraph: 合成回复\n- paragraph: 重复键\n- paragraph: 合成回复\n- textbox \"输入合成内容\"\n- button [disabled]:\n  - img",
+  "storage": {
+    "local": [],
+    "session": []
+  },
+  "shadow": {
+    "adopted": 1,
+    "styles": 0,
+    "display": "block"
+  },
+  "external_requests": [
+    "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+  ],
+  "chromium_version": "153.0.8010.12"
+}

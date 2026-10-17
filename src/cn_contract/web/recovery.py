@@ -24,6 +24,8 @@ def attach_recovery(app, database):
         path=request.url.path
         safe_api=(path in ('/api/login','/api/logout','/api/session','/api/matters','/api/intakes')
                   or path.startswith('/api/recovery/') or re.fullmatch(r'/api/intakes/[0-9a-f-]{36}(?:/revisions/[1-9][0-9]*)?',path))
+        safe_api = safe_api or path in ('/api/assistant/skills','/api/assistant/conversations') or re.fullmatch(
+            r'/api/assistant/(?:conversations/[0-9a-f-]{36}|runs/[0-9a-f-]{36}(?:/events)?)',path)
         if ((request.method not in ('GET','HEAD','OPTIONS') and path not in ('/api/login','/api/logout'))
                 or path.startswith('/api/') and not safe_api):
             return JSONResponse({'code':'BLOCKED_LIVE'},status_code=409)

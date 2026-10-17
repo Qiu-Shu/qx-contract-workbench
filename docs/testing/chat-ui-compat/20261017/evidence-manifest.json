@@ -1,0 +1,137 @@
+{
+  "scope": "synthetic local compatibility experiment only",
+  "exit_codes": {
+    "first_classic_script_harness": 1,
+    "default_probe_corrected": 0,
+    "adapted_probe": 0,
+    "native_probe": 0,
+    "verify_reports": 0
+  },
+  "limits": [
+    "Synthetic browser composition/keydown events, not real Windows OS IME candidate-window acceptance",
+    "Accessible snapshot finds unnamed default send button; no screen-reader acceptance",
+    "Chromium 153.0.8010.12 uses adoptedStyleSheets; fallback branch not validated"
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 6112,
+      "sha256": "2440067d7d1d3cb7282311c9317f6ba6c0bdce92628230ac67f0b25cab1d7321"
+    },
+    {
+      "path": "provenance.json",
+      "bytes": 3027,
+      "sha256": "e98cc6cbfeccb5e1549c6be81afff60b5874ef90709ad9bef59f14314760b380"
+    },
+    {
+      "path": "artifact-verification.json",
+      "bytes": 355,
+      "sha256": "c4e72a36730cdfa4c132c5ed7b989f59058adab35b7c8790a53cf11299187553"
+    },
+    {
+      "path": "report.json",
+      "bytes": 4304,
+      "sha256": "750594fa96b3ea7edcd7910d9d3b46271512ac1eff537c7d9c132613f0c8b6cc"
+    },
+    {
+      "path": "report-adapted.json",
+      "bytes": 3824,
+      "sha256": "b28a65fe19951772475093114f2f1b250a0058d245520fc8a85d185f8199530c"
+    },
+    {
+      "path": "report-native.json",
+      "bytes": 1852,
+      "sha256": "6cebc05de7efce2a68095a81c1be045ce9ccf6e91eeab47b08630795000c241a"
+    },
+    {
+      "path": "report-first-harness-error.json",
+      "bytes": 558,
+      "sha256": "99212d684ed0a707b710716e4586ab1ed2c69e80e3f8b3e89739b24d7bf37139"
+    },
+    {
+      "path": "probe.py",
+      "bytes": 3970,
+      "sha256": "2d023f17829a4c033a376c3a1ddcddb81e58e73bec20a9f93dda0f559f885b63"
+    },
+    {
+      "path": "probe-adapted.py",
+      "bytes": 4020,
+      "sha256": "df04c3e04677004ec361a4aba18ea6125872ee69ab2160340e46c1306a4f8a96"
+    },
+    {
+      "path": "probe-native.py",
+      "bytes": 3168,
+      "sha256": "18d9ab6660185246cec2b93477b9d5faca20cfe01b3554a5af9c27f028328a1b"
+    },
+    {
+      "path": "verify_reports.py",
+      "bytes": 1367,
+      "sha256": "1d42d24008c1e38796fd18f7645787230e7bb6bafbcf84b8700d58e966ce9d6e"
+    },
+    {
+      "path": "index.html",
+      "bytes": 326,
+      "sha256": "d6d90e4dfa5909122d21ca6e6c594db3c3e838fb9b095da7003508e3344f7e5b"
+    },
+    {
+      "path": "adapted.html",
+      "bytes": 326,
+      "sha256": "616dd262b32f90a5d922d35f26fafcc1a0d0f2ec2489cb4b47b67ce9d6343329"
+    },
+    {
+      "path": "native.html",
+      "bytes": 386,
+      "sha256": "af1e49c175410ec2d8de8e232e5fcb6f99a347ac631a0e03e682f35e1002f544"
+    },
+    {
+      "path": "fixture-default.js",
+      "bytes": 686,
+      "sha256": "ebb0ce73d23c5ec4c458f256afea718573d9f4f8ae4fb9e307a872acedc979fb"
+    },
+    {
+      "path": "fixture-adapted.js",
+      "bytes": 1241,
+      "sha256": "d5a047ff704cb6bac4cab0caf82bfe148e445aaa844994e0c3962173d43c8bfe"
+    },
+    {
+      "path": "native.js",
+      "bytes": 1053,
+      "sha256": "9a3c4c269d1bb004f19d099c05ce4b7f17394c33f491c24de58d86737f661201"
+    },
+    {
+      "path": "fixture.css",
+      "bytes": 65,
+      "sha256": "04f32df6cf60a90defec84e8068edf9642569dcc6c10cd0fc088f2e5f8b54871"
+    },
+    {
+      "path": "deep-chat-csp.png",
+      "bytes": 15872,
+      "sha256": "0d208d270a7be8bd610e0f08ad4086e611217a66a7ed1d47937e1f59e15ad38d"
+    },
+    {
+      "path": "deep-chat-adapted-csp.png",
+      "bytes": 11744,
+      "sha256": "77f062aea66aacb0e4a9eaf63a453e7f3e076cea80215cd6873e5243d91ee03f"
+    },
+    {
+      "path": "native-csp.png",
+      "bytes": 10422,
+      "sha256": "e08e40879d589612a8c445ee3785b83530c9ae50d1719b5f7ce79ede25a2e9ed"
+    },
+    {
+      "path": "probe-default.log",
+      "bytes": 4306,
+      "sha256": "c8f0a5183243e15962232c17ad73d16f5c6d74f1d91264d336605d8d0cf44b9c"
+    },
+    {
+      "path": "probe-adapted.log",
+      "bytes": 3826,
+      "sha256": "c35c5d2cdcd310954fbbe35e22494ec23f83e65830910e5a8e3520ad8d961a26"
+    },
+    {
+      "path": "probe-native.log",
+      "bytes": 1854,
+      "sha256": "236e4d8fb17b9501a56130aca71082a9e2fbad1b9adfafd0cb416ea0f24a403b"
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+{
+  "date": "2026-10-17",
+  "baseline": "e7618bb38c9d44302668d20816afa4439878ec1b",
+  "scope": "assistant HTTP/list/cancel/events; synthetic only",
+  "full": {
+    "total": 2042,
+    "unique": 2042,
+    "passed": 2042,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 1694.638,
+    "xml": "full-final.xml",
+    "sha256": "2eb37a3ac3a500aee976d9bf66fde0a8b1954929ecd88df8e3515422a4764186",
+    "exit_code": 0
+  },
+  "targeted": {
+    "control-green": {
+      "total": 97,
+      "unique": 97,
+      "passed": 97,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 47.264,
+      "xml": "control-green.xml",
+      "sha256": "241d7cd5c7affe078fbb98cfaf0063c871e5d5cc74673e6f91a09a709563ff4a"
+    },
+    "control-refine": {
+      "total": 8,
+      "unique": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 4.332,
+      "xml": "control-refine.xml",
+      "sha256": "32f41e956906abfc4018f08d648fbfa80b78d318fa924dec358ec997c4b42fa5"
+    },
+    "routes-final": {
+      "total": 10,
+      "unique": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 6.04,
+      "xml": "routes-final.xml",
+      "sha256": "0455b67bde60671af31c95fa272df8b257b204565b95eee592443062c1ba7007"
+    }
+  },
+  "red": {
+    "control-red": {
+      "total": 3,
+      "unique": 3,
+      "passed": 0,
+      "failed": 3,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 2.313,
+      "xml": "control-red.xml",
+      "sha256": "76d31f685ae697943990559a5744881763918149eab911a9bfd5d065bbffe7d2"
+    },
+    "routes-red": {
+      "total": 1,
+      "unique": 1,
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 1.606,
+      "xml": "routes-red.xml",
+      "sha256": "1dfc920ad60081164af94777cfaace4d26c468924ac327d4b4c8365c0a9ac449"
+    },
+    "window-red": {
+      "total": 2,
+      "unique": 2,
+      "passed": 0,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 2.32,
+      "xml": "window-red.xml",
+      "sha256": "618d4e1baa39efaf129dbfede71f1d27e1e7d5332d2b12dfe2e6ecaea52fcd5e"
+    }
+  },
+  "targets_overlap_full_and_are_not_added": true,
+  "source_snapshot": {
+    "files": 387,
+    "changed": [],
+    "manifest_sha256": "d91c330adfac32ebf52ec5814b0cf9ad282db2f640cdd5a8486a7c36da691c96"
+  },
+  "frozen": {
+    "checks": [
+      "frozen_auth_same_origin_legacy_pages_and_honest_capabilities",
+      "frozen_conversation_draft_message_versions_idempotency",
+      "frozen_sse_parallel_save_cancel_and_cursor_resume",
+      "frozen_restart_preserves_history_and_does_not_execute_queue",
+      "frozen_current_backup_self_verified",
+      "frozen_recovery_history_events_old_session_revoked_exact_read_allowlist"
+    ],
+    "count": 6,
+    "exit_code": 0,
+    "exe_sha256": "494889db2a814449baccfe2631ed0acc7c67698369a743d7d9d43bf876230efc",
+    "archive_sha256": "2c26999d0c6ea9d05fb4910c16702a5439fab73a69f9a267e2a352e072d81a02",
+    "scope": "new actual Windows frozen backend, synthetic only; no model, UI or installer acceptance"
+  },
+  "gates": [
+    {
+      "exit_code": 0,
+      "name": "schema"
+    },
+    {
+      "exit_code": 0,
+      "name": "defaults"
+    },
+    {
+      "exit_code": 0,
+      "name": "sources"
+    },
+    {
+      "exit_code": 0,
+      "name": "dependencies"
+    }
+  ],
+  "interrupted_run": {
+    "exit_code": -1,
+    "completed": false,
+    "counted_as_pass": false
+  },
+  "review": {
+    "spec_open": 0,
+    "standards_open": 0,
+    "standards_closed": 1,
+    "reviewers_ran_tests": false
+  },
+  "workbuddy": {
+    "task_id": "wb-5fb9a152511f",
+    "completed": true,
+    "file_reads": 3,
+    "reviewed_final_new_implementation": false
+  },
+  "artifact_hashes": {
+    "control-green.log": "1dbb244df83b486847abae6269a593376f1d19a8a9710bc70aac579696d529b9",
+    "control-green.xml": "241d7cd5c7affe078fbb98cfaf0063c871e5d5cc74673e6f91a09a709563ff4a",
+    "control-red.log": "3da7050fc0543e65d6641a237922169aa1b91e24402377b28f7598f0f912823d",
+    "control-red.xml": "76d31f685ae697943990559a5744881763918149eab911a9bfd5d065bbffe7d2",
+    "control-refine.log": "0cf172843d15b5148b0e535d558532bfd65372c54aa1d1dfdfcdfde3bc5562a2",
+    "control-refine.xml": "32f41e956906abfc4018f08d648fbfa80b78d318fa924dec358ec997c4b42fa5",
+    "control-summary.json": "106c47d18306b091d1ad3d84887eaf09aa57a628c9febc4516ab329c3eabc196",
+    "defaults-check.log": "1327e54ae343c27bb7f378bb915d826995396db5b801813b2e139b57d7aefeb6",
+    "dependencies-check.log": "32ddd58b8e25f73d17f1156ff1803b833eb5abe0e289a9f7db5f77d92203cc3a",
+    "frozen-build.log": "d4d5c9310af59352b38081022ecaeddc8e9c2ea0775956fcdd608c7f9b973225",
+    "frozen-final-build.log": "bcfd55c4b858ce9dc77b21dbc4e375e3c0e3a80767eb676c81de79acc228c4b2",
+    "frozen-http.json": "9ae1bc31c56fec49b518c818984eab1b8502b3d8b5d45fa1fee02da5445f6b63",
+    "frozen-http.log": "057f1b4852c751c9e3e8abead0a44a3ab982472cf35d3d39eecd391b5e58c0bb",
+    "full-final.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "full-final.log": "2039ff87a3bca78a465961f2eafbab78a6d433293e195fd9cc9c703b099f33de",
+    "full-final.xml": "2eb37a3ac3a500aee976d9bf66fde0a8b1954929ecd88df8e3515422a4764186",
+    "full-interrupted.exit": "186a919b8c7cb84aebf4e53c70cd1cc028a93a1d183ee29dd6e10cd18a714577",
+    "full-interrupted.log": "2952bb1c35c1d7ce88e32f276feaf840504c77aadd1170df29744e9323d6dca8",
+    "full-source-hashes.json": "d91c330adfac32ebf52ec5814b0cf9ad282db2f640cdd5a8486a7c36da691c96",
+    "gates.json": "07d93d11b9d16d7618d7f7c3f8d6e35263af0ead49f3c87d9af52f4fe68709d6",
+    "routes-final.log": "da83139ca969300e62f2918424ed5c259bb03c0d358d1dc7c9e9291cfadf63db",
+    "routes-final.xml": "0455b67bde60671af31c95fa272df8b257b204565b95eee592443062c1ba7007",
+    "routes-green.log": "649b00c2521dbd34eb343b1026f5291cfe6b411844373b39148d467197f00042",
+    "routes-green.xml": "3758bfd9bb6e3c150209bd1d2a223d887d7ef48f628fb4dcbffdf14c061a67be",
+    "routes-red.log": "9ac440191e19b001b5c81f263889f1156e7d2668f37ce975f77f335b5036c62a",
+    "routes-red.xml": "1dfc920ad60081164af94777cfaace4d26c468924ac327d4b4c8365c0a9ac449",
+    "schema-check.log": "b3494934d75e6ca7988134d1390fadcf95566b3ce3ce05563d5615da874c3303",
+    "sources-check.log": "dd6536e31ce1c1887cf8fd66091ebe0265b3d4c5f38d27f7766cdbcd30c6963b",
+    "window-red.log": "bcb8c4f0441e9e5c57c6d63064282244fcf12d0c9a3a8436b915a5111129cb8b",
+    "window-red.xml": "618d4e1baa39efaf129dbfede71f1d27e1e7d5332d2b12dfe2e6ecaea52fcd5e"
+  }
+}

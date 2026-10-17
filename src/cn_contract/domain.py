@@ -2564,12 +2564,48 @@ class AssistantConversationView(DomainModel):
     messages: tuple[AssistantMessageView, ...]
 
 
+class AssistantConversationSummary(DomainModel):
+    scope: ScopeSnapshot
+    display_title: IntakeLabel
+    composer_revision: NonNegativeInt
+    created_at: UTCDatetime
+    archived_at: UTCDatetime | None
+
+
+class AssistantConversationQuery(DomainModel):
+    cursor: UUID | None = None
+    limit: Annotated[int, Field(strict=True, ge=1, le=50)] = 20
+
+
+class AssistantConversationPage(DomainModel):
+    items: tuple[AssistantConversationSummary, ...]
+    next_cursor: UUID | None
+
+
+class AssistantCancelInput(DomainModel):
+    request_id: UUID
+
+
+class AssistantEventQuery(DomainModel):
+    after_seq: NonNegativeInt = 0
+    limit: Annotated[int, Field(strict=True, ge=1, le=100)] = 100
+
+
 class AssistantRunEvent(DomainModel):
     seq: PositiveInt
     event_type: NonEmpty
     audience: Literal['internal', 'client']
     payload: dict[str, JsonValue]
     created_at: UTCDatetime
+
+
+class AssistantEventPage(DomainModel):
+    run_id: UUID
+    conversation_id: UUID
+    state: AssistantRunState
+    events: tuple[AssistantRunEvent, ...]
+    next_after_seq: NonNegativeInt
+    has_more: StrictBool
 
 
 class AssistantRunView(DomainModel):
@@ -2585,3 +2621,15 @@ class AssistantRunView(DomainModel):
     cancel_requested: StrictBool
     created_at: UTCDatetime
     events: tuple[AssistantRunEvent, ...]
+
+
+class AssistantSkillView(DomainModel):
+    id: AssistantSkill
+    label: NonEmpty
+    state: Literal['not_connected'] = 'not_connected'
+    reason: NonEmpty
+
+
+class AssistantSkillCatalog(DomainModel):
+    items: tuple[AssistantSkillView, ...]
+    generation_enabled: Literal[False] = False

@@ -130,6 +130,37 @@ def read_conversation(actor, identifier, db):
         archived_at=row['archived_at'], messages=tuple(d.AssistantMessageView(**message) for message in messages))
 
 
+def list_conversations(actor, db, *, cursor=None, limit=20):
+    query = d.AssistantConversationQuery(cursor=cursor, limit=limit)
+    current = _current(actor, db)
+    parameters = {'owner':str(current.user_id), 'workspace':str(_workspace_id(db)), 'limit':query.limit}
+    boundary = ''
+    if query.cursor is not None:
+        anchor = db.execute(text('''SELECT id,created_at FROM assistant_conversations
+            WHERE id=:id AND owner_id=:owner AND workspace_id=:workspace'''),
+            {**parameters, 'id':str(query.cursor)}).mappings().first()
+        if anchor is None:
+            raise ServiceError('CROSS_MATTER_DENIED', 403)
+        # A formerly accessible row can still advance the owner's scan after revocation.
+        boundary = ' AND (created_at<:at OR (created_at=:at AND id<:id))'
+        parameters.update(at=anchor['created_at'], id=anchor['id'])
+    rows = db.execute(text('''SELECT id FROM assistant_conversations
+        WHERE owner_id=:owner AND workspace_id=:workspace''' + boundary +
+        ' ORDER BY created_at DESC,id DESC LIMIT :limit'), parameters).all()
+    items = []
+    for identifier, in rows:
+        try:
+            row = _owned(current, identifier, db)
+        except ServiceError as error:
+            if error.code != 'CROSS_MATTER_DENIED':
+                raise
+            continue
+        items.append(d.AssistantConversationSummary(scope=_snapshot(row), display_title=row['display_title'],
+            composer_revision=row['composer_revision'], created_at=row['created_at'], archived_at=row['archived_at']))
+    return d.AssistantConversationPage(items=tuple(items),
+        next_cursor=rows[-1][0] if len(rows) == query.limit else None)
+
+
 def save_draft(actor, identifier, request: d.AssistantDraftInput, db):
     request = d.AssistantDraftInput.model_validate(request.model_dump(mode='python'))
     row = _owned(actor, identifier, db)
@@ -193,13 +224,23 @@ def save_message(actor, identifier, request: d.AssistantMessageInput, db):
     return get_run(actor, run_id, db)
 
 
-def get_run(actor, identifier, db):
+def _owned_run(actor, identifier, db):
     _current(actor, db)
     row = db.execute(text('SELECT * FROM assistant_runs WHERE id=:id'),
                      {'id':str(identifier)}).mappings().first()
     if row is None:
         raise ServiceError('CROSS_MATTER_DENIED', 403)
     _owned(actor, UUID(row['conversation_id']), db)
+    return row
+
+
+def _event(event):
+    return d.AssistantRunEvent(seq=event['seq'], event_type=event['event_type'], audience=event['audience'],
+        payload=json.loads(event['payload_json']), created_at=event['created_at'])
+
+
+def get_run(actor, identifier, db):
+    row = _owned_run(actor, identifier, db)
     events = db.execute(text('''SELECT seq,event_type,audience,payload_json,created_at
         FROM assistant_run_events WHERE run_id=:id ORDER BY seq'''),
         {'id':str(identifier)}).mappings().all()
@@ -207,8 +248,51 @@ def get_run(actor, identifier, db):
         request_sha256=row['request_sha256'], scope=d.ScopeSnapshot.model_validate_json(row['scope_snapshot']),
         state=row['state'], requested_skill=row['requested_skill'], selected_provider=row['selected_provider'],
         selected_model=row['selected_model'], cancel_requested=bool(row['cancel_requested']), created_at=row['created_at'],
-        events=tuple(d.AssistantRunEvent(seq=event['seq'], event_type=event['event_type'], audience=event['audience'],
-            payload=json.loads(event['payload_json']), created_at=event['created_at']) for event in events))
+        events=tuple(_event(event) for event in events))
+
+
+def cancel_run(actor, identifier, request: d.AssistantCancelInput, db):
+    request = d.AssistantCancelInput.model_validate(request.model_dump(mode='python'))
+    row = _owned_run(actor, identifier, db)
+    require_active(db)
+    active = {'queued', 'preparing', 'routing', 'retrieving', 'generating', 'persisting', 'awaiting_input'}
+    if row['state'] not in active or row['cancel_requested']:
+        return get_run(actor, identifier, db)
+    state = 'cancelled' if row['state'] in {'queued', 'awaiting_input'} else row['state']
+    event_type = 'run.cancelled' if state == 'cancelled' else 'run.cancel_requested'
+    with db.begin_nested():
+        db.execute(text('UPDATE assistant_runs SET state=:state,cancel_requested=1 WHERE id=:id'),
+            {'id':str(identifier), 'state':state})
+        sequence = db.scalar(text('SELECT COALESCE(MAX(seq),0)+1 FROM assistant_run_events WHERE run_id=:id'),
+                             {'id':str(identifier)})
+        db.execute(text('''INSERT INTO assistant_run_events (run_id,seq,event_type,audience,payload_json,created_at)
+            VALUES (:id,:seq,:type,'internal',:payload,:at)'''),
+            {'id':str(identifier), 'seq':sequence, 'type':event_type, 'at':_at(),
+             'payload':canonical_json({'request_id':str(request.request_id),
+                 'previous_state':row['state'], 'state':state, 'cancel_requested':True})})
+    return get_run(actor, identifier, db)
+
+
+def read_events(actor, identifier, db, *, after_seq=0, limit=100):
+    query = d.AssistantEventQuery(after_seq=after_seq, limit=limit)
+    row = _owned_run(actor, identifier, db)
+    parameters = {'id':str(identifier), 'after':query.after_seq, 'limit':query.limit + 1}
+    latest = db.scalar(text('SELECT COALESCE(MAX(seq),0) FROM assistant_run_events WHERE run_id=:id'), parameters)
+    if query.after_seq > latest:
+        raise ServiceError('STATE_CONFLICT', 409)
+    if query.after_seq:
+        known = db.scalar(text('''SELECT COUNT(*) FROM assistant_run_events
+            WHERE run_id=:id AND seq<=:after'''), parameters)
+        if known != query.after_seq:
+            raise ServiceError('STATE_CONFLICT', 409)
+    rows = db.execute(text('''SELECT seq,event_type,audience,payload_json,created_at FROM assistant_run_events
+        WHERE run_id=:id AND seq>:after ORDER BY seq LIMIT :limit'''), parameters).mappings().all()
+    if any(event['seq'] != query.after_seq + offset for offset, event in enumerate(rows, start=1)):
+        raise ServiceError('STATE_CONFLICT', 409)
+    events = tuple(_event(event) for event in rows[:query.limit])
+    return d.AssistantEventPage(run_id=identifier, conversation_id=row['conversation_id'], state=row['state'],
+        events=events, next_after_seq=events[-1].seq if events else query.after_seq,
+        has_more=len(rows) > query.limit)
 
 
 def quarantine_runs(db):

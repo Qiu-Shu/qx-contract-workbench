@@ -1,0 +1,173 @@
+{
+  "time": "2026-10-17T02:48:28.624390+00:00",
+  "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
+  "checks": [
+    {
+      "name": "shift_enter_newline",
+      "calls": 0,
+      "text": "第一行\nx",
+      "messages": []
+    },
+    {
+      "name": "skill_click",
+      "calls": 0,
+      "text": "保留草稿",
+      "messages": []
+    },
+    {
+      "name": "enter_send",
+      "calls": 1,
+      "text": "",
+      "messages": [
+        {
+          "role": "user",
+          "text": "保留草稿"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        }
+      ]
+    },
+    {
+      "name": "failed_send",
+      "calls": 2,
+      "text": "",
+      "messages": [
+        {
+          "role": "user",
+          "text": "保留草稿"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        },
+        {
+          "role": "user",
+          "text": "失败草稿"
+        }
+      ]
+    },
+    {
+      "name": "supported_defaultInput_restore",
+      "calls": 2,
+      "text": "失败草稿",
+      "messages": [
+        {
+          "role": "user",
+          "text": "保留草稿"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        },
+        {
+          "role": "user",
+          "text": "失败草稿"
+        }
+      ]
+    },
+    {
+      "name": "composition_started_enter",
+      "calls": 2,
+      "text": "选字内容",
+      "messages": [
+        {
+          "role": "user",
+          "text": "保留草稿"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        },
+        {
+          "role": "user",
+          "text": "失败草稿"
+        }
+      ]
+    },
+    {
+      "name": "composition_end_enter_229",
+      "calls": 2,
+      "text": "选字内容",
+      "messages": [
+        {
+          "role": "user",
+          "text": "保留草稿"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        },
+        {
+          "role": "user",
+          "text": "失败草稿"
+        }
+      ]
+    },
+    {
+      "name": "isComposing_without_start",
+      "calls": 2,
+      "text": "只有isComposing",
+      "messages": [
+        {
+          "role": "user",
+          "text": "保留草稿"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        },
+        {
+          "role": "user",
+          "text": "失败草稿"
+        }
+      ]
+    },
+    {
+      "name": "repeat_key",
+      "calls": 2,
+      "text": "重复键",
+      "messages": [
+        {
+          "role": "user",
+          "text": "保留草稿"
+        },
+        {
+          "role": "ai",
+          "text": "合成回复"
+        },
+        {
+          "role": "user",
+          "text": "失败草稿"
+        }
+      ]
+    }
+  ],
+  "network": [
+    "http://127.0.0.1:62869/adapted.html",
+    "http://127.0.0.1:62869/fixture.css",
+    "http://127.0.0.1:62869/fixture-adapted.js",
+    "http://127.0.0.1:62869/package/dist/deepChat.bundle.js"
+  ],
+  "console": [
+    {
+      "type": "error",
+      "text": "合成失败"
+    }
+  ],
+  "errors": [],
+  "violations": [],
+  "aria": "- button \"审查合同\"\n- paragraph: 保留草稿\n- paragraph: 合成回复\n- paragraph: 失败草稿\n- textbox \"输入合成内容\"\n- button:\n  - img",
+  "storage": {
+    "local": [],
+    "session": []
+  },
+  "shadow": {
+    "adopted": 2,
+    "styles": 0,
+    "display": "block"
+  },
+  "external_requests": [],
+  "chromium_version": "153.0.8010.12"
+}

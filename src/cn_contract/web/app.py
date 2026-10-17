@@ -585,4 +585,6 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     register_pdf_routes(app,database,actor_in,authenticate_first,body_input,write)
     from .intake import register_routes as register_intake_routes
     register_intake_routes(app,database)
+    from .assistant import register_routes as register_assistant_routes
+    register_assistant_routes(app,database)
     return app
