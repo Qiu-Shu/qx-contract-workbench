@@ -40,6 +40,8 @@
 
 最终双轴独立复核范围内无未关闭明确问题；[服务审阅](service-independent-review.md)、[备份审阅](backup-independent-review.md)、[schema审阅](schema-independent-review.md)、[低精度独立探针](independent-low-precision-report.json)。HTTP下一片准备亦经只读复核，无必须更正项。最初汇总脚本要求全套零跳过而退出1；随后明确保留原两项skip，并按完全相同测试身份核对独立环境补验，不篡改原JUnit。
 
+提交后另核对 Git blob：初次有18份证据因默认换行转换不再匹配原始字节摘要。现为本证据目录增加精确字节保留规则并重新登记原始文件；不改原始测量值，不将规范化字节冒充测试输出。清单覆盖29份 JSON／XML／TXT，另存可读审阅说明。
+
 ## 验收范围与后续
 
 本片不修改安装版 0.4.1、真实工作区、F 盘原件或既有法库，不调用真实模型，不读取其他工具凭据，不发布云端。WorkBuddy 本轮没有活动端点，未派发复核；独立复核由子智能体完成。
