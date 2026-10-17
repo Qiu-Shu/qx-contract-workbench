@@ -51,8 +51,10 @@ def project_bundle(bundle,*,purpose='mock_demo',local_material=False):
 
 
 def create_app(settings: Settings, *, database: Database, synthetic_upload_hashes=None, synthetic_loopback_endpoints=(),
-               synthetic_signing_user_ids=(), purpose='mock_demo', assisted_policy=None, local_materials_enabled=False):
+               synthetic_signing_user_ids=(), purpose='mock_demo', assisted_policy=None, local_materials_enabled=False,
+               assistant_home_enabled=False):
     if not isinstance(database,Database):raise TypeError('explicit Database required')
+    if type(assistant_home_enabled) is not bool:raise TypeError('assistant_home_enabled must be bool')
     settings=Settings.model_validate(settings.model_dump(mode='python'))
     if settings.model_dump()!=database.settings.model_dump():raise ValueError('configured Settings mismatch')
     s.require_storage(database)
@@ -70,6 +72,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     app.state.database=database;app.state.template_environment=environment
     app.state.synthetic_upload_hashes=allowed
     app.state.purpose=purpose
+    app.state.assistant_home_enabled=assistant_home_enabled
     loopbacks=frozenset(synthetic_loopback_endpoints)
     signing=frozenset(str(v) for v in synthetic_signing_user_ids)
     from ..providers.qcc_registry import allowed_synthetic_endpoint
@@ -186,8 +189,10 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
         with database.session() as db:
             actor=actor_in(request,db)
             from ..persistence import UserRow
+            from .assistant_pages import home_url
             user=db.get(UserRow,str(actor.user_id))
-            return {'username':user.username,'roles':sorted(r.value for r in actor.roles)}
+            return {'username':user.username,'roles':sorted(r.value for r in actor.roles),
+                    'home_url':home_url(app,actor,db)}
 
     @app.post('/api/logout')
     def logout_api(request:Request):
@@ -577,7 +582,9 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
 
     @app.get('/static/{name}')
     def static_file(name:str):
-        if name not in {'workbench.js','workbench.css','pdf-review.mjs','library.js','library.css','workspace.js','workspace.css'}:raise ServiceError('NOT_SUPPORTED',404)
+        if name not in {'workbench.js','workbench.css','pdf-review.mjs','library.js','library.css','workspace.js','workspace.css',
+                        'assistant.css','assistant-api.mjs','assistant-state.mjs','assistant-render.mjs',
+                        'assistant-composer.mjs','assistant.mjs'}:raise ServiceError('NOT_SUPPORTED',404)
         return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith(('.js','.mjs')) else 'text/css')
     from .draft_confirmation import register_routes
     register_routes(app,database,authenticate_first,body_input,write)
@@ -587,4 +594,6 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     register_intake_routes(app,database)
     from .assistant import register_routes as register_assistant_routes
     register_assistant_routes(app,database)
+    from .assistant_pages import register_routes as register_assistant_pages
+    register_assistant_pages(app,database)
     return app

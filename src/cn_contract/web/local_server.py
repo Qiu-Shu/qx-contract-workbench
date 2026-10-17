@@ -193,7 +193,8 @@ def build_local_app(directory, *, port=8767, library_root=None, data_parent=None
         database = _database(root)
     try:
         app = create_app(load_settings(), database=database, purpose='assisted_draft',
-                         assisted_policy=load_seed_policy(), local_materials_enabled=True)
+                         assisted_policy=load_seed_policy(), local_materials_enabled=True,
+                         assistant_home_enabled=True)
         from .recovery import attach_recovery
         attach_recovery(app,database)
         if library_root is not None:

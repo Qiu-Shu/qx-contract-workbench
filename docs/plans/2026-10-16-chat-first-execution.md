@@ -49,13 +49,16 @@ Run existing Node suite and applicable Python regressions, plus the full Python 
 - CH-00A: shared storage bootstrap and HTTP request guards extracted and verified in 00c12b7; broader business separation remains. Do not call all decoupling complete.
 - CH-00B: first resource/loading slice verified; broader capability packaging and full-process measurements remain.
 - CH-01: first four-table storage/service slice, fixed schema versions, native upgrade and legacy backup compatibility verified on 2026-10-17. HTTP/list/cancel/event reads now passed targeted/frozen checks and the final full suite: 2,042 distinct tests, no failures/errors/skips. Worker/model execution and frontend consumers remain. See the current execution entry below.
-- CH-02 through CH-11: remain pending. Follow the specification's dependency order; do not redo old T00-T13 work or library imports.
+- CH-02: local-draft homepage implemented, independently reviewed and verified by the final 2,094-test full regression. Generation, attachments and profile panels remain later integration work.
+- CH-03 through CH-11: remain pending. Follow the specification's dependency order; do not redo old T00-T13 work or library imports.
 
 ## Review focus
 
 No new model permission, no parser checks removed, no dependence on preloaded test modules, no optional dependency accidentally omitted by PyInstaller, no resources removed outside the supported build process, no performance numbers extrapolated to unseen hardware. The original desktop/backup/library paths must remain usable.
 
 ## Execution log
+
+- 2026-10-17 CH-02A after e46ce3c complete: five small ES modules and separate authenticated HTML routes; native login selects the local-draft homepage. Final single full suite 2,094 passed, zero failures/errors/skips, exit0, 1,743.82 seconds; collection and unique JUnit identities match. Page18/related40/frontend wrappers2 are included, not added; Node28+4 behavior groups ran through those wrappers. Real browser11, review-fix probes4, frozen EXE5 and actual Electron development home6/contract14/new intake10/backup10/restored draft1 passed. Four distinct code/visual findings closed; four development gates passed. Session84247 ended. Of397 initial hashes,393 unchanged; four standalone CJS callers changed and one new CJS added, separately verified; product/Python inputs unchanged. No installed app replacement, model/Jev or attachments. [Evidence](../testing/chat-home/20261017/README.md). [CH-03 readiness](2026-10-17-conversation-materials-readiness.md) independently reviewed: replay precedes new quota/version checks, and first native attachment recovery uses qxbak; cnbak identity/schema extension remains explicit future work. Planning is not attachment implementation.
 
 - 2026-10-17 continuation after cfc3801: bounded message pages, latest-run summaries and lookup by the original request ID completed. HTTP create/draft responses also bounded, legacy service defaults preserved. 218 distinct focused/related tests passed (32 new included), zero failures/errors/skips; actual new frozen Windows EXE passed four groups including 51-message pagination, restart/idempotent replay, encrypted backup and quarantined recovery. Four development gates and independent Spec/Standards review passed. Current WorkBuddy three-file static review completed; future logical rebuild/cloud migration needs explicit order guarantees. No full-suite rerun, homepage/model/attachment integration or installer replacement. [Evidence](../testing/chat-history/20261017/README.md).
 

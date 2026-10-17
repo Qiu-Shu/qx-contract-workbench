@@ -1,0 +1,416 @@
+{
+  "baseline": "e46ce3c03565d1c60666ffa2151ed9a4ce972eb0",
+  "scope": "CH-02A local-draft homepage; no model, attachment execution or installer replacement",
+  "full": {
+    "tests": 2094,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 1743.613,
+    "exit_code": 0,
+    "unique_cases": 2094,
+    "collection_matches": true
+  },
+  "source_integrity": {
+    "initial_files": 397,
+    "unchanged": 393,
+    "changed_manual_electron_tests": [
+      "desktop/tests/acceptance.cjs",
+      "desktop/tests/backup.cjs",
+      "desktop/tests/intake.cjs",
+      "desktop/tests/library-lifecycle.cjs"
+    ],
+    "additional_manual_electron_tests": [
+      "desktop/tests/assistant.cjs"
+    ],
+    "pytest_inputs_unchanged": true,
+    "note": "The four manual CJS callers changed after full-suite startup; pytest does not invoke them. They ran separately in actual Electron except library-lifecycle (syntax only)."
+  },
+  "targeted": [
+    {
+      "name": "pages-green",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 8.938,
+      "exit_code": 0
+    },
+    {
+      "name": "pages-related",
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 16.735,
+      "exit_code": 0
+    },
+    {
+      "name": "frontend-final",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.233,
+      "exit_code": 0
+    }
+  ],
+  "targeted_unique_included_in_full": 60,
+  "node_assertion_groups": {
+    "state": 28,
+    "transport_and_input": 4,
+    "note": "Executed through two pytest wrappers; not added to the Python count."
+  },
+  "browser": {
+    "checks": [
+      "native_login_default_and_empty_home_creates_no_record",
+      "autosave_and_skill_selection_preserve_text_without_sending",
+      "shift_enter_and_synthetic_composition_do_not_submit",
+      "reload_reads_saved_draft_without_resubmission",
+      "unknown_put_reconciles_persisted_text_without_losing_input",
+      "version_conflict_keeps_both_texts_until_explicit_resolution",
+      "900_and_600_layout_menu_escape_without_document_overflow",
+      "all_101_messages_paginate_in_order_and_html_remains_plain_text",
+      "unknown_create_retry_keeps_original_identity_and_single_record",
+      "observed_revocation_clears_draft_and_history",
+      "no_external_requests_csp_violations_or_page_script_errors"
+    ],
+    "exit_code": 0
+  },
+  "review": {
+    "unique_defects_closed": 4,
+    "spec_open": 0,
+    "standards_open": 0,
+    "visual_disposition": "ship limited to local draft slice",
+    "manual_cjs_open": 0
+  },
+  "frozen": {
+    "checks": [
+      "actual_frozen_home_and_six_assets_match_current_source_bytes",
+      "actual_exe_51_http_messages_keyset_pages_and_bounded_create_draft",
+      "actual_exe_restart_lookup_and_same_request_replay_preserve_original_task",
+      "actual_exe_encrypted_backup_self_verified",
+      "actual_exe_recovery_paginated_history_scoped_lookup_and_write_fence"
+    ],
+    "count": 5,
+    "exit_code": 0,
+    "exe_sha256": "3daccbb8ffbe5243229d6769d0ec52d9bb223ac852665bf880cfe8021f6b82d2",
+    "archive_sha256": "adb4d8fc8d6138704735ef0b5d6417c3c5e1588801b16c8699b404eba36d6373",
+    "scope": "actual new Windows frozen backend; synthetic-only; no model/UI/installer acceptance"
+  },
+  "electron": {
+    "contract": {
+      "packaged": false,
+      "checks": [
+        "restart-menu-before-account",
+        "setup-password-confirmation",
+        "login",
+        "node-disabled",
+        "setup-ipc-denied-to-business-page",
+        "ui-create-case",
+        "ui-import-docx",
+        "original-anchor",
+        "ui-fact-candidate-and-confirm",
+        "api-opinion-and-disposition",
+        "ui-preview",
+        "authenticated-docx-download",
+        "owned-server-stopped",
+        "restart-keeps-case-and-anchors"
+      ],
+      "started": "2026-10-17T04:01:06.677Z",
+      "startupIncludingSetupMs": 3119,
+      "export": {
+        "bytes": 40812,
+        "sha256": "34fbdaa9ba682bac775fc1f64c0a8b61f94b995b019f887e1677b798f823f8f5"
+      },
+      "windowChecks": [
+        {
+          "width": 744,
+          "scrollWidth": 729,
+          "height": 695,
+          "zoom": 1
+        },
+        {
+          "width": 595,
+          "scrollWidth": 583,
+          "height": 556,
+          "zoom": 1.25
+        },
+        {
+          "width": 496,
+          "scrollWidth": 486,
+          "height": 463,
+          "zoom": 1.5
+        }
+      ],
+      "consoleErrors": [],
+      "restartToLoginAndSubmitMs": 1671,
+      "status": "PASS"
+    },
+    "home": {
+      "packaged": false,
+      "checks": [
+        "native-default-home-isolated-no-node-and-truthful-disabled-actions",
+        "autosave-skill-preserves-text-shift-enter-no-fake-submission",
+        "actual-window-zoom-layout-and-menu-focus",
+        "reload-retrieves-draft-without-message",
+        "owned-server-stops-and-app-restart-keeps-draft",
+        "no-script-errors-external-requests-or-generation-submissions"
+      ],
+      "viewports": [
+        {
+          "factor": 1,
+          "width": 744,
+          "scroll": 729
+        },
+        {
+          "factor": 1.25,
+          "width": 595,
+          "scroll": 583
+        },
+        {
+          "factor": 1.5,
+          "width": 496,
+          "scroll": 486
+        }
+      ],
+      "started": "2026-10-17T04:02:28.768Z",
+      "status": "PASS",
+      "finished": "2026-10-17T04:02:35.153Z"
+    },
+    "intake": {
+      "packaged": false,
+      "checks": [
+        "clipboard-read-remains-denied",
+        "ui-register-followup-materials-and-version",
+        "unsaved-export-disabled",
+        "separate-client-internal-clipboard",
+        "actual-electron-two-word-downloads",
+        "complete-original-snapshot-history",
+        "full-page-intake-switch-isolation",
+        "ui-convert-existing-contract-engine",
+        "converted-snapshot-readonly",
+        "restart-retains-intakes-and-old-cases"
+      ],
+      "started": "2026-10-17T04:03:03.783Z",
+      "version": "0.4.1",
+      "oldMatterIds": [],
+      "intakeId": "15e8abcf-b67c-4973-883a-4a74d530b83b",
+      "viewports": [
+        {
+          "width": 744,
+          "scroll": 729
+        },
+        {
+          "width": 496,
+          "scroll": 486
+        }
+      ],
+      "convertedMatter": "0c24cfc2-21ef-4be2-8117-7d36e7e064c4",
+      "consoleErrors": [],
+      "status": "PASS",
+      "finished": "2026-10-17T04:03:10.733Z"
+    },
+    "backup": {
+      "packaged": false,
+      "checks": [
+        "business-page-cannot-maintain",
+        "native-password-encrypted-verified-backup",
+        "existing-backup-not-overwritten",
+        "wrong-password-no-published-copy",
+        "restored-login-and-backend-readonly",
+        "historical-word-byte-equality",
+        "original-download",
+        "intake-history-readable",
+        "small-window-reading",
+        "return-original-workspace"
+      ],
+      "started": "2026-10-17T04:03:17.396Z",
+      "version": "0.4.1",
+      "archiveSha256": "8eaec4f58c6fd43fdaca9d2d8c2e48f1a8938d77c288d815dfc424d7c6b56714",
+      "restoredWorkspace": "recovered/b43329ec-9dbe-44ec-9c58-412a18091ecb",
+      "originalSha256": "9065f6665d0ec2d724c06b147ce322a74b40cf149acbc32e5d05086a59f2ab5d",
+      "historicalSha256": "34fbdaa9ba682bac775fc1f64c0a8b61f94b995b019f887e1677b798f823f8f5",
+      "status": "PASS",
+      "finished": "2026-10-17T04:03:33.405Z"
+    }
+  },
+  "electron_restored_draft": {
+    "checks": [
+      "restored-draft-readable-in-native-window-all-edits-disabled-and-http-write-denied"
+    ],
+    "scope": "existing synthetic qxbak recovery copy in actual development Electron",
+    "status": "PASS"
+  },
+  "gates": [
+    {
+      "exit_code": 0,
+      "name": "schema"
+    },
+    {
+      "exit_code": 0,
+      "name": "defaults"
+    },
+    {
+      "exit_code": 0,
+      "name": "sources"
+    },
+    {
+      "exit_code": 0,
+      "name": "dependencies"
+    }
+  ],
+  "desktop_syntax": [
+    {
+      "exit_code": 0,
+      "file": "desktop/tests/acceptance.cjs"
+    },
+    {
+      "exit_code": 0,
+      "file": "desktop/tests/assistant.cjs"
+    },
+    {
+      "exit_code": 0,
+      "file": "desktop/tests/intake.cjs"
+    },
+    {
+      "exit_code": 0,
+      "file": "desktop/tests/backup.cjs"
+    },
+    {
+      "exit_code": 0,
+      "file": "desktop/tests/library-lifecycle.cjs"
+    }
+  ],
+  "assets": [
+    {
+      "Name": "assistant-api.mjs",
+      "Length": 1982
+    },
+    {
+      "Name": "assistant-composer.mjs",
+      "Length": 1317
+    },
+    {
+      "Name": "assistant-render.mjs",
+      "Length": 6854
+    },
+    {
+      "Name": "assistant-state.mjs",
+      "Length": 10810
+    },
+    {
+      "Name": "assistant.mjs",
+      "Length": 6974
+    },
+    {
+      "Name": "assistant.css",
+      "Length": 13964
+    },
+    {
+      "Name": "assistant.html",
+      "Length": 8721
+    }
+  ],
+  "raw_evidence_sha256": {
+    "browser-final.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "browser-final.log": "ae09d0fb7cf8fdea0ba0fdd96cdaec6bdcb3805dc7bc7ef813b1c6ed6eb89487",
+    "browser-first.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "browser-first.log": "414855910b5e7f5ae332f648fea245044a3ab8bc608a38d0d1ce94c4ebb80fff",
+    "build.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "build.log": "d51abf6c3a7db2d1ffb301f80575772cfd611ab22e9b4894b4221757b4de67c0",
+    "collected.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "collected.log": "ca59305a8644cab2fe6ae421520c3c2230cda3aed05ee00d64a1fde19f423c26",
+    "design-detect.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "desktop-empty.png": "8ec7b893b9f2ac51ff909a4ebf503c155d5867454d0989ed925fde48395bcc6d",
+    "desktop-history.png": "eb4d3a82156d2205184862645d4f2ed3efd9c05197210c9b3d681330fd4a5739",
+    "electron-backup.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "electron-backup.log": "b35e66ddc85252e2eb8c7183ace852ae7da6818843caa9347838579ed66d297f",
+    "electron-home.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "electron-home.log": "c6bab9ec82be9607828b360767c3cd6a1d87038321db37e6ff098d5a6e504b0b",
+    "electron-intake-new/intake-audiences.png": "a27653b36bb21585f025c4feeafbab1c28e4d4b40731e8a384bff9f57b96f6b0",
+    "electron-intake-new/intake-small-1.5.png": "7020c8f2447c177cacec4dc875de87602e11a6c1d9fab838234e69e1af93da2d",
+    "electron-intake-new/intake-small-1.png": "14432b10dcf5e7691d8e3ed85d347537906d94a8358d89da25189b22e3b8ed63",
+    "electron-intake-new/intake-wide.png": "3681a66a9b4271220f0a7c51b1aaa349cec4ae860c3939e25fbb45c4d4fe32fc",
+    "electron-intake-new/workspace.png": "04ad055e7e6522e3cc1394e2f574970937cc785ce6f11dadb49eaf2996803485",
+    "electron-intake-new/中文 用户资料/Local Storage/leveldb/000003.log": "8bd2ea70a0b70c91de138a5b87c7936c6a6fa7c4275c54b97f4ef0ccc5b79bb4",
+    "electron-intake-new.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "electron-intake-new.log": "9712533a40c05983fba1d5df4cb565e149c52366f49967101b99479ee65b1141",
+    "electron-intake.exit": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "electron-intake.log": "1ef01af07677922d18ec167251a238da1f636e3e6762f6d5043cbce6f8e98268",
+    "electron-legacy/assistant-draft.png": "6e905c20807f8396fbea53c33ea5a3963164545d476b757deb1261122db7c036",
+    "electron-legacy/assistant-empty.png": "bc59e15bf3b5410849d754847e672d43e8b3676821471e328deb74771d07e7dd",
+    "electron-legacy/assistant-recovery-before-paint.png": "63e0918019a559d74c284223f088c43a621ac08fcd6f8d1535c0008ec5e2b9d3",
+    "electron-legacy/assistant-recovery.png": "b8ea2a7f21a092771df04a72a07589c6f4f1fb6ec51f90ca8a45dd6b5e68ba3b",
+    "electron-legacy/assistant-window-1.25.png": "eb1640bee303f91b01ccd4dee3358c0bcc3fec8749d357ddc4ba081d27a71767",
+    "electron-legacy/assistant-window-1.5.png": "323ef6f021365191fa879d80d7405421b33996360143d3bf654f5ab7d59f375d",
+    "electron-legacy/assistant-window-1.png": "c958202b9c82b51fb813612d1bc37765cde5530142e93460167528ecc478ebfa",
+    "electron-legacy/backup-created.png": "0e05531cb421e43ea0a264b4ea121f6fdc898fbb3c9d05bd1e2680dedea6d9cd",
+    "electron-legacy/backup-form.png": "0b8addb97f8c8fc12a793389526cc283a8285c4fb6ded8838dadcfa51443f6c9",
+    "electron-legacy/exports.png": "7a1cf5189db62f27d3f49690bae7f3a204a16a14aff9068f69a579efd78c977c",
+    "electron-legacy/failure.png": "fc455da2a83598b74d1722540ba843bd722dffc0bb3c69d103742f1aa135ad42",
+    "electron-legacy/original.png": "86eb37673d0d77f89f8adfa1295721f7c0abe16d4327abbb58e25fb0f88170ae",
+    "electron-legacy/recovery-documents.png": "acb07a97a2fccadc5942eaa8145088ec8c3ae1e8855defdd08d7833449ab9d6b",
+    "electron-legacy/recovery-intake.png": "3870ade9f9e9e4c289ac886d470a93e3a09aaec35f640b12f66ad3d9e66e5a1d",
+    "electron-legacy/recovery-overview.png": "f2d087ae69b2722bca9bf7e85d18def07dc1b1bc017a2f93b78f06babf8ab324",
+    "electron-legacy/recovery-small.png": "cf813c170667f657eb93f7866d55fb616835f8f6bceae61060029c8df505d632",
+    "electron-legacy/restore-verified.png": "59fa773e5392be8d2638b4608f902c9ab311f3f0ae20552acf8faad9aaf016bf",
+    "electron-legacy/setup.png": "b6aefffddc9bf7e100353adf74cedf483e181ba1a322b5bb42686e58b9c3e638",
+    "electron-legacy/window-1.25.png": "5c91b7186a5647e995776edba8d5cc4bb2fdf52f861180a909899575701471bd",
+    "electron-legacy/window-1.5.png": "a6372f68270ba5a80182b8e779990d4d717969e19cc04db902b6f7087ffaaaee",
+    "electron-legacy/window-1.png": "aee44600c8c5b50473851c4514be5044cce55f6c064ac2cfaef4c16677c18b7c",
+    "electron-legacy/中文 用户资料/Local Storage/leveldb/000003.log": "8bd2ea70a0b70c91de138a5b87c7936c6a6fa7c4275c54b97f4ef0ccc5b79bb4",
+    "electron-legacy.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "electron-legacy.log": "b44853e9c4a48a7a79a1bc3d3068bb452f64b5dc4e5ec244da87e850a4ef03cd",
+    "electron-readonly-before-paint.log": "c6c942681786517832d5807de53c191ebe507afb8510cebd108bc39d95822863",
+    "electron-readonly.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "electron-readonly.log": "c6c942681786517832d5807de53c191ebe507afb8510cebd108bc39d95822863",
+    "frontend-final.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "frontend-final.log": "2cae6438afb5a2b238f9baa91ec19955b0b824036a3449af9e0e31461af32012",
+    "frontend-final.xml": "28ffc5dd2cbf3d0944afab7ee0bd7cd997538a307db094e10f807866108ba9d2",
+    "frontend.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "frontend.log": "9c95993f3d9725c82f3d336adac44ffd8b04f8d17717eda56dced32a286db96a",
+    "frontend.xml": "c40cca059969355603b61cacd10e68d80da09c2e28b19479325b59b81e8dee6b",
+    "frozen-home.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "frozen-home.log": "6d858bb011276138e2a6946adaf9a298dae50e07f38706bdf3f782fb32d62651",
+    "full.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "full.log": "46bb785f639782bc9b64b5f41aed3188b0e5a047066b8866ee70fb20b4e13530",
+    "full.xml": "59c8fa565d1921ecffa56ecc03d109e32a889d72621acc630dd25fa242bea5f0",
+    "gate-defaults.log": "1327e54ae343c27bb7f378bb915d826995396db5b801813b2e139b57d7aefeb6",
+    "gate-dependencies.log": "32ddd58b8e25f73d17f1156ff1803b833eb5abe0e289a9f7db5f77d92203cc3a",
+    "gate-schema.log": "b3494934d75e6ca7988134d1390fadcf95566b3ce3ce05563d5615da874c3303",
+    "gate-sources.log": "dd6536e31ce1c1887cf8fd66091ebe0265b3d4c5f38d27f7766cdbcd30c6963b",
+    "menu-review-confirm.png": "a889131af970aca49af53809370be9ad5d235e82d110d6622e4002cc2f3080fa",
+    "narrow-draft.png": "bde764caa5f11d16be9f21accbb14cf64d236c7101e6c91bee6cfcc4bacd788f",
+    "narrow-menu.png": "6ba4a202b8bd12560df67c34173ba1a41305c7030ce80f7ac2e43a7474ca10dd",
+    "pages-green.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "pages-green.log": "97128e8c39092371c703f2e9f6bc6dbc351dc4e40efc382626b58b570733f668",
+    "pages-green.xml": "38277a60a49c044cb093db11ed4bd1bccd931b178ad8f8b14e9acf97e58aca7c",
+    "pages-preliminary.log": "ea254896b592c058fd42a3b6cd4e4ec6a029fe566b58ac4080c642b821eb41c1",
+    "pages-preliminary.xml": "fc6e980a14bbf46ef8c067f8668e43c1f7e5def5afcf8e724d3004e2a800aba3",
+    "pages-red.exit": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "pages-red.log": "8f0151aa7a3e6f78c874d927e9e7d5af30be2e98e5e289a51492fb96b5334a0d",
+    "pages-red.xml": "6a7c5343d2cb0b8caabf2bc440fac65d9547a3aa116751623c30ad52e53bb610",
+    "pages-related.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "pages-related.log": "bb988bdc112adb8ffed9b48ed7c60526dff25aca3bcd1d0f0a03592b65d8fac8",
+    "pages-related.xml": "3b10d9592e8c45a851806952752ee849d9878f974adc53cddc582199b7fcf600",
+    "review-all-red.exit": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "review-all-red.log": "b4d5ff5ba57cdf79cd4729c5b76ce75360f1fea42c066beba7bb3d1649e52ed2",
+    "review-green.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "review-green.log": "f66e6a50d631f682b5050738a503bdf2c36f58412ab46106a606b3a151d8f684",
+    "review-red.exit": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "review-red.log": "754204598db444226eb6a4c0dda7950c7ed089d3a75b52241d8d82cf000fb0bf",
+    "review-revoke-green.log": "b457a222a908f14e81c3071903b2b9a9e601626a2d3e0de366161b11ed2090e5",
+    "review-revoke-red.log": "66fb4150dbfa98d43dc0711fb1c82743104db4542187f7b054cbdb87f2daab96",
+    "state-green.log": "4c02eeeec243bc13cede46023a98918fd6455f45988119afcca96d7825abf191",
+    "state-progress.log": "b392ec5901efec6d62cf30e2e76f537c1d946858780dc15864f20953d0deed13",
+    "state-race-red.log": "139cd7d1a642e8648d3d2b46b5958662ad95b893d7b280347e895d5f9136a12c",
+    "state-red.log": "7bdedaf4b1afb5e4f1237b8fb86aaa0c21be20e244e8392cb9f44d1f025f39fb",
+    "transport-green.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "transport-green.log": "bab03d48028e27d14209530e6be0c46a13068483cf1746c52a69b8150c7cb75f",
+    "transport-red-effective.exit": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "transport-red-effective.log": "498907e18d010907abec3be6547a89c817cbb682a2983e477c822e30e18a6869",
+    "transport-red.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "transport-red.log": "e827f823710f204fa761e2a144c76c526b77c021ee3558df08eb11d2de2577ba"
+  }
+}

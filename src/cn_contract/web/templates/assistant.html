@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>群兴 · 对话</title>
+  <link rel="stylesheet" href="/static/assistant.css">
+  <script type="module" src="/static/assistant.mjs"></script>
+</head>
+<body data-conversation-id="{{ conversation_id }}" data-readonly="{{ 'true' if readonly else 'false' }}" data-library-enabled="{{ 'true' if library_enabled else 'false' }}">
+  <a class="skip-link" href="#composer">跳到输入框</a>
+  <aside id="sidebar" class="sidebar" aria-label="工作台导航">
+    <a class="brand" href="/assistant" aria-label="群兴法律工作台，对话首页"><span class="brand-short">群兴</span><span class="brand-long">法律工作台</span></a>
+    <button id="new-conversation" class="new-conversation" type="button" aria-label="新对话"{% if readonly %} disabled{% endif %}><span class="compact-label" aria-hidden="true">新建</span><span class="expanded-label">新对话</span></button>
+    <nav class="sidebar-section common-skills" aria-labelledby="common-heading">
+      <h2 id="common-heading">常用能力</h2>
+      <button type="button" data-skill="client_reply" aria-pressed="false">回复客户</button>
+      <button type="button" data-skill="material_organize" aria-pressed="false">整理资料</button>
+      <button type="button" data-skill="contract_review" aria-pressed="false">审查合同</button>
+      <button type="button" data-skill="content_draft" aria-pressed="false">创作文案</button>
+    </nav>
+    <section class="sidebar-section recent-section" aria-labelledby="recent-heading">
+      <h2 id="recent-heading">最近记录</h2>
+      <div id="conversation-list" class="conversation-list" aria-live="polite"><p class="muted">正在读取记录…</p></div>
+      <button id="more-conversations" class="text-button" type="button" hidden>加载更多记录</button>
+    </section>
+    <nav class="workspace-links" aria-label="已有工作区">
+      <a href="/workspace" aria-label="工作区与接待"><span class="compact-label" aria-hidden="true">接待</span><span class="expanded-label">工作区与接待</span></a>
+      <a href="/" aria-label="合同工作台"><span class="compact-label" aria-hidden="true">合同</span><span class="expanded-label">合同工作台</span></a>
+      {% if library_enabled %}<a href="/library" aria-label="法律资料库"><span class="compact-label" aria-hidden="true">法库</span><span class="expanded-label">法律资料库</span></a>{% endif %}
+    </nav>
+    <div class="account-area"><span id="account-name" class="muted"></span><button id="logout" class="text-button" type="button">退出登录</button></div>
+  </aside>
+
+  <main id="main" class="assistant-main">
+    <header class="page-toolbar">
+      <button id="nav-toggle" class="quiet-button" type="button" aria-expanded="false" aria-controls="sidebar">菜单</button>
+      <p class="availability">{% if readonly %}恢复副本 · 只读{% else %}本机草稿 · 生成尚未接通{% endif %}</p>
+      <label class="reading-control" for="body-size">阅读字号<select id="body-size"><option value="16">标准 16</option><option value="18">较大 18</option><option value="20">大号 20</option></select></label>
+    </header>
+
+    <div class="conversation-surface">
+      <header class="conversation-heading">
+        <h1 id="home-title">今天需要处理什么？</h1>
+        <p id="scope-label" class="muted">先记下咨询内容，草稿保存在本机。</p>
+      </header>
+      <noscript><p class="notice error">页面脚本未能运行，暂时无法读取或保存草稿。请重新打开应用，或进入已有工作区。</p></noscript>
+      <p id="notice" class="notice" role="status" aria-live="polite"></p>
+
+      <section class="history-section" aria-label="对话记录">
+        <button id="older-messages" class="text-button older-messages" type="button" hidden>加载更早消息</button>
+        <div id="history" class="history"><p class="history-hint">正在读取本次记录…</p></div>
+      </section>
+
+      <section class="run-panel" aria-label="最近任务">
+        <p id="run-status" role="status" aria-live="polite">尚无已登记任务</p>
+        <div class="run-actions"><button id="refresh-run" class="text-button" type="button" disabled>刷新状态</button><button id="cancel-run" class="text-button" type="button" disabled>取消任务</button></div>
+      </section>
+
+      <section id="conflict-panel" class="conflict-panel" aria-labelledby="conflict-heading" hidden>
+        <h2 id="conflict-heading">发现另一份已保存的草稿</h2>
+        <p>输入框中保留了你当前的文字。核对下面的版本后，再选择要保留哪一份。</p>
+        <h3>已保存的文字</h3>
+        <pre id="server-draft" class="reading-text" tabindex="0"></pre>
+        <div class="conflict-actions"><button id="keep-local" type="button">保留当前文字并保存</button><button id="use-server" class="quiet-button" type="button">使用已保存文字</button></div>
+      </section>
+
+      <section class="compose-section" aria-label="输入与保存草稿">
+        <div id="skill-cards" class="skill-cards" aria-label="选择本次能力">
+          <button type="button" data-skill="client_reply" aria-pressed="false"><strong>回复客户</strong><span>理清诉求，组织回复</span></button>
+          <button type="button" data-skill="material_organize" aria-pressed="false"><strong>整理资料</strong><span>梳理经过，列出缺口</span></button>
+          <button type="button" data-skill="contract_review" aria-pressed="false"><strong>审查合同</strong><span>核对条款，整理意见</span></button>
+          <button type="button" data-skill="content_draft" aria-pressed="false"><strong>创作文案</strong><span>整理选题，起草内容</span></button>
+        </div>
+        <div class="skill-options">
+          <p><span id="selected-skill">自动选择能力</span><button id="clear-skill" class="text-button" type="button" hidden>取消选择</button></p>
+          <details id="more-skills"><summary>更多能力</summary><div class="more-skills-content"><button type="button" data-skill="legal_research" aria-pressed="false">检索法律资料</button><p class="muted">选择能力会保留输入内容；当前不会执行。</p></div></details>
+        </div>
+        <form id="composer-form" class="composer-form">
+          <label class="sr-only" for="composer">咨询内容与工作草稿</label>
+          <textarea id="composer" name="content" rows="4" maxlength="20000" placeholder="例如：客户遇到了什么问题，需要我们帮忙处理什么……" aria-describedby="input-help save-status"{% if readonly %} readonly{% endif %}></textarea>
+          <div class="composer-actions">
+            <button id="add-material" class="quiet-button" type="button" disabled aria-describedby="capability-summary">添加材料</button>
+            <div class="save-actions"><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="capability-summary">发送</button></div>
+          </div>
+        </form>
+        <div class="composer-footnote"><p id="save-status" role="status" aria-live="polite">{% if readonly %}此副本只读，不能保存修改。{% else %}输入后自动保存，也可手动保存。{% endif %}</p><p id="input-help">Enter 发送，Shift+Enter 换行；当前发送不可用。</p></div>
+        <details class="capability-details">
+          <summary id="capability-summary">当前可用范围与说明</summary>
+          <div class="capability-content">
+            <p id="capability-details">模型对话与材料上传尚未接入。</p>
+            {% if readonly %}<p>当前打开的是恢复副本，可查看已保存的记录，不能编辑、发送、添加材料或继续历史任务。</p>{% else %}<p>此页可保存咨询原话和工作草稿、选择能力、查看历史记录及已登记任务。所选能力还未接入执行，当前不会生成回复或自动建档。</p>{% endif %}
+            <p>对话附件尚未接通，因此“添加材料”和“发送”暂不可用。保存草稿不等于提交审查，也不会把原话认定为已核实事实。</p>
+            <p>继续办理可进入<a href="/workspace">工作区与接待</a>或<a href="/">合同工作台</a>。{% if library_enabled %}已连接的资料可在<a href="/library">法律资料库</a>检索。{% endif %}</p>
+          </div>
+        </details>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

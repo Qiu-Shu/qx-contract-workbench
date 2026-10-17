@@ -29,8 +29,10 @@ def attach_recovery(app, database):
         if ((request.method not in ('GET','HEAD','OPTIONS') and path not in ('/api/login','/api/logout'))
                 or path.startswith('/api/') and not safe_api):
             return JSONResponse({'code':'BLOCKED_LIVE'},status_code=409)
+        assistant_page = path == '/assistant' or re.fullmatch(
+            r'/assistant/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', path)
         if (request.method=='GET' and not path.startswith(('/api/','/static/','/recovery'))
-                and path!='/login'):
+                and path!='/login' and not assistant_page):
             return RedirectResponse('/recovery',status_code=303)
         return await call_next(request)
 
