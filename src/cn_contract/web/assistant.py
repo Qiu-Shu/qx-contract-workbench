@@ -90,7 +90,8 @@ def register_routes(app, database):
 
     @app.post('/api/assistant/conversations',status_code=201)
     async def create(request:Request):
-        return await write(request,d.AssistantConversationCreateInput,service.create_conversation)
+        return await write(request,d.AssistantConversationCreateInput,
+            lambda a,v,db:service.create_conversation(a,v,db,page_size=50))
 
     @app.get('/api/assistant/conversations')
     def listing(request:Request,cursor:UUID|None=None,limit:int=Query(default=20,ge=1,le=50)):
@@ -98,14 +99,19 @@ def register_routes(app, database):
             return service.list_conversations(actor_in(request,db),db,cursor=cursor,limit=limit)
 
     @app.get('/api/assistant/conversations/{identifier}')
-    def conversation(identifier:UUID,request:Request):
+    def conversation(identifier:UUID,request:Request,before:UUID|None=None,limit:int=Query(default=50,ge=1,le=50)):
         with database.session() as db:
-            return service.read_conversation(actor_in(request,db),identifier,db)
+            return service.read_conversation_page(actor_in(request,db),identifier,db,before=before,limit=limit)
+
+    @app.get('/api/assistant/conversations/{identifier}/runs/by-request/{request_id}')
+    def find_run(identifier:UUID,request_id:UUID,request:Request):
+        with database.session() as db:
+            return service.find_run(actor_in(request,db),identifier,request_id,db)
 
     @app.put('/api/assistant/conversations/{identifier}/draft')
     async def draft(identifier:UUID,request:Request):
         return await write(request,d.AssistantDraftInput,
-            lambda a,v,db:service.save_draft(a,identifier,v,db),conversation=identifier)
+            lambda a,v,db:service.save_draft(a,identifier,v,db,page_size=50),conversation=identifier)
 
     @app.post('/api/assistant/conversations/{identifier}/messages',status_code=202)
     async def message(identifier:UUID,request:Request):

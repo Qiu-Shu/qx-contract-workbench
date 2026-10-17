@@ -1,0 +1,130 @@
+{
+  "baseline": "cfc380123feec043f7affb2829758761e59eb3bb",
+  "groups": [
+    {
+      "name": "service-green",
+      "passed": 124,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "junit_seconds": 53.547
+    },
+    {
+      "name": "routes-green",
+      "passed": 15,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "junit_seconds": 8.691
+    },
+    {
+      "name": "related",
+      "passed": 79,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "junit_seconds": 111.671
+    }
+  ],
+  "unique_cases": 218,
+  "new_cases": 32,
+  "full_suite_this_turn": "NOT_RUN",
+  "previous_full_suite": {
+    "commit": "cfc3801",
+    "passed": 2042,
+    "counted_in_this_turn": false
+  },
+  "red": {
+    "service": {
+      "exit_code": 1,
+      "failed": 3,
+      "deselected": 24,
+      "seconds": 2.13,
+      "reason": "missing read_conversation_page/find_run/page_size",
+      "fixture_error_retained": "service-red-fixture-error.log"
+    },
+    "http": {
+      "failed": 5,
+      "seconds": 4.47,
+      "exit_code": 1
+    }
+  },
+  "frozen": {
+    "checks": [
+      "actual_exe_51_http_messages_keyset_pages_and_bounded_create_draft",
+      "actual_exe_restart_lookup_and_same_request_replay_preserve_original_task",
+      "actual_exe_encrypted_backup_self_verified",
+      "actual_exe_recovery_paginated_history_scoped_lookup_and_write_fence"
+    ],
+    "count": 4,
+    "exit_code": 0,
+    "exe_sha256": "bbdaf85e20d1bb3d9c6ba9aec0d404b0a761fd688442b44171342ccb85d51387",
+    "archive_sha256": "e0c0e6bdc2936f9d9850d868f1eef77457778da0e32bb68e5d135026ac594074",
+    "scope": "actual new Windows frozen backend; synthetic-only; no model/UI/installer acceptance"
+  },
+  "gates": [
+    {
+      "name": "schema",
+      "exit_code": 0
+    },
+    {
+      "name": "defaults",
+      "exit_code": 0
+    },
+    {
+      "name": "sources",
+      "exit_code": 0
+    },
+    {
+      "name": "dependencies",
+      "exit_code": 0
+    }
+  ],
+  "review": {
+    "spec_open": 0,
+    "standards_open": 0,
+    "reviewers_ran_tests": false,
+    "workbuddy_task": "wb-f32b9b6db083",
+    "workbuddy_final_implementation_review": false
+  },
+  "raw_sha256": {
+    ".local/chat-history-20261017/build.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    ".local/chat-history-20261017/build.log": "8ad56bd6d6c07280f922eb6baf4768ee03fea3ef81bbc01b7b5cc0478a203d7c",
+    ".local/chat-history-20261017/defaults-check.log": "a11efd150b1e9b4c53fbc80ebd2265888c72140409f3d6a5a414f01798772c23",
+    ".local/chat-history-20261017/dependency-check.log": "32ddd58b8e25f73d17f1156ff1803b833eb5abe0e289a9f7db5f77d92203cc3a",
+    ".local/chat-history-20261017/frozen-history.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    ".local/chat-history-20261017/frozen-history.json": "969802c5cba3b90d67a941135df2edc5445f85ddcab740d9d4c3399de4dda831",
+    ".local/chat-history-20261017/frozen-history.log": "986234de4fadac74d4232048602d91ba1703bdfd812cf6f9762f9ed4da3b2472",
+    ".local/chat-history-20261017/frozen_history_probe.py": "bcff20e3af98a54bcd8449db1ef9a7d7e866f51535fd9d5e1370f2080874adaa",
+    ".local/chat-history-20261017/gates.json": "3bbf0ce1ae1d320ecc39792a822153e34d5715697f1c4ee2abceaf222e35c1aa",
+    ".local/chat-history-20261017/related.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    ".local/chat-history-20261017/related.log": "c617a42da73a784130fd5779222281e577f49269e2a4e4adffdfbba5c322593a",
+    ".local/chat-history-20261017/related.xml": "318a9d9a9c0318d3b794190ccb77614014b828c3c06ff27322177b19727a7945",
+    ".local/chat-history-20261017/routes-green.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    ".local/chat-history-20261017/routes-green.log": "fec7200b749c99b6c62bb31380525fb682257b471cd9c6b681bbaa679fce5e20",
+    ".local/chat-history-20261017/routes-green.xml": "e2e6e047d5400612325220faa9d4f9dc45feb8d3559884e0d46b535e3941625c",
+    ".local/chat-history-20261017/routes-red.exit": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    ".local/chat-history-20261017/routes-red.log": "43408ca8005e14e381de1176b8e6bfd5f016cfef907cc07c856318ad2e7c39a1",
+    ".local/chat-history-20261017/routes-red.xml": "c08d42304e90cbc09671a9bd34c325e437dfe98d31f96470264d8b702adfe591",
+    ".local/chat-history-20261017/schema-check.log": "b3494934d75e6ca7988134d1390fadcf95566b3ce3ce05563d5615da874c3303",
+    ".local/chat-history-20261017/service-green.exit": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    ".local/chat-history-20261017/service-green.log": "9429d0bc7dc1d9c288e67901064af599e1ba0396def10d886e23133d7c362698",
+    ".local/chat-history-20261017/service-green.xml": "077e54993af39ca524f4517cf0d61b7c64d9211d7489243702788706ee1bf4de",
+    ".local/chat-history-20261017/service-red-fixture-error.log": "f41f16546e77cb11be31893e9bad41868be0e8431d84afae2262438707b9a151",
+    ".local/chat-history-20261017/service-red-fixture-error.xml": "199fd751951e55cd0db6d91bf1409b5026a8688a6bc48537fabcbc043c997e70",
+    ".local/chat-history-20261017/service-red.log": "82b98b3daed363cacd8a3fc287b843a12a6ab4ed1a6113fb357d12bda5c97375",
+    ".local/chat-history-20261017/service-red.xml": "7331fafea231c4eafb25a90b50e0332f94d606bbdf736d278f5b0686b3eaf2a4",
+    ".local/chat-history-20261017/service-summary.json": "f797231504dcb527f32b633046e23636d3c5625985ab9515737a30d121c6e728",
+    ".local/chat-history-20261017/source-check.log": "dd6536e31ce1c1887cf8fd66091ebe0265b3d4c5f38d27f7766cdbcd30c6963b",
+    "src/cn_contract/assistant/service.py": "52effd16c5618d937e73f7e058081568c79be33ea9e90ac84b923b73497756f2",
+    "src/cn_contract/domain.py": "94a42824dc81f11c7a817c9dee5179b2c3b17e94f8cde41ee1c3b8880dee1e25",
+    "src/cn_contract/web/assistant.py": "5b6e49b0ff75b38bc37e3a18734171d950e081e28faaedebe54bfd2f588b5bcc",
+    "src/cn_contract/web/recovery.py": "0c5f312f7978545f7b2867a1113962367efd7dd8ad41aea7471ce84c1bfc7fb7",
+    "tests/integration/test_assistant_history.py": "c67bfc122dd1b73fb409b3900ea7b7d2353fba718db74ae6e4fade19349b6299",
+    "tests/integration/test_assistant_history_routes.py": "7e5c3059908607d914c0827c729205ab07281deac4a10f510bd0be7e1e1fbd3d"
+  },
+  "boundary": "synthetic-only; no installer/real-model/UI/cloud acceptance"
+}

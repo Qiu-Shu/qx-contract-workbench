@@ -91,7 +91,9 @@ def _at():
     return datetime.now(timezone.utc).isoformat()
 
 
-def create_conversation(actor, request: d.AssistantConversationCreateInput, db):
+def create_conversation(actor, request: d.AssistantConversationCreateInput, db, *, page_size=None):
+    if page_size is not None:
+        d.AssistantMessagePageQuery(limit=page_size)
     request = d.AssistantConversationCreateInput.model_validate(request.model_dump(mode='python'))
     current = _current(actor, db)
     require_active(db)
@@ -105,7 +107,9 @@ def create_conversation(actor, request: d.AssistantConversationCreateInput, db):
     if previous:
         if previous['request_sha256'] != digest:
             raise ServiceError('VERSION_CONFLICT', 409)
-        return read_conversation(current, UUID(previous['id']), db)
+        identifier = UUID(previous['id'])
+        return (read_conversation(current, identifier, db) if page_size is None else
+                read_conversation_page(current, identifier, db, limit=page_size))
     identifier = uuid4()
     db.execute(text('''INSERT INTO assistant_conversations
         (id,workspace_id,owner_id,request_id,request_sha256,scope_kind,scope_ref,
@@ -116,7 +120,8 @@ def create_conversation(actor, request: d.AssistantConversationCreateInput, db):
          'request':str(request.request_id), 'digest':digest, 'kind':request.scope_kind,
          'ref':str(request.scope_ref) if request.scope_ref else None,
          'title':request.display_title, 'at':_at()})
-    return read_conversation(current, identifier, db)
+    return (read_conversation(current, identifier, db) if page_size is None else
+            read_conversation_page(current, identifier, db, limit=page_size))
 
 
 def read_conversation(actor, identifier, db):
@@ -128,6 +133,48 @@ def read_conversation(actor, identifier, db):
         composer_revision=row['composer_revision'], draft_input=row['draft_input'],
         projection_intake_id=row['projection_intake_id'], created_at=row['created_at'],
         archived_at=row['archived_at'], messages=tuple(d.AssistantMessageView(**message) for message in messages))
+
+
+def _run_summary(row, db):
+    last_event_seq = db.scalar(text('SELECT COALESCE(MAX(seq),0) FROM assistant_run_events WHERE run_id=:id'),
+                               {'id':row['id']})
+    return d.AssistantRunSummary(id=row['id'], message_id=row['message_id'], request_id=row['request_id'],
+        request_sha256=row['request_sha256'], scope=d.ScopeSnapshot.model_validate_json(row['scope_snapshot']),
+        state=row['state'], requested_skill=row['requested_skill'], cancel_requested=bool(row['cancel_requested']),
+        created_at=row['created_at'], last_event_seq=last_event_seq)
+
+
+def read_conversation_page(actor, identifier, db, *, before=None, limit=50):
+    query = d.AssistantMessagePageQuery(before=before, limit=limit)
+    row = _owned(actor, identifier, db)
+    parameters = {'id':str(identifier), 'limit':query.limit + 1}
+    boundary = ''
+    if query.before is not None:
+        anchor = db.scalar(text('SELECT rowid FROM assistant_messages WHERE id=:message AND conversation_id=:id'),
+                           {**parameters, 'message':str(query.before)})
+        if anchor is None:
+            raise ServiceError('CROSS_MATTER_DENIED', 403)
+        boundary = ' AND rowid<:before'
+        parameters['before'] = anchor
+    messages = db.execute(text('''SELECT id,role,content,source_revision,created_at
+        FROM assistant_messages WHERE conversation_id=:id''' + boundary +
+        ' ORDER BY rowid DESC LIMIT :limit'), parameters).mappings().all()
+    latest = db.execute(text('''SELECT * FROM assistant_runs WHERE conversation_id=:id
+        ORDER BY rowid DESC LIMIT 1'''), {'id':str(identifier)}).mappings().first()
+    return d.AssistantConversationPageView(scope=_snapshot(row), display_title=row['display_title'],
+        composer_revision=row['composer_revision'], draft_input=row['draft_input'],
+        projection_intake_id=row['projection_intake_id'], created_at=row['created_at'], archived_at=row['archived_at'],
+        messages=tuple(d.AssistantMessageView(**message) for message in reversed(messages[:query.limit])),
+        next_before=messages[query.limit-1]['id'] if len(messages) > query.limit else None,
+        latest_run=_run_summary(latest, db) if latest else None)
+
+
+def find_run(actor, conversation_id, request_id, db):
+    _owned(actor, conversation_id, db)
+    row = db.execute(text('''SELECT * FROM assistant_runs
+        WHERE conversation_id=:conversation AND request_id=:request'''),
+        {'conversation':str(conversation_id), 'request':str(request_id)}).mappings().first()
+    return _run_summary(row, db) if row else None
 
 
 def list_conversations(actor, db, *, cursor=None, limit=20):
@@ -161,7 +208,9 @@ def list_conversations(actor, db, *, cursor=None, limit=20):
         next_cursor=rows[-1][0] if len(rows) == query.limit else None)
 
 
-def save_draft(actor, identifier, request: d.AssistantDraftInput, db):
+def save_draft(actor, identifier, request: d.AssistantDraftInput, db, *, page_size=None):
+    if page_size is not None:
+        d.AssistantMessagePageQuery(limit=page_size)
     request = d.AssistantDraftInput.model_validate(request.model_dump(mode='python'))
     row = _owned(actor, identifier, db)
     require_active(db)
@@ -169,7 +218,8 @@ def save_draft(actor, identifier, request: d.AssistantDraftInput, db):
     db.execute(text('''UPDATE assistant_conversations SET draft_input=:content,
         composer_revision=composer_revision+1 WHERE id=:id'''),
         {'id':str(identifier), 'content':request.content})
-    return read_conversation(actor, identifier, db)
+    return (read_conversation(actor, identifier, db) if page_size is None else
+            read_conversation_page(actor, identifier, db, limit=page_size))
 
 
 def save_message(actor, identifier, request: d.AssistantMessageInput, db):

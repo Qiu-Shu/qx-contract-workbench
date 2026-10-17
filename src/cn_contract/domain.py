@@ -2564,6 +2564,30 @@ class AssistantConversationView(DomainModel):
     messages: tuple[AssistantMessageView, ...]
 
 
+class AssistantMessagePageQuery(DomainModel):
+    before: UUID | None = None
+    limit: Annotated[int, Field(strict=True, ge=1, le=50)] = 50
+
+
+class AssistantRunSummary(DomainModel):
+    id: UUID
+    message_id: UUID
+    request_id: UUID
+    request_sha256: SHA256
+    scope: ScopeSnapshot
+    state: AssistantRunState
+    requested_skill: AssistantSkill | None
+    cancel_requested: StrictBool
+    created_at: UTCDatetime
+    last_event_seq: NonNegativeInt
+
+
+class AssistantConversationPageView(AssistantConversationView):
+    messages: Annotated[tuple[AssistantMessageView, ...], Field(max_length=50)]
+    next_before: UUID | None
+    latest_run: AssistantRunSummary | None
+
+
 class AssistantConversationSummary(DomainModel):
     scope: ScopeSnapshot
     display_title: IntakeLabel

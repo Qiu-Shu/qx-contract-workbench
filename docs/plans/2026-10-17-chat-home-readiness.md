@@ -12,11 +12,13 @@ Deep Chat实测见[兼容证据](../testing/chat-ui-compat/20261017/README.md)�
 
 ## 当前代码接线事实
 
+2026-10-17接续更新：下表原先识别的两个读取缺口已按[分页计划](2026-10-17-assistant-history.md)实现并完成218项目标／关联及实际冻结验证，见[证据](../testing/chat-history/20261017/README.md)。HTTP GET、创建重放及草稿响应均有界；`read_conversation`的旧服务默认仍保留完整读取。首页应消费新`AssistantConversationPageView`的`next_before`与`latest_run`，未知发送响应按同对话request_id查找；不创建新任务猜测恢复。以下其余接线要求继续适用。
+
 | 现有位置 | 已有能力与首页必须处理的差异 |
 |---|---|
 | `web/assistant.py` | 同源认证接口、严格DTO、取消与SSE。没有HTML页面，也没有主模型执行器 |
-| `assistant/service.py::read_conversation` | 当前读取全部消息；不能把这个结果整批下载再在浏览器假分页 |
-| `AssistantConversationView` | 有持久草稿和版本；尚无分页游标或当前任务定位，重开页面不能只依赖浏览器内存中的run_id |
+| `assistant/service.py::read_conversation_page` | HTTP已默认最多50条，向前游标必须属于当前对话；旧read_conversation仅供兼容调用 |
+| `AssistantConversationPageView` | 包含持久草稿／版本、next_before及latest_run；重开从服务端找回任务，不依赖浏览器内存中的run_id |
 | `AssistantDraftInput` / `AssistantMessageInput` | 字段为`content`、`expected_scope`、`expected_composer_revision`、`requested_skill`；不要照规格的概念例子错误发送`text`或`requested_skill_id` |
 | `AssistantConversationPage` | `items`可能为空而`next_cursor`仍非空：关联权限过滤以扫描页为边界，必须保留继续加载入口 |
 | `AssistantSkillCatalog` | 当前`generation_enabled=false`、`state=not_connected`。与最终设计的ready/setup_required/unavailable不同；只按实际值展示，不把卡片当可执行证明 |
