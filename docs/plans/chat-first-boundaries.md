@@ -4,6 +4,8 @@ Design baseline: [v2.1 specification](chat-first-architecture-v2.1.md), sections
 
 2026-10-17 implemented subset: storage initialization now lives in `storage_bootstrap.py`; HTTP request guards/parser helpers in `web/request_context.py`. Old app import aliases remain. This removes backup and five route modules' reverse dependencies on app composition while preserving the schema and guards. [167-case/frozen validation](../testing/chat-first/20261017/README.md) covers this extraction. Other entries below remain design targets.
 
+CH-03A now adds conversation-owned DOCX material services in `assistant/attachments.py`, file I/O in `attachment_files.py`, immutable records in `attachment_records.py`, and archive graph validation in `attachment_integrity.py`. Thin routes stay in `web/assistant_attachments.py`; the source panel is a separate `assistant-materials.mjs`. Existing parsers, authentication and qxbak are reused. This slice passed its final synthetic regression and Windows checks; its exact state is in [TASK_STATUS](../TASK_STATUS.md) and [evidence](../testing/chat-attachments/20261017/README.md). It does not implement the planned runner/providers/profiles below.
+
 | Owner | Responsibility | Dependency boundary |
 |---|---|---|
 | Electron | Windows and owned backend lifecycle | HTTP/local settings, not business SQL or provider secrets |

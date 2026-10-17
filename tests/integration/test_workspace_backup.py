@@ -188,9 +188,25 @@ def test_plaintext_staging_stays_inside_workspace(source,tmp_path,monkeypatch):
     module=feature();parent,root,*_=source
     actual=module._encrypt
     def inspect(plain,target,secret):
-        assert plain.is_relative_to(root), 'plaintext reached backup destination'
+        from cn_contract.ops.file_paths import filesystem_path
+        assert filesystem_path(plain).resolve().is_relative_to(filesystem_path(root).resolve()), 'plaintext reached backup destination'
         return actual(plain,target,secret)
     monkeypatch.setattr(module,'_encrypt',inspect)
     destination=tmp_path/'portable';destination.mkdir()
     module.create_workspace_backup(root,destination/'encrypted.qxbak',PASSPHRASE,data_parent=parent)
     assert [p.name for p in destination.iterdir()]==['encrypted.qxbak']
+
+
+@pytest.mark.parametrize('extended', [False, True])
+def test_backup_rejects_destination_alias_inside_source_before_maintenance(source, monkeypatch, extended):
+    from cn_contract.ops.file_paths import filesystem_path
+    module = feature(); parent, root, *_ = source
+    destination = root/'protected'/'forbidden-self.qxbak'
+    if extended:
+        destination = filesystem_path(destination)
+    def must_not_lock(*args):
+        pytest.fail('destination inside source reached maintenance')
+    monkeypatch.setattr(local_server, '_worker_lock', must_not_lock)
+    with pytest.raises(ValueError, match='BACKUP_DESTINATION_INVALID'):
+        module.create_workspace_backup(root, destination, PASSPHRASE, data_parent=parent)
+    assert not destination.exists()

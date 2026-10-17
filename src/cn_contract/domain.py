@@ -2657,3 +2657,117 @@ class AssistantSkillView(DomainModel):
 class AssistantSkillCatalog(DomainModel):
     items: tuple[AssistantSkillView, ...]
     generation_enabled: Literal[False] = False
+
+
+class DocumentParseInput(DomainModel):
+    """Pure parser identity, without pretending an unattached file has a case."""
+    id: UUID
+    baseline_view: BaselineView
+
+
+class AssistantMaterialPolicy(DomainModel):
+    policy_id: Literal['assistant-local-docx-v1'] = 'assistant-local-docx-v1'
+    material_mode: Literal['synthetic', 'local'] = 'synthetic'
+    local_processing_accepted: Literal[True]
+    external_processing: Literal[False] = False
+
+
+class AssistantAttachmentInput(DomainModel):
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    original_name: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=240)]
+    mime: Literal['application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+    policy: AssistantMaterialPolicy
+
+    @field_validator('original_name')
+    @classmethod
+    def filename_only(cls, value):
+        if value != value.strip() or any(ord(c) < 32 or c in '/\\:< >"|?*'.replace(' ', '') for c in value):
+            raise ValueError('a plain filename is required')
+        if value.rstrip('.') != value or not value.lower().endswith('.docx'):
+            raise ValueError('DOCX filename required')
+        return value
+
+
+class AssistantMaterialRef(DomainModel):
+    attachment_id: UUID
+    parse_revision: PositiveInt | None
+
+
+class AssistantMaterialSelectionInput(DomainModel):
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    items: Annotated[tuple[AssistantMaterialRef, ...], Field(max_length=20)]
+
+    @field_validator('items')
+    @classmethod
+    def distinct_attachments(cls, values):
+        if len({value.attachment_id for value in values}) != len(values):
+            raise ValueError('duplicate attachment selection')
+        return values
+
+
+class AssistantAttachmentParseInput(DomainModel):
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    baseline_view: BaselineView | None = None
+
+
+class AssistantAttachmentView(DomainModel):
+    id: UUID
+    conversation_id: UUID
+    request_id: UUID
+    original_name: NonEmpty
+    mime: NonEmpty
+    byte_size: PositiveInt
+    sha256: SHA256
+    policy: AssistantMaterialPolicy
+    created_at: UTCDatetime
+    review_status: Literal['unverified'] = 'unverified'
+
+
+class AssistantAttachmentReceipt(DomainModel):
+    attachment: AssistantAttachmentView
+    materials_revision: PositiveInt
+
+
+class AssistantMaterialReceipt(DomainModel):
+    request_id: UUID
+    kind: Literal['upload', 'parse', 'selection']
+    materials_revision: PositiveInt
+    items: tuple[AssistantMaterialRef, ...]
+
+
+class AssistantAttachmentParseView(DomainModel):
+    attachment_id: UUID
+    conversation_id: UUID
+    revision: PositiveInt
+    request_id: UUID
+    parser_version: NonEmpty
+    baseline_view: BaselineView | None
+    reading_status: Literal['readable', 'partial', 'needs_baseline', 'failed']
+    result: ParseResult | None
+    result_sha256: SHA256 | None
+    failure_code: NonEmpty | None
+    created_at: UTCDatetime
+    review_status: Literal['unverified'] = 'unverified'
+
+
+class AssistantAttachmentParseReceipt(DomainModel):
+    parse: AssistantAttachmentParseView
+    materials_revision: PositiveInt
+
+
+class AssistantMaterialsView(DomainModel):
+    scope: ScopeSnapshot
+    items: tuple[AssistantMaterialRef, ...]
+    attachments: tuple[AssistantAttachmentView, ...]
+
+
+class AssistantAttachmentExcerpt(DomainModel):
+    conversation_id: UUID
+    attachment_id: UUID
+    parse_revision: PositiveInt
+    original_sha256: SHA256
+    anchor: Anchor
+    review_status: Literal['unverified'] = 'unverified'

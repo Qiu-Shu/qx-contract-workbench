@@ -11,6 +11,8 @@ def statements_for(version):
         from .intake.schema import STATEMENTS
     elif version == 'assistant-v1':
         from .assistant.schema import STATEMENTS
+    elif version == 'assistant-attachments-v1':
+        from .assistant.attachment_schema import STATEMENTS
     else:
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     return STATEMENTS

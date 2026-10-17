@@ -72,26 +72,29 @@ def safe_relative(value):
 
 
 def redirected(path):
+    from .file_paths import filesystem_path
     try:
-        meta = path.lstat()
+        meta = filesystem_path(path).lstat()
         return stat.S_ISLNK(meta.st_mode) or bool(getattr(meta, 'st_file_attributes', 0) & getattr(stat, 'FILE_ATTRIBUTE_REPARSE_POINT', 1024))
     except OSError:
         return True
 
 
 def checked_root(path, *, create=False):
-    path = Path(path).absolute()
+    from .file_paths import filesystem_path, application_path
+    path = filesystem_path(path)
     # Inspect every existing component before resolving, including junctions.
     for parent in (path, *path.parents):
         if parent.exists() and redirected(parent): raise ValueError('REDIRECTED_ROOT')
     if create: path.mkdir(parents=True, exist_ok=True)
     if not path.is_dir(): raise ValueError('MISSING_ROOT')
-    return path.resolve(strict=True)
+    return application_path(path.resolve(strict=True))
 
 
 def checked_file(path, root, *, limit=FILE_LIMIT):
-    root = checked_root(root)
-    path = Path(path).absolute()
+    from .file_paths import filesystem_path
+    root = filesystem_path(checked_root(root))
+    path = filesystem_path(path)
     if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
     for parent in (path, *path.parents):
         if redirected(parent): raise ValueError('REDIRECTED_FILE')
@@ -156,9 +159,10 @@ def validate_raw_database(path, settings, *, expected_schema=None):
         return _tables(connection)
 
 
-def _file_references(db):
+def _file_references(db, *, allow_assistant=True):
     from ..exports.storage import ExportRecordRow, sha
-    items = []
+    from ..assistant.attachment_integrity import file_references
+    items = file_references(db, allowed=allow_assistant)
     for row in db.scalars(select(DocumentRow)):
         value = strict_json(row.payload.encode())
         if row.sha256 != value['sha256'] or str(row.id) != value['id'] or row.matter_id != value['matter_id']:
@@ -192,7 +196,7 @@ def _registered_hashes():
 def _collect_files(db):
     root = checked_root(db.info['database'].storage_root)
     registered = _registered_hashes()
-    files, refs = {}, _file_references(db)
+    files, refs = {}, _file_references(db, allow_assistant=False)
     for item in refs:
         if item['kind'] == 'original' and item['sha256'] not in registered:
             raise ServiceError('DATA_POLICY_UNAPPROVED', 409)
@@ -321,7 +325,7 @@ def restore_backup(backup_ref, *, key_resolver, restore_parent, settings):
         try:
             _mark_storage_flags(check)
             with check.session() as db:
-                actual = _file_references(db)
+                actual = _file_references(db, allow_assistant=False)
                 if [{k: v for k, v in i.items() if k != 'size'} for i in actual] != [{k: v for k, v in i.items() if k != 'size'} for i in refs]:
                     raise ValueError('FILE_RECORD_MANIFEST_MISMATCH')
                 registered = _registered_hashes()

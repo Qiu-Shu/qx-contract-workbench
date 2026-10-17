@@ -6,7 +6,8 @@ import subprocess
 import pytest
 
 
-@pytest.mark.parametrize('script', ['test_assistant_state.mjs', 'test_assistant_transport_input.mjs'])
+@pytest.mark.parametrize('script', ['test_assistant_state.mjs', 'test_assistant_transport_input.mjs',
+                                   'test_assistant_material_state.mjs', 'test_assistant_material_dom.mjs'])
 def test_browser_module_behaviour(script):
     node = shutil.which('node')
     assert node, 'The existing local Node runtime is required.'

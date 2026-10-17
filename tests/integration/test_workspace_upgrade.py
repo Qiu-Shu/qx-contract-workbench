@@ -21,7 +21,8 @@ def legacy(tmp_path,monkeypatch):
         matter=create_case(client,login(client),title='升级前合成案件')
     # Remove versioned extensions, recreating the fixed pre-intake schema.
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        for table in ('assistant_run_events', 'assistant_runs', 'assistant_messages',
+        for table in ('assistant_material_snapshots', 'assistant_attachment_parses', 'assistant_attachments',
+                      'assistant_run_events', 'assistant_runs', 'assistant_messages',
                       'assistant_conversations', 'intake_revisions','intake_cases'):
             db.execute('DROP TABLE IF EXISTS '+table)
         db.commit()
@@ -124,59 +125,68 @@ def test_existing_workspace_does_not_run_create_all(legacy, monkeypatch):
     with TestClient(local_server.build_local_app(root)) as client: login(client)
 
 
-def test_assistant_marker_failure_recovers_without_repeating_either_step(legacy, monkeypatch):
+@pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1'])
+def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
     from cn_contract.web import workspace_upgrade
-    from cn_contract.storage_schema import CURRENT_VERSION, schema_rows
+    from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
     root, matter, _ = legacy
     original = workspace_upgrade._write_marker
-    target_hash = workspace_upgrade._hash(schema_rows(CURRENT_VERSION, native=True))
+    target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
     def fail_assistant(root, marker):
         if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
         original(root, marker)
     monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
     with pytest.raises(OSError): local_server.build_local_app(root)
-    receipt_paths = [root/('upgrade-'+name+'.json') for name in ('intake-v1', 'assistant-v1')]
+    receipt_paths = [root/('upgrade-'+name+'.json') for name in VERSIONS[1:VERSIONS.index(target)+1]]
     receipts = [path.read_bytes() for path in receipt_paths]
     backups = sorted(str(path) for path in (root/'upgrade-backups').rglob('before.db'))
-    assert len(backups) == 2
+    assert len(backups) == VERSIONS.index(target)
     monkeypatch.setattr(workspace_upgrade, '_write_marker', original)
     with TestClient(local_server.build_local_app(root)) as client:
         login(client)
         assert client.get('/api/matters').json()[0]['id'] == matter
     assert [path.read_bytes() for path in receipt_paths] == receipts
-    assert sorted(str(path) for path in (root/'upgrade-backups').rglob('before.db')) == backups
-    assert json.loads((root/'workspace.json').read_text('utf-8'))['schema_sha256'] == target_hash
+    after_backups = sorted(str(path) for path in (root/'upgrade-backups').rglob('before.db'))
+    assert set(backups).issubset(after_backups)
+    assert len(after_backups) == len(VERSIONS)-1
+    assert json.loads((root/'workspace.json').read_text('utf-8'))['schema_sha256'] == workspace_upgrade._hash(schema_rows(CURRENT_VERSION, native=True))
 
 
-def test_assistant_ddl_failure_preserves_completed_intake_step(legacy, monkeypatch):
+@pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
+                                             ('assistant-attachments-v1', 'assistant-v1')])
+def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
     from cn_contract.web import workspace_upgrade
     from cn_contract.storage_schema import identify_schema
     root, matter, _ = legacy
     original = workspace_upgrade.statements_for
-    monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda target: (*original(target), 'INVALID SQL'))
+    monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda name:
+                        (*original(name), 'INVALID SQL') if name == target else original(name))
     with pytest.raises(sqlite3.Error): local_server.build_local_app(root)
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        assert identify_schema(workspace_upgrade._rows(db), native=True) == 'intake-v1'
+        assert identify_schema(workspace_upgrade._rows(db), native=True) == previous
         assert db.execute('SELECT id FROM matters').fetchall() == [(matter,)]
         assert local_server._schema_hash(db) == json.loads((root/'workspace.json').read_text('utf-8'))['schema_sha256']
+    previous_receipt = (root/('upgrade-'+previous+'.json')).read_bytes()
     monkeypatch.setattr(workspace_upgrade, 'statements_for', original)
     with TestClient(local_server.build_local_app(root)) as client: login(client)
+    assert (root/('upgrade-'+previous+'.json')).read_bytes() == previous_receipt
 
 
+@pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1'])
 @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
-def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage):
+def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
     from cn_contract.web import workspace_upgrade
-    from cn_contract.storage_schema import CURRENT_VERSION, schema_rows
+    from cn_contract.storage_schema import schema_rows
     root, _, _ = legacy
     original = workspace_upgrade._write_marker
-    target_hash = workspace_upgrade._hash(schema_rows(CURRENT_VERSION, native=True))
+    target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
     def fail_assistant(root, marker):
         if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
         original(root, marker)
     monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
     with pytest.raises(OSError): local_server.build_local_app(root)
     monkeypatch.setattr(workspace_upgrade, '_write_marker', original)
-    path = root/'upgrade-assistant-v1.json'
+    path = root/('upgrade-'+target+'.json')
     receipt = json.loads(path.read_text('utf-8'))
     if damage == 'backup': (root/receipt['backup']).write_bytes(b'changed backup')
     elif damage == 'receipt':
@@ -184,6 +194,8 @@ def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damag
         path.write_text(json.dumps(receipt), encoding='utf-8')
     else:
         with closing(sqlite3.connect(root/'workbench.db')) as db:
-            db.execute('DROP TRIGGER immutable_assistant_messages_update'); db.commit()
+            trigger = ('immutable_assistant_messages_update' if target == 'assistant-v1'
+                       else 'immutable_assistant_attachments_update')
+            db.execute('DROP TRIGGER '+trigger); db.commit()
     with pytest.raises(ValueError, match='WORKSPACE_DATABASE_MISMATCH'):
         local_server.build_local_app(root)

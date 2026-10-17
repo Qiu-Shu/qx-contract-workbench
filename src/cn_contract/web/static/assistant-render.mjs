@@ -5,6 +5,9 @@ export const errorText = error=>({
   CROSS_MATTER_DENIED:'当前无权访问此记录，已清除页面内容。',
   BLOCKED_LIVE:'当前副本仅供核对，不能保存或运行任务。',
   STATE_CONFLICT:'保存未完成，请核对输入长度或重新读取记录。',
+  FILE_LIMIT:'材料超过本机接收上限。请缩小文件或分开处理。',
+  FILE_UNSUPPORTED:'暂时无法读取这份文件，请选择完整的 DOCX。',
+  DATA_POLICY_UNAPPROVED:'此材料尚未获准在当前环境处理，请核对本机处理选项。',
   REQUEST_FAILED:'请求未完成，请重试或返回工作区。',
 }[error?.code] || '请求未完成，输入仍在此处，请重试或返回工作区。');
 
@@ -76,7 +79,7 @@ export function createRenderer(root=document,{isComposing=()=>false}={}) {
       byId('server-draft').textContent=state.conflict?.server || '（服务器草稿为空）';
       byId('new-conversation').disabled=readonly || state.loading || state.status==='saving' || state.status==='revoked';
       byId('send').disabled=true;
-      byId('add-material').disabled=true;
+      byId('add-material').disabled=readonly || state.loading || ['saving','conflict','revoked'].includes(state.status);
     },
     conversations(page,{append=false,selected=null,onSelect}={}) {
       const host=byId('conversation-list');
@@ -98,7 +101,7 @@ export function createRenderer(root=document,{isComposing=()=>false}={}) {
       });
     },
     capability(catalog) {
-      byId('capability-details').textContent=catalog.items?.[0]?.reason || '模型对话与材料上传尚未接入。可以先保存草稿，或进入工作区处理已有材料。';
+      byId('capability-details').textContent=catalog.items?.[0]?.reason || '模型对话尚未接入。可以先保存草稿与 DOCX，或进入工作区处理已有材料。';
     },
   };
 }

@@ -1,5 +1,5 @@
 // Same-origin transport. A failed write may already have reached the server.
-export async function request(path, {method='GET', body}={}) {
+export async function request(path, {method='GET', body, form}={}) {
   const headers = {};
   if (method !== 'GET') {
     const cookie = document.cookie.split('; ').find(value=>value.startsWith('qx_csrf='));
@@ -12,7 +12,7 @@ export async function request(path, {method='GET', body}={}) {
     let response;
     try {
       response = await fetch(path, {method, headers, signal:controller.signal, credentials:'same-origin', cache:'no-store',
-      body:body === undefined ? undefined : JSON.stringify(body)});
+      body:form || (body === undefined ? undefined : JSON.stringify(body))});
     } catch {
       throw Object.assign(new Error('network'), {code:'NETWORK_UNKNOWN', status:0});
     }
@@ -32,3 +32,17 @@ export const listConversations = cursor=>request('/api/assistant/conversations'+
 export const skills = ()=>request('/api/assistant/skills');
 export const session = ()=>request('/api/session');
 export const cancelRun = (id,body)=>request('/api/assistant/runs/'+encodeURIComponent(id)+'/cancel',{method:'POST',body});
+
+const attachment=(id,file)=>conversation(id)+'/attachments/'+encodeURIComponent(file);
+export const getMaterials=id=>request(conversation(id)+'/materials');
+export const findAttachmentRequest=(id,key)=>request(conversation(id)+'/attachments/by-request/'+encodeURIComponent(key));
+export const findMaterialRequest=(id,key)=>request(conversation(id)+'/materials/by-request/'+encodeURIComponent(key));
+export const uploadAttachment=(id,body,file)=>{
+  const form=new FormData();form.append('metadata',JSON.stringify(body));form.append('file',file,file.name);
+  return request(conversation(id)+'/attachments',{method:'POST',form});
+};
+export const parseAttachment=(id,file,body)=>request(attachment(id,file)+'/parses',{method:'POST',body});
+export const findParseRequest=(id,file,key)=>request(attachment(id,file)+'/parses/by-request/'+encodeURIComponent(key));
+export const getParse=(id,file,revision)=>request(attachment(id,file)+'/parses/'+encodeURIComponent(revision));
+export const selectMaterials=(id,body)=>request(conversation(id)+'/materials',{method:'PUT',body});
+export const originalUrl=(id,file)=>attachment(id,file)+'/original';

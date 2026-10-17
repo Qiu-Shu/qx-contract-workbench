@@ -34,6 +34,7 @@ def register_routes(app, database):
         return HTMLResponse(app.state.template_environment.get_template('assistant.html').render(
             conversation_id=str(identifier) if identifier is not None else '',
             readonly=getattr(app.state, 'recovery_copy', False),
+            local_materials_enabled=getattr(database, '_local_materials_enabled', False),
             library_enabled=hasattr(app.state, 'library_root')))
 
     @app.get('/assistant', response_class=HTMLResponse)

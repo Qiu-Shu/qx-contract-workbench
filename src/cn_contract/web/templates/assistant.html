@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/static/assistant.css">
   <script type="module" src="/static/assistant.mjs"></script>
 </head>
-<body data-conversation-id="{{ conversation_id }}" data-readonly="{{ 'true' if readonly else 'false' }}" data-library-enabled="{{ 'true' if library_enabled else 'false' }}">
+<body data-conversation-id="{{ conversation_id }}" data-readonly="{{ 'true' if readonly else 'false' }}" data-local-materials="{{ 'true' if local_materials_enabled else 'false' }}" data-library-enabled="{{ 'true' if library_enabled else 'false' }}">
   <a class="skip-link" href="#composer">跳到输入框</a>
   <aside id="sidebar" class="sidebar" aria-label="工作台导航">
     <a class="brand" href="/assistant" aria-label="群兴法律工作台，对话首页"><span class="brand-short">群兴</span><span class="brand-long">法律工作台</span></a>
@@ -66,6 +66,10 @@
       </section>
 
       <section class="compose-section" aria-label="输入与保存草稿">
+        <section id="material-section" class="material-section" aria-labelledby="material-heading" hidden>
+          <h2 id="material-heading">本次材料</h2>
+          <div id="material-list"></div>
+        </section>
         <div id="skill-cards" class="skill-cards" aria-label="选择本次能力">
           <button type="button" data-skill="client_reply" aria-pressed="false"><strong>回复客户</strong><span>理清诉求，组织回复</span></button>
           <button type="button" data-skill="material_organize" aria-pressed="false"><strong>整理资料</strong><span>梳理经过，列出缺口</span></button>
@@ -80,22 +84,34 @@
           <label class="sr-only" for="composer">咨询内容与工作草稿</label>
           <textarea id="composer" name="content" rows="4" maxlength="20000" placeholder="例如：客户遇到了什么问题，需要我们帮忙处理什么……" aria-describedby="input-help save-status"{% if readonly %} readonly{% endif %}></textarea>
           <div class="composer-actions">
-            <button id="add-material" class="quiet-button" type="button" disabled aria-describedby="capability-summary">添加材料</button>
+            <button id="add-material" class="quiet-button" type="button" aria-expanded="false" aria-controls="material-picker"{% if readonly %} disabled{% endif %}>添加材料</button>
             <div class="save-actions"><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="capability-summary">发送</button></div>
           </div>
         </form>
+        <section id="material-picker" class="material-picker" aria-label="添加本机 DOCX" hidden>
+          <label for="material-file">选择 DOCX 文件</label>
+          <input id="material-file" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+          <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取此原件；内容待核实，不外发。</label>
+          {% if not local_materials_enabled %}<p class="muted">当前环境仅接收已登记的独立合成材料。</p>{% endif %}
+          <p id="material-notice" role="status" aria-live="polite"></p>
+          <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>
+        </section>
         <div class="composer-footnote"><p id="save-status" role="status" aria-live="polite">{% if readonly %}此副本只读，不能保存修改。{% else %}输入后自动保存，也可手动保存。{% endif %}</p><p id="input-help">Enter 发送，Shift+Enter 换行；当前发送不可用。</p></div>
         <details class="capability-details">
           <summary id="capability-summary">当前可用范围与说明</summary>
           <div class="capability-content">
-            <p id="capability-details">模型对话与材料上传尚未接入。</p>
+            <p id="capability-details">可以保存草稿与 DOCX，模型对话尚未接入。</p>
             {% if readonly %}<p>当前打开的是恢复副本，可查看已保存的记录，不能编辑、发送、添加材料或继续历史任务。</p>{% else %}<p>此页可保存咨询原话和工作草稿、选择能力、查看历史记录及已登记任务。所选能力还未接入执行，当前不会生成回复或自动建档。</p>{% endif %}
-            <p>对话附件尚未接通，因此“添加材料”和“发送”暂不可用。保存草稿不等于提交审查，也不会把原话认定为已核实事实。</p>
+            <p>DOCX 保存在本次对话，可以读取原文、核对读取范围及下载原件。发送尚未开放；保存和读取不会自动认定事实，也不会建立合同案件。</p>
             <p>继续办理可进入<a href="/workspace">工作区与接待</a>或<a href="/">合同工作台</a>。{% if library_enabled %}已连接的资料可在<a href="/library">法律资料库</a>检索。{% endif %}</p>
           </div>
         </details>
       </section>
     </div>
   </main>
+  <aside id="material-preview" class="material-preview" aria-labelledby="material-preview-title" hidden>
+    <header><h2 id="material-preview-title">材料原文</h2><button id="close-material-preview" class="text-button" type="button">关闭原文</button></header>
+    <div id="material-preview-content" class="reading-text"></div>
+  </aside>
 </body>
 </html>

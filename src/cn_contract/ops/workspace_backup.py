@@ -23,6 +23,7 @@ from ..config import load_settings
 from ..domain import WorkspaceBackupManifest
 from ..persistence import Database, SessionRow
 from . import storage
+from .file_paths import filesystem_path, application_path
 from .backup import (checked_root, digest, encode, strict_json, safe_relative, redirected,
                      _file_references, _mark_storage_flags)
 
@@ -50,7 +51,7 @@ def _relative(name):
 
 @contextmanager
 def _reader(path, root, *, limit=FILE_LIMIT):
-    path, root = Path(path).absolute(), checked_root(root)
+    path, root = filesystem_path(path), filesystem_path(checked_root(root))
     if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
     for parent in (path, *path.parents):
         if redirected(parent): raise ValueError('REDIRECTED_FILE')
@@ -85,7 +86,8 @@ def _file(path, root, *, limit=FILE_LIMIT):
 
 
 def _inventory(root):
-    protected = checked_root(root/'protected')
+    root = filesystem_path(root)
+    protected = filesystem_path(checked_root(root/'protected'))
     files = [root/'workbench.db', root/'workspace.json']
     for directory, folders, names in os.walk(protected, followlinks=False, onerror=lambda exc: (_ for _ in ()).throw(exc)):
         for name in folders:
@@ -106,8 +108,9 @@ def _inventory(root):
 
 def _validate_database(root):
     # Known schema is independent of the archive and its own claimed hash.
+    root = application_path(root)
     from ..web.local_server import _marker, _schema_hash
-    marker = strict_json((root/'workspace.json').read_bytes())
+    marker = strict_json(filesystem_path(root/'workspace.json').read_bytes())
     expected = _marker()
     if (type(marker) is not dict or set(marker) != set(expected)|{'workspace_id','schema_sha256'}
             or any(marker[k] != v for k,v in expected.items())):
@@ -127,8 +130,9 @@ def _validate_database(root):
 
 
 def _references(root, inventory, *, source=False):
+    root = application_path(root)
     files = {i['path']:i for i in inventory}
-    database = Database('sqlite:///'+str(root/'workbench.db'), root/'protected', load_settings(), initialize_schema=False)
+    database = Database('sqlite:///'+str(root/'workbench.db'), filesystem_path(root/'protected'), load_settings(), initialize_schema=False)
     try:
         with database.session() as db:
             refs = _file_references(db)
@@ -142,7 +146,7 @@ def _references(root, inventory, *, source=False):
                     logical = Path(item['logical_ref'])
                     if storage.quarantined(db): logical = storage.relocation(item['logical_ref'],item['sha256'],db)
                     elif not logical.is_absolute(): logical = root/'protected'/logical
-                    if logical.absolute() != (root/name).absolute(): raise ValueError('FILE_REFERENCE_LOCATION')
+                    if filesystem_path(logical) != filesystem_path(root/name): raise ValueError('FILE_REFERENCE_LOCATION')
             return refs
     finally: database.engine.dispose()
 
@@ -206,12 +210,13 @@ def _unpack(plain, root):
             raise ValueError('MANIFEST_FILES_INVALID')
         if not {'workbench.db','workspace.json'} <= {i['path'] for i in entries}:
             raise ValueError('MANIFEST_FILES_INVALID')
-        root.mkdir(); (root/'protected').mkdir()
+        filesystem_path(root).mkdir(); filesystem_path(root/'protected').mkdir()
         for item in entries:
             name = item['path']; relative = _relative(name)
             if name not in ('workbench.db','workspace.json') and not name.startswith('protected/'):
                 raise ValueError('UNEXPECTED_FILE')
-            destination = root/relative; destination.parent.mkdir(parents=True,exist_ok=True)
+            destination = filesystem_path(root/relative)
+            destination.parent.mkdir(parents=True,exist_ok=True)
             with archive.open(name) as source, destination.open('xb') as output:
                 actual = _copy(source, output)
                 output.flush(); os.fsync(output.fileno())
@@ -224,6 +229,7 @@ def _unpack(plain, root):
 
 def _publish(encrypted,destination,expected):
     # Only ciphertext crosses into the chosen destination (including other disks).
+    destination=filesystem_path(destination)
     temporary=destination.parent/('.qx-'+str(uuid4())+'.partial')
     created=False
     try:
@@ -244,12 +250,14 @@ def create_workspace_backup(directory, destination, passphrase, *, data_parent):
     from ..web.local_server import _open_workspace, _worker_lock
     _key(passphrase,b'0'*16)
     root = _open_workspace(directory,data_parent=data_parent)
-    destination = Path(destination).absolute()
+    destination = application_path(Path(destination).absolute())
     parent = checked_root(destination.parent)
-    if destination.exists() or destination.is_symlink() or destination.is_relative_to(root):
+    destination = parent/destination.name
+    if (filesystem_path(destination).exists() or filesystem_path(destination).is_symlink()
+            or filesystem_path(destination).is_relative_to(filesystem_path(root))):
         raise ValueError('BACKUP_DESTINATION_INVALID')
     _relative(destination.name)
-    with _worker_lock(root), TemporaryDirectory(prefix='.qx-backup-',dir=root) as temporary:
+    with _worker_lock(root), TemporaryDirectory(prefix='.qx-backup-',dir=filesystem_path(root)) as temporary:
         stage = Path(temporary); snapshot = stage/'snapshot'; snapshot.mkdir()
         (snapshot/'protected').mkdir()
         marker = _validate_database(root)
@@ -293,7 +301,8 @@ def create_workspace_backup(directory, destination, passphrase, *, data_parent):
 
 
 def _fence(root, refs, archive_hash, manifest_hash):
-    database = Database('sqlite:///'+str(root/'workbench.db'),root/'protected',load_settings(),initialize_schema=False)
+    root = application_path(root)
+    database = Database('sqlite:///'+str(root/'workbench.db'),filesystem_path(root/'protected'),load_settings(),initialize_schema=False)
     _mark_storage_flags(database)
     try:
         with database.session() as db:
@@ -331,10 +340,10 @@ def restore_workspace_backup(archive, restore_parent, passphrase):
     archive = Path(archive).absolute()
     summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
     parent = checked_root(restore_parent,create=True)
-    with TemporaryDirectory(prefix='.qx-restore-',dir=parent) as temporary:
+    with TemporaryDirectory(prefix='.qx-restore-',dir=filesystem_path(parent)) as temporary:
         stage = Path(temporary); plain = stage/'archive.zip'
         _decrypt(archive,plain,passphrase)
-        root = stage/'workspace'
+        root = application_path(stage/'workspace')
         manifest, manifest_hash, refs = _unpack(plain,root)
         # _unpack also verifies newly created backups: it must never migrate.
         # Here all historical bytes/references have passed validation, and only
@@ -350,8 +359,8 @@ def restore_workspace_backup(archive, restore_parent, passphrase):
             if item.path.startswith('protected/'):
                 path=root/_relative(item.path)
                 if _file(path,root) != {'size':item.size,'sha256':item.sha256}: raise ValueError('RESTORED_FILE_CHANGED')
-                path.chmod(stat.S_IREAD)
-        published = parent/str(uuid4()); root.rename(published)
+                filesystem_path(path).chmod(stat.S_IREAD)
+        published = parent/str(uuid4()); filesystem_path(root).rename(filesystem_path(published))
     return {'archive_sha256':summary['sha256'],'restored_root':str(published),
             'workspace_id':str(manifest.workspace_id),'file_count':len(manifest.files),
             'quarantined':True,'restored_at':datetime.now(timezone.utc).isoformat()}

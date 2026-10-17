@@ -10,12 +10,14 @@ export function createDraftController(api, {
   onChange = () => {}, onConversation = () => {}, uuid = () => crypto.randomUUID(), readonly = false,
 } = {}) {
   const state = {id: null, view: null, text: '', savedText: '', skill: null,
-    status: readonly ? 'readonly' : 'idle', error: null, conflict: null, dirty: false, loading: false};
-  let epoch = 0, closed = false, channel = null, creating = null, pending = null;
+    status: readonly ? 'readonly' : 'idle', error: null, conflict: null, dirty: false, loading: false,
+    materials: null, materialAction: null};
+  let epoch = 0, closed = false, channel = null, creating = null, pending = null, materialPending = null;
   let reading = false, paging = false, cancelling = false;
 
   function notify() {
-    state.dirty = Boolean(creating || pending || state.conflict ||
+    state.materialAction = materialPending?.kind || null;
+    state.dirty = Boolean(creating || pending || materialPending || state.conflict ||
       (state.id ? state.text !== state.savedText : state.text.trim()));
     onChange(state);
   }
@@ -24,10 +26,11 @@ export function createDraftController(api, {
     if (state.id !== id) { state.id = id; onConversation(id); }
   }
   function reset() {
-    creating = pending = null;
+    creating = pending = materialPending = null;
     reading = paging = cancelling = false;
     state.view = null; state.text = state.savedText = ''; state.skill = null;
     state.conflict = state.error = null; state.loading = false;
+    state.materials = null; state.materialAction = null;
     state.status = readonly ? 'readonly' : 'idle';
   }
   function fail(error, token) {
@@ -100,6 +103,58 @@ export function createDraftController(api, {
       return fail(error, token);
     }
   }
+  async function materialsFor(view) {
+    if (!api.getMaterials) return null;
+    const materials = await api.getMaterials(view.scope.conversation_id);
+    if (!sameScope(materials.scope, view.scope)) {
+      throw Object.assign(new Error('Material revision changed'), {code:'VERSION_CONFLICT',status:409});
+    }
+    return materials;
+  }
+  async function writeMaterial(token) {
+    const action = materialPending, id = state.id;
+    action.body ||= {request_id:uuid(),expected_scope:{...state.view.scope},...action.input};
+    const body = action.body;
+    try {
+      if (!action.done && action.unknown) {
+        action.done = action.kind === 'upload'
+          ? await api.findAttachmentRequest(id,body.request_id)
+          : action.kind === 'parse' ? await api.findParseRequest(id,action.attachment,body.request_id)
+            : await api.findMaterialRequest(id,body.request_id);
+        if (!current(token)) return false;
+      }
+      if (!action.done) {
+        action.unknown = true;
+        action.done = action.kind === 'upload' ? await api.uploadAttachment(id,body,action.file)
+          : action.kind === 'parse' ? await api.parseAttachment(id,action.attachment,body)
+            : await api.selectMaterials(id,body);
+        if (!current(token)) return false;
+      }
+      const view = checked(await api.getConversation(id),id);
+      const materials = await materialsFor(view);
+      if (!current(token)) return false;
+      materialPending = null; state.materials = materials;
+      if (view.composer_revision !== state.view.composer_revision || view.draft_input !== state.savedText) {
+        return conflict(view);
+      }
+      baseline(view); return true;
+    } catch(error) {
+      if (!current(token)) return false;
+      if (error.status === 409 && error.code === 'VERSION_CONFLICT') {
+        if (!action.done) { action.body = null; action.unknown = false; }
+        try {
+          const view = checked(await api.getConversation(id),id);
+          const materials = await materialsFor(view);
+          if (!current(token)) return false;
+          state.materials = materials;
+          if (action.done) materialPending = null;
+          return conflict(view);
+        } catch(readError) { return fail(readError,token); }
+      }
+      if (error.status >= 400 && error.status < 500 && !action.done) materialPending = null;
+      return fail(error,token);
+    }
+  }
   async function drain(explicit) {
     const token = epoch;
     try {
@@ -107,13 +162,14 @@ export function createDraftController(api, {
         if (!explicit || !await reconcile(token)) return false;
         if (pending && !await writeDraft(token)) return false;
       }
-      if (!state.id && (creating || state.text.trim())) {
+      if (!state.id && (creating || state.text.trim() || materialPending)) {
         creating ||= {request_id: uuid()};
         const view = checked(await api.createConversation(creating));
         if (!current(token)) return false;
         identity(view.scope.conversation_id); baseline(view); creating = null;
         if (view.draft_input && view.draft_input !== state.text) return conflict(view);
       }
+      if (materialPending && !await writeMaterial(token)) return false;
       while (current(token) && state.id && state.text !== state.savedText) {
         pending = {body: {expected_scope: {...state.view.scope},
           expected_composer_revision: state.view.composer_revision, content: state.text},
@@ -140,6 +196,14 @@ export function createDraftController(api, {
     });
     notify(); return channel;
   }
+  function material(kind,input,{file,attachment}={}) {
+    if (closed || readonly || state.loading || state.status === 'revoked' || materialPending || state.conflict || channel) {
+      return Promise.resolve(false);
+    }
+    // Pending text writes share this drain; a file never sends an old draft back.
+    materialPending = {kind,input,file,attachment,body:null,unknown:false,done:null};
+    notify(); return save(true);
+  }
   async function open(id) {
     if (closed) return false;
     if (id === state.id && state.view) return refresh();
@@ -148,8 +212,9 @@ export function createDraftController(api, {
     reset(); state.id = null; state.loading = true; state.status = 'loading'; notify();
     try {
       const view = checked(await api.getConversation(id), id);
+      const materials = await materialsFor(view);
       if (!current(token)) return false;
-      identity(id); baseline(view, false); state.loading = false;
+      identity(id); baseline(view, false); state.materials = materials; state.loading = false;
       state.status = readonly ? 'readonly' : 'saved'; notify(); return true;
     } catch (error) {
       if (current(token)) state.loading = false;
@@ -162,6 +227,7 @@ export function createDraftController(api, {
     reading = marker;
     try {
       const view = checked(await api.getConversation(id), id);
+      const materials = await materialsFor(view);
       if (!current(token)) return false;
       if (channel || pending || state.view !== baselineAtStart) return false;
       const previous = state.view;
@@ -169,7 +235,7 @@ export function createDraftController(api, {
           view.composer_revision !== previous.composer_revision || view.draft_input !== state.savedText))) {
         return conflict(view);
       }
-      baseline(view, state.dirty); state.error = null;
+      baseline(view, state.dirty); state.materials = materials; state.error = null;
       state.status = readonly ? 'readonly' : (state.dirty ? 'idle' : 'saved'); notify(); return true;
     } catch (error) { return fail(error, token); }
     finally { if (reading === marker) reading = false; }
@@ -213,6 +279,9 @@ export function createDraftController(api, {
       state.skill = skill; notify();
     },
     open, save: () => save(), retry: () => save(true), refresh, loadEarlier, cancel,
+    upload: (file,policy) => file ? material('upload',{original_name:file.name,mime:file.type,policy},{file}) : Promise.resolve(false),
+    parse: (attachment,baseline_view=null) => material('parse',{baseline_view},{attachment}),
+    selectMaterials: items => material('selection',{items}),
     revoke(error) {
       return error?.status === 401 || error?.status === 403 ? fail(error, epoch) : false;
     },
@@ -224,7 +293,7 @@ export function createDraftController(api, {
       if (closed || readonly || !state.conflict || !['local', 'server'].includes(choice)) return false;
       if (choice === 'server') state.text = state.savedText;
       state.conflict = null; state.status = 'idle'; state.error = null; notify();
-      return choice === 'local' ? save(true) : true;
+      return choice === 'local' || materialPending ? save(true) : true;
     },
     canLeave: () => closed || (!state.dirty && !state.loading && !channel && !reading && !paging && !cancelling),
     close() { closed = true; epoch += 1; reset(); state.id = null; notify(); },

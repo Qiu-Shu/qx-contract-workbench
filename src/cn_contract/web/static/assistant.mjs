@@ -2,10 +2,11 @@ import * as api from './assistant-api.mjs';
 import {createDraftController} from './assistant-state.mjs';
 import {createRenderer,errorText} from './assistant-render.mjs';
 import {bindComposer} from './assistant-composer.mjs';
+import {bindMaterials} from './assistant-materials.mjs';
 
 const byId=id=>document.getElementById(id);
 const readonly=document.body.dataset.readonly==='true';
-let composer, timer, listCursor=null, listEpoch=0, closed=false;
+let composer, materials, timer, listCursor=null, listEpoch=0, closed=false;
 let pendingRoute=document.body.dataset.conversationId || null;
 const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing()});
 const controller=createDraftController(api,{readonly,
@@ -26,8 +27,10 @@ const controller=createDraftController(api,{readonly,
 
 function drawState(state) {
   renderer.state(state,readonly);
+  materials?.state(state);
   if(pendingRoute && !state.id && state.status!=='revoked') {
     byId('composer').disabled=true;byId('save-draft').disabled=true;
+    byId('add-material').disabled=true;
     document.querySelectorAll('[data-skill]').forEach(button=>button.disabled=true);
     byId('refresh-run').hidden=state.status!=='error';
     byId('refresh-run').textContent='重新读取记录';
@@ -69,6 +72,7 @@ composer=bindComposer({input:byId('composer'),form:byId('composer-form'),
   },
   onSend:()=>notice('模型对话尚未接入。输入可以保存为草稿；现有业务请从工作区进入。'),
 });
+materials=bindMaterials({controller,readonly});
 
 const examples={client_reply:'这是客户的咨询，帮我理清诉求并起草回复：',
   material_organize:'请帮我整理这次咨询的事实线索和待补材料：',
@@ -127,9 +131,9 @@ byId('logout').addEventListener('click',async()=>{
   }
 });
 window.addEventListener('beforeunload',event=>{
-  if(!controller.canLeave() || composer.isComposing()) {event.preventDefault();event.returnValue='';}
+  if(!controller.canLeave() || composer.isComposing() || materials.hasSelection()) {event.preventDefault();event.returnValue='';}
 });
-window.addEventListener('pagehide',()=>{closed=true;++listEpoch;clearTimeout(timer);composer.dispose();controller.close();});
+window.addEventListener('pagehide',()=>{closed=true;++listEpoch;clearTimeout(timer);composer.dispose();materials.dispose();controller.close();});
 
 drawState(controller.state);
 await safely(async()=>{

@@ -1,0 +1,339 @@
+{
+  "baseline": "00b106c",
+  "stage": "CH-03A conversation-owned DOCX material intake and recovery",
+  "full": {
+    "tests": 2171,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 1814.651,
+    "exit_code": 0,
+    "junit": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "2171",
+      "time": "1814.651",
+      "timestamp": "2026-10-17T18:11:49.994641+08:00",
+      "hostname": "PC-20260920HQJZ"
+    },
+    "unique_tests": 2171,
+    "collection_matches": true,
+    "initial_files": 426,
+    "changed": [],
+    "added": []
+  },
+  "targets": [
+    {
+      "name": "schema-final",
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 37.209
+    },
+    {
+      "name": "service-http-ui-final",
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 20.978
+    },
+    {
+      "name": "backup-final-green",
+      "tests": 81,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 120.034
+    },
+    {
+      "name": "destination-alias-green",
+      "tests": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 62.96
+    }
+  ],
+  "unique_targeted_in_full": 159,
+  "gates": [
+    {
+      "name": "schema",
+      "args": [
+        "-m",
+        "cn_contract.cli",
+        "schema",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "defaults",
+      "args": [
+        "scripts/verify_defaults.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "sources",
+      "args": [
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "dependencies",
+      "args": [
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "node_groups": {
+    "state": 28,
+    "transport_input": 4,
+    "material_state": 4,
+    "material_dom": 6,
+    "included_in_python_wrappers": true
+  },
+  "browser": {
+    "count": 11,
+    "checks": [
+      "open_close_picker_creates_no_case_or_conversation",
+      "attachment_only_receipt_without_hidden_case_or_model",
+      "local_parse_exact_text_and_unverified_safe_render",
+      "download_preserves_original_bytes",
+      "reload_retains_text_selected_files_and_parse_revision",
+      "selection_persists_without_deleting_original",
+      "unknown_upload_receipt_lookup_no_duplicate_and_keeps_new_text",
+      "narrow_file_list_and_source_panel_fit",
+      "switch_clears_scope_without_empty_record",
+      "revocation_clears_text_materials_and_preview",
+      "no_browser_errors_external_requests_or_model_jobs"
+    ],
+    "page_errors": [],
+    "exit_code": 0
+  },
+  "frozen": {
+    "count": 7,
+    "checks": [
+      "frozen_home_and_seven_assets_match_current_source",
+      "upload_receipt_replay_preserves_draft_without_hidden_case_or_intake",
+      "two_parse_revisions_exact_quote_and_deselection_preserve_original_and_history",
+      "frozen_process_restart_keeps_original_draft_and_historical_sources",
+      "actual_exe_encrypted_qxbak_backup_verified",
+      "qxbak_recovery_preserves_original_history_revokes_sessions_and_fences_all_writes",
+      "source_workspace_protected_original_remains_byte_identical"
+    ],
+    "exe_sha256": "d0cc1d0af0b9332d9e3c2e27993dfef1034022c7daed66635458f30738790a7f",
+    "processes_exited": 5
+  },
+  "electron": {
+    "count": 9,
+    "checks": [
+      "native_setup_login_home_isolation_and_generation_disabled",
+      "window_file_selection_consent_attachment_only_creation_no_hidden_case",
+      "window_docx_parse_source_quote_reading_revision_and_unverified_state",
+      "authenticated_original_download_byte_equality",
+      "page_reload_retains_draft_attachment_selection_and_exact_source",
+      "actual_narrow_window_and_display_zoom_keep_source_readable",
+      "new_conversation_clears_materials_then_explicit_reopen_restores_scope",
+      "owned_process_shutdown_and_actual_electron_restart_preserve_materials",
+      "no_script_errors_external_requests_or_model_submissions"
+    ],
+    "viewports": [
+      {
+        "factor": 1,
+        "width": 744,
+        "scroll": 729,
+        "height": 695
+      },
+      {
+        "factor": 1.25,
+        "width": 595,
+        "scroll": 583,
+        "height": 556
+      },
+      {
+        "factor": 1.5,
+        "width": 496,
+        "scroll": 486,
+        "height": 463
+      }
+    ],
+    "processes_exited": 2,
+    "packaged": false
+  },
+  "assets": {
+    "assistant-api.mjs": 3138,
+    "assistant-state.mjs": 14410,
+    "assistant-render.mjs": 7195,
+    "assistant-composer.mjs": 1317,
+    "assistant-materials.mjs": 9328,
+    "assistant.mjs": 7205,
+    "assistant.css": 15830
+  },
+  "raw_evidence": {
+    "collected.log": {
+      "sha256": "727e807720f2166c72f45f68fb0c050ac731bb168f04cafa2338fd150b7128f2",
+      "bytes": 231381
+    },
+    "full.log": {
+      "sha256": "80c84c5caff2c4d451de0ce742ed91bb356d1d884d0df16e31f42160291250d0",
+      "bytes": 2546
+    },
+    "full.xml": {
+      "sha256": "d7ee1d96090ef2758bf83acdb741be6c643a2ba7259fa0ae3dae58853abcb750",
+      "bytes": 317238
+    },
+    "full.exit": {
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    "verification-runner.log": {
+      "sha256": "fdc6505c79fba8dc139e43834ea458ec0ed32677c892b94761b4114c4b489f00",
+      "bytes": 21
+    },
+    "verification-runner.exit": {
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    "schema-final.xml": {
+      "sha256": "7bc76143b71f3f16dedf009a2384cb6ec0f45cbc0bcb9ae7b954e76fe00eb2a6",
+      "bytes": 6722
+    },
+    "service-http-ui-final.xml": {
+      "sha256": "ce28c77933efe1f9e78cdff7afad945c646e0b0db7aebe99efcdd60f2fc3820b",
+      "bytes": 5520
+    },
+    "backup-final-green.xml": {
+      "sha256": "0a0d907ae7552c1158600600197111e56d20c0147de49dab1c1c0cd86fbfe93c",
+      "bytes": 12179
+    },
+    "backup-final-green.log": {
+      "sha256": "30e8927da55925ebba6d5eb82dc4c896d68e9f5b797cfdb8a4c3a644e66de27a",
+      "bytes": 194
+    },
+    "backup-final-green.exit": {
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    "browser-first.log": {
+      "sha256": "02def502d01ffe592938d911969025b5c3bd2a0c84cb4859a059ec87a98e83cc",
+      "bytes": 1898
+    },
+    "browser-final.log": {
+      "sha256": "ddcfae2371dc3ab61b719c03ccac2d3d5af8ce3ee9a0b9fc25158deeb300d458",
+      "bytes": 32
+    },
+    "browser-final.exit": {
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    "browser-report.json": {
+      "sha256": "60dd8941bea294ce4795987ceef3687d27a60554b1fa9863c165807d219c8e7a",
+      "bytes": 11868
+    },
+    "frozen-attachments-final.json": {
+      "sha256": "da1c7d69014a772a0c55b26a89ed1b842be235a1f44033e58f6ce225e8b7cf1e",
+      "bytes": 3780
+    },
+    "build-final.log": {
+      "sha256": "85a9d56d877f457b5e005d355f5fc0ed663c900aa726ba0d4e509f20065e656a",
+      "bytes": 18116
+    },
+    "build-final.exit": {
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    "material-dom-review.json": {
+      "sha256": "ba63c6bc203a19a6bba43f595e51ca266464704a89fdfdd48a396da92e83d848",
+      "bytes": 805
+    },
+    "parse-failure-red.xml": {
+      "sha256": "74c35bf7dc018236c2895985873a4b859ed2946868dfaee06ecd704c621937e8",
+      "bytes": 1513
+    },
+    "gates.json": {
+      "sha256": "ba3310a965abbd215a42f5a61407a7ac4ed3c7c684b6a94208287db51e3e045e",
+      "bytes": 592
+    },
+    "verify_final.py": {
+      "sha256": "d3ea17249c1c28395a863ed9523e18ecc719eee425c9a313e08f5afe2b719a97",
+      "bytes": 2506
+    },
+    "browser_probe.py": {
+      "sha256": "5b577be837d134425cbe5b4d9c78be061ef3314f5409c5841428dd211dd8c140",
+      "bytes": 7768
+    },
+    "frozen_attachment_final_probe.py": {
+      "sha256": "cea92ce2bb6041f8908e87e7f40d97a7c5c849a921cd243eb886050964a3ec33",
+      "bytes": 10395
+    },
+    "destination-alias-green.xml": {
+      "sha256": "5b5f5a017253972bb2810417c5fa50799d163f509c687dde47b92f0bf12af818",
+      "bytes": 6588
+    },
+    "destination-alias-red.xml": {
+      "sha256": "84aadb0f502df5758c27d5e1b3196aab3c35b93ee1741660964e4ac78dcb190c",
+      "bytes": 1278
+    },
+    "interrupted-full-before-alias-fix/status.txt": {
+      "sha256": "f824b147fb2452e896b6251c81c9317901a6dee3d575192370373d8bfc8b36fd",
+      "bytes": 191
+    },
+    "main-model-plan-independent-review.md": {
+      "sha256": "7600c2266db02012dfbbb63d2cd0bc287b0a7bfe51165c10fe267eeaa2f49e2a",
+      "bytes": 2078
+    },
+    "Electron 合成附件 c562cebc/attachments-electron-report.json": {
+      "sha256": "07999278bd2c5fa6b2833676fe2013bccb4d88539f4836c6197baeef2779e083",
+      "bytes": 1801
+    },
+    "Electron 合成附件 c562cebc/attachments-reloaded.png": {
+      "sha256": "34f69d99035fab8d27870e4ad7fbd6d058d61b7cd82eee28bbc99b90615ff1d1",
+      "bytes": 70022
+    },
+    "Electron 合成附件 c562cebc/attachments-restarted.png": {
+      "sha256": "34f69d99035fab8d27870e4ad7fbd6d058d61b7cd82eee28bbc99b90615ff1d1",
+      "bytes": 70022
+    },
+    "Electron 合成附件 c562cebc/attachments-selected-before-consent.png": {
+      "sha256": "a196c4c8144d13f38c7d77e1223263a0bfec85d9aa43362c48a003ef712962dd",
+      "bytes": 62052
+    },
+    "Electron 合成附件 c562cebc/attachments-source.png": {
+      "sha256": "c21c285493ae5b262b003252e3820d487b85f31c4ef27690857fcdd5b2e1238e",
+      "bytes": 70420
+    },
+    "Electron 合成附件 c562cebc/attachments-window-1.25.png": {
+      "sha256": "1bc8bad81fa76e221575ff3b001246088ef7b67da007d8eca7b9e832056a3138",
+      "bytes": 36784
+    },
+    "Electron 合成附件 c562cebc/attachments-window-1.5.png": {
+      "sha256": "943e5577e16320090e1f207bf6a468ccaf035742436236444bf275051ded368b",
+      "bytes": 51160
+    },
+    "Electron 合成附件 c562cebc/attachments-window-1.png": {
+      "sha256": "636ed5b8e22d16447f1fb2e2207c04471620c6fc0138c1815818a5f57bebc078",
+      "bytes": 41020
+    }
+  },
+  "boundary": "Synthetic only. No model/Jev/send/profile/installed update/cloud deployment. WorkBuddy task lost; no review pass.",
+  "post_verification_format": {
+    "file": "tests/integration/test_assistant_attachment_backup.py",
+    "before_sha256": "f291c40f33c16659241194cffeb39a007c14e15788bc0ee2f7d653027dbcecbb",
+    "after_sha256": "2c127c3be0ed4691b1a71796de7bcd5dceedb8c19c9d86ffc978550984d94fe3",
+    "removed_bytes": 1,
+    "ast_including_locations_unchanged": true,
+    "reason": "Post-regression git diff --cached --check found only redundant EOF blank line; remove it without changing test code or locations.",
+    "unchanged_files": 425
+  }
+}

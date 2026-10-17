@@ -1,13 +1,14 @@
 """Fixed supported SQLite structures, independent of application initialization."""
-from .assistant.schema import expected_objects as assistant_objects
+from .assistant.attachment_schema import expected_objects as attachment_objects
+from .assistant_schema_baseline import ASSISTANT_V1_ROWS
 from .schema_baseline import INTAKE_V1_ROWS
 
 
-CURRENT_VERSION = 'assistant-v1'
-VERSIONS = ('pre-intake', 'intake-v1', CURRENT_VERSION)
+CURRENT_VERSION = 'assistant-attachments-v1'
+VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', CURRENT_VERSION)
 SUPPORTED_VERSIONS = VERSIONS
 _INTAKE_TABLES = frozenset(('intake_cases', 'intake_revisions'))
-_ASSISTANT_ROWS = tuple(assistant_objects())
+_ATTACHMENT_ROWS = tuple(attachment_objects())
 _IDENTITY_ROWS = (
     ('index', 'sqlite_autoindex_local_workspace_identity_1', 'local_workspace_identity', None),
     ('table', 'local_workspace_identity', 'local_workspace_identity',
@@ -21,8 +22,10 @@ def schema_rows(version, *, native=False):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     result = [row for row in INTAKE_V1_ROWS
               if version != 'pre-intake' or row[2] not in _INTAKE_TABLES]
-    if version == CURRENT_VERSION:
-        result.extend(_ASSISTANT_ROWS)
+    if version in ('assistant-v1', 'assistant-attachments-v1'):
+        result.extend(ASSISTANT_V1_ROWS)
+    if version == 'assistant-attachments-v1':
+        result.extend(_ATTACHMENT_ROWS)
     if native:
         result.extend(_IDENTITY_ROWS)
     if len({row[1] for row in result}) != len(result):
