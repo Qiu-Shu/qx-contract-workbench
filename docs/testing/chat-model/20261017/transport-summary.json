@@ -1,0 +1,39 @@
+{
+  "status": "targeted_pass",
+  "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_assistant_main_provider.py tests/unit/test_deepseek_codec.py tests/unit/test_model_schema.py -q --tb=short --junitxml=.local/chat-model-20261017/transport-final.xml",
+  "exit_code": 0,
+  "passed": 196,
+  "per_class": {
+    "tests.integration.test_assistant_main_provider": 59,
+    "tests.unit.test_deepseek_codec": 121,
+    "tests.unit.test_model_schema": 16
+  },
+  "pytest_elapsed_seconds": 4.77,
+  "red_evidence": [
+    "transport-red.xml",
+    "transport-red-all.xml",
+    "transport-hardening-red.xml",
+    "transport-cost-red.xml",
+    "config-snapshot-red.xml",
+    "config-decimal-red.xml"
+  ],
+  "green_evidence": [
+    "transport-first-green.xml",
+    "transport-hardening-green.xml",
+    "transport-green.xml",
+    "transport-final.xml",
+    "config-snapshot-green.xml"
+  ],
+  "source_sha256": {
+    "src/cn_contract/assistant/providers/__init__.py": "e62f8cd59c53f2d57cb84fb00819f6f0d14526f2fa49d642411b0ca99dd3bf1f",
+    "src/cn_contract/assistant/providers/main.py": "62edd4a66ba4ae803a9d7aff074157f2cd590ee60c7cd4dcf3691c1b65042a1a",
+    "tests/integration/test_assistant_main_provider.py": "253cf4a06774ab4d22a66bb84293c74181e1d65feae198694f18800d010da3ab"
+  },
+  "limitations": [
+    "independent synthetic loopback only",
+    "no real credentials read",
+    "no real model invocation",
+    "no full suite",
+    "not frozen executable or installed application validation"
+  ]
+}

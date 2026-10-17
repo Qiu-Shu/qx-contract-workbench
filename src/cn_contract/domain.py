@@ -2771,3 +2771,158 @@ class AssistantAttachmentExcerpt(DomainModel):
     original_sha256: SHA256
     anchor: Anchor
     review_status: Literal['unverified'] = 'unverified'
+
+
+MainUSD = Annotated[ExactDecimal, Field(ge=0, le=1000000000, max_digits=24, decimal_places=12)]
+MainRate = Annotated[ExactDecimal, Field(gt=0, le=10000, max_digits=12, decimal_places=6)]
+MainAttemptState = Literal['reserved', 'sending', 'sent_unknown', 'received', 'failed_before_send']
+MainTokenCount = Annotated[int, Field(strict=True, ge=0, le=2147483647)]
+
+
+class MainModelConfig(DomainModel):
+    enabled: StrictBool = False
+    protocol_version: Literal['deepseek-chat-json-v1'] = 'deepseek-chat-json-v1'
+    provider: Literal['deepseek'] = 'deepseek'
+    model: Literal['deepseek-flash', 'deepseek-v4-pro']
+    max_input_bytes: Annotated[int, Field(strict=True, ge=1, le=262144)] = 65536
+    max_output_tokens: Annotated[int, Field(strict=True, ge=1, le=8192)] = 4096
+    max_response_bytes: Annotated[int, Field(strict=True, ge=1, le=1048576)] = 1048576
+    timeout_seconds: Annotated[int, Field(strict=True, ge=1, le=120)] = 30
+    input_usd_per_million: MainRate
+    output_usd_per_million: MainRate
+    price_reference: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)]
+
+
+class MainRequest(DomainModel):
+    run_id: UUID
+    scope: ScopeSnapshot
+    message_id: UUID
+    content: AssistantText
+    source_sha256: SHA256
+
+    @model_validator(mode='after')
+    def exact_message(self):
+        if not self.content.strip() or hashlib.sha256(self.content.encode('utf-8')).hexdigest() != self.source_sha256:
+            raise ValueError('nonempty source message with matching digest required')
+        return self
+
+
+class MainPreparedInput(DomainModel):
+    request: MainRequest
+    wire_payload_json: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=262144)]
+
+
+class MainCitation(DomainModel):
+    message_id: UUID
+    quote_sha256: SHA256
+
+
+class MainCandidate(DomainModel):
+    text: AssistantText
+    citations: Annotated[tuple[MainCitation, ...], Field(max_length=1)] = ()
+
+    @field_validator('text')
+    @classmethod
+    def nonempty_candidate(cls, value):
+        if not value.strip():
+            raise ValueError('empty model candidate')
+        return value
+
+
+class MainUsage(DomainModel):
+    prompt_tokens: MainTokenCount
+    completion_tokens: MainTokenCount
+    total_tokens: MainTokenCount
+    prompt_cache_hit_tokens: MainTokenCount | None = None
+    prompt_cache_miss_tokens: MainTokenCount | None = None
+
+    @model_validator(mode='after')
+    def consistent_counts(self):
+        if self.total_tokens != self.prompt_tokens + self.completion_tokens:
+            raise ValueError('token total mismatch')
+        cache = (self.prompt_cache_hit_tokens, self.prompt_cache_miss_tokens)
+        if any(value is not None and value > self.prompt_tokens for value in cache):
+            raise ValueError('cache tokens exceed input')
+        if all(value is not None for value in cache) and sum(cache) != self.prompt_tokens:
+            raise ValueError('cache token total mismatch')
+        return self
+
+
+class MainReply(DomainModel):
+    state: Literal['received', 'sent_unknown', 'failed_before_send']
+    provider_request_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] | None = None
+    usage: MainUsage | None = None
+    output: MainCandidate | None = None
+    error_code: Literal['BLOCKED_LIVE', 'PROVIDER_ERROR', 'MODEL_OUTPUT_INVALID'] | None = None
+
+    @model_validator(mode='after')
+    def consistent_reply(self):
+        if self.output is not None and (self.state != 'received' or self.error_code is not None):
+            raise ValueError('output requires a received validated response')
+        if self.output is None and self.error_code is None:
+            raise ValueError('failed response needs a fixed error code')
+        if self.state != 'received' and (self.usage is not None or self.provider_request_id is not None):
+            raise ValueError('unknown/unsent response cannot claim received usage')
+        return self
+
+
+class MainModelPolicy(DomainModel):
+    policy_id: UUID
+    workspace_id: UUID
+    actor_id: UUID
+    config_sha256: SHA256
+    allowed_content_sha256s: Annotated[tuple[SHA256, ...], Field(min_length=1, max_length=256)]
+    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
+    max_calls: Annotated[int, Field(strict=True, ge=1, le=1000)]
+    expires_at: UTCDatetime
+
+    @field_validator('allowed_content_sha256s')
+    @classmethod
+    def unique_allowed_content(cls, value):
+        if len(value) != len(set(value)):
+            raise ValueError('duplicate allowed source')
+        return value
+
+
+class MainReceipt(DomainModel):
+    state: Literal['received', 'sent_unknown', 'failed_before_send']
+    provider_request_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] | None
+    usage: MainUsage | None
+    cost_status: Literal['unknown', 'estimated', 'not_sent']
+    estimated_cost_usd: MainUSD | None
+    unit: Literal['USD'] = 'USD'
+    error_code: Literal['BLOCKED_LIVE', 'PROVIDER_ERROR', 'MODEL_OUTPUT_INVALID'] | None
+
+    @model_validator(mode='after')
+    def no_false_zero_cost(self):
+        if self.cost_status == 'unknown' and self.estimated_cost_usd is not None:
+            raise ValueError('unknown usage has unknown cost')
+        if self.cost_status == 'estimated' and (self.state != 'received' or self.usage is None or self.estimated_cost_usd is None):
+            raise ValueError('estimated cost requires received usage')
+        if self.cost_status == 'not_sent' and (self.state != 'failed_before_send' or self.estimated_cost_usd != Decimal(0)):
+            raise ValueError('zero unsent cost needs proof before sending')
+        if self.state != 'received' and (self.usage is not None or self.provider_request_id is not None):
+            raise ValueError('no fabricated usage or response identity')
+        return self
+
+
+class MainOutputView(DomainModel):
+    id: UUID
+    run_id: UUID
+    scope: ScopeSnapshot
+    audience: Literal['internal'] = 'internal'
+    generation_kind: Literal['model_generated'] = 'model_generated'
+    review_status: Literal['unverified'] = 'unverified'
+    candidate: MainCandidate
+    created_at: UTCDatetime
+
+
+class MainAttemptView(DomainModel):
+    id: UUID
+    run_id: UUID
+    scope: ScopeSnapshot
+    state: MainAttemptState
+    reserved_usd: MainUSD
+    unit: Literal['USD'] = 'USD'
+    receipt: MainReceipt | None
+    output: MainOutputView | None

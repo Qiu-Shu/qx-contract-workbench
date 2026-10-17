@@ -311,12 +311,15 @@ def _fence(root, refs, archive_hash, manifest_hash):
             pending = list(db.scalars(select(JobRow).where(JobRow.state.in_(('queued','running')))))
             for job in pending:
                 job.state='blocked'; job.stage='恢复副本仅供核对'; job.error_code='BLOCKED_LIVE'; event(job,db)
+            from ..assistant.providers.attempts import recover_attempts
+            model_attempts = recover_attempts(db)
             from ..assistant.service import quarantine_runs
             assistant_jobs = quarantine_runs(db)
             db.add(storage.RestoreFenceRow(ref=str(uuid4()),archive_sha256=archive_hash,
                 manifest_sha256=manifest_hash,payload=encode({'restored_at':datetime.now(timezone.utc).isoformat(),
                 'state':'quarantined','old_sessions_revoked':True,'jobs_quarantined':len(pending),
                 'assistant_jobs_quarantined':assistant_jobs,
+                'model_attempts_interrupted':model_attempts,
                 'live_egress':False,'current_approvals_valid':False,'external_highwater':None}).decode()))
             grouped = {}
             for item in refs:

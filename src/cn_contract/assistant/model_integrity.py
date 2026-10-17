@@ -1,0 +1,240 @@
+"""Read-only validation of archived model history; never grants execution rights."""
+from decimal import Context, Decimal, localcontext
+import re
+from uuid import UUID
+
+from pydantic import TypeAdapter
+from sqlalchemy import text
+
+from .. import domain as d
+from ..storage_schema import identify_schema
+from .providers.main import _strict_json
+from .providers.policy import encoded, estimated_cost, prepare, reservation, sha
+
+
+def _fail():
+    raise ValueError('ASSISTANT_MODEL_INTEGRITY')
+
+
+def _uuid(value):
+    if type(value) is not str or str(UUID(value)) != value:
+        _fail()
+    return value
+
+
+def _hash(value):
+    if type(value) is not str or not re.fullmatch('[a-f0-9]{64}', value):
+        _fail()
+
+
+def _json(raw, limit=2*1024**2):
+    if type(raw) is not str or len(raw.encode('utf-8')) > limit:
+        _fail()
+    return _strict_json(raw)
+
+
+def _model(model, raw, limit=2*1024**2):
+    result = model.model_validate(_json(raw, limit))
+    if encoded(result) != raw:
+        _fail()
+    return result
+
+
+def _at(value):
+    if type(value) is not str:
+        _fail()
+    return TypeAdapter(d.UTCDatetime).validate_python(value)
+
+
+def _receipt(row, stored, output, config, run, created, updated):
+    state, claim = row['state'], row['claim_sha256']
+    if state not in {'reserved','sending','received','sent_unknown','failed_before_send'}:
+        _fail()
+    if claim is not None:
+        _hash(claim)
+    if state == 'reserved' and claim is not None or state in {'sending','received','sent_unknown'} and claim is None:
+        _fail()
+    if state in {'reserved','sending'}:
+        if stored is not None or output is not None:
+            _fail()
+        if run['state'] not in ({'queued','cancelled'} if state == 'reserved' else {'generating'}):
+            _fail()
+        return None
+    if stored is None or _at(stored['created_at']) != updated or updated < created:
+        _fail()
+    value = _model(d.MainReceipt, stored['receipt_json'], 16384)
+    if value.state != state:
+        _fail()
+    if value.provider_request_id is not None and (not value.provider_request_id.strip()
+            or any(ord(char) < 32 for char in value.provider_request_id)):
+        _fail()
+    if state == 'failed_before_send':
+        status, cost = 'not_sent', Decimal(0)
+    elif value.usage is None:
+        status, cost = 'unknown', None
+    else:
+        if output is not None and (value.usage.prompt_tokens > config.max_input_bytes
+                or value.usage.completion_tokens > config.max_output_tokens):
+            _fail()
+        status = 'estimated'
+        cost = estimated_cost(value.usage.prompt_tokens, value.usage.completion_tokens, config)
+    if value.cost_status != status or value.estimated_cost_usd != cost:
+        _fail()
+    if state != 'received' and (output is not None or value.error_code is None):
+        _fail()
+    if output is not None:
+        if run['state'] != 'completed' or value.error_code is not None:
+            _fail()
+    elif run['state'] not in {'failed','cancelled','interrupted'}:
+        _fail()
+    return value
+
+
+def _events(db, row, run, value, output):
+    events = db.execute(text('''SELECT * FROM assistant_run_events
+        WHERE run_id=:run ORDER BY seq'''), {'run':row['run_id']}).mappings().all()
+    if any(event['seq'] != sequence for sequence, event in enumerate(events, start=1)):
+        _fail()
+    events = [event for event in events if event['event_type'].lower().startswith('model.')]
+    expected = [('model.reserved', {'attempt_id':row['id'], 'state':'queued'})]
+    if row['claim_sha256'] is not None:
+        expected.append(('model.started', {'attempt_id':row['id'], 'state':'generating'}))
+    if value is not None:
+        if run['state'] == 'interrupted':
+            expected.append(('model.interrupted', {'attempt_id':row['id'], 'state':'interrupted',
+                                                   'cost_status':value.cost_status}))
+            if value.error_code != 'BLOCKED_LIVE' or row['state'] not in {'failed_before_send','sent_unknown'}:
+                _fail()
+        else:
+            expected.append(('model.finished', {'attempt_id':row['id'], 'state':run['state'],
+                'output_id':output['id'] if output else None, 'cost_status':value.cost_status,
+                'error_code':value.error_code}))
+    if len(events) != len(expected):
+        _fail()
+    for event, (kind, payload) in zip(events, expected):
+        if (event['event_type'] != kind or event['audience'] != 'internal'
+                or _json(event['payload_json'], 16384) != payload
+                or _at(event['created_at']) < _at(row['created_at'])):
+            _fail()
+
+
+def _validate(db, attempts, receipts, outputs, workspace):
+    conversations = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_conversations')).mappings()}
+    messages = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_messages')).mappings()}
+    runs = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_runs')).mappings()}
+    sessions = {r['id']:r for r in db.execute(text('SELECT id,user_id FROM sessions')).mappings()}
+    users = set(db.scalars(text('SELECT id FROM users')))
+    policies = {}
+    for row in attempts:
+        identifier, cid, run_id = (_uuid(row[key]) for key in ('id','conversation_id','run_id'))
+        for key in ('config_sha256','policy_sha256','request_sha256'):
+            _hash(row[key])
+        config = _model(d.MainModelConfig, row['config_json'], 32768)
+        policy = _model(d.MainModelPolicy, row['policy_json'], 131072)
+        prepared = _model(d.MainPreparedInput, row['input_json'])
+        request, scope = prepared.request, prepared.request.scope
+        conversation, run = conversations.get(cid), runs.get(run_id)
+        message = messages.get(str(request.message_id))
+        if conversation is None or run is None or message is None:
+            _fail()
+        actor, session = _uuid(run['actor_id']), sessions.get(_uuid(run['session_id']))
+        _uuid(conversation['id']); _uuid(conversation['owner_id']); _uuid(message['id'])
+        _uuid(run['request_id']); _hash(run['request_sha256'])
+        if (actor not in users or session is None or session['user_id'] != actor
+                or actor != conversation['owner_id'] or run['conversation_id'] != cid
+                or conversation['workspace_id'] != workspace or str(scope.workspace_id) != workspace
+                or str(scope.conversation_id) != cid or str(request.run_id) != run_id
+                or run['message_id'] != str(request.message_id) or message['conversation_id'] != cid
+                or message['role'] != 'user' or message['content'] != request.content
+                or message['source_revision'] != scope.input_revision
+                or _model(d.ScopeSnapshot, run['scope_snapshot']) != scope
+                or scope.scope_kind != conversation['scope_kind']
+                or (str(scope.scope_ref) if scope.scope_ref else None) != conversation['scope_ref']
+                or scope.binding_revision != conversation['binding_revision']
+                or scope.input_revision > conversation['input_revision']
+                or scope.materials_revision > conversation['materials_revision']):
+            _fail()
+        if scope.scope_kind != 'conversation':
+            table = 'matters' if scope.scope_kind == 'matter' else 'intake_cases'
+            target = db.execute(text(f'SELECT * FROM {table} WHERE id=:id'), {'id':str(scope.scope_ref)}).mappings().first()
+            if target is None or scope.scope_kind == 'intake' and target['owner_id'] != actor:
+                _fail()
+        # Current attachments may have changed after this historical input.
+        if scope.materials_revision:
+            snapshot = db.scalar(text('''SELECT items_json FROM assistant_material_snapshots
+                WHERE conversation_id=:cid AND revision=:revision'''), {'cid':cid,'revision':scope.materials_revision})
+            if snapshot != '[]':
+                _fail()
+        created, updated = _at(row['created_at']), _at(row['updated_at'])
+        if (not _at(conversation['created_at']) <= _at(message['created_at']) == _at(run['created_at']) <= created <= updated
+                or not config.enabled or str(policy.policy_id) != _uuid(row['policy_id'])
+                or str(policy.workspace_id) != workspace or str(policy.actor_id) != actor
+                or policy.config_sha256 != row['config_sha256'] or policy.expires_at <= created
+                or request.source_sha256 not in policy.allowed_content_sha256s
+                or sha(encoded(config)) != row['config_sha256'] or sha(encoded(policy)) != row['policy_sha256']
+                or sha(prepared.wire_payload_json) != row['request_sha256']
+                or prepare(request, config).wire_payload_json != prepared.wire_payload_json
+                or run['selected_provider'] != config.provider or run['selected_model'] != config.model):
+            _fail()
+        reserved = TypeAdapter(d.MainUSD).validate_python(row['reserved_usd'])
+        if reserved != reservation(config) or reserved > policy.max_total_usd or _json(run['budget_json'], 16384) != {
+                'policy_id':row['policy_id'], 'reserved_usd':str(reserved), 'unit':'USD'}:
+            _fail()
+        output = outputs.get(identifier)
+        value = _receipt(row, receipts.get(identifier), output, config, run, created, updated)
+        _events(db, row, run, value, output)
+        if output is not None:
+            view = _model(d.MainOutputView, output['output_json'], 262144)
+            if (_uuid(output['id']) != str(view.id) or output['conversation_id'] != cid
+                    or output['run_id'] != run_id or view.run_id != request.run_id
+                    or _model(d.ScopeSnapshot, output['scope_json']) != scope or view.scope != scope
+                    or _at(output['created_at']) != view.created_at or view.created_at != updated
+                    or any(c.message_id != request.message_id or c.quote_sha256 != request.source_sha256
+                           for c in view.candidate.citations)):
+                _fail()
+        old_policy, calls = policies.get(row['policy_id'], (row['policy_sha256'], 0))
+        if old_policy != row['policy_sha256']:
+            _fail()
+        if row['state'] != 'failed_before_send':
+            calls += 1
+        # Vendor usage can exceed the reserved ceiling. Preserve that receipt;
+        # only subsequent execution is blocked by the runtime budget ledger.
+        if calls > policy.max_calls:
+            _fail()
+        policies[row['policy_id']] = old_policy, calls
+
+
+def validate_model_records(db, *, allowed=True):
+    """Validate every model record; skip only positively identified older schemas."""
+    schema = [tuple(row) for row in db.execute(text(
+        'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+    native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
+    version = identify_schema(schema, native=native)
+    if version in ('pre-intake','intake-v1','assistant-v1','assistant-attachments-v1'):
+        return
+    if version != 'assistant-model-v1':
+        raise ValueError('DATABASE_SCHEMA_MISMATCH')
+    attempts = db.execute(text('SELECT * FROM assistant_model_attempts ORDER BY created_at,id')).mappings().all()
+    receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_receipts')).mappings()}
+    outputs = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_outputs')).mappings()}
+    model_runs = set(db.scalars(text('''SELECT id FROM assistant_runs r WHERE selected_provider IS NOT NULL
+        OR selected_model IS NOT NULL OR budget_json IS NOT NULL OR EXISTS (
+            SELECT 1 FROM assistant_run_events e WHERE e.run_id=r.id AND e.event_type LIKE 'model.%')''')))
+    if model_runs != {r['run_id'] for r in attempts}:
+        _fail()
+    if not attempts and not receipts and not outputs:
+        return
+    if not allowed:
+        raise ValueError('ASSISTANT_MODELS_REQUIRE_QXBAK')
+    identities = db.scalars(text('SELECT id FROM local_workspace_identity')).all() if native else []
+    if len(identities) != 1:
+        _fail()
+    if not (set(receipts) | set(outputs)) <= {r['id'] for r in attempts}:
+        _fail()
+    try:
+        # Pydantic decimal digit validation also normalizes using this context.
+        with localcontext(Context(prec=60)):
+            _validate(db, attempts, receipts, outputs, _uuid(identities[0]))
+    except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
+        # Archive errors must not interpolate source text or model bodies.
+        raise ValueError('ASSISTANT_MODEL_INTEGRITY') from None

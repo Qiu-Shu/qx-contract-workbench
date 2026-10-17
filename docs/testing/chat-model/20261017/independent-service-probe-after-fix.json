@@ -1,0 +1,23 @@
+{
+  "budget": {
+    "budget": "0.049152",
+    "first_estimated_cost": "0.3",
+    "second_state": "failed_before_send",
+    "second_provider_calls_after_budget_exceeded": 0
+  },
+  "cancel": {
+    "cancelled_attempt_state": "failed_before_send",
+    "cancelled_receipt": {
+      "state": "failed_before_send",
+      "provider_request_id": null,
+      "usage": null,
+      "cost_status": "not_sent",
+      "estimated_cost_usd": "0",
+      "unit": "USD",
+      "error_code": "BLOCKED_LIVE"
+    },
+    "execute_error": null,
+    "next_enqueue_error": null,
+    "provider_calls": 0
+  }
+}

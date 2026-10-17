@@ -218,6 +218,11 @@ def build_local_app(directory, *, port=8767, library_root=None, data_parent=None
             with _worker_lock(root):
                 if bridge: bridge.close()
                 try:
+                    from ..assistant.providers.attempts import recover_attempts
+                    from ..ops.storage import quarantined
+                    with database.session() as db:
+                        if not quarantined(db):
+                            recover_attempts(db)
                     async with worker_lifespan(application):
                         yield
                 finally:

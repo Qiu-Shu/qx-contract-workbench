@@ -1,0 +1,24 @@
+{
+  "scope": "Native startup recovery of pending assistant model attempts; independent synthetic workspaces only",
+  "product_files": ["src/cn_contract/web/local_server.py"],
+  "test_files": ["tests/integration/test_assistant_model_startup.py"],
+  "red": {"tests": 5, "failed": 3, "passed": 2, "exit_code": 1, "seconds": 7.13, "evidence": "startup-red.xml"},
+  "green": {"tests": 5, "passed": 5, "exit_code": 0, "seconds": 6.34, "evidence": "startup-green.xml"},
+  "regression": {
+    "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_assistant_model_startup.py tests/integration/test_local_workbench.py tests/integration/test_local_worker_contention.py -q --tb=short --junitxml=.local/chat-model-20261017/startup-regression.xml",
+    "tests": 37, "passed": 37, "exit_code": 0, "seconds": 32.43, "evidence": "startup-regression.xml"
+  },
+  "confirmed": [
+    "Worker OS lock held; model recovery committed before old worker starts",
+    "reserved becomes failed_before_send/not_sent; sending becomes sent_unknown/unknown",
+    "Completed outputs and receipts retained; second startup leaves model history identical",
+    "Retrying recovered attempts through runner performs no new provider call",
+    "Actual qxbak restore stays quarantined, does not call startup model recovery, rejects writes",
+    "Recovery failure rolls back, starts no worker, and releases OS lock"
+  ],
+  "source_sha256": {
+    "src/cn_contract/web/local_server.py": "788bf0ef1b5a15bb574a9f38d1e6e6bf0d27bebb7f06f4bd272b7a2e9b7c1298",
+    "tests/integration/test_assistant_model_startup.py": "9f6c15e21b8dbbf80dac8331d5fb6be027982ba1e91acf8cbdc47029be912231"
+  },
+  "limitations": "Not a packaged executable startup probe; no real provider, credentials, or private material used. Main transport config snapshot race reported separately to parent."
+}

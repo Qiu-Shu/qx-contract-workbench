@@ -29,7 +29,7 @@ def test_old_assistant_schema_is_frozen_and_upgrades_additively(tmp_path):
     with closing(assistant_database(tmp_path/'old.db')) as connection:
         before = rows(connection)
         assert identify_schema(before) == 'assistant-v1'
-        assert CURRENT_VERSION == 'assistant-attachments-v1'
+        assert set(before) < set(schema_rows('assistant-attachments-v1'))
         assert upgrade_database(connection) == CURRENT_VERSION
         assert rows(connection) == schema_rows(CURRENT_VERSION)
         assert set(before).issubset(rows(connection))

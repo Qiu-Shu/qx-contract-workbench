@@ -162,6 +162,8 @@ def validate_raw_database(path, settings, *, expected_schema=None):
 def _file_references(db, *, allow_assistant=True):
     from ..exports.storage import ExportRecordRow, sha
     from ..assistant.attachment_integrity import file_references
+    from ..assistant.model_integrity import validate_model_records
+    validate_model_records(db, allowed=allow_assistant)
     items = file_references(db, allowed=allow_assistant)
     for row in db.scalars(select(DocumentRow)):
         value = strict_json(row.payload.encode())

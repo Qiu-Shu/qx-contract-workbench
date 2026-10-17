@@ -1,0 +1,44 @@
+{
+  "original_probe_sha256": "2df49f3e5a31be5e63edf361bb07dd4fbe3bed5e66e8c503ad1d95da855d819f",
+  "before_evidence_sha256": "d4054cbe3fac72740ca5b0ff5555471fae477edc27aefb59c8aec9134232a888",
+  "error_code": "ASSISTANT_MODEL_INTEGRITY",
+  "frames": [
+    {
+      "file": "model_event_sequence_after_fix.py",
+      "line": 19,
+      "function": "<module>"
+    },
+    {
+      "file": "<frozen runpy>",
+      "line": 287,
+      "function": "run_path"
+    },
+    {
+      "file": "<frozen runpy>",
+      "line": 98,
+      "function": "_run_module_code"
+    },
+    {
+      "file": "<frozen runpy>",
+      "line": 88,
+      "function": "_run_code"
+    },
+    {
+      "file": "model_event_sequence_probe.py",
+      "line": 31,
+      "function": "<module>"
+    },
+    {
+      "file": "backup.py",
+      "line": 166,
+      "function": "_file_references"
+    },
+    {
+      "file": "model_integrity.py",
+      "line": 240,
+      "function": "validate_model_records"
+    }
+  ],
+  "rejected_before_backup": true,
+  "before_evidence_unchanged": true
+}

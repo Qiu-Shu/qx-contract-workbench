@@ -52,11 +52,15 @@ Run existing Node suite and applicable Python regressions, plus the full Python 
 - CH-02: local-draft homepage implemented, independently reviewed and verified by the final 2,094-test full regression. Generation, attachments and profile panels remain later integration work.
 - CH-03A: conversation-owned DOCX intake, immutable source/parse/snapshot records, source panel and native qxbak recovery verified. Final single full regression: 2,171 passed, no failures/errors/skips, exit0, 1,814.65s; 426 input files unchanged and collection/JUnit identities match. Browser11, final frozen EXE7, development Electron9 and four gates passed. Remaining CH-03 and CH-04 through CH-11 stay pending. Do not redo old T00-T13 work or library imports.
 
+- CH-04A: controlled provider/attempt/receipt services and native recovery verified; HTTP task management, settings and homepage consumption remain next. No real external processing is enabled.
+
 ## Review focus
 
 No new model permission, no parser checks removed, no dependence on preloaded test modules, no optional dependency accidentally omitted by PyInstaller, no resources removed outside the supported build process, no performance numbers extrapolated to unseen hardware. The original desktop/backup/library paths must remain usable.
 
 ## Execution log
+
+- 2026-10-17 CH-04A after114a1ab verified: explicit single-message DeepSeek transport, immutable wire/config/policy ledger, no-retry runner, body-free usage receipt and internal unverified output implemented as separate modules. Final full session3206 ended exit0 with2,348 passed/2 isolated-runtime skips (JUnit1,924.975s); the exact2 DuckDB cases then passed in the existing isolated runtime. All2,350 distinct collected cases covered, no unresolved failures/skips,451 stable input hashes;388 targeted cases are included, not added. Four development gates, final frozen backend and separate synthetic HTTP helper passed;201 stable build inputs, exactly1 loopback POST. Four independently reproduced defects closed. Earlier6904 and pre-event-fix builds are preserved historical evidence, never counted as final pass. No installed replacement, real credential/model, UI send, Jev or automatic profile. [Evidence](../testing/chat-model/20261017/README.md), [next HTTP/UI readiness](2026-10-17-main-model-http-readiness.md).
 
 - 2026-10-17 CH-04 preparation during frozen regression: [source-based connection map](2026-10-17-main-model-readiness.md) records reusable authorization/ledger algorithms and the next bounded provider/attempt/runner seam. Historical queued tasks do not grant external processing; local attachment policy stays external=false, unknown billing needs its own DTO, and existing egress is synthetic-loopback only. This is implementation preparation, not a new user design interview or working main-model/Jev connection. No keys read, network model calls or frozen source changes.
 

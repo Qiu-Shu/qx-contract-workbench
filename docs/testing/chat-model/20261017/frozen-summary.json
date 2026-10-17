@@ -1,0 +1,47 @@
+{
+  "status": "passed",
+  "source_inputs": 201,
+  "source_sha256": "144012e66c2f03e68c46613d925a6282cd7ec54b2ab1535c3ff6badc1e2a9444",
+  "source_unchanged_during_build": true,
+  "scope": "private backend build and separate frozen synthetic loopback helper",
+  "installed_application_modified": false,
+  "real_model_or_account_used": false,
+  "runs": {
+    "frozen-backend-smoke": {
+      "exit_code": 0,
+      "elapsed_seconds": 4.34,
+      "stdout_bytes": 723,
+      "stderr_bytes": 0
+    },
+    "frozen-model-helper-run": {
+      "exit_code": 0,
+      "elapsed_seconds": 1.697,
+      "stdout_bytes": 1265,
+      "stderr_bytes": 0
+    }
+  },
+  "bundles": {
+    "backend": {
+      "directory": "D:\\Documents\\ChatGPT\\律所项目\\.local\\chat-model-20261017\\frozen-backend-final\\qx-backend",
+      "file_count": 546,
+      "total_bytes": 96153813,
+      "total_MiB": 91.699,
+      "main_exe_bytes": 15513211,
+      "main_exe_MiB": 14.795,
+      "main_exe_sha256": "62d019a884c76d556c2a29ca99484540bc1a86bd572ee08985ef01ecd7759148"
+    },
+    "synthetic_helper": {
+      "directory": "D:\\Documents\\ChatGPT\\律所项目\\.local\\chat-model-20261017\\frozen-model-helper\\qx-model-probe",
+      "file_count": 546,
+      "total_bytes": 96141085,
+      "total_MiB": 91.687,
+      "main_exe_bytes": 15500483,
+      "main_exe_MiB": 14.782,
+      "main_exe_sha256": "2eb9bcc6e35f20b657c82924c1c3e35403086cb4555a27a1859ed24c5c6399ef"
+    }
+  },
+  "helper_report": "D:\\Documents\\ChatGPT\\律所项目\\.local\\chat-model-20261017\\冻结 合成模型回执 840f66e6\\report.json",
+  "backend_report": "D:\\Documents\\ChatGPT\\律所项目\\.local\\chat-model-20261017\\frozen-backend-smoke.json",
+  "loopback_post_count": 1,
+  "httpx2_version": "2.13.1"
+}

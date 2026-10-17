@@ -320,6 +320,8 @@ def cancel_run(actor, identifier, request: d.AssistantCancelInput, db):
             {'id':str(identifier), 'seq':sequence, 'type':event_type, 'at':_at(),
              'payload':canonical_json({'request_id':str(request.request_id),
                  'previous_state':row['state'], 'state':state, 'cancel_requested':True})})
+        from .providers.attempts import cancel_reserved_for_run
+        cancel_reserved_for_run(identifier, db)
     return get_run(actor, identifier, db)
 
 
