@@ -1,0 +1,15 @@
+✔ entry rechecks readiness after input changes and returns to the saved text (5.9614ms)
+✔ entry rechecks readiness after a skill selection is immediately cancelled (1.3985ms)
+✔ unknown network outcome repeated send and refresh use original lookup without resubmission (1.3539ms)
+✔ late capability success cannot authorize another conversation (1.0835ms)
+✔ history response for a former binding is rejected and cannot be displayed (0.9024ms)
+✔ a delayed history authorization error after revocation cannot restore old state (0.604ms)
+✔ a failed capability read is attempted once and does not create an automatic retry loop (0.693ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 70.0568

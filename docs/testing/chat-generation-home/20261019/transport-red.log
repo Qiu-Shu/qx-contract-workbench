@@ -1,0 +1,26 @@
+✔ same-origin transport carries CSRF only on writes and preserves original request identity (1.1536ms)
+✔ network and invalid responses are unknown, not proof a write failed (1.4684ms)
+✖ generation transport keeps registration explicit and history bounded to requested identities (0.3773ms)
+✔ transport abandons a stalled connection with an unknown outcome (0.3799ms)
+✔ Enter, Shift+Enter, held keys and composition boundaries keep native input intact (5.7184ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72.6043
+
+✖ failing tests:
+
+test at scripts\test_assistant_transport_input.mjs:35:1
+✖ generation transport keeps registration explicit and history bounded to requested identities (0.3773ms)
+  TypeError: api.getGenerationCapability is not a function
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_transport_input.mjs:40:15)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

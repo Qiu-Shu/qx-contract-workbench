@@ -1,0 +1,83 @@
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\������Ŀ\.local\chat-generation-home-20261019\read_recovery_probe.py", line 26, in <module>
+    expect(page.locator('#refresh-run')).to_be_visible()
+  File "D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 23501, in to_be_visible
+    self._sync(
+  File "D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 852, in to_be_visible
+    await self._expect_impl(
+  File "D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 128, in _expect_impl
+    _record_soft_or_raise(
+  File "D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 60, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to be visible
+Actual value: hidden 
+Call log:
+  - Expect "to_be_visible" locator("#refresh-run") with timeout 5000ms
+  - waiting for locator("#refresh-run")
+    14 �� locator resolved to <button hidden="" type="button" id="refresh-run" class="text-button">ˢ��״̬</button>
+       - unexpected value "hidden"
+
+Aria snapshot:
+- link "���������":
+  - /url: "#composer"
+- complementary "����̨����":
+  - link "Ⱥ�˷��ɹ���̨���Ի���ҳ":
+    - /url: /assistant
+    - text: Ⱥ�� ���ɹ���̨
+  - button "�¶Ի�"
+  - navigation "��������":
+    - heading "��������" [level=2]
+    - button "�ظ��ͻ�"
+    - button "��������"
+    - button "����ͬ"
+    - button "�����İ�"
+  - region "�����¼":
+    - heading "�����¼" [level=2]
+    - button "�¶Ի�"
+  - navigation "���й�����":
+    - link "��������Ӵ�":
+      - /url: /workspace
+    - link "��ͬ����̨":
+      - /url: /
+  - text: ��ҳ���ɺϳ���ʦ
+  - button "�˳���¼"
+- main:
+  - paragraph: ���������ݸ� �� �ܿ�����
+  - text: �Ķ��ֺ�
+  - combobox "�Ķ��ֺ�":
+    - option "��׼ 16" [selected]
+    - option "�ϴ� 18"
+    - option "��� 20"
+  - heading "�¶Ի�" [level=1]
+  - paragraph: ��ǰ��Χ�����ζԻ�
+  - region "�Ի���¼"
+  - region "���롢���������ɲݸ�":
+    - button "�ظ��ͻ� ����������֯�ظ�":
+      - strong: �ظ��ͻ�
+      - text: ����������֯�ظ�
+    - button "�������� �����������г�ȱ��":
+      - strong: ��������
+      - text: �����������г�ȱ��
+    - button "����ͬ �˶�����������":
+      - strong: ����ͬ
+      - text: �˶�����������
+    - button "�����İ� ����ѡ�⣬�������":
+      - strong: �����İ�
+      - text: ����ѡ�⣬�������
+    - paragraph: �Զ�ѡ������
+    - group: ��������
+    - text: ��ѯ�����빤���ݸ�
+    - textbox "��ѯ�����빤���ݸ�":
+      - /placeholder: ���磺�ͻ�������ʲô���⣬��Ҫ���ǰ�æ����ʲô����
+      - text: �����ϳɵ�һ�ʣ��������鹹������ѯ��
+    - button "���Ӳ���"
+    - button "����ݸ�"
+    - button "����" [disabled]
+    - status: �ݸ��ѱ��浽����
+    - paragraph: Enter ���ͣ�Shift+Enter ���У���ǰ���Ͳ����á�
+    - paragraph: ���벢�������ֺ󣬽��˶Ե�ǰ����������
+    - status: ����״̬δ��ȷ�ϡ���ˢ�¼�¼��˶ԡ�
+    - group: ��ǰ���÷�Χ��˵��

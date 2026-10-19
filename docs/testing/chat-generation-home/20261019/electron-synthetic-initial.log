@@ -1,0 +1,98 @@
+PASS actual_main_provision_login_home_and_original_sandbox_preload_policy
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\.local\chat-generation-home-20261019\electron_home_probe.py", line 151, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.local\chat-generation-home-20261019\electron_home_probe.py", line 90, in main
+    expect(page.locator('.generation-output').last).to_have_text(OUTPUT)
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 23008, in to_have_text
+    self._sync(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 648, in to_have_text
+    await self._expect_impl(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 128, in _expect_impl
+    _record_soft_or_raise(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 60, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to have text '独立合成Electron候选：交货日期仍需律师核对消息原文。'
+Actual value: None
+Error: element(s) not found 
+Call log:
+  - Expect "to_have_text" locator(".generation-output").last with timeout 20000ms
+  - waiting for locator(".generation-output").last
+
+Aria snapshot:
+- link "跳到输入框":
+  - /url: "#composer"
+- complementary "工作台导航":
+  - link "群兴法律工作台，对话首页":
+    - /url: /assistant
+    - text: 群兴 法律工作台
+  - button "新对话"
+  - navigation "常用能力":
+    - heading "常用能力" [level=2]
+    - button "回复客户"
+    - button "整理资料"
+    - button "审查合同"
+    - button "创作文案"
+  - region "最近记录":
+    - heading "最近记录" [level=2]
+    - button "新对话"
+  - navigation "已有工作区":
+    - link "工作区与接待":
+      - /url: /workspace
+    - link "合同工作台":
+      - /url: /
+  - text: 合成Electron律师
+  - button "退出登录"
+- main:
+  - paragraph: 本机工作草稿 · 受控生成
+  - text: 阅读字号
+  - combobox "阅读字号":
+    - option "标准 16" [selected]
+    - option "较大 18"
+    - option "大号 20"
+  - heading "新对话" [level=1]
+  - paragraph: 当前范围：本次对话
+  - region "对话记录":
+    - article:
+      - paragraph: 律师输入
+      - paragraph: 独立合成Electron验收：请列出虚构交货日期的待核事项。
+      - region "生成结果与费用":
+        - paragraph: 模型生成 · 内部草稿 · 待核对
+        - paragraph: 未经律师审核，不是正式法律意见。
+        - paragraph: 独立合成Electron候选：交货日期仍需律师核对消息原文。
+        - link "核对本次输入原文":
+          - /url: "#message-af84673e-8341-40c2-a561-f1733dace50e"
+        - paragraph: 估算费用 0.0000234 USD；实际扣费待核对。
+  - region "最近任务":
+    - status: 最近任务：任务已完成
+    - button "刷新状态"
+  - region "输入、保存与生成草稿":
+    - button "回复客户 理清诉求，组织回复":
+      - strong: 回复客户
+      - text: 理清诉求，组织回复
+    - button "整理资料 梳理经过，列出缺口":
+      - strong: 整理资料
+      - text: 梳理经过，列出缺口
+    - button "审查合同 核对条款，整理意见":
+      - strong: 审查合同
+      - text: 核对条款，整理意见
+    - button "创作文案 整理选题，起草内容":
+      - strong: 创作文案
+      - text: 整理选题，起草内容
+    - paragraph: 自动选择能力
+    - group: 更多能力
+    - text: 咨询内容与工作草稿
+    - textbox "咨询内容与工作草稿":
+      - /placeholder: 例如：客户遇到了什么问题，需要我们帮忙处理什么……
+    - button "添加材料"
+    - button "保存草稿"
+    - button "发送" [disabled]
+    - status: 草稿已保存到本机
+    - paragraph: Enter 发送，Shift+Enter 换行；当前发送不可用。
+    - paragraph: 先输入并保存文字，再核对能否生成。
+    - status
+    - group: 当前可用范围与说明

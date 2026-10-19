@@ -1,0 +1,111 @@
+{
+  "baseline": "f218f44",
+  "slice": "CH-04C",
+  "status": "engineering_slice_verified_not_production",
+  "targeted_pytest": {
+    "distinct_tests": 223,
+    "passed": 223,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "junit_seconds": 132.292,
+    "source_files": 348,
+    "sources_unchanged": true,
+    "includes_frontend_wrappers": 7,
+    "includes_new_history_tests": 25
+  },
+  "new_frontend_groups": {
+    "generation_state": 27,
+    "render": 12,
+    "independent_entry": 7,
+    "transport_total": 5,
+    "counting": "These run inside frontend wrappers; do not add to the 223 pytest count."
+  },
+  "browser": {
+    "final_groups": 11,
+    "loopback_posts": 6,
+    "external_requests": 0,
+    "page_errors": 0,
+    "csp_violations": 0,
+    "independent_first_read_recovery_checks": 3,
+    "visual_keyboard_groups": 4,
+    "screens_initial": 6,
+    "screens_confirmation": 1
+  },
+  "desktop": {
+    "status": "passed",
+    "source_files": 205,
+    "source_sha256": "b31bb2d3f69fb74c5f5151acbd01a262f7d1079660e999be9bac115645a94208",
+    "build_inputs_unchanged": true,
+    "desktop_source_mismatch": [],
+    "frozen_exe_sha256": "17e6bb2241caaa10335546ffda42c062c242392654d679fab570b1f6d37eb9af",
+    "frozen_package_files": 547,
+    "frozen_package_bytes": 96189838.0,
+    "build_log_warning_lines": 4,
+    "frozen_backend_groups": 4,
+    "default_electron_groups": 4,
+    "synthetic_electron_groups": 5,
+    "synthetic_upstream_posts": 1,
+    "real_model_calls": 0,
+    "reports": [
+      "frozen-backend-home-report.json",
+      "electron-default-verified/report.json",
+      "electron-synthetic-verified/report.json"
+    ],
+    "not_validated": [
+      "installer update or installation",
+      "production provider",
+      "real materials",
+      "Windows packaged Electron installer"
+    ]
+  },
+  "development_gates": {
+    "targeted": {
+      "exit": 0,
+      "seconds": 134.26600000000053
+    },
+    "defaults": {
+      "exit": 0,
+      "seconds": 0.3429999999998472
+    },
+    "sources": {
+      "exit": 0,
+      "seconds": 1.9380000000001019
+    },
+    "dependencies": {
+      "exit": 0,
+      "seconds": 0.46900000000005093
+    },
+    "schema": {
+      "exit": 0,
+      "seconds": 0.3429999999998472
+    }
+  },
+  "review": {
+    "closed_p2_issues": 2,
+    "closed_regression_extra_read": 1,
+    "unresolved_in_review_scope": 0,
+    "workbuddy_task": "wb-fd133d592937",
+    "workbuddy_reads": 3,
+    "workbuddy_runtime_testing": false
+  },
+  "limits": [
+    "No full Python suite this slice",
+    "No real provider calls",
+    "No installer or installed app changes",
+    "Synthetic composition events are not physical IME acceptance",
+    "No physical Windows DPI validation",
+    "Model settings, skills, attachments in generation, Jev and automatic profiles remain follow-up work",
+    "No Git push or cloud deployment"
+  ],
+  "post_test_whitespace_cleanup": [
+    {
+      "path": "scripts/test_assistant_generation_entry.mjs",
+      "tested_sha256": "d6221c8043e51c0f7fcd83d0bc752a74bd51f38460b52a474c6234372b4cac6a",
+      "current_sha256": "574aea8fa36875326f2c3ab7fa4935a800d0a5a32562627c0e7d19fe1c9f3181",
+      "change": "One final empty line removed after whitespace check; seven entry probes rerun and passed."
+    }
+  ],
+  "git_line_ending_differences": 15
+}

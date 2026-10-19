@@ -1,0 +1,66 @@
+✔ send follows the generation gate and existing draft/readonly guards (2.1413ms)
+✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.6181ms)
+✔ capability states give distinct truthful explanations (0.6992ms)
+✔ results stay with their matching input in chronological history and have source anchors (1.7873ms)
+✔ model text remains literal with whitespace and source links only target loaded messages (0.5977ms)
+✔ unrelated items and prior conversation content are cleared on switching or revocation (0.4167ms)
+✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.38ms)
+✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.4595ms)
+✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.2833ms)
+✔ initial template keeps send disabled, recovery hidden and describes controlled generation (0.4863ms)
+✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.2752ms)
+✔ late parse completion cannot reopen a preview explicitly closed by the lawyer (6.745ms)
+✔ late parse completion cannot replace a newer attachment preview (1.409ms)
+✔ switching conversations suppresses the prior parse callback while the target is loading (1.2735ms)
+✔ new conversation clears prior material rows, preview and unsubmitted picker selection (0.7497ms)
+✔ revocation clears materials immediately and a delayed source response stays discarded (0.8693ms)
+✔ successful unknown-upload reconciliation disarms the picker instead of creating another receipt (0.9006ms)
+PASS attachment-only action creates one conversation and never clears text typed during upload
+PASS unknown upload checks receipt before retry, retains chosen file and never duplicates
+PASS revocation clears pending attachment and late response cannot repopulate another view
+PASS material scope conflict preserves text and file until explicit resolution
+4 attachment state groups passed
+✔ scripts\test_assistant_material_state.mjs (46.8778ms)
+PASS blank and skill selection do not create records; read-only never writes
+PASS single save channel preserves input typed during an older acknowledgement
+PASS unknown creation requires explicit retry and preserves its original request identity
+PASS unknown write is reconciled by exact scope, revision and content before newer input saves
+PASS unknown write not committed can replay only after unchanged baseline is read
+PASS unknown write scope mismatch retains both drafts until explicit choice
+PASS unknown write revision mismatch retains both drafts until explicit choice
+PASS unknown write content mismatch retains both drafts until explicit choice
+PASS version conflict allows explicitly keeping local text against the new server version
+PASS refresh never overwrites unsaved input and detects independent remote edits
+PASS switch waits for save and rejects switching after failed persistence
+PASS late page reads and revocation cannot contaminate a newer conversation
+PASS current permission revocation clears text, history, skill and identity immediately
+PASS older pages deduplicate in chronological order and preserve pending input
+PASS empty page with a cursor can keep paging; refresh retains already loaded history
+PASS cancel reads the persisted result and preserves unsaved text
+PASS close discards delayed replies and removes in-memory content
+PASS unknown write stays dirty even when the user edits back to the saved baseline
+PASS create replay cannot silently overwrite a draft edited in another window
+PASS a late refresh cannot roll back a completed newer save
+PASS disjoint refreshed history starts its own cursor instead of hiding unread messages
+PASS an older read finishing does not release the busy guard on a newer read
+PASS a failed page read leaves no old identity available for accidental draft saves
+PASS late create response after close cannot change identity or notify the page
+PASS replayed PUT racing the original can recognize the original successful write
+PASS external 401 revocation clears unknown writes and rejects delayed reconciliation
+PASS external 403 revocation clears unknown writes and rejects delayed reconciliation
+PASS external non-authorization errors cannot clear conversation data
+28 assistant state checks passed
+✔ scripts\test_assistant_state.mjs (49.3368ms)
+✔ same-origin transport carries CSRF only on writes and preserves original request identity (1.1201ms)
+✔ network and invalid responses are unknown, not proof a write failed (1.4503ms)
+✔ generation transport keeps registration explicit and history bounded to requested identities (1.2361ms)
+✔ transport abandons a stalled connection with an unknown outcome (0.3508ms)
+✔ Enter, Shift+Enter, held keys and composition boundaries keep native input intact (1.2727ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 80.5848

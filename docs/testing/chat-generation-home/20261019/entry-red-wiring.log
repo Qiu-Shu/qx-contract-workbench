@@ -1,0 +1,25 @@
+PAGE_ERRORS []
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\.local\chat-generation-home-20261019\entry_red_probe.py", line 23, in <module>
+    expect(page.locator('#send')).to_be_enabled(timeout=5000)
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 23378, in to_be_enabled
+    self._sync(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 807, in to_be_enabled
+    await self._expect_impl(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 128, in _expect_impl
+    _record_soft_or_raise(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 60, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to be enabled
+Actual value: disabled 
+Call log:
+  - Expect "to_be_enabled" locator("#send") with timeout 5000ms
+  - waiting for locator("#send")
+    14 × locator resolved to <button disabled id="send" type="submit" class="quiet-button" aria-describedby="generation-note generation-status">发送</button>
+       - unexpected value "disabled"
+
+Aria snapshot:
+- button "发送" [disabled]

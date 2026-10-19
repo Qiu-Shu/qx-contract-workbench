@@ -19,31 +19,103 @@ const runText = {
 };
 const skillText = {client_reply:'回复客户',material_organize:'整理资料',contract_review:'审查合同',
   content_draft:'创作文案',legal_research:'检索法律资料'};
+const generationCapabilityText = {
+  unconfigured:'当前环境未配置或未启用模型生成。可以继续保存本机草稿。',
+  unapproved:'这份已保存的文字尚未取得有效的生成授权。请核对授权范围与有效期。',
+  empty:'先输入并保存文字，再核对能否生成。',
+  unsupported:'当前材料或输入范围不支持生成。含 DOCX 的对话暂不参与模型生成。',
+  busy:'当前有任务正在处理，暂不能再次发送。可刷新最近任务状态。',
+  budget_exhausted:'本次授权的预算或调用次数已用尽，暂不能发送。',
+  restored_read_only:'恢复副本只读，可核对已有结果，不能发送或继续历史任务。',
+  ready:'可为这份已保存且获准的文字生成内部草稿；结果仍需律师核对。',
+};
+const generationErrorText = error=>({
+  NETWORK_UNKNOWN:'发送结果尚不确定。请查找发送结果，避免重复发送。',
+  NOT_SUPPORTED:'当前选择的能力或材料范围尚未接入生成。',
+  BLOCKED_LIVE:'生成未获准。请核对当前环境、授权与预算。',
+  AUTHORIZATION_REQUIRED:'登录已失效。请重新登录后核对生成结果。',
+  CROSS_MATTER_DENIED:'当前无权访问生成结果，已清除页面内容。',
+  VERSION_CONFLICT:'输入或材料版本已变化。请重新读取记录并核对生成条件。',
+  STATE_CONFLICT:'当前状态暂不能生成。请刷新记录后核对。',
+  MODEL_OUTPUT_INVALID:'已收到响应，但内容未通过校验，未形成可展示草稿。',
+  PROVIDER_ERROR:'本次生成未取得可用结果，请核对任务与费用记录。',
+}[error?.code] || '生成状态未能确认。请刷新记录后核对。');
+const attemptText = {
+  reserved:'生成已登记，等待处理。',sending:'正在生成，等待返回。',
+  sent_unknown:'发送结果未知，停止自动续发；实际费用仍待核对。',
+  received:'已收到响应，未形成可展示的内部草稿。',failed_before_send:'发送前已停止，未生成草稿。',
+};
 const node = (tag,text,className)=>{ const element=document.createElement(tag); if(text!==undefined)element.textContent=text;
   if(className)element.className=className; return element; };
 
+function renderAttempt(attempt,visible) {
+  const section=node('section',undefined,'generation-result');
+  section.dataset.attemptId=attempt.id;section.setAttribute('aria-label','生成结果与费用');
+  const output=attempt.state==='received' && attempt.output?.audience==='internal' &&
+    attempt.output.review_status==='unverified' ? attempt.output : null;
+  section.append(node('p',output?'模型生成 · 内部草稿 · 待核对':'模型生成 · 状态记录','generation-meta'));
+  if(output) {
+    section.append(node('p','未经律师审核，不是正式法律意见。','generation-note'),
+      node('p',output.candidate.text,'generation-text'));
+    const links=node('div',undefined,'generation-sources');
+    for(const citation of output.candidate.citations || []) {
+      if(!visible.has(citation.message_id))continue;
+      const link=node('a','核对本次输入原文');link.href='#message-'+citation.message_id;
+      links.append(link);
+    }
+    if(links.children.length)section.append(links);
+    else section.append(node('p','未提供可定位到当前记录的原文引用。','generation-note'));
+  } else section.append(node('p',attemptText[attempt.state] || '生成状态待核对。','generation-note'));
+  const receipt=attempt.receipt;
+  if(receipt?.error_code)section.append(node('p',generationErrorText({code:receipt.error_code}),'generation-note'));
+  const cost=receipt?.cost_status==='estimated' && receipt.estimated_cost_usd!==null
+    ?'估算费用 '+receipt.estimated_cost_usd+' USD；实际扣费待核对。'
+    :receipt?.cost_status==='not_sent'?'已确认未发送，费用 0 USD。'
+      :'费用未知；预算预留 '+attempt.reserved_usd+' USD，不代表实际扣费。';
+  section.append(node('p',cost,'generation-cost'));return section;
+}
+
 export function createRenderer(root=document,{isComposing=()=>false}={}) {
   const byId=id=>root.getElementById(id);
+  const renderedAttempts=new WeakMap();
   let previousId=null;
   return {
     state(state,readonly=false) {
       const input=byId('composer');
       if((state.status==='revoked' || !isComposing()) && input.value!==state.text)input.value=state.text;
       input.disabled=readonly || state.loading || state.status==='revoked';
-      const messages=state.view?.messages || [];
+      const revoked=state.status==='revoked';
+      const messages=revoked || (state.view?.scope?.conversation_id && state.view.scope.conversation_id!==state.id)
+        ?[]:state.view?.messages || [];
+      const generation=state.generation;
       const history=byId('history');
       if(previousId!==state.id)history.replaceChildren();
       previousId=state.id;
       const visible=new Set(messages.map(message=>message.id));
+      const visibleKey=Array.from(visible).join(',');
+      const attemptsByMessage=new Map();
+      for(const item of generation?.items || []) {
+        if(!visible.has(item.message_id) || item.attempt.scope?.conversation_id!==state.id)continue;
+        if(!attemptsByMessage.has(item.message_id))attemptsByMessage.set(item.message_id,[]);
+        attemptsByMessage.get(item.message_id).push(item.attempt);
+      }
       Array.from(history.children).forEach(item=>{if(!visible.has(item.dataset.messageId))item.remove();});
       const existing=new Map(Array.from(history.children).map(item=>[item.dataset.messageId,item]));
       let position=history.firstChild;
       for(const message of messages) {
         let item=existing.get(message.id);
         if(!item) {
-          item=node('article',undefined,'message'); item.dataset.messageId=message.id;
+          item=node('article',undefined,'message'); item.dataset.messageId=message.id;item.id='message-'+message.id;
+          item.setAttribute('tabindex','-1');
           item.append(node('p',message.role==='user'?'律师输入':'已保存的回复 · 需核对','message-meta'),
             node('p',message.content,'message-text'));
+        }
+        const attempts=message.role==='user'?attemptsByMessage.get(message.id) || []:[];
+        const signature=JSON.stringify([visibleKey,attempts]);
+        if(renderedAttempts.get(item)!==signature) {
+          item.querySelectorAll('.generation-result').forEach(element=>element.remove());
+          for(const attempt of attempts)item.append(renderAttempt(attempt,visible));
+          renderedAttempts.set(item,signature);
         }
         if(item!==position)history.insertBefore(item,position);
         else position=position.nextSibling;
@@ -71,14 +143,27 @@ export function createRenderer(root=document,{isComposing=()=>false}={}) {
       byId('older-messages').disabled=state.loading;
       const run=state.view?.latest_run;
       byId('run-status').textContent=run?'最近任务：'+(runText[run.state]||'状态待核对')+(run.cancel_requested && run.state!=='cancelled'?'；已请求取消':''):'';
-      byId('refresh-run').hidden=!run;
+      byId('refresh-run').hidden=!run && generation?.phase!=='error';
       byId('refresh-run').disabled=state.loading || state.status==='saving';
       byId('cancel-run').hidden=!run || !['queued','preparing','routing','retrieving','generating','persisting','awaiting_input'].includes(run.state);
       byId('cancel-run').disabled=readonly || state.loading || state.status==='saving';
       byId('conflict-panel').hidden=!state.conflict;
       byId('server-draft').textContent=state.conflict?.server || '（服务器草稿为空）';
       byId('new-conversation').disabled=readonly || state.loading || state.status==='saving' || state.status==='revoked';
-      byId('send').disabled=true;
+      const phase=generation?.phase || 'idle';
+      byId('send').disabled=generation?.canSend!==true || readonly || state.loading || Boolean(state.skill) ||
+        ['saving','conflict','readonly','revoked'].includes(state.status) || ['checking','submitting','unknown','tracking'].includes(phase);
+      byId('generation-note').textContent=revoked?'访问已结束。':readonly || state.status==='readonly'
+        ?generationCapabilityText.restored_read_only:state.skill?'该能力尚未接入执行。取消选择后可核对普通文字的生成条件。'
+          :generationCapabilityText[generation?.capability?.state] || '输入并保存文字后，将核对当前生成条件。';
+      const phaseText={checking:'正在核对生成条件…',submitting:'正在提交生成请求…',
+        unknown:'发送结果尚不确定。请查找发送结果，避免重复发送。',tracking:'生成已登记，正在核对结果…'};
+      byId('generation-status').textContent=revoked?'':phaseText[phase] ||
+        (phase==='error'?generationErrorText(generation?.error):'');
+      byId('generation-status').dataset.kind=['unknown','error'].includes(phase)?'error':'';
+      byId('recover-generation').hidden=revoked || phase!=='unknown';
+      byId('recover-generation').disabled=state.loading || revoked;
+      byId('input-help').textContent='Enter 发送，Shift+Enter 换行；'+(byId('send').disabled?'当前发送不可用。':'发送后生成内部待核草稿。');
       byId('add-material').disabled=readonly || state.loading || ['saving','conflict','revoked'].includes(state.status);
     },
     conversations(page,{append=false,selected=null,onSelect}={}) {
@@ -101,7 +186,7 @@ export function createRenderer(root=document,{isComposing=()=>false}={}) {
       });
     },
     capability(catalog) {
-      byId('capability-details').textContent=catalog.items?.[0]?.reason || '模型对话尚未接入。可以先保存草稿与 DOCX，或进入工作区处理已有材料。';
+      byId('capability-details').textContent='所选能力尚未接入执行。普通文字能否生成，以当前对话的生成条件为准。';
     },
   };
 }

@@ -1,0 +1,29 @@
+PASS blank and skill selection do not create records; read-only never writes
+PASS single save channel preserves input typed during an older acknowledgement
+PASS unknown creation requires explicit retry and preserves its original request identity
+PASS unknown write is reconciled by exact scope, revision and content before newer input saves
+PASS unknown write not committed can replay only after unchanged baseline is read
+PASS unknown write scope mismatch retains both drafts until explicit choice
+PASS unknown write revision mismatch retains both drafts until explicit choice
+PASS unknown write content mismatch retains both drafts until explicit choice
+PASS version conflict allows explicitly keeping local text against the new server version
+PASS refresh never overwrites unsaved input and detects independent remote edits
+PASS switch waits for save and rejects switching after failed persistence
+PASS late page reads and revocation cannot contaminate a newer conversation
+PASS current permission revocation clears text, history, skill and identity immediately
+PASS older pages deduplicate in chronological order and preserve pending input
+PASS empty page with a cursor can keep paging; refresh retains already loaded history
+PASS cancel reads the persisted result and preserves unsaved text
+PASS close discards delayed replies and removes in-memory content
+PASS unknown write stays dirty even when the user edits back to the saved baseline
+PASS create replay cannot silently overwrite a draft edited in another window
+PASS a late refresh cannot roll back a completed newer save
+PASS disjoint refreshed history starts its own cursor instead of hiding unread messages
+PASS an older read finishing does not release the busy guard on a newer read
+PASS a failed page read leaves no old identity available for accidental draft saves
+PASS late create response after close cannot change identity or notify the page
+PASS replayed PUT racing the original can recognize the original successful write
+PASS external 401 revocation clears unknown writes and rejects delayed reconciliation
+PASS external 403 revocation clears unknown writes and rejects delayed reconciliation
+PASS external non-authorization errors cannot clear conversation data
+28 assistant state checks passed

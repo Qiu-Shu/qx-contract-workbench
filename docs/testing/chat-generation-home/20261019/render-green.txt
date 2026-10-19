@@ -1,0 +1,19 @@
+✔ send follows the generation gate and existing draft/readonly guards (1.9117ms)
+✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.3991ms)
+✔ capability states give distinct truthful explanations (0.5226ms)
+✔ results stay with their matching input in chronological history and have source anchors (0.8374ms)
+✔ model text remains literal with whitespace and source links only target loaded messages (0.9948ms)
+✔ unrelated items and prior conversation content are cleared on switching or revocation (0.408ms)
+✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.3313ms)
+✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.455ms)
+✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.3218ms)
+✔ initial template keeps send disabled, recovery hidden and describes controlled generation (0.4581ms)
+✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.219ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 68.4905

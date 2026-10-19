@@ -2928,6 +2928,27 @@ class MainAttemptView(DomainModel):
     output: MainOutputView | None
 
 
+class MainGenerationHistoryQuery(DomainModel):
+    message_ids: Annotated[tuple[UUID, ...], Field(min_length=1, max_length=50)]
+
+    @field_validator('message_ids')
+    @classmethod
+    def unique_messages(cls, value):
+        if len(value) != len(set(value)):
+            raise ValueError('duplicate history message')
+        return value
+
+
+class MainGenerationHistoryItem(DomainModel):
+    message_id: UUID
+    attempt: MainAttemptView
+
+
+class MainGenerationHistoryView(DomainModel):
+    scope: ScopeSnapshot
+    items: Annotated[tuple[MainGenerationHistoryItem, ...], Field(max_length=50)]
+
+
 class MainGenerationCapability(DomainModel):
     scope: ScopeSnapshot
     composer_revision: Annotated[int, Field(strict=True, ge=0)]

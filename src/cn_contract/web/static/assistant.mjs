@@ -7,12 +7,14 @@ import {bindMaterials} from './assistant-materials.mjs';
 const byId=id=>document.getElementById(id);
 const readonly=document.body.dataset.readonly==='true';
 let composer, materials, timer, listCursor=null, listEpoch=0, closed=false;
+let generationTimer, pollTimer, generationKey=null;
 let pendingRoute=document.body.dataset.conversationId || null;
 const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing()});
 const controller=createDraftController(api,{readonly,
   onChange:state=>{
     drawState(state);
     renderer.selected(state.id);
+    coordinateGeneration(state);
     if(state.status==='revoked') {
       ++listEpoch;
       byId('conversation-list').replaceChildren();
@@ -29,7 +31,7 @@ function drawState(state) {
   renderer.state(state,readonly);
   materials?.state(state);
   if(pendingRoute && !state.id && state.status!=='revoked') {
-    byId('composer').disabled=true;byId('save-draft').disabled=true;
+    byId('composer').disabled=true;byId('save-draft').disabled=true;byId('send').disabled=true;
     byId('add-material').disabled=true;
     document.querySelectorAll('[data-skill]').forEach(button=>button.disabled=true);
     byId('refresh-run').hidden=state.status!=='error';
@@ -44,6 +46,33 @@ function failure(error) {if(!controller.revoke(error))notice(errorText(error));}
 async function safely(action) {
   try { return await action(); }
   catch(error) { failure(error); return false; }
+}
+// Read only after a stable saved snapshot; draft edits never dispatch a model call.
+function coordinateGeneration(state) {
+  clearTimeout(generationTimer);
+  if(closed || !state.id || !state.view || state.status==='revoked') {
+    generationKey=null;clearTimeout(pollTimer);pollTimer=null;return;
+  }
+  if(state.generation.phase!=='tracking') {clearTimeout(pollTimer);pollTimer=null;}
+  else if(!pollTimer)pollTimer=setTimeout(async()=>{
+    pollTimer=null;
+    if(closed)return;
+    if(document.hidden) {coordinateGeneration(controller.state);return;}
+    const id=controller.state.id;
+    await safely(()=>controller.refresh());
+    if(!closed && id===controller.state.id)await safely(()=>controller.refreshGeneration());
+    if(!closed)coordinateGeneration(controller.state);
+  },2000);
+  // Editing and then undoing can restore the same text after invalidating its capability.
+  if(!state.generation.capability && ['idle','tracking'].includes(state.generation.phase))generationKey=null;
+  if(state.loading || state.dirty || state.conflict || state.materialAction ||
+      ['saving','error'].includes(state.status) ||
+      ['checking','submitting','unknown'].includes(state.generation.phase))return;
+  const key=JSON.stringify([state.view.scope,state.view.composer_revision,state.savedText,
+    state.skill,state.view.messages.map(message=>message.id)]);
+  if(key!==generationKey)generationTimer=setTimeout(()=>{
+    generationKey=key;void safely(()=>controller.refreshGeneration());
+  },0);
 }
 async function loadList(append=false) {
   if(closed || controller.state.status==='revoked')return;
@@ -70,7 +99,7 @@ composer=bindComposer({input:byId('composer'),form:byId('composer-form'),
     controller.edit(text); clearTimeout(timer);
     if(!readonly)timer=setTimeout(()=>void safely(()=>controller.save()),650);
   },
-  onSend:()=>notice('模型对话尚未接入。输入可以保存为草稿；现有业务请从工作区进入。'),
+  onSend:()=>{clearTimeout(timer);void safely(()=>controller.send());},
 });
 materials=bindMaterials({controller,readonly});
 
@@ -101,7 +130,12 @@ byId('older-messages').addEventListener('click',async()=>{
   const height=document.documentElement.scrollHeight,scroll=window.scrollY;
   if(await safely(()=>controller.loadEarlier()))window.scrollTo(0,scroll+document.documentElement.scrollHeight-height);
 });
-byId('refresh-run').addEventListener('click',()=>void (pendingRoute?open(pendingRoute):safely(()=>controller.refresh())));
+byId('refresh-run').addEventListener('click',()=>void (pendingRoute?open(pendingRoute):safely(async()=>{
+  const id=controller.state.id;
+  await controller.refresh();
+  if(id===controller.state.id)await controller.refreshGeneration();
+})));
+byId('recover-generation').addEventListener('click',()=>void safely(()=>controller.refreshGeneration()));
 byId('cancel-run').addEventListener('click',()=>void safely(()=>controller.cancel()));
 for(const [id,choice] of [['keep-local','local'],['use-server','server']])
   byId(id).addEventListener('click',()=>void safely(()=>controller.resolveConflict(choice)));
@@ -133,7 +167,10 @@ byId('logout').addEventListener('click',async()=>{
 window.addEventListener('beforeunload',event=>{
   if(!controller.canLeave() || composer.isComposing() || materials.hasSelection()) {event.preventDefault();event.returnValue='';}
 });
-window.addEventListener('pagehide',()=>{closed=true;++listEpoch;clearTimeout(timer);composer.dispose();materials.dispose();controller.close();});
+window.addEventListener('pagehide',()=>{
+  closed=true;++listEpoch;clearTimeout(timer);clearTimeout(generationTimer);clearTimeout(pollTimer);
+  composer.dispose();materials.dispose();controller.close();
+});
 
 drawState(controller.state);
 await safely(async()=>{

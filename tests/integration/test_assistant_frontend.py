@@ -7,7 +7,9 @@ import pytest
 
 
 @pytest.mark.parametrize('script', ['test_assistant_state.mjs', 'test_assistant_transport_input.mjs',
-                                   'test_assistant_material_state.mjs', 'test_assistant_material_dom.mjs'])
+                                   'test_assistant_material_state.mjs', 'test_assistant_material_dom.mjs',
+                                   'test_assistant_generation_state.mjs', 'test_assistant_generation_render.mjs',
+                                   'test_assistant_generation_entry.mjs'])
 def test_browser_module_behaviour(script):
     node = shutil.which('node')
     assert node, 'The existing local Node runtime is required.'

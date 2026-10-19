@@ -1,0 +1,27 @@
+{
+  "scope": "actual newly frozen EXE; default model runtime None; not installer acceptance",
+  "checks": [
+    "new_exe_login_home_and_exact_current_generation_assets",
+    "new_exe_default_generation_rejected_and_saved_text_retained",
+    "new_exe_history_current_ownership_and_legacy_message_has_no_attempt",
+    "new_exe_clean_pipe_exit_port_release_and_database_integrity"
+  ],
+  "exe_sha256": "17e6bb2241caaa10335546ffda42c062c242392654d679fab570b1f6d37eb9af",
+  "real_model_calls": 0,
+  "workspace_parent": "D:\\Documents\\ChatGPT\\律所项目\\.local\\chat-generation-home-20261019\\frozen-home-workspace-fd97d097",
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\chat-generation-home-20261019\\frozen-backend-verified\\qx-backend\\qx-backend.exe"
+  ],
+  "exit_code": 0,
+  "ready_seconds": 1.482,
+  "pid": 20156,
+  "backend_exit": 0,
+  "counts": {
+    "assistant_messages": 1,
+    "assistant_model_attempts": 0,
+    "assistant_model_receipts": 0,
+    "assistant_model_outputs": 0
+  },
+  "schema_version": "assistant-model-v1",
+  "status": "passed"
+}

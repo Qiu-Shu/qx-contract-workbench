@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {request} from '../src/cn_contract/web/static/assistant-api.mjs';
+import * as api from '../src/cn_contract/web/static/assistant-api.mjs';
 import {bindComposer} from '../src/cn_contract/web/static/assistant-composer.mjs';
 
 test('same-origin transport carries CSRF only on writes and preserves original request identity',async()=>{
@@ -29,6 +30,27 @@ test('network and invalid responses are unknown, not proof a write failed',async
     globalThis.fetch=async()=>({ok:false,status:401,json:async()=>({code:'AUTHORIZATION_REQUIRED',message:'private raw value'})});
     await assert.rejects(request('/api/assistant/skills'),error=>error.code==='AUTHORIZATION_REQUIRED' && error.status===401 && !error.message.includes('private'));
   } finally {globalThis.fetch=oldFetch;}
+});
+
+test('generation transport keeps registration explicit and history bounded to requested identities',async()=>{
+  const oldFetch=globalThis.fetch,oldDocument=globalThis.document,seen=[];
+  globalThis.document={cookie:'qx_csrf=synthetic'};
+  globalThis.fetch=async(path,options)=>{seen.push({path,options});return {ok:true,json:async()=>({})};};
+  try {
+    await api.getGenerationCapability('conversation');
+    await api.submitGeneration('conversation',{request_id:'fixed-id',content:'合成文字'});
+    await api.findGenerationRequest('conversation','fixed-id');
+    await api.getGenerationAttempt('attempt');
+    await api.getGenerationHistory('conversation',['message-one','message-two']);
+    assert.deepEqual(seen.map(x=>x.options.method),['GET','POST','GET','GET','GET']);
+    assert.equal(seen[0].path,'/api/assistant/conversations/conversation/generation-capability');
+    assert.equal(seen[1].path,'/api/assistant/conversations/conversation/generations');
+    assert.deepEqual(JSON.parse(seen[1].options.body),{request_id:'fixed-id',content:'合成文字'});
+    assert.equal(seen[2].path,'/api/assistant/conversations/conversation/generations/by-request/fixed-id');
+    assert.equal(seen[3].path,'/api/assistant/attempts/attempt');
+    assert.deepEqual(new URL(seen[4].path,'http://localhost').searchParams.getAll('message_id'),['message-one','message-two']);
+    assert.equal(seen.filter(x=>x.options.method==='POST').length,1);
+  } finally {globalThis.fetch=oldFetch;globalThis.document=oldDocument;}
 });
 
 test('transport abandons a stalled connection with an unknown outcome',async()=>{

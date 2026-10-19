@@ -1,7 +1,10 @@
+import {createGenerationController,isAuthorizationError} from './assistant-generation.mjs';
+
 // This controller stores only the current page in memory; the server owns revisions.
 const scopeKeys = ['workspace_id', 'conversation_id', 'scope_kind', 'scope_ref',
   'binding_revision', 'input_revision', 'materials_revision'];
 const sameScope = (left, right) => scopeKeys.every(key => left?.[key] === right?.[key]);
+const sameContext = (left,right) => scopeKeys.slice(0,5).every(key=>left?.[key]===right?.[key]);
 const unique = messages => [...new Map(messages.map(message => [message.id, message])).values()];
 const activeRuns = new Set(['queued', 'preparing', 'routing', 'retrieving', 'generating',
   'persisting', 'awaiting_input']);
@@ -13,19 +16,20 @@ export function createDraftController(api, {
     status: readonly ? 'readonly' : 'idle', error: null, conflict: null, dirty: false, loading: false,
     materials: null, materialAction: null};
   let epoch = 0, closed = false, channel = null, creating = null, pending = null, materialPending = null;
-  let reading = false, paging = false, cancelling = false;
+  let reading = false, paging = false, cancelling = false, generation = null;
 
   function notify() {
     state.materialAction = materialPending?.kind || null;
     state.dirty = Boolean(creating || pending || materialPending || state.conflict ||
       (state.id ? state.text !== state.savedText : state.text.trim()));
-    onChange(state);
+    generation?.sync(); onChange(state);
   }
   const current = token => !closed && token === epoch;
   function identity(id) {
     if (state.id !== id) { state.id = id; onConversation(id); }
   }
   function reset() {
+    generation?.reset();
     creating = pending = materialPending = null;
     reading = paging = cancelling = false;
     state.view = null; state.text = state.savedText = ''; state.skill = null;
@@ -35,7 +39,7 @@ export function createDraftController(api, {
   }
   function fail(error, token) {
     if (!current(token)) return false;
-    if (error.status === 401 || error.status === 403) {
+    if (isAuthorizationError(error)) {
       epoch += 1; reset(); state.status = 'revoked'; identity(null);
     } else state.status = 'error';
     state.error = {code: error.code || 'REQUEST_FAILED', status: error.status || 0};
@@ -49,7 +53,7 @@ export function createDraftController(api, {
   }
   function merged(view) {
     const previous = state.view;
-    if (!previous || !sameScope(previous.scope, view.scope) || !previous.messages.length) return view;
+    if (!previous || !sameContext(previous.scope, view.scope) || !previous.messages.length) return view;
     const ids = new Set(previous.messages.map(message => message.id));
     // A disjoint latest page may hide a gap: restart its cursor instead of skipping that gap.
     if (view.messages.length && !view.messages.some(message => ids.has(message.id))) return view;
@@ -57,6 +61,7 @@ export function createDraftController(api, {
       next_before: previous.next_before};
   }
   function baseline(view, keepText = true) {
+    if(state.view && !sameContext(state.view.scope,view.scope))generation?.reset();
     state.view = merged(view); state.savedText = view.draft_input;
     if (!keepText) state.text = view.draft_input;
   }
@@ -182,9 +187,14 @@ export function createDraftController(api, {
       return true;
     } catch (error) { return fail(error, token); }
   }
-  function save(explicit = false) {
+  function save(explicit = false, fromGeneration = false) {
     if (closed || state.loading || state.status === 'revoked' || state.conflict) return Promise.resolve(false);
     if (readonly) return Promise.resolve(!state.dirty);
+    if(!fromGeneration && generation?.blocked()) {
+      if(!generation.busy())return Promise.resolve(false);
+      const token=epoch;
+      return generation.wait().then(()=>current(token) && !generation.unknown() ? save(explicit) : false);
+    }
     if (channel) return channel;
     if (!state.dirty) return Promise.resolve(true);
     if (state.status === 'error' && !explicit) return Promise.resolve(false);
@@ -197,7 +207,7 @@ export function createDraftController(api, {
     notify(); return channel;
   }
   function material(kind,input,{file,attachment}={}) {
-    if (closed || readonly || state.loading || state.status === 'revoked' || materialPending || state.conflict || channel) {
+    if (closed || readonly || state.loading || state.status === 'revoked' || materialPending || state.conflict || channel || generation?.blocked()) {
       return Promise.resolve(false);
     }
     // Pending text writes share this drain; a file never sends an old draft back.
@@ -221,8 +231,9 @@ export function createDraftController(api, {
       return fail(error, token);
     }
   }
-  async function refresh() {
-    if (closed || !state.id || state.loading || channel || pending || creating || reading) return false;
+  async function refresh(fromGeneration = false) {
+    if (closed || !state.id || state.loading || channel || pending || creating || reading ||
+        (!fromGeneration && generation?.unknown())) return false;
     const token = epoch, id = state.id, baselineAtStart = state.view, marker = {};
     reading = marker;
     try {
@@ -261,29 +272,50 @@ export function createDraftController(api, {
     try {
       await api.cancelRun(run.id, {request_id: uuid()});
       if (!current(token)) return false;
-      return await refresh();
+      if(!await refresh())return false;
+      await generation.refresh();return current(token);
     } catch (error) { return fail(error, token); }
     finally { if (cancelling === marker) cancelling = false; }
   }
+  generation=createGenerationController(api,{state,readonly,uuid,notify,
+    token:()=>epoch,current,fail,
+    blocked:()=>Boolean((pending || creating) && !channel || materialPending || state.status==='error'),
+    busy:()=>Boolean(channel || pending || creating || materialPending || reading),
+    saveDraft:()=>save(false,true),refreshDraft:()=>refresh(true),
+    accept(body,attempt,clearText) {
+      state.view={...state.view,scope:{...attempt.scope},composer_revision:body.expected_composer_revision+1,draft_input:''};
+      state.savedText='';if(clearText)state.text='';
+      state.error=null;state.status=state.text?'idle':'saved';notify();
+    },
+    async readConflict() {
+      const token=epoch,id=state.id;
+      try {
+        const view=checked(await api.getConversation(id),id),materials=await materialsFor(view);
+        if(!current(token))return false;
+        state.materials=materials;return conflict(view);
+      } catch(error) {return fail(error,token);}
+    },
+  });
   return {
     state,
     edit(text) {
       if (closed || readonly || state.loading || state.status === 'revoked') return;
-      state.text = text;
+      state.text = text; generation.changed();
       if (state.conflict) state.conflict.local = text;
       if (state.status === 'saved') state.status = 'idle';
       notify();
     },
     selectSkill(skill) {
       if (closed || readonly || state.loading || state.status === 'revoked') return;
-      state.skill = skill; notify();
+      state.skill = skill; generation.changed(); notify();
     },
     open, save: () => save(), retry: () => save(true), refresh, loadEarlier, cancel,
+    send:generation.send,refreshGeneration:generation.refresh,
     upload: (file,policy) => file ? material('upload',{original_name:file.name,mime:file.type,policy},{file}) : Promise.resolve(false),
     parse: (attachment,baseline_view=null) => material('parse',{baseline_view},{attachment}),
     selectMaterials: items => material('selection',{items}),
     revoke(error) {
-      return error?.status === 401 || error?.status === 403 ? fail(error, epoch) : false;
+      return isAuthorizationError(error) ? fail(error, epoch) : false;
     },
     async newConversation() {
       if (closed || (!state.loading && (state.dirty || channel) && !await save())) return false;
@@ -295,7 +327,7 @@ export function createDraftController(api, {
       state.conflict = null; state.status = 'idle'; state.error = null; notify();
       return choice === 'local' || materialPending ? save(true) : true;
     },
-    canLeave: () => closed || (!state.dirty && !state.loading && !channel && !reading && !paging && !cancelling),
+    canLeave: () => closed || (!state.dirty && !state.loading && !channel && !reading && !paging && !cancelling && !generation.blocked()),
     close() { closed = true; epoch += 1; reset(); state.id = null; notify(); },
   };
 }

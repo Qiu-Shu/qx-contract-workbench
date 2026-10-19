@@ -32,6 +32,12 @@ export const listConversations = cursor=>request('/api/assistant/conversations'+
 export const skills = ()=>request('/api/assistant/skills');
 export const session = ()=>request('/api/session');
 export const cancelRun = (id,body)=>request('/api/assistant/runs/'+encodeURIComponent(id)+'/cancel',{method:'POST',body});
+export const getGenerationCapability=id=>request(conversation(id)+'/generation-capability');
+export const submitGeneration=(id,body)=>request(conversation(id)+'/generations',{method:'POST',body});
+export const findGenerationRequest=(id,key)=>request(conversation(id)+'/generations/by-request/'+encodeURIComponent(key));
+export const getGenerationAttempt=id=>request('/api/assistant/attempts/'+encodeURIComponent(id));
+export const getGenerationHistory=(id,ids)=>request(conversation(id)+'/generation-history?'+
+  new URLSearchParams(ids.map(value=>['message_id',value])));
 
 const attachment=(id,file)=>conversation(id)+'/attachments/'+encodeURIComponent(file);
 export const getMaterials=id=>request(conversation(id)+'/materials');

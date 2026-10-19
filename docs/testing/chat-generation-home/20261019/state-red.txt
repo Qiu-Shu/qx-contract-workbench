@@ -1,0 +1,10 @@
+file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_state.mjs:85
+    await c.open('one');await c.refreshGeneration();assert.equal(c.state.generation.canSend,false);
+                                ^
+
+TypeError: c.refreshGeneration is not a function
+    at file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_state.mjs:85:33
+    at async check (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_state.mjs:79:33)
+    at async file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_state.mjs:82:1
+
+Node.js v24.19.0

@@ -1,0 +1,503 @@
+✖ send follows the generation gate and existing draft/readonly guards (3.0528ms)
+✖ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.5399ms)
+✖ capability states give distinct truthful explanations (0.3636ms)
+✖ results stay with their matching input in chronological history and have source anchors (0.8114ms)
+✖ model text remains literal with whitespace and source links only target loaded messages (0.9483ms)
+✖ unrelated items and prior conversation content are cleared on switching or revocation (1.3236ms)
+✖ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.4638ms)
+✖ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.3012ms)
+✖ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.2891ms)
+✖ initial template keeps send disabled, recovery hidden and describes controlled generation (0.8173ms)
+✖ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.4598ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 0
+ℹ fail 11
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.0516
+
+✖ failing tests:
+
+test at scripts\test_assistant_generation_render.mjs:52:1
+✖ send follows the generation gate and existing draft/readonly guards (3.0528ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:53:53)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:62:1
+✖ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.5399ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /结果.*不确定/. Input:
+  
+  ''
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:64:28)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: /结果.*不确定/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:71:1
+✖ capability states give distinct truthful explanations (0.3636ms)
+  AssertionError [ERR_ASSERTION]: unconfigured
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:76:68)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: /未配置|未启用/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:81:1
+✖ results stay with their matching input in chronological history and have source anchors (0.8114ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'message-22222222-2222-4222-8222-222222222222'
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:84:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'message-22222222-2222-4222-8222-222222222222',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:93:1
+✖ model text remains literal with whitespace and source links only target loaded messages (0.9483ms)
+  TypeError: Cannot read properties of undefined (reading 'textContent')
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:97:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_assistant_generation_render.mjs:102:1
+✖ unrelated items and prior conversation content are cleared on switching or revocation (1.3236ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 0
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:108:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:112:1
+✖ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.4638ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /正在生成|正在发送/. Input:
+  
+  '律师输入第一段原文\n第二行律师输入第二次输入'
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:114:28)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '律师输入第一段原文\n第二行律师输入第二次输入',
+    expected: /正在生成|正在发送/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:120:1
+✖ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.3012ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /费用未知/. Input:
+  
+  '律师输入第一段原文\n第二行律师输入第二次输入'
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:123:48)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '律师输入第一段原文\n第二行律师输入第二次输入',
+    expected: /费用未知/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:132:1
+✖ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.2891ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /不支持|尚未接入/. Input:
+  
+  ''
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:134:28)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: /不支持|尚未接入/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:138:1
+✖ initial template keeps send disabled, recovery hidden and describes controlled generation (0.8173ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /<button\b[^>]*id="recover-generation"[^>]*\bhidden/. Input:
+  
+  '<!doctype html>\n' +
+    '<html lang="zh-CN">\n' +
+    '<head>\n' +
+    '  <meta charset="utf-8">\n' +
+    '  <meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+    '  <title>群兴 · 对话</title>\n' +
+    '  <link rel="stylesheet" href="/static/assistant.css">\n' +
+    '  <script type="module" src="/static/assistant.mjs"></script>\n' +
+    '</head>\n' +
+    `<body data-conversation-id="{{ conversation_id }}" data-readonly="{{ 'true' if readonly else 'false' }}" data-local-materials="{{ 'true' if local_materials_enabled else 'false' }}" data-library-enabled="{{ 'true' if library_enabled else 'false' }}">\n` +
+    '  <a class="skip-link" href="#composer">跳到输入框</a>\n' +
+    '  <aside id="sidebar" class="sidebar" aria-label="工作台导航">\n' +
+    '    <a class="brand" href="/assistant" aria-label="群兴法律工作台，对话首页"><span class="brand-short">群兴</span><span class="brand-long">法律工作台</span></a>\n' +
+    '    <button id="new-conversation" class="new-conversation" type="button" aria-label="新对话"{% if readonly %} disabled{% endif %}><span class="compact-label" aria-hidden="true">新建</span><span class="expanded-label">新对话</span></button>\n' +
+    '    <nav class="sidebar-section common-skills" aria-labelledby="common-heading">\n' +
+    '      <h2 id="common-heading">常用能力</h2>\n' +
+    '      <button type="button" data-skill="client_reply" aria-pressed="false">回复客户</button>\n' +
+    '      <button type="button" data-skill="material_organize" aria-pressed="false">整理资料</button>\n' +
+    '      <button type="button" data-skill="contract_review" aria-pressed="false">审查合同</button>\n' +
+    '      <button type="button" data-skill="content_draft" aria-pressed="false">创作文案</button>\n' +
+    '    </nav>\n' +
+    '    <section class="sidebar-section recent-section" aria-labelledby="recent-heading">\n' +
+    '      <h2 id="recent-heading">最近记录</h2>\n' +
+    '      <div id="conversation-list" class="conversation-list" aria-live="polite"><p class="muted">正在读取记录…</p></div>\n' +
+    '      <button id="more-conversations" class="text-button" type="button" hidden>加载更多记录</button>\n' +
+    '    </section>\n' +
+    '    <nav class="workspace-links" aria-label="已有工作区">\n' +
+    '      <a href="/workspace" aria-label="工作区与接待"><span class="compact-label" aria-hidden="true">接待</span><span class="expanded-label">工作区与接待</span></a>\n' +
+    '      <a href="/" aria-label="合同工作台"><span class="compact-label" aria-hidden="true">合同</span><span class="expanded-label">合同工作台</span></a>\n' +
+    '      {% if library_enabled %}<a href="/library" aria-label="法律资料库"><span class="compact-label" aria-hidden="true">法库</span><span class="expanded-label">法律资料库</span></a>{% endif %}\n' +
+    '    </nav>\n' +
+    '    <div class="account-area"><span id="account-name" class="muted"></span><button id="logout" class="text-button" type="button">退出登录</button></div>\n' +
+    '  </aside>\n' +
+    '\n' +
+    '  <main id="main" class="assistant-main">\n' +
+    '    <header class="page-toolbar">\n' +
+    '      <button id="nav-toggle" class="quiet-button" type="button" aria-expanded="false" aria-controls="sidebar">菜单</button>\n' +
+    '      <p class="availability">{% if readonly %}恢复副本 · 只读{% else %}本机草稿 · 生成尚未接通{% endif %}</p>\n' +
+    '      <label class="reading-control" for="body-size">阅读字号<select id="body-size"><option value="16">标准 16</option><option value="18">较大 18</option><option value="20">大号 20</option></select></label>\n' +
+    '    </header>\n' +
+    '\n' +
+    '    <div class="conversation-surface">\n' +
+    '      <header class="conversation-heading">\n' +
+    '        <h1 id="home-title">今天需要处理什么？</h1>\n' +
+    '        <p id="scope-label" class="muted">先记下咨询内容，草稿保存在本机。</p>\n' +
+    '      </header>\n' +
+    '      <noscript><p class="notice error">页面脚本未能运行，暂时无法读取或保存草稿。请重新打开应用，或进入已有工作区。</p></noscript>\n' +
+    '      <p id="notice" class="notice" role="status" aria-live="polite"></p>\n' +
+    '\n' +
+    '      <section class="history-section" aria-label="对话记录">\n' +
+    '        <button id="older-messages" class="text-button older-messages" type="button" hidden>加载更早消息</button>\n' +
+    '        <div id="history" class="history"><p class="history-hint">正在读取本次记录…</p></div>\n' +
+    '      </section>\n' +
+    '\n' +
+    '      <section class="run-panel" aria-label="最近任务">\n' +
+    '        <p id="run-status" role="status" aria-live="polite">尚无已登记任务</p>\n' +
+    '        <div class="run-actions"><button id="refresh-run" class="text-button" type="button" disabled>刷新状态</button><button id="cancel-run" class="text-button" type="button" disabled>取消任务</button></div>\n' +
+    '      </section>\n' +
+    '\n' +
+    '      <section id="conflict-panel" class="conflict-panel" aria-labelledby="conflict-heading" hidden>\n' +
+    '        <h2 id="conflict-heading">发现另一份已保存的草稿</h2>\n' +
+    '        <p>输入框中保留了你当前的文字。核对下面的版本后，再选择要保留哪一份。</p>\n' +
+    '        <h3>已保存的文字</h3>\n' +
+    '        <pre id="server-draft" class="reading-text" tabindex="0"></pre>\n' +
+    '        <div class="conflict-actions"><button id="keep-local" type="button">保留当前文字并保存</button><button id="use-server" class="quiet-button" type="button">使用已保存文字</button></div>\n' +
+    '      </section>\n' +
+    '\n' +
+    '      <section class="compose-section" aria-label="输入与保存草稿">\n' +
+    '        <section id="material-section" class="material-section" aria-labelledby="material-heading" hidden>\n' +
+    '          <h2 id="material-heading">本次材料</h2>\n' +
+    '          <div id="material-list"></div>\n' +
+    '        </section>\n' +
+    '        <div id="skill-cards" class="skill-cards" aria-label="选择本次能力">\n' +
+    '          <button type="button" data-skill="client_reply" aria-pressed="false"><strong>回复客户</strong><span>理清诉求，组织回复</span></button>\n' +
+    '          <button type="button" data-skill="material_organize" aria-pressed="false"><strong>整理资料</strong><span>梳理经过，列出缺口</span></button>\n' +
+    '          <button type="button" data-skill="contract_review" aria-pressed="false"><strong>审查合同</strong><span>核对条款，整理意见</span></button>\n' +
+    '          <button type="button" data-skill="content_draft" aria-pressed="false"><strong>创作文案</strong><span>整理选题，起草内容</span></button>\n' +
+    '        </div>\n' +
+    '        <div class="skill-options">\n' +
+    '          <p><span id="selected-skill">自动选择能力</span><button id="clear-skill" class="text-button" type="button" hidden>取消选择</button></p>\n' +
+    '          <details id="more-skills"><summary>更多能力</summary><div class="more-skills-content"><button type="button" data-skill="legal_research" aria-pressed="false">检索法律资料</button><p class="muted">选择能力会保留输入内容；当前不会执行。</p></div></details>\n' +
+    '        </div>\n' +
+    '        <form id="composer-form" class="composer-form">\n' +
+    '          <label class="sr-only" for="composer">咨询内容与工作草稿</label>\n' +
+    '          <textarea id="composer" name="content" rows="4" maxlength="20000" placeholder="例如：客户遇到了什么问题，需要我们帮忙处理什么……" aria-describedby="input-help save-status"{% if readonly %} readonly{% endif %}></textarea>\n' +
+    '          <div class="composer-actions">\n' +
+    '            <button id="add-material" class="quiet-button" type="button" aria-expanded="false" aria-controls="material-picker"{% if readonly %} disabled{% endif %}>添加材料</button>\n' +
+    '            <div class="save-actions"><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="capability-summary">发送</button></div>\n' +
+    '          </div>\n' +
+    '        </form>\n' +
+    '        <section id="material-picker" class="material-picker" aria-label="添加本机 DOCX" hidden>\n' +
+    '          <label for="material-file">选择 DOCX 文件</label>\n' +
+    '          <input id="material-file" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">\n' +
+    '          <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取此原件；内容待核实，不外发。</label>\n' +
+    '          {% if not local_materials_enabled %}<p class="muted">当前环境仅接收已登记的独立合成材料。</p>{% endif %}\n' +
+    '          <p id="material-notice" role="status" aria-live="polite"></p>\n' +
+    '          <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>\n' +
+    '        </section>\n' +
+    '        <div class="composer-footnote"><p id="save-status" role="status" aria-live="polite">{% if readonly %}此副本只读，不能保存修改。{% else %}输入后自动保存，也可手动保存。{% endif %}</p><p id="input-help">Enter 发送，Shift+Enter 换行；当前发送不可用。</p></div>\n' +
+    '        <details class="capability-details">\n' +
+    '          <summary id="capability-summary">当前可用范围与说明</summary>\n' +
+    '          <div class="capability-content">\n' +
+    '            <p id="capability-details">可以保存草稿与 DOCX，模型对话尚未接入。</p>\n' +
+    '            {% if readonly %}<p>当前打开的是恢复副本，可查看已保存的记录，不能编辑、发送、添加材料或继续历史任务。</p>{% else %}<p>此页可保存咨询原话和工作草稿、选择能力、查看历史记录及已登记任务。所选能力还未接入执行，当前不会生成回复或自动建档。</p>{% endif %}\n' +
+    '            <p>DOCX 保存在本次对话，可以读取原文、核对读取范围及下载原件。发送尚未开放；保存和读取不会自动认定事实，也不会建立合同案件。</p>\n' +
+    '            <p>继续办理可进入<a href="/workspace">工作区与接待</a>或<a href="/">合同工作台</a>。{% if library_enabled %}已连接的资料可在<a href="/library">法律资料库</a>检索。{% endif %}</p>\n' +
+    '          </div>\n' +
+    '        </details>\n' +
+    '      </section>\n' +
+    '    </div>\n' +
+    '  </main>\n' +
+    '  <aside id="material-preview" class="material-preview" aria-labelledby="material-preview-title" hidden>\n' +
+    '    <header><h2 id="material-preview-title">材料原文</h2><button id="close-material-preview" class="text-button" type="button">关闭原文</button></header>\n' +
+    '    <div id="material-preview-content" class="reading-text"></div>\n' +
+    '  </aside>\n' +
+    '</body>\n' +
+    '</html>\n'
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:141:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `<!doctype html>\n<html lang="zh-CN">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <title>群兴 · 对话</title>\n  <link rel="stylesheet" href="/static/assistant.css">\n  <script type="module" src="/static/assistant.mjs"></script>\n</head>\n<body data-conversation-id="{{ conversation_id }}" data-readonly="{{ 'true' if readonly else 'false' }}" data-local-materials="{{ 'true' if local_materials_enabled else 'false' }}" data-library-enabled="{{ 'true' if library_enabled else 'false' }}">\n  <a class="skip-link" href="#composer">跳到输入框</a>\n  <aside id="sidebar" class="sidebar" aria-label="工作台导航">\n    <a class="brand" href="/assistant" aria-label="群兴法律工作台，对话首页"><span class="brand-short">群兴</span><span class="brand-long">法律工作台</span></a>\n    <button id="new-conversation" class="new-conversation" type="button" aria-label="新对话"{% if readonly %} disabled{% endif %}><span class="compact-label" aria-hidden="true">新建</span><span class="expanded-label">新对话</span></button>\n    <nav class="sidebar-section common-skills" aria-labelledby="common-heading">\n      <h2 id="common-heading">常用能力</h2>\n      <button type="button" data-skill="client_reply" aria-pressed="false">回复客户</button>\n      <button type="button" data-skill="material_organize" aria-pressed="false">整理资料</button>\n      <button type="button" data-skill="contract_review" aria-pressed="false">审查合同</button>\n      <button type="button" data-skill="content_draft" aria-pressed="false">创作文案</button>\n    </nav>\n    <section class="sidebar-section recent-section" aria-labelledby="recent-heading">\n      <h2 id="recent-heading">最近记录</h2>\n      <div id="conversation-list" class="conversation-list" aria-live="polite"><p class="muted">正在读取记录…</p></div>\n      <button id="more-conversations" class="text-button" type="button" hidden>加载更多记录</button>\n    </section>\n    <nav class="workspace-links" aria-label="已有工作区">\n      <a href="/workspace" aria-label="工作区与接待"><span class="compact-label" aria-hidden="true">接待</span><span class="expanded-label">工作区与接待</span></a>\n      <a href="/" aria-label="合同工作台"><span class="compact-label" aria-hidden="true">合同</span><span class="expanded-label">合同工作台</span></a>\n      {% if library_enabled %}<a href="/library" aria-label="法律资料库"><span class="compact-label" aria-hidden="true">法库</span><span class="expanded-label">法律资料库</span></a>{% endif %}\n    </nav>\n    <div class="account-area"><span id="account-name" class="muted"></span><button id="logout" class="text-button" type="button">退出登录</button></div>\n  </aside>\n\n  <main id="main" class="assistant-main">\n    <header class="page-toolbar">\n      <button id="nav-toggle" class="quiet-button" type="button" aria-expanded="false" aria-controls="sidebar">菜单</button>\n      <p class="availability">{% if readonly %}恢复副本 · 只读{% else %}本机草稿 · 生成尚未接通{% endif %}</p>\n      <label class="reading-control" for="body-size">阅读字号<select id="body-size"><option value="16">标准 16</option><option value="18">较大 18</option><option value="20">大号 20</option></select></label>\n    </header>\n\n    <div class="conversation-surface">\n      <header class="conversation-heading">\n        <h1 id="home-title">今天需要处理什么？</h1>\n        <p id="scope-label" class="muted">先记下咨询内容，草稿保存在本机。</p>\n      </header>\n      <noscript><p class="notice error">页面脚本未能运行，暂时无法读取或保存草稿。请重新打开应用，或进入已有工作区。</p></noscript>\n      <p id="notice" class="notice" role="status" aria-live="polite"></p>\n\n      <section class="history-section" aria-label="对话记录">\n        <button id="older-messages" class="text-button older-messages" type="button" hidden>加载更早消息</button>\n        <div id="history" class="history"><p class="history-hint">正在读取本次记录…</p></div>\n      </section>\n\n      <section class="run-panel" aria-label="最近任务">\n        <p id="run-status" role="status" aria-live="polite">尚无已登记任务</p>\n        <div class="run-actions"><button id="refresh-run" class="text-button" type="button" disabled>刷新状态</button><button id="cancel-run" class="text-button" type="button" disabled>取消任务</button></div>\n      </section>\n\n      <section id="conflict-panel" class="conflict-panel" aria-labelledby="conflict-heading" hidden>\n        <h2 id="conflict-heading">发现另一份已保存的草稿</h2>\n        <p>输入框中保留了你当前的文字。核对下面的版本后，再选择要保留哪一份。</p>\n        <h3>已保存的文字</h3>\n        <pre id="server-draft" class="reading-text" tabindex="0"></pre>\n        <div class="conflict-actions"><button id="keep-local" type="button">保留当前文字并保存</button><button id="use-server" class="quiet-button" type="button">使用已保存文字</button></div>\n      </section>\n\n      <section class="compose-section" aria-label="输入与保存草稿">\n        <section id="material-section" class="material-section" aria-labelledby="material-heading" hidden>\n          <h2 id="material-heading">本次材料</h2>\n          <div id="material-list"></div>\n        </section>\n        <div id="skill-cards" class="skill-cards" aria-label="选择本次能力">\n          <button type="button" data-skill="client_reply" aria-pressed="false"><strong>回复客户</strong><span>理清诉求，组织回复</span></button>\n          <button type="button" data-skill="material_organize" aria-pressed="false"><strong>整理资料</strong><span>梳理经过，列出缺口</span></button>\n          <button type="button" data-skill="contract_review" aria-pressed="false"><strong>审查合同</strong><span>核对条款，整理意见</span></button>\n          <button type="button" data-skill="content_draft" aria-pressed="false"><strong>创作文案</strong><span>整理选题，起草内容</span></button>\n        </div>\n        <div class="skill-options">\n          <p><span id="selected-skill">自动选择能力</span><button id="clear-skill" class="text-button" type="button" hidden>取消选择</button></p>\n          <details id="more-skills"><summary>更多能力</summary><div class="more-skills-content"><button type="button" data-skill="legal_research" aria-pressed="false">检索法律资料</button><p class="muted">选择能力会保留输入内容；当前不会执行。</p></div></details>\n        </div>\n        <form id="composer-form" class="composer-form">\n          <label class="sr-only" for="composer">咨询内容与工作草稿</label>\n          <textarea id="composer" name="content" rows="4" maxlength="20000" placeholder="例如：客户遇到了什么问题，需要我们帮忙处理什么……" aria-describedby="input-help save-status"{% if readonly %} readonly{% endif %}></textarea>\n          <div class="composer-actions">\n            <button id="add-material" class="quiet-button" type="button" aria-expanded="false" aria-controls="material-picker"{% if readonly %} disabled{% endif %}>添加材料</button>\n            <div class="save-actions"><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="capability-summary">发送</button></div>\n          </div>\n        </form>\n        <section id="material-picker" class="material-picker" aria-label="添加本机 DOCX" hidden>\n          <label for="material-file">选择 DOCX 文件</label>\n          <input id="material-file" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">\n          <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取此原件；内容待核实，不外发。</label>\n          {% if not local_materials_enabled %}<p class="muted">当前环境仅接收已登记的独立合成材料。</p>{% endif %}\n          <p id="material-notice" role="status" aria-live="polite"></p>\n          <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>\n        </section>\n        <div class="composer-footnote"><p id="save-status" role="status" aria-live="polite">{% if readonly %}此副本只读，不能保存修改。{% else %}输入后自动保存，也可手动保存。{% endif %}</p><p id="input-help">Enter 发送，Shift+Enter 换行；当前发送不可用。</p></div>\n        <details class="capability-details">\n          <summary id="capability-summary">当前可用范围与说明</summary>\n          <div class="capability-content">\n            <p id="capability-details">可以保存草稿与 DOCX，模型对话尚未接入。</p>\n            {% if readonly %}<p>当前打开的是恢复副本，可查看已保存的记录，不能编辑、发送、添加材料或继续历史任务。</p>{% else %}<p>此页可保存咨询原话和工作草稿、选择能力、查看历史记录及已登记任务。所选能力还未接入执行，当前不会生成回复或自动建档。</p>{% endif %}\n            <p>DOCX 保存在本次对话，可以读取原文、核对读取范围及下载原件。发送尚未开放；保存和读取不会自动认定事实，也不会建立合同案件。</p>\n            <p>继续办理可进入<a href="/workspace">工作区与接待</a>或<a href="/">合同工作台</a>。{% if library_enabled %}已连接的资料可在<a href="/library">法律资料库</a>检索。{% endif %}</p>\n          </div>\n        </details>\n      </section>\n    </div>\n  </main>\n  <aside id="material-preview" class="material-preview" aria-labelledby="material-preview-title" hidden>\n    <header><h2 id="material-preview-title">材料原文</h2><button id="close-material-preview" class="text-button" type="button">关闭原文</button></header>\n    <div id="material-preview-content" class="reading-text"></div>\n  </aside>\n</body>\n</html>\n`,
+    expected: /<button\b[^>]*id="recover-generation"[^>]*\bhidden/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:147:1
+✖ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.4598ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /\.generation-text[^}]*white-space:\s*pre-wrap/s. Input:
+  
+  ':root {\n' +
+    '  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;\n' +
+    '  font-size: 16px;\n' +
+    '  color: #20252b;\n' +
+    '  background: #f7f8fa;\n' +
+    '  --surface: #fff;\n' +
+    '  --canvas: #f7f8fa;\n' +
+    '  --text: #20252b;\n' +
+    '  --muted: #59636f;\n' +
+    '  --accent: #245bd7;\n' +
+    '  --accent-hover: #1947b3;\n' +
+    '  --selected: #eaf0ff;\n' +
+    '  --line: #dce1e7;\n' +
+    '  --read-size: 1rem;\n' +
+    '  --sidebar-size: 14.5rem;\n' +
+    '}\n' +
+    '* { box-sizing: border-box; }\n' +
+    'body { margin: 0; }\n' +
+    'button, select, textarea { font: inherit; }\n' +
+    'button, select, summary, a { -webkit-tap-highlight-color: transparent; }\n' +
+    'button, select, textarea { max-width: 100%; }\n' +
+    'button {\n' +
+    '  min-height: 2.5rem;\n' +
+    '  padding: .5rem 1rem;\n' +
+    '  border: 1px solid transparent;\n' +
+    '  border-radius: .5rem;\n' +
+    '  background: var(--accent);\n' +
+    '  color: #fff;\n' +
+    '  font-weight: 600;\n' +
+    '  line-height: 1.5;\n' +
+    '  cursor: pointer;\n' +
+    '  transition: background-color 150ms ease-out, border-color 150ms ease-out;\n' +
+    '}\n' +
+    'button:hover { background: var(--accent-hover); }\n' +
+    'button:active { background: #153b94; }\n' +
+    'button:disabled { color: #626b77; background: #edf0f4; border-color: var(--line); cursor: not-allowed; }\n' +
+    'a { color: var(--accent); text-underline-offset: .2em; }\n' +
+    'a:hover { text-decoration-thickness: 2px; }\n' +
+    ':focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }\n' +
+    '::selection { color: #142b61; background: #dce7ff; }\n' +
+    '::placeholder { color: #626d7a; opacity: 1; }\n' +
+    '[hidden] { display: none !important; }\n' +
+    'h1, h2, h3, p { margin: 0; }\n' +
+    'h1, h2, h3 { overflow-wrap: anywhere; }\n' +
+    'h2 { font-size: 1rem; line-height: 1.5; }\n' +
+    'h3 { font-size: .875rem; line-height: 1.5; }\n' +
+    'p { line-height: 1.7; }\n' +
+    '.muted { color: var(--muted); }\n' +
+    '.material-section, .material-picker { margin: 1rem 0; padding: 1rem 0; border-top: 1px solid var(--line); }\n' +
+    '.material-section h2 { margin-bottom: .5rem; }\n' +
+    '.material-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; padding: .625rem 0; }\n' +
+    '.material-info { flex: 1 1 14rem; min-width: 0; overflow-wrap: anywhere; }\n' +
+    '.material-info strong { display: block; font-size: .875rem; }\n' +
+    '.material-info p, .material-picker p { font-size: .8125rem; color: var(--muted); }\n' +
+    '.material-actions { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }\n' +
+    '.material-picker { display: grid; gap: .75rem; }\n' +
+    '.material-picker input[type=file] { max-width: 100%; }\n' +
+    '.material-consent { display: flex; align-items: baseline; gap: .5rem; font-size: .875rem; line-height: 1.6; }\n' +
+    '.material-preview { position: fixed; z-index: 3; inset: 0 0 0 auto; width: min(34rem, 100vw); background: var(--surface); border-left: 1px solid var(--line); overflow-y: auto; padding: 1.25rem; }\n' +
+    '.material-preview header { display: flex; gap: 1rem; justify-content: space-between; align-items: center; margin-bottom: 1rem; }\n' +
+    '.material-preview p, .material-preview pre { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; font-family: inherit; }\n' +
+    '.material-preview section { margin-top: 1.5rem; }\n' +
+    '.material-preview .source-location { font-size: .75rem; color: var(--muted); margin-bottom: .5rem; }\n' +
+    '.material-preview select { display: block; margin: .75rem 0; padding: .5rem; }\n' +
+    '@media (min-width: 1100px) {\n' +
+    '  .material-preview { width: 30rem; }\n' +
+    '  body.source-open .assistant-main { margin-right: 30rem; padding-left: 1.5rem; padding-right: 1.5rem; }\n' +
+    '  body.source-open .skill-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }\n' +
+    '  body.source-open .composer-footnote { flex-direction: column; }\n' +
+    '  body.source-open .page-toolbar { flex-wrap: wrap; gap: .5rem; }\n' +
+    '}\n' +
+    '.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }\n' +
+    '.skip-link { position: absolute; z-index: 4; top: .5rem; left: .5rem; padding: .75rem 1rem; background: var(--surface); transform: translateY(-180%); }\n' +
+    '.skip-link:focus { transform: none; }\n' +
+    '.quiet-button { background: var(--surface); border-color: var(--line); color: var(--text); }\n' +
+    '.quiet-button:hover { background: #eef2f7; border-color: #aebdce; }\n' +
+    '.text-button { background: transparent; color: var(--muted); padding: .375rem .5rem; font-size: .875rem; font-weight: 500; }\n' +
+    '.text-button:hover { color: var(--accent); background: var(--selected); }\n' +
+    '.text-button:disabled { background: transparent; border-color: transparent; color: #626b77; }\n' +
+    '\n' +
+    '.sidebar {\n' +
+    '  position: fixed;\n' +
+    '  z-index: 2;\n' +
+    '  inset: 0 auto 0 0;\n' +
+    '  display: flex;\n' +
+    '  flex-direction: column;\n' +
+    '  width: var(--sidebar-size);\n' +
+    '  padding: 1.5rem 1rem 1rem;\n' +
+    '  background: #f0f3f7;\n' +
+    '  border-right: 1px solid var(--line);\n' +
+    '  overflow-y: auto;\n' +
+    '}\n' +
+    '.brand { display: flex; align-items: baseline; gap: .375rem; min-height: 2rem; margin: 0 .5rem 1.5rem; color: var(--text); font-weight: 600; text-decoration: none; white-space: nowrap; }\n' +
+    '.brand-short { font-size: 1.25rem; }\n' +
+    '.brand-long { font-size: .875rem; }\n' +
+    '.compact-label { display: none; }\n' +
+    '.new-conversation { width: 100%; background: var(--surface); border-color: var(--line); color: var(--accent); text-align: left; }\n' +
+    '.new-conversation:hover { background: var(--selected); border-color: #b0c4f6; }\n' +
+    '.sidebar-section { margin-top: 1.5rem; }\n' +
+    '.sidebar-section h2 { padding: 0 .5rem; margin-bottom: .5rem; color: var(--muted); font-size: .8125rem; font-weight: 500; }\n' +
+    '.common-skills { display: grid; gap: .125rem; }\n' +
+    '.common-skills button, .conversation-list button, .conversation-item { width: 100%; background: transparent; color: var(--text); text-align: left; padding: .5rem; font-size: .875rem; font-weight: 400; overflow-wrap: anywhere; }\n' +
+    '.common-skills button:hover, .conversation-list button:hover, .conversation-item:hover { background: #e3eaf4; }\n' +
+    '.common-skills button[aria-pressed="true"], .conversation-list button[aria-current], .conversation-item.is-current { color: #1849b4; background: #e1e9fa; }\n' +
+    '.recent-section { flex: 1; min-height: 5rem; }\n' +
+    '.conversation-list { display: grid; gap: .25rem; }\n' +
+    '.conversation-list p { padding: .5rem; font-size: .8125rem; overflow-wrap: anywhere; }\n' +
+    '.conversation-list button { display: block; }\n' +
+    '.conversation-list small, .conversation-item time { display: block; color: var(--muted); font-size: .8125rem; font-variant-numeric: tabular-nums; }\n' +
+    '.workspace-links { display: grid; gap: .125rem; padding-top: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--line); }\n' +
+    '.workspace-links a { padding: .625rem .5rem; border-radius: .5rem; color: var(--muted); text-decoration: none; font-size: .875rem; }\n' +
+    '.workspace-links a:hover { color: var(--text); background: #e3eaf4; }\n' +
+    '.account-area { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .25rem; margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--line); }\n' +
+    '#account-name { padding-left: .5rem; font-size: .8125rem; overflow-wrap: anywhere; }\n' +
+    '.assistant-main { margin-left: var(--sidebar-size); min-height: 100dvh; padding: 0 2rem 2rem; }\n' +
+    '.page-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.5rem; }\n' +
+    '.availability { color: var(--muted); font-size: .8125rem; }\n' +
+    '#nav-toggle { display: none; }\n' +
+    '.reading-control { display: flex; align-items: center; gap: .5rem; color: var(--muted); font-size: .8125rem; white-space: nowrap; }\n' +
+    '.reading-control select { min-height: 2.5rem; padding: .375rem .5rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--surface); color: var(--text); }\n' +
+    '.conversation-surface { display: flex; flex-direction: column; max-width: 52.5rem; margin: 0 auto; padding-top: 3rem; }\n' +
+    '.conversation-heading { margin-bottom: 2rem; }\n' +
+    '.conversation-heading h1 { font-size: 1.75rem; font-weight: 600; line-height: 1.5; }\n' +
+    '.conversation-heading p { margin-top: .5rem; font-size: .875rem; }\n' +
+    '.history-section { min-width: 0; }\n' +
+    '.history { min-width: 0; font-size: var(--read-size); line-height: 1.7; }\n' +
+    '.history:empty { display: none; }\n' +
+    '.history-hint, .history > p { color: var(--muted); font-size: .875rem; margin-bottom: 1rem; }\n' +
+    '.history article, .message { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }\n' +
+    '.message-meta, .history article header { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-bottom: .5rem; color: var(--muted); font-size: .8125rem; font-variant-numeric: tabular-nums; }\n' +
+    '.message-text, .reading-text, .history article p:not(.message-meta) { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; line-height: 1.7; }\n' +
+    '.history article p + p { margin-top: .75rem; }\n' +
+    '.older-messages { display: block; margin: 0 auto 1rem; }\n' +
+    '.run-panel { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin: 0 0 1.5rem; padding: .5rem 0; color: var(--muted); font-size: .8125rem; }\n' +
+    '.run-actions { display: flex; gap: .25rem; flex-shrink: 0; }\n' +
+    '.run-panel p { overflow-wrap: anywhere; }\n' +
+    '.run-panel:has(#run-status:empty) { display: none; }\n' +
+    '.notice { margin-bottom: 1.5rem; padding: .75rem 1rem; border-radius: .5rem; border: 1px solid #bfcee9; background: #edf3ff; color: #24416e; font-size: .875rem; overflow-wrap: anywhere; }\n' +
+    '.notice:empty { display: none; }\n' +
+    '.notice.error, .notice[data-kind="error"] { color: #8c331f; background: #fff2ed; border-color: #e3b8a9; }\n' +
+    '.conflict-panel { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #d8bd8b; border-radius: .75rem; background: #fff9ed; color: #664b1e; }\n' +
+    '.conflict-panel > p { margin: .5rem 0 1rem; font-size: .875rem; }\n' +
+    '#server-draft { max-height: 15rem; overflow: auto; margin: .5rem 0 1rem; padding: .75rem; background: var(--surface); border: 1px solid #e7dbc5; border-radius: .5rem; color: var(--text); font-size: var(--read-size); }\n' +
+    '.conflict-actions { display: flex; flex-wrap: wrap; gap: .5rem; }\n' +
+    '.conflict-actions button { font-size: .875rem; }\n' +
+    '.compose-section { min-width: 0; }\n' +
+    '.skill-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }\n' +
+    '.skill-cards button { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; padding: .875rem .75rem; border: 1px solid var(--line); border-radius: .75rem; color: var(--text); background: var(--surface); text-align: left; }\n' +
+    '.skill-c'... 5830 more characters
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:149:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: ':root {\n  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;\n  font-size: 16px;\n  color: #20252b;\n  background: #f7f8fa;\n  --surface: #fff;\n  --canvas: #f7f8fa;\n  --text: #20252b;\n  --muted: #59636f;\n  --accent: #245bd7;\n  --accent-hover: #1947b3;\n  --selected: #eaf0ff;\n  --line: #dce1e7;\n  --read-size: 1rem;\n  --sidebar-size: 14.5rem;\n}\n* { box-sizing: border-box; }\nbody { margin: 0; }\nbutton, select, textarea { font: inherit; }\nbutton, select, summary, a { -webkit-tap-highlight-color: transparent; }\nbutton, select, textarea { max-width: 100%; }\nbutton {\n  min-height: 2.5rem;\n  padding: .5rem 1rem;\n  border: 1px solid transparent;\n  border-radius: .5rem;\n  background: var(--accent);\n  color: #fff;\n  font-weight: 600;\n  line-height: 1.5;\n  cursor: pointer;\n  transition: background-color 150ms ease-out, border-color 150ms ease-out;\n}\nbutton:hover { background: var(--accent-hover); }\nbutton:active { background: #153b94; }\nbutton:disabled { color: #626b77; background: #edf0f4; border-color: var(--line); cursor: not-allowed; }\na { color: var(--accent); text-underline-offset: .2em; }\na:hover { text-decoration-thickness: 2px; }\n:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }\n::selection { color: #142b61; background: #dce7ff; }\n::placeholder { color: #626d7a; opacity: 1; }\n[hidden] { display: none !important; }\nh1, h2, h3, p { margin: 0; }\nh1, h2, h3 { overflow-wrap: anywhere; }\nh2 { font-size: 1rem; line-height: 1.5; }\nh3 { font-size: .875rem; line-height: 1.5; }\np { line-height: 1.7; }\n.muted { color: var(--muted); }\n.material-section, .material-picker { margin: 1rem 0; padding: 1rem 0; border-top: 1px solid var(--line); }\n.material-section h2 { margin-bottom: .5rem; }\n.material-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; padding: .625rem 0; }\n.material-info { flex: 1 1 14rem; min-width: 0; overflow-wrap: anywhere; }\n.material-info strong { display: block; font-size: .875rem; }\n.material-info p, .material-picker p { font-size: .8125rem; color: var(--muted); }\n.material-actions { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }\n.material-picker { display: grid; gap: .75rem; }\n.material-picker input[type=file] { max-width: 100%; }\n.material-consent { display: flex; align-items: baseline; gap: .5rem; font-size: .875rem; line-height: 1.6; }\n.material-preview { position: fixed; z-index: 3; inset: 0 0 0 auto; width: min(34rem, 100vw); background: var(--surface); border-left: 1px solid var(--line); overflow-y: auto; padding: 1.25rem; }\n.material-preview header { display: flex; gap: 1rem; justify-content: space-between; align-items: center; margin-bottom: 1rem; }\n.material-preview p, .material-preview pre { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; font-family: inherit; }\n.material-preview section { margin-top: 1.5rem; }\n.material-preview .source-location { font-size: .75rem; color: var(--muted); margin-bottom: .5rem; }\n.material-preview select { display: block; margin: .75rem 0; padding: .5rem; }\n@media (min-width: 1100px) {\n  .material-preview { width: 30rem; }\n  body.source-open .assistant-main { margin-right: 30rem; padding-left: 1.5rem; padding-right: 1.5rem; }\n  body.source-open .skill-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }\n  body.source-open .composer-footnote { flex-direction: column; }\n  body.source-open .page-toolbar { flex-wrap: wrap; gap: .5rem; }\n}\n.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }\n.skip-link { position: absolute; z-index: 4; top: .5rem; left: .5rem; padding: .75rem 1rem; background: var(--surface); transform: translateY(-180%); }\n.skip-link:focus { transform: none; }\n.quiet-button { background: var(--surface); border-color: var(--line); color: var(--text); }\n.quiet-button:hover { background: #eef2f7; border-color: #aebdce; }\n.text-button { background: transparent; color: var(--muted); padding: .375rem .5rem; font-size: .875rem; font-weight: 500; }\n.text-button:hover { color: var(--accent); background: var(--selected); }\n.text-button:disabled { background: transparent; border-color: transparent; color: #626b77; }\n\n.sidebar {\n  position: fixed;\n  z-index: 2;\n  inset: 0 auto 0 0;\n  display: flex;\n  flex-direction: column;\n  width: var(--sidebar-size);\n  padding: 1.5rem 1rem 1rem;\n  background: #f0f3f7;\n  border-right: 1px solid var(--line);\n  overflow-y: auto;\n}\n.brand { display: flex; align-items: baseline; gap: .375rem; min-height: 2rem; margin: 0 .5rem 1.5rem; color: var(--text); font-weight: 600; text-decoration: none; white-space: nowrap; }\n.brand-short { font-size: 1.25rem; }\n.brand-long { font-size: .875rem; }\n.compact-label { display: none; }\n.new-conversation { width: 100%; background: var(--surface); border-color: var(--line); color: var(--accent); text-align: left; }\n.new-conversation:hover { background: var(--selected); border-color: #b0c4f6; }\n.sidebar-section { margin-top: 1.5rem; }\n.sidebar-section h2 { padding: 0 .5rem; margin-bottom: .5rem; color: var(--muted); font-size: .8125rem; font-weight: 500; }\n.common-skills { display: grid; gap: .125rem; }\n.common-skills button, .conversation-list button, .conversation-item { width: 100%; background: transparent; color: var(--text); text-align: left; padding: .5rem; font-size: .875rem; font-weight: 400; overflow-wrap: anywhere; }\n.common-skills button:hover, .conversation-list button:hover, .conversation-item:hover { background: #e3eaf4; }\n.common-skills button[aria-pressed="true"], .conversation-list button[aria-current], .conversation-item.is-current { color: #1849b4; background: #e1e9fa; }\n.recent-section { flex: 1; min-height: 5rem; }\n.conversation-list { display: grid; gap: .25rem; }\n.conversation-list p { padding: .5rem; font-size: .8125rem; overflow-wrap: anywhere; }\n.conversation-list button { display: block; }\n.conversation-list small, .conversation-item time { display: block; color: var(--muted); font-size: .8125rem; font-variant-numeric: tabular-nums; }\n.workspace-links { display: grid; gap: .125rem; padding-top: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--line); }\n.workspace-links a { padding: .625rem .5rem; border-radius: .5rem; color: var(--muted); text-decoration: none; font-size: .875rem; }\n.workspace-links a:hover { color: var(--text); background: #e3eaf4; }\n.account-area { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .25rem; margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--line); }\n#account-name { padding-left: .5rem; font-size: .8125rem; overflow-wrap: anywhere; }\n.assistant-main { margin-left: var(--sidebar-size); min-height: 100dvh; padding: 0 2rem 2rem; }\n.page-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.5rem; }\n.availability { color: var(--muted); font-size: .8125rem; }\n#nav-toggle { display: none; }\n.reading-control { display: flex; align-items: center; gap: .5rem; color: var(--muted); font-size: .8125rem; white-space: nowrap; }\n.reading-control select { min-height: 2.5rem; padding: .375rem .5rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--surface); color: var(--text); }\n.conversation-surface { display: flex; flex-direction: column; max-width: 52.5rem; margin: 0 auto; padding-top: 3rem; }\n.conversation-heading { margin-bottom: 2rem; }\n.conversation-heading h1 { font-size: 1.75rem; font-weight: 600; line-height: 1.5; }\n.conversation-heading p { margin-top: .5rem; font-size: .875rem; }\n.history-section { min-width: 0; }\n.history { min-width: 0; font-size: var(--read-size); line-height: 1.7; }\n.history:empty { display: none; }\n.history-hint, .history > p { color: var(--muted); font-size: .875rem; margin-bottom: 1rem; }\n.history article, .message { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }\n.message-meta, .history article header { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-bottom: .5rem; color: var(--muted); font-size: .8125rem; font-variant-numeric: tabular-nums; }\n.message-text, .reading-text, .history article p:not(.message-meta) { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; line-height: 1.7; }\n.history article p + p { margin-top: .75rem; }\n.older-messages { display: block; margin: 0 auto 1rem; }\n.run-panel { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin: 0 0 1.5rem; padding: .5rem 0; color: var(--muted); font-size: .8125rem; }\n.run-actions { display: flex; gap: .25rem; flex-shrink: 0; }\n.run-panel p { overflow-wrap: anywhere; }\n.run-panel:has(#run-status:empty) { display: none; }\n.notice { margin-bottom: 1.5rem; padding: .75rem 1rem; border-radius: .5rem; border: 1px solid #bfcee9; background: #edf3ff; color: #24416e; font-size: .875rem; overflow-wrap: anywhere; }\n.notice:empty { display: none; }\n.notice.error, .notice[data-kind="error"] { color: #8c331f; background: #fff2ed; border-color: #e3b8a9; }\n.conflict-panel { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #d8bd8b; border-radius: .75rem; background: #fff9ed; color: #664b1e; }\n.conflict-panel > p { margin: .5rem 0 1rem; font-size: .875rem; }\n#server-draft { max-height: 15rem; overflow: auto; margin: .5rem 0 1rem; padding: .75rem; background: var(--surface); border: 1px solid #e7dbc5; border-radius: .5rem; color: var(--text); font-size: var(--read-size); }\n.conflict-actions { display: flex; flex-wrap: wrap; gap: .5rem; }\n.conflict-actions button { font-size: .875rem; }\n.compose-section { min-width: 0; }\n.skill-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }\n.skill-cards button { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; padding: .875rem .75rem; border: 1px solid var(--line); border-radius: .75rem; color: var(--text); background: var(--surface); text-align: left; }\n.skill-c'... 5830 more characters,
+    expected: /\.generation-text[^}]*white-space:\s*pre-wrap/s,
+    operator: 'match',
+    diff: 'simple'
+  }

@@ -4,12 +4,14 @@ import re
 from uuid import UUID
 
 from fastapi import Request
+from pydantic import ValidationError
 from sqlalchemy import text
 
 from .. import domain as d
 from ..assistant import service
 from ..assistant.attachment_records import items
 from ..assistant.providers import attempts
+from ..assistant.providers.history import read_history
 from ..assistant.providers.policy import MainModelRuntime, add_costs, prepare, require_policy, reservation, sha
 from ..ops.storage import quarantined, require_active
 from ..security import ServiceError
@@ -17,7 +19,7 @@ from .request_context import actor_in, body_input
 
 _UUID=r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 _READ_PATH=re.compile(rf'/api/assistant/(?:attempts/{_UUID}|conversations/{_UUID}/'
-    rf'(?:generation-capability|generations/by-request/{_UUID}))')
+    rf'(?:generation-capability|generation-history|generations/by-request/{_UUID}))')
 
 
 def is_generation_read_path(path):
@@ -86,6 +88,18 @@ def attach_generation(app, database, runtime=None):
             actor=actor_in(request,db)
             conversation=service._owned(actor,identifier,db)
             return _capability(actor,conversation,db,runtime,tasks)
+
+    @app.get(base+'/generation-history')
+    def history(identifier:UUID,request:Request):
+        with database.session() as db:
+            actor=actor_in(request,db)
+            conversation=service._owned(actor,identifier,db)
+            if any(key!='message_id' for key in request.query_params):
+                raise ServiceError('STATE_CONFLICT',422)
+            try:query=d.MainGenerationHistoryQuery(message_ids=request.query_params.getlist('message_id'))
+            except ValidationError:
+                raise ServiceError('STATE_CONFLICT',422) from None
+            return read_history(actor,conversation,query,db)
 
     @app.post(base+'/generations',status_code=202)
     async def generate(identifier:UUID,request:Request):

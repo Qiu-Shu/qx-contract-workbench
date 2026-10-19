@@ -1,0 +1,43 @@
+✔ send follows the generation gate and existing draft/readonly guards (2.0345ms)
+✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.4365ms)
+✔ capability states give distinct truthful explanations (0.5205ms)
+✔ results stay with their matching input in chronological history and have source anchors (1.4035ms)
+✔ model text remains literal with whitespace and source links only target loaded messages (0.4896ms)
+✔ unrelated items and prior conversation content are cleared on switching or revocation (0.4234ms)
+✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.4183ms)
+✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.4911ms)
+✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.287ms)
+✖ failed capability reads can be retried before any task exists (0.9886ms)
+✔ initial template keeps send disabled, recovery hidden and describes controlled generation (0.4391ms)
+✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.278ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 11
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 75.9479
+
+✖ failing tests:
+
+test at scripts\test_assistant_generation_render.mjs:138:1
+✖ failed capability reads can be retried before any task exists (0.9886ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:141:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

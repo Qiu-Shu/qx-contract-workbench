@@ -1,0 +1,23 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_history_keeps_two_outputs_in_request_order_without_runtime_or_provider_calls _
+
+world = (<cn_contract.persistence.Database object at 0x000001F75FA79F10>, Actor(user_id=UUID('82aba962-cf94-447c-ac63-542a8ea4...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001F75FB5B800>)
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-923/test_history_keeps_two_outputs0')
+
+    def test_history_keeps_two_outputs_in_request_order_without_runtime_or_provider_calls(world, tmp_path):
+        first_id, first = recorded(world)
+        second_id, second = recorded(world)
+        runtime = world[-1]
+        assert len(runtime.provider.calls) == 2
+        with boot(world, tmp_path, runtime=None) as http:
+            response = history(http, second_id, first_id)
+>           assert response.status_code == 200, response.text
+E           AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"b817b4fc-682c-44e5-af5d-8e249d8e1b06","retryable":false}
+E           assert 404 == 200
+E            +  where 404 = <Response [404 Not Found]>.status_code
+
+tests\integration\test_assistant_generation_history.py:38: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_generation_history.py::test_history_keeps_two_outputs_in_request_order_without_runtime_or_provider_calls
+1 failed in 1.69s

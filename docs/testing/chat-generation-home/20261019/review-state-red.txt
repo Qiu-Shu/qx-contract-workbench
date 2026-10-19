@@ -1,0 +1,55 @@
+reverted input: {"capCalls":1,"dirty":false,"canSend":false}
+✖ entry rechecks readiness after input changes and returns to the saved text (7.2869ms)
+✖ entry rechecks readiness after a skill selection is immediately cancelled (1.54ms)
+✔ unknown network outcome repeated send and refresh use original lookup without resubmission (1.8534ms)
+✔ late capability success cannot authorize another conversation (1.074ms)
+✔ history response for a former binding is rejected and cannot be displayed (0.7261ms)
+✖ a delayed history authorization error after revocation cannot restore old state (0.7835ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 3
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78.5236
+
+✖ failing tests:
+
+test at .local\chat-generation-home-20261019\review-state-probes.mjs:44:1
+✖ entry rechecks readiness after input changes and returns to the saved text (7.2869ms)
+  AssertionError [ERR_ASSERTION]: unchanged saved text must become sendable again after capability invalidation
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/.local/chat-generation-home-20261019/review-state-probes.mjs:48:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .local\chat-generation-home-20261019\review-state-probes.mjs:51:1
+✖ entry rechecks readiness after a skill selection is immediately cancelled (1.54ms)
+  AssertionError [ERR_ASSERTION]: restoring the previous selection must not strand the send button
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/.local/chat-generation-home-20261019/review-state-probes.mjs:54:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .local\chat-generation-home-20261019\review-state-probes.mjs:80:1
+✖ a delayed history authorization error after revocation cannot restore old state (0.7835ms)
+  { code: 'CROSS_MATTER_DENIED', status: 403 }

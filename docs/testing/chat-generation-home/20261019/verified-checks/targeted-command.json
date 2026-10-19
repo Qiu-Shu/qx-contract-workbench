@@ -1,0 +1,21 @@
+[
+  "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+  "-X",
+  "utf8",
+  "-m",
+  "pytest",
+  "tests/integration/test_assistant_frontend.py",
+  "tests/integration/test_assistant_pages.py",
+  "tests/integration/test_assistant_generation_history.py",
+  "tests/integration/test_assistant_generation_routes.py",
+  "tests/integration/test_assistant_history_routes.py",
+  "tests/integration/test_assistant_attachment_routes.py",
+  "tests/integration/test_assistant_model_backup.py",
+  "tests/integration/test_assistant_routes.py",
+  "tests/integration/test_assistant_task_manager.py",
+  "tests/integration/test_local_workbench.py",
+  "tests/unit/test_assistant_model_contract.py",
+  "-q",
+  "--tb=short",
+  "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\chat-generation-home-20261019\\verified-checks\\final-targeted.xml"
+]

@@ -1,0 +1,651 @@
+{
+  "scope": "real Chromium + native backend + real adapter + synthetic loopback; no installed app acceptance",
+  "checks": [
+    "native_login_has_no_generation_or_provider_probe",
+    "editing_then_reverting_saved_text_restores_send_without_provider_post",
+    "rapid_skill_selection_and_cancel_restores_send_without_provider_post",
+    "pending_generation_allows_new_saved_draft_and_preserves_it_on_reply",
+    "two_rounds_and_reload_keep_both_candidates_and_message_citations_without_resend",
+    "lost_202_response_recovers_original_request_without_second_provider_post",
+    "skill_and_selected_local_docx_block_generation_and_keep_draft",
+    "cancel_keeps_receipt_but_never_shows_late_candidate",
+    "switching_conversation_discards_late_result_from_current_screen",
+    "observed_revocation_clears_current_text_history_results_and_recent_list",
+    "zero_external_browser_requests_csp_violations_or_javascript_errors"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/login"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/workbench.css"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/workbench.js"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/login"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/session"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/assistant"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant.css"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-api.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-state.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-render.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-composer.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-materials.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-generation.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/session"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/skills"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "PUT",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/draft"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/materials"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f"
+    },
+    {
+      "method": "PUT",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/draft"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/materials"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f"
+    },
+    {
+      "method": "PUT",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/draft"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/materials"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f&message_id=06ce0059-f2bf-4dcf-8b34-e49e9f9738ea"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f&message_id=06ce0059-f2bf-4dcf-8b34-e49e9f9738ea"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/assistant/73238cc0-e3b6-461e-a7b5-7d03d176dc54"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant.css"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-api.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-state.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-render.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-composer.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-materials.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/static/assistant-generation.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/session"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/skills"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/materials"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f&message_id=06ce0059-f2bf-4dcf-8b34-e49e9f9738ea"
+    },
+    {
+      "method": "PUT",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/draft"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f&message_id=06ce0059-f2bf-4dcf-8b34-e49e9f9738ea"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generations/by-request/96a1c740-d9ac-4951-a7cb-e37cdebf9f80"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/materials"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f&message_id=06ce0059-f2bf-4dcf-8b34-e49e9f9738ea&message_id=78572d86-b408-46ad-86ea-6012db6de9d8"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/73238cc0-e3b6-461e-a7b5-7d03d176dc54/generation-history?message_id=84c28a88-d697-492f-a5c2-0311a7e5fd8f&message_id=06ce0059-f2bf-4dcf-8b34-e49e9f9738ea&message_id=78572d86-b408-46ad-86ea-6012db6de9d8"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "PUT",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b24e45b5-60f2-4733-ad94-9ece4f11e65a/draft"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b24e45b5-60f2-4733-ad94-9ece4f11e65a/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b24e45b5-60f2-4733-ad94-9ece4f11e65a/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b24e45b5-60f2-4733-ad94-9ece4f11e65a/generation-capability"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b24e45b5-60f2-4733-ad94-9ece4f11e65a/attachments"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b24e45b5-60f2-4733-ad94-9ece4f11e65a"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b24e45b5-60f2-4733-ad94-9ece4f11e65a/materials"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b24e45b5-60f2-4733-ad94-9ece4f11e65a/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "PUT",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/draft"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/generation-capability"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/generations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/materials"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/generation-history?message_id=25b5198e-079a-43ea-9bc6-0d7f7bc2411d"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/generation-history?message_id=25b5198e-079a-43ea-9bc6-0d7f7bc2411d"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/runs/a22b9203-6e1d-45b1-abc3-ea0a7b62872f/cancel"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/materials"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/f58b5df4-0f94-4544-a674-967aa9ad425e/generation-history?message_id=25b5198e-079a-43ea-9bc6-0d7f7bc2411d"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "PUT",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b5aac5e2-d9b7-4e8b-b8c1-cc1b4d011eb0/draft"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b5aac5e2-d9b7-4e8b-b8c1-cc1b4d011eb0/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b5aac5e2-d9b7-4e8b-b8c1-cc1b4d011eb0/generation-capability"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b5aac5e2-d9b7-4e8b-b8c1-cc1b4d011eb0/generations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b5aac5e2-d9b7-4e8b-b8c1-cc1b4d011eb0"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b5aac5e2-d9b7-4e8b-b8c1-cc1b4d011eb0/materials"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b5aac5e2-d9b7-4e8b-b8c1-cc1b4d011eb0/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b5aac5e2-d9b7-4e8b-b8c1-cc1b4d011eb0/generation-history?message_id=21ba64ba-1b5a-48ae-9f09-ea136cd1e5f8"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b5aac5e2-d9b7-4e8b-b8c1-cc1b4d011eb0/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/b5aac5e2-d9b7-4e8b-b8c1-cc1b4d011eb0/generation-history?message_id=21ba64ba-1b5a-48ae-9f09-ea136cd1e5f8"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "PUT",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/66891792-636d-4dd7-a806-e966d2526b8b/draft"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/66891792-636d-4dd7-a806-e966d2526b8b/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations"
+    },
+    {
+      "method": "PUT",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219/draft"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219/generation-capability"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219/generations"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219/materials"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219/generation-history?message_id=63c733cd-df06-4cdb-bc94-a351cf2d9d28"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219/generation-capability"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219/generation-history?message_id=63c733cd-df06-4cdb-bc94-a351cf2d9d28"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49893/api/assistant/conversations/80d00b10-fc24-4ee9-8a6e-507ac2b8b219"
+    }
+  ],
+  "page_errors": [],
+  "csp": [],
+  "real_model_calls": 0,
+  "exit_code": 0,
+  "source_before": {
+    "src/cn_contract/web/static/assistant.mjs": "6bef173b7511ef925c6df3c8133d9b05f9de55fe9f86338461ab64e8e772b39a",
+    "src/cn_contract/web/static/assistant-state.mjs": "5c895f266acdd9daf3e8e84a2c2fe8acb4248c1828a43a6c0a3fefcf9d81192a",
+    "src/cn_contract/web/static/assistant-generation.mjs": "db8f18f519e59104245c3fd648f40855837e8fb01f1cd860a51e2a1c5e82bf7a",
+    "src/cn_contract/web/static/assistant-api.mjs": "66b45bd2b450730017024c56fbc7b4e4459b6b736ae646e59c86ef3072dd9584",
+    "src/cn_contract/web/static/assistant-render.mjs": "efddaddcbce6a35fd0bc451d37a33ff7ce4a8baf5f141f1b795c261e4ce2d7ec",
+    "src/cn_contract/web/static/assistant-composer.mjs": "cdffd8b6ebead4a76005fd08e95bf8a180d0862ff8e88f34beb98d7ae90a5226",
+    "src/cn_contract/web/static/assistant-materials.mjs": "071d428c86ef1536ad4a28d361ba028fc385c946d5bef42209be9e7fcc0d36dc",
+    "src/cn_contract/web/templates/assistant.html": "7c29621243bd4cf4a8079811f71715f310e007fbb386537564122aac21dc487f",
+    "src/cn_contract/web/static/assistant.css": "011cf0f95df4c868d252cae84b4b90604d864b4c08fff60203d585491d908278",
+    "src/cn_contract/domain.py": "abdf94aef7eaba828c6a05589ffb30f7094f250929705597f35b3caf5cfc523a",
+    "src/cn_contract/web/assistant_generation.py": "b951950064fe324276d6038f0e87aa8bbd5b902e25cc2db247c299bac8a61da7",
+    "src/cn_contract/assistant/providers/history.py": "6f4b08fca1105d6ce74d2fe011e835a94739441514ea5dabb7f0203fc6c187c2"
+  },
+  "upstream_posts": 6,
+  "upstream_receipts": [
+    {
+      "case": "first",
+      "message_id": "84c28a88-d697-492f-a5c2-0311a7e5fd8f",
+      "source_sha256": "71a16a7a38abe613c00e115f2a47adce0e963701a43295e04eadfdf700ef7b1f",
+      "wire_sha256": "4fbfcea23a1a6bba57aa2fd93e53b919f5ec466be05ed45ddcb59d9ebafd1cfc"
+    },
+    {
+      "case": "second",
+      "message_id": "06ce0059-f2bf-4dcf-8b34-e49e9f9738ea",
+      "source_sha256": "9ae7d1628a361fa4497961d36dbd138519e8bbc809f2ff1f52b47625a1ad1894",
+      "wire_sha256": "1e2b6cc39ec749a93ede123178afad6ed3c4550a52b57a30b4cb374bdf59d248"
+    },
+    {
+      "case": "unknown",
+      "message_id": "78572d86-b408-46ad-86ea-6012db6de9d8",
+      "source_sha256": "913053d5d50a0acbdbc43908e2eba0a2715cccd25af2b57ab3d91f8b29c778e8",
+      "wire_sha256": "f1f4685fc26739a8cf6f42f4e0e8d18c07669b4be007ffebe93f0e8506a63aaf"
+    },
+    {
+      "case": "cancel",
+      "message_id": "25b5198e-079a-43ea-9bc6-0d7f7bc2411d",
+      "source_sha256": "ebf333182322bb385912d46f9739ee359844fedb405c154fce46ca966e458d9a",
+      "wire_sha256": "2fb204895525ff1f8ada401be9c064d7bc65b046594d65cfa8a3336c8e460226"
+    },
+    {
+      "case": "switch",
+      "message_id": "21ba64ba-1b5a-48ae-9f09-ea136cd1e5f8",
+      "source_sha256": "b531f3536f404ca273ba4eed64f32933b9e45853c0ba993067d1688f323fd451",
+      "wire_sha256": "ea7957f32b6886d67004a8c922c1d22f97cecf57794c6c38cba3327e75191827"
+    },
+    {
+      "case": "revoked",
+      "message_id": "63c733cd-df06-4cdb-bc94-a351cf2d9d28",
+      "source_sha256": "6e535c849671d041b1750ae0e363ac4eead3e97d4b3411003c0dc2ce97cb8c01",
+      "wire_sha256": "845a8b2e27f7ca6230324520fd4f0729413634f6ae98012d2ce11ab528c8bcc1"
+    }
+  ],
+  "fixture_errors": [],
+  "final_url": "http://127.0.0.1:49893/assistant",
+  "final_ui": {
+    "save-status": "访问已结束",
+    "generation-note": "访问已结束。",
+    "generation-status": "",
+    "notice": "登录已失效。请重新登录后读取已保存的记录。",
+    "run-status": ""
+  },
+  "source_after": {
+    "src/cn_contract/web/static/assistant.mjs": "6bef173b7511ef925c6df3c8133d9b05f9de55fe9f86338461ab64e8e772b39a",
+    "src/cn_contract/web/static/assistant-state.mjs": "5c895f266acdd9daf3e8e84a2c2fe8acb4248c1828a43a6c0a3fefcf9d81192a",
+    "src/cn_contract/web/static/assistant-generation.mjs": "db8f18f519e59104245c3fd648f40855837e8fb01f1cd860a51e2a1c5e82bf7a",
+    "src/cn_contract/web/static/assistant-api.mjs": "66b45bd2b450730017024c56fbc7b4e4459b6b736ae646e59c86ef3072dd9584",
+    "src/cn_contract/web/static/assistant-render.mjs": "efddaddcbce6a35fd0bc451d37a33ff7ce4a8baf5f141f1b795c261e4ce2d7ec",
+    "src/cn_contract/web/static/assistant-composer.mjs": "cdffd8b6ebead4a76005fd08e95bf8a180d0862ff8e88f34beb98d7ae90a5226",
+    "src/cn_contract/web/static/assistant-materials.mjs": "071d428c86ef1536ad4a28d361ba028fc385c946d5bef42209be9e7fcc0d36dc",
+    "src/cn_contract/web/templates/assistant.html": "7c29621243bd4cf4a8079811f71715f310e007fbb386537564122aac21dc487f",
+    "src/cn_contract/web/static/assistant.css": "011cf0f95df4c868d252cae84b4b90604d864b4c08fff60203d585491d908278",
+    "src/cn_contract/domain.py": "abdf94aef7eaba828c6a05589ffb30f7094f250929705597f35b3caf5cfc523a",
+    "src/cn_contract/web/assistant_generation.py": "b951950064fe324276d6038f0e87aa8bbd5b902e25cc2db247c299bac8a61da7",
+    "src/cn_contract/assistant/providers/history.py": "6f4b08fca1105d6ce74d2fe011e835a94739441514ea5dabb7f0203fc6c187c2"
+  },
+  "source_unchanged": true
+}

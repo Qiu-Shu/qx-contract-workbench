@@ -1,0 +1,37 @@
+{
+  "scope": "generation renderer only",
+  "baseline": "f218f44",
+  "red": {
+    "command": "node --test scripts/test_assistant_generation_render.mjs",
+    "exit_code": 1,
+    "tests": 11,
+    "passed": 0,
+    "failed": 11,
+    "log": "render-red.txt"
+  },
+  "target": {
+    "command": "node --test scripts/test_assistant_generation_render.mjs",
+    "exit_code": 0,
+    "tests": 11,
+    "passed": 11,
+    "failed": 0,
+    "log": "render-green.txt"
+  },
+  "regression": {
+    "command": "node --test scripts/test_assistant_generation_render.mjs scripts/test_assistant_state.mjs scripts/test_assistant_transport_input.mjs scripts/test_assistant_material_state.mjs scripts/test_assistant_material_dom.mjs",
+    "exit_code": 0,
+    "node_test_entries": 24,
+    "passed": 24,
+    "failed": 0,
+    "nested_state_check_groups": 28,
+    "nested_material_check_groups": 4,
+    "counting_note": "The two script-level Node entries each wrap their own checks; do not add them as independent Node entries.",
+    "log": "render-regression.txt"
+  },
+  "diff_check_exit_code": 0,
+  "limitations": [
+    "Lightweight DOM harness is not a real browser/layout verification.",
+    "Browser/Electron validation and Impeccable detect are owned by the root agent.",
+    "No commit, real materials, real model request, dependency install or external upload."
+  ]
+}

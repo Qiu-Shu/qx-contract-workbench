@@ -1,0 +1,5 @@
+PASS attachment-only action creates one conversation and never clears text typed during upload
+PASS unknown upload checks receipt before retry, retains chosen file and never duplicates
+PASS revocation clears pending attachment and late response cannot repopulate another view
+PASS material scope conflict preserves text and file until explicit resolution
+4 attachment state groups passed

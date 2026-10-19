@@ -1,0 +1,116 @@
+{
+  "scope": "actual development Electron main/BrowserWindow/preload; not installed app acceptance",
+  "mode": "default",
+  "checks": [],
+  "page_errors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+    },
+    {
+      "method": "GET",
+      "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/login"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/static/workbench.css"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/static/workbench.js"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:49411/api/login"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/api/session"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/assistant"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/static/assistant.css"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/static/assistant.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/static/assistant-api.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/static/assistant-state.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/static/assistant-render.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/static/assistant-composer.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/static/assistant-materials.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/static/assistant-generation.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/api/session"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/api/assistant/skills"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:49411/api/assistant/conversations"
+    }
+  ],
+  "source_before": {
+    "desktop/main.cjs": "48a8af3f7727412cc284f69936a41641386e1c8a7f830acaa4bdf9908136662d",
+    "desktop/backend.cjs": "efff31b5082bfa0e4d23d005f19062e06d066098c28d4e24a4957a05673c1daf",
+    "desktop/preload.cjs": "1e3fb88c4562950c82fc98c397cb1c6eafccf3b0810e1851997a192044f4f64c",
+    "desktop/policy.cjs": "60e29da78a86c5fbb9bab69f4e3d82afe146999d9749d1a340881d4824944c2a",
+    "desktop/setup.js": "09034929ae3957c3f26c3f93648425f71ac6f85a68ee0e0fa4fee20bb0da0bb2",
+    "src/cn_contract/desktop_entry.py": "009ced2df4513499502bc9fce1cf0e1210f61079f9f589f6a103d83f607a45f2",
+    "src/cn_contract/web/assistant_generation.py": "b951950064fe324276d6038f0e87aa8bbd5b902e25cc2db247c299bac8a61da7",
+    "src/cn_contract/assistant/providers/history.py": "6f4b08fca1105d6ce74d2fe011e835a94739441514ea5dabb7f0203fc6c187c2",
+    "src/cn_contract/domain.py": "abdf94aef7eaba828c6a05589ffb30f7094f250929705597f35b3caf5cfc523a",
+    "src/cn_contract/web/templates/assistant.html": "7c29621243bd4cf4a8079811f71715f310e007fbb386537564122aac21dc487f",
+    "src/cn_contract/web/static/assistant.css": "011cf0f95df4c868d252cae84b4b90604d864b4c08fff60203d585491d908278",
+    "src/cn_contract/web/static/assistant.mjs": "6bef173b7511ef925c6df3c8133d9b05f9de55fe9f86338461ab64e8e772b39a",
+    "src/cn_contract/web/static/assistant-api.mjs": "66b45bd2b450730017024c56fbc7b4e4459b6b736ae646e59c86ef3072dd9584",
+    "src/cn_contract/web/static/assistant-state.mjs": "5c895f266acdd9daf3e8e84a2c2fe8acb4248c1828a43a6c0a3fefcf9d81192a",
+    "src/cn_contract/web/static/assistant-generation.mjs": "58a8928ade9f59fdae0b6a9907566d636190319cdf998611e0abd270bfee7e49",
+    "src/cn_contract/web/static/assistant-render.mjs": "efddaddcbce6a35fd0bc451d37a33ff7ce4a8baf5f141f1b795c261e4ce2d7ec",
+    "src/cn_contract/web/static/assistant-composer.mjs": "cdffd8b6ebead4a76005fd08e95bf8a180d0862ff8e88f34beb98d7ae90a5226",
+    "src/cn_contract/web/static/assistant-materials.mjs": "071d428c86ef1536ad4a28d361ba028fc385c946d5bef42209be9e7fcc0d36dc"
+  },
+  "exit_code": 1,
+  "real_model_calls": 0,
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\desktop\\node_modules\\electron\\dist\\electron.exe",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\chat-generation-home-20261019\\electron_probe_bootstrap.cjs",
+    "--remote-debugging-port=0",
+    "--remote-debugging-address=127.0.0.1"
+  ],
+  "status": "failed",
+  "error_type": "AssertionError",
+  "error": "",
+  "process_returncode": 1
+}

@@ -155,7 +155,7 @@ def test_library_availability_is_shell_metadata(native):
 def test_assistant_static_allowlist_is_exact(chat):
     client, _, _ = chat
     for name in ('assistant.css', 'assistant-api.mjs', 'assistant-state.mjs',
-                 'assistant-render.mjs', 'assistant-composer.mjs', 'assistant.mjs'):
+                 'assistant-render.mjs', 'assistant-composer.mjs', 'assistant-generation.mjs', 'assistant.mjs'):
         response = client.get('/static/'+name)
         assert response.status_code == 200, name
         assert response.content, name

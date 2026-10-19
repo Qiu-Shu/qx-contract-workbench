@@ -35,7 +35,7 @@
   <main id="main" class="assistant-main">
     <header class="page-toolbar">
       <button id="nav-toggle" class="quiet-button" type="button" aria-expanded="false" aria-controls="sidebar">菜单</button>
-      <p class="availability">{% if readonly %}恢复副本 · 只读{% else %}本机草稿 · 生成尚未接通{% endif %}</p>
+      <p class="availability">{% if readonly %}恢复副本 · 只读{% else %}本机工作草稿 · 受控生成{% endif %}</p>
       <label class="reading-control" for="body-size">阅读字号<select id="body-size"><option value="16">标准 16</option><option value="18">较大 18</option><option value="20">大号 20</option></select></label>
     </header>
 
@@ -65,7 +65,7 @@
         <div class="conflict-actions"><button id="keep-local" type="button">保留当前文字并保存</button><button id="use-server" class="quiet-button" type="button">使用已保存文字</button></div>
       </section>
 
-      <section class="compose-section" aria-label="输入与保存草稿">
+      <section class="compose-section" aria-label="输入、保存与生成草稿">
         <section id="material-section" class="material-section" aria-labelledby="material-heading" hidden>
           <h2 id="material-heading">本次材料</h2>
           <div id="material-list"></div>
@@ -85,7 +85,7 @@
           <textarea id="composer" name="content" rows="4" maxlength="20000" placeholder="例如：客户遇到了什么问题，需要我们帮忙处理什么……" aria-describedby="input-help save-status"{% if readonly %} readonly{% endif %}></textarea>
           <div class="composer-actions">
             <button id="add-material" class="quiet-button" type="button" aria-expanded="false" aria-controls="material-picker"{% if readonly %} disabled{% endif %}>添加材料</button>
-            <div class="save-actions"><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="capability-summary">发送</button></div>
+            <div class="save-actions"><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="generation-note generation-status">发送</button></div>
           </div>
         </form>
         <section id="material-picker" class="material-picker" aria-label="添加本机 DOCX" hidden>
@@ -97,12 +97,17 @@
           <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>
         </section>
         <div class="composer-footnote"><p id="save-status" role="status" aria-live="polite">{% if readonly %}此副本只读，不能保存修改。{% else %}输入后自动保存，也可手动保存。{% endif %}</p><p id="input-help">Enter 发送，Shift+Enter 换行；当前发送不可用。</p></div>
+        <div class="generation-panel" aria-label="生成条件与状态">
+          <p id="generation-note">{% if readonly %}恢复副本只读，可核对已有结果，不能发送或继续历史任务。{% else %}输入并保存文字后，将核对当前生成条件。{% endif %}</p>
+          <p id="generation-status" role="status" aria-live="polite"></p>
+          <button id="recover-generation" class="text-button" type="button" hidden>查找发送结果</button>
+        </div>
         <details class="capability-details">
           <summary id="capability-summary">当前可用范围与说明</summary>
           <div class="capability-content">
-            <p id="capability-details">可以保存草稿与 DOCX，模型对话尚未接入。</p>
-            {% if readonly %}<p>当前打开的是恢复副本，可查看已保存的记录，不能编辑、发送、添加材料或继续历史任务。</p>{% else %}<p>此页可保存咨询原话和工作草稿、选择能力、查看历史记录及已登记任务。所选能力还未接入执行，当前不会生成回复或自动建档。</p>{% endif %}
-            <p>DOCX 保存在本次对话，可以读取原文、核对读取范围及下载原件。发送尚未开放；保存和读取不会自动认定事实，也不会建立合同案件。</p>
+            <p id="capability-details">所选能力尚未接入执行。普通文字能否生成，以当前对话的生成条件为准。</p>
+            {% if readonly %}<p>当前打开的是恢复副本，可查看已保存的记录，不能编辑、发送、添加材料或继续历史任务。</p>{% else %}<p>生成仅用于已获准的文字，结果是内部待核对草稿，未经律师审核，不能作为正式法律意见。选择能力不会自动发送；本页不会自动建档或发送给客户。</p>{% endif %}
+            <p>DOCX 保存在本次对话，可以读取原文、核对读取范围及下载原件。含材料的对话暂不参与模型生成；保存和读取不会自动认定事实，也不会建立合同案件。</p>
             <p>继续办理可进入<a href="/workspace">工作区与接待</a>或<a href="/">合同工作台</a>。{% if library_enabled %}已连接的资料可在<a href="/library">法律资料库</a>检索。{% endif %}</p>
           </div>
         </details>

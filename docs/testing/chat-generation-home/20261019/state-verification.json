@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-10-19T18:53:22.4095818+08:00",
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "checks": [
+    {
+      "command": "node scripts/test_assistant_state.mjs",
+      "exit_code": 0,
+      "summary": "28 assistant state checks passed",
+      "log": ".local/chat-generation-home-20261019/test_assistant_state-final.txt"
+    },
+    {
+      "command": "node scripts/test_assistant_material_state.mjs",
+      "exit_code": 0,
+      "summary": "4 attachment state groups passed",
+      "log": ".local/chat-generation-home-20261019/test_assistant_material_state-final.txt"
+    },
+    {
+      "command": "node scripts/test_assistant_generation_state.mjs",
+      "exit_code": 0,
+      "summary": "27 generation state groups passed",
+      "log": ".local/chat-generation-home-20261019/test_assistant_generation_state-final.txt"
+    }
+  ],
+  "sources": [
+    {
+      "path": "src/cn_contract/web/static/assistant-state.mjs",
+      "sha256": "5c895f266acdd9daf3e8e84a2c2fe8acb4248c1828a43a6c0a3fefcf9d81192a"
+    },
+    {
+      "path": "src/cn_contract/web/static/assistant-generation.mjs",
+      "sha256": "58a8928ade9f59fdae0b6a9907566d636190319cdf998611e0abd270bfee7e49"
+    },
+    {
+      "path": "scripts/test_assistant_generation_state.mjs",
+      "sha256": "7865eebb964856845feb457c82992a8b758757d3a6ae56e32e89850afc6b2aec"
+    }
+  ],
+  "notes": "Synthetic controller fixtures only. No provider, browser, installer or full Python suite run by this subtask. Initial missing interface and readback/background overlap failures retained in state-*-red.txt."
+}

@@ -584,7 +584,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     def static_file(name:str):
         if name not in {'workbench.js','workbench.css','pdf-review.mjs','library.js','library.css','workspace.js','workspace.css',
                         'assistant.css','assistant-api.mjs','assistant-state.mjs','assistant-render.mjs',
-                        'assistant-composer.mjs','assistant-materials.mjs','assistant.mjs'}:raise ServiceError('NOT_SUPPORTED',404)
+                        'assistant-composer.mjs','assistant-materials.mjs','assistant-generation.mjs','assistant.mjs'}:raise ServiceError('NOT_SUPPORTED',404)
         return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith(('.js','.mjs')) else 'text/css')
     from .draft_confirmation import register_routes
     register_routes(app,database,authenticate_first,body_input,write)
