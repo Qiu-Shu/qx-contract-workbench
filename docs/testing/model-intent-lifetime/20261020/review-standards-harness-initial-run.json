@@ -1,0 +1,24 @@
+{
+  "time_utc": "2026-10-19T16:32:38.813510+00:00",
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\model-intent-lifetime-20261020\\review_standards_probe.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\model-intent-lifetime-20261020\\review-standards-tmp",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\model-intent-lifetime-20261020\\review-standards.xml"
+  ],
+  "exit_code": 1,
+  "source_before": {
+    "src/cn_contract/assistant/native_model_control.py": "0a6ea8b9eac612e9fe334ba7f4562d717c1b039c2e4de3a20168c29a0b21dbc4",
+    "src/cn_contract/assistant/providers/registry.py": "a8e99983a1623359bcf28d5e4bb513bcb7ac4e913138685436f45f61768f16ad"
+  },
+  "source_after": {
+    "src/cn_contract/assistant/native_model_control.py": "0a6ea8b9eac612e9fe334ba7f4562d717c1b039c2e4de3a20168c29a0b21dbc4",
+    "src/cn_contract/assistant/providers/registry.py": "a8e99983a1623359bcf28d5e4bb513bcb7ac4e913138685436f45f61768f16ad"
+  },
+  "source_stable": true
+}

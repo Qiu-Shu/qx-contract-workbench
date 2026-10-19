@@ -103,6 +103,22 @@ class MainModelRegistry:
             if key[2] == session_id:
                 del self._grants[key]
 
+    def authorization_token(self, actor, scope):
+        """Current grant identity without retaining a provider or policy snapshot."""
+        self._check_loop(bind=True)
+        key = _identity(actor, scope)
+        self._current_config()
+        current = self._grants.get(key)
+        if current is None or current[0].expires_at <= datetime.now(timezone.utc):
+            raise ServiceError('BLOCKED_LIVE', 403)
+        return self._version, current[1]
+
+    def validate_authorization(self, actor, scope, token):
+        current = self.authorization_token(actor, scope)
+        if (type(token) is not tuple or len(token) != 2
+                or token[0] is not current[0] or token[1] is not current[1]):
+            raise ServiceError('BLOCKED_LIVE', 403)
+
     def resolve(self, actor, scope):
         self._check_loop(bind=True)
         key = _identity(actor, scope)

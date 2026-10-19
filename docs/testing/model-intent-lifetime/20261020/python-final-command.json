@@ -1,0 +1,16 @@
+[
+  "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+  "-X",
+  "utf8",
+  "-m",
+  "pytest",
+  "-q",
+  "tests/integration/test_native_model_lifetime.py",
+  "tests/integration/test_native_model_control.py",
+  "tests/integration/test_session_model_runtime.py",
+  "tests/integration/test_assistant_generation_routes.py",
+  "tests/integration/test_assistant_generation.py",
+  "tests/integration/test_assistant_generation_history.py",
+  "tests/integration/test_desktop_runtime.py",
+  "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\model-intent-lifetime-20261020\\python-final.xml"
+]

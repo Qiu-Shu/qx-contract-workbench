@@ -1,0 +1,87 @@
+{
+  "task": "CH-04I authorization intent reference lifetime",
+  "axis": "Standards",
+  "reviewer": "/root/generation_history_api",
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "baseline": "921ba306014ccd39d535e32cfb3cd0e7e4c95834",
+  "comparison": "working tree against 921ba30; HEAD equalled baseline at review start",
+  "result": "PASS_NO_FINDINGS",
+  "findings": [],
+  "documented_standard_violations": [],
+  "actionable_smells": [],
+  "standards": [
+    "AGENTS.md: synthetic-only development; authorization verified by backend; DTOs in domain.py; exact execution evidence",
+    "sources/specification-v2.0.md: 0.4 and 0.6",
+    "C:/Users/Administrator/.codex/skills/ponytail/SKILL.md: full, smallest complete change",
+    "C:/Users/Administrator/.codex/skills/code-review/SKILL.md: Standards and 12 Fowler smell heuristics"
+  ],
+  "source_sha256": {
+    "src/cn_contract/assistant/native_model_control.py": "0a6ea8b9eac612e9fe334ba7f4562d717c1b039c2e4de3a20168c29a0b21dbc4",
+    "src/cn_contract/assistant/providers/registry.py": "a8e99983a1623359bcf28d5e4bb513bcb7ac4e913138685436f45f61768f16ad"
+  },
+  "source_hashes_stable": true,
+  "reviewed_locations": [
+    {
+      "file": "src/cn_contract/assistant/native_model_control.py",
+      "lines": [119, 134],
+      "conclusion": "Intent replay metadata contains only fingerprint and opaque registry identities; replay checks still follow authentication, ownership, full draft basis and persistent-run checks."
+    },
+    {
+      "file": "src/cn_contract/assistant/providers/registry.py",
+      "lines": [106, 120],
+      "conclusion": "Cohesive trusted registry interface; reuses loop, identity and config validation; opaque objects have no outgoing object references and tokens use identity comparisons."
+    },
+    {
+      "file": "src/cn_contract/assistant/providers/registry.py",
+      "lines": [69, 104],
+      "conclusion": "Existing configuration and grant nonce invalidation remains authoritative; identical current grant is idempotent, revoke/regrant and successful reconfigure cannot revive old tokens."
+    },
+    {
+      "file": "src/cn_contract/assistant/providers/registry.py",
+      "lines": [131, 207],
+      "conclusion": "Existing active-task lease retains fixed provider as required; replacement blocks old lease sends and releasing lease permits collection."
+    }
+  ],
+  "independent_verification": {
+    "command_file": "review-standards-command.json",
+    "run_file": "review-standards-run.json",
+    "log": "review-standards.log",
+    "exit_file": "review-standards.exit",
+    "junit": "review-standards.xml",
+    "exit_code": 0,
+    "passed": 14,
+    "failed": 0,
+    "duration_seconds": 2.36,
+    "groups": {
+      "twelve_intents_release_retired_objects": 1,
+      "active_lease_retention_and_rejection": 1,
+      "generation_changes": 4,
+      "granted_identity_and_registry_isolation": 4,
+      "event_loop_constraints": 1,
+      "invalid_tokens_failed_config_and_config_drift": 1,
+      "expiry_without_renewal": 1,
+      "absent_grant_and_configuration": 1
+    },
+    "measurements_file": "review-standards-lifetime-measurements.json",
+    "retained_replay_tombstones": 12,
+    "retired_providers_collected": 12,
+    "retired_secret_resolvers_collected": 12,
+    "retired_policies_collected": 12,
+    "provider_generate_calls": 0,
+    "external_network_attempts": 0,
+    "network_guard": "External socket connections and DNS blocked; loopback allowed only for Python asyncio Windows socketpair self-pipe used by harness.",
+    "initial_harness_failure": {
+      "evidence_prefix": "review-standards-harness-initial",
+      "exit_code": 1,
+      "failed": 14,
+      "cause": "Test network guard blocked Windows asyncio loopback self-pipe before business execution; wrapper also attempted UTF-8 decoding of a platform-encoded log.",
+      "resolution": "Only .local harness changed: allow loopback self-pipe and explicitly set child UTF-8 output. No product edits."
+    }
+  },
+  "limitations": [
+    "Readonly product review; no product, author test, project status or commit changes.",
+    "No repeat of historical full suite or source/frozen Windows acceptance.",
+    "No real credentials, customer material, model calls or external network used.",
+    "Tombstone count still grows with intents by design to prevent replay; object collection does not prove RSS, startup or installation improvements."
+  ]
+}

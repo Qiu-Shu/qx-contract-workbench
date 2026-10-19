@@ -1,0 +1,45 @@
+{
+  "baseline": "921ba30",
+  "reviewed_at_utc": "2026-10-19T16:31:21.8233787Z",
+  "review_axis": "Spec",
+  "product_sha256": {
+    "src/cn_contract/assistant/native_model_control.py": "0a6ea8b9eac612e9fe334ba7f4562d717c1b039c2e4de3a20168c29a0b21dbc4",
+    "src/cn_contract/assistant/providers/registry.py": "a8e99983a1623359bcf28d5e4bb513bcb7ac4e913138685436f45f61768f16ad"
+  },
+  "command": ".venv/Scripts/python.exe -m pytest .local/model-intent-lifetime-20261020/review-spec/probe_spec.py -q --junitxml=.local/model-intent-lifetime-20261020/review-spec/results.xml",
+  "environment": {
+    "PYTHONPATH": "src;."
+  },
+  "exit_code": 0,
+  "passed": 14,
+  "failed": 0,
+  "cases": [
+    "test_production_provider_and_secret_closure_are_collectible_across_24_intents",
+    "test_same_provider_same_policy_aba_reconfigure_cannot_revive_marker",
+    "test_marker_shape_or_foreign_registry_does_not_authorize[none]",
+    "test_marker_shape_or_foreign_registry_does_not_authorize[list]",
+    "test_marker_shape_or_foreign_registry_does_not_authorize[short]",
+    "test_marker_shape_or_foreign_registry_does_not_authorize[long]",
+    "test_marker_shape_or_foreign_registry_does_not_authorize[epoch]",
+    "test_marker_shape_or_foreign_registry_does_not_authorize[grant]",
+    "test_marker_shape_or_foreign_registry_does_not_authorize[swapped]",
+    "test_marker_shape_or_foreign_registry_does_not_authorize[foreign]",
+    "test_exact_expiry_boundary_does_not_renew_or_replace_policy",
+    "test_both_new_methods_reject_absent_and_subsequent_event_loop",
+    "test_completed_receipt_existing_survives_draft_change_and_revoke_without_new_attempt",
+    "test_cancelled_inflight_after_disable_keeps_unknown_receipt_and_releases_lease"
+  ],
+  "findings": [],
+  "independent_probe": "probe_spec.py",
+  "production_provider_gc_cycles": 24,
+  "refs_per_cycle": [
+    "DeepSeekProvider",
+    "secret_resolver",
+    "NativeModelConfigure closure cell"
+  ],
+  "real_network_calls": 0,
+  "real_credentials_read": false,
+  "rss_measured": false,
+  "installer_measured": false,
+  "note": "Tests independently authored for Spec review; reused synthetic fixture setup only. Hashes taken after test against frozen product files."
+}

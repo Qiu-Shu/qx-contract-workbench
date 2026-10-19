@@ -1,0 +1,310 @@
+TAP version 13
+# Subtest: owned backend validates readiness, stops on EOF and rejects forged nonce
+ok 1 - owned backend validates readiness, stops on EOF and rejects forged nonce
+  ---
+  duration_ms: 116.2828
+  type: 'test'
+  ...
+# Subtest: trusted backend configures and disables through one owned child without exposing protocol credentials
+ok 2 - trusted backend configures and disables through one owned child without exposing protocol credentials
+  ---
+  duration_ms: 64.085
+  type: 'test'
+  ...
+# Subtest: legacy readiness still starts but model control remains unavailable
+ok 3 - legacy readiness still starts but model control remains unavailable
+  ---
+  duration_ms: 53.3212
+  type: 'test'
+  ...
+# Subtest: an owner stopped before startup cannot create a child or leave startup pending
+ok 4 - an owner stopped before startup cannot create a child or leave startup pending
+  ---
+  duration_ms: 0.5888
+  type: 'test'
+  ...
+# Subtest: synchronous process setup errors never expose their input or leave a startup timer
+ok 5 - synchronous process setup errors never expose their input or leave a startup timer
+  ---
+  duration_ms: 1.0792
+  type: 'test'
+  ...
+# Subtest: fragmented child pipe frames are reconstructed through their final newline
+ok 6 - fragmented child pipe frames are reconstructed through their final newline
+  ---
+  duration_ms: 54.8715
+  type: 'test'
+  ...
+# Subtest: a malformed second frame in the readiness chunk rejects startup
+ok 7 - a malformed second frame in the readiness chunk rejects startup
+  ---
+  duration_ms: 50.9067
+  type: 'test'
+  ...
+# Subtest: bad-nonce irreversibly closes the owned child and reports only one fixed failure
+ok 8 - bad-nonce irreversibly closes the owned child and reports only one fixed failure
+  ---
+  duration_ms: 58.2555
+  type: 'test'
+  ...
+# Subtest: partial-result irreversibly closes the owned child and reports only one fixed failure
+ok 9 - partial-result irreversibly closes the owned child and reports only one fixed failure
+  ---
+  duration_ms: 49.5966
+  type: 'test'
+  ...
+# Subtest: normal stop cancels pending control, permits EOF exit and does not announce failure
+ok 10 - normal stop cancels pending control, permits EOF exit and does not announce failure
+  ---
+  duration_ms: 56.6424
+  type: 'test'
+  ...
+# Subtest: stdout system errors stay inside the fixed failure boundary
+ok 11 - stdout system errors stay inside the fixed failure boundary
+  ---
+  duration_ms: 59.6592
+  type: 'test'
+  ...
+# Subtest: stderr system errors stay inside the fixed failure boundary
+ok 12 - stderr system errors stay inside the fixed failure boundary
+  ---
+  duration_ms: 52.008
+  type: 'test'
+  ...
+# Subtest: commands are serialized once, busy calls are rejected without allocating a sequence
+ok 13 - commands are serialized once, busy calls are rejected without allocating a sequence
+  ---
+  duration_ms: 0.6122
+  type: 'test'
+  ...
+# Subtest: business denials expose only fixed codes and do not poison the control pipe
+ok 14 - business denials expose only fixed codes and do not poison the control pipe
+  ---
+  duration_ms: 0.3791
+  type: 'test'
+  ...
+# Subtest: existing is an authorization-only success status
+ok 15 - existing is an authorization-only success status
+  ---
+  duration_ms: 0.19
+  type: 'test'
+  ...
+# Subtest: wrong nonce rejects the pending command with a fixed fatal error
+ok 16 - wrong nonce rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.3331
+  type: 'test'
+  ...
+# Subtest: future sequence rejects the pending command with a fixed fatal error
+ok 17 - future sequence rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2635
+  type: 'test'
+  ...
+# Subtest: unsafe sequence rejects the pending command with a fixed fatal error
+ok 18 - unsafe sequence rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1984
+  type: 'test'
+  ...
+# Subtest: wrong operation status rejects the pending command with a fixed fatal error
+ok 19 - wrong operation status rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1944
+  type: 'test'
+  ...
+# Subtest: unknown field rejects the pending command with a fixed fatal error
+ok 20 - unknown field rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.3064
+  type: 'test'
+  ...
+# Subtest: wrong protocol rejects the pending command with a fixed fatal error
+ok 21 - wrong protocol rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1883
+  type: 'test'
+  ...
+# Subtest: duplicate key rejects the pending command with a fixed fatal error
+ok 22 - duplicate key rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1879
+  type: 'test'
+  ...
+# Subtest: noncanonical number rejects the pending command with a fixed fatal error
+ok 23 - noncanonical number rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1634
+  type: 'test'
+  ...
+# Subtest: extra whitespace rejects the pending command with a fixed fatal error
+ok 24 - extra whitespace rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2052
+  type: 'test'
+  ...
+# Subtest: invalid UTF8 rejects the pending command with a fixed fatal error
+ok 25 - invalid UTF8 rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2142
+  type: 'test'
+  ...
+# Subtest: UTF8 BOM rejects the pending command with a fixed fatal error
+ok 26 - UTF8 BOM rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2038
+  type: 'test'
+  ...
+# Subtest: CRLF rejects the pending command with a fixed fatal error
+ok 27 - CRLF rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1674
+  type: 'test'
+  ...
+# Subtest: extra empty frame rejects the pending command with a fixed fatal error
+ok 28 - extra empty frame rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1582
+  type: 'test'
+  ...
+# Subtest: oversized incomplete frame rejects the pending command with a fixed fatal error
+ok 29 - oversized incomplete frame rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.6151
+  type: 'test'
+  ...
+# Subtest: every complete frame is handled, including a duplicate ack in the same buffer
+ok 30 - every complete frame is handled, including a duplicate ack in the same buffer
+  ---
+  duration_ms: 0.2668
+  type: 'test'
+  ...
+# Subtest: timeout and pipe-write failure are terminal and never retry a secret-bearing command
+ok 31 - timeout and pipe-write failure are terminal and never retry a secret-bearing command
+  ---
+  duration_ms: 20.4738
+  type: 'test'
+  ...
+# Subtest: invalid command inputs and UTF8 byte overflow are rejected before writing or consuming a sequence
+ok 32 - invalid command inputs and UTF8 byte overflow are rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.4449
+  type: 'test'
+  ...
+# Subtest: credential writes revoke current runtime before touching the protected store
+ok 33 - credential writes revoke current runtime before touching the protected store
+  ---
+  duration_ms: 3.4744
+  type: 'test'
+  ...
+# Subtest: trusted model selection configures only the fixed catalog and never grants sending
+ok 34 - trusted model selection configures only the fixed catalog and never grants sending
+  ---
+  duration_ms: 1.9136
+  type: 'test'
+  ...
+# Subtest: second model uses bounded trusted configuration and projections omit private metadata
+ok 35 - second model uses bounded trusted configuration and projections omit private metadata
+  ---
+  duration_ms: 0.3661
+  type: 'test'
+  ...
+# Subtest: arbitrary configuration is refused without consuming credentials and clears prior configuration
+ok 36 - arbitrary configuration is refused without consuming credentials and clears prior configuration
+  ---
+  duration_ms: 0.3455
+  type: 'test'
+  ...
+# Subtest: credential read failure cannot preserve a prior configured model
+ok 37 - credential read failure cannot preserve a prior configured model
+  ---
+  duration_ms: 0.2505
+  type: 'test'
+  ...
+# Subtest: consumer completion does not turn a rejected configuration ACK into success
+ok 38 - consumer completion does not turn a rejected configuration ACK into success
+  ---
+  duration_ms: 0.1933
+  type: 'test'
+  ...
+# Subtest: malformed success ACK closes the captured backend and never exposes its extra fields
+ok 39 - malformed success ACK closes the captured backend and never exposes its extra fields
+  ---
+  duration_ms: 0.3252
+  type: 'test'
+  ...
+# Subtest: health failure arriving with a valid ACK prevents configuration adoption
+ok 40 - health failure arriving with a valid ACK prevents configuration adoption
+  ---
+  duration_ms: 0.2602
+  type: 'test'
+  ...
+# Subtest: backend replacement while reading the credential prevents its handoff
+ok 41 - backend replacement while reading the credential prevents its handoff
+  ---
+  duration_ms: 7.4819
+  type: 'test'
+  ...
+# Subtest: late configuration ACK stops only the old backend after process replacement
+ok 42 - late configuration ACK stops only the old backend after process replacement
+  ---
+  duration_ms: 1.0379
+  type: 'test'
+  ...
+# Subtest: an obsolete document cannot adopt an ACK or invoke page failure handling
+ok 43 - an obsolete document cannot adopt an ACK or invoke page failure handling
+  ---
+  duration_ms: 0.7902
+  type: 'test'
+  ...
+# Subtest: runtime operations refuse overlapping mutations instead of queuing them
+ok 44 - runtime operations refuse overlapping mutations instead of queuing them
+  ---
+  duration_ms: 0.823
+  type: 'test'
+  ...
+# Subtest: failed revocation waits for backend stop and forbids the credential write
+ok 45 - failed revocation waits for backend stop and forbids the credential write
+  ---
+  duration_ms: 1.046
+  type: 'test'
+  ...
+# Subtest: a failed backend stop latches unsafe state even after the backend reference is cleared
+ok 46 - a failed backend stop latches unsafe state even after the backend reference is cleared
+  ---
+  duration_ms: 0.512
+  type: 'test'
+  ...
+# Subtest: credential and runtime IPC share a busy lock while the captured document guard remains valid
+ok 47 - credential and runtime IPC share a busy lock while the captured document guard remains valid
+  ---
+  duration_ms: 1.2723
+  type: 'test'
+  ...
+# Subtest: document epoch is rechecked after revocation before any credential write
+ok 48 - document epoch is rechecked after revocation before any credential write
+  ---
+  duration_ms: 0.7065
+  type: 'test'
+  ...
+# Subtest: navigation before IPC work starts prevents all runtime and credential work
+ok 49 - navigation before IPC work starts prevents all runtime and credential work
+  ---
+  duration_ms: 0.2807
+  type: 'test'
+  ...
+# Subtest: runtime status neither consumes credentials nor preserves metadata across backend replacement
+ok 50 - runtime status neither consumes credentials nor preserves metadata across backend replacement
+  ---
+  duration_ms: 0.2518
+  type: 'test'
+  ...
+1..50
+# tests 50
+# suites 0
+# pass 50
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 606.2152

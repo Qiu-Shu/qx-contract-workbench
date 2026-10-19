@@ -1,0 +1,82 @@
+{
+  "recorded_at": "2026-10-19T16:31:20.4626130Z",
+  "sources": [
+    {
+      "id": "http-api",
+      "url": "https://docs.typesafe.ai/api",
+      "snapshot": "api.md",
+      "method": "web open and public markdown fetch"
+    },
+    {
+      "id": "models",
+      "url": "https://docs.typesafe.ai/models",
+      "snapshot": "models.md",
+      "method": "web open and public markdown fetch"
+    },
+    {
+      "id": "responses",
+      "url": "https://docs.typesafe.ai/sdk/python/api/types/responses",
+      "snapshot": "responses.md",
+      "method": "web open and public markdown fetch"
+    },
+    {
+      "id": "retries",
+      "url": "https://docs.typesafe.ai/sdk/python/api/retries",
+      "snapshot": "retries.md",
+      "method": "web open and public markdown fetch"
+    },
+    {
+      "id": "sdk-tags",
+      "url": "https://api.github.com/repos/typesafe-ai/typesafe-sdk-python/tags?per_page=10",
+      "snapshot": "sdk-tags.json",
+      "method": "public GitHub API"
+    },
+    {
+      "id": "sdk-main",
+      "url": "https://api.github.com/repos/typesafe-ai/typesafe-sdk-python/commits/main",
+      "snapshot": "sdk-main.json",
+      "method": "public GitHub API"
+    },
+    {
+      "id": "sdk-release",
+      "url": "https://api.github.com/repos/typesafe-ai/typesafe-sdk-python/releases/latest",
+      "snapshot": "sdk-release.json",
+      "method": "public GitHub API"
+    },
+    {
+      "id": "sdk-source",
+      "url": "https://github.com/typesafe-ai/typesafe-sdk-python/tree/f36e68549ceca3191e5791e5f99ea1baa1a258b5",
+      "snapshot": "sdk-*.py and sdk-pyproject.toml and sdk-LICENSE",
+      "method": "public raw source at fixed commit; source was not executed"
+    },
+    {
+      "id": "lawve",
+      "url": "https://lawve.ai/@seth-chandler/skill/jev-question-translator",
+      "snapshot": "lawve-page.json",
+      "method": "public Scrapling Fetcher; HTTP 200; skill archive not downloaded"
+    },
+    {
+      "id": "choice",
+      "url": "https://docs.typesafe.ai/primitives/choice",
+      "snapshot": null,
+      "method": "web open"
+    },
+    {
+      "id": "noul",
+      "url": "https://docs.typesafe.ai/primitives/noul",
+      "snapshot": null,
+      "method": "web open"
+    },
+    {
+      "id": "confidence",
+      "url": "https://docs.typesafe.ai/confidence",
+      "snapshot": null,
+      "method": "web open"
+    }
+  ],
+  "limitations": [
+    "Some initial web opens for GitHub API/tags and Lawve returned inaccessible; public API requests and Scrapling subsequently succeeded.",
+    "No credentials, authenticated model catalog, live Jev inference or product tests used.",
+    "SDK source metadata and release/tag identity checked; no wheel installation or frozen build check."
+  ]
+}

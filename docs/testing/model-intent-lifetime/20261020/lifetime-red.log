@@ -1,0 +1,49 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_disabled_authorization_history_does_not_retain_provider_or_secret_resolver _
+
+native = namespace(database=<cn_contract.persistence.Database object at 0x00000202824FC680>, actor=Actor(user_id=UUID('a0207bbe...'expected_composer_revision': 1, 'content_sha256': 'bebfb188788246445fe29629efbeffd6622748f33e4e4e10c32404973f748f8f'})
+
+    def test_disabled_authorization_history_does_not_retain_provider_or_secret_resolver(native):
+        n = native
+        async def scenario():
+            payload = configure(n)
+            n.control.authorize(payload)
+            provider = weakref.ref(n.providers[0])
+            resolver = weakref.ref(n.providers[0].synthetic_resolver)
+            n.providers.clear()
+            n.control.disable()
+            gc.collect()
+            assert provider() is None
+            assert resolver() is None
+>       asyncio.run(scenario())
+
+tests\integration\test_native_model_lifetime.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def scenario():
+        payload = configure(n)
+        n.control.authorize(payload)
+        provider = weakref.ref(n.providers[0])
+        resolver = weakref.ref(n.providers[0].synthetic_resolver)
+        n.providers.clear()
+        n.control.disable()
+        gc.collect()
+>       assert provider() is None
+E       AssertionError: assert <tests.integration.test_assistant_generation.SyntheticProvider object at 0x0000020282402F30> is None
+E        +  where <tests.integration.test_assistant_generation.SyntheticProvider object at 0x0000020282402F30> = <weakref at 0x00000202837AA3E0; to 'SyntheticProvider' at 0x0000020282402F30>()
+
+tests\integration\test_native_model_lifetime.py:19: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_native_model_lifetime.py::test_disabled_authorization_history_does_not_retain_provider_or_secret_resolver
+1 failed in 1.42s

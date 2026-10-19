@@ -1,0 +1,228 @@
+{
+  "status": "frozen",
+  "base": "921ba30",
+  "scope": "CH-04I native authorization reference lifetime",
+  "interface": "MainModelRegistry.authorization_token(actor, scope), validate_authorization(actor, scope, token); opaque configuration and grant identities only",
+  "red": {
+    "tests": 1,
+    "meaning": "After disable and GC old provider remained reachable through native intent history",
+    "fail": 1,
+    "log": "lifetime-red.log",
+    "exit": 1
+  },
+  "first_green": {
+    "tests": 1,
+    "pass": 1,
+    "log": "lifetime-first-green.log",
+    "exit": 0
+  },
+  "target": {
+    "tests": 12,
+    "fail": 0,
+    "command": ".venv/Scripts/python.exe -m pytest -q -s tests/integration/test_native_model_lifetime.py",
+    "pass": 12,
+    "exit": 0,
+    "log": "lifetime-target.log",
+    "seconds": 6.71
+  },
+  "reference_measurement": {
+    "synthetic_rounds": 32,
+    "tracked": [
+      "provider",
+      "secret_resolver",
+      "policy"
+    ],
+    "live_after_each_replacement": [
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "live_after_disable": [
+      0,
+      0,
+      0
+    ],
+    "old_intents_rejected_after_new_config": 32,
+    "rss_measured": false
+  },
+  "source_hashes": [
+    {
+      "path": "src/cn_contract/assistant/native_model_control.py",
+      "sha256": "0a6ea8b9eac612e9fe334ba7f4562d717c1b039c2e4de3a20168c29a0b21dbc4"
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/registry.py",
+      "sha256": "a8e99983a1623359bcf28d5e4bb513bcb7ac4e913138685436f45f61768f16ad"
+    },
+    {
+      "path": "tests/integration/test_native_model_lifetime.py",
+      "sha256": "4d35457c548b7c09d39d80fa9f6f5c2f9db152139054aff6e62e5cdd58c221e7"
+    }
+  ],
+  "diff_check_exit": 0,
+  "limitations": [
+    "Synthetic providers, credentials and database only; no external model call",
+    "Weakref plus gc proves reachability release, not RSS reduction, startup improvement or binary size",
+    "Live execution tasks may legitimately retain their own lease until receipt completion",
+    "Lightweight request fingerprints and generation tombstones remain for replay prevention",
+    "Root owns wider regression, frozen backend rebuild, shared project records and commit"
+  ],
+  "hash_note": "Root final stable-source hashes are authoritative if line endings are normalized."
+}

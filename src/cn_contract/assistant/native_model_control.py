@@ -117,7 +117,7 @@ class NativeModelControl:
                     or items(conversation, db)):
                 raise ServiceError('BLOCKED_LIVE', 403)
             if previous is not None:
-                previous[2].snapshot_for(actor, basis.expected_scope)
+                self._registry.validate_authorization(actor, basis.expected_scope, previous[1])
                 return {'status': 'authorized'}
             config = self._config
             if not config.enabled or value.max_total_usd < reservation(config):
@@ -129,7 +129,7 @@ class NativeModelControl:
                 max_total_usd=value.max_total_usd, max_calls=1,
                 expires_at=datetime.now(timezone.utc)+timedelta(seconds=value.valid_for_seconds)))
             self._registry.grant(policy, actor.session_id, basis=basis)
-            lease = self._registry.resolve(actor, basis.expected_scope)
-            lease.snapshot_for(actor, basis.expected_scope)
-            self._intents[basis.request_id] = fingerprint, policy, lease
+            token = self._registry.authorization_token(actor, basis.expected_scope)
+            # Keep replay tombstones, not leases that retain retired providers and secrets.
+            self._intents[basis.request_id] = fingerprint, token
         return {'status': 'authorized'}
