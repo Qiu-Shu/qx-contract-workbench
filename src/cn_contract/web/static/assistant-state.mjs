@@ -11,6 +11,7 @@ const activeRuns = new Set(['queued', 'preparing', 'routing', 'retrieving', 'gen
 
 export function createDraftController(api, {
   onChange = () => {}, onConversation = () => {}, uuid = () => crypto.randomUUID(), readonly = false,
+  nativeAuthorization = null,
 } = {}) {
   const state = {id: null, view: null, text: '', savedText: '', skill: null,
     status: readonly ? 'readonly' : 'idle', error: null, conflict: null, dirty: false, loading: false,
@@ -277,7 +278,7 @@ export function createDraftController(api, {
     } catch (error) { return fail(error, token); }
     finally { if (cancelling === marker) cancelling = false; }
   }
-  generation=createGenerationController(api,{state,readonly,uuid,notify,
+  generation=createGenerationController(api,{state,readonly,uuid,notify,nativeAuthorization,
     token:()=>epoch,current,fail,
     blocked:()=>Boolean((pending || creating) && !channel || materialPending || state.status==='error'),
     busy:()=>Boolean(channel || pending || creating || materialPending || reading),

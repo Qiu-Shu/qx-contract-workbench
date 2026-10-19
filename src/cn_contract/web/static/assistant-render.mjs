@@ -31,6 +31,8 @@ const generationCapabilityText = {
 };
 const generationErrorText = error=>({
   NETWORK_UNKNOWN:'发送结果尚不确定。请查找发送结果，避免重复发送。',
+  NATIVE_CONFIRMATION_FAILED:'本次发送确认未完成，尚未提交生成请求。请刷新记录后重新确认；输入仍保留。',
+  INPUT_CHANGED:'输入、材料或当前范围已变化，尚未提交生成请求。请保存后重新确认要发送的文字。',
   NOT_SUPPORTED:'当前选择的能力或材料范围尚未接入生成。',
   BLOCKED_LIVE:'生成未获准。请核对当前环境、授权与预算。',
   AUTHORIZATION_REQUIRED:'登录已失效。请重新登录后核对生成结果。',
@@ -151,19 +153,24 @@ export function createRenderer(root=document,{isComposing=()=>false}={}) {
       byId('server-draft').textContent=state.conflict?.server || '（服务器草稿为空）';
       byId('new-conversation').disabled=readonly || state.loading || state.status==='saving' || state.status==='revoked';
       const phase=generation?.phase || 'idle';
+      const nativeConfirmation=generation?.nativeConfirmation===true;
+      byId('send').textContent=nativeConfirmation?'确认并发送':'发送';
       byId('send').disabled=generation?.canSend!==true || readonly || state.loading || Boolean(state.skill) ||
-        ['saving','conflict','readonly','revoked'].includes(state.status) || ['checking','submitting','unknown','tracking'].includes(phase);
+        ['saving','conflict','readonly','revoked'].includes(state.status) || ['checking','confirming','submitting','unknown','tracking'].includes(phase);
       byId('generation-note').textContent=revoked?'访问已结束。':readonly || state.status==='readonly'
         ?generationCapabilityText.restored_read_only:state.skill?'该能力尚未接入执行。取消选择后可核对普通文字的生成条件。'
-          :generationCapabilityText[generation?.capability?.state] || '输入并保存文字后，将核对当前生成条件。';
-      const phaseText={checking:'正在核对生成条件…',submitting:'正在提交生成请求…',
+          :nativeConfirmation && ['unapproved','ready','budget_exhausted'].includes(generation?.capability?.state)
+            ?'点击“确认并发送”后，在原生确认窗口核对完整文字、接收方与费用上限；确认后才发送，结果仍需律师核对。'
+            :generationCapabilityText[generation?.capability?.state] || '输入并保存文字后，将核对当前生成条件。';
+      const phaseText={checking:'正在核对生成条件…',confirming:'请在原生确认窗口核对本次文字、接收方与费用上限；尚未发送。',submitting:'正在提交生成请求…',
         unknown:'发送结果尚不确定。请查找发送结果，避免重复发送。',tracking:'生成已登记，正在核对结果…'};
       byId('generation-status').textContent=revoked?'':phaseText[phase] ||
         (phase==='error'?generationErrorText(generation?.error):'');
       byId('generation-status').dataset.kind=['unknown','error'].includes(phase)?'error':'';
       byId('recover-generation').hidden=revoked || phase!=='unknown';
       byId('recover-generation').disabled=state.loading || revoked;
-      byId('input-help').textContent='Enter 发送，Shift+Enter 换行；'+(byId('send').disabled?'当前发送不可用。':'发送后生成内部待核草稿。');
+      byId('input-help').textContent=(nativeConfirmation?'Enter 打开发送确认，':'Enter 发送，')+'Shift+Enter 换行；'+
+        (byId('send').disabled?'当前发送不可用。':'发送后生成内部待核草稿。');
       byId('add-material').disabled=readonly || state.loading || ['saving','conflict','revoked'].includes(state.status);
     },
     conversations(page,{append=false,selected=null,onSelect}={}) {

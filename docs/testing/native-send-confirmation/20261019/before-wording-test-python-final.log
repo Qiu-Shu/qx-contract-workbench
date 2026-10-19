@@ -1,0 +1,71 @@
+........................................................................ [ 44%]
+........................................................................ [ 88%]
+.........F.........                                                      [100%]
+================================== FAILURES ===================================
+_____ test_browser_module_behaviour[test_assistant_generation_render.mjs] _____
+
+script = 'test_assistant_generation_render.mjs'
+
+    @pytest.mark.parametrize('script', ['test_assistant_state.mjs', 'test_assistant_transport_input.mjs',
+                                       'test_assistant_material_state.mjs', 'test_assistant_material_dom.mjs',
+                                       'test_assistant_generation_state.mjs', 'test_assistant_generation_render.mjs',
+                                       'test_assistant_generation_entry.mjs'])
+    def test_browser_module_behaviour(script):
+        node = shutil.which('node')
+        assert node, 'The existing local Node runtime is required.'
+        result = subprocess.run([node, '--test', str(Path(__file__).parents[2]/'scripts'/script)],
+                                capture_output=True, text=True, encoding='utf-8', timeout=30)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: ✔ send follows the generation gate and existing draft/readonly guards (1.9289ms)
+E         ✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.4081ms)
+E         ✔ capability states give distinct truthful explanations (0.674ms)
+E         ✔ results stay with their matching input in chronological history and have source anchors (1.3552ms)
+E         ✔ model text remains literal with whitespace and source links only target loaded messages (0.5169ms)
+E         ✔ unrelated items and prior conversation content are cleared on switching or revocation (0.3793ms)
+E         ✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.3386ms)
+E         ✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.4414ms)
+E         ✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.2818ms)
+E         ✖ native send offers confirmation and explains its exact input and scope before submission (0.8527ms)
+E         ✔ native failures distinguish confirmation from unknown POST without exposing diagnostics (0.2202ms)
+E         ✔ failed capability reads can be retried before any task exists (0.153ms)
+E         ✔ initial template keeps send disabled, recovery hidden and describes controlled generation (0.375ms)
+E         ✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.1844ms)
+E         ℹ tests 14
+E         ℹ suites 0
+E         ℹ pass 13
+E         ℹ fail 1
+E         ℹ cancelled 0
+E         ℹ skipped 0
+E         ℹ todo 0
+E         ℹ duration_ms 67.1882
+E         
+E         ✖ failing tests:
+E         
+E         test at scripts\test_assistant_generation_render.mjs:138:1
+E         ✖ native send offers confirmation and explains its exact input and scope before submission (0.8527ms)
+E           AssertionError [ERR_ASSERTION]: The input did not match the regular expression /当前.*范围/. Input:
+E           
+E           '点击“确认并发送”后，在原生确认窗口核对完整文字、接收方与费用上限；确认后才发送，结果仍需律师核对。'
+E           
+E               at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:144:12)
+E               at Test.runInAsyncScope (node:async_hooks:227:14)
+E               at Test.run (node:internal/test_runner/test:1382:25)
+E               at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+E               at Test.postRun (node:internal/test_runner/test:1522:19)
+E               at Test.run (node:internal/test_runner/test:1447:12)
+E               at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+E             generatedMessage: true,
+E             code: 'ERR_ASSERTION',
+E             actual: '点击“确认并发送”后，在原生确认窗口核对完整文字、接收方与费用上限；确认后才发送，结果仍需律师核对。',
+E             expected: /当前.*范围/,
+E             operator: 'match',
+E             diff: 'simple'
+E           }
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\b...文字、接收方与费用上限；确认后才发送，结果仍需律师核对。',\n    expected: /当前.*范围/,\n    operator: 'match',\n    diff: 'simple'\n  }\n", stderr='').returncode
+
+tests\integration\test_assistant_frontend.py:18: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_frontend.py::test_browser_module_behaviour[test_assistant_generation_render.mjs]
+1 failed, 162 passed in 97.04s (0:01:37)

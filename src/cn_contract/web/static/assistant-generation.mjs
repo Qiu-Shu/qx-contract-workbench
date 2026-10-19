@@ -16,9 +16,10 @@ async function digest(text) {
 }
 
 export function createGenerationController(api,host) {
-  const {state,readonly,uuid,notify}=host;
+  const {state,readonly,uuid,notify,nativeAuthorization}=host;
+  const nativeConfirmation=typeof nativeAuthorization==='function';
   let epoch=0, edits=0, work=null, workKind=null, pending=null, capabilityBasis=null;
-  state.generation={phase:'idle',capability:null,canSend:false,items:[],error:null};
+  state.generation={phase:'idle',capability:null,canSend:false,items:[],error:null,nativeConfirmation};
   const available = () => api.getGenerationCapability && api.submitGeneration && api.findGenerationRequest;
   const token = () => ({epoch,host:host.token()});
   const current = value => value.epoch===epoch && host.current(value.host);
@@ -28,17 +29,19 @@ export function createGenerationController(api,host) {
   const sameBasis = value => value && edits===value.edits && state.text===value.text &&
     state.savedText===value.text && state.view?.composer_revision===value.revision && sameScope(value.scope,state.view?.scope);
   const tracking = () => state.generation.items.some(item=>active(item.attempt));
+  const sendable = cap => cap?.state==='ready' || nativeConfirmation &&
+    ['unapproved','budget_exhausted'].includes(cap?.state);
 
   function sync() {
     if(capabilityBasis && !sameBasis(capabilityBasis)) {
       capabilityBasis=null;state.generation.capability=null;
     }
     state.generation.canSend=Boolean(available() && !work && !pending && allowed() &&
-      sameBasis(capabilityBasis) && state.generation.capability?.state==='ready');
+      sameBasis(capabilityBasis) && sendable(state.generation.capability));
   }
   function reset() {
     epoch++;work=null;workKind=null;pending=null;capabilityBasis=null;
-    state.generation={phase:'idle',capability:null,canSend:false,items:[],error:null};
+    state.generation={phase:'idle',capability:null,canSend:false,items:[],error:null,nativeConfirmation};
   }
   function changed() {
     edits++;capabilityBasis=null;state.generation.capability=null;state.generation.canSend=false;
@@ -57,7 +60,7 @@ export function createGenerationController(api,host) {
     const task=Promise.resolve().then(()=>action(value)).catch(error=>failed(error,value)).finally(()=>{
       if(work===task) {work=null;workKind=null;}
       if(current(value)) {
-        if(['checking','submitting'].includes(state.generation.phase))state.generation.phase=
+        if(['checking','confirming','submitting'].includes(state.generation.phase))state.generation.phase=
           pending?(pending.result?'tracking':'unknown'):(tracking()?'tracking':'idle');
         notify();
       }
@@ -153,10 +156,27 @@ export function createGenerationController(api,host) {
       if(!cap || clicked.edits!==edits || clicked.text!==state.text) {
         return failed({code:'INPUT_CHANGED',status:409},value);
       }
-      if(cap.state!=='ready' || !allowed()) {state.generation.phase='idle';notify();return false;}
+      if(!sendable(cap) || !allowed()) {state.generation.phase='idle';notify();return false;}
       const body=Object.freeze({request_id:uuid(),expected_scope:Object.freeze({...state.view.scope}),
         expected_composer_revision:state.view.composer_revision,content:clicked.text,
         requested_skill:null,attachment_ids:Object.freeze([])});
+      if(nativeConfirmation) {
+        const stamp=basis(),id=state.id;
+        state.generation.phase='confirming';notify();
+        let approval;
+        try {
+          approval=await nativeAuthorization(Object.freeze({conversation_id:id,request_id:body.request_id,
+            expected_scope:body.expected_scope,expected_composer_revision:body.expected_composer_revision,
+            content_sha256:cap.content_sha256}));
+        } catch {return failed({code:'NATIVE_CONFIRMATION_FAILED',status:0},value);}
+        if(!current(value))return false;
+        if(!sameBasis(stamp) || id!==state.id || !allowed())return failed({code:'INPUT_CHANGED',status:409},value);
+        if(approval?.canceled===true && approval.ok===false) {
+          state.generation.phase='idle';notify();return false;
+        }
+        if(approval?.ok!==true || approval.canceled===true)
+          return failed({code:'NATIVE_CONFIRMATION_FAILED',status:0},value);
+      }
       pending={id:state.id,body,edits:clicked.edits,result:null};
       state.generation.phase='submitting';state.generation.capability=null;capabilityBasis=null;notify();
       try {

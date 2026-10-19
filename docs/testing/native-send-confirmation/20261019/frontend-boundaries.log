@@ -1,0 +1,37 @@
+PASS default, read-only, selected skill and local materials never dispatch
+PASS one click snapshots input, saves first and double click dispatches one fixed request
+PASS editing while initial save waits aborts send instead of sending the newer text
+PASS editing while capability waits invalidates ready and requires a fresh click
+PASS acknowledgement preserves new input and queued saves use the accepted composer revision
+PASS lost registration reply is recovered by original request only and preserves later edits
+PASS unknown not found stays unknown across send and refresh without replacing its key
+PASS unknown draft and material writes cannot be crossed by sending
+PASS registration conflict retains local and remote drafts for explicit resolution
+PASS old ready scope cannot authorize current text
+PASS old ready revision cannot authorize current text
+PASS old ready digest cannot authorize current text
+PASS old ready basis cannot authorize current text
+PASS edit invalidates a previously ready capability synchronously
+PASS ordinary BLOCKED_LIVE 403 retains draft and current identity
+PASS ordinary BUDGET_EXCEEDED 403 retains draft and current identity
+PASS ordinary CALL_LIMIT_EXCEEDED 403 retains draft and current identity
+PASS revocation discards delayed registration and clears current results
+PASS switch and close discard late history success and late authorization failure
+PASS history batches visible messages, retains older attempts and has no provider action on reopen
+PASS cancelling reads receipt and candidates without a second generation POST
+PASS historical scope change clears results and rejects late capability
+PASS known registration survives readback failure and newer draft can be saved after reconciliation
+PASS known registration and independent remote edit leave a resolvable composer conflict
+PASS completed older messages and attempts survive pagination and a later send
+PASS same text retyped during submission is preserved as new input
+PASS send during a background capability read waits then registers exactly the clicked input
+PASS native confirmation uses one fixed saved-draft request even when capability is already ready
+PASS native cancellation preserves input and refreshes never open a confirmation
+PASS native failures stay fixed and require another explicit confirmation without posting
+PASS confirmation stays busy across capability refresh and repeated send clicks
+PASS editing or retyping identical text during native confirmation invalidates the approval
+PASS scope composer materials and skill changes invalidate native approval before POST
+PASS switch close and revocation discard late native approval without touching the next page
+PASS native-approved unknown POST is recovered only by the same request without a new approval
+PASS native bridge cannot override missing configuration readonly skill or attachment guards
+36 generation state groups passed

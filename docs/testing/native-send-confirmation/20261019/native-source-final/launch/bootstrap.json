@@ -1,0 +1,75 @@
+{
+  "electron": "44.8.0",
+  "events": [
+    "actual_will_quit"
+  ],
+  "backend_configs": [
+    {
+      "keys": [
+        "data_parent",
+        "password",
+        "username"
+      ],
+      "contains_model_credential": false
+    }
+  ],
+  "windows": [
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    }
+  ],
+  "page_loads": 7,
+  "page_url": "http://127.0.0.1:49529/assistant/4217220f-912e-4a4d-8a7f-61460398c0af",
+  "ready": {
+    "port": 49529,
+    "pid": 1336
+  },
+  "model_controls": [
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "deepseek-flash"
+    },
+    {
+      "operation": "authorize",
+      "ok": true,
+      "status": "authorized"
+    }
+  ],
+  "backend_exit": {
+    "code": 0,
+    "signal": null
+  }
+}

@@ -1,0 +1,18 @@
+✔ approval creates one isolated modal and only its exact main frame can read or explicitly decide (10.3573ms)
+✔ approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision (1.9995ms)
+✔ approval stale guard, parent close, Escape and bounded timeout cancel without a decision (5.3824ms)
+✔ approval page renders full untrusted text as text and defaults focus to cancel (1.8947ms)
+✔ approval page never confirms while loading and explicit confirm is sent only once (1.1498ms)
+✔ approval preload exposes only two dedicated calls and refuses truthy decision values (1.1826ms)
+✔ approval still settles cancellation if optional session cleanup fails (1.9961ms)
+✔ approval validates the display boundary and admits the full 65536-byte text without truncation (2.0291ms)
+✔ approval blocks navigation, all external requests and cancels a crashed renderer (1.5827ms)
+✔ approval page loading failure and page departure never enable or dispatch confirmation (1.9632ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.8386

@@ -16,7 +16,7 @@ function snapshot(id='one',text='',revision=0) {
     binding_revision:1,input_revision:0,materials_revision:0},composer_revision:revision,
   draft_input:text,messages:[],next_before:null,latest_run:null};
 }
-function fixture({initial=snapshot(),readonly=false,capability='ready'}={}) {
+function fixture({initial=snapshot(),readonly=false,capability='ready',nativeAuthorization}={}) {
   let remote=copy(initial), sequence=0, mode=capability;
   const calls=[], attempts=new Map(), byRequest=new Map(), messages=new Map();
   let materials={items:[],attachments:[]};
@@ -70,7 +70,7 @@ function fixture({initial=snapshot(),readonly=false,capability='ready'}={}) {
       attempt.state='sent_unknown';attempt.receipt={state:'sent_unknown',cost_status:'unknown',estimated_cost_usd:null,unit:'USD'};
     },
   };
-  const controller=createDraftController(api,{uuid:()=>`request-${++sequence}`,readonly});
+  const controller=createDraftController(api,{uuid:()=>`request-${++sequence}`,readonly,nativeAuthorization});
   return {api,controller,calls,attempts,messages,byRequest,
     get remote(){return remote;},set remote(value){remote=copy(value);},
     set capability(value){mode=value;},get materials(){return materials;},set materials(value){materials=value;}};
@@ -288,6 +288,137 @@ await check('send during a background capability read waits then registers exact
   f.api.getGenerationCapability=async(...args)=>{const result=await cap(...args);if(++reads===1){started.resolve();await gate.promise;}return result;};
   const reading=c.refreshGeneration();await started.promise;const sending=c.send(),double=c.send();gate.resolve();
   await reading;assert.equal(await sending,true);assert.equal(await double,true);assert.equal(sends(f).length,1);
+});
+
+await check('native confirmation uses one fixed saved-draft request even when capability is already ready',async()=>{
+  for(const capability of ['unapproved','ready','budget_exhausted']) {
+    const approvals=[],gate=deferred(),entered=deferred();
+    const f=fixture({initial:snapshot('one','原生确认合成文字',2),capability,
+      nativeAuthorization:async value=>{approvals.push(copy(value));entered.resolve();return gate.promise;}}),c=f.controller;
+    await c.open('one');await c.refreshGeneration();assert.equal(c.state.generation.canSend,true,capability);
+    const first=c.send(),second=c.send();await entered.promise;
+    assert.equal(c.state.generation.phase,'confirming');assert.equal(c.state.generation.canSend,false);
+    assert.equal(approvals.length,1);assert.equal(sends(f).length,0);assert.equal(c.state.text,'原生确认合成文字');
+    assert.deepEqual(approvals[0],{conversation_id:'one',request_id:'request-1',expected_scope:f.remote.scope,
+      expected_composer_revision:2,content_sha256:sha('原生确认合成文字')});
+    gate.resolve({ok:true});assert.equal(await first,true);assert.equal(await second,true);
+    assert.equal(sends(f).length,1);assert.equal(sends(f)[0][2].request_id,approvals[0].request_id);
+    assert.deepEqual(sends(f)[0][2].expected_scope,approvals[0].expected_scope);
+  }
+});
+
+await check('native cancellation preserves input and refreshes never open a confirmation',async()=>{
+  const approvals=[];
+  const f=fixture({initial:snapshot('one','取消后保留',1),capability:'unapproved',
+    nativeAuthorization:async value=>{approvals.push(copy(value));return {ok:false,canceled:true};}}),c=f.controller;
+  await c.open('one');await c.refreshGeneration();assert.equal(approvals.length,0);
+  assert.equal(await c.send(),false);assert.equal(sends(f).length,0);assert.equal(c.state.text,'取消后保留');
+  assert.equal(c.state.generation.phase,'idle');assert.equal(c.state.generation.error,null);
+  await c.refreshGeneration();assert.equal(approvals.length,1);assert.equal(c.state.generation.canSend,true);
+  assert.equal(await c.send(),false);assert.equal(approvals.length,2);
+  assert.notEqual(approvals[0].request_id,approvals[1].request_id);
+});
+
+await check('native failures stay fixed and require another explicit confirmation without posting',async()=>{
+  for(const kind of ['denied','rejected','malformed']) {
+    const approvals=[];
+    const f=fixture({initial:snapshot('one','失败后保留',1),capability:'unapproved',nativeAuthorization:async value=>{
+      approvals.push(copy(value));
+      if(kind==='rejected')throw Object.assign(Error('PRIVATE_NATIVE_DETAIL'),{code:'PRIVATE_NATIVE_DETAIL',status:401});
+      return kind==='denied'?{ok:false,code:'PRIVATE_NATIVE_DETAIL'}:{ok:'true',message:'PRIVATE_NATIVE_DETAIL'};
+    }}),c=f.controller;
+    await c.open('one');assert.equal(await c.send(),false);
+    assert.equal(c.state.generation.phase,'error');assert.equal(c.state.generation.error.code,'NATIVE_CONFIRMATION_FAILED');
+    assert.doesNotMatch(JSON.stringify(c.state),/PRIVATE_NATIVE_DETAIL/);
+    assert.equal(c.state.id,'one');assert.equal(c.state.text,'失败后保留');assert.equal(sends(f).length,0);
+    await c.refreshGeneration();assert.equal(approvals.length,1);assert.equal(sends(f).length,0);
+    assert.equal(await c.send(),false);assert.equal(approvals.length,2);
+    assert.notEqual(approvals[0].request_id,approvals[1].request_id);
+  }
+});
+
+await check('confirmation stays busy across capability refresh and repeated send clicks',async()=>{
+  const gate=deferred(),entered=deferred();let approvals=0;
+  const f=fixture({initial:snapshot('one','确认中的文字',1),capability:'unapproved',
+    nativeAuthorization:()=>{approvals++;entered.resolve();return gate.promise;}}),c=f.controller;
+  await c.open('one');const sending=c.send();await entered.promise;
+  assert.equal(c.send(),sending);assert.equal(c.refreshGeneration(),sending);
+  assert.equal(c.state.generation.phase,'confirming');assert.equal(c.state.generation.canSend,false);
+  assert.equal(approvals,1);assert.equal(sends(f).length,0);
+  gate.resolve({ok:false,canceled:true});assert.equal(await sending,false);
+});
+
+await check('editing or retyping identical text during native confirmation invalidates the approval',async()=>{
+  for(const restore of [false,true]) {
+    const gate=deferred(),entered=deferred();
+    const f=fixture({initial:snapshot('one','确认前原文',1),capability:'unapproved',
+      nativeAuthorization:()=>{entered.resolve();return gate.promise;}}),c=f.controller;
+    await c.open('one');const sending=c.send();await entered.promise;
+    c.edit('新草稿');if(restore)c.edit('确认前原文');
+    const saving=c.save();gate.resolve({ok:true});assert.equal(await sending,false);assert.equal(await saving,true);
+    assert.equal(sends(f).length,0);assert.equal(c.state.text,restore?'确认前原文':'新草稿');
+    assert.equal(c.state.savedText,c.state.text);
+  }
+});
+
+await check('scope composer materials and skill changes invalidate native approval before POST',async()=>{
+  for(const change of ['scope','composer','materials','skill','skill-reset']) {
+    const gate=deferred(),entered=deferred();
+    const f=fixture({initial:snapshot('one','确认范围原文',1),capability:'unapproved',
+      nativeAuthorization:()=>{entered.resolve();return gate.promise;}}),c=f.controller;
+    await c.open('one');const sending=c.send();await entered.promise;
+    if(change.startsWith('skill')){c.selectSkill('contract_review');if(change==='skill-reset')c.selectSkill(null);}
+    else {
+      if(change==='scope')f.remote.scope={...f.remote.scope,binding_revision:2,scope_kind:'matter',scope_ref:'new-matter'};
+      if(change==='composer')f.remote.composer_revision++;
+      if(change==='materials'){f.remote.scope.materials_revision++;f.materials={items:[{attachment_id:'new'}],attachments:[]};}
+      await c.refresh();
+    }
+    gate.resolve({ok:true});assert.equal(await sending,false);assert.equal(sends(f).length,0,change);
+    assert.equal(c.state.text,'确认范围原文');
+  }
+});
+
+await check('switch close and revocation discard late native approval without touching the next page',async()=>{
+  for(const action of ['switch','close','revoke']) {
+    const gate=deferred(),entered=deferred();
+    const f=fixture({initial:snapshot('one','前一页原文',1),capability:'unapproved',
+      nativeAuthorization:()=>{entered.resolve();return gate.promise;}}),c=f.controller;
+    await c.open('one');const sending=c.send();await entered.promise;
+    if(action==='switch'){f.remote=snapshot('two','新页草稿',2);await c.open('two');}
+    if(action==='close')c.close();
+    if(action==='revoke')c.revoke(failure(403,'CROSS_MATTER_DENIED'));
+    gate.resolve({ok:true});assert.equal(await sending,false);assert.equal(sends(f).length,0);
+    assert.equal(c.state.id,action==='switch'?'two':null);
+    assert.equal(c.state.text,action==='switch'?'新页草稿':'');assert.deepEqual(c.state.generation.items,[]);
+  }
+});
+
+await check('native-approved unknown POST is recovered only by the same request without a new approval',async()=>{
+  const approvals=[];
+  const f=fixture({initial:snapshot('one','仅一次确认',1),capability:'unapproved',
+    nativeAuthorization:async value=>{approvals.push(copy(value));return {ok:true};}}),c=f.controller;
+  await c.open('one');f.api.submitGeneration=async(id,body)=>{f.calls.push(['submit',id,copy(body)]);throw failure();};
+  assert.equal(await c.send(),false);assert.equal(c.state.generation.phase,'unknown');
+  assert.equal(await c.send(),false);assert.equal(await c.refreshGeneration(),false);
+  assert.equal(approvals.length,1);assert.equal(sends(f).length,1);
+  assert.ok(f.calls.filter(x=>x[0]==='find').every(x=>x[2]===approvals[0].request_id));
+  assert.equal(c.state.text,'仅一次确认');
+});
+
+await check('native bridge cannot override missing configuration readonly skill or attachment guards',async()=>{
+  for(const options of [{capability:'unconfigured'},{capability:'unsupported'},{capability:'busy'},
+    {capability:'restored_read_only'},{readonly:true}]) {
+    let approvals=0;
+    const f=fixture({...options,initial:snapshot('one','不能确认的原文',1),nativeAuthorization:async()=>{approvals++;return {ok:true};}}),c=f.controller;
+    await c.open('one');await c.refreshGeneration();assert.equal(c.state.generation.canSend,false);
+    assert.equal(await c.send(),false);assert.equal(approvals,0);assert.equal(sends(f).length,0);
+  }
+  let approvals=0;
+  const f=fixture({initial:snapshot('one','普通原文',1),capability:'unapproved',nativeAuthorization:async()=>{approvals++;return {ok:true};}}),c=f.controller;
+  await c.open('one');c.selectSkill('client_reply');assert.equal(await c.send(),false);
+  c.selectSkill(null);f.materials={items:[{attachment_id:'file'}],attachments:[]};await c.refresh();
+  assert.equal(await c.send(),false);assert.equal(approvals,0);assert.equal(sends(f).length,0);
 });
 
 console.log(`${passed} generation state groups passed`);

@@ -1,0 +1,76 @@
+{
+  "scope": "Independent CH-04H frontend and acceptance-script review",
+  "result": "No reproduced blocking product defect",
+  "product_mutations": 0,
+  "independent_checks": [
+    {
+      "command": "node --test .local/native-send-confirmation-20261019/review-frontend.mjs",
+      "tests": 11,
+      "pass": 11,
+      "fail": 0,
+      "exit": 0,
+      "log": "review-frontend.log"
+    },
+    {
+      "command": ".venv/Scripts/python.exe .local/native-send-confirmation-20261019/review-frontend-tripwire.py",
+      "audit_groups": 3,
+      "pass": 3,
+      "fail": 0,
+      "exit": 0,
+      "log": "review-frontend-tripwire.log"
+    }
+  ],
+  "coverage": [
+    "Ready requires native approval; duplicate clicks share one confirmation",
+    "All seven scope fields, composer revision, text and skill ABA, selected materials, navigation/close/revocation",
+    "Cancellation and malformed native responses do not create pending submission",
+    "Unknown POST only performs original request-ID lookups",
+    "Actual helper sync and async transport counters plus unexpected URL blocking using stub transport",
+    "Static frozen accepted branch only native approval and disable; final form submission source branch only"
+  ],
+  "limitations": [
+    "No actual Electron/browser or production account execution by this reviewer",
+    "No re-review of own model-session/model-approval implementation",
+    "Independent script audit stubs transport and cannot establish runtime frozen request count",
+    "Root actual source/frozen acceptance evidence remains authoritative"
+  ],
+  "nonblocking_recommendation": "Resolved during review: root added generation_posts == (0 if frozen else 1), observed at acceptance script lines 196-197. No open recommendation.",
+  "reviewed_hashes": [
+    {
+      "path": "src/cn_contract/web/static/assistant-generation.mjs",
+      "sha256": "dcb0470a8abb64beb71c84d4a83d4e5d254d2fbcbfeccab2022ee97fda58ad88"
+    },
+    {
+      "path": "src/cn_contract/web/static/assistant-state.mjs",
+      "sha256": "710ea260823a0765e86b3cafb21b1bbec7cfb5864b55238e1a9be8c02f140fdb"
+    },
+    {
+      "path": "src/cn_contract/web/static/assistant.mjs",
+      "sha256": "ade8186b11f67703a985a502c01b7da1129b280e738e6c3d48f0393d2bc27925"
+    },
+    {
+      "path": "src/cn_contract/web/static/assistant-render.mjs",
+      "sha256": "b66953b73ef3346e5b3ed32428149005e5b27da323677aeaf684a26ba01d9dfb"
+    },
+    {
+      "path": "scripts/test_assistant_generation_state.mjs",
+      "sha256": "0cd37c5cd5ab0041f36393604463b83548ecb71c855e432437118e94679e30e8"
+    },
+    {
+      "path": "scripts/test_assistant_generation_entry.mjs",
+      "sha256": "33e435d5726686c5ec190acbe9fe6c934a163a30fac9b577a0e29d096a3118f6"
+    },
+    {
+      "path": "scripts/test_assistant_generation_render.mjs",
+      "sha256": "65ae5a1a6dbc526ac4c72d6d71ea4dc5a930536349cdbddfbde9c929b6485480"
+    },
+    {
+      "path": "desktop/tests/model-approval-acceptance.py",
+      "sha256": "729ed1cff5ce6915296ec932286c4a06b5d91c2bf140bf0120849d790e2e8477"
+    },
+    {
+      "path": "tests/helpers/synthetic_native_approval_entry.py",
+      "sha256": "8565aea94b19440ae5dc56ba05fceef423fc264114747649b596386b193d905e"
+    }
+  ]
+}

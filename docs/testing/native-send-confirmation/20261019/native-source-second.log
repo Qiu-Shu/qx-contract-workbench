@@ -1,0 +1,12 @@
+PASS configured_saved_draft_requires_native_confirmation_without_network_call
+PASS full_text_literal_markup_small_window_scales_and_default_cancel_preserve_draft
+PASS saved_draft_changed_during_confirmation_never_registers_or_sends_old_text
+PASS one_confirmed_send_reaches_existing_queue_loopback_receipt_and_history_reload_without_resend
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-acceptance.py", line 225, in <module>
+    if __name__=='__main__': main()
+                             ^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-acceptance.py", line 198, in main
+    assert report['network']=={'loopback_calls':1,'external_requests':0}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

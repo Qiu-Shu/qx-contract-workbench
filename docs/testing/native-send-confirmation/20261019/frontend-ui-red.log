@@ -1,0 +1,98 @@
+✔ entry rechecks readiness after input changes and returns to the saved text (7.1057ms)
+✔ entry rechecks readiness after a skill selection is immediately cancelled (1.4302ms)
+✔ unknown network outcome repeated send and refresh use original lookup without resubmission (1.5666ms)
+✔ late capability success cannot authorize another conversation (1.1022ms)
+✔ history response for a former binding is rejected and cannot be displayed (0.7724ms)
+✔ a delayed history authorization error after revocation cannot restore old state (0.5837ms)
+✔ a failed capability read is attempted once and does not create an automatic retry loop (0.6796ms)
+✖ shipped entry injects only the dedicated native authorization bridge when present (1.1339ms)
+✔ entry does not enqueue capability reads while a native confirmation is outstanding (1.4488ms)
+✔ send follows the generation gate and existing draft/readonly guards (2.0421ms)
+✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.4836ms)
+✔ capability states give distinct truthful explanations (0.6257ms)
+✔ results stay with their matching input in chronological history and have source anchors (1.6451ms)
+✔ model text remains literal with whitespace and source links only target loaded messages (0.5883ms)
+✔ unrelated items and prior conversation content are cleared on switching or revocation (0.4239ms)
+✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.4494ms)
+✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.5618ms)
+✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.3596ms)
+✖ native send offers confirmation and explains its exact input and scope before submission (1.0975ms)
+✖ native failures distinguish confirmation from unknown POST without exposing diagnostics (0.3755ms)
+✔ failed capability reads can be retried before any task exists (0.2258ms)
+✔ initial template keeps send disabled, recovery hidden and describes controlled generation (0.4791ms)
+✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.2126ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 20
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 77.4547
+
+✖ failing tests:
+
+test at scripts\test_assistant_generation_entry.mjs:98:1
+✖ shipped entry injects only the dedicated native authorization bridge when present (1.1339ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_entry.mjs:103:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:138:1
+✖ native send offers confirmation and explains its exact input and scope before submission (1.0975ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '' !== '确认并发送'
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:142:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: '确认并发送',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:152:1
+✖ native failures distinguish confirmation from unknown POST without exposing diagnostics (0.3755ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /确认.*未完成/. Input:
+  
+  '生成状态未能确认。请刷新记录后核对。'
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:155:28)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '生成状态未能确认。请刷新记录后核对。',
+    expected: /确认.*未完成/,
+    operator: 'match',
+    diff: 'simple'
+  }

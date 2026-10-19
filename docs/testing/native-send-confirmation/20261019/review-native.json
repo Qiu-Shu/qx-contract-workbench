@@ -1,0 +1,110 @@
+{
+  "created_utc": "2026-10-19T15:37:06.423540+00:00",
+  "reviewer_scope": "CH-04H independent review of native modules not authored by this reviewer",
+  "result": "No remaining blocking findings in reviewed CH-04H native scope; P3 wording mismatch closed",
+  "product_modified": false,
+  "scope": [
+    "desktop/model-session.cjs",
+    "desktop/model-approval.cjs",
+    "desktop/model-approval-window.cjs",
+    "desktop/model-approval.html",
+    "desktop/model-approval.css",
+    "desktop/model-approval.js",
+    "desktop/model-approval-preload.cjs",
+    "desktop/main.cjs",
+    "desktop/preload.cjs",
+    "desktop/package.json"
+  ],
+  "checks": [
+    {
+      "command": "node --test .local/native-send-confirmation-20261019/review-native-boundaries.test.cjs .local/native-send-confirmation-20261019/review-native-main.test.cjs",
+      "exit": 0,
+      "tests": 11,
+      "passed": 11,
+      "failed": 0,
+      "duration_ms": 131.5437,
+      "log": "review-native-initial.log"
+    },
+    {
+      "command": "node --test .local/native-send-confirmation-20261019/review-native-window.test.cjs",
+      "exit": 0,
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "duration_ms": 68.4876,
+      "log": "review-native-window.log"
+    },
+    {
+      "command": "node --test .local/native-send-confirmation-20261019/review-native-window.test.cjs scripts/test_assistant_generation_render.mjs",
+      "exit": 0,
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "composition": "4 independent window probes (same four, now including no-scroll focus cases) + 14 existing renderer regression tests",
+      "duration_ms": 75.0393,
+      "log": "review-native-focus-wording-final.log",
+      "note": "Replaces prior window evidence for final HTML/JS. Do not add reruns to the 15 distinct independent probes."
+    }
+  ],
+  "findings": [
+    {
+      "id": "N1",
+      "priority": "P3",
+      "status": "closed by root wording correction; independently checked against final render source and regression",
+      "files": [
+        "src/cn_contract/web/static/assistant-render.mjs",
+        "desktop/model-approval.cjs",
+        "desktop/model-approval.html"
+      ],
+      "description": "Frontend promises checking current scope in the native dialog, while the agreed four-field display contract only includes complete content, recipient, model and fee ceiling. Fullscope authorization verification exists and passed; this is a display expectation mismatch, not a permission failure.",
+      "recommendation": "Narrow frontend confirmation text to the four displayed items; do not enlarge the trusted approval DTO solely for this wording.",
+      "resolution": "Frontend confirmation note/status now asks the user to check complete text, recipient and fee ceiling; no claim that an undisplayed scope label is shown."
+    }
+  ],
+  "confirmed": [
+    "Main captures the original ready window/main frame/exact numeric-loopback conversation URL and document epoch; other windows/subframes/routes/settings/recovered workspaces rejected",
+    "Main menus share the approval busy lock and cannot switch or stop the backend mid-confirmation",
+    "Coordinator rejects arbitrary identity/config/version/model/price/text/endpoint fields before cookie access and HTTP requests",
+    "Callback holds fixed private config/version; exact one-call reservation comes from trusted catalog with BigInt decimal arithmetic, matches existing Python reservation formula",
+    "Three authenticated bounded no-redirect local GETs read actual draft/capability/materials before and after confirmation; scope/composer/hash and cookies rechecked",
+    "Fresh context identity changes block even with a still-true guard; input mutation after dispatch cannot alter captured request",
+    "Malformed/stale server draft cannot open confirmation; post-ACK cookie failure revokes original session and waits for stop on revoke failure",
+    "Ambiguous grant paths terminate original backend; late acknowledged grant on obsolete context revokes old token only",
+    "Approval uses fresh nonpersistent session; deny permissions/download/navigation/new-window/webview; only fixed three file assets admitted",
+    "Only the exact approval window/main frame/file URL may read and decide; explicit boolean after state presentation required; default focus Cancel",
+    "Full text uses textContent, retains whitespace; no automatic approval, parent loss/guard loss/timeout/old-window callbacks cancel",
+    "Cleanup failures do not prevent settled approval/cancellation; new modules are included in package allowlist"
+  ],
+  "source_sha256": {
+    "desktop/model-session.cjs": "efabbd9fe25bebffc496309ea4b4d32be777024cefb826d8366d8f8aead25543",
+    "desktop/model-approval.cjs": "a731bc2f39d004b78df169572354c3fb6b9af821075d8e2dc03a2d2f75cb7728",
+    "desktop/model-approval-window.cjs": "f1de114f401b763b504ea383b55d1a76eaf6558a09c334b104cd949f86c1a339",
+    "desktop/model-approval.html": "5441212d6fcfa0f14619afd0229b387211d436bffa619dcb0856f74dab415032",
+    "desktop/model-approval.css": "b680b58a3bf0f48de49ebfad57fe7de1938a7c36a4552fa6e799fad4773a2be8",
+    "desktop/model-approval.js": "cf465aced4d0bd58a5c6f06176bd0d220f07eb7f7cd74242f5fff7cf178559b6",
+    "desktop/model-approval-preload.cjs": "be50ed9d852420b70d9aad9ee33f7813d2d2553307fcd5dfc76aedcb5c57b22e",
+    "desktop/main.cjs": "ab3733b849a244015dfd9abe5707deaf9d85f9a7b0e5450d18a958490425438b",
+    "desktop/preload.cjs": "b6f27954dc1887fd00300064bfd32aca2d3c354f3cabb7635d71fd0ea9293c06",
+    "desktop/package.json": "387d06b2db84d356181ec6558fddb70d8b0414cc96854979e48635e404e611bc"
+  },
+  "limits": [
+    "Synthetic HTTP fixtures and source VM/DOM boundaries; not an actual Electron/Windows assertion",
+    "Root owns real Windows source/frozen backend approval acceptance and screenshots",
+    "No actual user secret/material read, no real model request, no installed application/law-library change, no commit",
+    "No full historical test suite rerun; 15 distinct probes only, not added to author test counts"
+  ],
+  "boundary": "Frontend may abandon a now-stale successful grant without renderer revoke; the root-approved bounded grant is tied to exact request/fullscope/composer/hash and expires within120s; no autofire.",
+  "completed_utc": "2026-10-19T15:41:07.719705+00:00",
+  "test_changes": "With root authorization, only the pre-existing render test name/assertion was aligned to the corrected product wording; no native product modified by reviewer.",
+  "distinct_independent_probes": 15,
+  "final_delta_review": "Only desktop/model-approval.html and model-approval.js changed after initial native review hashes: autofocus removed; default Cancel focus now uses preventScroll:true on success, read failure and decision failure. Final four window probes cover all three no-scroll focus paths. Session/coordinator/main/preload/package bytes remain identical to the initial 11 passing probes.",
+  "related_final_sha256": {
+    "src/cn_contract/web/static/assistant-render.mjs": "b66953b73ef3346e5b3ed32428149005e5b27da323677aeaf684a26ba01d9dfb",
+    "scripts/test_assistant_generation_render.mjs": "dab043b22d0ea6a9f5d9e4986ecbbb3b2b455b38d8fdd93058a154b0ca848aa8"
+  },
+  "probe_sha256": {
+    ".local\\native-send-confirmation-20261019\\review-native-boundaries.test.cjs": "d5fbd3913abc5946eaa5fac79373c1b81a9a52bfec5d2d206b32cac6d5158b10",
+    ".local\\native-send-confirmation-20261019\\review-native-main.test.cjs": "56f5f04332a16854f4e50ceb60b5f92dfb999fc8ed8ea61ee59ab2882b22e8cb",
+    ".local\\native-send-confirmation-20261019\\review-native-window.test.cjs": "8e2716f84d3b614cdd5a432649d0e794d583e6aeb0ba7859f330b79a728863b1"
+  }
+}

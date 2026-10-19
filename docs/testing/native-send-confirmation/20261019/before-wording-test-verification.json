@@ -1,0 +1,40 @@
+{
+  "commands": {
+    "node-final": {
+      "exit_code": 0,
+      "seconds": 5.437,
+      "tests": 152,
+      "pass": 152,
+      "fail": 0,
+      "skipped": 0
+    },
+    "python-final": {
+      "exit_code": 1,
+      "seconds": 98.89,
+      "tests": 163,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "defaults": {
+      "exit_code": 0,
+      "seconds": 0.562
+    },
+    "sources": {
+      "exit_code": 0,
+      "seconds": 2.328
+    },
+    "dependencies": {
+      "exit_code": 0,
+      "seconds": 0.578
+    },
+    "schema": {
+      "exit_code": 0,
+      "seconds": 0.406
+    }
+  },
+  "input_files": 481,
+  "changed_inputs": [
+    "scripts/test_assistant_generation_render.mjs"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "status": "frozen",
+  "scope": "CH-04H trusted approval coordinator and private model session",
+  "command": "node --test desktop/tests/model-approval.test.cjs desktop/tests/model-approval-session.test.cjs desktop/tests/model-session.test.cjs",
+  "final": {
+    "pass": 51,
+    "tests": 51,
+    "exit": 0,
+    "log": "coordinator-final.log",
+    "fail": 0
+  },
+  "counts": {
+    "new_coordinator": 20,
+    "existing_model_session": 18,
+    "new_authorization_session": 13
+  },
+  "red_evidence": {
+    "session": "Missing new trusted withAuthorization function; session-red.log exit1",
+    "coordinator": "Missing new coordinator module; coordinator-red.log exit1",
+    "behavior": "Exhausted prior grant was incorrectly rejected before explicit new confirmation; exhausted-red.log exit1 -> exhausted-green.log exit0"
+  },
+  "diff_check_exit": 0,
+  "synthetic_token_or_key_log_matches": 0,
+  "source_hashes": [
+    {
+      "path": "desktop/model-session.cjs",
+      "sha256": "efabbd9fe25bebffc496309ea4b4d32be777024cefb826d8366d8f8aead25543"
+    },
+    {
+      "path": "desktop/model-approval.cjs",
+      "sha256": "a731bc2f39d004b78df169572354c3fb6b9af821075d8e2dc03a2d2f75cb7728"
+    },
+    {
+      "path": "desktop/tests/model-approval.test.cjs",
+      "sha256": "ff1258e1a9280042cdd05837da0788e8692d509759fe3bb3c0507a501caa1cb9"
+    },
+    {
+      "path": "desktop/tests/model-approval-session.test.cjs",
+      "sha256": "9e830b9c8229df450a157bd1ec9c162adad7f5d09338a48ec1a24fb699260b3d"
+    }
+  ],
+  "hash_note": "Agent snapshot; root may normalize LF before final source acceptance. Root final stable hashes are authoritative.",
+  "boundaries": [
+    "Random numeric loopback HTTP only; fixed synthetic session cookies and drafts",
+    "No real account, credential, material or model requests",
+    "Real Electron dialog and production Python pipe integration owned by root",
+    "No commit by this agent"
+  ]
+}

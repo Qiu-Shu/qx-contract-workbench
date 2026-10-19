@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; connect-src 'none'; img-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+<title>确认本次发送 · 群兴法律工作台</title><link rel="stylesheet" href="model-approval.css"><script src="model-approval.js" defer></script></head>
+<body><main aria-labelledby="approval-title"><h1 id="approval-title">确认本次发送</h1>
+<p class="intro">只发送下列文字；本机原附件不会发送。结果保存为内部待核草稿。</p>
+<dl><dt>接收方</dt><dd id="approval-recipient">正在读取…</dd><dt>模型</dt><dd id="approval-model">正在读取…</dd><dt>费用上限</dt><dd id="approval-budget">正在读取…</dd></dl>
+<h2 id="approval-text-title">本次发送的完整文字</h2>
+<div id="approval-content" class="content" tabindex="0" role="region" aria-labelledby="approval-text-title"></div>
+<p class="hint">仅批准本次一次调用。确认发送不代表认可内容或模型结果，仍需律师核对。</p>
+<p id="approval-status" role="status" aria-live="polite">正在读取待确认内容…</p>
+<div class="actions"><button id="approval-cancel" class="secondary" type="button" disabled>取消</button><button id="approval-confirm" type="button" disabled>确认本次发送</button></div>
+</main></body></html>

@@ -13,7 +13,7 @@ async function fixture(t,{recovered=false}={}) {
   const workspace=recovered?'recovered/00000000-0000-4000-8000-000000000001':'main';
   fs.mkdirSync(path.join(root,'workspaces',workspace),{recursive:true});
   if(recovered)fs.writeFileSync(path.join(root,'desktop-settings.json'),JSON.stringify({workspace}));
-  const handlers=new Map(),states=[],backends=[];let ready,win,menu;
+  const handlers=new Map(),states=[],backends=[];let ready,win,menu,approvalOptions;
   const store={writes:0,async save(){this.writes++;return {status:'saved'};},
     async status(){return {status:'saved'};},async withSecret(fn){await fn('synthetic-settings-secret');return {status:'saved'};},async drain(){}};
   class Backend extends EventEmitter {
@@ -35,11 +35,12 @@ async function fixture(t,{recovered=false}={}) {
     ipcMain:{handle:(name,fn)=>handlers.set(name,fn)},dialog:{showMessageBox:async()=>({})},
     session:{fromPartition:()=>({setPermissionRequestHandler(){},setPermissionCheckHandler(){},on(){}})}};
   const requireModule=name=>name==='electron'?electron:name==='./backend.cjs'?{Backend}:name==='./model-credentials.cjs'?{createModelCredentialStore:()=>store}
+    :name==='./model-approval.cjs'?{registerModelApproval:options=>{approvalOptions=options;return require('../model-approval.cjs').registerModelApproval(options);}}
     :name.startsWith('./')?require(path.join(desktop,name)):require(name);
   vm.runInNewContext(fs.readFileSync(path.join(desktop,'main.cjs'),'utf8'),{require:requireModule,__dirname:desktop,URL,
     process:{env:{QX_DESKTOP_DATA_PARENT:root},platform:'win32'}});
   await ready;
-  return {win,states,backends,root,handlers,store,
+  return {win,states,backends,root,handlers,store,approvalOptions,
     event:()=>({sender:win.webContents,senderFrame:win.webContents.mainFrame}),
     menu:async label=>{const item=menu[0].submenu.find(x=>x.label===label);assert.ok(item);await item.click();}};
 }
@@ -123,4 +124,31 @@ test('renderer failure blocks credential replacement until the configured backen
   assert.equal(f.backends.length,2);
   await f.menu('主模型设置…');
   assert.equal((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.state,'unconfigured');
+});
+
+test('send confirmation context uses only the displayed conversation and owned main frame',async t=>{
+  const f=await fixture(t),capture=f.approvalOptions.captureContext;
+  assert.equal(capture(f.event()),null,'login is not a confirmation origin');
+  const id='00000000-0000-4000-8000-000000000003';
+  const url='http://127.0.0.1:18001/assistant/'+id;
+  await f.win.loadURL(url);
+  const context=capture(f.event());assert.equal(context.conversation_id,id);
+  assert.equal(context.backend,f.backends[0]);assert.equal(context.guard(),true);
+  assert.equal(capture({sender:{},senderFrame:f.win.webContents.mainFrame}),null);
+  assert.equal(capture({sender:f.win.webContents,senderFrame:{url}}),null);
+  await f.win.loadURL(url+'?other=1');assert.equal(capture(f.event()),null);assert.equal(context.guard(),false);
+  await f.win.loadURL(url);assert.equal(context.guard(),false,'returning to an old URL cannot revive the document guard');
+  const beforeReload=capture(f.event());await f.win.loadURL(url);assert.equal(beforeReload.guard(),false);
+  const beforeSettings=capture(f.event());await f.menu('主模型设置…');assert.equal(beforeSettings.guard(),false);
+  assert.equal(capture(f.event()),null);
+});
+
+test('restored workspaces and replaced backends cannot approve a send',async t=>{
+  const f=await fixture(t,{recovered:true});
+  await f.win.loadURL('http://127.0.0.1:18001/assistant/00000000-0000-4000-8000-000000000003');
+  assert.equal(f.approvalOptions.captureContext(f.event()),null);
+  const g=await fixture(t);await g.win.loadURL('http://127.0.0.1:18001/assistant/00000000-0000-4000-8000-000000000003');
+  const context=g.approvalOptions.captureContext(g.event());
+  await g.menu('重新打开工作台');assert.equal(context.guard(),false);
+  assert.notEqual(g.backends.at(-1),context.backend);
 });

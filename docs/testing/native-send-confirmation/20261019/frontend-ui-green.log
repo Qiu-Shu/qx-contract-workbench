@@ -1,0 +1,31 @@
+✔ entry rechecks readiness after input changes and returns to the saved text (6.9906ms)
+✔ entry rechecks readiness after a skill selection is immediately cancelled (1.4918ms)
+✔ unknown network outcome repeated send and refresh use original lookup without resubmission (1.7294ms)
+✔ late capability success cannot authorize another conversation (1.4484ms)
+✔ history response for a former binding is rejected and cannot be displayed (0.9962ms)
+✔ a delayed history authorization error after revocation cannot restore old state (0.6726ms)
+✔ a failed capability read is attempted once and does not create an automatic retry loop (0.7696ms)
+✔ shipped entry injects only the dedicated native authorization bridge when present (0.3624ms)
+✔ entry does not enqueue capability reads while a native confirmation is outstanding (0.9544ms)
+✔ send follows the generation gate and existing draft/readonly guards (2.1201ms)
+✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.4917ms)
+✔ capability states give distinct truthful explanations (0.5542ms)
+✔ results stay with their matching input in chronological history and have source anchors (1.5365ms)
+✔ model text remains literal with whitespace and source links only target loaded messages (0.5748ms)
+✔ unrelated items and prior conversation content are cleared on switching or revocation (0.4527ms)
+✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.4147ms)
+✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.4418ms)
+✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.3468ms)
+✔ native send offers confirmation and explains its exact input and scope before submission (0.4703ms)
+✔ native failures distinguish confirmation from unknown POST without exposing diagnostics (0.2946ms)
+✔ failed capability reads can be retried before any task exists (0.152ms)
+✔ initial template keeps send disabled, recovery hidden and describes controlled generation (0.4447ms)
+✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.2351ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78.7381

@@ -1,0 +1,922 @@
+TAP version 13
+# Subtest: owned backend validates readiness, stops on EOF and rejects forged nonce
+ok 1 - owned backend validates readiness, stops on EOF and rejects forged nonce
+  ---
+  duration_ms: 226.5006
+  type: 'test'
+  ...
+# Subtest: trusted authorization binds the private config version and exact bounded cost
+ok 2 - trusted authorization binds the private config version and exact bounded cost
+  ---
+  duration_ms: 4.178
+  type: 'test'
+  ...
+# Subtest: the pro model uses an exact eight-place reservation without floating-point rounding
+ok 3 - the pro model uses an exact eight-place reservation without floating-point rounding
+  ---
+  duration_ms: 1.5507
+  type: 'test'
+  ...
+# Subtest: confirmation holds the config lock and a retained lease cannot authorize later
+ok 4 - confirmation holds the config lock and a retained lease cannot authorize later
+  ---
+  duration_ms: 8.2198
+  type: 'test'
+  ...
+# Subtest: a lease is single use and does not accept a second request basis
+ok 5 - a lease is single use and does not accept a second request basis
+  ---
+  duration_ms: 0.6736
+  type: 'test'
+  ...
+# Subtest: configuration loss before opening the trusted transaction rejects without executing the callback
+ok 6 - configuration loss before opening the trusted transaction rejects without executing the callback
+  ---
+  duration_ms: 0.3735
+  type: 'test'
+  ...
+# Subtest: an acknowledged grant whose document changed is revoked for the captured session
+ok 7 - an acknowledged grant whose document changed is revoked for the captured session
+  ---
+  duration_ms: 0.5572
+  type: 'test'
+  ...
+# Subtest: ambiguous authorization stops its backend without attempting automatic authorization again
+ok 8 - ambiguous authorization stops its backend without attempting automatic authorization again
+  ---
+  duration_ms: 0.5864
+  type: 'test'
+  ...
+# Subtest: unknown ACK and ACK plus terminal control failure both close the backend
+ok 9 - unknown ACK and ACK plus terminal control failure both close the backend
+  ---
+  duration_ms: 0.613
+  type: 'test'
+  ...
+# Subtest: a confirmed authorization denial is never mistaken for consumer success
+ok 10 - a confirmed authorization denial is never mistaken for consumer success
+  ---
+  duration_ms: 0.4576
+  type: 'test'
+  ...
+# Subtest: a failed post-grant verification revokes and a denied revoke waits for owned backend shutdown
+ok 11 - a failed post-grant verification revokes and a denied revoke waits for owned backend shutdown
+  ---
+  duration_ms: 2.7017
+  type: 'test'
+  ...
+# Subtest: existing request acknowledgement is accepted without a new authorization capability
+ok 12 - existing request acknowledgement is accepted without a new authorization capability
+  ---
+  duration_ms: 0.5243
+  type: 'test'
+  ...
+# Subtest: a late authorization on a replaced backend revokes the old session only
+ok 13 - a late authorization on a replaced backend revokes the old session only
+  ---
+  duration_ms: 0.944
+  type: 'test'
+  ...
+# Subtest: failed post-grant verification plus a malformed revoke ACK closes the captured backend
+ok 14 - failed post-grant verification plus a malformed revoke ACK closes the captured backend
+  ---
+  duration_ms: 0.4048
+  type: 'test'
+  ...
+# Subtest: approval creates one isolated modal and only its exact main frame can read or explicitly decide
+ok 15 - approval creates one isolated modal and only its exact main frame can read or explicitly decide
+  ---
+  duration_ms: 17.5902
+  type: 'test'
+  ...
+# Subtest: approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision
+ok 16 - approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision
+  ---
+  duration_ms: 4.1353
+  type: 'test'
+  ...
+# Subtest: approval stale guard, parent close, Escape and bounded timeout cancel without a decision
+ok 17 - approval stale guard, parent close, Escape and bounded timeout cancel without a decision
+  ---
+  duration_ms: 12.1871
+  type: 'test'
+  ...
+# Subtest: approval default cancel focus preserves the initial top viewport
+ok 18 - approval default cancel focus preserves the initial top viewport
+  ---
+  duration_ms: 2.7349
+  type: 'test'
+  ...
+# Subtest: approval page renders full untrusted text as text and defaults focus to cancel
+ok 19 - approval page renders full untrusted text as text and defaults focus to cancel
+  ---
+  duration_ms: 2.1696
+  type: 'test'
+  ...
+# Subtest: approval page never confirms while loading and explicit confirm is sent only once
+ok 20 - approval page never confirms while loading and explicit confirm is sent only once
+  ---
+  duration_ms: 2.3145
+  type: 'test'
+  ...
+# Subtest: approval preload exposes only two dedicated calls and refuses truthy decision values
+ok 21 - approval preload exposes only two dedicated calls and refuses truthy decision values
+  ---
+  duration_ms: 1.5058
+  type: 'test'
+  ...
+# Subtest: approval still settles cancellation if optional session cleanup fails
+ok 22 - approval still settles cancellation if optional session cleanup fails
+  ---
+  duration_ms: 2.7881
+  type: 'test'
+  ...
+# Subtest: approval validates the display boundary and admits the full 65536-byte text without truncation
+ok 23 - approval validates the display boundary and admits the full 65536-byte text without truncation
+  ---
+  duration_ms: 4.5529
+  type: 'test'
+  ...
+# Subtest: approval blocks navigation, all external requests and cancels a crashed renderer
+ok 24 - approval blocks navigation, all external requests and cancels a crashed renderer
+  ---
+  duration_ms: 2.6663
+  type: 'test'
+  ...
+# Subtest: approval page loading failure and page departure never enable or dispatch confirmation
+ok 25 - approval page loading failure and page departure never enable or dispatch confirmation
+  ---
+  duration_ms: 3.0082
+  type: 'test'
+  ...
+# Subtest: only trusted saved content and fixed model cost reach confirmation and one authorization
+ok 26 - only trusted saved content and fixed model cost reach confirmation and one authorization
+  ---
+  duration_ms: 92.2562
+  type: 'test'
+  ...
+# Subtest: cancel leaves no authorization and no second HTTP snapshot
+ok 27 - cancel leaves no authorization and no second HTTP snapshot
+  ---
+  duration_ms: 9.7835
+  type: 'test'
+  ...
+# Subtest: renderer-selected budget, malformed scope and other displayed conversations are refused before reads
+ok 28 - renderer-selected budget, malformed scope and other displayed conversations are refused before reads
+  ---
+  duration_ms: 2.4234
+  type: 'test'
+  ...
+# Subtest: only an exact numeric owned loopback origin can receive a session cookie
+ok 29 - only an exact numeric owned loopback origin can receive a session cookie
+  ---
+  duration_ms: 2.6169
+  type: 'test'
+  ...
+# Subtest: all scope fields and composer revisions are checked independently of the content digest
+ok 30 - all scope fields and composer revisions are checked independently of the content digest
+  ---
+  duration_ms: 30.7669
+  type: 'test'
+  ...
+# Subtest: unapproved capability cannot hide selected attachments or a busy run
+ok 31 - unapproved capability cannot hide selected attachments or a busy run
+  ---
+  duration_ms: 12.3967
+  type: 'test'
+  ...
+# Subtest: materials and capability scope mismatches cannot reach confirmation
+ok 32 - materials and capability scope mismatches cannot reach confirmation
+  ---
+  duration_ms: 7.7286
+  type: 'test'
+  ...
+# Subtest: changed saved content, composer or materials after confirmation never authorizes
+ok 33 - changed saved content, composer or materials after confirmation never authorizes
+  ---
+  duration_ms: 19.6636
+  type: 'test'
+  ...
+# Subtest: ambiguous or target-specific cookies are rejected without authorization
+ok 34 - ambiguous or target-specific cookies are rejected without authorization
+  ---
+  duration_ms: 2.323
+  type: 'test'
+  ...
+# Subtest: a replaced session cookie after confirmation fails before authorization
+ok 35 - a replaced session cookie after confirmation fails before authorization
+  ---
+  duration_ms: 5.3867
+  type: 'test'
+  ...
+# Subtest: a cookie change after authorized ACK revokes the captured session
+ok 36 - a cookie change after authorized ACK revokes the captured session
+  ---
+  duration_ms: 8.1038
+  type: 'test'
+  ...
+# Subtest: shared busy refuses duplicate clicks and wait includes the pending confirmation
+ok 37 - shared busy refuses duplicate clicks and wait includes the pending confirmation
+  ---
+  duration_ms: 6.5447
+  type: 'test'
+  ...
+# Subtest: document change during confirmation cannot authorize even if the window returns true
+ok 38 - document change during confirmation cannot authorize even if the window returns true
+  ---
+  duration_ms: 4.654
+  type: 'test'
+  ...
+# Subtest: redirects, oversized bodies and malformed UTF8 are rejected as fixed errors
+ok 39 - redirects, oversized bodies and malformed UTF8 are rejected as fixed errors
+  ---
+  duration_ms: 13.8028
+  type: 'test'
+  ...
+# Subtest: repeated confirmation keeps the same request and budget and accepts an existing receipt
+ok 40 - repeated confirmation keeps the same request and budget and accepts an existing receipt
+  ---
+  duration_ms: 13.5499
+  type: 'test'
+  ...
+# Subtest: exhausted previous approval permits a new explicit one-call confirmation
+ok 41 - exhausted previous approval permits a new explicit one-call confirmation
+  ---
+  duration_ms: 7.1245
+  type: 'test'
+  ...
+# Subtest: a stalled owned HTTP response times out with fixed output and releases the busy lock
+ok 42 - a stalled owned HTTP response times out with fixed output and releases the busy lock
+  ---
+  duration_ms: 5007.4077
+  type: 'test'
+  ...
+# Subtest: HTTP permission denial and malformed JSON never forward server error text to the renderer
+ok 43 - HTTP permission denial and malformed JSON never forward server error text to the renderer
+  ---
+  duration_ms: 7.7207
+  type: 'test'
+  ...
+# Subtest: missing cookie and a cookie with header delimiters are refused before any request
+ok 44 - missing cookie and a cookie with header delimiters are refused before any request
+  ---
+  duration_ms: 1.5519
+  type: 'test'
+  ...
+# Subtest: a changed context identity cannot reuse the same guard function to approve
+ok 45 - a changed context identity cannot reuse the same guard function to approve
+  ---
+  duration_ms: 5.3349
+  type: 'test'
+  ...
+# Subtest: trusted backend configures and disables through one owned child without exposing protocol credentials
+ok 46 - trusted backend configures and disables through one owned child without exposing protocol credentials
+  ---
+  duration_ms: 154.9282
+  type: 'test'
+  ...
+# Subtest: legacy readiness still starts but model control remains unavailable
+ok 47 - legacy readiness still starts but model control remains unavailable
+  ---
+  duration_ms: 61.0697
+  type: 'test'
+  ...
+# Subtest: an owner stopped before startup cannot create a child or leave startup pending
+ok 48 - an owner stopped before startup cannot create a child or leave startup pending
+  ---
+  duration_ms: 0.5405
+  type: 'test'
+  ...
+# Subtest: synchronous process setup errors never expose their input or leave a startup timer
+ok 49 - synchronous process setup errors never expose their input or leave a startup timer
+  ---
+  duration_ms: 1.13
+  type: 'test'
+  ...
+# Subtest: fragmented child pipe frames are reconstructed through their final newline
+ok 50 - fragmented child pipe frames are reconstructed through their final newline
+  ---
+  duration_ms: 59.7652
+  type: 'test'
+  ...
+# Subtest: a malformed second frame in the readiness chunk rejects startup
+ok 51 - a malformed second frame in the readiness chunk rejects startup
+  ---
+  duration_ms: 52.6181
+  type: 'test'
+  ...
+# Subtest: bad-nonce irreversibly closes the owned child and reports only one fixed failure
+ok 52 - bad-nonce irreversibly closes the owned child and reports only one fixed failure
+  ---
+  duration_ms: 55.4242
+  type: 'test'
+  ...
+# Subtest: partial-result irreversibly closes the owned child and reports only one fixed failure
+ok 53 - partial-result irreversibly closes the owned child and reports only one fixed failure
+  ---
+  duration_ms: 49.3234
+  type: 'test'
+  ...
+# Subtest: normal stop cancels pending control, permits EOF exit and does not announce failure
+ok 54 - normal stop cancels pending control, permits EOF exit and does not announce failure
+  ---
+  duration_ms: 55.3044
+  type: 'test'
+  ...
+# Subtest: stdout system errors stay inside the fixed failure boundary
+ok 55 - stdout system errors stay inside the fixed failure boundary
+  ---
+  duration_ms: 51.8179
+  type: 'test'
+  ...
+# Subtest: stderr system errors stay inside the fixed failure boundary
+ok 56 - stderr system errors stay inside the fixed failure boundary
+  ---
+  duration_ms: 53.409
+  type: 'test'
+  ...
+# Subtest: commands are serialized once, busy calls are rejected without allocating a sequence
+ok 57 - commands are serialized once, busy calls are rejected without allocating a sequence
+  ---
+  duration_ms: 0.5636
+  type: 'test'
+  ...
+# Subtest: business denials expose only fixed codes and do not poison the control pipe
+ok 58 - business denials expose only fixed codes and do not poison the control pipe
+  ---
+  duration_ms: 0.3588
+  type: 'test'
+  ...
+# Subtest: existing is an authorization-only success status
+ok 59 - existing is an authorization-only success status
+  ---
+  duration_ms: 0.1777
+  type: 'test'
+  ...
+# Subtest: wrong nonce rejects the pending command with a fixed fatal error
+ok 60 - wrong nonce rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.3252
+  type: 'test'
+  ...
+# Subtest: future sequence rejects the pending command with a fixed fatal error
+ok 61 - future sequence rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2652
+  type: 'test'
+  ...
+# Subtest: unsafe sequence rejects the pending command with a fixed fatal error
+ok 62 - unsafe sequence rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1825
+  type: 'test'
+  ...
+# Subtest: wrong operation status rejects the pending command with a fixed fatal error
+ok 63 - wrong operation status rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2015
+  type: 'test'
+  ...
+# Subtest: unknown field rejects the pending command with a fixed fatal error
+ok 64 - unknown field rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.3005
+  type: 'test'
+  ...
+# Subtest: wrong protocol rejects the pending command with a fixed fatal error
+ok 65 - wrong protocol rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.181
+  type: 'test'
+  ...
+# Subtest: duplicate key rejects the pending command with a fixed fatal error
+ok 66 - duplicate key rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1726
+  type: 'test'
+  ...
+# Subtest: noncanonical number rejects the pending command with a fixed fatal error
+ok 67 - noncanonical number rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.158
+  type: 'test'
+  ...
+# Subtest: extra whitespace rejects the pending command with a fixed fatal error
+ok 68 - extra whitespace rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2149
+  type: 'test'
+  ...
+# Subtest: invalid UTF8 rejects the pending command with a fixed fatal error
+ok 69 - invalid UTF8 rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2047
+  type: 'test'
+  ...
+# Subtest: UTF8 BOM rejects the pending command with a fixed fatal error
+ok 70 - UTF8 BOM rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.199
+  type: 'test'
+  ...
+# Subtest: CRLF rejects the pending command with a fixed fatal error
+ok 71 - CRLF rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1556
+  type: 'test'
+  ...
+# Subtest: extra empty frame rejects the pending command with a fixed fatal error
+ok 72 - extra empty frame rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1492
+  type: 'test'
+  ...
+# Subtest: oversized incomplete frame rejects the pending command with a fixed fatal error
+ok 73 - oversized incomplete frame rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.6608
+  type: 'test'
+  ...
+# Subtest: every complete frame is handled, including a duplicate ack in the same buffer
+ok 74 - every complete frame is handled, including a duplicate ack in the same buffer
+  ---
+  duration_ms: 0.2473
+  type: 'test'
+  ...
+# Subtest: timeout and pipe-write failure are terminal and never retry a secret-bearing command
+ok 75 - timeout and pipe-write failure are terminal and never retry a secret-bearing command
+  ---
+  duration_ms: 11.3501
+  type: 'test'
+  ...
+# Subtest: invalid command inputs and UTF8 byte overflow are rejected before writing or consuming a sequence
+ok 76 - invalid command inputs and UTF8 byte overflow are rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.4246
+  type: 'test'
+  ...
+# Subtest: trusted secret consumer receives plaintext once but its returned value is never exposed
+ok 77 - trusted secret consumer receives plaintext once but its returned value is never exposed
+  ---
+  duration_ms: 30.5449
+  type: 'test'
+  ...
+# Subtest: missing credentials and invalid consumers never invoke a callback
+ok 78 - missing credentials and invalid consumers never invoke a callback
+  ---
+  duration_ms: 47.3115
+  type: 'test'
+  ...
+# Subtest: unavailable protection, corrupt bytes and rotation requirements block trusted consumption
+ok 79 - unavailable protection, corrupt bytes and rotation requirements block trusted consumption
+  ---
+  duration_ms: 18.3283
+  type: 'test'
+  ...
+# Subtest: a changed path during decrypt prevents the callback from receiving stale plaintext
+ok 80 - a changed path during decrypt prevents the callback from receiving stale plaintext
+  ---
+  duration_ms: 17.2925
+  type: 'test'
+  ...
+# Subtest: linked credentials are not decrypted or handed to a trusted callback
+ok 81 - linked credentials are not decrypted or handed to a trusted callback
+  ---
+  duration_ms: 20.5752
+  type: 'test'
+  ...
+# Subtest: trusted consumption occupies the existing serial queue and drain until its callback settles
+ok 82 - trusted consumption occupies the existing serial queue and drain until its callback settles
+  ---
+  duration_ms: 18.0112
+  type: 'test'
+  ...
+# Subtest: consumer exceptions never expose plaintext and do not poison later store operations
+ok 83 - consumer exceptions never expose plaintext and do not poison later store operations
+  ---
+  duration_ms: 14.2347
+  type: 'test'
+  ...
+# Subtest: empty, save, restart, replace and remove expose only status and persist only ciphertext
+ok 84 - empty, save, restart, replace and remove expose only status and persist only ciphertext
+  ---
+  duration_ms: 86.4989
+  type: 'test'
+  ...
+# Subtest: save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext
+ok 85 - save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext
+  ---
+  duration_ms: 56.8943
+  type: 'test'
+  ...
+# Subtest: only Windows and all available asynchronous protection methods permit status and save
+ok 86 - only Windows and all available asynchronous protection methods permit status and save
+  ---
+  duration_ms: 5.7215
+  type: 'test'
+  ...
+# Subtest: status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors
+ok 87 - status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors
+  ---
+  duration_ms: 22.4375
+  type: 'test'
+  ...
+# Subtest: status validates actual decrypted data and reports rotation without rewriting stored bytes
+ok 88 - status validates actual decrypted data and reports rotation without rewriting stored bytes
+  ---
+  duration_ms: 22.5126
+  type: 'test'
+  ...
+# Subtest: remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable
+ok 89 - remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable
+  ---
+  duration_ms: 2.8663
+  type: 'test'
+  ...
+# Subtest: invalid parent paths return a fixed result rather than throwing or creating files
+ok 90 - invalid parent paths return a fixed result rather than throwing or creating files
+  ---
+  duration_ms: 1.3399
+  type: 'test'
+  ...
+# Subtest: a junction ancestor is rejected for every operation and the linked directory remains untouched
+ok 91 - a junction ancestor is rejected for every operation and the linked directory remains untouched
+  ---
+  duration_ms: 2.3574
+  type: 'test'
+  ...
+# Subtest: the credential directory cannot be a junction, dangling junction or ordinary file
+ok 92 - the credential directory cannot be a junction, dangling junction or ordinary file
+  ---
+  duration_ms: 5.2157
+  type: 'test'
+  ...
+# Subtest: credential symbolic links including dangling links are never read, replaced or removed
+ok 93 - credential symbolic links including dangling links are never read, replaced or removed
+  ---
+  duration_ms: 4.2089
+  type: 'test'
+  ...
+# Subtest: credential hard links and directories are rejected without touching either target
+ok 94 - credential hard links and directories are rejected without touching either target
+  ---
+  duration_ms: 4.071
+  type: 'test'
+  ...
+# Subtest: a directory replaced by a junction during asynchronous encryption cannot redirect the write
+ok 95 - a directory replaced by a junction during asynchronous encryption cannot redirect the write
+  ---
+  duration_ms: 12.6482
+  type: 'test'
+  ...
+# Subtest: malformed encryption results and rejected encryption preserve old ciphertext and return a fixed error
+ok 96 - malformed encryption results and rejected encryption preserve old ciphertext and return a fixed error
+  ---
+  duration_ms: 14.7875
+  type: 'test'
+  ...
+# Subtest: flush or atomic replacement failures preserve old ciphertext and remove only the temporary ciphertext
+ok 97 - flush or atomic replacement failures preserve old ciphertext and remove only the temporary ciphertext
+  ---
+  duration_ms: 26.1108
+  type: 'test'
+  ...
+# Subtest: status, save and remove share a serial queue and drain waits for already accepted operations
+ok 98 - status, save and remove share a serial queue and drain waits for already accepted operations
+  ---
+  duration_ms: 26.5147
+  type: 'test'
+  ...
+# Subtest: a failed operation does not poison the queue or prevent a later safe removal
+ok 99 - a failed operation does not poison the queue or prevent a later safe removal
+  ---
+  duration_ms: 11.7741
+  type: 'test'
+  ...
+# Subtest: status checks current file identity again after decrypting
+ok 100 - status checks current file identity again after decrypting
+  ---
+  duration_ms: 11.3971
+  type: 'test'
+  ...
+# Subtest: oversized ciphertext is rejected before reading or decrypting it
+ok 101 - oversized ciphertext is rejected before reading or decrypting it
+  ---
+  duration_ms: 2.2348
+  type: 'test'
+  ...
+# Subtest: filesystem failures are fixed results and never expose file paths or raw exception messages
+ok 102 - filesystem failures are fixed results and never expose file paths or raw exception messages
+  ---
+  duration_ms: 11.8249
+  type: 'test'
+  ...
+# Subtest: declared desktop bundle includes standalone credential modules without new dependencies
+ok 103 - declared desktop bundle includes standalone credential modules without new dependencies
+  ---
+  duration_ms: 48.6045
+  type: 'test'
+  ...
+# Subtest: credential writes revoke current runtime before touching the protected store
+ok 104 - credential writes revoke current runtime before touching the protected store
+  ---
+  duration_ms: 5.0023
+  type: 'test'
+  ...
+# Subtest: trusted model selection configures only the fixed catalog and never grants sending
+ok 105 - trusted model selection configures only the fixed catalog and never grants sending
+  ---
+  duration_ms: 3.1273
+  type: 'test'
+  ...
+# Subtest: second model uses bounded trusted configuration and projections omit private metadata
+ok 106 - second model uses bounded trusted configuration and projections omit private metadata
+  ---
+  duration_ms: 0.5688
+  type: 'test'
+  ...
+# Subtest: arbitrary configuration is refused without consuming credentials and clears prior configuration
+ok 107 - arbitrary configuration is refused without consuming credentials and clears prior configuration
+  ---
+  duration_ms: 0.4968
+  type: 'test'
+  ...
+# Subtest: credential read failure cannot preserve a prior configured model
+ok 108 - credential read failure cannot preserve a prior configured model
+  ---
+  duration_ms: 0.4122
+  type: 'test'
+  ...
+# Subtest: consumer completion does not turn a rejected configuration ACK into success
+ok 109 - consumer completion does not turn a rejected configuration ACK into success
+  ---
+  duration_ms: 0.4297
+  type: 'test'
+  ...
+# Subtest: malformed success ACK closes the captured backend and never exposes its extra fields
+ok 110 - malformed success ACK closes the captured backend and never exposes its extra fields
+  ---
+  duration_ms: 1.0153
+  type: 'test'
+  ...
+# Subtest: health failure arriving with a valid ACK prevents configuration adoption
+ok 111 - health failure arriving with a valid ACK prevents configuration adoption
+  ---
+  duration_ms: 0.9894
+  type: 'test'
+  ...
+# Subtest: backend replacement while reading the credential prevents its handoff
+ok 112 - backend replacement while reading the credential prevents its handoff
+  ---
+  duration_ms: 9.3626
+  type: 'test'
+  ...
+# Subtest: late configuration ACK stops only the old backend after process replacement
+ok 113 - late configuration ACK stops only the old backend after process replacement
+  ---
+  duration_ms: 0.8533
+  type: 'test'
+  ...
+# Subtest: an obsolete document cannot adopt an ACK or invoke page failure handling
+ok 114 - an obsolete document cannot adopt an ACK or invoke page failure handling
+  ---
+  duration_ms: 0.49
+  type: 'test'
+  ...
+# Subtest: runtime operations refuse overlapping mutations instead of queuing them
+ok 115 - runtime operations refuse overlapping mutations instead of queuing them
+  ---
+  duration_ms: 0.5033
+  type: 'test'
+  ...
+# Subtest: failed revocation waits for backend stop and forbids the credential write
+ok 116 - failed revocation waits for backend stop and forbids the credential write
+  ---
+  duration_ms: 0.6146
+  type: 'test'
+  ...
+# Subtest: a failed backend stop latches unsafe state even after the backend reference is cleared
+ok 117 - a failed backend stop latches unsafe state even after the backend reference is cleared
+  ---
+  duration_ms: 0.3047
+  type: 'test'
+  ...
+# Subtest: credential and runtime IPC share a busy lock while the captured document guard remains valid
+ok 118 - credential and runtime IPC share a busy lock while the captured document guard remains valid
+  ---
+  duration_ms: 0.6747
+  type: 'test'
+  ...
+# Subtest: document epoch is rechecked after revocation before any credential write
+ok 119 - document epoch is rechecked after revocation before any credential write
+  ---
+  duration_ms: 0.4018
+  type: 'test'
+  ...
+# Subtest: navigation before IPC work starts prevents all runtime and credential work
+ok 120 - navigation before IPC work starts prevents all runtime and credential work
+  ---
+  duration_ms: 0.1814
+  type: 'test'
+  ...
+# Subtest: runtime status neither consumes credentials nor preserves metadata across backend replacement
+ok 121 - runtime status neither consumes credentials nor preserves metadata across backend replacement
+  ---
+  duration_ms: 0.1735
+  type: 'test'
+  ...
+# Subtest: native model settings preserve the running backend and return to the prior trusted conversation
+ok 122 - native model settings preserve the running backend and return to the prior trusted conversation
+  ---
+  duration_ms: 39.3963
+  type: 'test'
+  ...
+# Subtest: unsaved page rejection keeps its backend and does not enter settings
+ok 123 - unsaved page rejection keeps its backend and does not enter settings
+  ---
+  duration_ms: 7.659
+  type: 'test'
+  ...
+# Subtest: backup still stops the owned backend and returning starts an unconfigured process
+ok 124 - backup still stops the owned backend and returning starts an unconfigured process
+  ---
+  duration_ms: 5.8676
+  type: 'test'
+  ...
+# Subtest: restored read-only workspace can inspect credentials but cannot configure a model
+ok 125 - restored read-only workspace can inspect credentials but cannot configure a model
+  ---
+  duration_ms: 5.3912
+  type: 'test'
+  ...
+# Subtest: new runtime IPC rejects ordinary HTTP pages and subframes
+ok 126 - new runtime IPC rejects ordinary HTTP pages and subframes
+  ---
+  duration_ms: 6.1055
+  type: 'test'
+  ...
+# Subtest: resuming never loads an untrusted previous URL
+ok 127 - resuming never loads an untrusted previous URL
+  ---
+  duration_ms: 6.98
+  type: 'test'
+  ...
+# Subtest: a failure from an old backend cannot replace the current page
+ok 128 - a failure from an old backend cannot replace the current page
+  ---
+  duration_ms: 10.6269
+  type: 'test'
+  ...
+# Subtest: renderer failure blocks credential replacement until the configured backend has stopped
+ok 129 - renderer failure blocks credential replacement until the configured backend has stopped
+  ---
+  duration_ms: 5.8554
+  type: 'test'
+  ...
+# Subtest: send confirmation context uses only the displayed conversation and owned main frame
+ok 130 - send confirmation context uses only the displayed conversation and owned main frame
+  ---
+  duration_ms: 5.0655
+  type: 'test'
+  ...
+# Subtest: restored workspaces and replaced backends cannot approve a send
+ok 131 - restored workspaces and replaced backends cannot approve a send
+  ---
+  duration_ms: 25.5239
+  type: 'test'
+  ...
+# Subtest: native menu enters a distinct settings mode and only returns protected credential status
+ok 132 - native menu enters a distinct settings mode and only returns protected credential status
+  ---
+  duration_ms: 35.0499
+  type: 'test'
+  ...
+# Subtest: each credential IPC rejects other windows, subframes, backend pages and the wrong mode
+ok 133 - each credential IPC rejects other windows, subframes, backend pages and the wrong mode
+  ---
+  duration_ms: 5.9146
+  type: 'test'
+  ...
+# Subtest: a pending status read also locks mutation and rechecks permission on the next call
+ok 134 - a pending status read also locks mutation and rechecks permission on the next call
+  ---
+  duration_ms: 8.124
+  type: 'test'
+  ...
+# Subtest: pending status/save operations reject duplicate IPC and quit waits for the operation
+ok 135 - pending status/save operations reject duplicate IPC and quit waits for the operation
+  ---
+  duration_ms: 5.4912
+  type: 'test'
+  ...
+# Subtest: store failures and unexpected fields never escape through IPC
+ok 136 - store failures and unexpected fields never escape through IPC
+  ---
+  duration_ms: 7.4644
+  type: 'test'
+  ...
+# Subtest: preload exposes only explicit credential operations and package includes their modules
+ok 137 - preload exposes only explicit credential operations and package includes their modules
+  ---
+  duration_ms: 1.5059
+  type: 'test'
+  ...
+# Subtest: credential form saves once, clears input immediately and labels stored credentials without enabling model use
+ok 138 - credential form saves once, clears input immediately and labels stored credentials without enabling model use
+  ---
+  duration_ms: 5.6578
+  type: 'test'
+  ...
+# Subtest: credential errors clear inputs, hide raw errors and leaving discards delayed responses
+ok 139 - credential errors clear inputs, hide raw errors and leaving discards delayed responses
+  ---
+  duration_ms: 2.7039
+  type: 'test'
+  ...
+# Subtest: credential remove and return clear an unsubmitted replacement
+ok 140 - credential remove and return clear an unsubmitted replacement
+  ---
+  duration_ms: 2.3411
+  type: 'test'
+  ...
+# Subtest: unavailable settings can be checked again and reopening the same mode refreshes status
+ok 141 - unavailable settings can be checked again and reopening the same mode refreshes status
+  ---
+  duration_ms: 4.7203
+  type: 'test'
+  ...
+# Subtest: a late old settings reply cannot erase text entered after reopening settings
+ok 142 - a late old settings reply cannot erase text entered after reopening settings
+  ---
+  duration_ms: 2.4342
+  type: 'test'
+  ...
+# Subtest: model page checks storage before runtime and distinguishes stored credentials from configuration
+ok 143 - model page checks storage before runtime and distinguishes stored credentials from configuration
+  ---
+  duration_ms: 2.6675
+  type: 'test'
+  ...
+# Subtest: model page configures only a fixed selected ID, serializes actions and can switch or disable
+ok 144 - model page configures only a fixed selected ID, serializes actions and can switch or disable
+  ---
+  duration_ms: 2.6362
+  type: 'test'
+  ...
+# Subtest: model page hides stale runtime configuration while replacing credentials and reads back serially
+ok 145 - model page hides stale runtime configuration while replacing credentials and reads back serially
+  ---
+  duration_ms: 3.4606
+  type: 'test'
+  ...
+# Subtest: model page runtime failure is separate from stored credentials and a recheck can recover
+ok 146 - model page runtime failure is separate from stored credentials and a recheck can recover
+  ---
+  duration_ms: 2.3646
+  type: 'test'
+  ...
+# Subtest: model page discards delayed configuration after leaving without clearing the new page input
+ok 147 - model page discards delayed configuration after leaving without clearing the new page input
+  ---
+  duration_ms: 2.5435
+  type: 'test'
+  ...
+# Subtest: model page allows credential maintenance when runtime is unavailable and restart stays unconfigured
+ok 148 - model page allows credential maintenance when runtime is unavailable and restart stays unconfigured
+  ---
+  duration_ms: 2.4344
+  type: 'test'
+  ...
+# Subtest: model page rejects unknown model projection and never renders raw runtime errors
+ok 149 - model page rejects unknown model projection and never renders raw runtime errors
+  ---
+  duration_ms: 2.282
+  type: 'test'
+  ...
+# Subtest: library selection recognizes existing catalog without creating or repairing files
+ok 150 - library selection recognizes existing catalog without creating or repairing files
+  ---
+  duration_ms: 7.8866
+  type: 'test'
+  ...
+# Subtest: only owned loopback origin and exact setup document are allowed
+ok 151 - only owned loopback origin and exact setup document are allowed
+  ---
+  duration_ms: 0.7432
+  type: 'test'
+  ...
+# Subtest: clipboard permits writing only from the owned main frame, never reading
+ok 152 - clipboard permits writing only from the owned main frame, never reading
+  ---
+  duration_ms: 0.3865
+  type: 'test'
+  ...
+1..152
+# tests 152
+# suites 0
+# pass 152
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5382.2013

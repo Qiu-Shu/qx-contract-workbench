@@ -1,0 +1,108 @@
+{
+  "phase": "CH-04H frontend frozen",
+  "created_utc": "2026-10-19T15:31:07.797203+00:00",
+  "files": [
+    "src/cn_contract/web/static/assistant-generation.mjs",
+    "src/cn_contract/web/static/assistant-state.mjs",
+    "src/cn_contract/web/static/assistant.mjs",
+    "src/cn_contract/web/static/assistant-render.mjs",
+    "scripts/test_assistant_generation_state.mjs",
+    "scripts/test_assistant_generation_entry.mjs",
+    "scripts/test_assistant_generation_render.mjs"
+  ],
+  "contract": {
+    "option": "createDraftController(api,{nativeAuthorization})",
+    "bridge": "window.desktopAssistant.authorizeGeneration(value)",
+    "value_fields": [
+      "conversation_id",
+      "request_id",
+      "expected_scope",
+      "expected_composer_revision",
+      "content_sha256"
+    ],
+    "result": "{ok:boolean,canceled?:boolean,code?:string}; failures rendered via fixed local NATIVE_CONFIRMATION_FAILED code",
+    "phase": "confirming"
+  },
+  "behavior": [
+    "Native bridge requires confirmation even for already-ready capability; unapproved/ready/budget_exhausted eligible only with stable saved basis and current plain-text guards",
+    "request_id created before confirmation; only that immutable body is submitted after approval",
+    "Confirmation waits share the same send Promise, with no capability scheduling or duplicate approval",
+    "Cancellation and fixed failures preserve text and create no pending POST; next explicit attempt requires a new native confirmation",
+    "Any local edit including revert, skill change, material/scope/composer change, switch/close/revocation invalidates late confirmation",
+    "Unknown POST keeps original request ID and uses lookup only, without another approval or POST",
+    "No bridge keeps legacy ready-only behavior; restored/unsupported/skill/attachment guards remain blocked"
+  ],
+  "checks": [
+    {
+      "command": "node scripts/test_assistant_generation_state.mjs",
+      "phase": "RED",
+      "exit": 1,
+      "passed_groups": 27,
+      "failed_groups": 1,
+      "log": "frontend-first-red.log"
+    },
+    {
+      "command": "node scripts/test_assistant_generation_state.mjs",
+      "phase": "GREEN first slice",
+      "exit": 0,
+      "passed_groups": 28,
+      "log": "frontend-first-green.log"
+    },
+    {
+      "command": "node scripts/test_assistant_generation_state.mjs",
+      "phase": "boundary expansion",
+      "exit": 0,
+      "passed_groups": 36,
+      "log": "frontend-boundaries.log"
+    },
+    {
+      "command": "node --test scripts/test_assistant_generation_render.mjs scripts/test_assistant_generation_entry.mjs",
+      "phase": "RED",
+      "exit": 1,
+      "tests": 23,
+      "passed": 20,
+      "failed": 3,
+      "log": "frontend-ui-red.log"
+    },
+    {
+      "command": "node --test scripts/test_assistant_generation_render.mjs scripts/test_assistant_generation_entry.mjs",
+      "phase": "GREEN",
+      "exit": 0,
+      "tests": 23,
+      "passed": 23,
+      "failed": 0,
+      "log": "frontend-ui-green.log"
+    },
+    {
+      "command": ".venv/Scripts/python.exe -X utf8 -m pytest -q tests/integration/test_assistant_frontend.py --junitxml=.local/native-send-confirmation-20261019/frontend-regression.xml",
+      "phase": "associated regression",
+      "exit": 0,
+      "passed": 7,
+      "duration_seconds": 0.82,
+      "log": "frontend-regression.log",
+      "note": "Wrappers rerun seven frontend scripts; do not add to direct script counts."
+    },
+    {
+      "command": "git diff --check -- <seven owned source/test files>",
+      "exit": 0,
+      "log": "frontend-diff-check.exit"
+    }
+  ],
+  "self_review": "Source diff checked for exact bridge payload, no identity/budget/text supplied to native IPC, no POST before confirmation, no native bypass for ready, no raw native error storage/rendering, exact old POST recovery, and permission/scope guards. Independent review and actual Windows acceptance remain root-owned.",
+  "known_boundary": "If local input changes immediately after a successful native grant, frontend makes no POST. No renderer revoke endpoint is added. The already-approved fixed request/scope/composer/hash remains valid for at most 120 seconds and never auto-fires; a later explicit confirmation replaces the grant. Root agreed this boundary.",
+  "limits": [
+    "No native/main/Python/API endpoint files changed",
+    "No actual Electron/Windows/real backend acceptance in this subtask; root owns this validation",
+    "No actual key/material/model calls, no installation/law-library changes, no commit",
+    "Frozen backend must be rebuilt by root because bundled static resources changed"
+  ],
+  "sha256": {
+    "src/cn_contract/web/static/assistant-generation.mjs": "dcb0470a8abb64beb71c84d4a83d4e5d254d2fbcbfeccab2022ee97fda58ad88",
+    "src/cn_contract/web/static/assistant-state.mjs": "710ea260823a0765e86b3cafb21b1bbec7cfb5864b55238e1a9be8c02f140fdb",
+    "src/cn_contract/web/static/assistant.mjs": "ade8186b11f67703a985a502c01b7da1129b280e738e6c3d48f0393d2bc27925",
+    "src/cn_contract/web/static/assistant-render.mjs": "7111f1cbe2cadef15a7a908f5101bc90fbb1bd0f9a0c57c1b0296289b70f1eb4",
+    "scripts/test_assistant_generation_state.mjs": "0cd37c5cd5ab0041f36393604463b83548ecb71c855e432437118e94679e30e8",
+    "scripts/test_assistant_generation_entry.mjs": "bf2ee8a066199f545715e80173cd27be8625a8c2539e006934dd356d3999ea9c",
+    "scripts/test_assistant_generation_render.mjs": "65ae5a1a6dbc526ac4c72d6d71ea4dc5a930536349cdbddfbde9c929b6485480"
+  }
+}

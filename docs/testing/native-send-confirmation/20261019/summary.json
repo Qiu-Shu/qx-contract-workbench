@@ -1,0 +1,57 @@
+{
+  "phase": "CH-04H",
+  "baseline": "749b42e",
+  "verification": {
+    "commands": {
+      "node-final": {
+        "exit_code": 0,
+        "seconds": 5.343,
+        "tests": 152,
+        "pass": 152,
+        "fail": 0,
+        "skipped": 0
+      },
+      "python-final": {
+        "exit_code": 0,
+        "seconds": 105.921,
+        "tests": 163,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "defaults": {
+        "exit_code": 0,
+        "seconds": 0.5
+      },
+      "sources": {
+        "exit_code": 0,
+        "seconds": 2.203
+      },
+      "dependencies": {
+        "exit_code": 0,
+        "seconds": 0.515
+      },
+      "schema": {
+        "exit_code": 0,
+        "seconds": 0.453
+      }
+    },
+    "input_files": 481,
+    "changed_inputs": []
+  },
+  "build": {
+    "exit_code": 0,
+    "seconds": 25.39,
+    "input_files": 212,
+    "inputs_unchanged": true,
+    "exe_sha256": "613118cb7139998ada474a18c5e8319ea361c21248bb7df16b90df86cf9f4804"
+  },
+  "native_source_groups": 5,
+  "native_frozen_groups": 5,
+  "independent_native_probes": 15,
+  "independent_frontend_probes": 11,
+  "independent_test_audits": 3,
+  "real_model_calls": 0,
+  "installer_updated": false,
+  "scope": "single saved plain text native confirmation; not all CH-04/Jev/archive/production"
+}

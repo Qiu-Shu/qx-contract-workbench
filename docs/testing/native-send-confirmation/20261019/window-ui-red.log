@@ -1,0 +1,64 @@
+✖ approval page renders full untrusted text as text and defaults focus to cancel (1.0851ms)
+✖ approval page never confirms while loading and explicit confirm is sent only once (0.2064ms)
+✖ approval preload exposes only two dedicated calls and refuses truthy decision values (0.1976ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 58.406
+
+✖ failing tests:
+
+test at desktop\tests\model-approval-window.test.cjs:104:1
+✖ approval page renders full untrusted text as text and defaults focus to cancel (1.0851ms)
+  Error: ENOENT: no such file or directory, open 'D:\Documents\ChatGPT\律所项目\desktop\model-approval.html'
+      at Object.readFileSync (node:fs:484:20)
+      at page (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:89:17)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:106:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\model-approval.html'
+  }
+
+test at desktop\tests\model-approval-window.test.cjs:116:1
+✖ approval page never confirms while loading and explicit confirm is sent only once (0.2064ms)
+  Error: ENOENT: no such file or directory, open 'D:\Documents\ChatGPT\律所项目\desktop\model-approval.html'
+      at Object.readFileSync (node:fs:484:20)
+      at page (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:89:17)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:117:66)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\model-approval.html'
+  }
+
+test at desktop\tests\model-approval-window.test.cjs:126:1
+✖ approval preload exposes only two dedicated calls and refuses truthy decision values (0.1976ms)
+  Error: ENOENT: no such file or directory, open 'D:\Documents\ChatGPT\律所项目\desktop\model-approval-preload.cjs'
+      at Object.readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:128:25)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\model-approval-preload.cjs'
+  }

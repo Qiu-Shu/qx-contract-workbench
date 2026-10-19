@@ -1,0 +1,18 @@
+✖ trusted authorization binds the private config version and exact bounded cost (1.3876ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62.0193
+
+✖ failing tests:
+
+test at desktop\tests\model-approval-session.test.cjs:24:1
+✖ trusted authorization binds the private config version and exact bounded cost (1.3876ms)
+  TypeError: f.runtime.withAuthorization is not a function
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-session.test.cjs:26:32)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

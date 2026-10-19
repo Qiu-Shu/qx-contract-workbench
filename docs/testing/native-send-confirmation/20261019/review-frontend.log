@@ -1,0 +1,19 @@
+✔ independent: ready never bypasses confirmation and repeated clicks share it (6.6382ms)
+✔ independent: cancellation preserves saved input and refresh cannot reopen or submit (1.2054ms)
+✔ independent: each scope dimension invalidates approval after a fresh backend read (2.8496ms)
+✔ independent: composer-only revision movement invalidates an otherwise identical draft (0.5588ms)
+✔ independent: text and skill ABA edits cannot reuse the approved snapshot (0.7655ms)
+✔ independent: selected material blocks approval consumption even if capability incorrectly stays ready (0.5141ms)
+✔ independent: new page, close and revoked ownership discard late approval (1.1854ms)
+✔ independent: unknown POST is only looked up by its fixed original request (0.6751ms)
+✔ independent: a draft edited during confirmation waits to save and does not send the old version (1.2594ms)
+✔ independent: readonly mode never invokes native confirmation despite ready capability (0.8261ms)
+✔ independent: malformed native approval becomes fixed pre-submit failure, not unknown POST (0.4775ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 75.634

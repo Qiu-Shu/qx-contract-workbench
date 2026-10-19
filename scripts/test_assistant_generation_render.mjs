@@ -135,6 +135,31 @@ test('generation errors expose a fixed recovery explanation rather than raw diag
   assert.doesNotMatch(f.at('generation-status').textContent,/PRIVATE/);
 });
 
+test('native send offers confirmation of the full text recipient and fee ceiling before submission',t=>{
+  const f=fixture(t),s=state();s.generation.nativeConfirmation=true;
+  for(const capability of ['unapproved','ready','budget_exhausted']) {
+    s.generation.capability={state:capability};f.render.state(s);
+    assert.equal(f.at('send').textContent,'确认并发送');assert.equal(f.at('send').disabled,false);
+    assert.match(f.at('generation-note').textContent,/确认窗口/);
+    assert.match(f.at('generation-note').textContent,/完整文字、接收方与费用上限/);
+    assert.doesNotMatch(f.at('generation-note').textContent,/请核对授权范围与有效期/);
+  }
+  s.generation.phase='confirming';s.generation.canSend=false;f.render.state(s);
+  assert.equal(f.at('send').disabled,true);assert.match(f.at('generation-status').textContent,/确认窗口/);
+  assert.match(f.at('generation-status').textContent,/尚未发送/);assert.equal(f.at('recover-generation').hidden,true);
+});
+
+test('native failures distinguish confirmation from unknown POST without exposing diagnostics',t=>{
+  const f=fixture(t),s=state();s.generation={...s.generation,nativeConfirmation:true,phase:'error',canSend:false,
+    error:{code:'NATIVE_CONFIRMATION_FAILED',message:'PRIVATE_NATIVE_DETAIL'}};
+  f.render.state(s);assert.match(f.at('generation-status').textContent,/确认.*未完成/);
+  assert.match(f.at('generation-status').textContent,/尚未提交/);assert.doesNotMatch(f.at('generation-status').textContent,/PRIVATE_NATIVE_DETAIL/);
+  assert.equal(f.at('recover-generation').hidden,true);assert.equal(f.at('refresh-run').hidden,false);
+  s.generation.error={code:'INPUT_CHANGED'};f.render.state(s);assert.match(f.at('generation-status').textContent,/变化.*重新确认/);
+  s.generation.nativeConfirmation=false;s.generation.phase='idle';f.render.state(s);
+  assert.equal(f.at('send').textContent,'发送');
+});
+
 test('failed capability reads can be retried before any task exists',t=>{
   const f=fixture(t),s=state();s.generation={...s.generation,phase:'error',canSend:false,error:{code:'REQUEST_FAILED'}};
   f.render.state(s);assert.match(f.at('generation-status').textContent,/刷新/);

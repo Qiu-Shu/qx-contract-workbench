@@ -1,0 +1,18 @@
+✔ native model settings preserve the running backend and return to the prior trusted conversation (13.1773ms)
+✔ unsaved page rejection keeps its backend and does not enter settings (2.9843ms)
+✔ backup still stops the owned backend and returning starts an unconfigured process (3.1416ms)
+✔ restored read-only workspace can inspect credentials but cannot configure a model (3.0734ms)
+✔ new runtime IPC rejects ordinary HTTP pages and subframes (2.4956ms)
+✔ resuming never loads an untrusted previous URL (2.5209ms)
+✔ a failure from an old backend cannot replace the current page (6.2085ms)
+✔ renderer failure blocks credential replacement until the configured backend has stopped (3.3115ms)
+✔ send confirmation context uses only the displayed conversation and owned main frame (2.4874ms)
+✔ restored workspaces and replaced backends cannot approve a send (5.3682ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 100.0887

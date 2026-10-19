@@ -1,0 +1,21 @@
+PASS configured_saved_draft_requires_native_confirmation_without_network_call
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-acceptance.py", line 220, in <module>
+    if __name__=='__main__': main()
+                             ^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-acceptance.py", line 153, in main
+    approval.locator('#approval-cancel').focus(); approval.keyboard.press('Enter')
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 1628, in press
+    self._sync(self._impl_obj.press(key=key, delay=delay))
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_input.py", line 38, in press
+    await self._channel.send("keyboardPress", None, locals_to_params(locals()))
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 76, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 632, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: Keyboard.press: Target page, context or browser has been closed

@@ -12,7 +12,7 @@ class ObservedBackend extends Backend {
   constructor(executable,args){
     const entry=process.env.QX_PROBE_SETTINGS_ENTRY;
     const frozen=process.env.QX_PROBE_FROZEN_BACKEND;
-    super(frozen||executable,frozen?[]:entry?['-X','utf8',entry]:args);
+    super(frozen||executable,frozen?[]:entry?['-X','utf8',entry,...(process.env.QX_PROBE_LOOPBACK?[process.env.QX_PROBE_LOOPBACK]:[])]:args);
     observedBackend=this;
   }
   async start(config){
@@ -27,6 +27,14 @@ class ObservedBackend extends Backend {
   async disableModel(){
     const result=await super.disableModel();
     (report.model_controls ||= []).push({operation:'disable',ok:result.ok,status:result.status});save();return result;
+  }
+  async authorizeModel(payload){
+    const result=await super.authorizeModel(payload);
+    (report.model_controls ||= []).push({operation:'authorize',ok:result.ok,status:result.status});save();return result;
+  }
+  async revokeModel(payload){
+    const result=await super.revokeModel(payload);
+    (report.model_controls ||= []).push({operation:'revoke',ok:result.ok,status:result.status});save();return result;
   }
 }
 require.cache[require.resolve(backendPath)].exports={Backend:ObservedBackend};
@@ -47,14 +55,15 @@ app.whenReady().then(()=>{
     try{
       request=JSON.parse(fs.readFileSync(commandPath,'utf8'));fs.unlinkSync(commandPath);
       let value;
+      const target=request.target==='approval'?BrowserWindow.getAllWindows().find(w=>w!==primary&&w.webContents.getURL().endsWith('/model-approval.html')):primary;
       if(request.action==='menu'){
         const item=Menu.getApplicationMenu().items[0].submenu.items.find(i=>i.label===request.label);
         if(!item)throw Error('MENU_NOT_FOUND');await item.click();value={clicked:true};
       }else if(request.action==='window'){
-        primary.setSize(request.width,request.height);primary.webContents.setZoomFactor(request.zoom);value={changed:true,...primary.getContentBounds(),zoom:primary.webContents.getZoomFactor()};
+        target.setSize(request.width,request.height);target.webContents.setZoomFactor(request.zoom);value={changed:true,...target.getContentBounds(),zoom:target.webContents.getZoomFactor()};
       }else if(request.action==='capture'){
         if(!/^[a-z0-9-]+\.png$/.test(request.name))throw Error('TEST_CAPTURE_NAME');
-        const capture=await primary.webContents.capturePage();fs.writeFileSync(path.join(evidence,'..',request.name),capture.toPNG());value=capture.getSize();
+        const capture=await target.webContents.capturePage();fs.writeFileSync(path.join(evidence,'..',request.name),capture.toPNG());value=capture.getSize();
       }else if(request.action==='stop-backend'){
         observedBackend.child.kill();value={stopped:true};
       }else if(request.action==='crash-renderer'){

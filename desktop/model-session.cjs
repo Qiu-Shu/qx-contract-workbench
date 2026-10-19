@@ -21,6 +21,14 @@ function configuration(model) {
     price_reference:'https://api-docs.deepseek.com/quick_start/pricing/ (2026-10-19; peak/cache-miss; USD)'};
 }
 
+function reservation(model) {
+  const cents=value=>BigInt(value.split('.')[0])*100n+BigInt((value.split('.')[1] || '').padEnd(2,'0'));
+  const [input,output]=MODELS.get(model);
+  const amount=65536n*cents(input)+4096n*cents(output);
+  const digits=amount.toString().padStart(9,'0');
+  return digits.slice(0,-8)+'.'+digits.slice(-8).replace(/0+$/,'');
+}
+
 function createModelSession({store,getBackend,onFailure=()=>{}}) {
   let metadata=null,active=false,unsafe=false;
   const retired=new WeakSet();
@@ -70,6 +78,66 @@ function createModelSession({store,getBackend,onFailure=()=>{}}) {
     if(!healthy(backend) || retired.has(backend))return terminate(backend,guard);
     return clear(backend,guard);
   });
+  async function withAuthorization(backend,guard,callback) {
+    if(active)return rejected('STATE_CONFLICT');
+    const captured=metadata;
+    if(!captured || captured.backend!==backend || !matches(backend,guard) ||
+        typeof backend.authorizeModel!=='function' || typeof backend.revokeModel!=='function')return rejected();
+    active=true;
+    let open=true,used=false,authorized=false,grantedToken=null,flight=null;
+    const valid=()=>open && metadata===captured && matches(backend,guard);
+    async function revoke() {
+      if(!grantedToken)return okay();
+      const token=grantedToken;grantedToken=null;
+      try{
+        const ack=await backend.revokeModel({session_token:token});
+        if(exact(ack,['ok','status']) && ack.ok===true && ack.status==='revoked' && healthy(backend))return okay();
+      }catch{}
+      return terminate(backend,guard);
+    }
+    const lease=Object.freeze({model:captured.model,max_total_usd:reservation(captured.model),
+      authorize(value){
+        if(used || !valid())return Promise.resolve(rejected('STATE_CONFLICT'));
+        used=true;
+        flight=(async()=>{
+          let ack;
+          try{
+            ack=await backend.authorizeModel({session_token:value.session_token,
+              expected_config_version:captured.config_version,basis:value.basis,
+              max_total_usd:reservation(captured.model),valid_for_seconds:120});
+          }catch{return terminate(backend,guard);}
+          if(!healthy(backend))return terminate(backend,guard);
+          if(exact(ack,['ok','code']) && ack.ok===false && CONTROL_CODES.has(ack.code))return rejected(ack.code);
+          if(!exact(ack,['ok','status']) || ack.ok!==true || !['authorized','existing'].includes(ack.status))
+            return terminate(backend,guard);
+          authorized=true;
+          if(ack.status==='authorized')grantedToken=value.session_token;
+          if(!valid()){await revoke();return rejected('STATE_CONFLICT');}
+          return okay();
+        })();
+        return flight;
+      },
+      async revoke(){
+        if(!open)return rejected('STATE_CONFLICT');
+        if(flight)await flight;
+        authorized=false;return revoke();
+      }});
+    let result;
+    try{
+      result=await callback(lease);
+      if(flight)await flight;
+      if(!valid())result=rejected('STATE_CONFLICT');
+      if(result?.ok!==true || !authorized){
+        await revoke();
+        return result?.canceled===true ? {ok:false,code:'APPROVAL_CANCELED',canceled:true} :
+          rejected(CONTROL_CODES.has(result?.code)?result.code:'BLOCKED_LIVE');
+      }
+      return okay();
+    }catch{
+      if(flight)await flight;
+      await revoke();return rejected();
+    }finally{open=false;active=false;}
+  }
   return Object.freeze({
     status:()=>({ok:true,runtime:active ? {state:'unavailable',model:null} : view()}),
     configure:(model,guard=()=>true)=>run(async()=>{
@@ -107,7 +175,8 @@ function createModelSession({store,getBackend,onFailure=()=>{}}) {
       return okay();
     }),
     disable,
-    beforeCredentialChange:disable
+    beforeCredentialChange:disable,
+    withAuthorization
   });
 }
 

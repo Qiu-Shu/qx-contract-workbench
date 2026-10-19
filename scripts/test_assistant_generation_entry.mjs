@@ -13,7 +13,7 @@ assert.ok(start>=0&&end>start);
 const coordinateSource=source.slice(start,end);
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 const scope=id=>({workspace_id:'w',conversation_id:id,scope_kind:'conversation',scope_ref:null,binding_revision:1,input_revision:0,materials_revision:0});
-function fixture({initial='合成文字'}={}) {
+function fixture({initial='合成文字',nativeAuthorization}={}) {
   let remote={scope:scope('one'),draft_input:initial,composer_revision:1,messages:[],latest_run:null};
   const calls=[],timers=new Map(),pendingReads=new Set();let sequence=0,coordinator;
   const api={
@@ -24,7 +24,7 @@ function fixture({initial='合成文字'}={}) {
     async findGenerationRequest(){calls.push('find');return null;},
     async getGenerationHistory(id,ids){calls.push('history');return {scope:clone(remote.scope),items:[]};},
   };
-  const c=createDraftController(api,{uuid:()=>`synthetic-${++sequence}`,onChange:s=>coordinator?.(s)});
+  const c=createDraftController(api,{uuid:()=>`synthetic-${++sequence}`,onChange:s=>coordinator?.(s),nativeAuthorization});
   const document={hidden:false};
   const factory=new Function('controller','document','safely','setTimeout','clearTimeout',
     'let closed=false,generationTimer,pollTimer,generationKey=null;'+coordinateSource+';return coordinateGeneration;');
@@ -93,4 +93,26 @@ test('a failed capability read is attempted once and does not create an automati
   assert.equal(f.calls.filter(value=>value==='cap').length,1);
   assert.equal(f.calls.filter(value=>value==='POST').length,0);
   assert.equal([...f.timers.values()].filter(timer=>timer.delay===0).length,0);
+});
+
+test('shipped entry injects only the dedicated native authorization bridge when present',async()=>{
+  const block=source.slice(source.indexOf('const controller=createDraftController('),source.indexOf('function drawState('));
+  const entry=new Function('api','createDraftController','window','readonly',block+';return controller;');
+  const approvals=[],value={request_id:'fixed-request'},answer={ok:false,canceled:true};
+  const options=entry({},(_api,settings)=>settings,{desktopAssistant:{authorizeGeneration:async input=>{approvals.push(input);return answer;}}},false);
+  assert.equal(typeof options.nativeAuthorization,'function');assert.equal(await options.nativeAuthorization(value),answer);
+  assert.deepEqual(approvals,[value]);
+  for(const bridge of [undefined,{}, {authorizeGeneration:'not a function'}]) {
+    assert.equal(entry({},(_api,settings)=>settings,{desktopAssistant:bridge},false).nativeAuthorization,null);
+  }
+});
+
+test('entry does not enqueue capability reads while a native confirmation is outstanding',async()=>{
+  const entered=deferred(),gate=deferred();
+  const f=fixture({nativeAuthorization:()=>{entered.resolve();return gate.promise;}});
+  await f.c.open('one');await f.drainZero();const sending=f.c.send();await entered.promise;
+  assert.equal(f.c.state.generation.phase,'confirming');
+  assert.equal([...f.timers.values()].filter(timer=>timer.delay===0).length,0);
+  f.coordinator(f.c.state);assert.equal([...f.timers.values()].filter(timer=>timer.delay===0).length,0);
+  gate.resolve({ok:false,canceled:true});assert.equal(await sending,false);assert.equal(f.calls.filter(x=>x==='POST').length,0);
 });

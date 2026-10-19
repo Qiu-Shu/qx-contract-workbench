@@ -1,0 +1,38 @@
+✔ approval creates one isolated modal and only its exact main frame can read or explicitly decide (8.8596ms)
+✔ approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision (2.172ms)
+✔ approval stale guard, parent close, Escape and bounded timeout cancel without a decision (4.7269ms)
+✖ approval default cancel focus preserves the initial top viewport (2.1525ms)
+✔ approval page renders full untrusted text as text and defaults focus to cancel (1.6783ms)
+✔ approval page never confirms while loading and explicit confirm is sent only once (1.0922ms)
+✔ approval preload exposes only two dedicated calls and refuses truthy decision values (0.7765ms)
+✔ approval still settles cancellation if optional session cleanup fails (1.2856ms)
+✔ approval validates the display boundary and admits the full 65536-byte text without truncation (2.013ms)
+✔ approval blocks navigation, all external requests and cancels a crashed renderer (1.4372ms)
+✔ approval page loading failure and page departure never enable or dispatch confirmation (1.7946ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.2368
+
+✖ failing tests:
+
+test at desktop\tests\model-approval-window.test.cjs:104:1
+✖ approval default cancel focus preserves the initial top viewport (2.1525ms)
+  AssertionError [ERR_ASSERTION]: focusing the lower cancel button must not scroll away from recipient, model and budget
+  
+  400 !== 0
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:107:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 400,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

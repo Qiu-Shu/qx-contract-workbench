@@ -1,0 +1,14 @@
+✔ approval creates one isolated modal and only its exact main frame can read or explicitly decide (8.1281ms)
+✔ approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision (1.6181ms)
+✔ approval stale guard, parent close, Escape and bounded timeout cancel without a decision (5.0267ms)
+✔ approval page renders full untrusted text as text and defaults focus to cancel (2.4955ms)
+✔ approval page never confirms while loading and explicit confirm is sent only once (1.3658ms)
+✔ approval preload exposes only two dedicated calls and refuses truthy decision values (0.9714ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72.0305

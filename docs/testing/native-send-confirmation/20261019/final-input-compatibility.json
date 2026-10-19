@@ -1,0 +1,35 @@
+{
+  "native_runs": {
+    "native-source-verified": {
+      "during_run_inputs_unchanged": true,
+      "product_and_acceptance_scripts_match_final": true,
+      "only_later_changes": [
+        "scripts/test_assistant_generation_render.mjs"
+      ]
+    },
+    "native-frozen-verified": {
+      "during_run_inputs_unchanged": true,
+      "product_and_acceptance_scripts_match_final": true,
+      "only_later_changes": [
+        "scripts/test_assistant_generation_render.mjs"
+      ]
+    }
+  },
+  "frozen_static_assets": {
+    "assistant-api.mjs": "66b45bd2b450730017024c56fbc7b4e4459b6b736ae646e59c86ef3072dd9584",
+    "assistant-composer.mjs": "cdffd8b6ebead4a76005fd08e95bf8a180d0862ff8e88f34beb98d7ae90a5226",
+    "assistant-generation.mjs": "dcb0470a8abb64beb71c84d4a83d4e5d254d2fbcbfeccab2022ee97fda58ad88",
+    "assistant-materials.mjs": "071d428c86ef1536ad4a28d361ba028fc385c946d5bef42209be9e7fcc0d36dc",
+    "assistant-render.mjs": "b66953b73ef3346e5b3ed32428149005e5b27da323677aeaf684a26ba01d9dfb",
+    "assistant-state.mjs": "710ea260823a0765e86b3cafb21b1bbec7cfb5864b55238e1a9be8c02f140fdb",
+    "assistant.css": "24c6f83a4c26375967f86584c7bb1fcc70de4f4572a138a63a3a718308aecdcc",
+    "assistant.mjs": "ade8186b11f67703a985a502c01b7da1129b280e738e6c3d48f0393d2bc27925",
+    "library.css": "523732a1bdc367f67893f4b2df74c26cd201246cde5bf76919f82583f6d7cb76",
+    "library.js": "fafd34f958764281e7f48c4aa540a6bd4146e1bfa78e761c311a00d051cf6a76",
+    "pdf-review.mjs": "9894b6100de765f7151af43c1e78f734aece4309aa17ea1152079e14b2b9f6b1",
+    "workbench.css": "ef3db345f1435b596a08eef43613a858531f9fda3347057c743cf994214c56db",
+    "workbench.js": "e48bf2ebdd7fccf3de3e5edc879ab931038e023bdbc239fb0c09f0ac65c2ebae",
+    "workspace.css": "4376e2ce7c11dfb8df014cbf2cc1a6ede60df80e42990ecc15cbff23da8a082e",
+    "workspace.js": "959cc080ee3fda2b9d7d049ec52178afdf50b6d7740d1b2f590ef9492b6c8c7a"
+  }
+}

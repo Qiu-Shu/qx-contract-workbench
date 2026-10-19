@@ -11,6 +11,8 @@ let generationTimer, pollTimer, generationKey=null;
 let pendingRoute=document.body.dataset.conversationId || null;
 const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing()});
 const controller=createDraftController(api,{readonly,
+  nativeAuthorization:typeof window.desktopAssistant?.authorizeGeneration==='function'
+    ?value=>window.desktopAssistant.authorizeGeneration(value):null,
   onChange:state=>{
     drawState(state);
     renderer.selected(state.id);
@@ -67,7 +69,7 @@ function coordinateGeneration(state) {
   if(!state.generation.capability && ['idle','tracking'].includes(state.generation.phase))generationKey=null;
   if(state.loading || state.dirty || state.conflict || state.materialAction ||
       ['saving','error'].includes(state.status) ||
-      ['checking','submitting','unknown'].includes(state.generation.phase))return;
+      ['checking','confirming','submitting','unknown'].includes(state.generation.phase))return;
   const key=JSON.stringify([state.view.scope,state.view.composer_revision,state.savedText,
     state.skill,state.view.messages.map(message=>message.id)]);
   if(key!==generationKey)generationTimer=setTimeout(()=>{
