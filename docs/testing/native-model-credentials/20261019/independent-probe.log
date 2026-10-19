@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "normal_and_async_guard_groups": 2,
+  "residual_boundary_probes": 1,
+  "checks": [
+    "transient protection failure recovers; failed replacement preserves prior bytes",
+    "directory junction swap during awaited decryption is rejected without touching target",
+    "observed documented residual: a deliberately injected post-check junction swap can redirect path-based unlink"
+  ]
+}

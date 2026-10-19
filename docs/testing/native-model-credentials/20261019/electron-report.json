@@ -1,0 +1,260 @@
+{
+  "status": "passed",
+  "checks": [
+    "setup_wrong_mode_cannot_read_or_mutate_credentials",
+    "actual_native_settings_saves_only_windows_protected_ciphertext",
+    "second_sandboxed_window_with_real_preload_denied_by_original_window_guard",
+    "replace_then_clean_exit_keeps_ciphertext_and_supports_small_zoomed_window",
+    "real_electron_restart_reads_existing_windows_protected_credential",
+    "credential_save_does_not_enable_generation_or_expose_native_mutations_to_backend_page",
+    "stopped_owned_backend_and_corrupt_credential_reported_without_silent_rewrite",
+    "explicit_remove_deletes_only_selected_native_credential",
+    "no_plaintext_in_desktop_files_logs_or_backend_stdin_and_zero_model_attempts"
+  ],
+  "runs": [
+    {
+      "page_errors": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        }
+      ],
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\desktop\\node_modules\\electron\\dist\\electron.exe",
+        "D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\model-credentials-acceptance.cjs",
+        "--remote-debugging-port=0",
+        "--remote-debugging-address=127.0.0.1"
+      ],
+      "electron_exit": 0,
+      "bootstrap": {
+        "electron": "44.8.0",
+        "events": [
+          "actual_will_quit"
+        ],
+        "backend_configs": [],
+        "windows": [
+          {
+            "nodeIntegration": false,
+            "contextIsolation": true,
+            "sandbox": true,
+            "webSecurity": true
+          },
+          {
+            "nodeIntegration": false,
+            "contextIsolation": true,
+            "sandbox": true,
+            "webSecurity": true
+          }
+        ]
+      }
+    },
+    {
+      "page_errors": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/static/workbench.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/static/workbench.js"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:52631/api/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/assistant"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/static/assistant.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/static/assistant.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/static/assistant-api.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/static/assistant-state.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/static/assistant-render.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/static/assistant-composer.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/static/assistant-materials.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/static/assistant-generation.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/api/assistant/skills"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/api/assistant/conversations"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:52631/api/assistant/conversations"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/api/assistant/conversations"
+        },
+        {
+          "method": "PUT",
+          "url": "http://127.0.0.1:52631/api/assistant/conversations/19a59609-82d1-4c72-9ec2-d4c03996bccc/draft"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/api/assistant/conversations/19a59609-82d1-4c72-9ec2-d4c03996bccc/generation-capability"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:52631/api/assistant/conversations/19a59609-82d1-4c72-9ec2-d4c03996bccc/generation-capability"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        }
+      ],
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\desktop\\node_modules\\electron\\dist\\electron.exe",
+        "D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\model-credentials-acceptance.cjs",
+        "--remote-debugging-port=0",
+        "--remote-debugging-address=127.0.0.1"
+      ],
+      "electron_exit": 0,
+      "bootstrap": {
+        "electron": "44.8.0",
+        "events": [
+          "actual_will_quit"
+        ],
+        "backend_configs": [
+          {
+            "keys": [
+              "data_parent",
+              "password",
+              "username"
+            ],
+            "contains_model_credential": false
+          }
+        ],
+        "windows": [
+          {
+            "nodeIntegration": false,
+            "contextIsolation": true,
+            "sandbox": true,
+            "webSecurity": true
+          }
+        ],
+        "ready": {
+          "port": 52631,
+          "pid": 4760
+        },
+        "backend_exit": {
+          "code": 0,
+          "signal": null
+        }
+      }
+    }
+  ],
+  "source_before": {
+    "desktop/main.cjs": "49d1cfe7eea6958a5256acdcffae81511e53fa9bc19fdbd6931dbca0b3f929b2",
+    "desktop/backend.cjs": "efff31b5082bfa0e4d23d005f19062e06d066098c28d4e24a4957a05673c1daf",
+    "desktop/maintenance.cjs": "cec6936da5fbfc6ace46b800048898590f99d842471a4ae49cee4ddd36ab0e6c",
+    "desktop/policy.cjs": "60e29da78a86c5fbb9bab69f4e3d82afe146999d9749d1a340881d4824944c2a",
+    "desktop/preload.cjs": "1846fd1bbd86cce6873a1707048d6b5c42693d75701f5bf42eccce1fe822b70a",
+    "desktop/setup.html": "dd99479eb074f6ae81b0879aedacee3c18f6ba7cc6fbcea0f32847c8be92ef61",
+    "desktop/setup.js": "54481b3d50f92f2eef9814de2c7a48c05295f83547f0f77224f8bc6f51430357",
+    "desktop/setup.css": "3fc7dfa752d571708ca28e4422e3d515f2b5dbbc8a5142ff343326d6a55acc5b",
+    "desktop/model-settings.cjs": "c458a0e6ae772a6e976d107659c6dcf3cfbc61eeadd57bb3ef0c4f3e97d1e795",
+    "desktop/model-credentials.cjs": "31e7b4724f7d8c410085e44100ffcf4b8e8729a15fb9ca20617f2a50a3df20fd",
+    "desktop/package.json": "e2b39359e86da8777abb2ab6767e0e77621beed74e32816e11ffaa68d0ab629c"
+  },
+  "real_model_calls": 0,
+  "exit_code": 0,
+  "zoom_viewport": {
+    "changed": true,
+    "x": 348,
+    "y": 152,
+    "width": 496,
+    "height": 695,
+    "zoom": 1.5,
+    "scroll": 486
+  },
+  "counts": {
+    "assistant_messages": 0,
+    "assistant_model_attempts": 0,
+    "assistant_model_receipts": 0,
+    "assistant_model_outputs": 0
+  },
+  "source_after": {
+    "desktop/main.cjs": "49d1cfe7eea6958a5256acdcffae81511e53fa9bc19fdbd6931dbca0b3f929b2",
+    "desktop/backend.cjs": "efff31b5082bfa0e4d23d005f19062e06d066098c28d4e24a4957a05673c1daf",
+    "desktop/maintenance.cjs": "cec6936da5fbfc6ace46b800048898590f99d842471a4ae49cee4ddd36ab0e6c",
+    "desktop/policy.cjs": "60e29da78a86c5fbb9bab69f4e3d82afe146999d9749d1a340881d4824944c2a",
+    "desktop/preload.cjs": "1846fd1bbd86cce6873a1707048d6b5c42693d75701f5bf42eccce1fe822b70a",
+    "desktop/setup.html": "dd99479eb074f6ae81b0879aedacee3c18f6ba7cc6fbcea0f32847c8be92ef61",
+    "desktop/setup.js": "54481b3d50f92f2eef9814de2c7a48c05295f83547f0f77224f8bc6f51430357",
+    "desktop/setup.css": "3fc7dfa752d571708ca28e4422e3d515f2b5dbbc8a5142ff343326d6a55acc5b",
+    "desktop/model-settings.cjs": "c458a0e6ae772a6e976d107659c6dcf3cfbc61eeadd57bb3ef0c4f3e97d1e795",
+    "desktop/model-credentials.cjs": "31e7b4724f7d8c410085e44100ffcf4b8e8729a15fb9ca20617f2a50a3df20fd",
+    "desktop/package.json": "e2b39359e86da8777abb2ab6767e0e77621beed74e32816e11ffaa68d0ab629c"
+  }
+}

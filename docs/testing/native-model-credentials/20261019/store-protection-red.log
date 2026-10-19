@@ -1,0 +1,83 @@
+✔ empty, save, restart, replace and remove expose only status and persist only ciphertext (5.6558ms)
+✔ save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext (4.899ms)
+✖ only Windows and all available asynchronous protection methods permit status and save (2.346ms)
+✖ status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors (1.6105ms)
+✖ status validates actual decrypted data and reports rotation without rewriting stored bytes (1.7674ms)
+✔ remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable (1.7797ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 3
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 79.8674
+
+✖ failing tests:
+
+test at desktop\tests\model-credentials.test.cjs:76:1
+✖ only Windows and all available asynchronous protection methods permit status and save (2.346ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'CREDENTIAL_STORAGE_FAILED',
+  -   code: 'CREDENTIAL_STORAGE_UNAVAILABLE',
+      status: 'unavailable'
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:85:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'unavailable', code: 'CREDENTIAL_STORAGE_FAILED' },
+    expected: { status: 'unavailable', code: 'CREDENTIAL_STORAGE_UNAVAILABLE' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-credentials.test.cjs:92:1
+✖ status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors (1.6105ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'CREDENTIAL_STORAGE_FAILED',
+  +   status: 'unavailable'
+  -   code: 'CREDENTIAL_CORRUPT',
+  -   status: 'invalid'
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:97:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'unavailable', code: 'CREDENTIAL_STORAGE_FAILED' },
+    expected: { status: 'invalid', code: 'CREDENTIAL_CORRUPT' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-credentials.test.cjs:108:1
+✖ status validates actual decrypted data and reports rotation without rewriting stored bytes (1.7674ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   status: 'saved'
+  -   code: 'CREDENTIAL_CORRUPT',
+  -   status: 'invalid'
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:114:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'saved' },
+    expected: { status: 'invalid', code: 'CREDENTIAL_CORRUPT' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

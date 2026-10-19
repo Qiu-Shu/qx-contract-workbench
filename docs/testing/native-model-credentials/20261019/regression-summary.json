@@ -1,0 +1,115 @@
+{
+  "before": {
+    "desktop/backend.cjs": "efff31b5082bfa0e4d23d005f19062e06d066098c28d4e24a4957a05673c1daf",
+    "desktop/main.cjs": "49d1cfe7eea6958a5256acdcffae81511e53fa9bc19fdbd6931dbca0b3f929b2",
+    "desktop/maintenance.cjs": "cec6936da5fbfc6ace46b800048898590f99d842471a4ae49cee4ddd36ab0e6c",
+    "desktop/model-credentials.cjs": "31e7b4724f7d8c410085e44100ffcf4b8e8729a15fb9ca20617f2a50a3df20fd",
+    "desktop/model-settings.cjs": "c458a0e6ae772a6e976d107659c6dcf3cfbc61eeadd57bb3ef0c4f3e97d1e795",
+    "desktop/package.json": "e2b39359e86da8777abb2ab6767e0e77621beed74e32816e11ffaa68d0ab629c",
+    "desktop/policy.cjs": "60e29da78a86c5fbb9bab69f4e3d82afe146999d9749d1a340881d4824944c2a",
+    "desktop/preload.cjs": "1846fd1bbd86cce6873a1707048d6b5c42693d75701f5bf42eccce1fe822b70a",
+    "desktop/setup.css": "3fc7dfa752d571708ca28e4422e3d515f2b5dbbc8a5142ff343326d6a55acc5b",
+    "desktop/setup.html": "dd99479eb074f6ae81b0879aedacee3c18f6ba7cc6fbcea0f32847c8be92ef61",
+    "desktop/setup.js": "54481b3d50f92f2eef9814de2c7a48c05295f83547f0f77224f8bc6f51430357",
+    "desktop/tests/backend.test.cjs": "21ab3d5aa7c7a003f10fa05a1a8a98b5392c5776b5d92a38460637833126593c",
+    "desktop/tests/model-credentials.test.cjs": "22241870204f9535b42e47a7e80568bd3eb5fa735be593c41226ca861b7089e6",
+    "desktop/tests/model-packaging.test.cjs": "755fd54787fdf21e045d4316f088f37b56916883dd34b7fb56ccf21e04ec40c7",
+    "desktop/tests/model-settings.test.cjs": "18775eb9b266c89e68e65539a5d6b516cc41cf316781869a71482989cc6003e4",
+    "desktop/tests/policy.test.cjs": "2c32645a9a8e1e38ce9b2b4a0061a04063792bc811075b303a033ba9c95348f0",
+    "src/cn_contract/ops/workspace_backup.py": "44109bd82ed113d94b79c6cd837f683b1b56b77c737000b8542ed160545808df",
+    "tests/integration/test_native_credential_backup.py": "b9fc55b39ff9e5d0fc3ee46bb6a5cb742ab2ff0a2944723bb32d155c6ec4cce6"
+  },
+  "commands": [
+    {
+      "name": "desktop-tests",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "desktop\\tests\\backend.test.cjs",
+        "desktop\\tests\\model-credentials.test.cjs",
+        "desktop\\tests\\model-packaging.test.cjs",
+        "desktop\\tests\\model-settings.test.cjs",
+        "desktop\\tests\\policy.test.cjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.329
+    },
+    {
+      "name": "backup-test",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_credential_backup.py",
+        "-q",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\native-model-credentials-20261019\\regression-final\\backup-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 4.015
+    },
+    {
+      "name": "defaults",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "scripts/verify_defaults.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.406
+    },
+    {
+      "name": "sources",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0,
+      "seconds": 1.907
+    },
+    {
+      "name": "dependencies",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.031
+    }
+  ],
+  "after": {
+    "desktop/backend.cjs": "efff31b5082bfa0e4d23d005f19062e06d066098c28d4e24a4957a05673c1daf",
+    "desktop/main.cjs": "49d1cfe7eea6958a5256acdcffae81511e53fa9bc19fdbd6931dbca0b3f929b2",
+    "desktop/maintenance.cjs": "cec6936da5fbfc6ace46b800048898590f99d842471a4ae49cee4ddd36ab0e6c",
+    "desktop/model-credentials.cjs": "31e7b4724f7d8c410085e44100ffcf4b8e8729a15fb9ca20617f2a50a3df20fd",
+    "desktop/model-settings.cjs": "c458a0e6ae772a6e976d107659c6dcf3cfbc61eeadd57bb3ef0c4f3e97d1e795",
+    "desktop/package.json": "e2b39359e86da8777abb2ab6767e0e77621beed74e32816e11ffaa68d0ab629c",
+    "desktop/policy.cjs": "60e29da78a86c5fbb9bab69f4e3d82afe146999d9749d1a340881d4824944c2a",
+    "desktop/preload.cjs": "1846fd1bbd86cce6873a1707048d6b5c42693d75701f5bf42eccce1fe822b70a",
+    "desktop/setup.css": "3fc7dfa752d571708ca28e4422e3d515f2b5dbbc8a5142ff343326d6a55acc5b",
+    "desktop/setup.html": "dd99479eb074f6ae81b0879aedacee3c18f6ba7cc6fbcea0f32847c8be92ef61",
+    "desktop/setup.js": "54481b3d50f92f2eef9814de2c7a48c05295f83547f0f77224f8bc6f51430357",
+    "desktop/tests/backend.test.cjs": "21ab3d5aa7c7a003f10fa05a1a8a98b5392c5776b5d92a38460637833126593c",
+    "desktop/tests/model-credentials.test.cjs": "22241870204f9535b42e47a7e80568bd3eb5fa735be593c41226ca861b7089e6",
+    "desktop/tests/model-packaging.test.cjs": "755fd54787fdf21e045d4316f088f37b56916883dd34b7fb56ccf21e04ec40c7",
+    "desktop/tests/model-settings.test.cjs": "18775eb9b266c89e68e65539a5d6b516cc41cf316781869a71482989cc6003e4",
+    "desktop/tests/policy.test.cjs": "2c32645a9a8e1e38ce9b2b4a0061a04063792bc811075b303a033ba9c95348f0",
+    "src/cn_contract/ops/workspace_backup.py": "44109bd82ed113d94b79c6cd837f683b1b56b77c737000b8542ed160545808df",
+    "tests/integration/test_native_credential_backup.py": "b9fc55b39ff9e5d0fc3ee46bb6a5cb742ab2ff0a2944723bb32d155c6ec4cce6"
+  },
+  "unchanged": true,
+  "status": "passed"
+}

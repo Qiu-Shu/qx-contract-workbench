@@ -19,6 +19,14 @@
 <div id="backup-confirmation"><label for="backup-confirm">再次输入备份口令</label><input id="backup-confirm" type="password" minlength="12" maxlength="128" autocomplete="off"></div>
 <p id="backup-validation" role="alert" hidden></p><button id="maintenance-submit" type="submit">选择位置并备份</button></form>
 <section id="maintenance-result" hidden><p id="result-detail"></p><p id="result-path"></p></section>
+<form id="model-settings" hidden><h2>主模型设置</h2>
+<p>这是设置准备阶段。保存密钥不会启用模型，不会授权发送资料，也不会产生费用。</p>
+<p id="model-status" class="credential-status" role="status" aria-live="polite">正在检查本机保存状态…</p>
+<label for="model-secret">DeepSeek API 密钥</label><input id="model-secret" type="password" required minlength="16" maxlength="512" autocomplete="off" spellcheck="false" aria-describedby="model-help">
+<p id="model-help" class="hint">粘贴单行密钥，16–512 字符。提交后输入框会清空；已保存的密钥不会显示在此处。</p>
+<p id="model-validation" role="alert" hidden></p>
+<div class="model-actions"><button id="model-save" type="submit" disabled>保存密钥</button><button id="model-remove" class="secondary" type="button" disabled>移除已保存密钥</button><button id="model-recheck" class="secondary" type="button" disabled>重新检查</button></div>
+</form>
 <button id="resume" class="secondary" hidden>打开工作台</button>
 <footer><p>本机验证版 · 真实模型与企查查关闭，工作稿需由律师核验。</p><details><summary>资料保存位置</summary><p id="data-path"></p><p>案件资料独立保存；重新安装程序不会主动清空资料。</p></details></footer>
 </main></body></html>

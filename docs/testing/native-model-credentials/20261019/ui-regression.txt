@@ -1,0 +1,23 @@
+✔ owned backend validates readiness, stops on EOF and rejects forged nonce (102.0031ms)
+✔ native menu enters a distinct settings mode and only returns protected credential status (11.8485ms)
+✔ each credential IPC rejects other windows, subframes, backend pages and the wrong mode (2.4792ms)
+✔ a pending status read also locks mutation and rechecks permission on the next call (4.7959ms)
+✔ pending status/save operations reject duplicate IPC and quit waits for the operation (2.8194ms)
+✔ store failures and unexpected fields never escape through IPC (2.1261ms)
+✔ preload exposes only explicit credential operations and package includes their modules (0.9341ms)
+✔ credential form saves once, clears input immediately and labels stored credentials without enabling model use (2.462ms)
+✔ credential errors clear inputs, hide raw errors and leaving discards delayed responses (1.3331ms)
+✔ credential remove and return clear an unsubmitted replacement (1.8954ms)
+✔ unavailable settings can be checked again and reopening the same mode refreshes status (1.1828ms)
+✔ a late old settings reply cannot erase text entered after reopening settings (1.0254ms)
+✔ library selection recognizes existing catalog without creating or repairing files (3.3907ms)
+✔ only owned loopback origin and exact setup document are allowed (0.42ms)
+✔ clipboard permits writing only from the owned main frame, never reading (0.2115ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 157.2246

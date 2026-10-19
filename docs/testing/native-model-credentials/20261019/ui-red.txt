@@ -1,0 +1,143 @@
+✖ native menu enters a distinct settings mode and only returns protected credential status (8.9786ms)
+✖ each credential IPC rejects other windows, subframes, backend pages and the wrong mode (2.8793ms)
+✖ pending status/save operations reject duplicate IPC and quit waits for the operation (1.9054ms)
+✖ store failures and unexpected fields never escape through IPC (1.7188ms)
+✖ preload exposes only explicit credential operations and package includes their modules (1.1835ms)
+✖ credential form saves once, clears input immediately and labels stored credentials without enabling model use (6.5169ms)
+✖ credential errors clear inputs, hide raw errors and leaving discards delayed responses (1.5351ms)
+✖ credential remove and return clear an unsubmitted replacement (1.2962ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 0
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.6341
+
+✖ failing tests:
+
+test at desktop\tests\model-settings.test.cjs:41:1
+✖ native menu enters a distinct settings mode and only returns protected credential status (8.9786ms)
+  AssertionError [ERR_ASSERTION]: native model settings menu missing
+      at Object.open (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:38:89)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:42:35)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-settings.test.cjs:51:1
+✖ each credential IPC rejects other windows, subframes, backend pages and the wrong mode (2.8793ms)
+  AssertionError [ERR_ASSERTION]: native model settings menu missing
+      at Object.open (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:38:89)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:52:35)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-settings.test.cjs:67:1
+✖ pending status/save operations reject duplicate IPC and quit waits for the operation (1.9054ms)
+  AssertionError [ERR_ASSERTION]: native model settings menu missing
+      at Object.open (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:38:89)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:68:35)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-settings.test.cjs:79:1
+✖ store failures and unexpected fields never escape through IPC (1.7188ms)
+  AssertionError [ERR_ASSERTION]: native model settings menu missing
+      at Object.open (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:38:89)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:80:35)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-settings.test.cjs:89:1
+✖ preload exposes only explicit credential operations and package includes their modules (1.1835ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:93:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-settings.test.cjs:116:1
+✖ credential form saves once, clears input immediately and labels stored credentials without enabling model use (6.5169ms)
+  AssertionError [ERR_ASSERTION]: password field missing
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:117:38)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-settings.test.cjs:128:1
+✖ credential errors clear inputs, hide raw errors and leaving discards delayed responses (1.5351ms)
+  AssertionError [ERR_ASSERTION]: password field missing
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:129:38)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-settings.test.cjs:141:1
+✖ credential remove and return clear an unsubmitted replacement (1.2962ms)
+  AssertionError [ERR_ASSERTION]: password field missing
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:142:38)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

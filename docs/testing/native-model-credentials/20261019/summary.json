@@ -1,0 +1,120 @@
+{
+  "base_commit": "f4334939e08535d9716c625d34016b6a8e3ca041",
+  "status": "development_slice_verified",
+  "node_tests": 35,
+  "pytest_tests": 1,
+  "electron_acceptance_groups": 9,
+  "model_calls": 0,
+  "database_counts": {
+    "assistant_messages": 0,
+    "assistant_model_attempts": 0,
+    "assistant_model_receipts": 0,
+    "assistant_model_outputs": 0
+  },
+  "regression_inputs": 18,
+  "electron_inputs": 11,
+  "all_inputs_match_current_worktree": true,
+  "commands": [
+    {
+      "name": "desktop-tests",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "desktop\\tests\\backend.test.cjs",
+        "desktop\\tests\\model-credentials.test.cjs",
+        "desktop\\tests\\model-packaging.test.cjs",
+        "desktop\\tests\\model-settings.test.cjs",
+        "desktop\\tests\\policy.test.cjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.329
+    },
+    {
+      "name": "backup-test",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_credential_backup.py",
+        "-q",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\native-model-credentials-20261019\\regression-final\\backup-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 4.015
+    },
+    {
+      "name": "defaults",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "scripts/verify_defaults.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.406
+    },
+    {
+      "name": "sources",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0,
+      "seconds": 1.907
+    },
+    {
+      "name": "dependencies",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.031
+    }
+  ],
+  "electron_command_result": {
+    "exit_code": 0,
+    "process_exit_codes": [
+      0,
+      0
+    ]
+  },
+  "workbuddy": {
+    "task_id": "wb-6957053f69be",
+    "state": "cancelled",
+    "completed_reads": 5,
+    "denied_tool": "Glob",
+    "returned_review": false,
+    "retry": false
+  },
+  "independent_review": {
+    "normal_and_async_groups_passed": 2,
+    "same_user_post_check_path_swap_counterexample_observed": 1,
+    "normal_user_path_blockers": 0
+  },
+  "not_completed": [
+    "production model configuration/authorization",
+    "live model call",
+    "installer update",
+    "cloud deployment",
+    "full suite",
+    "new package/RSS reduction measurement"
+  ],
+  "acceptance_entry_hashes": {
+    "desktop/tests/model-credentials-acceptance.cjs": "419de93911c3251f817a55564a1031028b1f8c96ac56cc53466d6d51bdf434a3",
+    "desktop/tests/model-credentials-acceptance.py": "f13880463847e12e2e790be88c8d1a3728c01481ff8ecbfb103792a3ac631ae4"
+  }
+}

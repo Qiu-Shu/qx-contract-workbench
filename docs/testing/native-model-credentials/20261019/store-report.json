@@ -1,0 +1,99 @@
+{
+  "scope": "CH-04D native credential store only",
+  "command": "node --test desktop/tests/model-credentials.test.cjs",
+  "final_log": "store-atomic-green.log",
+  "exit_code": 0,
+  "tests": 19,
+  "passed": 19,
+  "failed": 0,
+  "duration_ms": 237.5706,
+  "environment": "Node v24.19.0 on Windows; synthetic in-process protector and temporary filesystem",
+  "files": [
+    {
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\desktop\\model-credentials.cjs",
+      "sha256": "31e7b4724f7d8c410085e44100ffcf4b8e8729a15fb9ca20617f2a50a3df20fd"
+    },
+    {
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\model-credentials.test.cjs",
+      "sha256": "22241870204f9535b42e47a7e80568bd3eb5fa735be593c41226ca861b7089e6"
+    }
+  ],
+  "stages": [
+    {
+      "tests": 1,
+      "exit_code": 1,
+      "name": "store-red",
+      "passed": 0,
+      "failed": 1
+    },
+    {
+      "tests": 1,
+      "exit_code": 0,
+      "name": "store-lifecycle-green",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "tests": 2,
+      "exit_code": 1,
+      "name": "store-input-red",
+      "passed": 1,
+      "failed": 1
+    },
+    {
+      "tests": 2,
+      "exit_code": 0,
+      "name": "store-input-green",
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "tests": 6,
+      "exit_code": 1,
+      "name": "store-protection-red",
+      "passed": 3,
+      "failed": 3
+    },
+    {
+      "tests": 6,
+      "exit_code": 0,
+      "name": "store-protection-green",
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "tests": 12,
+      "exit_code": 1,
+      "name": "store-path-red",
+      "passed": 6,
+      "failed": 6
+    },
+    {
+      "tests": 12,
+      "exit_code": 0,
+      "name": "store-path-green",
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "tests": 19,
+      "exit_code": 1,
+      "name": "store-atomic-red",
+      "passed": 18,
+      "failed": 1
+    },
+    {
+      "tests": 19,
+      "exit_code": 0,
+      "name": "store-atomic-green",
+      "passed": 19,
+      "failed": 0
+    }
+  ],
+  "limitations": [
+    "Actual Electron/Windows DPAPI validation is delegated to root and not claimed here.",
+    "No real model call, key, account, installation, or runtime-policy change.",
+    "The store does not claim protection from another process running as the same Windows user.",
+    "Key rotation is reported as unavailable and is not silently rewritten."
+  ]
+}

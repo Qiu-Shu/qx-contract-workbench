@@ -1,0 +1,28 @@
+{
+  "scope": "CH-04D native UI and IPC only",
+  "red": {
+    "command": "node --test desktop/tests/model-settings.test.cjs",
+    "exit_code": 1,
+    "tests": 8,
+    "passed": 0,
+    "failed": 8,
+    "log": "ui-red.txt"
+  },
+  "final": {
+    "command": "node --test desktop/tests/model-settings.test.cjs desktop/tests/policy.test.cjs desktop/tests/backend.test.cjs",
+    "exit_code": 0,
+    "tests": 15,
+    "passed": 15,
+    "failed": 0,
+    "new_ui_ipc_tests": 11,
+    "existing_policy_tests": 3,
+    "existing_backend_tests": 1,
+    "log": "ui-regression.txt"
+  },
+  "diff_check_exit_code": 0,
+  "limitations": [
+    "Main/preload/setup exercised with synthetic Electron and minimal DOM mocks, not a running Electron renderer.",
+    "Native Windows encryption/store module and production Electron verification owned by other agents/root.",
+    "No actual credential, HTTP transfer, paid model call, dependency installation or commit."
+  ]
+}

@@ -1,0 +1,14 @@
+✔ empty, save, restart, replace and remove expose only status and persist only ciphertext (5.6435ms)
+✔ save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext (5.4282ms)
+✔ only Windows and all available asynchronous protection methods permit status and save (1.553ms)
+✔ status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors (2.8569ms)
+✔ status validates actual decrypted data and reports rotation without rewriting stored bytes (2.448ms)
+✔ remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable (1.6951ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 79.0256

@@ -1,0 +1,27 @@
+✔ empty, save, restart, replace and remove expose only status and persist only ciphertext (21.4798ms)
+✔ save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext (22.9852ms)
+✔ only Windows and all available asynchronous protection methods permit status and save (3.3631ms)
+✔ status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors (11.3051ms)
+✔ status validates actual decrypted data and reports rotation without rewriting stored bytes (13.5351ms)
+✔ remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable (2.0178ms)
+✔ invalid parent paths return a fixed result rather than throwing or creating files (0.992ms)
+✔ a junction ancestor is rejected for every operation and the linked directory remains untouched (1.5822ms)
+✔ the credential directory cannot be a junction, dangling junction or ordinary file (3.0931ms)
+✔ credential symbolic links including dangling links are never read, replaced or removed (3.0207ms)
+✔ credential hard links and directories are rejected without touching either target (2.3558ms)
+✔ a directory replaced by a junction during asynchronous encryption cannot redirect the write (8.8336ms)
+✔ malformed encryption results and rejected encryption preserve old ciphertext and return a fixed error (10.5519ms)
+✔ flush or atomic replacement failures preserve old ciphertext and remove only the temporary ciphertext (19.2941ms)
+✔ status, save and remove share a serial queue and drain waits for already accepted operations (23.5777ms)
+✔ a failed operation does not poison the queue or prevent a later safe removal (8.6434ms)
+✔ status checks current file identity again after decrypting (8.0862ms)
+✔ oversized ciphertext is rejected before reading or decrypting it (2.0874ms)
+✔ filesystem failures are fixed results and never expose file paths or raw exception messages (9.7558ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 237.5706

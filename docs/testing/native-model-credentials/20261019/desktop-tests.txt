@@ -1,0 +1,220 @@
+TAP version 13
+# Subtest: owned backend validates readiness, stops on EOF and rejects forged nonce
+ok 1 - owned backend validates readiness, stops on EOF and rejects forged nonce
+  ---
+  duration_ms: 108.3817
+  type: 'test'
+  ...
+# Subtest: empty, save, restart, replace and remove expose only status and persist only ciphertext
+ok 2 - empty, save, restart, replace and remove expose only status and persist only ciphertext
+  ---
+  duration_ms: 31.1337
+  type: 'test'
+  ...
+# Subtest: save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext
+ok 3 - save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext
+  ---
+  duration_ms: 30.5749
+  type: 'test'
+  ...
+# Subtest: only Windows and all available asynchronous protection methods permit status and save
+ok 4 - only Windows and all available asynchronous protection methods permit status and save
+  ---
+  duration_ms: 3.4343
+  type: 'test'
+  ...
+# Subtest: status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors
+ok 5 - status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors
+  ---
+  duration_ms: 13.9669
+  type: 'test'
+  ...
+# Subtest: status validates actual decrypted data and reports rotation without rewriting stored bytes
+ok 6 - status validates actual decrypted data and reports rotation without rewriting stored bytes
+  ---
+  duration_ms: 16.609
+  type: 'test'
+  ...
+# Subtest: remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable
+ok 7 - remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable
+  ---
+  duration_ms: 2.1813
+  type: 'test'
+  ...
+# Subtest: invalid parent paths return a fixed result rather than throwing or creating files
+ok 8 - invalid parent paths return a fixed result rather than throwing or creating files
+  ---
+  duration_ms: 1.0877
+  type: 'test'
+  ...
+# Subtest: a junction ancestor is rejected for every operation and the linked directory remains untouched
+ok 9 - a junction ancestor is rejected for every operation and the linked directory remains untouched
+  ---
+  duration_ms: 1.7726
+  type: 'test'
+  ...
+# Subtest: the credential directory cannot be a junction, dangling junction or ordinary file
+ok 10 - the credential directory cannot be a junction, dangling junction or ordinary file
+  ---
+  duration_ms: 3.8651
+  type: 'test'
+  ...
+# Subtest: credential symbolic links including dangling links are never read, replaced or removed
+ok 11 - credential symbolic links including dangling links are never read, replaced or removed
+  ---
+  duration_ms: 4.0005
+  type: 'test'
+  ...
+# Subtest: credential hard links and directories are rejected without touching either target
+ok 12 - credential hard links and directories are rejected without touching either target
+  ---
+  duration_ms: 3.8438
+  type: 'test'
+  ...
+# Subtest: a directory replaced by a junction during asynchronous encryption cannot redirect the write
+ok 13 - a directory replaced by a junction during asynchronous encryption cannot redirect the write
+  ---
+  duration_ms: 12.7268
+  type: 'test'
+  ...
+# Subtest: malformed encryption results and rejected encryption preserve old ciphertext and return a fixed error
+ok 14 - malformed encryption results and rejected encryption preserve old ciphertext and return a fixed error
+  ---
+  duration_ms: 13.6267
+  type: 'test'
+  ...
+# Subtest: flush or atomic replacement failures preserve old ciphertext and remove only the temporary ciphertext
+ok 15 - flush or atomic replacement failures preserve old ciphertext and remove only the temporary ciphertext
+  ---
+  duration_ms: 23.2024
+  type: 'test'
+  ...
+# Subtest: status, save and remove share a serial queue and drain waits for already accepted operations
+ok 16 - status, save and remove share a serial queue and drain waits for already accepted operations
+  ---
+  duration_ms: 28.0341
+  type: 'test'
+  ...
+# Subtest: a failed operation does not poison the queue or prevent a later safe removal
+ok 17 - a failed operation does not poison the queue or prevent a later safe removal
+  ---
+  duration_ms: 11.6266
+  type: 'test'
+  ...
+# Subtest: status checks current file identity again after decrypting
+ok 18 - status checks current file identity again after decrypting
+  ---
+  duration_ms: 11.3432
+  type: 'test'
+  ...
+# Subtest: oversized ciphertext is rejected before reading or decrypting it
+ok 19 - oversized ciphertext is rejected before reading or decrypting it
+  ---
+  duration_ms: 1.7511
+  type: 'test'
+  ...
+# Subtest: filesystem failures are fixed results and never expose file paths or raw exception messages
+ok 20 - filesystem failures are fixed results and never expose file paths or raw exception messages
+  ---
+  duration_ms: 11.432
+  type: 'test'
+  ...
+# Subtest: declared desktop bundle includes standalone credential modules without new dependencies
+ok 21 - declared desktop bundle includes standalone credential modules without new dependencies
+  ---
+  duration_ms: 15.6455
+  type: 'test'
+  ...
+# Subtest: native menu enters a distinct settings mode and only returns protected credential status
+ok 22 - native menu enters a distinct settings mode and only returns protected credential status
+  ---
+  duration_ms: 13.1194
+  type: 'test'
+  ...
+# Subtest: each credential IPC rejects other windows, subframes, backend pages and the wrong mode
+ok 23 - each credential IPC rejects other windows, subframes, backend pages and the wrong mode
+  ---
+  duration_ms: 4.1199
+  type: 'test'
+  ...
+# Subtest: a pending status read also locks mutation and rechecks permission on the next call
+ok 24 - a pending status read also locks mutation and rechecks permission on the next call
+  ---
+  duration_ms: 5.4805
+  type: 'test'
+  ...
+# Subtest: pending status/save operations reject duplicate IPC and quit waits for the operation
+ok 25 - pending status/save operations reject duplicate IPC and quit waits for the operation
+  ---
+  duration_ms: 2.6209
+  type: 'test'
+  ...
+# Subtest: store failures and unexpected fields never escape through IPC
+ok 26 - store failures and unexpected fields never escape through IPC
+  ---
+  duration_ms: 2.5256
+  type: 'test'
+  ...
+# Subtest: preload exposes only explicit credential operations and package includes their modules
+ok 27 - preload exposes only explicit credential operations and package includes their modules
+  ---
+  duration_ms: 0.9146
+  type: 'test'
+  ...
+# Subtest: credential form saves once, clears input immediately and labels stored credentials without enabling model use
+ok 28 - credential form saves once, clears input immediately and labels stored credentials without enabling model use
+  ---
+  duration_ms: 2.3022
+  type: 'test'
+  ...
+# Subtest: credential errors clear inputs, hide raw errors and leaving discards delayed responses
+ok 29 - credential errors clear inputs, hide raw errors and leaving discards delayed responses
+  ---
+  duration_ms: 2.1106
+  type: 'test'
+  ...
+# Subtest: credential remove and return clear an unsubmitted replacement
+ok 30 - credential remove and return clear an unsubmitted replacement
+  ---
+  duration_ms: 1.2535
+  type: 'test'
+  ...
+# Subtest: unavailable settings can be checked again and reopening the same mode refreshes status
+ok 31 - unavailable settings can be checked again and reopening the same mode refreshes status
+  ---
+  duration_ms: 1.0966
+  type: 'test'
+  ...
+# Subtest: a late old settings reply cannot erase text entered after reopening settings
+ok 32 - a late old settings reply cannot erase text entered after reopening settings
+  ---
+  duration_ms: 1.0545
+  type: 'test'
+  ...
+# Subtest: library selection recognizes existing catalog without creating or repairing files
+ok 33 - library selection recognizes existing catalog without creating or repairing files
+  ---
+  duration_ms: 3.8599
+  type: 'test'
+  ...
+# Subtest: only owned loopback origin and exact setup document are allowed
+ok 34 - only owned loopback origin and exact setup document are allowed
+  ---
+  duration_ms: 0.427
+  type: 'test'
+  ...
+# Subtest: clipboard permits writing only from the owned main frame, never reading
+ok 35 - clipboard permits writing only from the owned main frame, never reading
+  ---
+  duration_ms: 0.2191
+  type: 'test'
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 296.3668

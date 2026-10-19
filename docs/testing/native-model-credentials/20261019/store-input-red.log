@@ -1,0 +1,35 @@
+✔ empty, save, restart, replace and remove expose only status and persist only ciphertext (5.7942ms)
+✖ save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext (4.6229ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 68.5325
+
+✖ failing tests:
+
+test at desktop\tests\model-credentials.test.cjs:63:1
+✖ save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext (4.6229ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'CREDENTIAL_STORAGE_FAILED',
+  +   status: 'unavailable'
+  -   code: 'CREDENTIAL_INPUT_INVALID',
+  -   status: 'invalid'
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:71:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'unavailable', code: 'CREDENTIAL_STORAGE_FAILED' },
+    expected: { status: 'invalid', code: 'CREDENTIAL_INPUT_INVALID' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

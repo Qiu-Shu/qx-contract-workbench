@@ -1,0 +1,20 @@
+✔ empty, save, restart, replace and remove expose only status and persist only ciphertext (29.268ms)
+✔ save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext (22.6781ms)
+✔ only Windows and all available asynchronous protection methods permit status and save (3.0814ms)
+✔ status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors (12.1311ms)
+✔ status validates actual decrypted data and reports rotation without rewriting stored bytes (13.7743ms)
+✔ remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable (2.6381ms)
+✔ invalid parent paths return a fixed result rather than throwing or creating files (1.0516ms)
+✔ a junction ancestor is rejected for every operation and the linked directory remains untouched (1.8408ms)
+✔ the credential directory cannot be a junction, dangling junction or ordinary file (3.0207ms)
+✔ credential symbolic links including dangling links are never read, replaced or removed (2.9533ms)
+✔ credential hard links and directories are rejected without touching either target (2.3606ms)
+✔ a directory replaced by a junction during asynchronous encryption cannot redirect the write (9.8971ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 166.6829

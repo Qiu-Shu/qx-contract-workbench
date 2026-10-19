@@ -1,10 +1,12 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog, session } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog, session, safeStorage } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { randomUUID } = require('node:crypto');
 const { Backend } = require('./backend.cjs');
 const { Maintenance } = require('./maintenance.cjs');
+const { createModelCredentialStore } = require('./model-credentials.cjs');
+const { registerModelSettings } = require('./model-settings.cjs');
 const { navigationAllowed, setupSenderAllowed, validLibraryRoot, clipboardWriteAllowed } = require('./policy.cjs');
 
 app.setName('群兴法律工作台验证版');
@@ -18,7 +20,7 @@ for (let current = path.resolve(dataParent); ; current = path.dirname(current)) 
 app.setPath('userData', dataParent);
 const setupURL = pathToFileURL(path.join(__dirname, 'setup.html')).href;
 const settingsPath = path.join(dataParent, 'desktop-settings.json');
-let win, backend, maintenance, origin = '', stopping = false, busy = false;
+let win, backend, maintenance, modelSettings, origin = '', stopping = false, busy = false;
 let settings = {}, state = {mode:'loading', message:'正在打开工作台…'};
 function workspacePath(){return path.join(dataParent,'workspaces',settings.workspace||'main');}
 function runtime(){return {executable:app.isPackaged?path.join(process.resourcesPath,'backend','qx-backend.exe')
@@ -26,7 +28,7 @@ function runtime(){return {executable:app.isPackaged?path.join(process.resources
 
 function setState(next) { state = {...next, library:settings.library_root || '', dataParent}; if (win && !win.isDestroyed()) win.webContents.send('desktop:state', state); }
 function isSetup(event) {
-  return win && event.sender === win.webContents && setupSenderAllowed(event.senderFrame?.url, setupURL,
+  return win && !win.isDestroyed() && event.sender === win.webContents && setupSenderAllowed(event.senderFrame?.url, setupURL,
     event.senderFrame === win.webContents.mainFrame);
 }
 function saveSettings(next) {
@@ -102,7 +104,9 @@ async function showMaintenance(operation){
   try{
     if(!await leavePage())return;
     if(backend)await backend.stop();origin='';
-    setState({mode:operation,message:operation==='backup'?'备份当前工作区的全部账户和案件资料。':'从加密备份建立独立核对副本，原工作区保留。'});
+    const messages={backup:'备份当前工作区的全部账户和案件资料。',restore:'从加密备份建立独立核对副本，原工作区保留。',
+      'model-settings':'主模型设置准备：仅管理这台电脑保存的密钥。'};
+    setState({mode:operation,message:messages[operation]});
   }finally{busy=false;}
 }
 async function runMaintenance(event,values){
@@ -180,6 +184,7 @@ else {
       {label:'工作台',submenu:[{label:'连接法律资料库…',click:async()=>{if ((await chooseLibrary()).ok && origin) await startBackend();}},
         {label:'断开资料库连接',click:async()=>{const next={...settings};delete next.library_root;if (!busy && (await changeSettings(next)).ok) await startBackend();}},
         {type:'separator'},
+        {label:'主模型设置…',click:()=>showMaintenance('model-settings')},
         {label:'备份案件资料…',click:()=>showMaintenance('backup')},
         {label:'从备份建立核对副本…',click:()=>showMaintenance('restore')},
         {label:'返回原工作区',click:async()=>{if(!busy&&(await changeSettings({...settings,workspace:'main'})).ok)await startBackend();}},
@@ -190,6 +195,8 @@ else {
     ipcMain.handle('desktop:state',event=>isSetup(event)?state:null);
     ipcMain.handle('desktop:library',event=>isSetup(event)?chooseLibrary():{ok:false});
     ipcMain.handle('desktop:maintenance',runMaintenance);
+    modelSettings=registerModelSettings({ipcMain,store:createModelCredentialStore({dataParent,safeStorage,platform:process.platform}),
+      isAllowed:event=>!busy&&!stopping&&state.mode==='model-settings'&&isSetup(event),setBusy:value=>{busy=value;}});
     ipcMain.handle('desktop:resume',event=>isSetup(event)&&!busy?startBackend():{ok:false});
     ipcMain.handle('desktop:start',(event,values)=>{
       if (!isSetup(event) || busy) return {ok:false};
@@ -209,5 +216,5 @@ app.on('before-quit',event=>{
   if (stopping) return;
   event.preventDefault(); stopping = true;
   if (win && !win.isDestroyed()) win.hide();
-  Promise.allSettled([backend?.stop(),maintenance?.stop()]).finally(()=>app.quit());
+  Promise.allSettled([backend?.stop(),maintenance?.stop(),modelSettings?.wait()]).finally(()=>app.quit());
 });

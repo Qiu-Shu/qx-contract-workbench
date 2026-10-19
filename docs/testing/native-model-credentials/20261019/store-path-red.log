@@ -1,0 +1,148 @@
+✔ empty, save, restart, replace and remove expose only status and persist only ciphertext (6.8756ms)
+✔ save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext (4.0776ms)
+✔ only Windows and all available asynchronous protection methods permit status and save (1.4119ms)
+✔ status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors (3.1264ms)
+✔ status validates actual decrypted data and reports rotation without rewriting stored bytes (2.8419ms)
+✔ remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable (1.5706ms)
+✖ invalid parent paths return a fixed result rather than throwing or creating files (0.6684ms)
+✖ a junction ancestor is rejected for every operation and the linked directory remains untouched (1.8715ms)
+✖ the credential directory cannot be a junction, dangling junction or ordinary file (1.3958ms)
+✖ credential symbolic links including dangling links are never read, replaced or removed (1.6925ms)
+✖ credential hard links and directories are rejected without touching either target (1.4715ms)
+✖ a directory replaced by a junction during asynchronous encryption cannot redirect the write (4.4471ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 6
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 94.3826
+
+✖ failing tests:
+
+test at desktop\tests\model-credentials.test.cjs:132:1
+✖ invalid parent paths return a fixed result rather than throwing or creating files (0.6684ms)
+  TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined
+      at Object.join (node:path:513:7)
+      at createModelCredentialStore (D:\Documents\ChatGPT\律所项目\desktop\model-credentials.cjs:12:26)
+      at Object.create (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:21:36)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:135:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    code: 'ERR_INVALID_ARG_TYPE'
+  }
+
+test at desktop\tests\model-credentials.test.cjs:142:1
+✖ a junction ancestor is rejected for every operation and the linked directory remains untouched (1.8715ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   status: 'empty'
+  -   code: 'CREDENTIAL_PATH_UNSAFE',
+  -   status: 'invalid'
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:148:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'empty' },
+    expected: { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-credentials.test.cjs:153:1
+✖ the credential directory cannot be a junction, dangling junction or ordinary file (1.3958ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   status: 'empty'
+  -   code: 'CREDENTIAL_PATH_UNSAFE',
+  -   status: 'invalid'
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:161:14)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'empty' },
+    expected: { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-credentials.test.cjs:170:1
+✖ credential symbolic links including dangling links are never read, replaced or removed (1.6925ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'CREDENTIAL_CORRUPT',
+  -   code: 'CREDENTIAL_PATH_UNSAFE',
+      status: 'invalid'
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:178:14)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'invalid', code: 'CREDENTIAL_CORRUPT' },
+    expected: { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-credentials.test.cjs:189:1
+✖ credential hard links and directories are rejected without touching either target (1.4715ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'CREDENTIAL_CORRUPT',
+  -   code: 'CREDENTIAL_PATH_UNSAFE',
+      status: 'invalid'
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:196:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'invalid', code: 'CREDENTIAL_CORRUPT' },
+    expected: { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-credentials.test.cjs:205:1
+✖ a directory replaced by a junction during asynchronous encryption cannot redirect the write (4.4471ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   status: 'saved'
+  -   code: 'CREDENTIAL_PATH_UNSAFE',
+  -   status: 'invalid'
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credentials.test.cjs:218:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'saved' },
+    expected: { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
