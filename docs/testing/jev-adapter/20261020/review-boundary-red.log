@@ -1,0 +1,148 @@
+FFF.FF.FFF                                                               [100%]
+================================== FAILURES ===================================
+_ test_only_json_media_type_can_supply_response_answers_or_model[text/plain] __
+
+content_type = 'text/plain'
+
+    @pytest.mark.parametrize('content_type', ['text/plain', 'text/html', None])
+    def test_only_json_media_type_can_supply_response_answers_or_model(content_type):
+        value = request()
+        with server(raw(envelope(value)), content_type=content_type) as (url, calls, _):
+            result = asyncio.run(provider(url).judge(value))
+>       assert (result.status, result.reason_code, result.evidence) == ('invalid', 'invalid_response', 'received')
+E       AssertionError: assert ('ok', None, 'received') == ('invalid', '...', 'received')
+E         
+E         At index 0 diff: 'ok' != 'invalid'
+E         Use -v to get more diff
+
+tests\integration\test_jev_provider.py:437: AssertionError
+__ test_only_json_media_type_can_supply_response_answers_or_model[text/html] __
+
+content_type = 'text/html'
+
+    @pytest.mark.parametrize('content_type', ['text/plain', 'text/html', None])
+    def test_only_json_media_type_can_supply_response_answers_or_model(content_type):
+        value = request()
+        with server(raw(envelope(value)), content_type=content_type) as (url, calls, _):
+            result = asyncio.run(provider(url).judge(value))
+>       assert (result.status, result.reason_code, result.evidence) == ('invalid', 'invalid_response', 'received')
+E       AssertionError: assert ('ok', None, 'received') == ('invalid', '...', 'received')
+E         
+E         At index 0 diff: 'ok' != 'invalid'
+E         Use -v to get more diff
+
+tests\integration\test_jev_provider.py:437: AssertionError
+____ test_only_json_media_type_can_supply_response_answers_or_model[None] _____
+
+content_type = None
+
+    @pytest.mark.parametrize('content_type', ['text/plain', 'text/html', None])
+    def test_only_json_media_type_can_supply_response_answers_or_model(content_type):
+        value = request()
+        with server(raw(envelope(value)), content_type=content_type) as (url, calls, _):
+            result = asyncio.run(provider(url).judge(value))
+>       assert (result.status, result.reason_code, result.evidence) == ('invalid', 'invalid_response', 'received')
+E       AssertionError: assert ('ok', None, 'received') == ('invalid', '...', 'received')
+E         
+E         At index 0 diff: 'ok' != 'invalid'
+E         Use -v to get more diff
+
+tests\integration\test_jev_provider.py:437: AssertionError
+__ test_reported_model_requires_independently_valid_response_model[bad-json] __
+
+mode = 'bad-json'
+
+    @pytest.mark.parametrize('mode', ['bad-json', 'wrong-model', 'bad-answer', 'reflection'])
+    def test_reported_model_requires_independently_valid_response_model(mode):
+        value = request(); body = envelope(value)
+        if mode == 'wrong-model': body['model'] = 'jev-latest'
+        elif mode == 'bad-answer': body['answers'] = {}
+        elif mode == 'reflection': body[KEY] = TEXT
+        with server(b'{' if mode == 'bad-json' else raw(body)) as (url, calls, _):
+            result = asyncio.run(provider(url).judge(value))
+>       assert result.model == ('jev-1.13.0' if mode == 'bad-answer' else None)
+E       AssertionError: assert 'jev-1.13.0' == None
+E        +  where 'jev-1.13.0' = JudgeResult(status='invalid', reason_code='invalid_response', evidence='received', local_request_id=UUID('32a2f6d2-469..._revision=2, materials_revision=3), elapsed_ms=0, model='jev-1.13.0', answers={}, provider_request_id=None, usage=None).model
+
+tests\integration\test_jev_provider.py:456: AssertionError
+_ test_reported_model_requires_independently_valid_response_model[wrong-model] _
+
+mode = 'wrong-model'
+
+    @pytest.mark.parametrize('mode', ['bad-json', 'wrong-model', 'bad-answer', 'reflection'])
+    def test_reported_model_requires_independently_valid_response_model(mode):
+        value = request(); body = envelope(value)
+        if mode == 'wrong-model': body['model'] = 'jev-latest'
+        elif mode == 'bad-answer': body['answers'] = {}
+        elif mode == 'reflection': body[KEY] = TEXT
+        with server(b'{' if mode == 'bad-json' else raw(body)) as (url, calls, _):
+            result = asyncio.run(provider(url).judge(value))
+>       assert result.model == ('jev-1.13.0' if mode == 'bad-answer' else None)
+E       AssertionError: assert 'jev-1.13.0' == None
+E        +  where 'jev-1.13.0' = JudgeResult(status='invalid', reason_code='invalid_response', evidence='received', local_request_id=UUID('0813b97b-0dc...sed_ms=0, model='jev-1.13.0', answers={}, provider_request_id=None, usage=JudgeUsage(input_tokens=20, output_tokens=4)).model
+
+tests\integration\test_jev_provider.py:456: AssertionError
+_ test_reported_model_requires_independently_valid_response_model[reflection] _
+
+mode = 'reflection'
+
+    @pytest.mark.parametrize('mode', ['bad-json', 'wrong-model', 'bad-answer', 'reflection'])
+    def test_reported_model_requires_independently_valid_response_model(mode):
+        value = request(); body = envelope(value)
+        if mode == 'wrong-model': body['model'] = 'jev-latest'
+        elif mode == 'bad-answer': body['answers'] = {}
+        elif mode == 'reflection': body[KEY] = TEXT
+        with server(b'{' if mode == 'bad-json' else raw(body)) as (url, calls, _):
+            result = asyncio.run(provider(url).judge(value))
+>       assert result.model == ('jev-1.13.0' if mode == 'bad-answer' else None)
+E       AssertionError: assert 'jev-1.13.0' == None
+E        +  where 'jev-1.13.0' = JudgeResult(status='failed', reason_code='provider_error', evidence='received', local_request_id=UUID('3a9ea84d-fb1a-4..._revision=2, materials_revision=3), elapsed_ms=0, model='jev-1.13.0', answers={}, provider_request_id=None, usage=None).model
+
+tests\integration\test_jev_provider.py:456: AssertionError
+_____ test_http_timeout_exception_is_a_timeout_even_before_outer_deadline _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002CEF0AA6DB0>
+
+    def test_http_timeout_exception_is_a_timeout_even_before_outer_deadline(monkeypatch):
+        import httpx2
+        attempts = []
+        async def timed_out(self, request):
+            attempts.append(1)
+            raise httpx2.ReadTimeout(KEY + TEXT)
+        monkeypatch.setattr(httpx2.AsyncHTTPTransport, 'handle_async_request', timed_out)
+        with server() as (url, calls, _):
+            result = asyncio.run(provider(url).judge(request()))
+>       assert (result.status, result.reason_code, result.evidence) == ('timed_out', 'timeout', 'sent_unknown')
+E       AssertionError: assert ('failed', 'p...sent_unknown') == ('timed_out',...sent_unknown')
+E         
+E         At index 0 diff: 'failed' != 'timed_out'
+E         Use -v to get more diff
+
+tests\integration\test_jev_provider.py:469: AssertionError
+__________ test_logging_factory_composes_without_unbounded_wrapping ___________
+
+    def test_logging_factory_composes_without_unbounded_wrapping():
+        from cn_contract.assistant.providers import main
+        module = api(); original = logging.getLogRecordFactory()
+        try:
+            main._protect_logs(); module._protect_logs(); main._protect_logs(); module._protect_logs()
+            stable = logging.getLogRecordFactory()
+            for _ in range(700):
+                main._protect_logs(); module._protect_logs()
+            final = logging.getLogRecordFactory()
+        finally:
+            logging.setLogRecordFactory(original)
+>       assert final is stable
+E       assert <function _protect_logs.<locals>.factory at 0x000002CEF0AE99E0> is <function _protect_logs.<locals>.factory at 0x000002CEF0AEA660>
+
+tests\integration\test_jev_provider.py:484: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_jev_provider.py::test_only_json_media_type_can_supply_response_answers_or_model[text/plain]
+FAILED tests/integration/test_jev_provider.py::test_only_json_media_type_can_supply_response_answers_or_model[text/html]
+FAILED tests/integration/test_jev_provider.py::test_only_json_media_type_can_supply_response_answers_or_model[None]
+FAILED tests/integration/test_jev_provider.py::test_reported_model_requires_independently_valid_response_model[bad-json]
+FAILED tests/integration/test_jev_provider.py::test_reported_model_requires_independently_valid_response_model[wrong-model]
+FAILED tests/integration/test_jev_provider.py::test_reported_model_requires_independently_valid_response_model[reflection]
+FAILED tests/integration/test_jev_provider.py::test_http_timeout_exception_is_a_timeout_even_before_outer_deadline
+FAILED tests/integration/test_jev_provider.py::test_logging_factory_composes_without_unbounded_wrapping
+8 failed, 2 passed, 60 deselected in 0.79s

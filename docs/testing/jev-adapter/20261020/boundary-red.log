@@ -1,0 +1,93 @@
+F..F                                                                     [100%]
+================================== FAILURES ===================================
+_________ test_config_change_while_entering_client_stops_before_post __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A381A436B0>
+
+    def test_config_change_while_entering_client_stops_before_post(monkeypatch):
+        import httpx2
+        original = httpx2.AsyncClient.__aenter__
+        value = request()
+        with server(raw(envelope(value))) as (url, calls, _):
+            instance = provider(url)
+            async def entering(self):
+                result = await original(self)
+                instance.config = d.JevConfig()
+                return result
+            monkeypatch.setattr(httpx2.AsyncClient, '__aenter__', entering)
+            result = asyncio.run(instance.judge(value))
+>       assert (result.status, result.reason_code, result.evidence) == ('failed', 'config_changed', 'not_sent')
+E       AssertionError: assert ('failed', 'c...', 'received') == ('failed', 'c...', 'not_sent')
+E         
+E         At index 2 diff: 'received' != 'not_sent'
+E         Use -v to get more diff
+
+tests\integration\test_jev_provider.py:342: AssertionError
+____ test_forged_text_with_valid_identity_is_invalid_without_io[surrogate] ____
+
+text = '\ud800'
+
+    @pytest.mark.parametrize('text', [123, '��' * 32769, '\ud800'], ids=['non-string', 'oversize', 'surrogate'])
+    def test_forged_text_with_valid_identity_is_invalid_without_io(text):
+        calls = []; value = request().model_copy(update={'text': text})
+>       result = asyncio.run(api().JevProvider(config(), lambda: calls.append(1),
+            preflight=lambda *_: None).judge(value))
+
+tests\integration\test_jev_provider.py:349: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <cn_contract.assistant.providers.jev.JevProvider object at 0x000001A381CCB7A0>
+request = JudgeRequest(local_request_id=UUID('52e503ec-8e6f-40b5-a51d-76f7df2ea4fc'), scope=ScopeSnapshot(scope_kind='conversati...ding_revision=1, input_revision=2, materials_revision=3), purpose='primary_intent', text='\ud800', explicit_skill=None)
+
+    async def judge(self, request: d.JudgeRequest, *,
+                    expected_config: d.JevConfig | None = None) -> d.JudgeResult:
+        loop = asyncio.get_running_loop(); started = loop.time()
+        config_invalid = False
+        try:
+            config = codec.validated_config(self.config if expected_config is None else expected_config)
+        except ValueError:
+            config = self._initial_config; config_invalid = True
+        deadline = started + config.timeout_ms / 1000
+        invalid_request = False
+        try:
+            value = codec.validated_request(request)
+            digest = codec.input_hash(value, config)
+        except ValueError:
+            # A forged DTO may still have a valid receipt identity. Never return
+            # a Pydantic exception (which embeds the consultation) to a caller.
+            try:
+                if type(request) is not d.JudgeRequest:
+                    raise ValueError()
+                fields = request.model_dump(mode='python', warnings=False)
+                value = d.JudgeRequest.model_validate({**fields, 'purpose': 'primary_intent',
+                    'text': '', 'explicit_skill': None})
+                digest = sha256(canonical_json({'template_version': codec.TEMPLATE_VERSION,
+                    'request': request.model_dump(mode='json', warnings=False),
+                    'config': config.model_dump(mode='json')}).encode('utf-8')).hexdigest()
+                invalid_request = True
+            except Exception:
+>               raise ValueError('invalid judge request identity') from None
+E               ValueError: invalid judge request identity
+
+src\cn_contract\assistant\providers\jev.py:100: ValueError
+============================== warnings summary ===============================
+tests/integration/test_jev_provider.py::test_forged_text_with_valid_identity_is_invalid_without_io[non-string]
+  D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\pydantic\main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `str` - serialized value may not be as expected [field_name='text', input_value=123, input_type=int])
+    return self.__pydantic_serializer__.to_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_jev_provider.py::test_config_change_while_entering_client_stops_before_post
+FAILED tests/integration/test_jev_provider.py::test_forged_text_with_valid_identity_is_invalid_without_io[surrogate]
+2 failed, 2 passed, 56 deselected, 1 warning in 0.58s

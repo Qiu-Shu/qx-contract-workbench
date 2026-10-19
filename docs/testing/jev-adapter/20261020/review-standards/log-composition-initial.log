@@ -1,0 +1,3003 @@
+{"status": "failed", "alternating_pairs": 600, "error_type": "RecursionError", "network_calls": 0, "secret_reads": 0}
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\.local\jev-adapter-20261020\review-standards\log_composition_probe.py", line 19, in <module>
+    result = logging.makeLogRecord({'name': 'independent.application',
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\logging\__init__.py", line 424, in makeLogRecord
+    rv = _logRecordFactory(None, None, "", 0, "", (), None, None)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\jev.py", line 29, in factory
+    record = previous(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\src\cn_contract\assistant\providers\main.py", line 153, in factory
+    record=previous(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+RecursionError: maximum recursion depth exceeded

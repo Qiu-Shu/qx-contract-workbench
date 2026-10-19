@@ -1,0 +1,40 @@
+{
+  "scope": "CH-05A Jev codec/provider synthetic verification",
+  "command": ".venv/Scripts/python.exe -m pytest tests/unit/test_jev_codec.py tests/integration/test_jev_provider.py -q -o junit_family=legacy --junitxml=.local/jev-adapter-20261020/targets.xml",
+  "exit": 0,
+  "passed": 124,
+  "codec_passed": 53,
+  "provider_passed": 71,
+  "cold_process_properties": {
+    "cold_judge_elapsed_ms": "110"
+  },
+  "sha256": {
+    "src/cn_contract/assistant/providers/jev.py": "06f913b805fca0d4bc5df636a485dca39b02761cb0a9edc9b8e18ed7edec8dd2",
+    "src/cn_contract/assistant/providers/jev_codec.py": "bc69e1145e09de8d3a53fd24c8cf0093a0120198d330041ea5e216b38deb1e69",
+    "src/cn_contract/assistant/providers/main.py": "cd15eec8824219294b484fa46289f7a30ed0fefec4aa03eaf54557a6b2869598",
+    "tests/unit/test_jev_codec.py": "bee08c378dc8ec797dc80a4aa2ef260760aa555c8a410a8c6857c397f847d07c",
+    "tests/integration/test_jev_provider.py": "60c3f6ab6ea325a6612790d989712d544127519da59869d3e11b02677951cbb2"
+  },
+  "red_evidence": {
+    "provider-red": {
+      "failed": 42,
+      "reason": "provider module absent"
+    },
+    "boundary-red": {
+      "failed": 2,
+      "passed": 2,
+      "reason": "client entry config race and invalid Unicode receipt"
+    },
+    "review-boundary-red": {
+      "failed": 8,
+      "passed": 2,
+      "reason": "response media type/model evidence, timeout classification, log composition"
+    }
+  },
+  "codec_initial_note": "Initial log retained: 52 failures and 2 setup errors; most were fixture scope-field mistakes and overlong Windows parameter ID, not product failures. Corrected fixture and bounded IDs; 53 codec targets now pass.",
+  "limitations": [
+    "Only synthetic local random-port HTTP; no real credential or remote provider call.",
+    "No production wiring, persistence, frontend or actual TypeSafe quality verification.",
+    "Synchronous prep/parse/cleanup can overrun wall time but late answers are discarded; not a hard realtime guarantee."
+  ]
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="7" time="0.923" timestamp="2026-10-20T01:33:05.158482+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.jev-adapter-20261020.review-spec.probe_transport" name="test_non_json_content_type_never_supplies_adoptable_answer[text/plain]" time="0.111"><failure message="AssertionError: assert ('ok' == 'invalid'&#10;  &#10;  - invalid&#10;  + ok)">content_type = 'text/plain'
+
+    @pytest.mark.parametrize('content_type',['text/plain','text/html',None])
+    def test_non_json_content_type_never_supplies_adoptable_answer(content_type):
+        with endpoint(content_type) as (url,calls,_):
+            result=asyncio.run(provider(url).judge(req()))
+&gt;       assert result.status=='invalid' and result.evidence=='received' and not result.answers
+E       AssertionError: assert ('ok' == 'invalid'
+E         
+E         - invalid
+E         + ok)
+
+.local\jev-adapter-20261020\review-spec\probe_transport.py:65: AssertionError</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_transport" name="test_non_json_content_type_never_supplies_adoptable_answer[text/html]" time="0.019"><failure message="AssertionError: assert ('ok' == 'invalid'&#10;  &#10;  - invalid&#10;  + ok)">content_type = 'text/html'
+
+    @pytest.mark.parametrize('content_type',['text/plain','text/html',None])
+    def test_non_json_content_type_never_supplies_adoptable_answer(content_type):
+        with endpoint(content_type) as (url,calls,_):
+            result=asyncio.run(provider(url).judge(req()))
+&gt;       assert result.status=='invalid' and result.evidence=='received' and not result.answers
+E       AssertionError: assert ('ok' == 'invalid'
+E         
+E         - invalid
+E         + ok)
+
+.local\jev-adapter-20261020\review-spec\probe_transport.py:65: AssertionError</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_transport" name="test_non_json_content_type_never_supplies_adoptable_answer[None]" time="0.027"><failure message="AssertionError: assert ('ok' == 'invalid'&#10;  &#10;  - invalid&#10;  + ok)">content_type = None
+
+    @pytest.mark.parametrize('content_type',['text/plain','text/html',None])
+    def test_non_json_content_type_never_supplies_adoptable_answer(content_type):
+        with endpoint(content_type) as (url,calls,_):
+            result=asyncio.run(provider(url).judge(req()))
+&gt;       assert result.status=='invalid' and result.evidence=='received' and not result.answers
+E       AssertionError: assert ('ok' == 'invalid'
+E         
+E         - invalid
+E         + ok)
+
+.local\jev-adapter-20261020\review-spec\probe_transport.py:65: AssertionError</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_transport" name="test_good_wire_has_no_scope_and_gives_only_allowed_advice" time="0.027" /><testcase classname=".local.jev-adapter-20261020.review-spec.probe_transport" name="test_even_well_formed_429_envelope_never_adopts_or_retries" time="0.015" /><testcase classname=".local.jev-adapter-20261020.review-spec.probe_transport" name="test_synchronous_decode_time_is_inside_deadline_and_usage_is_accounting_only" time="0.266" /><testcase classname=".local.jev-adapter-20261020.review-spec.probe_transport" name="test_cancelled_request_propagates_cancellation_and_does_not_retry" time="0.063" /></testsuite></testsuites>

@@ -5,6 +5,7 @@ No database, automatic retry, tool execution or consumer-site session is used.
 """
 import asyncio
 from contextvars import ContextVar
+from functools import wraps
 from decimal import Context, localcontext
 import json
 import logging
@@ -149,6 +150,7 @@ def _protect_logs():
     """Sanitize transport diagnostics in this async context, including future loggers."""
     previous=logging.getLogRecordFactory()
     if not getattr(previous,'_qx_main_private',False):
+        @wraps(previous)
         def factory(*args,**kwargs):
             record=previous(*args,**kwargs)
             if _private.get() and record.name.startswith(('httpx2','httpcore2')):

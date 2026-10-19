@@ -1,0 +1,52 @@
+FFF....                                                                  [100%]
+================================== FAILURES ===================================
+___ test_non_json_content_type_never_supplies_adoptable_answer[text/plain] ____
+
+content_type = 'text/plain'
+
+    @pytest.mark.parametrize('content_type',['text/plain','text/html',None])
+    def test_non_json_content_type_never_supplies_adoptable_answer(content_type):
+        with endpoint(content_type) as (url,calls,_):
+            result=asyncio.run(provider(url).judge(req()))
+>       assert result.status=='invalid' and result.evidence=='received' and not result.answers
+E       AssertionError: assert ('ok' == 'invalid'
+E         
+E         - invalid
+E         + ok)
+
+.local\jev-adapter-20261020\review-spec\probe_transport.py:65: AssertionError
+____ test_non_json_content_type_never_supplies_adoptable_answer[text/html] ____
+
+content_type = 'text/html'
+
+    @pytest.mark.parametrize('content_type',['text/plain','text/html',None])
+    def test_non_json_content_type_never_supplies_adoptable_answer(content_type):
+        with endpoint(content_type) as (url,calls,_):
+            result=asyncio.run(provider(url).judge(req()))
+>       assert result.status=='invalid' and result.evidence=='received' and not result.answers
+E       AssertionError: assert ('ok' == 'invalid'
+E         
+E         - invalid
+E         + ok)
+
+.local\jev-adapter-20261020\review-spec\probe_transport.py:65: AssertionError
+______ test_non_json_content_type_never_supplies_adoptable_answer[None] _______
+
+content_type = None
+
+    @pytest.mark.parametrize('content_type',['text/plain','text/html',None])
+    def test_non_json_content_type_never_supplies_adoptable_answer(content_type):
+        with endpoint(content_type) as (url,calls,_):
+            result=asyncio.run(provider(url).judge(req()))
+>       assert result.status=='invalid' and result.evidence=='received' and not result.answers
+E       AssertionError: assert ('ok' == 'invalid'
+E         
+E         - invalid
+E         + ok)
+
+.local\jev-adapter-20261020\review-spec\probe_transport.py:65: AssertionError
+=========================== short test summary info ===========================
+FAILED .local/jev-adapter-20261020/review-spec/probe_transport.py::test_non_json_content_type_never_supplies_adoptable_answer[text/plain]
+FAILED .local/jev-adapter-20261020/review-spec/probe_transport.py::test_non_json_content_type_never_supplies_adoptable_answer[text/html]
+FAILED .local/jev-adapter-20261020/review-spec/probe_transport.py::test_non_json_content_type_never_supplies_adoptable_answer[None]
+3 failed, 4 passed in 0.96s

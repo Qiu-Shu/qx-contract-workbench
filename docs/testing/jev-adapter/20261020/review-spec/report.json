@@ -1,0 +1,91 @@
+{
+  "baseline": "7dd5abb",
+  "review_axis": "Spec",
+  "reviewed_at_utc": "2026-10-19T17:36:25.792860+00:00",
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\review-spec\\probe_contract.py",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\review-spec\\probe_codec.py",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\review-spec\\probe_transport.py",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\review-spec\\probe_logging.py",
+    "-q",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\review-spec\\final.xml"
+  ],
+  "environment": {
+    "PYTHONPATH": "src;."
+  },
+  "exit_code": 0,
+  "passed": 36,
+  "failed": 0,
+  "failure_names": [],
+  "product_sha256_before": {
+    "src/cn_contract/domain.py": "9d16e632bd0f50149b6843cf4781669e9f7032e0dc55fae59a22752f5bc28516",
+    "src/cn_contract/assistant/routing.py": "b6529e27d501fc129851c9c304fa2143e066010eebc7596482c27cfff0fd1cee",
+    "src/cn_contract/assistant/providers/main.py": "cd15eec8824219294b484fa46289f7a30ed0fefec4aa03eaf54557a6b2869598",
+    "src/cn_contract/assistant/providers/jev.py": "06f913b805fca0d4bc5df636a485dca39b02761cb0a9edc9b8e18ed7edec8dd2",
+    "src/cn_contract/assistant/providers/jev_codec.py": "bc69e1145e09de8d3a53fd24c8cf0093a0120198d330041ea5e216b38deb1e69"
+  },
+  "product_sha256_after": {
+    "src/cn_contract/domain.py": "9d16e632bd0f50149b6843cf4781669e9f7032e0dc55fae59a22752f5bc28516",
+    "src/cn_contract/assistant/routing.py": "b6529e27d501fc129851c9c304fa2143e066010eebc7596482c27cfff0fd1cee",
+    "src/cn_contract/assistant/providers/main.py": "cd15eec8824219294b484fa46289f7a30ed0fefec4aa03eaf54557a6b2869598",
+    "src/cn_contract/assistant/providers/jev.py": "06f913b805fca0d4bc5df636a485dca39b02761cb0a9edc9b8e18ed7edec8dd2",
+    "src/cn_contract/assistant/providers/jev_codec.py": "bc69e1145e09de8d3a53fd24c8cf0093a0120198d330041ea5e216b38deb1e69"
+  },
+  "product_unchanged": true,
+  "cases": [
+    "test_ok_domain_result_requires_exact_fixed_question_semantics[missing_criteria]",
+    "test_ok_domain_result_requires_exact_fixed_question_semantics[extra_criteria]",
+    "test_ok_domain_result_requires_exact_fixed_question_semantics[wrong_type]",
+    "test_ok_domain_result_requires_exact_fixed_question_semantics[wrong_kind_options]",
+    "test_absolute_late_ok_result_is_rejected_by_domain_and_cannot_route[2001]",
+    "test_absolute_late_ok_result_is_rejected_by_domain_and_cannot_route[999999]",
+    "test_model_copy_missing_criteria_is_revalidated_before_routing",
+    "test_route_decision_cannot_contradict_its_source[changes0]",
+    "test_route_decision_cannot_contradict_its_source[changes1]",
+    "test_route_decision_cannot_contradict_its_source[changes2]",
+    "test_route_decision_cannot_contradict_its_source[changes3]",
+    "test_route_decision_cannot_contradict_its_source[changes4]",
+    "test_explicit_still_takes_precedence_over_invalid_auxiliary_result",
+    "test_all_fixed_choices_and_noul_can_be_represented_without_route_escalation",
+    "test_local_identifiers_and_revision_only_bind_hash_never_enter_wire",
+    "test_invalid_answers_keep_only_separately_validated_receipt_information",
+    "test_secret_escaped_inside_unexpected_json_property_clears_all_external_metadata",
+    "test_noul_invalid_numbers_are_unusable_but_unknown_usage_stays_unknown[True]",
+    "test_noul_invalid_numbers_are_unusable_but_unknown_usage_stays_unknown[0.5]",
+    "test_noul_invalid_numbers_are_unusable_but_unknown_usage_stays_unknown[nan]",
+    "test_noul_invalid_numbers_are_unusable_but_unknown_usage_stays_unknown[inf]",
+    "test_missing_usage_cannot_be_fabricated_and_noul_needs_no_confidence",
+    "test_invalid_tracking_id_is_dropped_without_discarding_valid_answer",
+    "test_non_json_content_type_never_supplies_adoptable_answer[text/plain]",
+    "test_non_json_content_type_never_supplies_adoptable_answer[text/html]",
+    "test_non_json_content_type_never_supplies_adoptable_answer[None]",
+    "test_good_wire_has_no_scope_and_gives_only_allowed_advice",
+    "test_even_well_formed_429_envelope_never_adopts_or_retries",
+    "test_synchronous_decode_time_is_inside_deadline_and_usage_is_accounting_only",
+    "test_cancelled_request_propagates_cancellation_and_does_not_retry",
+    "test_no_egress_cannot_claim_reported_model_or_read_secret",
+    "test_wrong_reported_model_is_not_replaced_with_requested_model",
+    "test_installation_is_idempotent_in_both_provider_orders[main-then-jev]",
+    "test_installation_is_idempotent_in_both_provider_orders[jev-then-main]",
+    "test_repeated_main_auxiliary_use_cannot_overflow_global_logging_stack",
+    "test_main_jev_and_unrelated_async_contexts_remain_independent"
+  ],
+  "closed_findings": [
+    "fixed question/result deadline invariants",
+    "RouteDecision source/workflow/reason invariants",
+    "JSON response media type",
+    "alternating main/auxiliary logging wrapper growth"
+  ],
+  "clarifications": [
+    "model means verified received supplier model, not requested config model"
+  ],
+  "remaining_findings": [],
+  "limitations": [
+    "Synthetic local-loopback/offline only; no TypeSafe connection, actual credential, legal-quality or persistent integration claim.",
+    "Synchronous Python work can exceed wall-clock deadline; overdue answer is rejected, not hard real-time scheduling.",
+    "Caller must retain full request and validate current scope, distinct egress permission, budget and durable claim before allowing preflight."
+  ]
+}

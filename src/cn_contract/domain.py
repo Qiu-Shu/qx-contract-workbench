@@ -13,7 +13,7 @@ import json
 from datetime import date, datetime, timezone
 from decimal import Decimal, DecimalException
 from enum import StrEnum
-from typing import Annotated, Literal, Mapping, Union
+from typing import Annotated, Literal, Mapping, Union, get_args
 from uuid import UUID
 
 from pydantic import (
@@ -2981,3 +2981,109 @@ class MainGenerationCapability(DomainModel):
     content_sha256: SHA256 | None
     state: Literal['unconfigured', 'unapproved', 'empty', 'unsupported', 'busy',
                    'budget_exhausted', 'restored_read_only', 'ready']
+
+
+JudgePurpose = Literal['primary_intent', 'material_kind', 'possible_result_guarantee']
+JudgeMaterialKind = Literal['contract', 'chat', 'transfer', 'judgment', 'mixed', 'unknown']
+JudgeSkipReason = Literal['unconfigured', 'no_budget', 'no_egress', 'explicit_skill', 'not_needed', 'stale_scope']
+JudgeProbability = Annotated[float, Field(strict=True, ge=0, le=1, allow_inf_nan=False)]
+JudgeLabel = Annotated[str, StringConstraints(strict=True, min_length=1, max_length=64, pattern=r'^[a-z_]+$')]
+
+
+class JevConfig(DomainModel):
+    enabled: StrictBool = False
+    protocol_version: Literal['typesafe-systemone-v1'] = 'typesafe-systemone-v1'
+    model: Literal['jev-1.13.0'] = 'jev-1.13.0'
+    max_input_bytes: Annotated[int, Field(strict=True, ge=1, le=65536)] = 65536
+    max_response_bytes: Annotated[int, Field(strict=True, ge=1, le=262144)] = 262144
+    timeout_ms: Annotated[int, Field(strict=True, ge=1, le=2000)] = 2000
+
+
+class JudgeRequest(DomainModel):
+    local_request_id: UUID
+    scope: ScopeSnapshot
+    purpose: JudgePurpose
+    text: Annotated[str, StringConstraints(strict=True, max_length=32768)]
+    explicit_skill: Annotated[str, StringConstraints(strict=True, max_length=80)] | None = None
+
+
+class JudgeChoice(DomainModel):
+    type: Literal['choice'] = 'choice'
+    choice: JudgeLabel
+    probabilities: Annotated[dict[JudgeLabel, JudgeProbability], Field(min_length=1, max_length=16)]
+    confidence: JudgeProbability
+
+    @model_validator(mode='after')
+    def valid_distribution(self):
+        if (self.choice not in self.probabilities or abs(sum(self.probabilities.values()) - 1) > 1e-6
+                or self.probabilities[self.choice] != max(self.probabilities.values())):
+            raise ValueError('invalid choice distribution')
+        return self
+
+
+class JudgeNoul(DomainModel):
+    type: Literal['noul'] = 'noul'
+    noul: JudgeProbability
+
+
+class JudgeUsage(DomainModel):
+    input_tokens: MainTokenCount | None = None
+    output_tokens: MainTokenCount | None = None
+
+
+class JudgeResult(DomainModel):
+    status: Literal['ok', 'skipped', 'timed_out', 'failed', 'invalid']
+    reason_code: Union[JudgeSkipReason, Literal['timeout', 'provider_error', 'invalid_response',
+        'invalid_request', 'config_changed']] | None = None
+    evidence: Literal['not_sent', 'sent_unknown', 'received']
+    local_request_id: UUID
+    input_hash: SHA256
+    scope: ScopeSnapshot
+    elapsed_ms: NonNegativeInt
+    model: Literal['jev-1.13.0'] | None = None
+    answers: Annotated[dict[JudgePurpose, Annotated[Union[JudgeChoice, JudgeNoul],
+        Field(discriminator='type')]], Field(max_length=3)] = Field(default_factory=dict)
+    provider_request_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] | None = None
+    usage: JudgeUsage | None = None
+
+    @model_validator(mode='after')
+    def result_evidence(self):
+        if self.status == 'ok':
+            if (self.reason_code is not None or self.evidence != 'received' or not self.answers
+                    or self.model is None or self.elapsed_ms >= 2000):
+                raise ValueError('usable judge result needs received validated answers')
+            for purpose, answer in self.answers.items():
+                if purpose == 'possible_result_guarantee':
+                    if type(answer) is not JudgeNoul:
+                        raise ValueError('fixed question answer type mismatch')
+                else:
+                    options = (set(get_args(AssistantSkill)) | {'unknown'} if purpose == 'primary_intent'
+                               else set(get_args(JudgeMaterialKind)))
+                    if type(answer) is not JudgeChoice or set(answer.probabilities) != options:
+                        raise ValueError('fixed question options mismatch')
+        elif self.answers or self.reason_code is None:
+            raise ValueError('unusable judge result must not carry answers')
+        if self.status == 'skipped' and (self.evidence != 'not_sent' or self.reason_code not in
+                ('unconfigured', 'no_budget', 'no_egress', 'explicit_skill', 'not_needed', 'stale_scope')):
+            raise ValueError('skipped judge cannot claim a request')
+        if self.evidence != 'received' and (self.usage is not None or self.provider_request_id is not None
+                                           or self.model is not None):
+            raise ValueError('unknown or unsent judge cannot claim received metadata')
+        return self
+
+
+class RouteDecision(DomainModel):
+    workflow: AssistantSkill | None
+    source: Literal['explicit', 'jev', 'current']
+    reason_code: Literal['explicit_skill', 'explicit_unavailable', 'jev_suggestion',
+                         'no_suggestion', 'unavailable_suggestion']
+
+    @model_validator(mode='after')
+    def selection_source(self):
+        if self.workflow is None:
+            if self.source != 'current' or self.reason_code not in (
+                    'explicit_unavailable', 'no_suggestion', 'unavailable_suggestion'):
+                raise ValueError('no selected workflow must preserve current flow')
+        elif (self.source, self.reason_code) not in (('explicit', 'explicit_skill'), ('jev', 'jev_suggestion')):
+            raise ValueError('selected workflow needs explicit or judge source')
+        return self

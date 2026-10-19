@@ -1,0 +1,23 @@
+.F..                                                                     [100%]
+================================== FAILURES ===================================
+___ test_installation_is_idempotent_in_both_provider_orders[jev-then-main] ____
+
+modules = (<module 'cn_contract.assistant.providers.jev' from 'D:\\Documents\\ChatGPT\\������Ŀ\\src\\cn_contract\\assistant\\provid...ntract.assistant.providers.main' from 'D:\\Documents\\ChatGPT\\������Ŀ\\src\\cn_contract\\assistant\\providers\\main.py'>)
+
+    @pytest.mark.parametrize('modules',[(main,jev),(jev,main)],ids=['main-then-jev','jev-then-main'])
+    def test_installation_is_idempotent_in_both_provider_orders(modules):
+        original=logging.getLogRecordFactory()
+        try:
+            for module in modules:module._protect_logs()
+            installed=logging.getLogRecordFactory()
+            for _ in range(32):
+                for module in modules:module._protect_logs()
+>           assert logging.getLogRecordFactory() is installed
+E           assert <function _protect_logs.<locals>.factory at 0x000002A4CC754040> is <function _protect_logs.<locals>.factory at 0x000002A4CC754180>
+E            +  where <function _protect_logs.<locals>.factory at 0x000002A4CC754040> = <function getLogRecordFactory at 0x000002A4C84FB7E0>()
+E            +    where <function getLogRecordFactory at 0x000002A4C84FB7E0> = logging.getLogRecordFactory
+
+.local\jev-adapter-20261020\review-spec\probe_logging.py:21: AssertionError
+=========================== short test summary info ===========================
+FAILED .local/jev-adapter-20261020/review-spec/probe_logging.py::test_installation_is_idempotent_in_both_provider_orders[jev-then-main]
+1 failed, 3 passed in 0.46s

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="4" time="0.390" timestamp="2026-10-20T01:34:29.386327+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.jev-adapter-20261020.review-spec.probe_logging" name="test_installation_is_idempotent_in_both_provider_orders[main-then-jev]" time="0.001" /><testcase classname=".local.jev-adapter-20261020.review-spec.probe_logging" name="test_installation_is_idempotent_in_both_provider_orders[jev-then-main]" time="0.001"><failure message="assert &lt;function _protect_logs.&lt;locals&gt;.factory at 0x000002A4CC754040&gt; is &lt;function _protect_logs.&lt;locals&gt;.factory at 0x000002A4CC754180&gt;&#10; +  where &lt;function _protect_logs.&lt;locals&gt;.factory at 0x000002A4CC754040&gt; = &lt;function getLogRecordFactory at 0x000002A4C84FB7E0&gt;()&#10; +    where &lt;function getLogRecordFactory at 0x000002A4C84FB7E0&gt; = logging.getLogRecordFactory">modules = (&lt;module 'cn_contract.assistant.providers.jev' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\provid...ntract.assistant.providers.main' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\main.py'&gt;)
+
+    @pytest.mark.parametrize('modules',[(main,jev),(jev,main)],ids=['main-then-jev','jev-then-main'])
+    def test_installation_is_idempotent_in_both_provider_orders(modules):
+        original=logging.getLogRecordFactory()
+        try:
+            for module in modules:module._protect_logs()
+            installed=logging.getLogRecordFactory()
+            for _ in range(32):
+                for module in modules:module._protect_logs()
+&gt;           assert logging.getLogRecordFactory() is installed
+E           assert &lt;function _protect_logs.&lt;locals&gt;.factory at 0x000002A4CC754040&gt; is &lt;function _protect_logs.&lt;locals&gt;.factory at 0x000002A4CC754180&gt;
+E            +  where &lt;function _protect_logs.&lt;locals&gt;.factory at 0x000002A4CC754040&gt; = &lt;function getLogRecordFactory at 0x000002A4C84FB7E0&gt;()
+E            +    where &lt;function getLogRecordFactory at 0x000002A4C84FB7E0&gt; = logging.getLogRecordFactory
+
+.local\jev-adapter-20261020\review-spec\probe_logging.py:21: AssertionError</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_logging" name="test_repeated_main_auxiliary_use_cannot_overflow_global_logging_stack" time="0.001" /><testcase classname=".local.jev-adapter-20261020.review-spec.probe_logging" name="test_main_jev_and_unrelated_async_contexts_remain_independent" time="0.016" /></testsuite></testsuites>

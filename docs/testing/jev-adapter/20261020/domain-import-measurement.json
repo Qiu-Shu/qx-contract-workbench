@@ -1,0 +1,181 @@
+{
+  "kind": "isolated_domain_import_not_whole_app",
+  "source_sha256": {
+    "baseline_7dd5abb": "6b395d19029575695a423e802ef8f65f21e57b53076e53dca860944c54f3cdce",
+    "current": "9d16e632bd0f50149b6843cf4781669e9f7032e0dc55fae59a22752f5bc28516"
+  },
+  "inputs_stable": true,
+  "samples": [
+    {
+      "round": 1,
+      "mode": "baseline_7dd5abb",
+      "exit_code": 0,
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\domain_import_probe.py",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\baseline-domain.py"
+      ],
+      "import_ms": 273.514,
+      "before": {
+        "working_set_bytes": 13426688,
+        "private_bytes": 8183808
+      },
+      "after": {
+        "working_set_bytes": 39223296,
+        "private_bytes": 30699520
+      },
+      "delta": {
+        "working_set_bytes": 25796608,
+        "private_bytes": 22515712
+      },
+      "httpx2_imported": false,
+      "model_types": 219
+    },
+    {
+      "round": 1,
+      "mode": "current",
+      "exit_code": 0,
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\domain_import_probe.py",
+        "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\domain.py"
+      ],
+      "import_ms": 290.696,
+      "before": {
+        "working_set_bytes": 13307904,
+        "private_bytes": 8060928
+      },
+      "after": {
+        "working_set_bytes": 39718912,
+        "private_bytes": 31068160
+      },
+      "delta": {
+        "working_set_bytes": 26411008,
+        "private_bytes": 23007232
+      },
+      "httpx2_imported": false,
+      "model_types": 226
+    },
+    {
+      "round": 2,
+      "mode": "current",
+      "exit_code": 0,
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\domain_import_probe.py",
+        "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\domain.py"
+      ],
+      "import_ms": 284.878,
+      "before": {
+        "working_set_bytes": 13459456,
+        "private_bytes": 8224768
+      },
+      "after": {
+        "working_set_bytes": 39415808,
+        "private_bytes": 30814208
+      },
+      "delta": {
+        "working_set_bytes": 25956352,
+        "private_bytes": 22589440
+      },
+      "httpx2_imported": false,
+      "model_types": 226
+    },
+    {
+      "round": 2,
+      "mode": "baseline_7dd5abb",
+      "exit_code": 0,
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\domain_import_probe.py",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\baseline-domain.py"
+      ],
+      "import_ms": 272.626,
+      "before": {
+        "working_set_bytes": 13336576,
+        "private_bytes": 8085504
+      },
+      "after": {
+        "working_set_bytes": 39227392,
+        "private_bytes": 30736384
+      },
+      "delta": {
+        "working_set_bytes": 25890816,
+        "private_bytes": 22650880
+      },
+      "httpx2_imported": false,
+      "model_types": 219
+    },
+    {
+      "round": 3,
+      "mode": "baseline_7dd5abb",
+      "exit_code": 0,
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\domain_import_probe.py",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\baseline-domain.py"
+      ],
+      "import_ms": 281.82,
+      "before": {
+        "working_set_bytes": 13328384,
+        "private_bytes": 8077312
+      },
+      "after": {
+        "working_set_bytes": 39075840,
+        "private_bytes": 30547968
+      },
+      "delta": {
+        "working_set_bytes": 25747456,
+        "private_bytes": 22470656
+      },
+      "httpx2_imported": false,
+      "model_types": 219
+    },
+    {
+      "round": 3,
+      "mode": "current",
+      "exit_code": 0,
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\domain_import_probe.py",
+        "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\domain.py"
+      ],
+      "import_ms": 283.315,
+      "before": {
+        "working_set_bytes": 13434880,
+        "private_bytes": 8196096
+      },
+      "after": {
+        "working_set_bytes": 39460864,
+        "private_bytes": 30818304
+      },
+      "delta": {
+        "working_set_bytes": 26025984,
+        "private_bytes": 22622208
+      },
+      "httpx2_imported": false,
+      "model_types": 226
+    }
+  ],
+  "median_import_ms": {
+    "baseline_7dd5abb": 273.514,
+    "current": 284.878
+  },
+  "median_private_delta_bytes": {
+    "baseline_7dd5abb": 22515712,
+    "current": 22622208
+  },
+  "note": "Three interleaved fresh Python processes per version; OS/cache variation retained. Not installer size, whole desktop startup, or overall RSS improvement."
+}

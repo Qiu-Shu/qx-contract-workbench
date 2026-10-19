@@ -1,0 +1,22 @@
+[
+  "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+  "-X",
+  "utf8",
+  "-m",
+  "PyInstaller",
+  "--noconfirm",
+  "--onedir",
+  "--name",
+  "jev-probe",
+  "--distpath",
+  "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\frozen-probe",
+  "--workpath",
+  "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020\\build-probe",
+  "--specpath",
+  "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-adapter-20261020",
+  "--paths",
+  "D:\\Documents\\ChatGPT\\律所项目\\src",
+  "--exclude-module",
+  "pytest",
+  "D:\\Documents\\ChatGPT\\律所项目\\tests\\helpers\\synthetic_jev_entry.py"
+]

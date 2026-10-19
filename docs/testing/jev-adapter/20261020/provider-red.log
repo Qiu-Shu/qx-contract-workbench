@@ -1,0 +1,1584 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                               [100%]
+================================== FAILURES ===================================
+_ test_local_skip_does_not_resolve_secret_import_http_or_dispatch[disabled-unconfigured] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922EFE0530>
+case = 'disabled', reason = 'unconfigured'
+
+    @pytest.mark.parametrize('case,reason', [('disabled', 'unconfigured'), ('default', 'no_egress'),
+        ('explicit', 'explicit_skill'), ('empty', 'not_needed'), ('no_budget', 'no_budget'),
+        ('no_egress', 'no_egress'), ('stale_scope', 'stale_scope')])
+    def test_local_skip_does_not_resolve_secret_import_http_or_dispatch(monkeypatch, case, reason):
+>       module = api(); original = builtins.__import__; touched = []
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_local_skip_does_not_resolve_secret_import_http_or_dispatch[default-no_egress] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922EFE3110>
+case = 'default', reason = 'no_egress'
+
+    @pytest.mark.parametrize('case,reason', [('disabled', 'unconfigured'), ('default', 'no_egress'),
+        ('explicit', 'explicit_skill'), ('empty', 'not_needed'), ('no_budget', 'no_budget'),
+        ('no_egress', 'no_egress'), ('stale_scope', 'stale_scope')])
+    def test_local_skip_does_not_resolve_secret_import_http_or_dispatch(monkeypatch, case, reason):
+>       module = api(); original = builtins.__import__; touched = []
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_local_skip_does_not_resolve_secret_import_http_or_dispatch[explicit-explicit_skill] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922EFE22D0>
+case = 'explicit', reason = 'explicit_skill'
+
+    @pytest.mark.parametrize('case,reason', [('disabled', 'unconfigured'), ('default', 'no_egress'),
+        ('explicit', 'explicit_skill'), ('empty', 'not_needed'), ('no_budget', 'no_budget'),
+        ('no_egress', 'no_egress'), ('stale_scope', 'stale_scope')])
+    def test_local_skip_does_not_resolve_secret_import_http_or_dispatch(monkeypatch, case, reason):
+>       module = api(); original = builtins.__import__; touched = []
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_local_skip_does_not_resolve_secret_import_http_or_dispatch[empty-not_needed] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922EFE18B0>
+case = 'empty', reason = 'not_needed'
+
+    @pytest.mark.parametrize('case,reason', [('disabled', 'unconfigured'), ('default', 'no_egress'),
+        ('explicit', 'explicit_skill'), ('empty', 'not_needed'), ('no_budget', 'no_budget'),
+        ('no_egress', 'no_egress'), ('stale_scope', 'stale_scope')])
+    def test_local_skip_does_not_resolve_secret_import_http_or_dispatch(monkeypatch, case, reason):
+>       module = api(); original = builtins.__import__; touched = []
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_local_skip_does_not_resolve_secret_import_http_or_dispatch[no_budget-no_budget] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922EFE3530>
+case = 'no_budget', reason = 'no_budget'
+
+    @pytest.mark.parametrize('case,reason', [('disabled', 'unconfigured'), ('default', 'no_egress'),
+        ('explicit', 'explicit_skill'), ('empty', 'not_needed'), ('no_budget', 'no_budget'),
+        ('no_egress', 'no_egress'), ('stale_scope', 'stale_scope')])
+    def test_local_skip_does_not_resolve_secret_import_http_or_dispatch(monkeypatch, case, reason):
+>       module = api(); original = builtins.__import__; touched = []
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_local_skip_does_not_resolve_secret_import_http_or_dispatch[no_egress-no_egress] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922F0315B0>
+case = 'no_egress', reason = 'no_egress'
+
+    @pytest.mark.parametrize('case,reason', [('disabled', 'unconfigured'), ('default', 'no_egress'),
+        ('explicit', 'explicit_skill'), ('empty', 'not_needed'), ('no_budget', 'no_budget'),
+        ('no_egress', 'no_egress'), ('stale_scope', 'stale_scope')])
+    def test_local_skip_does_not_resolve_secret_import_http_or_dispatch(monkeypatch, case, reason):
+>       module = api(); original = builtins.__import__; touched = []
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_local_skip_does_not_resolve_secret_import_http_or_dispatch[stale_scope-stale_scope] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922F0321E0>
+case = 'stale_scope', reason = 'stale_scope'
+
+    @pytest.mark.parametrize('case,reason', [('disabled', 'unconfigured'), ('default', 'no_egress'),
+        ('explicit', 'explicit_skill'), ('empty', 'not_needed'), ('no_budget', 'no_budget'),
+        ('no_egress', 'no_egress'), ('stale_scope', 'stale_scope')])
+    def test_local_skip_does_not_resolve_secret_import_http_or_dispatch(monkeypatch, case, reason):
+>       module = api(); original = builtins.__import__; touched = []
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_real_loopback_sends_one_fixed_question_once_without_identity_or_proxy[primary_intent] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922F033110>
+purpose = 'primary_intent'
+
+    @pytest.mark.parametrize('purpose', ['primary_intent', 'material_kind', 'possible_result_guarantee'])
+    def test_real_loopback_sends_one_fixed_question_once_without_identity_or_proxy(monkeypatch, purpose):
+        value = request(purpose)
+        monkeypatch.setenv('HTTP_PROXY', 'http://127.0.0.1:1')
+        monkeypatch.setenv('HTTPS_PROXY', 'http://127.0.0.1:1')
+        monkeypatch.setenv('ALL_PROXY', 'http://127.0.0.1:1')
+        with server(raw(envelope(value)), headers={'x-typesafe-request-id': 'synthetic-response'}) as (url, calls, _):
+>           instance = provider(url); result = asyncio.run(instance.judge(value))
+                       ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_real_loopback_sends_one_fixed_question_once_without_identity_or_proxy[material_kind] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922EFE3D70>
+purpose = 'material_kind'
+
+    @pytest.mark.parametrize('purpose', ['primary_intent', 'material_kind', 'possible_result_guarantee'])
+    def test_real_loopback_sends_one_fixed_question_once_without_identity_or_proxy(monkeypatch, purpose):
+        value = request(purpose)
+        monkeypatch.setenv('HTTP_PROXY', 'http://127.0.0.1:1')
+        monkeypatch.setenv('HTTPS_PROXY', 'http://127.0.0.1:1')
+        monkeypatch.setenv('ALL_PROXY', 'http://127.0.0.1:1')
+        with server(raw(envelope(value)), headers={'x-typesafe-request-id': 'synthetic-response'}) as (url, calls, _):
+>           instance = provider(url); result = asyncio.run(instance.judge(value))
+                       ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_real_loopback_sends_one_fixed_question_once_without_identity_or_proxy[possible_result_guarantee] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922EFE15E0>
+purpose = 'possible_result_guarantee'
+
+    @pytest.mark.parametrize('purpose', ['primary_intent', 'material_kind', 'possible_result_guarantee'])
+    def test_real_loopback_sends_one_fixed_question_once_without_identity_or_proxy(monkeypatch, purpose):
+        value = request(purpose)
+        monkeypatch.setenv('HTTP_PROXY', 'http://127.0.0.1:1')
+        monkeypatch.setenv('HTTPS_PROXY', 'http://127.0.0.1:1')
+        monkeypatch.setenv('ALL_PROXY', 'http://127.0.0.1:1')
+        with server(raw(envelope(value)), headers={'x-typesafe-request-id': 'synthetic-response'}) as (url, calls, _):
+>           instance = provider(url); result = asyncio.run(instance.judge(value))
+                       ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_synthetic_factory_cannot_point_to_arbitrary_destination[https://api.typesafe.ai/v1/systemone] _
+
+url = 'https://api.typesafe.ai/v1/systemone'
+
+    @pytest.mark.parametrize('url', ['https://api.typesafe.ai/v1/systemone',
+        'http://localhost:123/v1/systemone', 'http://127.0.0.1:0/v1/systemone',
+        'http://127.0.0.1:65536/v1/systemone', 'http://127.0.0.1:0123/v1/systemone',
+        'http://user@127.0.0.1:123/v1/systemone', 'http://127.0.0.1:123/v1/systemone?x=1',
+        'http://127.0.0.1:123/v1/systemone/', 'http://127.0.0.2:123/v1/systemone'])
+    def test_synthetic_factory_cannot_point_to_arbitrary_destination(url):
+        with pytest.raises(ValueError, match='exact synthetic loopback required'):
+>           provider(url)
+
+tests\integration\test_jev_provider.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_synthetic_factory_cannot_point_to_arbitrary_destination[http://localhost:123/v1/systemone] _
+
+url = 'http://localhost:123/v1/systemone'
+
+    @pytest.mark.parametrize('url', ['https://api.typesafe.ai/v1/systemone',
+        'http://localhost:123/v1/systemone', 'http://127.0.0.1:0/v1/systemone',
+        'http://127.0.0.1:65536/v1/systemone', 'http://127.0.0.1:0123/v1/systemone',
+        'http://user@127.0.0.1:123/v1/systemone', 'http://127.0.0.1:123/v1/systemone?x=1',
+        'http://127.0.0.1:123/v1/systemone/', 'http://127.0.0.2:123/v1/systemone'])
+    def test_synthetic_factory_cannot_point_to_arbitrary_destination(url):
+        with pytest.raises(ValueError, match='exact synthetic loopback required'):
+>           provider(url)
+
+tests\integration\test_jev_provider.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.1:0/v1/systemone] _
+
+url = 'http://127.0.0.1:0/v1/systemone'
+
+    @pytest.mark.parametrize('url', ['https://api.typesafe.ai/v1/systemone',
+        'http://localhost:123/v1/systemone', 'http://127.0.0.1:0/v1/systemone',
+        'http://127.0.0.1:65536/v1/systemone', 'http://127.0.0.1:0123/v1/systemone',
+        'http://user@127.0.0.1:123/v1/systemone', 'http://127.0.0.1:123/v1/systemone?x=1',
+        'http://127.0.0.1:123/v1/systemone/', 'http://127.0.0.2:123/v1/systemone'])
+    def test_synthetic_factory_cannot_point_to_arbitrary_destination(url):
+        with pytest.raises(ValueError, match='exact synthetic loopback required'):
+>           provider(url)
+
+tests\integration\test_jev_provider.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.1:65536/v1/systemone] _
+
+url = 'http://127.0.0.1:65536/v1/systemone'
+
+    @pytest.mark.parametrize('url', ['https://api.typesafe.ai/v1/systemone',
+        'http://localhost:123/v1/systemone', 'http://127.0.0.1:0/v1/systemone',
+        'http://127.0.0.1:65536/v1/systemone', 'http://127.0.0.1:0123/v1/systemone',
+        'http://user@127.0.0.1:123/v1/systemone', 'http://127.0.0.1:123/v1/systemone?x=1',
+        'http://127.0.0.1:123/v1/systemone/', 'http://127.0.0.2:123/v1/systemone'])
+    def test_synthetic_factory_cannot_point_to_arbitrary_destination(url):
+        with pytest.raises(ValueError, match='exact synthetic loopback required'):
+>           provider(url)
+
+tests\integration\test_jev_provider.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.1:0123/v1/systemone] _
+
+url = 'http://127.0.0.1:0123/v1/systemone'
+
+    @pytest.mark.parametrize('url', ['https://api.typesafe.ai/v1/systemone',
+        'http://localhost:123/v1/systemone', 'http://127.0.0.1:0/v1/systemone',
+        'http://127.0.0.1:65536/v1/systemone', 'http://127.0.0.1:0123/v1/systemone',
+        'http://user@127.0.0.1:123/v1/systemone', 'http://127.0.0.1:123/v1/systemone?x=1',
+        'http://127.0.0.1:123/v1/systemone/', 'http://127.0.0.2:123/v1/systemone'])
+    def test_synthetic_factory_cannot_point_to_arbitrary_destination(url):
+        with pytest.raises(ValueError, match='exact synthetic loopback required'):
+>           provider(url)
+
+tests\integration\test_jev_provider.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_synthetic_factory_cannot_point_to_arbitrary_destination[http://user@127.0.0.1:123/v1/systemone] _
+
+url = 'http://user@127.0.0.1:123/v1/systemone'
+
+    @pytest.mark.parametrize('url', ['https://api.typesafe.ai/v1/systemone',
+        'http://localhost:123/v1/systemone', 'http://127.0.0.1:0/v1/systemone',
+        'http://127.0.0.1:65536/v1/systemone', 'http://127.0.0.1:0123/v1/systemone',
+        'http://user@127.0.0.1:123/v1/systemone', 'http://127.0.0.1:123/v1/systemone?x=1',
+        'http://127.0.0.1:123/v1/systemone/', 'http://127.0.0.2:123/v1/systemone'])
+    def test_synthetic_factory_cannot_point_to_arbitrary_destination(url):
+        with pytest.raises(ValueError, match='exact synthetic loopback required'):
+>           provider(url)
+
+tests\integration\test_jev_provider.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.1:123/v1/systemone?x=1] _
+
+url = 'http://127.0.0.1:123/v1/systemone?x=1'
+
+    @pytest.mark.parametrize('url', ['https://api.typesafe.ai/v1/systemone',
+        'http://localhost:123/v1/systemone', 'http://127.0.0.1:0/v1/systemone',
+        'http://127.0.0.1:65536/v1/systemone', 'http://127.0.0.1:0123/v1/systemone',
+        'http://user@127.0.0.1:123/v1/systemone', 'http://127.0.0.1:123/v1/systemone?x=1',
+        'http://127.0.0.1:123/v1/systemone/', 'http://127.0.0.2:123/v1/systemone'])
+    def test_synthetic_factory_cannot_point_to_arbitrary_destination(url):
+        with pytest.raises(ValueError, match='exact synthetic loopback required'):
+>           provider(url)
+
+tests\integration\test_jev_provider.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.1:123/v1/systemone/] _
+
+url = 'http://127.0.0.1:123/v1/systemone/'
+
+    @pytest.mark.parametrize('url', ['https://api.typesafe.ai/v1/systemone',
+        'http://localhost:123/v1/systemone', 'http://127.0.0.1:0/v1/systemone',
+        'http://127.0.0.1:65536/v1/systemone', 'http://127.0.0.1:0123/v1/systemone',
+        'http://user@127.0.0.1:123/v1/systemone', 'http://127.0.0.1:123/v1/systemone?x=1',
+        'http://127.0.0.1:123/v1/systemone/', 'http://127.0.0.2:123/v1/systemone'])
+    def test_synthetic_factory_cannot_point_to_arbitrary_destination(url):
+        with pytest.raises(ValueError, match='exact synthetic loopback required'):
+>           provider(url)
+
+tests\integration\test_jev_provider.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.2:123/v1/systemone] _
+
+url = 'http://127.0.0.2:123/v1/systemone'
+
+    @pytest.mark.parametrize('url', ['https://api.typesafe.ai/v1/systemone',
+        'http://localhost:123/v1/systemone', 'http://127.0.0.1:0/v1/systemone',
+        'http://127.0.0.1:65536/v1/systemone', 'http://127.0.0.1:0123/v1/systemone',
+        'http://user@127.0.0.1:123/v1/systemone', 'http://127.0.0.1:123/v1/systemone?x=1',
+        'http://127.0.0.1:123/v1/systemone/', 'http://127.0.0.2:123/v1/systemone'])
+    def test_synthetic_factory_cannot_point_to_arbitrary_destination(url):
+        with pytest.raises(ValueError, match='exact synthetic loopback required'):
+>           provider(url)
+
+tests\integration\test_jev_provider.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_non_200_and_redirect_have_one_post_and_no_retry[301] __________
+
+status = 301
+
+    @pytest.mark.parametrize('status', [301, 307, 401, 429, 529])
+    def test_non_200_and_redirect_have_one_post_and_no_retry(status):
+        value = request()
+        with server(raw(envelope(value))) as (sink, sink_calls, _):
+            with server(b'{}', status=status, headers={'Location': sink, 'Retry-After': '1'}) as (url, calls, _):
+>               result = asyncio.run(provider(url).judge(value))
+                                     ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_non_200_and_redirect_have_one_post_and_no_retry[307] __________
+
+status = 307
+
+    @pytest.mark.parametrize('status', [301, 307, 401, 429, 529])
+    def test_non_200_and_redirect_have_one_post_and_no_retry(status):
+        value = request()
+        with server(raw(envelope(value))) as (sink, sink_calls, _):
+            with server(b'{}', status=status, headers={'Location': sink, 'Retry-After': '1'}) as (url, calls, _):
+>               result = asyncio.run(provider(url).judge(value))
+                                     ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_non_200_and_redirect_have_one_post_and_no_retry[401] __________
+
+status = 401
+
+    @pytest.mark.parametrize('status', [301, 307, 401, 429, 529])
+    def test_non_200_and_redirect_have_one_post_and_no_retry(status):
+        value = request()
+        with server(raw(envelope(value))) as (sink, sink_calls, _):
+            with server(b'{}', status=status, headers={'Location': sink, 'Retry-After': '1'}) as (url, calls, _):
+>               result = asyncio.run(provider(url).judge(value))
+                                     ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_non_200_and_redirect_have_one_post_and_no_retry[429] __________
+
+status = 429
+
+    @pytest.mark.parametrize('status', [301, 307, 401, 429, 529])
+    def test_non_200_and_redirect_have_one_post_and_no_retry(status):
+        value = request()
+        with server(raw(envelope(value))) as (sink, sink_calls, _):
+            with server(b'{}', status=status, headers={'Location': sink, 'Retry-After': '1'}) as (url, calls, _):
+>               result = asyncio.run(provider(url).judge(value))
+                                     ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_non_200_and_redirect_have_one_post_and_no_retry[529] __________
+
+status = 529
+
+    @pytest.mark.parametrize('status', [301, 307, 401, 429, 529])
+    def test_non_200_and_redirect_have_one_post_and_no_retry(status):
+        value = request()
+        with server(raw(envelope(value))) as (sink, sink_calls, _):
+            with server(b'{}', status=status, headers={'Location': sink, 'Retry-After': '1'}) as (url, calls, _):
+>               result = asyncio.run(provider(url).judge(value))
+                                     ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____ test_partial_or_late_response_is_unknown_and_never_retried[headers] _____
+
+mode = 'headers'
+
+    @pytest.mark.parametrize('mode', ['headers', 'body', 'chunks', 'truncated', 'oversize'])
+    def test_partial_or_late_response_is_unknown_and_never_retried(mode):
+        value = request(); body = raw(envelope(value))
+        options = {'header_pause': .3} if mode == 'headers' else {'pause': .3} if mode == 'body' else (
+            {'chunks': [body[i:i+20] for i in range(0, len(body), 20)], 'pause': .025} if mode == 'chunks' else
+            {'declared_length': len(body) + 50} if mode == 'truncated' else {})
+        with server(body, **options) as (url, calls, _):
+>           instance = provider(url, timeout_ms=150, max_response_bytes=20 if mode == 'oversize' else 262144)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______ test_partial_or_late_response_is_unknown_and_never_retried[body] _______
+
+mode = 'body'
+
+    @pytest.mark.parametrize('mode', ['headers', 'body', 'chunks', 'truncated', 'oversize'])
+    def test_partial_or_late_response_is_unknown_and_never_retried(mode):
+        value = request(); body = raw(envelope(value))
+        options = {'header_pause': .3} if mode == 'headers' else {'pause': .3} if mode == 'body' else (
+            {'chunks': [body[i:i+20] for i in range(0, len(body), 20)], 'pause': .025} if mode == 'chunks' else
+            {'declared_length': len(body) + 50} if mode == 'truncated' else {})
+        with server(body, **options) as (url, calls, _):
+>           instance = provider(url, timeout_ms=150, max_response_bytes=20 if mode == 'oversize' else 262144)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____ test_partial_or_late_response_is_unknown_and_never_retried[chunks] ______
+
+mode = 'chunks'
+
+    @pytest.mark.parametrize('mode', ['headers', 'body', 'chunks', 'truncated', 'oversize'])
+    def test_partial_or_late_response_is_unknown_and_never_retried(mode):
+        value = request(); body = raw(envelope(value))
+        options = {'header_pause': .3} if mode == 'headers' else {'pause': .3} if mode == 'body' else (
+            {'chunks': [body[i:i+20] for i in range(0, len(body), 20)], 'pause': .025} if mode == 'chunks' else
+            {'declared_length': len(body) + 50} if mode == 'truncated' else {})
+        with server(body, **options) as (url, calls, _):
+>           instance = provider(url, timeout_ms=150, max_response_bytes=20 if mode == 'oversize' else 262144)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____ test_partial_or_late_response_is_unknown_and_never_retried[truncated] ____
+
+mode = 'truncated'
+
+    @pytest.mark.parametrize('mode', ['headers', 'body', 'chunks', 'truncated', 'oversize'])
+    def test_partial_or_late_response_is_unknown_and_never_retried(mode):
+        value = request(); body = raw(envelope(value))
+        options = {'header_pause': .3} if mode == 'headers' else {'pause': .3} if mode == 'body' else (
+            {'chunks': [body[i:i+20] for i in range(0, len(body), 20)], 'pause': .025} if mode == 'chunks' else
+            {'declared_length': len(body) + 50} if mode == 'truncated' else {})
+        with server(body, **options) as (url, calls, _):
+>           instance = provider(url, timeout_ms=150, max_response_bytes=20 if mode == 'oversize' else 262144)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____ test_partial_or_late_response_is_unknown_and_never_retried[oversize] _____
+
+mode = 'oversize'
+
+    @pytest.mark.parametrize('mode', ['headers', 'body', 'chunks', 'truncated', 'oversize'])
+    def test_partial_or_late_response_is_unknown_and_never_retried(mode):
+        value = request(); body = raw(envelope(value))
+        options = {'header_pause': .3} if mode == 'headers' else {'pause': .3} if mode == 'body' else (
+            {'chunks': [body[i:i+20] for i in range(0, len(body), 20)], 'pause': .025} if mode == 'chunks' else
+            {'declared_length': len(body) + 50} if mode == 'truncated' else {})
+        with server(body, **options) as (url, calls, _):
+>           instance = provider(url, timeout_ms=150, max_response_bytes=20 if mode == 'oversize' else 262144)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____________ test_cancellation_propagates_without_background_retry ____________
+
+    def test_cancellation_propagates_without_background_retry():
+        value = request()
+        with server(raw(envelope(value)), pause=.5) as (url, calls, seen):
+            async def exercise():
+                task = asyncio.create_task(provider(url).judge(value))
+                while not seen.is_set():
+                    await asyncio.sleep(.002)
+                task.cancel()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+                await asyncio.sleep(.025)
+>           asyncio.run(exercise())
+
+tests\integration\test_jev_provider.py:201: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_jev_provider.py:194: in exercise
+    task = asyncio.create_task(provider(url).judge(value))
+                               ^^^^^^^^^^^^^
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____ test_config_change_during_io_drops_answers_but_retains_received_usage ____
+
+    def test_config_change_during_io_drops_answers_but_retains_received_usage():
+        value = request()
+        with server(raw(envelope(value)), pause=.08) as (url, calls, seen):
+>           instance = provider(url)
+                       ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____________ test_expected_config_mismatch_never_resolves_secret _____________
+
+    def test_expected_config_mismatch_never_resolves_secret():
+        def forbidden():
+            pytest.fail('stale config resolved secret')
+>       result = asyncio.run(api().JevProvider(config(), forbidden, preflight=lambda *_: None).judge(
+                             ^^^^^
+            request(), expected_config=d.JevConfig()))
+
+tests\integration\test_jev_provider.py:223: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____________ test_wire_oversize_is_invalid_without_secret_or_http _____________
+
+    def test_wire_oversize_is_invalid_without_secret_or_http():
+        calls = []
+>       result = asyncio.run(api().JevProvider(config(max_input_bytes=5), lambda: calls.append(1),
+                             ^^^^^
+            preflight=lambda *_: None).judge(request()))
+
+tests\integration\test_jev_provider.py:230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup[preflight] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922F053F80>
+stage = 'preflight'
+
+    @pytest.mark.parametrize('stage', ['preflight', 'secret', 'import', 'decode', 'cleanup'])
+    def test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup(monkeypatch, stage):
+>       module = api(); value = request(); original_import = builtins.__import__
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup[secret] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922F053140>
+stage = 'secret'
+
+    @pytest.mark.parametrize('stage', ['preflight', 'secret', 'import', 'decode', 'cleanup'])
+    def test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup(monkeypatch, stage):
+>       module = api(); value = request(); original_import = builtins.__import__
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup[import] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922F0957F0>
+stage = 'import'
+
+    @pytest.mark.parametrize('stage', ['preflight', 'secret', 'import', 'decode', 'cleanup'])
+    def test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup(monkeypatch, stage):
+>       module = api(); value = request(); original_import = builtins.__import__
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup[decode] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922F096120>
+stage = 'decode'
+
+    @pytest.mark.parametrize('stage', ['preflight', 'secret', 'import', 'decode', 'cleanup'])
+    def test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup(monkeypatch, stage):
+>       module = api(); value = request(); original_import = builtins.__import__
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup[cleanup] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922F052ED0>
+stage = 'cleanup'
+
+    @pytest.mark.parametrize('stage', ['preflight', 'secret', 'import', 'decode', 'cleanup'])
+    def test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup(monkeypatch, stage):
+>       module = api(); value = request(); original_import = builtins.__import__
+                 ^^^^^
+
+tests\integration\test_jev_provider.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____ test_private_transport_logs_are_sanitized_and_other_context_is_not ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001922F03F110>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x000001922F03E270>
+
+    def test_private_transport_logs_are_sanitized_and_other_context_is_not(monkeypatch, caplog):
+        import httpx2
+        original = httpx2.AsyncClient.send
+    
+        async def sending(self, *args, **kwargs):
+            try:
+                raise ValueError(KEY + TEXT)
+            except ValueError:
+                logging.getLogger('httpx2.future').warning(KEY + TEXT, exc_info=True, stack_info=True)
+            await asyncio.sleep(.01)
+            return await original(self, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx2.AsyncClient, 'send', sending)
+        value = request()
+        caplog.set_level(logging.DEBUG)
+        with server(raw(envelope(value))) as (url, calls, _):
+            async def exercise():
+                task = asyncio.create_task(provider(url).judge(value))
+                await asyncio.sleep(.005)
+                logging.getLogger('httpx2.other').warning('outside-context-visible')
+                return await task
+>           result = asyncio.run(exercise())
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:302: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_jev_provider.py:298: in exercise
+    task = asyncio.create_task(provider(url).judge(value))
+                               ^^^^^^^^^^^^^
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+------------------------------ Captured log call ------------------------------
+DEBUG    asyncio:proactor_events.py:634 Using proactor: IocpProactor
+_ test_invalid_or_reflected_response_contains_no_private_text[invalid-answer] _
+
+mode = 'invalid-answer'
+
+    @pytest.mark.parametrize('mode', ['invalid-answer', 'reflect-body', 'reflect-header'])
+    def test_invalid_or_reflected_response_contains_no_private_text(mode):
+        value = request(); body = envelope(value); headers = {'x-typesafe-request-id': 'safe-id'}
+        if mode == 'invalid-answer':
+            body['answers']['primary_intent']['choice'] = TEXT
+        elif mode == 'reflect-body':
+            body[KEY] = TEXT
+        else:
+            headers['x-typesafe-request-id'] = KEY
+        with server(raw(body), headers=headers) as (url, calls, _):
+>           result = asyncio.run(provider(url).judge(value))
+                                 ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:317: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__ test_invalid_or_reflected_response_contains_no_private_text[reflect-body] __
+
+mode = 'reflect-body'
+
+    @pytest.mark.parametrize('mode', ['invalid-answer', 'reflect-body', 'reflect-header'])
+    def test_invalid_or_reflected_response_contains_no_private_text(mode):
+        value = request(); body = envelope(value); headers = {'x-typesafe-request-id': 'safe-id'}
+        if mode == 'invalid-answer':
+            body['answers']['primary_intent']['choice'] = TEXT
+        elif mode == 'reflect-body':
+            body[KEY] = TEXT
+        else:
+            headers['x-typesafe-request-id'] = KEY
+        with server(raw(body), headers=headers) as (url, calls, _):
+>           result = asyncio.run(provider(url).judge(value))
+                                 ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:317: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_invalid_or_reflected_response_contains_no_private_text[reflect-header] _
+
+mode = 'reflect-header'
+
+    @pytest.mark.parametrize('mode', ['invalid-answer', 'reflect-body', 'reflect-header'])
+    def test_invalid_or_reflected_response_contains_no_private_text(mode):
+        value = request(); body = envelope(value); headers = {'x-typesafe-request-id': 'safe-id'}
+        if mode == 'invalid-answer':
+            body['answers']['primary_intent']['choice'] = TEXT
+        elif mode == 'reflect-body':
+            body[KEY] = TEXT
+        else:
+            headers['x-typesafe-request-id'] = KEY
+        with server(raw(body), headers=headers) as (url, calls, _):
+>           result = asyncio.run(provider(url).judge(value))
+                                 ^^^^^^^^^^^^^
+
+tests\integration\test_jev_provider.py:317: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_jev_provider.py:106: in provider
+    return api().JevProvider.for_synthetic_loopback(config(**changes), lambda: KEY, url,
+           ^^^^^
+tests\integration\test_jev_provider.py:25: in api
+    return importlib.import_module('cn_contract.assistant.providers.jev')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.jev'
+import_ = <function _gcd_import at 0x0000019229BB80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.jev'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_jev_provider.py::test_local_skip_does_not_resolve_secret_import_http_or_dispatch[disabled-unconfigured]
+FAILED tests/integration/test_jev_provider.py::test_local_skip_does_not_resolve_secret_import_http_or_dispatch[default-no_egress]
+FAILED tests/integration/test_jev_provider.py::test_local_skip_does_not_resolve_secret_import_http_or_dispatch[explicit-explicit_skill]
+FAILED tests/integration/test_jev_provider.py::test_local_skip_does_not_resolve_secret_import_http_or_dispatch[empty-not_needed]
+FAILED tests/integration/test_jev_provider.py::test_local_skip_does_not_resolve_secret_import_http_or_dispatch[no_budget-no_budget]
+FAILED tests/integration/test_jev_provider.py::test_local_skip_does_not_resolve_secret_import_http_or_dispatch[no_egress-no_egress]
+FAILED tests/integration/test_jev_provider.py::test_local_skip_does_not_resolve_secret_import_http_or_dispatch[stale_scope-stale_scope]
+FAILED tests/integration/test_jev_provider.py::test_real_loopback_sends_one_fixed_question_once_without_identity_or_proxy[primary_intent]
+FAILED tests/integration/test_jev_provider.py::test_real_loopback_sends_one_fixed_question_once_without_identity_or_proxy[material_kind]
+FAILED tests/integration/test_jev_provider.py::test_real_loopback_sends_one_fixed_question_once_without_identity_or_proxy[possible_result_guarantee]
+FAILED tests/integration/test_jev_provider.py::test_synthetic_factory_cannot_point_to_arbitrary_destination[https://api.typesafe.ai/v1/systemone]
+FAILED tests/integration/test_jev_provider.py::test_synthetic_factory_cannot_point_to_arbitrary_destination[http://localhost:123/v1/systemone]
+FAILED tests/integration/test_jev_provider.py::test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.1:0/v1/systemone]
+FAILED tests/integration/test_jev_provider.py::test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.1:65536/v1/systemone]
+FAILED tests/integration/test_jev_provider.py::test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.1:0123/v1/systemone]
+FAILED tests/integration/test_jev_provider.py::test_synthetic_factory_cannot_point_to_arbitrary_destination[http://user@127.0.0.1:123/v1/systemone]
+FAILED tests/integration/test_jev_provider.py::test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.1:123/v1/systemone?x=1]
+FAILED tests/integration/test_jev_provider.py::test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.1:123/v1/systemone/]
+FAILED tests/integration/test_jev_provider.py::test_synthetic_factory_cannot_point_to_arbitrary_destination[http://127.0.0.2:123/v1/systemone]
+FAILED tests/integration/test_jev_provider.py::test_non_200_and_redirect_have_one_post_and_no_retry[301]
+FAILED tests/integration/test_jev_provider.py::test_non_200_and_redirect_have_one_post_and_no_retry[307]
+FAILED tests/integration/test_jev_provider.py::test_non_200_and_redirect_have_one_post_and_no_retry[401]
+FAILED tests/integration/test_jev_provider.py::test_non_200_and_redirect_have_one_post_and_no_retry[429]
+FAILED tests/integration/test_jev_provider.py::test_non_200_and_redirect_have_one_post_and_no_retry[529]
+FAILED tests/integration/test_jev_provider.py::test_partial_or_late_response_is_unknown_and_never_retried[headers]
+FAILED tests/integration/test_jev_provider.py::test_partial_or_late_response_is_unknown_and_never_retried[body]
+FAILED tests/integration/test_jev_provider.py::test_partial_or_late_response_is_unknown_and_never_retried[chunks]
+FAILED tests/integration/test_jev_provider.py::test_partial_or_late_response_is_unknown_and_never_retried[truncated]
+FAILED tests/integration/test_jev_provider.py::test_partial_or_late_response_is_unknown_and_never_retried[oversize]
+FAILED tests/integration/test_jev_provider.py::test_cancellation_propagates_without_background_retry
+FAILED tests/integration/test_jev_provider.py::test_config_change_during_io_drops_answers_but_retains_received_usage
+FAILED tests/integration/test_jev_provider.py::test_expected_config_mismatch_never_resolves_secret
+FAILED tests/integration/test_jev_provider.py::test_wire_oversize_is_invalid_without_secret_or_http
+FAILED tests/integration/test_jev_provider.py::test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup[preflight]
+FAILED tests/integration/test_jev_provider.py::test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup[secret]
+FAILED tests/integration/test_jev_provider.py::test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup[import]
+FAILED tests/integration/test_jev_provider.py::test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup[decode]
+FAILED tests/integration/test_jev_provider.py::test_one_deadline_includes_synchronous_preparation_parsing_and_cleanup[cleanup]
+FAILED tests/integration/test_jev_provider.py::test_private_transport_logs_are_sanitized_and_other_context_is_not
+FAILED tests/integration/test_jev_provider.py::test_invalid_or_reflected_response_contains_no_private_text[invalid-answer]
+FAILED tests/integration/test_jev_provider.py::test_invalid_or_reflected_response_contains_no_private_text[reflect-body]
+FAILED tests/integration/test_jev_provider.py::test_invalid_or_reflected_response_contains_no_private_text[reflect-header]
+42 failed in 1.46s

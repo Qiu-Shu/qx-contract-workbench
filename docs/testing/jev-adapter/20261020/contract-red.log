@@ -1,0 +1,397 @@
+FFFFFFFFFFFFFFFFFFFFFFFFF                                                [100%]
+================================== FAILURES ===================================
+____________ test_default_disabled_fixed_model_and_bounded_request ____________
+
+    def test_default_disabled_fixed_model_and_bounded_request():
+>       config = d.JevConfig()
+                 ^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JevConfig'
+
+tests\unit\test_jev_contract_routing.py:29: AttributeError
+__________ test_probabilities_are_numbers_not_truth_or_strings[True] __________
+
+value = True
+
+    @pytest.mark.parametrize('value', [True, False, '0.5', -0.01, 1.01, float('nan'), float('inf')])
+    def test_probabilities_are_numbers_not_truth_or_strings(value):
+>       with pytest.raises(ValidationError): d.JudgeNoul(noul=value)
+                                             ^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeNoul'
+
+tests\unit\test_jev_contract_routing.py:43: AttributeError
+_________ test_probabilities_are_numbers_not_truth_or_strings[False] __________
+
+value = False
+
+    @pytest.mark.parametrize('value', [True, False, '0.5', -0.01, 1.01, float('nan'), float('inf')])
+    def test_probabilities_are_numbers_not_truth_or_strings(value):
+>       with pytest.raises(ValidationError): d.JudgeNoul(noul=value)
+                                             ^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeNoul'
+
+tests\unit\test_jev_contract_routing.py:43: AttributeError
+__________ test_probabilities_are_numbers_not_truth_or_strings[0.5] ___________
+
+value = '0.5'
+
+    @pytest.mark.parametrize('value', [True, False, '0.5', -0.01, 1.01, float('nan'), float('inf')])
+    def test_probabilities_are_numbers_not_truth_or_strings(value):
+>       with pytest.raises(ValidationError): d.JudgeNoul(noul=value)
+                                             ^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeNoul'
+
+tests\unit\test_jev_contract_routing.py:43: AttributeError
+_________ test_probabilities_are_numbers_not_truth_or_strings[-0.01] __________
+
+value = -0.01
+
+    @pytest.mark.parametrize('value', [True, False, '0.5', -0.01, 1.01, float('nan'), float('inf')])
+    def test_probabilities_are_numbers_not_truth_or_strings(value):
+>       with pytest.raises(ValidationError): d.JudgeNoul(noul=value)
+                                             ^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeNoul'
+
+tests\unit\test_jev_contract_routing.py:43: AttributeError
+__________ test_probabilities_are_numbers_not_truth_or_strings[1.01] __________
+
+value = 1.01
+
+    @pytest.mark.parametrize('value', [True, False, '0.5', -0.01, 1.01, float('nan'), float('inf')])
+    def test_probabilities_are_numbers_not_truth_or_strings(value):
+>       with pytest.raises(ValidationError): d.JudgeNoul(noul=value)
+                                             ^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeNoul'
+
+tests\unit\test_jev_contract_routing.py:43: AttributeError
+__________ test_probabilities_are_numbers_not_truth_or_strings[nan] ___________
+
+value = nan
+
+    @pytest.mark.parametrize('value', [True, False, '0.5', -0.01, 1.01, float('nan'), float('inf')])
+    def test_probabilities_are_numbers_not_truth_or_strings(value):
+>       with pytest.raises(ValidationError): d.JudgeNoul(noul=value)
+                                             ^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeNoul'
+
+tests\unit\test_jev_contract_routing.py:43: AttributeError
+__________ test_probabilities_are_numbers_not_truth_or_strings[inf] ___________
+
+value = inf
+
+    @pytest.mark.parametrize('value', [True, False, '0.5', -0.01, 1.01, float('nan'), float('inf')])
+    def test_probabilities_are_numbers_not_truth_or_strings(value):
+>       with pytest.raises(ValidationError): d.JudgeNoul(noul=value)
+                                             ^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeNoul'
+
+tests\unit\test_jev_contract_routing.py:43: AttributeError
+_ test_choice_does_not_repair_invalid_probability_distribution[a-probabilities0] _
+
+choice = 'a', probabilities = {}
+
+    @pytest.mark.parametrize('choice, probabilities', [('a', {}), ('a', {'b': 1}),
+        ('a', {'a': 0.4, 'b': 0.6}), ('a', {'a': 0.8, 'b': 0.8})])
+    def test_choice_does_not_repair_invalid_probability_distribution(choice, probabilities):
+>       with pytest.raises(ValidationError): d.JudgeChoice(choice=choice, probabilities=probabilities, confidence=0.4)
+                                             ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:50: AttributeError
+_ test_choice_does_not_repair_invalid_probability_distribution[a-probabilities1] _
+
+choice = 'a', probabilities = {'b': 1}
+
+    @pytest.mark.parametrize('choice, probabilities', [('a', {}), ('a', {'b': 1}),
+        ('a', {'a': 0.4, 'b': 0.6}), ('a', {'a': 0.8, 'b': 0.8})])
+    def test_choice_does_not_repair_invalid_probability_distribution(choice, probabilities):
+>       with pytest.raises(ValidationError): d.JudgeChoice(choice=choice, probabilities=probabilities, confidence=0.4)
+                                             ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:50: AttributeError
+_ test_choice_does_not_repair_invalid_probability_distribution[a-probabilities2] _
+
+choice = 'a', probabilities = {'a': 0.4, 'b': 0.6}
+
+    @pytest.mark.parametrize('choice, probabilities', [('a', {}), ('a', {'b': 1}),
+        ('a', {'a': 0.4, 'b': 0.6}), ('a', {'a': 0.8, 'b': 0.8})])
+    def test_choice_does_not_repair_invalid_probability_distribution(choice, probabilities):
+>       with pytest.raises(ValidationError): d.JudgeChoice(choice=choice, probabilities=probabilities, confidence=0.4)
+                                             ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:50: AttributeError
+_ test_choice_does_not_repair_invalid_probability_distribution[a-probabilities3] _
+
+choice = 'a', probabilities = {'a': 0.8, 'b': 0.8}
+
+    @pytest.mark.parametrize('choice, probabilities', [('a', {}), ('a', {'b': 1}),
+        ('a', {'a': 0.4, 'b': 0.6}), ('a', {'a': 0.8, 'b': 0.8})])
+    def test_choice_does_not_repair_invalid_probability_distribution(choice, probabilities):
+>       with pytest.raises(ValidationError): d.JudgeChoice(choice=choice, probabilities=probabilities, confidence=0.4)
+                                             ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:50: AttributeError
+________ test_tied_choice_and_unknown_usage_remain_distinct_from_zero _________
+
+    def test_tied_choice_and_unknown_usage_remain_distinct_from_zero():
+>       value = d.JudgeChoice(choice='a', probabilities={'a': 0.5, 'b': 0.5}, confidence=0)
+                ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:54: AttributeError
+_ test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state[changes0] _
+
+changes = {'reason_code': 'timeout', 'status': 'timed_out'}
+
+    @pytest.mark.parametrize('changes', [dict(status='timed_out', reason_code='timeout'),
+        dict(evidence='not_sent'), dict(evidence='sent_unknown'), dict(model=None), dict(answers={})])
+    def test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state(changes):
+>       with pytest.raises(ValidationError): result(**changes)
+                                             ^^^^^^^^^^^^^^^^^
+
+tests\unit\test_jev_contract_routing.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+choice = 'client_reply'
+changes = {'reason_code': 'timeout', 'status': 'timed_out'}
+
+    def result(choice='client_reply', **changes):
+        fields = dict(status='ok', evidence='received', reason_code=None, local_request_id=uuid4(),
+            input_hash='1'*64, scope=scope(), elapsed_ms=10, model='jev-1.13.0',
+>           answers={'primary_intent': d.JudgeChoice(choice=choice, probabilities={choice: 1}, confidence=1)})
+                                       ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:19: AttributeError
+_ test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state[changes1] _
+
+changes = {'evidence': 'not_sent'}
+
+    @pytest.mark.parametrize('changes', [dict(status='timed_out', reason_code='timeout'),
+        dict(evidence='not_sent'), dict(evidence='sent_unknown'), dict(model=None), dict(answers={})])
+    def test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state(changes):
+>       with pytest.raises(ValidationError): result(**changes)
+                                             ^^^^^^^^^^^^^^^^^
+
+tests\unit\test_jev_contract_routing.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+choice = 'client_reply', changes = {'evidence': 'not_sent'}
+
+    def result(choice='client_reply', **changes):
+        fields = dict(status='ok', evidence='received', reason_code=None, local_request_id=uuid4(),
+            input_hash='1'*64, scope=scope(), elapsed_ms=10, model='jev-1.13.0',
+>           answers={'primary_intent': d.JudgeChoice(choice=choice, probabilities={choice: 1}, confidence=1)})
+                                       ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:19: AttributeError
+_ test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state[changes2] _
+
+changes = {'evidence': 'sent_unknown'}
+
+    @pytest.mark.parametrize('changes', [dict(status='timed_out', reason_code='timeout'),
+        dict(evidence='not_sent'), dict(evidence='sent_unknown'), dict(model=None), dict(answers={})])
+    def test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state(changes):
+>       with pytest.raises(ValidationError): result(**changes)
+                                             ^^^^^^^^^^^^^^^^^
+
+tests\unit\test_jev_contract_routing.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+choice = 'client_reply', changes = {'evidence': 'sent_unknown'}
+
+    def result(choice='client_reply', **changes):
+        fields = dict(status='ok', evidence='received', reason_code=None, local_request_id=uuid4(),
+            input_hash='1'*64, scope=scope(), elapsed_ms=10, model='jev-1.13.0',
+>           answers={'primary_intent': d.JudgeChoice(choice=choice, probabilities={choice: 1}, confidence=1)})
+                                       ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:19: AttributeError
+_ test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state[changes3] _
+
+changes = {'model': None}
+
+    @pytest.mark.parametrize('changes', [dict(status='timed_out', reason_code='timeout'),
+        dict(evidence='not_sent'), dict(evidence='sent_unknown'), dict(model=None), dict(answers={})])
+    def test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state(changes):
+>       with pytest.raises(ValidationError): result(**changes)
+                                             ^^^^^^^^^^^^^^^^^
+
+tests\unit\test_jev_contract_routing.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+choice = 'client_reply', changes = {'model': None}
+
+    def result(choice='client_reply', **changes):
+        fields = dict(status='ok', evidence='received', reason_code=None, local_request_id=uuid4(),
+            input_hash='1'*64, scope=scope(), elapsed_ms=10, model='jev-1.13.0',
+>           answers={'primary_intent': d.JudgeChoice(choice=choice, probabilities={choice: 1}, confidence=1)})
+                                       ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:19: AttributeError
+_ test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state[changes4] _
+
+changes = {'answers': {}}
+
+    @pytest.mark.parametrize('changes', [dict(status='timed_out', reason_code='timeout'),
+        dict(evidence='not_sent'), dict(evidence='sent_unknown'), dict(model=None), dict(answers={})])
+    def test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state(changes):
+>       with pytest.raises(ValidationError): result(**changes)
+                                             ^^^^^^^^^^^^^^^^^
+
+tests\unit\test_jev_contract_routing.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+choice = 'client_reply', changes = {'answers': {}}
+
+    def result(choice='client_reply', **changes):
+        fields = dict(status='ok', evidence='received', reason_code=None, local_request_id=uuid4(),
+            input_hash='1'*64, scope=scope(), elapsed_ms=10, model='jev-1.13.0',
+>           answers={'primary_intent': d.JudgeChoice(choice=choice, probabilities={choice: 1}, confidence=1)})
+                                       ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:19: AttributeError
+_____________ test_timed_out_received_metadata_is_accounting_only _____________
+
+    def test_timed_out_received_metadata_is_accounting_only():
+        value = result(status='timed_out', reason_code='timeout', answers={},
+>           usage=d.JudgeUsage(input_tokens=3), provider_request_id='synthetic-receipt')
+                  ^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeUsage'
+
+tests\unit\test_jev_contract_routing.py:69: AttributeError
+___ test_explicit_skill_always_wins_without_mutating_full_request_or_judge ____
+
+    def test_explicit_skill_always_wins_without_mutating_full_request_or_judge():
+>       original = d.JudgeRequest(local_request_id=uuid4(), scope=scope(), purpose='primary_intent',
+                   ^^^^^^^^^^^^^^
+            text='�Ȼظ��鹹�ͻ���������ȫ���ϳɸ��������鷨����', explicit_skill='material_organize')
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeRequest'. Did you mean: 'ModelRequest'?
+
+tests\unit\test_jev_contract_routing.py:74: AttributeError
+_ test_unavailable_explicit_choice_never_falls_back_to_judge[not_registered] __
+
+explicit = 'not_registered'
+
+    @pytest.mark.parametrize('explicit', ['not_registered', 'contract_review', ''])
+    def test_unavailable_explicit_choice_never_falls_back_to_judge(explicit):
+>       decision = choose(explicit, result(), {'client_reply'})
+                                    ^^^^^^^^
+
+tests\unit\test_jev_contract_routing.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+choice = 'client_reply', changes = {}
+
+    def result(choice='client_reply', **changes):
+        fields = dict(status='ok', evidence='received', reason_code=None, local_request_id=uuid4(),
+            input_hash='1'*64, scope=scope(), elapsed_ms=10, model='jev-1.13.0',
+>           answers={'primary_intent': d.JudgeChoice(choice=choice, probabilities={choice: 1}, confidence=1)})
+                                       ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:19: AttributeError
+_ test_unavailable_explicit_choice_never_falls_back_to_judge[contract_review] _
+
+explicit = 'contract_review'
+
+    @pytest.mark.parametrize('explicit', ['not_registered', 'contract_review', ''])
+    def test_unavailable_explicit_choice_never_falls_back_to_judge(explicit):
+>       decision = choose(explicit, result(), {'client_reply'})
+                                    ^^^^^^^^
+
+tests\unit\test_jev_contract_routing.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+choice = 'client_reply', changes = {}
+
+    def result(choice='client_reply', **changes):
+        fields = dict(status='ok', evidence='received', reason_code=None, local_request_id=uuid4(),
+            input_hash='1'*64, scope=scope(), elapsed_ms=10, model='jev-1.13.0',
+>           answers={'primary_intent': d.JudgeChoice(choice=choice, probabilities={choice: 1}, confidence=1)})
+                                       ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:19: AttributeError
+________ test_unavailable_explicit_choice_never_falls_back_to_judge[] _________
+
+explicit = ''
+
+    @pytest.mark.parametrize('explicit', ['not_registered', 'contract_review', ''])
+    def test_unavailable_explicit_choice_never_falls_back_to_judge(explicit):
+>       decision = choose(explicit, result(), {'client_reply'})
+                                    ^^^^^^^^
+
+tests\unit\test_jev_contract_routing.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+choice = 'client_reply', changes = {}
+
+    def result(choice='client_reply', **changes):
+        fields = dict(status='ok', evidence='received', reason_code=None, local_request_id=uuid4(),
+            input_hash='1'*64, scope=scope(), elapsed_ms=10, model='jev-1.13.0',
+>           answers={'primary_intent': d.JudgeChoice(choice=choice, probabilities={choice: 1}, confidence=1)})
+                                       ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:19: AttributeError
+________ test_valid_advice_only_selects_whitelisted_existing_workflow _________
+
+    def test_valid_advice_only_selects_whitelisted_existing_workflow():
+>       assert choose(None, result(), {'client_reply'}).workflow == 'client_reply'
+                            ^^^^^^^^
+
+tests\unit\test_jev_contract_routing.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+choice = 'client_reply', changes = {}
+
+    def result(choice='client_reply', **changes):
+        fields = dict(status='ok', evidence='received', reason_code=None, local_request_id=uuid4(),
+            input_hash='1'*64, scope=scope(), elapsed_ms=10, model='jev-1.13.0',
+>           answers={'primary_intent': d.JudgeChoice(choice=choice, probabilities={choice: 1}, confidence=1)})
+                                       ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:19: AttributeError
+__ test_material_mix_and_absent_or_forged_judge_do_not_replace_current_flow ___
+
+    def test_material_mix_and_absent_or_forged_judge_do_not_replace_current_flow():
+>       mixed = result(answers={'material_kind': d.JudgeChoice(choice='mixed', probabilities={'mixed': 1}, confidence=1)})
+                                                 ^^^^^^^^^^^^^
+E       AttributeError: module 'cn_contract.domain' has no attribute 'JudgeChoice'
+
+tests\unit\test_jev_contract_routing.py:98: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_jev_contract_routing.py::test_default_disabled_fixed_model_and_bounded_request
+FAILED tests/unit/test_jev_contract_routing.py::test_probabilities_are_numbers_not_truth_or_strings[True]
+FAILED tests/unit/test_jev_contract_routing.py::test_probabilities_are_numbers_not_truth_or_strings[False]
+FAILED tests/unit/test_jev_contract_routing.py::test_probabilities_are_numbers_not_truth_or_strings[0.5]
+FAILED tests/unit/test_jev_contract_routing.py::test_probabilities_are_numbers_not_truth_or_strings[-0.01]
+FAILED tests/unit/test_jev_contract_routing.py::test_probabilities_are_numbers_not_truth_or_strings[1.01]
+FAILED tests/unit/test_jev_contract_routing.py::test_probabilities_are_numbers_not_truth_or_strings[nan]
+FAILED tests/unit/test_jev_contract_routing.py::test_probabilities_are_numbers_not_truth_or_strings[inf]
+FAILED tests/unit/test_jev_contract_routing.py::test_choice_does_not_repair_invalid_probability_distribution[a-probabilities0]
+FAILED tests/unit/test_jev_contract_routing.py::test_choice_does_not_repair_invalid_probability_distribution[a-probabilities1]
+FAILED tests/unit/test_jev_contract_routing.py::test_choice_does_not_repair_invalid_probability_distribution[a-probabilities2]
+FAILED tests/unit/test_jev_contract_routing.py::test_choice_does_not_repair_invalid_probability_distribution[a-probabilities3]
+FAILED tests/unit/test_jev_contract_routing.py::test_tied_choice_and_unknown_usage_remain_distinct_from_zero
+FAILED tests/unit/test_jev_contract_routing.py::test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state[changes0]
+FAILED tests/unit/test_jev_contract_routing.py::test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state[changes1]
+FAILED tests/unit/test_jev_contract_routing.py::test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state[changes2]
+FAILED tests/unit/test_jev_contract_routing.py::test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state[changes3]
+FAILED tests/unit/test_jev_contract_routing.py::test_result_cannot_mix_usable_answers_with_unknown_or_unsent_state[changes4]
+FAILED tests/unit/test_jev_contract_routing.py::test_timed_out_received_metadata_is_accounting_only
+FAILED tests/unit/test_jev_contract_routing.py::test_explicit_skill_always_wins_without_mutating_full_request_or_judge
+FAILED tests/unit/test_jev_contract_routing.py::test_unavailable_explicit_choice_never_falls_back_to_judge[not_registered]
+FAILED tests/unit/test_jev_contract_routing.py::test_unavailable_explicit_choice_never_falls_back_to_judge[contract_review]
+FAILED tests/unit/test_jev_contract_routing.py::test_unavailable_explicit_choice_never_falls_back_to_judge[]
+FAILED tests/unit/test_jev_contract_routing.py::test_valid_advice_only_selects_whitelisted_existing_workflow
+FAILED tests/unit/test_jev_contract_routing.py::test_material_mix_and_absent_or_forged_judge_do_not_replace_current_flow
+25 failed in 0.62s

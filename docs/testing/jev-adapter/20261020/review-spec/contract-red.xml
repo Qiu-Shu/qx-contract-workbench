@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="14" time="0.377" timestamp="2026-10-20T01:27:23.259318+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_ok_domain_result_requires_exact_fixed_question_semantics[missing_criteria]" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;">case = 'missing_criteria'
+
+    @pytest.mark.parametrize('case', ['missing_criteria', 'extra_criteria', 'wrong_type', 'wrong_kind_options'])
+    def test_ok_domain_result_requires_exact_fixed_question_semantics(case):
+        data = fields()
+        if case == 'missing_criteria': data['answers'] = {'primary_intent': answer(labels=('client_reply',))}
+        elif case == 'extra_criteria': data['answers'] = {'primary_intent': answer(labels=PRIMARY+('invented',))}
+        elif case == 'wrong_type': data['answers'] = {'primary_intent': d.JudgeNoul(noul=1)}
+        else: data['answers'] = {'material_kind': answer()}
+&gt;       with pytest.raises(ValidationError): d.JudgeResult(**data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:30: Failed</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_ok_domain_result_requires_exact_fixed_question_semantics[extra_criteria]" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;">case = 'extra_criteria'
+
+    @pytest.mark.parametrize('case', ['missing_criteria', 'extra_criteria', 'wrong_type', 'wrong_kind_options'])
+    def test_ok_domain_result_requires_exact_fixed_question_semantics(case):
+        data = fields()
+        if case == 'missing_criteria': data['answers'] = {'primary_intent': answer(labels=('client_reply',))}
+        elif case == 'extra_criteria': data['answers'] = {'primary_intent': answer(labels=PRIMARY+('invented',))}
+        elif case == 'wrong_type': data['answers'] = {'primary_intent': d.JudgeNoul(noul=1)}
+        else: data['answers'] = {'material_kind': answer()}
+&gt;       with pytest.raises(ValidationError): d.JudgeResult(**data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:30: Failed</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_ok_domain_result_requires_exact_fixed_question_semantics[wrong_type]" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;">case = 'wrong_type'
+
+    @pytest.mark.parametrize('case', ['missing_criteria', 'extra_criteria', 'wrong_type', 'wrong_kind_options'])
+    def test_ok_domain_result_requires_exact_fixed_question_semantics(case):
+        data = fields()
+        if case == 'missing_criteria': data['answers'] = {'primary_intent': answer(labels=('client_reply',))}
+        elif case == 'extra_criteria': data['answers'] = {'primary_intent': answer(labels=PRIMARY+('invented',))}
+        elif case == 'wrong_type': data['answers'] = {'primary_intent': d.JudgeNoul(noul=1)}
+        else: data['answers'] = {'material_kind': answer()}
+&gt;       with pytest.raises(ValidationError): d.JudgeResult(**data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:30: Failed</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_ok_domain_result_requires_exact_fixed_question_semantics[wrong_kind_options]" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;">case = 'wrong_kind_options'
+
+    @pytest.mark.parametrize('case', ['missing_criteria', 'extra_criteria', 'wrong_type', 'wrong_kind_options'])
+    def test_ok_domain_result_requires_exact_fixed_question_semantics(case):
+        data = fields()
+        if case == 'missing_criteria': data['answers'] = {'primary_intent': answer(labels=('client_reply',))}
+        elif case == 'extra_criteria': data['answers'] = {'primary_intent': answer(labels=PRIMARY+('invented',))}
+        elif case == 'wrong_type': data['answers'] = {'primary_intent': d.JudgeNoul(noul=1)}
+        else: data['answers'] = {'material_kind': answer()}
+&gt;       with pytest.raises(ValidationError): d.JudgeResult(**data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:30: Failed</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_absolute_late_ok_result_is_rejected_by_domain_and_cannot_route[2001]" time="0.001"><failure message="AssertionError: assert 'client_reply' is None&#10; +  where 'client_reply' = RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion').workflow&#10; +    where RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion') = choose_workflow(None, JudgeResult(status='ok', reason_code=None, evidence='received', local_request_id=UUID('419e3b80-311e-4d7d-aef9-7fe7616..., 'content_draft': 0.0, 'legal_research': 0.0, 'unknown': 0.0}, confidence=1.0)}, provider_request_id=None, usage=None), {'client_reply', 'content_draft', 'contract_review', 'legal_research', 'material_organize', 'unknown'})&#10; +      where {'client_reply', 'content_draft', 'contract_review', 'legal_research', 'material_organize', 'unknown'} = set(('client_reply', 'material_organize', 'contract_review', 'content_draft', 'legal_research', 'unknown'))">elapsed = 2001
+
+    @pytest.mark.parametrize('elapsed', [2001, 999999])
+    def test_absolute_late_ok_result_is_rejected_by_domain_and_cannot_route(elapsed):
+        data = {**fields(), 'elapsed_ms': elapsed}
+        forged = d.JudgeResult.model_construct(**data)
+&gt;       assert choose_workflow(None, forged, set(PRIMARY)).workflow is None
+E       AssertionError: assert 'client_reply' is None
+E        +  where 'client_reply' = RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion').workflow
+E        +    where RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion') = choose_workflow(None, JudgeResult(status='ok', reason_code=None, evidence='received', local_request_id=UUID('419e3b80-311e-4d7d-aef9-7fe7616..., 'content_draft': 0.0, 'legal_research': 0.0, 'unknown': 0.0}, confidence=1.0)}, provider_request_id=None, usage=None), {'client_reply', 'content_draft', 'contract_review', 'legal_research', 'material_organize', 'unknown'})
+E        +      where {'client_reply', 'content_draft', 'contract_review', 'legal_research', 'material_organize', 'unknown'} = set(('client_reply', 'material_organize', 'contract_review', 'content_draft', 'legal_research', 'unknown'))
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:37: AssertionError</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_absolute_late_ok_result_is_rejected_by_domain_and_cannot_route[999999]" time="0.001"><failure message="AssertionError: assert 'client_reply' is None&#10; +  where 'client_reply' = RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion').workflow&#10; +    where RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion') = choose_workflow(None, JudgeResult(status='ok', reason_code=None, evidence='received', local_request_id=UUID('4e1615d4-6415-41d1-a1b8-4eebba3..., 'content_draft': 0.0, 'legal_research': 0.0, 'unknown': 0.0}, confidence=1.0)}, provider_request_id=None, usage=None), {'client_reply', 'content_draft', 'contract_review', 'legal_research', 'material_organize', 'unknown'})&#10; +      where {'client_reply', 'content_draft', 'contract_review', 'legal_research', 'material_organize', 'unknown'} = set(('client_reply', 'material_organize', 'contract_review', 'content_draft', 'legal_research', 'unknown'))">elapsed = 999999
+
+    @pytest.mark.parametrize('elapsed', [2001, 999999])
+    def test_absolute_late_ok_result_is_rejected_by_domain_and_cannot_route(elapsed):
+        data = {**fields(), 'elapsed_ms': elapsed}
+        forged = d.JudgeResult.model_construct(**data)
+&gt;       assert choose_workflow(None, forged, set(PRIMARY)).workflow is None
+E       AssertionError: assert 'client_reply' is None
+E        +  where 'client_reply' = RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion').workflow
+E        +    where RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion') = choose_workflow(None, JudgeResult(status='ok', reason_code=None, evidence='received', local_request_id=UUID('4e1615d4-6415-41d1-a1b8-4eebba3..., 'content_draft': 0.0, 'legal_research': 0.0, 'unknown': 0.0}, confidence=1.0)}, provider_request_id=None, usage=None), {'client_reply', 'content_draft', 'contract_review', 'legal_research', 'material_organize', 'unknown'})
+E        +      where {'client_reply', 'content_draft', 'contract_review', 'legal_research', 'material_organize', 'unknown'} = set(('client_reply', 'material_organize', 'contract_review', 'content_draft', 'legal_research', 'unknown'))
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:37: AssertionError</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_model_copy_missing_criteria_is_revalidated_before_routing" time="0.001"><failure message="AssertionError: assert 'client_reply' is None&#10; +  where 'client_reply' = RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion').workflow&#10; +    where RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion') = choose_workflow(None, JudgeResult(status='ok', reason_code=None, evidence='received', local_request_id=UUID('403d0fa4-2620-44c2-ba6e-bf04855...e', choice='client_reply', probabilities={'client_reply': 1.0}, confidence=1.0)}, provider_request_id=None, usage=None), {'client_reply'})">def test_model_copy_missing_criteria_is_revalidated_before_routing():
+        good = d.JudgeResult(**fields())
+        forged = good.model_copy(update={'answers': {'primary_intent': answer(labels=('client_reply',))}})
+&gt;       assert choose_workflow(None, forged, {'client_reply'}).workflow is None
+E       AssertionError: assert 'client_reply' is None
+E        +  where 'client_reply' = RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion').workflow
+E        +    where RouteDecision(workflow='client_reply', source='jev', reason_code='jev_suggestion') = choose_workflow(None, JudgeResult(status='ok', reason_code=None, evidence='received', local_request_id=UUID('403d0fa4-2620-44c2-ba6e-bf04855...e', choice='client_reply', probabilities={'client_reply': 1.0}, confidence=1.0)}, provider_request_id=None, usage=None), {'client_reply'})
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:44: AssertionError</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_route_decision_cannot_contradict_its_source[changes0]" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;">changes = {'reason_code': 'no_suggestion', 'source': 'current', 'workflow': 'contract_review'}
+
+    @pytest.mark.parametrize('changes', [
+        dict(workflow='contract_review', source='current', reason_code='no_suggestion'),
+        dict(workflow=None, source='jev', reason_code='jev_suggestion'),
+        dict(workflow='client_reply', source='jev', reason_code='explicit_skill'),
+        dict(workflow='client_reply', source='explicit', reason_code='jev_suggestion'),
+        dict(workflow=None, source='current', reason_code='explicit_skill')])
+    def test_route_decision_cannot_contradict_its_source(changes):
+&gt;       with pytest.raises(ValidationError): d.RouteDecision(**changes)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:54: Failed</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_route_decision_cannot_contradict_its_source[changes1]" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;">changes = {'reason_code': 'jev_suggestion', 'source': 'jev', 'workflow': None}
+
+    @pytest.mark.parametrize('changes', [
+        dict(workflow='contract_review', source='current', reason_code='no_suggestion'),
+        dict(workflow=None, source='jev', reason_code='jev_suggestion'),
+        dict(workflow='client_reply', source='jev', reason_code='explicit_skill'),
+        dict(workflow='client_reply', source='explicit', reason_code='jev_suggestion'),
+        dict(workflow=None, source='current', reason_code='explicit_skill')])
+    def test_route_decision_cannot_contradict_its_source(changes):
+&gt;       with pytest.raises(ValidationError): d.RouteDecision(**changes)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:54: Failed</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_route_decision_cannot_contradict_its_source[changes2]" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;">changes = {'reason_code': 'explicit_skill', 'source': 'jev', 'workflow': 'client_reply'}
+
+    @pytest.mark.parametrize('changes', [
+        dict(workflow='contract_review', source='current', reason_code='no_suggestion'),
+        dict(workflow=None, source='jev', reason_code='jev_suggestion'),
+        dict(workflow='client_reply', source='jev', reason_code='explicit_skill'),
+        dict(workflow='client_reply', source='explicit', reason_code='jev_suggestion'),
+        dict(workflow=None, source='current', reason_code='explicit_skill')])
+    def test_route_decision_cannot_contradict_its_source(changes):
+&gt;       with pytest.raises(ValidationError): d.RouteDecision(**changes)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:54: Failed</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_route_decision_cannot_contradict_its_source[changes3]" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;">changes = {'reason_code': 'jev_suggestion', 'source': 'explicit', 'workflow': 'client_reply'}
+
+    @pytest.mark.parametrize('changes', [
+        dict(workflow='contract_review', source='current', reason_code='no_suggestion'),
+        dict(workflow=None, source='jev', reason_code='jev_suggestion'),
+        dict(workflow='client_reply', source='jev', reason_code='explicit_skill'),
+        dict(workflow='client_reply', source='explicit', reason_code='jev_suggestion'),
+        dict(workflow=None, source='current', reason_code='explicit_skill')])
+    def test_route_decision_cannot_contradict_its_source(changes):
+&gt;       with pytest.raises(ValidationError): d.RouteDecision(**changes)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:54: Failed</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_route_decision_cannot_contradict_its_source[changes4]" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;">changes = {'reason_code': 'explicit_skill', 'source': 'current', 'workflow': None}
+
+    @pytest.mark.parametrize('changes', [
+        dict(workflow='contract_review', source='current', reason_code='no_suggestion'),
+        dict(workflow=None, source='jev', reason_code='jev_suggestion'),
+        dict(workflow='client_reply', source='jev', reason_code='explicit_skill'),
+        dict(workflow='client_reply', source='explicit', reason_code='jev_suggestion'),
+        dict(workflow=None, source='current', reason_code='explicit_skill')])
+    def test_route_decision_cannot_contradict_its_source(changes):
+&gt;       with pytest.raises(ValidationError): d.RouteDecision(**changes)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'pydantic_core._pydantic_core.ValidationError'&gt;
+
+.local\jev-adapter-20261020\review-spec\probe_contract.py:54: Failed</failure></testcase><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_explicit_still_takes_precedence_over_invalid_auxiliary_result" time="0.000" /><testcase classname=".local.jev-adapter-20261020.review-spec.probe_contract" name="test_all_fixed_choices_and_noul_can_be_represented_without_route_escalation" time="0.001" /></testsuite></testsuites>

@@ -1,0 +1,28 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_______ test_configured_model_is_not_a_received_model_receipt[not_sent] _______
+
+evidence = 'not_sent'
+
+    @pytest.mark.parametrize('evidence', ['not_sent', 'sent_unknown'])
+    def test_configured_model_is_not_a_received_model_receipt(evidence):
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'pydantic_core._pydantic_core.ValidationError'>
+
+tests\unit\test_jev_contract_routing.py:126: Failed
+_____ test_configured_model_is_not_a_received_model_receipt[sent_unknown] _____
+
+evidence = 'sent_unknown'
+
+    @pytest.mark.parametrize('evidence', ['not_sent', 'sent_unknown'])
+    def test_configured_model_is_not_a_received_model_receipt(evidence):
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'pydantic_core._pydantic_core.ValidationError'>
+
+tests\unit\test_jev_contract_routing.py:126: Failed
+=========================== short test summary info ===========================
+FAILED tests/unit/test_jev_contract_routing.py::test_configured_model_is_not_a_received_model_receipt[not_sent]
+FAILED tests/unit/test_jev_contract_routing.py::test_configured_model_is_not_a_received_model_receipt[sent_unknown]
+2 failed, 28 deselected in 0.37s
