@@ -13,6 +13,7 @@ from ..ops.storage import quarantined, read_historical_artifact
 from ..security import ServiceError, authorize
 from .request_context import actor_in
 from .assistant_attachments import is_attachment_read_path
+from .assistant_generation import is_generation_read_path
 
 
 def attach_recovery(app, database):
@@ -28,6 +29,7 @@ def attach_recovery(app, database):
         safe_api = safe_api or path in ('/api/assistant/skills','/api/assistant/conversations') or re.fullmatch(
             r'/api/assistant/(?:conversations/[0-9a-f-]{36}(?:/runs/by-request/[0-9a-f-]{36})?|runs/[0-9a-f-]{36}(?:/events)?)',path)
         safe_api = safe_api or is_attachment_read_path(path)
+        safe_api = safe_api or is_generation_read_path(path)
         if ((request.method not in ('GET','HEAD','OPTIONS') and path not in ('/api/login','/api/logout'))
                 or path.startswith('/api/') and not safe_api):
             return JSONResponse({'code':'BLOCKED_LIVE'},status_code=409)

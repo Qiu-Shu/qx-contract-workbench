@@ -1,0 +1,20 @@
+[
+  ".venv/Scripts/python.exe",
+  "-X",
+  "utf8",
+  "-m",
+  "pytest",
+  "tests/integration/test_api_job_outcomes.py",
+  "tests/integration/test_api_query_jobs.py",
+  "tests/integration/test_assistant_generation.py",
+  "tests/integration/test_assistant_generation_routes.py",
+  "tests/integration/test_assistant_history_routes.py",
+  "tests/integration/test_assistant_model_startup.py",
+  "tests/integration/test_assistant_routes.py",
+  "tests/integration/test_assistant_task_manager.py",
+  "tests/integration/test_local_workbench.py",
+  "tests/integration/test_local_worker_contention.py",
+  "-q",
+  "--tb=short",
+  "--junitxml=.local\\chat-generation-http-20261019\\final-regression.xml"
+]

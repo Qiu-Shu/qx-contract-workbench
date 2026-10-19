@@ -52,7 +52,7 @@ def project_bundle(bundle,*,purpose='mock_demo',local_material=False):
 
 def create_app(settings: Settings, *, database: Database, synthetic_upload_hashes=None, synthetic_loopback_endpoints=(),
                synthetic_signing_user_ids=(), purpose='mock_demo', assisted_policy=None, local_materials_enabled=False,
-               assistant_home_enabled=False):
+               assistant_home_enabled=False, assistant_model_runtime=None):
     if not isinstance(database,Database):raise TypeError('explicit Database required')
     if type(assistant_home_enabled) is not bool:raise TypeError('assistant_home_enabled must be bool')
     settings=Settings.model_validate(settings.model_dump(mode='python'))
@@ -598,4 +598,6 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     register_assistant_attachments(app,database)
     from .assistant_pages import register_routes as register_assistant_pages
     register_assistant_pages(app,database)
+    from .assistant_generation import attach_generation
+    attach_generation(app,database,assistant_model_runtime)
     return app

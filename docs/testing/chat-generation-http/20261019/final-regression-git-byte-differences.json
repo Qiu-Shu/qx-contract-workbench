@@ -1,0 +1,78 @@
+{
+  "input_manifest": "final-regression-source-after.json",
+  "differences": [
+    {
+      "path": "rules/default-draft-cards.json",
+      "worktree_sha256": "28561b34d9897c900216850a2c5355194b568b85c15b8cc2cd7bafb00569b3e0",
+      "git_blob_sha256": "5a328c75123b83b7e74d8c356e09f439b8211a627539513de98856ea54fa5a2c",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/helpers/synthetic_documents.py",
+      "worktree_sha256": "0072fce05285f230b5620c18ac715ab4e024769f5ad3aa7e718b978eef253a73",
+      "git_blob_sha256": "030a6ad9c1046857ffb67cda6a6aca2a193fbac4f50116edcddb311912a0faf3",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/integration/test_case_bridge.py",
+      "worktree_sha256": "0c45b1aa3604f39c91a74d16e0b4ca680e241fa7e7706384eab24da6ef7e25ec",
+      "git_blob_sha256": "3b8fd93249669bed2b4a72221f541127d6713b5ea9e60700cd6666a7c154064f",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/integration/test_document_reparse.py",
+      "worktree_sha256": "35d2e8af708b86e232aeef7f78c427054e3f1e3b07f4c5f7a8142096f06d8802",
+      "git_blob_sha256": "607b3af4b474f5ec5f3cd5ff461c8f22e6d58c86acd17e913b983c85f76a2d91",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/integration/test_exports.py",
+      "worktree_sha256": "bed6648f4fd770904a38cfbe1f7e1187b07e9aa951da9de71678e2b3b314c71e",
+      "git_blob_sha256": "37980fb775037c9f4172917c017c05a6e89446e7b3edc3e0e0ad974b8e43bb2f",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/integration/test_local_material_boundaries.py",
+      "worktree_sha256": "8585535b6975027fe4de2dd4b2ec1302a8578b71244d415d754cb7746085c73d",
+      "git_blob_sha256": "6dc295f89536e57707d5f6bfd0064dc3962ef95764df77d8fc40562263d9fafc",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/integration/test_local_materials.py",
+      "worktree_sha256": "d4178ba1ce2ca28a63d80c6f087500fda0be0266c5bf0fec6fa21e92a4d1948f",
+      "git_blob_sha256": "5a0cf5fc0b56db1d49a00bbc2307df45feada177c35916b94ee889dce1157c48",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/integration/test_parsing.py",
+      "worktree_sha256": "d2dea9b44042f14ef9da9e8be60e121a8e635df4f9050279df5e5a4d9609c9c6",
+      "git_blob_sha256": "111ffbe24b9a0b2c24393bcbd04ab595ce9b49e26080c28246603ea4238fe16d",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/security/test_approval.py",
+      "worktree_sha256": "dcea01726c08a9390b6570d0b9d64c9c0ab58d08bbb4305786f08dd6d4b201af",
+      "git_blob_sha256": "962ae6d09c4d972903793e4c9a62b6a6083f76b2222940fa057af74f6e093cc2",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/security/test_upload.py",
+      "worktree_sha256": "311b9b0890635f1b62162d7d6e559d3711146dfe224c04d692607d84eabbf943",
+      "git_blob_sha256": "1e5409a87d4b7b3116300e2f0a9e99bcae451c5687c748b3511f713fe4fb0b9f",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/unit/test_document_parts.py",
+      "worktree_sha256": "8a0869c89937c1618cc418422337611dadb2047a5bdfb3a3da8035d19c2c102c",
+      "git_blob_sha256": "0ccf290517b82db75884720d11294d141dc050a522db24d1650a21e25c0b8f20",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    },
+    {
+      "path": "tests/unit/test_runtime_dependencies.py",
+      "worktree_sha256": "0bd877cf951709bb6765b8e6fee1fea80ee9f0c0de08478ad07d400c5e1e6b00",
+      "git_blob_sha256": "6a9bfc5ec879c04297e825baa3014a175e542649cd2fb87a638194e6882e03ef",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    }
+  ],
+  "note": "Run/build manifests describe measured worktree bytes. Existing baseline normalization differences are preserved, not silently rewritten."
+}

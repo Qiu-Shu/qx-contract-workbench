@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="22" skipped="0" tests="22" time="8.493" timestamp="2026-10-19T18:08:58.029984+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_task_manager" name="test_submit_commits_before_dispatch_and_replay_never_dispatches_twice" time="0.475"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CD9A84A0&gt;, Actor(user_id=UUID('191c5d86-c464-4e44-90b6-306c4b8d...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CDBBE8A0&gt;)
+
+    def test_submit_commits_before_dispatch_and_replay_never_dispatches_twice(world):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CD9A84A0&gt;, Actor(user_id=UUID('191c5d86-c464-4e44-90b6-306c4b8d...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CDBBE8A0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_immediate_close_seals_unsent_task_without_entering_runner" time="0.333"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDC0C710&gt;, Actor(user_id=UUID('d3d2eba8-9d21-4211-bb45-88a62025...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CED9BFE0&gt;)
+
+    def test_immediate_close_seals_unsent_task_without_entering_runner(world):
+        _, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDC0C710&gt;, Actor(user_id=UUID('d3d2eba8-9d21-4211-bb45-88a62025...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CED9BFE0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_old_records_and_restarts_never_acquire_dispatch_eligibility[queued]" time="0.462"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF6D580&gt;, Actor(user_id=UUID('b2c385ef-b79a-45f8-a974-a0d010fa...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF6D0A0&gt;)
+old_kind = 'queued'
+
+    @pytest.mark.parametrize('old_kind', ['queued', 'reserved'])
+    def test_old_records_and_restarts_never_acquire_dispatch_eligibility(world, old_kind):
+        database, actor, conversation, request, runtime = world
+        with database.session() as db:
+            old = (service.save_message(actor, conversation.scope.conversation_id, request, db)
+                   if old_kind == 'queued' else attempts.enqueue_generation(actor, conversation.scope.conversation_id, request, db, runtime))
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF6D580&gt;, Actor(user_id=UUID('b2c385ef-b79a-45f8-a974-a0d010fa...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF6D0A0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_old_records_and_restarts_never_acquire_dispatch_eligibility[reserved]" time="0.316"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF6D2E0&gt;, Actor(user_id=UUID('b3fc7607-67f7-42ca-b728-53930ea4...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF57890&gt;)
+old_kind = 'reserved'
+
+    @pytest.mark.parametrize('old_kind', ['queued', 'reserved'])
+    def test_old_records_and_restarts_never_acquire_dispatch_eligibility(world, old_kind):
+        database, actor, conversation, request, runtime = world
+        with database.session() as db:
+            old = (service.save_message(actor, conversation.scope.conversation_id, request, db)
+                   if old_kind == 'queued' else attempts.enqueue_generation(actor, conversation.scope.conversation_id, request, db, runtime))
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF6D2E0&gt;, Actor(user_id=UUID('b3fc7607-67f7-42ca-b728-53930ea4...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF57890&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_new_submission_requires_running_lifecycle_without_partial_rows[False]" time="0.428"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF6FC80&gt;, Actor(user_id=UUID('a98745f0-7188-441e-a3f8-0f249b8d...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF6F4D0&gt;)
+closed = False
+
+    @pytest.mark.parametrize('closed', [False, True])
+    def test_new_submission_requires_running_lifecycle_without_partial_rows(world, closed):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF6FC80&gt;, Actor(user_id=UUID('a98745f0-7188-441e-a3f8-0f249b8d...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF6F4D0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_new_submission_requires_running_lifecycle_without_partial_rows[True]" time="0.293"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDC0D700&gt;, Actor(user_id=UUID('2a4baaa4-acff-454b-a102-47ceb779...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CED9B740&gt;)
+closed = True
+
+    @pytest.mark.parametrize('closed', [False, True])
+    def test_new_submission_requires_running_lifecycle_without_partial_rows(world, closed):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDC0D700&gt;, Actor(user_id=UUID('2a4baaa4-acff-454b-a102-47ceb779...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CED9B740&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_requested_skill_is_not_dispatched_as_generic_generation[client_reply]" time="0.283"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF89100&gt;, Actor(user_id=UUID('b8364089-24f2-4143-ba62-17a8d3f7...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF88FE0&gt;)
+skill = 'client_reply'
+
+    @pytest.mark.parametrize('skill', ['client_reply','material_organize','contract_review','content_draft','legal_research'])
+    def test_requested_skill_is_not_dispatched_as_generic_generation(world, skill):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF89100&gt;, Actor(user_id=UUID('b8364089-24f2-4143-ba62-17a8d3f7...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF88FE0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_requested_skill_is_not_dispatched_as_generic_generation[material_organize]" time="0.287"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF03920&gt;, Actor(user_id=UUID('75ddbe11-426f-4280-9cf9-8704d697...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF02B70&gt;)
+skill = 'material_organize'
+
+    @pytest.mark.parametrize('skill', ['client_reply','material_organize','contract_review','content_draft','legal_research'])
+    def test_requested_skill_is_not_dispatched_as_generic_generation(world, skill):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF03920&gt;, Actor(user_id=UUID('75ddbe11-426f-4280-9cf9-8704d697...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF02B70&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_requested_skill_is_not_dispatched_as_generic_generation[contract_review]" time="0.296"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEFC2D20&gt;, Actor(user_id=UUID('cdb7a88b-abff-4421-9245-e47521ee...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF54CE0&gt;)
+skill = 'contract_review'
+
+    @pytest.mark.parametrize('skill', ['client_reply','material_organize','contract_review','content_draft','legal_research'])
+    def test_requested_skill_is_not_dispatched_as_generic_generation(world, skill):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEFC2D20&gt;, Actor(user_id=UUID('cdb7a88b-abff-4421-9245-e47521ee...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF54CE0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_requested_skill_is_not_dispatched_as_generic_generation[content_draft]" time="0.297"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDA1A4E0&gt;, Actor(user_id=UUID('95f5309a-984a-4736-a23f-82fc035c...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CF023050&gt;)
+skill = 'content_draft'
+
+    @pytest.mark.parametrize('skill', ['client_reply','material_organize','contract_review','content_draft','legal_research'])
+    def test_requested_skill_is_not_dispatched_as_generic_generation(world, skill):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDA1A4E0&gt;, Actor(user_id=UUID('95f5309a-984a-4736-a23f-82fc035c...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CF023050&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_requested_skill_is_not_dispatched_as_generic_generation[legal_research]" time="0.346"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CF055E50&gt;, Actor(user_id=UUID('cbc5d95f-0f72-402f-867a-99777d09...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CF0574A0&gt;)
+skill = 'legal_research'
+
+    @pytest.mark.parametrize('skill', ['client_reply','material_organize','contract_review','content_draft','legal_research'])
+    def test_requested_skill_is_not_dispatched_as_generic_generation(world, skill):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CF055E50&gt;, Actor(user_id=UUID('cbc5d95f-0f72-402f-867a-99777d09...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CF0574A0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_four_active_tasks_bound_admission_but_not_same_key_replay" time="0.313"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CF0AA720&gt;, Actor(user_id=UUID('8086907f-329d-43fd-b659-a3370eb9...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CF0ABE30&gt;)
+
+    def test_four_active_tasks_bound_admission_but_not_same_key_replay(world):
+        database, actor, _, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CF0AA720&gt;, Actor(user_id=UUID('8086907f-329d-43fd-b659-a3370eb9...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CF0ABE30&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_same_key_in_two_managers_is_owned_only_by_first_registration" time="0.297"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CF055FA0&gt;, Actor(user_id=UUID('e2248258-47d9-4eb6-9ed7-1ff08fd9...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CF055A90&gt;)
+
+    def test_same_key_in_two_managers_is_owned_only_by_first_registration(world):
+        _, actor, conversation, request, runtime = world
+&gt;       first, second = manager(world), manager(world)
+                        ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CF055FA0&gt;, Actor(user_id=UUID('e2248258-47d9-4eb6-9ed7-1ff08fd9...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CF055A90&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_dispatch_factory_failure_is_sealed_unsent_and_not_retried" time="0.285"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDA19760&gt;, Actor(user_id=UUID('eebc0b3b-3bb5-4efc-a51e-a436248d...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CED98E30&gt;)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001E8CED98AD0&gt;
+caplog = &lt;_pytest.logging.LogCaptureFixture object at 0x000001E8CED9AF90&gt;
+
+    def test_dispatch_factory_failure_is_sealed_unsent_and_not_retried(world, monkeypatch, caplog):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDA19760&gt;, Actor(user_id=UUID('eebc0b3b-3bb5-4efc-a51e-a436248d...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CED98E30&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_inflight_draft_write_keeps_candidate_valid_and_response_not_logged" time="0.296"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF22DE0&gt;, Actor(user_id=UUID('43760c76-b3b9-4977-9efb-f15fb056...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF235C0&gt;)
+caplog = &lt;_pytest.logging.LogCaptureFixture object at 0x000001E8CEF22CC0&gt;
+
+    def test_inflight_draft_write_keeps_candidate_valid_and_response_not_logged(world, caplog):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF22DE0&gt;, Actor(user_id=UUID('43760c76-b3b9-4977-9efb-f15fb056...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF235C0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_close_cancels_network_once_even_if_shutdown_caller_is_cancelled_twice" time="0.296"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF232F0&gt;, Actor(user_id=UUID('c88d1ddb-fb54-43c0-9ea8-1e38666a...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CDC0D9A0&gt;)
+
+    def test_close_cancels_network_once_even_if_shutdown_caller_is_cancelled_twice(world):
+        _, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF232F0&gt;, Actor(user_id=UUID('c88d1ddb-fb54-43c0-9ea8-1e38666a...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CDC0D9A0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_task_failure_and_revocation_leave_fixed_receipts_and_cleanup[revoked_before]" time="0.294"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDA19D60&gt;, Actor(user_id=UUID('d754b05d-48fe-4a11-84af-aa4dde07...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CED99520&gt;)
+change = 'revoked_before'
+caplog = &lt;_pytest.logging.LogCaptureFixture object at 0x000001E8CED9A060&gt;
+
+    @pytest.mark.parametrize('change', ['revoked_before', 'revoked_during', 'provider_exception'])
+    def test_task_failure_and_revocation_leave_fixed_receipts_and_cleanup(world, change, caplog):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:266: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDA19D60&gt;, Actor(user_id=UUID('d754b05d-48fe-4a11-84af-aa4dde07...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CED99520&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_task_failure_and_revocation_leave_fixed_receipts_and_cleanup[revoked_during]" time="0.291"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CED5FE00&gt;, Actor(user_id=UUID('64eb9f52-b233-4a0d-878b-27828e26...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF565D0&gt;)
+change = 'revoked_during'
+caplog = &lt;_pytest.logging.LogCaptureFixture object at 0x000001E8CEFC3B60&gt;
+
+    @pytest.mark.parametrize('change', ['revoked_before', 'revoked_during', 'provider_exception'])
+    def test_task_failure_and_revocation_leave_fixed_receipts_and_cleanup(world, change, caplog):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:266: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CED5FE00&gt;, Actor(user_id=UUID('64eb9f52-b233-4a0d-878b-27828e26...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF565D0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_task_failure_and_revocation_leave_fixed_receipts_and_cleanup[provider_exception]" time="0.470"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF6D910&gt;, Actor(user_id=UUID('c96a3f0a-efc6-432b-965e-13eb1157...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF6D2E0&gt;)
+change = 'provider_exception'
+caplog = &lt;_pytest.logging.LogCaptureFixture object at 0x000001E8CEF6FDD0&gt;
+
+    @pytest.mark.parametrize('change', ['revoked_before', 'revoked_during', 'provider_exception'])
+    def test_task_failure_and_revocation_leave_fixed_receipts_and_cleanup(world, change, caplog):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:266: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF6D910&gt;, Actor(user_id=UUID('c96a3f0a-efc6-432b-965e-13eb1157...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF6D2E0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_failed_registration_creates_no_task_or_attempt[missing_policy]" time="0.294"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF8AA80&gt;, Actor(user_id=UUID('3d9bdfd1-025a-4e83-9fbc-782e0740...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEFC1B20&gt;)
+failure_kind = 'missing_policy'
+
+    @pytest.mark.parametrize('failure_kind', ['missing_policy', 'unauthorized', 'stale_scope'])
+    def test_failed_registration_creates_no_task_or_attempt(world, failure_kind):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:305: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CEF8AA80&gt;, Actor(user_id=UUID('3d9bdfd1-025a-4e83-9fbc-782e0740...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEFC1B20&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_failed_registration_creates_no_task_or_attempt[unauthorized]" time="0.288"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDAC3320&gt;, Actor(user_id=UUID('0517ecf0-3b5b-4a54-96f7-f4c21341...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CF0AA7B0&gt;)
+failure_kind = 'unauthorized'
+
+    @pytest.mark.parametrize('failure_kind', ['missing_policy', 'unauthorized', 'stale_scope'])
+    def test_failed_registration_creates_no_task_or_attempt(world, failure_kind):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:305: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CDAC3320&gt;, Actor(user_id=UUID('0517ecf0-3b5b-4a54-96f7-f4c21341...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CF0AA7B0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase><testcase classname="tests.integration.test_assistant_task_manager" name="test_failed_registration_creates_no_task_or_attempt[stale_scope]" time="0.342"><failure message="AssertionError: application-scoped GenerationTasks is required&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')&#10; +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (&lt;cn_contract.persistence.Database object at 0x000001E8CF0A9010&gt;, Actor(user_id=UUID('e98de833-5ade-49cb-a024-e28ea1ff...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF032C0&gt;)
+failure_kind = 'stale_scope'
+
+    @pytest.mark.parametrize('failure_kind', ['missing_policy', 'unauthorized', 'stale_scope'])
+    def test_failed_registration_creates_no_task_or_attempt(world, failure_kind):
+        database, actor, conversation, request, runtime = world
+&gt;       tasks = manager(world)
+                ^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_task_manager.py:305: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001E8CF0A9010&gt;, Actor(user_id=UUID('e98de833-5ade-49cb-a024-e28ea1ff...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001E8CEF032C0&gt;)
+
+    def manager(world):
+        name = 'cn_contract.assistant.task_manager'
+&gt;       assert importlib.util.find_spec(name) is not None, 'application-scoped GenerationTasks is required'
+E       AssertionError: application-scoped GenerationTasks is required
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001E8C7025800&gt;('cn_contract.assistant.task_manager')
+E        +    where &lt;function find_spec at 0x000001E8C7025800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_assistant_task_manager.py:18: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.547" timestamp="2026-10-19T18:16:37.786309+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.chat-generation-http-20261019.test_independent_spec_probes" name="test_approved_text_over_wire_byte_cap_returns_fixed_client_error" time="0.584"><failure message="AssertionError: (500, 'Internal Server Error')&#10;assert 500 in {403, 413, 422}&#10; +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code">world = (&lt;cn_contract.persistence.Database object at 0x00000297D950B8F0&gt;, Actor(user_id=UUID('cf35b682-e60c-4a2b-8856-6f0e8ee2...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000297D842AC60&gt;)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/chat-generation-http-20261019/independent-wire-cap-tmp/test_approved_text_over_wire_b0')
+
+    def test_approved_text_over_wire_byte_cap_returns_fixed_client_error(world, tmp_path):
+        from pathlib import Path
+        from fastapi.testclient import TestClient
+        from cn_contract.assistant.providers.policy import sha
+        from cn_contract.web import local_server
+        from tests.integration.test_assistant_generation_routes import signin
+        database, actor, conversation, request, runtime = world
+        content = '#x1F98A' * 20000
+        request = d.AssistantMessageInput.model_validate({**request.model_dump(mode='python'), 'content':content})
+        runtime.policy = d.MainModelPolicy.model_validate({**runtime.policy.model_dump(mode='python'),
+            'allowed_content_sha256s':(sha(content),)})
+        root = Path(database.engine.url.database).parent
+        app = local_server.build_local_app(root, data_parent=tmp_path, assistant_model_runtime=runtime)
+        with TestClient(app, raise_server_exceptions=False) as client:
+            headers = signin(client)
+            base = '/api/assistant/conversations/'+str(conversation.scope.conversation_id)
+            response = client.post(base+'/generations', headers=headers, json=request.model_dump(mode='json'))
+            with database.session() as db:
+                assert db.scalar(text('SELECT COUNT(*) FROM assistant_model_attempts')) == 0
+                assert db.scalar(text('SELECT COUNT(*) FROM assistant_messages')) == 0
+            assert runtime.provider.calls == []
+&gt;           assert response.status_code in {403, 413, 422}, (response.status_code, response.text)
+E           AssertionError: (500, 'Internal Server Error')
+E           assert 500 in {403, 413, 422}
+E            +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code
+
+.local\chat-generation-http-20261019\test_independent_spec_probes.py:192: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="6" time="3.170" timestamp="2026-10-19T18:19:31.112813+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.chat-generation-http-20261019.test_standards_probe" name="test_previous_startup_failure_stops_worker_and_disposes" time="0.365"><failure message="AttributeError: 'State' object has no attribute 'worker_thread'">application = &lt;fastapi.applications.FastAPI object at 0x0000022D626DAD20&gt;
+
+    @asynccontextmanager
+    async def lifespan(application):
+        try:
+&gt;           recover_jobs(database)
+
+src\cn_contract\web\demo_server.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\jobs.py:85: in recover_jobs
+    s.require_storage(database)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+database = &lt;cn_contract.persistence.Database object at 0x0000022D60D64C20&gt;
+
+    def require_storage(database):
+        if not getattr(database, '_web_storage_initialized', False):
+&gt;           raise RuntimeError('initialize_storage(database) required explicitly')
+E           RuntimeError: initialize_storage(database) required explicitly
+
+src\cn_contract\web\storage.py:81: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;starlette.datastructures.State object at 0x0000022D6257FDA0&gt;
+key = 'worker_thread'
+
+    def __getattr__(self, key: Any) -&gt; Any:
+        try:
+&gt;           return self._state[key]
+                   ^^^^^^^^^^^^^^^^
+E           KeyError: 'worker_thread'
+
+.venv\Lib\site-packages\starlette\datastructures.py:683: KeyError
+
+During handling of the above exception, another exception occurred:
+
+world = (&lt;cn_contract.persistence.Database object at 0x0000022D60D64C20&gt;, Actor(user_id=UUID('9eb95d7b-fd30-4850-b67c-b11427e0...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x0000022D626DAD50&gt;)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022D626DADB0&gt;
+
+    def test_previous_startup_failure_stops_worker_and_disposes(world, monkeypatch):
+        database, _, _, _, runtime = world
+        app = FastAPI()
+        disposed = []
+        dispose = database.engine.dispose
+        def observed_dispose():
+            disposed.append(True)
+            assert not app.state.worker_thread.is_alive()
+            dispose()
+        monkeypatch.setattr(database.engine, 'dispose', observed_dispose)
+        @asynccontextmanager
+        async def failed_start(application):
+            raise RuntimeError('SYNTHETIC_START_FAILURE')
+            yield
+        app.router.lifespan_context = failed_start
+        attach_generation(app, database, runtime)
+        attach_job_worker(app, database)
+        async def scenario():
+            with pytest.raises(RuntimeError, match='SYNTHETIC_START_FAILURE'):
+                async with app.router.lifespan_context(app):
+                    pytest.fail('startup failure admitted application')
+            assert not app.state.assistant_generation_tasks.accepting
+            assert app.state.assistant_generation_tasks.active_count == 0
+            assert not runtime.provider.calls
+&gt;       asyncio.run(scenario())
+
+.local\chat-generation-http-20261019\test_standards_probe.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+.local\chat-generation-http-20261019\test_standards_probe.py:45: in scenario
+    async with app.router.lifespan_context(app):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:210: in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\demo_server.py:59: in lifespan
+    database.engine.dispose()
+.local\chat-generation-http-20261019\test_standards_probe.py:33: in observed_dispose
+    assert not app.state.worker_thread.is_alive()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;starlette.datastructures.State object at 0x0000022D6257FDA0&gt;
+key = 'worker_thread'
+
+    def __getattr__(self, key: Any) -&gt; Any:
+        try:
+            return self._state[key]
+        except KeyError:
+            message = "'{}' object has no attribute '{}'"
+&gt;           raise AttributeError(message.format(self.__class__.__name__, key))
+E           AttributeError: 'State' object has no attribute 'worker_thread'
+
+.venv\Lib\site-packages\starlette\datastructures.py:686: AttributeError</failure></testcase><testcase classname=".local.chat-generation-http-20261019.test_standards_probe" name="test_previous_teardown_failure_cannot_skip_generation_and_worker_close" time="0.313"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'SYNTHETIC_EXIT_FAILURE'&#10;  Actual message: 'initialize_storage(database) required explicitly'">async def scenario():
+        entered = asyncio.Event()
+        async def waiting(request, **kwargs):
+            runtime.provider.calls.append(request)
+            entered.set()
+            await asyncio.Event().wait()
+        runtime.provider.generate = waiting
+        with pytest.raises(RuntimeError, match='SYNTHETIC_EXIT_FAILURE'):
+&gt;           async with app.router.lifespan_context(app):
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.local\chat-generation-http-20261019\test_standards_probe.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:210: in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\web\demo_server.py:49: in lifespan
+    recover_jobs(database)
+src\cn_contract\web\jobs.py:85: in recover_jobs
+    s.require_storage(database)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+database = &lt;cn_contract.persistence.Database object at 0x0000022D626541A0&gt;
+
+    def require_storage(database):
+        if not getattr(database, '_web_storage_initialized', False):
+&gt;           raise RuntimeError('initialize_storage(database) required explicitly')
+E           RuntimeError: initialize_storage(database) required explicitly
+
+src\cn_contract\web\storage.py:81: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+world = (&lt;cn_contract.persistence.Database object at 0x0000022D626541A0&gt;, Actor(user_id=UUID('df18f002-301f-4f61-8eb7-ba2c2128...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x0000022D629E7950&gt;)
+
+    def test_previous_teardown_failure_cannot_skip_generation_and_worker_close(world):
+        database, actor, conversation, message, runtime = world
+        app = FastAPI()
+        @asynccontextmanager
+        async def failed_exit(application):
+            try:
+                yield
+            finally:
+                raise RuntimeError('SYNTHETIC_EXIT_FAILURE')
+        app.router.lifespan_context = failed_exit
+        attach_generation(app, database, runtime)
+        attach_job_worker(app, database)
+        async def scenario():
+            entered = asyncio.Event()
+            async def waiting(request, **kwargs):
+                runtime.provider.calls.append(request)
+                entered.set()
+                await asyncio.Event().wait()
+            runtime.provider.generate = waiting
+            with pytest.raises(RuntimeError, match='SYNTHETIC_EXIT_FAILURE'):
+                async with app.router.lifespan_context(app):
+                    manager = app.state.assistant_generation_tasks
+                    attempt = manager.submit(actor, conversation.scope.conversation_id, message)
+                    await asyncio.wait_for(entered.wait(), 3)
+            assert not manager.accepting and manager.active_count == 0
+            assert not app.state.worker_thread.is_alive()
+            with database.session() as db:
+                assert db.scalar(text('SELECT state FROM assistant_model_attempts WHERE id=:id'),
+                    {'id':str(attempt.id)}) == 'sent_unknown'
+                assert db.scalar(text('SELECT COUNT(*) FROM assistant_model_receipts')) == 1
+            assert len(runtime.provider.calls) == 1
+&gt;       asyncio.run(scenario())
+
+.local\chat-generation-http-20261019\test_standards_probe.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def scenario():
+        entered = asyncio.Event()
+        async def waiting(request, **kwargs):
+            runtime.provider.calls.append(request)
+            entered.set()
+            await asyncio.Event().wait()
+        runtime.provider.generate = waiting
+&gt;       with pytest.raises(RuntimeError, match='SYNTHETIC_EXIT_FAILURE'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'SYNTHETIC_EXIT_FAILURE'
+E         Actual message: 'initialize_storage(database) required explicitly'
+
+.local\chat-generation-http-20261019\test_standards_probe.py:73: AssertionError</failure></testcase><testcase classname=".local.chat-generation-http-20261019.test_standards_probe" name="test_late_restore_fence_blocks_new_registration_or_background_writes[before_submit]" time="0.287" /><testcase classname=".local.chat-generation-http-20261019.test_standards_probe" name="test_late_restore_fence_blocks_new_registration_or_background_writes[before_runner]" time="0.330" /><testcase classname=".local.chat-generation-http-20261019.test_standards_probe" name="test_late_restore_fence_blocks_new_registration_or_background_writes[inflight]" time="0.322" /><testcase classname=".local.chat-generation-http-20261019.test_standards_probe" name="test_capability_with_real_transport_class_never_resolves_credential" time="0.494" /></testsuite></testsuites>

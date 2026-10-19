@@ -1,0 +1,12 @@
+{
+  "input_manifest": "frozen-final-source-after.json",
+  "differences": [
+    {
+      "path": "rules/default-draft-cards.json",
+      "worktree_sha256": "28561b34d9897c900216850a2c5355194b568b85c15b8cc2cd7bafb00569b3e0",
+      "git_blob_sha256": "5a328c75123b83b7e74d8c356e09f439b8211a627539513de98856ea54fa5a2c",
+      "difference": "existing CRLF worktree versus LF baseline blob; normalized bytes equal; baseline blob unchanged"
+    }
+  ],
+  "note": "Run/build manifests describe measured worktree bytes. Existing baseline normalization differences are preserved, not silently rewritten."
+}

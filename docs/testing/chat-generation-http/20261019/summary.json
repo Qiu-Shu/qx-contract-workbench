@@ -1,0 +1,119 @@
+{
+  "phase": "CH-04B controlled generation HTTP and application lifecycle",
+  "date": "2026-10-19",
+  "baseline": "ffe1897",
+  "status": "bounded_engineering_verification_passed",
+  "final_regression": {
+    "tests": 145,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "junit_seconds": 86.36,
+    "unique_case_count": 145,
+    "exit_code": 0,
+    "scope": "affected tests, not full suite",
+    "new_formal_tests_included": 53,
+    "source_input_count": 351,
+    "source_bytes_unchanged": true
+  },
+  "independent": {
+    "spec_initial": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit_seconds": 3.391,
+      "unique_case_count": 7
+    },
+    "spec_boundary_after_fix": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit_seconds": 1.343,
+      "unique_case_count": 1
+    },
+    "standards": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit_seconds": 3.09,
+      "unique_case_count": 6
+    },
+    "open_findings": 0,
+    "product_findings_closed": 1,
+    "note": "7 initial spec probes and 1 unchanged post-fix probe were separate runs; not a post-fix rerun of all 8."
+  },
+  "development_gates": {
+    "defaults": 0,
+    "sources": 0,
+    "dependencies": 0,
+    "schema": 0,
+    "sources_checked": 13,
+    "production_approval_warnings": 13,
+    "runtime_packages": 55,
+    "build_packages": 1
+  },
+  "frozen": {
+    "source_input_count": 203,
+    "source_sha256": "2c41065f3601970d95ee9983a4f83255fc829a0dadc6a759cdd909a05ca94ae5",
+    "source_bytes_unchanged": true,
+    "artifacts": {
+      "frozen-backend-boundary-fixed": {
+        "file_count": 546,
+        "directory_bytes": 96165036,
+        "exe_sha256": "0c6bb42804e1bc60d54bf3e78a9a8fcb36b29a2e6ddb03db475b1f43895b54b1",
+        "build_exit": 0
+      },
+      "frozen-http-helper-boundary-fixed": {
+        "file_count": 546,
+        "directory_bytes": 96153268,
+        "exe_sha256": "ee62049a0f5c2a938e8d411617a0cf7ea6a84c5438b2590215ccaf8b474fb741",
+        "build_exit": 0
+      }
+    },
+    "backend_checks": 3,
+    "synthetic_helper_checks": 5,
+    "synthetic_upstream_posts": 3,
+    "attempts": 3,
+    "receipts": 3,
+    "outputs": 1,
+    "backend_ready_seconds_single_observation": 1.362,
+    "not_installer_or_performance_acceptance": true
+  },
+  "workbuddy": {
+    "usable_connection": false,
+    "task_dispatched": false,
+    "review_received": false,
+    "observed": "busy after user re-opened the dedicated chat; previous task has no terminal record; local active-state JSON is damaged",
+    "wait_on_previous_task": "unknown to current MCP process",
+    "state_modified": false
+  },
+  "real_model_calls": 0,
+  "installed_app_replaced": false,
+  "pushed": false,
+  "remaining": [
+    "homepage send and authorized candidate display",
+    "protected runtime settings and daily policy resolver",
+    "Jev auxiliary routing",
+    "automatic profile drafts",
+    "remaining v2.1 tasks"
+  ],
+  "raw_evidence": ".local/chat-generation-http-20261019/",
+  "historical_excluded": [
+    "author intermediate overlapping green runs",
+    "pre-boundary-fix frozen builds",
+    "source-probe-01 synthetic response missing object/created",
+    "first final-backend helper variable collision",
+    "standards harness missing initialize_storage: 2 failed/4 passed; corrected harness only"
+  ],
+  "git_byte_verification": {
+    "changed_product_and_formal_tests_exact": true,
+    "existing_regression_input_crlf_lf_differences": 12,
+    "existing_build_input_crlf_lf_differences": 1,
+    "build_differences_included_in_regression_differences": true,
+    "only_line_endings": true,
+    "baseline_blobs_unchanged": true
+  }
+}

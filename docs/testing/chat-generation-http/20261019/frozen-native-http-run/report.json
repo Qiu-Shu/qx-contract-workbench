@@ -1,0 +1,25 @@
+{
+  "scope": "native HTTP and separate frozen synthetic entry; not installed application",
+  "frozen": true,
+  "real_model_calls": 0,
+  "checks": [
+    "fast_durable_accept_concurrent_draft_and_replay_one_post",
+    "receipt_candidate_citation_and_current_draft_preserved",
+    "logout_rechecks_read_and_cancelled_reply_keeps_receipt_without_output",
+    "shutdown_while_provider_pending_exits_cleanly",
+    "restart_reads_receipts_and_replay_does_not_resend"
+  ],
+  "fast_accept_seconds": 0.04699999999979809,
+  "counts": {
+    "assistant_model_attempts": 3,
+    "assistant_model_receipts": 3,
+    "assistant_model_outputs": 1
+  },
+  "status": "passed",
+  "upstream_posts": 3,
+  "upstream_payload_hashes": [
+    "f66142be6d6e47010fa5e1f94f73de2980913bc27d15cc32bc2bc372898b92f2",
+    "3bf3703dec8977e97f87cff5b72443a67c9ea7e1761219e2500a8642cca4af9a",
+    "a22848062569b4a49962fc145eb1404ccf3916eebd3bf2e166afb744522685cf"
+  ]
+}

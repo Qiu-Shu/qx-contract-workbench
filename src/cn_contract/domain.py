@@ -2926,3 +2926,12 @@ class MainAttemptView(DomainModel):
     unit: Literal['USD'] = 'USD'
     receipt: MainReceipt | None
     output: MainOutputView | None
+
+
+class MainGenerationCapability(DomainModel):
+    scope: ScopeSnapshot
+    composer_revision: Annotated[int, Field(strict=True, ge=0)]
+    basis: Literal['saved_draft'] = 'saved_draft'
+    content_sha256: SHA256 | None
+    state: Literal['unconfigured', 'unapproved', 'empty', 'unsupported', 'busy',
+                   'budget_exhausted', 'restored_read_only', 'ready']

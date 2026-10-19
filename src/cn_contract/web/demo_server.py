@@ -37,6 +37,7 @@ def build_demo(directory=None,*,purpose='mock_demo',assisted_policy=None):
 def attach_job_worker(app,database,*,shutdown_timeout=10):
     """Shared single worker lifecycle for explicit local startup paths."""
     stop=Event()
+    previous=app.router.lifespan_context
 
     def worker():
         while not stop.is_set():
@@ -44,13 +45,17 @@ def attach_job_worker(app,database,*,shutdown_timeout=10):
 
     @asynccontextmanager
     async def lifespan(application):
-        recover_jobs(database)
-        thread=Thread(target=worker,name='synthetic-single-worker',daemon=True)
-        application.state.worker_thread=thread;thread.start()
-        try:yield
+        try:
+            recover_jobs(database)
+            stop.clear()
+            thread=Thread(target=worker,name='synthetic-single-worker',daemon=True)
+            application.state.worker_thread=thread;thread.start()
+            try:
+                async with previous(application):yield
+            finally:
+                stop.set();thread.join(timeout=shutdown_timeout)
+                if thread.is_alive():raise RuntimeError('worker still running; shutdown incomplete')
         finally:
-            stop.set();thread.join(timeout=shutdown_timeout)
-            if thread.is_alive():raise RuntimeError('worker still running; shutdown incomplete')
             database.engine.dispose()
     app.router.lifespan_context=lifespan
 

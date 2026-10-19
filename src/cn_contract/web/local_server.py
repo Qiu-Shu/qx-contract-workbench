@@ -185,7 +185,7 @@ def _worker_lock(root):
                 fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
 
 
-def build_local_app(directory, *, port=8767, library_root=None, data_parent=None):
+def build_local_app(directory, *, port=8767, library_root=None, data_parent=None, assistant_model_runtime=None):
     root = _open_workspace(directory, data_parent=data_parent)
     with _worker_lock(root):
         from .workspace_upgrade import upgrade
@@ -194,7 +194,7 @@ def build_local_app(directory, *, port=8767, library_root=None, data_parent=None
     try:
         app = create_app(load_settings(), database=database, purpose='assisted_draft',
                          assisted_policy=load_seed_policy(), local_materials_enabled=True,
-                         assistant_home_enabled=True)
+                         assistant_home_enabled=True, assistant_model_runtime=assistant_model_runtime)
         from .recovery import attach_recovery
         attach_recovery(app,database)
         if library_root is not None:
