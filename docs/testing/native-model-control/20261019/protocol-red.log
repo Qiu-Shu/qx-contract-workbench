@@ -1,0 +1,16 @@
+
+=================================== ERRORS ====================================
+________ ERROR collecting tests/unit/test_desktop_control_protocol.py _________
+ImportError while importing test module 'D:\Documents\ChatGPT\������Ŀ\tests\unit\test_desktop_control_protocol.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_desktop_control_protocol.py:9: in <module>
+    from cn_contract.desktop_control import ParentControlChannel, parse_control_line, PROTOCOL
+E   ModuleNotFoundError: No module named 'cn_contract.desktop_control'
+=========================== short test summary info ===========================
+ERROR tests/unit/test_desktop_control_protocol.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.46s

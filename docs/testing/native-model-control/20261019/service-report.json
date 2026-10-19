@@ -1,0 +1,89 @@
+{
+  "scope": "CH-04F private native service, DTO and narrow approval-basis checks",
+  "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_native_model_control.py tests/integration/test_model_registry.py tests/integration/test_assistant_generation.py -q --junitxml=.local/native-model-control-20261019/service-final.xml",
+  "exit_code": 0,
+  "tests": 115,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "junit_seconds": 29.774,
+  "groups": [
+    {
+      "file": "tests.integration.test_assistant_generation",
+      "tests": 32
+    },
+    {
+      "file": "tests.integration.test_model_registry",
+      "tests": 37
+    },
+    {
+      "file": "tests.integration.test_native_model_control",
+      "tests": 46
+    }
+  ],
+  "files": [
+    {
+      "sha256": "8cb466d76972716d635ac44f41479e8e945fcfdfeabec571ab330acc659d0f8f",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\native_model_control.py"
+    },
+    {
+      "sha256": "6b395d19029575695a423e802ef8f65f21e57b53076e53dca860944c54f3cdce",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\domain.py"
+    },
+    {
+      "sha256": "3dfea0e9e0228c60431f0c94a439dde1485a60243a74bc50874d9c6eca6b915d",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\registry.py"
+    },
+    {
+      "sha256": "f1939e16fbe4bf26ea33fc0cac50163c2794b7b7d1d92ce8cd9275475c8fec92",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\policy.py"
+    },
+    {
+      "sha256": "abee718f947d25ef7e95f3ab027e11441b3d81effe4e2ba6b51982e55e9cfde0",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\attempts.py"
+    },
+    {
+      "sha256": "7c74c108017f02871ce707a76fd4e4aa34d5de3a5c4581f91380ba1a6ba3c906",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\tests\\integration\\test_native_model_control.py"
+    }
+  ],
+  "stages": [
+    {
+      "exit_code": 2,
+      "collection_errors": 1,
+      "executed_tests": 0,
+      "name": "service-red"
+    },
+    {
+      "exit_code": 0,
+      "passed": 38,
+      "name": "service-core"
+    },
+    {
+      "exit_code": 1,
+      "reason": "Test fixture attempted to UPDATE immutable assistant_runs.request_id; existing IMMUTABLE_RECORD correctly rejected it. No product defect.",
+      "passed": 39,
+      "failed": 2,
+      "name": "service-boundaries"
+    },
+    {
+      "exit_code": 0,
+      "reason": "Fixture now uses trusted legacy runtime to persist a different intent with the same policy and checks native basis at claim/settle without changing immutable records.",
+      "passed": 9,
+      "deselected": 32,
+      "name": "service-identity-corrected"
+    },
+    {
+      "exit_code": 0,
+      "warnings": 0,
+      "passed": 115,
+      "name": "service-final"
+    }
+  ],
+  "limitations": [
+    "Only synthetic data and in-process synthetic providers; no real model invocation.",
+    "Private stdin/stdout protocol, desktop entry and JS integration are owned by root and the other agent.",
+    "No HTTP authorization endpoint; no installation or real credential access.",
+    "Product frozen for independent review; no commit by this subagent."
+  ]
+}

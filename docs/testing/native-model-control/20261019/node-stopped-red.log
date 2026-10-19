@@ -1,0 +1,30 @@
+✖ an owner stopped before startup cannot create a child or leave startup pending (120.1962ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 180.6667
+
+✖ failing tests:
+
+test at desktop\tests\model-control.test.cjs:47:1
+✖ an owner stopped before startup cannot create a child or leave startup pending (120.1962ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'still_pending'
+  - 'BACKEND_STOPPED'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:53:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'still_pending',
+    expected: 'BACKEND_STOPPED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

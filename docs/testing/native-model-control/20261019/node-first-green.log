@@ -1,0 +1,30 @@
+✔ owned backend validates readiness, stops on EOF and rejects forged nonce (100.7881ms)
+✔ trusted backend configures and disables through one owned child without exposing protocol credentials (53.7099ms)
+✔ trusted secret consumer receives plaintext once but its returned value is never exposed (13.3806ms)
+✔ empty, save, restart, replace and remove expose only status and persist only ciphertext (23.2732ms)
+✔ save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext (23.105ms)
+✔ only Windows and all available asynchronous protection methods permit status and save (3.4838ms)
+✔ status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors (11.717ms)
+✔ status validates actual decrypted data and reports rotation without rewriting stored bytes (13.8578ms)
+✔ remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable (2.092ms)
+✔ invalid parent paths return a fixed result rather than throwing or creating files (0.9609ms)
+✔ a junction ancestor is rejected for every operation and the linked directory remains untouched (1.6255ms)
+✔ the credential directory cannot be a junction, dangling junction or ordinary file (3.0748ms)
+✔ credential symbolic links including dangling links are never read, replaced or removed (3.5656ms)
+✔ credential hard links and directories are rejected without touching either target (2.8637ms)
+✔ a directory replaced by a junction during asynchronous encryption cannot redirect the write (9.069ms)
+✔ malformed encryption results and rejected encryption preserve old ciphertext and return a fixed error (10.4764ms)
+✔ flush or atomic replacement failures preserve old ciphertext and remove only the temporary ciphertext (16.4953ms)
+✔ status, save and remove share a serial queue and drain waits for already accepted operations (19.2869ms)
+✔ a failed operation does not poison the queue or prevent a later safe removal (8.0193ms)
+✔ status checks current file identity again after decrypting (8.8525ms)
+✔ oversized ciphertext is rejected before reading or decrypting it (2.1381ms)
+✔ filesystem failures are fixed results and never expose file paths or raw exception messages (8.3475ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 239.4926

@@ -1,0 +1,46 @@
+{
+  "scope": "CH-04F capability approval-basis review fix",
+  "finding": "Capability advertised ready for another conversation with identical text or a later composer revision, while enqueue correctly rejected both.",
+  "fix": "Read-only check_draft compares full scope, composer revision and content digest; capability and submission share it; legacy runtime no-op.",
+  "regression_tests_added": 3,
+  "product_files": [
+    "src/cn_contract/assistant/providers/policy.py",
+    "src/cn_contract/assistant/providers/registry.py",
+    "src/cn_contract/web/assistant_generation.py"
+  ],
+  "red": [
+    {
+      "failed": 2,
+      "name": "capability-basis-red",
+      "deselected": 3,
+      "exit_code": 1
+    },
+    {
+      "failed": 2,
+      "name": "capability-regression-red",
+      "deselected": 46,
+      "passed": 1,
+      "exit_code": 1
+    }
+  ],
+  "green": [
+    {
+      "junit_seconds": 21.427,
+      "command": ".venv/Scripts/python.exe -m pytest .local/native-model-control-20261019/review-basis-probes.py tests/integration/test_native_model_control.py -q",
+      "name": "capability-basis-green",
+      "passed": 54,
+      "composition": "5 independent probes + 49 native service tests",
+      "exit_code": 0
+    },
+    {
+      "junit_seconds": 14.955,
+      "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_assistant_generation_routes.py tests/integration/test_model_registry.py -q",
+      "name": "capability-regression-green",
+      "passed": 63,
+      "composition": "26 generation routes + 37 registry tests",
+      "exit_code": 0
+    }
+  ],
+  "hashes": "capability-basis-hashes.json",
+  "limits": "Synthetic-only verification. No request ID generation, grant consumption, real model request, or HTTP authorization endpoint. Product frozen for parent validation."
+}

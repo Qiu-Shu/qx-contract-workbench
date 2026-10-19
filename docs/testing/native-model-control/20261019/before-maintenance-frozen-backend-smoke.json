@@ -1,0 +1,18 @@
+{
+  "scope": "actual final production backend, not installer or real model approval",
+  "exe_sha256": "2b2a0ea57665fc5c42011f497fe57fb003262fc49c0bd257b5a13c18bac924b7",
+  "real_model_calls": 0,
+  "checks": [
+    "canonical_ready_login_empty_registry",
+    "private_config_authorize_then_disable_before_any_generation",
+    "normal_eof_clean_exit",
+    "zero_attempts_integrity_no_plaintext_secret_or_token"
+  ],
+  "ready_seconds": 1.62,
+  "counts": {
+    "assistant_model_attempts": 0,
+    "assistant_model_receipts": 0,
+    "assistant_model_outputs": 0
+  },
+  "status": "passed"
+}

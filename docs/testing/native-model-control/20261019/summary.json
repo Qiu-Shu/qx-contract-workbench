@@ -1,0 +1,105 @@
+{
+  "phase": "CH-04F",
+  "baseline": "0ff926d",
+  "python_regression": {
+    "tests": 406,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "unique": true,
+    "collection_matches": true,
+    "input_files": 483,
+    "changed_inputs": [],
+    "junit_seconds": 223.387,
+    "exit_code": 0
+  },
+  "node": {
+    "tests": 73,
+    "failures": 0,
+    "exit_code": 0,
+    "added": 38,
+    "log": "node-current-final.log"
+  },
+  "independent_review": {
+    "python_probes": 11,
+    "node_python_cross_probes": 2,
+    "maintenance_formal_tests_rechecked": 2,
+    "unresolved_blockers": 0,
+    "report": "review-final.md"
+  },
+  "native": {
+    "scope": "native private control, not daily approval UI",
+    "electron": "44.8.0",
+    "real_model_calls": 0,
+    "checks": [
+      "real_safeStorage_ciphertext",
+      "configured_without_grant_then_exact_single_intent",
+      "real_pipe_http_receipt_citation_and_replay_one_post",
+      "revoke_disable_eof_clean_shutdown",
+      "restart_empty_registry_history_read_without_resend",
+      "no_plaintext_secret_or_session_token_in_ack_logs_database"
+    ],
+    "status": "passed",
+    "upstream_posts": 1,
+    "counts": {
+      "assistant_model_attempts": 1,
+      "assistant_model_receipts": 1,
+      "assistant_model_outputs": 1
+    },
+    "input_files": 483,
+    "changed_inputs": [],
+    "exit_code": 0
+  },
+  "frozen_backend": {
+    "scope": "actual final production backend, not installer or real model approval",
+    "exe_sha256": "7bebe34c3b9c750f996354a1fa0ae723f10cc0453bb5ce153acdf941dfe81fee",
+    "real_model_calls": 0,
+    "checks": [
+      "canonical_ready_login_empty_registry",
+      "private_config_authorize_then_disable_before_any_generation",
+      "normal_eof_clean_exit",
+      "zero_attempts_integrity_no_plaintext_secret_or_token"
+    ],
+    "workspace_parent": "D:\\Documents\\ChatGPT\\律所项目\\.local\\native-model-control-20261019\\冻结 合成 5b4455ac",
+    "ready_seconds": 1.517,
+    "counts": {
+      "assistant_model_attempts": 0,
+      "assistant_model_receipts": 0,
+      "assistant_model_outputs": 0
+    },
+    "status": "passed"
+  },
+  "frozen_maintenance": {
+    "status": "passed",
+    "checks": [
+      "existing_maintenance_adapter_backup",
+      "existing_maintenance_adapter_restore_quarantined"
+    ],
+    "archive_sha256": "8cf054ecf15e2331a743e10ae25a3dab9c2fc35b3769f5776f0841362b3fb67a",
+    "file_count": 2,
+    "exit_codes": [
+      0,
+      0
+    ]
+  },
+  "stable_build_inputs": 212,
+  "development_gates": {
+    "defaults": 0,
+    "sources": 0,
+    "dependencies": 0,
+    "schema": 0
+  },
+  "real_model_calls": 0,
+  "workbuddy": "busy/unknown; no task delegated this turn",
+  "pending": [
+    "daily native settings and explicit send approval UI",
+    "intent tombstones to release obsolete provider references without reviving request IDs",
+    "Jev, automatic archive proposals and later approved tasks"
+  ],
+  "not_claimed": [
+    "installer acceptance",
+    "real provider verification",
+    "bundle or RSS reduction",
+    "production readiness"
+  ]
+}

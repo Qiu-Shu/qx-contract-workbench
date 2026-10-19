@@ -2793,6 +2793,31 @@ class MainModelConfig(DomainModel):
     price_reference: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)]
 
 
+class MainSendApproval(DomainModel):
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+    content_sha256: SHA256
+
+
+class NativeModelConfigure(DomainModel):
+    config: MainModelConfig
+    secret: Annotated[str, StringConstraints(strict=True, min_length=16, max_length=512,
+        pattern=r'^[!-~]+$')] = Field(repr=False)
+
+
+class NativeModelAuthorization(DomainModel):
+    session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
+    expected_config_version: UUID
+    basis: MainSendApproval
+    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
+    valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
+
+
+class NativeModelRevoke(DomainModel):
+    session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
+
+
 class MainRequest(DomainModel):
     run_id: UUID
     scope: ScopeSnapshot

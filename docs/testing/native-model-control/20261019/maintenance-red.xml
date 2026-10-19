@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="4.643" timestamp="2026-10-19T21:48:31.819133+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_native_control_process" name="test_maintenance_completion_exits_with_parent_pipe_still_open" time="3.715"><failure message="AssertionError: assert 3221225477 == 0&#10; +  where 3221225477 = wait(timeout=15)&#10; +    where wait = &lt;Popen: returncode: 3221225477 args: ['D:\\Documents\\ChatGPT\\律所项目\\.venv\\...&gt;.wait">tests\integration\test_native_control_process.py:57: in test_maintenance_completion_exits_with_parent_pipe_still_open
+    assert proc.wait(timeout=15)==0
+E   AssertionError: assert 3221225477 == 0
+E    +  where 3221225477 = wait(timeout=15)
+E    +    where wait = &lt;Popen: returncode: 3221225477 args: ['D:\\Documents\\ChatGPT\\律所项目\\.venv\\...&gt;.wait</failure></testcase></testsuite></testsuites>

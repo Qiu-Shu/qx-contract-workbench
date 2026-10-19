@@ -14,11 +14,11 @@ from threading import Event, Thread
 
 
 def emit(event, **payload):
-    print(json.dumps({'event': event, **payload}, ensure_ascii=True), flush=True)
+    print(json.dumps({'event': event, **payload}, ensure_ascii=True, separators=(',', ':')), flush=True)
 
 
-def read_config():
-    line = sys.stdin.readline(16385)
+def read_config(stream):
+    line = stream.readline(16385).decode('utf-8')
     if len(line) > 16384 or not line.endswith('\n'):
         raise ValueError('INVALID_CONFIG')
     value = json.loads(line)
@@ -46,20 +46,34 @@ def read_config():
 def main():
     # Never render request data, credentials, paths or exception tracebacks.
     logging.disable(logging.CRITICAL)
-    if hasattr(sys.stdin, 'reconfigure'): sys.stdin.reconfigure(encoding='utf-8')
-    if hasattr(sys.stdout, 'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
+    if hasattr(sys.stdout, 'reconfigure'): sys.stdout.reconfigure(encoding='utf-8', newline='\n')
+    # One unbuffered byte stream from bootstrap onward. No text prefetch can
+    # swallow later commands, and a waiting daemon never holds a BufferedReader
+    # lock when a maintenance operation completes before the parent closes stdin.
+    stream = os.fdopen(sys.stdin.fileno(), 'rb', buffering=0, closefd=False)
     finished = Event()
     shutdown = Event()
     server_holder = []
     try:
-        config = read_config()
+        config = read_config(stream)
 
-        def watch_parent():
-            # Cover imports, initialization and validation as well as serving.
-            sys.stdin.readline(256)
+        def parent_eof():
             shutdown.set()
             if server_holder: server_holder[0].should_exit = True
             if not finished.wait(15): os._exit(2)
+
+        channel = None
+        if 'operation' not in config:
+            from .desktop_control import ParentControlChannel, attach_control, PROTOCOL
+            channel = ParentControlChannel(stream, config['nonce'], emit, parent_eof)
+
+        def watch_parent():
+            # Cover imports, initialization and validation as well as serving.
+            if channel is not None:
+                channel.watch()
+            else:
+                stream.readline(256)
+                parent_eof()
 
         Thread(target=watch_parent, daemon=True).start()
         from .web.local_server import build_local_app, initialize_workspace
@@ -85,7 +99,12 @@ def main():
             sock.bind(('127.0.0.1', 0))
             sock.listen(128)
             port = sock.getsockname()[1]
-            app = build_local_app(root, data_parent=parent, port=port, library_root=config.get('library_root'))
+            from .assistant.providers.registry import MainModelRegistry
+            from .assistant.native_model_control import NativeModelControl
+            registry = MainModelRegistry()
+            app = build_local_app(root, data_parent=parent, port=port, library_root=config.get('library_root'),
+                                  assistant_model_runtime=registry)
+            attach_control(app, channel, NativeModelControl(app.state.database, registry))
             server = uvicorn.Server(uvicorn.Config(app, host='127.0.0.1', port=port,
                 workers=1, access_log=False, log_config=None, log_level='critical'))
             server_holder.append(server)
@@ -94,7 +113,7 @@ def main():
             def announce_ready():
                 while not finished.wait(.05):
                     if server.started:
-                        emit('ready', port=port, nonce=config['nonce'])
+                        emit('ready', port=port, nonce=config['nonce'], control_protocol=PROTOCOL)
                         return
 
             Thread(target=announce_ready, daemon=True).start()

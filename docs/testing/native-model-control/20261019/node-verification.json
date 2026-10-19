@@ -1,0 +1,47 @@
+{
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "date": "2026-10-19",
+  "scope": "CH-04F Node owned-child model control and trusted credential consumption",
+  "final_command": "node --test desktop/tests/*.test.cjs",
+  "final_log": "node-final-green.log",
+  "final_exit": 0,
+  "final_passed": 73,
+  "final_failed": 0,
+  "added_tests": {"model-control.test.cjs": 31, "model-credential-consumption.test.cjs": 7},
+  "existing_tests_passed": 35,
+  "evidence": [
+    {"log": "node-first-red.log", "passed": 0, "failed": 2, "exit": 1,
+      "note": "Expected public control methods and trusted store consumption did not exist."},
+    {"log": "node-first-green.log", "passed": 22, "failed": 0, "exit": 0},
+    {"log": "node-boundary-red.log", "passed": 24, "failed": 3, "exit": 1,
+      "note": "Two valid product failures: ready followed by a malformed frame could publish startup success, and BOM was stripped before canonical validation. The third failure was a synthetic fixture error: stdout.end did not close the Windows OS pipe while that fixture stayed alive; it was corrected to flush and exit."},
+    {"log": "node-boundary-green.log", "passed": 54, "failed": 0, "exit": 0},
+    {"log": "node-stopped-red.log", "passed": 0, "failed": 1, "exit": 1,
+      "note": "Starting an owner already stopped before spawning left startup unresolved."},
+    {"log": "node-all-green.log", "passed": 71, "failed": 0, "exit": 0},
+    {"log": "node-stream-red.log", "passed": 0, "failed": 2, "exit": 1,
+      "note": "System stdout/stderr errors escaped the failure boundary before fixed handlers were installed."},
+    {"log": "node-final-green.log", "passed": 73, "failed": 0, "exit": 0}
+  ],
+  "protocol": {
+    "version": "qx-model-control-v1",
+    "command_utf8_bytes_including_newline": 32768,
+    "stdout_frame_utf8_bytes_including_newline": 8192,
+    "command_timeout_ms": 10000,
+    "normal_stop_grace_ms": 20000,
+    "concurrency": "one pending command, busy rejects without queue or sequence allocation",
+    "fatal_behavior": "fixed Promise rejection, immediate owned child termination, one failed event, no retry",
+    "legacy": "canonical ready without control_protocol can start but cannot use model control"
+  },
+  "source_hashes": "node-source-hashes.json",
+  "secret_scan": "node-evidence-secret-scan.json",
+  "diff_check_exit": 0,
+  "boundaries": [
+    "Tests use synthetic child processes, synthetic credentials and an in-memory synthetic encryption provider.",
+    "The root owns actual Python pipe integration and native Windows safeStorage acceptance.",
+    "No renderer, preload, main-process UI or Python source was changed by this assignment.",
+    "Package inclusion is owned by the root.",
+    "withSecret callback results are ignored; no claim is made that immutable JS strings can be reliably erased.",
+    "No real material, real key, external provider request, dependency installation or commit."
+  ]
+}

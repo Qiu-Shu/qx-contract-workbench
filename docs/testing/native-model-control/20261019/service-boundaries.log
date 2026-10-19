@@ -1,0 +1,454 @@
+...................FF....................                                [100%]
+================================== FAILURES ===================================
+__ test_persisted_request_identity_is_checked_at_claim_and_settlement[claim] __
+
+self = <sqlalchemy.engine.base.Connection object at 0x0000025D4ABA0E60>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025D4AB27D70>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025D4ABA2660>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x0000025D4ABA25A0>
+parameters = [('36caa8c7-781d-4570-bab8-7acd3ad9d9bf', '1f5e6969-eea1-435b-82a9-748e2a5ed168')]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025D4AB27D70>
+cursor = <sqlite3.Cursor object at 0x0000025D4AC1D740>
+statement = 'UPDATE assistant_runs SET request_id=? WHERE id=?'
+parameters = ('36caa8c7-781d-4570-bab8-7acd3ad9d9bf', '1f5e6969-eea1-435b-82a9-748e2a5ed168')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025D4ABA2660>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.IntegrityError: IMMUTABLE_RECORD
+
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: IntegrityError
+
+The above exception was the direct cause of the following exception:
+
+native = namespace(database=<cn_contract.persistence.Database object at 0x0000025D4ABD3DD0>, actor=Actor(user_id=UUID('4a5cec80...'expected_composer_revision': 1, 'content_sha256': 'bebfb188788246445fe29629efbeffd6622748f33e4e4e10c32404973f748f8f'})
+moment = 'claim'
+
+    @pytest.mark.parametrize('moment', ['claim', 'settle'])
+    def test_persisted_request_identity_is_checked_at_claim_and_settlement(native, moment):
+        n = native
+        async def scenario():
+            payload = configure(n)
+            n.control.authorize(payload)
+            lease = n.registry.resolve(n.actor, n.draft.scope)
+            attempt = enqueue(n, lease)
+            if moment == 'settle':
+                with n.database.session() as db: claimed = attempts.claim(n.actor, attempt.id, db, lease)
+                token, request, config = claimed
+                reply = await lease.provider.generate(request, expected_config=config)
+            with n.database.session() as db:
+                db.execute(text('UPDATE assistant_runs SET request_id=:request WHERE id=:id'),
+                    {'request': str(uuid4()), 'id': str(attempt.run_id)})
+            if moment == 'claim':
+                completed = await execute_attempt(n.actor, attempt.id, n.database, lease)
+                assert completed.receipt.cost_status == 'not_sent'
+                assert n.providers[0].calls == []
+            else:
+                with n.database.session() as db:
+                    attempts.settle(n.actor, attempt.id, token, reply, db, lease)
+                    completed = attempts.read_attempt(n.actor, attempt.id, db)
+                assert completed.receipt.cost_status == 'estimated'
+                assert len(n.providers[0].calls) == 1
+            assert completed.output is None
+>       asyncio.run(scenario())
+
+tests\integration\test_native_model_control.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_model_control.py:222: in scenario
+    db.execute(text('UPDATE assistant_runs SET request_id=:request WHERE id=:id'),
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2373: in execute
+    return self._execute_internal(
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2280: in _execute_internal
+    result = conn.execute(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+.venv\Lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025D4AB27D70>
+cursor = <sqlite3.Cursor object at 0x0000025D4AC1D740>
+statement = 'UPDATE assistant_runs SET request_id=? WHERE id=?'
+parameters = ('36caa8c7-781d-4570-bab8-7acd3ad9d9bf', '1f5e6969-eea1-435b-82a9-748e2a5ed168')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025D4ABA2660>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) IMMUTABLE_RECORD
+E       [SQL: UPDATE assistant_runs SET request_id=? WHERE id=?]
+E       [parameters: ('36caa8c7-781d-4570-bab8-7acd3ad9d9bf', '1f5e6969-eea1-435b-82a9-748e2a5ed168')]
+E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: IntegrityError
+_ test_persisted_request_identity_is_checked_at_claim_and_settlement[settle] __
+
+self = <sqlalchemy.engine.base.Connection object at 0x0000025D4ABF1970>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025D4ABD8AA0>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025D4ABF33B0>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x0000025D4ABF1160>
+parameters = [('77f31471-5b48-47b6-aaca-47f0ad3cf281', '2a4ca89b-239e-4ccd-a526-011f99334471')]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025D4ABD8AA0>
+cursor = <sqlite3.Cursor object at 0x0000025D4B004740>
+statement = 'UPDATE assistant_runs SET request_id=? WHERE id=?'
+parameters = ('77f31471-5b48-47b6-aaca-47f0ad3cf281', '2a4ca89b-239e-4ccd-a526-011f99334471')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025D4ABF33B0>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.IntegrityError: IMMUTABLE_RECORD
+
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: IntegrityError
+
+The above exception was the direct cause of the following exception:
+
+native = namespace(database=<cn_contract.persistence.Database object at 0x0000025D4974F200>, actor=Actor(user_id=UUID('ac834f75...'expected_composer_revision': 1, 'content_sha256': 'bebfb188788246445fe29629efbeffd6622748f33e4e4e10c32404973f748f8f'})
+moment = 'settle'
+
+    @pytest.mark.parametrize('moment', ['claim', 'settle'])
+    def test_persisted_request_identity_is_checked_at_claim_and_settlement(native, moment):
+        n = native
+        async def scenario():
+            payload = configure(n)
+            n.control.authorize(payload)
+            lease = n.registry.resolve(n.actor, n.draft.scope)
+            attempt = enqueue(n, lease)
+            if moment == 'settle':
+                with n.database.session() as db: claimed = attempts.claim(n.actor, attempt.id, db, lease)
+                token, request, config = claimed
+                reply = await lease.provider.generate(request, expected_config=config)
+            with n.database.session() as db:
+                db.execute(text('UPDATE assistant_runs SET request_id=:request WHERE id=:id'),
+                    {'request': str(uuid4()), 'id': str(attempt.run_id)})
+            if moment == 'claim':
+                completed = await execute_attempt(n.actor, attempt.id, n.database, lease)
+                assert completed.receipt.cost_status == 'not_sent'
+                assert n.providers[0].calls == []
+            else:
+                with n.database.session() as db:
+                    attempts.settle(n.actor, attempt.id, token, reply, db, lease)
+                    completed = attempts.read_attempt(n.actor, attempt.id, db)
+                assert completed.receipt.cost_status == 'estimated'
+                assert len(n.providers[0].calls) == 1
+            assert completed.output is None
+>       asyncio.run(scenario())
+
+tests\integration\test_native_model_control.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_model_control.py:222: in scenario
+    db.execute(text('UPDATE assistant_runs SET request_id=:request WHERE id=:id'),
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2373: in execute
+    return self._execute_internal(
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2280: in _execute_internal
+    result = conn.execute(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+.venv\Lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025D4ABD8AA0>
+cursor = <sqlite3.Cursor object at 0x0000025D4B004740>
+statement = 'UPDATE assistant_runs SET request_id=? WHERE id=?'
+parameters = ('77f31471-5b48-47b6-aaca-47f0ad3cf281', '2a4ca89b-239e-4ccd-a526-011f99334471')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025D4ABF33B0>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) IMMUTABLE_RECORD
+E       [SQL: UPDATE assistant_runs SET request_id=? WHERE id=?]
+E       [parameters: ('77f31471-5b48-47b6-aaca-47f0ad3cf281', '2a4ca89b-239e-4ccd-a526-011f99334471')]
+E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: IntegrityError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_native_model_control.py::test_persisted_request_identity_is_checked_at_claim_and_settlement[claim]
+FAILED tests/integration/test_native_model_control.py::test_persisted_request_identity_is_checked_at_claim_and_settlement[settle]
+2 failed, 39 passed in 16.31s

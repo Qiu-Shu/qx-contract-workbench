@@ -119,26 +119,31 @@ function createModelCredentialStore({ dataParent, safeStorage, platform = proces
       }
     }
   }
+  async function readProtected(consumer) {
+    if (platform !== 'win32') return unavailable();
+    inspectFile();
+    if (!await available()) return unavailable();
+    const before = inspectFile();
+    if (!before) return { status: 'empty' };
+    const bytes = readCiphertext(before);
+    if (!bytes) return corrupt();
+    let decrypted;
+    try {
+      decrypted = await safeStorage.decryptStringAsync(bytes);
+    } catch (error) {
+      return error?.isTemporarilyUnavailable === true ? unavailable() : corrupt();
+    }
+    unchanged(before);
+    if (!decrypted || !validSecret(decrypted.result) || typeof decrypted.shouldReEncrypt !== 'boolean') return corrupt();
+    if (decrypted.shouldReEncrypt) return { status: 'unavailable', code: 'CREDENTIAL_ROTATION_REQUIRED' };
+    if (consumer) await consumer(decrypted.result.trim());
+    return { status: 'saved' };
+  }
   return Object.freeze({
-    status: () => serial(async () => {
-      if (platform !== 'win32') return unavailable();
-      inspectFile();
-      if (!await available()) return unavailable();
-      const before = inspectFile();
-      if (!before) return { status: 'empty' };
-      const bytes = readCiphertext(before);
-      if (!bytes) return corrupt();
-      let decrypted;
-      try {
-        decrypted = await safeStorage.decryptStringAsync(bytes);
-      } catch (error) {
-        return error?.isTemporarilyUnavailable === true ? unavailable() : corrupt();
-      }
-      unchanged(before);
-      if (!decrypted || !validSecret(decrypted.result) || typeof decrypted.shouldReEncrypt !== 'boolean') return corrupt();
-      if (decrypted.shouldReEncrypt) return { status: 'unavailable', code: 'CREDENTIAL_ROTATION_REQUIRED' };
-      return { status: 'saved' };
-    }),
+    status: () => serial(() => readProtected()),
+    // Trusted main-process consumption only; callback results never cross this boundary.
+    withSecret: consumer => serial(() => typeof consumer === 'function' ? readProtected(consumer)
+      : { status: 'invalid', code: 'CREDENTIAL_INPUT_INVALID' }),
     save: (secret) => serial(async () => {
       if (platform !== 'win32') return unavailable();
       if (!validSecret(secret)) return { status: 'invalid', code: 'CREDENTIAL_INPUT_INVALID' };

@@ -31,6 +31,15 @@ class MainModelRuntime:
     def snapshot_for(self, actor, scope):
         return self.snapshot()
 
+    def check_draft(self, actor, scope, composer_revision, content_sha256):
+        pass
+
+    def check_submission(self, actor, request):
+        pass
+
+    def check_execution(self, actor, request_id, request):
+        pass
+
 
 def validated(model, data):
     with localcontext(Context(prec=60)):

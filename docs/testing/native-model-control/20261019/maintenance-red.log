@@ -1,0 +1,11 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_maintenance_completion_exits_with_parent_pipe_still_open ________
+tests\integration\test_native_control_process.py:57: in test_maintenance_completion_exits_with_parent_pipe_still_open
+    assert proc.wait(timeout=15)==0
+E   AssertionError: assert 3221225477 == 0
+E    +  where 3221225477 = wait(timeout=15)
+E    +    where wait = <Popen: returncode: 3221225477 args: ['D:\\Documents\\ChatGPT\\������Ŀ\\.venv\\...>.wait
+=========================== short test summary info ===========================
+FAILED tests/integration/test_native_control_process.py::test_maintenance_completion_exits_with_parent_pipe_still_open
+1 failed, 1 deselected in 4.68s

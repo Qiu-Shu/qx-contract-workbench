@@ -1,0 +1,15 @@
+{
+  "scope": "native private control, not daily approval UI",
+  "electron": "44.8.0",
+  "real_model_calls": 0,
+  "checks": [
+    "real_safeStorage_ciphertext",
+    "configured_without_grant_then_exact_single_intent",
+    "real_pipe_http_receipt_citation_and_replay_one_post",
+    "revoke_disable_eof_clean_shutdown"
+  ],
+  "status": "failed",
+  "error_type": "AssertionError",
+  "error_code": "ERR_ASSERTION",
+  "error_location": "model-control-acceptance.cjs:115:10"
+}

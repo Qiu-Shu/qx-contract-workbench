@@ -56,7 +56,7 @@ test('empty, save, restart, replace and remove expose only status and persist on
   assert.deepEqual(await f.store.remove(), { status: 'empty' });
   assert.deepEqual(await f.store.remove(), { status: 'empty' });
   assert.deepEqual(await f.create().status(), { status: 'empty' });
-  assert.deepEqual(Object.keys(f.store).sort(), ['drain', 'remove', 'save', 'status']);
+  assert.deepEqual(Object.keys(f.store).sort(), ['drain', 'remove', 'save', 'status', 'withSecret']);
   assert.equal(await f.store.drain(), undefined);
 });
 

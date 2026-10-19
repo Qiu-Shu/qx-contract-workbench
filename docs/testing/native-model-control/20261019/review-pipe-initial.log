@@ -1,0 +1,76 @@
+F.....                                                                   [100%]
+================================== FAILURES ===================================
+_______ test_oversized_utf8_partial_frame_is_rejected_at_the_byte_limit _______
+
+    def test_oversized_utf8_partial_frame_is_rejected_at_the_byte_limit():
+        async def scenario():
+            reader, writer = pipe()
+            exits, emitted = [], []
+            class Handler:
+                def disable(self):
+                    return {'status': 'disabled'}
+            channel = ParentControlChannel(reader, NONCE, lambda **v: emitted.append(v), lambda: None,
+                fatal=exits.append, timeout=.1)
+            channel.bind(Handler())
+            worker = Thread(target=channel.watch, daemon=True)
+            worker.start()
+            raw = frame('configure', {'sentinel': '��' * 12000})[:-1].encode('utf-8')
+            assert len(raw) > MAX_BYTES and len(raw.decode('utf-8')) < MAX_BYTES
+            try:
+                await asyncio.to_thread(writer.write, raw)
+                await asyncio.sleep(.05)
+                before_eof = list(exits)
+            finally:
+                writer.close()
+                await joined(worker)
+                reader.close()
+            assert emitted == []
+            assert before_eof == [2], 'over-limit byte frame remained pending until EOF/newline'
+>       asyncio.run(scenario())
+
+.local\native-model-control-20261019\review-pipe-probes.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def scenario():
+        reader, writer = pipe()
+        exits, emitted = [], []
+        class Handler:
+            def disable(self):
+                return {'status': 'disabled'}
+        channel = ParentControlChannel(reader, NONCE, lambda **v: emitted.append(v), lambda: None,
+            fatal=exits.append, timeout=.1)
+        channel.bind(Handler())
+        worker = Thread(target=channel.watch, daemon=True)
+        worker.start()
+        raw = frame('configure', {'sentinel': '��' * 12000})[:-1].encode('utf-8')
+        assert len(raw) > MAX_BYTES and len(raw.decode('utf-8')) < MAX_BYTES
+        try:
+            await asyncio.to_thread(writer.write, raw)
+            await asyncio.sleep(.05)
+            before_eof = list(exits)
+        finally:
+            writer.close()
+            await joined(worker)
+            reader.close()
+        assert emitted == []
+>       assert before_eof == [2], 'over-limit byte frame remained pending until EOF/newline'
+E       AssertionError: over-limit byte frame remained pending until EOF/newline
+E       assert [] == [2]
+E         
+E         Right contains one more item: 2
+E         Use -v to get more diff
+
+.local\native-model-control-20261019\review-pipe-probes.py:55: AssertionError
+=========================== short test summary info ===========================
+FAILED .local/native-model-control-20261019/review-pipe-probes.py::test_oversized_utf8_partial_frame_is_rejected_at_the_byte_limit
+1 failed, 5 passed in 0.72s

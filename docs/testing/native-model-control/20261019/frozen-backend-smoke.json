@@ -1,0 +1,19 @@
+{
+  "scope": "actual final production backend, not installer or real model approval",
+  "exe_sha256": "7bebe34c3b9c750f996354a1fa0ae723f10cc0453bb5ce153acdf941dfe81fee",
+  "real_model_calls": 0,
+  "checks": [
+    "canonical_ready_login_empty_registry",
+    "private_config_authorize_then_disable_before_any_generation",
+    "normal_eof_clean_exit",
+    "zero_attempts_integrity_no_plaintext_secret_or_token"
+  ],
+  "workspace_parent": "D:\\Documents\\ChatGPT\\律所项目\\.local\\native-model-control-20261019\\冻结 合成 5b4455ac",
+  "ready_seconds": 1.517,
+  "counts": {
+    "assistant_model_attempts": 0,
+    "assistant_model_receipts": 0,
+    "assistant_model_outputs": 0
+  },
+  "status": "passed"
+}

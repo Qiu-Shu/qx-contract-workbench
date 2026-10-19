@@ -1,0 +1,13 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_native_stdout_is_canonical_lf_and_control_uses_same_owned_pipe _____
+tests\integration\test_native_control_process.py:21: in test_native_stdout_is_canonical_lf_and_control_uses_same_owned_pipe
+    assert raw.endswith(b'\n') and not raw.endswith(b'\r\n')
+E   assert (True and not True)
+E    +  where True = <built-in method endswith of bytes object at 0x000001DFA80161F0>(b'\n')
+E    +    where <built-in method endswith of bytes object at 0x000001DFA80161F0> = b'{"event":"ready","port":58191,"nonce":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","control_protocol":"qx-model-control-v1"}\r\n'.endswith
+E    +  and   True = <built-in method endswith of bytes object at 0x000001DFA80161F0>(b'\r\n')
+E    +    where <built-in method endswith of bytes object at 0x000001DFA80161F0> = b'{"event":"ready","port":58191,"nonce":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","control_protocol":"qx-model-control-v1"}\r\n'.endswith
+=========================== short test summary info ===========================
+FAILED tests/integration/test_native_control_process.py::test_native_stdout_is_canonical_lf_and_control_uses_same_owned_pipe
+1 failed in 1.61s

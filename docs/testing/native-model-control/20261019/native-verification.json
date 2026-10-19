@@ -1,0 +1,23 @@
+{
+  "scope": "native private control, not daily approval UI",
+  "electron": "44.8.0",
+  "real_model_calls": 0,
+  "checks": [
+    "real_safeStorage_ciphertext",
+    "configured_without_grant_then_exact_single_intent",
+    "real_pipe_http_receipt_citation_and_replay_one_post",
+    "revoke_disable_eof_clean_shutdown",
+    "restart_empty_registry_history_read_without_resend",
+    "no_plaintext_secret_or_session_token_in_ack_logs_database"
+  ],
+  "status": "passed",
+  "upstream_posts": 1,
+  "counts": {
+    "assistant_model_attempts": 1,
+    "assistant_model_receipts": 1,
+    "assistant_model_outputs": 1
+  },
+  "input_files": 483,
+  "changed_inputs": [],
+  "exit_code": 0
+}

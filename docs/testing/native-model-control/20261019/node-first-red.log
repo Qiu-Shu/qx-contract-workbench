@@ -1,0 +1,27 @@
+✖ trusted backend configures and disables through one owned child without exposing protocol credentials (51.3429ms)
+✖ trusted secret consumer receives plaintext once but its returned value is never exposed (19.0774ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 106.6792
+
+✖ failing tests:
+
+test at desktop\tests\model-control.test.cjs:12:1
+✖ trusted backend configures and disables through one owned child without exposing protocol credentials (51.3429ms)
+  TypeError: backend.configureModel is not a function
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:16:34)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at desktop\tests\model-credential-consumption.test.cjs:36:1
+✖ trusted secret consumer receives plaintext once but its returned value is never exposed (19.0774ms)
+  TypeError: f.store.withSecret is not a function
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-credential-consumption.test.cjs:40:34)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

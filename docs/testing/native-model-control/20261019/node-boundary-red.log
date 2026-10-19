@@ -1,0 +1,88 @@
+✔ trusted backend configures and disables through one owned child without exposing protocol credentials (56.3086ms)
+✔ legacy readiness still starts but model control remains unavailable (52.3116ms)
+✔ fragmented child pipe frames are reconstructed through their final newline (54.9366ms)
+✖ a malformed second frame in the readiness chunk rejects startup (47.2639ms)
+✔ bad-nonce irreversibly closes the owned child and reports only one fixed failure (49.353ms)
+✖ partial-result irreversibly closes the owned child and reports only one fixed failure (10059.5008ms)
+✔ normal stop cancels pending control, permits EOF exit and does not announce failure (48.3311ms)
+✔ commands are serialized once, busy calls are rejected without allocating a sequence (0.5995ms)
+✔ business denials expose only fixed codes and do not poison the control pipe (0.3575ms)
+✔ existing is an authorization-only success status (0.2676ms)
+✔ wrong nonce rejects the pending command with a fixed fatal error (0.2875ms)
+✔ future sequence rejects the pending command with a fixed fatal error (0.1732ms)
+✔ unsafe sequence rejects the pending command with a fixed fatal error (0.1834ms)
+✔ wrong operation status rejects the pending command with a fixed fatal error (0.1625ms)
+✔ unknown field rejects the pending command with a fixed fatal error (0.1574ms)
+✔ wrong protocol rejects the pending command with a fixed fatal error (0.1521ms)
+✔ duplicate key rejects the pending command with a fixed fatal error (0.172ms)
+✔ noncanonical number rejects the pending command with a fixed fatal error (0.1739ms)
+✔ extra whitespace rejects the pending command with a fixed fatal error (0.1901ms)
+✔ invalid UTF8 rejects the pending command with a fixed fatal error (0.2072ms)
+✖ UTF8 BOM rejects the pending command with a fixed fatal error (0.1912ms)
+✔ CRLF rejects the pending command with a fixed fatal error (0.1543ms)
+✔ extra empty frame rejects the pending command with a fixed fatal error (0.6407ms)
+✔ oversized incomplete frame rejects the pending command with a fixed fatal error (0.2286ms)
+✔ every complete frame is handled, including a duplicate ack in the same buffer (0.2316ms)
+✔ timeout and pipe-write failure are terminal and never retry a secret-bearing command (15.2909ms)
+✔ invalid command inputs and UTF8 byte overflow are rejected before writing or consuming a sequence (0.4929ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 24
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10450.0475
+
+✖ failing tests:
+
+test at desktop\tests\model-control.test.cjs:54:1
+✖ a malformed second frame in the readiness chunk rejects startup (47.2639ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:57:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /BACKEND_PROTOCOL/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-control.test.cjs:61:52
+✖ partial-result irreversibly closes the owned child and reports only one fixed failure (10059.5008ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /BACKEND_PROTOCOL/. Input:
+  
+  'Error: BACKEND_CONTROL_TIMEOUT'
+  
+      at async TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:68:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: BACKEND_CONTROL_TIMEOUT
+        at ModelControl.fail (D:\Documents\ChatGPT\律所项目\desktop\model-control.cjs:51:18)
+        at Timeout.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\model-control.cjs:128:37)
+        at listOnTimeout (node:internal/timers:635:17)
+        at process.processTimers (node:internal/timers:571:7),
+    expected: /BACKEND_PROTOCOL/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-control.test.cjs:139:4
+✖ UTF8 BOM rejects the pending command with a fixed fatal error (0.1912ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:144:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { message: 'BACKEND_PROTOCOL' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

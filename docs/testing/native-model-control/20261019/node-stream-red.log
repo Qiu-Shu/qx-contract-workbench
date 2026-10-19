@@ -1,0 +1,58 @@
+✖ stdout system errors stay inside the fixed failure boundary (51.6846ms)
+✖ stderr system errors stay inside the fixed failure boundary (47.6979ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 159.2881
+
+✖ failing tests:
+
+test at desktop\tests\model-control.test.cjs:105:41
+✖ stdout system errors stay inside the fixed failure boundary (51.6846ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "synthetic pipe failure detail"
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:111:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: Error: synthetic pipe failure detail
+        at D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:111:62
+        at getActual (node:assert:611:5)
+        at strict.doesNotThrow (node:assert:779:32)
+        at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:111:10)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-control.test.cjs:105:41
+✖ stderr system errors stay inside the fixed failure boundary (47.6979ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "synthetic pipe failure detail"
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:111:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: Error: synthetic pipe failure detail
+        at D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:111:62
+        at getActual (node:assert:611:5)
+        at strict.doesNotThrow (node:assert:779:32)
+        at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-control.test.cjs:111:10)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }

@@ -52,6 +52,7 @@ def _capability(actor, conversation, db, runtime, tasks):
     if digest is None:return result('empty')
     try:
         require_policy(config,policy,actor,scope,digest)
+        runtime.check_draft(actor,scope,conversation['composer_revision'],digest)
         # Canonical UUID widths are fixed; this checks the complete future wire byte cap.
         prepare(d.MainRequest(run_id=UUID(int=0),scope=scope,message_id=UUID(int=0),
             content=content,source_sha256=digest),config)

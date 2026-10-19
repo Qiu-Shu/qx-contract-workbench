@@ -73,24 +73,28 @@ class MainModelRegistry:
         self._version = object()
         self._grants.clear()
 
-    def grant(self, policy, session_id):
+    def grant(self, policy, session_id, *, basis=None):
         self._check_loop()
         session_id = _session_id(session_id)
         policy = _copy(d.MainModelPolicy, policy)
+        basis = _copy(d.MainSendApproval, basis) if basis is not None else None
         config = self._current_config()
         if (not config.enabled or policy.config_sha256 != sha(encoded(config))
                 or policy.expires_at <= datetime.now(timezone.utc)):
             raise ServiceError('BLOCKED_LIVE', 403)
-        digest = sha(encoded(policy))
+        if basis is not None and (basis.expected_scope.workspace_id != policy.workspace_id
+                or policy.allowed_content_sha256s != (basis.content_sha256,)):
+            raise ServiceError('BLOCKED_LIVE', 403)
+        digest = sha(encoded(policy) + ('\n'+encoded(basis) if basis is not None else ''))
         previous = self._seen_policies.get(policy.policy_id)
         if previous is not None and previous != digest:
             raise ServiceError('VERSION_CONFLICT', 409)
         key = policy.workspace_id, policy.actor_id, session_id
         current = self._grants.get(key)
-        if current is not None and current[0] == policy:
+        if current is not None and current[0] == policy and current[2] == basis:
             return
         self._seen_policies[policy.policy_id] = digest
-        self._grants[key] = policy, object()
+        self._grants[key] = policy, object(), basis
 
     def revoke(self, session_id):
         self._check_loop()
@@ -115,7 +119,7 @@ class _RuntimeLease:
         self._version = registry._version
         self._fixed_provider = registry._provider
         self._config = config
-        self._policy, self._nonce = grant if grant is not None else (None, None)
+        self._policy, self._nonce, self._basis = grant if grant is not None else (None, None, None)
         self.provider = _LeaseProvider(self)
 
     def snapshot(self):
@@ -137,6 +141,34 @@ class _RuntimeLease:
             raise ServiceError('BLOCKED_LIVE', 403)
         return self.snapshot()
 
+    def check_draft(self, actor, scope, composer_revision, content_sha256):
+        self.snapshot_for(actor, scope)
+        if self._basis is None:
+            return
+        basis = self._basis
+        if (scope != basis.expected_scope or composer_revision != basis.expected_composer_revision
+                or content_sha256 != basis.content_sha256):
+            raise ServiceError('BLOCKED_LIVE', 403)
+
+    def check_submission(self, actor, request):
+        request = _copy(d.AssistantMessageInput, request)
+        self.check_draft(actor, request.expected_scope, request.expected_composer_revision, sha(request.content))
+        if self._basis is not None and (request.request_id != self._basis.request_id
+                or request.requested_skill is not None or request.attachment_ids):
+            raise ServiceError('BLOCKED_LIVE', 403)
+
+    def check_execution(self, actor, request_id, request):
+        request = _copy(d.MainRequest, request)
+        self.snapshot_for(actor, request.scope)
+        if self._basis is None:
+            return
+        basis = self._basis
+        expected = basis.expected_scope.model_copy(update={
+            'input_revision': basis.expected_scope.input_revision+1})
+        if (request_id != basis.request_id or request.scope != expected
+                or request.source_sha256 != basis.content_sha256):
+            raise ServiceError('BLOCKED_LIVE', 403)
+
 
 class _LeaseProvider:
     def __init__(self, lease):
@@ -153,6 +185,8 @@ class _LeaseProvider:
             raise ServiceError('BLOCKED_LIVE', 403)
         request = _copy(d.MainRequest, request)
         require_policy(config, policy, lease._actor, request.scope, request.source_sha256)
+        if lease._basis is not None:
+            lease.check_execution(lease._actor, lease._basis.request_id, request)
         return await lease._fixed_provider.generate(request, expected_config=config)
 
 
