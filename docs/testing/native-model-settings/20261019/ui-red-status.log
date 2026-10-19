@@ -1,0 +1,32 @@
+✖ model page checks storage before runtime and distinguishes stored credentials from configuration (5.5022ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 59.8016
+
+✖ failing tests:
+
+test at desktop\tests\model-settings.test.cjs:195:1
+✖ model page checks storage before runtime and distinguishes stored credentials from configuration (5.5022ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'credential',
+  -   'runtime'
+    ]
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:200:38)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'credential' ],
+    expected: [ 'credential', 'runtime' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

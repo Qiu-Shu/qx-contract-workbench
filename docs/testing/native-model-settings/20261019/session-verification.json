@@ -1,0 +1,55 @@
+{
+  "scope": "CH-04G model session and IPC",
+  "status": "frozen",
+  "validation": [
+    {
+      "command": "node --test desktop/tests/model-session.test.cjs",
+      "log": "session-first-red.log",
+      "exit": 1,
+      "tests": 2,
+      "pass": 0,
+      "fail": 2,
+      "meaning": "Old credential handler bypassed revoke; new runtime module absent"
+    },
+    {
+      "command": "node --test desktop/tests/model-session.test.cjs",
+      "log": "session-first-green.log",
+      "exit": 0,
+      "tests": 2,
+      "pass": 2,
+      "fail": 0
+    },
+    {
+      "command": "node --test desktop/tests/model-session.test.cjs",
+      "log": "session-boundaries-green.log",
+      "exit": 0,
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "meaning": "16 additional boundary cases first run green; no artificial RED claimed"
+    }
+  ],
+  "synthetic_secret_log_matches": 0,
+  "source_hashes": [
+    {
+      "path": "desktop/model-session.cjs",
+      "sha256": "743b79b14d7c0680788358cba67371a86ebcc6089124ebdb9ffb06f5e5addb0f"
+    },
+    {
+      "path": "desktop/model-settings.cjs",
+      "sha256": "2a9c6fc50b0f4092e365437bc131d027cdc6eaf61785a9bc4ab1fd503c0070e7"
+    },
+    {
+      "path": "desktop/tests/model-session.test.cjs",
+      "sha256": "4b0a54dfdf4f1f347cb46472773cda1ee41ef7ecd0ffb3d8076b0431b452ad40"
+    }
+  ],
+  "hash_note": "Agent snapshot before root may normalize source to LF; final root source acceptance hashes are authoritative.",
+  "boundaries": [
+    "Synthetic trusted backends and credential consumers only",
+    "No real key, account, external model request or real material",
+    "No Electron UI acceptance performed by this agent in this slice",
+    "Root owns full regression, actual Windows source acceptance and shared project records"
+  ],
+  "interface": "createModelSession({store,getBackend,onFailure}): status(), configure(modelId,guard?), disable(guard?), beforeCredentialChange(guard?); registerModelSettings takes runtime and captureGuard(event) or isCurrent(event); fixed projected runtime response only"
+}

@@ -1,0 +1,28 @@
+PASS stored_credential_before_account_does_not_enable_runtime_and_other_window_denied
+PASS configure_keeps_pid_login_and_draft_but_capability_unapproved_and_post_forbidden
+PASS switch_disable_replace_and_remove_use_native_control_without_a_send_grant
+PASS actual_windows_settings_layout_at_100_150_200_percent_and_clean_shutdown
+PASS restart_retains_ciphertext_only_and_owned_backend_failure_clears_runtime
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings-acceptance.py", line 249, in <module>
+    main()
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings-acceptance.py", line 218, in main
+    current.command('crash-renderer');expect(p.locator('#retry')).to_be_visible()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings-acceptance.py", line 104, in command
+    self.page.wait_for_timeout(50)
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 12744, in wait_for_timeout
+    self._sync(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_page.py", line 1144, in wait_for_timeout
+    await self._main_frame.wait_for_timeout(timeout)
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_frame.py", line 925, in wait_for_timeout
+    await self._channel.send("waitForTimeout", None, {"waitTimeout": timeout})
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 76, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 632, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: Page.wait_for_timeout: Page crashed

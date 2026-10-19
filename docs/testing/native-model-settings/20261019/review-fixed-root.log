@@ -1,0 +1,56 @@
+✔ renderer failure must retire its configured backend before a later credential replacement (12.7839ms)
+✔ backend failure during navigation cannot overwrite error with model-settings (3.2499ms)
+✔ navigation epoch invalidates a delayed credential read even if frame URL and identity are unchanged (2.9464ms)
+✔ runtime request and credential request share a lock without a second store operation (2.6866ms)
+✖ disable failure stops the owned backend and prevents credential writes (3.1144ms)
+✔ late configure ACK is rejected and its old backend stopped after document navigation (4.1542ms)
+✔ corrupt replacement credential clears the previously configured backend (2.431ms)
+✖ ACK followed by backend control failure cannot display configured (2.2343ms)
+✔ replacing the backend while secret lookup is pending never configures either instance (1.4258ms)
+✔ replacing backend after configure dispatch stops only the old captured instance (0.5962ms)
+✔ arbitrary renderer configuration is rejected before secret access and after old authority is cleared (0.1851ms)
+✔ business configure rejection cannot retain the previous runtime metadata (0.2042ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 10
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 88.607
+
+✖ failing tests:
+
+test at .local\native-model-settings-20261019\review-probe.test.cjs:92:1
+✖ disable failure stops the owned backend and prevents credential writes (3.1144ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\.local\native-model-settings-20261019\review-probe.test.cjs:96:52)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .local\native-model-settings-20261019\review-probe.test.cjs:119:1
+✖ ACK followed by backend control failure cannot display configured (2.2343ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\.local\native-model-settings-20261019\review-probe.test.cjs:124:89)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

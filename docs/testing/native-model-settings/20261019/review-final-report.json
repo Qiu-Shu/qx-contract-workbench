@@ -1,0 +1,79 @@
+{
+  "phase": "independent review final",
+  "created_utc": "2026-10-19T14:41:08.226099+00:00",
+  "result": "no remaining blocking findings in reviewed CH-04G scope",
+  "scope": [
+    "desktop/main.cjs",
+    "desktop/model-session.cjs",
+    "desktop/model-settings.cjs",
+    "desktop/preload.cjs",
+    "desktop/setup-model.js",
+    "desktop/setup.js",
+    "desktop/setup.html",
+    "desktop/setup.css",
+    "desktop/package.json"
+  ],
+  "product_writes": false,
+  "authorized_test_change": "desktop/tests/model-settings-navigation.test.cjs: added one renderer-failure/stop-pending credential replacement regression and the minimal store fixture counters",
+  "final_check": {
+    "command": "node --test .local/native-model-settings-20261019/review-probe.test.cjs desktop/tests/model-settings-navigation.test.cjs",
+    "exit": 0,
+    "tests": 20,
+    "passed": 20,
+    "failed": 0,
+    "composition": {
+      "independent_target_probes": 12,
+      "navigation_tests": 8
+    },
+    "duration_ms": 98.4863,
+    "log": "review-final.log"
+  },
+  "initial_evidence": "review-initial-report.json; review-initial.log/exit preserves the original 7 pass / 1 failure; review-extra.log/exit covers four additional distinct probes",
+  "findings": [
+    {
+      "id": "R1",
+      "priority": "P2",
+      "status": "closed by root product fix; independently verified",
+      "trigger": "configured backend -> render-process-gone -> reopen model settings -> replace credential",
+      "observed_before": "showError clears activeBackend without stopping its healthy owned backend; beforeCredentialChange sees no backend and allows store.save, leaving the prior configuration active",
+      "fix": "showError captures the owned backend and holds busy while stop completes (or awaits an existing stopping Promise); error UI only applies to the still-current instance",
+      "verified": "Original renderer-failure probe passes; formal regression proves zero credential writes before stop settles, replacement allowed afterward, and new backend starts unconfigured"
+    }
+  ],
+  "reviewed_boundaries": [
+    "Trusted return URL is captured before navigation and bound to the active backend snapshot; valid return preserves backend/session",
+    "Unsaved-page navigation rejection does not stop backend or enter settings",
+    "Recovery snapshot excludes generation configuration while credential inspection remains available",
+    "Old-backend failure cannot replace current page; failure during leave cannot overwrite error state",
+    "Document epoch rejects delayed results even when main-frame identity and setup URL are unchanged",
+    "Credential and runtime operations share the busy lock",
+    "Credential replacement waits for disable; failed disable stops owned backend and causes zero store writes",
+    "Corrupt credential or business configure rejection cannot leave known old runtime configuration",
+    "Late configure ACK cannot publish configured after navigation/backend replacement/control failure",
+    "withSecret callback result is treated separately from credential-read status; no nested store queue access",
+    "Fixed catalog rejects arbitrary renderer configuration before reading the secret",
+    "UI uses textContent and epoch/active isolation, clears secret input, serializes credential/runtime reads, and keeps saved/configured/authorized distinct",
+    "Preload exposes only dedicated functions; broker projects fixed status/model/code fields; package allowlist includes new modules"
+  ],
+  "source_sha256": {
+    "desktop/main.cjs": "525cd723a707ac52f1ac375e73c22139e004ea0ee240d098c0c5bec81e0f29bf",
+    "desktop/model-session.cjs": "743b79b14d7c0680788358cba67371a86ebcc6089124ebdb9ffb06f5e5addb0f",
+    "desktop/model-settings.cjs": "2a9c6fc50b0f4092e365437bc131d027cdc6eaf61785a9bc4ab1fd503c0070e7",
+    "desktop/preload.cjs": "0f03d36f2aa00c2899bb67ac37b806e252f4f585c001bba9bc97f3920338284b",
+    "desktop/setup-model.js": "a10fcb0210062ae8b9538ab6eaf096baaabdd13f531ca02a2963bbdf57abb79d",
+    "desktop/setup.js": "66bcb5e325451ae4b365323915f769ab5221636358b4febd8ae235e0214be605",
+    "desktop/setup.html": "54dafd7496a4b45f2e5d913cffe88e3a753f4791366d1e5df86afc6a32b9f8f8",
+    "desktop/setup.css": "6756de95bcb1aa0729aed4cf6c3ba077282b3d580a74ff79592533ac003917f8",
+    "desktop/package.json": "f19c97285dfab5be3e0795ac0c2fc1a794e1bf683e9e035d8dfc24f0e17de7f5"
+  },
+  "evidence_sha256": {
+    "desktop\\tests\\model-settings-navigation.test.cjs": "250436391e5a14e70e927092db08c37c74d2ab84cd76625685d6e0fda6ebfb96",
+    ".local\\native-model-settings-20261019\\review-probe.test.cjs": "97ac4c0d653f0955b7fbe43dcc39902732f5241d1d4d0667ed2508b0d09988a4",
+    ".local\\native-model-settings-20261019\\review-final.log": "3b2fe626682adbe9777bc6cd5d6c7609de613dd353f7c6c7ceaca0d73a0859e7"
+  },
+  "limits": [
+    "VM harness executes actual main.cjs with synthetic Electron/backend/store boundaries; no actual Electron process in this independent probe",
+    "No actual secret, model call, external request, installed application or law-library access",
+    "Actual Windows acceptance and screenshots owned by root; not rerun here"
+  ]
+}

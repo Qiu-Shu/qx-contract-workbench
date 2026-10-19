@@ -3,24 +3,56 @@ const codes=new Set(['CREDENTIAL_INPUT_INVALID','CREDENTIAL_PATH_UNSAFE','CREDEN
   'CREDENTIAL_STORAGE_UNAVAILABLE','CREDENTIAL_STORAGE_FAILED','CREDENTIAL_ROTATION_REQUIRED']);
 const denied=()=>({status:'unavailable',code:'ACCESS_DENIED'});
 const unavailable=()=>({status:'unavailable',code:'CREDENTIAL_STORAGE_FAILED'});
+const runtimeCodes=new Set([...codes,'ACCESS_DENIED','BLOCKED_LIVE','STATE_CONFLICT','VERSION_CONFLICT',
+  'BUDGET_EXCEEDED','CROSS_MATTER_DENIED']);
+const runtimeDenied=(code='BLOCKED_LIVE')=>({ok:false,runtime:{state:'unavailable',model:null},code});
+const check=guard=>{try{return guard()===true;}catch{return false;}};
+function runtimeResult(result) {
+  const state=result?.runtime?.state,model=result?.runtime?.model;
+  if(typeof result?.ok!=='boolean' || !['unavailable','unconfigured','configured'].includes(state) ||
+      (state==='configured' ? !['deepseek-flash','deepseek-v4-pro'].includes(model) : model!==null))return runtimeDenied();
+  return {ok:result.ok,runtime:{state,model},...(runtimeCodes.has(result.code)?{code:result.code}:{})};
+}
 
-function registerModelSettings({ipcMain,store,isAllowed,setBusy}) {
+function registerModelSettings({ipcMain,store,runtime,isAllowed,isCurrent,captureGuard,setBusy}) {
   let pending=null;
-  async function run(event,operation,secret) {
-    if(pending || !isAllowed(event))return denied();
+  async function run(event,operation,value,modelOperation=false) {
+    const deny=()=>modelOperation ? runtimeDenied('ACCESS_DENIED') : denied();
+    if(pending || !check(()=>isAllowed(event)))return deny();
+    let guard;
+    try{guard=captureGuard ? captureGuard(event) : ()=>isCurrent ? isCurrent(event) : true;}
+    catch{return deny();}
+    if(typeof guard!=='function' || !check(guard))return deny();
     setBusy(true);
-    const task=Promise.resolve().then(()=>operation==='save'?store.save(secret):store[operation]());
-    pending=task;
-    try {
-      const result=await task;
+    const task=Promise.resolve().then(async()=>{
+      if(!check(guard))return deny();
+      if(modelOperation){
+        if(!runtime)return runtimeDenied();
+        const result=await (operation==='configure' ? runtime.configure(value,guard) : runtime[operation](guard));
+        return check(guard) ? runtimeResult(result) : deny();
+      }
+      if(operation!=='status' && runtime){
+        const cleared=await runtime.beforeCredentialChange(guard);
+        if(!check(guard))return deny();
+        if(cleared?.ok!==true)return unavailable();
+      }
+      if(!check(guard))return deny();
+      const result=await (operation==='save' ? store.save(value) : store[operation]());
+      if(!check(guard))return deny();
       if(!statuses.has(result?.status))return unavailable();
       return {status:result.status,...(codes.has(result.code)?{code:result.code}:{})};
-    } catch {return unavailable();}
-    finally {secret='';pending=null;setBusy(false);}
+    });
+    pending=task;
+    try{return await task;}
+    catch{return modelOperation ? runtimeDenied() : unavailable();}
+    finally{value='';pending=null;setBusy(false);}
   }
   ipcMain.handle('desktop:model-status',event=>run(event,'status'));
   ipcMain.handle('desktop:model-save',(event,secret)=>run(event,'save',secret));
   ipcMain.handle('desktop:model-remove',event=>run(event,'remove'));
+  ipcMain.handle('desktop:model-runtime-status',event=>run(event,'status',undefined,true));
+  ipcMain.handle('desktop:model-configure',(event,model)=>run(event,'configure',model,true));
+  ipcMain.handle('desktop:model-disable',event=>run(event,'disable',undefined,true));
   return {wait:()=>Promise.allSettled([pending,store.drain?.()])};
 }
 module.exports={registerModelSettings};

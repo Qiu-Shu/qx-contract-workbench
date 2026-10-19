@@ -7,6 +7,7 @@ const { Backend } = require('./backend.cjs');
 const { Maintenance } = require('./maintenance.cjs');
 const { createModelCredentialStore } = require('./model-credentials.cjs');
 const { registerModelSettings } = require('./model-settings.cjs');
+const { createModelSession } = require('./model-session.cjs');
 const { navigationAllowed, setupSenderAllowed, validLibraryRoot, clipboardWriteAllowed } = require('./policy.cjs');
 
 app.setName('群兴法律工作台验证版');
@@ -22,6 +23,7 @@ const setupURL = pathToFileURL(path.join(__dirname, 'setup.html')).href;
 const settingsPath = path.join(dataParent, 'desktop-settings.json');
 let win, backend, maintenance, modelSettings, origin = '', stopping = false, busy = false;
 let settings = {}, state = {mode:'loading', message:'正在打开工作台…'};
+let documentEpoch=0, settingsReturn=null, activeBackend=null;
 function workspacePath(){return path.join(dataParent,'workspaces',settings.workspace||'main');}
 function runtime(){return {executable:app.isPackaged?path.join(process.resourcesPath,'backend','qx-backend.exe')
   :path.join(__dirname,'..','.venv','Scripts','python.exe'),args:app.isPackaged?[]:['-m','cn_contract.desktop_entry']};}
@@ -47,10 +49,17 @@ async function changeSettings(next) {
     return {ok:false};
   }
 }
-async function showError() {
-  origin = '';
-  setState({mode:'error',message:'工作台未能启动或已意外停止。请重新打开；已有资料会保留。如仍失败，请保留资料目录并联系维护人员。'});
-  if (win && !win.isDestroyed()) await win.loadURL(setupURL);
+async function showError(owned=backend) {
+  if(owned!==backend)return;
+  const wasBusy=busy;busy=true;
+  origin = ''; settingsReturn=null;activeBackend=null;
+  try {
+    if(owned&&!owned.closing)await owned.stop();
+    else if(owned)await owned.stopping;
+    if(stopping||owned!==backend)return;
+    setState({mode:'error',message:'工作台未能启动或已意外停止。请重新打开；已有资料会保留。如仍失败，请保留资料目录并联系维护人员。'});
+    if(win&&!win.isDestroyed())try{await win.loadURL(setupURL);}catch{}
+  } finally {if(!wasBusy)busy=false;}
 }
 async function leavePage(){
   if(win.webContents.getURL()===setupURL)return true;
@@ -70,14 +79,18 @@ async function startBackend(credentials = {}) {
   }
   busy = true; setState({mode:'loading',message:'正在检查资料并启动工作台…'});
   try {
+    activeBackend=null;settingsReturn=null;origin='';
     if (backend) await backend.stop();
     if (settings.library_root && !validLibraryRoot(settings.library_root)) throw new Error('LIBRARY_UNAVAILABLE');
     const {executable,args}=runtime();
     backend = new Backend(executable,args);
-    backend.on('failed', () => { if (!stopping) void showError(); });
+    const owned=backend;
+    owned.on('failed', () => { if (!stopping && backend===owned) void showError(owned); });
     const ready = await backend.start({data_parent:dataParent,...credentials,...settings});
     origin = `http://127.0.0.1:${ready.port}`;
+    activeBackend={instance:owned,origin,workspace:settings.workspace||'main'};
     await win.loadURL(origin+'/login');
+    if(activeBackend?.instance!==owned)return {ok:false};
     setState({mode:'ready'}); return {ok:true};
   } catch {
     if (backend) await backend.stop();
@@ -102,12 +115,32 @@ async function showMaintenance(operation){
   if(operation==='backup'&&!fs.existsSync(workspacePath()))return;
   busy=true;
   try{
+    const previous=win.webContents.getURL(),owned=activeBackend;
     if(!await leavePage())return;
-    if(backend)await backend.stop();origin='';
+    if(owned&&activeBackend!==owned)return;
+    if(operation==='model-settings') {
+      if(previous!==setupURL)settingsReturn=navigationAllowed(previous,origin,'')?{owned,url:previous}:null;
+    } else {
+      activeBackend=null;settingsReturn=null;origin='';
+      if(backend)await backend.stop();
+    }
     const messages={backup:'备份当前工作区的全部账户和案件资料。',restore:'从加密备份建立独立核对副本，原工作区保留。',
-      'model-settings':'主模型设置准备：仅管理这台电脑保存的密钥。'};
+      'model-settings':'管理本机密钥与本次运行的主模型。配置后仍需单独确认发送。'};
     setState({mode:operation,message:messages[operation]});
   }finally{busy=false;}
+}
+async function resume(event){
+  if(!isSetup(event)||busy||stopping)return {ok:false};
+  const owned=activeBackend;
+  if(state.mode!=='model-settings'||!owned||!origin||!backend||backend.closing)return startBackend();
+  busy=true;
+  try {
+    const target=settingsReturn?.owned===owned&&navigationAllowed(settingsReturn.url,origin,'')?settingsReturn.url:origin+'/login';
+    await win.loadURL(target);
+    if(activeBackend!==owned)return {ok:false};
+    setState({mode:'ready'});return {ok:true};
+  } catch {await showError();return {ok:false};}
+  finally {busy=false;}
 }
 async function runMaintenance(event,values){
   if(!isSetup(event)||busy||stopping||!['backup','restore'].includes(state.mode))return {ok:false};
@@ -175,6 +208,7 @@ else {
     win = new BrowserWindow({width:1240,height:850,minWidth:640,minHeight:540,backgroundColor:'#f2f5f8',show:false,
       webPreferences:{preload:path.join(__dirname,'preload.cjs'),session:isolated,nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
     win.webContents.setWindowOpenHandler(()=>({action:'deny'}));
+    win.webContents.on('did-start-navigation',(_event,_url,inPlace,isMainFrame)=>{if(isMainFrame&&!inPlace)documentEpoch++;});
     win.webContents.on('will-navigate',(event,url)=>{if(!navigationAllowed(url,origin,setupURL)) event.preventDefault();});
     win.webContents.on('will-redirect',(event,url)=>{if(!navigationAllowed(url,origin,setupURL)) event.preventDefault();});
     win.webContents.on('will-attach-webview',event=>event.preventDefault());
@@ -188,16 +222,22 @@ else {
         {label:'备份案件资料…',click:()=>showMaintenance('backup')},
         {label:'从备份建立核对副本…',click:()=>showMaintenance('restore')},
         {label:'返回原工作区',click:async()=>{if(!busy&&(await changeSettings({...settings,workspace:'main'})).ok)await startBackend();}},
-        {label:'重新打开工作台',click:()=>{if(!busy) void startBackend();}}, {type:'separator'},{role:'quit',label:'退出'}]},
+        {label:'重新打开工作台',click:()=>startBackend()}, {type:'separator'},{role:'quit',label:'退出'}]},
       {label:'编辑',submenu:[{role:'undo',label:'撤销'},{role:'redo',label:'重做'},{type:'separator'},{role:'cut',label:'剪切'},{role:'copy',label:'复制'},{role:'paste',label:'粘贴'},{role:'selectAll',label:'全选'}]},
       {label:'视图',submenu:[{role:'resetZoom',label:'恢复字号'},{role:'zoomIn',label:'放大'},{role:'zoomOut',label:'缩小'},{role:'togglefullscreen',label:'全屏'}]}
     ]));
     ipcMain.handle('desktop:state',event=>isSetup(event)?state:null);
     ipcMain.handle('desktop:library',event=>isSetup(event)?chooseLibrary():{ok:false});
     ipcMain.handle('desktop:maintenance',runMaintenance);
-    modelSettings=registerModelSettings({ipcMain,store:createModelCredentialStore({dataParent,safeStorage,platform:process.platform}),
-      isAllowed:event=>!busy&&!stopping&&state.mode==='model-settings'&&isSetup(event),setBusy:value=>{busy=value;}});
-    ipcMain.handle('desktop:resume',event=>isSetup(event)&&!busy?startBackend():{ok:false});
+    const store=createModelCredentialStore({dataParent,safeStorage,platform:process.platform});
+    const modelSession=createModelSession({store,
+      getBackend:()=>activeBackend?.instance===backend&&origin&&backend&&!backend.closing&&!activeBackend.workspace.startsWith('recovered/')?backend:null,
+      onFailure:async owned=>{if(!stopping&&backend===owned)await showError(owned);}});
+    modelSettings=registerModelSettings({ipcMain,store,runtime:modelSession,
+      isAllowed:event=>!busy&&!stopping&&state.mode==='model-settings'&&isSetup(event),
+      captureGuard:event=>{const epoch=documentEpoch;return ()=>epoch===documentEpoch&&!stopping&&state.mode==='model-settings'&&isSetup(event);},
+      setBusy:value=>{busy=value;}});
+    ipcMain.handle('desktop:resume',resume);
     ipcMain.handle('desktop:start',(event,values)=>{
       if (!isSetup(event) || busy) return {ok:false};
       if (state.mode === 'error') return startBackend();

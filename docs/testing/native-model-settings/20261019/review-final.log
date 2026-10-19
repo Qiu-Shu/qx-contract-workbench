@@ -1,0 +1,28 @@
+✔ renderer failure must retire its configured backend before a later credential replacement (13.3728ms)
+✔ backend failure during navigation cannot overwrite error with model-settings (3.8207ms)
+✔ navigation epoch invalidates a delayed credential read even if frame URL and identity are unchanged (3.4432ms)
+✔ runtime request and credential request share a lock without a second store operation (3.3553ms)
+✔ disable failure stops the owned backend and prevents credential writes (3.1969ms)
+✔ late configure ACK is rejected and its old backend stopped after document navigation (4.5362ms)
+✔ corrupt replacement credential clears the previously configured backend (2.916ms)
+✔ ACK followed by backend control failure cannot display configured (2.568ms)
+✔ replacing the backend while secret lookup is pending never configures either instance (1.2504ms)
+✔ replacing backend after configure dispatch stops only the old captured instance (0.6447ms)
+✔ arbitrary renderer configuration is rejected before secret access and after old authority is cleared (0.1998ms)
+✔ business configure rejection cannot retain the previous runtime metadata (0.2655ms)
+✔ native model settings preserve the running backend and return to the prior trusted conversation (10.8134ms)
+✔ unsaved page rejection keeps its backend and does not enter settings (3.1483ms)
+✔ backup still stops the owned backend and returning starts an unconfigured process (3.6131ms)
+✔ restored read-only workspace can inspect credentials but cannot configure a model (3.6902ms)
+✔ new runtime IPC rejects ordinary HTTP pages and subframes (2.8034ms)
+✔ resuming never loads an untrusted previous URL (2.3975ms)
+✔ a failure from an old backend cannot replace the current page (6.7601ms)
+✔ renderer failure blocks credential replacement until the configured backend has stopped (3.4537ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 98.4863

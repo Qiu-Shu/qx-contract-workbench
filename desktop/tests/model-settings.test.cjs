@@ -39,7 +39,7 @@ async function native(t) {
 
 test('native menu enters a distinct settings mode and only returns protected credential status',async t=>{
   const f=await native(t);await f.open();
-  assert.equal(f.states.at(-1).mode,'model-settings');assert.match(f.states.at(-1).message,/准备|设置/);
+  assert.equal(f.states.at(-1).mode,'model-settings');assert.match(f.states.at(-1).message,/单独确认发送/);
   const read=f.handlers.get('desktop:model-status');assert.equal(typeof read,'function');
   assert.equal((await read(f.event())).status,'empty');
   const save=f.handlers.get('desktop:model-save');assert.equal((await save(f.event(),'synthetic-secret')).status,'saved');
@@ -126,9 +126,15 @@ function page() {
     ?[...elements.values()].filter(value=>value.tag==='button'):[]};
   let onState;const api={onState:fn=>onState=fn,state:async()=>({mode:'setup'}),chooseLibrary(){},start(){},resume:async()=>{calls.push('resume');},maintenance(){},
     modelStatus:async()=>({status:'empty'}),modelSave:async value=>{calls.push(['save',value]);return {status:'saved'};},
-    modelRemove:async()=>{calls.push('remove');return {status:'empty'};}};
+    modelRemove:async()=>{calls.push('remove');return {status:'empty'};},
+    modelRuntimeStatus:async()=>({ok:true,runtime:{state:'unconfigured',model:null}}),
+    modelConfigure:async model=>{calls.push(['configure',model]);return {ok:true,runtime:{state:'configured',model}};},
+    modelDisable:async()=>{calls.push('disable');return {ok:true,runtime:{state:'unconfigured',model:null}};}};
   const window={desktopSetup:api,addEventListener:(name,fn)=>listeners.set(name,fn)};
-  vm.runInNewContext(fs.readFileSync(path.join(desktop,'setup.js'),'utf8'),{document,window,console});
+  const context=vm.createContext({document,window,console});
+  if(fs.existsSync(path.join(desktop,'setup-model.js')))
+    vm.runInContext(fs.readFileSync(path.join(desktop,'setup-model.js'),'utf8'),context);
+  vm.runInContext(fs.readFileSync(path.join(desktop,'setup.js'),'utf8'),context);
   return {api,calls,listeners,at:id=>elements.get('#'+id),state:value=>onState(value),html};
 }
 
@@ -141,7 +147,7 @@ test('credential form saves once, clears input immediately and labels stored cre
   await submit({preventDefault(){}});assert.equal(f.calls.filter(value=>Array.isArray(value)).length,1);
   assert.equal(f.at('model-save').disabled,true);gate.resolve();await saving;
   assert.match(f.at('model-status').textContent,/已保存/);assert.match(f.at('model-save').textContent,/替换/);
-  assert.match(f.html,/不会启用模型|不启用模型/);assert.match(f.html,/不授权|不会授权/);assert.match(f.html,/不产生费用|不会产生费用/);
+  assert.match(f.html,/保存密钥不会配置/);assert.match(f.html,/不授权|不会授权/);assert.match(f.html,/不会产生调用费用/);
 });
 
 test('credential errors clear inputs, hide raw errors and leaving discards delayed responses',async()=>{
@@ -161,7 +167,7 @@ test('credential remove and return clear an unsubmitted replacement',async()=>{
   const f=page();await tick();assert.ok(f.at('model-secret'),'password field missing');
   f.api.modelStatus=async()=>({status:'saved'});f.state({mode:'model-settings'});await tick();
   f.at('model-secret').value='synthetic-unsubmitted';await f.at('model-remove').listeners.click();
-  assert.equal(f.at('model-secret').value,'');assert.match(f.at('model-status').textContent,/未配置|已移除/);
+  assert.equal(f.at('model-secret').value,'');assert.match(f.at('model-status').textContent,/未保存|已移除/);
   f.at('model-secret').value='synthetic-unsubmitted';await f.at('resume').listeners.click();
   assert.equal(f.at('model-secret').value,'');assert.deepEqual(f.calls,['remove','resume']);
 });
@@ -183,5 +189,109 @@ test('a late old settings reply cannot erase text entered after reopening settin
   f.state({mode:'setup'});f.state({mode:'model-settings'});await tick();
   f.at('model-secret').value='synthetic-new-secret';gate.resolve({status:'saved'});await saving;
   assert.equal(f.at('model-secret').value,'synthetic-new-secret');
-  assert.match(f.at('model-status').textContent,/未配置/);
+  assert.match(f.at('model-status').textContent,/未保存/);
+});
+
+test('model page checks storage before runtime and distinguishes stored credentials from configuration',async()=>{
+  const f=page();await tick();const gate=deferred(),reads=[];
+  f.api.modelStatus=async()=>{reads.push('credential');await gate.promise;return {status:'saved'};};
+  f.api.modelRuntimeStatus=async()=>{reads.push('runtime');return {ok:true,runtime:{state:'unconfigured',model:null}};};
+  f.state({mode:'model-settings'});await tick();assert.deepEqual(reads,['credential']);
+  gate.resolve();await tick();assert.deepEqual(reads,['credential','runtime']);
+  assert.match(f.at('model-status').textContent,/已保存/);
+  assert.match(f.at('model-runtime-status').textContent,/本次运行.*未配置/);
+  assert.equal(f.at('model-configure').disabled,false);
+  assert.equal(f.at('model-disable').disabled,true);
+  assert.deepEqual(f.calls,[],'reading or saving credentials cannot configure automatically');
+});
+
+test('model page configures only a fixed selected ID, serializes actions and can switch or disable',async()=>{
+  const f=page();await tick();f.api.modelStatus=async()=>({status:'saved'});
+  f.state({mode:'model-settings'});await tick();
+  const gate=deferred();f.api.modelConfigure=async model=>{f.calls.push(['configure',model]);await gate.promise;
+    return {ok:true,runtime:{state:'configured',model}};};
+  f.at('model-secret').value='synthetic-unsubmitted';
+  const configuring=f.at('model-configure').listeners.click();
+  assert.equal(f.at('model-secret').value,'');assert.equal(f.at('model-configure').disabled,true);
+  await f.at('model-configure').listeners.click();await f.at('model-disable').listeners.click();
+  await f.at('model-recheck').listeners.click();await f.at('resume').listeners.click();
+  assert.deepEqual(f.calls,[['configure','deepseek-flash']]);
+  gate.resolve();await configuring;
+  assert.match(f.at('model-runtime-status').textContent,/本次运行已配置.*尚未授权发送/);
+  assert.equal(f.at('model-configure').disabled,true,'same model needs no repeated configuration');
+  f.at('model-id').value='deepseek-v4-pro';f.at('model-id').listeners.change();
+  assert.equal(f.at('model-configure').disabled,false);
+  await f.at('model-configure').listeners.click();assert.match(f.at('model-runtime-status').textContent,/V4 Pro/);
+  await f.at('model-disable').listeners.click();assert.match(f.at('model-runtime-status').textContent,/本次运行未配置/);
+  assert.match(f.at('model-status').textContent,/已保存/);
+  f.at('model-id').value='unexpected-model';f.at('model-id').listeners.change();
+  assert.equal(f.at('model-configure').disabled,true);await f.at('model-configure').listeners.click();
+  assert.deepEqual(f.calls,[['configure','deepseek-flash'],['configure','deepseek-v4-pro'],'disable']);
+});
+
+test('model page hides stale runtime configuration while replacing credentials and reads back serially',async()=>{
+  const f=page();await tick();f.api.modelStatus=async()=>({status:'saved'});
+  f.api.modelRuntimeStatus=async()=>({ok:true,runtime:{state:'configured',model:'deepseek-flash'}});
+  f.state({mode:'model-settings'});await tick();
+  const saving=deferred(),reading=deferred(),order=[];
+  f.api.modelSave=async()=>{order.push('save');await saving.promise;return {status:'saved'};};
+  f.api.modelRuntimeStatus=async()=>{order.push('runtime');await reading.promise;return {ok:true,runtime:{state:'unconfigured',model:null}};};
+  f.at('model-secret').value='synthetic-replacement';
+  const pending=f.at('model-settings').listeners.submit({preventDefault(){}});
+  assert.deepEqual(order,['save']);assert.doesNotMatch(f.at('model-runtime-status').textContent,/已配置/);
+  saving.resolve();await tick();assert.deepEqual(order,['save','runtime']);
+  assert.equal(f.at('resume').disabled,true);assert.doesNotMatch(f.at('model-runtime-status').textContent,/已配置/);
+  reading.resolve();await pending;
+  assert.match(f.at('model-status').textContent,/已保存/);assert.match(f.at('model-runtime-status').textContent,/未配置/);
+  assert.equal(f.at('model-configure').disabled,false);
+});
+
+test('model page runtime failure is separate from stored credentials and a recheck can recover',async()=>{
+  const f=page();await tick();f.api.modelStatus=async()=>({status:'saved'});
+  f.state({mode:'model-settings'});await tick();
+  f.api.modelConfigure=async()=>{throw Error('synthetic-private-key');};
+  await f.at('model-configure').listeners.click();
+  assert.match(f.at('model-status').textContent,/已保存/);
+  assert.equal(f.at('model-runtime-validation').hidden,false);
+  assert.doesNotMatch(f.at('model-runtime-validation').textContent,/synthetic/);
+  assert.equal(f.at('model-configure').disabled,true);
+  await f.at('model-recheck').listeners.click();
+  assert.equal(f.at('model-runtime-validation').hidden,true);assert.equal(f.at('model-configure').disabled,false);
+});
+
+test('model page discards delayed configuration after leaving without clearing the new page input',async()=>{
+  const f=page();await tick();f.api.modelStatus=async()=>({status:'saved'});
+  f.state({mode:'model-settings'});await tick();const gate=deferred();f.api.modelConfigure=()=>gate.promise;
+  const configuring=f.at('model-configure').listeners.click();
+  f.state({mode:'setup'});f.state({mode:'model-settings'});await tick();
+  f.at('model-secret').value='synthetic-new-secret';
+  gate.resolve({ok:true,runtime:{state:'configured',model:'deepseek-v4-pro'}});await configuring;
+  assert.equal(f.at('model-secret').value,'synthetic-new-secret');
+  assert.match(f.at('model-runtime-status').textContent,/未配置/);
+  f.listeners.get('pagehide')();assert.equal(f.at('model-secret').value,'');
+  await f.at('model-configure').listeners.click();assert.deepEqual(f.calls,[]);
+});
+
+test('model page allows credential maintenance when runtime is unavailable and restart stays unconfigured',async()=>{
+  const f=page();await tick();f.api.modelStatus=async()=>({status:'saved'});
+  f.api.modelRuntimeStatus=async()=>({ok:true,runtime:{state:'unavailable',model:null}});
+  f.state({mode:'model-settings'});await tick();
+  assert.equal(f.at('model-save').disabled,false);assert.equal(f.at('model-remove').disabled,false);
+  assert.equal(f.at('model-configure').disabled,true);assert.equal(f.at('model-disable').disabled,true);
+  await f.at('model-configure').listeners.click();assert.deepEqual(f.calls,[]);
+  f.state({mode:'error'});f.api.modelRuntimeStatus=async()=>({ok:true,runtime:{state:'unconfigured',model:null}});
+  f.state({mode:'model-settings'});await tick();
+  assert.match(f.at('model-status').textContent,/已保存/);assert.match(f.at('model-runtime-status').textContent,/本次运行未配置/);
+  assert.equal(f.at('model-configure').disabled,false);assert.deepEqual(f.calls,[]);
+});
+
+test('model page rejects unknown model projection and never renders raw runtime errors',async()=>{
+  const f=page();await tick();f.api.modelStatus=async()=>({status:'saved'});
+  f.api.modelRuntimeStatus=async()=>({ok:true,runtime:{state:'configured',model:'synthetic-private-value'}});
+  f.state({mode:'model-settings'});await tick();
+  assert.doesNotMatch(f.at('model-runtime-status').textContent,/synthetic|已配置/);
+  assert.equal(f.at('model-configure').disabled,true);
+  f.api.modelRuntimeStatus=async()=>({ok:false,runtime:{state:'unavailable',model:null},code:'synthetic-private-key'});
+  await f.at('model-recheck').listeners.click();assert.equal(f.at('model-runtime-validation').hidden,false);
+  assert.doesNotMatch(f.at('model-runtime-validation').textContent,/synthetic/);
 });

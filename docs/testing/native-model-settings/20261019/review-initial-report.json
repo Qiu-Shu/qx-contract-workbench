@@ -1,0 +1,61 @@
+{
+  "phase": "independent review initial",
+  "created_utc": "2026-10-19T14:38:31.702968+00:00",
+  "product_writes": false,
+  "scope": [
+    "desktop/main.cjs",
+    "desktop/model-session.cjs",
+    "desktop/model-settings.cjs",
+    "desktop/preload.cjs",
+    "desktop/setup-model.js",
+    "desktop/setup.js",
+    "desktop/setup.html",
+    "desktop/setup.css",
+    "desktop/package.json"
+  ],
+  "checks": [
+    {
+      "command": "node --test .local/native-model-settings-20261019/review-probe.test.cjs",
+      "exit": 1,
+      "tests": 8,
+      "passed": 7,
+      "failed": 1,
+      "log": "review-initial.log"
+    },
+    {
+      "command": "node --test --test-name-pattern='replacing|arbitrary|business' .local/native-model-settings-20261019/review-probe.test.cjs",
+      "exit": 0,
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "log": "review-extra.log"
+    }
+  ],
+  "findings": [
+    {
+      "id": "R1",
+      "priority": "P2",
+      "status": "reported to root; open",
+      "trigger": "configured backend -> render-process-gone -> reopen model settings -> replace credential",
+      "observed": "showError clears activeBackend without stopping its healthy owned backend; beforeCredentialChange sees no backend and allows store.save, leaving the prior configuration active",
+      "source": "desktop/main.cjs showError/render-process-gone/getBackend",
+      "probe": "renderer failure must retire its configured backend before a later credential replacement"
+    }
+  ],
+  "source_sha256": {
+    "desktop/main.cjs": "ecb5ee7a22c22bdc289367e812fb022c8670507f84a8ecd62307e1923f213b3c",
+    "desktop/model-session.cjs": "743b79b14d7c0680788358cba67371a86ebcc6089124ebdb9ffb06f5e5addb0f",
+    "desktop/model-settings.cjs": "2a9c6fc50b0f4092e365437bc131d027cdc6eaf61785a9bc4ab1fd503c0070e7",
+    "desktop/preload.cjs": "0f03d36f2aa00c2899bb67ac37b806e252f4f585c001bba9bc97f3920338284b",
+    "desktop/setup-model.js": "a10fcb0210062ae8b9538ab6eaf096baaabdd13f531ca02a2963bbdf57abb79d",
+    "desktop/setup.js": "66bcb5e325451ae4b365323915f769ab5221636358b4febd8ae235e0214be605",
+    "desktop/setup.html": "54dafd7496a4b45f2e5d913cffe88e3a753f4791366d1e5df86afc6a32b9f8f8",
+    "desktop/setup.css": "45e8b1d9c1a3c18f7cd102492daddde6c3765f40bae6933b3ce94674c43ee96f",
+    "desktop/package.json": "f19c97285dfab5be3e0795ac0c2fc1a794e1bf683e9e035d8dfc24f0e17de7f5"
+  },
+  "limits": [
+    "VM harness executes actual main.cjs with synthetic Electron/backend/store boundaries; no actual Electron process in this independent probe",
+    "No actual secret, model call, external request, installed application or law-library access",
+    "Actual Windows acceptance and screenshots owned by root; not rerun here"
+  ]
+}

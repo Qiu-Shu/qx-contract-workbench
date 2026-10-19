@@ -1,0 +1,117 @@
+{
+  "electron": "44.8.0",
+  "events": [
+    "actual_will_quit"
+  ],
+  "backend_configs": [
+    {
+      "keys": [
+        "data_parent",
+        "password",
+        "username"
+      ],
+      "contains_model_credential": false
+    }
+  ],
+  "windows": [
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    }
+  ],
+  "page_loads": 6,
+  "page_url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html",
+  "ready": {
+    "port": 63576,
+    "pid": 21240
+  },
+  "model_controls": [
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "deepseek-flash"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "deepseek-v4-pro"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "deepseek-flash"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "deepseek-flash"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "deepseek-flash"
+    }
+  ],
+  "backend_exit": {
+    "code": 0,
+    "signal": null
+  }
+}

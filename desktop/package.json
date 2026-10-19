@@ -21,7 +21,7 @@
     "electronLanguages": ["zh-CN", "zh-TW", "en-US"],
     "electronDist": "node_modules/electron/dist",
     "directories": {"output": "../dist/desktop"},
-    "files": ["main.cjs", "backend.cjs", "model-control.cjs", "maintenance.cjs", "model-credentials.cjs", "model-settings.cjs", "policy.cjs", "preload.cjs", "setup.html", "setup.css", "setup.js", "package.json"],
+    "files": ["main.cjs", "backend.cjs", "model-control.cjs", "maintenance.cjs", "model-credentials.cjs", "model-settings.cjs", "model-session.cjs", "policy.cjs", "preload.cjs", "setup.html", "setup.css", "setup.js", "setup-model.js", "package.json"],
     "extraResources": [{"from": "../dist/qx-backend", "to": "backend"}],
     "win": {"target": "nsis", "signAndEditExecutable": false, "artifactName": "Qunxing-Workbench-${version}-Setup.${ext}"},
     "nsis": {"oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "deleteAppDataOnUninstall": false, "runAfterFinish": false, "createDesktopShortcut": false, "createStartMenuShortcut": true}

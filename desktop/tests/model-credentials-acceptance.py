@@ -155,14 +155,14 @@ def main():
             assert all(v.get('code')=='ACCESS_DENIED' for v in denied.values()),denied
             passed('credential_save_does_not_enable_generation_or_expose_native_mutations_to_backend_page')
             current.open_settings()
-            with socket.socket() as sock:assert sock.connect_ex(('127.0.0.1',int(origin.rsplit(':',1)[1])))!=0
+            with socket.socket() as sock:assert sock.connect_ex(('127.0.0.1',int(origin.rsplit(':',1)[1])))==0
             cipher=vault.read_bytes();vault.write_bytes(b'independent synthetic corrupt ciphertext')
             p.reload();expect(p.locator('#model-settings')).to_be_visible()
             assert current.status()['status']=='invalid'
             assert vault.read_bytes()==b'independent synthetic corrupt ciphertext'
             expect(p.locator('#model-validation')).to_contain_text('无法读取')
             current.command('capture',name='settings-corrupt.png')
-            passed('stopped_owned_backend_and_corrupt_credential_reported_without_silent_rewrite')
+            passed('preserved_owned_backend_and_corrupt_credential_reported_without_silent_rewrite')
             p.locator('#model-remove').click();expect(p.locator('#model-status')).to_contain_text('已移除')
             assert not vault.exists() and current.status()=={'status':'empty'}
             current.close();current=None;passed('explicit_remove_deletes_only_selected_native_credential')

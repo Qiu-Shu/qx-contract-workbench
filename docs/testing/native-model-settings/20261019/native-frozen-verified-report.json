@@ -1,0 +1,1339 @@
+{
+  "status": "passed",
+  "checks": [
+    "stored_credential_before_account_does_not_enable_runtime_and_other_window_denied",
+    "configure_keeps_pid_login_and_draft_but_capability_unapproved_and_post_forbidden",
+    "switch_disable_replace_and_remove_use_native_control_without_a_send_grant",
+    "actual_windows_settings_layout_at_100_150_200_percent_and_clean_shutdown",
+    "restart_retains_ciphertext_only_and_owned_backend_failure_clears_runtime",
+    "renderer_crash_stops_configured_backend_before_credential_replacement",
+    "backup_maintenance_still_stops_backend_and_resume_starts_unconfigured",
+    "zero_model_records_no_plaintext_leak_and_no_external_request"
+  ],
+  "runs": [
+    {
+      "page_errors": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/workbench.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/workbench.js"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:63576/api/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/assistant"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-api.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-state.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-render.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-composer.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-materials.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-generation.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/skills"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations"
+        },
+        {
+          "method": "PUT",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations/b675d1e3-fb01-4cee-80f1-ba04af79058a/draft"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations/b675d1e3-fb01-4cee-80f1-ba04af79058a/generation-capability"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations/b675d1e3-fb01-4cee-80f1-ba04af79058a/generation-capability"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/assistant/b675d1e3-fb01-4cee-80f1-ba04af79058a"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-api.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-state.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-render.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-composer.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-materials.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/static/assistant-generation.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations/b675d1e3-fb01-4cee-80f1-ba04af79058a"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/skills"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations/b675d1e3-fb01-4cee-80f1-ba04af79058a/materials"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations/b675d1e3-fb01-4cee-80f1-ba04af79058a/generation-capability"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations/b675d1e3-fb01-4cee-80f1-ba04af79058a/generation-capability"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations/b675d1e3-fb01-4cee-80f1-ba04af79058a/generation-capability"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:63576/api/assistant/conversations/b675d1e3-fb01-4cee-80f1-ba04af79058a/generations"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        }
+      ],
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\desktop\\node_modules\\electron\\dist\\electron.exe",
+        "D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\model-credentials-acceptance.cjs",
+        "--remote-debugging-port=0",
+        "--remote-debugging-address=127.0.0.1"
+      ],
+      "electron_exit": 0,
+      "bootstrap": {
+        "electron": "44.8.0",
+        "events": [
+          "actual_will_quit"
+        ],
+        "backend_configs": [
+          {
+            "keys": [
+              "data_parent",
+              "password",
+              "username"
+            ],
+            "contains_model_credential": false
+          }
+        ],
+        "windows": [
+          {
+            "nodeIntegration": false,
+            "contextIsolation": true,
+            "sandbox": true,
+            "webSecurity": true
+          },
+          {
+            "nodeIntegration": false,
+            "contextIsolation": true,
+            "sandbox": true,
+            "webSecurity": true
+          }
+        ],
+        "page_loads": 6,
+        "page_url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html",
+        "ready": {
+          "port": 63576,
+          "pid": 21240
+        },
+        "model_controls": [
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "configure",
+            "ok": true,
+            "status": "configured",
+            "model": "deepseek-flash"
+          },
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "configure",
+            "ok": true,
+            "status": "configured",
+            "model": "deepseek-v4-pro"
+          },
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "configure",
+            "ok": true,
+            "status": "configured",
+            "model": "deepseek-flash"
+          },
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "configure",
+            "ok": true,
+            "status": "configured",
+            "model": "deepseek-flash"
+          },
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "configure",
+            "ok": true,
+            "status": "configured",
+            "model": "deepseek-flash"
+          }
+        ],
+        "backend_exit": {
+          "code": 0,
+          "signal": null
+        }
+      }
+    },
+    {
+      "page_errors": [],
+      "requests": [
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/static/workbench.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/static/workbench.js"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:63596/api/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/assistant"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/static/assistant.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/static/assistant.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/static/assistant-api.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/static/assistant-state.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/static/assistant-render.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/static/assistant-composer.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/static/assistant-materials.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/static/assistant-generation.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/api/assistant/skills"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63596/api/assistant/conversations"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/static/workbench.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/static/workbench.js"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:63604/api/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/assistant"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/static/assistant.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/static/assistant.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/static/assistant-api.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/static/assistant-state.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/static/assistant-render.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/static/assistant-composer.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/static/assistant-materials.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/static/assistant-generation.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/api/assistant/skills"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63604/api/assistant/conversations"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/workbench.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/workbench.js"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/workbench.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/workbench.js"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:63614/api/login"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:63614/api/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/assistant"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/assistant"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-api.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-state.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-api.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-render.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-state.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-composer.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-render.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-materials.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-composer.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-materials.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-generation.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/static/assistant-generation.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/api/assistant/skills"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/api/assistant/skills"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/api/assistant/conversations"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63614/api/assistant/conversations"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/workbench.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/workbench.js"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/workbench.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/workbench.js"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:63622/api/login"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:63622/api/login"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/assistant"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/assistant"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant.css"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-api.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-state.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-api.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-render.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-state.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-composer.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-render.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-materials.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-composer.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-materials.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-generation.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/static/assistant-generation.mjs"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/api/session"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/api/assistant/skills"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/api/assistant/skills"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/api/assistant/conversations"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:63622/api/assistant/conversations"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.css"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup-model.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        },
+        {
+          "method": "GET",
+          "url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.js"
+        }
+      ],
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\desktop\\node_modules\\electron\\dist\\electron.exe",
+        "D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\model-credentials-acceptance.cjs",
+        "--remote-debugging-port=0",
+        "--remote-debugging-address=127.0.0.1"
+      ],
+      "electron_exit": 0,
+      "bootstrap": {
+        "electron": "44.8.0",
+        "events": [
+          "actual_will_quit"
+        ],
+        "backend_configs": [
+          {
+            "keys": [
+              "data_parent"
+            ],
+            "contains_model_credential": false
+          },
+          {
+            "keys": [
+              "data_parent"
+            ],
+            "contains_model_credential": false
+          },
+          {
+            "keys": [
+              "data_parent"
+            ],
+            "contains_model_credential": false
+          },
+          {
+            "keys": [
+              "data_parent"
+            ],
+            "contains_model_credential": false
+          }
+        ],
+        "windows": [
+          {
+            "nodeIntegration": false,
+            "contextIsolation": true,
+            "sandbox": true,
+            "webSecurity": true
+          }
+        ],
+        "page_loads": 15,
+        "page_url": "file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/desktop/setup.html",
+        "ready": {
+          "port": 63622,
+          "pid": 6184
+        },
+        "model_controls": [
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "configure",
+            "ok": true,
+            "status": "configured",
+            "model": "deepseek-flash"
+          },
+          {
+            "operation": "disable",
+            "ok": true,
+            "status": "disabled"
+          },
+          {
+            "operation": "configure",
+            "ok": true,
+            "status": "configured",
+            "model": "deepseek-flash"
+          }
+        ],
+        "backend_exit": {
+          "code": 0,
+          "signal": null
+        }
+      }
+    }
+  ],
+  "source_before": {
+    "desktop/backend.cjs": "3d7c513293fc1b2347c57ec63c0354f1f79572892a7fd13f98bc2e8403c5af8e",
+    "desktop/main.cjs": "525cd723a707ac52f1ac375e73c22139e004ea0ee240d098c0c5bec81e0f29bf",
+    "desktop/maintenance.cjs": "cec6936da5fbfc6ace46b800048898590f99d842471a4ae49cee4ddd36ab0e6c",
+    "desktop/model-control.cjs": "56186e5d0ba3361cf4173309f46ff752918b0563303fb5a0936f019b1cfa4747",
+    "desktop/model-credentials.cjs": "9f2b90999432fa1670ae4a3de6c17afee7d405c20a78e7334e6032e150ba4914",
+    "desktop/model-session.cjs": "743b79b14d7c0680788358cba67371a86ebcc6089124ebdb9ffb06f5e5addb0f",
+    "desktop/model-settings.cjs": "2a9c6fc50b0f4092e365437bc131d027cdc6eaf61785a9bc4ab1fd503c0070e7",
+    "desktop/package-lock.json": "fa3c2ad30d1441caec1d0c9f1232487fd390e90aa56c8379fa06d6522f9a4cb5",
+    "desktop/package.json": "f19c97285dfab5be3e0795ac0c2fc1a794e1bf683e9e035d8dfc24f0e17de7f5",
+    "desktop/policy.cjs": "60e29da78a86c5fbb9bab69f4e3d82afe146999d9749d1a340881d4824944c2a",
+    "desktop/preload.cjs": "0f03d36f2aa00c2899bb67ac37b806e252f4f585c001bba9bc97f3920338284b",
+    "desktop/setup-model.js": "a10fcb0210062ae8b9538ab6eaf096baaabdd13f531ca02a2963bbdf57abb79d",
+    "desktop/setup.css": "6756de95bcb1aa0729aed4cf6c3ba077282b3d580a74ff79592533ac003917f8",
+    "desktop/setup.html": "54dafd7496a4b45f2e5d913cffe88e3a753f4791366d1e5df86afc6a32b9f8f8",
+    "desktop/setup.js": "66bcb5e325451ae4b365323915f769ab5221636358b4febd8ae235e0214be605",
+    "desktop/tests/model-credentials-acceptance.cjs": "cbb604b1d7e3f29280f5c03d2361c0ca7d45a3d2cea381b96b484c66f713ad32",
+    "desktop/tests/model-settings-acceptance.py": "db4ab13d57d7b80075933f63a07859185e083afed7f74335291ee1a910c56b37",
+    "src/cn_contract/__init__.py": "e15282ccd713dfe1b59ee491caff69a9395f2cb0dc9a04c331c36685e3f6117b",
+    "src/cn_contract/acceptance/__init__.py": "0bfd663398e047e8e27db278b583ca2d3773eb138538d5428a08d2b29948852e",
+    "src/cn_contract/acceptance/assisted_registry.py": "07a741ea48cdc638962d6738b11c94e1f7ef649586cb5dc1435edb1f2867cb20",
+    "src/cn_contract/acceptance/definitions.py": "094e5a775332ba66839e6341ecf32e331e29ed05611634fa15d92fb8e8c660eb",
+    "src/cn_contract/acceptance/ocr_scoring.py": "c564cb9055b9ececa11187c6c84e4011e9ed2a2d531f37bd2a6c6376fa191b62",
+    "src/cn_contract/acceptance/pytest_evidence.py": "89295cdb7fca198e806071bc5c0d2efb14a31431779de03f6d2851ea52e05bca",
+    "src/cn_contract/acceptance/registry.py": "2160f9cbc10dfdd4d504d110b469f0977f5d10671e45f52ef989af175d66f32f",
+    "src/cn_contract/acceptance/runner.py": "feb6b08e706f0656957436d41615b6a5d2ac1d16df10aafd9203cd5977224b0f",
+    "src/cn_contract/acceptance/sample_runner.py": "e6c4a02d67652634a113e7f9538f730cd197b33d309104fded55b479d079ce92",
+    "src/cn_contract/assistant/__init__.py": "e8b6b98e06425e06666908e31a382da2fce1ce2c0e8712da99b726ae42f6c71d",
+    "src/cn_contract/assistant/attachment_files.py": "42e9139450979bbbfa0ad64e6dd6501d9df453ab91cfe50239edf26895cf0a74",
+    "src/cn_contract/assistant/attachment_integrity.py": "c5444537048ee76132364fcd78c4365babc704014ac0feab5c92c0f345bdcd1b",
+    "src/cn_contract/assistant/attachment_records.py": "e4ecb2f1a5dd67eb220eeee24831106beb86063653ffbdea762a45032d6d421b",
+    "src/cn_contract/assistant/attachment_schema.py": "bdbb444e4bdad3586c44e9beebcd713353f4536f3ff768165f617805c4894f8c",
+    "src/cn_contract/assistant/attachments.py": "6cc58ecf777d32d239c405567cb070d6b8ea913b6a3136b5dabe53b5f961323f",
+    "src/cn_contract/assistant/model_integrity.py": "3f8fd8de9a27163ea7cd7ad64cba2565b8182c8432806d1d32f98b24054e5f35",
+    "src/cn_contract/assistant/model_schema.py": "989c61440616d5ed469ef6896978309b1daa89fe40d4eedd542a111720d9b3b8",
+    "src/cn_contract/assistant/native_model_control.py": "8cb466d76972716d635ac44f41479e8e945fcfdfeabec571ab330acc659d0f8f",
+    "src/cn_contract/assistant/providers/__init__.py": "e62f8cd59c53f2d57cb84fb00819f6f0d14526f2fa49d642411b0ca99dd3bf1f",
+    "src/cn_contract/assistant/providers/attempts.py": "abee718f947d25ef7e95f3ab027e11441b3d81effe4e2ba6b51982e55e9cfde0",
+    "src/cn_contract/assistant/providers/history.py": "6f4b08fca1105d6ce74d2fe011e835a94739441514ea5dabb7f0203fc6c187c2",
+    "src/cn_contract/assistant/providers/main.py": "62edd4a66ba4ae803a9d7aff074157f2cd590ee60c7cd4dcf3691c1b65042a1a",
+    "src/cn_contract/assistant/providers/policy.py": "d83c029b8db0b1a5131b29394da4c472457e22f827ddc738e6ebc5893bdcdce6",
+    "src/cn_contract/assistant/providers/registry.py": "3664986943d7d295258f2921162de2b44bd089b04a82af1ea723c8971d339f51",
+    "src/cn_contract/assistant/runner.py": "7f212a75e5a64446da6c4cd0a79ca4d3fb81cfb3ca215dc2f9335f7af9210bf6",
+    "src/cn_contract/assistant/schema.py": "0979aeba4fce1d1aff0772ebb9e4e57437f14e85ce3e9df3d903f9a08e1ec26e",
+    "src/cn_contract/assistant/service.py": "82b72d23df1b5c7732a014fb94a9d82aa1f6db9745e3188d7d8010c70f71e511",
+    "src/cn_contract/assistant/task_manager.py": "127892431f9408e7e9202b5341e0bc294acda865d2ede55a62699db0804f76ec",
+    "src/cn_contract/assistant_attachment_schema_baseline.py": "983b972df0847f3726b0863507c570c1a42ebdcaa3665079441dcd94863f4333",
+    "src/cn_contract/assistant_schema_baseline.py": "1843eb0eba5bff9f7ff6123e6a3882d6839cd0aad810dbc9746392ce82deaa49",
+    "src/cn_contract/audit.py": "c4b844ef8008984bdba3308be8451bd1bdc35f83b8953f20b09765fbb156e05e",
+    "src/cn_contract/authorities/__init__.py": "fc5dadb41a894e467fcca2c01f7d9ff61e77ec6d5516d75681a3d91c49652b15",
+    "src/cn_contract/authorities/applicability.py": "399feade027467a616aeb50b7afcb29f7c2ea6930c5b815c70dc2248da7ee356",
+    "src/cn_contract/authorities/registry.py": "8acc0bb83b57bdaa5d22b217d2ae27628bdf2489d7df91e4541e8efda3dd2eb6",
+    "src/cn_contract/authorities/storage.py": "96285ee43c615d8eeb6ea5bb5c61c3c6d31f97f931367a966514da08d7eee14e",
+    "src/cn_contract/cli.py": "0ceffec8cd0ce794f04225fcf5d0ed1c337e9c8ff8bfdba801e5bdc048ff0650",
+    "src/cn_contract/config.py": "77ec3d6265ee99750e5db9e6ea7853ba8b9fab8de2b507e3ca997c1b87e940fe",
+    "src/cn_contract/desktop_control.py": "e225bf47e9ba112ed9dfc98f9641d39058b752d7cf9b82b135010f93dbc81f0d",
+    "src/cn_contract/desktop_entry.py": "1d43b703b68d6fa7d7a040c17f8f7fc6a2a31f0dee089cb730dda65ef8e5a68c",
+    "src/cn_contract/documents/__init__.py": "d96bcdd171049d71d4e0596d142bd0740fa51e9978d6d66c48c5640c4bace97a",
+    "src/cn_contract/documents/_windows_ocr.py": "42217009e919157b82092e5672c4cd61dc8414af1b72a4eb96862dc84e183a2b",
+    "src/cn_contract/documents/anchors.py": "bfa30fa4fde840c00a30364648509e182238ab3bb45bbe17cb88901002a238f3",
+    "src/cn_contract/documents/docx_adapter.py": "6ceaeac61da42185c090cb5b27cda99e6916caecd8a94d1755748ee34e8b1c6f",
+    "src/cn_contract/documents/docx_styles.py": "c9f19564fa5ea8d33fa65153ae9b52bb1aff4354118d8b6b8800530d0a43cd16",
+    "src/cn_contract/documents/ingest.py": "b9689e759667b668f6591ba4bb31e5ee050452aa505f38b0215cec14d77681c1",
+    "src/cn_contract/documents/local_materials.py": "b328aebe1b74e1cb7a972eb1db9f15a7870e7565fa654d8edfe9ba881d75e12e",
+    "src/cn_contract/documents/ocr_adapter.py": "0c33b8618ac48a49f259b5a56b12b9e828f65be2c3819692eac846d6535897de",
+    "src/cn_contract/documents/ocr_assets.py": "96931b53f67bb5729caf54e7e2d8055e306a8c4e8bee6034d9cb0492e89e211d",
+    "src/cn_contract/documents/ocr_candidates.py": "4a9ecf53e7775ccfacb966bc6ea67984a52fa3d7935196e9434f0fd0855e483f",
+    "src/cn_contract/documents/ocr_process.py": "9e834eb8e1929a15cb0f0ded5b602a70190344fa3ff7fed13b9a5438fb68d20e",
+    "src/cn_contract/documents/ocr_worker.py": "a2294afa2220e59ffedf9ee5b863988416ea55aa21a27a6491bf9e4fbaf428a2",
+    "src/cn_contract/documents/ocr_workspace.py": "7430bee4a4abe7637c6479e186540b6a12ef674dc837768c5edb2ca0f2a4d5e8",
+    "src/cn_contract/documents/pdf_adapter.py": "c2bdcf26644810d57684eb02229938ae8cbb521135826f9b508931615d797e8a",
+    "src/cn_contract/documents/pdf_visibility.py": "e5bef1ef2d70b8c580ab767cb6e0d9027a15a0ca3720c41cb9dd6f444474aadd",
+    "src/cn_contract/documents/pdfjs_assets.py": "b2e48235252c91bebd223bc51487bce2676938efa598ded5adc3cc05777afc6e",
+    "src/cn_contract/documents/proofreading.py": "04ae7928c3cc90ad42d8f1b51df98b1ce1086386b0d86bf6902c89fa0d4821a8",
+    "src/cn_contract/domain.py": "6b395d19029575695a423e802ef8f65f21e57b53076e53dca860944c54f3cdce",
+    "src/cn_contract/exports/__init__.py": "4c1d67e0637494ebaee62f8154cf365329574828d4045c12c70e6578f8eddf9c",
+    "src/cn_contract/exports/approvals.py": "5cd82d5edad120f2b2b74a62be2cb5e5f6126f4ad579528a39ac521687e35189",
+    "src/cn_contract/exports/audience_filter.py": "2b9e11be43fdbaf9c0a873abaea1a1d2ff45dc42e70d982e389b05860d915faf",
+    "src/cn_contract/exports/draft_confirmation.py": "25a49c8047b53cbed64d7e3de2648c2fa454de275188cf365ace7baf30399a12",
+    "src/cn_contract/exports/effective_text.py": "a0249ddbfe235012fac199049f3eaffa90189473eabd410b8e5460a09c5f5efb",
+    "src/cn_contract/exports/redline_adapter.py": "b5d08bdf690d2c2fe20a74e0080b3b8aa53640d06e66fb262035a70404389cce",
+    "src/cn_contract/exports/report_docx.py": "6292eb5988ad9d445bcadabc4cee7f2c00b5fb6781b68fbc76ed99a6c9d564dd",
+    "src/cn_contract/exports/storage.py": "40c37d248c4578702ea95f4373962f21cf38f48e055a7eb049d373b6048194b7",
+    "src/cn_contract/facts/__init__.py": "6725e264dcee56aea6088c05858ea0d95ce4b24059410888a74cdf3720049a6d",
+    "src/cn_contract/facts/calculate.py": "7923a94b9b3d8c00c487af11fcb13726d720cd62ea5d9ef843aae185901907fe",
+    "src/cn_contract/facts/confirm.py": "00b9dfca23aede6109df6724763be1976898f7fd64d902cceb8cf4a56aeb3e07",
+    "src/cn_contract/facts/extract.py": "e9dad1743a5d0ab55b3e06b04372af817101c2e1530123f753859499af91df19",
+    "src/cn_contract/facts/party.py": "66707cf14794d319bf6a5c47afb8551f5932d4ce05dcd0daa983f81e4a06ada6",
+    "src/cn_contract/facts/storage.py": "4dca908cd617db67ca7a466b77d16bbab65cfe3ea02b52e7a10628d26ddcd52e",
+    "src/cn_contract/intake/__init__.py": "2db94938e2b6154cfa9aae2d71eb09e232d398052544d1e889c0dc2a742d6a5b",
+    "src/cn_contract/intake/schema.py": "8ac6a2ed5b5870e35ecb417b0bc0b2cb7d2bf5bb3d797c93c56fa0a52ae1ce32",
+    "src/cn_contract/intake/service.py": "515e4609a027a81ae7c091917145e357527d4162a5dece1848b5e5d27d11e837",
+    "src/cn_contract/library/__init__.py": "0cfe852880ac3558919551b5ba4f8490a97a4c82a469d910a56f8b7efe97a4c6",
+    "src/cn_contract/library/__main__.py": "0c0a98fd4f67542e016c68d282b0690a56e47341aaee7234be054a5a9b58cdc0",
+    "src/cn_contract/library/assets.py": "a34f94be4da72fb803fe0acef22280465c5e064f8c8c35abfb94e9f01d40b672",
+    "src/cn_contract/library/budget.py": "b5e7634d04ed913984b099d5e30aaf73e920efeeab49d3c3c75925f5c05ffa51",
+    "src/cn_contract/library/catalog.py": "026b4f8ffb8ba60a13c93cd8816b4717b4d067f25da5849168decced22df49a5",
+    "src/cn_contract/library/cleaning.py": "7d665427e3cda6a2c907257ec07349d8749abf14efa9e38b2484092979577bad",
+    "src/cn_contract/library/csv_source.py": "56e227f9bc68dcb2ddef78f3eda885e052e83e1f326ffbaedefc244377a83d8b",
+    "src/cn_contract/library/index.py": "870f6ac750e113f282d5de36cec71de079574b33f48248bf4391fd0fdb95aecf",
+    "src/cn_contract/library/law_sections.py": "770c25e66322872a746261ba5fc0ec5da669e2bd2f0852513c46fec7abebd1ec",
+    "src/cn_contract/library/originals.py": "d4d62a2224874a2df888cf036e4c196f850d48d79e40a6a4fdf91543eea58b1c",
+    "src/cn_contract/library/pilot.py": "ac66be24ba0c64c4c8598d9f38d2e53efc69633e281280439d2a035290e89870",
+    "src/cn_contract/library/pilot_adapter.py": "662cf569b91f088b60ce05029d115b89754a18ca08d040916e4c0f3cf726de2c",
+    "src/cn_contract/library/portability.py": "4e149fd4f1cbf18792daa98e01552951d7e6bab4b4b37a9ddaa0dfd6bae52c16",
+    "src/cn_contract/library/service.py": "caa589c952dc0d9c86fe41e23353a148296448423500c1d4979727c076a7c025",
+    "src/cn_contract/library/text.py": "502dbc5c34109a45138abc7d52a9b6d890a416bb3d5afca1a1d2c3c61ee91a0a",
+    "src/cn_contract/live/__init__.py": "c412f1fd1ad75a94578457fd231371c7643d457091c9bfd95d6e802cc337bcdf",
+    "src/cn_contract/live/guards.py": "e2d6e4c57304f734f633094f238081492d85587f67a7311503a11c6ca60250de",
+    "src/cn_contract/live/readiness.py": "d2d6164772e18cee79e8538f14e5208cbc0d92840713132205206bda06a2dfb6",
+    "src/cn_contract/mcp/__init__.py": "230f6ed32f7ea2112c354bff47cdae1376ed1aa2a2d261b6f88ebac64276a1f1",
+    "src/cn_contract/mcp/bound_entry.py": "ff4f8c17ea5ceeaedd7e5abe7d948e96083802dcdb66456eeccff00a987f950b",
+    "src/cn_contract/mcp/case_client.py": "d802e7950372b0e314078e077b9e3072ba6282d0644b2934b8fdbaa84d0c211a",
+    "src/cn_contract/mcp/offline_server.py": "78eca3b86296e89799c841b598d7224754b95ba71f14405bcfbe5ebb054d5c54",
+    "src/cn_contract/ops/__init__.py": "3ffd7f6c1db4c30ece7dcb95df360f427c4cbe3a1d10edae5fafa54e12238c1c",
+    "src/cn_contract/ops/backup.py": "39416546994ee1bcc399949a484a57427ca6ffc157bb472b25958a88d29f12a7",
+    "src/cn_contract/ops/egress.py": "01f784e8a4eca4f92ed32a58faa121b0137501c5b63ead56ea9732ba903ef40c",
+    "src/cn_contract/ops/file_paths.py": "5b7155dafe59419ba501888ac92d960f490172bcfa7d9405e41d7ab40ec6d5c9",
+    "src/cn_contract/ops/release.py": "0fd7330c43d125d03a3bbd597dc6fb9623bfb36db364c4fb162ff4bc7c1af820",
+    "src/cn_contract/ops/secrets.py": "0a0aed21bb7a310398960c0dbd6b6a627569d5dfd19baa9d18af285cb9046e99",
+    "src/cn_contract/ops/storage.py": "e24f24b955a579961b4cc20561e19f821f762b59230311d7a193c1f6328be4ef",
+    "src/cn_contract/ops/workspace_backup.py": "44109bd82ed113d94b79c6cd837f683b1b56b77c737000b8542ed160545808df",
+    "src/cn_contract/persistence.py": "ee324e1eb6234cc3740fce79b0b909a7721aae3dcec5bd53466a1431a6a1be7c",
+    "src/cn_contract/providers/__init__.py": "31a901f69f2270bac1b09bb606e7a1818fef6a6b334bb09b0a2700794d8bbb8b",
+    "src/cn_contract/providers/mcp_client.py": "3d371354b5cf31b93a277bd6b8a90dbe581ffede5b0cf17d828c2d78cc06c859",
+    "src/cn_contract/providers/mock_qcc.py": "655f5bb04e85a7061f37027f3f7fdd02ac902d67bd2434eadfe34c9582fe042b",
+    "src/cn_contract/providers/qcc_mcp.py": "928d5a0b6bcfbb8ec10ed4a11dc8cd3439a5977723d38081cafffe8fba2c7ec8",
+    "src/cn_contract/providers/qcc_registry.py": "fbce22a488df6c908e975f31431a2b9896979648935b52686743757ffc606619",
+    "src/cn_contract/providers/storage.py": "a7f38beebe75f6c817c7e337dec256e1bd7d0de1a4d09ced1abdf2dc424fb7f7",
+    "src/cn_contract/queries/__init__.py": "0ba009c6973a02460e267a491a6981d5856be967f5a8f41dc65a210220b4946a",
+    "src/cn_contract/queries/gateway.py": "198494bcdeffc085ec9229936619238b8fe0deccc8f8cfc8c81302f50e5e4c09",
+    "src/cn_contract/queries/ledger.py": "9b8880d3536ed4b351697c275fe3835d016e24f6b067c3b3e725756ea53b0c10",
+    "src/cn_contract/queries/planner.py": "0244ef10118af106d9d0d59ef6959406a9c2c82fb25134bf53d471b49f6c19e1",
+    "src/cn_contract/queries/storage.py": "7c9bbf5f02685a026e7815514a4c5ae849305d36a7e8e8629ff70a2f4f40f862",
+    "src/cn_contract/review/__init__.py": "210241a05e5417a51fcb1617ffa5699802300e4375a64a2298390ee5bf6b7315",
+    "src/cn_contract/review/basis.py": "30b84c0d012749f4796583e94834d8bf0a0653560fab112995ebad94afd31b68",
+    "src/cn_contract/review/decisions.py": "a657ef556433051b15a2ceaf83730f2c72e5d003904f15bbbcb5ac8d3ca393f2",
+    "src/cn_contract/review/deepseek_codec.py": "1691a927aac4c4b0676536f19e2887538278a4d9a32e29d27e823084438ef362",
+    "src/cn_contract/review/demo.py": "a4954070d1dfcc3cddac5b2753bbdc9be2f99b216738437e467233c342d97842",
+    "src/cn_contract/review/model_adapter.py": "1770fb5b093e86cf2b5dd36f3960c8d09b5b51ecf8ecede08b8fae1d4e88241e",
+    "src/cn_contract/review/proposals.py": "7136711bde02c7411a34e12e9ce412c5eaf4f1b2106c9534474c60d8aca4638e",
+    "src/cn_contract/review/storage.py": "d4e0a6d9a3c4a481a86ef91408e080b672e33052dc674ff14feda4ea43ba24dd",
+    "src/cn_contract/review/synthetic.py": "0b734458557b40264a2fc218e685f6a0841e2abf0bc35163ac784f4abbf90eaa",
+    "src/cn_contract/review/validator.py": "583e6532e019b601d499f3c39f2388293229f8acafbe4d70d7e655c43cbb9f8d",
+    "src/cn_contract/review/workflow.py": "03c6685432babcb2dc6d098057ac9efb081b4916019682c08c69b377e704dc8b",
+    "src/cn_contract/rules/__init__.py": "bc8ac84b72c69337e3d7d5c51e97371d1b85d938aa3b8e76e4ac84a229a94cf6",
+    "src/cn_contract/rules/evaluator.py": "f40d762086fd5ff20f6b995fe012cced35be96de895c065b878b55dba0b7887c",
+    "src/cn_contract/rules/loader.py": "bf9ba87f94d6c7d5874a74c84be9185b9d4c75a25c473d572b1a46895a9adf74",
+    "src/cn_contract/rules/storage.py": "aac079680195afde47bb3da0ad3f0a2de5091ee95cb30ad5eb9048f648a045c9",
+    "src/cn_contract/schema_baseline.py": "59aac5bd8be5e2df4f1716e071ac336f65f8c8a83adc71998570923707d48c50",
+    "src/cn_contract/schema_migrations.py": "fd273b99f5cd174d9482ff80fe90f97211a5faaf7ebd587cd4ebcd58fc24ea3b",
+    "src/cn_contract/security.py": "d6457c56fc6a6889e0ac2848dc77b037b9806e125b2d3532a52275697662b7f2",
+    "src/cn_contract/storage_bootstrap.py": "732acbacc9459ef7dcdbfdc2e408bde97b006a6bb2f5facfe535dc65a5f53888",
+    "src/cn_contract/storage_schema.py": "df5ee218d58b788acb8688cede46c915f273e0a163e9e906cd2b193c6ae457c8",
+    "src/cn_contract/web/__init__.py": "c1e755c1c11a3fb8bb965caa2db865ede1e5c1d0c55d0a39493d4925f77a018a",
+    "src/cn_contract/web/app.py": "df3a84faaa41c605ec306e805ce79681eeb1841b322de10c5797927241761ad2",
+    "src/cn_contract/web/assistant.py": "5b6e49b0ff75b38bc37e3a18734171d950e081e28faaedebe54bfd2f588b5bcc",
+    "src/cn_contract/web/assistant_attachments.py": "72a437aafba776d795dff8966cdc955bb708e6a1580bcf35e32cab4237bb620a",
+    "src/cn_contract/web/assistant_generation.py": "802af1e6d90e77d590118d7a9033e39bd8e11cf585ec1edf2d3b488945c4d802",
+    "src/cn_contract/web/assistant_pages.py": "15668b532234b2646bdd10a403ee433aa795a3660e8e4755e845b92727f40d47",
+    "src/cn_contract/web/assisted_demo_server.py": "ff19a4e91f2b7824051f5e08bd468203bd5293569658f2999c9e6593cd8811af",
+    "src/cn_contract/web/case_bridge.py": "2dbaed96d67824cd27bd87e601d1284d93f87c47248b8223ca2234da7114ea5f",
+    "src/cn_contract/web/demo_server.py": "34d00d012b8e0a5d3ee22f1806204f91538f0b56990538ba69b9f91a14c09bd5",
+    "src/cn_contract/web/dependencies.py": "29afc72408bd3b085348c42598f6f23b69771b91a976b2ebb908cb2153b8d694",
+    "src/cn_contract/web/draft_confirmation.py": "fde6cdba9e3bb8357234194946459936ec9d5f0cff675cec4914eaeceb5a6aec",
+    "src/cn_contract/web/intake.py": "70a4f2982830e5f1268b6c0e3bc4fa8db66bac308454cfc81cadf2a7e701e281",
+    "src/cn_contract/web/jobs.py": "75e19a6ef2a8a150941072342dfc675ebfc727018c91233789c3301bd0fa1e4c",
+    "src/cn_contract/web/library.py": "cadcad4172b2caf426a883cc22f8f60be5f2badfdfffce81ee9014321011c83f",
+    "src/cn_contract/web/local_server.py": "a717e0312186476d807b23d2972585e438b487d0837aa69ccfb48cb1f9b8604f",
+    "src/cn_contract/web/pdf_review.py": "0371f0b70a1eb1b9671383d627d27bf88c445a04093573539eb5b737bcc39218",
+    "src/cn_contract/web/recovery.py": "5800c49b68e622f7ab2521cdfcde6500d61353ceca5794a15874b14f4d4b2b7b",
+    "src/cn_contract/web/request_context.py": "f182733c08a3527a649582b56c1300ab37dac6102f50910051f7213d1273281f",
+    "src/cn_contract/web/services.py": "6b193193533d799107d04321bab4665a45ac0d4ccc5d1ca93295784e1542b2b5",
+    "src/cn_contract/web/storage.py": "15a80c7d3d9632e52ddc887b1a42a76eb5e1767957df977d7585f8d0019c2742",
+    "src/cn_contract/web/workspace_upgrade.py": "299c1f603808d0465f7f042f91819c9578463cc8c62fcbaab24ec138dff9fcf5",
+    "tests/helpers/synthetic_native_settings_entry.py": "b324745eaf180c862d488cf01487a9a4ce3f066174674e48c9ea5560bddbe53e"
+  },
+  "backend": "frozen",
+  "real_model_calls": 0,
+  "exit_code": 0,
+  "exe_sha256": "7bebe34c3b9c750f996354a1fa0ae723f10cc0453bb5ce153acdf941dfe81fee",
+  "integrity": "ok",
+  "counts": {
+    "assistant_messages": 0,
+    "assistant_model_attempts": 0,
+    "assistant_model_receipts": 0,
+    "assistant_model_outputs": 0
+  },
+  "source_after": {
+    "desktop/backend.cjs": "3d7c513293fc1b2347c57ec63c0354f1f79572892a7fd13f98bc2e8403c5af8e",
+    "desktop/main.cjs": "525cd723a707ac52f1ac375e73c22139e004ea0ee240d098c0c5bec81e0f29bf",
+    "desktop/maintenance.cjs": "cec6936da5fbfc6ace46b800048898590f99d842471a4ae49cee4ddd36ab0e6c",
+    "desktop/model-control.cjs": "56186e5d0ba3361cf4173309f46ff752918b0563303fb5a0936f019b1cfa4747",
+    "desktop/model-credentials.cjs": "9f2b90999432fa1670ae4a3de6c17afee7d405c20a78e7334e6032e150ba4914",
+    "desktop/model-session.cjs": "743b79b14d7c0680788358cba67371a86ebcc6089124ebdb9ffb06f5e5addb0f",
+    "desktop/model-settings.cjs": "2a9c6fc50b0f4092e365437bc131d027cdc6eaf61785a9bc4ab1fd503c0070e7",
+    "desktop/package-lock.json": "fa3c2ad30d1441caec1d0c9f1232487fd390e90aa56c8379fa06d6522f9a4cb5",
+    "desktop/package.json": "f19c97285dfab5be3e0795ac0c2fc1a794e1bf683e9e035d8dfc24f0e17de7f5",
+    "desktop/policy.cjs": "60e29da78a86c5fbb9bab69f4e3d82afe146999d9749d1a340881d4824944c2a",
+    "desktop/preload.cjs": "0f03d36f2aa00c2899bb67ac37b806e252f4f585c001bba9bc97f3920338284b",
+    "desktop/setup-model.js": "a10fcb0210062ae8b9538ab6eaf096baaabdd13f531ca02a2963bbdf57abb79d",
+    "desktop/setup.css": "6756de95bcb1aa0729aed4cf6c3ba077282b3d580a74ff79592533ac003917f8",
+    "desktop/setup.html": "54dafd7496a4b45f2e5d913cffe88e3a753f4791366d1e5df86afc6a32b9f8f8",
+    "desktop/setup.js": "66bcb5e325451ae4b365323915f769ab5221636358b4febd8ae235e0214be605",
+    "desktop/tests/model-credentials-acceptance.cjs": "cbb604b1d7e3f29280f5c03d2361c0ca7d45a3d2cea381b96b484c66f713ad32",
+    "desktop/tests/model-settings-acceptance.py": "db4ab13d57d7b80075933f63a07859185e083afed7f74335291ee1a910c56b37",
+    "src/cn_contract/__init__.py": "e15282ccd713dfe1b59ee491caff69a9395f2cb0dc9a04c331c36685e3f6117b",
+    "src/cn_contract/acceptance/__init__.py": "0bfd663398e047e8e27db278b583ca2d3773eb138538d5428a08d2b29948852e",
+    "src/cn_contract/acceptance/assisted_registry.py": "07a741ea48cdc638962d6738b11c94e1f7ef649586cb5dc1435edb1f2867cb20",
+    "src/cn_contract/acceptance/definitions.py": "094e5a775332ba66839e6341ecf32e331e29ed05611634fa15d92fb8e8c660eb",
+    "src/cn_contract/acceptance/ocr_scoring.py": "c564cb9055b9ececa11187c6c84e4011e9ed2a2d531f37bd2a6c6376fa191b62",
+    "src/cn_contract/acceptance/pytest_evidence.py": "89295cdb7fca198e806071bc5c0d2efb14a31431779de03f6d2851ea52e05bca",
+    "src/cn_contract/acceptance/registry.py": "2160f9cbc10dfdd4d504d110b469f0977f5d10671e45f52ef989af175d66f32f",
+    "src/cn_contract/acceptance/runner.py": "feb6b08e706f0656957436d41615b6a5d2ac1d16df10aafd9203cd5977224b0f",
+    "src/cn_contract/acceptance/sample_runner.py": "e6c4a02d67652634a113e7f9538f730cd197b33d309104fded55b479d079ce92",
+    "src/cn_contract/assistant/__init__.py": "e8b6b98e06425e06666908e31a382da2fce1ce2c0e8712da99b726ae42f6c71d",
+    "src/cn_contract/assistant/attachment_files.py": "42e9139450979bbbfa0ad64e6dd6501d9df453ab91cfe50239edf26895cf0a74",
+    "src/cn_contract/assistant/attachment_integrity.py": "c5444537048ee76132364fcd78c4365babc704014ac0feab5c92c0f345bdcd1b",
+    "src/cn_contract/assistant/attachment_records.py": "e4ecb2f1a5dd67eb220eeee24831106beb86063653ffbdea762a45032d6d421b",
+    "src/cn_contract/assistant/attachment_schema.py": "bdbb444e4bdad3586c44e9beebcd713353f4536f3ff768165f617805c4894f8c",
+    "src/cn_contract/assistant/attachments.py": "6cc58ecf777d32d239c405567cb070d6b8ea913b6a3136b5dabe53b5f961323f",
+    "src/cn_contract/assistant/model_integrity.py": "3f8fd8de9a27163ea7cd7ad64cba2565b8182c8432806d1d32f98b24054e5f35",
+    "src/cn_contract/assistant/model_schema.py": "989c61440616d5ed469ef6896978309b1daa89fe40d4eedd542a111720d9b3b8",
+    "src/cn_contract/assistant/native_model_control.py": "8cb466d76972716d635ac44f41479e8e945fcfdfeabec571ab330acc659d0f8f",
+    "src/cn_contract/assistant/providers/__init__.py": "e62f8cd59c53f2d57cb84fb00819f6f0d14526f2fa49d642411b0ca99dd3bf1f",
+    "src/cn_contract/assistant/providers/attempts.py": "abee718f947d25ef7e95f3ab027e11441b3d81effe4e2ba6b51982e55e9cfde0",
+    "src/cn_contract/assistant/providers/history.py": "6f4b08fca1105d6ce74d2fe011e835a94739441514ea5dabb7f0203fc6c187c2",
+    "src/cn_contract/assistant/providers/main.py": "62edd4a66ba4ae803a9d7aff074157f2cd590ee60c7cd4dcf3691c1b65042a1a",
+    "src/cn_contract/assistant/providers/policy.py": "d83c029b8db0b1a5131b29394da4c472457e22f827ddc738e6ebc5893bdcdce6",
+    "src/cn_contract/assistant/providers/registry.py": "3664986943d7d295258f2921162de2b44bd089b04a82af1ea723c8971d339f51",
+    "src/cn_contract/assistant/runner.py": "7f212a75e5a64446da6c4cd0a79ca4d3fb81cfb3ca215dc2f9335f7af9210bf6",
+    "src/cn_contract/assistant/schema.py": "0979aeba4fce1d1aff0772ebb9e4e57437f14e85ce3e9df3d903f9a08e1ec26e",
+    "src/cn_contract/assistant/service.py": "82b72d23df1b5c7732a014fb94a9d82aa1f6db9745e3188d7d8010c70f71e511",
+    "src/cn_contract/assistant/task_manager.py": "127892431f9408e7e9202b5341e0bc294acda865d2ede55a62699db0804f76ec",
+    "src/cn_contract/assistant_attachment_schema_baseline.py": "983b972df0847f3726b0863507c570c1a42ebdcaa3665079441dcd94863f4333",
+    "src/cn_contract/assistant_schema_baseline.py": "1843eb0eba5bff9f7ff6123e6a3882d6839cd0aad810dbc9746392ce82deaa49",
+    "src/cn_contract/audit.py": "c4b844ef8008984bdba3308be8451bd1bdc35f83b8953f20b09765fbb156e05e",
+    "src/cn_contract/authorities/__init__.py": "fc5dadb41a894e467fcca2c01f7d9ff61e77ec6d5516d75681a3d91c49652b15",
+    "src/cn_contract/authorities/applicability.py": "399feade027467a616aeb50b7afcb29f7c2ea6930c5b815c70dc2248da7ee356",
+    "src/cn_contract/authorities/registry.py": "8acc0bb83b57bdaa5d22b217d2ae27628bdf2489d7df91e4541e8efda3dd2eb6",
+    "src/cn_contract/authorities/storage.py": "96285ee43c615d8eeb6ea5bb5c61c3c6d31f97f931367a966514da08d7eee14e",
+    "src/cn_contract/cli.py": "0ceffec8cd0ce794f04225fcf5d0ed1c337e9c8ff8bfdba801e5bdc048ff0650",
+    "src/cn_contract/config.py": "77ec3d6265ee99750e5db9e6ea7853ba8b9fab8de2b507e3ca997c1b87e940fe",
+    "src/cn_contract/desktop_control.py": "e225bf47e9ba112ed9dfc98f9641d39058b752d7cf9b82b135010f93dbc81f0d",
+    "src/cn_contract/desktop_entry.py": "1d43b703b68d6fa7d7a040c17f8f7fc6a2a31f0dee089cb730dda65ef8e5a68c",
+    "src/cn_contract/documents/__init__.py": "d96bcdd171049d71d4e0596d142bd0740fa51e9978d6d66c48c5640c4bace97a",
+    "src/cn_contract/documents/_windows_ocr.py": "42217009e919157b82092e5672c4cd61dc8414af1b72a4eb96862dc84e183a2b",
+    "src/cn_contract/documents/anchors.py": "bfa30fa4fde840c00a30364648509e182238ab3bb45bbe17cb88901002a238f3",
+    "src/cn_contract/documents/docx_adapter.py": "6ceaeac61da42185c090cb5b27cda99e6916caecd8a94d1755748ee34e8b1c6f",
+    "src/cn_contract/documents/docx_styles.py": "c9f19564fa5ea8d33fa65153ae9b52bb1aff4354118d8b6b8800530d0a43cd16",
+    "src/cn_contract/documents/ingest.py": "b9689e759667b668f6591ba4bb31e5ee050452aa505f38b0215cec14d77681c1",
+    "src/cn_contract/documents/local_materials.py": "b328aebe1b74e1cb7a972eb1db9f15a7870e7565fa654d8edfe9ba881d75e12e",
+    "src/cn_contract/documents/ocr_adapter.py": "0c33b8618ac48a49f259b5a56b12b9e828f65be2c3819692eac846d6535897de",
+    "src/cn_contract/documents/ocr_assets.py": "96931b53f67bb5729caf54e7e2d8055e306a8c4e8bee6034d9cb0492e89e211d",
+    "src/cn_contract/documents/ocr_candidates.py": "4a9ecf53e7775ccfacb966bc6ea67984a52fa3d7935196e9434f0fd0855e483f",
+    "src/cn_contract/documents/ocr_process.py": "9e834eb8e1929a15cb0f0ded5b602a70190344fa3ff7fed13b9a5438fb68d20e",
+    "src/cn_contract/documents/ocr_worker.py": "a2294afa2220e59ffedf9ee5b863988416ea55aa21a27a6491bf9e4fbaf428a2",
+    "src/cn_contract/documents/ocr_workspace.py": "7430bee4a4abe7637c6479e186540b6a12ef674dc837768c5edb2ca0f2a4d5e8",
+    "src/cn_contract/documents/pdf_adapter.py": "c2bdcf26644810d57684eb02229938ae8cbb521135826f9b508931615d797e8a",
+    "src/cn_contract/documents/pdf_visibility.py": "e5bef1ef2d70b8c580ab767cb6e0d9027a15a0ca3720c41cb9dd6f444474aadd",
+    "src/cn_contract/documents/pdfjs_assets.py": "b2e48235252c91bebd223bc51487bce2676938efa598ded5adc3cc05777afc6e",
+    "src/cn_contract/documents/proofreading.py": "04ae7928c3cc90ad42d8f1b51df98b1ce1086386b0d86bf6902c89fa0d4821a8",
+    "src/cn_contract/domain.py": "6b395d19029575695a423e802ef8f65f21e57b53076e53dca860944c54f3cdce",
+    "src/cn_contract/exports/__init__.py": "4c1d67e0637494ebaee62f8154cf365329574828d4045c12c70e6578f8eddf9c",
+    "src/cn_contract/exports/approvals.py": "5cd82d5edad120f2b2b74a62be2cb5e5f6126f4ad579528a39ac521687e35189",
+    "src/cn_contract/exports/audience_filter.py": "2b9e11be43fdbaf9c0a873abaea1a1d2ff45dc42e70d982e389b05860d915faf",
+    "src/cn_contract/exports/draft_confirmation.py": "25a49c8047b53cbed64d7e3de2648c2fa454de275188cf365ace7baf30399a12",
+    "src/cn_contract/exports/effective_text.py": "a0249ddbfe235012fac199049f3eaffa90189473eabd410b8e5460a09c5f5efb",
+    "src/cn_contract/exports/redline_adapter.py": "b5d08bdf690d2c2fe20a74e0080b3b8aa53640d06e66fb262035a70404389cce",
+    "src/cn_contract/exports/report_docx.py": "6292eb5988ad9d445bcadabc4cee7f2c00b5fb6781b68fbc76ed99a6c9d564dd",
+    "src/cn_contract/exports/storage.py": "40c37d248c4578702ea95f4373962f21cf38f48e055a7eb049d373b6048194b7",
+    "src/cn_contract/facts/__init__.py": "6725e264dcee56aea6088c05858ea0d95ce4b24059410888a74cdf3720049a6d",
+    "src/cn_contract/facts/calculate.py": "7923a94b9b3d8c00c487af11fcb13726d720cd62ea5d9ef843aae185901907fe",
+    "src/cn_contract/facts/confirm.py": "00b9dfca23aede6109df6724763be1976898f7fd64d902cceb8cf4a56aeb3e07",
+    "src/cn_contract/facts/extract.py": "e9dad1743a5d0ab55b3e06b04372af817101c2e1530123f753859499af91df19",
+    "src/cn_contract/facts/party.py": "66707cf14794d319bf6a5c47afb8551f5932d4ce05dcd0daa983f81e4a06ada6",
+    "src/cn_contract/facts/storage.py": "4dca908cd617db67ca7a466b77d16bbab65cfe3ea02b52e7a10628d26ddcd52e",
+    "src/cn_contract/intake/__init__.py": "2db94938e2b6154cfa9aae2d71eb09e232d398052544d1e889c0dc2a742d6a5b",
+    "src/cn_contract/intake/schema.py": "8ac6a2ed5b5870e35ecb417b0bc0b2cb7d2bf5bb3d797c93c56fa0a52ae1ce32",
+    "src/cn_contract/intake/service.py": "515e4609a027a81ae7c091917145e357527d4162a5dece1848b5e5d27d11e837",
+    "src/cn_contract/library/__init__.py": "0cfe852880ac3558919551b5ba4f8490a97a4c82a469d910a56f8b7efe97a4c6",
+    "src/cn_contract/library/__main__.py": "0c0a98fd4f67542e016c68d282b0690a56e47341aaee7234be054a5a9b58cdc0",
+    "src/cn_contract/library/assets.py": "a34f94be4da72fb803fe0acef22280465c5e064f8c8c35abfb94e9f01d40b672",
+    "src/cn_contract/library/budget.py": "b5e7634d04ed913984b099d5e30aaf73e920efeeab49d3c3c75925f5c05ffa51",
+    "src/cn_contract/library/catalog.py": "026b4f8ffb8ba60a13c93cd8816b4717b4d067f25da5849168decced22df49a5",
+    "src/cn_contract/library/cleaning.py": "7d665427e3cda6a2c907257ec07349d8749abf14efa9e38b2484092979577bad",
+    "src/cn_contract/library/csv_source.py": "56e227f9bc68dcb2ddef78f3eda885e052e83e1f326ffbaedefc244377a83d8b",
+    "src/cn_contract/library/index.py": "870f6ac750e113f282d5de36cec71de079574b33f48248bf4391fd0fdb95aecf",
+    "src/cn_contract/library/law_sections.py": "770c25e66322872a746261ba5fc0ec5da669e2bd2f0852513c46fec7abebd1ec",
+    "src/cn_contract/library/originals.py": "d4d62a2224874a2df888cf036e4c196f850d48d79e40a6a4fdf91543eea58b1c",
+    "src/cn_contract/library/pilot.py": "ac66be24ba0c64c4c8598d9f38d2e53efc69633e281280439d2a035290e89870",
+    "src/cn_contract/library/pilot_adapter.py": "662cf569b91f088b60ce05029d115b89754a18ca08d040916e4c0f3cf726de2c",
+    "src/cn_contract/library/portability.py": "4e149fd4f1cbf18792daa98e01552951d7e6bab4b4b37a9ddaa0dfd6bae52c16",
+    "src/cn_contract/library/service.py": "caa589c952dc0d9c86fe41e23353a148296448423500c1d4979727c076a7c025",
+    "src/cn_contract/library/text.py": "502dbc5c34109a45138abc7d52a9b6d890a416bb3d5afca1a1d2c3c61ee91a0a",
+    "src/cn_contract/live/__init__.py": "c412f1fd1ad75a94578457fd231371c7643d457091c9bfd95d6e802cc337bcdf",
+    "src/cn_contract/live/guards.py": "e2d6e4c57304f734f633094f238081492d85587f67a7311503a11c6ca60250de",
+    "src/cn_contract/live/readiness.py": "d2d6164772e18cee79e8538f14e5208cbc0d92840713132205206bda06a2dfb6",
+    "src/cn_contract/mcp/__init__.py": "230f6ed32f7ea2112c354bff47cdae1376ed1aa2a2d261b6f88ebac64276a1f1",
+    "src/cn_contract/mcp/bound_entry.py": "ff4f8c17ea5ceeaedd7e5abe7d948e96083802dcdb66456eeccff00a987f950b",
+    "src/cn_contract/mcp/case_client.py": "d802e7950372b0e314078e077b9e3072ba6282d0644b2934b8fdbaa84d0c211a",
+    "src/cn_contract/mcp/offline_server.py": "78eca3b86296e89799c841b598d7224754b95ba71f14405bcfbe5ebb054d5c54",
+    "src/cn_contract/ops/__init__.py": "3ffd7f6c1db4c30ece7dcb95df360f427c4cbe3a1d10edae5fafa54e12238c1c",
+    "src/cn_contract/ops/backup.py": "39416546994ee1bcc399949a484a57427ca6ffc157bb472b25958a88d29f12a7",
+    "src/cn_contract/ops/egress.py": "01f784e8a4eca4f92ed32a58faa121b0137501c5b63ead56ea9732ba903ef40c",
+    "src/cn_contract/ops/file_paths.py": "5b7155dafe59419ba501888ac92d960f490172bcfa7d9405e41d7ab40ec6d5c9",
+    "src/cn_contract/ops/release.py": "0fd7330c43d125d03a3bbd597dc6fb9623bfb36db364c4fb162ff4bc7c1af820",
+    "src/cn_contract/ops/secrets.py": "0a0aed21bb7a310398960c0dbd6b6a627569d5dfd19baa9d18af285cb9046e99",
+    "src/cn_contract/ops/storage.py": "e24f24b955a579961b4cc20561e19f821f762b59230311d7a193c1f6328be4ef",
+    "src/cn_contract/ops/workspace_backup.py": "44109bd82ed113d94b79c6cd837f683b1b56b77c737000b8542ed160545808df",
+    "src/cn_contract/persistence.py": "ee324e1eb6234cc3740fce79b0b909a7721aae3dcec5bd53466a1431a6a1be7c",
+    "src/cn_contract/providers/__init__.py": "31a901f69f2270bac1b09bb606e7a1818fef6a6b334bb09b0a2700794d8bbb8b",
+    "src/cn_contract/providers/mcp_client.py": "3d371354b5cf31b93a277bd6b8a90dbe581ffede5b0cf17d828c2d78cc06c859",
+    "src/cn_contract/providers/mock_qcc.py": "655f5bb04e85a7061f37027f3f7fdd02ac902d67bd2434eadfe34c9582fe042b",
+    "src/cn_contract/providers/qcc_mcp.py": "928d5a0b6bcfbb8ec10ed4a11dc8cd3439a5977723d38081cafffe8fba2c7ec8",
+    "src/cn_contract/providers/qcc_registry.py": "fbce22a488df6c908e975f31431a2b9896979648935b52686743757ffc606619",
+    "src/cn_contract/providers/storage.py": "a7f38beebe75f6c817c7e337dec256e1bd7d0de1a4d09ced1abdf2dc424fb7f7",
+    "src/cn_contract/queries/__init__.py": "0ba009c6973a02460e267a491a6981d5856be967f5a8f41dc65a210220b4946a",
+    "src/cn_contract/queries/gateway.py": "198494bcdeffc085ec9229936619238b8fe0deccc8f8cfc8c81302f50e5e4c09",
+    "src/cn_contract/queries/ledger.py": "9b8880d3536ed4b351697c275fe3835d016e24f6b067c3b3e725756ea53b0c10",
+    "src/cn_contract/queries/planner.py": "0244ef10118af106d9d0d59ef6959406a9c2c82fb25134bf53d471b49f6c19e1",
+    "src/cn_contract/queries/storage.py": "7c9bbf5f02685a026e7815514a4c5ae849305d36a7e8e8629ff70a2f4f40f862",
+    "src/cn_contract/review/__init__.py": "210241a05e5417a51fcb1617ffa5699802300e4375a64a2298390ee5bf6b7315",
+    "src/cn_contract/review/basis.py": "30b84c0d012749f4796583e94834d8bf0a0653560fab112995ebad94afd31b68",
+    "src/cn_contract/review/decisions.py": "a657ef556433051b15a2ceaf83730f2c72e5d003904f15bbbcb5ac8d3ca393f2",
+    "src/cn_contract/review/deepseek_codec.py": "1691a927aac4c4b0676536f19e2887538278a4d9a32e29d27e823084438ef362",
+    "src/cn_contract/review/demo.py": "a4954070d1dfcc3cddac5b2753bbdc9be2f99b216738437e467233c342d97842",
+    "src/cn_contract/review/model_adapter.py": "1770fb5b093e86cf2b5dd36f3960c8d09b5b51ecf8ecede08b8fae1d4e88241e",
+    "src/cn_contract/review/proposals.py": "7136711bde02c7411a34e12e9ce412c5eaf4f1b2106c9534474c60d8aca4638e",
+    "src/cn_contract/review/storage.py": "d4e0a6d9a3c4a481a86ef91408e080b672e33052dc674ff14feda4ea43ba24dd",
+    "src/cn_contract/review/synthetic.py": "0b734458557b40264a2fc218e685f6a0841e2abf0bc35163ac784f4abbf90eaa",
+    "src/cn_contract/review/validator.py": "583e6532e019b601d499f3c39f2388293229f8acafbe4d70d7e655c43cbb9f8d",
+    "src/cn_contract/review/workflow.py": "03c6685432babcb2dc6d098057ac9efb081b4916019682c08c69b377e704dc8b",
+    "src/cn_contract/rules/__init__.py": "bc8ac84b72c69337e3d7d5c51e97371d1b85d938aa3b8e76e4ac84a229a94cf6",
+    "src/cn_contract/rules/evaluator.py": "f40d762086fd5ff20f6b995fe012cced35be96de895c065b878b55dba0b7887c",
+    "src/cn_contract/rules/loader.py": "bf9ba87f94d6c7d5874a74c84be9185b9d4c75a25c473d572b1a46895a9adf74",
+    "src/cn_contract/rules/storage.py": "aac079680195afde47bb3da0ad3f0a2de5091ee95cb30ad5eb9048f648a045c9",
+    "src/cn_contract/schema_baseline.py": "59aac5bd8be5e2df4f1716e071ac336f65f8c8a83adc71998570923707d48c50",
+    "src/cn_contract/schema_migrations.py": "fd273b99f5cd174d9482ff80fe90f97211a5faaf7ebd587cd4ebcd58fc24ea3b",
+    "src/cn_contract/security.py": "d6457c56fc6a6889e0ac2848dc77b037b9806e125b2d3532a52275697662b7f2",
+    "src/cn_contract/storage_bootstrap.py": "732acbacc9459ef7dcdbfdc2e408bde97b006a6bb2f5facfe535dc65a5f53888",
+    "src/cn_contract/storage_schema.py": "df5ee218d58b788acb8688cede46c915f273e0a163e9e906cd2b193c6ae457c8",
+    "src/cn_contract/web/__init__.py": "c1e755c1c11a3fb8bb965caa2db865ede1e5c1d0c55d0a39493d4925f77a018a",
+    "src/cn_contract/web/app.py": "df3a84faaa41c605ec306e805ce79681eeb1841b322de10c5797927241761ad2",
+    "src/cn_contract/web/assistant.py": "5b6e49b0ff75b38bc37e3a18734171d950e081e28faaedebe54bfd2f588b5bcc",
+    "src/cn_contract/web/assistant_attachments.py": "72a437aafba776d795dff8966cdc955bb708e6a1580bcf35e32cab4237bb620a",
+    "src/cn_contract/web/assistant_generation.py": "802af1e6d90e77d590118d7a9033e39bd8e11cf585ec1edf2d3b488945c4d802",
+    "src/cn_contract/web/assistant_pages.py": "15668b532234b2646bdd10a403ee433aa795a3660e8e4755e845b92727f40d47",
+    "src/cn_contract/web/assisted_demo_server.py": "ff19a4e91f2b7824051f5e08bd468203bd5293569658f2999c9e6593cd8811af",
+    "src/cn_contract/web/case_bridge.py": "2dbaed96d67824cd27bd87e601d1284d93f87c47248b8223ca2234da7114ea5f",
+    "src/cn_contract/web/demo_server.py": "34d00d012b8e0a5d3ee22f1806204f91538f0b56990538ba69b9f91a14c09bd5",
+    "src/cn_contract/web/dependencies.py": "29afc72408bd3b085348c42598f6f23b69771b91a976b2ebb908cb2153b8d694",
+    "src/cn_contract/web/draft_confirmation.py": "fde6cdba9e3bb8357234194946459936ec9d5f0cff675cec4914eaeceb5a6aec",
+    "src/cn_contract/web/intake.py": "70a4f2982830e5f1268b6c0e3bc4fa8db66bac308454cfc81cadf2a7e701e281",
+    "src/cn_contract/web/jobs.py": "75e19a6ef2a8a150941072342dfc675ebfc727018c91233789c3301bd0fa1e4c",
+    "src/cn_contract/web/library.py": "cadcad4172b2caf426a883cc22f8f60be5f2badfdfffce81ee9014321011c83f",
+    "src/cn_contract/web/local_server.py": "a717e0312186476d807b23d2972585e438b487d0837aa69ccfb48cb1f9b8604f",
+    "src/cn_contract/web/pdf_review.py": "0371f0b70a1eb1b9671383d627d27bf88c445a04093573539eb5b737bcc39218",
+    "src/cn_contract/web/recovery.py": "5800c49b68e622f7ab2521cdfcde6500d61353ceca5794a15874b14f4d4b2b7b",
+    "src/cn_contract/web/request_context.py": "f182733c08a3527a649582b56c1300ab37dac6102f50910051f7213d1273281f",
+    "src/cn_contract/web/services.py": "6b193193533d799107d04321bab4665a45ac0d4ccc5d1ca93295784e1542b2b5",
+    "src/cn_contract/web/storage.py": "15a80c7d3d9632e52ddc887b1a42a76eb5e1767957df977d7585f8d0019c2742",
+    "src/cn_contract/web/workspace_upgrade.py": "299c1f603808d0465f7f042f91819c9578463cc8c62fcbaab24ec138dff9fcf5",
+    "tests/helpers/synthetic_native_settings_entry.py": "b324745eaf180c862d488cf01487a9a4ce3f066174674e48c9ea5560bddbe53e"
+  }
+}

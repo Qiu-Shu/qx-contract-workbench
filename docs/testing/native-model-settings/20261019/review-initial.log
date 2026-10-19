@@ -1,0 +1,32 @@
+✖ renderer failure must retire its configured backend before a later credential replacement (12.2898ms)
+✔ backend failure during navigation cannot overwrite error with model-settings (3.3271ms)
+✔ navigation epoch invalidates a delayed credential read even if frame URL and identity are unchanged (2.8526ms)
+✔ runtime request and credential request share a lock without a second store operation (2.4865ms)
+✔ disable failure stops the owned backend and prevents credential writes (2.6765ms)
+✔ late configure ACK is rejected and its old backend stopped after document navigation (2.8656ms)
+✔ corrupt replacement credential clears the previously configured backend (2.4489ms)
+✔ ACK followed by backend control failure cannot display configured (2.1966ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 84.2967
+
+✖ failing tests:
+
+test at .local\native-model-settings-20261019\review-probe.test.cjs:50:1
+✖ renderer failure must retire its configured backend before a later credential replacement (12.2898ms)
+  AssertionError [ERR_ASSERTION]: renderer failure orphaned live configuration; subsequent save skipped disable and stop
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\.local\native-model-settings-20261019\review-probe.test.cjs:58:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

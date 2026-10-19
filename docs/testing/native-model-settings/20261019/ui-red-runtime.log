@@ -1,0 +1,52 @@
+✖ model page configures only a fixed selected ID, serializes actions and can switch or disable (5.7738ms)
+✖ model page hides stale runtime configuration while replacing credentials and reads back serially (4.0698ms)
+✖ model page runtime failure is separate from stored credentials and a recheck can recover (1.7856ms)
+✖ model page discards delayed configuration after leaving without clearing the new page input (1.658ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 68.3015
+
+✖ failing tests:
+
+test at desktop\tests\model-settings.test.cjs:208:1
+✖ model page configures only a fixed selected ID, serializes actions and can switch or disable (5.7738ms)
+  TypeError: f.at(...).listeners.click is not a function
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:214:55)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at desktop\tests\model-settings.test.cjs:232:1
+✖ model page hides stale runtime configuration while replacing credentials and reads back serially (4.0698ms)
+  AssertionError [ERR_ASSERTION]: The input was expected to not match the regular expression /已配置/. Input:
+  
+  '本次运行已配置 DeepSeek Flash，尚未授权发送。'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:241:43)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '本次运行已配置 DeepSeek Flash，尚未授权发送。',
+    expected: /已配置/,
+    operator: 'doesNotMatch',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-settings.test.cjs:249:1
+✖ model page runtime failure is separate from stored credentials and a recheck can recover (1.7856ms)
+  TypeError: f.at(...).listeners.click is not a function
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:253:43)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at desktop\tests\model-settings.test.cjs:262:1
+✖ model page discards delayed configuration after leaving without clearing the new page input (1.658ms)
+  TypeError: f.at(...).listeners.click is not a function
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings.test.cjs:265:55)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

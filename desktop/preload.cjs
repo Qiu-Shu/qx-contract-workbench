@@ -7,6 +7,9 @@ contextBridge.exposeInMainWorld('desktopSetup',Object.freeze({
   modelStatus:()=>ipcRenderer.invoke('desktop:model-status'),
   modelSave:secret=>ipcRenderer.invoke('desktop:model-save',secret),
   modelRemove:()=>ipcRenderer.invoke('desktop:model-remove'),
+  modelRuntimeStatus:()=>ipcRenderer.invoke('desktop:model-runtime-status'),
+  modelConfigure:model=>ipcRenderer.invoke('desktop:model-configure',model),
+  modelDisable:()=>ipcRenderer.invoke('desktop:model-disable'),
   resume:()=>ipcRenderer.invoke('desktop:resume'),
   onState:callback=>ipcRenderer.on('desktop:state',(_event,value)=>callback(value))
 }));
