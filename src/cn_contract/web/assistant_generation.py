@@ -13,6 +13,7 @@ from ..assistant.attachment_records import items
 from ..assistant.providers import attempts
 from ..assistant.providers.history import read_history
 from ..assistant.providers.policy import MainModelRuntime, add_costs, prepare, require_policy, reservation, sha
+from ..assistant.providers.registry import MainModelRegistry, resolve_runtime
 from ..ops.storage import quarantined, require_active
 from ..security import ServiceError
 from .request_context import actor_in, body_input
@@ -36,8 +37,11 @@ def _capability(actor, conversation, db, runtime, tasks):
             content_sha256=digest,state=state)
 
     if quarantined(db):return result('restored_read_only')
-    if runtime is None:return result('unconfigured')
-    try:config,policy=runtime.snapshot()
+    try:
+        runtime=resolve_runtime(runtime,actor,scope)
+        if runtime is None:return result('unconfigured')
+        config,policy=runtime.snapshot_for(actor,scope)
+    except ServiceError:return result('unapproved')
     except (ValueError,TypeError,AttributeError):return result('unconfigured')
     if not config.enabled:return result('unconfigured')
     if conversation['archived_at'] is not None or items(conversation,db):return result('unsupported')
@@ -60,8 +64,8 @@ def _capability(actor, conversation, db, runtime, tasks):
 
 
 def attach_generation(app, database, runtime=None):
-    if runtime is not None and not isinstance(runtime,MainModelRuntime):
-        raise TypeError('trusted MainModelRuntime required')
+    if runtime is not None and not isinstance(runtime,(MainModelRuntime,MainModelRegistry)):
+        raise TypeError('trusted MainModelRuntime or MainModelRegistry required')
     tasks=None
     if runtime is not None:
         from ..assistant.task_manager import GenerationTasks

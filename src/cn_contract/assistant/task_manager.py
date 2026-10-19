@@ -9,6 +9,7 @@ from ..ops.storage import require_active
 from ..security import ServiceError
 from . import service
 from .providers import attempts
+from .providers.registry import resolve_runtime
 from .runner import execute_attempt
 
 MAX_ACTIVE_TASKS = 4
@@ -60,10 +61,13 @@ class GenerationTasks:
     def submit(self, actor, conversation_id, request):
         request = d.AssistantMessageInput.model_validate(request.model_dump(mode='python'))
         with self.database.session() as db:
-            service._owned(actor, conversation_id, db)
+            conversation = service._owned(actor, conversation_id, db)
             if request.requested_skill is not None:
                 raise ServiceError('NOT_SUPPORTED', 422)
-            if self.runtime is None:
+            # Select once under current DB authority. This same lease survives
+            # dispatch; a later setting/grant cannot switch this attempt.
+            runtime = resolve_runtime(self.runtime, actor, service._snapshot(conversation))
+            if runtime is None:
                 raise ServiceError('BLOCKED_LIVE', 403)
             # Database.session's BEGIN IMMEDIATE makes this classification and
             # the existing idempotent enqueue one serialized transaction.
@@ -72,11 +76,11 @@ class GenerationTasks:
                 {'cid':str(conversation_id), 'request':str(request.request_id)})
             if previous is None:
                 self._admit()
-            view = attempts.enqueue_generation(actor, conversation_id, request, db, self.runtime)
+            view = attempts.enqueue_generation(actor, conversation_id, request, db, runtime)
         if previous is not None:
             return view
         # No task receives authority before the new durable attempt commits.
-        coroutine = execute_attempt(actor, view.id, self.database, self.runtime)
+        coroutine = execute_attempt(actor, view.id, self.database, runtime)
         try:
             task = asyncio.create_task(coroutine, name='assistant-generation')
         except Exception:

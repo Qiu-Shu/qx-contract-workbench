@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.613" timestamp="2026-10-19T20:25:52.605566+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_model_registry" name="test_malformed_trusted_dto_does_not_emit_original_values_in_serializer_warnings" time="0.001"><failure message="assert [&lt;warnings.Wa...0215FA13B8C0&gt;] == []&#10;  &#10;  Left contains one more item: &lt;warnings.WarningMessage object at 0x00000215FA13B8C0&gt;&#10;  Use -v to get more diff">world = namespace(config=MainModelConfig(enabled=True, protocol_version='deepseek-chat-json-v1', provider='deepseek', model='d...x00000215FA13B980&gt;, registry=&lt;cn_contract.assistant.providers.registry.MainModelRegistry object at 0x00000215FA13BB00&gt;)
+recwarn = WarningsRecorder(record=True)
+
+    def test_malformed_trusted_dto_does_not_emit_original_values_in_serializer_warnings(world, recwarn):
+        world.registry.configure(world.provider)
+        invalid = world.policy.model_copy(update={'max_total_usd': 'SYNTHETIC_PRIVATE_MARKER'})
+        with blocked():
+            world.registry.grant(invalid, world.actor.session_id)
+&gt;       assert list(recwarn) == []
+E       assert [&lt;warnings.Wa...0215FA13B8C0&gt;] == []
+E         
+E         Left contains one more item: &lt;warnings.WarningMessage object at 0x00000215FA13B8C0&gt;
+E         Use -v to get more diff
+
+tests\integration\test_model_registry.py:372: AssertionError</failure></testcase></testsuite></testsuites>

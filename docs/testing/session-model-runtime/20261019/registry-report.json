@@ -1,0 +1,61 @@
+{
+  "scope": "CH-04E registry and legacy snapshot_for only",
+  "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_model_registry.py -q --junitxml=.local/session-model-runtime-20261019/registry-final.xml",
+  "exit_code": 0,
+  "tests": 37,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "junit_seconds": 0.657,
+  "files": [
+    {
+      "sha256": "45c70656d49bd2e92ef700538f8b37505c7b729748d76958c95e2736f6097abc",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\registry.py"
+    },
+    {
+      "sha256": "104c223bb834b6b8e6fc5a218595aecb714298616ab208ffb6201cfb0cb68184",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\policy.py"
+    },
+    {
+      "sha256": "4495677d59547e6b8ef9f35a671def316040a7258ad61bbf3afeeb4527525862",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\tests\\integration\\test_model_registry.py"
+    }
+  ],
+  "stages": [
+    {
+      "collection_errors": 1,
+      "executed_tests": 0,
+      "name": "registry-red",
+      "exit_code": 2
+    },
+    {
+      "name": "registry-core-green",
+      "exit_code": 0,
+      "passed": 2
+    },
+    {
+      "warnings": 3,
+      "name": "registry-boundaries",
+      "exit_code": 0,
+      "passed": 35
+    },
+    {
+      "deselected": 36,
+      "name": "registry-warning-red",
+      "exit_code": 1,
+      "failed": 1
+    },
+    {
+      "warnings": 0,
+      "name": "registry-final",
+      "exit_code": 0,
+      "passed": 37
+    }
+  ],
+  "limitations": [
+    "No HTTP credential or grant endpoint was introduced.",
+    "No real model requests; synthetic in-process providers only.",
+    "Registry does not query or reset budget counters; database accounting and full application integration are tested by root and the other agent.",
+    "Product files are frozen pending independent review; no commit by this subagent."
+  ]
+}

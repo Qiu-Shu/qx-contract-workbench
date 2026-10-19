@@ -1,0 +1,16 @@
+
+=================================== ERRORS ====================================
+__________ ERROR collecting tests/integration/test_model_registry.py __________
+ImportError while importing test module 'D:\Documents\ChatGPT\������Ŀ\tests\integration\test_model_registry.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_model_registry.py:12: in <module>
+    from cn_contract.assistant.providers.registry import MainModelRegistry, resolve_runtime
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.registry'
+=========================== short test summary info ===========================
+ERROR tests/integration/test_model_registry.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.71s

@@ -1,0 +1,27 @@
+............F...                                                         [100%]
+================================== FAILURES ===================================
+_____ test_cancelled_registry_attempt_preserves_receipt_without_resending _____
+
+world = (<cn_contract.persistence.Database object at 0x000001AF83550650>, Actor(user_id=UUID('88d25303-6247-4b1c-ad3e-9cd17d50...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF835D3D10>)
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-935/test_cancelled_registry_attemp0')
+
+    def test_cancelled_registry_attempt_preserves_receipt_without_resending(world, tmp_path):
+        with loopback(delayed=True) as peer:
+            registry, _ = configured(world, peer)
+            with boot(world, tmp_path, runtime=registry) as http:
+                save_draft(http)
+                grant(http, registry, world[4].policy)
+                try:
+                    first = submit(http)
+                    wait_calls(peer, 1)
+                    response = http.client.post('/api/assistant/runs/'+first['run_id']+'/cancel',
+                        headers=http.headers)
+>                   assert response.status_code == 200, response.text
+E                   AssertionError: {"code":"STATE_CONFLICT","message":"request blocked","correlation_id":"e2c06c41-a3a6-4be2-9158-cb8ce3146f81","retryable":false}
+E                   assert 422 == 200
+E                    +  where 422 = <Response [422 Unprocessable Content]>.status_code
+
+tests\integration\test_session_model_runtime.py:390: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_session_model_runtime.py::test_cancelled_registry_attempt_preserves_receipt_without_resending
+1 failed, 15 passed in 12.21s

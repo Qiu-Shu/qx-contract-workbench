@@ -1,0 +1,167 @@
+"""Trusted, event-loop-owned configuration and login-session grants."""
+import asyncio
+from datetime import datetime, timezone
+from uuid import UUID
+
+from ... import domain as d
+from ...security import ServiceError
+from .policy import MainModelRuntime, encoded, require_policy, sha, validated
+
+
+def _copy(model, value):
+    try:
+        if not isinstance(value, model):
+            raise ValueError
+        return validated(model, value.model_dump(mode='python', warnings=False))
+    except Exception:
+        raise ServiceError('BLOCKED_LIVE', 403) from None
+
+
+def _config(provider):
+    try:
+        if not callable(provider.generate):
+            raise ValueError
+        return _copy(d.MainModelConfig, provider.config)
+    except Exception:
+        raise ServiceError('BLOCKED_LIVE', 403) from None
+
+
+def _session_id(value):
+    if type(value) is not UUID:
+        raise ServiceError('BLOCKED_LIVE', 403)
+    return value
+
+
+def _identity(actor, scope):
+    actor = _copy(d.Actor, actor)
+    scope = _copy(d.ScopeSnapshot, scope)
+    return scope.workspace_id, actor.user_id, actor.session_id
+
+
+class MainModelRegistry:
+    def __init__(self):
+        self._loop = None
+        self._provider = None
+        self._config = None
+        self._version = object()
+        self._grants = {}
+        self._seen_policies = {}
+
+    def _check_loop(self, *, bind=False):
+        try:
+            current = asyncio.get_running_loop()
+        except RuntimeError:
+            current = None
+        if self._loop is None:
+            if bind:
+                if current is None:
+                    raise ServiceError('BLOCKED_LIVE', 403)
+                self._loop = current
+        elif current is not self._loop:
+            raise ServiceError('BLOCKED_LIVE', 403)
+
+    def _current_config(self):
+        config = _config(self._provider)
+        if config != self._config:
+            raise ServiceError('BLOCKED_LIVE', 403)
+        return config
+
+    def configure(self, provider):
+        self._check_loop()
+        config = _config(provider) if provider is not None else None
+        self._provider, self._config = provider, config
+        self._version = object()
+        self._grants.clear()
+
+    def grant(self, policy, session_id):
+        self._check_loop()
+        session_id = _session_id(session_id)
+        policy = _copy(d.MainModelPolicy, policy)
+        config = self._current_config()
+        if (not config.enabled or policy.config_sha256 != sha(encoded(config))
+                or policy.expires_at <= datetime.now(timezone.utc)):
+            raise ServiceError('BLOCKED_LIVE', 403)
+        digest = sha(encoded(policy))
+        previous = self._seen_policies.get(policy.policy_id)
+        if previous is not None and previous != digest:
+            raise ServiceError('VERSION_CONFLICT', 409)
+        key = policy.workspace_id, policy.actor_id, session_id
+        current = self._grants.get(key)
+        if current is not None and current[0] == policy:
+            return
+        self._seen_policies[policy.policy_id] = digest
+        self._grants[key] = policy, object()
+
+    def revoke(self, session_id):
+        self._check_loop()
+        session_id = _session_id(session_id)
+        for key in tuple(self._grants):
+            if key[2] == session_id:
+                del self._grants[key]
+
+    def resolve(self, actor, scope):
+        self._check_loop(bind=True)
+        key = _identity(actor, scope)
+        if self._provider is None:
+            return None
+        config = self._current_config()
+        return _RuntimeLease(self, key, actor, config, self._grants.get(key))
+
+
+class _RuntimeLease:
+    def __init__(self, registry, key, actor, config, grant):
+        self._registry, self._key = registry, key
+        self._actor = _copy(d.Actor, actor)
+        self._version = registry._version
+        self._fixed_provider = registry._provider
+        self._config = config
+        self._policy, self._nonce = grant if grant is not None else (None, None)
+        self.provider = _LeaseProvider(self)
+
+    def snapshot(self):
+        registry = self._registry
+        registry._check_loop()
+        current = registry._grants.get(self._key)
+        nonce = current[1] if current is not None else None
+        if (registry._version is not self._version or registry._provider is not self._fixed_provider
+                or nonce is not self._nonce):
+            raise ServiceError('BLOCKED_LIVE', 403)
+        registry._current_config()
+        if self._policy is not None and self._policy.expires_at <= datetime.now(timezone.utc):
+            raise ServiceError('BLOCKED_LIVE', 403)
+        return self._config, self._policy
+
+    def snapshot_for(self, actor, scope):
+        self._registry._check_loop()
+        if _identity(actor, scope) != self._key:
+            raise ServiceError('BLOCKED_LIVE', 403)
+        return self.snapshot()
+
+
+class _LeaseProvider:
+    def __init__(self, lease):
+        self._lease = lease
+
+    @property
+    def config(self):
+        return self._lease.snapshot()[0]
+
+    async def generate(self, request, *, expected_config=None):
+        lease = self._lease
+        config, policy = lease.snapshot()
+        if expected_config is not None and _copy(d.MainModelConfig, expected_config) != config:
+            raise ServiceError('BLOCKED_LIVE', 403)
+        request = _copy(d.MainRequest, request)
+        require_policy(config, policy, lease._actor, request.scope, request.source_sha256)
+        return await lease._fixed_provider.generate(request, expected_config=config)
+
+
+def resolve_runtime(runtime_or_registry, actor, scope):
+    if isinstance(runtime_or_registry, MainModelRegistry):
+        return runtime_or_registry.resolve(actor, scope)
+    if isinstance(runtime_or_registry, _RuntimeLease):
+        runtime_or_registry.snapshot_for(actor, scope)
+        return runtime_or_registry
+    if runtime_or_registry is None or isinstance(runtime_or_registry, MainModelRuntime):
+        return runtime_or_registry
+    raise ServiceError('BLOCKED_LIVE', 403)

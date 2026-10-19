@@ -1,0 +1,22 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_malformed_trusted_dto_does_not_emit_original_values_in_serializer_warnings _
+
+world = namespace(config=MainModelConfig(enabled=True, protocol_version='deepseek-chat-json-v1', provider='deepseek', model='d...x00000215FA13B980>, registry=<cn_contract.assistant.providers.registry.MainModelRegistry object at 0x00000215FA13BB00>)
+recwarn = WarningsRecorder(record=True)
+
+    def test_malformed_trusted_dto_does_not_emit_original_values_in_serializer_warnings(world, recwarn):
+        world.registry.configure(world.provider)
+        invalid = world.policy.model_copy(update={'max_total_usd': 'SYNTHETIC_PRIVATE_MARKER'})
+        with blocked():
+            world.registry.grant(invalid, world.actor.session_id)
+>       assert list(recwarn) == []
+E       assert [<warnings.Wa...0215FA13B8C0>] == []
+E         
+E         Left contains one more item: <warnings.WarningMessage object at 0x00000215FA13B8C0>
+E         Use -v to get more diff
+
+tests\integration\test_model_registry.py:372: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_model_registry.py::test_malformed_trusted_dto_does_not_emit_original_values_in_serializer_warnings
+1 failed, 36 deselected in 0.65s

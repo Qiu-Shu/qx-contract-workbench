@@ -1,0 +1,39 @@
+{
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "date": "2026-10-19",
+  "scope": "CH-04E independent local HTTP session-runtime integration tests",
+  "changed_file": "tests/integration/test_session_model_runtime.py",
+  "test_sha256": "8eff1b244ed2a8b0d872b1cba319a5ebf0776a64c898c871c49ccb0fd13028bf",
+  "command": ".venv/Scripts/python.exe -m pytest -q tests/integration/test_session_model_runtime.py",
+  "runs": [
+    {"log": "http-first.log", "passed": 1, "failed": 0, "exit": 0},
+    {"log": "http-expanded-first.log", "passed": 14, "failed": 0, "exit": 0},
+    {"log": "http-complete.log", "passed": 15, "failed": 1, "exit": 1,
+      "note": "New cancellation test omitted the existing required request_id. This was a test construction error, corrected without changing product code."},
+    {"log": "http-final.log", "passed": 16, "failed": 0, "exit": 0, "seconds": 12.57}
+  ],
+  "red_green_boundary": "The product implementation was already present before this test file's first execution. No artificial rollback was performed. Product boundary RED evidence is maintained separately by the root and registry agents.",
+  "coverage": [
+    "Actual authenticated HTTP-session actor, not the older fixture session",
+    "Different users and same-user distinct login-session grants",
+    "Single real loopback POST, authorization header, bounded payload and replay recovery",
+    "Shared policy call and amount limits survive second-session grant and reauthorization",
+    "Queued configuration and grant ABA produce proved not_sent without network",
+    "Sending configuration and grant ABA retain usage receipt but discard candidate",
+    "Concurrent session revocation affects only the revoked session",
+    "Replacement pricing does not alter an in-flight attempt's original estimated receipt",
+    "Cancellation retains received receipt; result lookup does not resend",
+    "Restart recovers reserved and sending markers without grants or automatic sends",
+    "Restored quarantine rejects generation even with a trusted current-session grant"
+  ],
+  "transport": {
+    "application": "build_local_app through in-process ASGI TestClient with real lifespan and isolated SQLite workspace",
+    "supplier": "DeepSeekProvider.for_synthetic_loopback to a real ThreadingHTTPServer bound to 127.0.0.1:0",
+    "external_model_requests": 0,
+    "real_credentials_or_materials": false,
+    "unrelated_service_ports_used": false
+  },
+  "boundary": "This validates the trusted server registry and loopback protocol. It does not validate Electron UI, browser rendering, external model service, or native credential-to-backend delivery.",
+  "product_files_modified_by_this_assignment": [],
+  "committed": false
+}

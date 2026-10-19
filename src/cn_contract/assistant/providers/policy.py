@@ -28,6 +28,9 @@ class MainModelRuntime:
                   if self.policy is not None else None)
         return config, policy
 
+    def snapshot_for(self, actor, scope):
+        return self.snapshot()
+
 
 def validated(model, data):
     with localcontext(Context(prec=60)):

@@ -68,7 +68,7 @@ def enqueue_generation(actor, conversation_id, request, db, runtime):
     request = d.AssistantMessageInput.model_validate(request.model_dump(mode='python'))
     conversation = service._owned(actor, conversation_id, db)
     require_active(db)
-    config, policy = runtime.snapshot()
+    config, policy = runtime.snapshot_for(actor, service._snapshot(conversation))
     previous = db.execute(text('''SELECT r.id,a.id AS attempt_id FROM assistant_runs r
         LEFT JOIN assistant_model_attempts a ON a.run_id=r.id
         WHERE r.conversation_id=:cid AND r.request_id=:request'''),
@@ -121,7 +121,7 @@ def _current(actor, row, db, runtime):
     run = service._owned_run(actor, UUID(row['run_id']), db)
     conversation = service._owned(actor, UUID(row['conversation_id']), db)
     prepared = _model(d.MainPreparedInput, row['input_json'])
-    config, policy = runtime.snapshot()
+    config, policy = runtime.snapshot_for(actor, prepared.request.scope)
     require_policy(config, policy, actor, prepared.request.scope, prepared.request.source_sha256)
     if (str(actor.session_id) != run['session_id'] or run['actor_id'] != str(actor.user_id)
             or conversation['archived_at'] is not None or service._snapshot(conversation) != prepared.request.scope

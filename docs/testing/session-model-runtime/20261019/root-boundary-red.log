@@ -1,0 +1,18 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+__________________ test_enqueue_obeys_bound_runtime_identity __________________
+.local\session-model-runtime-20261019\test_attempt_scope_probe.py:16: in test_enqueue_obeys_bound_runtime_identity
+    with pytest.raises(ServiceError, match='BLOCKED_LIVE'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+___________________ test_claim_obeys_bound_runtime_identity ___________________
+.local\session-model-runtime-20261019\test_attempt_scope_probe.py:26: in test_claim_obeys_bound_runtime_identity
+    assert attempts.claim(actor, view.id, db, runtime) is None
+E   AssertionError: assert ('e121f8d6a0a6890793feb676bc1106dc563e9dd8365e6893e57946eae7ef8374', MainRequest(run_id=UUID('e652d363-cd3b-4fc4-95fd-...=30, input_usd_per_million=Decimal('0.3'), output_usd_per_million=Decimal('1.2'), price_reference='synthetic-ceiling')) is None
+E    +  where ('e121f8d6a0a6890793feb676bc1106dc563e9dd8365e6893e57946eae7ef8374', MainRequest(run_id=UUID('e652d363-cd3b-4fc4-95fd-...=30, input_usd_per_million=Decimal('0.3'), output_usd_per_million=Decimal('1.2'), price_reference='synthetic-ceiling')) = <function claim at 0x0000028FD27E5580>(Actor(user_id=UUID('e6cd491a-0910-4711-a518-589d37cd5ed5'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('ecf7c5f0-9b56-4595-bf24-d43e4c37804b')), UUID('98c280ec-ca73-43a2-aadf-e388c0ea4205'), <sqlalchemy.orm.session.Session object at 0x0000028FD48A3380>, <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x0000028FD48A3230>)
+E    +    where <function claim at 0x0000028FD27E5580> = attempts.claim
+E    +    and   UUID('98c280ec-ca73-43a2-aadf-e388c0ea4205') = MainAttemptView(id=UUID('98c280ec-ca73-43a2-aadf-e388c0ea4205'), run_id=UUID('e652d363-cd3b-4fc4-95fd-f3de581dd9b9'), ...on=1, materials_revision=0), state='reserved', reserved_usd=Decimal('0.024576'), unit='USD', receipt=None, output=None).id
+=========================== short test summary info ===========================
+FAILED .local/session-model-runtime-20261019/test_attempt_scope_probe.py::test_enqueue_obeys_bound_runtime_identity
+FAILED .local/session-model-runtime-20261019/test_attempt_scope_probe.py::test_claim_obeys_bound_runtime_identity
+2 failed in 1.66s

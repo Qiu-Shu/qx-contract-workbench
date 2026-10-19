@@ -1,0 +1,8 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -m pytest .local/session-model-runtime-20261019/review-runtime-probes.py -q -p no:cacheprovider --basetemp=.local/session-model-runtime-20261019/review-final-temp --junitxml=.local/session-model-runtime-20261019/review-final.xml",
+  "exit_code": 0,
+  "inputs_unchanged": true,
+  "changed_inputs": [],
+  "real_model_calls": 0,
+  "provider_transport": "in-process synthetic provider; real local SQLite application service and runner"
+}

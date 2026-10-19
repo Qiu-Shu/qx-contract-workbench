@@ -1,0 +1,20 @@
+{
+  "scope": "actual newly frozen backend startup/auth/schema; not installer acceptance",
+  "exe_sha256": "d1db1a81424bc714e3760641683fb70b37c98036349a24d588dbede9239fd568",
+  "checks": [
+    "ready_login_assistant_and_unconfigured_generation_denied",
+    "clean_parent_pipe_shutdown_and_closed_port",
+    "exact_current_model_schema_marker_and_sqlite_integrity"
+  ],
+  "workspace_parent": "D:\\Documents\\ChatGPT\\律所项目\\.local\\session-model-runtime-20261019\\冻结 后端合成 2d6c4c6f",
+  "ready_seconds": 1.574,
+  "pid": 14408,
+  "exit_code": 0,
+  "status": "passed",
+  "schema_version": "assistant-model-v1",
+  "model_counts": {
+    "assistant_model_attempts": 0,
+    "assistant_model_receipts": 0,
+    "assistant_model_outputs": 0
+  }
+}

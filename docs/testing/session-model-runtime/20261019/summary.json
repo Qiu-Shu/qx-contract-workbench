@@ -1,0 +1,82 @@
+{
+  "baseline": "4435396",
+  "phase": "CH-04E",
+  "regression": {
+    "tests": 331,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "unique": true,
+    "collection_matches": true,
+    "input_files": 472,
+    "changed_inputs": [],
+    "junit_seconds": 164.468,
+    "exit_code": 0
+  },
+  "new_formal_tests": {
+    "registry": 37,
+    "http_and_loopback": 16,
+    "included_in_regression": true
+  },
+  "independent_review": {
+    "tests": 8,
+    "exit_code": 0,
+    "input_files": 13,
+    "inputs_unchanged": true,
+    "blocking_findings": 0
+  },
+  "root_boundary_probe": {
+    "tests": 2,
+    "red_exit": 1,
+    "green_exit": 0,
+    "note": "Enqueue/claim missed snapshot_for before wiring. First green checks fixed code via ServiceError.code instead of exception text."
+  },
+  "development_gates": {
+    "defaults": 0,
+    "sources": 0,
+    "dependencies": 0,
+    "schema": 0,
+    "production_unapproved_sources": 13,
+    "runtime_dependencies": 55,
+    "build_dependencies": 1
+  },
+  "windows_frozen_backend": {
+    "scope": "actual newly frozen backend startup/auth/schema; not installer acceptance",
+    "exe_sha256": "d1db1a81424bc714e3760641683fb70b37c98036349a24d588dbede9239fd568",
+    "checks": [
+      "ready_login_assistant_and_unconfigured_generation_denied",
+      "clean_parent_pipe_shutdown_and_closed_port",
+      "exact_current_model_schema_marker_and_sqlite_integrity"
+    ],
+    "workspace_parent": "D:\\Documents\\ChatGPT\\律所项目\\.local\\session-model-runtime-20261019\\冻结 后端合成 2d6c4c6f",
+    "ready_seconds": 1.574,
+    "pid": 14408,
+    "exit_code": 0,
+    "status": "passed",
+    "schema_version": "assistant-model-v1",
+    "model_counts": {
+      "assistant_model_attempts": 0,
+      "assistant_model_receipts": 0,
+      "assistant_model_outputs": 0
+    }
+  },
+  "build_input_files": 210,
+  "build_inputs_unchanged": true,
+  "initial_build": {
+    "compiler_exit_code": 0,
+    "acceptance": "invalidated_by_input_change",
+    "changed_inputs": [
+      "src/cn_contract/assistant/providers/registry.py"
+    ],
+    "smoke_executed": false
+  },
+  "real_model_calls": 0,
+  "native_credential_pipe_connected": false,
+  "production_runtime": null,
+  "new_runtime_dependencies": 0,
+  "database_schema_changes": false,
+  "source_test_normalization": "Two new test files normalized CRLF to LF before final 331-case run; earlier agent byte hashes describe their previous CRLF bytes.",
+  "verification_scope": "Targeted regression, ASGI TestClient + real loopback supplier, independent service probes, actual Windows frozen default backend. No new Electron/browser/installer test.",
+  "preexisting_lf_differences": 20,
+  "changed_product_and_test_files_match_staged_bytes": true
+}
