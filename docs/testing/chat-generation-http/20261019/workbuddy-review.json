@@ -1,0 +1,39 @@
+{
+  "task_id": "wb-151ff422094a",
+  "state": "completed",
+  "stop_reason": "end_turn",
+  "error": null,
+  "answer": "已只读三份源码（`task_manager.py`、`runner.py`、`attempts.py`），未读其他文件、未写文件、未运行命令、未联网。以下仅基于这三份文件的静态源码结论。\n\n## 问题 1：调度时机与补发路径\n\n**结论：本范围未发现「新任务在持久提交前被调度」或「同键重放/旧 queued/reserved/重启补发」的可复现路径。** 逐个核对了入口，均为受控：\n\n1. **新任务确实在提交后才调度**：`submit`（task_manager.py:60-89）内，`attempts.enqueue_generation(...)` 发生在 `with self.database.session()`（第 62/75 行）内；该 `with` 块退出即提交，`asyncio.create_task` 在第 81 行——**两者之间无任何 `await`**，且 `submit` 是同步方法，故「提交 → 建协程 → 建任务」原子执行，不存在提交前调度。若 `enqueue_generation` 抛异常（预算/冲突），`with` 块回滚、异常外抛，第 81 行不会执行。\n\n2. **同键重放不重发**：`submit` 第 70-72 行先查 `previous`，非空则跳过 `_admit` 并在第 76-77 行直接返回 `view`（不建任务）。`enqueue_generation`（attempts.py:67-116）重放分支第 76-87 行也返回既有 `read_attempt`，不新插入 attempt、不新发起调用。\n\n3. **旧 queued（无 attempt）不补发**：`enqueue_generation` 第 78-79 行对 `attempt_id IS NULL` 直接抛 `STATE_CONFLICT(409)`，不给旧 queued 运行授予执行资格。\n\n4. **旧 reserved / sending 不补发**：`recover_attempts`（attempts.py:249-263）仅把 `reserved→failed_before_send`、`sending→sent_unknown`，并 `assistant_runs.state='interrupted'`，不产生任何 `execute_attempt` 调用、不重发。\n\n**一处需确认的边界（非重发，但属「重启一致性依赖」）**：提交（第 75 行）与 `create_task`（第 81 行）之间若进程崩溃，会留下一个 `reserved` 但从未被 claim 的 attempt。分类上它会被 `recover_attempts` 正确归为 `failed_before_send`（未发送），不是重发——但这一正确性**依赖 `recover_attempts` 在启动维护时被调用**，而该调用点在本次三份文件之外，无法确认接线。\n\n## 问题 2：未发送预占 vs 已发送结果未知，是否会混淆\n\n**结论：本范围未发现混淆路径。** 状态机与 `claim_sha256` 双守卫把它们严格分开：\n\n- **未发送预占**：`reserved` 且 `claim_sha256 IS NULL`。`_abandon_unsent`（attempts.py:140-142）用 `WHERE ... state='reserved' AND claim_sha256 IS NULL` + `rowcount != 1 → STATE_CONFLICT`，只会把「从未 claim」的预占标 `failed_before_send`。`cancel_reserved_for_run`（156-163）也只选 `state='reserved'`。\n- **已发送结果未知**：claim 后 state=`sending` 且 `claim_sha256=sha(token)`。`settle`（198-246）在 201-202 与 226-227 两处校验 `state='sending' AND claim_sha256=sha(token)`，不符即 `STATE_CONFLICT`。`_abandon_unsent` 的 `state='reserved'` 与 `settle` 的 `state='sending'` 互斥，且 `Database.session` 为 `BEGIN IMMEDIATE`（题设），二者串行化，不会互相穿透。\n\n关键时序链也已核对无冲突：\n- 关闭时（`close`，task_manager.py:112-131）先 `task.cancel()`（120-121）；`execute_attempt`（runner.py:16-24）的 `except asyncio.CancelledError` 把结果记为 `sent_unknown` 并在 25-26 行 `settle`，`settle` 完成后（27-28 行）才 `raise asyncio.CancelledError`。done 回调 `_finished`（task_manager.py:103-107）再 `_release_unsent`→`cancel_reserved_for_run`，此时已无 `reserved` 行，为 no-op。故已 claim 的任务被取消时只会记 `sent_unknown`，不会被 `_abandon_unsent` 误当未发送。\n- 未 claim 即被取消的任务（协程未启动或尚未到 `claim`）：attempt 仍为 `reserved`，由 `_finished`→`cancel_reserved_for_run` 正确归 `failed_before_send`。\n- `claim`（166-195）为同步、无 `await`，claim 的 `UPDATE`（188-192）带 `AND state='reserved' AND claim_sha256 IS NULL` 守卫，一旦成功即进入 `sending`，之后唯一的 `await` 在 `generate`（try 内），取消只会被 CancelledError 分支承接。\n\n## 未检查/未独立确认的前提（按题设列出）\n\n1. `Database.session` 确为 `BEGIN IMMEDIATE`（题设，未读底座代码验证）——这是串行化去重与 `claim`/`settle`/`_abandon_unsent` 互斥的基础。\n2. `recover_attempts` 是否在启动/维护路径被调用（在本次三份文件之外），决定崩溃残留 `reserved/sending` 的最终归类是否落实。\n3. `require_active`、`runtime.snapshot()`、`service.save_message/_owned/_owned_run/_snapshot` 的确切语义（未读，仅按三份文件中的用法推断）。\n4. `assistant_model_attempts` 与 run 之间是否「一 run 一 attempt」（`cancel_reserved_for_run` 按 `run_id` 取 `first()`，若存在多 attempt 会只处理一条——本次未读 schema 无法确认唯一约束）。\n5. 单进程单 `GenerationTasks` 实例的假设（`active_count`/`MAX_ACTIVE_TASKS` 为进程内内存态，多进程/多实例不共享，会各自放行至各自上限）。\n\n**小结**：两个问题在本只读范围内均未发现可复现缺陷；调度的「先提交后建任务」与「未发送/已发送未知」的区分都由原子事务与 `claim_sha256`+状态双守卫保证。需要后续接续验证的，是 `recover_attempts` 的启动接线与 schema 层「一 run 一 attempt」约束这两个题设外前提。",
+  "permissions": [
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "src/cn_contract/assistant/task_manager.py"
+    },
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "src/cn_contract/assistant/runner.py"
+    },
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "src/cn_contract/assistant/providers/attempts.py"
+    }
+  ],
+  "tool_events": [
+    {
+      "tool": "Read",
+      "status": "completed"
+    },
+    {
+      "tool": "Read",
+      "status": "completed"
+    },
+    {
+      "tool": "Read",
+      "status": "completed"
+    }
+  ],
+  "receipt_transform": "Dedicated session identity omitted; approved source paths made repository-relative. Answer and tool events unchanged."
+}

@@ -83,12 +83,21 @@
     "not_installer_or_performance_acceptance": true
   },
   "workbuddy": {
-    "usable_connection": false,
-    "task_dispatched": false,
-    "review_received": false,
-    "observed": "busy after user re-opened the dedicated chat; previous task has no terminal record; local active-state JSON is damaged",
-    "wait_on_previous_task": "unknown to current MCP process",
-    "state_modified": false
+    "usable_connection_at_dispatch": true,
+    "task_dispatched": true,
+    "review_received": true,
+    "task_id": "wb-151ff422094a",
+    "state": "completed",
+    "stop_reason": "end_turn",
+    "error": null,
+    "approved_reads": 3,
+    "completed_read_events": 3,
+    "scope": "static review of task_manager.py, runner.py and providers/attempts.py only",
+    "findings": 0,
+    "root_verified_out_of_scope_assumptions": true,
+    "historical_blocker": "Earlier busy with unfinished old record and invalid active JSON; retained as historical observation. Later status connected; fresh task completed.",
+    "old_task_retried": false,
+    "bridge_state_manually_modified": false
   },
   "real_model_calls": 0,
   "installed_app_replaced": false,
@@ -115,5 +124,6 @@
     "build_differences_included_in_regression_differences": true,
     "only_line_endings": true,
     "baseline_blobs_unchanged": true
-  }
+  },
+  "product_commit": "eccea9a"
 }
