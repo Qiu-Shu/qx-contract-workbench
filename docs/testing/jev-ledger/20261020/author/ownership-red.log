@@ -1,0 +1,54 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+____________ test_explicit_skill_skips_without_provider_or_policy _____________
+
+world = (<cn_contract.persistence.Database object at 0x000002322B4F31A0>, Actor(user_id=UUID('157d8bad-666a-495a-a7c0-2dbc53bd...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000002322A2F90A0>)
+
+    def test_explicit_skill_skips_without_provider_or_policy(world):
+        database, actor, run, _, _ = setup(world, requested_skill='contract_review')
+        module = importlib.import_module('cn_contract.assistant.providers.judge_policy')
+        with database.session() as db:
+>           assert api().reserve(actor, run.id, db, module.JudgeRuntime()) is None
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_judge_attempts.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\assistant\providers\judge_attempts.py:89: in reserve
+    config = runtime.configuration()
+             ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <cn_contract.assistant.providers.judge_policy.JudgeRuntime object at 0x000002322B61B7D0>
+
+    def configuration(self):
+        with self._lock:
+            self._check_loop()
+            try:
+                current = validated_config(self._provider.config)
+                if current != self._config:
+                    raise ValueError()
+                return current
+            except Exception:
+>               raise ServiceError('BLOCKED_LIVE', 403) from None
+E               cn_contract.security.ServiceError: request not authorized
+
+src\cn_contract\assistant\providers\judge_policy.py:129: ServiceError
+___ test_other_session_cannot_claim_or_abandon_original_session_reservation ___
+
+world = (<cn_contract.persistence.Database object at 0x000002322B5DBC20>, Actor(user_id=UUID('f0384e05-a13e-45dc-9278-f3c93274...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000002322B636B40>)
+
+    def test_other_session_cannot_claim_or_abandon_original_session_reservation(world):
+        values = setup(world); database, actor, _, _, runtime = values
+        first = reserve(values)
+        with database.session() as db:
+            token, _ = login('lawyer', 'fixture123', db); other = authenticate(token, db)
+        with database.session() as db:
+>           with pytest.raises(ServiceError): api().claim(other, first.id, db, runtime)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+
+tests\integration\test_judge_attempts.py:150: Failed
+=========================== short test summary info ===========================
+FAILED tests/integration/test_judge_attempts.py::test_explicit_skill_skips_without_provider_or_policy
+FAILED tests/integration/test_judge_attempts.py::test_other_session_cannot_claim_or_abandon_original_session_reservation
+2 failed, 29 deselected in 1.81s

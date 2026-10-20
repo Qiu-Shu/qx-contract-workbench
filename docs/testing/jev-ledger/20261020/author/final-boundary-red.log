@@ -1,0 +1,31 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+________ test_failed_configuration_replacement_keeps_prior_valid_grant ________
+tests\integration\test_judge_attempts.py:429: in test_failed_configuration_replacement_keeps_prior_valid_grant
+    with pytest.raises(ServiceError) as failure:runtime.configure(malformed)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\judge_policy.py:94: in configure
+    config = validated_config(provider.config) if provider is not None else None
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\jev_codec.py:36: in validated_config
+    raise ValueError('invalid judge configuration') from None
+E   ValueError: invalid judge configuration
+_______ test_historical_decision_timestamp_must_precede_approval_expiry _______
+tests\integration\test_judge_attempts.py:446: in test_historical_decision_timestamp_must_precede_approval_expiry
+    with database.session() as db,pytest.raises(ValueError,match='ASSISTANT_JUDGE_INTEGRITY'):
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+____ test_explicit_skill_does_not_need_to_fit_an_unused_judge_wire_budget _____
+tests\integration\test_judge_attempts.py:456: in test_explicit_skill_does_not_need_to_fit_an_unused_judge_wire_budget
+    assert api().reserve(actor,run.id,db,runtime) is None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\judge_attempts.py:91: in reserve
+    request_for_run(actor, run_id, db, d.JevConfig(), purpose=purpose)
+src\cn_contract\assistant\providers\judge_attempts.py:55: in request_for_run
+    raise ServiceError('BLOCKED_LIVE', 403) from None
+E   cn_contract.security.ServiceError: request not authorized
+=========================== short test summary info ===========================
+FAILED tests/integration/test_judge_attempts.py::test_failed_configuration_replacement_keeps_prior_valid_grant
+FAILED tests/integration/test_judge_attempts.py::test_historical_decision_timestamp_must_precede_approval_expiry
+FAILED tests/integration/test_judge_attempts.py::test_explicit_skill_does_not_need_to_fit_an_unused_judge_wire_budget
+3 failed, 51 deselected in 2.24s

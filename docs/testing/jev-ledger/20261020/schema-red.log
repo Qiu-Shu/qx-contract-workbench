@@ -1,0 +1,309 @@
+FFFFFFFFFFFFFFFF                                                         [100%]
+================================== FAILURES ===================================
+___________ test_judge_is_additive_and_does_not_replace_main_ledger ___________
+
+    def test_judge_is_additive_and_does_not_replace_main_ledger():
+>       assert storage_schema.CURRENT_VERSION == 'assistant-judge-v1'
+E       AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E         
+E         - assistant-judge-v1
+E         ?           ^^ -
+E         + assistant-model-v1
+E         ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:32: AssertionError
+__ test_old_model_structure_is_frozen_even_if_current_schema_changes[False] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F79E7CEDB0>
+native = False
+
+    @pytest.mark.parametrize('native', [False, True])
+    def test_old_model_structure_is_frozen_even_if_current_schema_changes(monkeypatch, native):
+        from cn_contract.assistant import model_schema
+        before = storage_schema.schema_rows('assistant-model-v1', native=native)
+        assert hashlib.sha256(json.dumps(before, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest() == HISTORICAL[native]
+        try:
+            monkeypatch.setattr(model_schema, 'expected_objects', lambda: [('table', 'bad', 'bad', 'bad')])
+            importlib.reload(storage_schema)
+>           assert storage_schema.schema_rows('assistant-model-v1', native=native) == before
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 16 diff: ('index', 'sqlite_autoindex_assistant_run_events_1', 'assistant_run_events', None) != ('index', 'sqlite_autoindex_assistant_model_attempts_1', 'assistant_model_attempts', None)
+E             Right contains 15 more items, first extra item: ('trigger', 'immutable_rule_manager_grants_update', 'rule_manager_grants', "CREATE TRIGGER immutable_rule_manager_grants_update BEFORE UPDATE ON rule_manager_grants BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests\integration\test_assistant_judge_schema.py:48: AssertionError
+___ test_old_model_structure_is_frozen_even_if_current_schema_changes[True] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F79E823CE0>
+native = True
+
+    @pytest.mark.parametrize('native', [False, True])
+    def test_old_model_structure_is_frozen_even_if_current_schema_changes(monkeypatch, native):
+        from cn_contract.assistant import model_schema
+        before = storage_schema.schema_rows('assistant-model-v1', native=native)
+        assert hashlib.sha256(json.dumps(before, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest() == HISTORICAL[native]
+        try:
+            monkeypatch.setattr(model_schema, 'expected_objects', lambda: [('table', 'bad', 'bad', 'bad')])
+            importlib.reload(storage_schema)
+>           assert storage_schema.schema_rows('assistant-model-v1', native=native) == before
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 16 diff: ('index', 'sqlite_autoindex_assistant_run_events_1', 'assistant_run_events', None) != ('index', 'sqlite_autoindex_assistant_model_attempts_1', 'assistant_model_attempts', None)
+E             Right contains 15 more items, first extra item: ('trigger', 'immutable_rule_manager_grants_update', 'rule_manager_grants', "CREATE TRIGGER immutable_rule_manager_grants_update BEFORE UPDATE ON rule_manager_grants BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests\integration\test_assistant_judge_schema.py:48: AssertionError
+_ test_every_supported_old_version_upgrades_without_replacing_old_objects[False-pre-intake] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_every_supported_old_versi0')
+version = 'pre-intake', native = False
+
+    @pytest.mark.parametrize('version', PREVIOUS)
+    @pytest.mark.parametrize('native', [False, True])
+    def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
+        with closing(old_db(tmp_path/'old.db', version, native)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+E           AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E             
+E             - assistant-judge-v1
+E             ?           ^^ -
+E             + assistant-model-v1
+E             ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:59: AssertionError
+_ test_every_supported_old_version_upgrades_without_replacing_old_objects[False-intake-v1] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_every_supported_old_versi1')
+version = 'intake-v1', native = False
+
+    @pytest.mark.parametrize('version', PREVIOUS)
+    @pytest.mark.parametrize('native', [False, True])
+    def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
+        with closing(old_db(tmp_path/'old.db', version, native)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+E           AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E             
+E             - assistant-judge-v1
+E             ?           ^^ -
+E             + assistant-model-v1
+E             ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:59: AssertionError
+_ test_every_supported_old_version_upgrades_without_replacing_old_objects[False-assistant-v1] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_every_supported_old_versi2')
+version = 'assistant-v1', native = False
+
+    @pytest.mark.parametrize('version', PREVIOUS)
+    @pytest.mark.parametrize('native', [False, True])
+    def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
+        with closing(old_db(tmp_path/'old.db', version, native)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+E           AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E             
+E             - assistant-judge-v1
+E             ?           ^^ -
+E             + assistant-model-v1
+E             ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:59: AssertionError
+_ test_every_supported_old_version_upgrades_without_replacing_old_objects[False-assistant-attachments-v1] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_every_supported_old_versi3')
+version = 'assistant-attachments-v1', native = False
+
+    @pytest.mark.parametrize('version', PREVIOUS)
+    @pytest.mark.parametrize('native', [False, True])
+    def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
+        with closing(old_db(tmp_path/'old.db', version, native)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+E           AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E             
+E             - assistant-judge-v1
+E             ?           ^^ -
+E             + assistant-model-v1
+E             ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:59: AssertionError
+_ test_every_supported_old_version_upgrades_without_replacing_old_objects[False-assistant-model-v1] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_every_supported_old_versi4')
+version = 'assistant-model-v1', native = False
+
+    @pytest.mark.parametrize('version', PREVIOUS)
+    @pytest.mark.parametrize('native', [False, True])
+    def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
+        with closing(old_db(tmp_path/'old.db', version, native)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+E           AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E             
+E             - assistant-judge-v1
+E             ?           ^^ -
+E             + assistant-model-v1
+E             ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:59: AssertionError
+_ test_every_supported_old_version_upgrades_without_replacing_old_objects[True-pre-intake] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_every_supported_old_versi5')
+version = 'pre-intake', native = True
+
+    @pytest.mark.parametrize('version', PREVIOUS)
+    @pytest.mark.parametrize('native', [False, True])
+    def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
+        with closing(old_db(tmp_path/'old.db', version, native)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+E           AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E             
+E             - assistant-judge-v1
+E             ?           ^^ -
+E             + assistant-model-v1
+E             ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:59: AssertionError
+_ test_every_supported_old_version_upgrades_without_replacing_old_objects[True-intake-v1] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_every_supported_old_versi6')
+version = 'intake-v1', native = True
+
+    @pytest.mark.parametrize('version', PREVIOUS)
+    @pytest.mark.parametrize('native', [False, True])
+    def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
+        with closing(old_db(tmp_path/'old.db', version, native)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+E           AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E             
+E             - assistant-judge-v1
+E             ?           ^^ -
+E             + assistant-model-v1
+E             ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:59: AssertionError
+_ test_every_supported_old_version_upgrades_without_replacing_old_objects[True-assistant-v1] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_every_supported_old_versi7')
+version = 'assistant-v1', native = True
+
+    @pytest.mark.parametrize('version', PREVIOUS)
+    @pytest.mark.parametrize('native', [False, True])
+    def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
+        with closing(old_db(tmp_path/'old.db', version, native)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+E           AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E             
+E             - assistant-judge-v1
+E             ?           ^^ -
+E             + assistant-model-v1
+E             ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:59: AssertionError
+_ test_every_supported_old_version_upgrades_without_replacing_old_objects[True-assistant-attachments-v1] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_every_supported_old_versi8')
+version = 'assistant-attachments-v1', native = True
+
+    @pytest.mark.parametrize('version', PREVIOUS)
+    @pytest.mark.parametrize('native', [False, True])
+    def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
+        with closing(old_db(tmp_path/'old.db', version, native)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+E           AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E             
+E             - assistant-judge-v1
+E             ?           ^^ -
+E             + assistant-model-v1
+E             ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:59: AssertionError
+_ test_every_supported_old_version_upgrades_without_replacing_old_objects[True-assistant-model-v1] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_every_supported_old_versi9')
+version = 'assistant-model-v1', native = True
+
+    @pytest.mark.parametrize('version', PREVIOUS)
+    @pytest.mark.parametrize('native', [False, True])
+    def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
+        with closing(old_db(tmp_path/'old.db', version, native)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+E           AssertionError: assert 'assistant-model-v1' == 'assistant-judge-v1'
+E             
+E             - assistant-judge-v1
+E             ?           ^^ -
+E             + assistant-model-v1
+E             ?           ^^  +
+
+tests\integration\test_assistant_judge_schema.py:59: AssertionError
+________________ test_judge_migration_failure_is_atomic[False] ________________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_judge_migration_failure_i0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F79E90EB10>
+native = False
+
+    @pytest.mark.parametrize('native', [False, True])
+    def test_judge_migration_failure_is_atomic(tmp_path, monkeypatch, native):
+        with closing(old_db(tmp_path/'old.db', 'assistant-model-v1', native)) as db:
+            before = schema_migrations.database_rows(db)
+            actual = schema_migrations.statements_for
+            monkeypatch.setattr(schema_migrations, 'statements_for', lambda target:
+                (*actual(target), 'INVALID SQL') if target == 'assistant-judge-v1' else actual(target))
+>           with pytest.raises(sqlite3.Error):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.Error'>
+
+tests\integration\test_assistant_judge_schema.py:75: Failed
+________________ test_judge_migration_failure_is_atomic[True] _________________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_judge_migration_failure_i1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F79E96ECF0>
+native = True
+
+    @pytest.mark.parametrize('native', [False, True])
+    def test_judge_migration_failure_is_atomic(tmp_path, monkeypatch, native):
+        with closing(old_db(tmp_path/'old.db', 'assistant-model-v1', native)) as db:
+            before = schema_migrations.database_rows(db)
+            actual = schema_migrations.statements_for
+            monkeypatch.setattr(schema_migrations, 'statements_for', lambda target:
+                (*actual(target), 'INVALID SQL') if target == 'assistant-judge-v1' else actual(target))
+>           with pytest.raises(sqlite3.Error):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'sqlite3.Error'>
+
+tests\integration\test_assistant_judge_schema.py:75: Failed
+_____________ test_partial_judge_schema_is_not_silently_repaired ______________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-963/test_partial_judge_schema_is_n0')
+
+    def test_partial_judge_schema_is_not_silently_repaired(tmp_path):
+>       from cn_contract.assistant import judge_schema
+E       ImportError: cannot import name 'judge_schema' from 'cn_contract.assistant' (D:\Documents\ChatGPT\������Ŀ\src\cn_contract\assistant\__init__.py)
+
+tests\integration\test_assistant_judge_schema.py:82: ImportError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_judge_schema.py::test_judge_is_additive_and_does_not_replace_main_ledger
+FAILED tests/integration/test_assistant_judge_schema.py::test_old_model_structure_is_frozen_even_if_current_schema_changes[False]
+FAILED tests/integration/test_assistant_judge_schema.py::test_old_model_structure_is_frozen_even_if_current_schema_changes[True]
+FAILED tests/integration/test_assistant_judge_schema.py::test_every_supported_old_version_upgrades_without_replacing_old_objects[False-pre-intake]
+FAILED tests/integration/test_assistant_judge_schema.py::test_every_supported_old_version_upgrades_without_replacing_old_objects[False-intake-v1]
+FAILED tests/integration/test_assistant_judge_schema.py::test_every_supported_old_version_upgrades_without_replacing_old_objects[False-assistant-v1]
+FAILED tests/integration/test_assistant_judge_schema.py::test_every_supported_old_version_upgrades_without_replacing_old_objects[False-assistant-attachments-v1]
+FAILED tests/integration/test_assistant_judge_schema.py::test_every_supported_old_version_upgrades_without_replacing_old_objects[False-assistant-model-v1]
+FAILED tests/integration/test_assistant_judge_schema.py::test_every_supported_old_version_upgrades_without_replacing_old_objects[True-pre-intake]
+FAILED tests/integration/test_assistant_judge_schema.py::test_every_supported_old_version_upgrades_without_replacing_old_objects[True-intake-v1]
+FAILED tests/integration/test_assistant_judge_schema.py::test_every_supported_old_version_upgrades_without_replacing_old_objects[True-assistant-v1]
+FAILED tests/integration/test_assistant_judge_schema.py::test_every_supported_old_version_upgrades_without_replacing_old_objects[True-assistant-attachments-v1]
+FAILED tests/integration/test_assistant_judge_schema.py::test_every_supported_old_version_upgrades_without_replacing_old_objects[True-assistant-model-v1]
+FAILED tests/integration/test_assistant_judge_schema.py::test_judge_migration_failure_is_atomic[False]
+FAILED tests/integration/test_assistant_judge_schema.py::test_judge_migration_failure_is_atomic[True]
+FAILED tests/integration/test_assistant_judge_schema.py::test_partial_judge_schema_is_not_silently_repaired
+16 failed in 18.14s

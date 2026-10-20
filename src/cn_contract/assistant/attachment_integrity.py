@@ -59,7 +59,7 @@ def file_references(db, *, allowed=True):
     version = identify_schema(schema, native=native)
     if version in ('pre-intake', 'intake-v1', 'assistant-v1'):
         return []
-    if version not in ('assistant-attachments-v1', 'assistant-model-v1'):
+    if version not in ('assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     originals = db.execute(text('SELECT * FROM assistant_attachments ORDER BY id')).mappings().all()
     parses = db.execute(text('SELECT * FROM assistant_attachment_parses ORDER BY attachment_id,revision')).mappings().all()

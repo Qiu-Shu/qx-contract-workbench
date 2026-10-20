@@ -312,6 +312,8 @@ def _fence(root, refs, archive_hash, manifest_hash):
             for job in pending:
                 job.state='blocked'; job.stage='恢复副本仅供核对'; job.error_code='BLOCKED_LIVE'; event(job,db)
             from ..assistant.providers.attempts import recover_attempts
+            from ..assistant.providers.judge_attempts import recover_attempts as recover_judges
+            judge_attempts = recover_judges(db)
             model_attempts = recover_attempts(db)
             from ..assistant.service import quarantine_runs
             assistant_jobs = quarantine_runs(db)
@@ -320,6 +322,7 @@ def _fence(root, refs, archive_hash, manifest_hash):
                 'state':'quarantined','old_sessions_revoked':True,'jobs_quarantined':len(pending),
                 'assistant_jobs_quarantined':assistant_jobs,
                 'model_attempts_interrupted':model_attempts,
+                'judge_attempts_interrupted':judge_attempts,
                 'live_egress':False,'current_approvals_valid':False,'external_highwater':None}).decode()))
             grouped = {}
             for item in refs:

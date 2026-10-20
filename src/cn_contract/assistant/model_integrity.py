@@ -212,7 +212,7 @@ def validate_model_records(db, *, allowed=True):
     version = identify_schema(schema, native=native)
     if version in ('pre-intake','intake-v1','assistant-v1','assistant-attachments-v1'):
         return
-    if version != 'assistant-model-v1':
+    if version not in ('assistant-model-v1', 'assistant-judge-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     attempts = db.execute(text('SELECT * FROM assistant_model_attempts ORDER BY created_at,id')).mappings().all()
     receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_receipts')).mappings()}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="2.493" timestamp="2026-10-20T02:33:41.602718+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.jev-ledger-20261020.review-spec-glue.probe_deadline_receipt" name="test_already_received_usage_survives_total_deadline_without_adoption[decode]" time="0.804" /><testcase classname=".local.jev-ledger-20261020.review-spec-glue.probe_deadline_receipt" name="test_already_received_usage_survives_total_deadline_without_adoption[cleanup]" time="0.679"><failure message="AssertionError: assert 'sent_unknown' == 'received'&#10;  &#10;  - received&#10;  + sent_unknown">world = (&lt;cn_contract.persistence.Database object at 0x000001AFD933F200&gt;, Actor(user_id=UUID('0d1ccd9f-0372-423a-97fa-a29c2df2...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AFD96177A0&gt;)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001AFD9617FE0&gt;
+slow_stage = 'cleanup'
+
+    @pytest.mark.parametrize('slow_stage',['decode','cleanup'])
+    def test_already_received_usage_survives_total_deadline_without_adoption(world,monkeypatch,slow_stage):
+        database,actor,conversation,message,_=world
+        with database.session() as db:
+            run=service.save_message(actor,conversation.scope.conversation_id,message,db)
+        config=d.JevConfig(enabled=True,timeout_ms=200)
+        with database.session() as db:
+            request=attempts.request_for_run(actor,run.id,db,config)
+        decoded=[]
+        original_decode=jev_codec.decode_response
+        def capture_decode(*args,**kwargs):
+            result=original_decode(*args,**kwargs)
+            decoded.append(result)
+            if slow_stage=='decode':time.sleep(.25)
+            return result
+        monkeypatch.setattr(jev_codec,'decode_response',capture_decode)
+        if slow_stage=='cleanup':
+            original_exit=httpx2.AsyncClient.__aexit__
+            async def slow_exit(self,*args):
+                try:await asyncio.sleep(.25)
+                finally:await original_exit(self,*args)
+            monkeypatch.setattr(httpx2.AsyncClient,'__aexit__',slow_exit)
+        with server(raw(envelope(request)),headers={'x-typesafe-request-id':'independent-late-receipt'}) as (url,calls,_):
+            runtime=JudgeRuntime(JevProvider.for_synthetic_loopback(config,lambda:'SYNTHETIC_LEDGER_ONLY_KEY',url))
+            runtime.grant(d.JudgePolicy(policy_id=uuid4(),workspace_id=request.scope.workspace_id,
+                actor_id=actor.user_id,session_id=actor.session_id,config_sha256=sha(encoded(config)),
+                permissions=(d.JudgePermission(local_request_id=request.local_request_id,purpose=request.purpose,
+                    input_hash=jev_codec.input_hash(request,config)),),reserved_usd='.02',max_total_usd='.02',max_calls=1,
+                expires_at=datetime.now(timezone.utc)+timedelta(minutes=2)))
+            with database.session() as db:
+                attempt=attempts.reserve(actor,run.id,db,runtime)
+            result=asyncio.run(execute_attempt(actor,attempt.id,database,runtime))
+        assert len(calls)==1 and len(decoded)==1
+        assert decoded[0]['usage'].input_tokens==20
+        assert result.decision is None and result.receipt.cost_status=='unknown'
+        assert result.receipt.occupied_usd==Decimal('.02')
+&gt;       assert result.state=='received'
+E       AssertionError: assert 'sent_unknown' == 'received'
+E         
+E         - received
+E         + sent_unknown
+
+.local\jev-ledger-20261020\review-spec-glue\probe_deadline_receipt.py:58: AssertionError</failure></testcase></testsuite></testsuites>

@@ -46,6 +46,29 @@ class _ConfigurationChanged(ValueError):
     pass
 
 
+class _PreflightDenied(ValueError):
+    def __init__(self, reason):
+        self.reason = reason
+
+
+class JevCancelledError(asyncio.CancelledError):
+    """Cancellation carrying only an already parsed, safe accounting receipt."""
+
+    def __init__(self, result: d.JudgeResult):
+        super().__init__()
+        self.result = result
+
+
+def _preflight(callback, request, config):
+    reason = 'no_egress' if callback is None else callback(request, config)
+    if inspect.iscoroutine(reason):
+        reason.close()
+        raise ValueError()
+    if reason is not None and (type(reason) is not str or reason not in get_args(d.JudgeSkipReason)):
+        raise ValueError()
+    return reason
+
+
 class JevProvider:
     def __init__(self, config: d.JevConfig, secret_resolver, *, preflight=None):
         self.config = codec.validated_config(config)
@@ -78,7 +101,7 @@ class JevProvider:
             return False
 
     async def judge(self, request: d.JudgeRequest, *,
-                    expected_config: d.JevConfig | None = None) -> d.JudgeResult:
+                    expected_config: d.JevConfig | None = None, preflight=None) -> d.JudgeResult:
         loop = asyncio.get_running_loop(); started = loop.time()
         config_invalid = False
         try:
@@ -143,15 +166,10 @@ class JevProvider:
                 return finish('skipped', 'explicit_skill')
             if not value.text.strip():
                 return finish('skipped', 'not_needed')
-            reason = 'no_egress' if self._preflight is None else self._preflight(value, config)
-            # The seam is deliberately synchronous, not an unbounded coroutine.
-            if inspect.iscoroutine(reason):
-                reason.close()
-                raise ValueError()
+            callback = self._preflight if preflight is None else preflight
+            reason = _preflight(callback, value, config)
             check_deadline()
             if reason is not None:
-                if type(reason) is not str or reason not in get_args(d.JudgeSkipReason):
-                    raise ValueError()
                 return finish('skipped', reason)
             try:
                 body = codec.build_request(value, config)
@@ -182,6 +200,12 @@ class JevProvider:
                     check_deadline()
                     if not self._unchanged(config):
                         raise _ConfigurationChanged()
+                    reason = _preflight(callback, value, config)
+                    check_deadline()
+                    if reason is not None:
+                        raise _PreflightDenied(reason)
+                    if not self._unchanged(config):
+                        raise _ConfigurationChanged()
                     evidence = 'sent_unknown'
                     async with client.stream('POST', self._endpoint, content=wire, headers={
                             'Authorization': 'Bearer ' + secret, 'Content-Type': 'application/json',
@@ -206,6 +230,10 @@ class JevProvider:
             # Context cleanup and synchronous parsing consume the same deadline.
             return finish(status, reason)
         except asyncio.CancelledError:
+            if evidence == 'received':
+                # Cleanup cancellation must not discard already received usage.
+                # Non-ok status removes all answers; cancellation still propagates.
+                raise JevCancelledError(finish('failed', 'provider_error')) from None
             raise
         except TimeoutError:
             return finish('timed_out', 'timeout')
@@ -213,6 +241,8 @@ class JevProvider:
             return finish('invalid', 'invalid_response')
         except _ConfigurationChanged:
             return finish('failed', 'config_changed')
+        except _PreflightDenied as failure:
+            return finish('skipped', failure.reason)
         except Exception as error:
             if 'httpx2' in locals() and isinstance(error, httpx2.TimeoutException):
                 return finish('timed_out', 'timeout')

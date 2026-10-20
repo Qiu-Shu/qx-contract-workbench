@@ -1,0 +1,28 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_valid_reserved_history_is_checked_without_live_authorization ______
+
+world = (<cn_contract.persistence.Database object at 0x000002058CE49880>, Actor(user_id=UUID('46156a0b-1547-4a55-81d5-47b085ad...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000002058E0088C0>)
+
+    def test_valid_reserved_history_is_checked_without_live_authorization(world):
+        database, actor, run, _, runtime = setup(world)
+        with database.session() as db:
+            api().reserve(actor, run.id, db, runtime)
+        runtime.revoke()
+        integrity = importlib.import_module('cn_contract.assistant.judge_integrity')
+        with database.session() as db:
+>           integrity.validate_judge_records(db)
+
+tests\integration\test_judge_attempts.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+db = <sqlalchemy.orm.session.Session object at 0x000002058E2EDD30>
+
+    def validate_judge_records(db, *, allowed=True):
+>       raise ValueError('ASSISTANT_JUDGE_INTEGRITY_NOT_IMPLEMENTED')
+E       ValueError: ASSISTANT_JUDGE_INTEGRITY_NOT_IMPLEMENTED
+
+src\cn_contract\assistant\judge_integrity.py:5: ValueError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_judge_attempts.py::test_valid_reserved_history_is_checked_without_live_authorization
+1 failed, 2 deselected in 1.47s

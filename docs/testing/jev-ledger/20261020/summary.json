@@ -1,0 +1,172 @@
+{
+  "phase": "CH-05B independent Jev ledger backend",
+  "baseline": "a4c3c6706caad31c2335b4d055240dbddbfbd372",
+  "verification": {
+    "commands": {
+      "python-final": {
+        "exit_code": 0,
+        "seconds": 406.219,
+        "tests": 703,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "defaults": {
+        "exit_code": 0,
+        "seconds": 0.407
+      },
+      "sources": {
+        "exit_code": 0,
+        "seconds": 2.204
+      },
+      "dependencies": {
+        "exit_code": 0,
+        "seconds": 0.547
+      },
+      "schema": {
+        "exit_code": 0,
+        "seconds": 0.39
+      }
+    },
+    "input_files": 500,
+    "changed_inputs": []
+  },
+  "unique_python_tests": 703,
+  "python_groups": {
+    "tests.integration.test_assistant_attachment_backup": 25,
+    "tests.integration.test_assistant_backup": 10,
+    "tests.integration.test_assistant_generation": 32,
+    "tests.integration.test_assistant_judge_schema": 16,
+    "tests.integration.test_assistant_judge_upgrade_backup": 4,
+    "tests.integration.test_assistant_model_backup": 54,
+    "tests.integration.test_assistant_model_denial_fence": 1,
+    "tests.integration.test_assistant_model_schema": 16,
+    "tests.integration.test_assistant_model_startup": 5,
+    "tests.integration.test_assistant_model_upgrade_backup": 4,
+    "tests.integration.test_assistant_storage": 49,
+    "tests.integration.test_backup_restore": 28,
+    "tests.integration.test_desktop_runtime": 8,
+    "tests.integration.test_jev_provider": 71,
+    "tests.integration.test_judge_attempts": 63,
+    "tests.integration.test_judge_backup": 10,
+    "tests.integration.test_local_workbench": 30,
+    "tests.integration.test_storage_schema_versions": 10,
+    "tests.integration.test_workspace_backup": 17,
+    "tests.integration.test_workspace_upgrade": 28,
+    "tests.unit.test_domain": 111,
+    "tests.unit.test_jev_codec": 53,
+    "tests.unit.test_jev_contract_routing": 30,
+    "tests.unit.test_judge_policy": 12,
+    "tests.unit.test_model_schema": 16
+  },
+  "warnings": [
+    "Existing test_jev_provider record_property fixture is incompatible with the selected xunit2 reporting mode; one pytest reporting warning, no test failure.",
+    "Frozen build retains optional hidden-import warnings for tzdata, pysqlite2, MySQLdb, psycopg2; tested SQLite/UTC paths passed."
+  ],
+  "independent_spec": {
+    "tests": 10,
+    "exit_code": 0,
+    "open_findings": 0
+  },
+  "independent_standards": {
+    "before_last_fix_tests": 3,
+    "targeted_after_last_fix_tests": 1,
+    "exit_code": 0,
+    "open_findings": 0
+  },
+  "windows_source": {
+    "mode": "source",
+    "groups": [
+      "single_loopback_execution_unknown_usage_and_no_replay",
+      "actual_backend_recovery_once_without_replay_or_main_run_change",
+      "actual_backend_exact_current_schema",
+      "actual_backend_encrypted_backup_restore_retains_judge_receipts",
+      "restored_startup_is_read_only_and_does_not_resume"
+    ],
+    "child_exits": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "whole_app_ui_tested": false,
+    "installed_app_changed": false,
+    "real_model_calls": 0,
+    "command": [
+      "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "cn_contract.desktop_entry"
+    ],
+    "loopback_execution_process": "host Python seed; the child verifies recovery, encrypted backup and restore",
+    "external_network_tripwire": false,
+    "ready_seconds": [
+      1.082,
+      1.059,
+      1.176
+    ],
+    "status": "passed",
+    "loopback_posts": 1,
+    "workspace": "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\source 合成工作区 24cecbc7",
+    "schema": "assistant-judge-v1"
+  },
+  "windows_frozen": {
+    "mode": "frozen",
+    "groups": [
+      "single_loopback_execution_unknown_usage_and_no_replay",
+      "actual_backend_recovery_once_without_replay_or_main_run_change",
+      "actual_backend_exact_current_schema",
+      "actual_backend_encrypted_backup_restore_retains_judge_receipts",
+      "restored_startup_is_read_only_and_does_not_resume"
+    ],
+    "child_exits": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "whole_app_ui_tested": false,
+    "installed_app_changed": false,
+    "real_model_calls": 0,
+    "command": [
+      "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\frozen-backend\\qx-backend\\qx-backend.exe"
+    ],
+    "loopback_execution_process": "host Python seed; the child verifies recovery, encrypted backup and restore",
+    "external_network_tripwire": false,
+    "ready_seconds": [
+      1.189,
+      1.101,
+      1.328
+    ],
+    "status": "passed",
+    "loopback_posts": 1,
+    "workspace": "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\frozen 合成工作区 0cfec5b1",
+    "schema": "assistant-judge-v1",
+    "exe_sha256": "4cf0c502fa21b59e9a310127b9a317bfc580a91baba7841a0c095a73635eabe7"
+  },
+  "build": {
+    "exit_code": 0,
+    "seconds": 28.31,
+    "input_files": 221,
+    "inputs_unchanged": true,
+    "exe_sha256": "4cf0c502fa21b59e9a310127b9a317bfc580a91baba7841a0c095a73635eabe7"
+  },
+  "workbuddy": {
+    "observation": "Summarized status tool result at beginning of this turn, not a historical receipt",
+    "connected": false,
+    "reason": "Dedicated native chat is busy or its state is unknown: busy",
+    "delegated": false
+  },
+  "boundaries": [
+    "No second queue; referenced original assistant_runs and left main run fields unchanged.",
+    "Callable trusted backend only; native Jev configuration, independent UI approval and optional main-runner phase remain pending.",
+    "Only current full plain text primary_intent mapped; explicit skill skips, other purposes and attachments remain rejected.",
+    "Reserved USD is policy accounting, not a vendor price or paid invoice; unknown stays occupied.",
+    "No external reconciliation after restart; immutable same-call receipts and conservative recovery only.",
+    "Host Python performed synthetic loopback seed; real child backends tested recovery/backup/restore, not Jev native UI execution.",
+    "Installed app 0.4.1, real materials, F drive corpus, real accounts, cloud and GitHub remained unchanged."
+  ]
+}

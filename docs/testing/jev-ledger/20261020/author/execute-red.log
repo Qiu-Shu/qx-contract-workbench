@@ -1,0 +1,32 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_real_loopback_claim_settle_preserves_unknown_cost_and_main_run _____
+
+world = (<cn_contract.persistence.Database object at 0x000002B1D93EB2F0>, Actor(user_id=UUID('d23f1432-f3b3-4e07-8e1e-b5b53bb8...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000002B1D9A3D4F0>)
+
+    def test_real_loopback_claim_settle_preserves_unknown_cost_and_main_run(world):
+        database, actor, run, request, runtime = setup(world)
+>       execution = importlib.import_module('cn_contract.assistant.providers.judge_execution')
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_judge_attempts.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'cn_contract.assistant.providers.judge_execution'
+import_ = <function _gcd_import at 0x000002B1D2DD80E0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.judge_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_judge_attempts.py::test_real_loopback_claim_settle_preserves_unknown_cost_and_main_run
+1 failed, 1 deselected in 1.35s

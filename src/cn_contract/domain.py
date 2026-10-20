@@ -3087,3 +3087,72 @@ class RouteDecision(DomainModel):
         elif (self.source, self.reason_code) not in (('explicit', 'explicit_skill'), ('jev', 'jev_suggestion')):
             raise ValueError('selected workflow needs explicit or judge source')
         return self
+
+
+# Jev authorization is independent of the main model and never grants a workflow.
+JudgeUSD = Annotated[ExactDecimal, Field(ge=0, le=1000000, max_digits=24, decimal_places=12)]
+
+
+class JudgePermission(DomainModel):
+    local_request_id: UUID
+    purpose: JudgePurpose
+    input_hash: SHA256
+
+
+class JudgePolicy(DomainModel):
+    policy_id: UUID
+    workspace_id: UUID
+    actor_id: UUID
+    session_id: UUID
+    recipient: Literal['https://api.typesafe.ai/v1/systemone'] = 'https://api.typesafe.ai/v1/systemone'
+    config_sha256: SHA256
+    permissions: Annotated[tuple[JudgePermission, ...], Field(min_length=1, max_length=100)]
+    reserved_usd: Annotated[JudgeUSD, Field(gt=0)]
+    max_total_usd: Annotated[JudgeUSD, Field(gt=0)]
+    max_calls: Annotated[int, Field(strict=True, ge=1, le=100)]
+    expires_at: UTCDatetime
+
+    @model_validator(mode='after')
+    def bounded_judge_policy(self):
+        keys = {(p.local_request_id, p.purpose) for p in self.permissions}
+        if len(keys) != len(self.permissions) or self.reserved_usd > self.max_total_usd:
+            raise ValueError('invalid judge policy envelope')
+        return self
+
+
+class JudgeReceipt(DomainModel):
+    result: JudgeResult
+    cost_status: Literal['not_sent', 'unknown']
+    occupied_usd: JudgeUSD
+    unit: Literal['USD'] = 'USD'
+
+    @model_validator(mode='after')
+    def conservative_judge_cost(self):
+        unsent = self.result.evidence == 'not_sent'
+        if ((self.cost_status == 'not_sent') != unsent or
+                (self.occupied_usd == 0) != unsent):
+            raise ValueError('judge reservation cannot imply a settled vendor price')
+        return self
+
+
+class JudgeDecisionView(DomainModel):
+    attempt_id: UUID
+    run_id: UUID
+    scope: ScopeSnapshot
+    decision: RouteDecision
+    audience: Literal['internal'] = 'internal'
+    review_status: Literal['unverified'] = 'unverified'
+    created_at: UTCDatetime
+
+
+class JudgeAttemptView(DomainModel):
+    id: UUID
+    run_id: UUID
+    message_id: UUID
+    purpose: JudgePurpose
+    scope: ScopeSnapshot
+    state: Literal['reserved', 'sending', 'not_sent', 'sent_unknown', 'received']
+    reserved_usd: JudgeUSD
+    unit: Literal['USD'] = 'USD'
+    receipt: JudgeReceipt | None = None
+    decision: JudgeDecisionView | None = None

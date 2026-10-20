@@ -1,0 +1,59 @@
+{
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\review-standards\\cancellation_probe.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\review-standards\\tmp-cancellation-final",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\review-standards\\cancellation-final.xml"
+  ],
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "time_utc": "2026-10-19T18:47:38.729462+00:00",
+  "exit_code": 0,
+  "source_before": {
+    "src/cn_contract/assistant/attachment_integrity.py": "65442254d7483955b531f1109963507c538177dd9781066d2030cd3ba5a76ed3",
+    "src/cn_contract/assistant/judge_integrity.py": "c6369ee0f59bdc0837c1fbf1887b6bf2fa17f8fdba80fdf5e3b1ec2d4ded60bd",
+    "src/cn_contract/assistant/judge_schema.py": "44de9e38b94a6ffb77f12124158cb64fa2a783dac3630548f85903fa9ff288f3",
+    "src/cn_contract/assistant/model_integrity.py": "6dfa70718bf8783799488130b394301021c9a9da6ba47250b62dd48104a47da0",
+    "src/cn_contract/assistant/providers/jev.py": "0ef430717db2f11c225ba0fddbb1ac23b736b1d033105d4e027e02bede1fa686",
+    "src/cn_contract/assistant/providers/judge_attempts.py": "3058deae4fbd09edba6fb470da28f57881b0f5e5d890fef3de5f14eadb5e4c4d",
+    "src/cn_contract/assistant/providers/judge_execution.py": "7ad51bb46ba8002a83be414e04247f66d1c78c7293f29303988f27d53cb9951b",
+    "src/cn_contract/assistant/providers/judge_policy.py": "708eee0dc681138834a15e07629f59cc002afd850be8c0278a54ec6233acef2e",
+    "src/cn_contract/assistant/service.py": "b6e9c2c9825ede962be21c2385d0109b7712130405edbeed58a2b869d2c6baa0",
+    "src/cn_contract/assistant_model_schema_baseline.py": "15343cb48bd893986974bb7decddd2a522d9d55293ceb9be7b5aa6d36bdd96ea",
+    "src/cn_contract/domain.py": "088cc8d08e435128b81d057e7017d4f46d42ea43303a1d2ba789d7dac46dde0f",
+    "src/cn_contract/ops/backup.py": "a35ace69057382e214e12d7694d19f7f9edc36de361481ea058c0a6c73934983",
+    "src/cn_contract/ops/workspace_backup.py": "76f91555f1a546f5d46158a696eac9de10099efad1e342aebd7abc7e5e58dfa8",
+    "src/cn_contract/schema_migrations.py": "ab672fb310904735a34327ed7796d0ef9a933b9aa81a4ebc6cc6c596a691fde2",
+    "src/cn_contract/storage_bootstrap.py": "eff36b791980fc655ecabdba825f29dee48214336c8bcc89f7354465e20fb826",
+    "src/cn_contract/storage_schema.py": "573b479f9d4829dd3e74f71471b1fce1c5a8b956d365bcc017340f027a9596bb",
+    "src/cn_contract/web/local_server.py": "ce1907c57ff9291544cb9dda11b4db5b6ef290936cc9ecfddfe397ff5f4c5bc4"
+  },
+  "source_after": {
+    "src/cn_contract/assistant/attachment_integrity.py": "65442254d7483955b531f1109963507c538177dd9781066d2030cd3ba5a76ed3",
+    "src/cn_contract/assistant/judge_integrity.py": "c6369ee0f59bdc0837c1fbf1887b6bf2fa17f8fdba80fdf5e3b1ec2d4ded60bd",
+    "src/cn_contract/assistant/judge_schema.py": "44de9e38b94a6ffb77f12124158cb64fa2a783dac3630548f85903fa9ff288f3",
+    "src/cn_contract/assistant/model_integrity.py": "6dfa70718bf8783799488130b394301021c9a9da6ba47250b62dd48104a47da0",
+    "src/cn_contract/assistant/providers/jev.py": "0ef430717db2f11c225ba0fddbb1ac23b736b1d033105d4e027e02bede1fa686",
+    "src/cn_contract/assistant/providers/judge_attempts.py": "3058deae4fbd09edba6fb470da28f57881b0f5e5d890fef3de5f14eadb5e4c4d",
+    "src/cn_contract/assistant/providers/judge_execution.py": "7ad51bb46ba8002a83be414e04247f66d1c78c7293f29303988f27d53cb9951b",
+    "src/cn_contract/assistant/providers/judge_policy.py": "708eee0dc681138834a15e07629f59cc002afd850be8c0278a54ec6233acef2e",
+    "src/cn_contract/assistant/service.py": "b6e9c2c9825ede962be21c2385d0109b7712130405edbeed58a2b869d2c6baa0",
+    "src/cn_contract/assistant_model_schema_baseline.py": "15343cb48bd893986974bb7decddd2a522d9d55293ceb9be7b5aa6d36bdd96ea",
+    "src/cn_contract/domain.py": "088cc8d08e435128b81d057e7017d4f46d42ea43303a1d2ba789d7dac46dde0f",
+    "src/cn_contract/ops/backup.py": "a35ace69057382e214e12d7694d19f7f9edc36de361481ea058c0a6c73934983",
+    "src/cn_contract/ops/workspace_backup.py": "76f91555f1a546f5d46158a696eac9de10099efad1e342aebd7abc7e5e58dfa8",
+    "src/cn_contract/schema_migrations.py": "ab672fb310904735a34327ed7796d0ef9a933b9aa81a4ebc6cc6c596a691fde2",
+    "src/cn_contract/storage_bootstrap.py": "eff36b791980fc655ecabdba825f29dee48214336c8bcc89f7354465e20fb826",
+    "src/cn_contract/storage_schema.py": "573b479f9d4829dd3e74f71471b1fce1c5a8b956d365bcc017340f027a9596bb",
+    "src/cn_contract/web/local_server.py": "ce1907c57ff9291544cb9dda11b4db5b6ef290936cc9ecfddfe397ff5f4c5bc4"
+  },
+  "source_stable": true,
+  "changed_since_previous": [
+    "src/cn_contract/assistant/providers/jev.py",
+    "src/cn_contract/assistant/providers/judge_execution.py"
+  ]
+}

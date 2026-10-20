@@ -1,0 +1,55 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_external_cancellation_after_decode_keeps_received_accounting ______
+
+world = (<cn_contract.persistence.Database object at 0x00000268E8584E00>, Actor(user_id=UUID('9259daf0-531f-4696-b6bc-1ed97418...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000268E84DA0F0>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000268E84D8080>
+
+    def test_external_cancellation_after_decode_keeps_received_accounting(world,monkeypatch):
+        database,actor,conversation,message,_=world
+        with database.session() as db:
+            run=service.save_message(actor,conversation.scope.conversation_id,message,db)
+        config=d.JevConfig(enabled=True)
+        with database.session() as db:
+            request=attempts.request_for_run(actor,run.id,db,config)
+        decoded=asyncio.Event()
+        original_decode=jev_codec.decode_response
+        def capture(*args,**kwargs):
+            value=original_decode(*args,**kwargs)
+            assert value['usage'].input_tokens==20
+            decoded.set()
+            return value
+        monkeypatch.setattr(jev_codec,'decode_response',capture)
+        original_exit=httpx2.AsyncClient.__aexit__
+        async def cleanup(self,*args):
+            try:await asyncio.sleep(.25)
+            finally:await original_exit(self,*args)
+        monkeypatch.setattr(httpx2.AsyncClient,'__aexit__',cleanup)
+        with server(raw(envelope(request)),headers={'x-typesafe-request-id':'independent-cancel-receipt'}) as (url,calls,_):
+            runtime=JudgeRuntime(JevProvider.for_synthetic_loopback(config,lambda:'SYNTHETIC_LEDGER_ONLY_KEY',url))
+            runtime.grant(d.JudgePolicy(policy_id=uuid4(),workspace_id=request.scope.workspace_id,
+                actor_id=actor.user_id,session_id=actor.session_id,config_sha256=sha(encoded(config)),
+                permissions=(d.JudgePermission(local_request_id=request.local_request_id,purpose=request.purpose,
+                    input_hash=jev_codec.input_hash(request,config)),),reserved_usd='.02',max_total_usd='.02',max_calls=1,
+                expires_at=datetime.now(timezone.utc)+timedelta(minutes=2)))
+            with database.session() as db:attempt=attempts.reserve(actor,run.id,db,runtime)
+            async def cancel():
+                task=asyncio.create_task(execute_attempt(actor,attempt.id,database,runtime))
+                await asyncio.wait_for(decoded.wait(),2)
+                task.cancel()
+                with pytest.raises(asyncio.CancelledError):await task
+            asyncio.run(cancel())
+        assert len(calls)==1
+        with database.session() as db:
+            result=attempts.read_attempt(actor,attempt.id,db)
+            assert result.decision is None and result.receipt.occupied_usd==Decimal('.02')
+>           assert result.state=='received'
+E           AssertionError: assert 'sent_unknown' == 'received'
+E             
+E             - received
+E             + sent_unknown
+
+.local\jev-ledger-20261020\review-spec-glue\probe_deadline_receipt.py:105: AssertionError
+=========================== short test summary info ===========================
+FAILED .local/jev-ledger-20261020/review-spec-glue/probe_deadline_receipt.py::test_external_cancellation_after_decode_keeps_received_accounting
+1 failed, 2 deselected in 1.49s

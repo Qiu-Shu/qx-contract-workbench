@@ -1,0 +1,158 @@
+{
+  "task": "CH-05B Jev independent ledger and recovery",
+  "axis": "Standards",
+  "reviewer": "/root/generation_history_api",
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "baseline": "a4c3c6706caad31c2335b4d055240dbddbfbd372",
+  "comparison": "Working tree plus untracked source modules; HEAD equalled baseline at review start",
+  "result": "PASS_NO_FINDINGS",
+  "findings": [],
+  "documented_standard_violations": [],
+  "actionable_smells": [],
+  "standards": [
+    "AGENTS.md",
+    "Ponytail full",
+    "code-review Standards and its 12 Fowler heuristics",
+    "docs/plans/2026-10-20-jev-ledger.md",
+    "docs/plans/chat-first-architecture-v2.1.md sections 6.4-6.5"
+  ],
+  "checks": [
+    {
+      "file": "src/cn_contract/domain.py",
+      "lines": [
+        3092,
+        3159
+      ],
+      "conclusion": "Business DTOs remain centralized immutable snapshots; Decimal USD and UTC, with no I/O or permission decisions."
+    },
+    {
+      "file": "src/cn_contract/assistant/providers/judge_attempts.py",
+      "lines": [
+        36,
+        145
+      ],
+      "conclusion": "Original full message/run scope and independent policy/session/config identity are verified; conservative quota accounting in caller-owned short transactions."
+    },
+    {
+      "file": "src/cn_contract/assistant/providers/judge_attempts.py",
+      "lines": [
+        173,
+        256
+      ],
+      "conclusion": "Single CAS claim, immutable accounting and conditional decision adoption; recovery/cancel never select provider/model or finish the main run."
+    },
+    {
+      "file": "src/cn_contract/assistant/providers/judge_execution.py",
+      "lines": [
+        10,
+        48
+      ],
+      "conclusion": "HTTP occurs after the claim transaction closes; preflight and settlement use separate transactions; exact JevProvider owns the only deadline and cancellation remains conservative."
+    },
+    {
+      "file": "src/cn_contract/assistant/providers/judge_policy.py",
+      "lines": [
+        43,
+        146
+      ],
+      "conclusion": "Independent actor/session/workspace/request hash permissions, fixed recipient, policy-id digest ledger, configuration and authorization generations, app-loop execution ownership."
+    },
+    {
+      "file": "src/cn_contract/assistant/judge_schema.py",
+      "lines": [
+        5,
+        40
+      ],
+      "conclusion": "Only three additive tables reference existing assistant_runs; immutable input, claim and receipts; no second queue."
+    },
+    {
+      "file": "src/cn_contract/assistant/judge_integrity.py",
+      "lines": [
+        45,
+        175
+      ],
+      "conclusion": "Historical input/config/policy/source/identity/receipt/decision and budget evidence cross-checked independently of current live authorization."
+    },
+    {
+      "file": "src/cn_contract/storage_schema.py",
+      "lines": [
+        2,
+        35
+      ],
+      "conclusion": "Main schema is captured from baseline, historical versions retained; narrow bootstrap/migration/backup/startup integration."
+    },
+    {
+      "file": "src/cn_contract/assistant/providers/jev.py",
+      "lines": [
+        49,
+        204
+      ],
+      "conclusion": "Single-call trusted preflight checked before secret and before POST; default deny, no new SDK, raw-data logs or environment-controlled destination."
+    }
+  ],
+  "independent_verification": {
+    "command": [
+      "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\review-standards\\probe.py",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\review-standards\\tmp-final",
+      "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\review-standards\\standards-final.xml"
+    ],
+    "exit_code": 0,
+    "passed": 3,
+    "failed": 0,
+    "pytest_seconds": 1.63,
+    "evidence": [
+      "standards-final.log",
+      "standards-final.exit",
+      "standards-final.xml",
+      "standards-final.json"
+    ],
+    "probe_cases": [
+      "Independent write transaction finishes while actual loopback HTTP waits; one POST, repeat execution does not resend; main run and event count unchanged",
+      "No runtime/config/policy and Main runtime cannot reserve Jev; no secret lookup or ledger mutation",
+      "Frozen Main DDL exactly equals baseline git source; native and non-native schemas add only Jev ledger objects"
+    ],
+    "loopback_posts": 1,
+    "external_network_attempts": 0,
+    "real_model_calls": 0,
+    "unknown_cost_occupied_usd": "0.031",
+    "unit": "USD",
+    "main_run_row_unchanged": true,
+    "main_run_events_unchanged": true,
+    "main_model_attempt_count": 0,
+    "source_count": 17,
+    "source_stable": true,
+    "author_targets_included_in_count": false
+  },
+  "source_sha256": {
+    "src/cn_contract/assistant/attachment_integrity.py": "65442254d7483955b531f1109963507c538177dd9781066d2030cd3ba5a76ed3",
+    "src/cn_contract/assistant/judge_integrity.py": "c6369ee0f59bdc0837c1fbf1887b6bf2fa17f8fdba80fdf5e3b1ec2d4ded60bd",
+    "src/cn_contract/assistant/judge_schema.py": "44de9e38b94a6ffb77f12124158cb64fa2a783dac3630548f85903fa9ff288f3",
+    "src/cn_contract/assistant/model_integrity.py": "6dfa70718bf8783799488130b394301021c9a9da6ba47250b62dd48104a47da0",
+    "src/cn_contract/assistant/providers/jev.py": "80bf399ade7a0bc7114971e68d458eb5efdee39b1c31f423ae5afe0693b8f29e",
+    "src/cn_contract/assistant/providers/judge_attempts.py": "3058deae4fbd09edba6fb470da28f57881b0f5e5d890fef3de5f14eadb5e4c4d",
+    "src/cn_contract/assistant/providers/judge_execution.py": "97dc6dec12151474d334337e572e5e8ac17e8203530c8f5b18acbe0c59473d18",
+    "src/cn_contract/assistant/providers/judge_policy.py": "708eee0dc681138834a15e07629f59cc002afd850be8c0278a54ec6233acef2e",
+    "src/cn_contract/assistant/service.py": "b6e9c2c9825ede962be21c2385d0109b7712130405edbeed58a2b869d2c6baa0",
+    "src/cn_contract/assistant_model_schema_baseline.py": "15343cb48bd893986974bb7decddd2a522d9d55293ceb9be7b5aa6d36bdd96ea",
+    "src/cn_contract/domain.py": "088cc8d08e435128b81d057e7017d4f46d42ea43303a1d2ba789d7dac46dde0f",
+    "src/cn_contract/ops/backup.py": "a35ace69057382e214e12d7694d19f7f9edc36de361481ea058c0a6c73934983",
+    "src/cn_contract/ops/workspace_backup.py": "76f91555f1a546f5d46158a696eac9de10099efad1e342aebd7abc7e5e58dfa8",
+    "src/cn_contract/schema_migrations.py": "ab672fb310904735a34327ed7796d0ef9a933b9aa81a4ebc6cc6c596a691fde2",
+    "src/cn_contract/storage_bootstrap.py": "eff36b791980fc655ecabdba825f29dee48214336c8bcc89f7354465e20fb826",
+    "src/cn_contract/storage_schema.py": "573b479f9d4829dd3e74f71471b1fce1c5a8b956d365bcc017340f027a9596bb",
+    "src/cn_contract/web/local_server.py": "ce1907c57ff9291544cb9dda11b4db5b6ef290936cc9ecfddfe397ff5f4c5bc4"
+  },
+  "limitations": [
+    "Only local review artifacts were written; no product, author tests, project state or commit changes.",
+    "No real credentials/materials or external network/model calls.",
+    "Author target regressions and Windows validation were not rerun or counted as independent results.",
+    "Native Jev UI, main-runner integration, actual vendor pricing and additional material mapping are explicit later scope, not defects of this slice.",
+    "Standards review does not replace the independent Spec axis or production approval."
+  ]
+}

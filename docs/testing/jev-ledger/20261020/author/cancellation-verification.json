@@ -1,0 +1,46 @@
+{
+  "phase": "CH-05B Jev ledger author verification",
+  "command": ".venv/Scripts/python.exe -m pytest .local/jev-ledger-20261020/review-spec-glue/probe_deadline_receipt.py tests/unit/test_judge_policy.py tests/integration/test_judge_attempts.py tests/unit/test_jev_codec.py tests/integration/test_jev_provider.py -q --tb=short --junitxml=.local/jev-ledger-20261020/author/cancellation-targets.xml -o junit_family=legacy",
+  "exit": 0,
+  "passed": 202,
+  "new_targets": 75,
+  "existing_jev_targets": 124,
+  "independent_deadline_probes": 3,
+  "counts": {
+    ".local.jev-ledger-20261020.review-spec-glue.probe_deadline_receipt": 3,
+    "tests.unit.test_judge_policy": 12,
+    "tests.integration.test_judge_attempts": 63,
+    "tests.unit.test_jev_codec": 53,
+    "tests.integration.test_jev_provider": 71
+  },
+  "sha256": {
+    "src/cn_contract/domain.py": "088cc8d08e435128b81d057e7017d4f46d42ea43303a1d2ba789d7dac46dde0f",
+    "src/cn_contract/assistant/judge_schema.py": "44de9e38b94a6ffb77f12124158cb64fa2a783dac3630548f85903fa9ff288f3",
+    "src/cn_contract/assistant/judge_integrity.py": "c6369ee0f59bdc0837c1fbf1887b6bf2fa17f8fdba80fdf5e3b1ec2d4ded60bd",
+    "src/cn_contract/assistant/providers/judge_policy.py": "708eee0dc681138834a15e07629f59cc002afd850be8c0278a54ec6233acef2e",
+    "src/cn_contract/assistant/providers/judge_attempts.py": "3058deae4fbd09edba6fb470da28f57881b0f5e5d890fef3de5f14eadb5e4c4d",
+    "src/cn_contract/assistant/providers/judge_execution.py": "7ad51bb46ba8002a83be414e04247f66d1c78c7293f29303988f27d53cb9951b",
+    "src/cn_contract/assistant/providers/jev.py": "0ef430717db2f11c225ba0fddbb1ac23b736b1d033105d4e027e02bede1fa686",
+    "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c",
+    "tests/integration/test_judge_attempts.py": "73cc0c55e9fdf2b166d1215603208cdaf5b98ed91943c8237886e0357fb2f2c1"
+  },
+  "effective_red": [
+    "reserve-red.log: missing dedicated schema, 1 failure",
+    "execute-red.log: missing dedicated executor, 1 failure",
+    "integrity-red.log: explicit not-implemented rejection, 1 failure",
+    "ownership-red.log: explicit skip without provider and wrong-session claim mutation, 2 failures",
+    "final-boundary-red.log: config error normalization, expired historical decision, unused wire cap on explicit skill, 3 failures",
+    "../review-spec-glue/deadline-red.xml: independent duplicate-deadline receipt-loss probe, 1 failure/1 pass",
+    "cancellation-red.log: actual decoded receipt lost during external cleanup cancellation; 3 failures"
+  ],
+  "boundaries": [
+    "Only full current plain user text and primary_intent are mapped. Explicit skill skips without Jev authorization or wire preparation.",
+    "No queue, HTTP authorization, frontend, native setting or main-run selection/state/expense mutation.",
+    "Independent trusted policy reserves Decimal USD without asserting TypeSafe prices or actual settlement. Received/unknown always retains reservation.",
+    "One durable claim, request/config/policy/session/scope guards immediately before HTTP, generation fencing across revoke/configure/regrant, same-loop runtime mutations.",
+    "Completed receipt immutable; recovery closes pending attempts only and does not implement later external reconciliation.",
+    "Only synthetic random-port loopback and fake secrets; no live provider/account/material calls.",
+    "Root owns final schema/backup/Windows/frozen/application regression and project record.",
+    "JevCancelledError carries only an already parsed non-ok received JudgeResult. Executor validates DTO/request/scope/hash, rejects adoption, settles safe receipt, then propagates cancellation; no receipt remains sent_unknown."
+  ]
+}

@@ -1,0 +1,31 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+_ test_external_cancel_after_decode_preserves_safe_receipt_without_adoption[valid] _
+tests\integration\test_judge_attempts.py:487: in test_external_cancel_after_decode_preserves_safe_receipt_without_adoption
+    assert len(calls)==1 and result.state=='received' and result.decision is None
+E   assert (1 == 1 and 'sent_unknown' == 'received'
+E    +  where 1 = len([{'body': b'{"model":"jev-1.13.0","questions":{"primary_intent":{"criteria":{"client_reply":"\xe5\x87\x86\xe5\xa4\x87\... 'identity', 'Authorization': 'Bearer SYNTHETIC_JUDGE_KEY', 'Connection': 'keep-alive', ...}, 'path': '/v1/systemone'}])
+E     
+E     - received
+E     + sent_unknown)
+_ test_external_cancel_after_decode_preserves_safe_receipt_without_adoption[invalid-answer] _
+tests\integration\test_judge_attempts.py:487: in test_external_cancel_after_decode_preserves_safe_receipt_without_adoption
+    assert len(calls)==1 and result.state=='received' and result.decision is None
+E   assert (1 == 1 and 'sent_unknown' == 'received'
+E    +  where 1 = len([{'body': b'{"model":"jev-1.13.0","questions":{"primary_intent":{"criteria":{"client_reply":"\xe5\x87\x86\xe5\xa4\x87\... 'identity', 'Authorization': 'Bearer SYNTHETIC_JUDGE_KEY', 'Connection': 'keep-alive', ...}, 'path': '/v1/systemone'}])
+E     
+E     - received
+E     + sent_unknown)
+_ test_external_cancel_after_decode_preserves_safe_receipt_without_adoption[secret-reflection] _
+tests\integration\test_judge_attempts.py:487: in test_external_cancel_after_decode_preserves_safe_receipt_without_adoption
+    assert len(calls)==1 and result.state=='received' and result.decision is None
+E   assert (1 == 1 and 'sent_unknown' == 'received'
+E    +  where 1 = len([{'body': b'{"model":"jev-1.13.0","questions":{"primary_intent":{"criteria":{"client_reply":"\xe5\x87\x86\xe5\xa4\x87\... 'identity', 'Authorization': 'Bearer SYNTHETIC_JUDGE_KEY', 'Connection': 'keep-alive', ...}, 'path': '/v1/systemone'}])
+E     
+E     - received
+E     + sent_unknown)
+=========================== short test summary info ===========================
+FAILED tests/integration/test_judge_attempts.py::test_external_cancel_after_decode_preserves_safe_receipt_without_adoption[valid]
+FAILED tests/integration/test_judge_attempts.py::test_external_cancel_after_decode_preserves_safe_receipt_without_adoption[invalid-answer]
+FAILED tests/integration/test_judge_attempts.py::test_external_cancel_after_decode_preserves_safe_receipt_without_adoption[secret-reflection]
+3 failed, 54 deselected in 2.38s

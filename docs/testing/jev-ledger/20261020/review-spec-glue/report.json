@@ -1,0 +1,138 @@
+{
+  "review": "CH-05B independent Spec probes",
+  "assessment": "Spec pass for frozen CH-05B backend scope; no open blocking findings",
+  "open_findings": [],
+  "closed_findings": [
+    {
+      "priority": "P2",
+      "summary": "Already decoded safe receipt metadata was discarded on duplicate timeout or external cancellation",
+      "branches": ["duplicate execution/provider deadline", "external cancellation during cleanup"],
+      "verification": "Original three deadline/cancellation nodes passed unchanged; cancellation propagates and no decision is adopted"
+    }
+  ],
+  "baseline": "a4c3c6706caad31c2335b4d055240dbddbfbd372",
+  "timestamp_utc": "2026-10-19T18:47:34.571398+00:00",
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\review-spec-glue\\probe_schema_glue.py",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\review-spec-glue\\probe_deadline_receipt.py",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\review-spec-glue\\probe_recovery_authorization.py",
+    "-q",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-ledger-20261020\\review-spec-glue\\final.xml"
+  ],
+  "exit_code": 0,
+  "actual_test_count": 10,
+  "unique_test_count": 10,
+  "counts": {
+    "passed": 10,
+    "failure": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "product_hashes_before": {
+    "src/cn_contract/storage_schema.py": "573b479f9d4829dd3e74f71471b1fce1c5a8b956d365bcc017340f027a9596bb",
+    "src/cn_contract/assistant_model_schema_baseline.py": "15343cb48bd893986974bb7decddd2a522d9d55293ceb9be7b5aa6d36bdd96ea",
+    "src/cn_contract/schema_migrations.py": "ab672fb310904735a34327ed7796d0ef9a933b9aa81a4ebc6cc6c596a691fde2",
+    "src/cn_contract/storage_bootstrap.py": "eff36b791980fc655ecabdba825f29dee48214336c8bcc89f7354465e20fb826",
+    "src/cn_contract/assistant/attachment_integrity.py": "65442254d7483955b531f1109963507c538177dd9781066d2030cd3ba5a76ed3",
+    "src/cn_contract/assistant/model_integrity.py": "6dfa70718bf8783799488130b394301021c9a9da6ba47250b62dd48104a47da0",
+    "src/cn_contract/ops/backup.py": "a35ace69057382e214e12d7694d19f7f9edc36de361481ea058c0a6c73934983",
+    "src/cn_contract/ops/workspace_backup.py": "76f91555f1a546f5d46158a696eac9de10099efad1e342aebd7abc7e5e58dfa8",
+    "src/cn_contract/web/local_server.py": "ce1907c57ff9291544cb9dda11b4db5b6ef290936cc9ecfddfe397ff5f4c5bc4",
+    "src/cn_contract/assistant/service.py": "b6e9c2c9825ede962be21c2385d0109b7712130405edbeed58a2b869d2c6baa0",
+    "src/cn_contract/domain.py": "088cc8d08e435128b81d057e7017d4f46d42ea43303a1d2ba789d7dac46dde0f",
+    "src/cn_contract/assistant/judge_schema.py": "44de9e38b94a6ffb77f12124158cb64fa2a783dac3630548f85903fa9ff288f3",
+    "src/cn_contract/assistant/judge_integrity.py": "c6369ee0f59bdc0837c1fbf1887b6bf2fa17f8fdba80fdf5e3b1ec2d4ded60bd",
+    "src/cn_contract/assistant/providers/judge_attempts.py": "3058deae4fbd09edba6fb470da28f57881b0f5e5d890fef3de5f14eadb5e4c4d",
+    "src/cn_contract/assistant/providers/judge_execution.py": "7ad51bb46ba8002a83be414e04247f66d1c78c7293f29303988f27d53cb9951b",
+    "src/cn_contract/assistant/providers/judge_policy.py": "708eee0dc681138834a15e07629f59cc002afd850be8c0278a54ec6233acef2e",
+    "src/cn_contract/assistant/providers/jev.py": "0ef430717db2f11c225ba0fddbb1ac23b736b1d033105d4e027e02bede1fa686"
+  },
+  "product_hashes_after": {
+    "src/cn_contract/storage_schema.py": "573b479f9d4829dd3e74f71471b1fce1c5a8b956d365bcc017340f027a9596bb",
+    "src/cn_contract/assistant_model_schema_baseline.py": "15343cb48bd893986974bb7decddd2a522d9d55293ceb9be7b5aa6d36bdd96ea",
+    "src/cn_contract/schema_migrations.py": "ab672fb310904735a34327ed7796d0ef9a933b9aa81a4ebc6cc6c596a691fde2",
+    "src/cn_contract/storage_bootstrap.py": "eff36b791980fc655ecabdba825f29dee48214336c8bcc89f7354465e20fb826",
+    "src/cn_contract/assistant/attachment_integrity.py": "65442254d7483955b531f1109963507c538177dd9781066d2030cd3ba5a76ed3",
+    "src/cn_contract/assistant/model_integrity.py": "6dfa70718bf8783799488130b394301021c9a9da6ba47250b62dd48104a47da0",
+    "src/cn_contract/ops/backup.py": "a35ace69057382e214e12d7694d19f7f9edc36de361481ea058c0a6c73934983",
+    "src/cn_contract/ops/workspace_backup.py": "76f91555f1a546f5d46158a696eac9de10099efad1e342aebd7abc7e5e58dfa8",
+    "src/cn_contract/web/local_server.py": "ce1907c57ff9291544cb9dda11b4db5b6ef290936cc9ecfddfe397ff5f4c5bc4",
+    "src/cn_contract/assistant/service.py": "b6e9c2c9825ede962be21c2385d0109b7712130405edbeed58a2b869d2c6baa0",
+    "src/cn_contract/domain.py": "088cc8d08e435128b81d057e7017d4f46d42ea43303a1d2ba789d7dac46dde0f",
+    "src/cn_contract/assistant/judge_schema.py": "44de9e38b94a6ffb77f12124158cb64fa2a783dac3630548f85903fa9ff288f3",
+    "src/cn_contract/assistant/judge_integrity.py": "c6369ee0f59bdc0837c1fbf1887b6bf2fa17f8fdba80fdf5e3b1ec2d4ded60bd",
+    "src/cn_contract/assistant/providers/judge_attempts.py": "3058deae4fbd09edba6fb470da28f57881b0f5e5d890fef3de5f14eadb5e4c4d",
+    "src/cn_contract/assistant/providers/judge_execution.py": "7ad51bb46ba8002a83be414e04247f66d1c78c7293f29303988f27d53cb9951b",
+    "src/cn_contract/assistant/providers/judge_policy.py": "708eee0dc681138834a15e07629f59cc002afd850be8c0278a54ec6233acef2e",
+    "src/cn_contract/assistant/providers/jev.py": "0ef430717db2f11c225ba0fddbb1ac23b736b1d033105d4e027e02bede1fa686"
+  },
+  "products_stable": true,
+  "testcases": [
+    {
+      "nodeid": ".local.jev-ledger-20261020.review-spec-glue.probe_schema_glue::test_all_old_schema_rows_equal_actual_baseline_commit[False]",
+      "status": "passed",
+      "seconds": "0.039"
+    },
+    {
+      "nodeid": ".local.jev-ledger-20261020.review-spec-glue.probe_schema_glue::test_all_old_schema_rows_equal_actual_baseline_commit[True]",
+      "status": "passed",
+      "seconds": "0.035"
+    },
+    {
+      "nodeid": ".local.jev-ledger-20261020.review-spec-glue.probe_schema_glue::test_final_step_failure_rolls_back_entire_isolated_upgrade_chain[False]",
+      "status": "passed",
+      "seconds": "0.898"
+    },
+    {
+      "nodeid": ".local.jev-ledger-20261020.review-spec-glue.probe_schema_glue::test_final_step_failure_rolls_back_entire_isolated_upgrade_chain[True]",
+      "status": "passed",
+      "seconds": "0.903"
+    },
+    {
+      "nodeid": ".local.jev-ledger-20261020.review-spec-glue.probe_deadline_receipt::test_already_received_usage_survives_total_deadline_without_adoption[decode]",
+      "status": "passed",
+      "seconds": "0.751"
+    },
+    {
+      "nodeid": ".local.jev-ledger-20261020.review-spec-glue.probe_deadline_receipt::test_already_received_usage_survives_total_deadline_without_adoption[cleanup]",
+      "status": "passed",
+      "seconds": "0.600"
+    },
+    {
+      "nodeid": ".local.jev-ledger-20261020.review-spec-glue.probe_deadline_receipt::test_external_cancellation_after_decode_keeps_received_accounting",
+      "status": "passed",
+      "seconds": "0.499"
+    },
+    {
+      "nodeid": ".local.jev-ledger-20261020.review-spec-glue.probe_recovery_authorization::test_recovery_releases_only_unsent_budget_and_keeps_main_rows_exact",
+      "status": "passed",
+      "seconds": "0.534"
+    },
+    {
+      "nodeid": ".local.jev-ledger-20261020.review-spec-glue.probe_recovery_authorization::test_existing_main_model_runtime_is_not_jev_authorization",
+      "status": "passed",
+      "seconds": "0.366"
+    },
+    {
+      "nodeid": ".local.jev-ledger-20261020.review-spec-glue.probe_recovery_authorization::test_same_user_new_login_cannot_inherit_old_session_judge_permission",
+      "status": "passed",
+      "seconds": "0.440"
+    }
+  ],
+  "probe_sha256": {
+    "probe_schema_glue.py": "cf655e0ace71884c9f4f197a46fff30515bdd69507f1b2680ef333d9e06befbc",
+    "probe_deadline_receipt.py": "a81e5d4a72ce06e0e07d5fcc6aa11d517313ec4d918778ba3fe742eb48ef6d16",
+    "probe_recovery_authorization.py": "0ced1b153bea545f62279d7809f7ba699ff65e70e27860f4784591f68af19b60"
+  },
+  "network_boundary": "Only three local synthetic loopback HTTP POSTs; no external model, key or user material.",
+  "retained_red_evidence": [
+    "deadline-red.log",
+    "deadline-red.xml",
+    "cancellation-red.log",
+    "cancellation-red.xml"
+  ]
+}
