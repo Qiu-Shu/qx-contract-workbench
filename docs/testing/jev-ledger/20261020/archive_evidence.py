@@ -22,7 +22,8 @@ checked['exe_sha256']=sha(exe)
 extensions={'.py','.md','.json','.xml','.log','.exit'}
 files=[p for p in src.iterdir() if p.is_file() and p.suffix in extensions]
 for name in ('author','review-spec-glue','review-standards'):
- files.extend(p for p in (src/name).rglob('*') if p.is_file() and p.suffix in extensions and '__pycache__' not in p.parts)
+ # Review evidence is at the top level; nested pytest workspaces stay local.
+ files.extend(p for p in (src/name).iterdir() if p.is_file() and p.suffix in extensions)
 for p in files:
  target=dst/p.relative_to(src);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,target)
 manifest={p.relative_to(dst).as_posix():sha(p) for p in sorted(dst.rglob('*')) if p.is_file() and p.name!='manifest.sha256.json'}
