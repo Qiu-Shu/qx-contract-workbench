@@ -1,0 +1,21 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_long_text_span_does_not_allocate_a_full_character_map __________
+
+    def test_long_text_span_does_not_allocate_a_full_character_map():
+        source = '甲乙丙丁。' * 40000 + '㍻年'
+        normalize('甲乙丙丁。㍻年')  # Warm the same fixed alphabet before measuring.
+        tracemalloc.start()
+        try:
+            result = original_span(source, 200001, 200003)
+            peak = tracemalloc.get_traced_memory()[1]
+        finally:
+            tracemalloc.stop()
+        assert result == (200000, 200002)
+>       assert peak < 1024 * 1024
+E       assert 21241164 < (1024 * 1024)
+
+tests\unit\test_library_span.py:52: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_library_span.py::test_long_text_span_does_not_allocate_a_full_character_map
+1 failed in 1.05s

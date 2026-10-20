@@ -14,7 +14,7 @@ from .catalog import canonical, connection, digest
 from .cleaning import normalize_case
 from .index import current_generation, generation_path
 from .originals import OriginalReader
-from .text import normalize, query_terms
+from .text import normalize, original_span, query_terms
 
 
 _RANK_CACHE = OrderedDict()
@@ -189,15 +189,16 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
                     raise ValueError('INDEX_VERSION_MISMATCH')
                 text, _, _ = reader.read(record)
                 section = text[row['start']:row['end']]
-                normalized, mapping = normalize(section, with_map=True)
+                normalized = normalize(section)
                 titles = [normalize(value) for value in [row['title'], *json.loads(row['title_aliases'])]]
                 if any(term not in normalized and all(term not in title for title in titles) for term in terms):
                     continue
                 starts = [(normalized.find(term), term) for term in terms if term in normalized]
                 if starts:
                     start, term = min(starts)
-                    match_start = row['start'] + mapping[start]
-                    match_end = row['start'] + mapping[start + len(term) - 1] + 1
+                    source_start, source_end = original_span(section, start, start + len(term))
+                    match_start = row['start'] + source_start
+                    match_end = row['start'] + source_end
                     if match_start >= row['core_end']:
                         continue  # The following source fragment owns this hit.
                     field = 'body'

@@ -1,0 +1,41 @@
+{
+  "body_characters": 250009,
+  "source_sha256": "b663598ae15217e27e29a17e1f588c59893e923127bbc0fcf5df7bd7518b4caf",
+  "generation_id": "cf59a92ba94d40afbddba8838ba213f1",
+  "inputs": {
+    "src/cn_contract/library/text.py": "502dbc5c34109a45138abc7d52a9b6d890a416bb3d5afca1a1d2c3c61ee91a0a",
+    "src/cn_contract/library/service.py": "caa589c952dc0d9c86fe41e23353a148296448423500c1d4979727c076a7c025",
+    "src/cn_contract/assistant/tools/library.py": "1b25ad39c011bd2154fea09c6dff87981583111119766fa607884607e4e28581"
+  },
+  "scope": "One synthetic record, warm rank cache; Python traced peak separate from untraced timings. Not RSS/GUI/cold-start/installer.",
+  "library_search": {
+    "seconds": [
+      0.08149419999972451,
+      0.08062740000605118,
+      0.0837139999930514
+    ],
+    "median_seconds": 0.08149419999972451,
+    "traced_peak_bytes": [
+      27134258,
+      27134250,
+      27134187
+    ],
+    "median_peak_bytes": 27134250,
+    "result_sha256": "a8dee336776e2c07ce588bf1a202fb7a3e08395b6179eae10935c5a8a9d35ba8"
+  },
+  "assistant_adapter": {
+    "seconds": [
+      0.1630043999903137,
+      0.1777970999974059,
+      0.17148010000528302
+    ],
+    "median_seconds": 0.17148010000528302,
+    "traced_peak_bytes": [
+      27135867,
+      27135890,
+      27135866
+    ],
+    "median_peak_bytes": 27135867,
+    "result_sha256": "aa5bff0a71372211b1dcdba53c1cb53fd9083ec40aac2ff070ebe3bee3bf449f"
+  }
+}

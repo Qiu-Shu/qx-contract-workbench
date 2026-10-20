@@ -8,7 +8,7 @@ from ...library.catalog import canonical, digest
 from ...library.cleaning import clean_case, normalize_case
 from ...library.index import current_generation
 from ...library.law_sections import law_fields, split_law
-from ...library.text import normalize, query_terms
+from ...library.text import normalize, original_span, query_terms
 
 
 def _validated(model, value, code):
@@ -70,18 +70,19 @@ def _matches(query, original, fragment, hit, fields, titles):
         return False
     terms, _ = query_terms(query.text, query.mode)
     lower, upper = (fragment.start, fragment.end) if fragment else (0, len(original.text))
-    body, mapping = normalize(original.text[lower:upper], with_map=True)
+    section = original.text[lower:upper]
+    body = normalize(section)
     # Whole-law hits came from title-only units, not from an unbounded body match.
     if original.record.kind == 'law_markdown' and hit.fragment_id is None:
         body = ''
-        mapping = []
     title_values = [normalize(title) for title in titles]
     if any(term not in body and all(term not in title for title in title_values) for term in terms):
         return False
     starts = [(body.find(term), term) for term in terms if term in body]
     if starts:
         position, term = min(starts)
-        expected = (lower + mapping[position], lower + mapping[position + len(term) - 1] + 1)
+        start, end = original_span(section, position, position + len(term))
+        expected = (lower + start, lower + end)
         return hit.match_field == 'body' and (hit.match_start, hit.match_end) == expected
     return (hit.match_field == ('title' if terms else 'metadata') and
             hit.match_start is None and hit.match_end is None)

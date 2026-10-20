@@ -38,6 +38,24 @@ def normalize(text: str, *, with_map=False):
     return normalized, mapping
 
 
+def original_span(text: str, start: int, end: int) -> tuple[int, int]:
+    """Map one normalized span back to its original character range."""
+    if type(start) is not int or type(end) is not int or not 0 <= start < end:
+        raise ValueError('NORMALIZED_RANGE_INVALID')
+    position, previous_space, first = 0, False, None
+    for index, char in enumerate(text):
+        for value in _CHARACTERS[ord(char)]:
+            if value == ' ' and previous_space:
+                continue
+            previous_space = value == ' '
+            if position == start:
+                first = index
+            position += 1
+            if position == end:
+                return first, index + 1
+    raise ValueError('NORMALIZED_RANGE_INVALID')
+
+
 def tokens(normalized: str) -> list[str]:
     result = []
     for match in _RUNS.finditer(normalized):
