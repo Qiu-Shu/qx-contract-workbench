@@ -11,7 +11,7 @@ from cn_contract.assistant.providers.jev_codec import input_hash
 from cn_contract.config import canonical_json
 
 
-def inspect(database, run_id=None, source_hash=None):
+def inspect(database, run_id=None, source_hash=None, main_count=1):
     connection = sqlite3.connect(Path(database).resolve().as_uri() + '?mode=ro', uri=True)
     connection.row_factory = sqlite3.Row
     try:
@@ -24,11 +24,13 @@ def inspect(database, run_id=None, source_hash=None):
         if run_id is None:
             assert set(counts.values()) == {0}
             return {'counts': counts, 'result': 'empty'}
-        assert set(counts.values()) == {1}
+        assert main_count in (1, 2)
+        assert all(value == (1 if table.startswith('assistant_judge_') else main_count)
+                   for table, value in counts.items()), counts
         run = connection.execute('SELECT * FROM assistant_runs WHERE id=?', (run_id,)).fetchone()
-        main = connection.execute('SELECT * FROM assistant_model_attempts').fetchone()
+        main = connection.execute('SELECT * FROM assistant_model_attempts WHERE run_id=?', (run_id,)).fetchone()
         judge = connection.execute('SELECT * FROM assistant_judge_attempts').fetchone()
-        message = connection.execute('SELECT * FROM assistant_messages').fetchone()
+        message = connection.execute('SELECT * FROM assistant_messages WHERE id=?', (run['message_id'],)).fetchone()
         receipt = json.loads(connection.execute('SELECT receipt_json FROM assistant_judge_receipts').fetchone()[0])
         decision = json.loads(connection.execute('SELECT decision_json FROM assistant_judge_decisions').fetchone()[0])
         request = d.JudgeRequest.model_validate_json(judge['request_json'])
@@ -62,6 +64,8 @@ if __name__ == '__main__':
     parser.add_argument('database')
     parser.add_argument('--run')
     parser.add_argument('--hash')
+    parser.add_argument('--main-count', type=int, choices=(1, 2), default=1)
     options = parser.parse_args()
     assert bool(options.run) == bool(options.hash)
-    print(json.dumps(inspect(options.database, options.run, options.hash)))
+    assert options.main_count == 1 or options.run
+    print(json.dumps(inspect(options.database, options.run, options.hash, options.main_count)))

@@ -1,0 +1,210 @@
+✔ only trusted saved content and fixed model cost reach confirmation and one authorization (31.7767ms)
+✔ cancel leaves no authorization and no second HTTP snapshot (5.7084ms)
+✔ renderer-selected budget, malformed scope and other displayed conversations are refused before reads (1.6262ms)
+✔ only an exact numeric owned loopback origin can receive a session cookie (1.4993ms)
+✔ all scope fields and composer revisions are checked independently of the content digest (19.3399ms)
+✔ unapproved capability cannot hide selected attachments or a busy run (8.7662ms)
+✔ materials and capability scope mismatches cannot reach confirmation (5.1073ms)
+✔ changed saved content, composer or materials after confirmation never authorizes (12.0455ms)
+✔ ambiguous or target-specific cookies are rejected without authorization (1.3737ms)
+✔ a replaced session cookie after confirmation fails before authorization (3.1221ms)
+✔ a cookie change after authorized ACK revokes the captured session (5.4194ms)
+✔ shared busy refuses duplicate clicks and wait includes the pending confirmation (4.3517ms)
+✔ document change during confirmation cannot authorize even if the window returns true (2.7327ms)
+✔ redirects, oversized bodies and malformed UTF8 are rejected as fixed errors (9.4333ms)
+✔ repeated confirmation keeps the same request and budget and accepts an existing receipt (7.9572ms)
+✔ exhausted previous approval permits a new explicit one-call confirmation (4.5005ms)
+✔ a stalled owned HTTP response times out with fixed output and releases the busy lock (5003.8372ms)
+✔ HTTP permission denial and malformed JSON never forward server error text to the renderer (8.551ms)
+✔ missing cookie and a cookie with header delimiters are refused before any request (0.9924ms)
+✔ a changed context identity cannot reuse the same guard function to approve (3.6281ms)
+✖ judge without trusted budget is displayed unavailable and does not prevent main-only consent (4.1116ms)
+✖ separately selected judge uses the same complete draft and request with its own version and budget (3.4032ms)
+✖ declining available optional judge grants only the main model (2.9851ms)
+✖ forged auxiliary consent, boolean expansion and extra choice fields never authorize (6.967ms)
+✖ known auxiliary refusal preserves the separately authorized main flow (3.8288ms)
+✖ unknown auxiliary ACK stops its captured backend and does not claim a successful main send (2.526ms)
+✖ cookie changed after auxiliary grant withdraws both captured grants (5.3421ms)
+✖ main denial never grants the auxiliary and changed draft never grants either (2.9788ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 20
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5236.7579
+
+✖ failing tests:
+
+test at desktop\tests\model-approval.test.cjs:241:1
+✖ judge without trusted budget is displayed unavailable and does not prevent main-only consent (4.1116ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   canceled: true,
+  +   code: 'APPROVAL_CANCELED',
+  +   ok: false
+  -   ok: true
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval.test.cjs:243:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: false, code: 'APPROVAL_CANCELED', canceled: true },
+    expected: { ok: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval.test.cjs:248:1
+✖ separately selected judge uses the same complete draft and request with its own version and budget (3.4032ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   canceled: true,
+  +   code: 'APPROVAL_CANCELED',
+  +   ok: false
+  -   ok: true
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval.test.cjs:250:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: false, code: 'APPROVAL_CANCELED', canceled: true },
+    expected: { ok: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval.test.cjs:259:1
+✖ declining available optional judge grants only the main model (2.9851ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   canceled: true,
+  +   code: 'APPROVAL_CANCELED',
+  +   ok: false
+  -   ok: true
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval.test.cjs:261:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: false, code: 'APPROVAL_CANCELED', canceled: true },
+    expected: { ok: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval.test.cjs:264:1
+✖ forged auxiliary consent, boolean expansion and extra choice fields never authorize (6.967ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval.test.cjs:268:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval.test.cjs:272:1
+✖ known auxiliary refusal preserves the separately authorized main flow (3.8288ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   canceled: true,
+  +   code: 'APPROVAL_CANCELED',
+  +   ok: false
+  -   ok: true
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval.test.cjs:275:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: false, code: 'APPROVAL_CANCELED', canceled: true },
+    expected: { ok: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval.test.cjs:278:1
+✖ unknown auxiliary ACK stops its captured backend and does not claim a successful main send (2.526ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval.test.cjs:281:52)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval.test.cjs:285:1
+✖ cookie changed after auxiliary grant withdraws both captured grants (5.3421ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert(f.calls.includes('judge-revoke'))
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval.test.cjs:290:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval.test.cjs:293:1
+✖ main denial never grants the auxiliary and changed draft never grants either (2.9788ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'confirm',
+  -   'authorize'
+    ]
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval.test.cjs:296:52)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'confirm' ],
+    expected: [ 'confirm', 'authorize' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

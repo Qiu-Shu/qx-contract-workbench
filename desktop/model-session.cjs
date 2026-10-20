@@ -29,9 +29,13 @@ function reservation(model) {
   return digits.slice(0,-8)+'.'+digits.slice(-8).replace(/0+$/,'');
 }
 
-function createModelSession({store,getBackend,onFailure=()=>{},kind='main'}) {
+function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judgeBudget=null}) {
   if(!['main','judge'].includes(kind))throw new TypeError('MODEL_KIND_INVALID');
   const judge=kind==='judge',configureMethod=judge?'configureJudge':'configureModel',disableMethod=judge?'disableJudge':'disableModel';
+  if(judgeBudget!==null && (!judge || typeof judgeBudget!=='string' || judgeBudget==='0' ||
+      !/^(?:(?:0|[1-9]\d{0,5})(?:\.\d{0,11}[1-9])?|1000000)$/.test(judgeBudget)))
+    throw new TypeError('JUDGE_BUDGET_INVALID');
+  const authorizeMethod=judge?'authorizeJudge':'authorizeModel',revokeMethod=judge?'revokeJudge':'revokeModel';
   const supports=backend=>!judge || backend?.control?.judgeEnabled===true;
   const allowedModel=model=>typeof model==='string' && (judge?model==='jev-1.13.0':MODELS.has(model));
   const configured=model=>judge?{enabled:true,protocol_version:'typesafe-systemone-v1',model:'jev-1.13.0',
@@ -88,32 +92,40 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main'}) {
     return clear(backend,guard);
   });
   async function withAuthorization(backend,guard,callback) {
-    if(active)return rejected('STATE_CONFLICT');
     const captured=metadata;
-    if(!captured || captured.backend!==backend || !matches(backend,guard) ||
-        typeof backend.authorizeModel!=='function' || typeof backend.revokeModel!=='function')return rejected();
+    const supportsAuthorization=()=>!judge || (judgeBudget!==null && backend?.control?.judgeAuthorizationEnabled===true);
+    if(active || !captured || captured.backend!==backend || !matches(backend,guard) ||
+        !supportsAuthorization() || typeof backend[authorizeMethod]!=='function' || typeof backend[revokeMethod]!=='function'){
+      if(!judge)return rejected(active?'STATE_CONFLICT':'BLOCKED_LIVE');
+      try{return await callback(null);}catch{return rejected();}
+    }
     active=true;
     let open=true,used=false,authorized=false,grantedToken=null,flight=null;
-    const valid=()=>open && metadata===captured && matches(backend,guard);
+    const budget=judge?judgeBudget:reservation(captured.model);
+    const valid=()=>open && metadata===captured && matches(backend,guard) && supportsAuthorization();
     async function revoke() {
       if(!grantedToken)return okay();
       const token=grantedToken;grantedToken=null;
       try{
-        const ack=await backend.revokeModel({session_token:token});
+        const ack=await backend[revokeMethod]({session_token:token});
         if(exact(ack,['ok','status']) && ack.ok===true && ack.status==='revoked' && healthy(backend))return okay();
       }catch{}
       return terminate(backend,guard);
     }
-    const lease=Object.freeze({model:captured.model,max_total_usd:reservation(captured.model),
+    const lease=Object.freeze({model:captured.model,max_total_usd:budget,
       authorize(value){
         if(used || !valid())return Promise.resolve(rejected('STATE_CONFLICT'));
         used=true;
+        if(judge){
+          try{value=structuredClone(value);}catch{return Promise.resolve(rejected());}
+          if(value?.basis?.purpose!=='primary_intent')return Promise.resolve(rejected());
+        }
         flight=(async()=>{
           let ack;
           try{
-            ack=await backend.authorizeModel({session_token:value.session_token,
+            ack=await backend[authorizeMethod]({session_token:value.session_token,
               expected_config_version:captured.config_version,basis:value.basis,
-              max_total_usd:reservation(captured.model),valid_for_seconds:120});
+              max_total_usd:budget,valid_for_seconds:120});
           }catch{return terminate(backend,guard);}
           if(!healthy(backend))return terminate(backend,guard);
           if(exact(ack,['ok','code']) && ack.ok===false && CONTROL_CODES.has(ack.code))return rejected(ack.code);
@@ -136,7 +148,7 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main'}) {
       result=await callback(lease);
       if(flight)await flight;
       if(!valid())result=rejected('STATE_CONFLICT');
-      if(result?.ok!==true || !authorized){
+      if(result?.ok!==true || (!judge && !authorized)){
         await revoke();
         return result?.canceled===true ? {ok:false,code:'APPROVAL_CANCELED',canceled:true} :
           rejected(CONTROL_CODES.has(result?.code)?result.code:'BLOCKED_LIVE');
@@ -185,7 +197,7 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main'}) {
     }),
     disable,
     beforeCredentialChange:disable,
-    ...(judge?{}:{withAuthorization})
+    withAuthorization
   });
 }
 

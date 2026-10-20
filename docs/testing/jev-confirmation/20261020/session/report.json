@@ -1,0 +1,56 @@
+{
+  "stage": "CH-05D2 Judge approval session lifecycle",
+  "base_commit": "a1ecd7e7d06112e228719586e4d35fe65a906036",
+  "command": "node --test desktop/tests/judge-approval-session.test.cjs desktop/tests/model-approval-session.test.cjs desktop/tests/model-session.test.cjs desktop/tests/judge-settings-core.test.cjs",
+  "red": {
+    "log": "red.log",
+    "tests": 16,
+    "pass": 0,
+    "fail": 16,
+    "exit_code": 1,
+    "reason": "Judge lease absent and invalid budget accepted before implementation"
+  },
+  "first_green": {
+    "log": "green.log",
+    "tests": 59,
+    "pass": 59,
+    "fail": 0,
+    "exit_code": 0
+  },
+  "final": {
+    "log": "final.log",
+    "tests": 62,
+    "pass": 62,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "input_files": [
+    {
+      "path": "desktop/model-session.cjs",
+      "sha256": "288d57e9aa8855deed52ff58bd08c0243a0ab70c09ad3c5cb647685ae469ee02"
+    },
+    {
+      "path": "desktop/tests/judge-approval-session.test.cjs",
+      "sha256": "5bb29b9b0085fea0ca8636b97d2af9563a5dba17f62bdb1a4e928a0046c698e5"
+    },
+    {
+      "path": "desktop/tests/model-approval-session.test.cjs",
+      "sha256": "9e830b9c8229df450a157bd1ec9c162adad7f5d09338a48ec1a24fb699260b3d"
+    },
+    {
+      "path": "desktop/tests/model-session.test.cjs",
+      "sha256": "4b0a54dfdf4f1f347cb46472773cda1ee41ef7ecd0ffb3d8076b0431b452ad40"
+    },
+    {
+      "path": "desktop/tests/judge-settings-core.test.cjs",
+      "sha256": "4b136253ee93b5eb83cc4d8fc2f6384e0364f20019178383d566dc946f6a9494"
+    }
+  ],
+  "limits": [
+    "Only local session unit tests; no real model calls, full suite, GUI or build performed by this subagent.",
+    "Default trusted budget remains null; only test constructors inject a synthetic positive decimal budget.",
+    "No change to renderer budget input, authorization IPC or Main pricing."
+  ]
+}

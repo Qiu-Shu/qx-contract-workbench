@@ -11,7 +11,7 @@ const CONTENT='仅用于本机测试的虚构文字。\n第二行保留完整空
 const digest=value=>createHash('sha256').update(value,'utf8').digest('hex');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 const deferred=()=>{let resolve;const promise=new Promise(done=>{resolve=done;});return {promise,resolve};};
-async function fixture(t) {
+async function fixture(t,options={}) {
   const scope={workspace_id:WORKSPACE,conversation_id:ID,scope_kind:'conversation',scope_ref:null,
     binding_revision:1,input_revision:0,materials_revision:0};
   const input={conversation_id:ID,request_id:REQUEST,expected_scope:{...scope},
@@ -29,6 +29,19 @@ async function fixture(t) {
   const session={cookies:{async get(value){cookies.push(value);return [{name:'qx_session',value:TOKEN},{name:'other',value:'ignored'}];}}};
   const runtime=createModelSession({store:{async withSecret(fn){await fn('synthetic_key');return {status:'saved'};}},getBackend:()=>backend});
   await runtime.configure('deepseek-flash');
+  let judgeRuntime,judgePayload;
+  if(options.judge){
+    Object.assign(backend.control,{judgeEnabled:true,judgeAuthorizationEnabled:true});
+    Object.assign(backend,{
+      async configureJudge(){return {ok:true,status:'configured',config_sha256:'b'.repeat(64),config_version:WORKSPACE};},
+      async disableJudge(){return {ok:true,status:'disabled'};},
+      async authorizeJudge(value){calls.push('judge-authorize');judgePayload=value;return {ok:true,status:'authorized'};},
+      async revokeJudge(){calls.push('judge-revoke');return {ok:true,status:'revoked'};}
+    });
+    judgeRuntime=createModelSession({kind:'judge',judgeBudget:options.budget??null,getBackend:()=>backend,
+      store:{async withSecret(fn){await fn('synthetic_judge_key');return {status:'saved'};}}});
+    await judgeRuntime.configure('jev-1.13.0');
+  }
   const state={current:true,confirmResult:true,onConfirm:null,respond:null};
   const server=http.createServer((req,res)=>{
     requests.push({path:req.url,method:req.method,cookie:req.headers.cookie});
@@ -43,11 +56,15 @@ async function fixture(t) {
   const event={},parent={},handlers=new Map();let busy=false;
   const context={origin,session,parent,backend,conversation_id:ID,guard:()=>state.current};
   const {registerModelApproval}=require('../model-approval.cjs');
-  const registration=registerModelApproval({ipcMain:{handle:(name,fn)=>handlers.set(name,fn)},runtime,
+  const optional=options.afterJudge?{withAuthorization:async(...args)=>{
+    const result=await judgeRuntime.withAuthorization(...args);options.afterJudge({state,context,calls});return result;
+  }}:judgeRuntime;
+  const registration=registerModelApproval({ipcMain:{handle:(name,fn)=>handlers.set(name,fn)},runtime,judgeRuntime:optional,
     captureContext:value=>value===event?{...context}:null,isBusy:()=>busy,setBusy:value=>{busy=value;},
     async confirm(value){details=value.details;calls.push('confirm');
       if(state.onConfirm)return state.onConfirm(value);return state.confirmResult;}});
-  return {scope,input,draft,capability,materials,requests,calls,cookies,backend,runtime,session,state,context,
+  return {scope,input,draft,capability,materials,requests,calls,cookies,backend,runtime,judgeRuntime,session,state,context,
+    get judgePayload(){return judgePayload;},
     registration,get payload(){return payload;},get details(){return details;},get busy(){return busy;},
     invoke:(value=input,sender=event)=>handlers.get('desktop:approve-generation')(sender,value)};
 }
@@ -222,4 +239,87 @@ test('a changed context identity cannot reuse the same guard function to approve
   f.state.onConfirm=async()=>{f.context.parent={};return true;};
   assert.equal((await f.invoke()).ok,false);
   assert.notEqual(f.context.parent,original);assert.deepEqual(f.calls,['confirm']);
+});
+
+test('judge without trusted budget is displayed unavailable and does not prevent main-only consent',async t=>{
+  const f=await fixture(t,{judge:true});f.state.confirmResult={main:true,judge:false};
+  assert.deepEqual(await f.invoke(),{ok:true});
+  assert.deepEqual(f.details.judge,{available:false,max_total_usd:null});
+  assert.deepEqual(f.calls,['confirm','authorize']);
+});
+
+test('separately selected judge uses the same complete draft and request with its own version and budget',async t=>{
+  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:true};
+  assert.deepEqual(await f.invoke(),{ok:true});
+  assert.deepEqual(f.details.judge,{available:true,max_total_usd:'0.02'});
+  assert.equal(f.details.content,CONTENT);assert.equal(f.judgePayload.session_token,TOKEN);
+  assert.deepEqual(f.judgePayload.basis,{...f.payload.basis,purpose:'primary_intent'});
+  assert.equal(f.judgePayload.expected_config_version,WORKSPACE);
+  assert.equal(f.judgePayload.max_total_usd,'0.02');
+  assert.deepEqual(f.calls,['confirm','authorize','judge-authorize']);
+});
+
+test('declining available optional judge grants only the main model',async t=>{
+  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:false};
+  assert.deepEqual(await f.invoke(),{ok:true});assert.deepEqual(f.calls,['confirm','authorize']);
+});
+
+test('forged auxiliary consent, boolean expansion and extra choice fields never authorize',async t=>{
+  for(const [budget,decision] of [[null,{main:true,judge:true}],['0.02',true],['0.02',{main:true,judge:true,extra:1}],
+      ['0.02',{main:false,judge:true}],['0.02',{main:true,judge:'true'}]]){
+    const f=await fixture(t,{judge:true,budget});f.state.confirmResult=decision;
+    assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm']);
+  }
+});
+
+test('known auxiliary refusal preserves the separately authorized main flow',async t=>{
+  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:true};
+  f.backend.authorizeJudge=async()=>{f.calls.push('judge-authorize');return {ok:false,code:'STATE_CONFLICT'};};
+  assert.deepEqual(await f.invoke(),{ok:true});assert.deepEqual(f.calls,['confirm','authorize','judge-authorize']);
+});
+
+test('unknown auxiliary ACK stops its captured backend and does not claim a successful main send',async t=>{
+  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:true};
+  f.backend.authorizeJudge=async()=>{f.calls.push('judge-authorize');throw Error('synthetic private failure');};
+  assert.equal((await f.invoke()).ok,false);assert.equal(f.backend.closing,true);
+  assert.equal(f.calls.filter(x=>x==='judge-authorize').length,1);
+});
+
+test('cookie changed after auxiliary grant withdraws both captured grants',async t=>{
+  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:true};let token=TOKEN;
+  f.session.cookies.get=async()=>[{name:'qx_session',value:token}];
+  f.backend.authorizeJudge=async()=>{f.calls.push('judge-authorize');token='changed_session';return {ok:true,status:'authorized'};};
+  assert.equal((await f.invoke()).ok,false);
+  assert(f.calls.includes('judge-revoke'));assert(f.calls.includes('revoke'));
+});
+
+test('main denial never grants the auxiliary and changed draft never grants either',async t=>{
+  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:true};
+  f.backend.authorizeModel=async()=>{f.calls.push('authorize');return {ok:false,code:'VERSION_CONFLICT'};};
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm','authorize']);
+  f.calls.length=0;f.state.onConfirm=async()=>{f.draft.composer_revision++;return {main:true,judge:true};};
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm']);
+});
+
+test('failure after the inner lease closes stops only the captured backend and waits for cleanup',async t=>{
+  let newStopped=false;
+  const replacement={stop:async()=>{newStopped=true;}};
+  const f=await fixture(t,{judge:true,budget:'0.02',afterJudge({state,context}){
+    state.current=false;context.backend=replacement;
+  }});
+  f.state.confirmResult={main:true,judge:true};
+  const gate=deferred();let finished=false;
+  f.backend.stop=async()=>{f.calls.push('stop');await gate.promise;f.backend.closing=true;};
+  const pending=f.invoke().then(result=>{finished=true;return result;});
+  while(!f.calls.includes('stop'))await tick();
+  assert.equal(finished,false);assert.equal(newStopped,false);gate.resolve();
+  assert.equal((await pending).ok,false);assert.equal(newStopped,false);
+  assert(f.calls.includes('revoke'));assert.equal(f.backend.closing,true);
+});
+
+test('cancelling the combined window neither grants nor leaves optional approval locked',async t=>{
+  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult=false;
+  assert.equal((await f.invoke()).canceled,true);assert.deepEqual(f.calls,['confirm']);
+  f.state.confirmResult={main:true,judge:false};assert.deepEqual(await f.invoke(),{ok:true});
+  assert.deepEqual(f.calls,['confirm','confirm','authorize']);
 });

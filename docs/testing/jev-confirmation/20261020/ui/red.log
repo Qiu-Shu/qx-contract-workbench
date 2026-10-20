@@ -1,0 +1,165 @@
+✔ approval creates one isolated modal and only its exact main frame can read or explicitly decide (9.7989ms)
+✔ approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision (1.6656ms)
+✔ approval stale guard, parent close, Escape and bounded timeout cancel without a decision (4.8834ms)
+✔ approval default cancel focus preserves the initial top viewport (1.5679ms)
+✔ approval page renders full untrusted text as text and defaults focus to cancel (1.2589ms)
+✔ approval page never confirms while loading and explicit confirm is sent only once (1.0233ms)
+✔ approval preload exposes only two dedicated calls and refuses truthy decision values (0.8904ms)
+✔ approval still settles cancellation if optional session cleanup fails (2.1009ms)
+✔ approval validates the display boundary and admits the full 65536-byte text without truncation (1.404ms)
+✔ approval blocks navigation, all external requests and cancels a crashed renderer (1.164ms)
+✔ approval page loading failure and page departure never enable or dispatch confirmation (1.6126ms)
+✖ approval presents optional Judge separately and accepts only the displayed exact selection (1.6694ms)
+✖ unavailable Judge cannot be forged as selected and cancellation remains independent (1.6193ms)
+✖ Judge display schema rejects missing fields, misleading budgets and surplus configuration (9.1364ms)
+✖ legacy display cannot accept a new Judge selection and successive windows keep independent choices (1.8755ms)
+✖ Judge page starts unselected, discloses the separate recipient and exact budget, and returns explicit choices (1.6054ms)
+✖ unavailable Judge remains unselected and disabled without blocking main confirmation (1.2815ms)
+✖ malformed or late Judge display never enables confirmation or restores a selection (1.2371ms)
+✖ preload forwards only booleans or exact Main and Judge selections (0.8148ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 11
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 106.6078
+
+✖ failing tests:
+
+test at desktop\tests\model-approval-window.test.cjs:188:1
+✖ approval presents optional Judge separately and accepts only the displayed exact selection (1.6694ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:191:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval-window.test.cjs:205:1
+✖ unavailable Judge cannot be forged as selected and cancellation remains independent (1.6193ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:208:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval-window.test.cjs:216:1
+✖ Judge display schema rejects missing fields, misleading budgets and surplus configuration (9.1364ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert(win)
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:230:32)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval-window.test.cjs:236:1
+✖ legacy display cannot accept a new Judge selection and successive windows keep independent choices (1.8755ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:238:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval-window.test.cjs:246:1
+✖ Judge page starts unselected, discloses the separate recipient and exact budget, and returns explicit choices (1.6054ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert(checkbox)
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:248:101)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval-window.test.cjs:263:1
+✖ unavailable Judge remains unselected and disabled without blocking main confirmation (1.2815ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert(checkbox)
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:264:109)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval-window.test.cjs:273:1
+✖ malformed or late Judge display never enables confirmation or restores a selection (1.2371ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:277:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval-window.test.cjs:285:1
+✖ preload forwards only booleans or exact Main and Judge selections (0.8148ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:290:42)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

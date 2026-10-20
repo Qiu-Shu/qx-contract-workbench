@@ -3,13 +3,22 @@ const {pathToFileURL}=require('node:url');
 const {randomUUID}=require('node:crypto');
 
 function approvalDetails(value) {
-  if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==4||
+  const budget=value=>typeof value==='string'&&/^(0|[1-9]\d{0,6})(\.\d{1,12})?$/.test(value)&&
+    /[1-9]/.test(value)&&(Number(value.split('.')[0])<1000000||/^1000000(?:\.0{1,12})?$/.test(value));
+  if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==(Object.hasOwn(value,'judge')?5:4)||
       !['content','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
       typeof value.content!=='string'||!value.content.trim()||Buffer.byteLength(value.content,'utf8')>65536||
       !['deepseek-flash','deepseek-v4-pro'].includes(value.model)||value.recipient!=='DeepSeek（api.deepseek.com）'||
-      typeof value.max_total_usd!=='string'||!/^(0|[1-9]\d{0,6})(\.\d{1,12})?$/.test(value.max_total_usd)||
-      !(Number(value.max_total_usd)>0&&Number(value.max_total_usd)<=1000000))return null;
-  return {content:value.content,model:value.model,max_total_usd:value.max_total_usd,recipient:value.recipient};
+      !budget(value.max_total_usd))return null;
+  const snapshot={content:value.content,model:value.model,max_total_usd:value.max_total_usd,recipient:value.recipient};
+  if(Object.hasOwn(value,'judge')){
+    const judge=value.judge;
+    if(!judge||typeof judge!=='object'||Array.isArray(judge)||Object.keys(judge).length!==2||
+        !Object.hasOwn(judge,'available')||!Object.hasOwn(judge,'max_total_usd')||typeof judge.available!=='boolean'||
+        (judge.available?!budget(judge.max_total_usd):judge.max_total_usd!==null))return null;
+    snapshot.judge={available:judge.available,max_total_usd:judge.max_total_usd};
+  }
+  return snapshot;
 }
 
 function createModelApprovalWindow({BrowserWindow,ipcMain,session}) {
@@ -29,7 +38,7 @@ function createModelApprovalWindow({BrowserWindow,ipcMain,session}) {
       for(const clear of ['clearStorageData','clearCache'])
         try {void job.isolated[clear]().catch(()=>{});}catch{}
     }
-    job.resolve(approved===true);
+    job.resolve(approved);
   }
   function allowed(event) {
     const job=active,win=job?.window;
@@ -43,8 +52,18 @@ function createModelApprovalWindow({BrowserWindow,ipcMain,session}) {
     active.presented=true;return active.details;
   });
   ipcMain.handle('desktop:approval-decision',(event,value,...extra)=>{
-    if(extra.length||typeof value!=='boolean'||!allowed(event)||(value&&!active.presented))return false;
-    finish(active,value);return true;
+    if(extra.length||!allowed(event))return false;
+    let selection=value;
+    if(Object.hasOwn(active.details,'judge')){
+      if(value!==false){
+        if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==2||
+            !Object.hasOwn(value,'main')||!Object.hasOwn(value,'judge')||value.main!==true||
+            typeof value.judge!=='boolean'||(value.judge&&!active.details.judge.available))return false;
+        selection={main:true,judge:value.judge};
+      }
+    }else if(typeof value!=='boolean')return false;
+    if(selection!==false&&!active.presented)return false;
+    finish(active,selection);return true;
   });
   function confirm({parent,details,guard}) {
     const snapshot=approvalDetails(details);
@@ -59,7 +78,7 @@ function createModelApprovalWindow({BrowserWindow,ipcMain,session}) {
         isolated.setPermissionCheckHandler(()=>false);
         isolated.webRequest.onBeforeRequest({urls:['<all_urls>']},(request,callback)=>callback({cancel:!assets.has(request.url)}));
         listen(isolated,'will-download',event=>event.preventDefault());
-        const win=new BrowserWindow({parent,modal:true,width:640,height:540,minWidth:640,minHeight:540,
+        const win=new BrowserWindow({parent,modal:true,width:640,height:snapshot.judge?700:540,minWidth:640,minHeight:540,
           show:false,title:'确认本次发送 · 群兴法律工作台',backgroundColor:'#f2f5f8',autoHideMenuBar:true,
           webPreferences:{preload:path.join(__dirname,'model-approval-preload.cjs'),session:isolated,
             sandbox:true,contextIsolation:true,nodeIntegration:false,webSecurity:true,webviewTag:false}});job.window=win;

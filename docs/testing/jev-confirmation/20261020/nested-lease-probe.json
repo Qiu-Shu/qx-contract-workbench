@@ -1,0 +1,14 @@
+{
+  "probe": "nested-lease-outer-final-guard-failure",
+  "result": {
+    "ok": false,
+    "code": "STATE_CONFLICT"
+  },
+  "calls": [
+    "grant synthetic_main",
+    "grant synthetic_inner",
+    "revoke synthetic_main"
+  ],
+  "remainingGrantCount": 1,
+  "limitation": "Synthetic guard transition and in-memory ACKs; not evidence of an ordinary Electron event-loop race."
+}

@@ -1,0 +1,101 @@
+{
+  "electron": "44.8.0",
+  "events": [
+    "actual_will_quit"
+  ],
+  "backend_configs": [
+    {
+      "keys": [
+        "data_parent",
+        "password",
+        "username"
+      ],
+      "contains_model_credential": false
+    }
+  ],
+  "windows": [
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    }
+  ],
+  "page_loads": 7,
+  "page_url": "http://127.0.0.1:52183/assistant/0e85c977-87d7-4468-a5f6-342cd2c05a89",
+  "ready": {
+    "port": 52183,
+    "pid": 20172
+  },
+  "model_controls": [
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "deepseek-flash"
+    },
+    {
+      "operation": "authorize",
+      "ok": true,
+      "status": "authorized"
+    }
+  ],
+  "judge_controls": [
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "jev-1.13.0",
+      "has_config_version": true
+    }
+  ],
+  "backend_exit": {
+    "code": 0,
+    "signal": null
+  },
+  "backend_exits": [
+    {
+      "pid": 20172,
+      "code": 0,
+      "signal": null
+    }
+  ]
+}

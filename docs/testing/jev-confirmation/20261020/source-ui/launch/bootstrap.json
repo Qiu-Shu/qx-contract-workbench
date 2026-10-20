@@ -1,0 +1,118 @@
+{
+  "electron": "44.8.0",
+  "events": [
+    "actual_will_quit"
+  ],
+  "backend_configs": [
+    {
+      "keys": [
+        "data_parent",
+        "password",
+        "username"
+      ],
+      "contains_model_credential": false
+    }
+  ],
+  "windows": [
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    }
+  ],
+  "synthetic_judge_budget": true,
+  "page_loads": 8,
+  "page_url": "http://127.0.0.1:52247/assistant/ac05b632-381c-4584-b1ae-3a432a772833",
+  "ready": {
+    "port": 52247,
+    "pid": 25164
+  },
+  "model_controls": [
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "deepseek-flash"
+    },
+    {
+      "operation": "authorize",
+      "ok": true,
+      "status": "authorized"
+    },
+    {
+      "operation": "authorize",
+      "ok": true,
+      "status": "authorized"
+    }
+  ],
+  "judge_controls": [
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "jev-1.13.0",
+      "has_config_version": true
+    },
+    {
+      "operation": "authorize",
+      "ok": true,
+      "status": "authorized"
+    }
+  ],
+  "backend_exit": {
+    "code": 0,
+    "signal": null
+  },
+  "backend_exits": [
+    {
+      "pid": 25164,
+      "code": 0,
+      "signal": null
+    }
+  ]
+}

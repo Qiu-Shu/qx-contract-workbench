@@ -43,7 +43,7 @@ test('unknown judge protocol is fatal before readiness',t=>{const f=pipe(t,{judg
 test('judge configure uses fixed trusted model without authorization or main calls',async()=>{
   const f=fixture();assert.equal(f.runtime.status().runtime.state,'unconfigured');
   assert.equal((await f.runtime.configure('jev-1.13.0')).ok,true);
-  assert.equal(f.runtime.withAuthorization,undefined);
+  assert.equal(typeof f.runtime.withAuthorization,'function');
   assert.deepEqual(f.calls.map(x=>x[0]),['disableJudge','secret','configureJudge']);
   assert.deepEqual(f.calls[2][1],{secret,config:{enabled:true,protocol_version:'typesafe-systemone-v1',model:'jev-1.13.0',max_input_bytes:65536,max_response_bytes:262144,timeout_ms:2000}});
   assert.deepEqual(f.runtime.status(),{ok:true,runtime:{state:'configured',model:'jev-1.13.0'}});

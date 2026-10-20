@@ -3,6 +3,7 @@
 Uses the existing actual-main observer. All accounts/text/credentials are synthetic.
 No test provider is packaged and the frozen path never submits an approved POST.
 """
+import argparse
 import hashlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
@@ -21,7 +22,9 @@ from playwright.sync_api import Error as BrowserError, expect, sync_playwright
 
 PROJECT = Path(__file__).resolve().parents[2]
 SECRET = 'synthetic-native-secret-approval-20261019'
+JUDGE_SECRET = 'synthetic-native-secret-judge-approval-20261020'
 CONTENT = '独立合成咨询：虚构客户希望核对交货日期，尚未核实事实。'
+JUDGE_CONTENT = '另一份独立合成咨询：虚构客户询问返还样品的步骤，陈述与依据仍待律师核验。'
 LONG = '<script>禁止执行合成标记</script>\n' + '独立合成材料；客户陈述尚未核实，需要律师核对时间及原件。\n' * 110
 
 
@@ -34,24 +37,54 @@ def hashes():
 
 
 def main():
-    target = Path(sys.argv[1]).resolve(); target.mkdir(parents=True, exist_ok=False)
-    frozen = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else None
+    parser = argparse.ArgumentParser()
+    parser.add_argument('target', type=Path)
+    parser.add_argument('legacy_frozen', nargs='?', type=Path)
+    parser.add_argument('--frozen', type=Path)
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument('--judge', action='store_true')
+    modes.add_argument('--judge-closed', action='store_true')
+    options = parser.parse_args()
+    if options.frozen and options.legacy_frozen: parser.error('choose one frozen argument')
+    target = options.target.resolve(); target.mkdir(parents=True, exist_ok=False)
+    frozen = options.frozen or options.legacy_frozen
+    if frozen: frozen = frozen.resolve(); assert frozen.is_file()
+    judge_mode = options.judge or options.judge_closed
     data = target/'中文 合成确认资料'; launch = target/'launch'; launch.mkdir()
-    report = {'status': 'running', 'checks': [], 'source_before': hashes(), 'real_model_calls': 0,
+    report = {'status': 'running', 'checks': [], 'source_before': hashes(), 'real_model_execution': 'not_requested',
         'backend': 'frozen_grant_without_send' if frozen else 'source_loopback', 'exit_code': 1,
-        'page_errors': [], 'requests': []}
+        'page_errors': [], 'requests': [], 'judge_mode': 'synthetic_budget' if options.judge else
+            'production_default_closed' if options.judge_closed else 'legacy_main',
+        'frozen_network_observation': 'not_instrumented' if frozen else None}
     if frozen: report['exe_sha256'] = hashlib.sha256(frozen.read_bytes()).hexdigest()
     posts = []
     class Provider(BaseHTTPRequestHandler):
         def log_message(self, *_): pass
         def do_POST(self):
             try:
+                if self.path == '/v1/systemone':
+                    assert options.judge and not frozen
+                    assert self.headers['Authorization'] == 'Bearer '+JUDGE_SECRET
+                    body = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
+                    assert body['model'] == 'jev-1.13.0'
+                    assert body['state'] == {'latest_request': JUDGE_CONTENT, 'selected_skill': None}
+                    assert list(body['questions']) == ['primary_intent']
+                    posts.append({'provider': 'judge', 'content_sha256': hashlib.sha256(JUDGE_CONTENT.encode()).hexdigest()})
+                    probabilities = dict.fromkeys(('client_reply', 'material_organize', 'contract_review',
+                        'content_draft', 'legal_research', 'unknown'), 0)
+                    probabilities['client_reply'] = 1
+                    response = {'model': 'jev-1.13.0', 'answers': {'primary_intent': {'type': 'choice',
+                        'choice': 'client_reply', 'probabilities': probabilities, 'confidence': 1}},
+                        'usage': {'input_tokens': 25, 'output_tokens': 2}}
+                    self.send_response(200); self.send_header('Content-Type', 'application/json')
+                    self.send_header('x-typesafe-request-id', 'synthetic-ui-judge'); self.end_headers()
+                    self.wfile.write(json.dumps(response).encode()); return
                 assert self.path == '/chat/completions'
                 assert self.headers['Authorization'] == 'Bearer '+SECRET
                 body = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
                 source = json.loads(body['messages'][1]['content'])
-                assert source['content'] == CONTENT
-                posts.append({'content_sha256': hashlib.sha256(CONTENT.encode()).hexdigest()})
+                assert source['content'] in ((CONTENT, JUDGE_CONTENT) if options.judge else (CONTENT,))
+                posts.append({'provider': 'main', 'content_sha256': hashlib.sha256(source['content'].encode()).hexdigest()})
                 candidate = {'text': '独立合成候选：交货事项仍需律师核对。', 'citations': [
                     {'message_id': source['message_id'], 'quote_sha256': source['quote_sha256']}]}
                 response = {'id': 'synthetic-native-confirmation', 'model': 'deepseek-flash',
@@ -69,11 +102,17 @@ def main():
     try:
         env = {**os.environ, 'QX_PROBE_EVIDENCE': str(launch), 'QX_DESKTOP_DATA_PARENT': str(data),
             'PYTHONPATH': str(PROJECT/'src')}; env.pop('ELECTRON_RUN_AS_NODE', None)
+        for key in ('QX_PROBE_FROZEN_BACKEND', 'QX_PROBE_SETTINGS_ENTRY', 'QX_PROBE_LOOPBACK',
+                    'QX_PROBE_JUDGE_LOOPBACK', 'QX_PROBE_JUDGE_BUDGET', 'QX_PROBE_SETTINGS_NETWORK'):
+            env.pop(key, None)
+        if options.judge: env['QX_PROBE_JUDGE_BUDGET'] = 'synthetic-judge-budget-v1'
         if frozen: env['QX_PROBE_FROZEN_BACKEND'] = str(frozen)
         else:
-            env.update(QX_PROBE_SETTINGS_ENTRY=str(PROJECT/'tests/helpers/synthetic_native_approval_entry.py'),
+            entry = 'synthetic_native_control_entry.py' if judge_mode else 'synthetic_native_approval_entry.py'
+            env.update(QX_PROBE_SETTINGS_ENTRY=str(PROJECT/'tests/helpers'/entry),
                 QX_PROBE_LOOPBACK=f'http://127.0.0.1:{server.server_port}/chat/completions',
                 QX_PROBE_SETTINGS_NETWORK=str(launch/'network-tripwire.json'))
+            if judge_mode: env['QX_PROBE_JUDGE_LOOPBACK'] = f'http://127.0.0.1:{server.server_port}/v1/systemone'
         command = [str(PROJECT/'desktop/node_modules/electron/dist/electron.exe'),
             str(PROJECT/'desktop/tests/model-credentials-acceptance.cjs'), '--remote-debugging-port=0',
             '--remote-debugging-address=127.0.0.1']
@@ -130,6 +169,20 @@ def main():
                 command_native('menu', label='主模型设置…'); expect(page.locator('#model-settings')).to_be_visible()
             def capability():
                 return page.evaluate("async()=>{const id=location.pathname.split('/').pop();return (await fetch('/api/assistant/conversations/'+id+'/generation-capability')).json()}")
+            def judge_choice(window):
+                if not judge_mode: return
+                expect(window.locator('#approval-judge')).to_be_visible()
+                expect(window.locator('#approval-judge-select')).not_to_be_checked()
+                expect(window.locator('#approval-judge')).to_contain_text('TypeSafe（api.typesafe.ai）')
+                expect(window.locator('#approval-judge')).to_contain_text('同一完整文字')
+                if options.judge:
+                    expect(window.locator('#approval-judge-select')).to_be_enabled()
+                    expect(window.locator('#approval-judge-budget')).to_contain_text('USD 0.02')
+                    expect(window.locator('#approval-judge-budget')).to_contain_text('不是供应商收费上限')
+                    expect(window.locator('#approval-judge-budget')).to_contain_text('实际费用尚未核对')
+                else:
+                    expect(window.locator('#approval-judge-select')).to_be_disabled()
+                    expect(window.locator('#approval-judge-budget')).to_contain_text('仍可确认主模型发送')
             expect(page.locator('#setup')).to_be_visible()
             page.locator('#username').fill('合成确认律师'); page.locator('#password').fill('fixture123'); page.locator('#confirm').fill('fixture123')
             page.get_by_role('button', name='建立账户并打开工作台').click()
@@ -140,10 +193,15 @@ def main():
             settings(); page.locator('#model-secret').fill(SECRET); page.locator('#model-save').click()
             expect(page.locator('#model-status')).to_contain_text('已保存'); expect(page.locator('#model-configure')).to_be_enabled()
             page.locator('#model-configure').click(); expect(page.locator('#model-runtime-status')).to_contain_text('已配置')
+            if judge_mode:
+                page.locator('#judge-secret').fill(JUDGE_SECRET); page.locator('#judge-save').click()
+                expect(page.locator('#judge-status')).to_contain_text('已保存')
+                page.locator('#judge-configure').click(); expect(page.locator('#judge-runtime-status')).to_contain_text('已配置')
             page.locator('#resume').click(); expect(page.locator('#send')).to_be_enabled()
             assert capability()['state'] == 'unapproved' and not posts
-            passed('configured_saved_draft_requires_native_confirmation_without_network_call')
+            passed('configured_saved_draft_requires_native_confirmation_without_observed_loopback_post')
             page.locator('#send').click(); approval = modal()
+            judge_choice(approval)
             assert approval.locator('#approval-content').inner_text() == LONG
             assert approval.locator('script').count() == 1, 'CONTENT_MUST_REMAIN_TEXT'
             expect(approval.locator('#approval-budget')).to_contain_text('0.024576')
@@ -162,6 +220,7 @@ def main():
             assert not posts; assert capability()['state'] == 'unapproved'
             passed('full_text_literal_markup_small_window_scales_and_default_cancel_preserve_draft')
             save(CONTENT); expect(page.locator('#send')).to_be_enabled(); page.locator('#send').click(); approval = modal()
+            judge_choice(approval)
             changed = page.evaluate("""async()=>{const url='/api/assistant/conversations/'+location.pathname.split('/').pop();
               const v=await(await fetch(url)).json();const csrf=decodeURIComponent(document.cookie.split('; ').find(x=>x.startsWith('qx_csrf=')).split('=')[1]);
               return (await fetch(url+'/draft',{method:'PUT',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},
@@ -177,37 +236,93 @@ def main():
                 page.evaluate("""async()=>{const id=location.pathname.split('/').pop();const cap=await(await fetch('/api/assistant/conversations/'+id+'/generation-capability')).json();
                   window.probeApproval=null;desktopAssistant.authorizeGeneration({conversation_id:id,request_id:crypto.randomUUID(),expected_scope:cap.scope,
                     expected_composer_revision:cap.composer_revision,content_sha256:cap.content_sha256}).then(x=>window.probeApproval=x);}""")
-                approval=modal(); closing_action(approval,lambda:approval.locator('#approval-confirm').click())
+                approval=modal(); judge_choice(approval)
+                if options.judge: approval.locator('#approval-judge-select').check()
+                command_native('capture', target='approval', name='approval-frozen-selection.png')
+                closing_action(approval,lambda:approval.locator('#approval-confirm').click())
                 page.wait_for_function('()=>window.probeApproval!==null'); assert page.evaluate('()=>window.probeApproval') == {'ok': True}
                 assert capability()['state'] == 'ready' and not posts
-                settings(); page.locator('#model-disable').click(); expect(page.locator('#model-runtime-status')).to_contain_text('未配置')
+                settings()
+                if judge_mode:
+                    page.locator('#judge-disable').click(); expect(page.locator('#judge-runtime-status')).to_contain_text('未配置')
+                page.locator('#model-disable').click(); expect(page.locator('#model-runtime-status')).to_contain_text('未配置')
                 page.locator('#resume').click(); assert capability()['state'] == 'unconfigured'
-                passed('frozen_private_authorization_consumes_confirmation_then_disable_without_any_provider_post')
+                passed('frozen_private_authorization_consumes_confirmation_then_disable_without_generation_submission')
             else:
-                page.locator('#send').click(); approval=modal(); closing_action(approval,lambda:approval.locator('#approval-confirm').click())
+                page.locator('#send').click(); approval=modal(); judge_choice(approval)
+                command_native('capture', target='approval', name='approval-main-only.png')
+                closing_action(approval,lambda:approval.locator('#approval-confirm').click())
                 expect(page.locator('.generation-text')).to_contain_text('独立合成候选', timeout=45000)
                 assert len(posts) == 1; expect(page.locator('#composer')).to_have_value('')
                 page.reload(); expect(page.locator('.generation-text')).to_contain_text('独立合成候选')
                 assert len(posts) == 1
                 passed('one_confirmed_send_reaches_existing_queue_loopback_receipt_and_history_reload_without_resend')
+                if judge_mode:
+                    assert [p['provider'] for p in posts] == ['main']
+                    passed('independent_judge_configuration_does_not_send_when_unselected_or_default_closed')
+                if options.judge:
+                    save(JUDGE_CONTENT); page.locator('#send').click(); approval=modal(); judge_choice(approval)
+                    assert approval.locator('#approval-content').inner_text() == JUDGE_CONTENT
+                    approval.locator('#approval-judge-select').check()
+                    command_native('capture', target='approval', name='approval-dual-selection.png')
+                    closing_action(approval,lambda:approval.locator('#approval-confirm').click())
+                    expect(page.locator('.generation-text')).to_have_count(2, timeout=45000)
+                    expect(page.locator('#composer')).to_have_value('')
+                    assert [p['provider'] for p in posts] == ['main', 'judge', 'main']
+                    page.reload(); expect(page.locator('.generation-text')).to_have_count(2)
+                    assert [p['provider'] for p in posts] == ['main', 'judge', 'main']
+                    command_native('capture', name='assistant-two-synthetic-results.png')
+                    passed('explicit_dual_selection_runs_judge_then_main_once_and_reload_does_not_resend')
             page.close(); report['electron_exit']=proc.wait(timeout=45); assert report['electron_exit']==0
         report['bootstrap']=json.loads((launch/'bootstrap.json').read_text('utf-8'))
         assert all(w=={'nodeIntegration':False,'contextIsolation':True,'sandbox':True,'webSecurity':True} for w in report['bootstrap']['windows'])
         assert report['page_errors']==[],report['page_errors']
+        assert not report.get('provider_error'), 'UNEXPECTED_SYNTHETIC_PROVIDER_REQUEST'
         assert all(r['url'].startswith(('file:','http://127.0.0.1:')) for r in report['requests'])
         report['generation_posts']=sum(r['method']=='POST' and r['url'].endswith('/generations') for r in report['requests'])
-        assert report['generation_posts']==(0 if frozen else 1)
+        main_count = 0 if frozen else 2 if options.judge else 1
+        judge_count = 1 if options.judge and not frozen else 0
+        assert report['generation_posts']==main_count
+        report['provider_order'] = [p['provider'] for p in posts]
+        report['provider_posts'] = {'main': sum(p['provider']=='main' for p in posts),
+            'judge': sum(p['provider']=='judge' for p in posts)}
+        assert report['provider_posts'] == {'main': main_count, 'judge': judge_count}
+        assert bool(report['bootstrap'].get('synthetic_judge_budget')) == options.judge
+        judge_grants = [c for c in report['bootstrap'].get('judge_controls', []) if c['operation']=='authorize']
+        assert len(judge_grants) == (1 if options.judge else 0), judge_grants
+        assert all(c['ok'] and c['status']=='authorized' for c in judge_grants)
+        if frozen:
+            assert report['bootstrap']['model_controls'][-1] == {'operation': 'disable', 'ok': True, 'status': 'disabled'}
+            if judge_mode:
+                assert report['bootstrap']['judge_controls'][-1] == {'operation': 'disable', 'ok': True, 'status': 'disabled'}
         if not frozen:
             report['network']=json.loads((launch/'network-tripwire.json').read_text('utf-8'))
-            assert report['network']=={'loopback_calls':1,'external_requests':0}
-        with sqlite3.connect(data/'workspaces/main/workbench.db') as conn:
+            assert report['network'] == ({'main': main_count, 'judge': judge_count, 'blocked_other_httpx_requests': 0}
+                if judge_mode else {'loopback_calls': 1, 'external_requests': 0})
+        database = data/'workspaces/main/workbench.db'
+        with sqlite3.connect(database.as_uri()+'?mode=ro', uri=True) as conn:
+            conn.execute('PRAGMA query_only=ON')
             assert conn.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
             report['counts']={n:conn.execute('SELECT COUNT(*) FROM '+n).fetchone()[0] for n in
-                ('assistant_messages','assistant_model_attempts','assistant_model_receipts','assistant_model_outputs')}
-            assert set(report['counts'].values())==({0} if frozen else {1}),report['counts']
+                ('assistant_messages','assistant_runs','assistant_model_attempts','assistant_model_receipts','assistant_model_outputs',
+                 'assistant_judge_attempts','assistant_judge_receipts','assistant_judge_decisions')}
+            assert all(count == (judge_count if name.startswith('assistant_judge_') else main_count)
+                for name, count in report['counts'].items()), report['counts']
+            assert [r[0] for r in conn.execute('SELECT content FROM assistant_messages ORDER BY source_revision')] == (
+                [] if frozen else [CONTENT, JUDGE_CONTENT] if options.judge else [CONTENT])
+            if judge_count:
+                run_id = conn.execute('SELECT run_id FROM assistant_judge_attempts').fetchone()[0]
+        if judge_count:
+            checked = subprocess.run([sys.executable, '-X', 'utf8', str(PROJECT/'tests/helpers/inspect_native_control_records.py'),
+                str(database), '--run', run_id, '--hash', hashlib.sha256(JUDGE_CONTENT.encode()).hexdigest(),
+                '--main-count', '2'], cwd=PROJECT, env={**os.environ, 'PYTHONPATH': str(PROJECT/'src')},
+                capture_output=True, text=True, encoding='utf-8', check=True)
+            report['judge_ledger'] = json.loads(checked.stdout)
+            passed('same_run_exact_source_hash_unknown_cost_internal_unverified_judge_decision')
         for p in data.rglob('*'):
-            if p.is_file(): assert SECRET.encode() not in p.read_bytes(),'PLAINTEXT_FILE'
-        passed('protected_credentials_no_external_requests_owned_windows_and_exact_database_counts')
+            if p.is_file():
+                raw=p.read_bytes(); assert SECRET.encode() not in raw and JUDGE_SECRET.encode() not in raw,'PLAINTEXT_FILE'
+        passed('protected_credentials_owned_windows_and_exact_database_counts')
         report['source_after']=hashes(); assert report['source_before']==report['source_after'],'SOURCE_DRIFT'
         report.update(status='passed',exit_code=0,loopback_posts=len(posts))
     except BaseException as error:
@@ -220,7 +335,7 @@ def main():
             proc.terminate(); proc.wait(timeout=20)
         server.shutdown();server.server_close()
         for name,lines in logs.items():
-            raw=''.join(lines);assert SECRET not in raw,'PLAINTEXT_LOG'
+            raw=''.join(lines);assert SECRET not in raw and JUDGE_SECRET not in raw,'PLAINTEXT_LOG'
             (launch/f'electron-{name}.txt').write_text(raw,encoding='utf-8')
         (target/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({'status':report['status'],'checks':len(report['checks']),'input_files':len(report['source_before'])}))

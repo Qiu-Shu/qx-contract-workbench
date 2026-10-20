@@ -1,0 +1,117 @@
+{
+  "electron": "44.8.0",
+  "events": [
+    "actual_will_quit"
+  ],
+  "backend_configs": [
+    {
+      "keys": [
+        "data_parent",
+        "password",
+        "username"
+      ],
+      "contains_model_credential": false
+    }
+  ],
+  "windows": [
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    },
+    {
+      "nodeIntegration": false,
+      "contextIsolation": true,
+      "sandbox": true,
+      "webSecurity": true
+    }
+  ],
+  "synthetic_judge_budget": true,
+  "page_loads": 8,
+  "page_url": "http://127.0.0.1:52397/assistant/8d235340-6f6d-4030-aeb3-815851dd38fe",
+  "ready": {
+    "port": 52397,
+    "pid": 29688
+  },
+  "model_controls": [
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "deepseek-flash"
+    },
+    {
+      "operation": "authorize",
+      "ok": true,
+      "status": "authorized"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    }
+  ],
+  "judge_controls": [
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    },
+    {
+      "operation": "configure",
+      "ok": true,
+      "status": "configured",
+      "model": "jev-1.13.0",
+      "has_config_version": true
+    },
+    {
+      "operation": "authorize",
+      "ok": true,
+      "status": "authorized"
+    },
+    {
+      "operation": "disable",
+      "ok": true,
+      "status": "disabled"
+    }
+  ],
+  "backend_exit": {
+    "code": 0,
+    "signal": null
+  },
+  "backend_exits": [
+    {
+      "pid": 29688,
+      "code": 0,
+      "signal": null
+    }
+  ]
+}

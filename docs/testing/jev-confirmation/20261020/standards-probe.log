@@ -1,0 +1,46 @@
+{
+  "independent_probe_count": 4,
+  "reports": [
+    {
+      "case": "default-closed-budget",
+      "callbacks": 1,
+      "result": {
+        "ok": true
+      },
+      "calls": []
+    },
+    {
+      "case": "unawaited-known-denial",
+      "callbacks": 1,
+      "result": {
+        "ok": true
+      },
+      "calls": [
+        "authorize"
+      ]
+    },
+    {
+      "case": "unawaited-unknown-ack",
+      "callbacks": 1,
+      "result": {
+        "ok": false,
+        "code": "STATE_CONFLICT"
+      },
+      "calls": [
+        "authorize",
+        "stop-old"
+      ]
+    },
+    {
+      "case": "late-ack-replacement",
+      "result": {
+        "ok": false,
+        "code": "STATE_CONFLICT"
+      },
+      "calls": [
+        "authorize",
+        "revoke"
+      ]
+    }
+  ]
+}

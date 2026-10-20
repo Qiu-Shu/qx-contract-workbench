@@ -1,0 +1,48 @@
+{
+  "task_id": "wb-e09930c8083b",
+  "state": "completed",
+  "answer": "已只读 4 份文件（`2026-10-20-jev-native-handoff.md`、`model-approval.html/.js/.cjs`），未写文件、未运行、未联网、未读其他文件。结论：**现有确认窗口是\"单一 DeepSeek 主发送\"专用，Jev/TypeSafe 辅助入口完全未实现**，不能直接\"复用\"而不加独立辅助区与独立授权链路。以下 5 条按证据给出。\n\n## 5 条具体边界 / 建议\n\n**1. 现有窗口是单一接收方硬编码，无\"用途/辅助\"字段 —— 复用需新增独立辅助区**\n- 证据：`model-approval.html:7` 只有 `接收方/模型/费用上限` 三项；`model-approval.js:20` 硬校验 `value.recipient!=='DeepSeek（api.deepseek.com）'`（非 DeepSeek 直接 throw），`:4` 模型映射只含 deepseek 两项；`model-approval.cjs:114` 硬编码 `recipient:'DeepSeek（api.deepseek.com）'`。\n- 建议：窗口内新增\"辅助判断（可选）\"区，独立显示 TypeSafe 接收方 + 用途（primary_intent）+ 默认未勾选 checkbox，与主发送区并排，不合并成一个按钮。\n\n**2. 授权链路只有 Main 的 `lease.authorize`，没有 `authorize_judge`/TypeSafe policy 分支 —— 直接复用会把\"主许可\"扩大成\"Jev 许可\"**\n- 证据：`model-approval.cjs:119-121` 只调用 `lease.authorize({basis:{request_id, expected_scope, expected_composer_revision, content_sha256}})`；`validInput`（`:17-26`）只校验这 5 个主 basis 字段，无 `purpose`、无 Jev `config_version`、无辅助勾选态。\n- 计划 `handoff.md:72-82` 要求的独立 Jev basis 与 `authorize_judge` 六步算法（含 `purpose=primary_intent`、`jev_codec.input_hash`、独立 `JudgePolicy` + `JudgeRuntime.grant`）在当前文件里都不存在。\n- 建议：辅助走独立 `authorize_judge` + `JudgeRuntime.grant`，与主 `lease.authorize` 完全分离；不能把辅助标志塞进现有 authorize 调用。\n\n**3. 现有窗口把 `max_total_usd` 标为\"费用上限\"，Jev 沿用会误称\"最高收费\"**\n- 证据：`model-approval.html:7` `<dt>费用上限</dt>`；`model-approval.js:24` 显示 `USD ${value.max_total_usd}（本次一次调用）`。\n- 计划 `handoff.md:103-107` 明确：预留金额不是供应商硬上限、无账单对账，禁止写\"本次最高收费\"。\n- 建议：辅助区预算文案改为\"预留 X 美元预算；这不是供应商收费上限，实际费用尚未核对\"。\n\n**4. 单按钮 confirm 是\"全量二选一\"，无法表达\"默认不选辅助、不勾选辅助仍继续主流程\"**\n- 证据：`model-approval.js:14-15` cancel/confirm 二元；`decide(value)`（`:6-13`）一次性 true/false，无 main/aux 区分。\n- 风险：若把辅助挂到同一 confirm 上，会出现\"不勾辅助却连带取消主流程\"或\"确认主=自动勾辅助\"两种错误，都违反\"未选辅助不取消主流程\"。\n- 建议：两个独立 consent 状态（主 / 辅），`decide` 区分 main、aux 两个布尔，`aux=false` 只跳过辅助、继续主流程。\n\n**5. 代码层没有\"真实账户/价目/可接受预算\"门禁，纯靠装配 —— 易把合成回环误当真实可用**\n- 证据：`model-approval.cjs` 全篇无任何\"真实账户已确认 / 价目来源 / 可接受预算\"的 gate 字段；计划 `handoff.md:107` 要求真实入口在此三者未落实前保持关闭、本轮预留只是合成值。\n- 建议：`authorize_judge` 前显式校验一个\"已确认账户许可/价目来源/可接受预算\"的装配标志，缺任一即拒辅助（只影响辅助，不影响主流程），不把任意预留常量当正式价格。\n\n（正面一处，供复用参考：`model-approval.html:3` 的 CSP `connect-src 'none'` 使确认窗口自身无法联网，真实发送仍须经受控后端，这条边界应保留并同样作用于辅助区。）\n\n## 辅助许可提示文案（供中文律师）\n\n> 可选：将这段文字额外发送给 TypeSafe，仅用于判断首个处理流程（分类建议，不产生正式法律结论）。程序将预留 X 美元预算；这不是供应商收费上限，实际费用尚未核对。不勾选不会影响本次已确认的主流程；勾选后的结果仅供内部参考，仍需律师核对。\n\n**声明**：以上为对这 4 份文件的静态阅读结论，未运行任何测试、未联网、未读目录外文件；Jev 辅助链路（独立接收方/用途/默认未勾选/独立授权）属\"尚未实现\"，不是现有 bug。",
+  "stop_reason": "end_turn",
+  "error": null,
+  "permissions": [
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "D:\\Documents\\ChatGPT\\律所项目\\docs\\plans\\2026-10-20-jev-native-handoff.md"
+    },
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "D:\\Documents\\ChatGPT\\律所项目\\desktop\\model-approval.html"
+    },
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "D:\\Documents\\ChatGPT\\律所项目\\desktop\\model-approval.js"
+    },
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "D:\\Documents\\ChatGPT\\律所项目\\desktop\\model-approval.cjs"
+    }
+  ],
+  "tool_events": [
+    {
+      "tool": "Read",
+      "status": "completed"
+    },
+    {
+      "tool": "Read",
+      "status": "completed"
+    },
+    {
+      "tool": "Read",
+      "status": "completed"
+    },
+    {
+      "tool": "Read",
+      "status": "completed"
+    }
+  ],
+  "parent_disposition": "本轮实机连接成功并完成4次只读；材料仅含既有确认UI与计划，未读后端，不能将其“辅助入口完全未实现”扩为D1后端不存在。采用独立接收方/目的/预算与默认未选建议；仍按批准方案使用同窗单确认按钮和独立辅助复选框。未按建议新增通用布尔审批后门。"
+}

@@ -8,11 +8,21 @@ const save=()=>fs.writeFileSync(output,JSON.stringify(report,null,2));
 let primary,timer,handling=false,observedBackend;
 const backendPath=path.join(project,'desktop/backend.cjs');
 const {Backend}=require(backendPath);
+// Test observer only: production main has no budget or environment override.
+if(process.env.QX_PROBE_JUDGE_BUDGET==='synthetic-judge-budget-v1'){
+  const sessionPath=path.join(project,'desktop/model-session.cjs'),original=require(sessionPath);
+  require.cache[require.resolve(sessionPath)].exports={...original,createModelSession(options){
+    return original.createModelSession(options.kind==='judge'?{...options,judgeBudget:'0.02'}:options);
+  }};
+  report.synthetic_judge_budget=true;
+}
 class ObservedBackend extends Backend {
   constructor(executable,args){
     const entry=process.env.QX_PROBE_SETTINGS_ENTRY;
     const frozen=process.env.QX_PROBE_FROZEN_BACKEND;
-    super(frozen||executable,frozen?[]:entry?['-X','utf8',entry,...(process.env.QX_PROBE_LOOPBACK?[process.env.QX_PROBE_LOOPBACK]:[])]:args);
+    const syntheticArgs=entry?['-X','utf8',entry,...(process.env.QX_PROBE_LOOPBACK?[process.env.QX_PROBE_LOOPBACK]:[])]:args;
+    if(entry&&process.env.QX_PROBE_JUDGE_LOOPBACK)syntheticArgs.push('--judge',process.env.QX_PROBE_JUDGE_LOOPBACK,process.env.QX_PROBE_SETTINGS_NETWORK);
+    super(frozen||executable,frozen?[]:syntheticArgs);
     observedBackend=this;
   }
   async start(config){
@@ -45,6 +55,14 @@ class ObservedBackend extends Backend {
   async disableJudge(){
     const result=await super.disableJudge();
     (report.judge_controls ||= []).push({operation:'disable',ok:result.ok,status:result.status});save();return result;
+  }
+  async authorizeJudge(payload){
+    const result=await super.authorizeJudge(payload);
+    (report.judge_controls ||= []).push({operation:'authorize',ok:result.ok,status:result.status});save();return result;
+  }
+  async revokeJudge(payload){
+    const result=await super.revokeJudge(payload);
+    (report.judge_controls ||= []).push({operation:'revoke',ok:result.ok,status:result.status});save();return result;
   }
 }
 require.cache[require.resolve(backendPath)].exports={Backend:ObservedBackend};

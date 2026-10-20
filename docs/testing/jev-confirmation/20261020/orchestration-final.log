@@ -1,0 +1,38 @@
+✔ only trusted saved content and fixed model cost reach confirmation and one authorization (30.3599ms)
+✔ cancel leaves no authorization and no second HTTP snapshot (5.0776ms)
+✔ renderer-selected budget, malformed scope and other displayed conversations are refused before reads (1.2896ms)
+✔ only an exact numeric owned loopback origin can receive a session cookie (1.1911ms)
+✔ all scope fields and composer revisions are checked independently of the content digest (18.5059ms)
+✔ unapproved capability cannot hide selected attachments or a busy run (6.5983ms)
+✔ materials and capability scope mismatches cannot reach confirmation (4.838ms)
+✔ changed saved content, composer or materials after confirmation never authorizes (11.4654ms)
+✔ ambiguous or target-specific cookies are rejected without authorization (1.2892ms)
+✔ a replaced session cookie after confirmation fails before authorization (2.7769ms)
+✔ a cookie change after authorized ACK revokes the captured session (4.2495ms)
+✔ shared busy refuses duplicate clicks and wait includes the pending confirmation (3.948ms)
+✔ document change during confirmation cannot authorize even if the window returns true (2.8894ms)
+✔ redirects, oversized bodies and malformed UTF8 are rejected as fixed errors (8.1179ms)
+✔ repeated confirmation keeps the same request and budget and accepts an existing receipt (8.0144ms)
+✔ exhausted previous approval permits a new explicit one-call confirmation (4.3588ms)
+✔ a stalled owned HTTP response times out with fixed output and releases the busy lock (5009.8758ms)
+✔ HTTP permission denial and malformed JSON never forward server error text to the renderer (7.1825ms)
+✔ missing cookie and a cookie with header delimiters are refused before any request (1.0965ms)
+✔ a changed context identity cannot reuse the same guard function to approve (3.7435ms)
+✔ judge without trusted budget is displayed unavailable and does not prevent main-only consent (5.1581ms)
+✔ separately selected judge uses the same complete draft and request with its own version and budget (5.5243ms)
+✔ declining available optional judge grants only the main model (4.3863ms)
+✔ forged auxiliary consent, boolean expansion and extra choice fields never authorize (13.3337ms)
+✔ known auxiliary refusal preserves the separately authorized main flow (5.1999ms)
+✔ unknown auxiliary ACK stops its captured backend and does not claim a successful main send (5.0734ms)
+✔ cookie changed after auxiliary grant withdraws both captured grants (4.5259ms)
+✔ main denial never grants the auxiliary and changed draft never grants either (7.8144ms)
+✔ failure after the inner lease closes stops only the captured backend and waits for cleanup (6.8323ms)
+✔ cancelling the combined window neither grants nor leaves optional approval locked (8.0747ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5264.0733

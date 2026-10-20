@@ -1,0 +1,329 @@
+✖ Judge exposes an optional lease but its default budget cannot grant authority (3.287ms)
+✖ trusted synthetic Judge budget and captured configuration use separate authorization methods (0.3193ms)
+✖ Judge budget rejects noncanonical, nonpositive, over-limit and nonstring amounts (0.3606ms)
+✖ Judge budget accepts its exact supported boundaries without floating point conversion (0.2715ms)
+✖ optional admission failures invoke the callback with null once without changing the backend (0.2886ms)
+✖ optional null callback failures are not retried or mistaken for authorization (0.2349ms)
+✖ an available Judge lease can be declined without disabling the successful Main flow (0.2814ms)
+✖ a known Judge denial can continue once without a grant or revocation (0.2848ms)
+✖ Judge refuses a Main basis or another purpose without dispatching authority (0.3612ms)
+✖ an open Judge lease locks configuration and a competing callback only receives null (0.4392ms)
+✖ Judge authorization is single-use and captures the original caller values through a late ACK (0.3267ms)
+✖ unknown Judge ACK or control failure stops its captured backend instead of falling back (0.2362ms)
+✖ post-grant callback failure or cancellation revokes only Judge authority (0.2076ms)
+✖ late Judge grants after navigation or backend replacement revoke the old session only (0.1852ms)
+✖ existing Judge requests do not invent a new grant to revoke (0.1393ms)
+✖ failed Judge revocation waits for the owned backend shutdown and keeps its lock (0.1477ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 0
+ℹ fail 16
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.3679
+
+✖ failing tests:
+
+test at desktop\tests\judge-approval-session.test.cjs:35:1
+✖ Judge exposes an optional lease but its default budget cannot grant authority (3.287ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:40:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:48:1
+✖ trusted synthetic Judge budget and captured configuration use separate authorization methods (0.3193ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:50:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:59:1
+✖ Judge budget rejects noncanonical, nonpositive, over-limit and nonstring amounts (0.3606ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception (TypeError): 0.02
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:62:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { name: 'TypeError' },
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:67:1
+✖ Judge budget accepts its exact supported boundaries without floating point conversion (0.2715ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:70:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:76:1
+✖ optional admission failures invoke the callback with null once without changing the backend (0.2886ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:85:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:93:1
+✖ optional null callback failures are not retried or mistaken for authorization (0.2349ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:95:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:102:1
+✖ an available Judge lease can be declined without disabling the successful Main flow (0.2814ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:104:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:111:1
+✖ a known Judge denial can continue once without a grant or revocation (0.2848ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:114:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:121:1
+✖ Judge refuses a Main basis or another purpose without dispatching authority (0.3612ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:124:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:133:1
+✖ an open Judge lease locks configuration and a competing callback only receives null (0.4392ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:135:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:152:1
+✖ Judge authorization is single-use and captures the original caller values through a late ACK (0.3267ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:156:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:170:1
+✖ unknown Judge ACK or control failure stops its captured backend instead of falling back (0.2362ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:180:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:189:1
+✖ post-grant callback failure or cancellation revokes only Judge authority (0.2076ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:192:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:204:1
+✖ late Judge grants after navigation or backend replacement revoke the old session only (0.1852ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:208:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:220:1
+✖ existing Judge requests do not invent a new grant to revoke (0.1393ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:223:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-approval-session.test.cjs:231:1
+✖ failed Judge revocation waits for the owned backend shutdown and keeps its lock (0.1477ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-approval-session.test.cjs:235:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

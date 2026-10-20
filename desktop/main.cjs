@@ -246,7 +246,7 @@ else {
       registerModelSettings({...settingsOptions,store:judgeStore,runtime:judgeSession,kind:'judge'})];
     modelSettings={wait:()=>Promise.allSettled(handlers.map(handler=>handler.wait()))};
     approvalWindow=createModelApprovalWindow({BrowserWindow,ipcMain,session});
-    modelApproval=registerModelApproval({ipcMain,runtime:modelSession,
+    modelApproval=registerModelApproval({ipcMain,runtime:modelSession,judgeRuntime:judgeSession,
       isBusy:()=>busy||stopping,setBusy:value=>{busy=value;},confirm:approvalWindow.confirm,
       captureContext:event=>{
         const owned=activeBackend,epoch=documentEpoch,url=win?.webContents.getURL();
