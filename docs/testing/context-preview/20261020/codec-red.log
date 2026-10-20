@@ -1,0 +1,24 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__ test_projection_has_fixed_outbound_fields_and_preview_never_enables_send ___
+
+    def test_projection_has_fixed_outbound_fields_and_preview_never_enables_send():
+>       codec = api()
+                ^^^^^
+
+tests\unit\test_assistant_context_preview.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def api():
+        name = 'cn_contract.assistant.providers.context_preview'
+>       assert importlib.util.find_spec(name) is not None, 'fixed context preview codec missing'
+E       AssertionError: fixed context preview codec missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x0000018464B75D00>('cn_contract.assistant.providers.context_preview')
+E        +    where <function find_spec at 0x0000018464B75D00> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+tests\unit\test_assistant_context_preview.py:17: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_context_preview.py::test_projection_has_fixed_outbound_fields_and_preview_never_enables_send
+1 failed in 0.46s

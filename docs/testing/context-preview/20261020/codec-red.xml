@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.372" timestamp="2026-10-20T22:41:41.928030+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_assistant_context_preview" name="test_projection_has_fixed_outbound_fields_and_preview_never_enables_send" time="0.001"><failure message="AssertionError: fixed context preview codec missing&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000018464B75D00&gt;('cn_contract.assistant.providers.context_preview')&#10; +    where &lt;function find_spec at 0x0000018464B75D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">def test_projection_has_fixed_outbound_fields_and_preview_never_enables_send():
+&gt;       codec = api()
+                ^^^^^
+
+tests\unit\test_assistant_context_preview.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def api():
+        name = 'cn_contract.assistant.providers.context_preview'
+&gt;       assert importlib.util.find_spec(name) is not None, 'fixed context preview codec missing'
+E       AssertionError: fixed context preview codec missing
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000018464B75D00&gt;('cn_contract.assistant.providers.context_preview')
+E        +    where &lt;function find_spec at 0x0000018464B75D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\unit\test_assistant_context_preview.py:17: AssertionError</failure></testcase></testsuite></testsuites>

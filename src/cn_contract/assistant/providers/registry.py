@@ -73,6 +73,11 @@ class MainModelRegistry:
         self._version = object()
         self._grants.clear()
 
+    def configuration(self):
+        """Local preview only: inspecting configuration never resolves a grant."""
+        self._check_loop()
+        return self._current_config() if self._provider is not None else None
+
     def grant(self, policy, session_id, *, basis=None):
         self._check_loop()
         session_id = _session_id(session_id)

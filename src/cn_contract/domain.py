@@ -3414,3 +3414,98 @@ class AssistantResearchHistoryItem(DomainModel):
 class AssistantResearchHistoryView(DomainModel):
     scope: ScopeSnapshot
     items: Annotated[tuple[AssistantResearchHistoryItem, ...], Field(max_length=50)]
+
+
+class MainContextSelection(DomainModel):
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+    citation_ids: Annotated[tuple[UUID, ...], Field(min_length=1, max_length=8)]
+
+    @field_validator('citation_ids')
+    @classmethod
+    def unique_context_selection(cls, value):
+        if len(value) != len(set(value)):
+            raise ValueError('duplicate selected citation')
+        return value
+
+
+class MainContextSource(DomainModel):
+    saved_citation_id: UUID
+    kind: Literal['case_csv', 'law_markdown']
+    title: Annotated[str, StringConstraints(strict=True, max_length=2000)]
+    version_id: LibraryHash
+    quote: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=1200)]
+    quote_sha256: LibraryHash
+    start: NonNegativeInt
+    end: PositiveInt
+    line_start: PositiveInt
+    line_end: PositiveInt
+    article: Annotated[str, StringConstraints(strict=True, max_length=200)] | None
+    ambiguous: StrictBool
+    source_match: Literal['record_quote_matched'] = 'record_quote_matched'
+    support_status: Literal['unverified'] = 'unverified'
+    applicability_status: Literal['unverified'] = 'unverified'
+
+    @model_validator(mode='after')
+    def exact_context_source(self):
+        if (self.end - self.start != len(self.quote) or self.line_end < self.line_start
+                or hashlib.sha256(self.quote.encode('utf-8')).hexdigest() != self.quote_sha256):
+            raise ValueError('CONTEXT_SOURCE_INVALID')
+        return self
+
+
+class MainContextManifest(DomainModel):
+    format_version: Literal['saved-library-context-v1']
+    question: AssistantText
+    sources: Annotated[tuple[MainContextSource, ...], Field(min_length=1, max_length=8)]
+
+    @model_validator(mode='after')
+    def exact_context_manifest(self):
+        identifiers = tuple(item.saved_citation_id for item in self.sources)
+        if not self.question.strip() or len(identifiers) != len(set(identifiers)):
+            raise ValueError('CONTEXT_MANIFEST_INVALID')
+        return self
+
+
+class MainContextPreview(DomainModel):
+    scope: ScopeSnapshot
+    composer_revision: NonNegativeInt
+    manifest: MainContextManifest
+    manifest_sha256: SHA256
+    system_text: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=4096)]
+    state: Literal['not_configured', 'ready', 'input_too_large']
+    model: Literal['deepseek-flash', 'deepseek-v4-pro'] | None
+    config_sha256: SHA256 | None
+    max_input_bytes: Annotated[int, Field(strict=True, ge=1, le=262144)] | None
+    wire_payload_json: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=524288)] | None
+    wire_sha256: SHA256 | None
+    wire_bytes: PositiveInt | None
+    sending_enabled: Literal[False] = False
+
+    @model_validator(mode='after')
+    def consistent_context_preview(self):
+        from .config import canonical_json
+        manifest = canonical_json(self.manifest.model_dump(mode='json'))
+        if hashlib.sha256(manifest.encode('utf-8')).hexdigest() != self.manifest_sha256:
+            raise ValueError('CONTEXT_PREVIEW_INVALID')
+        configured = (self.model, self.config_sha256, self.max_input_bytes,
+            self.wire_payload_json, self.wire_sha256, self.wire_bytes)
+        if self.state == 'not_configured':
+            if any(value is not None for value in configured):
+                raise ValueError('CONTEXT_PREVIEW_INVALID')
+            return self
+        if any(value is None for value in configured):
+            raise ValueError('CONTEXT_PREVIEW_INVALID')
+        raw = self.wire_payload_json.encode('utf-8')
+        body = json.loads(self.wire_payload_json)
+        if (not isinstance(body, dict) or set(body) != {
+                'model', 'messages', 'max_tokens', 'stream', 'thinking', 'response_format'}
+                or canonical_json(body) != self.wire_payload_json or body['model'] != self.model
+                or body['messages'] != [{'role':'system', 'content':self.system_text}, {'role':'user', 'content':manifest}]
+                or type(body['max_tokens']) is not int or not 1 <= body['max_tokens'] <= 8192
+                or body['stream'] is not False or body['thinking'] != {'type':'disabled'}
+                or body['response_format'] != {'type':'json_object'}
+                or len(raw) != self.wire_bytes or hashlib.sha256(raw).hexdigest() != self.wire_sha256
+                or (self.state == 'ready') != (len(raw) <= self.max_input_bytes)):
+            raise ValueError('CONTEXT_PREVIEW_INVALID')
+        return self

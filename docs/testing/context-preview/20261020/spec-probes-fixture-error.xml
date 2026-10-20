@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="6" time="6.668" timestamp="2026-10-20T22:52:37.644616+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.library-context-20261020.test_spec_probes" name="test_authority_is_rechecked_after_body_read[revoke-401]" time="1.405" /><testcase classname=".local.library-context-20261020.test_spec_probes" name="test_authority_is_rechecked_after_body_read[draft-409]" time="1.424" /><testcase classname=".local.library-context-20261020.test_spec_probes" name="test_authority_is_rechecked_after_body_read[restore-409]" time="1.306" /><testcase classname=".local.library-context-20261020.test_spec_probes" name="test_corrupt_saved_source_cannot_become_a_clean_preview" time="1.306" /><testcase classname=".local.library-context-20261020.test_spec_probes" name="test_old_v1_models_serialize_identically_and_do_not_accept_context" time="0.223" /><testcase classname=".local.library-context-20261020.test_spec_probes" name="test_configuration_preview_does_not_read_secret_or_touch_grants" time="0.000"><failure message="NameError: name 'config' is not defined">def test_configuration_preview_does_not_read_secret_or_touch_grants():
+        import asyncio
+        from datetime import datetime, timedelta, timezone
+        from uuid import uuid4
+        from cn_contract.assistant.providers.registry import MainModelRegistry
+        from cn_contract.assistant.providers.policy import encoded, sha
+        from tests.unit.test_assistant_context_preview import config, scope
+&gt;       class Provider:
+
+.local\library-context-20261020\test_spec_probes.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    class Provider:
+&gt;       config = config()
+                 ^^^^^^
+E       NameError: name 'config' is not defined
+
+.local\library-context-20261020\test_spec_probes.py:92: NameError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.721" timestamp="2026-10-20T22:43:49.371437+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_context_configuration" name="test_preview_configuration_is_independent_of_authority" time="0.002"><failure message="AttributeError: 'MainModelRegistry' object has no attribute 'configuration'">tests\integration\test_context_configuration.py:24: in test_preview_configuration_is_independent_of_authority
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_context_configuration.py:12: in scenario
+    assert world.registry.configuration() is None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'MainModelRegistry' object has no attribute 'configuration'</failure></testcase></testsuite></testsuites>

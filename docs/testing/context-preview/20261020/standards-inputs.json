@@ -1,0 +1,58 @@
+{
+  "baseline": "0d53fdfdae806c6fec90c01cab1531a7cb666831",
+  "commit_list": [],
+  "diff": "git diff 0d53fdfdae806c6fec90c01cab1531a7cb666831 plus new source/test files",
+  "input_count": 10,
+  "inputs": [
+    {
+      "path": "src/cn_contract/domain.py",
+      "sha256": "59fc735e6b0865e300fbaedd005543950be2923543616bb0b743a837aba6bef2"
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/context_preview.py",
+      "sha256": "ac979c7eceb50dd2509caafcf31954d03fd8d8bfc8f6dfd1123e0ffcfd102fdd"
+    },
+    {
+      "path": "src/cn_contract/assistant/context_preview.py",
+      "sha256": "b4479df421126f08cb4caf7a4f373964323cc29606e6743e4658fe9635f3ece0"
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/registry.py",
+      "sha256": "d6a7203fca053bb3393b3387e8ddaf62eda81882ffd4e32fb5eb79d19a45f8bc"
+    },
+    {
+      "path": "src/cn_contract/web/assistant_context.py",
+      "sha256": "75b33a20deffbc5f889433ceffa7ee8425f76c1380e78530229f1f91dfa19cf1"
+    },
+    {
+      "path": "src/cn_contract/web/assistant_generation.py",
+      "sha256": "28d43e6f661807520d1a908f074e559416258e24ac26afe6cd725605cc190fdf"
+    },
+    {
+      "path": "tests/unit/test_assistant_context_preview.py",
+      "sha256": "ab998cd957aa1e165e06d6169dbd3859dfb524f9997bb5e8291bcfbb8241c4a8"
+    },
+    {
+      "path": "tests/integration/test_assistant_context_preview.py",
+      "sha256": "639b4a44e03a6f05b6977fbc8a9e6c919876aa5910b77c21601351719e2cfe28"
+    },
+    {
+      "path": "tests/integration/test_assistant_context_preview_routes.py",
+      "sha256": "d54a42eb799c3a8591d36a61d0b47cdfcfd1d8b8475216550d6260c1ef883480"
+    },
+    {
+      "path": "tests/integration/test_context_configuration.py",
+      "sha256": "47c7d423e893a19e5f94b1b7f6a533588a46ec18cce6315041328d639f79ee9d"
+    }
+  ],
+  "command": ".venv/Scripts/python.exe -X utf8 -m pytest -q tests/unit/test_assistant_context_preview.py::test_legacy_text_request_retains_fixed_wire_bytes tests/unit/test_assistant_context_preview.py::test_double_json_escaping_retains_complete_overbudget_preview tests/integration/test_context_configuration.py::test_preview_configuration_is_independent_of_authority tests/integration/test_assistant_context_preview_routes.py::test_preview_stays_blocked_after_backup_restore --basetemp=D:/Documents/ChatGPT/律所项目/.local/library-context-20261020/standards-pytest --junitxml=.local/library-context-20261020/standards-checks.xml",
+  "exit_code": 0,
+  "passed": 4,
+  "pytest_seconds": 4.05,
+  "findings": 0,
+  "limitations": [
+    "No full suite",
+    "No real data or real model",
+    "No desktop installer validation"
+  ]
+}

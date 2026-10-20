@@ -1,0 +1,65 @@
+{
+  "hypotheses": [
+    {
+      "name": "directory depth",
+      "prediction": "same synthetic sample fails only in deep independently owned directory"
+    },
+    {
+      "name": "source/model regression",
+      "prediction": "same sample also fails in short directory"
+    },
+    {
+      "name": "shared test side effects",
+      "prediction": "isolated deep and short samples both pass"
+    }
+  ],
+  "sample_id": "sales-dev-1",
+  "inputs_before": {
+    "src/cn_contract/acceptance/sample_runner.py": "e6c4a02d67652634a113e7f9538f730cd197b33d309104fded55b479d079ce92",
+    "src/cn_contract/persistence.py": "ee324e1eb6234cc3740fce79b0b909a7721aae3dcec5bd53466a1431a6a1be7c",
+    "src/cn_contract/documents/ingest.py": "b9689e759667b668f6591ba4bb31e5ee050452aa505f38b0215cec14d77681c1",
+    "src/cn_contract/domain.py": "59fc735e6b0865e300fbaedd005543950be2923543616bb0b743a837aba6bef2"
+  },
+  "runs": [
+    {
+      "label": "short",
+      "root": "D:\\Documents\\ChatGPT\\律所项目\\.local\\pd-2a7b971f\\samples-ed3aa211d2344c1f9ae865cdce540c86",
+      "root_chars": 85,
+      "original_path": "D:\\Documents\\ChatGPT\\律所项目\\.local\\pd-2a7b971f\\samples-ed3aa211d2344c1f9ae865cdce540c86\\protected\\6d7007a2-ca46-4e72-8375-6368dc9d9faf\\12d6842d-ebfb-4566-a81e-9fc4dc26fe7d\\original.bin",
+      "original_path_chars": 182,
+      "state": "completed",
+      "parse_status": "completed",
+      "facts": 3,
+      "coverage": 18,
+      "run_status": "completed"
+    },
+    {
+      "label": "deep",
+      "root": "D:\\Documents\\ChatGPT\\律所项目\\.local\\library-context-20261020\\path-probe--f9c83122683f40cd8abb41cfa9c4f040\\test_40_samples_really_parse_c0\\samples-234aefc0849645d4a6512564d835698a",
+      "root_chars": 175,
+      "state": "failed",
+      "stage": "ingest",
+      "type": "FileNotFoundError",
+      "code": null,
+      "winerror": 206,
+      "filename": "D:\\Documents\\ChatGPT\\律所项目\\.local\\library-context-20261020\\path-probe--f9c83122683f40cd8abb41cfa9c4f040\\test_40_samples_really_parse_c0\\samples-234aefc0849645d4a6512564d835698a\\protected\\5f2b7f73-bc5e-4023-8a3e-dedc85688077\\f65520ad-f4da-4906-8e37-fde3d02dafac",
+      "message": "[WinError 206] 文件名或扩展名太长。: 'D:\\\\Documents\\\\ChatGPT\\\\律所项目\\\\.local\\\\library-context-20261020\\\\path-probe--f9c83122683f40cd8abb41cfa9c4f040\\\\test_40_samples_really_parse_c0\\\\samples-234aefc0849645d4a6512564d835698a\\\\protected\\\\5f2b7f73-bc5e-4023-8a3e-dedc85688077\\\\f65520ad-f4da-4906-8e37-fde3d02dafac'",
+      "trace": "Traceback (most recent call last):\n  File \"C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\pathlib.py\", line 1311, in mkdir\n    os.mkdir(self, mode)\nFileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\\\Documents\\\\ChatGPT\\\\律所项目\\\\.local\\\\library-context-20261020\\\\path-probe--f9c83122683f40cd8abb41cfa9c4f040\\\\test_40_samples_really_parse_c0\\\\samples-234aefc0849645d4a6512564d835698a\\\\protected\\\\5f2b7f73-bc5e-4023-8a3e-dedc85688077\\\\f65520ad-f4da-4906-8e37-fde3d02dafac'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"D:\\Documents\\ChatGPT\\律所项目\\.local\\library-context-20261020\\path-diagnosis-single.py\", line 30, in <module>\n    version=s.ingest(BytesIO(data),s.UploadMeta(matter_id=matter.id,original_name=Path(sample.path).name,mime=s.DOCX_MIME,baseline_view='original',supersedes_id=None),actor,db=db)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\ingest.py\", line 83, in ingest\n    version = create_version(actual, actor, db, content=BytesIO(data))\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\persistence.py\", line 315, in create_version\n    path.parent.mkdir(parents=True, exist_ok=False)\n  File \"C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\pathlib.py\", line 1316, in mkdir\n    self.mkdir(mode, parents=False, exist_ok=exist_ok)\n  File \"C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\pathlib.py\", line 1311, in mkdir\n    os.mkdir(self, mode)\nFileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\\\Documents\\\\ChatGPT\\\\律所项目\\\\.local\\\\library-context-20261020\\\\path-probe--f9c83122683f40cd8abb41cfa9c4f040\\\\test_40_samples_really_parse_c0\\\\samples-234aefc0849645d4a6512564d835698a\\\\protected\\\\5f2b7f73-bc5e-4023-8a3e-dedc85688077\\\\f65520ad-f4da-4906-8e37-fde3d02dafac'\n"
+    }
+  ],
+  "inputs_after": {
+    "src/cn_contract/acceptance/sample_runner.py": "e6c4a02d67652634a113e7f9538f730cd197b33d309104fded55b479d079ce92",
+    "src/cn_contract/persistence.py": "ee324e1eb6234cc3740fce79b0b909a7721aae3dcec5bd53466a1431a6a1be7c",
+    "src/cn_contract/documents/ingest.py": "b9689e759667b668f6591ba4bb31e5ee050452aa505f38b0215cec14d77681c1",
+    "src/cn_contract/domain.py": "59fc735e6b0865e300fbaedd005543950be2923543616bb0b743a837aba6bef2"
+  },
+  "inputs_unchanged": true,
+  "command": ".venv/Scripts/python.exe -X utf8 .local/library-context-20261020/path-diagnosis-single.py",
+  "process_exit_code": 0,
+  "baseline_match": {
+    "src/cn_contract/acceptance/sample_runner.py": true,
+    "src/cn_contract/persistence.py": true,
+    "src/cn_contract/documents/ingest.py": true
+  },
+  "deep_failure_path_chars": 259
+}

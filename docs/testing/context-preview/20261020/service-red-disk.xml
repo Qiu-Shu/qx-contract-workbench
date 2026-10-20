@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.645" timestamp="2026-10-20T22:41:13.356394+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_context_preview" name="test_preview_reconstructs_saved_sources_without_library_or_model" time="0.975"><failure message="AssertionError: context preview service missing&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x00000226E6785800&gt;('cn_contract.assistant.context_preview')&#10; +    where &lt;function find_spec at 0x00000226E6785800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_assistant_context_preview.py:34: in test_preview_reconstructs_saved_sources_without_library_or_model
+    assert importlib.util.find_spec('cn_contract.assistant.context_preview') is not None, 'context preview service missing'
+E   AssertionError: context preview service missing
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x00000226E6785800&gt;('cn_contract.assistant.context_preview')
+E    +    where &lt;function find_spec at 0x00000226E6785800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase></testsuite></testsuites>

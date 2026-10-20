@@ -1,0 +1,13 @@
+E                                                                        [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_preview_reconstructs_saved_sources_without_library_or_model _
+tests\integration\test_assistant_library_adapter.py:41: in library
+    import_laws(root, laws, 'synthetic')
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+=========================== short test summary info ===========================
+ERROR tests/integration/test_assistant_context_preview.py::test_preview_reconstructs_saved_sources_without_library_or_model
+1 error in 1.41s

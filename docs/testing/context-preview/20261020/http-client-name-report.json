@@ -1,0 +1,44 @@
+{
+  "kind": "Windows Python-source TCP HTTP synthetic probe",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "not_evidence_for": [
+    "Electron",
+    "installer",
+    "GUI",
+    "live model",
+    "real legal data"
+  ],
+  "input_hashes": [],
+  "checks": [],
+  "connects": [
+    {
+      "host": "127.0.0.1",
+      "port": 61575,
+      "probe_http": false
+    }
+  ],
+  "data_root": "D:\\Documents\\ChatGPT\\律所项目\\.local\\library-context-20261020\\http-data-3e169c376a",
+  "port": 61574,
+  "source_hashes": {
+    "cases.csv": "42fe575214ee484faf866bf20368c956fcf9f6aa359869177ee7dc198ba86e00",
+    "laws\\只在标题命中.md": "04946bfcb0254c79f19cdf5875c20bfa9c1d9b2082c1480c7193443e4f706c9a",
+    "laws\\吉林虚构规则_20250101.md": "8635649437dcca23228ce3673b0d2592c7f89b0a149e30ef2777eab1e3d1734e"
+  },
+  "startup": {
+    "server": "uvicorn.Server",
+    "socket": "AF_INET loopback TCP",
+    "started": true
+  },
+  "success": false,
+  "error_type": "UnboundLocalError",
+  "error": "cannot access local variable 'http' where it is not associated with a value",
+  "server_stopped": true,
+  "call_counters": {
+    "provider_generate": 0,
+    "secret_resolver": 0,
+    "jev_judge": 0,
+    "library_search": 0,
+    "library_read_original": 0
+  },
+  "script_sha256": "5814f7cce135272a506afca6feba03a836129ad44f0b6f7732c4fd838dd30b8b"
+}

@@ -1,0 +1,55 @@
+{
+  "stage": "CH-06B2b1",
+  "scope": "pure local context preview codec; no send authorization or model call",
+  "baseline": "0d53fdf",
+  "runs": [
+    {
+      "name": "codec-red",
+      "command": ".venv/Scripts/python.exe -m pytest tests/unit/test_assistant_context_preview.py -q --junitxml=.local/library-context-20261020/codec-red.xml",
+      "exit_code": 1,
+      "failed": 1,
+      "seconds": 0.46,
+      "expected_failure": "fixed context preview codec missing"
+    },
+    {
+      "name": "codec-green",
+      "command": ".venv/Scripts/python.exe -m pytest tests/unit/test_assistant_context_preview.py -q --junitxml=.local/library-context-20261020/codec-green.xml",
+      "exit_code": 0,
+      "passed": 1,
+      "seconds": 0.43
+    },
+    {
+      "name": "codec-expanded",
+      "command": ".venv/Scripts/python.exe -m pytest tests/unit/test_assistant_context_preview.py -q --junitxml=.local/library-context-20261020/codec-expanded.xml",
+      "exit_code": 0,
+      "passed": 31,
+      "seconds": 0.51
+    },
+    {
+      "name": "codec-final",
+      "command": ".venv/Scripts/python.exe -m pytest tests/unit/test_assistant_context_preview.py tests/unit/test_assistant_model_contract.py tests/unit/test_library_records.py -q --junitxml=.local/library-context-20261020/codec-final.xml",
+      "exit_code": 0,
+      "passed": 46,
+      "seconds": 0.68
+    }
+  ],
+  "files": [
+    {
+      "path": "src/cn_contract/domain.py",
+      "sha256": "59fc735e6b0865e300fbaedd005543950be2923543616bb0b743a837aba6bef2"
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/context_preview.py",
+      "sha256": "ac979c7eceb50dd2509caafcf31954d03fd8d8bfc8f6dfd1123e0ffcfd102fdd"
+    },
+    {
+      "path": "tests/unit/test_assistant_context_preview.py",
+      "sha256": "ab998cd957aa1e165e06d6169dbd3859dfb524f9997bb5e8291bcfbb8241c4a8"
+    }
+  ],
+  "bounds": "Preview wire is capped at 524288 characters to retain double-escaped complete over-budget data. Actual configured send budget remains at most 262144 UTF-8 bytes. sending_enabled is always false.",
+  "legacy_v1": {
+    "wire_bytes": 973,
+    "wire_sha256": "fe24920857e4a951b627c2ee0b4c3a01253c550e7cf134e3420b3db843d3873f"
+  }
+}

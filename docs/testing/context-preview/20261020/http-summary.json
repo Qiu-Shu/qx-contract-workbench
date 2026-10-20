@@ -1,0 +1,97 @@
+{
+  "stage": "CH-06B2b1",
+  "command": ".venv/Scripts/python.exe .local/library-context-20261020/http-probe.py",
+  "exit_code": 0,
+  "elapsed_seconds": 3.5293359,
+  "platform": "Windows-10-10.0.19045-SP0",
+  "port": 61592,
+  "server_stopped": true,
+  "remaining_listeners": 0,
+  "checks": [
+    {
+      "name": "unconfigured",
+      "state": "not_configured",
+      "passed": true
+    },
+    {
+      "name": "configured",
+      "state": "ready",
+      "passed": true
+    },
+    {
+      "name": "exact_utf8_budget",
+      "state": "ready",
+      "passed": true
+    },
+    {
+      "name": "one_byte_over_budget",
+      "state": "input_too_large",
+      "passed": true
+    },
+    {
+      "name": "disabled",
+      "state": "not_configured",
+      "passed": true
+    },
+    {
+      "name": "cross_origin_rejected",
+      "passed": true
+    },
+    {
+      "name": "missing_csrf_rejected",
+      "passed": true
+    },
+    {
+      "name": "stale_selection_rejected",
+      "passed": true
+    },
+    {
+      "name": "no_preview_side_effects",
+      "passed": true
+    }
+  ],
+  "tcp_http_requests": 27,
+  "source_count": 4,
+  "configured_wire_bytes": 3402,
+  "overbudget_wire_bytes": 3402,
+  "overbudget_budget": 3401,
+  "counters": {
+    "provider_generate": 0,
+    "secret_resolver": 0,
+    "jev_judge": 0,
+    "library_search": 1,
+    "library_read_original": 0
+  },
+  "preview_deltas": {
+    "provider_generate": 0,
+    "secret_resolver": 0,
+    "jev_judge": 0,
+    "library_search": 0,
+    "library_read_original": 0
+  },
+  "failures_retained": [
+    {
+      "prefix": "http-bootstrap",
+      "exit_code": 1,
+      "reason": "probe standalone import path did not include tests fixture package"
+    },
+    {
+      "prefix": "http-startup-loopback",
+      "exit_code": 1,
+      "reason": "probe network guard incorrectly rejected Windows asyncio socketpair loopback; no product defect"
+    },
+    {
+      "prefix": "http-client-name",
+      "exit_code": 1,
+      "reason": "probe helper name shadowed http module; no product defect"
+    }
+  ],
+  "limitations": [
+    "Python source app over real Windows loopback TCP; not TestClient",
+    "Not Electron, installer, GUI, live model, Jev or real-data validation",
+    "Only synthetic fixture inputs; no F drive reads",
+    "No product or test edits; no installed dependencies"
+  ],
+  "script_sha256": "463369ed607c25f60ab1e41ac16d6447a2c7a541481f738eb3dc2799818fde27",
+  "report_sha256": "e08a7b67b3d7af9d4f884683c010e14b17ee13a3ef634490b1be09832257f730"
+}

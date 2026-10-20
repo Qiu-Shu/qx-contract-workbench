@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\������Ŀ\.local\library-context-20261020\http-probe.py", line 246, in <module>
+    main()
+  File "D:\Documents\ChatGPT\������Ŀ\.local\library-context-20261020\http-probe.py", line 129, in main
+    opener = build_opener(ProxyHandler({}), HTTPCookieProcessor(http.cookiejar.CookieJar()))
+                                                                ^^^^
+UnboundLocalError: cannot access local variable 'http' where it is not associated with a value
+{"success": false, "server_stopped": true, "call_counters": {"provider_generate": 0, "secret_resolver": 0, "jev_judge": 0, "library_search": 0, "library_read_original": 0}}

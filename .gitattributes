@@ -65,3 +65,8 @@ tests/unit/test_library_records.py -text whitespace=blank-at-eol,blank-at-eof,sp
 
 docs/testing/library-chat/** -text -whitespace
 tests/integration/test_assistant_research*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/testing/context-preview/** -text -whitespace
+tests/integration/test_assistant_context_preview*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_context_configuration.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/unit/test_assistant_context_preview.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

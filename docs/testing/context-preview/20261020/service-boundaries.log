@@ -1,0 +1,13 @@
+..........E                                                              [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_selected_attachment_is_rejected_but_deselected_history_is_allowed _
+file D:\Documents\ChatGPT\律所项目\tests\integration\test_assistant_context_preview.py, line 102
+  def test_selected_attachment_is_rejected_but_deselected_history_is_allowed(workspace, research, library, material_workspace):
+E       fixture 'material_workspace' not found
+>       available fixtures: anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, library, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, research, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, workspace
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\Documents\ChatGPT\律所项目\tests\integration\test_assistant_context_preview.py:102
+=========================== short test summary info ===========================
+ERROR tests/integration/test_assistant_context_preview.py::test_selected_attachment_is_rejected_but_deselected_history_is_allowed
+10 passed, 1 error in 13.19s
