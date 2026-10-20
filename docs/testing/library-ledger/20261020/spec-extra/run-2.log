@@ -1,0 +1,10 @@
+.F                                                                       [100%]
+================================== FAILURES ===================================
+________________ test_mismatched_content_identity_is_rejected _________________
+.local\library-ledger-20261020\spec-extra\test_spec_checks.py:56: in test_mismatched_content_identity_is_rejected
+    with database.session() as db, pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+=========================== short test summary info ===========================
+FAILED .local/library-ledger-20261020/spec-extra/test_spec_checks.py::test_mismatched_content_identity_is_rejected
+1 failed, 1 passed in 2.99s

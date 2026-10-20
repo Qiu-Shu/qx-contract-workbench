@@ -1,0 +1,48 @@
+{
+  "task_id": "wb-1513e39d57a0",
+  "state": "completed",
+  "session_id": "c67b5f24-dfb2-4aef-93a6-e56cfdec1b7e",
+  "answer": "已只读这 4 个文件（`library_schema.py`、`storage_schema.py`、`schema_migrations.py`、`storage_bootstrap.py`），未运行命令、未联网、未用 Glob/Grep、未读其他文件。以下仅由代码支持；无法从这 4 文件证明的前提单独标注，不把推测当缺陷。\n\n## 具体问题（按严重度）\n\n**1. 复合外键的有效性从未被本片代码自证，两条建库路径对它的校验行为不一致（需先核实父表）**\n- `library_schema.py:20` `FOREIGN KEY(run_id,event_seq) REFERENCES assistant_run_events(run_id,seq)` 要求父表 `assistant_run_events` 必须存在 `UNIQUE(run_id, seq)`（或该复合列为主键），否则该外键非法。\n- `expected_objects()`（`:36-40`）在全新的 `:memory:` 库里执行 `STATEMENTS`：默认 `foreign_keys=OFF`，且父表 `assistant_runs`/`assistant_run_events` 根本不存在——所以它**只把 DDL 文本原样记下，从不验证外键目标列与父表唯一约束**。\n- `initialize_storage()`（`:43-53`）也不设 `PRAGMA foreign_keys=ON`，用 `exec_driver_sql` 建表：若父表缺 `UNIQUE(run_id,seq)`，新库会**静默建成一个不被强制的外键**（不报错）。\n- 而 `upgrade_database` 走的是 `PRAGMA foreign_keys=ON`（`schema_migrations.py:38`）后建表：此时若父表缺该唯一约束，`CREATE TABLE` 会直接报 \"foreign key mismatch\" → 回滚，迁移被阻断。\n- **结论**：`assistant_run_events` 是否确有 `UNIQUE(run_id,seq)` 无法从这 4 文件证明，须读 `assistant_schema.py` 核实。缺则\"新建库静默坏外键 / 升级库直接失败\"两个不一致后果都成立。\n\n**2. 基准行集在\"外键关闭+父表缺失\"环境生成，与迁移环境（外键开启+父表存在）可能产出不同 `sqlite_master`，有 `DATABASE_SCHEMA_MISMATCH` 误报风险（需实测确认）**\n- `_LIBRARY_ROWS = tuple(library_objects())`（`storage_schema.py:14`）的基线来自第 1 点所述环境；而 `upgrade_database` 在 `foreign_keys=ON` 下建表（`schema_migrations.py:38`），其校验 `database_rows(connection) != schema_rows(target)`（`:52`）要求两者逐行精确相等。\n- SQLite 在 `foreign_keys=ON` 建表时可能为外键子列额外生成 `sqlite_autoindex_<表>_<n>`；`expected_objects()`（外键关闭）则不含。若二者 `sqlite_master` 行集不同，升级会在第 52 行误抛 `DATABASE_SCHEMA_MISMATCH`。\n- 这是\"环境不一致导致的精确比对风险\"，本片 4 文件无法给出最终结论，**最小验证步骤**：分别用 `foreign_keys=OFF` 与 `foreign_keys=ON` 建这 2 张表并 `SELECT sql FROM sqlite_master` 对比 autoindex 数量。\n\n**3. `initialize_storage` 与 `upgrade_database` 两条路径建出的\"同一版本\"可能不是同一份 schema，破坏 `identify_schema` 精确匹配**\n- `library_schema.py:43-53` 建表**不**开外键；`schema_migrations.py:38` 建表**开**外键。同一 `assistant-library-v1` 经两条路径可能得到不同的 `sqlite_master`（同第 2 点根因）。`identify_schema`（`storage_schema.py:52-57`）是 `actual == schema_rows(version)` 的精确相等，任一路径差异都会让它识别失败。建议统一两条路径的 `foreign_keys` 建表环境，再固化基准。\n\n**4. `read_original` 的结果体有 262144 字符上限，与\"全文回查\"用途存在边界冲突（需实现层澄清）**\n- `library_schema.py:11` `handler_id IN ('legal_library.search','legal_library.read_original')`，且 `:15` `result_json TEXT NOT NULL CHECK(length(result_json) <= 262144)`。\n- `legal_library.read_original` 的既有返回是含完整正文的 `LibraryOriginal`（`originals.py`/`service.read_original`，非本片 4 文件）。若 `result_json` 落库的是全文，长文档正文超过 262144 字符会撞 CHECK 约束。\n- 这是边界/设计澄清点，不是已证实的缺陷：需明确 `read_original` 的 `result_json` 究竟存全文还是存受限引用。\n\n**5. 版本门用硬编码 `==`，扩展下一个库版本时易漏（维护性，非当前 bug）**\n- `storage_schema.py:36` `if version == 'assistant-library-v1': result.extend(_LIBRARY_ROWS)`。当前是末位版本，成立；但未来加 `assistant-library-v2` 时若忘改此判断，新版本将不含库表行。建议改成 `in VERSIONS[VERSIONS.index('assistant-library-v1'):]` 之类按位置切片。\n\n## 未发现问题的部分（正面确认）\n- 两张新表**不可变性**正确：`library_schema.py:29-33` 为两张表各生成 `BEFORE UPDATE` / `BEFORE DELETE` 的 `RAISE(ABORT,'IMMUTABLE_RECORD')` 触发器，INSERT 不受限，符合\"追加只读回执\"语义。\n- 升级**原子性**正确：`schema_migrations.py:45-59` `BEGIN IMMEDIATE` → 建表前重查 `database_rows != before` 即抛 → 每步后 `database_rows == schema_rows(target)` 校验 → `foreign_key_check` → `commit`，异常 `rollback`；且 `:33` 拒绝在已有事务内执行。\n- 旧版本兼容正确：`VERSIONS` 为纯追加线性链（`storage_schema.py:11`），`identify_schema` 精确匹配、`pre-intake` 永不作 target、`statements_for` 覆盖每个新版本（`schema_migrations.py:9-24`）。\n\n## 复核结论\n新 `assistant-library-v1` 迁移的不可变性、复合唯一键、升级原子性与旧版本链整体正确；**主要风险集中在\"复合外键 `(run_id,event_seq)→assistant_run_events(run_id,seq)` 的父表唯一约束未在本片自证，以及建表基线环境（外键关闭）与迁移环境（外键开启）不一致可能造成 `sqlite_master` 精确比对误报\"**。这两点都指向同一根因，且第 1、2 条的最终成立与否依赖 `assistant_schema.py` 与一次真实 `sqlite_master` 对比，本片 4 文件无法下结论。\n\n**已读文件清单**：`src/cn_contract/assistant/library_schema.py`、`src/cn_contract/storage_schema.py`、`src/cn_contract/schema_migrations.py`、`src/cn_contract/storage_bootstrap.py`。\n\n声明：以上为纯静态代码阅读结论，未运行任何测试、未建库实测、未读取真实资料或密钥。",
+  "stop_reason": "end_turn",
+  "error": null,
+  "permissions": [
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\library_schema.py"
+    },
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\storage_schema.py"
+    },
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\schema_migrations.py"
+    },
+    {
+      "tool": "Read",
+      "allowed": true,
+      "target": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\storage_bootstrap.py"
+    }
+  ],
+  "tool_events": [
+    {
+      "tool": "Read",
+      "status": "completed"
+    },
+    {
+      "tool": "Read",
+      "status": "completed"
+    },
+    {
+      "tool": "Read",
+      "status": "completed"
+    },
+    {
+      "tool": "Read",
+      "status": "completed"
+    }
+  ]
+}

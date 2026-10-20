@@ -1,0 +1,23 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_unfinished_tool_event_must_be_valid_before_archiving __________
+
+ledger = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1039/test_unfinished_tool_event...d', 'state': 'queued'}, created_at=datetime.datetime(2026, 10, 20, 12, 3, 52, 11472, tzinfo=datetime.timezone.utc)),)))
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1039/test_unfinished_tool_event_mus0')
+
+    def test_unfinished_tool_event_must_be_valid_before_archiving(ledger, tmp_path):
+        root, database, _, run = ledger
+        with database.session() as db:
+            db.execute(text('''INSERT INTO assistant_run_events
+                (run_id,seq,event_type,audience,payload_json,created_at)
+                VALUES (:run,2,'tool.before','internal','{}',:at)'''),
+                {'run':str(run.id), 'at':run.created_at.isoformat()})
+        target = tmp_path/'invalid-unfinished.qxbak'
+>       with pytest.raises(ValueError, match='ASSISTANT_LIBRARY'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_backup.py:44: Failed
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_backup.py::test_unfinished_tool_event_must_be_valid_before_archiving
+1 failed in 2.59s

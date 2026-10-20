@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.895" timestamp="2026-10-20T20:15:47.508265+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.library-ledger-20261020.spec-extra.test_spec_checks" name="test_mismatched_content_identity_is_rejected" time="0.939"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">.local\library-ledger-20261020\spec-extra\test_spec_checks.py:61: in test_mismatched_content_identity_is_rejected
+    with database.session() as db, pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase></testsuite></testsuites>

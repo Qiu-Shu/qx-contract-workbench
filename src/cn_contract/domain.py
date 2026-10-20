@@ -3310,3 +3310,86 @@ class AssistantLibraryToolResult(DomainModel):
         if search != (self.page is not None) or search == (self.citation is not None):
             raise ValueError('LIBRARY_TOOL_RESULT_INVALID')
         return self
+
+
+class LibraryHandlerRequest(DomainModel):
+    tool: AssistantLibraryTool
+    query: AssistantLibraryQuery | None = None
+    saved_citation_id: UUID | None = None
+
+    @model_validator(mode='after')
+    def server_owned_library_reference(self):
+        search = self.tool == 'legal_library.search'
+        if search != (self.query is not None) or search == (self.saved_citation_id is not None):
+            raise ValueError('LIBRARY_TOOL_INPUT_INVALID')
+        return self
+
+
+class LibraryHandlerEvent(DomainModel):
+    call_id: UUID
+    handler_id: AssistantLibraryTool
+    handler_version: Literal['1'] = '1'
+    request: LibraryHandlerRequest
+    scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+    citation_sha256: SHA256 | None = None
+
+    @model_validator(mode='after')
+    def exact_library_handler_event(self):
+        if self.handler_id != self.request.tool or (
+                (self.request.saved_citation_id is not None) != (self.citation_sha256 is not None)):
+            raise ValueError('LIBRARY_HANDLER_EVENT_INVALID')
+        return self
+
+
+class LibraryHandlerCall(DomainModel):
+    run_id: UUID
+    event_seq: PositiveInt
+    payload: LibraryHandlerEvent
+
+
+class LibraryHandlerResult(DomainModel):
+    result: AssistantLibraryToolResult
+    citation_ids: Annotated[tuple[UUID, ...], Field(max_length=8)]
+
+    @model_validator(mode='after')
+    def exact_saved_citation_ids(self):
+        count = len(self.result.page.citations) if self.result.page is not None else 1
+        if count != len(self.citation_ids) or len(set(self.citation_ids)) != count:
+            raise ValueError('LIBRARY_HANDLER_RESULT_INVALID')
+        return self
+
+
+class LibraryHandlerReceiptView(DomainModel):
+    id: UUID
+    run_id: UUID
+    event_seq: PositiveInt
+    handler_id: AssistantLibraryTool
+    handler_version: Literal['1']
+    request: LibraryHandlerRequest
+    scope: ScopeSnapshot
+    result: LibraryHandlerResult
+    created_at: UTCDatetime
+
+    @model_validator(mode='after')
+    def matching_receipt_identity(self):
+        if (self.handler_id != self.request.tool or self.handler_id != self.result.result.tool
+                or self.scope != self.result.result.scope):
+            raise ValueError('LIBRARY_HANDLER_RECEIPT_INVALID')
+        if self.request.query is not None and self.request.query != self.result.result.page.query:
+            raise ValueError('LIBRARY_HANDLER_RECEIPT_INVALID')
+        return self
+
+
+class LibraryHandlerExecution(DomainModel):
+    receipt: LibraryHandlerReceiptView
+    replayed: StrictBool
+
+
+class SavedLibraryCitation(DomainModel):
+    id: UUID
+    receipt_id: UUID
+    run_id: UUID
+    scope: ScopeSnapshot
+    citation: CitationRef
+    created_at: UTCDatetime

@@ -1,0 +1,64 @@
+{
+  "baseline_commit": "641a6e82575ec7366ed3aea49214f2655b03c33c",
+  "scope": "CH-06B1 additive SQLite schema, fixed Judge baseline, native migration and interrupted recovery tests",
+  "ddl_contract": "docs/plans/2026-10-20-library-ledger-execution.md",
+  "red": {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_assistant_library_schema.py -q",
+    "exit_code": 1,
+    "failed": 1,
+    "reason": "Existing upgrade returned assistant-judge-v1; expected assistant-library-v1",
+    "log": "schema-red.log"
+  },
+  "tracer_green": {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_assistant_library_schema.py -q",
+    "exit_code": 0,
+    "passed": 1,
+    "log": "schema-tracer-green.log"
+  },
+  "first_target": {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_assistant_library_schema.py tests/integration/test_assistant_judge_schema.py tests/integration/test_assistant_model_schema.py tests/integration/test_assistant_attachment_schema.py tests/integration/test_storage_schema_versions.py tests/integration/test_storage_bootstrap.py tests/integration/test_workspace_upgrade.py -q --junitxml=.local/library-ledger-20261020/schema-target.xml",
+    "exit_code": 1,
+    "junit_entries": 125,
+    "passed": 123,
+    "errors": 4,
+    "failures": 0,
+    "skipped": 0,
+    "errors_explanation": "Two oversized automatic pytest parameter IDs failed Windows environment variable limit 32767 at both setup and teardown. Two product assertions did not run. Original raw log/XML retained locally; omitted here rather than represented as unmodified shared evidence.",
+    "raw_log": "schema-target.log",
+    "raw_xml": "schema-target.xml"
+  },
+  "corrected_target": {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_assistant_library_schema.py -q --junitxml=.local/library-ledger-20261020/schema-target-corrected.xml",
+    "exit_code": 0,
+    "junit_entries": 38,
+    "passed": 38,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "fix": "Explicit short IDs only; production code and test assertions unchanged.",
+    "log": "schema-target-corrected.log",
+    "xml": "schema-target-corrected.xml"
+  },
+  "target_coverage": {
+    "new_schema_final_passed": 38,
+    "other_six_files_passed_in_first_target": 87,
+    "distinct_tests_across_batches": 125,
+    "note": "Not a single frozen full-product verification; parallel domain/integrity development was ongoing."
+  },
+  "file_sha256": {
+    "src/cn_contract/assistant/library_schema.py": "36c1a10622a4d69074399705716c221da452c17d629d000e9744a2c77f6c7239",
+    "src/cn_contract/assistant_judge_schema_baseline.py": "7e058952fb9a9af89936bfc9a2af1aff205e7f8c0f5c481132d7117bbbd900a4",
+    "src/cn_contract/storage_schema.py": "21ae4950209bf008212f0768ee1cc8f351e2224ef48debc2264d47aa92d310ea",
+    "src/cn_contract/storage_bootstrap.py": "b25c2127bee1c74f746bd74f38d6ea5f14870e931a774f07acd60ee65f251a85",
+    "src/cn_contract/schema_migrations.py": "32cb27125c6f0fb904020afbb5a0b7c47681aca0e3e6bd66654af7b4c5cc1730",
+    "tests/integration/test_assistant_library_schema.py": "ddad96a7f79315cb3b5a8e69597adb18063c34135e0b5d0c5434773fce3fcd77",
+    "tests/integration/test_assistant_judge_schema.py": "137dbfb22ae9463fb30b5ac0120ecf08974e5b0a7590e8e6bfcf8cd114b4d25e",
+    "tests/integration/test_assistant_model_schema.py": "c9f01290d785c7e43c446bebe0d6f5a90143205931931862b5ac30145410a52a",
+    "tests/integration/test_workspace_upgrade.py": "c7a0b9c3f6a4bfd901e9e1d8fa1ba15aa84d5216d5107c3006e8fb3a080fad21"
+  },
+  "limitations": [
+    "No real library, model, installed workspace or cloud touched.",
+    "No full product suite, UI, frozen app or process memory measurement.",
+    "No commits or pushes by this subagent."
+  ]
+}

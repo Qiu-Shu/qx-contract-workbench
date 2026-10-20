@@ -1,0 +1,19 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_library_is_an_additive_upgrade_from_judge ________________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1036/test_library_is_an_additive_up0')
+
+    def test_library_is_an_additive_upgrade_from_judge(tmp_path):
+        with closing(old_db(tmp_path/'old.db', 'assistant-judge-v1', False)) as db:
+            before = schema_migrations.database_rows(db)
+>           assert schema_migrations.upgrade_database(db) == 'assistant-library-v1'
+E           AssertionError: assert 'assistant-judge-v1' == 'assistant-library-v1'
+E             
+E             - assistant-library-v1
+E             + assistant-judge-v1
+
+tests\integration\test_assistant_library_schema.py:12: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_schema.py::test_library_is_an_additive_upgrade_from_judge
+1 failed in 2.55s

@@ -19,8 +19,9 @@ def initialize_storage(database):
     from .assistant.attachment_schema import initialize_storage as attachments
     from .assistant.model_schema import initialize_storage as model
     from .assistant.judge_schema import initialize_storage as judge
+    from .assistant.library_schema import initialize_storage as library
     for init in (authorities, rules, facts, reviews, providers, queries, exports,
-                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge):
+                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library):
         init(database)
 
 

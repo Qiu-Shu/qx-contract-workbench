@@ -29,9 +29,8 @@ def old_db(path, version, native):
 
 
 def test_judge_is_additive_and_does_not_replace_main_ledger():
-    assert storage_schema.CURRENT_VERSION == 'assistant-judge-v1'
     previous = set(storage_schema.schema_rows('assistant-model-v1'))
-    current = set(storage_schema.schema_rows(storage_schema.CURRENT_VERSION))
+    current = set(storage_schema.schema_rows('assistant-judge-v1'))
     assert previous < current
     assert {row[2] for row in current - previous} == {
         'assistant_judge_attempts', 'assistant_judge_receipts', 'assistant_judge_decisions'}
@@ -56,12 +55,12 @@ def test_old_model_structure_is_frozen_even_if_current_schema_changes(monkeypatc
 def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_path, version, native):
     with closing(old_db(tmp_path/'old.db', version, native)) as db:
         before = schema_migrations.database_rows(db)
-        assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         after = schema_migrations.database_rows(db)
         assert set(before) < set(after)
-        assert storage_schema.identify_schema(after, native=native) == 'assistant-judge-v1'
+        assert storage_schema.identify_schema(after, native=native) == storage_schema.CURRENT_VERSION
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
-        assert schema_migrations.upgrade_database(db) == 'assistant-judge-v1'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         assert schema_migrations.database_rows(db) == after
 
 

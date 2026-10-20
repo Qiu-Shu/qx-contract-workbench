@@ -9,6 +9,7 @@ from ...library.cleaning import clean_case, normalize_case
 from ...library.index import current_generation
 from ...library.law_sections import law_fields, split_law
 from ...library.text import normalize, original_span, query_terms
+from ..citation_identity import citation_identity
 
 
 def _validated(model, value, code):
@@ -114,7 +115,7 @@ def _citation(original, generation, fragment, fields, start, end,
         'match_in_quote': bool(match_field == 'body' and start <= match_start < match_end <= end),
         'source_match': 'record_quote_matched', 'support_status': 'unverified', 'applicability_status': 'unverified',
     }
-    value['citation_id'] = digest(canonical(['qx-library-citation-v1', value]).encode('utf-8'))
+    value['citation_id'] = citation_identity(value)
     return d.CitationRef.model_validate(value)
 
 

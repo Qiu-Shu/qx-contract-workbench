@@ -59,3 +59,6 @@ tests/integration/test_assistant_library_*.py -text whitespace=blank-at-eol,blan
 
 docs/testing/library-memory/** -text -whitespace
 tests/unit/test_library_span.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/testing/library-ledger/** -text -whitespace
+tests/unit/test_library_records.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

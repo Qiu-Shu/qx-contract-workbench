@@ -1,0 +1,34 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_private_publish_original_cannot_replace_persisted_source_snapshot ____
+
+ledger = (<cn_contract.persistence.Database object at 0x000001F5D18B1310>, Actor(user_id=UUID('0951a866-9c37-41fc-972e-b5e992b5...act.assistant.library_handlers' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\library_handlers.py'>)
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1051/test_private_publish_origi... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+
+    def test_private_publish_original_cannot_replace_persisted_source_snapshot(ledger, library):
+        database, actor, _, handlers = ledger
+        first = execute(ledger, call(ledger), LegalLibraryAdapter(library[0]))
+        saved_id = first.receipt.result.citation_ids[0]
+        original = first.receipt.result.result.page.citations[0]
+        read = call(ledger, d.LibraryHandlerRequest(tool='legal_library.read_original', saved_citation_id=saved_id))
+        changed = original.model_copy(update={'title':'另一份虚构来源'})
+        result = d.AssistantLibraryToolResult(tool='legal_library.read_original', scope=read.payload.scope, citation=changed)
+        before = totals(database)
+        with database.session() as db:
+>           denied('LIBRARY_RECORD_INVALID', lambda: handlers._publish_in_session(actor, read, result, db))
+
+tests\integration\test_assistant_library_handlers.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+code = 'LIBRARY_RECORD_INVALID'
+action = <function test_private_publish_original_cannot_replace_persisted_source_snapshot.<locals>.<lambda> at 0x000001F5D188D8A0>
+
+    def denied(code, action):
+>       with pytest.raises(ServiceError) as caught:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+
+tests\integration\test_assistant_library_handlers.py:61: Failed
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_handlers.py::test_private_publish_original_cannot_replace_persisted_source_snapshot
+1 failed in 1.72s

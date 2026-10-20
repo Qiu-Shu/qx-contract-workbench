@@ -17,6 +17,8 @@ def statements_for(version):
         from .assistant.model_schema import STATEMENTS
     elif version == 'assistant-judge-v1':
         from .assistant.judge_schema import STATEMENTS
+    elif version == 'assistant-library-v1':
+        from .assistant.library_schema import STATEMENTS
     else:
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     return STATEMENTS

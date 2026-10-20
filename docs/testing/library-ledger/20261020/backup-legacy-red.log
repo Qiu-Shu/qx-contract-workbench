@@ -1,0 +1,29 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_old_schema_cannot_hide_new_tool_events _________________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1055/test_old_schema_cannot_hide_ne0')
+
+    def test_old_schema_cannot_hide_new_tool_events(tmp_path):
+        root, database, *_ = judge_workspace(tmp_path, True)
+        try:
+            with database.session() as db:
+                token, _ = login(USERNAME, PASSWORD, db)
+                actor = authenticate(token, db)
+                view = service.create_conversation(actor, d.AssistantConversationCreateInput(request_id=uuid4()), db)
+                run = service.save_message(actor, view.scope.conversation_id, d.AssistantMessageInput(
+                    request_id=uuid4(), expected_scope=view.scope, expected_composer_revision=view.composer_revision,
+                    content='旧容器中的不合格式虚构事件'), db)
+                db.execute(text('''INSERT INTO assistant_run_events
+                    (run_id,seq,event_type,audience,payload_json,created_at)
+                    VALUES (:run,2,'tool.before','internal','{}',:at)'''),
+                    {'run':str(run.id), 'at':run.created_at.isoformat()})
+            target = tmp_path/'hidden-new.qxbak'
+>           with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_upgrade_backup.py:57: Failed
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_upgrade_backup.py::test_old_schema_cannot_hide_new_tool_events
+1 failed, 4 deselected in 4.06s

@@ -1,0 +1,68 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_history_does_not_require_old_current_session_or_revision[rebound] ____
+
+ledger = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1053/test_history_does_not_requ...', 'state': 'queued'}, created_at=datetime.datetime(2026, 10, 20, 12, 11, 8, 858097, tzinfo=datetime.timezone.utc)),)))
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1053/test_history_does_not_requ... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+change = 'rebound'
+
+    @pytest.mark.parametrize('change', ['revoked', 'new_input', 'new_draft', 'unfinished', 'rebound'])
+    def test_history_does_not_require_old_current_session_or_revision(ledger, library, change):
+        _, database, actor, run = ledger
+        search(ledger, library, execute=change != 'unfinished')
+        with database.session() as db:
+            if change == 'revoked':
+                db.execute(text('UPDATE sessions SET revoked=1'))
+                db.execute(text('UPDATE users SET disabled=1'))
+            elif change == 'rebound':
+                # A later binding keeps its earlier conversation-scoped citation as history.
+                db.execute(text('UPDATE assistant_conversations SET binding_revision=binding_revision+1'))
+            elif change in ('new_input', 'new_draft'):
+                service.cancel_run(actor, run.id, d.AssistantCancelInput(request_id=uuid4()), db)
+                view = service.read_conversation(actor, run.scope.conversation_id, db)
+                if change == 'new_input':
+                    service.save_message(actor, view.scope.conversation_id, d.AssistantMessageInput(
+                        request_id=uuid4(), expected_scope=view.scope, expected_composer_revision=view.composer_revision,
+                        content='下一轮完全虚构咨询。'), db)
+                else:
+                    service.save_draft(actor, view.scope.conversation_id, d.AssistantDraftInput(
+                        expected_scope=view.scope, expected_composer_revision=view.composer_revision,
+                        content='新的合成草稿'), db)
+>           assert backup._file_references(db) == []
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_library_backup.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\backup.py:170: in _file_references
+    validate_library_records(db, allowed=allow_assistant)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+db = <sqlalchemy.orm.session.Session object at 0x000001C8C61F2B70>
+
+    def validate_library_records(db, *, allowed=True):
+        """Snapshots are historical proof; current sessions and external files may be offline."""
+        schema = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+        native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
+        version = identify_schema(schema, native=native)
+        if version != 'assistant-library-v1':
+            return
+        events = db.execute(text("SELECT * FROM assistant_run_events WHERE lower(event_type) LIKE 'tool.%'")).mappings().all()
+        receipts = db.execute(text('SELECT * FROM assistant_handler_receipts')).mappings().all()
+        citations = db.execute(text('SELECT * FROM assistant_library_citations ORDER BY receipt_id,ordinal')).mappings().all()
+        if not events and not receipts and not citations:
+            return
+        if not allowed:
+            raise ValueError('ASSISTANT_LIBRARY_REQUIRE_QXBAK')
+        identities = db.scalars(text('SELECT id FROM local_workspace_identity')).all() if native else []
+        try:
+            if len(identities) != 1:
+                _fail()
+            _validate(db, events, receipts, citations, _uuid(identities[0]))
+        except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
+>           raise ValueError('ASSISTANT_LIBRARY_INTEGRITY') from None
+E           ValueError: ASSISTANT_LIBRARY_INTEGRITY
+
+src\cn_contract\assistant\library_integrity.py:163: ValueError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_backup.py::test_history_does_not_require_old_current_session_or_revision[rebound]
+1 failed, 43 deselected in 1.94s

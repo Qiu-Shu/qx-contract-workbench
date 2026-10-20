@@ -1,0 +1,90 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+__ test_rehashed_outer_records_cannot_hide_invalid_citation_identity[create] __
+
+ledger = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1060/test_rehashed_outer_record...', 'state': 'queued'}, created_at=datetime.datetime(2026, 10, 20, 12, 17, 6, 383895, tzinfo=datetime.timezone.utc)),)))
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1060/test_rehashed_outer_record... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1060/test_rehashed_outer_records_ca0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001CE60295D30>
+operation = 'create'
+
+    @pytest.mark.parametrize('operation', ['create', 'restore'])
+    def test_rehashed_outer_records_cannot_hide_invalid_citation_identity(ledger, library, tmp_path, monkeypatch, operation):
+        from cn_contract.assistant.library_records import sha
+        from cn_contract.config import canonical_json
+        root, database, *_ = ledger
+        search(ledger, library)
+        with database.session() as db:
+            receipt = dict(db.execute(text('SELECT * FROM assistant_handler_receipts')).mappings().one())
+            citation = dict(db.execute(text('SELECT * FROM assistant_library_citations WHERE ordinal=0')).mappings().one())
+        value = json.loads(citation['citation_json'])
+        value['citation_id'] = '0'*64
+        raw = canonical_json(value)
+        result = json.loads(receipt['result_json'])
+        result['result']['page']['citations'][0] = value
+        result_raw = canonical_json(result)
+        corrupt(database, 'assistant_library_citations',
+            'UPDATE assistant_library_citations SET citation_json=?,citation_sha256=? WHERE id=?',
+            (raw, sha(raw), citation['id']))
+        corrupt(database, 'assistant_handler_receipts',
+            'UPDATE assistant_handler_receipts SET result_json=?,result_sha256=? WHERE id=?',
+            (result_raw, sha(result_raw), receipt['id']))
+        source_before = (root/'workbench.db').read_bytes()
+        archive = tmp_path/'invalid-content-identity.qxbak'
+        if operation == 'create':
+>           with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_backup.py:327: Failed
+_ test_rehashed_outer_records_cannot_hide_invalid_citation_identity[restore] __
+
+ledger = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1060/test_rehashed_outer_record...', 'state': 'queued'}, created_at=datetime.datetime(2026, 10, 20, 12, 17, 8, 803226, tzinfo=datetime.timezone.utc)),)))
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1060/test_rehashed_outer_record... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1060/test_rehashed_outer_records_ca1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001CE60528A10>
+operation = 'restore'
+
+    @pytest.mark.parametrize('operation', ['create', 'restore'])
+    def test_rehashed_outer_records_cannot_hide_invalid_citation_identity(ledger, library, tmp_path, monkeypatch, operation):
+        from cn_contract.assistant.library_records import sha
+        from cn_contract.config import canonical_json
+        root, database, *_ = ledger
+        search(ledger, library)
+        with database.session() as db:
+            receipt = dict(db.execute(text('SELECT * FROM assistant_handler_receipts')).mappings().one())
+            citation = dict(db.execute(text('SELECT * FROM assistant_library_citations WHERE ordinal=0')).mappings().one())
+        value = json.loads(citation['citation_json'])
+        value['citation_id'] = '0'*64
+        raw = canonical_json(value)
+        result = json.loads(receipt['result_json'])
+        result['result']['page']['citations'][0] = value
+        result_raw = canonical_json(result)
+        corrupt(database, 'assistant_library_citations',
+            'UPDATE assistant_library_citations SET citation_json=?,citation_sha256=? WHERE id=?',
+            (raw, sha(raw), citation['id']))
+        corrupt(database, 'assistant_handler_receipts',
+            'UPDATE assistant_handler_receipts SET result_json=?,result_sha256=? WHERE id=?',
+            (result_raw, sha(result_raw), receipt['id']))
+        source_before = (root/'workbench.db').read_bytes()
+        archive = tmp_path/'invalid-content-identity.qxbak'
+        if operation == 'create':
+            with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            assert not archive.exists()
+        else:
+            # An authenticated hostile archive has both outer hashes recomputed; restore must still reject it.
+            with monkeypatch.context() as patch:
+                patch.setattr(workspace_backup, '_file_references', lambda db: [])
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            archive_before = archive.read_bytes()
+            destination = tmp_path/'must-not-publish'
+>           with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_backup.py:337: Failed
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_backup.py::test_rehashed_outer_records_cannot_hide_invalid_citation_identity[create]
+FAILED tests/integration/test_assistant_library_backup.py::test_rehashed_outer_records_cannot_hide_invalid_citation_identity[restore]
+2 failed, 44 deselected in 6.00s

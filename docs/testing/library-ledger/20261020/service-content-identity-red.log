@@ -1,0 +1,225 @@
+FFFFFFFFFF                                                               [100%]
+================================== FAILURES ===================================
+_ test_every_citation_container_checks_its_own_content_identity[changes0-citation] _
+
+kind = 'citation'
+changes = {'citation_id': '0000000000000000000000000000000000000000000000000000000000000000'}
+
+    @pytest.mark.parametrize('kind', ['citation', 'page', 'handler', 'saved'])
+    @pytest.mark.parametrize('changes', [{'citation_id':'0' * 64}, {'title':'被替换的虚构标题'}])
+    def test_every_citation_container_checks_its_own_content_identity(kind, changes):
+        from cn_contract.assistant.library_records import encoded, model
+        original = synthetic_citation()
+        good = citation_container(original, kind)
+        assert model(type(good), encoded(good)) == good
+        changed = citation_container(original.model_copy(update=changes), kind)
+>       with pytest.raises(ValueError, match='LIBRARY_RECORD_INVALID'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_library_records.py:91: Failed
+_ test_every_citation_container_checks_its_own_content_identity[changes0-page] _
+
+kind = 'page'
+changes = {'citation_id': '0000000000000000000000000000000000000000000000000000000000000000'}
+
+    @pytest.mark.parametrize('kind', ['citation', 'page', 'handler', 'saved'])
+    @pytest.mark.parametrize('changes', [{'citation_id':'0' * 64}, {'title':'被替换的虚构标题'}])
+    def test_every_citation_container_checks_its_own_content_identity(kind, changes):
+        from cn_contract.assistant.library_records import encoded, model
+        original = synthetic_citation()
+        good = citation_container(original, kind)
+        assert model(type(good), encoded(good)) == good
+        changed = citation_container(original.model_copy(update=changes), kind)
+>       with pytest.raises(ValueError, match='LIBRARY_RECORD_INVALID'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_library_records.py:91: Failed
+_ test_every_citation_container_checks_its_own_content_identity[changes0-handler] _
+
+kind = 'handler'
+changes = {'citation_id': '0000000000000000000000000000000000000000000000000000000000000000'}
+
+    @pytest.mark.parametrize('kind', ['citation', 'page', 'handler', 'saved'])
+    @pytest.mark.parametrize('changes', [{'citation_id':'0' * 64}, {'title':'被替换的虚构标题'}])
+    def test_every_citation_container_checks_its_own_content_identity(kind, changes):
+        from cn_contract.assistant.library_records import encoded, model
+        original = synthetic_citation()
+        good = citation_container(original, kind)
+        assert model(type(good), encoded(good)) == good
+        changed = citation_container(original.model_copy(update=changes), kind)
+>       with pytest.raises(ValueError, match='LIBRARY_RECORD_INVALID'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_library_records.py:91: Failed
+_ test_every_citation_container_checks_its_own_content_identity[changes0-saved] _
+
+kind = 'saved'
+changes = {'citation_id': '0000000000000000000000000000000000000000000000000000000000000000'}
+
+    @pytest.mark.parametrize('kind', ['citation', 'page', 'handler', 'saved'])
+    @pytest.mark.parametrize('changes', [{'citation_id':'0' * 64}, {'title':'被替换的虚构标题'}])
+    def test_every_citation_container_checks_its_own_content_identity(kind, changes):
+        from cn_contract.assistant.library_records import encoded, model
+        original = synthetic_citation()
+        good = citation_container(original, kind)
+        assert model(type(good), encoded(good)) == good
+        changed = citation_container(original.model_copy(update=changes), kind)
+>       with pytest.raises(ValueError, match='LIBRARY_RECORD_INVALID'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_library_records.py:91: Failed
+_ test_every_citation_container_checks_its_own_content_identity[changes1-citation] _
+
+kind = 'citation', changes = {'title': '被替换的虚构标题'}
+
+    @pytest.mark.parametrize('kind', ['citation', 'page', 'handler', 'saved'])
+    @pytest.mark.parametrize('changes', [{'citation_id':'0' * 64}, {'title':'被替换的虚构标题'}])
+    def test_every_citation_container_checks_its_own_content_identity(kind, changes):
+        from cn_contract.assistant.library_records import encoded, model
+        original = synthetic_citation()
+        good = citation_container(original, kind)
+        assert model(type(good), encoded(good)) == good
+        changed = citation_container(original.model_copy(update=changes), kind)
+>       with pytest.raises(ValueError, match='LIBRARY_RECORD_INVALID'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_library_records.py:91: Failed
+_ test_every_citation_container_checks_its_own_content_identity[changes1-page] _
+
+kind = 'page', changes = {'title': '被替换的虚构标题'}
+
+    @pytest.mark.parametrize('kind', ['citation', 'page', 'handler', 'saved'])
+    @pytest.mark.parametrize('changes', [{'citation_id':'0' * 64}, {'title':'被替换的虚构标题'}])
+    def test_every_citation_container_checks_its_own_content_identity(kind, changes):
+        from cn_contract.assistant.library_records import encoded, model
+        original = synthetic_citation()
+        good = citation_container(original, kind)
+        assert model(type(good), encoded(good)) == good
+        changed = citation_container(original.model_copy(update=changes), kind)
+>       with pytest.raises(ValueError, match='LIBRARY_RECORD_INVALID'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_library_records.py:91: Failed
+_ test_every_citation_container_checks_its_own_content_identity[changes1-handler] _
+
+kind = 'handler', changes = {'title': '被替换的虚构标题'}
+
+    @pytest.mark.parametrize('kind', ['citation', 'page', 'handler', 'saved'])
+    @pytest.mark.parametrize('changes', [{'citation_id':'0' * 64}, {'title':'被替换的虚构标题'}])
+    def test_every_citation_container_checks_its_own_content_identity(kind, changes):
+        from cn_contract.assistant.library_records import encoded, model
+        original = synthetic_citation()
+        good = citation_container(original, kind)
+        assert model(type(good), encoded(good)) == good
+        changed = citation_container(original.model_copy(update=changes), kind)
+>       with pytest.raises(ValueError, match='LIBRARY_RECORD_INVALID'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_library_records.py:91: Failed
+_ test_every_citation_container_checks_its_own_content_identity[changes1-saved] _
+
+kind = 'saved', changes = {'title': '被替换的虚构标题'}
+
+    @pytest.mark.parametrize('kind', ['citation', 'page', 'handler', 'saved'])
+    @pytest.mark.parametrize('changes', [{'citation_id':'0' * 64}, {'title':'被替换的虚构标题'}])
+    def test_every_citation_container_checks_its_own_content_identity(kind, changes):
+        from cn_contract.assistant.library_records import encoded, model
+        original = synthetic_citation()
+        good = citation_container(original, kind)
+        assert model(type(good), encoded(good)) == good
+        changed = citation_container(original.model_copy(update=changes), kind)
+>       with pytest.raises(ValueError, match='LIBRARY_RECORD_INVALID'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_library_records.py:91: Failed
+__ test_rehashed_outer_rows_do_not_allow_wrong_citation_identity_in_history ___
+
+ledger = (<cn_contract.persistence.Database object at 0x000001F6980D3A10>, Actor(user_id=UUID('5a4da9f0-ba3b-4113-b52f-3e730700...act.assistant.library_handlers' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\library_handlers.py'>)
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1061/test_rehashed_outer_rows_d... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+
+    def test_rehashed_outer_rows_do_not_allow_wrong_citation_identity_in_history(ledger, library):
+        from cn_contract.assistant.library_records import sha
+        from cn_contract.config import canonical_json
+        from tests.integration.test_assistant_attachment_backup import corrupt
+        database, actor, _, handlers = ledger
+        result = execute(ledger, call(ledger), LegalLibraryAdapter(library[0]))
+        identifier = result.receipt.result.citation_ids[0]
+        with database.session() as db:
+            citation = dict(db.execute(text('SELECT * FROM assistant_library_citations WHERE id=:id'),
+                {'id':str(identifier)}).mappings().one())
+            receipt = dict(db.execute(text('SELECT * FROM assistant_handler_receipts WHERE id=:id'),
+                {'id':citation['receipt_id']}).mappings().one())
+        value = json.loads(citation['citation_json'])
+        value['citation_id'] = '0' * 64
+        raw = canonical_json(value)
+        payload = json.loads(receipt['result_json'])
+        payload['result']['page']['citations'][0] = value
+        payload_raw = canonical_json(payload)
+        corrupt(database, 'assistant_library_citations',
+            'UPDATE assistant_library_citations SET citation_json=?,citation_sha256=? WHERE id=?',
+            (raw, sha(raw), str(identifier)))
+        corrupt(database, 'assistant_handler_receipts',
+            'UPDATE assistant_handler_receipts SET result_json=?,result_sha256=? WHERE id=?',
+            (payload_raw, sha(payload_raw), receipt['id']))
+        with database.session() as db:
+>           denied('LIBRARY_RECORD_INVALID', lambda: handlers.read_saved_citation(actor, identifier, db))
+
+tests\integration\test_assistant_library_handlers.py:434: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+code = 'LIBRARY_RECORD_INVALID'
+action = <function test_rehashed_outer_rows_do_not_allow_wrong_citation_identity_in_history.<locals>.<lambda> at 0x000001F6980AE840>
+
+    def denied(code, action):
+>       with pytest.raises(ServiceError) as caught:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+
+tests\integration\test_assistant_library_handlers.py:61: Failed
+____ test_publish_rejects_wrong_content_identity_before_persisting_any_row ____
+
+ledger = (<cn_contract.persistence.Database object at 0x000001F6957D2120>, Actor(user_id=UUID('26ef14cc-31f3-4017-b864-27dcecd5...act.assistant.library_handlers' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\library_handlers.py'>)
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1061/test_publish_rejects_wrong... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+
+    def test_publish_rejects_wrong_content_identity_before_persisting_any_row(ledger, library):
+        database, actor, _, handlers = ledger
+        first = call(ledger)
+        page = LegalLibraryAdapter(library[0]).search(first.payload.request.query)
+        changed = page.citations[0].model_copy(update={'citation_id':'0' * 64})
+        page = page.model_copy(update={'citations':(changed, *page.citations[1:])})
+        result = d.AssistantLibraryToolResult(tool='legal_library.search', scope=first.payload.scope, page=page)
+        with database.session() as db:
+>           denied('LIBRARY_RECORD_INVALID', lambda: handlers._publish_in_session(actor, first, result, db))
+
+tests\integration\test_assistant_library_handlers.py:445: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+code = 'LIBRARY_RECORD_INVALID'
+action = <function test_publish_rejects_wrong_content_identity_before_persisting_any_row.<locals>.<lambda> at 0x000001F699EC1120>
+
+    def denied(code, action):
+>       with pytest.raises(ServiceError) as caught:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+
+tests\integration\test_assistant_library_handlers.py:61: Failed
+=========================== short test summary info ===========================
+FAILED tests/unit/test_library_records.py::test_every_citation_container_checks_its_own_content_identity[changes0-citation]
+FAILED tests/unit/test_library_records.py::test_every_citation_container_checks_its_own_content_identity[changes0-page]
+FAILED tests/unit/test_library_records.py::test_every_citation_container_checks_its_own_content_identity[changes0-handler]
+FAILED tests/unit/test_library_records.py::test_every_citation_container_checks_its_own_content_identity[changes0-saved]
+FAILED tests/unit/test_library_records.py::test_every_citation_container_checks_its_own_content_identity[changes1-citation]
+FAILED tests/unit/test_library_records.py::test_every_citation_container_checks_its_own_content_identity[changes1-page]
+FAILED tests/unit/test_library_records.py::test_every_citation_container_checks_its_own_content_identity[changes1-handler]
+FAILED tests/unit/test_library_records.py::test_every_citation_container_checks_its_own_content_identity[changes1-saved]
+FAILED tests/integration/test_assistant_library_handlers.py::test_rehashed_outer_rows_do_not_allow_wrong_citation_identity_in_history
+FAILED tests/integration/test_assistant_library_handlers.py::test_publish_rejects_wrong_content_identity_before_persisting_any_row
+10 failed, 44 deselected in 3.33s

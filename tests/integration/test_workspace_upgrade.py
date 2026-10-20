@@ -21,7 +21,8 @@ def legacy(tmp_path,monkeypatch):
         matter=create_case(client,login(client),title='升级前合成案件')
     # Remove versioned extensions, recreating the fixed pre-intake schema.
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        for table in ('assistant_judge_decisions', 'assistant_judge_receipts', 'assistant_judge_attempts',
+        for table in ('assistant_library_citations', 'assistant_handler_receipts',
+                      'assistant_judge_decisions', 'assistant_judge_receipts', 'assistant_judge_attempts',
                       'assistant_model_outputs', 'assistant_model_receipts', 'assistant_model_attempts',
                       'assistant_material_snapshots', 'assistant_attachment_parses', 'assistant_attachments',
                       'assistant_run_events', 'assistant_runs', 'assistant_messages',
@@ -127,7 +128,7 @@ def test_existing_workspace_does_not_run_create_all(legacy, monkeypatch):
     with TestClient(local_server.build_local_app(root)) as client: login(client)
 
 
-@pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1'])
+@pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1'])
 def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
     from cn_contract.web import workspace_upgrade
     from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
@@ -157,7 +158,8 @@ def test_assistant_marker_failure_recovers_without_repeating_completed_steps(leg
 @pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
                                              ('assistant-attachments-v1', 'assistant-v1'),
                                              ('assistant-model-v1', 'assistant-attachments-v1'),
-                                             ('assistant-judge-v1', 'assistant-model-v1')])
+                                             ('assistant-judge-v1', 'assistant-model-v1'),
+                                             ('assistant-library-v1', 'assistant-judge-v1')])
 def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
     from cn_contract.web import workspace_upgrade
     from cn_contract.storage_schema import identify_schema
@@ -176,7 +178,7 @@ def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, ta
     assert (root/('upgrade-'+previous+'.json')).read_bytes() == previous_receipt
 
 
-@pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1'])
+@pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1'])
 @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
 def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
     from cn_contract.web import workspace_upgrade
@@ -201,7 +203,8 @@ def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damag
             trigger = {'assistant-v1':'immutable_assistant_messages_update',
                        'assistant-attachments-v1':'immutable_assistant_attachments_update',
                        'assistant-model-v1':'immutable_assistant_model_receipts_update',
-                       'assistant-judge-v1':'immutable_assistant_judge_receipts_update'}[target]
+                       'assistant-judge-v1':'immutable_assistant_judge_receipts_update',
+                       'assistant-library-v1':'immutable_assistant_handler_receipts_update'}[target]
             db.execute('DROP TRIGGER '+trigger); db.commit()
     with pytest.raises(ValueError, match='WORKSPACE_DATABASE_MISMATCH'):
         local_server.build_local_app(root)

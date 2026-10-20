@@ -1,16 +1,17 @@
 """Fixed supported SQLite structures, independent of application initialization."""
-from .assistant.judge_schema import expected_objects as judge_objects
+from .assistant.library_schema import expected_objects as library_objects
+from .assistant_judge_schema_baseline import ASSISTANT_JUDGE_V1_ROWS
 from .assistant_model_schema_baseline import ASSISTANT_MODEL_V1_ROWS
 from .assistant_attachment_schema_baseline import ASSISTANT_ATTACHMENTS_V1_ROWS
 from .assistant_schema_baseline import ASSISTANT_V1_ROWS
 from .schema_baseline import INTAKE_V1_ROWS
 
 
-CURRENT_VERSION = 'assistant-judge-v1'
-VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', CURRENT_VERSION)
+CURRENT_VERSION = 'assistant-library-v1'
+VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', CURRENT_VERSION)
 SUPPORTED_VERSIONS = VERSIONS
 _INTAKE_TABLES = frozenset(('intake_cases', 'intake_revisions'))
-_JUDGE_ROWS = tuple(judge_objects())
+_LIBRARY_ROWS = tuple(library_objects())
 _IDENTITY_ROWS = (
     ('index', 'sqlite_autoindex_local_workspace_identity_1', 'local_workspace_identity', None),
     ('table', 'local_workspace_identity', 'local_workspace_identity',
@@ -24,14 +25,16 @@ def schema_rows(version, *, native=False):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     result = [row for row in INTAKE_V1_ROWS
               if version != 'pre-intake' or row[2] not in _INTAKE_TABLES]
-    if version in ('assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1'):
+    if version in VERSIONS[2:]:
         result.extend(ASSISTANT_V1_ROWS)
-    if version in ('assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1'):
+    if version in VERSIONS[3:]:
         result.extend(ASSISTANT_ATTACHMENTS_V1_ROWS)
-    if version in ('assistant-model-v1', 'assistant-judge-v1'):
+    if version in VERSIONS[4:]:
         result.extend(ASSISTANT_MODEL_V1_ROWS)
-    if version == 'assistant-judge-v1':
-        result.extend(_JUDGE_ROWS)
+    if version in VERSIONS[5:]:
+        result.extend(ASSISTANT_JUDGE_V1_ROWS)
+    if version == 'assistant-library-v1':
+        result.extend(_LIBRARY_ROWS)
     if native:
         result.extend(_IDENTITY_ROWS)
     if len({row[1] for row in result}) != len(result):
