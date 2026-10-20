@@ -13,6 +13,12 @@ contextBridge.exposeInMainWorld('desktopSetup',Object.freeze({
   modelRuntimeStatus:()=>ipcRenderer.invoke('desktop:model-runtime-status'),
   modelConfigure:model=>ipcRenderer.invoke('desktop:model-configure',model),
   modelDisable:()=>ipcRenderer.invoke('desktop:model-disable'),
+  judgeStatus:()=>ipcRenderer.invoke('desktop:judge-status'),
+  judgeSave:secret=>ipcRenderer.invoke('desktop:judge-save',secret),
+  judgeRemove:()=>ipcRenderer.invoke('desktop:judge-remove'),
+  judgeRuntimeStatus:()=>ipcRenderer.invoke('desktop:judge-runtime-status'),
+  judgeConfigure:model=>ipcRenderer.invoke('desktop:judge-configure',model),
+  judgeDisable:()=>ipcRenderer.invoke('desktop:judge-disable'),
   resume:()=>ipcRenderer.invoke('desktop:resume'),
   onState:callback=>ipcRenderer.on('desktop:state',(_event,value)=>callback(value))
 }));

@@ -1,0 +1,100 @@
+{
+  "time_utc": "2026-10-20T10:05:03.670812+00:00",
+  "base": "29564821ce02210426261b9d562e624d93cdf094",
+  "node": {
+    "command": "node --test desktop/tests/*.test.cjs",
+    "tests": 190,
+    "passed": 190,
+    "exit_code": 0
+  },
+  "python": {
+    "tests": 119,
+    "passed": 119,
+    "exit_code": 0,
+    "command_record": "backend/backend-final.json"
+  },
+  "gates": [
+    {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "cn_contract.cli",
+        "schema",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "scripts/verify_defaults.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "windows": {
+    "source_groups": 9,
+    "frozen_groups": 9,
+    "each_inputs": 191,
+    "source_frozen_inputs_equal": true,
+    "each_electron_launches": 3,
+    "main_judge_record_counts": {
+      "assistant_messages": 0,
+      "assistant_model_attempts": 0,
+      "assistant_model_receipts": 0,
+      "assistant_model_outputs": 0,
+      "assistant_judge_attempts": 0,
+      "assistant_judge_receipts": 0,
+      "assistant_judge_decisions": 0
+    },
+    "restored_record_counts": {
+      "assistant_messages": 0,
+      "assistant_model_attempts": 0,
+      "assistant_model_receipts": 0,
+      "assistant_model_outputs": 0,
+      "assistant_judge_attempts": 0,
+      "assistant_judge_receipts": 0,
+      "assistant_judge_decisions": 0
+    }
+  },
+  "reviews": {
+    "Spec": "no findings; static independent review",
+    "Standards": "no findings; includes two driver corrections"
+  },
+  "size_delta_bytes": 2626,
+  "installed_version": "0.4.1 unchanged",
+  "limits": [
+    "No real model/provider execution; no process-wide network counter. Source httpx/httpx2 send tripwires were zero; frozen not instrumented.",
+    "Application zoom 100/150/200%, not OS DPI or another Windows user.",
+    "Jev configuration only: no native per-request policy or main-run integration yet.",
+    "Restore seed by host workspace_backup API, actual recovered source/frozen backend checked; not frozen maintenance restore execution.",
+    "No new dependencies/schema/queue; no installer/RSS/general startup improvement claim.",
+    "WorkBuddy current status busy/unknown; no delegation result."
+  ]
+}

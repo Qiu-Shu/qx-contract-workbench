@@ -127,7 +127,7 @@ async function showMaintenance(operation){
       if(backend)await backend.stop();
     }
     const messages={backup:'备份当前工作区的全部账户和案件资料。',restore:'从加密备份建立独立核对副本，原工作区保留。',
-      'model-settings':'管理本机密钥与本次运行的主模型。配置后仍需单独确认发送。'};
+      'model-settings':'管理主模型与可选 Jev 辅助判断。配置后仍需单独确认发送。'};
     setState({mode:operation,message:messages[operation]});
   }finally{busy=false;}
 }
@@ -221,6 +221,7 @@ else {
         {label:'断开资料库连接',click:async()=>{const next={...settings};delete next.library_root;if (!busy && (await changeSettings(next)).ok) await startBackend();}},
         {type:'separator'},
         {label:'主模型设置…',click:()=>showMaintenance('model-settings')},
+        {label:'Jev 辅助设置…',click:()=>showMaintenance('model-settings')},
         {label:'备份案件资料…',click:()=>showMaintenance('backup')},
         {label:'从备份建立核对副本…',click:()=>showMaintenance('restore')},
         {label:'返回原工作区',click:async()=>{if(!busy&&(await changeSettings({...settings,workspace:'main'})).ok)await startBackend();}},
@@ -232,13 +233,18 @@ else {
     ipcMain.handle('desktop:library',event=>isSetup(event)?chooseLibrary():{ok:false});
     ipcMain.handle('desktop:maintenance',runMaintenance);
     const store=createModelCredentialStore({dataParent,safeStorage,platform:process.platform});
-    const modelSession=createModelSession({store,
-      getBackend:()=>activeBackend?.instance===backend&&origin&&backend&&!backend.closing&&!activeBackend.workspace.startsWith('recovered/')?backend:null,
-      onFailure:async owned=>{if(!stopping&&backend===owned)await showError(owned);}});
-    modelSettings=registerModelSettings({ipcMain,store,runtime:modelSession,
+    const sessionOptions={getBackend:()=>activeBackend?.instance===backend&&origin&&backend&&!backend.closing&&!activeBackend.workspace.startsWith('recovered/')?backend:null,
+      onFailure:async owned=>{if(!stopping&&backend===owned)await showError(owned);}};
+    const modelSession=createModelSession({store,...sessionOptions});
+    const judgeStore=createModelCredentialStore({dataParent,safeStorage,platform:process.platform,provider:'typesafe'});
+    const judgeSession=createModelSession({store:judgeStore,...sessionOptions,kind:'judge'});
+    const settingsOptions={ipcMain,
       isAllowed:event=>!busy&&!stopping&&state.mode==='model-settings'&&isSetup(event),
       captureGuard:event=>{const epoch=documentEpoch;return ()=>epoch===documentEpoch&&!stopping&&state.mode==='model-settings'&&isSetup(event);},
-      setBusy:value=>{busy=value;}});
+      setBusy:value=>{busy=value;}};
+    const handlers=[registerModelSettings({...settingsOptions,store,runtime:modelSession}),
+      registerModelSettings({...settingsOptions,store:judgeStore,runtime:judgeSession,kind:'judge'})];
+    modelSettings={wait:()=>Promise.allSettled(handlers.map(handler=>handler.wait()))};
     approvalWindow=createModelApprovalWindow({BrowserWindow,ipcMain,session});
     modelApproval=registerModelApproval({ipcMain,runtime:modelSession,
       isBusy:()=>busy||stopping,setBusy:value=>{busy=value;},confirm:approvalWindow.confirm,

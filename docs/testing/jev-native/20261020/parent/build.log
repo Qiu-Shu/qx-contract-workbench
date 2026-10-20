@@ -1,0 +1,152 @@
+104 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.8
+104 INFO: Python: 3.12.14
+136 INFO: Platform: Windows-10-10.0.19045-SP0
+136 INFO: Python environment: D:\Documents\ChatGPT\������Ŀ\.venv
+1128 INFO: Module search paths (PYTHONPATH):
+['D:\\Documents\\ChatGPT\\������Ŀ',
+ 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build',
+ 'C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.zip',
+ 'C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs',
+ 'C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib',
+ 'C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python',
+ 'D:\\Documents\\ChatGPT\\������Ŀ\\.venv',
+ 'D:\\Documents\\ChatGPT\\������Ŀ\\.venv\\Lib\\site-packages',
+ 'D:\\Documents\\ChatGPT\\������Ŀ\\src',
+ 'D:\\Documents\\ChatGPT\\������Ŀ\\.venv\\Lib\\site-packages\\win32',
+ 'D:\\Documents\\ChatGPT\\������Ŀ\\.venv\\Lib\\site-packages\\win32\\lib',
+ 'D:\\Documents\\ChatGPT\\������Ŀ\\.venv\\Lib\\site-packages\\pythonwin',
+ 'D:\\Documents\\ChatGPT\\������Ŀ\\scripts',
+ 'D:\\Documents\\ChatGPT\\������Ŀ\\src']
+1359 INFO: Appending 'datas' from .spec
+1366 INFO: checking Analysis
+1366 INFO: Building Analysis because Analysis-00.toc is non existent
+1366 INFO: Looking for Python shared library...
+1366 INFO: Using Python shared library: C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python312.dll
+1366 INFO: Running Analysis Analysis-00.toc
+1366 INFO: Target bytecode optimization level: 0
+1366 INFO: Initializing module dependency graph...
+1367 INFO: Initializing module graph hook caches...
+1379 INFO: Analyzing modules for base_library.zip ...
+2190 INFO: Processing standard module hook 'hook-heapq.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+2254 INFO: Processing standard module hook 'hook-encodings.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+3190 INFO: Processing standard module hook 'hook-math.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+3363 INFO: Processing standard module hook 'hook-pickle.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+4322 INFO: Caching module dependency graph...
+4359 INFO: Analyzing D:\Documents\ChatGPT\������Ŀ\scripts\desktop_backend_entry.py
+4492 INFO: Processing standard module hook 'hook-platform.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+4502 INFO: Processing standard module hook 'hook-pydantic.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+4779 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+4780 INFO: SetuptoolsInfo: initializing cached setuptools info...
+5300 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+5405 INFO: Processing standard module hook 'hook-xml.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+5580 INFO: Processing standard module hook 'hook-_ctypes.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+6123 INFO: Processing standard module hook 'hook-zoneinfo.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+6141 INFO: Processing standard module hook 'hook-sysconfig.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+6701 INFO: Processing standard module hook 'hook-argon2.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+6736 INFO: Processing standard module hook 'hook-sqlalchemy.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+7240 INFO: Processing pre-safe-import-module hook 'hook-importlib_metadata.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+7241 INFO: Setuptools: 'importlib_metadata' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.importlib_metadata'!
+7248 INFO: Processing standard module hook 'hook-setuptools.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+7261 INFO: Processing pre-safe-import-module hook 'hook-distutils.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+7279 INFO: Processing pre-safe-import-module hook 'hook-jaraco.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+7279 INFO: Setuptools: 'jaraco' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco'!
+7289 INFO: Processing pre-safe-import-module hook 'hook-more_itertools.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+7289 INFO: Setuptools: 'more_itertools' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.more_itertools'!
+7390 INFO: Processing standard module hook 'hook-_osx_support.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+7401 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+7619 INFO: Processing standard module hook 'hook-setuptools._vendor.jaraco.text.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+7620 INFO: Processing pre-safe-import-module hook 'hook-importlib_resources.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+7765 INFO: Processing pre-safe-import-module hook 'hook-backports.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+7766 INFO: Setuptools: 'backports' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.backports'!
+8148 INFO: Processing pre-safe-import-module hook 'hook-tomli.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+8149 INFO: Setuptools: 'tomli' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.tomli'!
+8519 INFO: Processing pre-safe-import-module hook 'hook-wheel.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+8520 INFO: Setuptools: 'wheel' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.wheel'!
+8553 INFO: Processing standard module hook 'hook-setuptools._vendor.importlib_metadata.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+8567 INFO: Processing pre-safe-import-module hook 'hook-zipp.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\pre_safe_import_module'
+8568 INFO: Setuptools: 'zipp' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.zipp'!
+10664 INFO: Processing standard module hook 'hook-sqlite3.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+10900 INFO: Processing standard module hook 'hook-cryptography.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+11729 INFO: hook-cryptography: cryptography does not seem to be using dynamically linked OpenSSL.
+11801 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+11852 INFO: Processing standard module hook 'hook-xml.dom.domreg.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+12126 INFO: Processing standard module hook 'hook-webbrowser.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+12141 INFO: Processing standard module hook 'hook-PIL.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+12212 INFO: Processing standard module hook 'hook-PIL.Image.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+12554 INFO: Processing standard module hook 'hook-PIL.ImageFilter.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+12700 INFO: Processing standard module hook 'hook-pdfminer.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+12813 INFO: Processing standard module hook 'hook-difflib.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+13201 INFO: Processing standard module hook 'hook-charset_normalizer.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+13502 INFO: Processing standard module hook 'hook-pypdfium2.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+13514 INFO: Processing standard module hook 'hook-pypdfium2_raw.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+14016 INFO: Processing standard module hook 'hook-jsonschema.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+14272 INFO: Processing standard module hook 'hook-jsonschema_specifications.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+14391 INFO: Processing standard module hook 'hook-anyio.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+15402 INFO: Processing standard module hook 'hook-pygments.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+16612 INFO: Processing standard module hook 'hook-opentelemetry.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+16889 INFO: Processing standard module hook 'hook-uvicorn.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+18055 INFO: Processing standard module hook 'hook-pywintypes.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+18313 INFO: Processing standard module hook 'hook-lxml.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+18555 INFO: Processing standard module hook 'hook-lxml.etree.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+18569 INFO: Processing standard module hook 'hook-docx.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+19554 INFO: Processing standard module hook 'hook-jinja2.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+20205 INFO: Analyzing hidden import 'uvicorn.__main__'
+20205 INFO: Analyzing hidden import 'uvicorn.lifespan'
+20206 INFO: Analyzing hidden import 'uvicorn.lifespan.off'
+20206 INFO: Analyzing hidden import 'uvicorn.lifespan.on'
+20210 INFO: Analyzing hidden import 'uvicorn.loops'
+20211 INFO: Analyzing hidden import 'uvicorn.loops.asyncio'
+20211 INFO: Analyzing hidden import 'uvicorn.loops.auto'
+20213 INFO: Analyzing hidden import 'uvicorn.loops.zuvloop'
+20214 INFO: Analyzing hidden import 'uvicorn.protocols.http.auto'
+20215 INFO: Analyzing hidden import 'uvicorn.protocols.websockets.auto'
+20216 INFO: Analyzing hidden import 'uvicorn.workers'
+20219 INFO: Analyzing hidden import 'sqlalchemy.dialects.sqlite'
+20276 INFO: Processing module hooks (post-graph stage)...
+20704 INFO: Processing standard module hook 'hook-lxml.isoschematron.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+20830 WARNING: Hidden import "tzdata" not found!
+21022 INFO: Processing standard module hook 'hook-PIL.SpiderImagePlugin.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+22536 INFO: Processing standard module hook 'hook-sqlalchemy.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks'
+22807 WARNING: Hidden import "pysqlite2" not found!
+22807 WARNING: Hidden import "MySQLdb" not found!
+22808 WARNING: Hidden import "psycopg2" not found!
+23336 INFO: Processing standard module hook 'hook-lxml.objectify.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\stdhooks'
+23349 INFO: Performing binary vs. data reclassification (394 entries)
+23375 INFO: Looking for ctypes DLLs
+23427 INFO: Analyzing run-time hooks ...
+23433 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\rthooks'
+23435 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\rthooks'
+23436 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\rthooks'
+23438 INFO: Including run-time hook 'pyi_rth_setuptools.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\PyInstaller\\hooks\\rthooks'
+23439 INFO: Including run-time hook 'pyi_rth_pywintypes.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\rthooks'
+23439 INFO: Including run-time hook 'pyi_rth_cryptography_openssl.py' from 'D:\\Documents\\ChatGPT\\������Ŀ\\.local\\desktop-tools\\python-build\\_pyinstaller_hooks_contrib\\rthooks'
+23465 INFO: Creating base_library.zip...
+23480 INFO: Looking for dynamic libraries
+25404 INFO: Extra DLL search directories (AddDllDirectory): []
+25404 INFO: Extra DLL search directories (PATH): []
+25870 INFO: Warnings written to D:\Documents\ChatGPT\������Ŀ\.local\jev-native-20261020\build\backend\warn-backend.txt
+26005 INFO: Graph cross-reference written to D:\Documents\ChatGPT\������Ŀ\.local\jev-native-20261020\build\backend\xref-backend.html
+26060 INFO: checking PYZ
+26060 INFO: Building PYZ because PYZ-00.toc is non existent
+26060 INFO: Building PYZ (ZlibArchive) D:\Documents\ChatGPT\������Ŀ\.local\jev-native-20261020\build\backend\PYZ-00.pyz
+27179 INFO: Building PYZ (ZlibArchive) D:\Documents\ChatGPT\������Ŀ\.local\jev-native-20261020\build\backend\PYZ-00.pyz completed successfully.
+27209 INFO: checking PKG
+27209 INFO: Building PKG because PKG-00.toc is non existent
+27209 INFO: Building PKG (CArchive) qx-backend.pkg
+27227 INFO: Building PKG (CArchive) qx-backend.pkg completed successfully.
+27228 INFO: Bootloader D:\Documents\ChatGPT\������Ŀ\.local\desktop-tools\python-build\PyInstaller\bootloader\Windows-64bit-intel\run.exe
+27228 INFO: checking EXE
+27228 INFO: Building EXE because EXE-00.toc is non existent
+27228 INFO: Building EXE from EXE-00.toc
+27229 INFO: Copying bootloader EXE to D:\Documents\ChatGPT\������Ŀ\.local\jev-native-20261020\build\backend\qx-backend.exe
+27234 INFO: Copying icon to EXE
+27236 INFO: Copying 0 resources to EXE
+27236 INFO: Embedding manifest in EXE
+27238 INFO: Appending PKG archive to EXE
+27245 INFO: Fixing EXE headers
+27339 INFO: Building EXE from EXE-00.toc completed successfully.
+27343 INFO: checking COLLECT
+27343 INFO: Building COLLECT because COLLECT-00.toc is non existent
+27343 INFO: Building COLLECT COLLECT-00.toc
+27658 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+27667 INFO: Build complete! The results are available in: D:\Documents\ChatGPT\������Ŀ\.local\jev-native-20261020\frozen-backend

@@ -1,0 +1,45 @@
+{
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/unit/test_desktop_control_protocol.py",
+    "-k",
+    "fixed_judge",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-native-20261020\\backend\\protocol-red.xml"
+  ],
+  "exit_code": 1,
+  "time_utc": "2026-10-20T09:48:45.087861+00:00",
+  "counts": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "2",
+    "skipped": "0",
+    "tests": "2",
+    "time": "0.363",
+    "timestamp": "2026-10-20T17:48:44.536940+08:00",
+    "hostname": "PC-20260920HQJZ"
+  },
+  "source_before": {
+    "src/cn_contract/domain.py": "66ba71ea2845d459cba03964b226e36a5946fbe5195783b4d0f62660dd00a795",
+    "src/cn_contract/desktop_control.py": "e225bf47e9ba112ed9dfc98f9641d39058b752d7cf9b82b135010f93dbc81f0d",
+    "src/cn_contract/desktop_entry.py": "1d43b703b68d6fa7d7a040c17f8f7fc6a2a31f0dee089cb730dda65ef8e5a68c",
+    "src/cn_contract/assistant/native_judge_control.py": "8e9522aaedcae537d84809c1014c635e90b961541ab695677226e619b4a006fb",
+    "tests/unit/test_native_judge_control.py": "7fb45f0f66a330ee67267c90ea2f52fada9b408840783a175ef5cc7b4cfc630a",
+    "tests/unit/test_desktop_control_protocol.py": "261ff57d539bf3771c60e74bfa00e21de854305ccc698b5ade5cc13d066a37c3",
+    "tests/integration/test_desktop_runtime.py": "75b3bd7693fc1199a1d95007e3bc8b9b5d9ec240d72f72cfc39e5a9d3892a3fc"
+  },
+  "source_after": {
+    "src/cn_contract/domain.py": "66ba71ea2845d459cba03964b226e36a5946fbe5195783b4d0f62660dd00a795",
+    "src/cn_contract/desktop_control.py": "e225bf47e9ba112ed9dfc98f9641d39058b752d7cf9b82b135010f93dbc81f0d",
+    "src/cn_contract/desktop_entry.py": "1d43b703b68d6fa7d7a040c17f8f7fc6a2a31f0dee089cb730dda65ef8e5a68c",
+    "src/cn_contract/assistant/native_judge_control.py": "8e9522aaedcae537d84809c1014c635e90b961541ab695677226e619b4a006fb",
+    "tests/unit/test_native_judge_control.py": "7fb45f0f66a330ee67267c90ea2f52fada9b408840783a175ef5cc7b4cfc630a",
+    "tests/unit/test_desktop_control_protocol.py": "261ff57d539bf3771c60e74bfa00e21de854305ccc698b5ade5cc13d066a37c3",
+    "tests/integration/test_desktop_runtime.py": "75b3bd7693fc1199a1d95007e3bc8b9b5d9ec240d72f72cfc39e5a9d3892a3fc"
+  },
+  "source_stable": true
+}

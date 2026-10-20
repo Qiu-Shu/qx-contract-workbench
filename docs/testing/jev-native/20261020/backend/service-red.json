@@ -1,0 +1,41 @@
+{
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/unit/test_native_judge_control.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-native-20261020\\backend\\service-red.xml"
+  ],
+  "exit_code": 1,
+  "time_utc": "2026-10-20T09:47:21.524416+00:00",
+  "counts": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "1",
+    "skipped": "0",
+    "tests": "1",
+    "time": "0.624",
+    "timestamp": "2026-10-20T17:47:20.698346+08:00",
+    "hostname": "PC-20260920HQJZ"
+  },
+  "source_before": {
+    "src/cn_contract/domain.py": "088cc8d08e435128b81d057e7017d4f46d42ea43303a1d2ba789d7dac46dde0f",
+    "src/cn_contract/desktop_control.py": "e225bf47e9ba112ed9dfc98f9641d39058b752d7cf9b82b135010f93dbc81f0d",
+    "src/cn_contract/desktop_entry.py": "1d43b703b68d6fa7d7a040c17f8f7fc6a2a31f0dee089cb730dda65ef8e5a68c",
+    "tests/unit/test_native_judge_control.py": "7fb45f0f66a330ee67267c90ea2f52fada9b408840783a175ef5cc7b4cfc630a",
+    "tests/unit/test_desktop_control_protocol.py": "f3020831cfb20584f11dcc9cd9b00dab5e151f410cdd57db9a0a1ef44960432a",
+    "tests/integration/test_desktop_runtime.py": "75b3bd7693fc1199a1d95007e3bc8b9b5d9ec240d72f72cfc39e5a9d3892a3fc"
+  },
+  "source_after": {
+    "src/cn_contract/domain.py": "088cc8d08e435128b81d057e7017d4f46d42ea43303a1d2ba789d7dac46dde0f",
+    "src/cn_contract/desktop_control.py": "e225bf47e9ba112ed9dfc98f9641d39058b752d7cf9b82b135010f93dbc81f0d",
+    "src/cn_contract/desktop_entry.py": "1d43b703b68d6fa7d7a040c17f8f7fc6a2a31f0dee089cb730dda65ef8e5a68c",
+    "tests/unit/test_native_judge_control.py": "7fb45f0f66a330ee67267c90ea2f52fada9b408840783a175ef5cc7b4cfc630a",
+    "tests/unit/test_desktop_control_protocol.py": "f3020831cfb20584f11dcc9cd9b00dab5e151f410cdd57db9a0a1ef44960432a",
+    "tests/integration/test_desktop_runtime.py": "75b3bd7693fc1199a1d95007e3bc8b9b5d9ec240d72f72cfc39e5a9d3892a3fc"
+  },
+  "source_stable": true
+}

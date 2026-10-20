@@ -1,0 +1,33 @@
+✔ judge capability negotiates on the existing pipe and shares the sequence (2.993ms)
+✔ legacy main capability cannot send judge frames or consume sequence (0.4729ms)
+✔ unknown judge protocol is fatal before readiness (0.3278ms)
+✔ judge configure uses fixed trusted model without authorization or main calls (0.8766ms)
+✔ judge refuses another provider model without reading a secret (0.2259ms)
+✔ judge credential replacement clears configuration before reading a failed new secret (0.2753ms)
+✔ failed disable closes owned backend before allowing credential edits (0.3529ms)
+✔ late configuration ack terminates obsolete runtime and never reports configured (0.1887ms)
+✔ backend replacement discards judge status and cannot grant or reuse old state (0.3023ms)
+✔ old backend is unaffected when storing a future judge credential (0.2037ms)
+✔ judge settings use separate IPC namespace and accept only the judge status model (0.7346ms)
+✔ judge pipe rejects unimplemented grant and malformed disable without writes (0.9258ms)
+✔ native model settings preserve the running backend and return to the prior trusted conversation (24.8557ms)
+✔ unsaved page rejection keeps its backend and does not enter settings (3.0125ms)
+✔ backup still stops the owned backend and returning starts an unconfigured process (3.2515ms)
+✔ restored read-only workspace can inspect credentials but cannot configure a model (2.9702ms)
+✔ new runtime IPC rejects ordinary HTTP pages and subframes (2.3142ms)
+✔ resuming never loads an untrusted previous URL (2.4924ms)
+✔ a failure from an old backend cannot replace the current page (6.5581ms)
+✔ renderer failure blocks credential replacement until the configured backend has stopped (3.2188ms)
+✔ send confirmation context uses only the displayed conversation and owned main frame (2.4769ms)
+✔ restored workspaces and replaced backends cannot approve a send (4.9016ms)
+✔ judge menu shares trusted lifecycle while main and judge operations remain separate (2.665ms)
+✔ judge config is unavailable in a restored read-only workspace (3.5265ms)
+✔ shared native settings busy lock prevents main credential writes during judge configuration (3.0274ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.6792

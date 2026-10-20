@@ -1,0 +1,20 @@
+✔ credential form saves once, clears input immediately and labels stored credentials without enabling model use (7.5713ms)
+✔ credential errors clear inputs, hide raw errors and leaving discards delayed responses (2.7436ms)
+✔ credential remove and return clear an unsubmitted replacement (2.4091ms)
+✔ unavailable settings can be checked again and reopening the same mode refreshes status (1.9328ms)
+✔ a late old settings reply cannot erase text entered after reopening settings (1.789ms)
+✔ model page checks storage before runtime and distinguishes stored credentials from configuration (1.6751ms)
+✔ model page configures only a fixed selected ID, serializes actions and can switch or disable (2.7945ms)
+✔ model page hides stale runtime configuration while replacing credentials and reads back serially (3.6224ms)
+✔ model page runtime failure is separate from stored credentials and a recheck can recover (2.7951ms)
+✔ model page discards delayed configuration after leaving without clearing the new page input (2.9428ms)
+✔ model page allows credential maintenance when runtime is unavailable and restart stays unconfigured (2.5749ms)
+✔ model page rejects unknown model projection and never renders raw runtime errors (1.8031ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 98.6258

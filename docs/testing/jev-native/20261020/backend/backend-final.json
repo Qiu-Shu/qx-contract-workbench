@@ -1,0 +1,48 @@
+{
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/unit/test_native_judge_control.py",
+    "tests/unit/test_desktop_control_protocol.py",
+    "tests/integration/test_desktop_runtime.py",
+    "tests/integration/test_native_control_process.py",
+    "tests/integration/test_native_model_control.py",
+    "tests/integration/test_native_model_lifetime.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-native-20261020\\backend\\backend-final.xml"
+  ],
+  "exit_code": 0,
+  "time_utc": "2026-10-20T09:55:45.072173+00:00",
+  "counts": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "119",
+    "time": "52.593",
+    "timestamp": "2026-10-20T17:54:51.273140+08:00",
+    "hostname": "PC-20260920HQJZ"
+  },
+  "source_before": {
+    "src/cn_contract/domain.py": "66ba71ea2845d459cba03964b226e36a5946fbe5195783b4d0f62660dd00a795",
+    "src/cn_contract/desktop_control.py": "35e998f0e6891c54fd073c7cd054687ebfafdf041bb223ef2e58745090023728",
+    "src/cn_contract/desktop_entry.py": "805d4c02cf23c515c2323d9f1b049e85e552a22a191c42c7e361e86692e2df15",
+    "src/cn_contract/assistant/native_judge_control.py": "8e9522aaedcae537d84809c1014c635e90b961541ab695677226e619b4a006fb",
+    "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+    "tests/unit/test_desktop_control_protocol.py": "e15fbca1b6c744a4b7de4c8af94df47954136eadb15af6f91575464c926b96fb",
+    "tests/integration/test_desktop_runtime.py": "7ab5875b7dd52d0571545a672329b43bd10405567597d0f02e0e6a28e5d884aa"
+  },
+  "source_after": {
+    "src/cn_contract/domain.py": "66ba71ea2845d459cba03964b226e36a5946fbe5195783b4d0f62660dd00a795",
+    "src/cn_contract/desktop_control.py": "35e998f0e6891c54fd073c7cd054687ebfafdf041bb223ef2e58745090023728",
+    "src/cn_contract/desktop_entry.py": "805d4c02cf23c515c2323d9f1b049e85e552a22a191c42c7e361e86692e2df15",
+    "src/cn_contract/assistant/native_judge_control.py": "8e9522aaedcae537d84809c1014c635e90b961541ab695677226e619b4a006fb",
+    "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+    "tests/unit/test_desktop_control_protocol.py": "e15fbca1b6c744a4b7de4c8af94df47954136eadb15af6f91575464c926b96fb",
+    "tests/integration/test_desktop_runtime.py": "7ab5875b7dd52d0571545a672329b43bd10405567597d0f02e0e6a28e5d884aa"
+  },
+  "source_stable": true
+}

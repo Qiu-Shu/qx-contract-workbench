@@ -18,6 +18,11 @@ HERE = Path(__file__).resolve().parent
 PROJECT = HERE.parents[1]
 FIRST = 'synthetic-native-secret-settings-first-20261019'
 SECOND = 'synthetic-native-secret-settings-second-20261019'
+JUDGE_FIRST = 'synthetic-native-secret-jev-first-20261020'
+JUDGE_SECOND = 'synthetic-native-secret-jev-second-20261020'
+SECRETS = (FIRST, SECOND, JUDGE_FIRST, JUDGE_SECOND)
+MODEL_TABLES = ('assistant_messages', 'assistant_model_attempts', 'assistant_model_receipts',
+                'assistant_model_outputs', 'assistant_judge_attempts', 'assistant_judge_receipts', 'assistant_judge_decisions')
 CONTENT = '独立合成咨询：虚构客户希望核对交货日期，尚未核实事实。'
 
 
@@ -35,6 +40,8 @@ def main():
     data = target/'中文 合成设置资料'
     report = {'status': 'running', 'checks': [], 'runs': [], 'source_before': hashes(),
               'backend': 'frozen' if frozen else 'source_with_network_tripwire', 'real_model_calls': 0, 'exit_code': 1}
+    report['network_observation'] = ('frozen backend not instrumented; native pipe ACK and zero durable model records only'
+        if frozen else 'source backend httpx/httpx2 send tripwires and renderer request events; not process-wide networking')
     if frozen:
         report['exe_sha256'] = hashlib.sha256(frozen.read_bytes()).hexdigest()
     current = None
@@ -46,7 +53,31 @@ def main():
         for p in data.rglob('*'):
             if p.is_file():
                 raw = p.read_bytes()
-                assert FIRST.encode() not in raw and SECOND.encode() not in raw, 'PLAINTEXT_FILE'
+                assert all(secret.encode() not in raw for secret in SECRETS), 'PLAINTEXT_FILE'
+
+    def zero_records(root):
+        with sqlite3.connect(root/'workbench.db') as conn:
+            integrity = conn.execute('PRAGMA integrity_check').fetchone()[0]
+            assert integrity == 'ok', integrity
+            counts = {name: conn.execute('SELECT COUNT(*) FROM '+name).fetchone()[0] for name in MODEL_TABLES}
+            assert all(n == 0 for n in counts.values()), counts
+            return {'integrity': integrity, 'counts': counts}
+
+    def denied_native(page):
+        denied = page.evaluate("""async()=>{
+          const result={};
+          for(const prefix of ['model','judge']) {
+            result[prefix+'Status']=await desktopSetup[prefix+'Status']();
+            result[prefix+'Save']=await desktopSetup[prefix+'Save']('synthetic-native-secret-denied-page');
+            result[prefix+'Remove']=await desktopSetup[prefix+'Remove']();
+            result[prefix+'Runtime']=await desktopSetup[prefix+'RuntimeStatus']();
+            result[prefix+'Configure']=await desktopSetup[prefix+'Configure'](prefix==='model'?'deepseek-flash':'jev-1.13.0');
+            result[prefix+'Disable']=await desktopSetup[prefix+'Disable']();
+          }
+          return result;
+        }""")
+        assert all(value.get('code') == 'ACCESS_DENIED' for value in denied.values()), denied
+        return {name: value['code'] for name, value in denied.items()}
 
     try:
         with sync_playwright() as pw:
@@ -124,55 +155,75 @@ def main():
                     self.command('menu', label='主模型设置…')
                     expect(self.page.locator('#model-settings')).to_be_visible()
                     expect(self.page.locator('#model-recheck')).to_be_enabled()
+                    expect(self.page.locator('#judge-settings')).to_be_visible()
+                    expect(self.page.locator('#judge-recheck')).to_be_enabled()
 
-                def runtime(self):
-                    return self.page.evaluate('()=>desktopSetup.modelRuntimeStatus()')
+                def runtime(self, prefix='model'):
+                    return self.page.evaluate("prefix=>desktopSetup[prefix+'RuntimeStatus']()", prefix)
 
-                def store(self, value):
-                    self.page.locator('#model-secret').fill(value); self.page.locator('#model-save').click()
-                    expect(self.page.locator('#model-secret')).to_have_value('')
-                    expect(self.page.locator('#model-status')).to_contain_text('已保存')
-                    expect(self.page.locator('#model-recheck')).to_be_enabled()
+                def store(self, value, prefix='model'):
+                    self.page.locator(f'#{prefix}-secret').fill(value); self.page.locator(f'#{prefix}-save').click()
+                    expect(self.page.locator(f'#{prefix}-secret')).to_have_value('')
+                    expect(self.page.locator(f'#{prefix}-status')).to_contain_text('已保存')
+                    expect(self.page.locator(f'#{prefix}-recheck')).to_be_enabled()
 
-                def configure(self, model):
-                    self.page.locator('#model-id').select_option(model)
-                    self.page.locator('#model-configure').click()
-                    expect(self.page.locator('#model-runtime-status')).to_contain_text('已配置')
-                    expect(self.page.locator('#model-recheck')).to_be_enabled()
-                    value = self.runtime(); assert value['ok'] and value['runtime'] == {'state': 'configured', 'model': model}, value
+                def configure(self, model, prefix='model'):
+                    self.page.locator(f'#{prefix}-id').select_option(model)
+                    self.page.locator(f'#{prefix}-configure').click()
+                    expect(self.page.locator(f'#{prefix}-runtime-status')).to_contain_text('已配置')
+                    expect(self.page.locator(f'#{prefix}-recheck')).to_be_enabled()
+                    value = self.runtime(prefix); assert value['ok'] and value['runtime'] == {'state': 'configured', 'model': model}, value
+
+                def controls(self, prefix):
+                    snapshot = json.loads((self.dir/'bootstrap.json').read_text('utf-8'))
+                    return snapshot.get(prefix+'_controls', [])
 
                 def close(self):
                     if not self.page.is_closed(): self.page.close()
                     self.record['electron_exit'] = self.proc.wait(timeout=45); assert self.record['electron_exit'] == 0
                     self.record['bootstrap'] = json.loads((self.dir/'bootstrap.json').read_text('utf-8'))
                     for name, lines in self.logs.items():
-                        raw = ''.join(lines); assert FIRST not in raw and SECOND not in raw, 'PLAINTEXT_LOG'
+                        raw = ''.join(lines); assert all(secret not in raw for secret in SECRETS), 'PLAINTEXT_LOG'
                         (self.dir/f'electron-{name}.txt').write_text(raw, encoding='utf-8')
                     assert self.record['page_errors'] == [], self.record['page_errors']
                     assert all(r['url'].startswith(('file:', 'http://127.0.0.1:')) for r in self.record['requests'])
                     if not frozen:
                         self.record['tripwire'] = json.loads((self.dir/'network-tripwire.json').read_text('utf-8'))
-                        assert self.record['tripwire'] == {'httpx_calls': 0, 'external_requests': 0}
+                        assert all(self.record['tripwire'][key] == 0 for key in ('httpx_calls', 'httpx2_calls', 'blocked_send_attempts'))
+                        assert 'not process-wide' in self.record['tripwire']['scope']
                     assert all(w == {'nodeIntegration': False, 'contextIsolation': True, 'sandbox': True, 'webSecurity': True}
                                for w in self.record['bootstrap']['windows'])
                     assert all(not c['contains_model_credential'] for c in self.record['bootstrap']['backend_configs'])
+                    assert all(secret not in json.dumps(self.record['bootstrap']) for secret in SECRETS), 'PLAINTEXT_OBSERVATION'
+                    for control in self.record['bootstrap'].get('judge_controls', []):
+                        assert set(control) <= {'operation', 'ok', 'status', 'model', 'has_config_version'}, control
+                        assert control['operation'] in ('configure', 'disable') and control['ok'] is True, control
+                        assert control['status'] == ('configured' if control['operation'] == 'configure' else 'disabled'), control
+                        if control['operation'] == 'configure':
+                            assert control['model'] == 'jev-1.13.0' and control['has_config_version'] is True, control
                     safe_files()
 
             current = Running(1); p = current.page
             expect(p.locator('#setup')).to_be_visible(); current.settings(); current.store(FIRST)
+            main_cipher = (data/'model-credentials/deepseek.bin').read_bytes()
+            current.store(JUDGE_FIRST, 'judge')
+            assert (data/'model-credentials/deepseek.bin').read_bytes() == main_cipher
+            assert (data/'model-credentials/typesafe.bin').is_file()
             assert current.runtime()['runtime']['state'] == 'unavailable'
+            assert current.runtime('judge')['runtime']['state'] == 'unavailable'
             expect(p.locator('#model-configure')).to_be_disabled()
+            expect(p.locator('#judge-configure')).to_be_disabled()
             other = current.command('other-window')
             assert other['node'] == 'undefined' and all(v.get('code') == 'ACCESS_DENIED' for k,v in other.items() if k != 'node')
-            passed('stored_credential_before_account_does_not_enable_runtime_and_other_window_denied')
+            passed('separate_credentials_before_account_do_not_enable_either_runtime_and_other_window_denied')
             p.locator('#resume').click(); expect(p.locator('#setup')).to_be_visible()
             p.locator('#username').fill('合成设置律师'); p.locator('#password').fill('fixture123'); p.locator('#confirm').fill('fixture123')
             p.get_by_role('button', name='建立账户并打开工作台').click()
             p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/login'), timeout=60000)
             origin = p.url.rsplit('/',1)[0]
-            def login():
+            def login(destination='assistant'):
                 p.get_by_label('用户名').fill('合成设置律师'); p.get_by_label('密码').fill('fixture123')
-                p.get_by_role('button', name='登录', exact=True).click(); p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/assistant'))
+                p.get_by_role('button', name='登录', exact=True).click(); p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/'+re.escape(destination)))
             login(); p.locator('#composer').fill(CONTENT)
             expect(p.locator('#save-status')).to_have_text('草稿已保存到本机')
             conversation_url = p.url; cid = p.url.rsplit('/',1)[1]
@@ -182,7 +233,9 @@ def main():
             first_pid = json.loads((current.dir/'bootstrap.json').read_text('utf-8'))['ready']['pid']
             cookies_before = {x['name']: x['value'] for x in p.context.cookies(origin)}
             current.settings(); assert current.runtime()['runtime']['state'] == 'unconfigured'
-            current.configure('deepseek-flash'); p.locator('#resume').click(); p.wait_for_url(conversation_url)
+            assert current.runtime('judge')['runtime']['state'] == 'unconfigured'
+            current.configure('deepseek-flash'); current.configure('jev-1.13.0', 'judge')
+            p.locator('#resume').click(); p.wait_for_url(conversation_url)
             expect(p.locator('#composer')).to_have_value(CONTENT)
             assert capability()['state'] == 'unapproved'
             assert cookies_before == {x['name']: x['value'] for x in p.context.cookies(origin)}
@@ -197,19 +250,38 @@ def main():
             }""", cid)
             assert result['status'] == 403, result
             passed('configure_keeps_pid_login_and_draft_but_capability_unapproved_and_post_forbidden')
-            denied = p.evaluate("async()=>({runtime:await desktopSetup.modelRuntimeStatus(),configure:await desktopSetup.modelConfigure('deepseek-flash'),disable:await desktopSetup.modelDisable()})")
-            assert all(v.get('code') == 'ACCESS_DENIED' for v in denied.values())
+            report['http_ipc_denials'] = denied_native(p)
             current.settings(); current.configure('deepseek-v4-pro')
             expect(p.locator('#model-runtime-status')).to_contain_text('尚未授权')
+            expect(p.locator('#judge-runtime-status')).to_contain_text('尚未批准发送')
+            main_controls = current.controls('model')
+            main_runtime = current.runtime()
+            p.locator('#judge-disable').click(); expect(p.locator('#judge-recheck')).to_be_enabled()
+            assert current.runtime('judge')['runtime']['state'] == 'unconfigured'
+            assert current.runtime() == main_runtime and current.controls('model') == main_controls
+            current.configure('jev-1.13.0', 'judge'); current.store(JUDGE_SECOND, 'judge')
+            assert current.runtime('judge')['runtime']['state'] == 'unconfigured'
+            assert current.runtime() == main_runtime and current.controls('model') == main_controls
+            current.configure('jev-1.13.0', 'judge'); p.locator('#judge-remove').click()
+            expect(p.locator('#judge-recheck')).to_be_enabled()
+            assert p.evaluate('()=>desktopSetup.judgeStatus()')['status'] == 'empty'
+            assert current.runtime('judge')['runtime']['state'] == 'unconfigured'
+            assert current.runtime() == main_runtime and current.controls('model') == main_controls
+            assert (data/'model-credentials/deepseek.bin').read_bytes() == main_cipher
+            current.store(JUDGE_FIRST, 'judge'); current.configure('jev-1.13.0', 'judge')
+            judge_controls = current.controls('judge'); judge_runtime = current.runtime('judge')
             current.store(SECOND); assert current.runtime()['runtime']['state'] == 'unconfigured'
+            assert current.runtime('judge') == judge_runtime and current.controls('judge') == judge_controls
             current.configure('deepseek-flash'); p.locator('#model-disable').click()
             expect(p.locator('#model-recheck')).to_be_enabled(); assert current.runtime()['runtime']['state'] == 'unconfigured'
+            assert current.runtime('judge') == judge_runtime and current.controls('judge') == judge_controls
             current.configure('deepseek-flash'); p.locator('#model-remove').click()
             expect(p.locator('#model-recheck')).to_be_enabled()
             assert p.evaluate('()=>desktopSetup.modelStatus()')['status'] == 'empty'
             assert current.runtime()['runtime']['state'] == 'unconfigured'
+            assert current.runtime('judge') == judge_runtime and current.controls('judge') == judge_controls
             current.store(FIRST); current.configure('deepseek-flash')
-            passed('switch_disable_replace_and_remove_use_native_control_without_a_send_grant')
+            passed('independent_native_ACKs_switch_disable_replace_remove_preserve_other_provider_without_any_grant')
             for width,height,zoom,name in [(1240,850,1,'settings-configured'),(760,760,1.5,'settings-150-percent'),(640,540,2,'settings-200-percent')]:
                 metrics=current.command('window',width=width,height=height,zoom=zoom)
                 p.wait_for_function('(w)=>Math.abs(innerWidth-w)<2',arg=metrics['width']/metrics['zoom'])
@@ -219,37 +291,83 @@ def main():
                 p.locator('#model-configure').scroll_into_view_if_needed()
                 assert p.locator('#model-configure').evaluate('el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&document.elementFromPoint(r.x+5,r.y+5)===el}')
                 current.command('capture',name=name+'-controls.png')
+                for selector in ('#judge-id', '#judge-disable', '#judge-recheck'):
+                    control = p.locator(selector); expect(control).to_be_enabled(); control.scroll_into_view_if_needed()
+                    geometry = control.evaluate('el=>{const r=el.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:innerWidth,height:innerHeight,hit:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===el}}')
+                    # Zoom rounds the integer viewport while DOM rectangles remain fractional.
+                    assert geometry['left'] >= -1 and geometry['top'] >= -1 and geometry['right'] <= geometry['width']+1 and geometry['bottom'] <= geometry['height']+1 and geometry['hit'], {'scale':zoom,'control':selector,**geometry}
+                    report.setdefault('control_geometry', []).append({'scale':zoom,'control':selector,**geometry})
+                p.locator('#judge-recheck').click(); expect(p.locator('#judge-recheck')).to_be_enabled()
+                p.locator('#judge-disable').click(); expect(p.locator('#judge-recheck')).to_be_enabled()
+                assert current.runtime('judge')['runtime']['state'] == 'unconfigured'
+                current.configure('jev-1.13.0', 'judge')
+                current.command('capture',name=name+'-judge-controls.png')
             current.close(); current=None
             passed('actual_windows_settings_layout_at_100_150_200_percent_and_clean_shutdown')
             current=Running(2);p=current.page
             p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/login'),timeout=60000);login()
             current.settings();assert current.runtime()['runtime']['state']=='unconfigured'
+            assert current.runtime('judge')['runtime']['state']=='unconfigured'
             assert p.evaluate('()=>desktopSetup.modelStatus()')['status']=='saved'
-            current.configure('deepseek-flash')
+            assert p.evaluate('()=>desktopSetup.judgeStatus()')['status']=='saved'
+            current.configure('deepseek-flash'); current.configure('jev-1.13.0', 'judge')
             current.command('stop-backend');expect(p.locator('#retry')).to_be_visible()
             denied=p.evaluate('()=>desktopSetup.modelRuntimeStatus()');assert denied.get('code')=='ACCESS_DENIED',denied
+            denied=p.evaluate('()=>desktopSetup.judgeRuntimeStatus()');assert denied.get('code')=='ACCESS_DENIED',denied
             p.locator('#retry').click();p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/login'),timeout=60000);login()
             current.settings();assert current.runtime()['runtime']['state']=='unconfigured'
+            assert current.runtime('judge')['runtime']['state']=='unconfigured'
             passed('restart_retains_ciphertext_only_and_owned_backend_failure_clears_runtime')
-            current.configure('deepseek-flash')
+            current.configure('deepseek-flash'); current.configure('jev-1.13.0', 'judge')
+            renderer_pid = json.loads((current.dir/'bootstrap.json').read_text('utf-8'))['ready']['pid']
             crashed=current.command('crash-renderer');current.recover_renderer(crashed['loads']);p=current.page
             expect(p.locator('#retry')).to_be_visible()
             stopped=json.loads((current.dir/'bootstrap.json').read_text('utf-8'))
-            assert stopped['backend_exit']['code']==0,stopped['backend_exit']
+            assert any(item['pid'] == renderer_pid and item['code'] == 0 for item in stopped['backend_exits']), stopped['backend_exits']
             current.settings();current.store(SECOND);assert current.runtime()['runtime']['state']=='unavailable'
+            current.store(JUDGE_SECOND, 'judge');assert current.runtime('judge')['runtime']['state']=='unavailable'
             p.locator('#resume').click();p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/login'),timeout=60000);login()
             passed('renderer_crash_stops_configured_backend_before_credential_replacement')
             current.command('menu',label='备份案件资料…');expect(p.locator('#maintenance')).to_be_visible()
+            report['maintenance_ipc_denials'] = denied_native(p)
             p.locator('#resume').click();p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/login'),timeout=60000);login()
             current.settings();assert current.runtime()['runtime']['state']=='unconfigured'
+            assert current.runtime('judge')['runtime']['state']=='unconfigured'
             current.close();current=None
             passed('backup_maintenance_still_stops_backend_and_resume_starts_unconfigured')
-            with sqlite3.connect(data/'workspaces/main/workbench.db') as conn:
-                report['integrity']=conn.execute('PRAGMA integrity_check').fetchone()[0];assert report['integrity']=='ok'
-                report['counts']={name:conn.execute('SELECT COUNT(*) FROM '+name).fetchone()[0] for name in
-                    ('assistant_messages','assistant_model_attempts','assistant_model_receipts','assistant_model_outputs')}
-                assert all(n==0 for n in report['counts'].values()),report['counts']
-            passed('zero_model_records_no_plaintext_leak_and_no_external_request')
+            original = data/'workspaces/main'
+            report.update(zero_records(original))
+            passed('zero_main_and_judge_records_no_plaintext_leak_and_scoped_network_observation')
+
+            # Host-side real backup/restore seeds a read-only copy; the next actual backend opens it.
+            from cn_contract.ops.workspace_backup import create_workspace_backup, restore_workspace_backup
+            passphrase = 'synthetic-jev-native-backup-20261020'
+            before_restore = hashlib.sha256((original/'workbench.db').read_bytes()).hexdigest()
+            archive = target/'synthetic-settings.qxbak'
+            create_workspace_backup(original, archive, passphrase, data_parent=data)
+            restored = Path(restore_workspace_backup(archive, data/'workspaces/recovered', passphrase)['restored_root'])
+            assert hashlib.sha256((original/'workbench.db').read_bytes()).hexdigest() == before_restore
+            assert not list(restored.rglob('*credential*'))
+            settings_file = data/'desktop-settings.json'
+            settings = json.loads(settings_file.read_text('utf-8')) if settings_file.exists() else {}
+            settings['workspace'] = restored.relative_to(data/'workspaces').as_posix()
+            settings_file.write_text(json.dumps(settings), encoding='utf-8')
+            report['restore_seed'] = {'method': 'host workspace_backup API', 'workspace': settings['workspace'],
+                                      'source_db_unchanged': True, 'native_frozen_maintenance': False}
+            current=Running(3);p=current.page
+            p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/login'),timeout=60000);login('recovery')
+            report['restore_http_ipc_denials'] = denied_native(p)
+            current.settings()
+            for prefix, model in (('model', 'deepseek-flash'), ('judge', 'jev-1.13.0')):
+                assert current.runtime(prefix)['runtime']['state'] == 'unavailable'
+                expect(p.locator(f'#{prefix}-configure')).to_be_disabled()
+                rejected=p.evaluate("v=>desktopSetup[v.prefix+'Configure'](v.model)", {'prefix':prefix,'model':model})
+                assert rejected.get('code') == 'BLOCKED_LIVE', rejected
+            assert not current.controls('judge') and not current.controls('model')
+            current.close();current=None
+            report['restored_records'] = zero_records(restored)
+            safe_files()
+            passed('actual_restored_backend_denies_HTTP_IPC_and_native_main_judge_configuration')
             report['source_after']=hashes();assert report['source_before']==report['source_after']
             report.update(status='passed',exit_code=0)
     except BaseException as error:

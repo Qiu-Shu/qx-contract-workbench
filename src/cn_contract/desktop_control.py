@@ -9,10 +9,25 @@ from threading import Event
 from uuid import UUID
 
 PROTOCOL = 'qx-model-control-v1'
+JUDGE_PROTOCOL = 'qx-judge-control-v1'
 MAX_BYTES = 32768
 MAX_SEQUENCE = 9007199254740991
-_OPERATIONS = {'configure', 'disable', 'authorize', 'revoke'}
+_OPERATIONS = {'configure', 'disable', 'authorize', 'revoke', 'configure_judge', 'disable_judge'}
 _CODES = {'BLOCKED_LIVE', 'VERSION_CONFLICT', 'STATE_CONFLICT', 'BUDGET_EXCEEDED', 'CROSS_MATTER_DENIED'}
+
+
+class NativeControlHandler:
+    """Fixed composition of the two native configuration lifecycles."""
+    def __init__(self, main, judge):
+        self.configure, self.disable = main.configure, main.disable
+        self.authorize, self.revoke = main.authorize, main.revoke
+        self.configure_judge, self.disable_judge = judge.configure, judge.disable
+
+    def disable_all(self):
+        try:
+            self.disable()
+        finally:
+            self.disable_judge()
 
 
 def _unique(pairs):
@@ -77,44 +92,57 @@ class ParentControlChannel:
     def close(self):
         self._closed.set()
         if self._handler is not None:
-            self._handler.disable()
+            # Older Main-only trusted assemblies keep their fixed cleanup seam.
+            getattr(self._handler, 'disable_all', self._handler.disable)()
 
     def _request_close(self):
         self._closed.set()
         if self._loop is not None:
+            stopped = Event()
+            def clear():
+                try:
+                    self.close()
+                except Exception:
+                    pass  # Parent shutdown/fatal exit also destroys the process identity.
+                finally:
+                    stopped.set()
             try:
-                self._loop.call_soon_threadsafe(self.close)
+                self._loop.call_soon_threadsafe(clear)
+                stopped.wait(self._timeout)
             except RuntimeError:
                 pass
 
     def _fail(self):
-        self._closed.set()
+        self._request_close()
         self._fatal(2)
 
     async def _dispatch(self, operation, payload):
         from .security import ServiceError
-        if self._closed.is_set() or asyncio.get_running_loop() is not self._loop:
+        if (self._closed.is_set() or asyncio.get_running_loop() is not self._loop
+                or operation not in _OPERATIONS):
             raise ValueError('CONTROL_REJECTED')
         try:
-            if operation == 'disable':
+            if operation in ('disable', 'disable_judge'):
                 if payload:
                     raise ServiceError('BLOCKED_LIVE', 403)
-                result = self._handler.disable()
+                result = getattr(self._handler, operation)()
             else:
                 result = getattr(self._handler, operation)(payload)
         except ServiceError as error:
             return {'ok':False, 'code':error.code if error.code in _CODES else 'BLOCKED_LIVE'}
         except Exception:
-            self._handler.disable()
+            getattr(self._handler, 'disable_all', self._handler.disable)()
             return {'ok':False, 'code':'BLOCKED_LIVE'}
         expected = {'configure':{'configured'}, 'disable':{'disabled'},
-                    'authorize':{'authorized','existing'}, 'revoke':{'revoked'}}[operation]
+                    'authorize':{'authorized','existing'}, 'revoke':{'revoked'},
+                    'configure_judge':{'configured'}, 'disable_judge':{'disabled'}}[operation]
         if type(result) is not dict or result.get('status') not in expected:
             raise ValueError('CONTROL_REJECTED')
-        keys = {'status','config_sha256','config_version'} if operation == 'configure' else {'status'}
+        configuring = operation in ('configure', 'configure_judge')
+        keys = {'status','config_sha256','config_version'} if configuring else {'status'}
         if set(result) != keys:
             raise ValueError('CONTROL_REJECTED')
-        if operation == 'configure':
+        if configuring:
             if (type(result['config_sha256']) is not str or not re.fullmatch('[0-9a-f]{64}', result['config_sha256'])
                     or type(result['config_version']) is not str
                     or str(UUID(result['config_version'])) != result['config_version']):

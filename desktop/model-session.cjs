@@ -29,12 +29,18 @@ function reservation(model) {
   return digits.slice(0,-8)+'.'+digits.slice(-8).replace(/0+$/,'');
 }
 
-function createModelSession({store,getBackend,onFailure=()=>{}}) {
+function createModelSession({store,getBackend,onFailure=()=>{},kind='main'}) {
+  if(!['main','judge'].includes(kind))throw new TypeError('MODEL_KIND_INVALID');
+  const judge=kind==='judge',configureMethod=judge?'configureJudge':'configureModel',disableMethod=judge?'disableJudge':'disableModel';
+  const supports=backend=>!judge || backend?.control?.judgeEnabled===true;
+  const allowedModel=model=>typeof model==='string' && (judge?model==='jev-1.13.0':MODELS.has(model));
+  const configured=model=>judge?{enabled:true,protocol_version:'typesafe-systemone-v1',model:'jev-1.13.0',
+    max_input_bytes:65536,max_response_bytes:262144,timeout_ms:2000}:configuration(model);
   let metadata=null,active=false,unsafe=false;
   const retired=new WeakSet();
   const current=()=>{try{return getBackend() || null;}catch{return null;}};
-  const healthy=backend=>Boolean(backend && typeof backend.configureModel==='function' &&
-    typeof backend.disableModel==='function' && typeof backend.stop==='function' && !backend.closing &&
+  const healthy=backend=>Boolean(backend && typeof backend[configureMethod]==='function' &&
+    typeof backend[disableMethod]==='function' && supports(backend) && typeof backend.stop==='function' && !backend.closing &&
     (!backend.control || (backend.control.ready && backend.control.enabled &&
       !backend.control.closed && !backend.control.failed)));
   function view() {
@@ -55,7 +61,7 @@ function createModelSession({store,getBackend,onFailure=()=>{}}) {
   }
   async function clear(backend,guard) {
     let result;
-    try{result=await backend.disableModel();}catch{return terminate(backend,guard);}
+    try{result=await backend[disableMethod]();}catch{return terminate(backend,guard);}
     if(!exact(result,['ok','status']) || result.ok!==true || result.status!=='disabled')
       return terminate(backend,guard);
     forget(backend);
@@ -75,6 +81,9 @@ function createModelSession({store,getBackend,onFailure=()=>{}}) {
     if(unsafe)return rejected();
     const backend=current();
     if(!backend){metadata=null;return okay();}
+    // A legacy child has never accepted Judge authority; saving its future credential need not stop Main.
+    if(judge && !supports(backend) && !backend.closing && backend.control?.ready &&
+        backend.control.enabled && !backend.control.closed && !backend.control.failed){metadata=null;return okay();}
     if(!healthy(backend) || retired.has(backend))return terminate(backend,guard);
     return clear(backend,guard);
   });
@@ -147,13 +156,13 @@ function createModelSession({store,getBackend,onFailure=()=>{}}) {
       // Clear known old authority even if reading the replacement credential fails.
       const cleared=await clear(backend,guard);
       if(!cleared.ok)return cleared;
-      if(typeof model!=='string' || !MODELS.has(model))return rejected();
+      if(!allowedModel(model))return rejected();
       let attempted=false,ack,credential,stale=false;
       try{
         credential=await store.withSecret(async secret=>{
           if(!matches(backend,guard)){stale=true;return;}
           attempted=true;
-          ack=await backend.configureModel({config:configuration(model),secret});
+          ack=await backend[configureMethod]({config:configured(model),secret});
         });
       }catch{
         if(attempted)return terminate(backend,guard);
@@ -176,7 +185,7 @@ function createModelSession({store,getBackend,onFailure=()=>{}}) {
     }),
     disable,
     beforeCredentialChange:disable,
-    withAuthorization
+    ...(judge?{}:{withAuthorization})
   });
 }
 

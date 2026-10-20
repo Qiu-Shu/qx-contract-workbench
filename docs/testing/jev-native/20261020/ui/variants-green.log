@@ -1,0 +1,21 @@
+✔ optional Jev credentials and runtime have separate explicit actions and no automatic configuration (7.951ms)
+✔ disabled credential actions do not dispatch and rechecking restores an unavailable Jev section (1.9636ms)
+✔ initial reads hold one shared lock and never overlap the private control channel (1.7284ms)
+✔ model operation locks both providers and return without queuing duplicate actions (1.764ms)
+✔ judge operation locks both providers and return without queuing duplicate actions (1.5325ms)
+✔ late Jev save response cannot revive settings or clear new input (1.778ms)
+✔ late Jev runtime response cannot revive settings or clear new input (1.4205ms)
+✔ late Jev configure response cannot revive settings or clear new input (1.8693ms)
+✔ Jev rejects a model from the other provider even without a selection change event (1.2301ms)
+✔ Jev error projection has no private text and corrupt storage remains replaceable (1.6879ms)
+✔ return and document exit clear both unsubmitted passwords (1.3202ms)
+✔ preload exposes only the six fixed Jev operations with isolated channels (0.9952ms)
+✔ Jev copy and initial controls describe optional configuration without claiming permission or a network test (1.2335ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.0202

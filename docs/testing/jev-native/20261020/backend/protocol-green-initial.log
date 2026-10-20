@@ -1,0 +1,282 @@
+.................FFFFF                                                   [100%]
+================================== FAILURES ===================================
+_______ test_single_service_disable_is_isolated_and_close_disables_both _______
+
+    def test_single_service_disable_is_isolated_and_close_disables_both():
+        from cn_contract.desktop_control import NativeControlHandler
+        async def scenario():
+            main, judge = LocalControl(), LocalControl()
+            handler = NativeControlHandler(main, judge)
+            handler.configure({}); handler.configure_judge({})
+            handler.disable()
+            assert not main.configured and judge.configured
+            handler.configure({}); handler.disable_judge()
+            assert main.configured and not judge.configured
+            handler.configure_judge({})
+            channel = ParentControlChannel(BytesIO(), NONCE, lambda **v:None, lambda:None)
+            channel.bind(handler); channel.close()
+            assert not main.configured and not judge.configured
+>       asyncio.run(scenario())
+
+tests\unit\test_desktop_control_protocol.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\unit\test_desktop_control_protocol.py:99: in scenario
+    handler = NativeControlHandler(main, judge)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <cn_contract.desktop_control.NativeControlHandler object at 0x0000020B93A629C0>
+main = <test_desktop_control_protocol.LocalControl object at 0x0000020B93A62AB0>
+judge = <test_desktop_control_protocol.LocalControl object at 0x0000020B93A62990>
+
+    def __init__(self, main, judge):
+        self.configure, self.disable = main.configure, main.disable
+>       self.authorize, self.revoke = main.authorize, main.revoke
+                                      ^^^^^^^^^^^^^^
+E       AttributeError: 'LocalControl' object has no attribute 'authorize'
+
+src\cn_contract\desktop_control.py:23: AttributeError
+______ test_pipe_failure_or_eof_clears_both_on_the_application_loop[eof] ______
+
+ending = 'eof'
+
+    @pytest.mark.parametrize('ending', ['eof', 'bad-frame', 'bad-ack', 'unexpected-error'])
+    def test_pipe_failure_or_eof_clears_both_on_the_application_loop(ending):
+        from cn_contract.desktop_control import NativeControlHandler
+        async def scenario():
+            main, judge = LocalControl(), LocalControl()
+            outputs, exits, stopped = [], [], []
+            frames = line(operation='configure') + line(sequence=2, operation='configure_judge')
+            if ending == 'bad-frame': frames += 'not-json\n'
+            if ending == 'bad-ack': frames += line(sequence=3, operation='configure_judge', payload={'bad_ack': True})
+            if ending == 'unexpected-error': frames += line(sequence=3, operation='configure_judge', payload={'crash': True})
+            channel = ParentControlChannel(BytesIO(frames.encode()), NONCE, lambda **v:outputs.append(v),
+                lambda:stopped.append(True), fatal=exits.append, timeout=1)
+            channel.bind(NativeControlHandler(main, judge))
+            worker = Thread(target=channel.watch)
+            worker.start()
+            while worker.is_alive(): await asyncio.sleep(.001)
+            worker.join()
+            assert not main.configured and not judge.configured
+            assert all(loop is asyncio.get_running_loop() for loop in main.loops + judge.loops)
+            assert [item['sequence'] for item in outputs] == ([1, 2, 3] if ending == 'unexpected-error' else [1, 2])
+            assert exits == ([2] if ending in ('bad-frame', 'bad-ack') else [])
+            if ending == 'unexpected-error':
+                assert outputs[-1]['ok'] is False and outputs[-1]['code'] == 'BLOCKED_LIVE'
+            assert 'SYNTHETIC_SECRET' not in repr(outputs)
+>       asyncio.run(scenario())
+
+tests\unit\test_desktop_control_protocol.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\unit\test_desktop_control_protocol.py:124: in scenario
+    channel.bind(NativeControlHandler(main, judge))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <cn_contract.desktop_control.NativeControlHandler object at 0x0000020B9560AE40>
+main = <test_desktop_control_protocol.LocalControl object at 0x0000020B9560A690>
+judge = <test_desktop_control_protocol.LocalControl object at 0x0000020B9560ADE0>
+
+    def __init__(self, main, judge):
+        self.configure, self.disable = main.configure, main.disable
+>       self.authorize, self.revoke = main.authorize, main.revoke
+                                      ^^^^^^^^^^^^^^
+E       AttributeError: 'LocalControl' object has no attribute 'authorize'
+
+src\cn_contract\desktop_control.py:23: AttributeError
+___ test_pipe_failure_or_eof_clears_both_on_the_application_loop[bad-frame] ___
+
+ending = 'bad-frame'
+
+    @pytest.mark.parametrize('ending', ['eof', 'bad-frame', 'bad-ack', 'unexpected-error'])
+    def test_pipe_failure_or_eof_clears_both_on_the_application_loop(ending):
+        from cn_contract.desktop_control import NativeControlHandler
+        async def scenario():
+            main, judge = LocalControl(), LocalControl()
+            outputs, exits, stopped = [], [], []
+            frames = line(operation='configure') + line(sequence=2, operation='configure_judge')
+            if ending == 'bad-frame': frames += 'not-json\n'
+            if ending == 'bad-ack': frames += line(sequence=3, operation='configure_judge', payload={'bad_ack': True})
+            if ending == 'unexpected-error': frames += line(sequence=3, operation='configure_judge', payload={'crash': True})
+            channel = ParentControlChannel(BytesIO(frames.encode()), NONCE, lambda **v:outputs.append(v),
+                lambda:stopped.append(True), fatal=exits.append, timeout=1)
+            channel.bind(NativeControlHandler(main, judge))
+            worker = Thread(target=channel.watch)
+            worker.start()
+            while worker.is_alive(): await asyncio.sleep(.001)
+            worker.join()
+            assert not main.configured and not judge.configured
+            assert all(loop is asyncio.get_running_loop() for loop in main.loops + judge.loops)
+            assert [item['sequence'] for item in outputs] == ([1, 2, 3] if ending == 'unexpected-error' else [1, 2])
+            assert exits == ([2] if ending in ('bad-frame', 'bad-ack') else [])
+            if ending == 'unexpected-error':
+                assert outputs[-1]['ok'] is False and outputs[-1]['code'] == 'BLOCKED_LIVE'
+            assert 'SYNTHETIC_SECRET' not in repr(outputs)
+>       asyncio.run(scenario())
+
+tests\unit\test_desktop_control_protocol.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\unit\test_desktop_control_protocol.py:124: in scenario
+    channel.bind(NativeControlHandler(main, judge))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <cn_contract.desktop_control.NativeControlHandler object at 0x0000020B9560B650>
+main = <test_desktop_control_protocol.LocalControl object at 0x0000020B9560AD20>
+judge = <test_desktop_control_protocol.LocalControl object at 0x0000020B9560AEA0>
+
+    def __init__(self, main, judge):
+        self.configure, self.disable = main.configure, main.disable
+>       self.authorize, self.revoke = main.authorize, main.revoke
+                                      ^^^^^^^^^^^^^^
+E       AttributeError: 'LocalControl' object has no attribute 'authorize'
+
+src\cn_contract\desktop_control.py:23: AttributeError
+____ test_pipe_failure_or_eof_clears_both_on_the_application_loop[bad-ack] ____
+
+ending = 'bad-ack'
+
+    @pytest.mark.parametrize('ending', ['eof', 'bad-frame', 'bad-ack', 'unexpected-error'])
+    def test_pipe_failure_or_eof_clears_both_on_the_application_loop(ending):
+        from cn_contract.desktop_control import NativeControlHandler
+        async def scenario():
+            main, judge = LocalControl(), LocalControl()
+            outputs, exits, stopped = [], [], []
+            frames = line(operation='configure') + line(sequence=2, operation='configure_judge')
+            if ending == 'bad-frame': frames += 'not-json\n'
+            if ending == 'bad-ack': frames += line(sequence=3, operation='configure_judge', payload={'bad_ack': True})
+            if ending == 'unexpected-error': frames += line(sequence=3, operation='configure_judge', payload={'crash': True})
+            channel = ParentControlChannel(BytesIO(frames.encode()), NONCE, lambda **v:outputs.append(v),
+                lambda:stopped.append(True), fatal=exits.append, timeout=1)
+            channel.bind(NativeControlHandler(main, judge))
+            worker = Thread(target=channel.watch)
+            worker.start()
+            while worker.is_alive(): await asyncio.sleep(.001)
+            worker.join()
+            assert not main.configured and not judge.configured
+            assert all(loop is asyncio.get_running_loop() for loop in main.loops + judge.loops)
+            assert [item['sequence'] for item in outputs] == ([1, 2, 3] if ending == 'unexpected-error' else [1, 2])
+            assert exits == ([2] if ending in ('bad-frame', 'bad-ack') else [])
+            if ending == 'unexpected-error':
+                assert outputs[-1]['ok'] is False and outputs[-1]['code'] == 'BLOCKED_LIVE'
+            assert 'SYNTHETIC_SECRET' not in repr(outputs)
+>       asyncio.run(scenario())
+
+tests\unit\test_desktop_control_protocol.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\unit\test_desktop_control_protocol.py:124: in scenario
+    channel.bind(NativeControlHandler(main, judge))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <cn_contract.desktop_control.NativeControlHandler object at 0x0000020B95670920>
+main = <test_desktop_control_protocol.LocalControl object at 0x0000020B95672240>
+judge = <test_desktop_control_protocol.LocalControl object at 0x0000020B95672AB0>
+
+    def __init__(self, main, judge):
+        self.configure, self.disable = main.configure, main.disable
+>       self.authorize, self.revoke = main.authorize, main.revoke
+                                      ^^^^^^^^^^^^^^
+E       AttributeError: 'LocalControl' object has no attribute 'authorize'
+
+src\cn_contract\desktop_control.py:23: AttributeError
+_ test_pipe_failure_or_eof_clears_both_on_the_application_loop[unexpected-error] _
+
+ending = 'unexpected-error'
+
+    @pytest.mark.parametrize('ending', ['eof', 'bad-frame', 'bad-ack', 'unexpected-error'])
+    def test_pipe_failure_or_eof_clears_both_on_the_application_loop(ending):
+        from cn_contract.desktop_control import NativeControlHandler
+        async def scenario():
+            main, judge = LocalControl(), LocalControl()
+            outputs, exits, stopped = [], [], []
+            frames = line(operation='configure') + line(sequence=2, operation='configure_judge')
+            if ending == 'bad-frame': frames += 'not-json\n'
+            if ending == 'bad-ack': frames += line(sequence=3, operation='configure_judge', payload={'bad_ack': True})
+            if ending == 'unexpected-error': frames += line(sequence=3, operation='configure_judge', payload={'crash': True})
+            channel = ParentControlChannel(BytesIO(frames.encode()), NONCE, lambda **v:outputs.append(v),
+                lambda:stopped.append(True), fatal=exits.append, timeout=1)
+            channel.bind(NativeControlHandler(main, judge))
+            worker = Thread(target=channel.watch)
+            worker.start()
+            while worker.is_alive(): await asyncio.sleep(.001)
+            worker.join()
+            assert not main.configured and not judge.configured
+            assert all(loop is asyncio.get_running_loop() for loop in main.loops + judge.loops)
+            assert [item['sequence'] for item in outputs] == ([1, 2, 3] if ending == 'unexpected-error' else [1, 2])
+            assert exits == ([2] if ending in ('bad-frame', 'bad-ack') else [])
+            if ending == 'unexpected-error':
+                assert outputs[-1]['ok'] is False and outputs[-1]['code'] == 'BLOCKED_LIVE'
+            assert 'SYNTHETIC_SECRET' not in repr(outputs)
+>       asyncio.run(scenario())
+
+tests\unit\test_desktop_control_protocol.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\unit\test_desktop_control_protocol.py:124: in scenario
+    channel.bind(NativeControlHandler(main, judge))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <cn_contract.desktop_control.NativeControlHandler object at 0x0000020B95671430>
+main = <test_desktop_control_protocol.LocalControl object at 0x0000020B95670A10>
+judge = <test_desktop_control_protocol.LocalControl object at 0x0000020B95671910>
+
+    def __init__(self, main, judge):
+        self.configure, self.disable = main.configure, main.disable
+>       self.authorize, self.revoke = main.authorize, main.revoke
+                                      ^^^^^^^^^^^^^^
+E       AttributeError: 'LocalControl' object has no attribute 'authorize'
+
+src\cn_contract\desktop_control.py:23: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_desktop_control_protocol.py::test_single_service_disable_is_isolated_and_close_disables_both
+FAILED tests/unit/test_desktop_control_protocol.py::test_pipe_failure_or_eof_clears_both_on_the_application_loop[eof]
+FAILED tests/unit/test_desktop_control_protocol.py::test_pipe_failure_or_eof_clears_both_on_the_application_loop[bad-frame]
+FAILED tests/unit/test_desktop_control_protocol.py::test_pipe_failure_or_eof_clears_both_on_the_application_loop[bad-ack]
+FAILED tests/unit/test_desktop_control_protocol.py::test_pipe_failure_or_eof_clears_both_on_the_application_loop[unexpected-error]
+5 failed, 17 passed in 0.81s

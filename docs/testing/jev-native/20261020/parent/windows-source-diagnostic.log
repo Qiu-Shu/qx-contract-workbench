@@ -1,0 +1,10 @@
+PASS separate_credentials_before_account_do_not_enable_either_runtime_and_other_window_denied
+PASS configure_keeps_pid_login_and_draft_but_capability_unapproved_and_post_forbidden
+PASS independent_native_ACKs_switch_disable_replace_remove_preserve_other_provider_without_any_grant
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings-acceptance.py", line 382, in <module>
+    main()
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings-acceptance.py", line 297, in main
+    assert geometry['left'] >= 0 and geometry['top'] >= 0 and geometry['right'] <= geometry['width'] and geometry['bottom'] <= geometry['height'] and geometry['hit'], {'scale':zoom,'control':selector,**geometry}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'scale': 1.5, 'control': '#judge-recheck', 'left': 36.66666793823242, 'top': 415.03125, 'right': 250.0000114440918, 'bottom': 463.5625, 'width': 496, 'height': 463, 'hit': True}

@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
 const MAX_CIPHERTEXT_BYTES = 65536;
+const CREDENTIAL_FORMAT = 'qunxing-model-credential-v1';
 const UNSAFE_PATH = Symbol('unsafe credential path');
 
 function validSecret(secret) {
@@ -9,14 +10,30 @@ function validSecret(secret) {
     secret.trim().length >= 16 && secret.trim().length <= 512;
 }
 
-function createModelCredentialStore({ dataParent, safeStorage, platform = process.platform }) {
+function protectedSecret(text, provider) {
+  if (typeof text !== 'string' || text.length > 2048) return null;
+  let envelope;
+  try { envelope = JSON.parse(text); } catch { /* Legacy DeepSeek keys are plain strings. */ }
+  if (provider === 'deepseek') {
+    // Never treat a copied provider-bound envelope as a legacy main-model key.
+    if (envelope?.format === CREDENTIAL_FORMAT) return null;
+    return validSecret(text) ? text.trim() : null;
+  }
+  if (!envelope || !validSecret(envelope.secret) || envelope.secret !== envelope.secret.trim()) return null;
+  const expected = { format: CREDENTIAL_FORMAT, provider, secret: envelope.secret };
+  // Our canonical encoding also rejects duplicate/extra keys and foreign versions.
+  return JSON.stringify(expected) === text ? envelope.secret : null;
+}
+
+function createModelCredentialStore({ dataParent, safeStorage, platform = process.platform, provider = 'deepseek' }) {
+  if (provider !== 'deepseek' && provider !== 'typesafe') throw new TypeError('CREDENTIAL_PROVIDER_INVALID');
   const absolute = typeof dataParent === 'string' && path.isAbsolute(dataParent);
   const parts = absolute ? dataParent.slice(path.parse(dataParent).root.length).split(/[\\/]/).filter(Boolean) : [];
   const validParent = absolute && !/^[\\/]{2}/.test(dataParent) && parts.every(part =>
     !/[<>:"|?*\x00-\x1f]/.test(part) && !/[. ]$/.test(part) &&
     !/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part));
   const directory = validParent ? path.join(dataParent, 'model-credentials') : null;
-  const file = validParent ? path.join(directory, 'deepseek.bin') : null;
+  const file = validParent ? path.join(directory, provider === 'deepseek' ? 'deepseek.bin' : 'typesafe.bin') : null;
   let pending = Promise.resolve();
   const unavailable = () => ({ status: 'unavailable', code: 'CREDENTIAL_STORAGE_UNAVAILABLE' });
   const failed = () => ({ status: 'unavailable', code: 'CREDENTIAL_STORAGE_FAILED' });
@@ -134,9 +151,11 @@ function createModelCredentialStore({ dataParent, safeStorage, platform = proces
       return error?.isTemporarilyUnavailable === true ? unavailable() : corrupt();
     }
     unchanged(before);
-    if (!decrypted || !validSecret(decrypted.result) || typeof decrypted.shouldReEncrypt !== 'boolean') return corrupt();
+    if (!decrypted || typeof decrypted.shouldReEncrypt !== 'boolean') return corrupt();
+    const secret = protectedSecret(decrypted.result, provider);
+    if (secret === null) return corrupt();
     if (decrypted.shouldReEncrypt) return { status: 'unavailable', code: 'CREDENTIAL_ROTATION_REQUIRED' };
-    if (consumer) await consumer(decrypted.result.trim());
+    if (consumer) await consumer(secret);
     return { status: 'saved' };
   }
   return Object.freeze({
@@ -146,12 +165,16 @@ function createModelCredentialStore({ dataParent, safeStorage, platform = proces
       : { status: 'invalid', code: 'CREDENTIAL_INPUT_INVALID' }),
     save: (secret) => serial(async () => {
       if (platform !== 'win32') return unavailable();
-      if (!validSecret(secret)) return { status: 'invalid', code: 'CREDENTIAL_INPUT_INVALID' };
+      if (!validSecret(secret) || (provider === 'deepseek' && protectedSecret(secret, provider) === null)) {
+        return { status: 'invalid', code: 'CREDENTIAL_INPUT_INVALID' };
+      }
       inspectFile();
       if (!await available()) return unavailable();
       const before = inspectFile();
       let bytes;
-      try { bytes = await safeStorage.encryptStringAsync(secret.trim()); }
+      const plaintext = provider === 'deepseek' ? secret.trim()
+        : JSON.stringify({ format: CREDENTIAL_FORMAT, provider, secret: secret.trim() });
+      try { bytes = await safeStorage.encryptStringAsync(plaintext); }
       catch (error) { return error?.isTemporarilyUnavailable === true ? unavailable() : failed(); }
       unchanged(before);
       if (!Buffer.isBuffer(bytes) || bytes.length === 0 || bytes.length > MAX_CIPHERTEXT_BYTES) return failed();

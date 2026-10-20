@@ -1,0 +1,56 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+_______ test_single_service_disable_is_isolated_and_close_disables_both _______
+
+    def test_single_service_disable_is_isolated_and_close_disables_both():
+>       from cn_contract.desktop_control import NativeControlHandler
+E       ImportError: cannot import name 'NativeControlHandler' from 'cn_contract.desktop_control' (D:\Documents\ChatGPT\律所项目\src\cn_contract\desktop_control.py)
+
+tests\unit\test_desktop_control_protocol.py:96: ImportError
+______ test_pipe_failure_or_eof_clears_both_on_the_application_loop[eof] ______
+
+ending = 'eof'
+
+    @pytest.mark.parametrize('ending', ['eof', 'bad-frame', 'bad-ack', 'unexpected-error'])
+    def test_pipe_failure_or_eof_clears_both_on_the_application_loop(ending):
+>       from cn_contract.desktop_control import NativeControlHandler
+E       ImportError: cannot import name 'NativeControlHandler' from 'cn_contract.desktop_control' (D:\Documents\ChatGPT\律所项目\src\cn_contract\desktop_control.py)
+
+tests\unit\test_desktop_control_protocol.py:114: ImportError
+___ test_pipe_failure_or_eof_clears_both_on_the_application_loop[bad-frame] ___
+
+ending = 'bad-frame'
+
+    @pytest.mark.parametrize('ending', ['eof', 'bad-frame', 'bad-ack', 'unexpected-error'])
+    def test_pipe_failure_or_eof_clears_both_on_the_application_loop(ending):
+>       from cn_contract.desktop_control import NativeControlHandler
+E       ImportError: cannot import name 'NativeControlHandler' from 'cn_contract.desktop_control' (D:\Documents\ChatGPT\律所项目\src\cn_contract\desktop_control.py)
+
+tests\unit\test_desktop_control_protocol.py:114: ImportError
+____ test_pipe_failure_or_eof_clears_both_on_the_application_loop[bad-ack] ____
+
+ending = 'bad-ack'
+
+    @pytest.mark.parametrize('ending', ['eof', 'bad-frame', 'bad-ack', 'unexpected-error'])
+    def test_pipe_failure_or_eof_clears_both_on_the_application_loop(ending):
+>       from cn_contract.desktop_control import NativeControlHandler
+E       ImportError: cannot import name 'NativeControlHandler' from 'cn_contract.desktop_control' (D:\Documents\ChatGPT\律所项目\src\cn_contract\desktop_control.py)
+
+tests\unit\test_desktop_control_protocol.py:114: ImportError
+_ test_pipe_failure_or_eof_clears_both_on_the_application_loop[unexpected-error] _
+
+ending = 'unexpected-error'
+
+    @pytest.mark.parametrize('ending', ['eof', 'bad-frame', 'bad-ack', 'unexpected-error'])
+    def test_pipe_failure_or_eof_clears_both_on_the_application_loop(ending):
+>       from cn_contract.desktop_control import NativeControlHandler
+E       ImportError: cannot import name 'NativeControlHandler' from 'cn_contract.desktop_control' (D:\Documents\ChatGPT\律所项目\src\cn_contract\desktop_control.py)
+
+tests\unit\test_desktop_control_protocol.py:114: ImportError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_desktop_control_protocol.py::test_single_service_disable_is_isolated_and_close_disables_both
+FAILED tests/unit/test_desktop_control_protocol.py::test_pipe_failure_or_eof_clears_both_on_the_application_loop[eof]
+FAILED tests/unit/test_desktop_control_protocol.py::test_pipe_failure_or_eof_clears_both_on_the_application_loop[bad-frame]
+FAILED tests/unit/test_desktop_control_protocol.py::test_pipe_failure_or_eof_clears_both_on_the_application_loop[bad-ack]
+FAILED tests/unit/test_desktop_control_protocol.py::test_pipe_failure_or_eof_clears_both_on_the_application_loop[unexpected-error]
+5 failed, 17 deselected in 0.41s

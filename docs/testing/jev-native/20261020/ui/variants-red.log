@@ -1,0 +1,47 @@
+✔ optional Jev credentials and runtime have separate explicit actions and no automatic configuration (8.1488ms)
+✔ disabled credential actions do not dispatch and rechecking restores an unavailable Jev section (2.047ms)
+✔ initial reads hold one shared lock and never overlap the private control channel (1.7534ms)
+✔ model operation locks both providers and return without queuing duplicate actions (1.6681ms)
+✔ judge operation locks both providers and return without queuing duplicate actions (1.4229ms)
+✔ late Jev save response cannot revive settings or clear new input (1.7101ms)
+✔ late Jev runtime response cannot revive settings or clear new input (1.4137ms)
+✔ late Jev configure response cannot revive settings or clear new input (1.9157ms)
+✖ Jev rejects a model from the other provider even without a selection change event (2.2609ms)
+✔ Jev error projection has no private text and corrupt storage remains replaceable (2.1514ms)
+✔ return and document exit clear both unsubmitted passwords (1.3768ms)
+✔ preload exposes only the six fixed Jev operations with isolated channels (0.8313ms)
+✔ Jev copy and initial controls describe optional configuration without claiming permission or a network test (1.1719ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 84.4723
+
+✖ failing tests:
+
+test at desktop\tests\judge-settings-ui.test.cjs:144:1
+✖ Jev rejects a model from the other provider even without a selection change event (2.2609ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   [
+  +     'judgeConfigure',
+  +     'deepseek-flash'
+  +   ]
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-settings-ui.test.cjs:148:58)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 'judgeConfigure', 'deepseek-flash' ] ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

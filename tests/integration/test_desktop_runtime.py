@@ -58,6 +58,27 @@ def test_desktop_protocol_readiness_auth_restart_and_eof(tmp_path):
             message = json.loads(messages.get(timeout=30))
             assert message['event'] == 'ready', message
             assert message['nonce'] == 'a' * 32
+            assert message['control_protocol'] == 'qx-model-control-v1'
+            assert message['judge_control_protocol'] == 'qx-judge-control-v1'
+            configured = []
+            for sequence, operation in enumerate(('configure_judge', 'disable', 'configure_judge', 'disable_judge'), 1):
+                payload = ({'config': {'enabled': True}, 'secret': 'SYNTHETIC_TYPESAFE_PIPE_TOKEN_ONLY'}
+                           if operation == 'configure_judge' else {})
+                proc.stdin.write(json.dumps({'event': 'model-control', 'protocol': 'qx-model-control-v1',
+                    'nonce': 'a'*32, 'sequence': sequence, 'operation': operation, 'payload': payload})+'\n')
+                proc.stdin.flush()
+                reply = json.loads(messages.get(timeout=10))
+                assert reply['sequence'] == sequence and reply['ok'] is True
+                assert reply['protocol'] == 'qx-model-control-v1' and reply['nonce'] == 'a'*32
+                assert reply['event'] == 'model-control-result'
+                if operation == 'configure_judge':
+                    assert reply['status'] == 'configured'
+                    configured.append(reply)
+                else:
+                    assert reply['status'] == 'disabled'
+            assert configured[0]['config_sha256'] == configured[1]['config_sha256']
+            assert configured[0]['config_version'] != configured[1]['config_version']
+            assert 'SYNTHETIC_TYPESAFE' not in repr(configured)
             with httpx.Client(base_url=f"http://127.0.0.1:{message['port']}", trust_env=False) as client:
                 assert client.get('/api/matters').status_code == 401
                 assert client.post('/api/login', json={'username':'桌面律师','password':'fiction123'}).status_code == 200

@@ -1,0 +1,39 @@
+✔ optional Jev credentials and runtime have separate explicit actions and no automatic configuration (6.0786ms)
+✖ disabled credential actions do not dispatch and rechecking restores an unavailable Jev section (3.7004ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 68.5944
+
+✖ failing tests:
+
+test at desktop\tests\judge-settings-ui.test.cjs:67:1
+✖ disabled credential actions do not dispatch and rechecking restores an unavailable Jev section (3.7004ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   [
+  +     'judgeSave',
+  +     'synthetic-forced-input'
+  +   ],
+  +   [
+  +     'judgeRuntimeStatus'
+  +   ]
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-settings-ui.test.cjs:75:54)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 'judgeSave', 'synthetic-forced-input' ], [ 'judgeRuntimeStatus' ] ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

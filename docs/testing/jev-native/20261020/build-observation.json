@@ -1,0 +1,17 @@
+{
+  "command": ".venv/Scripts/python.exe -m PyInstaller --noconfirm --distpath .local/jev-native-20261020/frozen-backend --workpath .local/jev-native-20261020/build desktop/backend.spec",
+  "PYTHONPATH": ".local/desktop-tools/python-build",
+  "exit_code": 0,
+  "old": {
+    "files": 547,
+    "bytes": 96255320,
+    "exe_sha256": "4cf0c502fa21b59e9a310127b9a317bfc580a91baba7841a0c095a73635eabe7"
+  },
+  "new": {
+    "files": 547,
+    "bytes": 96257946,
+    "exe_sha256": "7c3ef868b25601ab7f19674daac72210b311055a37df09348c762282930ab0a4"
+  },
+  "delta_bytes": 2626,
+  "scope": "Uncompressed backend directory only; no new installer, RSS or controlled cold-start benchmark. Source/frozen acceptance pins 191 source/UI/driver files, not the whole build/dependency closure."
+}

@@ -49,6 +49,8 @@ class Backend extends EventEmitter {
       catch { this.control.fail('BACKEND_PIPE_CLOSED'); }
     });
   }
+  configureJudge(payload) { return this._model('configure_judge',payload); }
+  disableJudge() { return this._model('disable_judge',{}); }
   configureModel(payload) { return this._model('configure',payload); }
   disableModel() { return this._model('disable',{}); }
   authorizeModel(payload) { return this._model('authorize',payload); }

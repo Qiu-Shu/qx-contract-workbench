@@ -2999,6 +2999,12 @@ class JevConfig(DomainModel):
     timeout_ms: Annotated[int, Field(strict=True, ge=1, le=2000)] = 2000
 
 
+class NativeJudgeConfigure(DomainModel):
+    config: JevConfig
+    secret: Annotated[str, StringConstraints(strict=True, min_length=16, max_length=512,
+        pattern=r'^[!-~]+$')] = Field(repr=False)
+
+
 class JudgeRequest(DomainModel):
     local_request_id: UUID
     scope: ScopeSnapshot

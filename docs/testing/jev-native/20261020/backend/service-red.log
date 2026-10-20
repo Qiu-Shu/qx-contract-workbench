@@ -1,0 +1,12 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_configuration_returns_only_safe_new_identity_and_never_grants ______
+
+    def test_configuration_returns_only_safe_new_identity_and_never_grants():
+>       from cn_contract.assistant.native_judge_control import NativeJudgeControl
+E       ModuleNotFoundError: No module named 'cn_contract.assistant.native_judge_control'
+
+tests\unit\test_native_judge_control.py:13: ModuleNotFoundError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_native_judge_control.py::test_configuration_returns_only_safe_new_identity_and_never_grants
+1 failed in 0.62s

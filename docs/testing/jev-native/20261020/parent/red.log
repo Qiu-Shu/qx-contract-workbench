@@ -1,0 +1,138 @@
+✖ judge capability negotiates on the existing pipe and shares the sequence (2.918ms)
+✔ legacy main capability cannot send judge frames or consume sequence (1.1372ms)
+✔ unknown judge protocol is fatal before readiness (0.2326ms)
+✖ judge configure uses fixed trusted model without authorization or main calls (0.8049ms)
+✖ judge refuses another provider model without reading a secret (0.5359ms)
+✖ judge credential replacement clears configuration before reading a failed new secret (0.3717ms)
+✔ failed disable closes owned backend before allowing credential edits (0.3388ms)
+✔ late configuration ack terminates obsolete runtime and never reports configured (0.2492ms)
+✔ backend replacement discards judge status and cannot grant or reuse old state (0.2671ms)
+✖ old backend is unaffected when storing a future judge credential (0.3708ms)
+✖ judge settings use separate IPC namespace and accept only the judge status model (0.7664ms)
+✔ judge pipe rejects unimplemented grant and malformed disable without writes (0.2889ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 6
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 66.0844
+
+✖ failing tests:
+
+test at desktop\tests\judge-settings-core.test.cjs:31:1
+✖ judge capability negotiates on the existing pipe and shares the sequence (2.918ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - true
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-settings-core.test.cjs:32:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-settings-core.test.cjs:43:1
+✖ judge configure uses fixed trusted model without authorization or main calls (0.8049ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-settings-core.test.cjs:45:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-settings-core.test.cjs:51:1
+✖ judge refuses another provider model without reading a secret (0.5359ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'stop'
+  -   'disableJudge'
+    ]
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-settings-core.test.cjs:53:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'stop' ],
+    expected: [ 'disableJudge' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-settings-core.test.cjs:55:1
+✖ judge credential replacement clears configuration before reading a failed new secret (0.3717ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'BLOCKED_LIVE'
+  - 'CREDENTIAL_CORRUPT'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-settings-core.test.cjs:58:63)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'BLOCKED_LIVE',
+    expected: 'CREDENTIAL_CORRUPT',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-settings-core.test.cjs:74:1
+✖ old backend is unaffected when storing a future judge credential (0.3708ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-settings-core.test.cjs:77:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-settings-core.test.cjs:79:1
+✖ judge settings use separate IPC namespace and accept only the judge status model (0.7664ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-settings-core.test.cjs:84:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

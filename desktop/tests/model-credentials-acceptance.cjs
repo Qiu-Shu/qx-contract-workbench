@@ -18,7 +18,8 @@ class ObservedBackend extends Backend {
   async start(config){
     report.backend_configs.push({keys:Object.keys(config).sort(),contains_model_credential:JSON.stringify(config).includes('synthetic-native-secret-')});save();
     const ready=await super.start(config);report.ready={port:ready.port,pid:this.child.pid};save();
-    this.child.once('close',(code,signal)=>{report.backend_exit={code,signal};save();});return ready;
+    const pid=this.child.pid;
+    this.child.once('close',(code,signal)=>{report.backend_exit={code,signal};(report.backend_exits ||= []).push({pid,code,signal});save();});return ready;
   }
   async configureModel(payload){
     const result=await super.configureModel(payload);
@@ -35,6 +36,15 @@ class ObservedBackend extends Backend {
   async revokeModel(payload){
     const result=await super.revokeModel(payload);
     (report.model_controls ||= []).push({operation:'revoke',ok:result.ok,status:result.status});save();return result;
+  }
+  async configureJudge(payload){
+    const result=await super.configureJudge(payload);
+    (report.judge_controls ||= []).push({operation:'configure',ok:result.ok,status:result.status,
+      model:payload.config.model,has_config_version:typeof result.config_version==='string'});save();return result;
+  }
+  async disableJudge(){
+    const result=await super.disableJudge();
+    (report.judge_controls ||= []).push({operation:'disable',ok:result.ok,status:result.status});save();return result;
   }
 }
 require.cache[require.resolve(backendPath)].exports={Backend:ObservedBackend};
@@ -72,7 +82,7 @@ app.whenReady().then(()=>{
         const other=new BrowserWindow({show:false,webPreferences:{nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true,preload:path.join(project,'desktop/preload.cjs')}});
         try{
           await other.loadFile(path.join(project,'desktop/setup.html'));
-          value=await other.webContents.executeJavaScript(`(async()=>({status:await desktopSetup.modelStatus(),save:await desktopSetup.modelSave('synthetic-native-secret-untrusted-window'),remove:await desktopSetup.modelRemove(),runtime:await desktopSetup.modelRuntimeStatus(),configure:await desktopSetup.modelConfigure('deepseek-flash'),disable:await desktopSetup.modelDisable(),node:typeof require}))()`);
+          value=await other.webContents.executeJavaScript(`(async()=>({status:await desktopSetup.modelStatus(),save:await desktopSetup.modelSave('synthetic-native-secret-untrusted-window'),remove:await desktopSetup.modelRemove(),runtime:await desktopSetup.modelRuntimeStatus(),configure:await desktopSetup.modelConfigure('deepseek-flash'),disable:await desktopSetup.modelDisable(),judgeStatus:await desktopSetup.judgeStatus(),judgeSave:await desktopSetup.judgeSave('synthetic-native-secret-untrusted-judge-window'),judgeRemove:await desktopSetup.judgeRemove(),judgeRuntime:await desktopSetup.judgeRuntimeStatus(),judgeConfigure:await desktopSetup.judgeConfigure('jev-1.13.0'),judgeDisable:await desktopSetup.judgeDisable(),node:typeof require}))()`);
         }finally{other.destroy();}
       }else throw Error('UNKNOWN_TEST_COMMAND');
       fs.writeFileSync(path.join(evidence,'response.json'),JSON.stringify({id:request.id,value}));

@@ -1,0 +1,102 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+____ test_fixed_judge_operations_share_the_existing_frame[configure_judge] ____
+
+operation = 'configure_judge'
+
+    @pytest.mark.parametrize('operation', ['configure_judge', 'disable_judge'])
+    def test_fixed_judge_operations_share_the_existing_frame(operation):
+>       assert parse_control_line(line(operation=operation), NONCE, 1) == (operation, {})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\unit\test_desktop_control_protocol.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+line = '{"event":"model-control","protocol":"qx-model-control-v1","nonce":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","sequence":1,"operation":"configure_judge","payload":{}}\n'
+nonce = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', sequence = 1
+
+    def parse_control_line(line, nonce, sequence):
+        try:
+            if type(line) is bytes:
+                if len(line) > MAX_BYTES:
+                    raise ValueError
+                line = line.decode('utf-8')
+            if type(line) is not str:
+                raise ValueError
+            if not line.endswith('\n') or len(line.encode('utf-8')) > MAX_BYTES:
+                raise ValueError
+            value = json.loads(line, object_pairs_hook=_unique, parse_constant=_constant)
+            if (type(value) is not dict or set(value) != {'event','protocol','nonce','sequence','operation','payload'}
+                    or value['event'] != 'model-control' or value['protocol'] != PROTOCOL
+                    or value['nonce'] != nonce or type(value['sequence']) is not int
+                    or not 1 <= value['sequence'] <= MAX_SEQUENCE or value['sequence'] != sequence
+                    or type(value['operation']) is not str or value['operation'] not in _OPERATIONS
+                    or type(value['payload']) is not dict):
+                raise ValueError
+            pending = [(value['payload'], 0)]
+            while pending:
+                item, depth = pending.pop()
+                if depth > 16 or (type(item) is float and not math.isfinite(item)):
+                    raise ValueError
+                if type(item) is dict:
+                    pending.extend((part, depth+1) for part in item.values())
+                elif type(item) is list:
+                    pending.extend((part, depth+1) for part in item)
+            return value['operation'], value['payload']
+        except (ValueError, TypeError, KeyError, RecursionError, UnicodeError):
+>           raise ValueError('CONTROL_REJECTED') from None
+E           ValueError: CONTROL_REJECTED
+
+src\cn_contract\desktop_control.py:60: ValueError
+_____ test_fixed_judge_operations_share_the_existing_frame[disable_judge] _____
+
+operation = 'disable_judge'
+
+    @pytest.mark.parametrize('operation', ['configure_judge', 'disable_judge'])
+    def test_fixed_judge_operations_share_the_existing_frame(operation):
+>       assert parse_control_line(line(operation=operation), NONCE, 1) == (operation, {})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\unit\test_desktop_control_protocol.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+line = '{"event":"model-control","protocol":"qx-model-control-v1","nonce":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","sequence":1,"operation":"disable_judge","payload":{}}\n'
+nonce = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', sequence = 1
+
+    def parse_control_line(line, nonce, sequence):
+        try:
+            if type(line) is bytes:
+                if len(line) > MAX_BYTES:
+                    raise ValueError
+                line = line.decode('utf-8')
+            if type(line) is not str:
+                raise ValueError
+            if not line.endswith('\n') or len(line.encode('utf-8')) > MAX_BYTES:
+                raise ValueError
+            value = json.loads(line, object_pairs_hook=_unique, parse_constant=_constant)
+            if (type(value) is not dict or set(value) != {'event','protocol','nonce','sequence','operation','payload'}
+                    or value['event'] != 'model-control' or value['protocol'] != PROTOCOL
+                    or value['nonce'] != nonce or type(value['sequence']) is not int
+                    or not 1 <= value['sequence'] <= MAX_SEQUENCE or value['sequence'] != sequence
+                    or type(value['operation']) is not str or value['operation'] not in _OPERATIONS
+                    or type(value['payload']) is not dict):
+                raise ValueError
+            pending = [(value['payload'], 0)]
+            while pending:
+                item, depth = pending.pop()
+                if depth > 16 or (type(item) is float and not math.isfinite(item)):
+                    raise ValueError
+                if type(item) is dict:
+                    pending.extend((part, depth+1) for part in item.values())
+                elif type(item) is list:
+                    pending.extend((part, depth+1) for part in item)
+            return value['operation'], value['payload']
+        except (ValueError, TypeError, KeyError, RecursionError, UnicodeError):
+>           raise ValueError('CONTROL_REJECTED') from None
+E           ValueError: CONTROL_REJECTED
+
+src\cn_contract\desktop_control.py:60: ValueError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_desktop_control_protocol.py::test_fixed_judge_operations_share_the_existing_frame[configure_judge]
+FAILED tests/unit/test_desktop_control_protocol.py::test_fixed_judge_operations_share_the_existing_frame[disable_judge]
+2 failed, 15 deselected in 0.40s

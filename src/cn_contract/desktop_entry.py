@@ -64,7 +64,7 @@ def main():
 
         channel = None
         if 'operation' not in config:
-            from .desktop_control import ParentControlChannel, attach_control, PROTOCOL
+            from .desktop_control import ParentControlChannel, NativeControlHandler, attach_control, PROTOCOL, JUDGE_PROTOCOL
             channel = ParentControlChannel(stream, config['nonce'], emit, parent_eof)
 
         def watch_parent():
@@ -101,10 +101,13 @@ def main():
             port = sock.getsockname()[1]
             from .assistant.providers.registry import MainModelRegistry
             from .assistant.native_model_control import NativeModelControl
+            from .assistant.providers.judge_policy import JudgeRuntime
+            from .assistant.native_judge_control import NativeJudgeControl
             registry = MainModelRegistry()
             app = build_local_app(root, data_parent=parent, port=port, library_root=config.get('library_root'),
                                   assistant_model_runtime=registry)
-            attach_control(app, channel, NativeModelControl(app.state.database, registry))
+            attach_control(app, channel, NativeControlHandler(
+                NativeModelControl(app.state.database, registry), NativeJudgeControl(JudgeRuntime())))
             server = uvicorn.Server(uvicorn.Config(app, host='127.0.0.1', port=port,
                 workers=1, access_log=False, log_config=None, log_level='critical'))
             server_holder.append(server)
@@ -113,7 +116,8 @@ def main():
             def announce_ready():
                 while not finished.wait(.05):
                     if server.started:
-                        emit('ready', port=port, nonce=config['nonce'], control_protocol=PROTOCOL)
+                        emit('ready', port=port, nonce=config['nonce'], control_protocol=PROTOCOL,
+                             judge_control_protocol=JUDGE_PROTOCOL)
                         return
 
             Thread(target=announce_ready, daemon=True).start()

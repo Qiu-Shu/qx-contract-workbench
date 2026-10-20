@@ -1,20 +1,21 @@
 const {TextDecoder} = require('node:util');
 
 const PROTOCOL = 'qx-model-control-v1';
+const JUDGE_PROTOCOL = 'qx-judge-control-v1';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const SHA256 = /^[0-9a-f]{64}$/;
 const CODES = new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT',
   'BUDGET_EXCEEDED','CROSS_MATTER_DENIED']);
 const STATUSES = {configure:['configured'],disable:['disabled'],
-  authorize:['authorized','existing'],revoke:['revoked']};
+  authorize:['authorized','existing'],revoke:['revoked'],configure_judge:['configured'],disable_judge:['disabled']};
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const keys = (value, expected) => object(value) && Object.keys(value).length === expected.length &&
   expected.every(key => Object.hasOwn(value,key));
 const blocked = () => ({ok:false,code:'BLOCKED_LIVE'});
 
 function validPayload(operation, payload) {
-  if (operation === 'disable') return keys(payload,[]);
-  if (operation === 'configure') return keys(payload,['config','secret']) && object(payload.config) &&
+  if (operation === 'disable' || operation === 'disable_judge') return keys(payload,[]);
+  if (operation === 'configure' || operation === 'configure_judge') return keys(payload,['config','secret']) && object(payload.config) &&
     typeof payload.secret === 'string' && /^[\x20-\x7e]{16,1024}$/.test(payload.secret) &&
     payload.secret.trim().length >= 16 && payload.secret.trim().length <= 512;
   const token = value => typeof value === 'string' && /^[\x21-\x7e]{1,256}$/.test(value);
@@ -37,7 +38,7 @@ class ModelControl {
   constructor({nonce,write,onReady,onFatal,timeoutMs=10000}) {
     this.nonce=nonce; this.write=write; this.onReady=onReady; this.onFatal=onFatal;
     this.timeoutMs=timeoutMs; this.sequence=0; this.buffer=Buffer.alloc(0);
-    this.ready=false; this.enabled=false; this.closed=false; this.failed=false; this.pending=null;
+    this.ready=false; this.enabled=false; this.judgeEnabled=false; this.closed=false; this.failed=false; this.pending=null;
   }
   _finish(error, result) {
     const pending=this.pending;
@@ -83,11 +84,14 @@ class ModelControl {
       }
       if (!this.ready) {
         const fields=['event','port','nonce'];
-        if (Object.hasOwn(value,'control_protocol')) fields.push('control_protocol');
+        const hasMain=Object.hasOwn(value,'control_protocol'),hasJudge=Object.hasOwn(value,'judge_control_protocol');
+        if (hasMain) fields.push('control_protocol');
+        if (hasJudge) fields.push('judge_control_protocol');
         if (!keys(value,fields) || value.event !== 'ready' || value.nonce !== this.nonce ||
             !Number.isSafeInteger(value.port) || value.port < 1 || value.port > 65535 ||
-            (fields.length === 4 && value.control_protocol !== PROTOCOL)) throw new Error();
-        this.ready=true; this.enabled=fields.length === 4;
+            (hasMain && value.control_protocol !== PROTOCOL) ||
+            (hasJudge && (!hasMain || value.judge_control_protocol !== JUDGE_PROTOCOL))) throw new Error();
+        this.ready=true; this.enabled=hasMain; this.judgeEnabled=hasJudge;
         this.onReady(value); return;
       }
       if (!this.pending || value.event !== 'model-control-result' || value.protocol !== PROTOCOL ||
@@ -114,6 +118,7 @@ class ModelControl {
   }
   request(operation,payload) {
     if (this.closed || this.failed || !this.ready || !this.enabled) return Promise.resolve(blocked());
+    if ((operation === 'configure_judge' || operation === 'disable_judge') && !this.judgeEnabled) return Promise.resolve(blocked());
     if (this.pending) return Promise.resolve({ok:false,code:'STATE_CONFLICT'});
     let line;
     const sequence=this.sequence+1;

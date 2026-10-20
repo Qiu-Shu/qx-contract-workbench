@@ -7,14 +7,16 @@ const runtimeCodes=new Set([...codes,'ACCESS_DENIED','BLOCKED_LIVE','STATE_CONFL
   'BUDGET_EXCEEDED','CROSS_MATTER_DENIED']);
 const runtimeDenied=(code='BLOCKED_LIVE')=>({ok:false,runtime:{state:'unavailable',model:null},code});
 const check=guard=>{try{return guard()===true;}catch{return false;}};
-function runtimeResult(result) {
+function runtimeResult(result,kind) {
   const state=result?.runtime?.state,model=result?.runtime?.model;
   if(typeof result?.ok!=='boolean' || !['unavailable','unconfigured','configured'].includes(state) ||
-      (state==='configured' ? !['deepseek-flash','deepseek-v4-pro'].includes(model) : model!==null))return runtimeDenied();
+      (state==='configured' ? !(kind==='judge'?['jev-1.13.0']:['deepseek-flash','deepseek-v4-pro']).includes(model) : model!==null))return runtimeDenied();
   return {ok:result.ok,runtime:{state,model},...(runtimeCodes.has(result.code)?{code:result.code}:{})};
 }
 
-function registerModelSettings({ipcMain,store,runtime,isAllowed,isCurrent,captureGuard,setBusy}) {
+function registerModelSettings({ipcMain,store,runtime,isAllowed,isCurrent,captureGuard,setBusy,kind='main'}) {
+  if(!['main','judge'].includes(kind))throw new TypeError('MODEL_KIND_INVALID');
+  const prefix=kind==='judge'?'judge':'model';
   let pending=null;
   async function run(event,operation,value,modelOperation=false) {
     const deny=()=>modelOperation ? runtimeDenied('ACCESS_DENIED') : denied();
@@ -29,7 +31,7 @@ function registerModelSettings({ipcMain,store,runtime,isAllowed,isCurrent,captur
       if(modelOperation){
         if(!runtime)return runtimeDenied();
         const result=await (operation==='configure' ? runtime.configure(value,guard) : runtime[operation](guard));
-        return check(guard) ? runtimeResult(result) : deny();
+        return check(guard) ? runtimeResult(result,kind) : deny();
       }
       if(operation!=='status' && runtime){
         const cleared=await runtime.beforeCredentialChange(guard);
@@ -47,12 +49,12 @@ function registerModelSettings({ipcMain,store,runtime,isAllowed,isCurrent,captur
     catch{return modelOperation ? runtimeDenied() : unavailable();}
     finally{value='';pending=null;setBusy(false);}
   }
-  ipcMain.handle('desktop:model-status',event=>run(event,'status'));
-  ipcMain.handle('desktop:model-save',(event,secret)=>run(event,'save',secret));
-  ipcMain.handle('desktop:model-remove',event=>run(event,'remove'));
-  ipcMain.handle('desktop:model-runtime-status',event=>run(event,'status',undefined,true));
-  ipcMain.handle('desktop:model-configure',(event,model)=>run(event,'configure',model,true));
-  ipcMain.handle('desktop:model-disable',event=>run(event,'disable',undefined,true));
+  ipcMain.handle(`desktop:${prefix}-status`,event=>run(event,'status'));
+  ipcMain.handle(`desktop:${prefix}-save`,(event,secret)=>run(event,'save',secret));
+  ipcMain.handle(`desktop:${prefix}-remove`,event=>run(event,'remove'));
+  ipcMain.handle(`desktop:${prefix}-runtime-status`,event=>run(event,'status',undefined,true));
+  ipcMain.handle(`desktop:${prefix}-configure`,(event,model)=>run(event,'configure',model,true));
+  ipcMain.handle(`desktop:${prefix}-disable`,event=>run(event,'disable',undefined,true));
   return {wait:()=>Promise.allSettled([pending,store.drain?.()])};
 }
 module.exports={registerModelSettings};

@@ -1,0 +1,38 @@
+PASS separate_credentials_before_account_do_not_enable_either_runtime_and_other_window_denied
+PASS configure_keeps_pid_login_and_draft_but_capability_unapproved_and_post_forbidden
+PASS independent_native_ACKs_switch_disable_replace_remove_preserve_other_provider_without_any_grant
+PASS actual_windows_settings_layout_at_100_150_200_percent_and_clean_shutdown
+PASS restart_retains_ciphertext_only_and_owned_backend_failure_clears_runtime
+PASS renderer_crash_stops_configured_backend_before_credential_replacement
+PASS backup_maintenance_still_stops_backend_and_resume_starts_unconfigured
+PASS zero_main_and_judge_records_no_plaintext_leak_and_scoped_network_observation
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings-acceptance.py", line 385, in <module>
+    main()
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings-acceptance.py", line 358, in main
+    p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/login'),timeout=60000);login()
+                                                                               ^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings-acceptance.py", line 226, in login
+    p.get_by_role('button', name='登录', exact=True).click(); p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/assistant'))
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 10057, in wait_for_url
+    self._sync(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_page.py", line 590, in wait_for_url
+    return await self._main_frame.wait_for_url(**locals_to_params(locals()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_frame.py", line 289, in wait_for_url
+    async with self.expect_navigation(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_event_context_manager.py", line 33, in __aexit__
+    await self._future
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_frame.py", line 265, in continuation
+    event = await waiter.result()
+            ^^^^^^^^^^^^^^^^^^^^^
+playwright._impl._errors.TimeoutError: Timeout 25000ms exceeded.
+=========================== logs ===========================
+waiting for navigation to "re.compile('http://127\\.0\\.0\\.1:\\d+/assistant')" until 'load'
+  navigated to "http://127.0.0.1:61374/recovery"
+============================================================

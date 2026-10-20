@@ -1,0 +1,70 @@
+{
+  "phase": "CH-05C optional Jev native settings UI",
+  "scope": "Four production UI files changed; setup.js reused unchanged; one new Node UI test file. No new resources or dependencies.",
+  "commands": [
+    {
+      "command": "node --test desktop/tests/judge-settings-ui.test.cjs",
+      "passed": 13,
+      "exit": 0,
+      "log": "variants-green.log"
+    },
+    {
+      "command": "node --test --test-name-pattern='credential form|credential errors|credential remove|unavailable settings|a late old|model page' desktop/tests/model-settings.test.cjs",
+      "passed": 12,
+      "exit": 0,
+      "log": "main-regression.log"
+    },
+    {
+      "command": "impeccable.cmd detect --json desktop/setup.html desktop/setup.css desktop/setup-model.js desktop/preload.cjs",
+      "findings": 0,
+      "exit": 0,
+      "log": "impeccable-detect.json"
+    }
+  ],
+  "effective_red": [
+    {
+      "log": "first-red.log",
+      "failed": 1,
+      "reason": "Optional Jev settings were absent."
+    },
+    {
+      "log": "disabled-red.log",
+      "failed": 1,
+      "reason": "Forced disabled credential action still dispatched."
+    },
+    {
+      "log": "variants-red.log",
+      "failed": 1,
+      "reason": "Model ID changed without a change event crossed the provider selector boundary."
+    }
+  ],
+  "sha256": {
+    "desktop/setup.html": "7a3adb913a87902edfcb262a98191937d2712157d43ba820a5dbcc7a60f6a6ff",
+    "desktop/setup.css": "ad8b84dc3d3f16a87cc05c439184c4748bcbe48b9b1d62fe82e5c95ec2f31c83",
+    "desktop/setup.js": "66bcb5e325451ae4b365323915f769ab5221636358b4febd8ae235e0214be605",
+    "desktop/setup-model.js": "a95c98e0c6c34e3097432af93b0cc0b22180fd254a4e62714d83a0b49d9ea3df",
+    "desktop/preload.cjs": "3c9f888c159fb988bb691ec8bf0feea8855cb573e191490022c13ef1e7c0554b",
+    "desktop/tests/judge-settings-ui.test.cjs": "13a821efcdade57e07233d4ffb2c04b6d03c0d7c2cb450a8e224c65ba8bf69ab"
+  },
+  "selectors": [
+    "judge-settings",
+    "judge-secret",
+    "judge-save",
+    "judge-remove",
+    "judge-status",
+    "judge-id",
+    "judge-configure",
+    "judge-disable",
+    "judge-recheck",
+    "judge-runtime-status",
+    "judge-validation",
+    "judge-runtime-validation",
+    "resume"
+  ],
+  "contract": "Fixed main/judge variant map; page-wide busy and epoch; serial initial credential/runtime checks; saves/configures remain separate; both passwords cleared on operations/exit; late results ignored.",
+  "limits": [
+    "Node DOM doubles verify behavior, not actual browser layout or native IPC security.",
+    "Root owns actual Windows/Electron verification, packaging and native lifecycle review.",
+    "No real key was read, no external request or credential-account operation performed."
+  ]
+}

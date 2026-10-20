@@ -17,11 +17,13 @@ async function fixture(t,{recovered=false}={}) {
   const store={writes:0,async save(){this.writes++;return {status:'saved'};},
     async status(){return {status:'saved'};},async withSecret(fn){await fn('synthetic-settings-secret');return {status:'saved'};},async drain(){}};
   class Backend extends EventEmitter {
-    constructor(){super();this.stops=0;this.configures=0;this.disables=0;backends.push(this);}
+    constructor(){super();this.stops=0;this.configures=0;this.disables=0;this.judgeConfigures=0;this.judgeDisables=0;this.control={ready:true,enabled:true,judgeEnabled:true};backends.push(this);}
     async start(){return {port:18000+backends.length};}
     async stop(){this.stops++;this.closing=true;}
     async configureModel(){this.configures++;return {ok:true,status:'configured',config_sha256:'a'.repeat(64),config_version:'00000000-0000-4000-8000-000000000002'};}
     async disableModel(){this.disables++;return {ok:true,status:'disabled'};}
+    async configureJudge(){this.judgeConfigures++;return {ok:true,status:'configured',config_sha256:'b'.repeat(64),config_version:'00000000-0000-4000-8000-000000000003'};}
+    async disableJudge(){this.judgeDisables++;return {ok:true,status:'disabled'};}
   }
   class Window {
     constructor(){win=this;this.url='';this.preventLeave=false;this.events={};this.webContents={mainFrame:{url:''},
@@ -151,4 +153,37 @@ test('restored workspaces and replaced backends cannot approve a send',async t=>
   const context=g.approvalOptions.captureContext(g.event());
   await g.menu('重新打开工作台');assert.equal(context.guard(),false);
   assert.notEqual(g.backends.at(-1),context.backend);
+});
+
+
+test('judge menu shares trusted lifecycle while main and judge operations remain separate',async t=>{
+  const f=await fixture(t);await f.menu('Jev 辅助设置…');
+  const call=(name,...args)=>f.handlers.get('desktop:'+name)(f.event(),...args);
+  assert.equal((await call('model-configure','deepseek-flash')).ok,true);
+  assert.equal((await call('judge-configure','jev-1.13.0')).ok,true);
+  assert.equal((await call('judge-disable')).ok,true);
+  assert.equal((await call('model-runtime-status')).runtime.state,'configured');
+  assert.equal((await call('judge-runtime-status')).runtime.state,'unconfigured');
+  assert.equal((await call('judge-configure','jev-1.13.0')).ok,true);
+  assert.equal((await call('model-disable')).ok,true);
+  assert.equal((await call('judge-runtime-status')).runtime.state,'configured');
+  assert.equal(f.backends[0].stops,0);
+  await call('resume');
+  assert.equal((await call('judge-disable')).code,'ACCESS_DENIED');
+});
+test('judge config is unavailable in a restored read-only workspace',async t=>{
+  const f=await fixture(t,{recovered:true});await f.menu('Jev 辅助设置…');
+  const result=await f.handlers.get('desktop:judge-configure')(f.event(),'jev-1.13.0');
+  assert.equal(result.ok,false);assert.equal(f.backends[0].judgeConfigures,0);
+});
+test('shared native settings busy lock prevents main credential writes during judge configuration',async t=>{
+  const f=await fixture(t);await f.menu('Jev 辅助设置…');
+  let finish;f.backends[0].configureJudge=()=>new Promise(resolve=>{finish=resolve;});
+  const pending=f.handlers.get('desktop:judge-configure')(f.event(),'jev-1.13.0');
+  for(let n=0;!finish&&n<10;n++)await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(typeof finish,'function');
+  assert.equal((await f.handlers.get('desktop:model-save')(f.event(),'synthetic-unused-secret')).code,'ACCESS_DENIED');
+  assert.equal(f.store.writes,0);
+  finish({ok:true,status:'configured',config_sha256:'b'.repeat(64),config_version:'00000000-0000-4000-8000-000000000003'});
+  assert.equal((await pending).ok,true);
 });

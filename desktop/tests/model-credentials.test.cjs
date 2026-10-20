@@ -330,3 +330,177 @@ test('filesystem failures are fixed results and never expose file paths or raw e
   t.mock.restoreAll();
   assert.deepEqual(await f.store.status(), { status: 'saved' });
 });
+
+test('only fixed provider identities can construct a store without consulting storage or creating paths', (t) => {
+  const f = fixture(t);
+  for (const provider of ['../deepseek', 'typesafe.bin', 'TypeSafe', '', null, 42, {}, ['typesafe'], '__proto__']) {
+    assert.throws(() => f.create({ provider }), { name: 'TypeError', message: 'CREDENTIAL_PROVIDER_INVALID' });
+  }
+  assert.equal(fs.existsSync(f.dataParent), false);
+});
+
+test('TypeSafe has its own protected envelope, survives recreation and never returns callback data', async (t) => {
+  const f = fixture(t);
+  const store = f.create({ provider: 'typesafe' });
+  assert.deepEqual(await store.save(`  ${SECRET}  `), { status: 'saved' });
+  assert.deepEqual(fs.readdirSync(f.directory), ['typesafe.bin']);
+  const bytes = fs.readFileSync(path.join(f.directory, 'typesafe.bin'));
+  assert.equal(bytes.includes(Buffer.from(SECRET)), false);
+  assert.deepEqual(JSON.parse((await f.safeStorage.decryptStringAsync(bytes)).result), {
+    format: 'qunxing-model-credential-v1', provider: 'typesafe', secret: SECRET
+  });
+  const seen = [];
+  assert.deepEqual(await f.create({ provider: 'typesafe' }).withSecret(value => {
+    seen.push(value); return { secret: value };
+  }), { status: 'saved' });
+  assert.deepEqual(seen, [SECRET]);
+  assert.deepEqual(await f.store.status(), { status: 'empty' });
+});
+
+test('TypeSafe preserves accepted key boundaries and escapes without accepting an oversized or multiline key', async (t) => {
+  const f = fixture(t);
+  const store = f.create({ provider: 'typesafe' });
+  const file = path.join(f.directory, 'typesafe.bin');
+  for (const secret of ['x'.repeat(16), '\\"'.repeat(256), `  ${SECRET}  `]) {
+    assert.deepEqual(await store.save(secret), { status: 'saved' });
+    const seen = [];
+    assert.deepEqual(await f.create({ provider: 'typesafe' }).withSecret(value => seen.push(value)), { status: 'saved' });
+    assert.deepEqual(seen, [secret.trim()]);
+  }
+  const before = fs.readFileSync(file);
+  for (const secret of ['x'.repeat(15), 'x'.repeat(513), SECRET + '\n']) {
+    assert.deepEqual(await store.save(secret), { status: 'invalid', code: 'CREDENTIAL_INPUT_INVALID' });
+    assert.deepEqual(fs.readFileSync(file), before);
+  }
+});
+
+test('legacy DeepSeek ciphertext remains readable only through its default or explicit store', async (t) => {
+  const f = fixture(t);
+  fs.mkdirSync(f.directory, { recursive: true });
+  const legacy = await f.safeStorage.encryptStringAsync(` ${SECRET} `);
+  fs.writeFileSync(f.file, legacy);
+  for (const store of [f.store, f.create({ provider: 'deepseek' })]) {
+    const seen = [];
+    assert.deepEqual(await store.withSecret(value => seen.push(value)), { status: 'saved' });
+    assert.deepEqual(seen, [SECRET]);
+  }
+  fs.copyFileSync(f.file, path.join(f.directory, 'typesafe.bin'));
+  const seen = [];
+  assert.deepEqual(await f.create({ provider: 'typesafe' }).withSecret(value => seen.push(value)),
+    { status: 'invalid', code: 'CREDENTIAL_CORRUPT' });
+  assert.deepEqual(seen, []);
+  assert.deepEqual(fs.readFileSync(f.file), legacy);
+});
+
+test('copying a TypeSafe ciphertext into DeepSeek cannot expose an envelope as a main-model key', async (t) => {
+  const f = fixture(t);
+  fs.mkdirSync(f.directory, { recursive: true });
+  const envelope = JSON.stringify({ format: 'qunxing-model-credential-v1', provider: 'typesafe', secret: SECRET });
+  const ciphertext = await f.safeStorage.encryptStringAsync(envelope);
+  fs.writeFileSync(f.file, ciphertext);
+  const seen = [];
+  assert.deepEqual(await f.store.withSecret(value => seen.push(value)), { status: 'invalid', code: 'CREDENTIAL_CORRUPT' });
+  assert.deepEqual(seen, []);
+  assert.deepEqual(fs.readFileSync(f.file), ciphertext);
+  assert.deepEqual(await f.store.save(envelope), { status: 'invalid', code: 'CREDENTIAL_INPUT_INVALID' });
+});
+
+test('TypeSafe rejects foreign, malformed, duplicate and extra envelope fields without consuming or rewriting them', async (t) => {
+  const f = fixture(t);
+  const file = path.join(f.directory, 'typesafe.bin');
+  const store = f.create({ provider: 'typesafe' });
+  fs.mkdirSync(f.directory, { recursive: true });
+  const valid = { format: 'qunxing-model-credential-v1', provider: 'typesafe', secret: SECRET };
+  const malformed = [
+    SECRET, 'null', '[]', 'true', '42', '{',
+    JSON.stringify({ ...valid, format: 'unknown-v2' }),
+    JSON.stringify({ ...valid, provider: 'deepseek' }),
+    JSON.stringify({ ...valid, secret: 'short' }),
+    JSON.stringify({ ...valid, secret: SECRET + '\n' }),
+    JSON.stringify({ ...valid, secret: ' ' + SECRET }),
+    JSON.stringify({ ...valid, extra: true }),
+    JSON.stringify({ provider: 'typesafe', secret: SECRET }),
+    JSON.stringify({ ...valid, secret: null }),
+    `{"format":"qunxing-model-credential-v1","provider":"deepseek","provider":"typesafe","secret":"${SECRET}"}`,
+    JSON.stringify({ ...valid, secret: 'x'.repeat(4096) })
+  ];
+  for (const text of malformed) {
+    const bytes = await f.safeStorage.encryptStringAsync(text);
+    fs.writeFileSync(file, bytes);
+    const seen = [];
+    assert.deepEqual(await store.withSecret(value => seen.push(value)), { status: 'invalid', code: 'CREDENTIAL_CORRUPT' });
+    assert.deepEqual(seen, []);
+    assert.deepEqual(fs.readFileSync(file), bytes);
+  }
+});
+
+test('TypeSafe save, replace and remove preserve DeepSeek and the reverse operations preserve TypeSafe', async (t) => {
+  const f = fixture(t);
+  const typesafe = f.create({ provider: 'typesafe' });
+  const file = path.join(f.directory, 'typesafe.bin');
+  assert.deepEqual(await f.store.save(SECRET), { status: 'saved' });
+  const deepseekBytes = fs.readFileSync(f.file);
+  assert.deepEqual(await typesafe.save(REPLACEMENT), { status: 'saved' });
+  assert.deepEqual(fs.readFileSync(f.file), deepseekBytes);
+  assert.equal(fs.existsSync(file), true);
+  const typesafeBytes = fs.readFileSync(file);
+  assert.deepEqual(await f.store.remove(), { status: 'empty' });
+  assert.deepEqual(fs.readFileSync(file), typesafeBytes);
+  assert.deepEqual(await f.store.save(SECRET), { status: 'saved' });
+  const restoredDeepseek = fs.readFileSync(f.file);
+  assert.deepEqual(await typesafe.save(SECRET), { status: 'saved' });
+  assert.deepEqual(await typesafe.remove(), { status: 'empty' });
+  assert.deepEqual(fs.readFileSync(f.file), restoredDeepseek);
+  assert.deepEqual(await typesafe.status(), { status: 'empty' });
+});
+
+test('TypeSafe refuses unavailable system protection and rotation without consuming a key or touching DeepSeek', async (t) => {
+  const f = fixture(t);
+  const typesafe = f.create({ provider: 'typesafe' });
+  await f.store.save(SECRET);
+  const deepseekBytes = fs.readFileSync(f.file);
+  const file = path.join(f.directory, 'typesafe.bin');
+  f.safeStorage.isAsyncEncryptionAvailable = async () => false;
+  assert.deepEqual(await typesafe.save(REPLACEMENT), { status: 'unavailable', code: 'CREDENTIAL_STORAGE_UNAVAILABLE' });
+  assert.equal(fs.existsSync(file), false);
+  assert.deepEqual(fs.readFileSync(f.file), deepseekBytes);
+  f.safeStorage.isAsyncEncryptionAvailable = async () => true;
+  await typesafe.save(REPLACEMENT);
+  const decrypt = f.safeStorage.decryptStringAsync;
+  f.safeStorage.decryptStringAsync = async bytes => ({ ...await decrypt(bytes), shouldReEncrypt: true });
+  const seen = [];
+  assert.deepEqual(await typesafe.withSecret(value => seen.push(value)), { status: 'unavailable', code: 'CREDENTIAL_ROTATION_REQUIRED' });
+  assert.deepEqual(seen, []);
+  assert.deepEqual(fs.readFileSync(f.file), deepseekBytes);
+});
+
+test('TypeSafe replacement failure preserves both providers and leaves no temporary ciphertext', async (t) => {
+  const f = fixture(t);
+  const typesafe = f.create({ provider: 'typesafe' });
+  await f.store.save(SECRET);
+  const deepseekBytes = fs.readFileSync(f.file);
+  await typesafe.save(REPLACEMENT);
+  assert.deepEqual(fs.readdirSync(f.directory).sort(), ['deepseek.bin', 'typesafe.bin']);
+  const file = path.join(f.directory, 'typesafe.bin');
+  const typesafeBytes = fs.readFileSync(file);
+  t.mock.method(fs, 'renameSync', () => { throw new Error(SECRET); });
+  assert.deepEqual(await typesafe.save(SECRET), { status: 'unavailable', code: 'CREDENTIAL_STORAGE_FAILED' });
+  t.mock.restoreAll();
+  assert.deepEqual(fs.readFileSync(f.file), deepseekBytes);
+  assert.deepEqual(fs.readFileSync(file), typesafeBytes);
+  assert.deepEqual(fs.readdirSync(f.directory).sort(), ['deepseek.bin', 'typesafe.bin']);
+});
+
+test('TypeSafe rejects a linked credential file without reading, replacing or removing its DeepSeek target', async (t) => {
+  const f = fixture(t);
+  await f.store.save(SECRET);
+  const before = fs.readFileSync(f.file);
+  const file = path.join(f.directory, 'typesafe.bin');
+  const typesafe = f.create({ provider: 'typesafe' });
+  fs.symlinkSync(f.file, file, 'file');
+  for (const operation of [() => typesafe.status(), () => typesafe.save(REPLACEMENT), () => typesafe.remove()]) {
+    assert.deepEqual(await operation(), { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' });
+  }
+  assert.equal(fs.lstatSync(file).isSymbolicLink(), true);
+  assert.deepEqual(fs.readFileSync(f.file), before);
+});

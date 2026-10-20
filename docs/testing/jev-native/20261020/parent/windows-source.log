@@ -1,0 +1,10 @@
+PASS separate_credentials_before_account_do_not_enable_either_runtime_and_other_window_denied
+PASS configure_keeps_pid_login_and_draft_but_capability_unapproved_and_post_forbidden
+PASS independent_native_ACKs_switch_disable_replace_remove_preserve_other_provider_without_any_grant
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings-acceptance.py", line 381, in <module>
+    main()
+  File "D:\Documents\ChatGPT\律所项目\desktop\tests\model-settings-acceptance.py", line 296, in main
+    assert control.evaluate('el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.top>=0&&r.right<=innerWidth&&r.bottom<=innerHeight&&document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===el}')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
