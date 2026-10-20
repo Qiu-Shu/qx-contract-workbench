@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.248" timestamp="2026-10-20T21:16:03.313746+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_research_service" name="test_other_actor_cannot_interrupt_an_owned_research" time="0.598"><failure message="AssertionError: assert 'failed' == 'queued'&#10;  &#10;  - queued&#10;  + failed">workspace = (&lt;cn_contract.persistence.Database object at 0x0000028C36D690D0&gt;, {'admin': Actor(user_id=UUID('9d2d7d22-cf76-4544-947... &lt;module 'cn_contract.assistant.service' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\service.py'&gt;)
+research = &lt;module 'cn_contract.assistant.research' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\research.py'&gt;
+
+    def test_other_actor_cannot_interrupt_an_owned_research(workspace, research):
+        database, actors, _, _ = workspace
+        view = conversation(workspace)
+        with database.session() as db:
+            first = research.enqueue_research(actors['lawyer'], view.scope.conversation_id, request(view), db)
+        with pytest.raises(ServiceError, match='authorized'):
+            research.execute_research(actors['reviewer'], first.run.id, database, LegalLibraryAdapter(None))
+        with database.session() as db:
+&gt;           assert research.read_research(actors['lawyer'], first.run.id, db).run.state == 'queued'
+E           AssertionError: assert 'failed' == 'queued'
+E             
+E             - queued
+E             + failed
+
+tests\integration\test_assistant_research_service.py:70: AssertionError</failure></testcase></testsuite></testsuites>

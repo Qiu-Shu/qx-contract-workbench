@@ -195,6 +195,11 @@ body.has-history .conversation-surface { padding-top: 1.5rem; }
 body.has-history .conversation-heading { margin-bottom: 1.5rem; }
 body.has-history .conversation-heading h1 { font-size: 1.25rem; }
 body.has-history .compose-section { position: sticky; bottom: 0; padding-top: 1rem; background: var(--canvas); }
+/* Source panels and short windows need room to reach earlier messages. */
+body.has-history.source-open .compose-section { position: static; }
+@media (max-height: 800px) {
+  body.has-history .compose-section { position: static; }
+}
 
 @media (max-width: 999px) {
   :root { --sidebar-size: 4rem; }
@@ -248,3 +253,14 @@ body.has-history .compose-section { position: sticky; bottom: 0; padding-top: 1r
 @media (prefers-reduced-motion: reduce) {
   button { transition: none; }
 }
+
+.research-result { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.research-hits { padding-left: 1.5rem; margin: .75rem 0 0; }
+.research-hits li + li { margin-top: .75rem; }
+.citation-link { display: block; padding: .5rem 0; text-align: left; color: var(--accent); background: transparent; overflow-wrap: anywhere; }
+.citation-link:hover { color: var(--accent-hover); background: var(--selected); text-decoration: underline; }
+.citation-quote { margin: 1.25rem 0; font-size: var(--read-size); }
+.citation-boundary { margin-bottom: .75rem; font-size: .875rem; }
+.citation-details { border-top: 1px solid var(--line); padding-top: 1rem; font-size: .8125rem; line-height: 1.7; }
+.citation-details dt { color: var(--muted); margin-top: .75rem; }
+.citation-details dd { margin: .25rem 0 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }

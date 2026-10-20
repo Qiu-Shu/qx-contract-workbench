@@ -59,7 +59,8 @@ def test_history_keeps_two_outputs_in_request_order_without_runtime_or_provider_
             assert output['candidate']['citations'][0]['message_id'] == item['message_id']
             assert output['audience'] == 'internal' and output['review_status'] == 'unverified'
         assert len(runtime.provider.calls) == 2
-        assert http.app.state.assistant_generation_tasks is None
+        assert http.app.state.assistant_generation_tasks.runtime is None
+        assert http.app.state.assistant_generation_tasks.active_count == 0
 
 
 def test_legacy_queued_message_is_omitted_without_dispatch(world, tmp_path):

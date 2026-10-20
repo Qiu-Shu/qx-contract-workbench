@@ -1,0 +1,14 @@
+{
+  "exit_code": 1,
+  "checks": [
+    "skill_selection_keeps_empty_input_and_does_not_query",
+    "actual_Enter_single_local_query_and_synthetic_IME_ShiftEnter_guard"
+  ],
+  "page_errors": [],
+  "external_requests": [],
+  "screens": [],
+  "scope": "actual source HTTP app + independent synthetic SQLite law library + actual Chromium; no installed app",
+  "physical_ime_tested": false,
+  "physical_os_scaling_tested": false,
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\Documents\\ChatGPT\\律所项目\\.local\\library-chat-20261020\\frontend_browser.py\", line 72, in <module>\n    expect(page.locator('#citation-preview')).to_be_visible();expect(page.locator('.citation-quote')).to_contain_text('合成租赁')\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Documents\\ChatGPT\\律所项目\\.venv\\Lib\\site-packages\\playwright\\sync_api\\_generated.py\", line 22185, in to_contain_text\n    self._sync(\n  File \"D:\\Documents\\ChatGPT\\律所项目\\.venv\\Lib\\site-packages\\playwright\\_impl\\_sync_base.py\", line 115, in _sync\n    return task.result()\n           ^^^^^^^^^^^^^\n  File \"D:\\Documents\\ChatGPT\\律所项目\\.venv\\Lib\\site-packages\\playwright\\_impl\\_assertions.py\", line 303, in to_contain_text\n    await self._expect_impl(\n  File \"D:\\Documents\\ChatGPT\\律所项目\\.venv\\Lib\\site-packages\\playwright\\_impl\\_assertions.py\", line 128, in _expect_impl\n    _record_soft_or_raise(\n  File \"D:\\Documents\\ChatGPT\\律所项目\\.venv\\Lib\\site-packages\\playwright\\_impl\\_assertions.py\", line 60, in _record_soft_or_raise\n    raise error\nAssertionError: Locator expected to contain text '合成租赁'\nActual value: # 纯合成资料\r\n \nCall log:\n  - Expect \"to_contain_text\" locator(\".citation-quote\") with timeout 5000ms\n  - waiting for locator(\".citation-quote\")\n    14 × locator resolved to <p class=\"citation-quote\"># 纯合成资料\r↵</p>\n       - unexpected value \"# 纯合成资料\r\n\"\n\nAria snapshot:\n- paragraph: \"# 纯合成资料\"\n"
+}

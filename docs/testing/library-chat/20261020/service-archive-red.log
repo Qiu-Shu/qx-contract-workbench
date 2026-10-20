@@ -1,0 +1,20 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_corrupt_acceptance_rejected_on_create_and_authenticated_restore _____
+
+history = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1084/test_corrupt_acceptance_re...e), citation_ids=()), created_at=datetime.datetime(2026, 10, 20, 13, 34, 42, 440481, tzinfo=datetime.timezone.utc)),)))
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1084/test_corrupt_acceptance_reject0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A6B208CCB0>
+
+    def test_corrupt_acceptance_rejected_on_create_and_authenticated_restore(history, tmp_path, monkeypatch):
+        root, database, _, result = history
+        change_acceptance(database, result.run.id, 'call_id', str(uuid4()))
+        archive = tmp_path/'bad.qxbak'
+>       with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_research_backup.py:55: Failed
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_research_backup.py::test_corrupt_acceptance_rejected_on_create_and_authenticated_restore
+1 failed in 2.74s

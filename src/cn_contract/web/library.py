@@ -42,6 +42,10 @@ def _identifier(value):
 def attach_library(app, database, root):
     root = ensure_root(root)
     app.state.library_root = root
+    tasks = getattr(app.state, 'assistant_generation_tasks', None)
+    if tasks is not None:
+        from ..assistant.tools.library import LegalLibraryAdapter
+        tasks.library_adapter = LegalLibraryAdapter(root)
 
     def authenticated(request, *, write=False):
         with database.session() as db:

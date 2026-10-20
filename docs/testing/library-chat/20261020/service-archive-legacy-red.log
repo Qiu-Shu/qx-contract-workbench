@@ -1,0 +1,46 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_legacy_query_text_cannot_impersonate_workflow_discriminator _______
+
+ledger = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1089/test_legacy_query_text_can...', 'state': 'queued'}, created_at=datetime.datetime(2026, 10, 20, 13, 40, 1, 947110, tzinfo=datetime.timezone.utc)),)))
+
+    def test_legacy_query_text_cannot_impersonate_workflow_discriminator(ledger):
+        from cn_contract.assistant.library_handlers import begin_library_call
+        _, database, actor, run = ledger
+        begin_library_call(actor, run.id, uuid4(), d.LibraryHandlerRequest(
+            tool='legal_library.search', query=d.AssistantLibraryQuery(text='local-research-v1')), database)
+        with database.session() as db:
+            current = service._owned(actor, run.scope.conversation_id, db)
+>           assert research.read_history(actor, current,
+                d.MainGenerationHistoryQuery(message_ids=(run.message_id,)), db).items == ()
+
+tests\integration\test_assistant_research_backup.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\assistant\research.py:117: in read_history
+    research=read_research(actor, UUID(run_id), db)))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\research.py:49: in read_research
+    call = _initial(row, db)
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+row = {'id': 'c07af248-43c1-4556-a063-471ac287af96', 'conversation_id': '2ccaaa7a-2d10-40d3-a9a9-4252b708d479', 'message_id'..., 'selected_model': None, 'budget_json': None, 'cancel_requested': 0, 'created_at': '2026-10-20T13:40:01.947110+00:00'}
+db = <sqlalchemy.orm.session.Session object at 0x000001576CCB7560>
+
+    def _initial(row, db):
+        """A skill label or old queued message alone is never dispatch authority."""
+        events = db.execute(text('''SELECT * FROM assistant_run_events WHERE run_id=:run
+            ORDER BY seq'''),
+            {'run':row['id']}).mappings().all()
+        content = db.scalar(text('SELECT content FROM assistant_messages WHERE id=:id'),
+            {'id':row['message_id']})
+        try:
+            call = initial_call(row, content, events)
+            if call is None:
+>               raise ServiceError('STATE_CONFLICT', 409)
+E               cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\research.py:41: ServiceError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_research_backup.py::test_legacy_query_text_cannot_impersonate_workflow_discriminator
+1 failed, 12 deselected in 1.42s

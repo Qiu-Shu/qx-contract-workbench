@@ -1,0 +1,352 @@
+{
+  "exit_code": 0,
+  "checks": [
+    "skill_selection_keeps_empty_input_and_does_not_query",
+    "actual_Enter_single_local_query_and_synthetic_IME_ShiftEnter_guard",
+    "keyboard_source_open_escape_restore_and_literal_markup",
+    "390_and_800_width_20px_text_without_horizontal_overflow",
+    "offline_library_history_reopens_without_search_POST",
+    "actual_not_ready_and_zero_hits_are_distinct",
+    "new_conversation_clears_history_and_source_immediately",
+    "zero_model_Jev_rows_and_zero_external_requests"
+  ],
+  "page_errors": [],
+  "external_requests": [],
+  "screens": [
+    "desktop-saved-citation.png",
+    "narrow-large-citation.png",
+    "small-window-results.png"
+  ],
+  "scope": "actual source HTTP app + independent synthetic SQLite law library + actual Chromium; no installed app",
+  "physical_ime_tested": false,
+  "physical_os_scaling_tested": false,
+  "counts": {
+    "assistant_handler_receipts": 3,
+    "assistant_library_citations": 2,
+    "assistant_model_attempts": 0,
+    "assistant_model_outputs": 0,
+    "assistant_judge_attempts": 0
+  },
+  "requests": [
+    {
+      "url": "http://127.0.0.1:53392/login",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/workbench.css",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/workbench.js",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/login",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/session",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/assistant",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant.css",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-api.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-state.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-render.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-composer.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-materials.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-citations.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-generation.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-research.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/session",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/skills",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/draft",
+      "method": "PUT"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/researches",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/materials",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/research-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-capability",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/research-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/materials",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-capability",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/research-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/library-citations/3b556084-171e-4756-9906-bce95351d002",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/library-citations/3b556084-171e-4756-9906-bce95351d002",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/assistant/4dbfdc45-4341-4a08-96c5-525eb688928f",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant.css",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-api.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-state.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-render.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-composer.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-materials.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-citations.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-generation.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/static/assistant-research.mjs",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/session",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/skills",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/materials",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-capability",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/research-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/library-citations/3b556084-171e-4756-9906-bce95351d002",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/draft",
+      "method": "PUT"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/researches",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/materials",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/research-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3&message_id=e6c61835-87a0-4e20-8ceb-0c728b9ec0e8",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-capability",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3&message_id=e6c61835-87a0-4e20-8ceb-0c728b9ec0e8",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/research-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3&message_id=e6c61835-87a0-4e20-8ceb-0c728b9ec0e8",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/draft",
+      "method": "PUT"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/researches",
+      "method": "POST"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/materials",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/research-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3&message_id=e6c61835-87a0-4e20-8ceb-0c728b9ec0e8&message_id=0acff353-8d61-446d-8874-01c8a0c3f34e",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-capability",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3&message_id=e6c61835-87a0-4e20-8ceb-0c728b9ec0e8&message_id=0acff353-8d61-446d-8874-01c8a0c3f34e",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/research-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3&message_id=e6c61835-87a0-4e20-8ceb-0c728b9ec0e8&message_id=0acff353-8d61-446d-8874-01c8a0c3f34e",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/materials",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-capability",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/generation-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3&message_id=e6c61835-87a0-4e20-8ceb-0c728b9ec0e8&message_id=0acff353-8d61-446d-8874-01c8a0c3f34e",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations/4dbfdc45-4341-4a08-96c5-525eb688928f/research-history?message_id=b691c564-420d-4455-9c45-458b1d8a6da3&message_id=e6c61835-87a0-4e20-8ceb-0c728b9ec0e8&message_id=0acff353-8d61-446d-8874-01c8a0c3f34e",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/library-citations/3b556084-171e-4756-9906-bce95351d002",
+      "method": "GET"
+    },
+    {
+      "url": "http://127.0.0.1:53392/api/assistant/conversations",
+      "method": "GET"
+    }
+  ]
+}

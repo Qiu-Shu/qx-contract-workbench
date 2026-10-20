@@ -1,0 +1,32 @@
+{
+  "review": "standards archive supplement",
+  "findings": 0,
+  "inputs": [
+    {
+      "path": "src/cn_contract/assistant/research.py",
+      "sha256": "c309fcfa37fa85d1beb39c11123edb8f58a6acf1da05658753266a3a1530a4f1"
+    },
+    {
+      "path": "src/cn_contract/assistant/research_records.py",
+      "sha256": "f8623c52c57605f59bb08c42fb722c1dfb37104a4410b79f964aac8bd76d7fad"
+    },
+    {
+      "path": "src/cn_contract/assistant/library_integrity.py",
+      "sha256": "934a493957ab3822170877e1528acedb2461584cd4869025388d5ebcbcf9f0f8"
+    },
+    {
+      "path": "tests/integration/test_assistant_research_backup.py",
+      "sha256": "53c23d5f4c6183bbf3cd3e8f6182e0929ac367a35790677661710841cea8a415"
+    }
+  ],
+  "ddl_changes": [],
+  "checks": {
+    "final_count": 2,
+    "initial_seconds": 4.06,
+    "initial_count": 2,
+    "final_exit": 0,
+    "final_seconds": 1.95,
+    "initial_exit": 0
+  },
+  "original_review_scope": "Does not prove archive completeness; later Spec P2 confirmed and repaired."
+}

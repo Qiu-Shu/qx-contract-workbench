@@ -126,7 +126,8 @@ def test_csrf_origin_strict_body_and_bounded_queries(chat):
     skills=client.get('/api/assistant/skills')
     assert skills.status_code==200 and skills.json()['generation_enabled'] is False
     assert [s['id'] for s in skills.json()['items']][:4]==['client_reply','material_organize','contract_review','content_draft']
-    assert all(s['state']=='not_connected' for s in skills.json()['items'])
+    assert all(s['state']==('local_only' if s['id']=='legal_research' else 'not_connected')
+               for s in skills.json()['items'])
 
 
 def test_cancel_and_resume_committed_events(chat):

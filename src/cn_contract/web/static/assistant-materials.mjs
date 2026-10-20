@@ -2,7 +2,7 @@
 import * as api from './assistant-api.mjs';
 import {errorText} from './assistant-render.mjs';
 
-export function bindMaterials({controller,readonly=false,root=document}) {
+export function bindMaterials({controller,readonly=false,root=document,onPreview=()=>{}}) {
   const byId=id=>root.getElementById(id);
   const node=(tag,text)=>{const item=root.createElement(tag);item.textContent=text;return item;};
   let identity=null,revision=null,previewEpoch=0,chosen=null,previousAction=null;
@@ -30,6 +30,7 @@ export function bindMaterials({controller,readonly=false,root=document}) {
       await preview(attachment);
   }
   async function preview(attachment){
+    onPreview();
     const cid=controller.state.id,token=++previewEpoch;
     const current=()=>token===previewEpoch && cid===controller.state.id && controller.state.status!=='revoked';
     const host=byId('material-preview-content');
@@ -131,7 +132,7 @@ export function bindMaterials({controller,readonly=false,root=document}) {
         row.append(info,buttons);host.append(row);
       }
     },
-    hasSelection:()=>Boolean(chosen),
+    close:closePreview,hasSelection:()=>Boolean(chosen),
     dispose(){closePreview();chosen=null;},
   };
 }

@@ -38,6 +38,11 @@ export const findGenerationRequest=(id,key)=>request(conversation(id)+'/generati
 export const getGenerationAttempt=id=>request('/api/assistant/attempts/'+encodeURIComponent(id));
 export const getGenerationHistory=(id,ids)=>request(conversation(id)+'/generation-history?'+
   new URLSearchParams(ids.map(value=>['message_id',value])));
+export const submitResearch=(id,body)=>request(conversation(id)+'/researches',{method:'POST',body});
+export const findResearchRequest=(id,key)=>request(conversation(id)+'/researches/by-request/'+encodeURIComponent(key));
+export const getResearchHistory=(id,ids)=>request(conversation(id)+'/research-history?'+
+  new URLSearchParams(ids.map(value=>['message_id',value])));
+export const getSavedCitation=id=>request('/api/assistant/library-citations/'+encodeURIComponent(id));
 
 const attachment=(id,file)=>conversation(id)+'/attachments/'+encodeURIComponent(file);
 export const getMaterials=id=>request(conversation(id)+'/materials');

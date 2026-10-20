@@ -1,0 +1,487 @@
+........................................................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+........................................................................ [  8%]
+........................................................................ [ 11%]
+........................................................................ [ 13%]
+........................................................................ [ 15%]
+........................................................................ [ 17%]
+........................................................................ [ 19%]
+..----------------------------------------
+...................................................................... [ 22%]
+........................................................................ [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 28%]
+........................................................................ [ 30%]
+........................................................................ [ 33%]
+........................................................................ [ 35%]
+........................................................................ [ 37%]
+........................................................................ [ 39%]
+........................................................................ [ 41%]
+........................................................................ [ 44%]
+........................................................................ [ 46%]
+........................................................................ [ 48%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+........................................................................ [ 55%]
+........................................................................ [ 57%]
+........................................................................ [ 59%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+........................................................................ [ 66%]
+........................................................................ [ 68%]
+........................................................................ [ 70%]
+........................................................................ [ 72%]
+........................................................................ [ 74%]
+........................................................................ [ 77%]
+........................................................................ [ 79%]
+........................................................................ [ 81%]
+...F..FFFFFFFFFF.FF................FFFFFFFF.FFFFFFFFFFFFFFF..FF......... [ 83%]
+........................................................................ [ 85%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 92%]
+........................................................................ [ 94%]
+........................................................................ [ 96%]
+........................................................................ [ 99%]
+...............................                                          [100%]
+================================== FAILURES ===================================
+_______________________ test_multiline_offsets_and_bom ________________________
+tests\unit\test_library_cases.py:35: in test_multiline_offsets_and_bom
+    src = assets.register_source(root, original, 'fiction', 'case_csv')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:40: in register_source
+    return _register_source_in_transaction(root, path, batch_id, kind, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:51: in _register_source_in_transaction
+    check_budget(root, additional_bytes=before.st_size)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_______ test_same_case_different_body_survives_and_replay_is_idempotent _______
+tests\unit\test_library_cases.py:78: in test_same_case_different_body_survives_and_replay_is_idempotent
+    first = module.import_case_file(root, path, 'fiction', limit=2, batch_size=1)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+___________ test_broken_quote_stops_file_and_retains_committed_rows ___________
+tests\unit\test_library_cases.py:93: in test_broken_quote_stops_file_and_retains_committed_rows
+    result = module.import_case_file(root, path, 'fiction', batch_size=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+___________ test_column_mismatch_retained_and_next_record_survives ____________
+tests\unit\test_library_cases.py:105: in test_column_mismatch_retained_and_next_record_survives
+    result = module.import_case_file(root, path, 'fiction', batch_size=2)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+______________________ test_source_changed_reject_resume ______________________
+tests\unit\test_library_cases.py:116: in test_source_changed_reject_resume
+    module.import_case_file(root, path, 'fiction', limit=2, batch_size=1)
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+______________ test_duplicate_header_is_rejected_without_records ______________
+tests\unit\test_library_cases.py:129: in test_duplicate_header_is_rejected_without_records
+    module.import_case_file(tmp_path / 'library', path, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+
+During handling of the above exception, another exception occurred:
+tests\unit\test_library_cases.py:128: in test_duplicate_header_is_rejected_without_records
+    with pytest.raises(ValueError, match='HEADER_INVALID'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'HEADER_INVALID'
+E     Actual message: 'LIBRARY_DISK_BUDGET'
+________________ test_limit_does_not_parse_broken_next_record _________________
+tests\unit\test_library_cases.py:137: in test_limit_does_not_parse_broken_next_record
+    result = module.import_case_file(tmp_path / 'library', path, 'fiction', limit=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+__________ test_historical_versions_and_exact_aliases_are_preserved ___________
+tests\unit\test_library_laws.py:25: in test_historical_versions_and_exact_aliases_are_preserved
+    report = module.import_laws(root, incoming, 'fiction-laws')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_________ test_missing_url_draft_word_and_repeal_are_not_legal_status _________
+tests\unit\test_library_laws.py:42: in test_missing_url_draft_word_and_repeal_are_not_legal_status
+    module.import_laws(root, incoming, 'fiction-laws')
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+________________ test_toc_quotation_and_article_one_subsection ________________
+tests\unit\test_library_laws.py:60: in test_toc_quotation_and_article_one_subsection
+    module.import_laws(root, incoming, 'fiction-laws')
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_________ test_zero_width_original_span_and_unstructured_text_survive _________
+tests\unit\test_library_laws.py:83: in test_zero_width_original_span_and_unstructured_text_survive
+    module.import_laws(root, incoming, 'fiction-laws')
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_________ test_undecodable_file_is_reported_without_stopping_good_law _________
+tests\unit\test_library_laws.py:107: in test_undecodable_file_is_reported_without_stopping_good_law
+    report = module.import_laws(tmp_path / 'library', incoming, 'fiction-laws')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+____________ test_bulk_laws_committed_batch_survives_resource_stop ____________
+tests\unit\test_library_laws.py:132: in test_bulk_laws_committed_batch_survives_resource_stop
+    assert len(list(catalog.iter_records(root))) == 4
+E   AssertionError: assert 0 == 4
+E    +  where 0 = len([])
+E    +    where [] = list(<generator object iter_records at 0x00000192D384B540>)
+E    +      where <generator object iter_records at 0x00000192D384B540> = <function iter_records at 0x00000192BB976660>(WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1092/test_bulk_laws_committed_batch0/library'))
+E    +        where <function iter_records at 0x00000192BB976660> = <module 'cn_contract.library.catalog' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\library\\catalog.py'>.iter_records
+__________ test_two_character_words_original_offsets_and_phrase_all ___________
+tests\unit\test_library_search.py:37: in test_two_character_words_original_offsets_and_phrase_all
+    root, _ = world(tmp_path)
+              ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_________________ test_case_number_filters_and_title_ranking __________________
+tests\unit\test_library_search.py:52: in test_case_number_filters_and_title_ranking
+    root, _ = world(tmp_path)
+              ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_________ test_exact_case_ranking_is_independent_of_unrelated_corpus __________
+tests\unit\test_library_search.py:69: in test_exact_case_ranking_is_independent_of_unrelated_corpus
+    api('csv_source').import_case_file(root, scoped, 'fiction-scoped')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+__ test_control_characters_do_not_inject_queries_and_single_han_is_explicit ___
+tests\unit\test_library_search.py:96: in test_control_characters_do_not_inject_queries_and_single_han_is_explicit
+    root, _ = world(tmp_path)
+              ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+________________ test_cursor_is_bound_to_query_and_generation _________________
+tests\unit\test_library_search.py:106: in test_cursor_is_bound_to_query_and_generation
+    root, generation = world(tmp_path)
+                       ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+___________ test_exact_case_cursor_from_global_ranking_is_rejected ____________
+tests\unit\test_library_search.py:122: in test_exact_case_cursor_from_global_ranking_is_rejected
+    root, generation = world(tmp_path)
+                       ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+___________________ test_source_hash_and_version_must_match ___________________
+tests\unit\test_library_search.py:132: in test_source_hash_and_version_must_match
+    root, _ = world(tmp_path)
+              ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+__________________ test_law_fragments_remain_in_one_version ___________________
+tests\unit\test_library_search.py:151: in test_law_fragments_remain_in_one_version
+    api('law_sections').import_laws(root, laws, 'fiction-laws')
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_______________ test_cli_uses_same_search_and_original_service ________________
+tests\unit\test_library_search.py:170: in test_cli_uses_same_search_and_original_service
+    root, _ = world(tmp_path)
+              ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_________________ test_timeout_is_explicit_not_empty_success __________________
+tests\unit\test_library_search.py:186: in test_timeout_is_explicit_not_empty_success
+    root, _ = world(tmp_path)
+              ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+____________ test_structured_filters_use_indexes_and_document_type ____________
+tests\unit\test_library_search.py:198: in test_structured_filters_use_indexes_and_document_type
+    root, generation = world(tmp_path)
+                       ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+________________ test_identical_law_alias_title_is_searchable _________________
+tests\unit\test_library_search.py:213: in test_identical_law_alias_title_is_searchable
+    api('law_sections').import_laws(root, laws, 'fiction')
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+______________ test_deep_cursor_rejected_with_narrow_query_hint _______________
+tests\unit\test_library_search.py:220: in test_deep_cursor_rejected_with_narrow_query_hint
+    root, generation = world(tmp_path)
+                       ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_____ test_candidate_window_stops_at_cursor_boundary_without_false_total ______
+tests\unit\test_library_search.py:238: in test_candidate_window_stops_at_cursor_boundary_without_false_total
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+___________ test_filtered_candidate_window_does_not_claim_no_match ____________
+tests\unit\test_library_search.py:262: in test_filtered_candidate_window_does_not_claim_no_match
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+___________ test_repeat_ranking_reused_but_original_bytes_rechecked ___________
+tests\unit\test_library_search.py:271: in test_repeat_ranking_reused_but_original_bytes_rechecked
+    root, _ = world(tmp_path)
+              ^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:26: in world
+    api('csv_source').import_case_file(root, incoming, 'fiction')
+src\cn_contract\library\csv_source.py:122: in import_case_file
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+___________ test_phrase_crossing_fragment_boundary_is_found_once[] ____________
+tests\unit\test_library_search.py:305: in test_phrase_crossing_fragment_boundary_is_found_once
+    root = law_world(tmp_path, {'虚构边界规定.md': body})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:297: in law_world
+    api('law_sections').import_laws(root, laws, 'fiction')
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_ test_phrase_crossing_fragment_boundary_is_found_once[\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b] _
+tests\unit\test_library_search.py:305: in test_phrase_crossing_fragment_boundary_is_found_once
+    root = law_world(tmp_path, {'虚构边界规定.md': body})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:297: in law_world
+    api('law_sections').import_laws(root, laws, 'fiction')
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+___________ test_fragment_role_survives_search_and_original_export ____________
+tests\unit\test_library_search.py:316: in test_fragment_role_survives_search_and_original_export
+    root = law_world(tmp_path, {'虚构角色.md': '目录\n第一条 租赁\n\n第一章 总则\n第一条 租赁正文。\n> 第二条 租赁引述。'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_library_search.py:297: in law_world
+    api('law_sections').import_laws(root, laws, 'fiction')
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+________ test_title_results_are_one_per_version_before_body_locations _________
+tests\unit\test_library_search.py:325: in test_title_results_are_one_per_version_before_body_locations
+    root = law_world(tmp_path, {
+tests\unit\test_library_search.py:297: in law_world
+    api('law_sections').import_laws(root, laws, 'fiction')
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_______________________ test_source_copy_hash_and_alias _______________________
+tests\unit\test_library_sources.py:28: in test_source_copy_hash_and_alias
+    first = assets.register_source(root, original, 'fiction', 'law_markdown')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:40: in register_source
+    return _register_source_in_transaction(root, path, batch_id, kind, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:51: in _register_source_in_transaction
+    check_budget(root, additional_bytes=before.st_size)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_________________ test_changed_content_retains_both_versions __________________
+tests\unit\test_library_sources.py:47: in test_changed_content_retains_both_versions
+    first = assets.register_source(root, original, 'fiction', 'law_markdown')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:40: in register_source
+    return _register_source_in_transaction(root, path, batch_id, kind, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:51: in _register_source_in_transaction
+    check_budget(root, additional_bytes=before.st_size)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+_________________________ test_snapshot_change_abort __________________________
+tests\unit\test_library_sources.py:68: in test_snapshot_change_abort
+    assets.register_source(root, original, 'fiction', 'law_markdown')
+src\cn_contract\library\assets.py:40: in register_source
+    return _register_source_in_transaction(root, path, batch_id, kind, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:51: in _register_source_in_transaction
+    check_budget(root, additional_bytes=before.st_size)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+
+During handling of the above exception, another exception occurred:
+tests\unit\test_library_sources.py:67: in test_snapshot_change_abort
+    with pytest.raises(ValueError, match='SOURCE_CHANGED'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'SOURCE_CHANGED'
+E     Actual message: 'LIBRARY_DISK_BUDGET'
+____________ test_asset_corruption_and_invalid_ranges_are_rejected ____________
+tests\unit\test_library_sources.py:105: in test_asset_corruption_and_invalid_ranges_are_rejected
+    item = assets.register_source(root, original, 'fiction', 'law_markdown')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:40: in register_source
+    return _register_source_in_transaction(root, path, batch_id, kind, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:51: in _register_source_in_transaction
+    check_budget(root, additional_bytes=before.st_size)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+___________________________ test_audit_append_only ____________________________
+tests\unit\test_library_sources.py:119: in test_audit_append_only
+    item = assets.register_source(root, source(tmp_path), 'fiction', 'law_markdown')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:40: in register_source
+    return _register_source_in_transaction(root, path, batch_id, kind, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\assets.py:51: in _register_source_in_transaction
+    check_budget(root, additional_bytes=before.st_size)
+src\cn_contract\library\budget.py:49: in check_budget
+    raise ValueError('LIBRARY_DISK_BUDGET')
+E   ValueError: LIBRARY_DISK_BUDGET
+============================== warnings summary ===============================
+tests/integration/test_jev_provider.py::test_cold_process_import_is_lazy_and_first_judge_reports_actual_elapsed
+  tests\integration\test_jev_provider.py:412: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    def test_cold_process_import_is_lazy_and_first_judge_reports_actual_elapsed(record_property):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/unit/test_library_cases.py::test_multiline_offsets_and_bom - Val...
+FAILED tests/unit/test_library_cases.py::test_same_case_different_body_survives_and_replay_is_idempotent
+FAILED tests/unit/test_library_cases.py::test_broken_quote_stops_file_and_retains_committed_rows
+FAILED tests/unit/test_library_cases.py::test_column_mismatch_retained_and_next_record_survives
+FAILED tests/unit/test_library_cases.py::test_source_changed_reject_resume - ...
+FAILED tests/unit/test_library_cases.py::test_duplicate_header_is_rejected_without_records
+FAILED tests/unit/test_library_cases.py::test_limit_does_not_parse_broken_next_record
+FAILED tests/unit/test_library_laws.py::test_historical_versions_and_exact_aliases_are_preserved
+FAILED tests/unit/test_library_laws.py::test_missing_url_draft_word_and_repeal_are_not_legal_status
+FAILED tests/unit/test_library_laws.py::test_toc_quotation_and_article_one_subsection
+FAILED tests/unit/test_library_laws.py::test_zero_width_original_span_and_unstructured_text_survive
+FAILED tests/unit/test_library_laws.py::test_undecodable_file_is_reported_without_stopping_good_law
+FAILED tests/unit/test_library_laws.py::test_bulk_laws_committed_batch_survives_resource_stop
+FAILED tests/unit/test_library_search.py::test_two_character_words_original_offsets_and_phrase_all
+FAILED tests/unit/test_library_search.py::test_case_number_filters_and_title_ranking
+FAILED tests/unit/test_library_search.py::test_exact_case_ranking_is_independent_of_unrelated_corpus
+FAILED tests/unit/test_library_search.py::test_control_characters_do_not_inject_queries_and_single_han_is_explicit
+FAILED tests/unit/test_library_search.py::test_cursor_is_bound_to_query_and_generation
+FAILED tests/unit/test_library_search.py::test_exact_case_cursor_from_global_ranking_is_rejected
+FAILED tests/unit/test_library_search.py::test_source_hash_and_version_must_match
+FAILED tests/unit/test_library_search.py::test_law_fragments_remain_in_one_version
+FAILED tests/unit/test_library_search.py::test_cli_uses_same_search_and_original_service
+FAILED tests/unit/test_library_search.py::test_timeout_is_explicit_not_empty_success
+FAILED tests/unit/test_library_search.py::test_structured_filters_use_indexes_and_document_type
+FAILED tests/unit/test_library_search.py::test_identical_law_alias_title_is_searchable
+FAILED tests/unit/test_library_search.py::test_deep_cursor_rejected_with_narrow_query_hint
+FAILED tests/unit/test_library_search.py::test_candidate_window_stops_at_cursor_boundary_without_false_total
+FAILED tests/unit/test_library_search.py::test_filtered_candidate_window_does_not_claim_no_match
+FAILED tests/unit/test_library_search.py::test_repeat_ranking_reused_but_original_bytes_rechecked
+FAILED tests/unit/test_library_search.py::test_phrase_crossing_fragment_boundary_is_found_once[]
+FAILED tests/unit/test_library_search.py::test_phrase_crossing_fragment_boundary_is_found_once[\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b\u200b]
+FAILED tests/unit/test_library_search.py::test_fragment_role_survives_search_and_original_export
+FAILED tests/unit/test_library_search.py::test_title_results_are_one_per_version_before_body_locations
+FAILED tests/unit/test_library_sources.py::test_source_copy_hash_and_alias - ...
+FAILED tests/unit/test_library_sources.py::test_changed_content_retains_both_versions
+FAILED tests/unit/test_library_sources.py::test_snapshot_change_abort - Asser...
+FAILED tests/unit/test_library_sources.py::test_asset_corruption_and_invalid_ranges_are_rejected
+FAILED tests/unit/test_library_sources.py::test_audit_append_only - ValueErro...
+38 failed, 3233 passed, 1 warning in 2480.81s (0:41:20)

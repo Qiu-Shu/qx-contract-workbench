@@ -78,7 +78,7 @@
         </div>
         <div class="skill-options">
           <p><span id="selected-skill">自动选择能力</span><button id="clear-skill" class="text-button" type="button" hidden>取消选择</button></p>
-          <details id="more-skills"><summary>更多能力</summary><div class="more-skills-content"><button type="button" data-skill="legal_research" aria-pressed="false">检索法律资料</button><p class="muted">选择能力会保留输入内容；当前不会执行。</p></div></details>
+          <details id="more-skills"><summary>更多能力</summary><div class="more-skills-content"><button type="button" data-skill="legal_research" aria-pressed="false">检索法律资料</button><p class="muted">关键词检索仅使用本机资料库；选择后按发送执行。</p></div></details>
         </div>
         <form id="composer-form" class="composer-form">
           <label class="sr-only" for="composer">咨询内容与工作草稿</label>
@@ -105,7 +105,7 @@
         <details class="capability-details">
           <summary id="capability-summary">当前可用范围与说明</summary>
           <div class="capability-content">
-            <p id="capability-details">所选能力尚未接入执行。普通文字能否生成，以当前对话的生成条件为准。</p>
+            <p id="capability-details">“检索法律资料”支持本机关键词查询，其他所选能力尚未接入执行。普通文字生成以当前对话的条件为准。</p>
             {% if readonly %}<p>当前打开的是恢复副本，可查看已保存的记录，不能编辑、发送、添加材料或继续历史任务。</p>{% else %}<p>生成仅用于已获准的文字，结果是内部待核对草稿，未经律师审核，不能作为正式法律意见。选择能力不会自动发送；本页不会自动建档或发送给客户。</p>{% endif %}
             <p>DOCX 保存在本次对话，可以读取原文、核对读取范围及下载原件。含材料的对话暂不参与模型生成；保存和读取不会自动认定事实，也不会建立合同案件。</p>
             <p>继续办理可进入<a href="/workspace">工作区与接待</a>或<a href="/">合同工作台</a>。{% if library_enabled %}已连接的资料可在<a href="/library">法律资料库</a>检索。{% endif %}</p>
@@ -117,6 +117,10 @@
   <aside id="material-preview" class="material-preview" aria-labelledby="material-preview-title" hidden>
     <header><h2 id="material-preview-title">材料原文</h2><button id="close-material-preview" class="text-button" type="button">关闭原文</button></header>
     <div id="material-preview-content" class="reading-text"></div>
+  </aside>
+  <aside id="citation-preview" class="material-preview citation-preview" aria-labelledby="citation-preview-title" hidden>
+    <header><h2 id="citation-preview-title">已保存的引用片段</h2><button id="close-citation-preview" class="text-button" type="button">关闭引用</button></header>
+    <div id="citation-preview-content" class="reading-text" aria-live="polite"></div>
   </aside>
 </body>
 </html>

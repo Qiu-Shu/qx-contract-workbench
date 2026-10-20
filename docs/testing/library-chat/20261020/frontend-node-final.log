@@ -1,0 +1,134 @@
+✔ source snapshots display only literal text with provenance and pending review (2.3159ms)
+✔ closing invalidates a pending response and restores a connected trigger or composer (0.7334ms)
+✔ scope rebinding, switching, loading and revocation clear panel and reject late data (0.8829ms)
+✔ saved UUID and conversation identity must match; ordinary draft revision does not erase snapshot (0.6116ms)
+✔ lookup authorization error clears and cannot render raw diagnostics (0.37ms)
+✔ result statuses distinguish unavailable, incomplete and zero hits (1.6388ms)
+✔ card click passes only saved UUID and malformed IDs are never links (0.5353ms)
+✔ shared renderer uses local send rules while ordinary native approval remains distinct (1.3379ms)
+✔ entry rechecks readiness after input changes and returns to the saved text (11.1852ms)
+✔ entry rechecks readiness after a skill selection is immediately cancelled (2.3385ms)
+✔ unknown network outcome repeated send and refresh use original lookup without resubmission (2.2139ms)
+✔ late capability success cannot authorize another conversation (2.0214ms)
+✔ history response for a former binding is rejected and cannot be displayed (1.2949ms)
+✔ a delayed history authorization error after revocation cannot restore old state (0.8047ms)
+✔ a failed capability read is attempted once and does not create an automatic retry loop (0.9932ms)
+✔ shipped entry injects only the dedicated native authorization bridge when present (0.4921ms)
+✔ entry does not enqueue capability reads while a native confirmation is outstanding (1.4852ms)
+✔ send follows the generation gate and existing draft/readonly guards (3.5542ms)
+✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (1.0619ms)
+✔ capability states give distinct truthful explanations (2.0998ms)
+✔ results stay with their matching input in chronological history and have source anchors (1.8081ms)
+✔ model text remains literal with whitespace and source links only target loaded messages (1.0147ms)
+✔ unrelated items and prior conversation content are cleared on switching or revocation (0.8252ms)
+✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.6504ms)
+✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.9755ms)
+✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.5748ms)
+✔ native send offers confirmation of the full text recipient and fee ceiling before submission (0.6888ms)
+✔ native failures distinguish confirmation from unknown POST without exposing diagnostics (0.5031ms)
+✔ failed capability reads can be retried before any task exists (0.2627ms)
+✔ initial template keeps send disabled, recovery hidden and describes controlled generation (0.6397ms)
+✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.2998ms)
+PASS default, read-only, selected skill and local materials never dispatch
+PASS one click snapshots input, saves first and double click dispatches one fixed request
+PASS editing while initial save waits aborts send instead of sending the newer text
+PASS editing while capability waits invalidates ready and requires a fresh click
+PASS acknowledgement preserves new input and queued saves use the accepted composer revision
+PASS lost registration reply is recovered by original request only and preserves later edits
+PASS unknown not found stays unknown across send and refresh without replacing its key
+PASS unknown draft and material writes cannot be crossed by sending
+PASS registration conflict retains local and remote drafts for explicit resolution
+PASS old ready scope cannot authorize current text
+PASS old ready revision cannot authorize current text
+PASS old ready digest cannot authorize current text
+PASS old ready basis cannot authorize current text
+PASS edit invalidates a previously ready capability synchronously
+PASS ordinary BLOCKED_LIVE 403 retains draft and current identity
+PASS ordinary BUDGET_EXCEEDED 403 retains draft and current identity
+PASS ordinary CALL_LIMIT_EXCEEDED 403 retains draft and current identity
+PASS revocation discards delayed registration and clears current results
+PASS switch and close discard late history success and late authorization failure
+PASS history batches visible messages, retains older attempts and has no provider action on reopen
+PASS cancelling reads receipt and candidates without a second generation POST
+PASS historical scope change clears results and rejects late capability
+PASS known registration survives readback failure and newer draft can be saved after reconciliation
+PASS known registration and independent remote edit leave a resolvable composer conflict
+PASS completed older messages and attempts survive pagination and a later send
+PASS same text retyped during submission is preserved as new input
+PASS send during a background capability read waits then registers exactly the clicked input
+PASS native confirmation uses one fixed saved-draft request even when capability is already ready
+PASS native cancellation preserves input and refreshes never open a confirmation
+PASS native failures stay fixed and require another explicit confirmation without posting
+PASS confirmation stays busy across capability refresh and repeated send clicks
+PASS editing or retyping identical text during native confirmation invalidates the approval
+PASS scope composer materials and skill changes invalidate native approval before POST
+PASS switch close and revocation discard late native approval without touching the next page
+PASS native-approved unknown POST is recovered only by the same request without a new approval
+PASS native bridge cannot override missing configuration readonly skill or attachment guards
+36 generation state groups passed
+✔ scripts\test_assistant_generation_state.mjs (105.6593ms)
+✔ late parse completion cannot reopen a preview explicitly closed by the lawyer (9.5187ms)
+✔ late parse completion cannot replace a newer attachment preview (2.3241ms)
+✔ switching conversations suppresses the prior parse callback while the target is loading (2.0784ms)
+✔ new conversation clears prior material rows, preview and unsubmitted picker selection (1.7488ms)
+✔ revocation clears materials immediately and a delayed source response stays discarded (1.7091ms)
+✔ successful unknown-upload reconciliation disarms the picker instead of creating another receipt (1.754ms)
+PASS attachment-only action creates one conversation and never clears text typed during upload
+PASS unknown upload checks receipt before retry, retains chosen file and never duplicates
+PASS revocation clears pending attachment and late response cannot repopulate another view
+PASS material scope conflict preserves text and file until explicit resolution
+4 attachment state groups passed
+✔ scripts\test_assistant_material_state.mjs (65.7891ms)
+✔ explicit local research saves keywords and dispatches once without model configuration (6.4943ms)
+✔ skill click alone preserves text and never dispatches (5.0322ms)
+✔ readonly, attachments, empty or overlong keyword never dispatch (1.2436ms)
+✔ edit or skill change during save aborts the clicked search (2.0489ms)
+✔ unknown registration uses original lookup even after skill changes and never resends (1.2484ms)
+✔ unknown not-found stays unresolved and prevents competing model or material work (0.5678ms)
+✔ registration proof followed by read failure unlocks newer draft without resubmitting (0.7396ms)
+✔ switch and revocation discard late research history immediately (3.1243ms)
+✔ history rejects unrelated messages and receipt scopes but allows authorized older revisions (1.1456ms)
+✔ authorization error clears entire active view and history (0.5535ms)
+PASS blank and skill selection do not create records; read-only never writes
+PASS single save channel preserves input typed during an older acknowledgement
+PASS unknown creation requires explicit retry and preserves its original request identity
+PASS unknown write is reconciled by exact scope, revision and content before newer input saves
+PASS unknown write not committed can replay only after unchanged baseline is read
+PASS unknown write scope mismatch retains both drafts until explicit choice
+PASS unknown write revision mismatch retains both drafts until explicit choice
+PASS unknown write content mismatch retains both drafts until explicit choice
+PASS version conflict allows explicitly keeping local text against the new server version
+PASS refresh never overwrites unsaved input and detects independent remote edits
+PASS switch waits for save and rejects switching after failed persistence
+PASS late page reads and revocation cannot contaminate a newer conversation
+PASS current permission revocation clears text, history, skill and identity immediately
+PASS older pages deduplicate in chronological order and preserve pending input
+PASS empty page with a cursor can keep paging; refresh retains already loaded history
+PASS cancel reads the persisted result and preserves unsaved text
+PASS close discards delayed replies and removes in-memory content
+PASS unknown write stays dirty even when the user edits back to the saved baseline
+PASS create replay cannot silently overwrite a draft edited in another window
+PASS a late refresh cannot roll back a completed newer save
+PASS disjoint refreshed history starts its own cursor instead of hiding unread messages
+PASS an older read finishing does not release the busy guard on a newer read
+PASS a failed page read leaves no old identity available for accidental draft saves
+PASS late create response after close cannot change identity or notify the page
+PASS replayed PUT racing the original can recognize the original successful write
+PASS external 401 revocation clears unknown writes and rejects delayed reconciliation
+PASS external 403 revocation clears unknown writes and rejects delayed reconciliation
+PASS external non-authorization errors cannot clear conversation data
+28 assistant state checks passed
+✔ scripts\test_assistant_state.mjs (75.6476ms)
+✔ same-origin transport carries CSRF only on writes and preserves original request identity (1.746ms)
+✔ network and invalid responses are unknown, not proof a write failed (2.446ms)
+✔ generation transport keeps registration explicit and history bounded to requested identities (2.2789ms)
+✔ transport abandons a stalled connection with an unknown outcome (0.4395ms)
+✔ Enter, Shift+Enter, held keys and composition boundaries keep native input intact (1.8861ms)
+ℹ tests 55
+ℹ suites 0
+ℹ pass 55
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 130.8487

@@ -1,0 +1,116 @@
+✖ explicit local research saves keywords and dispatches once without model configuration (2.2478ms)
+✖ skill click alone preserves text and never dispatches (3.5957ms)
+✔ readonly, attachments, empty or overlong keyword never dispatch (1.2435ms)
+✔ edit or skill change during save aborts the clicked search (0.97ms)
+✖ unknown registration uses original lookup even after skill changes and never resends (0.3388ms)
+✖ unknown not-found stays unresolved and prevents competing model or material work (1.094ms)
+✖ registration proof followed by read failure unlocks newer draft without resubmitting (0.3098ms)
+✖ switch and revocation discard late research history immediately (2.4021ms)
+✖ history rejects unrelated messages and receipt scopes but allows authorized older revisions (0.3811ms)
+✖ authorization error clears entire active view and history (0.2712ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 2
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 69.4928
+
+✖ failing tests:
+
+test at scripts\test_assistant_research_state.mjs:37:1
+✖ explicit local research saves keywords and dispatches once without model configuration (2.2478ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_research_state.mjs:39:47)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_research_state.mjs:43:1
+✖ skill click alone preserves text and never dispatches (3.5957ms)
+  TypeError: Cannot read properties of undefined (reading 'canSend')
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_research_state.mjs:45:99)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_assistant_research_state.mjs:60:1
+✖ unknown registration uses original lookup even after skill changes and never resends (0.3388ms)
+  TypeError: Cannot read properties of undefined (reading 'phase')
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_research_state.mjs:63:68)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_assistant_research_state.mjs:67:1
+✖ unknown not-found stays unresolved and prevents competing model or material work (1.094ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_research_state.mjs:70:60)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_research_state.mjs:73:1
+✖ registration proof followed by read failure unlocks newer draft without resubmitting (0.3098ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_research_state.mjs:77:45)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_research_state.mjs:79:1
+✖ switch and revocation discard late research history immediately (2.4021ms)
+  TypeError: Cannot read properties of undefined (reading 'items')
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_research_state.mjs:85:39)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_assistant_research_state.mjs:88:1
+✖ history rejects unrelated messages and receipt scopes but allows authorized older revisions (0.3811ms)
+  TypeError: Cannot read properties of undefined (reading 'id')
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_research_state.mjs:90:40)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_assistant_research_state.mjs:96:1
+✖ authorization error clears entire active view and history (0.2712ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'idle' !== 'revoked'
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_research_state.mjs:99:38)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'idle',
+    expected: 'revoked',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

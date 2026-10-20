@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="5" time="3.300" timestamp="2026-10-20T21:13:49.585346+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_research_manager" name="test_local_submit_without_model_and_replay_never_dispatches_twice" time="0.492"><failure message="TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'">world = (&lt;cn_contract.persistence.Database object at 0x000001BEF2676E10&gt;, Actor(user_id=UUID('ca7bd8cb-3949-4609-97d9-b01d18fe...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF28BB5C0&gt;)
+
+    def test_local_submit_without_model_and_replay_never_dispatches_twice(world):
+&gt;       tasks, adapter, request = setup(world)
+                                  ^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_manager.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001BEF2676E10&gt;, Actor(user_id=UUID('ca7bd8cb-3949-4609-97d9-b01d18fe...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF28BB5C0&gt;)
+
+    def setup(world):
+        database, actor, conversation, request, runtime = world
+        adapter = LocalAdapter()
+&gt;       tasks = GenerationTasks(database, None, library_adapter=adapter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'
+
+tests\integration\test_assistant_research_manager.py:33: TypeError</failure></testcase><testcase classname="tests.integration.test_assistant_research_manager" name="test_immediate_close_seals_local_before_dispatch" time="0.428"><failure message="TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'">world = (&lt;cn_contract.persistence.Database object at 0x000001BEF2916630&gt;, Actor(user_id=UUID('8859f3fe-7da0-46e0-a320-36c343d3...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2B2A390&gt;)
+
+    def test_immediate_close_seals_local_before_dispatch(world):
+&gt;       tasks, adapter, request = setup(world)
+                                  ^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_manager.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001BEF2916630&gt;, Actor(user_id=UUID('8859f3fe-7da0-46e0-a320-36c343d3...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2B2A390&gt;)
+
+    def setup(world):
+        database, actor, conversation, request, runtime = world
+        adapter = LocalAdapter()
+&gt;       tasks = GenerationTasks(database, None, library_adapter=adapter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'
+
+tests\integration\test_assistant_research_manager.py:33: TypeError</failure></testcase><testcase classname="tests.integration.test_assistant_research_manager" name="test_close_waits_for_local_thread_and_rejects_late_publication" time="0.408"><failure message="TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'">world = (&lt;cn_contract.persistence.Database object at 0x000001BEF28658E0&gt;, Actor(user_id=UUID('98422219-16f7-402b-91b8-25a7d44f...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2BB21E0&gt;)
+
+    def test_close_waits_for_local_thread_and_rejects_late_publication(world):
+&gt;       tasks, adapter, request = setup(world)
+                                  ^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_manager.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001BEF28658E0&gt;, Actor(user_id=UUID('98422219-16f7-402b-91b8-25a7d44f...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2BB21E0&gt;)
+
+    def setup(world):
+        database, actor, conversation, request, runtime = world
+        adapter = LocalAdapter()
+&gt;       tasks = GenerationTasks(database, None, library_adapter=adapter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'
+
+tests\integration\test_assistant_research_manager.py:33: TypeError</failure></testcase><testcase classname="tests.integration.test_assistant_research_manager" name="test_local_and_model_share_capacity_and_replay_needs_no_new_slot" time="0.422"><failure message="TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'">world = (&lt;cn_contract.persistence.Database object at 0x000001BEF2BF1FD0&gt;, Actor(user_id=UUID('1c960f1f-a938-4d55-825a-f02ce767...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2BF2CF0&gt;)
+
+    def test_local_and_model_share_capacity_and_replay_needs_no_new_slot(world):
+&gt;       tasks, adapter, request = setup(world)
+                                  ^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_manager.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001BEF2BF1FD0&gt;, Actor(user_id=UUID('1c960f1f-a938-4d55-825a-f02ce767...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2BF2CF0&gt;)
+
+    def setup(world):
+        database, actor, conversation, request, runtime = world
+        adapter = LocalAdapter()
+&gt;       tasks = GenerationTasks(database, None, library_adapter=adapter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'
+
+tests\integration\test_assistant_research_manager.py:33: TypeError</failure></testcase><testcase classname="tests.integration.test_assistant_research_manager" name="test_local_factory_failure_seals_registration_without_retry" time="0.420"><failure message="TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'">world = (&lt;cn_contract.persistence.Database object at 0x000001BEF2C23EF0&gt;, Actor(user_id=UUID('bec71667-ae0a-4dad-a083-4dd375bc...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2C23F50&gt;)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001BEF2C23E30&gt;
+
+    def test_local_factory_failure_seals_registration_without_retry(world, monkeypatch):
+&gt;       tasks, adapter, request = setup(world)
+                                  ^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_manager.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (&lt;cn_contract.persistence.Database object at 0x000001BEF2C23EF0&gt;, Actor(user_id=UUID('bec71667-ae0a-4dad-a083-4dd375bc...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2C23F50&gt;)
+
+    def setup(world):
+        database, actor, conversation, request, runtime = world
+        adapter = LocalAdapter()
+&gt;       tasks = GenerationTasks(database, None, library_adapter=adapter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'
+
+tests\integration\test_assistant_research_manager.py:33: TypeError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="16" time="14.134" timestamp="2026-10-20T21:16:08.785295+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_research_manager" name="test_local_submit_without_model_and_replay_never_dispatches_twice" time="0.684" /><testcase classname="tests.integration.test_assistant_research_manager" name="test_immediate_close_seals_local_before_dispatch" time="0.465" /><testcase classname="tests.integration.test_assistant_research_manager" name="test_close_waits_for_local_thread_and_rejects_late_publication" time="0.566" /><testcase classname="tests.integration.test_assistant_research_manager" name="test_local_and_model_share_capacity_and_replay_needs_no_new_slot" time="0.596" /><testcase classname="tests.integration.test_assistant_research_manager" name="test_local_factory_failure_seals_registration_without_retry" time="0.478" /><testcase classname="tests.integration.test_assistant_research_routes" name="test_local_no_model_replay_history_and_citation_do_not_reread_library" time="1.426" /><testcase classname="tests.integration.test_assistant_research_routes" name="test_invalid_research_never_registers_or_runs[csrf-403]" time="0.578" /><testcase classname="tests.integration.test_assistant_research_routes" name="test_invalid_research_never_registers_or_runs[origin-403]" time="0.569" /><testcase classname="tests.integration.test_assistant_research_routes" name="test_invalid_research_never_registers_or_runs[skill-422]" time="0.599" /><testcase classname="tests.integration.test_assistant_research_routes" name="test_invalid_research_never_registers_or_runs[long-422]" time="0.804" /><testcase classname="tests.integration.test_assistant_research_routes" name="test_invalid_research_never_registers_or_runs[path-422]" time="0.749" /><testcase classname="tests.integration.test_assistant_research_routes" name="test_not_configured_is_persisted_and_unknown_request_is_read_only" time="0.868" /><testcase classname="tests.integration.test_assistant_research_routes" name="test_cross_user_history_and_citation_are_denied" time="1.114"><failure message="ValueError: username, valid password length and known roles required">world = (&lt;cn_contract.persistence.Database object at 0x000001B686828650&gt;, Actor(user_id=UUID('90cd9b87-1b09-4a68-afac-93f15b40...skill=None, attachment_ids=()), &lt;cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001B6868BCD40&gt;)
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1072/test_cross_user_history_and_ci0')
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1072/test_cross_user_history_an... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n&gt; 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+
+    def test_cross_user_history_and_citation_are_denied(world,tmp_path,library):
+        with boot(world,tmp_path,library[0]) as http:
+            result = submit(http)
+            saved = result['receipts'][0]['result']['citation_ids'][0]
+            with http.database.session() as db:
+&gt;               provision_user('other','fixture123',{d.Role.HANDLING_LAWYER},db)
+
+tests\integration\test_assistant_research_routes.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+username = 'other', password = 'fixture123'
+roles = frozenset({&lt;Role.HANDLING_LAWYER: 'handling_lawyer'&gt;})
+db = &lt;sqlalchemy.orm.session.Session object at 0x000001B68652FAD0&gt;
+
+    def provision_user(username: str, password: str, roles: set[Role], db: Session,
+                       *, local_workbench_password: bool = False) -&gt; UUID:
+        """Explicit trusted server initialization; never exposed to cookie clients."""
+        roles = frozenset(Role(role) for role in roles)
+        password_valid = 6 &lt;= len(password) &lt;= 12 if local_workbench_password else len(password) &gt;= 12
+        if type(local_workbench_password) is not bool or not username.strip() or not password_valid or not roles:
+&gt;           raise ValueError('username, valid password length and known roles required')
+E           ValueError: username, valid password length and known roles required
+
+src\cn_contract\security.py:42: ValueError</failure></testcase><testcase classname="tests.integration.test_assistant_research_routes" name="test_history_rejects_unknown_foreign_or_unbounded_message_queries" time="0.449" /><testcase classname="tests.integration.test_assistant_research_routes" name="test_legacy_saved_message_never_becomes_executable" time="0.463" /><testcase classname="tests.integration.test_assistant_research_routes" name="test_qxbak_recovery_reads_saved_snapshot_without_live_library" time="2.703" /></testsuite></testsuites>

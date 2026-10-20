@@ -2650,7 +2650,7 @@ class AssistantRunView(DomainModel):
 class AssistantSkillView(DomainModel):
     id: AssistantSkill
     label: NonEmpty
-    state: Literal['not_connected'] = 'not_connected'
+    state: Literal['not_connected', 'local_only'] = 'not_connected'
     reason: NonEmpty
 
 
@@ -3393,3 +3393,24 @@ class SavedLibraryCitation(DomainModel):
     scope: ScopeSnapshot
     citation: CitationRef
     created_at: UTCDatetime
+
+
+class AssistantResearchAccepted(DomainModel):
+    workflow: Literal['local-research-v1'] = 'local-research-v1'
+    call_id: UUID
+    request_sha256: SHA256
+
+
+class AssistantResearchView(DomainModel):
+    run: AssistantRunSummary
+    receipts: Annotated[tuple[LibraryHandlerReceiptView, ...], Field(max_length=8)]
+
+
+class AssistantResearchHistoryItem(DomainModel):
+    message_id: UUID
+    research: AssistantResearchView
+
+
+class AssistantResearchHistoryView(DomainModel):
+    scope: ScopeSnapshot
+    items: Annotated[tuple[AssistantResearchHistoryItem, ...], Field(max_length=50)]

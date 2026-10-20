@@ -1,0 +1,115 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+______ test_local_submit_without_model_and_replay_never_dispatches_twice ______
+
+world = (<cn_contract.persistence.Database object at 0x000001BEF2676E10>, Actor(user_id=UUID('ca7bd8cb-3949-4609-97d9-b01d18fe...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF28BB5C0>)
+
+    def test_local_submit_without_model_and_replay_never_dispatches_twice(world):
+>       tasks, adapter, request = setup(world)
+                                  ^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_manager.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (<cn_contract.persistence.Database object at 0x000001BEF2676E10>, Actor(user_id=UUID('ca7bd8cb-3949-4609-97d9-b01d18fe...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF28BB5C0>)
+
+    def setup(world):
+        database, actor, conversation, request, runtime = world
+        adapter = LocalAdapter()
+>       tasks = GenerationTasks(database, None, library_adapter=adapter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'
+
+tests\integration\test_assistant_research_manager.py:33: TypeError
+______________ test_immediate_close_seals_local_before_dispatch _______________
+
+world = (<cn_contract.persistence.Database object at 0x000001BEF2916630>, Actor(user_id=UUID('8859f3fe-7da0-46e0-a320-36c343d3...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2B2A390>)
+
+    def test_immediate_close_seals_local_before_dispatch(world):
+>       tasks, adapter, request = setup(world)
+                                  ^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_manager.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (<cn_contract.persistence.Database object at 0x000001BEF2916630>, Actor(user_id=UUID('8859f3fe-7da0-46e0-a320-36c343d3...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2B2A390>)
+
+    def setup(world):
+        database, actor, conversation, request, runtime = world
+        adapter = LocalAdapter()
+>       tasks = GenerationTasks(database, None, library_adapter=adapter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'
+
+tests\integration\test_assistant_research_manager.py:33: TypeError
+_______ test_close_waits_for_local_thread_and_rejects_late_publication ________
+
+world = (<cn_contract.persistence.Database object at 0x000001BEF28658E0>, Actor(user_id=UUID('98422219-16f7-402b-91b8-25a7d44f...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2BB21E0>)
+
+    def test_close_waits_for_local_thread_and_rejects_late_publication(world):
+>       tasks, adapter, request = setup(world)
+                                  ^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_manager.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (<cn_contract.persistence.Database object at 0x000001BEF28658E0>, Actor(user_id=UUID('98422219-16f7-402b-91b8-25a7d44f...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2BB21E0>)
+
+    def setup(world):
+        database, actor, conversation, request, runtime = world
+        adapter = LocalAdapter()
+>       tasks = GenerationTasks(database, None, library_adapter=adapter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'
+
+tests\integration\test_assistant_research_manager.py:33: TypeError
+______ test_local_and_model_share_capacity_and_replay_needs_no_new_slot _______
+
+world = (<cn_contract.persistence.Database object at 0x000001BEF2BF1FD0>, Actor(user_id=UUID('1c960f1f-a938-4d55-825a-f02ce767...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2BF2CF0>)
+
+    def test_local_and_model_share_capacity_and_replay_needs_no_new_slot(world):
+>       tasks, adapter, request = setup(world)
+                                  ^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_manager.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (<cn_contract.persistence.Database object at 0x000001BEF2BF1FD0>, Actor(user_id=UUID('1c960f1f-a938-4d55-825a-f02ce767...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2BF2CF0>)
+
+    def setup(world):
+        database, actor, conversation, request, runtime = world
+        adapter = LocalAdapter()
+>       tasks = GenerationTasks(database, None, library_adapter=adapter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'
+
+tests\integration\test_assistant_research_manager.py:33: TypeError
+_________ test_local_factory_failure_seals_registration_without_retry _________
+
+world = (<cn_contract.persistence.Database object at 0x000001BEF2C23EF0>, Actor(user_id=UUID('bec71667-ae0a-4dad-a083-4dd375bc...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2C23F50>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BEF2C23E30>
+
+    def test_local_factory_failure_seals_registration_without_retry(world, monkeypatch):
+>       tasks, adapter, request = setup(world)
+                                  ^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_manager.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = (<cn_contract.persistence.Database object at 0x000001BEF2C23EF0>, Actor(user_id=UUID('bec71667-ae0a-4dad-a083-4dd375bc...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001BEF2C23F50>)
+
+    def setup(world):
+        database, actor, conversation, request, runtime = world
+        adapter = LocalAdapter()
+>       tasks = GenerationTasks(database, None, library_adapter=adapter)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'library_adapter'
+
+tests\integration\test_assistant_research_manager.py:33: TypeError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_research_manager.py::test_local_submit_without_model_and_replay_never_dispatches_twice
+FAILED tests/integration/test_assistant_research_manager.py::test_immediate_close_seals_local_before_dispatch
+FAILED tests/integration/test_assistant_research_manager.py::test_close_waits_for_local_thread_and_rejects_late_publication
+FAILED tests/integration/test_assistant_research_manager.py::test_local_and_model_share_capacity_and_replay_needs_no_new_slot
+FAILED tests/integration/test_assistant_research_manager.py::test_local_factory_failure_seals_registration_without_retry
+5 failed in 3.34s

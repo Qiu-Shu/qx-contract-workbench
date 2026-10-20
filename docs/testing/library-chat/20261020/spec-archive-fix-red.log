@@ -1,0 +1,49 @@
+...F                                                                     [100%]
+================================== FAILURES ===================================
+_____ test_legacy_b1_keyword_is_data_even_when_it_equals_workflow_marker ______
+
+world = (<cn_contract.persistence.Database object at 0x00000292022A9F40>, Actor(user_id=UUID('fb41dc17-9931-44f3-8b02-e5296094...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000292022E1E20>)
+
+    def test_legacy_b1_keyword_is_data_even_when_it_equals_workflow_marker(world):
+        database,actor,view,request,_=world
+        request=request.model_copy(update={'content':'local-research-v1','requested_skill':'legal_research'})
+        with database.session() as db:
+            run=service.save_message(actor,view.scope.conversation_id,request,db)
+        call=library_handlers.begin_library_call(actor,run.id,uuid4(),d.LibraryHandlerRequest(tool='legal_library.search',query=d.AssistantLibraryQuery(text=request.content)),database)
+        library_handlers.execute_library_handler(actor,run.id,call.event_seq,database,LegalLibraryAdapter(None))
+        with database.session() as db:
+            assert backup._file_references(db)==[]
+            current=service._owned(actor,view.scope.conversation_id,db)
+>           assert research.read_history(actor,current,d.MainGenerationHistoryQuery(message_ids=(run.message_id,)),db).items==()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.local\library-chat-20261020\spec-archive-fix-probe.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\assistant\research.py:117: in read_history
+    research=read_research(actor, UUID(run_id), db)))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\research.py:49: in read_research
+    call = _initial(row, db)
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+row = {'id': 'cf38883b-00d0-4f48-8fc5-5197b5941a55', 'conversation_id': '7aa8aebe-0c01-4a58-bddf-0e3e924b96fb', 'message_id'..., 'selected_model': None, 'budget_json': None, 'cancel_requested': 0, 'created_at': '2026-10-20T13:39:56.157996+00:00'}
+db = <sqlalchemy.orm.session.Session object at 0x00000292022E2B10>
+
+    def _initial(row, db):
+        """A skill label or old queued message alone is never dispatch authority."""
+        events = db.execute(text('''SELECT * FROM assistant_run_events WHERE run_id=:run
+            ORDER BY seq'''),
+            {'run':row['id']}).mappings().all()
+        content = db.scalar(text('SELECT content FROM assistant_messages WHERE id=:id'),
+            {'id':row['message_id']})
+        try:
+            call = initial_call(row, content, events)
+            if call is None:
+>               raise ServiceError('STATE_CONFLICT', 409)
+E               cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\research.py:41: ServiceError
+=========================== short test summary info ===========================
+FAILED .local/library-chat-20261020/spec-archive-fix-probe.py::test_legacy_b1_keyword_is_data_even_when_it_equals_workflow_marker
+1 failed, 3 passed in 8.06s

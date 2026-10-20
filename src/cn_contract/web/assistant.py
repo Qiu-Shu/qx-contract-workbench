@@ -86,7 +86,9 @@ def register_routes(app, database):
         entries = [('client_reply','回复客户'),('material_organize','整理资料'),
                    ('contract_review','审查合同'),('content_draft','创作文案'),('legal_research','检索法律资料')]
         return d.AssistantSkillCatalog(items=tuple(d.AssistantSkillView(id=key,label=label,
-            reason='对话执行尚未接入；已保存的输入不会自动运行模型。') for key,label in entries))
+            state='local_only' if key=='legal_research' else 'not_connected',
+            reason='输入最多200字关键词，仅检索本机资料；结果与适用性待核对。' if key=='legal_research' else
+                '对话执行尚未接入；已保存的输入不会自动运行模型。') for key,label in entries))
 
     @app.post('/api/assistant/conversations',status_code=201)
     async def create(request:Request):

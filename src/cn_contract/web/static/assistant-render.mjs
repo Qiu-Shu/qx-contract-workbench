@@ -1,3 +1,4 @@
+import {renderResearch,researchStatusText} from './assistant-citations.mjs';
 export const errorText = error=>({
   NETWORK_UNKNOWN:'连接中断，保存结果尚不确定。输入仍在此处，请点击“重试保存”核对。',
   VERSION_CONFLICT:'资料已在另一处更新。请核对两份文字后选择要保留的版本。',
@@ -77,7 +78,7 @@ function renderAttempt(attempt,visible) {
   section.append(node('p',cost,'generation-cost'));return section;
 }
 
-export function createRenderer(root=document,{isComposing=()=>false}={}) {
+export function createRenderer(root=document,{isComposing=()=>false,onCitation=()=>{}}={}) {
   const byId=id=>root.getElementById(id);
   const renderedAttempts=new WeakMap();
   let previousId=null;
@@ -89,7 +90,8 @@ export function createRenderer(root=document,{isComposing=()=>false}={}) {
       const revoked=state.status==='revoked';
       const messages=revoked || (state.view?.scope?.conversation_id && state.view.scope.conversation_id!==state.id)
         ?[]:state.view?.messages || [];
-      const generation=state.generation;
+      const generation=state.generation,research=state.research;
+      const local=state.skill==='legal_research';
       const history=byId('history');
       if(previousId!==state.id)history.replaceChildren();
       previousId=state.id;
@@ -113,10 +115,13 @@ export function createRenderer(root=document,{isComposing=()=>false}={}) {
             node('p',message.content,'message-text'));
         }
         const attempts=message.role==='user'?attemptsByMessage.get(message.id) || []:[];
-        const signature=JSON.stringify([visibleKey,attempts]);
+        const searches=(research?.items||[]).filter(item=>item.message_id===message.id).map(item=>item.research);
+        const signature=JSON.stringify([visibleKey,attempts,searches]);
         if(renderedAttempts.get(item)!==signature) {
           item.querySelectorAll('.generation-result').forEach(element=>element.remove());
+          item.querySelectorAll('.research-result').forEach(element=>element.remove());
           for(const attempt of attempts)item.append(renderAttempt(attempt,visible));
+          for(const result of searches)item.append(renderResearch(root,result,onCitation));
           renderedAttempts.set(item,signature);
         }
         if(item!==position)history.insertBefore(item,position);
@@ -145,32 +150,38 @@ export function createRenderer(root=document,{isComposing=()=>false}={}) {
       byId('older-messages').disabled=state.loading;
       const run=state.view?.latest_run;
       byId('run-status').textContent=run?'最近任务：'+(runText[run.state]||'状态待核对')+(run.cancel_requested && run.state!=='cancelled'?'；已请求取消':''):'';
-      byId('refresh-run').hidden=!run && generation?.phase!=='error';
+      byId('refresh-run').hidden=!run && generation?.phase!=='error' && research?.phase!=='error';
       byId('refresh-run').disabled=state.loading || state.status==='saving';
       byId('cancel-run').hidden=!run || !['queued','preparing','routing','retrieving','generating','persisting','awaiting_input'].includes(run.state);
       byId('cancel-run').disabled=readonly || state.loading || state.status==='saving';
       byId('conflict-panel').hidden=!state.conflict;
       byId('server-draft').textContent=state.conflict?.server || '（服务器草稿为空）';
       byId('new-conversation').disabled=readonly || state.loading || state.status==='saving' || state.status==='revoked';
-      const phase=generation?.phase || 'idle';
-      const nativeConfirmation=generation?.nativeConfirmation===true;
-      byId('send').textContent=nativeConfirmation?'确认并发送':'发送';
-      byId('send').disabled=generation?.canSend!==true || readonly || state.loading || Boolean(state.skill) ||
+      const showingResearch=local || ['unknown','error','tracking'].includes(research?.phase);
+      const operation=showingResearch?research:generation;
+      const phase=operation?.phase || 'idle';
+      const nativeConfirmation=!showingResearch && generation?.nativeConfirmation===true;
+      byId('send').textContent=local?'本机检索':nativeConfirmation?'确认并发送':'发送';
+      byId('send').disabled=(local?research:generation)?.canSend!==true || readonly || state.loading || Boolean(state.skill && !local) ||
         ['saving','conflict','readonly','revoked'].includes(state.status) || ['checking','confirming','submitting','unknown','tracking'].includes(phase);
       byId('generation-note').textContent=revoked?'访问已结束。':readonly || state.status==='readonly'
-        ?generationCapabilityText.restored_read_only:state.skill?'该能力尚未接入执行。取消选择后可核对普通文字的生成条件。'
+        ?generationCapabilityText.restored_read_only:local
+          ?state.materials?.items?.length?'本机关键词检索暂不接受附件，请先将材料移出本次。': [...state.text].length>200
+            ?'关键词超过 200 字。请缩短后检索；原有文字仍保留。':'输入不超过 200 字的关键词，仅查询本机资料库；不会发送给模型。'
+          :state.skill?'该能力尚未接入执行。取消选择后可核对普通文字的生成条件。'
           :nativeConfirmation && ['unapproved','ready','budget_exhausted'].includes(generation?.capability?.state)
             ?'点击“确认并发送”后，在原生确认窗口核对完整文字、接收方与费用上限；确认后才发送，结果仍需律师核对。'
             :generationCapabilityText[generation?.capability?.state] || '输入并保存文字后，将核对当前生成条件。';
       const phaseText={checking:'正在核对生成条件…',confirming:'请在原生确认窗口核对本次文字、接收方与费用上限；尚未发送。',submitting:'正在提交生成请求…',
         unknown:'发送结果尚不确定。请查找发送结果，避免重复发送。',tracking:'生成已登记，正在核对结果…'};
-      byId('generation-status').textContent=revoked?'':phaseText[phase] ||
+      byId('generation-status').textContent=revoked?'':showingResearch?researchStatusText(research):phaseText[phase] ||
         (phase==='error'?generationErrorText(generation?.error):'');
       byId('generation-status').dataset.kind=['unknown','error'].includes(phase)?'error':'';
       byId('recover-generation').hidden=revoked || phase!=='unknown';
       byId('recover-generation').disabled=state.loading || revoked;
       byId('input-help').textContent=(nativeConfirmation?'Enter 打开发送确认，':'Enter 发送，')+'Shift+Enter 换行；'+
-        (byId('send').disabled?'当前发送不可用。':'发送后生成内部待核草稿。');
+        (byId('send').disabled?'当前发送不可用。':local?'发送后查询本机资料。':'发送后生成内部待核草稿。');
+      input.placeholder=local?'输入关键词，例如：合成买卖纠纷':'例如：客户遇到了什么问题，需要我们帮忙处理什么……';
       byId('add-material').disabled=readonly || state.loading || ['saving','conflict','revoked'].includes(state.status);
     },
     conversations(page,{append=false,selected=null,onSelect}={}) {
@@ -193,7 +204,7 @@ export function createRenderer(root=document,{isComposing=()=>false}={}) {
       });
     },
     capability(catalog) {
-      byId('capability-details').textContent='所选能力尚未接入执行。普通文字能否生成，以当前对话的生成条件为准。';
+      byId('capability-details').textContent='“检索法律资料”支持本机关键词查询，结果保留来源与待核对状态。其他所选能力尚未接入执行；普通文字生成以当前对话的条件为准。';
     },
   };
 }

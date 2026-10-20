@@ -1,0 +1,75 @@
+{
+  "full_counts": {
+    "tests": 3271,
+    "failed": 38,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failure_groups": {
+    "tests.unit.test_library_cases": 7,
+    "tests.unit.test_library_laws": 6,
+    "tests.unit.test_library_search": 20,
+    "tests.unit.test_library_sources": 5
+  },
+  "failure_mentions_disk_budget": 37,
+  "failure_without_disk_budget_text": [
+    {
+      "classname": "tests.unit.test_library_laws",
+      "name": "test_bulk_laws_committed_batch_survives_resource_stop",
+      "time": "0.095"
+    }
+  ],
+  "inputs": {
+    "count": 484,
+    "before_after_equal": true,
+    "before_current_equal": true,
+    "differences": []
+  },
+  "budget": {
+    "baseline": "13f53bf986fb672834d2952c0276b52ea41b3d9c",
+    "file": "src/cn_contract/library/budget.py",
+    "baseline_sha256": "b5e7634d04ed913984b099d5e30aaf73e920efeeab49d3c3c75925f5c05ffa51",
+    "current_sha256": "b5e7634d04ed913984b099d5e30aaf73e920efeeab49d3c3c75925f5c05ffa51",
+    "byte_equal": true,
+    "newline_normalized_equal": true,
+    "git_diff": "",
+    "threshold_bytes": 42949672960
+  },
+  "gates": [
+    {
+      "name": "gate-1",
+      "exit_code": 0
+    },
+    {
+      "name": "gate-2",
+      "exit_code": 0
+    },
+    {
+      "name": "gate-3",
+      "exit_code": 0
+    },
+    {
+      "name": "gate-4",
+      "exit_code": 0
+    }
+  ],
+  "scope": "Artifact/source audit only; no test execution or product mutation.",
+  "recovery": {
+    "exit_code": 0,
+    "counts": {
+      "tests": 38,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "exact_failed_node_set": true,
+    "no_duplicate_nodes": true,
+    "command_exact_failed_node_order": true,
+    "record_exact_failed_node_order": true,
+    "basetemp": "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\library-chat-20261020\\pytest-recovery-d3dfe94589de46b1bc5506133101690a",
+    "inputs_equal_to_full_reported": true,
+    "inputs_equal_to_full_independently_recomputed": true,
+    "combined_distinct_passing_cases": 3271,
+    "single_full_run_green": false
+  }
+}

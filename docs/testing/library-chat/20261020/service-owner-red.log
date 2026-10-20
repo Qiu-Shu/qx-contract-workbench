@@ -1,0 +1,25 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_other_actor_cannot_interrupt_an_owned_research _____________
+
+workspace = (<cn_contract.persistence.Database object at 0x0000028C36D690D0>, {'admin': Actor(user_id=UUID('9d2d7d22-cf76-4544-947... <module 'cn_contract.assistant.service' from 'D:\\Documents\\ChatGPT\\������Ŀ\\src\\cn_contract\\assistant\\service.py'>)
+research = <module 'cn_contract.assistant.research' from 'D:\\Documents\\ChatGPT\\������Ŀ\\src\\cn_contract\\assistant\\research.py'>
+
+    def test_other_actor_cannot_interrupt_an_owned_research(workspace, research):
+        database, actors, _, _ = workspace
+        view = conversation(workspace)
+        with database.session() as db:
+            first = research.enqueue_research(actors['lawyer'], view.scope.conversation_id, request(view), db)
+        with pytest.raises(ServiceError, match='authorized'):
+            research.execute_research(actors['reviewer'], first.run.id, database, LegalLibraryAdapter(None))
+        with database.session() as db:
+>           assert research.read_research(actors['lawyer'], first.run.id, db).run.state == 'queued'
+E           AssertionError: assert 'failed' == 'queued'
+E             
+E             - queued
+E             + failed
+
+tests\integration\test_assistant_research_service.py:70: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_research_service.py::test_other_actor_cannot_interrupt_an_owned_research
+1 failed, 1 deselected in 1.29s

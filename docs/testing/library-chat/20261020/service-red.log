@@ -1,0 +1,19 @@
+E                                                                        [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_local_research_persists_result_and_replay_without_model _
+
+workspace = (<cn_contract.persistence.Database object at 0x000001FE01A87BF0>, {'admin': Actor(user_id=UUID('475dc080-9d40-4048-b53... <module 'cn_contract.assistant.service' from 'D:\\Documents\\ChatGPT\\������Ŀ\\src\\cn_contract\\assistant\\service.py'>)
+
+    @pytest.fixture
+    def research(workspace):
+>       assert importlib.util.find_spec('cn_contract.assistant.research') is not None, 'local research service missing'
+E       AssertionError: local research service missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x000001FE7BBD5D00>('cn_contract.assistant.research')
+E        +    where <function find_spec at 0x000001FE7BBD5D00> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+tests\integration\test_assistant_research_service.py:17: AssertionError
+=========================== short test summary info ===========================
+ERROR tests/integration/test_assistant_research_service.py::test_local_research_persists_result_and_replay_without_model
+1 error in 1.28s

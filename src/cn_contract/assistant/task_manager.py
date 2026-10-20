@@ -1,4 +1,4 @@
-"""One application lifecycle owns only attempts it newly committed itself."""
+"""One application lifecycle owns newly committed model and local research work."""
 import asyncio
 from functools import partial
 
@@ -19,12 +19,13 @@ MAX_ACTIVE_TASKS = 4
 class GenerationTasks:
     """start/submit run synchronously on the application's lifespan event loop."""
 
-    def __init__(self, database, runtime, *, judge_runtime=None):
+    def __init__(self, database, runtime, *, judge_runtime=None, library_adapter=None):
         if judge_runtime is not None and type(judge_runtime) is not JudgeRuntime:
             raise TypeError('trusted JudgeRuntime required')
         self.database = database
         self.runtime = runtime
         self.judge_runtime = judge_runtime
+        self.library_adapter = library_adapter
         self._loop = None
         self._started = False
         self._tasks = {}
@@ -85,17 +86,58 @@ class GenerationTasks:
         if previous is not None:
             return view
         # No task receives authority before the new durable attempt commits.
-        coroutine = self._execute(actor, view.id, runtime, auxiliary)
+        self._dispatch(view.id, view.run_id, self._execute(actor, view.id, runtime, auxiliary))
+        return view
+
+    def submit_research(self, actor, conversation_id, request):
+        from . import research
+        request = d.AssistantMessageInput.model_validate(request.model_dump(mode='python'))
+        with self.database.session() as db:
+            service._owned(actor, conversation_id, db)
+            previous = db.scalar(text('''SELECT id FROM assistant_runs
+                WHERE conversation_id=:cid AND request_id=:request'''),
+                {'cid':str(conversation_id), 'request':str(request.request_id)})
+            if previous is None:
+                self._admit()
+            view = research.enqueue_research(actor, conversation_id, request, db)
+        if previous is None:
+            self._dispatch(view.run.id, view.run.id, self._execute_research(actor, view.run.id), local=True)
+        return view
+
+    def _dispatch(self, identifier, run_id, coroutine, *, local=False):
         try:
             task = asyncio.create_task(coroutine, name='assistant-generation')
         except Exception:
             coroutine.close()
             self._last_error = 'GENERATION_TASK_FAILED'
-            self._release_unsent(view.run_id)
+            self._release_unsent(run_id, local=local)
             raise ServiceError('STATE_CONFLICT', 503) from None
-        self._tasks[view.id] = task
-        task.add_done_callback(partial(self._finished, view.id, view.run_id))
-        return view
+        self._tasks[identifier] = task
+        task.add_done_callback(partial(self._finished, identifier, run_id, local))
+
+    async def _execute_research(self, actor, run_id):
+        from . import research
+        from .tools.library import LegalLibraryAdapter
+        adapter = self.library_adapter if self.library_adapter is not None else LegalLibraryAdapter(None)
+        worker = asyncio.create_task(asyncio.to_thread(
+            research.execute_research, actor, run_id, self.database, adapter))
+        cancelled = False
+        while not worker.done():
+            try:
+                await asyncio.shield(worker)
+            except asyncio.CancelledError:
+                if not cancelled:
+                    self._release_unsent(run_id, local=True)
+                cancelled = True
+            except Exception:
+                break
+        # A cancelled await cannot kill a thread. Keep its admission slot until
+        # it exits, after sealing the run against any late publication.
+        if cancelled:
+            if not worker.cancelled():
+                worker.exception()
+            raise asyncio.CancelledError()
+        return worker.result()
 
     def _reserve_judge(self, actor, main, db):
         if self.judge_runtime is None:
@@ -113,10 +155,14 @@ class GenerationTasks:
         # cancellation and permission checks after the optional wait.
         return await execute_attempt(actor, identifier, self.database, runtime)
 
-    def _release_unsent(self, run_id):
+    def _release_unsent(self, run_id, *, local=False):
         try:
             with self.database.session() as db:
                 require_active(db)
+                if local:
+                    from .research import interrupt_research
+                    interrupt_research(run_id, db)
+                    return
                 # This run belongs to this manager. Never recover unrelated or
                 # claimed attempts; the existing runner owns their settlement.
                 attempts.cancel_reserved_for_run(run_id, db)
@@ -126,11 +172,11 @@ class GenerationTasks:
             # A failed write retains the original durable marker for locked
             # startup recovery. It is never requeued here.
 
-    def _finished(self, identifier, run_id, task):
+    def _finished(self, identifier, run_id, local, task):
         self._tasks.pop(identifier, None)
         if not task.cancelled() and task.exception() is not None:
             self._last_error = 'GENERATION_TASK_FAILED'
-        self._release_unsent(run_id)
+        self._release_unsent(run_id, local=local)
 
     async def _drain(self, pending):
         await asyncio.gather(*pending, return_exceptions=True)

@@ -1,0 +1,35 @@
+............F...                                                         [100%]
+================================== FAILURES ===================================
+_______________ test_cross_user_history_and_citation_are_denied _______________
+
+world = (<cn_contract.persistence.Database object at 0x000001B686828650>, Actor(user_id=UUID('90cd9b87-1b09-4a68-afac-93f15b40...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001B6868BCD40>)
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1072/test_cross_user_history_and_ci0')
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1072/test_cross_user_history_an... ��ȫ�鹹����\nĿ¼\n��һ�� ����\n�ڶ��� ����\n��һ�� ������ȫ�鹹���������ģ�������Ϊ��ʽ�������ݡ�\n> �ڶ��� �鹹�������޹���\n������ ��һ���������ġ�\n������ �ظ��������Ŵ��ˡ�\n������ �������ڽ����ǡ�')
+
+    def test_cross_user_history_and_citation_are_denied(world,tmp_path,library):
+        with boot(world,tmp_path,library[0]) as http:
+            result = submit(http)
+            saved = result['receipts'][0]['result']['citation_ids'][0]
+            with http.database.session() as db:
+>               provision_user('other','fixture123',{d.Role.HANDLING_LAWYER},db)
+
+tests\integration\test_assistant_research_routes.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+username = 'other', password = 'fixture123'
+roles = frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>})
+db = <sqlalchemy.orm.session.Session object at 0x000001B68652FAD0>
+
+    def provision_user(username: str, password: str, roles: set[Role], db: Session,
+                       *, local_workbench_password: bool = False) -> UUID:
+        """Explicit trusted server initialization; never exposed to cookie clients."""
+        roles = frozenset(Role(role) for role in roles)
+        password_valid = 6 <= len(password) <= 12 if local_workbench_password else len(password) >= 12
+        if type(local_workbench_password) is not bool or not username.strip() or not password_valid or not roles:
+>           raise ValueError('username, valid password length and known roles required')
+E           ValueError: username, valid password length and known roles required
+
+src\cn_contract\security.py:42: ValueError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_research_routes.py::test_cross_user_history_and_citation_are_denied
+1 failed, 15 passed in 14.18s

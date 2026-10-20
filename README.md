@@ -2,7 +2,7 @@
 
 面向宋萌律师及约 10 名受邀试用者的 Windows 法律工作台。复用现有合同审查、接待、法律资料库及持衡工程，逐步贯通“对话或上传材料 → 辅助处理 → 原文核对 → 档案草稿 → 工作成果”。暂不建设收费、订阅或交易系统。
 
-**当前状态（2026-10-20）：开发分支已完成内部法库检索、持久引用、调用回执及备份恢复切片；本机安装版仍是 0.4.1。** 对话首页、普通文字的受控主模型生成链和 Jev 独立账本已有工程验证；Jev 本机配置、后端逐请求许可及同一主任务内的可选辅助已接通。同一发送确认窗已区分主模型与可选辅助许可；真实辅助默认关闭。自动档案及完整业务技能编排仍待贯通。合成验证通过不代表真实模型、法律质量或生产验收通过。
+**当前状态（2026-10-20）：开发分支已贯通对话内本机关键词检索、持久引用和历史原文片段面板；本机安装版仍是0.4.1。** 普通文字受控生成、Jev独立配置与同窗许可已有工程验证；检索不需要模型配置，不向主模型或Jev发送命中。自动档案、资料辅助生成及完整技能编排仍待贯通；合成验证不代表真实模型、法律质量或生产验收通过。
 
 ## 协作者从这里开始
 
@@ -12,7 +12,7 @@
 - [对话式前端、模块解耦与轻量化 v2.1](docs/plans/chat-first-architecture-v2.1.md)
 - [下一步接线安排](docs/plans/2026-10-19-post-home-readiness.md)
 - [Windows 安装版与开发版说明](desktop/README.md)
-- [本次 GitHub 同步记录](docs/testing/GITHUB-CH06B1-20261020.md)
+- [上一批已核对的 GitHub 同步记录](docs/testing/GITHUB-CH06B1-20261020.md)
 
 当前协作集成分支为 [`codex/contract-review-v2`](https://github.com/Qiu-Shu/qx-contract-workbench/tree/codex/contract-review-v2)。开始修改前先获取远端更新并查看 TODO；独立任务建议使用短分支和 PR，避免多人同时改动集成分支。每个完成阶段同步代码、实际验证记录、TODO 和 README。
 
@@ -25,16 +25,16 @@
 | 建案前附件 | 对话归属的 DOCX 收件、版本/摘要与原文核对、受控恢复；无需暗建合同案件 | [当前状态](docs/TASK_STATUS.md) |
 | 主模型开发链 | DeepSeek 普通文字、系统保护凭据、日常配置、独立窗口确认具体文本、一次授权、费用记录和未知不重发 | [确认发送验证](docs/testing/native-send-confirmation/20261019/README.md) |
 | Jev 辅助基础 | 独立凭据、配置、账本和恢复；后端独立逐请求许可、同任务可选辅助及同窗独立确认已接通；生产辅助预算默认未配置 | [适配](docs/testing/jev-adapter/20261020/README.md) · [账本](docs/testing/jev-ledger/20261020/README.md) · [配置](docs/testing/jev-native/20261020/README.md) · [本片确认](docs/testing/jev-confirmation/20261020/README.md) |
-| 对话法库底座 | 受限检索、服务器持久引用、固定调用回执和8次工具额度；当前权限重核，历史快照可随备份恢复；尚未接聊天页面和模型编排 | [适配器](docs/testing/library-adapter/20261020/README.md) · [持久引用](docs/testing/library-ledger/20261020/README.md) |
+| 对话法库检索 | 选择“检索法律资料”，最多200字关键词、5条候选；原文片段/来源版本/待核状态可保存和回查；复用任务、当前权限及只读恢复，尚未接资料辅助生成 | [本机检索与引用面板](docs/testing/library-chat/20261020/README.md) · [持久化底座](docs/testing/library-ledger/20261020/README.md) |
 | 解耦与资源 | 公共存储/请求边界及对话模块抽离，PDF 按需加载，Electron 语言资源筛选；长文检索按命中区间定位，去掉整篇坐标表 | [模块证据](docs/testing/chat-first/20261017/README.md) · [构建资源](docs/testing/chat-first/20261016/README.md) · [检索内存](docs/testing/library-memory/20261020/README.md) |
 
 资源首片在同后端的未压缩构建目录中减少 **48,880,941 字节（46.62 MiB）**；这不是安装器、整机启动或内存的综合结论。当前仍需持续测量核心包体、可输入时间和进程占用。
 
-最新 CH-06B1：完整 Python 回归3222项通过、0跳过，0失败/错误，exit0；473份输入前后稳定，四项开发检查通过。独立 Spec 复核发现并关闭1项引用内容摘要遗漏，Standards补审无待修问题；WorkBuddy本轮实际连接并完成4文件只读复核，意见由统筹另行核实。[本片证据与限制](docs/testing/library-ledger/20261020/README.md)
+最新 CH-06B2a：同一484份输入，Python分两批覆盖3271个不同用例通过；首轮38项被C盘预算阻断，换D盘独立临时目录补验全过，不能称单次全套通过。四开发检查、55个顶层Node测试及8组源码浏览器场景通过。独审关闭归档缺口及旧记录误判；WorkBuddy本轮完成3文件只读计划复核。[实际证据与限制](docs/testing/library-chat/20261020/README.md)
 
 此前长文检索在同合成样本上的 Python 跟踪分配峰值下降约87.7%，小样本耗时增加约6–8%；这项取舍和185项分批验证仍以[原阶段证据](docs/testing/library-memory/20261020/README.md)为准，不冒充本轮资源测量。
 
-下一片先接无需模型配置的本机检索与聊天引用面板，再补完整上下文的外发许可及有界多轮编排。当前一次文字许可不能自动扩大为资料或四轮调用；[接线准备](docs/plans/2026-10-20-library-b2-readiness.md)列出实际断点与顺序。
+下一片接明确选定片段的完整上下文许可及一次主模型回答，再扩展有界多轮。旧一次文字许可不能扩大为资料或四轮调用；[接续准备](docs/plans/2026-10-20-library-context-readiness.md)列出严格格式、原生预览、当前权限、费用、恢复和兼容约束，尚未实施。
 
 ## 架构与边界
 
@@ -64,6 +64,8 @@ python -m venv .venv
 ```
 
 运行包含 `tests/integration/test_library_pilot.py` 的测试时，须为当前命令设置 `QX_PILOT_PYTHON`，指向已安装 DuckDB 的独立 Python 解释器；未设置会明确跳过2项。当前本机可复用 `D:/Documents/裁判文书数据库试点2025/.venv/Scripts/python.exe`（DuckDB 1.5.6），协作者使用自己的绝对路径。测试只在临时目录新建虚构CSV及DuckDB，不读取既有试点数据。DuckDB是旧试点迁移测试的独立依赖，无需加入桌面核心运行包；若本机确实缺少，先建立隔离环境并安装与既有试点兼容的版本，再执行用例。用户已授权缺失依赖直接安装，优先复用现有可用环境。
+
+法库测试临时目录所在盘须满足既有40 GiB可用空间保护。C盘不足时，用空间充足盘上的全新专属 `--basetemp` 目录运行；pytest会管理该目录，不得指向真实资料或已有共享目录。不得降低产品阈值来使测试通过。
 
 开发和普通 CI 只用独立虚构材料。开发检查通过不解除发布审批；`release` / `production` 检查仍可能按既有条件阻断，不能改门禁以得到绿色结果。测试、构建、原生 Windows 验证和法律验收分别记录；不用历史数量冒充本轮执行。
 

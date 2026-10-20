@@ -1,0 +1,54 @@
+{
+  "status": "frozen_for_independent_review",
+  "files": {
+    "src/cn_contract/assistant/research.py": "c309fcfa37fa85d1beb39c11123edb8f58a6acf1da05658753266a3a1530a4f1",
+    "src/cn_contract/assistant/research_records.py": "f8623c52c57605f59bb08c42fb722c1dfb37104a4410b79f964aac8bd76d7fad",
+    "src/cn_contract/assistant/library_integrity.py": "934a493957ab3822170877e1528acedb2461584cd4869025388d5ebcbcf9f0f8",
+    "tests/integration/test_assistant_research_backup.py": "53c23d5f4c6183bbf3cd3e8f6182e0929ac367a35790677661710841cea8a415"
+  },
+  "runs": [
+    {
+      "evidence": "service-archive-red",
+      "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_assistant_research_backup.py -q --junitxml=.local/library-chat-20261020/service-archive-red.xml",
+      "exit": 1,
+      "failed": 1,
+      "seconds": 2.74,
+      "meaning": "Expected RED: corrupt acceptance was not rejected on archive creation"
+    },
+    {
+      "evidence": "service-archive-green",
+      "exit": 0,
+      "passed": 1,
+      "seconds": 3.45
+    },
+    {
+      "evidence": "service-archive-regression",
+      "exit": 0,
+      "passed": 77,
+      "seconds": 67.81
+    },
+    {
+      "evidence": "service-archive-final",
+      "exit": 0,
+      "passed": 12,
+      "seconds": 15.46
+    },
+    {
+      "evidence": "service-archive-legacy-red",
+      "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_assistant_research_backup.py -q -k legacy_query_text --junitxml=.local/library-chat-20261020/service-archive-legacy-red.xml",
+      "exit": 1,
+      "failed": 1,
+      "deselected": 12,
+      "seconds": 1.42,
+      "meaning": "Expected RED: legacy B1 query text matching workflow sentinel broke research history"
+    },
+    {
+      "evidence": "service-archive-regression-final",
+      "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_assistant_research_backup.py tests/integration/test_assistant_research_service.py tests/integration/test_assistant_library_backup.py -q --junitxml=.local/library-chat-20261020/service-archive-regression-final.xml",
+      "exit": 0,
+      "passed": 79,
+      "seconds": 71.57
+    }
+  ],
+  "boundary": "No new DTO, persisted marker shape or DDL. Pure initial identity validator shared by runtime/archive. Complete coordinated rewriting of all research traces into valid legacy B1 history is indistinguishable without a new discriminator; single marker corruption/deletion/rename and orphan marker rejected. No full suite, real library/model, commit or push."
+}

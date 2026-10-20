@@ -1,0 +1,49 @@
+{
+  "frozen": true,
+  "files": {
+    "src/cn_contract/web/static/assistant-api.mjs": "ebfb95d075f5533dd378a52820d55976184db009c4d36b22c773960839666cec",
+    "src/cn_contract/web/static/assistant-state.mjs": "b38729d1aca736ba2c901139d060eb781963a8aee35306c48acffb4d947775a3",
+    "src/cn_contract/web/static/assistant-generation.mjs": "dcb0470a8abb64beb71c84d4a83d4e5d254d2fbcbfeccab2022ee97fda58ad88",
+    "src/cn_contract/web/static/assistant-research.mjs": "70290311bad0bfef49c03acd05e09cc34adbd53e4cbf877b0d0ddd5246b1cce8",
+    "src/cn_contract/web/static/assistant-citations.mjs": "5ab80e559c7739c1cea71c057e257608a9f723eb01f6a529f115e4dd0083bce8",
+    "src/cn_contract/web/static/assistant-render.mjs": "2e4972e5dc9fa7f774e10d5854ca7c1386657ab52cfbac9e0535b1c081d554a1",
+    "src/cn_contract/web/static/assistant-materials.mjs": "0ce1e2e73d9300261da16ab963efad7e355491ff177e5d4f7ad946066aa3af04",
+    "src/cn_contract/web/static/assistant.mjs": "7113f34162711f71f33d9deb6ec33324db2dd9bd44074da3e72d98816ca62cee",
+    "src/cn_contract/web/static/assistant.css": "62d514d5ec8dfefd219e10d50b7b29794ac23f60f5e40d0f46b90ed7617f91ee",
+    "src/cn_contract/web/static/assistant-composer.mjs": "cdffd8b6ebead4a76005fd08e95bf8a180d0862ff8e88f34beb98d7ae90a5226",
+    "src/cn_contract/web/templates/assistant.html": "820623e3a167c0928843dd1497de4e539f7c65f1f48dbdbcb3a5f69d826167d3",
+    "scripts/test_assistant_research_state.mjs": "664530f498b74b2075fc30264e235f3ff0a1d6b43e1b716387177d4f4ceb974e",
+    "scripts/test_assistant_citations.mjs": "39b8d25bf987573e99e6f7bae3f2a1b5aab7b600a917e02381285eb7a6ff4bc3"
+  },
+  "node_top_level_tests": 55,
+  "legacy_nested_groups": {
+    "generation": 36,
+    "draft": 28,
+    "materials": 4
+  },
+  "browser": "frontend-browser-final/report.json",
+  "browser_checks": 8,
+  "browser_exit": 0,
+  "detector": "impeccable-detect.json",
+  "detector_exit": 0,
+  "detector_scope": "before final 5-line CSS layout fix; not rerun under bounded instruction",
+  "limitations": [
+    "synthetic source app; installed app not exercised",
+    "physical Chinese IME and operating-system scaling not exercised"
+  ],
+  "node_command": [
+    "node",
+    "--test",
+    "scripts/test_assistant_state.mjs",
+    "scripts/test_assistant_material_state.mjs",
+    "scripts/test_assistant_material_dom.mjs",
+    "scripts/test_assistant_generation_state.mjs",
+    "scripts/test_assistant_generation_render.mjs",
+    "scripts/test_assistant_generation_entry.mjs",
+    "scripts/test_assistant_transport_input.mjs",
+    "scripts/test_assistant_research_state.mjs",
+    "scripts/test_assistant_citations.mjs"
+  ],
+  "node_cwd": "D:\\Documents\\ChatGPT\\律所项目",
+  "node_exit_code": 0
+}

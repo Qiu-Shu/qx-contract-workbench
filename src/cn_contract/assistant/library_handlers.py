@@ -152,39 +152,45 @@ def _source(actor, run_id, request, db, *, before_seq=None):
     return saved.citation
 
 
+def begin_library_call_in_session(actor, run_id, call_id, request, db):
+    """Trusted caller owns a short write transaction; never commits independently."""
+    run_id, call_id, request = _identifier(run_id), _identifier(call_id), _request(request)
+    _, scope, conversation = _execution(actor, run_id, db)
+    rows = db.execute(text('''SELECT * FROM assistant_run_events
+        WHERE run_id=:run AND event_type='tool.before' ORDER BY seq'''),
+        {'run':str(run_id)}).mappings().all()
+    calls = tuple(_event(row, run_id) for row in rows)
+    if len(calls) > 8 or len({item.payload.call_id for item in calls}) != len(calls):
+        raise ServiceError('LIBRARY_RECORD_INVALID', 409)
+    for item in calls:
+        if item.payload.call_id == call_id:
+            _execution(actor, run_id, db, item.payload)
+            if item.payload.request != request:
+                raise ServiceError('VERSION_CONFLICT', 409)
+            return item
+    if len(calls) == 8:
+        raise ServiceError('LIBRARY_TOOL_LIMIT', 409)
+    citation = _source(actor, run_id, request, db)
+    payload = d.LibraryHandlerEvent(call_id=call_id, handler_id=request.tool, request=request,
+        scope=scope, expected_composer_revision=conversation['composer_revision'],
+        citation_sha256=sha(encoded(citation)) if citation else None)
+    seq, total = db.execute(text('SELECT COALESCE(MAX(seq),0),COUNT(*) FROM assistant_run_events WHERE run_id=:run'),
+        {'run':str(run_id)}).one()
+    if seq != total:
+        raise ServiceError('LIBRARY_RECORD_INVALID', 409)
+    db.execute(text('''INSERT INTO assistant_run_events
+        (run_id,seq,event_type,audience,payload_json,created_at)
+        VALUES (:run,:seq,'tool.before','internal',:payload,:at)'''),
+        {'run':str(run_id), 'seq':seq + 1, 'payload':encoded(payload), 'at':service._at()})
+    return d.LibraryHandlerCall(run_id=run_id, event_seq=seq + 1, payload=payload)
+
+
 def begin_library_call(actor, run_id, call_id, request, database):
     run_id, call_id, request = _identifier(run_id), _identifier(call_id), _request(request)
     try:
         with database.session() as db:
             db.connection()  # Database's begin hook acquires BEGIN IMMEDIATE before any read.
-            _, scope, conversation = _execution(actor, run_id, db)
-            rows = db.execute(text('''SELECT * FROM assistant_run_events
-                WHERE run_id=:run AND event_type='tool.before' ORDER BY seq'''),
-                {'run':str(run_id)}).mappings().all()
-            calls = tuple(_event(row, run_id) for row in rows)
-            if len(calls) > 8 or len({item.payload.call_id for item in calls}) != len(calls):
-                raise ServiceError('LIBRARY_RECORD_INVALID', 409)
-            for item in calls:
-                if item.payload.call_id == call_id:
-                    _execution(actor, run_id, db, item.payload)
-                    if item.payload.request != request:
-                        raise ServiceError('VERSION_CONFLICT', 409)
-                    return item
-            if len(calls) == 8:
-                raise ServiceError('LIBRARY_TOOL_LIMIT', 409)
-            citation = _source(actor, run_id, request, db)
-            payload = d.LibraryHandlerEvent(call_id=call_id, handler_id=request.tool, request=request,
-                scope=scope, expected_composer_revision=conversation['composer_revision'],
-                citation_sha256=sha(encoded(citation)) if citation else None)
-            seq, total = db.execute(text('SELECT COALESCE(MAX(seq),0),COUNT(*) FROM assistant_run_events WHERE run_id=:run'),
-                {'run':str(run_id)}).one()
-            if seq != total:
-                raise ServiceError('LIBRARY_RECORD_INVALID', 409)
-            db.execute(text('''INSERT INTO assistant_run_events
-                (run_id,seq,event_type,audience,payload_json,created_at)
-                VALUES (:run,:seq,'tool.before','internal',:payload,:at)'''),
-                {'run':str(run_id), 'seq':seq + 1, 'payload':encoded(payload), 'at':service._at()})
-            return d.LibraryHandlerCall(run_id=run_id, event_seq=seq + 1, payload=payload)
+            return begin_library_call_in_session(actor, run_id, call_id, request, db)
     except SQLAlchemyError:
         raise ServiceError('LIBRARY_RECORD_INVALID', 409) from None
 

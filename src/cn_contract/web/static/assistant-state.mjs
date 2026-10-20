@@ -1,4 +1,5 @@
 import {createGenerationController,isAuthorizationError} from './assistant-generation.mjs';
+import {createResearchController} from './assistant-research.mjs';
 
 // This controller stores only the current page in memory; the server owns revisions.
 const scopeKeys = ['workspace_id', 'conversation_id', 'scope_kind', 'scope_ref',
@@ -17,20 +18,20 @@ export function createDraftController(api, {
     status: readonly ? 'readonly' : 'idle', error: null, conflict: null, dirty: false, loading: false,
     materials: null, materialAction: null};
   let epoch = 0, closed = false, channel = null, creating = null, pending = null, materialPending = null;
-  let reading = false, paging = false, cancelling = false, generation = null;
+  let reading = false, paging = false, cancelling = false, generation = null, research = null;
 
   function notify() {
     state.materialAction = materialPending?.kind || null;
     state.dirty = Boolean(creating || pending || materialPending || state.conflict ||
       (state.id ? state.text !== state.savedText : state.text.trim()));
-    generation?.sync(); onChange(state);
+    generation?.sync(); research?.sync(); onChange(state);
   }
   const current = token => !closed && token === epoch;
   function identity(id) {
     if (state.id !== id) { state.id = id; onConversation(id); }
   }
   function reset() {
-    generation?.reset();
+    generation?.reset();research?.reset();
     creating = pending = materialPending = null;
     reading = paging = cancelling = false;
     state.view = null; state.text = state.savedText = ''; state.skill = null;
@@ -62,7 +63,7 @@ export function createDraftController(api, {
       next_before: previous.next_before};
   }
   function baseline(view, keepText = true) {
-    if(state.view && !sameContext(state.view.scope,view.scope))generation?.reset();
+    if(state.view && !sameContext(state.view.scope,view.scope)){generation?.reset();research?.reset();}
     state.view = merged(view); state.savedText = view.draft_input;
     if (!keepText) state.text = view.draft_input;
   }
@@ -191,10 +192,11 @@ export function createDraftController(api, {
   function save(explicit = false, fromGeneration = false) {
     if (closed || state.loading || state.status === 'revoked' || state.conflict) return Promise.resolve(false);
     if (readonly) return Promise.resolve(!state.dirty);
-    if(!fromGeneration && generation?.blocked()) {
-      if(!generation.busy())return Promise.resolve(false);
+    const active=generation?.blocked()?generation:research?.blocked()?research:null;
+    if(!fromGeneration && active) {
+      if(!active.busy())return Promise.resolve(false);
       const token=epoch;
-      return generation.wait().then(()=>current(token) && !generation.unknown() ? save(explicit) : false);
+      return active.wait().then(()=>current(token) && !active.unknown() ? save(explicit) : false);
     }
     if (channel) return channel;
     if (!state.dirty) return Promise.resolve(true);
@@ -208,7 +210,7 @@ export function createDraftController(api, {
     notify(); return channel;
   }
   function material(kind,input,{file,attachment}={}) {
-    if (closed || readonly || state.loading || state.status === 'revoked' || materialPending || state.conflict || channel || generation?.blocked()) {
+    if (closed || readonly || state.loading || state.status === 'revoked' || materialPending || state.conflict || channel || generation?.blocked() || research?.blocked()) {
       return Promise.resolve(false);
     }
     // Pending text writes share this drain; a file never sends an old draft back.
@@ -234,7 +236,7 @@ export function createDraftController(api, {
   }
   async function refresh(fromGeneration = false) {
     if (closed || !state.id || state.loading || channel || pending || creating || reading ||
-        (!fromGeneration && generation?.unknown())) return false;
+        (!fromGeneration && (generation?.unknown() || research?.unknown()))) return false;
     const token = epoch, id = state.id, baselineAtStart = state.view, marker = {};
     reading = marker;
     try {
@@ -274,11 +276,11 @@ export function createDraftController(api, {
       await api.cancelRun(run.id, {request_id: uuid()});
       if (!current(token)) return false;
       if(!await refresh())return false;
-      await generation.refresh();return current(token);
+      await refreshWorkflows();return current(token);
     } catch (error) { return fail(error, token); }
     finally { if (cancelling === marker) cancelling = false; }
   }
-  generation=createGenerationController(api,{state,readonly,uuid,notify,nativeAuthorization,
+  const workflowHost={state,readonly,uuid,notify,nativeAuthorization,
     token:()=>epoch,current,fail,
     blocked:()=>Boolean((pending || creating) && !channel || materialPending || state.status==='error'),
     busy:()=>Boolean(channel || pending || creating || materialPending || reading),
@@ -296,22 +298,36 @@ export function createDraftController(api, {
         state.materials=materials;return conflict(view);
       } catch(error) {return fail(error,token);}
     },
-  });
+  };
+  generation=createGenerationController(api,{...workflowHost,blocked:()=>workflowHost.blocked() || research?.blocked()});
+  research=createResearchController(api,{...workflowHost,blocked:()=>workflowHost.blocked() || generation?.blocked()});
+  function refreshWorkflows(){
+    // An unacknowledged write must be resolved before any competing history read.
+    if(research.blocked())return research.refresh();
+    if(generation.blocked() || !api.getResearchHistory)return generation.refresh();
+    const token=epoch;
+    return generation.refresh().then(async generated=>{
+      if(!current(token))return false;
+      const researched=await research.refresh();
+      return researched && (generated || !api.getGenerationCapability);
+    });
+  }
   return {
     state,
     edit(text) {
       if (closed || readonly || state.loading || state.status === 'revoked') return;
-      state.text = text; generation.changed();
+      state.text = text; generation.changed();research.changed();
       if (state.conflict) state.conflict.local = text;
       if (state.status === 'saved') state.status = 'idle';
       notify();
     },
     selectSkill(skill) {
       if (closed || readonly || state.loading || state.status === 'revoked') return;
-      state.skill = skill; generation.changed(); notify();
+      state.skill = skill; generation.changed();research.changed(); notify();
     },
     open, save: () => save(), retry: () => save(true), refresh, loadEarlier, cancel,
-    send:generation.send,refreshGeneration:generation.refresh,
+    send:()=>research.unknown()?research.send():generation.unknown()?generation.send():
+      state.skill==='legal_research'?research.send():generation.send(),refreshGeneration:refreshWorkflows,
     upload: (file,policy) => file ? material('upload',{original_name:file.name,mime:file.type,policy},{file}) : Promise.resolve(false),
     parse: (attachment,baseline_view=null) => material('parse',{baseline_view},{attachment}),
     selectMaterials: items => material('selection',{items}),
@@ -328,7 +344,7 @@ export function createDraftController(api, {
       state.conflict = null; state.status = 'idle'; state.error = null; notify();
       return choice === 'local' || materialPending ? save(true) : true;
     },
-    canLeave: () => closed || (!state.dirty && !state.loading && !channel && !reading && !paging && !cancelling && !generation.blocked()),
+    canLeave: () => closed || (!state.dirty && !state.loading && !channel && !reading && !paging && !cancelling && !generation.blocked() && !research.blocked()),
     close() { closed = true; epoch += 1; reset(); state.id = null; notify(); },
   };
 }

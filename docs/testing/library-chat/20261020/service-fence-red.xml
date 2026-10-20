@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.352" timestamp="2026-10-20T21:16:55.324182+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_research_service" name="test_restored_fence_remains_read_only_even_during_trusted_cleanup" time="0.644"><failure message="assert AssistantRese..., receipts=()) == AssistantRese..., receipts=())&#10;  &#10;  Use -v to get more diff">workspace = (&lt;cn_contract.persistence.Database object at 0x000002D37FF9D940&gt;, {'admin': Actor(user_id=UUID('7df49c6e-0778-4f86-847... &lt;module 'cn_contract.assistant.service' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\service.py'&gt;)
+research = &lt;module 'cn_contract.assistant.research' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\research.py'&gt;
+
+    def test_restored_fence_remains_read_only_even_during_trusted_cleanup(workspace, research):
+        from cn_contract.ops.storage import RestoreFenceRow
+        database, actors, _, _ = workspace
+        view = conversation(workspace)
+        with database.session() as db:
+            first = research.enqueue_research(actors['lawyer'], view.scope.conversation_id, request(view), db)
+            db.add(RestoreFenceRow(ref=str(uuid4()), archive_sha256='a'*64, manifest_sha256='b'*64, payload='{}'))
+        with database.session() as db:
+            research.interrupt_research(first.run.id, db)
+&gt;           assert research.read_research(actors['lawyer'], first.run.id, db) == first
+E           assert AssistantRese..., receipts=()) == AssistantRese..., receipts=())
+E             
+E             Use -v to get more diff
+
+tests\integration\test_assistant_research_service.py:82: AssertionError</failure></testcase></testsuite></testsuites>

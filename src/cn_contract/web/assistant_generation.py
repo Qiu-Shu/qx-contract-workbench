@@ -70,11 +70,11 @@ def attach_generation(app, database, runtime=None, *, judge_runtime=None):
         raise TypeError('trusted MainModelRuntime or MainModelRegistry required')
     if judge_runtime is not None and type(judge_runtime) is not JudgeRuntime:
         raise TypeError('trusted JudgeRuntime required')
-    tasks=None
-    if runtime is not None:
-        from ..assistant.task_manager import GenerationTasks
-        tasks=GenerationTasks(database,runtime,judge_runtime=judge_runtime)
+    from ..assistant.task_manager import GenerationTasks
+    tasks=GenerationTasks(database,runtime,judge_runtime=judge_runtime)
     app.state.assistant_generation_tasks=tasks
+    from .assistant_research import register_routes
+    register_routes(app,database,tasks)
     previous=app.router.lifespan_context
 
     @asynccontextmanager

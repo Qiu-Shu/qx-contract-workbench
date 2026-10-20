@@ -8,6 +8,7 @@ from .. import domain as d
 from ..config import canonical_json
 from ..storage_schema import identify_schema
 from .library_records import encoded, model, receipt_view, result_citations, sha
+from .research_records import initial_call
 
 
 def _fail():
@@ -70,7 +71,7 @@ def _run_history(db, run_id, workspace):
         if event['seq'] != seq or timestamp < previous:
             _fail()
         previous = timestamp
-    return scope, conversation, events
+    return scope, conversation, events, run, message['content']
 
 
 def _validate(db, events, receipts, citations, workspace):
@@ -104,7 +105,10 @@ def _validate(db, events, receipts, citations, workspace):
     if groups:
         _fail()
     for run_id in {row['run_id'] for row in events}:
-        scope, conversation, history = _run_history(db, run_id, workspace)
+        scope, conversation, history, run, content = _run_history(db, run_id, workspace)
+        research = initial_call(run, content, history)
+        if research is not None and run['state'] == 'completed' and (run_id, research.event_seq) not in by_event:
+            _fail()
         calls, last_revision = set(), 0
         for event in history:
             if not event['event_type'].lower().startswith('tool.'):
@@ -148,7 +152,8 @@ def validate_library_records(db, *, allowed=True):
     version = identify_schema(schema, native=native)
     if version in ('pre-intake', 'intake-v1'):
         return
-    events = db.execute(text("SELECT * FROM assistant_run_events WHERE lower(event_type) LIKE 'tool.%'")).mappings().all()
+    events = db.execute(text('''SELECT * FROM assistant_run_events WHERE lower(event_type) LIKE 'tool.%'
+        OR lower(event_type) LIKE 'research.%' OR payload_json LIKE '%local-research-v1%' ''')).mappings().all()
     if version != 'assistant-library-v1':
         if events:
             _fail()
