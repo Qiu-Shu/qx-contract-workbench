@@ -1,0 +1,12 @@
+{
+  "stage": "WIN-PATH-01",
+  "baseline": "7446a9ce47d9452568f7d2ea1cf53c92167d53f4",
+  "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_contract_long_path_backup.py -q --basetemp=D:/qx-lpb-red-20261020 --junitxml=.local/long-path-20261020/backup-red.xml",
+  "exit_code": 1,
+  "failed": 1,
+  "seconds": 2.36,
+  "expected_failure": "Actual DOCX HTTP upload reaches ingest and create_version, then original UUID parent mkdir raises Windows WinError 3 on the >260-character path",
+  "warning": "record_property with default xunit2; subsequent evidence uses junit_family=xunit1",
+  "source_modified": false,
+  "owned_test": "tests/integration/test_contract_long_path_backup.py"
+}

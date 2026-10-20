@@ -1,0 +1,156 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+___ test_long_original_create_read_preserves_portable_reference[210-False] ____
+
+self = WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read0/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成...合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/0c9a9cde-5d3f-4725-b668-383138a7d5e8/4745073d-8a58-40d8-a6c8-33361f226836')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\qx-lpu-red-20261020\\test_long_original_create_read0\\合同原件\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\0c9a9cde-5d3f-4725-b668-383138a7d5e8\\4745073d-8a58-40d8-a6c8-33361f226836'
+
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+self = WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read0/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成...合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/0c9a9cde-5d3f-4725-b668-383138a7d5e8')
+mode = 511, parents = True, exist_ok = True
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\qx-lpu-red-20261020\\test_long_original_create_read0\\合同原件\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\0c9a9cde-5d3f-4725-b668-383138a7d5e8'
+
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read0')
+length = 210, extended = False
+
+    @pytest.mark.parametrize('length,extended', [(210, False), (285, False), (285, True)])
+    def test_long_original_create_read_preserves_portable_reference(tmp_path, length, extended):
+        p, _, _, database, actor, matter = deep_world(tmp_path, length, extended=extended)
+        content = '独立合成合同原件，不包含真实客户资料。'.encode('utf-8')
+        with database.session() as db:
+>           version = p.create_version(meta(matter.id), actor, db, content=BytesIO(content))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\unit\test_contract_long_paths.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\persistence.py:315: in create_version
+    path.parent.mkdir(parents=True, exist_ok=False)
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1315: in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1316: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read0/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成...合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/0c9a9cde-5d3f-4725-b668-383138a7d5e8')
+mode = 511, parents = False, exist_ok = True
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\qx-lpu-red-20261020\\test_long_original_create_read0\\合同原件\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\0c9a9cde-5d3f-4725-b668-383138a7d5e8'
+
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+___ test_long_original_create_read_preserves_portable_reference[285-False] ____
+
+self = WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read1/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成...成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成')
+mode = 511, parents = True, exist_ok = True
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\qx-lpu-red-20261020\\test_long_original_create_read1\\合同原件\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成'
+
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+self = WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read1/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成...成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成')
+mode = 511, parents = True, exist_ok = True
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\qx-lpu-red-20261020\\test_long_original_create_read1\\合同原件\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成'
+
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read1')
+length = 285, extended = False
+
+    @pytest.mark.parametrize('length,extended', [(210, False), (285, False), (285, True)])
+    def test_long_original_create_read_preserves_portable_reference(tmp_path, length, extended):
+>       p, _, _, database, actor, matter = deep_world(tmp_path, length, extended=extended)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\unit\test_contract_long_paths.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\unit\test_contract_long_paths.py:18: in deep_world
+    database = p.Database(f'sqlite:///{tmp_path / "test.db"}',
+src\cn_contract\persistence.py:170: in __init__
+    self.storage_root.mkdir(parents=True, exist_ok=True)
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1315: in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1316: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read1/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成...成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成')
+mode = 511, parents = False, exist_ok = True
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\qx-lpu-red-20261020\\test_long_original_create_read1\\合同原件\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成\\中文资料合成合成合成合成合成合成合成合成合成合成合成合成'
+
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+____ test_long_original_create_read_preserves_portable_reference[285-True] ____
+
+tmp_path = WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read2')
+length = 285, extended = True
+
+    @pytest.mark.parametrize('length,extended', [(210, False), (285, False), (285, True)])
+    def test_long_original_create_read_preserves_portable_reference(tmp_path, length, extended):
+        p, _, _, database, actor, matter = deep_world(tmp_path, length, extended=extended)
+        content = '独立合成合同原件，不包含真实客户资料。'.encode('utf-8')
+        with database.session() as db:
+            version = p.create_version(meta(matter.id), actor, db, content=BytesIO(content))
+        path = database.storage_root / version.storage_ref
+        assert len(str(path.parent)) > 260
+>       assert database.storage_root == application_path(database.storage_root)
+E       AssertionError: assert WindowsPath('//?/D:/qx-lpu-red-20261020/test_long_original_create_read2/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成...成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成') == WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read2/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成...成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成')
+E        +  where WindowsPath('//?/D:/qx-lpu-red-20261020/test_long_original_create_read2/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成...成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成') = <cn_contract.persistence.Database object at 0x00000236FF65BE30>.storage_root
+E        +  and   WindowsPath('D:/qx-lpu-red-20261020/test_long_original_create_read2/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成...成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成') = application_path(WindowsPath('//?/D:/qx-lpu-red-20261020/test_long_original_create_read2/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成...成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成'))
+E        +    where WindowsPath('//?/D:/qx-lpu-red-20261020/test_long_original_create_read2/合同原件/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成...成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成/中文资料合成合成合成合成合成合成合成合成合成合成合成合成') = <cn_contract.persistence.Database object at 0x00000236FF65BE30>.storage_root
+
+tests\unit\test_contract_long_paths.py:32: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_contract_long_paths.py::test_long_original_create_read_preserves_portable_reference[210-False]
+FAILED tests/unit/test_contract_long_paths.py::test_long_original_create_read_preserves_portable_reference[285-False]
+FAILED tests/unit/test_contract_long_paths.py::test_long_original_create_read_preserves_portable_reference[285-True]
+3 failed in 1.25s

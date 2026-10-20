@@ -1,0 +1,18 @@
+{
+  "python": ".venv/Scripts/python.exe",
+  "arguments": [
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/unit/test_contract_long_paths.py::test_long_nested_rollback_preserves_parent_original",
+    "tests/unit/test_contract_long_paths.py::test_long_uuid_collision_does_not_clean_up_preexisting_original",
+    "tests/unit/test_contract_long_paths.py::test_long_missing_or_changed_original_reports_generic_conflict[missing]",
+    "tests/integration/test_contract_long_path_backup.py::test_contract_long_path_original_roundtrip_and_rebackup",
+    "--basetemp=",
+    "D:/qx-long-standards-bf4a8f7a",
+    "--junitxml=.local/long-path-20261020/standards-checks.xml"
+  ],
+  "basetemp": "D:/qx-long-standards-bf4a8f7a"
+}

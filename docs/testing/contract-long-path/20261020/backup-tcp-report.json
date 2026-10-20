@@ -1,0 +1,333 @@
+{
+  "platform": "Windows-10-10.0.19045-SP0",
+  "kind": "real Windows loopback HTTP, Python source app",
+  "data_root": "D:\\qx-lpt-0129242ce7",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/login",
+      "status": 200,
+      "input_bytes": 53,
+      "input_sha256": "50a2da895dcf2330de96cef24d508310cafba89e8601d201952eb2dfcbe64af6",
+      "response_bytes": 60,
+      "response_sha256": "d6b1701a73134030094349a53cc78e435035a1c0de3b39198d9137c9a03fc4e4"
+    },
+    {
+      "method": "POST",
+      "path": "/api/matters",
+      "status": 201,
+      "input_bytes": 173,
+      "input_sha256": "bff1cecd896772424d86c28ab75cd52c556932f1f420e7a894c8079757f1949d",
+      "response_bytes": 438,
+      "response_sha256": "e6003573dd3cf8924f4d693939c3f33e21eaac65d2e8d792a003ef5369afb689"
+    },
+    {
+      "method": "POST",
+      "path": "/api/matters/bf200f22-614a-44b5-8572-43dee3b5eba2/documents",
+      "status": 202,
+      "input_bytes": 37342,
+      "input_sha256": "8ca2f57670779a2f2aadfb196b2cc7dc0d0553bcbdeb08245eb8b2c7cf9ec4ab",
+      "response_bytes": 177,
+      "response_sha256": "ac21591e666061d7e57b05c8ef50f8aa9b4ad5652e3c03c41b7d5eb53095d825"
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs/cdab4a81-2dd1-45b2-b930-811815b68d4c",
+      "status": 200,
+      "input_bytes": 0,
+      "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_bytes": 155,
+      "response_sha256": "9290cf3eb07df1496eb348a0e9216f162d4ca5e01b9f91e5193741c6d2241b4b"
+    },
+    {
+      "method": "GET",
+      "path": "/api/matters/bf200f22-614a-44b5-8572-43dee3b5eba2/documents/603023e5-aee2-45db-8723-6b265170594e/anchors",
+      "status": 200,
+      "input_bytes": 0,
+      "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_bytes": 1686,
+      "response_sha256": "0bda5bfc7078be4c99d97373a009e11bd9da1a7aa8a15df39a5da961dd823332"
+    },
+    {
+      "method": "GET",
+      "path": "/api/matters/bf200f22-614a-44b5-8572-43dee3b5eba2/documents/603023e5-aee2-45db-8723-6b265170594e/original?sha256=a581cec1589f840d01c8c3c5175505e9692a9e8b57c6064b880a3d761cc9d03d",
+      "status": 200,
+      "input_bytes": 0,
+      "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_bytes": 36722,
+      "response_sha256": "a581cec1589f840d01c8c3c5175505e9692a9e8b57c6064b880a3d761cc9d03d"
+    },
+    {
+      "method": "GET",
+      "path": "/api/matters",
+      "status": 401,
+      "input_bytes": 0,
+      "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_bytes": 142,
+      "response_sha256": "2463a22cd4038905fc3686ab2beba77e818f97c76f64fd9cca8c00f64be238e6"
+    },
+    {
+      "method": "POST",
+      "path": "/api/login",
+      "status": 200,
+      "input_bytes": 53,
+      "input_sha256": "50a2da895dcf2330de96cef24d508310cafba89e8601d201952eb2dfcbe64af6",
+      "response_bytes": 60,
+      "response_sha256": "bf6eccce4ab533daa2e2348d977c0129f7d94a8c0ae75033c138ba0b32cb2c9b"
+    },
+    {
+      "method": "GET",
+      "path": "/api/recovery/matters/bf200f22-614a-44b5-8572-43dee3b5eba2/originals/603023e5-aee2-45db-8723-6b265170594e",
+      "status": 200,
+      "input_bytes": 0,
+      "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_bytes": 36722,
+      "response_sha256": "a581cec1589f840d01c8c3c5175505e9692a9e8b57c6064b880a3d761cc9d03d"
+    },
+    {
+      "method": "POST",
+      "path": "/api/matters",
+      "status": 409,
+      "input_bytes": 2,
+      "input_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "response_bytes": 23,
+      "response_sha256": "3f1645105d1c95f8604dd71df2b911e452af34684ac8a26d5a6f0aa3fbd61d3f"
+    },
+    {
+      "method": "POST",
+      "path": "/api/matters/bf200f22-614a-44b5-8572-43dee3b5eba2/documents",
+      "status": 409,
+      "input_bytes": 2,
+      "input_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "response_bytes": 23,
+      "response_sha256": "3f1645105d1c95f8604dd71df2b911e452af34684ac8a26d5a6f0aa3fbd61d3f"
+    },
+    {
+      "method": "GET",
+      "path": "/api/matters",
+      "status": 401,
+      "input_bytes": 0,
+      "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_bytes": 142,
+      "response_sha256": "108b247273c249e121e439e27d6ca85d006969e7fc767622392441a9ecb83b8d"
+    },
+    {
+      "method": "POST",
+      "path": "/api/login",
+      "status": 200,
+      "input_bytes": 53,
+      "input_sha256": "50a2da895dcf2330de96cef24d508310cafba89e8601d201952eb2dfcbe64af6",
+      "response_bytes": 60,
+      "response_sha256": "b7be23e704c33e4471224c5cb8812cc5e34bfc1a67758926b4b701f7a194ea89"
+    },
+    {
+      "method": "GET",
+      "path": "/api/recovery/matters/bf200f22-614a-44b5-8572-43dee3b5eba2/originals/603023e5-aee2-45db-8723-6b265170594e",
+      "status": 200,
+      "input_bytes": 0,
+      "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_bytes": 36722,
+      "response_sha256": "a581cec1589f840d01c8c3c5175505e9692a9e8b57c6064b880a3d761cc9d03d"
+    },
+    {
+      "method": "POST",
+      "path": "/api/matters",
+      "status": 409,
+      "input_bytes": 2,
+      "input_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "response_bytes": 23,
+      "response_sha256": "3f1645105d1c95f8604dd71df2b911e452af34684ac8a26d5a6f0aa3fbd61d3f"
+    },
+    {
+      "method": "POST",
+      "path": "/api/matters/bf200f22-614a-44b5-8572-43dee3b5eba2/documents",
+      "status": 409,
+      "input_bytes": 2,
+      "input_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "response_bytes": 23,
+      "response_sha256": "3f1645105d1c95f8604dd71df2b911e452af34684ac8a26d5a6f0aa3fbd61d3f"
+    }
+  ],
+  "servers": [
+    {
+      "label": "source",
+      "port": 65184,
+      "root_chars": 195,
+      "database_chars": 208,
+      "started": true,
+      "stopped": true
+    },
+    {
+      "label": "first_recovery",
+      "port": 65195,
+      "root_chars": 198,
+      "database_chars": 211,
+      "started": true,
+      "stopped": true
+    },
+    {
+      "label": "second_recovery",
+      "port": 65206,
+      "root_chars": 198,
+      "database_chars": 211,
+      "started": true,
+      "stopped": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "http_upload_parse_original",
+      "original_parent_chars": 279,
+      "storage_ref": "bf200f22-614a-44b5-8572-43dee3b5eba2/603023e5-aee2-45db-8723-6b265170594e/original.bin",
+      "original_sha256": "a581cec1589f840d01c8c3c5175505e9692a9e8b57c6064b880a3d761cc9d03d",
+      "passed": true
+    },
+    {
+      "name": "first_recovery",
+      "original_parent_chars": 282,
+      "storage_ref": "bf200f22-614a-44b5-8572-43dee3b5eba2/603023e5-aee2-45db-8723-6b265170594e/original.bin",
+      "original_sha256": "a581cec1589f840d01c8c3c5175505e9692a9e8b57c6064b880a3d761cc9d03d",
+      "passed": true
+    },
+    {
+      "name": "second_recovery",
+      "original_parent_chars": 282,
+      "storage_ref": "bf200f22-614a-44b5-8572-43dee3b5eba2/603023e5-aee2-45db-8723-6b265170594e/original.bin",
+      "original_sha256": "a581cec1589f840d01c8c3c5175505e9692a9e8b57c6064b880a3d761cc9d03d",
+      "passed": true
+    }
+  ],
+  "connects": [
+    {
+      "host": "127.0.0.1",
+      "port": 65185
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65184
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65184
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65184
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65184
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65184
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65184
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65196
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65195
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65195
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65195
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65195
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65195
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65207
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65206
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65206
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65206
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65206
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 65206
+    }
+  ],
+  "input_hashes_before": {
+    "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8",
+    "src/cn_contract/ops/file_paths.py": "5b7155dafe59419ba501888ac92d960f490172bcfa7d9405e41d7ab40ec6d5c9",
+    "src/cn_contract/ops/backup.py": "2c6eabc3bd8455813b4ebd9546102a7d8da85d9f6a3b73586dee4911e9a584d7",
+    "src/cn_contract/ops/workspace_backup.py": "76f91555f1a546f5d46158a696eac9de10099efad1e342aebd7abc7e5e58dfa8",
+    "src/cn_contract/web/local_server.py": "d1b127e3307e482784ddc879c647b08536eef8b7dea4eee56e8287d3c7da9958",
+    "src/cn_contract/web/recovery.py": "b2bb4d30b3b3355623a0ac5f98773db5f1588a488387e44a4599e04f17ffc53f",
+    "src/cn_contract/web/services.py": "6b193193533d799107d04321bab4665a45ac0d4ccc5d1ca93295784e1542b2b5",
+    "src/cn_contract/documents/ingest.py": "b9689e759667b668f6591ba4bb31e5ee050452aa505f38b0215cec14d77681c1",
+    "tests/integration/test_contract_long_path_backup.py": "d6930a2746d80ccd7aa445eae045eef570caf3dbc647a9a0f3044da378efcbf4"
+  },
+  "archives": [
+    {
+      "archive_path": "D:\\qx-lpt-0129242ce7\\backup-first.qxbak",
+      "archive_sha256": "b4a02ed3f5e1c2ccd6f14fba0ccfc7433b56dee9a47224fafbb6e97fcb0f73a1",
+      "bytes": 710189,
+      "file_count": 3,
+      "workspace_id": "e1901649-c51d-4ad5-92ed-ca4a70c800b7",
+      "created_at": "2026-10-20T15:47:10.428010+00:00",
+      "verified": true
+    },
+    {
+      "archive_path": "D:\\qx-lpt-0129242ce7\\backup-second.qxbak",
+      "archive_sha256": "846453b664f35a462370d336c2ad0e6f7fa952f2bfb9522cb21c2e3b07961d94",
+      "bytes": 710189,
+      "file_count": 3,
+      "workspace_id": "e1901649-c51d-4ad5-92ed-ca4a70c800b7",
+      "created_at": "2026-10-20T15:47:12.502003+00:00",
+      "verified": true
+    }
+  ],
+  "success": true,
+  "input_hashes_after": {
+    "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8",
+    "src/cn_contract/ops/file_paths.py": "5b7155dafe59419ba501888ac92d960f490172bcfa7d9405e41d7ab40ec6d5c9",
+    "src/cn_contract/ops/backup.py": "2c6eabc3bd8455813b4ebd9546102a7d8da85d9f6a3b73586dee4911e9a584d7",
+    "src/cn_contract/ops/workspace_backup.py": "76f91555f1a546f5d46158a696eac9de10099efad1e342aebd7abc7e5e58dfa8",
+    "src/cn_contract/web/local_server.py": "d1b127e3307e482784ddc879c647b08536eef8b7dea4eee56e8287d3c7da9958",
+    "src/cn_contract/web/recovery.py": "b2bb4d30b3b3355623a0ac5f98773db5f1588a488387e44a4599e04f17ffc53f",
+    "src/cn_contract/web/services.py": "6b193193533d799107d04321bab4665a45ac0d4ccc5d1ca93295784e1542b2b5",
+    "src/cn_contract/documents/ingest.py": "b9689e759667b668f6591ba4bb31e5ee050452aa505f38b0215cec14d77681c1",
+    "tests/integration/test_contract_long_path_backup.py": "d6930a2746d80ccd7aa445eae045eef570caf3dbc647a9a0f3044da378efcbf4"
+  },
+  "inputs_stable": true,
+  "elapsed_seconds": 5.593000000008033,
+  "model_calls": {
+    "model_generate": 0,
+    "jev_judge": 0
+  },
+  "limitations": [
+    "Python source HTTP, not Electron/GUI/installer/frozen backend",
+    "Source and recovered original parents exceed 260 characters; database file paths remain below 260",
+    "No real documents, external network, model, Jev or F-drive data used"
+  ],
+  "script_sha256": "23d93c01d5a2df4de29bb8d7f803fc8142aa2f172384460ddc83823f39f32404"
+}

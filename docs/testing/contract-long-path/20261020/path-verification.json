@@ -1,0 +1,56 @@
+{
+  "hypotheses": [
+    {
+      "name": "directory depth",
+      "prediction": "same synthetic sample fails only in deep independently owned directory"
+    },
+    {
+      "name": "source/model regression",
+      "prediction": "same sample also fails in short directory"
+    },
+    {
+      "name": "shared test side effects",
+      "prediction": "isolated deep and short samples both pass"
+    }
+  ],
+  "sample_id": "sales-dev-1",
+  "inputs_before": {
+    "src/cn_contract/acceptance/sample_runner.py": "e6c4a02d67652634a113e7f9538f730cd197b33d309104fded55b479d079ce92",
+    "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8",
+    "src/cn_contract/documents/ingest.py": "b9689e759667b668f6591ba4bb31e5ee050452aa505f38b0215cec14d77681c1",
+    "src/cn_contract/domain.py": "59fc735e6b0865e300fbaedd005543950be2923543616bb0b743a837aba6bef2"
+  },
+  "runs": [
+    {
+      "label": "short",
+      "root": "D:\\Documents\\ChatGPT\\律所项目\\.local\\pd-a4f5fff8\\samples-9d8acb40d08d4c5890c4bb717188f221",
+      "root_chars": 85,
+      "original_path": "D:\\Documents\\ChatGPT\\律所项目\\.local\\pd-a4f5fff8\\samples-9d8acb40d08d4c5890c4bb717188f221\\protected\\214ce12e-6ead-468e-b651-9c0f72234dba\\ddcf183d-99e2-48a8-88af-292ebbc5e17a\\original.bin",
+      "original_path_chars": 182,
+      "state": "completed",
+      "parse_status": "completed",
+      "facts": 3,
+      "coverage": 18,
+      "run_status": "completed"
+    },
+    {
+      "label": "deep",
+      "root": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-path-20261020\\path-probe-------46eb7768163a4582a20e8eace7cef855\\test_40_samples_really_parse_c0\\samples-deae4382745d4ba7a699b895b259cfb5",
+      "root_chars": 174,
+      "original_path": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-path-20261020\\path-probe-------46eb7768163a4582a20e8eace7cef855\\test_40_samples_really_parse_c0\\samples-deae4382745d4ba7a699b895b259cfb5\\protected\\965808a4-34da-42b7-b60c-2473ab82d7a1\\41a80108-496c-4e9b-ae3b-2be936622c6e\\original.bin",
+      "original_path_chars": 271,
+      "state": "completed",
+      "parse_status": "completed",
+      "facts": 3,
+      "coverage": 18,
+      "run_status": "completed"
+    }
+  ],
+  "inputs_after": {
+    "src/cn_contract/acceptance/sample_runner.py": "e6c4a02d67652634a113e7f9538f730cd197b33d309104fded55b479d079ce92",
+    "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8",
+    "src/cn_contract/documents/ingest.py": "b9689e759667b668f6591ba4bb31e5ee050452aa505f38b0215cec14d77681c1",
+    "src/cn_contract/domain.py": "59fc735e6b0865e300fbaedd005543950be2923543616bb0b743a837aba6bef2"
+  },
+  "inputs_unchanged": true
+}

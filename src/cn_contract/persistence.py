@@ -25,6 +25,7 @@ from sqlalchemy.types import TypeDecorator
 from .config import Settings, canonical_json
 from .domain import (Actor, Approval, AuditEvent, DocumentVersion, ExportArtifact,
                      FactSnapshot, Matter, MatterStatus, ParseResult, ParseStatus, Position, VersionInput)
+from .ops.file_paths import application_path, filesystem_path
 
 
 class UTCDateTime(TypeDecorator):
@@ -149,6 +150,7 @@ class ExportRow(Base):
 
 def _remove_created(path: Path, root: Path):
     """Remove only this transaction's checked original; never recurse."""
+    path, root = filesystem_path(path), filesystem_path(root)
     if not path.resolve().is_relative_to(root.resolve()):
         raise RuntimeError('unsafe original cleanup path')
     if path.exists():
@@ -166,8 +168,9 @@ class Database:
         self.settings = Settings.model_validate(settings.model_dump(mode='python'))
         self.settings._config_sha256 = hashlib.sha256(
             canonical_json(self.settings.model_dump(mode='python')).encode('utf-8')).hexdigest()
-        self.storage_root = Path(storage_root).resolve()
-        self.storage_root.mkdir(parents=True, exist_ok=True)
+        # Namespace prefixes belong to file I/O, not application paths or refs.
+        self.storage_root = application_path(filesystem_path(storage_root).resolve())
+        filesystem_path(self.storage_root).mkdir(parents=True, exist_ok=True)
         self.engine = create_engine(url, connect_args={'check_same_thread': False, 'timeout': 15})
 
         @event.listens_for(self.engine, 'connect')
@@ -279,10 +282,10 @@ def read_original(matter_id: UUID, version_id: UUID, actor: Actor, db: Session) 
     from .security import ServiceError
     version = read_version(matter_id, version_id, actor, db)
     database = configured_database(db)
-    path = database.storage_root / version.storage_ref
-    if not path.resolve().is_relative_to(database.storage_root) or path.is_symlink():
-        raise ServiceError('VERSION_CONFLICT', 409)
+    path = filesystem_path(database.storage_root / version.storage_ref)
     try:
+        if not path.resolve().is_relative_to(filesystem_path(database.storage_root)) or path.is_symlink():
+            raise ServiceError('VERSION_CONFLICT', 409)
         data = path.read_bytes()
     except OSError:
         raise ServiceError('VERSION_CONFLICT', 409) from None
@@ -309,8 +312,8 @@ def create_version(input: VersionInput, actor: Actor, db: Session, *,
             raise ServiceError('VERSION_CONFLICT', 409)
     identifier = uuid4()
     relative = Path(str(input.matter_id)) / str(identifier) / 'original.bin'
-    path = database.storage_root / relative
-    if not path.resolve().is_relative_to(database.storage_root):
+    path = filesystem_path(database.storage_root / relative)
+    if not path.resolve().is_relative_to(filesystem_path(database.storage_root)):
         raise ServiceError('FILE_UNSUPPORTED', 400)
     path.parent.mkdir(parents=True, exist_ok=False)
     digest = hashlib.sha256()

@@ -1,0 +1,60 @@
+{
+  "baseline": "7446a9ce47d9452568f7d2ea1cf53c92167d53f4",
+  "inputs": [
+    {
+      "path": "src/cn_contract/persistence.py",
+      "sha256": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8"
+    },
+    {
+      "path": "src/cn_contract/ops/file_paths.py",
+      "sha256": "5b7155dafe59419ba501888ac92d960f490172bcfa7d9405e41d7ab40ec6d5c9"
+    },
+    {
+      "path": "src/cn_contract/ops/__init__.py",
+      "sha256": "3ffd7f6c1db4c30ece7dcb95df360f427c4cbe3a1d10edae5fafa54e12238c1c"
+    },
+    {
+      "path": "tests/unit/test_contract_long_paths.py",
+      "sha256": "be4d765122ecd774226aedb29d594ae5f8f92b74b8c32d16ac8ced43d0874504"
+    },
+    {
+      "path": "tests/integration/test_contract_long_path_backup.py",
+      "sha256": "d6930a2746d80ccd7aa445eae045eef570caf3dbc647a9a0f3044da378efcbf4"
+    },
+    {
+      "path": "docs/plans/2026-10-20-contract-long-path.md",
+      "sha256": "716c6a13981aa9297f87deecc1858524192e0d776cf7d43516970046625b383c"
+    }
+  ],
+  "command": "standards-command.json",
+  "exit_code": 0,
+  "passed": 4,
+  "warnings": 1,
+  "pytest_seconds": 11.93,
+  "properties": [
+    {
+      "name": "source_database_path_chars",
+      "value": "209"
+    },
+    {
+      "name": "source_original_parent_chars",
+      "value": "280"
+    },
+    {
+      "name": "restored_original_parent_chars",
+      "value": "281"
+    },
+    {
+      "name": "source_sha256",
+      "value": "835db6cb278cb0bd01112365c8a017aafff2ffec21e79e1888f8620ea4319dfd"
+    },
+    {
+      "name": "storage_ref",
+      "value": "df809156-16b7-4be2-95d8-5e3ab32f8068/ebe179ed-4b1e-432c-9fba-ea3b5b2c5b49/original.bin"
+    }
+  ],
+  "initial_invocation_exit": 4,
+  "initial_invocation": "standards-invocation-error-command.json",
+  "initial_invocation_error": "PowerShell argument concatenation emitted empty --basetemp; pytest rejected before collection. Corrected parentheses; product not changed.",
+  "findings": 0
+}

@@ -1,0 +1,93 @@
+{
+  "stage": "WIN-PATH-01",
+  "baseline": "7446a9ce47d9452568f7d2ea1cf53c92167d53f4",
+  "integration": {
+    "red": {
+      "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_contract_long_path_backup.py -q --basetemp=D:/qx-lpb-red-20261020 --junitxml=.local/long-path-20261020/backup-red.xml",
+      "exit_code": 1,
+      "failed": 1,
+      "seconds": 2.36,
+      "defect": "Actual DOCX ingest/create_version original UUID parent mkdir WinError 3"
+    },
+    "green": {
+      "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_contract_long_path_backup.py -q -o junit_family=xunit1 --basetemp=D:/qx-lpb-green-20261020 --junitxml=.local/long-path-20261020/backup-green.xml",
+      "exit_code": 0,
+      "passed": 3,
+      "seconds": 8.81,
+      "warnings": 0
+    },
+    "test_file_sha256": "d6930a2746d80ccd7aa445eae045eef570caf3dbc647a9a0f3044da378efcbf4"
+  },
+  "tcp": {
+    "command": ".venv/Scripts/python.exe -X utf8 .local/long-path-20261020/backup-tcp.py",
+    "exit_code": 0,
+    "elapsed_seconds": 5.593000000008033,
+    "checks": [
+      {
+        "name": "http_upload_parse_original",
+        "original_parent_chars": 279,
+        "storage_ref": "bf200f22-614a-44b5-8572-43dee3b5eba2/603023e5-aee2-45db-8723-6b265170594e/original.bin",
+        "original_sha256": "a581cec1589f840d01c8c3c5175505e9692a9e8b57c6064b880a3d761cc9d03d",
+        "passed": true
+      },
+      {
+        "name": "first_recovery",
+        "original_parent_chars": 282,
+        "storage_ref": "bf200f22-614a-44b5-8572-43dee3b5eba2/603023e5-aee2-45db-8723-6b265170594e/original.bin",
+        "original_sha256": "a581cec1589f840d01c8c3c5175505e9692a9e8b57c6064b880a3d761cc9d03d",
+        "passed": true
+      },
+      {
+        "name": "second_recovery",
+        "original_parent_chars": 282,
+        "storage_ref": "bf200f22-614a-44b5-8572-43dee3b5eba2/603023e5-aee2-45db-8723-6b265170594e/original.bin",
+        "original_sha256": "a581cec1589f840d01c8c3c5175505e9692a9e8b57c6064b880a3d761cc9d03d",
+        "passed": true
+      }
+    ],
+    "requests": 16,
+    "servers": [
+      {
+        "label": "source",
+        "port": 65184,
+        "root_chars": 195,
+        "database_chars": 208,
+        "started": true,
+        "stopped": true
+      },
+      {
+        "label": "first_recovery",
+        "port": 65195,
+        "root_chars": 198,
+        "database_chars": 211,
+        "started": true,
+        "stopped": true
+      },
+      {
+        "label": "second_recovery",
+        "port": 65206,
+        "root_chars": 198,
+        "database_chars": 211,
+        "started": true,
+        "stopped": true
+      }
+    ],
+    "remaining_listeners": 0,
+    "model_calls": {
+      "model_generate": 0,
+      "jev_judge": 0
+    },
+    "inputs_stable": true,
+    "script_sha256": "23d93c01d5a2df4de29bb8d7f803fc8142aa2f172384460ddc83823f39f32404",
+    "report_sha256": "e8c0dd521479db8497a6648241815d555dd38ae7f564a6a0d9aa6d46e1602f9a",
+    "initial_failure": "WinError10054 on second recovery forbidden POST; preserved backup-tcp-reset-*; no product or original probe changes",
+    "diagnosis": "Same second recovery directory: urllib 10 and httpx 10 real POST requests returned 409/BLOCKED_LIVE; unchanged complete probe rerun passed",
+    "diagnostic_command": ".venv/Scripts/python.exe -X utf8 .local/long-path-20261020/backup-tcp-readonly.py",
+    "diagnostic_exit_code": 0
+  },
+  "limitations": [
+    "Python source HTTP, not Electron/GUI/installer/frozen backend",
+    "Source and recovered original parents exceed 260 characters; database file paths remain below 260",
+    "No real documents, external network, model, Jev or F-drive data used"
+  ]
+}
