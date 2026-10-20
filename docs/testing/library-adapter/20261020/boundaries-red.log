@@ -1,0 +1,84 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+___________ test_cross_fragment_phrase_is_not_quoted_as_single_rule ___________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1013/test_cross_fragment_phrase_is_0')
+
+    def test_cross_fragment_phrase_is_not_quoted_as_single_rule(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        (laws / '虚构分界.md').write_text('第一条 前段末尾甲\n第二条 后段开头乙。', encoding='utf-8', newline='')
+        root = tmp_path / 'library'
+        import_laws(root, laws, 'synthetic')
+        activate_generation(root, build_generation(root))
+>       page = adapter(root).search(query(text='尾甲 第二条', mode='phrase', kind='law_markdown'))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_library_adapter.py:242: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <cn_contract.assistant.tools.library.LegalLibraryAdapter object at 0x0000020904C9A570>
+query = AssistantLibraryQuery(text='尾甲 第二条', kind='law_markdown', mode='phrase', case_no=None, court=None, cause=None, document_type=None, province=None, date_from=None, date_to=None, limit=5, cursor=None)
+
+    def search(self, query):
+        query = _validated(d.AssistantLibraryQuery, query, 'LIBRARY_QUERY_INVALID')
+        if self.root is None:
+            return d.LibraryCitationPage(query=query, state='not_configured')
+        try:
+            page = service.search(self.root, query)
+            if page.state == 'not_ready':
+                return d.LibraryCitationPage(query=query, state='not_ready')
+            _current(self.root, page.generation_id)
+            citations, omitted = [], 0
+            for hit in page.hits:
+                original, fragments, title, metadata = _checked_original(
+                    self.root, hit.record_id, hit.version_id, hit.fragment_id)
+                if not original.text.strip():
+                    omitted += 1
+                    continue
+                if hit.kind != original.record.kind:
+                    raise ValueError('LIBRARY_SOURCE_UNAVAILABLE')
+                fragment = original.fragment
+                if fragments and fragment is None:
+                    position = hit.match_start if hit.match_start is not None else 0
+                    fragment = next((item for item in fragments if item.start <= position < item.end), None)
+                    if fragment is None:
+                        raise ValueError('LIBRARY_SOURCE_UNAVAILABLE')
+                lower, upper = (fragment.start, fragment.end) if fragment else (0, len(original.text))
+                start = max(lower, hit.match_start - 60) if hit.match_start is not None else lower
+                end = min(upper, start + 1200)
+                citations.append(_citation(original, page.generation_id, fragment, title, metadata,
+                    start, end, hit.match_field, hit.match_start, hit.match_end))
+            _current(self.root, page.generation_id)
+            return d.LibraryCitationPage(query=query, state=page.state, generation_id=page.generation_id,
+                citations=tuple(citations), coverage=page.coverage, next_cursor=page.next_cursor,
+                omitted_hits=omitted)
+        except (ValueError, OSError, sqlite3.Error, TypeError, KeyError) as error:
+>           raise ValueError(_source_error(error)) from None
+E           ValueError: LIBRARY_CITATION_MISMATCH
+
+src\cn_contract\assistant\tools\library.py:131: ValueError
+____________ test_metadata_filters_are_rechecked_from_original_csv ____________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1013/test_metadata_filters_are_... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020904CC77D0>
+
+    def test_metadata_filters_are_rechecked_from_original_csv(library, monkeypatch):
+        root, _ = library
+        real = library_service.search
+        def wrong_filter(path, requested):
+            # Simulates a damaged derived index accepting a different court.
+            return real(path, requested.model_copy(update={'court': None}))
+        monkeypatch.setattr(library_service, 'search', wrong_filter)
+        page = adapter(root).search(query(text='目标租赁', court='另一个虚构法院', kind='case_csv'))
+>       assert page.citations == () and page.omitted_hits == 1
+E       AssertionError: assert ((CitationRef(...unverified'),) == ()
+E         
+E         Left contains one more item: CitationRef(citation_id='96c38ee8ef3923eda351139add654abfa6a41dd77950444b7c9c7e28d5c4bbb3', generation_id='282eecf13ba..._end=1304, match_in_quote=True, source_match='matched', support_status='unverified', applicability_status='unverified')
+E         Use -v to get more diff)
+
+tests\integration\test_assistant_library_adapter.py:273: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_adapter.py::test_cross_fragment_phrase_is_not_quoted_as_single_rule
+FAILED tests/integration/test_assistant_library_adapter.py::test_metadata_filters_are_rechecked_from_original_csv
+2 failed, 43 deselected in 1.35s

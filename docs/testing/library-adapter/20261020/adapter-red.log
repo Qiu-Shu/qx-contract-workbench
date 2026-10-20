@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\.local\library-adapter-20261020\adapter-red.py", line 17, in <module>
+    assert required.issubset(hit), 'source-bound citation contract missing: '+str(sorted(required-set(hit)))
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: source-bound citation contract missing: ['end', 'generation_id', 'quote', 'quote_sha256', 'source_match', 'source_sha256', 'start']

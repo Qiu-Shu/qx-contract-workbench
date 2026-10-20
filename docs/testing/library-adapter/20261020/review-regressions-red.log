@@ -1,0 +1,50 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_________________ test_body_hit_cannot_be_relabelled_as_title _________________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1027/test_body_hit_cannot_be_re... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000163D775BC20>
+
+    def test_body_hit_cannot_be_relabelled_as_title(library, monkeypatch):
+        root, _ = library
+        real = library_service.search
+        def changed(path, requested):
+            page = real(path, requested)
+            assert page.hits[0].match_field == 'body'
+            return page.model_copy(update={'hits': tuple(hit.model_copy(update={
+                'match_field': 'title', 'match_start': None, 'match_end': None,
+                'title': '目标租赁伪造标题'}) for hit in page.hits)})
+        monkeypatch.setattr(library_service, 'search', changed)
+        page = adapter(root).search(query(text='目标租赁', kind='case_csv'))
+>       assert page.citations == () and page.omitted_hits == 1
+E       AssertionError: assert ((CitationRef(...unverified'),) == ()
+E         
+E         Left contains one more item: CitationRef(citation_id='95e24e2ee0c592bd93ad72194eeef6a02ec67aea8ed6f062a42ff1b002cc37b3', generation_id='3b36e3ac7f8...end=None, match_in_quote=False, source_match='matched', support_status='unverified', applicability_status='unverified')
+E         Use -v to get more diff)
+
+tests\integration\test_assistant_library_adapter.py:388: AssertionError
+_______ test_query_can_start_inside_normalized_compatibility_character ________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1027/test_query_can_start_inside_no0')
+
+    def test_query_can_start_inside_normalized_compatibility_character(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        original = '第一条 ㍻年标记。'
+        (laws / '虚构兼容字符.md').write_text(original, encoding='utf-8')
+        root = tmp_path / 'library'
+        import_laws(root, laws, 'synthetic')
+        activate_generation(root, build_generation(root))
+        requested = query(text='成年', kind='law_markdown')
+        assert len(library_service.search(root, requested).hits) == 1
+        page = adapter(root).search(requested)
+>       assert len(page.citations) == 1 and page.omitted_hits == 0
+E       AssertionError: assert (0 == 1)
+E        +  where 0 = len(())
+E        +    where () = LibraryCitationPage(query=AssistantLibraryQuery(text='成年', kind='law_markdown', mode='all', case_no=None, court=None, ... citations=(), coverage={'case_csv': 0, 'law_markdown': 1, 'records': 1, 'units': 2}, next_cursor=None, omitted_hits=1).citations
+
+tests\integration\test_assistant_library_adapter.py:402: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_adapter.py::test_body_hit_cannot_be_relabelled_as_title
+FAILED tests/integration/test_assistant_library_adapter.py::test_query_can_start_inside_normalized_compatibility_character
+2 failed, 61 deselected in 1.21s

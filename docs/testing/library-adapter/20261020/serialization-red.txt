@@ -1,0 +1,24 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_invalid_copied_input_does_not_leak_query_in_serialization_warning ____
+
+workspace = (<cn_contract.persistence.Database object at 0x000002F0F70175F0>, {'admin': Actor(user_id=UUID('68bcfd79-d30f-4939-a62... <module 'cn_contract.assistant.service' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\service.py'>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002F0F70FDC10>
+
+    def test_invalid_copied_input_does_not_leak_query_in_serialization_warning(workspace, monkeypatch):
+        database, actors, _, _ = workspace
+        call = search_call(conversation(workspace))
+        call = call.model_copy(update={'query':call.query.model_copy(update={'text':b'SYNTHETIC_PRIVATE_QUERY'})})
+        with warnings.catch_warnings(record=True) as recorded:
+            warnings.simplefilter('always')
+            deny('LIBRARY_TOOL_INPUT_INVALID', lambda: execute_tool(actors['lawyer'], call, database, unread_adapter(monkeypatch)))
+>       assert recorded == []
+E       assert [<warnings.Wa...02F0F7157860>] == []
+E         
+E         Left contains one more item: <warnings.WarningMessage object at 0x000002F0F7157860>
+E         Use -v to get more diff
+
+tests\integration\test_assistant_library_tools.py:161: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_tools.py::test_invalid_copied_input_does_not_leak_query_in_serialization_warning
+1 failed in 1.28s

@@ -52,3 +52,7 @@ docs/testing/jev-native/** -text -whitespace
 docs/testing/jev-request/** -text -whitespace
 
 docs/testing/jev-confirmation/** -text -whitespace
+
+docs/testing/library-adapter/** -text -whitespace
+# Preserve the exact reviewed test inputs alongside this phase's source receipts.
+tests/integration/test_assistant_library_*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -3182,3 +3182,131 @@ class JudgeAttemptView(DomainModel):
     unit: Literal['USD'] = 'USD'
     receipt: JudgeReceipt | None = None
     decision: JudgeDecisionView | None = None
+
+
+# Excerpts check their record/quote bytes, never legal support or applicability.
+# registered_source_sha256 is the import identity, not a fresh whole-CSV checksum.
+LibraryGeneration = Annotated[str, StringConstraints(strict=True, pattern=r'^[a-f0-9]{32}$')]
+LibraryHash = Annotated[str, StringConstraints(strict=True, pattern=r'^[a-f0-9]{64}$')]
+LibraryFilterText = Annotated[str, StringConstraints(strict=True, max_length=200)]
+
+
+class AssistantLibraryQuery(LibraryQuery):
+    text: LibraryFilterText = ''
+    case_no: LibraryFilterText | None = None
+    court: LibraryFilterText | None = None
+    cause: LibraryFilterText | None = None
+    document_type: LibraryFilterText | None = None
+    province: LibraryFilterText | None = None
+    limit: Annotated[int, Field(strict=True, ge=1, le=8)] = 5
+    cursor: Annotated[str, StringConstraints(strict=True, max_length=2048)] | None = None
+
+
+class CitationRef(DomainModel):
+    citation_id: LibraryHash
+    generation_id: LibraryGeneration
+    record_id: LibraryHash
+    version_id: LibraryHash
+    source_id: LibraryHash
+    registered_source_sha256: LibraryHash
+    raw_sha256: LibraryHash
+    body_sha256: LibraryHash
+    kind: Literal['case_csv', 'law_markdown']
+    title: Annotated[str, StringConstraints(strict=True, max_length=2000)]
+    metadata: dict[str, Annotated[str, StringConstraints(strict=True, max_length=2000)] | None]
+    fragment_id: LibraryHash | None
+    fragment_role: Literal['paragraph', 'article_candidate', 'contents_candidate', 'quoted_candidate'] | None
+    article: Annotated[str, StringConstraints(strict=True, max_length=200)] | None
+    ambiguous: StrictBool
+    start: NonNegativeInt
+    end: PositiveInt
+    line_start: PositiveInt
+    line_end: PositiveInt
+    quote: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=1200)]
+    quote_sha256: LibraryHash
+    match_field: Literal['body', 'title', 'metadata']
+    match_start: NonNegativeInt | None
+    match_end: PositiveInt | None
+    match_in_quote: StrictBool
+    source_match: Literal['record_quote_matched'] = 'record_quote_matched'
+    support_status: Literal['unverified'] = 'unverified'
+    applicability_status: Literal['unverified'] = 'unverified'
+
+    @model_validator(mode='after')
+    def exact_bounded_citation(self):
+        if (self.end - self.start != len(self.quote) or self.line_end < self.line_start or
+                hashlib.sha256(self.quote.encode('utf-8')).hexdigest() != self.quote_sha256):
+            raise ValueError('CITATION_RANGE_OR_HASH_INVALID')
+        body = self.match_field == 'body'
+        if body != (self.match_start is not None and self.match_end is not None):
+            raise ValueError('CITATION_MATCH_INVALID')
+        if not body and (self.match_start is not None or self.match_end is not None):
+            raise ValueError('CITATION_MATCH_INVALID')
+        if body and self.match_end <= self.match_start:
+            raise ValueError('CITATION_MATCH_INVALID')
+        if self.match_in_quote != bool(body and self.start <= self.match_start < self.match_end <= self.end):
+            raise ValueError('CITATION_MATCH_INVALID')
+        if (self.fragment_id is None) != (self.fragment_role is None):
+            raise ValueError('CITATION_FRAGMENT_INVALID')
+        if self.fragment_id is None and (self.article is not None or self.ambiguous):
+            raise ValueError('CITATION_FRAGMENT_INVALID')
+        allowed = {'case_no', 'court', 'cause', 'province', 'decision_date', 'publication_date',
+                   'filing_date', 'filename_date_candidate', 'region_candidate', 'legal_status'}
+        if not set(self.metadata) <= allowed:
+            raise ValueError('CITATION_METADATA_INVALID')
+        return self
+
+
+class LibraryCitationPage(DomainModel):
+    query: AssistantLibraryQuery
+    state: Literal['ready', 'timeout', 'not_ready', 'not_configured']
+    generation_id: LibraryGeneration | None = None
+    citations: Annotated[tuple[CitationRef, ...], Field(max_length=8)] = ()
+    coverage: dict[str, NonNegativeInt] = Field(default_factory=dict)
+    next_cursor: Annotated[str, StringConstraints(strict=True, max_length=2048)] | None = None
+    omitted_hits: NonNegativeInt = 0
+
+    @model_validator(mode='after')
+    def consistent_citation_page(self):
+        available = self.state in ('ready', 'timeout')
+        if available != (self.generation_id is not None):
+            raise ValueError('CITATION_PAGE_GENERATION_INVALID')
+        if len(self.citations) + self.omitted_hits > self.query.limit:
+            raise ValueError('CITATION_PAGE_LIMIT_INVALID')
+        if any(item.generation_id != self.generation_id for item in self.citations):
+            raise ValueError('CITATION_PAGE_GENERATION_INVALID')
+        if not available and (self.citations or self.coverage or self.next_cursor or self.omitted_hits):
+            raise ValueError('CITATION_PAGE_UNAVAILABLE_INVALID')
+        return self
+
+
+AssistantLibraryTool = Literal['legal_library.search', 'legal_library.read_original']
+
+
+class AssistantLibraryToolCall(DomainModel):
+    tool: AssistantLibraryTool
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+    query: AssistantLibraryQuery | None = None
+    citation: CitationRef | None = None
+
+    @model_validator(mode='after')
+    def exact_library_tool_input(self):
+        search = self.tool == 'legal_library.search'
+        if search != (self.query is not None) or search == (self.citation is not None):
+            raise ValueError('LIBRARY_TOOL_INPUT_INVALID')
+        return self
+
+
+class AssistantLibraryToolResult(DomainModel):
+    tool: AssistantLibraryTool
+    scope: ScopeSnapshot
+    page: LibraryCitationPage | None = None
+    citation: CitationRef | None = None
+
+    @model_validator(mode='after')
+    def exact_library_tool_result(self):
+        search = self.tool == 'legal_library.search'
+        if search != (self.page is not None) or search == (self.citation is not None):
+            raise ValueError('LIBRARY_TOOL_RESULT_INVALID')
+        return self

@@ -1,0 +1,24 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_model_copy_cannot_bypass_strict_input_types _______________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1018/test_model_copy_cannot_byp... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+
+    def test_model_copy_cannot_bypass_strict_input_types(library):
+        root, _ = library
+        ref = first_case(root)
+>       with pytest.raises(ValueError, match='LIBRARY_CITATION_INVALID'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_adapter.py:361: Failed
+============================== warnings summary ===============================
+tests/integration/test_assistant_library_adapter.py::test_model_copy_cannot_bypass_strict_input_types
+  D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\pydantic\main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `str` - serialized value may not be as expected [field_name='source_id', input_value=b'e2e070a10d1afe36e528b28...4cfc4d23f4d594dd51eaeda', input_type=bytes])
+    return self.__pydantic_serializer__.to_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_adapter.py::test_model_copy_cannot_bypass_strict_input_types
+1 failed, 58 deselected, 1 warning in 0.91s

@@ -1,0 +1,32 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_unconfigured_local_library_is_an_honest_read_without_new_run ______
+
+workspace = (<cn_contract.persistence.Database object at 0x000001B2EA5F6A20>, {'admin': Actor(user_id=UUID('9017f25b-2db4-4fc5-a6d... <module 'cn_contract.assistant.service' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\service.py'>)
+
+    def test_unconfigured_local_library_is_an_honest_read_without_new_run(workspace):
+        from cn_contract.assistant.tools.library import LegalLibraryAdapter
+        database, actors, _, _ = workspace
+        view = conversation(workspace)
+        before = counts(database)
+        call = d.AssistantLibraryToolCall(tool='legal_library.search', expected_scope=view.scope,
+            expected_composer_revision=view.composer_revision, query=d.AssistantLibraryQuery(text='虚构租赁'))
+>       result = execute_tool(actors['lawyer'], call, database, LegalLibraryAdapter(None))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_library_tools.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('15ed4a1a-72ce-4362-b346-ad1d76a4ac06'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('92703054-92ee-46ee-8409-49c3743c125d'))
+call = AssistantLibraryToolCall(tool='legal_library.search', expected_scope=ScopeSnapshot(scope_kind='conversation', scope_re...one, cause=None, document_type=None, province=None, date_from=None, date_to=None, limit=5, cursor=None), citation=None)
+database = <cn_contract.persistence.Database object at 0x000001B2EA5F6A20>
+adapter = <cn_contract.assistant.tools.library.LegalLibraryAdapter object at 0x000001B2ED6B7410>
+
+    def execute_tool(actor, call, database, adapter):
+>       raise ServiceError('NOT_SUPPORTED', 422)
+E       cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\tools\service.py:6: ServiceError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_tools.py::test_unconfigured_local_library_is_an_honest_read_without_new_run
+1 failed in 1.18s

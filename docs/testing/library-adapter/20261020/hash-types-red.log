@@ -1,0 +1,148 @@
+FFFFFFFF                                                                 [100%]
+================================== FAILURES ===================================
+____________ test_citation_hashes_do_not_coerce_bytes[citation_id] ____________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1016/test_citation_hashes_do_no... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+field = 'citation_id'
+
+    @pytest.mark.parametrize('field', ['citation_id', 'record_id', 'version_id', 'source_id',
+                                      'source_sha256', 'raw_sha256', 'body_sha256', 'quote_sha256'])
+    def test_citation_hashes_do_not_coerce_bytes(library, field):
+        root, _ = library
+        ref = first_case(root)
+        bad = ref.model_dump(mode='python')
+        bad[field] = bad[field].encode('ascii')
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_adapter.py:331: Failed
+_____________ test_citation_hashes_do_not_coerce_bytes[record_id] _____________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1016/test_citation_hashes_do_no... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+field = 'record_id'
+
+    @pytest.mark.parametrize('field', ['citation_id', 'record_id', 'version_id', 'source_id',
+                                      'source_sha256', 'raw_sha256', 'body_sha256', 'quote_sha256'])
+    def test_citation_hashes_do_not_coerce_bytes(library, field):
+        root, _ = library
+        ref = first_case(root)
+        bad = ref.model_dump(mode='python')
+        bad[field] = bad[field].encode('ascii')
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_adapter.py:331: Failed
+____________ test_citation_hashes_do_not_coerce_bytes[version_id] _____________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1016/test_citation_hashes_do_no... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+field = 'version_id'
+
+    @pytest.mark.parametrize('field', ['citation_id', 'record_id', 'version_id', 'source_id',
+                                      'source_sha256', 'raw_sha256', 'body_sha256', 'quote_sha256'])
+    def test_citation_hashes_do_not_coerce_bytes(library, field):
+        root, _ = library
+        ref = first_case(root)
+        bad = ref.model_dump(mode='python')
+        bad[field] = bad[field].encode('ascii')
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_adapter.py:331: Failed
+_____________ test_citation_hashes_do_not_coerce_bytes[source_id] _____________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1016/test_citation_hashes_do_no... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+field = 'source_id'
+
+    @pytest.mark.parametrize('field', ['citation_id', 'record_id', 'version_id', 'source_id',
+                                      'source_sha256', 'raw_sha256', 'body_sha256', 'quote_sha256'])
+    def test_citation_hashes_do_not_coerce_bytes(library, field):
+        root, _ = library
+        ref = first_case(root)
+        bad = ref.model_dump(mode='python')
+        bad[field] = bad[field].encode('ascii')
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_adapter.py:331: Failed
+___________ test_citation_hashes_do_not_coerce_bytes[source_sha256] ___________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1016/test_citation_hashes_do_no... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+field = 'source_sha256'
+
+    @pytest.mark.parametrize('field', ['citation_id', 'record_id', 'version_id', 'source_id',
+                                      'source_sha256', 'raw_sha256', 'body_sha256', 'quote_sha256'])
+    def test_citation_hashes_do_not_coerce_bytes(library, field):
+        root, _ = library
+        ref = first_case(root)
+        bad = ref.model_dump(mode='python')
+        bad[field] = bad[field].encode('ascii')
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_adapter.py:331: Failed
+____________ test_citation_hashes_do_not_coerce_bytes[raw_sha256] _____________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1016/test_citation_hashes_do_no... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+field = 'raw_sha256'
+
+    @pytest.mark.parametrize('field', ['citation_id', 'record_id', 'version_id', 'source_id',
+                                      'source_sha256', 'raw_sha256', 'body_sha256', 'quote_sha256'])
+    def test_citation_hashes_do_not_coerce_bytes(library, field):
+        root, _ = library
+        ref = first_case(root)
+        bad = ref.model_dump(mode='python')
+        bad[field] = bad[field].encode('ascii')
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_adapter.py:331: Failed
+____________ test_citation_hashes_do_not_coerce_bytes[body_sha256] ____________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1016/test_citation_hashes_do_no... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+field = 'body_sha256'
+
+    @pytest.mark.parametrize('field', ['citation_id', 'record_id', 'version_id', 'source_id',
+                                      'source_sha256', 'raw_sha256', 'body_sha256', 'quote_sha256'])
+    def test_citation_hashes_do_not_coerce_bytes(library, field):
+        root, _ = library
+        ref = first_case(root)
+        bad = ref.model_dump(mode='python')
+        bad[field] = bad[field].encode('ascii')
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_adapter.py:331: Failed
+___________ test_citation_hashes_do_not_coerce_bytes[quote_sha256] ____________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1016/test_citation_hashes_do_no... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+field = 'quote_sha256'
+
+    @pytest.mark.parametrize('field', ['citation_id', 'record_id', 'version_id', 'source_id',
+                                      'source_sha256', 'raw_sha256', 'body_sha256', 'quote_sha256'])
+    def test_citation_hashes_do_not_coerce_bytes(library, field):
+        root, _ = library
+        ref = first_case(root)
+        bad = ref.model_dump(mode='python')
+        bad[field] = bad[field].encode('ascii')
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_assistant_library_adapter.py:331: Failed
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_adapter.py::test_citation_hashes_do_not_coerce_bytes[citation_id]
+FAILED tests/integration/test_assistant_library_adapter.py::test_citation_hashes_do_not_coerce_bytes[record_id]
+FAILED tests/integration/test_assistant_library_adapter.py::test_citation_hashes_do_not_coerce_bytes[version_id]
+FAILED tests/integration/test_assistant_library_adapter.py::test_citation_hashes_do_not_coerce_bytes[source_id]
+FAILED tests/integration/test_assistant_library_adapter.py::test_citation_hashes_do_not_coerce_bytes[source_sha256]
+FAILED tests/integration/test_assistant_library_adapter.py::test_citation_hashes_do_not_coerce_bytes[raw_sha256]
+FAILED tests/integration/test_assistant_library_adapter.py::test_citation_hashes_do_not_coerce_bytes[body_sha256]
+FAILED tests/integration/test_assistant_library_adapter.py::test_citation_hashes_do_not_coerce_bytes[quote_sha256]
+8 failed, 50 deselected in 8.03s

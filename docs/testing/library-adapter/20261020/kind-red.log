@@ -1,0 +1,24 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________ test_kind_filter_is_rechecked_from_source __________________
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1021/test_kind_filter_is_rechec... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000013A8326BE00>
+
+    def test_kind_filter_is_rechecked_from_source(library, monkeypatch):
+        root, _ = library
+        real = library_service.search
+        def wrong_kind(path, requested):
+            return real(path, requested.model_copy(update={'kind': 'all'}))
+        monkeypatch.setattr(library_service, 'search', wrong_kind)
+        page = adapter(root).search(query(text='只在标题', kind='case_csv'))
+>       assert page.citations == () and page.omitted_hits == 1
+E       AssertionError: assert ((CitationRef(...unverified'),) == ()
+E         
+E         Left contains one more item: CitationRef(citation_id='8056209e16faceef04375412086fbe0a59625bf1a2804a71379a599af8588c6e', generation_id='fce09f95072...end=None, match_in_quote=False, source_match='matched', support_status='unverified', applicability_status='unverified')
+E         Use -v to get more diff)
+
+tests\integration\test_assistant_library_adapter.py:374: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_adapter.py::test_kind_filter_is_rechecked_from_source
+1 failed, 59 deselected in 1.19s

@@ -1,0 +1,131 @@
+{
+  "stage": "CH-06A adapter implementation",
+  "base": "ced22116edc736b55712d6c005917b37a3604ee1",
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_assistant_library_adapter.py",
+    "-q"
+  ],
+  "exit_code": 0,
+  "seconds": 25.10899999999674,
+  "summary": [
+    "63 passed in 24.63s"
+  ],
+  "input_sha256_before": {
+    "src/cn_contract/domain.py": "ad4dbcea93859c716c7ae82acd2a458d5ed8be0a054f031c35de5ad1429ecfea",
+    "src/cn_contract/assistant/tools/__init__.py": "6cedc11c9448204eff763d37bafc5659fd1a7d35191369b5d2d3aa0c55cbdd74",
+    "src/cn_contract/assistant/tools/library.py": "1b25ad39c011bd2154fea09c6dff87981583111119766fa607884607e4e28581",
+    "tests/integration/test_assistant_library_adapter.py": "a0640b00533359330047d098bafdc04c194e24f10eb80d21aed5c085cf0d8573"
+  },
+  "input_sha256_after": {
+    "src/cn_contract/domain.py": "ad4dbcea93859c716c7ae82acd2a458d5ed8be0a054f031c35de5ad1429ecfea",
+    "src/cn_contract/assistant/tools/__init__.py": "6cedc11c9448204eff763d37bafc5659fd1a7d35191369b5d2d3aa0c55cbdd74",
+    "src/cn_contract/assistant/tools/library.py": "1b25ad39c011bd2154fea09c6dff87981583111119766fa607884607e4e28581",
+    "tests/integration/test_assistant_library_adapter.py": "a0640b00533359330047d098bafdc04c194e24f10eb80d21aed5c085cf0d8573"
+  },
+  "inputs_stable": true,
+  "red_evidence": [
+    {
+      "file": "adapter-red.log",
+      "exit_code": 1,
+      "meaning": "Real old synthetic search returns hits but lacks source-bound citation contract; not an import failure."
+    },
+    {
+      "file": "boundaries-red.log",
+      "exit_code": 1,
+      "failures": 2,
+      "meaning": "cross-fragment phrase aborted page; derived index could bypass source court filter"
+    },
+    {
+      "file": "hash-types-red.log",
+      "exit_code": 1,
+      "failures": 8,
+      "meaning": "citation hash types coerced bytes"
+    },
+    {
+      "file": "model-types-red.log",
+      "exit_code": 1,
+      "failures": 1,
+      "meaning": "model_copy bytes could bypass strict fields through JSON conversion"
+    },
+    {
+      "file": "kind-red.log",
+      "exit_code": 1,
+      "failures": 1,
+      "meaning": "recheck query kind against source kind"
+    },
+    {
+      "file": "review-standards-red.log",
+      "exit_code": 1,
+      "failures": 1,
+      "meaning": "independent original-title classification counterexample"
+    },
+    {
+      "file": "review-regressions-red.log",
+      "exit_code": 1,
+      "failures": 2,
+      "meaning": "false title class and normalized compatibility character expansion"
+    }
+  ],
+  "earlier_runs": [
+    {
+      "file": "adapter-initial.log",
+      "passed": 41,
+      "failed": 1,
+      "failure": "test fixture Windows newline translation; source bytes preserved with newline=\"\""
+    },
+    {
+      "file": "adapter-green.log",
+      "passed": 45,
+      "failed": 0
+    },
+    {
+      "passed": 58,
+      "failed": 0,
+      "note": "intermediate result before last strict model-copy fix; superseded by final run"
+    },
+    {
+      "passed": 59,
+      "failed": 0,
+      "inputs_stable": true,
+      "note": "superseded by kind-filter fix"
+    },
+    {
+      "passed": 60,
+      "failed": 0,
+      "inputs_stable": true,
+      "note": "superseded by independent-review fixes"
+    }
+  ],
+  "limits": [
+    "No HTTP/UI/runner hook/persistence implementation.",
+    "No true corpus, network, model, GUI, frozen package, commit or push operation.",
+    "No production legal-support/applicability verification.",
+    "Read quantities/quote length bounded; overall peak RAM and timing not a product benchmark."
+  ],
+  "independent_observation": {
+    "file": "review-spec-observation.log",
+    "exit_code": 0,
+    "upstream_normalized_hits": 1,
+    "adapter_citations_before_fix": 0,
+    "note": "Observation probe does not assert normalized success; added formal regression did fail."
+  },
+  "review_repairs": [
+    "Rebuild match class and exact positions with existing normalize(with_map=True).",
+    "Rename source digest registered_source_sha256 and source_match to record_quote_matched.",
+    "Nonreferenced CSV row mutation test shows registered digest is not a current whole-file verification claim."
+  ],
+  "implementation_files_frozen": true,
+  "evidence_retention": {
+    "final_report": "adapter-report-63.json",
+    "final_log": "adapter-final-63.log",
+    "historical_60_summary": "adapter-history-60-summary.json",
+    "historical_60_original_files_preserved": false,
+    "reason": "Rolling filenames were reused; historical summary is explicitly reconstructed from actual tool output.",
+    "dedicated_red_green_files_preserved": true
+  }
+}

@@ -1,0 +1,25 @@
+F.........................................                               [100%]
+================================== FAILURES ===================================
+_______ test_real_search_produces_exact_citations_without_private_paths _______
+
+library = (WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1010/test_real_search_produces_... 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+
+    def test_real_search_produces_exact_citations_without_private_paths(library):
+        root, text = library
+        page = adapter(root).search(query(text='租赁', kind='law_markdown', limit=8))
+        assert page.state == 'ready' and page.generation_id
+        assert page.query.limit == 8 and page.coverage['law_markdown'] == 2
+        assert 1 <= len(page.citations) <= 8
+        for ref in page.citations:
+>           assert ref.quote == text[ref.start:ref.end]
+E           AssertionError: assert '第一条 租赁\r\n' == '条 租赁\n第二条'
+E             
+E             - 条 租赁
+E             + 第一条 租赁
+E             ? ++    +
+E             - 第二条
+
+tests\integration\test_assistant_library_adapter.py:68: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_adapter.py::test_real_search_produces_exact_citations_without_private_paths
+1 failed, 41 passed in 18.95s
