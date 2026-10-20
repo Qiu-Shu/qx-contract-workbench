@@ -51,6 +51,8 @@ class Backend extends EventEmitter {
   }
   configureJudge(payload) { return this._model('configure_judge',payload); }
   disableJudge() { return this._model('disable_judge',{}); }
+  authorizeJudge(payload) { return this._model('authorize_judge',payload); }
+  revokeJudge(payload) { return this._model('revoke_judge',payload); }
   configureModel(payload) { return this._model('configure',payload); }
   disableModel() { return this._model('disable',{}); }
   authorizeModel(payload) { return this._model('authorize',payload); }

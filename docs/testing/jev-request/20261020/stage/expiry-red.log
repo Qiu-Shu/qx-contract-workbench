@@ -1,0 +1,82 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_permission_expiring_after_the_first_snapshot_never_rolls_back_approved_main _
+
+world = (<cn_contract.persistence.Database object at 0x000002493A32E750>, Actor(user_id=UUID('b81e71b8-b3b5-4bea-aa4f-ad68e740...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000002493A455CD0>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002493B57D550>
+
+    def test_permission_expiring_after_the_first_snapshot_never_rolls_back_approved_main(world, monkeypatch):
+        from cn_contract.assistant.providers import judge_policy
+        database, actor, conversation, request, main = world
+        auxiliary, _ = judge(world)
+        original = auxiliary.snapshot_for
+        expired = False
+        at = datetime.now(timezone.utc)
+        class Clock:
+            @staticmethod
+            def now(tz):return at + (timedelta(minutes=10) if expired else timedelta())
+        def snapshot(*args):
+            nonlocal expired
+            value = original(*args)
+            expired = True
+            return value
+        monkeypatch.setattr(judge_policy, 'datetime', Clock)
+        monkeypatch.setattr(auxiliary, 'snapshot_for', snapshot)
+        tasks = GenerationTasks(database, main, judge_runtime=auxiliary)
+        async def scenario():
+            tasks.start()
+            tasks.submit(actor, conversation.scope.conversation_id, request)
+            await finished(tasks)
+            assert len(main.provider.calls) == 1 and tasks.last_error is None
+            assert all(row['state'] == 'not_sent' for row in rows(database, 'assistant_judge_attempts'))
+            await tasks.close()
+>       asyncio.run(scenario())
+
+tests\integration\test_assistant_judge_stage.py:419: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_assistant_judge_stage.py:414: in scenario
+    tasks.submit(actor, conversation.scope.conversation_id, request)
+src\cn_contract\assistant\task_manager.py:84: in submit
+    auxiliary = self._reserve_judge(actor, request, view, db) if previous is None else None
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\task_manager.py:118: in _reserve_judge
+    auxiliary = judge_attempts.reserve(actor, main.run_id, db, self.judge_runtime)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\judge_attempts.py:100: in reserve
+    config, policy, version = runtime.snapshot_for(actor, request)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_judge_stage.py:406: in snapshot
+    value = original(*args)
+            ^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\judge_policy.py:139: in snapshot_for
+    require_policy(config, policy, actor, request)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+config = JevConfig(enabled=True, protocol_version='typesafe-systemone-v1', model='jev-1.13.0', max_input_bytes=65536, max_response_bytes=262144, timeout_ms=2000)
+policy = JudgePolicy(policy_id=UUID('6d74917f-d05b-472f-a4a1-0e1d6beef5a5'), workspace_id=UUID('99fd3593-468a-4ae8-937e-b16bd49...mal('0.04'), max_calls=2, expires_at=datetime.datetime(2026, 10, 20, 10, 30, 36, 827362, tzinfo=datetime.timezone.utc))
+actor = Actor(user_id=UUID('b81e71b8-b3b5-4bea-aa4f-ad68e740cf44'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('88aa835c-e076-450d-9823-d1dcb9c8ba29'))
+request = JudgeRequest(local_request_id=UUID('1f0317f2-cd0e-439a-9f7e-8a3cc98d0dc6'), scope=ScopeSnapshot(scope_kind='conversati...n=1, input_revision=1, materials_revision=0), purpose='primary_intent', text='��ȫ�ϳ����⣺�������鹹�Ľ�����ѯ��', explicit_skill=None)
+
+    def require_policy(config, policy, actor, request, *, at=None):
+        if (not config.enabled or policy is None or policy.actor_id != actor.user_id
+                or policy.session_id != actor.session_id or policy.workspace_id != request.scope.workspace_id
+                or policy.config_sha256 != sha(encoded(config))
+                or policy.expires_at <= (at or datetime.now(timezone.utc))
+                or not any(p.local_request_id == request.local_request_id and p.purpose == request.purpose
+                           and p.input_hash == input_hash(request, config) for p in policy.permissions)):
+>           raise ServiceError('BLOCKED_LIVE', 403)
+E           cn_contract.security.ServiceError: request not authorized
+
+src\cn_contract\assistant\providers\judge_policy.py:50: ServiceError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_judge_stage.py::test_permission_expiring_after_the_first_snapshot_never_rolls_back_approved_main
+1 failed, 31 deselected in 1.44s

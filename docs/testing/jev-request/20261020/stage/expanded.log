@@ -1,0 +1,18 @@
+............................F                                            [100%]
+================================== FAILURES ===================================
+_ test_native_application_factory_passes_same_optional_runtime_without_granting _
+
+world = (<cn_contract.persistence.Database object at 0x000001B709852EA0>, Actor(user_id=UUID('22219491-903f-41d5-be73-0442d509...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001B70998A5D0>)
+
+    def test_native_application_factory_passes_same_optional_runtime_without_granting(world):
+        from cn_contract.web.local_server import build_local_app
+        database, _, _, _, main = world
+        auxiliary = JudgeRuntime()
+>       root = database.protected_root.parent
+               ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Database' object has no attribute 'protected_root'
+
+tests\integration\test_assistant_judge_stage.py:339: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_judge_stage.py::test_native_application_factory_passes_same_optional_runtime_without_granting
+1 failed, 28 passed in 15.01s

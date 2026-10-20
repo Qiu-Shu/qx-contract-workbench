@@ -1,0 +1,157 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+____ test_exact_judge_authorization_operations_are_parsed[authorize_judge] ____
+
+operation = 'authorize_judge'
+
+    @pytest.mark.parametrize('operation', ['authorize_judge', 'revoke_judge'])
+    def test_exact_judge_authorization_operations_are_parsed(operation):
+        payload = {'session_token': 'synthetic-session'}
+        line = json.dumps(dict(event='model-control', protocol=control.PROTOCOL,
+            nonce='synthetic', sequence=1, operation=operation, payload=payload))+'\n'
+>       assert control.parse_control_line(line, 'synthetic', 1) == (operation, payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\unit\test_judge_authorization_protocol.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+line = '{"event": "model-control", "protocol": "qx-model-control-v1", "nonce": "synthetic", "sequence": 1, "operation": "authorize_judge", "payload": {"session_token": "synthetic-session"}}\n'
+nonce = 'synthetic', sequence = 1
+
+    def parse_control_line(line, nonce, sequence):
+        try:
+            if type(line) is bytes:
+                if len(line) > MAX_BYTES:
+                    raise ValueError
+                line = line.decode('utf-8')
+            if type(line) is not str:
+                raise ValueError
+            if not line.endswith('\n') or len(line.encode('utf-8')) > MAX_BYTES:
+                raise ValueError
+            value = json.loads(line, object_pairs_hook=_unique, parse_constant=_constant)
+            if (type(value) is not dict or set(value) != {'event','protocol','nonce','sequence','operation','payload'}
+                    or value['event'] != 'model-control' or value['protocol'] != PROTOCOL
+                    or value['nonce'] != nonce or type(value['sequence']) is not int
+                    or not 1 <= value['sequence'] <= MAX_SEQUENCE or value['sequence'] != sequence
+                    or type(value['operation']) is not str or value['operation'] not in _OPERATIONS
+                    or type(value['payload']) is not dict):
+                raise ValueError
+            pending = [(value['payload'], 0)]
+            while pending:
+                item, depth = pending.pop()
+                if depth > 16 or (type(item) is float and not math.isfinite(item)):
+                    raise ValueError
+                if type(item) is dict:
+                    pending.extend((part, depth+1) for part in item.values())
+                elif type(item) is list:
+                    pending.extend((part, depth+1) for part in item)
+            return value['operation'], value['payload']
+        except (ValueError, TypeError, KeyError, RecursionError, UnicodeError):
+>           raise ValueError('CONTROL_REJECTED') from None
+E           ValueError: CONTROL_REJECTED
+
+src\cn_contract\desktop_control.py:75: ValueError
+_____ test_exact_judge_authorization_operations_are_parsed[revoke_judge] ______
+
+operation = 'revoke_judge'
+
+    @pytest.mark.parametrize('operation', ['authorize_judge', 'revoke_judge'])
+    def test_exact_judge_authorization_operations_are_parsed(operation):
+        payload = {'session_token': 'synthetic-session'}
+        line = json.dumps(dict(event='model-control', protocol=control.PROTOCOL,
+            nonce='synthetic', sequence=1, operation=operation, payload=payload))+'\n'
+>       assert control.parse_control_line(line, 'synthetic', 1) == (operation, payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\unit\test_judge_authorization_protocol.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+line = '{"event": "model-control", "protocol": "qx-model-control-v1", "nonce": "synthetic", "sequence": 1, "operation": "revoke_judge", "payload": {"session_token": "synthetic-session"}}\n'
+nonce = 'synthetic', sequence = 1
+
+    def parse_control_line(line, nonce, sequence):
+        try:
+            if type(line) is bytes:
+                if len(line) > MAX_BYTES:
+                    raise ValueError
+                line = line.decode('utf-8')
+            if type(line) is not str:
+                raise ValueError
+            if not line.endswith('\n') or len(line.encode('utf-8')) > MAX_BYTES:
+                raise ValueError
+            value = json.loads(line, object_pairs_hook=_unique, parse_constant=_constant)
+            if (type(value) is not dict or set(value) != {'event','protocol','nonce','sequence','operation','payload'}
+                    or value['event'] != 'model-control' or value['protocol'] != PROTOCOL
+                    or value['nonce'] != nonce or type(value['sequence']) is not int
+                    or not 1 <= value['sequence'] <= MAX_SEQUENCE or value['sequence'] != sequence
+                    or type(value['operation']) is not str or value['operation'] not in _OPERATIONS
+                    or type(value['payload']) is not dict):
+                raise ValueError
+            pending = [(value['payload'], 0)]
+            while pending:
+                item, depth = pending.pop()
+                if depth > 16 or (type(item) is float and not math.isfinite(item)):
+                    raise ValueError
+                if type(item) is dict:
+                    pending.extend((part, depth+1) for part in item.values())
+                elif type(item) is list:
+                    pending.extend((part, depth+1) for part in item)
+            return value['operation'], value['payload']
+        except (ValueError, TypeError, KeyError, RecursionError, UnicodeError):
+>           raise ValueError('CONTROL_REJECTED') from None
+E           ValueError: CONTROL_REJECTED
+
+src\cn_contract\desktop_control.py:75: ValueError
+________ test_dual_dispatch_routes_authorization_without_touching_main ________
+
+    def test_dual_dispatch_routes_authorization_without_touching_main():
+        async def exercise():
+            calls = []
+            class Service:
+                def __init__(self, name): self.name = name
+                def configure(self, payload): raise AssertionError('not configuring')
+                def disable(self): calls.append((self.name, 'disable')); return {'status':'disabled'}
+                def authorize(self, payload): calls.append((self.name, 'authorize')); return {'status':'authorized'}
+                def revoke(self, payload): calls.append((self.name, 'revoke')); return {'status':'revoked'}
+            handler = control.NativeControlHandler(Service('main'), Service('judge'))
+            channel = control.ParentControlChannel(BytesIO(), 'synthetic', lambda **kw:None, lambda:None)
+            channel.bind(handler)
+            for operation, status in [('authorize_judge','authorized'),('revoke_judge','revoked')]:
+                assert await channel._dispatch(operation, {'session_token':'synthetic'}) == {'ok':True,'status':status}
+            assert calls == [('judge','authorize'),('judge','revoke')]
+            channel.close()
+            assert calls[-2:] == [('main','disable'),('judge','disable')]
+>       asyncio.run(exercise())
+
+tests\unit\test_judge_authorization_protocol.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\unit\test_judge_authorization_protocol.py:32: in exercise
+    assert await channel._dispatch(operation, {'session_token':'synthetic'}) == {'ok':True,'status':status}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <cn_contract.desktop_control.ParentControlChannel object at 0x000001BE422D2CC0>
+operation = 'authorize_judge', payload = {'session_token': 'synthetic'}
+
+    async def _dispatch(self, operation, payload):
+        from .security import ServiceError
+        if (self._closed.is_set() or asyncio.get_running_loop() is not self._loop
+                or operation not in _OPERATIONS):
+>           raise ValueError('CONTROL_REJECTED')
+E           ValueError: CONTROL_REJECTED
+
+src\cn_contract\desktop_control.py:123: ValueError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_judge_authorization_protocol.py::test_exact_judge_authorization_operations_are_parsed[authorize_judge]
+FAILED tests/unit/test_judge_authorization_protocol.py::test_exact_judge_authorization_operations_are_parsed[revoke_judge]
+FAILED tests/unit/test_judge_authorization_protocol.py::test_dual_dispatch_routes_authorization_without_touching_main
+3 failed in 0.62s

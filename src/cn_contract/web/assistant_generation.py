@@ -14,6 +14,7 @@ from ..assistant.providers import attempts
 from ..assistant.providers.history import read_history
 from ..assistant.providers.policy import MainModelRuntime, add_costs, prepare, require_policy, reservation, sha
 from ..assistant.providers.registry import MainModelRegistry, resolve_runtime
+from ..assistant.providers.judge_policy import JudgeRuntime
 from ..ops.storage import quarantined, require_active
 from ..security import ServiceError
 from .request_context import actor_in, body_input
@@ -64,13 +65,15 @@ def _capability(actor, conversation, db, runtime, tasks):
     return result('ready')
 
 
-def attach_generation(app, database, runtime=None):
+def attach_generation(app, database, runtime=None, *, judge_runtime=None):
     if runtime is not None and not isinstance(runtime,(MainModelRuntime,MainModelRegistry)):
         raise TypeError('trusted MainModelRuntime or MainModelRegistry required')
+    if judge_runtime is not None and type(judge_runtime) is not JudgeRuntime:
+        raise TypeError('trusted JudgeRuntime required')
     tasks=None
     if runtime is not None:
         from ..assistant.task_manager import GenerationTasks
-        tasks=GenerationTasks(database,runtime)
+        tasks=GenerationTasks(database,runtime,judge_runtime=judge_runtime)
     app.state.assistant_generation_tasks=tasks
     previous=app.router.lifespan_context
 

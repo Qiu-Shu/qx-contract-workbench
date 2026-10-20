@@ -1,0 +1,77 @@
+.F.....                                                                  [100%]
+================================== FAILURES ===================================
+_ test_unreserved_permission_is_released_after_its_matching_main_run_is_cancelled _
+
+native = namespace(database=<cn_contract.persistence.Database object at 0x0000029CF213E9C0>, actor=Actor(user_id=UUID('96ff85c3...primary_intent'}, control=<cn_contract.assistant.native_judge_control.NativeJudgeControl object at 0x0000029CF24D15B0>)
+
+    def test_unreserved_permission_is_released_after_its_matching_main_run_is_cancelled(native):
+        n = native
+        async def scenario():
+            payload = configuration(n)
+            n.control.authorize(payload)
+            with n.database.session() as db:
+                run = service.save_message(n.actor, n.draft.scope.conversation_id, n.request, db)
+                cancelled = service.cancel_run(n.actor, run.id, d.AssistantCancelInput(request_id=uuid4()), db)
+                assert cancelled.state == 'cancelled'
+            assert n.control.authorize(next_payload(n, payload)) == {'status': 'authorized'}
+>       asyncio.run(scenario())
+
+tests\integration\test_native_judge_authorization.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_judge_authorization.py:121: in scenario
+    assert n.control.authorize(next_payload(n, payload)) == {'status': 'authorized'}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\native_judge_control.py:23: in invoke
+    return method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\native_judge_control.py:156: in authorize
+    _available_slot(self._runtime, basis.expected_scope.workspace_id, db)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+runtime = <cn_contract.assistant.providers.judge_policy.JudgeRuntime object at 0x0000029CF24EB770>
+workspace_id = UUID('4ec33009-70fb-4e7b-b598-9a5a1025666c')
+db = <sqlalchemy.orm.session.Session object at 0x0000029CF24E85F0>
+
+    def _available_slot(runtime, workspace_id, db):
+        pending = db.scalar(text('''SELECT 1 FROM assistant_judge_attempts a
+            JOIN assistant_conversations c ON c.id=a.conversation_id
+            WHERE c.workspace_id=:workspace AND a.state IN ('reserved','sending') LIMIT 1'''),
+            {'workspace': str(workspace_id)})
+        if pending:
+            raise ServiceError('STATE_CONFLICT', 409)
+        current = runtime.policy
+        if current is None or current.expires_at <= datetime.now(timezone.utc):
+            return
+        if current.max_calls == 1 and len(current.permissions) == 1 and current.workspace_id == workspace_id:
+            permission = current.permissions[0]
+            run = db.execute(text('''SELECT r.*,a.state AS judge_state,a.policy_sha256,a.input_hash,
+                a.policy_id,a.purpose FROM assistant_runs r
+                JOIN assistant_conversations c ON c.id=r.conversation_id
+                LEFT JOIN assistant_judge_attempts a ON a.run_id=r.id
+                WHERE r.request_id=:request AND c.workspace_id=:workspace
+                AND r.actor_id=:actor AND r.session_id=:session'''),
+                {'request': str(permission.local_request_id), 'workspace': str(workspace_id),
+                 'actor': str(current.actor_id), 'session': str(current.session_id)}).mappings().first()
+            if run is not None:
+                if (run['judge_state'] in ('received', 'not_sent', 'sent_unknown')
+                        and run['policy_id'] == str(current.policy_id) and run['policy_sha256'] == sha(encoded(current))
+                        and run['purpose'] == permission.purpose and run['input_hash'] == permission.input_hash):
+                    return
+                if run['judge_state'] is None and run['state'] in ('completed', 'failed', 'canceled', 'interrupted'):
+                    return
+>       raise ServiceError('STATE_CONFLICT', 409)
+E       cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\native_judge_control.py:86: ServiceError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_native_judge_authorization.py::test_unreserved_permission_is_released_after_its_matching_main_run_is_cancelled
+1 failed, 6 passed in 3.82s

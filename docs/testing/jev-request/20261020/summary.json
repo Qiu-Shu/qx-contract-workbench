@@ -1,0 +1,105 @@
+{
+  "base": "27f224c6568fcfdd4c16f49c6533cf9741dbb464",
+  "time_utc": "2026-10-20T10:35:08.920194+00:00",
+  "node": {
+    "tests": 201,
+    "passed": 201,
+    "exit_code": 0,
+    "command": "node --test desktop/tests/*.test.cjs"
+  },
+  "python_groups": [
+    {
+      "name": "optional-stage-and-main-routes",
+      "tests": 157,
+      "exit_code": 0,
+      "evidence": "stage/implementation.md"
+    },
+    {
+      "name": "native-authorization-config-policy",
+      "tests": 83,
+      "exit_code": 0,
+      "evidence": "native/publication-final.json"
+    },
+    {
+      "name": "private-control-protocol",
+      "tests": 32,
+      "exit_code": 0,
+      "evidence": "parent/protocol-final.xml"
+    }
+  ],
+  "group_limit": "Separate target runs, not one full suite. Stage 157 precedes the narrow grant return-identity fix; native 83 and final source full chain validate that fix. Counts do not include or sum earlier reruns.",
+  "gates": [
+    {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "cn_contract.cli",
+        "schema",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "scripts/verify_defaults.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "windows": {
+    "source_groups": 10,
+    "frozen_control_groups": 7,
+    "each_backend_launches": 2,
+    "pinned_repository_inputs": 285,
+    "same_input_hashes": true,
+    "source_post_order": [
+      "judge",
+      "main"
+    ],
+    "source_posts": {
+      "judge": 1,
+      "main": 1
+    },
+    "frozen_provider_execution": false
+  },
+  "review": {
+    "spec_unresolved": 0,
+    "standards_unresolved": 0,
+    "standards_fixed_P2": 1
+  },
+  "workbuddy": "Current status checked twice: disconnected, busy/unknown; no task dispatched.",
+  "limits": [
+    "CH-05D1 backend/private pipe only; CH-05D2 native confirmation UI and real account/price/budget prerequisites remain.",
+    "Synthetic loopback only; frozen tested authorization/revoke/disable/refusal/restart, not frozen provider execution.",
+    "Headless Electron driver does not exercise renderer IPC; fixed IPC/navigation tests remain separate.",
+    "Source child httpx/httpx2 send tripwire only; no whole-process network counter, frozen uninstrumented.",
+    "Installed 0.4.1, real F: library, undownloaded years and Aliyun unchanged."
+  ]
+}

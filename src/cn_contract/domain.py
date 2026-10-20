@@ -3099,6 +3099,26 @@ class RouteDecision(DomainModel):
 JudgeUSD = Annotated[ExactDecimal, Field(ge=0, le=1000000, max_digits=24, decimal_places=12)]
 
 
+class JudgeSendApproval(DomainModel):
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: Annotated[int, Field(strict=True, ge=0)]
+    content_sha256: SHA256
+    purpose: Literal['primary_intent'] = 'primary_intent'
+
+
+class NativeJudgeAuthorization(DomainModel):
+    session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
+    expected_config_version: UUID
+    basis: JudgeSendApproval
+    max_total_usd: Annotated[JudgeUSD, Field(gt=0)]
+    valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
+
+
+class NativeJudgeRevoke(DomainModel):
+    session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
+
+
 class JudgePermission(DomainModel):
     local_request_id: UUID
     purpose: JudgePurpose

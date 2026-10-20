@@ -99,6 +99,7 @@ class JudgeRuntime:
             self._authorization_id = uuid4()
 
     def grant(self, policy):
+        """Publish a validated policy and return its fixed authorization identity."""
         with self._lock:
             self._check_loop()
             policy = copy(d.JudgePolicy, policy)
@@ -111,9 +112,11 @@ class JudgeRuntime:
             if prior is not None and prior != digest:
                 raise ServiceError('VERSION_CONFLICT', 409)
             if self._policy == policy:
-                return
+                return self._authorization_id
+            identity = uuid4()
             self._seen[policy.policy_id] = digest
-            self._policy = policy; self._authorization_id = uuid4()
+            self._policy = policy; self._authorization_id = identity
+            return identity
 
     def revoke(self):
         with self._lock:

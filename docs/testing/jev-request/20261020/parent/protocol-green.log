@@ -1,0 +1,46 @@
+..................FF............                                         [100%]
+================================== FAILURES ===================================
+___________ test_invalid_frames_never_dispatch[no-judge-authorize] ____________
+
+raw = '{"event":"model-control","protocol":"qx-model-control-v1","nonce":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","sequence":1,"operation":"authorize_judge","payload":{}}\n'
+
+    @pytest.mark.parametrize('raw', [
+        line(nonce='b'*32), line(sequence=True), line(sequence=2), line(sequence=1.0),
+        line(sequence=9007199254740992), line(operation='shell'), line(payload=[]),
+        line(extra='not allowed'), line().replace('"sequence":1', '"sequence":1,"sequence":1'),
+        line()[:-1], line(payload={'x':'字'*12000}), line(payload={'x':float('nan')}),
+        line(operation='authorize_judge'), line(operation='revoke_judge'), line(operation='disable_all'),
+        line(protocol='qx-judge-control-v1'),
+    ], ids=['nonce','bool-sequence','order','float-sequence','unsafe-sequence','operation',
+            'payload-type','extra-key','duplicate-key','partial','oversize','nonfinite',
+            'no-judge-authorize','no-judge-revoke','no-public-disable-all','capability-not-frame-version'])
+    def test_invalid_frames_never_dispatch(raw):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_desktop_control_protocol.py:42: Failed
+_____________ test_invalid_frames_never_dispatch[no-judge-revoke] _____________
+
+raw = '{"event":"model-control","protocol":"qx-model-control-v1","nonce":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","sequence":1,"operation":"revoke_judge","payload":{}}\n'
+
+    @pytest.mark.parametrize('raw', [
+        line(nonce='b'*32), line(sequence=True), line(sequence=2), line(sequence=1.0),
+        line(sequence=9007199254740992), line(operation='shell'), line(payload=[]),
+        line(extra='not allowed'), line().replace('"sequence":1', '"sequence":1,"sequence":1'),
+        line()[:-1], line(payload={'x':'字'*12000}), line(payload={'x':float('nan')}),
+        line(operation='authorize_judge'), line(operation='revoke_judge'), line(operation='disable_all'),
+        line(protocol='qx-judge-control-v1'),
+    ], ids=['nonce','bool-sequence','order','float-sequence','unsafe-sequence','operation',
+            'payload-type','extra-key','duplicate-key','partial','oversize','nonfinite',
+            'no-judge-authorize','no-judge-revoke','no-public-disable-all','capability-not-frame-version'])
+    def test_invalid_frames_never_dispatch(raw):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_desktop_control_protocol.py:42: Failed
+=========================== short test summary info ===========================
+FAILED tests/unit/test_desktop_control_protocol.py::test_invalid_frames_never_dispatch[no-judge-authorize]
+FAILED tests/unit/test_desktop_control_protocol.py::test_invalid_frames_never_dispatch[no-judge-revoke]
+2 failed, 30 passed in 0.81s

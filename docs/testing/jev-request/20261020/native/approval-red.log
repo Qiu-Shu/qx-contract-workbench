@@ -1,0 +1,58 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_approval_hash_matches_actual_saved_full_request_and_is_single_call ___
+
+native = namespace(database=<cn_contract.persistence.Database object at 0x000001E858FCC350>, actor=Actor(user_id=UUID('357e308b... 1, 'content_sha256': 'bebfb188788246445fe29629efbeffd6622748f33e4e4e10c32404973f748f8f', 'purpose': 'primary_intent'})
+
+    def test_approval_hash_matches_actual_saved_full_request_and_is_single_call(native):
+        n = native
+        async def scenario():
+            payload = configuration(n)
+            assert n.control.authorize(payload) == {'status': 'authorized'}
+            policy = n.runtime.policy
+            assert policy.max_calls == 1 and policy.reserved_usd == policy.max_total_usd == Decimal('0.031')
+            assert policy.session_id == n.actor.session_id and policy.actor_id == n.actor.user_id
+            assert policy.recipient == 'https://api.typesafe.ai/v1/systemone'
+            assert len(policy.permissions) == 1
+            with n.database.session() as db:
+                run = service.save_message(n.actor, n.draft.scope.conversation_id, n.request, db)
+                actual = judge_attempts.request_for_run(n.actor, run.id, db, n.runtime.configuration())
+                assert actual.text == n.request.content and actual.local_request_id == n.request.request_id
+                assert actual.scope.input_revision == n.draft.scope.input_revision+1
+                assert actual.scope.model_dump(exclude={'input_revision'}) == n.draft.scope.model_dump(exclude={'input_revision'})
+                assert policy.permissions[0].input_hash == jev_codec.input_hash(actual, n.runtime.configuration())
+                assert policy.permissions[0].input_hash != n.basis['content_sha256']
+                assert n.runtime.snapshot_for(n.actor, actual)[1] == policy
+                attempt = judge_attempts.reserve(n.actor, run.id, db, n.runtime)
+                assert attempt.state == 'reserved' and attempt.reserved_usd == Decimal('0.031')
+            assert n.control.authorize(payload) == {'status': 'existing'}
+            assert n.runtime.policy == policy
+>       asyncio.run(scenario())
+
+tests\integration\test_native_judge_authorization.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_judge_authorization.py:49: in scenario
+    payload = configuration(n)
+              ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+n = namespace(database=<cn_contract.persistence.Database object at 0x000001E858FCC350>, actor=Actor(user_id=UUID('357e308b... 1, 'content_sha256': 'bebfb188788246445fe29629efbeffd6622748f33e4e4e10c32404973f748f8f', 'purpose': 'primary_intent'})
+
+    def configuration(n):
+>       n.control = NativeJudgeControl(n.runtime, database=n.database)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: NativeJudgeControl.__init__() got an unexpected keyword argument 'database'
+
+tests\integration\test_native_judge_authorization.py:40: TypeError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_native_judge_authorization.py::test_approval_hash_matches_actual_saved_full_request_and_is_single_call
+1 failed in 2.63s

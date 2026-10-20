@@ -1,0 +1,124 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_expiry_immediately_after_publication_cannot_erase_intent_or_renew_same_request _
+
+native = namespace(database=<cn_contract.persistence.Database object at 0x000001AF6ADDBD40>, actor=Actor(user_id=UUID('fad018fe...primary_intent'}, control=<cn_contract.assistant.native_judge_control.NativeJudgeControl object at 0x000001AF6B170440>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AF6AF5B860>
+
+    def test_expiry_immediately_after_publication_cannot_erase_intent_or_renew_same_request(native, monkeypatch):
+        from datetime import timezone
+        from cn_contract.assistant import native_judge_control
+        from cn_contract.assistant.providers import judge_policy
+        n = native
+        now = datetime.now(timezone.utc)
+        class Clock(datetime):
+            @classmethod
+            def now(cls, tz=None): return now
+        monkeypatch.setattr(native_judge_control, 'datetime', Clock)
+        monkeypatch.setattr(judge_policy, 'datetime', Clock)
+        async def scenario():
+            payload = {**configuration(n), 'valid_for_seconds': 1}
+            original = n.runtime.grant
+            def grant_then_pause(policy):
+                nonlocal now
+                identity = original(policy)
+                now += timedelta(seconds=2)
+                return identity
+            monkeypatch.setattr(n.runtime, 'grant', grant_then_pause)
+            try:
+                first = n.control.authorize(payload)
+            except ServiceError:
+                first = None
+            original_policy = n.runtime.policy
+            with denied('BLOCKED_LIVE'): n.control.authorize(payload)
+            assert n.runtime.policy is original_policy
+            assert first == {'status': 'authorized'}
+>       asyncio.run(scenario())
+
+tests\integration\test_native_judge_authorization.py:550: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def scenario():
+        payload = {**configuration(n), 'valid_for_seconds': 1}
+        original = n.runtime.grant
+        def grant_then_pause(policy):
+            nonlocal now
+            identity = original(policy)
+            now += timedelta(seconds=2)
+            return identity
+        monkeypatch.setattr(n.runtime, 'grant', grant_then_pause)
+        try:
+            first = n.control.authorize(payload)
+        except ServiceError:
+            first = None
+        original_policy = n.runtime.policy
+        with denied('BLOCKED_LIVE'): n.control.authorize(payload)
+>       assert n.runtime.policy is original_policy
+E       AssertionError: assert JudgePolicy(policy_id=UUID('e3b6967d-0007-450d-bbe6-6dd03c7839e0'), workspace_id=UUID('35b18fb6-0edd-4d0e-9813-f60b4fa...al('0.031'), max_calls=1, expires_at=datetime.datetime(2026, 10, 20, 10, 31, 53, 110617, tzinfo=datetime.timezone.utc)) is JudgePolicy(policy_id=UUID('0bc406aa-9c73-4883-b139-7dbe6e05ba50'), workspace_id=UUID('35b18fb6-0edd-4d0e-9813-f60b4fa...al('0.031'), max_calls=1, expires_at=datetime.datetime(2026, 10, 20, 10, 31, 51, 110617, tzinfo=datetime.timezone.utc))
+E        +  where JudgePolicy(policy_id=UUID('e3b6967d-0007-450d-bbe6-6dd03c7839e0'), workspace_id=UUID('35b18fb6-0edd-4d0e-9813-f60b4fa...al('0.031'), max_calls=1, expires_at=datetime.datetime(2026, 10, 20, 10, 31, 53, 110617, tzinfo=datetime.timezone.utc)) = <cn_contract.assistant.providers.judge_policy.JudgeRuntime object at 0x000001AF6ADA61B0>.policy
+E        +    where <cn_contract.assistant.providers.judge_policy.JudgeRuntime object at 0x000001AF6ADA61B0> = namespace(database=<cn_contract.persistence.Database object at 0x000001AF6ADDBD40>, actor=Actor(user_id=UUID('fad018fe...primary_intent'}, control=<cn_contract.assistant.native_judge_control.NativeJudgeControl object at 0x000001AF6B170440>).runtime
+
+tests\integration\test_native_judge_authorization.py:548: AssertionError
+_ test_runtime_grant_returns_its_fixed_identity_and_changes_it_only_on_new_grants _
+
+native = namespace(database=<cn_contract.persistence.Database object at 0x000001AF6A77F080>, actor=Actor(user_id=UUID('d4c37b10...primary_intent'}, control=<cn_contract.assistant.native_judge_control.NativeJudgeControl object at 0x000001AF6C387890>)
+
+    def test_runtime_grant_returns_its_fixed_identity_and_changes_it_only_on_new_grants(native):
+        n = native
+        async def scenario():
+            payload = configuration(n)
+            n.control.authorize(payload)
+            current = n.runtime.policy
+            request = d.JudgeRequest(local_request_id=n.request.request_id,
+                scope=n.draft.scope.model_copy(update={'input_revision': n.draft.scope.input_revision+1}),
+                purpose='primary_intent', text=n.request.content)
+            identity = n.runtime.snapshot_for(n.actor, request)[2]
+            assert n.runtime.grant(current) == identity
+            n.runtime.revoke()
+            replacement = n.runtime.grant(current)
+            assert isinstance(replacement, UUID) and replacement != identity
+            assert replacement == n.runtime.snapshot_for(n.actor, request)[2]
+>       asyncio.run(scenario())
+
+tests\integration\test_native_judge_authorization.py:568: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def scenario():
+        payload = configuration(n)
+        n.control.authorize(payload)
+        current = n.runtime.policy
+        request = d.JudgeRequest(local_request_id=n.request.request_id,
+            scope=n.draft.scope.model_copy(update={'input_revision': n.draft.scope.input_revision+1}),
+            purpose='primary_intent', text=n.request.content)
+        identity = n.runtime.snapshot_for(n.actor, request)[2]
+>       assert n.runtime.grant(current) == identity
+E       AssertionError: assert None == UUID('38e03488-d846-4d19-8cc3-5d2c8216a907')
+E        +  where None = grant(JudgePolicy(policy_id=UUID('ba508fd1-b9ad-4499-bfaf-9a7d1ebe8f93'), workspace_id=UUID('7cd00c32-0685-47f9-ace7-a919e88...al('0.031'), max_calls=1, expires_at=datetime.datetime(2026, 10, 20, 10, 33, 50, 713464, tzinfo=datetime.timezone.utc)))
+E        +    where grant = <cn_contract.assistant.providers.judge_policy.JudgeRuntime object at 0x000001AF6AE0D3D0>.grant
+E        +      where <cn_contract.assistant.providers.judge_policy.JudgeRuntime object at 0x000001AF6AE0D3D0> = namespace(database=<cn_contract.persistence.Database object at 0x000001AF6A77F080>, actor=Actor(user_id=UUID('d4c37b10...primary_intent'}, control=<cn_contract.assistant.native_judge_control.NativeJudgeControl object at 0x000001AF6C387890>).runtime
+
+tests\integration\test_native_judge_authorization.py:563: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_native_judge_authorization.py::test_expiry_immediately_after_publication_cannot_erase_intent_or_renew_same_request
+FAILED tests/integration/test_native_judge_authorization.py::test_runtime_grant_returns_its_fixed_identity_and_changes_it_only_on_new_grants
+2 failed in 2.07s

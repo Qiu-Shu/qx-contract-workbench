@@ -1,0 +1,107 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+__ test_single_task_commits_both_ledgers_then_judge_post_then_original_main ___
+
+world = (<cn_contract.persistence.Database object at 0x0000015E2C97CB60>, Actor(user_id=UUID('b2cda0d7-30d1-449a-bbcc-f7e090c1...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x0000015E2E005400>)
+
+    def test_single_task_commits_both_ledgers_then_judge_post_then_original_main(world):
+        database, actor, conversation, request, main = world
+        _, value = judge(world)
+        with server(raw(envelope(value))) as (url, calls, _):
+            auxiliary, _ = judge(world, url=url)
+>           tasks = GenerationTasks(database, main, judge_runtime=auxiliary)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'judge_runtime'
+
+tests\integration\test_assistant_judge_stage.py:58: TypeError
+_ test_main_permission_never_opens_optional_judge_without_exact_independent_permission[none] _
+
+world = (<cn_contract.persistence.Database object at 0x0000015E2E059730>, Actor(user_id=UUID('0d9995ab-a3bb-4760-b8f4-71871d5a...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x0000015E2E359AF0>)
+missing = 'none'
+
+    @pytest.mark.parametrize('missing', ['none', 'unconfigured', 'no-policy', 'wrong-hash'])
+    def test_main_permission_never_opens_optional_judge_without_exact_independent_permission(world, missing):
+        database, actor, conversation, request, main = world
+        auxiliary, _ = judge(world)
+        if missing == 'none':auxiliary = None
+        elif missing == 'unconfigured':auxiliary = JudgeRuntime()
+        elif missing == 'no-policy':auxiliary.revoke()
+        else:
+            policy = auxiliary.policy
+            auxiliary.grant(policy.model_copy(update={'policy_id':uuid4(), 'permissions':(
+                policy.permissions[0].model_copy(update={'input_hash':'0'*64}),)}))
+>       tasks = GenerationTasks(database, main, judge_runtime=auxiliary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'judge_runtime'
+
+tests\integration\test_assistant_judge_stage.py:95: TypeError
+_ test_main_permission_never_opens_optional_judge_without_exact_independent_permission[unconfigured] _
+
+world = (<cn_contract.persistence.Database object at 0x0000015E2E0597F0>, Actor(user_id=UUID('c39f7d42-963a-42a4-99dd-39dbb7d7...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x0000015E2E3767B0>)
+missing = 'unconfigured'
+
+    @pytest.mark.parametrize('missing', ['none', 'unconfigured', 'no-policy', 'wrong-hash'])
+    def test_main_permission_never_opens_optional_judge_without_exact_independent_permission(world, missing):
+        database, actor, conversation, request, main = world
+        auxiliary, _ = judge(world)
+        if missing == 'none':auxiliary = None
+        elif missing == 'unconfigured':auxiliary = JudgeRuntime()
+        elif missing == 'no-policy':auxiliary.revoke()
+        else:
+            policy = auxiliary.policy
+            auxiliary.grant(policy.model_copy(update={'policy_id':uuid4(), 'permissions':(
+                policy.permissions[0].model_copy(update={'input_hash':'0'*64}),)}))
+>       tasks = GenerationTasks(database, main, judge_runtime=auxiliary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'judge_runtime'
+
+tests\integration\test_assistant_judge_stage.py:95: TypeError
+_ test_main_permission_never_opens_optional_judge_without_exact_independent_permission[no-policy] _
+
+world = (<cn_contract.persistence.Database object at 0x0000015E2E3766F0>, Actor(user_id=UUID('03f92a45-956d-42a7-957c-7c271870...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x0000015E2E35AE70>)
+missing = 'no-policy'
+
+    @pytest.mark.parametrize('missing', ['none', 'unconfigured', 'no-policy', 'wrong-hash'])
+    def test_main_permission_never_opens_optional_judge_without_exact_independent_permission(world, missing):
+        database, actor, conversation, request, main = world
+        auxiliary, _ = judge(world)
+        if missing == 'none':auxiliary = None
+        elif missing == 'unconfigured':auxiliary = JudgeRuntime()
+        elif missing == 'no-policy':auxiliary.revoke()
+        else:
+            policy = auxiliary.policy
+            auxiliary.grant(policy.model_copy(update={'policy_id':uuid4(), 'permissions':(
+                policy.permissions[0].model_copy(update={'input_hash':'0'*64}),)}))
+>       tasks = GenerationTasks(database, main, judge_runtime=auxiliary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'judge_runtime'
+
+tests\integration\test_assistant_judge_stage.py:95: TypeError
+_ test_main_permission_never_opens_optional_judge_without_exact_independent_permission[wrong-hash] _
+
+world = (<cn_contract.persistence.Database object at 0x0000015E2CEE0110>, Actor(user_id=UUID('2d427913-d667-427b-a79a-92238901...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x0000015E2E358050>)
+missing = 'wrong-hash'
+
+    @pytest.mark.parametrize('missing', ['none', 'unconfigured', 'no-policy', 'wrong-hash'])
+    def test_main_permission_never_opens_optional_judge_without_exact_independent_permission(world, missing):
+        database, actor, conversation, request, main = world
+        auxiliary, _ = judge(world)
+        if missing == 'none':auxiliary = None
+        elif missing == 'unconfigured':auxiliary = JudgeRuntime()
+        elif missing == 'no-policy':auxiliary.revoke()
+        else:
+            policy = auxiliary.policy
+            auxiliary.grant(policy.model_copy(update={'policy_id':uuid4(), 'permissions':(
+                policy.permissions[0].model_copy(update={'input_hash':'0'*64}),)}))
+>       tasks = GenerationTasks(database, main, judge_runtime=auxiliary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: GenerationTasks.__init__() got an unexpected keyword argument 'judge_runtime'
+
+tests\integration\test_assistant_judge_stage.py:95: TypeError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_judge_stage.py::test_single_task_commits_both_ledgers_then_judge_post_then_original_main
+FAILED tests/integration/test_assistant_judge_stage.py::test_main_permission_never_opens_optional_judge_without_exact_independent_permission[none]
+FAILED tests/integration/test_assistant_judge_stage.py::test_main_permission_never_opens_optional_judge_without_exact_independent_permission[unconfigured]
+FAILED tests/integration/test_assistant_judge_stage.py::test_main_permission_never_opens_optional_judge_without_exact_independent_permission[no-policy]
+FAILED tests/integration/test_assistant_judge_stage.py::test_main_permission_never_opens_optional_judge_without_exact_independent_permission[wrong-hash]
+5 failed in 3.13s

@@ -33,8 +33,7 @@ def _row(identifier, db):
     return row
 
 
-def request_for_run(actor, run_id, db, config, *, purpose='primary_intent'):
-    config = copy(d.JevConfig, config)
+def _request_for_run(actor, run_id, db, *, purpose):
     run = service._owned_run(actor, run_id, db)
     conversation = service._owned(actor, UUID(run['conversation_id']), db)
     require_active(db)
@@ -48,8 +47,13 @@ def request_for_run(actor, run_id, db, config, *, purpose='primary_intent'):
             or message['conversation_id'] != run['conversation_id'] or message['role'] != 'user'
             or message['source_revision'] != scope.input_revision or items(conversation, db)):
         raise ServiceError('BLOCKED_LIVE', 403)
-    request = d.JudgeRequest(local_request_id=UUID(run['request_id']), scope=scope,
+    return d.JudgeRequest(local_request_id=UUID(run['request_id']), scope=scope,
         purpose=purpose, text=message['content'], explicit_skill=run['requested_skill'])
+
+
+def request_for_run(actor, run_id, db, config, *, purpose='primary_intent'):
+    config = copy(d.JevConfig, config)
+    request = _request_for_run(actor, run_id, db, purpose=purpose)
     if request.explicit_skill is not None:
         return request
     try:
@@ -86,18 +90,36 @@ def _budget(policy, db):
     return total(costs), calls
 
 
-def reserve(actor, run_id, db, runtime, *, purpose='primary_intent'):
+def reserve(actor, run_id, db, runtime, *, purpose='primary_intent', optional=False):
     if type(runtime) is not JudgeRuntime:
         raise ServiceError('BLOCKED_LIVE', 403)
     run = service._owned_run(actor, run_id, db)
     if run['requested_skill'] is not None:
         request_for_run(actor, run_id, db, d.JevConfig(), purpose=purpose)
         return None
-    config = runtime.configuration()
-    request = request_for_run(actor, run_id, db, config, purpose=purpose)
+    try:
+        config = runtime.configuration()
+    except ServiceError as error:
+        if optional and error.code == 'BLOCKED_LIVE':
+            return None
+        raise
+    # Identity and stored DTO failures are never optional, even when they use
+    # the same error code as a missing in-memory provider permission.
+    request = _request_for_run(actor, run_id, db, purpose=purpose)
     if request.explicit_skill is not None:
         return None
-    config, policy, version = runtime.snapshot_for(actor, request)
+    try:
+        jev_codec.build_request(request, config)
+    except ValueError:
+        if optional:
+            return None
+        raise ServiceError('BLOCKED_LIVE', 403) from None
+    try:
+        config, policy, version = runtime.snapshot_for(actor, request)
+    except ServiceError as error:
+        if optional and error.code == 'BLOCKED_LIVE':
+            return None
+        raise
     previous = db.execute(text('SELECT * FROM assistant_judge_attempts WHERE run_id=:run AND purpose=:purpose'),
                           {'run':str(run_id), 'purpose':purpose}).mappings().first()
     digest = jev_codec.input_hash(request, config)
@@ -108,6 +130,8 @@ def reserve(actor, run_id, db, runtime, *, purpose='primary_intent'):
         return read_attempt(actor, UUID(previous['id']), db)
     used, calls = _budget(policy, db)
     if total((used, policy.reserved_usd)) > policy.max_total_usd or calls >= policy.max_calls:
+        if optional:
+            return None
         raise ServiceError('BUDGET_EXCEEDED', 403)
     run = service._owned_run(actor, run_id, db)
     identifier, at = uuid4(), service._at()

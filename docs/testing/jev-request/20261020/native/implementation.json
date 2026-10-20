@@ -1,0 +1,476 @@
+{
+  "task": "CH-05D1 native Jev single-request authorization",
+  "base": "27f224c6568fcfdd4c16f49c6533cf9741dbb464",
+  "recorded_utc": "2026-10-20T10:33:24.269002+00:00",
+  "scope": [
+    "src/cn_contract/domain.py",
+    "src/cn_contract/assistant/native_judge_control.py",
+    "src/cn_contract/assistant/providers/judge_policy.py",
+    "tests/integration/test_native_judge_authorization.py"
+  ],
+  "source_sha256": {
+    "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+    "src/cn_contract/assistant/native_judge_control.py": "c1bf0a6ada4a2c97dd27d6800082e37f77b7c68f9347f5ea2b6243065ae6a003",
+    "src/cn_contract/assistant/providers/judge_policy.py": "3e068fed410189352858584a9da6634bea308acf40142cdb0e6b8b0e92016601",
+    "tests/integration/test_native_judge_authorization.py": "9f763b171d02bc5310abc289ef73abcc43f3c0b7c53f46e56b273f62804c40c6"
+  },
+  "interface": {
+    "constructor": "NativeJudgeControl(runtime, provider_factory=None, *, database=None)",
+    "authorize": "NativeJudgeAuthorization(session_token, expected_config_version, basis, max_total_usd, valid_for_seconds)",
+    "basis": "JudgeSendApproval(request_id, expected_scope, expected_composer_revision, content_sha256, purpose=primary_intent)",
+    "revoke": "NativeJudgeRevoke(session_token)",
+    "ack_status": [
+      "authorized",
+      "existing",
+      "revoked"
+    ],
+    "grant_return": "JudgeRuntime.grant returns the fixed authorization UUID after successful publication; existing callers may ignore it."
+  },
+  "verified": [
+    "Post scope changes only input_revision+1; permission uses codec hash of actual full saved draft and exact config.",
+    "Independent positive JudgeUSD budget, reserved=max_total, max_calls=1, strict expiry 1..900 seconds.",
+    "Authentication, ownership, active storage, exact scope/composer/hash, no attachments, fixed purpose and no skill fields.",
+    "Same request cannot renew, change parameters or revive after expiration/revoke/reconfigure/ABA; historical run returns existing without grant.",
+    "Any workspace reserved/sending attempt blocks new grant, even after revoke/configure or expiration.",
+    "Settled auxiliary attempt, exact matching terminal Main without auxiliary, or expiration without pending may release slot.",
+    "Publish only after DB commit; failed commit leaves no policy/tombstone and allows valid retry.",
+    "Grant returns UUID directly; expiry immediately after publication cannot cause missing tombstone or renewal.",
+    "Revoke is current actor/session only; bound-loop constraints preserved.",
+    "Only short digest/UUID tombstones retained; retired providers collect; no provider calls or raw credentials in persisted rows."
+  ],
+  "resolved_defects": [
+    {
+      "evidence": "slot-boundaries-initial",
+      "cause": "Main cancellation state misspelled canceled instead of cancelled",
+      "fix": "Use actual cancelled terminal plus exact historical JudgeRequest input hash before release."
+    },
+    {
+      "evidence": "publication-red",
+      "cause": "Post-grant snapshot could expire before tombstone was recorded",
+      "fix": "Return UUID from validated grant and record without another snapshot; original idempotent grant returns same UUID."
+    }
+  ],
+  "runs": [
+    {
+      "label": "approval-red",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_judge_authorization.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\approval-red.xml"
+      ],
+      "exit_code": 1,
+      "time_utc": "2026-10-20T10:20:52.309278+00:00",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "1",
+        "time": "2.635",
+        "timestamp": "2026-10-20T18:20:49.151332+08:00",
+        "hostname": "PC-20260920HQJZ"
+      },
+      "source_before": {
+        "src/cn_contract/domain.py": "66ba71ea2845d459cba03964b226e36a5946fbe5195783b4d0f62660dd00a795",
+        "src/cn_contract/assistant/native_judge_control.py": "8e9522aaedcae537d84809c1014c635e90b961541ab695677226e619b4a006fb",
+        "tests/integration/test_native_judge_authorization.py": "961da535bd248196dc36ec1c3b9b226f79d6b7ceb2c1b527d99b995349bc05c5",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_after": {
+        "src/cn_contract/domain.py": "66ba71ea2845d459cba03964b226e36a5946fbe5195783b4d0f62660dd00a795",
+        "src/cn_contract/assistant/native_judge_control.py": "8e9522aaedcae537d84809c1014c635e90b961541ab695677226e619b4a006fb",
+        "tests/integration/test_native_judge_authorization.py": "961da535bd248196dc36ec1c3b9b226f79d6b7ceb2c1b527d99b995349bc05c5",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_stable": true
+    },
+    {
+      "label": "approval-green",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_judge_authorization.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\approval-green.xml"
+      ],
+      "exit_code": 0,
+      "time_utc": "2026-10-20T10:22:57.167221+00:00",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "1",
+        "time": "1.547",
+        "timestamp": "2026-10-20T18:22:55.262680+08:00",
+        "hostname": "PC-20260920HQJZ"
+      },
+      "source_before": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "211dd215f9b6db1b236746bcb8d4ed732becc31d059cb908d264cd32ba4322f5",
+        "tests/integration/test_native_judge_authorization.py": "961da535bd248196dc36ec1c3b9b226f79d6b7ceb2c1b527d99b995349bc05c5",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_after": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "211dd215f9b6db1b236746bcb8d4ed732becc31d059cb908d264cd32ba4322f5",
+        "tests/integration/test_native_judge_authorization.py": "961da535bd248196dc36ec1c3b9b226f79d6b7ceb2c1b527d99b995349bc05c5",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_stable": true
+    },
+    {
+      "label": "slot-boundaries-initial",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_judge_authorization.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\slot-boundaries-initial.xml"
+      ],
+      "exit_code": 1,
+      "time_utc": "2026-10-20T10:24:27.963939+00:00",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "7",
+        "time": "3.821",
+        "timestamp": "2026-10-20T18:24:23.795010+08:00",
+        "hostname": "PC-20260920HQJZ"
+      },
+      "source_before": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "211dd215f9b6db1b236746bcb8d4ed732becc31d059cb908d264cd32ba4322f5",
+        "tests/integration/test_native_judge_authorization.py": "5b26902596266c3530f7960b7746163f012a0c0c50459ab9413e41a88b97a583",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_after": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "211dd215f9b6db1b236746bcb8d4ed732becc31d059cb908d264cd32ba4322f5",
+        "tests/integration/test_native_judge_authorization.py": "5b26902596266c3530f7960b7746163f012a0c0c50459ab9413e41a88b97a583",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_stable": true
+    },
+    {
+      "label": "slot-boundaries-green",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_judge_authorization.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\slot-boundaries-green.xml"
+      ],
+      "exit_code": 0,
+      "time_utc": "2026-10-20T10:24:55.216974+00:00",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "7",
+        "time": "3.670",
+        "timestamp": "2026-10-20T18:24:51.266360+08:00",
+        "hostname": "PC-20260920HQJZ"
+      },
+      "source_before": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "4b17eeb6262b3b8ef2b680c20163f13b7127beb3298ee4e3c2cb362a7732faf7",
+        "tests/integration/test_native_judge_authorization.py": "5b26902596266c3530f7960b7746163f012a0c0c50459ab9413e41a88b97a583",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_after": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "4b17eeb6262b3b8ef2b680c20163f13b7127beb3298ee4e3c2cb362a7732faf7",
+        "tests/integration/test_native_judge_authorization.py": "5b26902596266c3530f7960b7746163f012a0c0c50459ab9413e41a88b97a583",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_stable": true
+    },
+    {
+      "label": "authorization-boundaries",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_judge_authorization.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\authorization-boundaries.xml"
+      ],
+      "exit_code": 0,
+      "time_utc": "2026-10-20T10:26:43.946979+00:00",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "26",
+        "time": "13.927",
+        "timestamp": "2026-10-20T18:26:29.711196+08:00",
+        "hostname": "PC-20260920HQJZ"
+      },
+      "source_before": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "4b17eeb6262b3b8ef2b680c20163f13b7127beb3298ee4e3c2cb362a7732faf7",
+        "tests/integration/test_native_judge_authorization.py": "5c2ce6a2da682051fc379174a74cc27ca12bc401df309f6efe12985cd92e239b",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_after": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "4b17eeb6262b3b8ef2b680c20163f13b7127beb3298ee4e3c2cb362a7732faf7",
+        "tests/integration/test_native_judge_authorization.py": "5c2ce6a2da682051fc379174a74cc27ca12bc401df309f6efe12985cd92e239b",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_stable": true
+    },
+    {
+      "label": "authorization-validation",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_judge_authorization.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\authorization-validation.xml"
+      ],
+      "exit_code": 0,
+      "time_utc": "2026-10-20T10:30:04.728695+00:00",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "50",
+        "time": "24.975",
+        "timestamp": "2026-10-20T18:29:39.379427+08:00",
+        "hostname": "PC-20260920HQJZ"
+      },
+      "source_before": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "4b17eeb6262b3b8ef2b680c20163f13b7127beb3298ee4e3c2cb362a7732faf7",
+        "tests/integration/test_native_judge_authorization.py": "f0a9eab37d34b68bc7bf423202bccd89685a96cb46f8cc9d08a6404a80246911",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_after": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "4b17eeb6262b3b8ef2b680c20163f13b7127beb3298ee4e3c2cb362a7732faf7",
+        "tests/integration/test_native_judge_authorization.py": "f0a9eab37d34b68bc7bf423202bccd89685a96cb46f8cc9d08a6404a80246911",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7"
+      },
+      "source_stable": true
+    },
+    {
+      "label": "target-final",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_judge_authorization.py",
+        "tests/unit/test_native_judge_control.py",
+        "tests/unit/test_judge_policy.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\target-final.xml"
+      ],
+      "exit_code": 0,
+      "time_utc": "2026-10-20T10:30:52.618455+00:00",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "81",
+        "time": "22.754",
+        "timestamp": "2026-10-20T18:30:29.509125+08:00",
+        "hostname": "PC-20260920HQJZ"
+      },
+      "source_before": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "4b17eeb6262b3b8ef2b680c20163f13b7127beb3298ee4e3c2cb362a7732faf7",
+        "tests/integration/test_native_judge_authorization.py": "f0a9eab37d34b68bc7bf423202bccd89685a96cb46f8cc9d08a6404a80246911",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+        "src/cn_contract/assistant/providers/judge_policy.py": "708eee0dc681138834a15e07629f59cc002afd850be8c0278a54ec6233acef2e",
+        "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c"
+      },
+      "source_after": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "4b17eeb6262b3b8ef2b680c20163f13b7127beb3298ee4e3c2cb362a7732faf7",
+        "tests/integration/test_native_judge_authorization.py": "f0a9eab37d34b68bc7bf423202bccd89685a96cb46f8cc9d08a6404a80246911",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+        "src/cn_contract/assistant/providers/judge_policy.py": "708eee0dc681138834a15e07629f59cc002afd850be8c0278a54ec6233acef2e",
+        "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c"
+      },
+      "source_stable": true
+    },
+    {
+      "label": "publication-red",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_judge_authorization.py::test_expiry_immediately_after_publication_cannot_erase_intent_or_renew_same_request",
+        "tests/integration/test_native_judge_authorization.py::test_runtime_grant_returns_its_fixed_identity_and_changes_it_only_on_new_grants",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\publication-red.xml"
+      ],
+      "exit_code": 1,
+      "time_utc": "2026-10-20T10:31:51.148432+00:00",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "0",
+        "tests": "2",
+        "time": "2.074",
+        "timestamp": "2026-10-20T18:31:48.675080+08:00",
+        "hostname": "PC-20260920HQJZ"
+      },
+      "source_before": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "4b17eeb6262b3b8ef2b680c20163f13b7127beb3298ee4e3c2cb362a7732faf7",
+        "tests/integration/test_native_judge_authorization.py": "9f763b171d02bc5310abc289ef73abcc43f3c0b7c53f46e56b273f62804c40c6",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+        "src/cn_contract/assistant/providers/judge_policy.py": "708eee0dc681138834a15e07629f59cc002afd850be8c0278a54ec6233acef2e",
+        "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c"
+      },
+      "source_after": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "4b17eeb6262b3b8ef2b680c20163f13b7127beb3298ee4e3c2cb362a7732faf7",
+        "tests/integration/test_native_judge_authorization.py": "9f763b171d02bc5310abc289ef73abcc43f3c0b7c53f46e56b273f62804c40c6",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+        "src/cn_contract/assistant/providers/judge_policy.py": "708eee0dc681138834a15e07629f59cc002afd850be8c0278a54ec6233acef2e",
+        "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c"
+      },
+      "source_stable": true
+    },
+    {
+      "label": "publication-green",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_judge_authorization.py::test_expiry_immediately_after_publication_cannot_erase_intent_or_renew_same_request",
+        "tests/integration/test_native_judge_authorization.py::test_runtime_grant_returns_its_fixed_identity_and_changes_it_only_on_new_grants",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\publication-green.xml"
+      ],
+      "exit_code": 0,
+      "time_utc": "2026-10-20T10:32:03.457235+00:00",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "2",
+        "time": "1.882",
+        "timestamp": "2026-10-20T18:32:01.214243+08:00",
+        "hostname": "PC-20260920HQJZ"
+      },
+      "source_before": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "c1bf0a6ada4a2c97dd27d6800082e37f77b7c68f9347f5ea2b6243065ae6a003",
+        "tests/integration/test_native_judge_authorization.py": "9f763b171d02bc5310abc289ef73abcc43f3c0b7c53f46e56b273f62804c40c6",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+        "src/cn_contract/assistant/providers/judge_policy.py": "3e068fed410189352858584a9da6634bea308acf40142cdb0e6b8b0e92016601",
+        "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c"
+      },
+      "source_after": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "c1bf0a6ada4a2c97dd27d6800082e37f77b7c68f9347f5ea2b6243065ae6a003",
+        "tests/integration/test_native_judge_authorization.py": "9f763b171d02bc5310abc289ef73abcc43f3c0b7c53f46e56b273f62804c40c6",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+        "src/cn_contract/assistant/providers/judge_policy.py": "3e068fed410189352858584a9da6634bea308acf40142cdb0e6b8b0e92016601",
+        "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c"
+      },
+      "source_stable": true
+    },
+    {
+      "label": "publication-final",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_native_judge_authorization.py",
+        "tests/unit/test_native_judge_control.py",
+        "tests/unit/test_judge_policy.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\publication-final.xml"
+      ],
+      "exit_code": 0,
+      "time_utc": "2026-10-20T10:32:46.894345+00:00",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "83",
+        "time": "27.825",
+        "timestamp": "2026-10-20T18:32:18.650172+08:00",
+        "hostname": "PC-20260920HQJZ"
+      },
+      "source_before": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "c1bf0a6ada4a2c97dd27d6800082e37f77b7c68f9347f5ea2b6243065ae6a003",
+        "tests/integration/test_native_judge_authorization.py": "9f763b171d02bc5310abc289ef73abcc43f3c0b7c53f46e56b273f62804c40c6",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+        "src/cn_contract/assistant/providers/judge_policy.py": "3e068fed410189352858584a9da6634bea308acf40142cdb0e6b8b0e92016601",
+        "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c"
+      },
+      "source_after": {
+        "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+        "src/cn_contract/assistant/native_judge_control.py": "c1bf0a6ada4a2c97dd27d6800082e37f77b7c68f9347f5ea2b6243065ae6a003",
+        "tests/integration/test_native_judge_authorization.py": "9f763b171d02bc5310abc289ef73abcc43f3c0b7c53f46e56b273f62804c40c6",
+        "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+        "src/cn_contract/assistant/providers/judge_policy.py": "3e068fed410189352858584a9da6634bea308acf40142cdb0e6b8b0e92016601",
+        "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c"
+      },
+      "source_stable": true
+    }
+  ],
+  "diff_check": {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "src/cn_contract/domain.py",
+      "src/cn_contract/assistant/native_judge_control.py",
+      "src/cn_contract/assistant/providers/judge_policy.py",
+      "tests/integration/test_native_judge_authorization.py"
+    ],
+    "exit_code": 0
+  },
+  "boundaries": [
+    "Synthetic-only validation; no real keys, remote model requests, price validation, actual budget UI, build or commit.",
+    "One active optional grant; pending attempts deliberately block further grants until settlement/recovery.",
+    "No changes to Main authorization, schema, HTTP, task manager, Node, control channel or desktop entry in this agent scope.",
+    "Parent and stage agent own protocol/lifecycle/pipeline integration; this report covers native service and runtime return compatibility."
+  ]
+}

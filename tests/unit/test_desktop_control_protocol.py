@@ -33,11 +33,11 @@ def test_fixed_judge_operations_share_the_existing_frame(operation):
     line(sequence=9007199254740992), line(operation='shell'), line(payload=[]),
     line(extra='not allowed'), line().replace('"sequence":1', '"sequence":1,"sequence":1'),
     line()[:-1], line(payload={'x':'字'*12000}), line(payload={'x':float('nan')}),
-    line(operation='authorize_judge'), line(operation='revoke_judge'), line(operation='disable_all'),
+    line(operation='grant_judge'), line(operation='refresh_judge'), line(operation='disable_all'),
     line(protocol='qx-judge-control-v1'),
 ], ids=['nonce','bool-sequence','order','float-sequence','unsafe-sequence','operation',
         'payload-type','extra-key','duplicate-key','partial','oversize','nonfinite',
-        'no-judge-authorize','no-judge-revoke','no-public-disable-all','capability-not-frame-version'])
+        'unknown-judge-grant','unknown-judge-refresh','no-public-disable-all','capability-not-frame-version'])
 def test_invalid_frames_never_dispatch(raw):
     with pytest.raises(ValueError):
         parse_control_line(raw, NONCE, 1)

@@ -10,9 +10,11 @@ from uuid import UUID
 
 PROTOCOL = 'qx-model-control-v1'
 JUDGE_PROTOCOL = 'qx-judge-control-v1'
+JUDGE_AUTH_PROTOCOL = 'qx-judge-authorization-v1'
 MAX_BYTES = 32768
 MAX_SEQUENCE = 9007199254740991
-_OPERATIONS = {'configure', 'disable', 'authorize', 'revoke', 'configure_judge', 'disable_judge'}
+_OPERATIONS = {'configure', 'disable', 'authorize', 'revoke', 'configure_judge', 'disable_judge',
+               'authorize_judge', 'revoke_judge'}
 _CODES = {'BLOCKED_LIVE', 'VERSION_CONFLICT', 'STATE_CONFLICT', 'BUDGET_EXCEEDED', 'CROSS_MATTER_DENIED'}
 
 
@@ -22,6 +24,13 @@ class NativeControlHandler:
         self.configure, self.disable = main.configure, main.disable
         self.authorize, self.revoke = main.authorize, main.revoke
         self.configure_judge, self.disable_judge = judge.configure, judge.disable
+        self._judge = judge
+
+    def authorize_judge(self, payload):
+        return self._judge.authorize(payload)
+
+    def revoke_judge(self, payload):
+        return self._judge.revoke(payload)
 
     def disable_all(self):
         try:
@@ -135,7 +144,8 @@ class ParentControlChannel:
             return {'ok':False, 'code':'BLOCKED_LIVE'}
         expected = {'configure':{'configured'}, 'disable':{'disabled'},
                     'authorize':{'authorized','existing'}, 'revoke':{'revoked'},
-                    'configure_judge':{'configured'}, 'disable_judge':{'disabled'}}[operation]
+                    'configure_judge':{'configured'}, 'disable_judge':{'disabled'},
+                    'authorize_judge':{'authorized','existing'}, 'revoke_judge':{'revoked'}}[operation]
         if type(result) is not dict or result.get('status') not in expected:
             raise ValueError('CONTROL_REJECTED')
         configuring = operation in ('configure', 'configure_judge')

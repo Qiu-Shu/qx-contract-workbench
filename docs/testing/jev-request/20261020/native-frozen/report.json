@@ -1,0 +1,47 @@
+{
+  "scope": "native private control, not daily approval UI",
+  "electron": "44.8.0",
+  "mode": "frozen-control-only",
+  "external_provider_execution": "not_requested",
+  "renderer_ipc": "not_exercised_by_this_headless_private_pipe_driver",
+  "checks": [
+    "real_safeStorage_ciphertext",
+    "independent_typesafe_safeStorage_ciphertext",
+    "configured_without_grant_then_exact_single_intent",
+    "independent_judge_grant_and_no_native_http_endpoint",
+    "frozen_two_native_grants_revoked_disabled_submission_denied",
+    "frozen_eof_restart_has_no_authority_or_persisted_attempt",
+    "no_plaintext_secret_or_session_token_in_ack_logs_database"
+  ],
+  "ledger": {
+    "counts": {
+      "assistant_messages": 0,
+      "assistant_runs": 0,
+      "assistant_model_attempts": 0,
+      "assistant_model_receipts": 0,
+      "assistant_model_outputs": 0,
+      "assistant_judge_attempts": 0,
+      "assistant_judge_receipts": 0,
+      "assistant_judge_decisions": 0
+    },
+    "result": "empty"
+  },
+  "restart_ledger": {
+    "counts": {
+      "assistant_messages": 0,
+      "assistant_runs": 0,
+      "assistant_model_attempts": 0,
+      "assistant_model_receipts": 0,
+      "assistant_model_outputs": 0,
+      "assistant_judge_attempts": 0,
+      "assistant_judge_receipts": 0,
+      "assistant_judge_decisions": 0
+    },
+    "result": "empty"
+  },
+  "status": "passed",
+  "upstream_posts": 0,
+  "judge_upstream_posts": 0,
+  "observed_post_order": [],
+  "network_limit": "No provider execution requested; no whole-process network counter installed."
+}

@@ -1,0 +1,42 @@
+{
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/integration/test_native_judge_authorization.py::test_expiry_immediately_after_publication_cannot_erase_intent_or_renew_same_request",
+    "tests/integration/test_native_judge_authorization.py::test_runtime_grant_returns_its_fixed_identity_and_changes_it_only_on_new_grants",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\jev-request-20261020\\native\\publication-green.xml"
+  ],
+  "exit_code": 0,
+  "time_utc": "2026-10-20T10:32:03.457235+00:00",
+  "counts": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "2",
+    "time": "1.882",
+    "timestamp": "2026-10-20T18:32:01.214243+08:00",
+    "hostname": "PC-20260920HQJZ"
+  },
+  "source_before": {
+    "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+    "src/cn_contract/assistant/native_judge_control.py": "c1bf0a6ada4a2c97dd27d6800082e37f77b7c68f9347f5ea2b6243065ae6a003",
+    "tests/integration/test_native_judge_authorization.py": "9f763b171d02bc5310abc289ef73abcc43f3c0b7c53f46e56b273f62804c40c6",
+    "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+    "src/cn_contract/assistant/providers/judge_policy.py": "3e068fed410189352858584a9da6634bea308acf40142cdb0e6b8b0e92016601",
+    "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c"
+  },
+  "source_after": {
+    "src/cn_contract/domain.py": "48a1c300bb9e48befdc74103af0819262192a689c56a4b4f464b9e33905dd667",
+    "src/cn_contract/assistant/native_judge_control.py": "c1bf0a6ada4a2c97dd27d6800082e37f77b7c68f9347f5ea2b6243065ae6a003",
+    "tests/integration/test_native_judge_authorization.py": "9f763b171d02bc5310abc289ef73abcc43f3c0b7c53f46e56b273f62804c40c6",
+    "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+    "src/cn_contract/assistant/providers/judge_policy.py": "3e068fed410189352858584a9da6634bea308acf40142cdb0e6b8b0e92016601",
+    "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c"
+  },
+  "source_stable": true
+}

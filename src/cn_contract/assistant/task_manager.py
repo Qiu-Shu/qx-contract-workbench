@@ -8,7 +8,8 @@ from .. import domain as d
 from ..ops.storage import require_active
 from ..security import ServiceError
 from . import service
-from .providers import attempts
+from .providers import attempts, judge_attempts, judge_execution
+from .providers.judge_policy import JudgeRuntime
 from .providers.registry import resolve_runtime
 from .runner import execute_attempt
 
@@ -18,9 +19,12 @@ MAX_ACTIVE_TASKS = 4
 class GenerationTasks:
     """start/submit run synchronously on the application's lifespan event loop."""
 
-    def __init__(self, database, runtime):
+    def __init__(self, database, runtime, *, judge_runtime=None):
+        if judge_runtime is not None and type(judge_runtime) is not JudgeRuntime:
+            raise TypeError('trusted JudgeRuntime required')
         self.database = database
         self.runtime = runtime
+        self.judge_runtime = judge_runtime
         self._loop = None
         self._started = False
         self._tasks = {}
@@ -77,10 +81,11 @@ class GenerationTasks:
             if previous is None:
                 self._admit()
             view = attempts.enqueue_generation(actor, conversation_id, request, db, runtime)
+            auxiliary = self._reserve_judge(actor, view, db) if previous is None else None
         if previous is not None:
             return view
         # No task receives authority before the new durable attempt commits.
-        coroutine = execute_attempt(actor, view.id, self.database, runtime)
+        coroutine = self._execute(actor, view.id, runtime, auxiliary)
         try:
             task = asyncio.create_task(coroutine, name='assistant-generation')
         except Exception:
@@ -92,6 +97,22 @@ class GenerationTasks:
         task.add_done_callback(partial(self._finished, view.id, view.run_id))
         return view
 
+    def _reserve_judge(self, actor, main, db):
+        if self.judge_runtime is None:
+            return None
+        transaction = db.get_transaction()
+        auxiliary = judge_attempts.reserve(actor, main.run_id, db, self.judge_runtime, optional=True)
+        if transaction is None or db.get_transaction() is not transaction or not transaction.is_active:
+            raise ServiceError('STATE_CONFLICT', 409)
+        return auxiliary
+
+    async def _execute(self, actor, identifier, runtime, auxiliary):
+        if auxiliary is not None:
+            await judge_execution.execute_attempt(actor, auxiliary.id, self.database, self.judge_runtime)
+        # The original main lease still performs its own current-scope, session,
+        # cancellation and permission checks after the optional wait.
+        return await execute_attempt(actor, identifier, self.database, runtime)
+
     def _release_unsent(self, run_id):
         try:
             with self.database.session() as db:
@@ -99,6 +120,7 @@ class GenerationTasks:
                 # This run belongs to this manager. Never recover unrelated or
                 # claimed attempts; the existing runner owns their settlement.
                 attempts.cancel_reserved_for_run(run_id, db)
+                judge_attempts.cancel_reserved_for_run(run_id, db)
         except Exception:
             self._last_error = 'GENERATION_TASK_FAILED'
             # A failed write retains the original durable marker for locked

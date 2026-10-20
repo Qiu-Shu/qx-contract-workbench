@@ -1,0 +1,87 @@
+✖ new capability admits exact Judge authorization and revoke on the same sequence (1.8399ms)
+✔ config-only child rejects authorization without writing or stopping existing controls (1.0252ms)
+✔ authorization capability without Judge configuration capability fails the handshake (0.1558ms)
+✔ Judge authorization refuses main basis without purpose (0.2089ms)
+✔ Judge authorization refuses different purpose (0.1608ms)
+✔ Judge authorization refuses injected policy (0.1326ms)
+✔ Judge authorization refuses numeric budget (0.1614ms)
+✔ Judge authorization refuses wrong config version (0.2019ms)
+✔ Judge authorization refuses unknown scope grant (0.2031ms)
+✖ Judge authorization cannot compete with an outstanding Main operation (0.6899ms)
+✖ Backend facade keeps Judge authorization names fixed (0.2354ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 8
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 69.5377
+
+✖ failing tests:
+
+test at desktop\tests\judge-authorization-control.test.cjs:19:1
+✖ new capability admits exact Judge authorization and revoke on the same sequence (1.8399ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - true
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-authorization-control.test.cjs:21:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-authorization-control.test.cjs:48:1
+✖ Judge authorization cannot compete with an outstanding Main operation (0.6899ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'BLOCKED_LIVE',
+  -   code: 'STATE_CONFLICT',
+      ok: false
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-authorization-control.test.cjs:50:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: false, code: 'BLOCKED_LIVE' },
+    expected: { ok: false, code: 'STATE_CONFLICT' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\judge-authorization-control.test.cjs:53:1
+✖ Backend facade keeps Judge authorization names fixed (0.2354ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\judge-authorization-control.test.cjs:55:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
