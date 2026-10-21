@@ -12,11 +12,34 @@ from ...review.model_adapter import strict_json
 from ...security import ServiceError
 from .. import service
 from ..attachment_records import items
+from . import context_codec
 from .policy import encoded, sha, prepare, require_policy, reservation, receipt, add_costs, validated
 
 
 def _model(model, raw):
     return validated(model, strict_json(raw))
+
+
+def _input(row):
+    """Private format dispatch shared by every ledger reader.
+
+    The current schema always carries input_format; a missing or unknown value
+    is corruption, never a silent fallback. Only archive validation against a
+    positively identified older schema decodes historical rows as V1 elsewhere.
+    """
+    fmt = row['input_format'] if 'input_format' in row.keys() else None
+    if fmt == 'plain-text-v1':
+        return _model(d.MainPreparedInput, row['input_json'])
+    if fmt == 'library-context-v1':
+        return _model(d.MainContextPreparedInput, row['input_json'])
+    raise ValueError('ASSISTANT_MODEL_INTEGRITY')
+
+
+def _wire(prepared, config):
+    """Deterministic rebuild for the decoded format."""
+    if isinstance(prepared, d.MainContextPreparedInput):
+        return context_codec.prepare(prepared.request, config).wire_payload_json
+    return prepare(prepared.request, config).wire_payload_json
 
 
 def _row(identifier, db):
@@ -27,15 +50,41 @@ def _row(identifier, db):
     return row
 
 
+def _relations(identifier, db):
+    return db.execute(text('''SELECT ordinal,saved_citation_id FROM assistant_model_input_citations
+        WHERE attempt_id=:id ORDER BY ordinal'''), {'id':str(identifier)}).mappings().all()
+
+
+def _context_sources_match(row, prepared, db):
+    """The persisted ordered selection must equal the immutable input's manifest."""
+    relations = _relations(row['id'], db)
+    manifest = prepared.request.manifest
+    bindings = prepared.request.basis.source_bindings
+    if not 1 <= len(relations) <= 8 or len(relations) != len(manifest.sources):
+        raise ValueError('ASSISTANT_MODEL_INTEGRITY')
+    for ordinal, (relation, source, binding) in enumerate(zip(relations, manifest.sources, bindings)):
+        if (relation['ordinal'] != ordinal or relation['saved_citation_id'] != str(source.saved_citation_id)
+                or binding.saved_citation_id != source.saved_citation_id):
+            raise ValueError('ASSISTANT_MODEL_INTEGRITY')
+        digest = db.scalar(text('SELECT citation_sha256 FROM assistant_library_citations WHERE id=:id'),
+                           {'id': relation['saved_citation_id']})
+        if digest is None or digest != binding.citation_sha256:
+            raise ValueError('ASSISTANT_MODEL_INTEGRITY')
+
+
 def read_attempt(actor, identifier, db):
     row = _row(identifier, db)
     service._owned(actor, UUID(row['conversation_id']), db)
-    prepared = _model(d.MainPreparedInput, row['input_json'])
+    prepared = _input(row)
     usage = db.scalar(text('SELECT receipt_json FROM assistant_model_receipts WHERE attempt_id=:id'), {'id':row['id']})
     output = db.scalar(text('SELECT output_json FROM assistant_model_outputs WHERE attempt_id=:id'), {'id':row['id']})
-    return validated(d.MainAttemptView, dict(id=row['id'], run_id=row['run_id'], scope=prepared.request.scope,
+    values = dict(id=row['id'], run_id=row['run_id'], scope=prepared.request.scope,
         state=row['state'], reserved_usd=row['reserved_usd'],
-        receipt=_model(d.MainReceipt, usage) if usage else None,
+        receipt=_model(d.MainReceipt, usage) if usage else None)
+    if isinstance(prepared, d.MainContextPreparedInput):
+        return validated(d.MainContextAttemptView, dict(values,
+            output=_model(d.MainContextOutputView, output) if output else None))
+    return validated(d.MainAttemptView, dict(values,
         output=_model(d.MainOutputView, output) if output else None))
 
 
@@ -64,28 +113,51 @@ def _budget(policy, db):
     return add_costs(costs), calls
 
 
+def _previous(conversation_id, request_id, db):
+    return db.execute(text('''SELECT r.id,a.id AS attempt_id FROM assistant_runs r
+        LEFT JOIN assistant_model_attempts a ON a.run_id=r.id
+        WHERE r.conversation_id=:cid AND r.request_id=:request'''),
+        {'cid':str(conversation_id), 'request':str(request_id)}).mappings().first()
+
+
+def _replay(actor, conversation_id, message, previous, config, policy, db, *, context,
+            citation_ids=None):
+    """An old queued message never acquires execution eligibility on retry."""
+    if previous['attempt_id'] is None:
+        raise ServiceError('STATE_CONFLICT', 409)
+    service.save_message(actor, conversation_id, message, db)
+    row = _row(previous['attempt_id'], db)
+    prepared = _input(row)
+    if context != isinstance(prepared, d.MainContextPreparedInput):
+        raise ServiceError('VERSION_CONFLICT', 409)
+    if (policy is None or row['config_sha256'] != sha(encoded(config))
+            or row['policy_sha256'] != sha(encoded(policy))
+            or _wire(prepared, config) != prepared.wire_payload_json):
+        raise ServiceError('VERSION_CONFLICT', 409)
+    if context:
+        # The resubmitted ordered selection must equal the registered one;
+        # the message digest alone never covers citation_ids.
+        persisted = [UUID(item['saved_citation_id']) for item in _relations(row['id'], db)]
+        if persisted != list(citation_ids):
+            raise ServiceError('VERSION_CONFLICT', 409)
+        _context_sources_match(row, prepared, db)
+    return read_attempt(actor, UUID(row['id']), db)
+
+
+def _submission_message(request):
+    return d.AssistantMessageInput(request_id=request.request_id, expected_scope=request.expected_scope,
+        expected_composer_revision=request.expected_composer_revision, content=request.content)
+
+
 def enqueue_generation(actor, conversation_id, request, db, runtime):
     request = d.AssistantMessageInput.model_validate(request.model_dump(mode='python'))
     conversation = service._owned(actor, conversation_id, db)
     require_active(db)
     config, policy = runtime.snapshot_for(actor, service._snapshot(conversation))
     runtime.check_submission(actor, request)
-    previous = db.execute(text('''SELECT r.id,a.id AS attempt_id FROM assistant_runs r
-        LEFT JOIN assistant_model_attempts a ON a.run_id=r.id
-        WHERE r.conversation_id=:cid AND r.request_id=:request'''),
-        {'cid':str(conversation_id), 'request':str(request.request_id)}).mappings().first()
+    previous = _previous(conversation_id, request.request_id, db)
     if previous:
-        # An old queued message never acquires execution eligibility on upgrade/retry.
-        if previous['attempt_id'] is None:
-            raise ServiceError('STATE_CONFLICT', 409)
-        service.save_message(actor, conversation_id, request, db)
-        row = _row(previous['attempt_id'], db)
-        prepared = _model(d.MainPreparedInput, row['input_json'])
-        if (policy is None or row['config_sha256'] != sha(encoded(config))
-                or row['policy_sha256'] != sha(encoded(policy))
-                or prepare(prepared.request, config).wire_payload_json != prepared.wire_payload_json):
-            raise ServiceError('VERSION_CONFLICT', 409)
-        return read_attempt(actor, UUID(row['id']), db)
+        return _replay(actor, conversation_id, request, previous, config, policy, db, context=False)
     require_policy(config, policy, actor, service._snapshot(conversation), sha(request.content))
     if request.attachment_ids or items(conversation, db):
         raise ServiceError('BLOCKED_LIVE', 403)
@@ -102,9 +174,9 @@ def enqueue_generation(actor, conversation_id, request, db, runtime):
         identifier, at = uuid4(), service._at()
         db.execute(text('''INSERT INTO assistant_model_attempts
             (id,run_id,conversation_id,policy_id,config_sha256,policy_sha256,request_sha256,
-             input_json,config_json,policy_json,reserved_usd,created_at,state,updated_at)
+             input_json,config_json,policy_json,reserved_usd,created_at,state,updated_at,input_format)
             VALUES(:id,:run,:cid,:policy,:config_sha,:policy_sha,:request_sha,:input,:config,:policy_json,
-                   :reserved,:at,'reserved',:at)'''), {'id':str(identifier), 'run':str(run.id),
+                   :reserved,:at,'reserved',:at,'plain-text-v1')'''), {'id':str(identifier), 'run':str(run.id),
             'cid':str(conversation_id), 'policy':str(policy.policy_id), 'config_sha':sha(encoded(config)),
             'policy_sha':sha(encoded(policy)), 'request_sha':sha(prepared.wire_payload_json),
             'input':encoded(prepared), 'config':encoded(config), 'policy_json':encoded(policy),
@@ -117,22 +189,81 @@ def enqueue_generation(actor, conversation_id, request, db, runtime):
     return read_attempt(actor, identifier, db)
 
 
+def enqueue_context(actor, conversation_id, request, db, runtime):
+    """Register one source-bound answer; the format is fixed by this trusted entry."""
+    from ..context_preview import assemble_context
+    request = d.MainContextSubmission.model_validate(request.model_dump(mode='python'))
+    conversation = service._owned(actor, conversation_id, db)
+    require_active(db)
+    config, policy = runtime.snapshot_for(actor, service._snapshot(conversation))
+    previous = _previous(conversation_id, request.request_id, db)
+    if previous:
+        return _replay(actor, conversation_id, _submission_message(request), previous,
+                       config, policy, db, context=True, citation_ids=request.citation_ids)
+    scope, manifest, records = assemble_context(actor, conversation, request.citation_ids, db,
+                                                question=request.content)
+    # Authorization precedes basis construction: a disabled or missing grant can
+    # never describe wire bytes, and the manifest digest alone keys the policy.
+    require_policy(config, policy, actor, scope, context_codec.manifest_digest(manifest))
+    basis = context_codec.build_basis(request.request_id, manifest, scope,
+                                      request.expected_composer_revision, config, records)
+    runtime.check_context_submission(actor, request, basis)
+    if items(conversation, db):
+        raise ServiceError('BLOCKED_LIVE', 403)
+    used, calls = _budget(policy, db)
+    reserved = reservation(config)
+    if add_costs((used,reserved)) > policy.max_total_usd:
+        raise ServiceError('BUDGET_EXCEEDED', 403)
+    if calls >= policy.max_calls:
+        raise ServiceError('CALL_LIMIT_EXCEEDED', 403)
+    with db.begin_nested():
+        run = service.save_message(actor, conversation_id, _submission_message(request), db)
+        prepared = context_codec.prepare(d.MainContextRequest(run_id=run.id, message_id=run.message_id,
+            scope=run.scope, composer_revision=request.expected_composer_revision + 1,
+            manifest=manifest, basis=basis), config)
+        identifier, at = uuid4(), service._at()
+        db.execute(text('''INSERT INTO assistant_model_attempts
+            (id,run_id,conversation_id,policy_id,config_sha256,policy_sha256,request_sha256,
+             input_json,config_json,policy_json,reserved_usd,created_at,state,updated_at,input_format)
+            VALUES(:id,:run,:cid,:policy,:config_sha,:policy_sha,:request_sha,:input,:config,:policy_json,
+                   :reserved,:at,'reserved',:at,'library-context-v1')'''), {'id':str(identifier),
+            'run':str(run.id), 'cid':str(conversation_id), 'policy':str(policy.policy_id),
+            'config_sha':sha(encoded(config)), 'policy_sha':sha(encoded(policy)),
+            'request_sha':sha(prepared.wire_payload_json), 'input':encoded(prepared),
+            'config':encoded(config), 'policy_json':encoded(policy), 'reserved':str(reserved), 'at':at})
+        for ordinal, record in enumerate(records):
+            db.execute(text('''INSERT INTO assistant_model_input_citations
+                (attempt_id,ordinal,saved_citation_id) VALUES(:id,:ordinal,:citation)'''),
+                {'id':str(identifier), 'ordinal':ordinal, 'citation':str(record.id)})
+        db.execute(text('''UPDATE assistant_runs SET selected_provider=:provider,selected_model=:model,
+            budget_json=:budget WHERE id=:id'''), {'id':str(run.id), 'provider':config.provider,
+            'model':config.model, 'budget':canonical_json({'policy_id':str(policy.policy_id),
+                'reserved_usd':str(reserved), 'unit':'USD'})})
+        _event(run.id, 'model.reserved', {'attempt_id':str(identifier), 'state':'queued'}, db)
+    return read_attempt(actor, identifier, db)
+
+
 def _current(actor, row, db, runtime):
     require_active(db)
     run = service._owned_run(actor, UUID(row['run_id']), db)
     conversation = service._owned(actor, UUID(row['conversation_id']), db)
-    prepared = _model(d.MainPreparedInput, row['input_json'])
+    prepared = _input(row)
     config, policy = runtime.snapshot_for(actor, prepared.request.scope)
     runtime.check_execution(actor, UUID(run['request_id']), prepared.request)
-    require_policy(config, policy, actor, prepared.request.scope, prepared.request.source_sha256)
+    if isinstance(prepared, d.MainContextPreparedInput):
+        require_policy(config, policy, actor, prepared.request.scope, prepared.request.basis.manifest_sha256)
+    else:
+        require_policy(config, policy, actor, prepared.request.scope, prepared.request.source_sha256)
     if (str(actor.session_id) != run['session_id'] or run['actor_id'] != str(actor.user_id)
             or conversation['archived_at'] is not None or service._snapshot(conversation) != prepared.request.scope
             or row['config_sha256'] != sha(encoded(config)) or row['policy_sha256'] != sha(encoded(policy))
             or run['cancel_requested'] or run['state'] not in {'queued','generating'}
-            or prepare(prepared.request, config).wire_payload_json != prepared.wire_payload_json):
+            or _wire(prepared, config) != prepared.wire_payload_json):
         raise ServiceError('VERSION_CONFLICT', 409)
     if items(conversation, db):
         raise ServiceError('BLOCKED_LIVE', 403)
+    if isinstance(prepared, d.MainContextPreparedInput):
+        _context_sources_match(row, prepared, db)
     return prepared.request, config
 
 
@@ -202,16 +333,25 @@ def settle(actor, identifier, token, reply, db, runtime):
     row = _row(identifier, db)
     if row['state'] != 'sending' or row['claim_sha256'] != sha(token):
         raise ServiceError('STATE_CONFLICT', 409)
-    reply = d.MainReply.model_validate(reply.model_dump(mode='python'))
+    prepared = _input(row)
+    context = isinstance(prepared, d.MainContextPreparedInput)
+    reply = (d.MainContextReply if context else d.MainReply).model_validate(reply.model_dump(mode='python'))
     config = _model(d.MainModelConfig, row['config_json'])
-    prepared = _model(d.MainPreparedInput, row['input_json'])
     candidate = reply.output
     outside_envelope = reply.usage is not None and (reply.usage.prompt_tokens > config.max_input_bytes
         or reply.usage.completion_tokens > config.max_output_tokens)
-    if candidate and (outside_envelope or any(
+    if context:
+        selected = {item.saved_citation_id: item.quote_sha256
+                    for item in prepared.request.manifest.sources}
+        invalid = any(selected.get(item.saved_citation_id) != item.quote_sha256
+                      for item in candidate.citations) if candidate else False
+    else:
+        invalid = candidate and any(
             c.message_id != prepared.request.message_id or c.quote_sha256 != prepared.request.source_sha256
-            for c in candidate.citations)):
-        reply = d.MainReply(state='received', provider_request_id=reply.provider_request_id,
+            for c in candidate.citations)
+    if candidate and (outside_envelope or invalid):
+        reply = (d.MainContextReply if context else d.MainReply)(
+            state='received', provider_request_id=reply.provider_request_id,
             usage=reply.usage, error_code='MODEL_OUTPUT_INVALID')
         candidate = None
     value = receipt(reply, config)
@@ -235,8 +375,9 @@ def settle(actor, identifier, token, reply, db, runtime):
             {'state':reply.state, 'at':at, 'id':row['id']})
         output_id = None
         if adopt:
-            output = d.MainOutputView(id=uuid4(), run_id=row['run_id'], scope=prepared.request.scope,
-                                     candidate=candidate, created_at=at)
+            view_type = d.MainContextOutputView if context else d.MainOutputView
+            output = view_type(id=uuid4(), run_id=row['run_id'], scope=prepared.request.scope,
+                               candidate=candidate, created_at=at)
             output_id = str(output.id)
             db.execute(text('''INSERT INTO assistant_model_outputs VALUES(:id,:attempt,:cid,:run,:scope,:output,:at)'''),
                 {'id':output_id, 'attempt':row['id'], 'cid':row['conversation_id'], 'run':row['run_id'],

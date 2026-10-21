@@ -2964,16 +2964,6 @@ class MainGenerationHistoryQuery(DomainModel):
         return value
 
 
-class MainGenerationHistoryItem(DomainModel):
-    message_id: UUID
-    attempt: MainAttemptView
-
-
-class MainGenerationHistoryView(DomainModel):
-    scope: ScopeSnapshot
-    items: Annotated[tuple[MainGenerationHistoryItem, ...], Field(max_length=50)]
-
-
 class MainGenerationCapability(DomainModel):
     scope: ScopeSnapshot
     composer_revision: Annotated[int, Field(strict=True, ge=0)]
@@ -3604,3 +3594,67 @@ class MainContextReply(DomainModel):
         if self.state != 'received' and (self.usage is not None or self.provider_request_id is not None):
             raise ValueError('unknown/unsent response cannot claim received usage')
         return self
+
+
+class MainContextSubmission(DomainModel):
+    """Trusted web submission for one source-bound answer; format is server-fixed."""
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+    content: AssistantText
+    citation_ids: Annotated[tuple[UUID, ...], Field(min_length=1, max_length=8)]
+
+    @field_validator('content')
+    @classmethod
+    def nonblank_context_question(cls, value):
+        if not value.strip():
+            raise ValueError('message text required')
+        return value
+
+    @field_validator('citation_ids')
+    @classmethod
+    def unique_context_submission(cls, value):
+        if len(value) != len(set(value)):
+            raise ValueError('duplicate selected citation')
+        return value
+
+
+class MainContextOutputView(DomainModel):
+    id: UUID
+    run_id: UUID
+    scope: ScopeSnapshot
+    audience: Literal['internal'] = 'internal'
+    generation_kind: Literal['model_generated'] = 'model_generated'
+    review_status: Literal['unverified'] = 'unverified'
+    candidate: MainContextCandidate
+    created_at: UTCDatetime
+
+
+class MainContextAttemptView(DomainModel):
+    id: UUID
+    run_id: UUID
+    scope: ScopeSnapshot
+    input_format: Literal['library-context-v1'] = 'library-context-v1'
+    state: MainAttemptState
+    reserved_usd: MainUSD
+    unit: Literal['USD'] = 'USD'
+    receipt: MainReceipt | None
+    output: MainContextOutputView | None
+
+
+class NativeContextAuthorization(DomainModel):
+    session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
+    expected_config_version: UUID
+    basis: MainContextSendBasis
+    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
+    valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
+
+
+class MainGenerationHistoryItem(DomainModel):
+    message_id: UUID
+    attempt: MainAttemptView | MainContextAttemptView
+
+
+class MainGenerationHistoryView(DomainModel):
+    scope: ScopeSnapshot
+    items: Annotated[tuple[MainGenerationHistoryItem, ...], Field(max_length=50)]

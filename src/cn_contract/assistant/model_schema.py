@@ -51,7 +51,10 @@ def initialize_storage(database):
             "SELECT type,name,tbl_name,sql FROM sqlite_master WHERE tbl_name IN "
             "('assistant_model_attempts','assistant_model_receipts','assistant_model_outputs') ORDER BY type,name")]
         if found:
-            if found != expected_objects():
+            # The positively identified context-v1 successor is also accepted;
+            # partial migrations and unknown structures stay rejected.
+            from .context_schema import expected_model_objects
+            if found != expected_objects() and found != expected_model_objects():
                 raise ValueError('DATABASE_SCHEMA_MISMATCH')
             return
         for statement in STATEMENTS:

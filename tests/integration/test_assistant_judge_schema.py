@@ -57,7 +57,10 @@ def test_every_supported_old_version_upgrades_without_replacing_old_objects(tmp_
         before = schema_migrations.database_rows(db)
         assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         after = schema_migrations.database_rows(db)
-        assert set(before) < set(after)
+        # The context successor replaces the model family's attempts table and its
+        # immutable-input trigger in place; every other historical object is kept.
+        replaced = {row[1] for row in set(before) - set(after)}
+        assert replaced <= {'assistant_model_attempts', 'immutable_assistant_model_input'}
         assert storage_schema.identify_schema(after, native=native) == storage_schema.CURRENT_VERSION
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
         assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION

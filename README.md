@@ -30,17 +30,17 @@
 | 主模型开发链 | DeepSeek 普通文字、系统保护凭据、日常配置、独立窗口确认具体文本、一次授权、费用记录和未知不重发 | [确认发送验证](docs/testing/native-send-confirmation/20261019/README.md) |
 | Jev 辅助基础 | 独立凭据、配置、账本和恢复；后端独立逐请求许可、同任务可选辅助及同窗独立确认已接通；生产辅助预算默认未配置 | [适配](docs/testing/jev-adapter/20261020/README.md) · [账本](docs/testing/jev-ledger/20261020/README.md) · [配置](docs/testing/jev-native/20261020/README.md) · [本片确认](docs/testing/jev-confirmation/20261020/README.md) |
 | 对话法库检索 | 选择“检索法律资料”，最多200字关键词、5条候选；原文片段/来源版本/待核状态可保存和回查；复用任务、当前权限及只读恢复，尚未接资料辅助生成 | [本机检索与引用面板](docs/testing/library-chat/20261020/README.md) · [持久化底座](docs/testing/library-ledger/20261020/README.md) |
-| 资料上下文预览（开发接口） | 从当前草稿和1—8条已保存引用重建完整清单；有配置时显示完整请求及字节预算，超限不截断；所有状态均不发送、不读取密钥、不创建任务 | [预览证据](docs/testing/context-preview/20261020/README.md) |
+| 资料辅助回答 | 从当前草稿和1—8条已保存引用由服务器重建完整清单与精确字节；原生窗口一次确认授权（服务端重建核对、单次有效），不可变输入格式与有序来源入不可变账本；执行/取消/费用/恢复与普通文字同一生命周期，恢复副本只读不重发 | [发送闭合证据](docs/testing/context-send/20261021/README.md) · [预览证据](docs/testing/context-preview/20261020/README.md) |
 | 合同原件长路径（开发分支） | 复用既有路径工具，保存/读取/事务清理支持深中文原件目录；qxbak恢复下载、二次备份及只读限制已验，逻辑引用不变 | [Windows实测](docs/testing/contract-long-path/20261020/README.md) |
 | 解耦与资源 | 公共存储/请求边界及对话模块抽离，PDF 按需加载，Electron 语言资源筛选；长文检索按命中区间定位，去掉整篇坐标表 | [模块证据](docs/testing/chat-first/20261017/README.md) · [构建资源](docs/testing/chat-first/20261016/README.md) · [检索内存](docs/testing/library-memory/20261020/README.md) |
 
 资源首片在同后端的未压缩构建目录中减少 **48,880,941 字节（46.62 MiB）**；这不是安装器、整机启动或内存的综合结论。当前仍需持续测量核心包体、可输入时间和进程占用。
 
-最新 CH-06B2b1：644项关联Python与四开发检查通过，491份输入前后稳定；Windows实际HTTP通过9组检查、27次请求，主模型/Jev/密钥读取均为0。独立需求与规范复核无本片待修项，WorkBuddy完成2文件只读计划复核。广泛回归曾因过深目录中止，另有测试重名与测试脚本导入失败，均保留记录；本轮不称全套通过，旧合同长路径限制尚待修复。[实际证据与限制](docs/testing/context-preview/20261020/README.md)
+最新 CH-06B2b2：`assistant-context-v1` 不可变输入格式、有序来源关联、原生一次许可（服务端重建核对、单次有效）与同 attempt 执行/撤销/费用、升级与备份恢复同片闭合；一次资料辅助回答经原生授权与 127.0.0.1 回环 HTTP 逐字节核验。本片目标 8 文件 120 项通过、新增 75 项；四开发门 exit 0；完整全套 3450 通过，51 个失败全部为基线同等复现的 qxbak 恢复环境类失败（本机 `\\?\` 路径 nlink 假阳性，自 WIN-PATH-01 起潜伏，另列待查）。律师选片 GUI、真实供应商与有界多轮不在本片。[实际证据与限制](docs/testing/context-send/20261021/README.md)
 
 此前长文检索在同合成样本上的 Python 跟踪分配峰值下降约87.7%，小样本耗时增加约6–8%；这项取舍和185项分批验证仍以[原阶段证据](docs/testing/library-memory/20261020/README.md)为准，不冒充本轮资源测量。
 
-下一片CH-06B2b2将独立资料许可、不可变输入格式、既有调用账本、原生确认和备份迁移一起接通，再完成一次资料辅助回答；之后扩展有界多轮。旧一次文字许可保持原范围。[预览合同](docs/plans/2026-10-20-context-preview-execution.md)已实施；[发送与存储设计](docs/plans/2026-10-20-context-send-storage.md)仍是待实施方案。
+下一片CH-06B2c将在已闭合的单次资料回答之上扩展有界多轮（同run≤4轮模型/≤8工具），复用现有生命周期、取消与费用账本；律师选片GUI仍待排期。旧一次文字许可保持原范围。[发送与存储设计](docs/plans/2026-10-20-context-send-storage.md)已实施；[本片执行计划](docs/plans/2026-10-21-context-send.md)。
 
 ## 架构与边界
 

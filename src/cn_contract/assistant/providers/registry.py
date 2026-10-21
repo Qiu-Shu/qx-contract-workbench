@@ -82,12 +82,19 @@ class MainModelRegistry:
         self._check_loop()
         session_id = _session_id(session_id)
         policy = _copy(d.MainModelPolicy, policy)
-        basis = _copy(d.MainSendApproval, basis) if basis is not None else None
+        if basis is not None:
+            basis = (_copy(d.MainContextSendBasis, basis) if isinstance(basis, d.MainContextSendBasis)
+                     else _copy(d.MainSendApproval, basis))
         config = self._current_config()
         if (not config.enabled or policy.config_sha256 != sha(encoded(config))
                 or policy.expires_at <= datetime.now(timezone.utc)):
             raise ServiceError('BLOCKED_LIVE', 403)
-        if basis is not None and (basis.expected_scope.workspace_id != policy.workspace_id
+        if basis is not None and isinstance(basis, d.MainContextSendBasis):
+            if (basis.expected_scope.workspace_id != policy.workspace_id
+                    or policy.allowed_content_sha256s != (basis.manifest_sha256,)
+                    or basis.config_sha256 != sha(encoded(config))):
+                raise ServiceError('BLOCKED_LIVE', 403)
+        elif basis is not None and (basis.expected_scope.workspace_id != policy.workspace_id
                 or policy.allowed_content_sha256s != (basis.content_sha256,)):
             raise ServiceError('BLOCKED_LIVE', 403)
         digest = sha(encoded(policy) + ('\n'+encoded(basis) if basis is not None else ''))
@@ -167,6 +174,9 @@ class _RuntimeLease:
         if self._basis is None:
             return
         basis = self._basis
+        if isinstance(basis, d.MainContextSendBasis):
+            # A context grant never authorizes plain-text drafts.
+            raise ServiceError('BLOCKED_LIVE', 403)
         if (scope != basis.expected_scope or composer_revision != basis.expected_composer_revision
                 or content_sha256 != basis.content_sha256):
             raise ServiceError('BLOCKED_LIVE', 403)
@@ -178,17 +188,50 @@ class _RuntimeLease:
                 or request.requested_skill is not None or request.attachment_ids):
             raise ServiceError('BLOCKED_LIVE', 403)
 
+    def check_context_submission(self, actor, request, basis):
+        """A granted context basis must equal the server's trusted rebuild exactly."""
+        request = _copy(d.MainContextSubmission, request)
+        basis = _copy(d.MainContextSendBasis, basis)
+        self.snapshot_for(actor, request.expected_scope)
+        granted = self._basis
+        if type(granted) is not d.MainContextSendBasis or granted != basis:
+            raise ServiceError('BLOCKED_LIVE', 403)
+        if (request.request_id != basis.request_id
+                or tuple(request.citation_ids) != tuple(item.saved_citation_id
+                                                        for item in basis.source_bindings)):
+            raise ServiceError('BLOCKED_LIVE', 403)
+
     def check_execution(self, actor, request_id, request):
+        if isinstance(request, d.MainContextRequest):
+            request = _copy(d.MainContextRequest, request)
+            self.snapshot_for(actor, request.scope)
+            basis = self._basis
+            if type(basis) is not d.MainContextSendBasis or request.basis != basis:
+                raise ServiceError('BLOCKED_LIVE', 403)
+            return
         request = _copy(d.MainRequest, request)
         self.snapshot_for(actor, request.scope)
         if self._basis is None:
             return
         basis = self._basis
+        if isinstance(basis, d.MainContextSendBasis):
+            raise ServiceError('BLOCKED_LIVE', 403)
         expected = basis.expected_scope.model_copy(update={
             'input_revision': basis.expected_scope.input_revision+1})
         if (request_id != basis.request_id or request.scope != expected
                 or request.source_sha256 != basis.content_sha256):
             raise ServiceError('BLOCKED_LIVE', 403)
+
+    def _preflight(self):
+        """Boolean revalidation for the transport; exceptions are denial, never leases."""
+        try:
+            registry = self._registry
+            registry._check_loop()
+            current = registry._grants.get(self._key)
+            return (registry._version is self._version and registry._provider is self._fixed_provider
+                    and current is not None and current[1] is self._nonce and current[2] == self._basis)
+        except Exception:
+            return False
 
 
 class _LeaseProvider:
@@ -204,7 +247,19 @@ class _LeaseProvider:
         config, policy = lease.snapshot()
         if expected_config is not None and _copy(d.MainModelConfig, expected_config) != config:
             raise ServiceError('BLOCKED_LIVE', 403)
+        if isinstance(request, d.MainContextRequest):
+            request = _copy(d.MainContextRequest, request)
+            basis = lease._basis
+            if type(basis) is not d.MainContextSendBasis or request.basis != basis:
+                raise ServiceError('BLOCKED_LIVE', 403)
+            require_policy(config, policy, lease._actor, request.scope, basis.manifest_sha256)
+            generate_context = getattr(lease._fixed_provider, 'generate_context', None)
+            if not callable(generate_context):
+                raise ServiceError('BLOCKED_LIVE', 403)
+            return await generate_context(request, expected_config=config, preflight=lease._preflight)
         request = _copy(d.MainRequest, request)
+        if isinstance(lease._basis, d.MainContextSendBasis):
+            raise ServiceError('BLOCKED_LIVE', 403)
         require_policy(config, policy, lease._actor, request.scope, request.source_sha256)
         if lease._basis is not None:
             lease.check_execution(lease._actor, lease._basis.request_id, request)

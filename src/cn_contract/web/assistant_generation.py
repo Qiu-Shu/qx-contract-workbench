@@ -129,6 +129,23 @@ def attach_generation(app, database, runtime=None, *, judge_runtime=None):
             # Valid HTTP text may still exceed the configured UTF-8 wire limit.
             raise ServiceError('STATE_CONFLICT',422) from None
 
+    @app.post(base+'/context-generations',status_code=202)
+    async def generate_context(identifier:UUID,request:Request):
+        """Source-bound answer; the fixed server-side format is never client-chosen."""
+        def authorize():
+            with database.session() as db:
+                actor=actor_in(request,db,write=True)
+                service._owned(actor,identifier,db)
+                require_active(db)
+            return actor
+        authorize()
+        value=await body_input(request,d.MainContextSubmission)
+        actor=authorize()
+        if tasks is None:raise ServiceError('BLOCKED_LIVE',403)
+        try:return tasks.submit_context(actor,identifier,value)
+        except ValueError:
+            raise ServiceError('STATE_CONFLICT',422) from None
+
     @app.get('/api/assistant/attempts/{identifier}')
     def attempt(identifier:UUID,request:Request):
         with database.session() as db:

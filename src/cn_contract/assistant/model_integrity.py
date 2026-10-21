@@ -118,21 +118,31 @@ def _events(db, row, run, value, output):
             _fail()
 
 
-def _validate(db, attempts, receipts, outputs, workspace):
+def _validate(db, attempts, receipts, outputs, workspace, *, context_schema):
+    from . import context_integrity
     conversations = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_conversations')).mappings()}
     messages = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_messages')).mappings()}
     runs = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_runs')).mappings()}
     sessions = {r['id']:r for r in db.execute(text('SELECT id,user_id FROM sessions')).mappings()}
     users = set(db.scalars(text('SELECT id FROM users')))
     policies = {}
+    relations = 0
     for row in attempts:
         identifier, cid, run_id = (_uuid(row[key]) for key in ('id','conversation_id','run_id'))
         for key in ('config_sha256','policy_sha256','request_sha256'):
             _hash(row[key])
         config = _model(d.MainModelConfig, row['config_json'], 32768)
         policy = _model(d.MainModelPolicy, row['policy_json'], 131072)
-        prepared = _model(d.MainPreparedInput, row['input_json'])
+        # Only a positively identified context schema may carry the format column;
+        # older schemas are historical V1 by definition, never by fallback.
+        fmt = row['input_format'] if context_schema else 'plain-text-v1'
+        if fmt not in ('plain-text-v1', 'library-context-v1'):
+            _fail()
+        context = fmt == 'library-context-v1'
+        prepared = _model(d.MainContextPreparedInput if context else d.MainPreparedInput, row['input_json'])
         request, scope = prepared.request, prepared.request.scope
+        source_sha = request.basis.manifest_sha256 if context else request.source_sha256
+        question = request.manifest.question if context else request.content
         conversation, run = conversations.get(cid), runs.get(run_id)
         message = messages.get(str(request.message_id))
         if conversation is None or run is None or message is None:
@@ -145,7 +155,7 @@ def _validate(db, attempts, receipts, outputs, workspace):
                 or conversation['workspace_id'] != workspace or str(scope.workspace_id) != workspace
                 or str(scope.conversation_id) != cid or str(request.run_id) != run_id
                 or run['message_id'] != str(request.message_id) or message['conversation_id'] != cid
-                or message['role'] != 'user' or message['content'] != request.content
+                or message['role'] != 'user' or message['content'] != question
                 or message['source_revision'] != scope.input_revision
                 or _model(d.ScopeSnapshot, run['scope_snapshot']) != scope
                 or scope.scope_kind != conversation['scope_kind']
@@ -170,12 +180,22 @@ def _validate(db, attempts, receipts, outputs, workspace):
                 or not config.enabled or str(policy.policy_id) != _uuid(row['policy_id'])
                 or str(policy.workspace_id) != workspace or str(policy.actor_id) != actor
                 or policy.config_sha256 != row['config_sha256'] or policy.expires_at <= created
-                or request.source_sha256 not in policy.allowed_content_sha256s
+                or source_sha not in policy.allowed_content_sha256s
                 or sha(encoded(config)) != row['config_sha256'] or sha(encoded(policy)) != row['policy_sha256']
-                or sha(prepared.wire_payload_json) != row['request_sha256']
-                or prepare(request, config).wire_payload_json != prepared.wire_payload_json
                 or run['selected_provider'] != config.provider or run['selected_model'] != config.model):
             _fail()
+        if context:
+            context_integrity.validate_context_input(row, prepared, config)
+            context_integrity.validate_context_selection(db, row, prepared)
+            relations += len(request.manifest.sources)
+        else:
+            if (sha(prepared.wire_payload_json) != row['request_sha256']
+                    or prepare(request, config).wire_payload_json != prepared.wire_payload_json):
+                _fail()
+            if context_schema and db.scalar(text(
+                    'SELECT COUNT(*) FROM assistant_model_input_citations WHERE attempt_id=:id'),
+                    {'id': row['id']}):
+                _fail()
         reserved = TypeAdapter(d.MainUSD).validate_python(row['reserved_usd'])
         if reserved != reservation(config) or reserved > policy.max_total_usd or _json(run['budget_json'], 16384) != {
                 'policy_id':row['policy_id'], 'reserved_usd':str(reserved), 'unit':'USD'}:
@@ -184,13 +204,17 @@ def _validate(db, attempts, receipts, outputs, workspace):
         value = _receipt(row, receipts.get(identifier), output, config, run, created, updated)
         _events(db, row, run, value, output)
         if output is not None:
-            view = _model(d.MainOutputView, output['output_json'], 262144)
+            view = _model(d.MainContextOutputView if context else d.MainOutputView,
+                          output['output_json'], 262144)
             if (_uuid(output['id']) != str(view.id) or output['conversation_id'] != cid
                     or output['run_id'] != run_id or view.run_id != request.run_id
                     or _model(d.ScopeSnapshot, output['scope_json']) != scope or view.scope != scope
-                    or _at(output['created_at']) != view.created_at or view.created_at != updated
-                    or any(c.message_id != request.message_id or c.quote_sha256 != request.source_sha256
-                           for c in view.candidate.citations)):
+                    or _at(output['created_at']) != view.created_at or view.created_at != updated):
+                _fail()
+            if context:
+                context_integrity.validate_context_output(view, prepared)
+            elif any(c.message_id != request.message_id or c.quote_sha256 != request.source_sha256
+                     for c in view.candidate.citations):
                 _fail()
         old_policy, calls = policies.get(row['policy_id'], (row['policy_sha256'], 0))
         if old_policy != row['policy_sha256']:
@@ -202,6 +226,14 @@ def _validate(db, attempts, receipts, outputs, workspace):
         if calls > policy.max_calls:
             _fail()
         policies[row['policy_id']] = old_policy, calls
+    if context_schema:
+        # No orphaned or extra relation rows beyond the validated manifests.
+        total = db.scalar(text('SELECT COUNT(*) FROM assistant_model_input_citations'))
+        if total != relations:
+            _fail()
+        owners = set(db.scalars(text('SELECT DISTINCT attempt_id FROM assistant_model_input_citations')))
+        if not owners <= {r['id'] for r in attempts}:
+            _fail()
 
 
 def validate_model_records(db, *, allowed=True):
@@ -212,7 +244,8 @@ def validate_model_records(db, *, allowed=True):
     version = identify_schema(schema, native=native)
     if version in ('pre-intake','intake-v1','assistant-v1','assistant-attachments-v1'):
         return
-    if version not in ('assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1'):
+    if version not in ('assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
+                       'assistant-context-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     attempts = db.execute(text('SELECT * FROM assistant_model_attempts ORDER BY created_at,id')).mappings().all()
     receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_receipts')).mappings()}
@@ -234,7 +267,8 @@ def validate_model_records(db, *, allowed=True):
     try:
         # Pydantic decimal digit validation also normalizes using this context.
         with localcontext(Context(prec=60)):
-            _validate(db, attempts, receipts, outputs, _uuid(identities[0]))
+            _validate(db, attempts, receipts, outputs, _uuid(identities[0]),
+                      context_schema=version == 'assistant-context-v1')
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
         # Archive errors must not interpolate source text or model bodies.
         raise ValueError('ASSISTANT_MODEL_INTEGRITY') from None

@@ -12,16 +12,25 @@ async def execute_attempt(actor, identifier, database, runtime):
         with database.session() as db:
             return attempts.read_attempt(actor, identifier, db)
     token, request, config = claimed
+    reply_type = d.MainContextReply if type(request) is d.MainContextRequest else d.MainReply
     cancelled = False
     try:
         async with asyncio.timeout(config.timeout_seconds):
-            reply = await runtime.provider.generate(request, expected_config=config)
-            reply = d.MainReply.model_validate(reply.model_dump(mode='python'))
+            if type(request) is d.MainContextRequest:
+                generate_context = getattr(runtime.provider, 'generate_context', None)
+                if callable(generate_context):
+                    reply = await generate_context(request, expected_config=config)
+                else:
+                    # Registry leases dispatch context sends inside generate().
+                    reply = await runtime.provider.generate(request, expected_config=config)
+            else:
+                reply = await runtime.provider.generate(request, expected_config=config)
+            reply = reply_type.model_validate(reply.model_dump(mode='python'))
     except asyncio.CancelledError:
         cancelled = True
-        reply = d.MainReply(state='sent_unknown', error_code='PROVIDER_ERROR')
+        reply = reply_type(state='sent_unknown', error_code='PROVIDER_ERROR')
     except Exception:
-        reply = d.MainReply(state='sent_unknown', error_code='PROVIDER_ERROR')
+        reply = reply_type(state='sent_unknown', error_code='PROVIDER_ERROR')
     with database.session() as db:
         attempts.settle(actor, identifier, token, reply, db, runtime)
     if cancelled:

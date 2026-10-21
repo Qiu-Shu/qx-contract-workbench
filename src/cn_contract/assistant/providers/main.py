@@ -51,3 +51,12 @@ class DeepSeekProvider(DeepSeekTransport):
                        expected_config: d.MainModelConfig | None = None) -> d.MainReply:
         return await self._generate(request,expected_config=expected_config,
             builder=build_request,decoder=_decode,reply_type=d.MainReply)
+
+    async def generate_context(self, request: d.MainContextRequest, *,
+                               expected_config: d.MainModelConfig | None = None,
+                               preflight=None) -> d.MainContextReply:
+        """Source-bound sending stays denied unless the trusted lease preflights."""
+        from .context_codec import build_request as context_build, decode_response as context_decode
+        return await self._generate(request, expected_config=expected_config,
+            builder=context_build, decoder=context_decode, reply_type=d.MainContextReply,
+            preflight=preflight if preflight is not None else (lambda: False))

@@ -37,6 +37,9 @@ class MainModelRuntime:
     def check_submission(self, actor, request):
         pass
 
+    def check_context_submission(self, actor, request, basis):
+        pass
+
     def check_execution(self, actor, request_id, request):
         pass
 

@@ -23,15 +23,19 @@ HISTORICAL = {False: '6f32a34c5d9f9c5c25815dde728504bc90a7b6512b5ea54818bae294e7
               True: '900c3e39df4c11686d70b89e7c7c50a13da051e7e00bed8a08ea8f734a47cfc4'}
 
 
-def test_library_is_an_additive_upgrade_from_judge(tmp_path):
+def test_library_chain_upgrades_judge_to_current_with_exact_delta(tmp_path):
     with closing(old_db(tmp_path/'old.db', 'assistant-judge-v1', False)) as db:
         before = schema_migrations.database_rows(db)
-        assert schema_migrations.upgrade_database(db) == 'assistant-library-v1'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         after = schema_migrations.database_rows(db)
-        assert set(before) < set(after)
+        # Library tables are additive; the context step replaces the model
+        # family's attempts table and immutable-input trigger in place.
         assert {row[2] for row in set(after) - set(before)} == {
-            'assistant_handler_receipts', 'assistant_library_citations'}
-        assert storage_schema.identify_schema(after) == 'assistant-library-v1'
+            'assistant_handler_receipts', 'assistant_library_citations',
+            'assistant_model_input_citations', 'assistant_model_attempts'}
+        assert {row[1] for row in set(before) - set(after)} == {
+            'assistant_model_attempts', 'immutable_assistant_model_input'}
+        assert storage_schema.identify_schema(after) == 'assistant-context-v1'
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
 
 
@@ -57,13 +61,15 @@ def test_all_historical_versions_upgrade_without_replacing_objects_or_rows(tmp_p
         db.execute("INSERT INTO users VALUES ('synthetic-user', 'old-user', 'not-a-real-password', '[]', 0)")
         db.commit()
         before = schema_migrations.database_rows(db)
-        assert schema_migrations.upgrade_database(db) == 'assistant-library-v1'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         after = schema_migrations.database_rows(db)
-        assert set(before) < set(after)
-        assert storage_schema.identify_schema(after, native=native) == 'assistant-library-v1'
+        # Only the model family's in-place context migration replaces old objects.
+        replaced = {row[1] for row in set(before) - set(after)}
+        assert replaced <= {'assistant_model_attempts', 'immutable_assistant_model_input'}
+        assert storage_schema.identify_schema(after, native=native) == storage_schema.CURRENT_VERSION
         assert db.execute('SELECT username FROM users').fetchall() == [('old-user',)]
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
-        assert schema_migrations.upgrade_database(db) == 'assistant-library-v1'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         assert schema_migrations.database_rows(db) == after
 
 

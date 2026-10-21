@@ -12,6 +12,9 @@ from ..ops.storage import require_active
 from ..security import ServiceError, authenticate
 from . import service
 from .attachment_records import items
+from .context_preview import assemble_context
+from .providers.attempts import _input as _stored_input
+from .providers.context_codec import build_basis
 from .providers.main import DeepSeekProvider
 from .providers.policy import encoded, prepare, reservation, sha, validated
 
@@ -131,5 +134,73 @@ class NativeModelControl:
             self._registry.grant(policy, actor.session_id, basis=basis)
             token = self._registry.authorization_token(actor, basis.expected_scope)
             # Keep replay tombstones, not leases that retain retired providers and secrets.
+            self._intents[basis.request_id] = fingerprint, token
+        return {'status': 'authorized'}
+
+    @_fixed_errors
+    def authorize_context(self, payload):
+        """One native grant for a server-rebuilt library-context basis; no new scopes."""
+        self._check_loop()
+        value = _payload(d.NativeContextAuthorization, payload)
+        with self._database.session() as db:
+            actor = authenticate(value.session_token, db)
+            basis = value.basis
+            conversation = service._owned(actor, basis.expected_scope.conversation_id, db)
+            require_active(db)
+            if self._config_version is None or value.expected_config_version != self._config_version:
+                raise ServiceError('BLOCKED_LIVE', 403)
+            fingerprint = sha(canonical_json({'actor': str(actor.user_id), 'session': str(actor.session_id),
+                'approval': value.model_dump(mode='json', exclude={'session_token'})}))
+            previous = self._intents.get(basis.request_id)
+            if previous is not None and previous[0] != fingerprint:
+                raise ServiceError('VERSION_CONFLICT', 409)
+            run = db.execute(text('''SELECT r.*,m.content FROM assistant_runs r
+                JOIN assistant_messages m ON m.id=r.message_id WHERE r.request_id=:request'''),
+                {'request': str(basis.request_id)}).mappings().first()
+            if run is not None:
+                attempt = db.execute(text('SELECT * FROM assistant_model_attempts WHERE run_id=:id'),
+                    {'id': run['id']}).mappings().first()
+                expected = basis.expected_scope.model_copy(update={
+                    'input_revision': basis.expected_scope.input_revision+1})
+                if (attempt is None or attempt['input_format'] != 'library-context-v1'
+                        or run['conversation_id'] != str(basis.expected_scope.conversation_id)
+                        or run['actor_id'] != str(actor.user_id) or run['session_id'] != str(actor.session_id)
+                        or d.ScopeSnapshot.model_validate_json(run['scope_snapshot']) != expected
+                        or run['requested_skill'] is not None):
+                    raise ServiceError('VERSION_CONFLICT', 409)
+                prepared = _stored_input(attempt)
+                if (type(prepared) is not d.MainContextPreparedInput or prepared.request.basis != basis
+                        or prepared.request.manifest.question != run['content']):
+                    raise ServiceError('VERSION_CONFLICT', 409)
+                original = d.AssistantMessageInput(request_id=basis.request_id, expected_scope=basis.expected_scope,
+                    expected_composer_revision=basis.expected_composer_revision, content=run['content'])
+                digest = service._digest({'actor_id': str(actor.user_id), 'workspace_id': conversation['workspace_id'],
+                    'conversation_id': conversation['id'], 'request': original.model_dump(mode='json')})
+                if run['request_sha256'] != digest:
+                    raise ServiceError('VERSION_CONFLICT', 409)
+                return {'status': 'existing'}
+            service._expected(conversation, basis)
+            if (not conversation['draft_input'].strip() or items(conversation, db)):
+                raise ServiceError('BLOCKED_LIVE', 403)
+            if previous is not None:
+                self._registry.validate_authorization(actor, basis.expected_scope, previous[1])
+                return {'status': 'authorized'}
+            config = self._config
+            if not config.enabled or value.max_total_usd < reservation(config):
+                raise ServiceError('BLOCKED_LIVE', 403)
+            # The exact approved bytes are rebuilt from persisted citations and the
+            # current draft; a client-presented basis only names what to rebuild.
+            scope, manifest, records = assemble_context(actor, conversation,
+                tuple(item.saved_citation_id for item in basis.source_bindings), db)
+            computed = build_basis(basis.request_id, manifest, scope,
+                conversation['composer_revision'], config, records)
+            if computed != basis:
+                raise ServiceError('BLOCKED_LIVE', 403)
+            policy = validated(d.MainModelPolicy, dict(policy_id=uuid4(), workspace_id=basis.expected_scope.workspace_id,
+                actor_id=actor.user_id, config_sha256=sha(encoded(config)), allowed_content_sha256s=(basis.manifest_sha256,),
+                max_total_usd=value.max_total_usd, max_calls=1,
+                expires_at=datetime.now(timezone.utc)+timedelta(seconds=value.valid_for_seconds)))
+            self._registry.grant(policy, actor.session_id, basis=basis)
+            token = self._registry.authorization_token(actor, basis.expected_scope)
             self._intents[basis.request_id] = fingerprint, token
         return {'status': 'authorized'}

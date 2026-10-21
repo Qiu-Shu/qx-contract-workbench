@@ -1,0 +1,57 @@
+........................................................................ [ 59%]
+................................................F                        [100%]
+================================== FAILURES ===================================
+_______________ test_preview_stays_blocked_after_backup_restore _______________
+
+world = (<cn_contract.persistence.Database object at 0x0000018B996292E0>, Actor(user_id=UUID('c7d6f8e7-08f7-490f-94ed-83cf5e9b...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x0000018B996A1B50>)
+tmp_path = WindowsPath('D:/temp-qx/slice-final2/test_preview_stays_blocked_aft0')
+library = (WindowsPath('D:/temp-qx/slice-final2/test_preview_stays_blocked_aft0/library'), '# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+
+    def test_preview_stays_blocked_after_backup_restore(world, tmp_path, library):
+        from cn_contract.ops import workspace_backup
+        from tests.helpers.legacy_assistant_backup import PASSPHRASE
+        with boot(world, tmp_path, library[0]) as http:
+            body = selection(http)
+            with http.database.session() as db:
+                before_schema = db.execute(text('SELECT type,name,sql FROM sqlite_master ORDER BY type,name')).all()
+            assert http.client.post(http.url+'/context-preview', headers=http.headers, json=body).status_code == 200
+            with http.database.session() as db:
+                assert db.execute(text('SELECT type,name,sql FROM sqlite_master ORDER BY type,name')).all() == before_schema
+            source_root = http.root
+        archive = tmp_path/'context-preview.qxbak'
+        workspace_backup.create_workspace_backup(source_root, archive, PASSPHRASE, data_parent=tmp_path)
+>       restored = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_context_preview_routes.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/slice-final2/test_preview_stays_blocked_aft0/context-preview.qxbak')
+root = WindowsPath('//?/D:/temp-qx/slice-final2/test_preview_stays_blocked_aft0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_context_preview_routes.py::test_preview_stays_blocked_after_backup_restore
+1 failed, 120 passed in 266.05s (0:04:26)

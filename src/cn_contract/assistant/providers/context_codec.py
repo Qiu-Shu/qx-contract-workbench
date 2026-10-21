@@ -33,6 +33,14 @@ def validate_sources(manifest, scope, bindings, records):
             raise ValueError('CONTEXT_INPUT_INVALID')
 
 
+def manifest_digest(manifest):
+    """Authorization-key digest of the manifest alone; independent of any config."""
+    manifest = _validated(d.MainContextManifest, manifest)
+    from ...config import canonical_json
+    from hashlib import sha256
+    return sha256(canonical_json(manifest.model_dump(mode='json')).encode('utf-8')).hexdigest()
+
+
 def build_basis(request_id, manifest, scope, composer_revision, config, records):
     """Describe exact proposed bytes after source checks; does not grant a send."""
     records = tuple(_validated(d.SavedLibraryCitation, item) for item in records)
