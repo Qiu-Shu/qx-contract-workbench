@@ -221,8 +221,8 @@ def test_persisted_request_identity_is_checked_at_claim_and_settlement(native, m
         attempt = enqueue(n, legacy, n.request.model_copy(update={'request_id': uuid4()}))
         if moment == 'settle':
             with n.database.session() as db: claimed = attempts.claim(n.actor, attempt.id, db, legacy)
-            token, request, config = claimed
-            reply = await lease.provider.generate(request, expected_config=config)
+            token, prepared, config = claimed
+            reply = await lease.provider.generate(prepared.request, expected_config=config)
         if moment == 'claim':
             completed = await execute_attempt(n.actor, attempt.id, n.database, lease)
             assert completed.receipt.cost_status == 'not_sent'
@@ -394,7 +394,8 @@ def test_basis_cannot_change_under_same_policy_identity_and_execution_scope_is_e
             n.registry.grant(policy, n.actor.session_id, basis=basis.model_copy(update={'request_id': uuid4()}))
         attempt = enqueue(n, lease)
         with n.database.session() as db:
-            token, request, config = attempts.claim(n.actor, attempt.id, db, lease)
+            token, prepared, config = attempts.claim(n.actor, attempt.id, db, lease)
+        request = prepared.request
         lease.check_execution(n.actor, n.request.request_id, request)
         for scope in [n.draft.scope, request.scope.model_copy(update={'input_revision': 9}),
                       request.scope.model_copy(update={'binding_revision': 2}),

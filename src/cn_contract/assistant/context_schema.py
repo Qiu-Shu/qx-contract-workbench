@@ -56,9 +56,11 @@ def initialize_storage(database):
             "'assistant_model_input_citations') ORDER BY type,name")]
         if found == expected_objects():
             return
-        # The positively identified rounds-v1 successor is accepted as-is.
+        # The positively identified rounds-v1 and rounds-v2 successors are
+        # accepted as-is.
         from .rounds_schema import expected_objects as rounds_objects
-        if found == rounds_objects():
+        from .rounds_v2_schema import expected_objects as rounds_v2_objects
+        if found == rounds_objects() or found == rounds_v2_objects():
             return
         # Only the positively identified V1 model family is migrated in place.
         if found != model_schema.expected_objects():

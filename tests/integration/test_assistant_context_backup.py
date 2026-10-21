@@ -142,9 +142,9 @@ def test_context_archive_rejects_selection_and_format_corruption(context_world, 
         corrupt(database, 'assistant_model_outputs',
                 'UPDATE assistant_model_outputs SET output_json=?', (canonical_json(forged),))
     elif fault == 'second_round':
-        # B2c1 fail-closed: a hand-inserted second round is structurally
-        # occupiable but not yet validatable; intermediate-round semantics
-        # arrive with the bounded loop in B2c2.
+        # A hand-inserted second round stays structurally occupiable but is
+        # rejected: a v1-format run can never become multi-round, and v2
+        # rounds require their persisted plan/tool chain (B2c2 semantics).
         with database.session() as db:
             row = dict(db.execute(text('SELECT * FROM assistant_model_attempts')).mappings().one())
         values = tuple(str(uuid4()) if key == 'id' else 2 if key == 'round_no' else value

@@ -41,4 +41,7 @@ def preview_context(actor, conversation_id, selection, db, *, config=None):
     if not conversation['draft_input'].strip() or items(conversation, db):
         raise ServiceError('NOT_SUPPORTED', 422)
     scope, manifest, _ = assemble_context(actor, conversation, selection.citation_ids, db)
-    return build_preview(manifest, scope, conversation['composer_revision'], config)
+    template = ('saved-library-context-system-v2' if selection.max_rounds > 1
+                else 'saved-library-context-system-v1')
+    return build_preview(manifest, scope, conversation['composer_revision'], config,
+                         template_version=template)

@@ -46,7 +46,7 @@ def _at(value):
     return TypeAdapter(d.UTCDatetime).validate_python(value)
 
 
-def _receipt(row, stored, output, config, run, created, updated):
+def _receipt(row, stored, output, config, run, created, updated, *, intermediate=False):
     state, claim = row['state'], row['claim_sha256']
     if state not in {'reserved','sending','received','sent_unknown','failed_before_send'}:
         _fail()
@@ -55,7 +55,7 @@ def _receipt(row, stored, output, config, run, created, updated):
     if state == 'reserved' and claim is not None or state in {'sending','received','sent_unknown'} and claim is None:
         _fail()
     if state in {'reserved','sending'}:
-        if stored is not None or output is not None:
+        if stored is not None or output is not None or intermediate:
             _fail()
         if run['state'] not in ({'queued','cancelled'} if state == 'reserved' else {'generating'}):
             _fail()
@@ -82,7 +82,11 @@ def _receipt(row, stored, output, config, run, created, updated):
         _fail()
     if state != 'received' and (output is not None or value.error_code is None):
         _fail()
-    if output is not None:
+    if intermediate:
+        # A plan round is a received, error-free, output-free continuation.
+        if state != 'received' or value.error_code is not None or output is not None:
+            _fail()
+    elif output is not None:
         if run['state'] != 'completed' or value.error_code is not None:
             _fail()
     elif run['state'] not in {'failed','cancelled','interrupted'}:
@@ -118,9 +122,141 @@ def _events(db, row, run, value, output):
             _fail()
 
 
+def _plan_stop_events(db):
+    """Load bounded-rounds continuation events; malformed payloads are corruption."""
+    plans, stops = {}, {}
+    rows = db.execute(text('''SELECT * FROM assistant_run_events
+        WHERE event_type IN ('model.tool_plan','model.bounded_stop')
+        ORDER BY run_id,seq''')).mappings().all()
+    for row in rows:
+        if row['audience'] != 'internal':
+            _fail()
+        payload = _json(row['payload_json'], 262144)
+        if type(payload) is not dict:
+            _fail()
+        attempt_id = payload.get('attempt_id')
+        if type(attempt_id) is not str:
+            _fail()
+        _uuid(attempt_id)
+        if row['event_type'] == 'model.tool_plan':
+            plan = d.MainContextToolPlan.model_validate(payload.get('plan'))
+            plans.setdefault(attempt_id, []).append((row['seq'], plan))
+        else:
+            if payload.get('reason') not in ('rounds_exhausted', 'tool_limit', 'tool_rejected',
+                                             'budget_exhausted'):
+                _fail()
+            stops.setdefault(row['run_id'], []).append((row['seq'], payload))
+    return plans, stops
+
+
+def _events_rounds(db, run, rows, receipts, outputs, plan_map, stop_map):
+    """Whole-run expected model event sequence for a bounded-rounds archive."""
+    events = db.execute(text('''SELECT * FROM assistant_run_events
+        WHERE run_id=:run ORDER BY seq'''), {'run':run['id']}).mappings().all()
+    if any(event['seq'] != sequence for sequence, event in enumerate(events, start=1)):
+        _fail()
+    events = [event for event in events if event['event_type'].lower().startswith('model.')]
+    expected = []
+    for row in rows:
+        expected.append(('model.reserved', {'attempt_id':row['id'], 'state':'queued'}, row))
+        if row['claim_sha256'] is not None:
+            expected.append(('model.started', {'attempt_id':row['id'], 'state':'generating'}, row))
+        stored = receipts.get(row['id'])
+        if stored is None:
+            continue
+        value = _model(d.MainReceipt, stored['receipt_json'], 16384)
+        plans = plan_map.get(row['id'], ())
+        if (run['state'] == 'interrupted' and value.error_code == 'BLOCKED_LIVE'
+                and row['state'] in ('failed_before_send', 'sent_unknown')):
+            expected.append(('model.interrupted', {'attempt_id':row['id'], 'state':'interrupted',
+                'cost_status':value.cost_status}, row))
+        elif plans:
+            expected.append(('model.finished', {'attempt_id':row['id'], 'state':'generating',
+                'output_id':None, 'cost_status':value.cost_status, 'error_code':None}, row))
+            expected.append(('model.tool_plan', {'attempt_id':row['id'],
+                'plan':plans[0][1].model_dump(mode='json')}, row))
+        else:
+            output = outputs.get(row['id'])
+            expected.append(('model.finished', {'attempt_id':row['id'], 'state':run['state'],
+                'output_id':output['id'] if output else None, 'cost_status':value.cost_status,
+                'error_code':value.error_code}, row))
+    for _, payload in stop_map.get(run['id'], ()):
+        expected.append(('model.bounded_stop', payload, None))
+    if len(events) != len(expected):
+        _fail()
+    for event, (kind, payload, row) in zip(events, expected):
+        if (event['event_type'] != kind or event['audience'] != 'internal'
+                or _json(event['payload_json'], 262144) != payload):
+            _fail()
+        if row is not None and _at(event['created_at']) < _at(row['created_at']):
+            _fail()
+
+
+def _validate_rounds_replay(db, run_id, ordered, prepareds, plan_map):
+    """Bind plan events, tool calls, receipts and next-round inputs exactly.
+
+    Non-final plan rounds bind every planned call to a receipt which the next
+    round input replays. A trailing plan round (in-flight pause or bounded
+    stop) may show only a prefix of executed calls; a rejected final call can
+    leave its tool.before event without a receipt.
+    """
+    from .library_records import receipt_view
+    from .providers.rounds_codec import project_outcome
+    mixed = db.execute(text('''SELECT * FROM assistant_run_events
+        WHERE run_id=:run AND event_type IN ('tool.before','model.tool_plan')
+        ORDER BY seq'''), {'run': run_id}).mappings().all()
+    position = 0
+    for index, row in enumerate(ordered, start=1):
+        plans = plan_map.get(row['id'])
+        if not plans:
+            continue
+        plan_seq, plan = plans[0]
+        if position >= len(mixed) or mixed[position]['event_type'] != 'model.tool_plan':
+            _fail()
+        if mixed[position]['seq'] != plan_seq:
+            _fail()
+        position += 1
+        exchange = None
+        if index < len(ordered):
+            following = prepareds[ordered[index]['id']]
+            if type(following) is not d.MainContextRoundsPreparedInput:
+                _fail()
+            exchange = following.exchanges[index - 1]
+            if exchange.round_no != index or exchange.plan != plan:
+                _fail()
+        executed = 0
+        while position < len(mixed) and mixed[position]['event_type'] == 'tool.before':
+            if executed >= len(plan.calls):
+                _fail()
+            planned = plan.calls[executed]
+            event = mixed[position]
+            call = d.LibraryHandlerEvent.model_validate(_json(event['payload_json'], 16384))
+            if (call.handler_id != planned.tool or call.request.tool != planned.tool
+                    or call.request.query != planned.query
+                    or call.request.saved_citation_id != planned.saved_citation_id):
+                _fail()
+            receipt_row = db.execute(text('''SELECT * FROM assistant_handler_receipts
+                WHERE run_id=:run AND event_seq=:seq AND handler_id=:handler
+                AND handler_version='1' '''), {'run': run_id, 'seq': event['seq'],
+                'handler': call.handler_id}).mappings().first()
+            if exchange is not None:
+                if receipt_row is None:
+                    _fail()
+                if project_outcome(receipt_view(receipt_row)) != exchange.outcomes[executed]:
+                    _fail()
+            executed += 1
+            position += 1
+        if exchange is not None and executed != len(plan.calls):
+            _fail()
+    if position != len(mixed):
+        _fail()
+
+
 def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rounds=False):
     from . import context_integrity
-    run_rounds = {}
+    run_attempts = {}
+    prepareds = {}
+    plan_map, stop_map = _plan_stop_events(db) if rounds else ({}, {})
     conversations = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_conversations')).mappings()}
     messages = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_messages')).mappings()}
     runs = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_runs')).mappings()}
@@ -131,13 +267,13 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
     for row in attempts:
         identifier, cid, run_id = (_uuid(row[key]) for key in ('id','conversation_id','run_id'))
         if rounds:
-            # rounds-v1 rows carry the immutable round occupancy column; B2c1
-            # defines no intermediate-round semantics, so archives with more
-            # than one round per run fail closed (checked after the loop).
+            # rounds rows carry the immutable round occupancy column; v1
+            # archives define no intermediate-round semantics and fail closed
+            # after the loop, while v2 archives bind plans, tools and inputs.
             round_no = row['round_no']
             if type(round_no) is not int or not 1 <= round_no <= 4:
                 _fail()
-            run_rounds.setdefault(run_id, []).append(round_no)
+            run_attempts.setdefault(run_id, []).append(row)
         for key in ('config_sha256','policy_sha256','request_sha256'):
             _hash(row[key])
         config = _model(d.MainModelConfig, row['config_json'], 32768)
@@ -145,10 +281,23 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
         # Only a positively identified context schema may carry the format column;
         # older schemas are historical V1 by definition, never by fallback.
         fmt = row['input_format'] if context_schema else 'plain-text-v1'
-        if fmt not in ('plain-text-v1', 'library-context-v1'):
+        allowed = ('plain-text-v1', 'library-context-v1')
+        if rounds == 'v2':
+            allowed = allowed + ('library-context-v2',)
+        if fmt not in allowed:
             _fail()
-        context = fmt == 'library-context-v1'
-        prepared = _model(d.MainContextPreparedInput if context else d.MainPreparedInput, row['input_json'])
+        context = fmt in ('library-context-v1', 'library-context-v2')
+        if fmt == 'library-context-v2':
+            prepared = _model(d.MainContextRoundsPreparedInput, row['input_json'])
+            if prepared.round_no != row['round_no']:
+                _fail()
+        elif fmt == 'library-context-v1':
+            prepared = _model(d.MainContextPreparedInput, row['input_json'])
+        else:
+            prepared = _model(d.MainPreparedInput, row['input_json'])
+        if context and prepared.request.basis.input_format != fmt:
+            _fail()
+        prepareds[identifier] = prepared
         request, scope = prepared.request, prepared.request.scope
         source_sha = request.basis.manifest_sha256 if context else request.source_sha256
         question = request.manifest.question if context else request.content
@@ -210,8 +359,11 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
                 'policy_id':row['policy_id'], 'reserved_usd':str(reserved), 'unit':'USD'}:
             _fail()
         output = outputs.get(identifier)
-        value = _receipt(row, receipts.get(identifier), output, config, run, created, updated)
-        _events(db, row, run, value, output)
+        intermediate = identifier in plan_map
+        value = _receipt(row, receipts.get(identifier), output, config, run, created, updated,
+                         intermediate=intermediate)
+        if rounds != 'v2':
+            _events(db, row, run, value, output)
         if output is not None:
             view = _model(d.MainContextOutputView if context else d.MainOutputView,
                           output['output_json'], 262144)
@@ -243,11 +395,49 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
         owners = set(db.scalars(text('SELECT DISTINCT attempt_id FROM assistant_model_input_citations')))
         if not owners <= {r['id'] for r in attempts}:
             _fail()
-    for run_id, occupied in run_rounds.items():
-        # Round occupancy must be contiguous from 1; B2c1 writers only ever
-        # occupy round 1, so any multi-round archive is not yet validatable.
-        if sorted(occupied) != list(range(1, len(occupied) + 1)) or len(occupied) > 1:
+    if rounds == 'v1':
+        # The v1 ledger never defined intermediate-round semantics: single only.
+        if plan_map or stop_map:
             _fail()
+        for run_id, rows in run_attempts.items():
+            if len(rows) != 1 or rows[0]['round_no'] != 1:
+                _fail()
+    if rounds == 'v2':
+        for run_id, rows in run_attempts.items():
+            ordered = sorted(rows, key=lambda item: item['round_no'])
+            if [item['round_no'] for item in ordered] != list(range(1, len(ordered) + 1)):
+                _fail()
+            if len(ordered) > 1 and any(item['input_format'] != 'library-context-v2'
+                                        for item in ordered):
+                _fail()
+            run = runs[run_id]
+            for row in ordered[:-1]:
+                # Every non-final round must carry exactly one persisted plan.
+                if len(plan_map.get(row['id'], ())) != 1:
+                    _fail()
+            last = ordered[-1]
+            last_plans = plan_map.get(last['id'], ())
+            if len(last_plans) > 1:
+                _fail()
+            stops = stop_map.get(run_id, ())
+            if len(stops) > 1:
+                _fail()
+            if last_plans:
+                if stops:
+                    stop_seq, payload = stops[0]
+                    if (run['state'] != 'failed' or payload['attempt_id'] != last['id']
+                            or stop_seq < last_plans[0][0]):
+                        _fail()
+                    if payload['reason'] == 'rounds_exhausted':
+                        last_policy = _model(d.MainModelPolicy, last['policy_json'], 131072)
+                        if last['round_no'] != last_policy.max_calls:
+                            _fail()
+                elif run['state'] not in ('generating', 'interrupted') or last['round_no'] == 4:
+                    _fail()
+            elif stops:
+                _fail()
+            _events_rounds(db, run, ordered, receipts, outputs, plan_map, stop_map)
+            _validate_rounds_replay(db, run_id, ordered, prepareds, plan_map)
 
 
 def validate_model_records(db, *, allowed=True):
@@ -259,7 +449,7 @@ def validate_model_records(db, *, allowed=True):
     if version in ('pre-intake','intake-v1','assistant-v1','assistant-attachments-v1'):
         return
     if version not in ('assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
-                       'assistant-context-v1', 'assistant-rounds-v1'):
+                       'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     attempts = db.execute(text('SELECT * FROM assistant_model_attempts ORDER BY created_at,id')).mappings().all()
     receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_receipts')).mappings()}
@@ -282,8 +472,10 @@ def validate_model_records(db, *, allowed=True):
         # Pydantic decimal digit validation also normalizes using this context.
         with localcontext(Context(prec=60)):
             _validate(db, attempts, receipts, outputs, _uuid(identities[0]),
-                      context_schema=version in ('assistant-context-v1', 'assistant-rounds-v1'),
-                      rounds=version == 'assistant-rounds-v1')
+                      context_schema=version in ('assistant-context-v1', 'assistant-rounds-v1',
+                                                 'assistant-rounds-v2'),
+                      rounds=('v2' if version == 'assistant-rounds-v2'
+                              else 'v1' if version == 'assistant-rounds-v1' else False))
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
         # Archive errors must not interpolate source text or model bodies.
         raise ValueError('ASSISTANT_MODEL_INTEGRITY') from None

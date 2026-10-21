@@ -15,6 +15,7 @@ from .attachment_records import items
 from .context_preview import assemble_context
 from .providers.attempts import _input as _stored_input
 from .providers.context_codec import build_basis
+from .providers.rounds_codec import build_basis_rounds
 from .providers.main import DeepSeekProvider
 from .providers.policy import encoded, prepare, reservation, sha, validated
 
@@ -145,6 +146,10 @@ class NativeModelControl:
         with self._database.session() as db:
             actor = authenticate(value.session_token, db)
             basis = value.basis
+            # The explicit bounded-rounds shape and the basis format must agree.
+            fmt = 'library-context-v2' if value.max_rounds > 1 else 'library-context-v1'
+            if basis.input_format != fmt:
+                raise ServiceError('BLOCKED_LIVE', 403)
             conversation = service._owned(actor, basis.expected_scope.conversation_id, db)
             require_active(db)
             if self._config_version is None or value.expected_config_version != self._config_version:
@@ -163,15 +168,19 @@ class NativeModelControl:
                     {'id': run['id']}).mappings().first()
                 expected = basis.expected_scope.model_copy(update={
                     'input_revision': basis.expected_scope.input_revision+1})
-                if (attempt is None or attempt['input_format'] != 'library-context-v1'
+                if (attempt is None or attempt['input_format'] != fmt
                         or run['conversation_id'] != str(basis.expected_scope.conversation_id)
                         or run['actor_id'] != str(actor.user_id) or run['session_id'] != str(actor.session_id)
                         or d.ScopeSnapshot.model_validate_json(run['scope_snapshot']) != expected
                         or run['requested_skill'] is not None):
                     raise ServiceError('VERSION_CONFLICT', 409)
                 prepared = _stored_input(attempt)
-                if (type(prepared) is not d.MainContextPreparedInput or prepared.request.basis != basis
-                        or prepared.request.manifest.question != run['content']):
+                expected_type = (d.MainContextRoundsPreparedInput if fmt == 'library-context-v2'
+                                 else d.MainContextPreparedInput)
+                if (type(prepared) is not expected_type
+                        or getattr(prepared, 'round_no', 1) != 1):
+                    raise ServiceError('VERSION_CONFLICT', 409)
+                if prepared.request.basis != basis or prepared.request.manifest.question != run['content']:
                     raise ServiceError('VERSION_CONFLICT', 409)
                 original = d.AssistantMessageInput(request_id=basis.request_id, expected_scope=basis.expected_scope,
                     expected_composer_revision=basis.expected_composer_revision, content=run['content'])
@@ -193,13 +202,14 @@ class NativeModelControl:
             # current draft; a client-presented basis only names what to rebuild.
             scope, manifest, records = assemble_context(actor, conversation,
                 tuple(item.saved_citation_id for item in basis.source_bindings), db)
-            computed = build_basis(basis.request_id, manifest, scope,
+            builder = build_basis_rounds if fmt == 'library-context-v2' else build_basis
+            computed = builder(basis.request_id, manifest, scope,
                 conversation['composer_revision'], config, records)
             if computed != basis:
                 raise ServiceError('BLOCKED_LIVE', 403)
             policy = validated(d.MainModelPolicy, dict(policy_id=uuid4(), workspace_id=basis.expected_scope.workspace_id,
                 actor_id=actor.user_id, config_sha256=sha(encoded(config)), allowed_content_sha256s=(basis.manifest_sha256,),
-                max_total_usd=value.max_total_usd, max_calls=1,
+                max_total_usd=value.max_total_usd, max_calls=value.max_rounds,
                 expires_at=datetime.now(timezone.utc)+timedelta(seconds=value.valid_for_seconds)))
             self._registry.grant(policy, actor.session_id, basis=basis)
             token = self._registry.authorization_token(actor, basis.expected_scope)

@@ -61,7 +61,13 @@ def validate_context_input(row, prepared, config):
     """Deterministic rebuild must reproduce the immutable stored wire."""
     if prepared.request.basis.config_sha256 != policy_sha(policy_encoded(config)):
         raise ValueError('ASSISTANT_MODEL_INTEGRITY')
-    if context_codec.prepare(prepared.request, config).wire_payload_json != prepared.wire_payload_json:
+    if isinstance(prepared, d.MainContextRoundsPreparedInput):
+        from .providers import rounds_codec
+        rebuilt = rounds_codec.prepare_rounds(prepared.request, prepared.round_no,
+                                              prepared.exchanges, config)
+    else:
+        rebuilt = context_codec.prepare(prepared.request, config)
+    if rebuilt.wire_payload_json != prepared.wire_payload_json:
         raise ValueError('ASSISTANT_MODEL_INTEGRITY')
     if policy_sha(prepared.wire_payload_json) != row['request_sha256']:
         raise ValueError('ASSISTANT_MODEL_INTEGRITY')

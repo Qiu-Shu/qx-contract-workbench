@@ -18,7 +18,7 @@ from tests.integration.test_storage_schema_versions import rows
 
 
 def test_model_schema_is_an_additive_version():
-    assert CURRENT_VERSION == 'assistant-rounds-v1'
+    assert CURRENT_VERSION == 'assistant-rounds-v2'
     old = set(schema_rows('assistant-attachments-v1'))
     assert old < set(schema_rows(CURRENT_VERSION))
     assert identify_schema(schema_rows(CURRENT_VERSION)) == CURRENT_VERSION

@@ -11,12 +11,18 @@ async def execute_attempt(actor, identifier, database, runtime):
     if claimed is None:
         with database.session() as db:
             return attempts.read_attempt(actor, identifier, db)
-    token, request, config = claimed
+    token, prepared, config = claimed
+    request = prepared.request
     reply_type = d.MainContextReply if type(request) is d.MainContextRequest else d.MainReply
     cancelled = False
     try:
         async with asyncio.timeout(config.timeout_seconds):
-            if type(request) is d.MainContextRequest:
+            if type(prepared) is d.MainContextRoundsPreparedInput:
+                generate_rounds = getattr(runtime.provider, 'generate_rounds', None)
+                if not callable(generate_rounds):
+                    raise ValueError('rounds provider required')
+                reply = await generate_rounds(prepared, expected_config=config)
+            elif type(request) is d.MainContextRequest:
                 generate_context = getattr(runtime.provider, 'generate_context', None)
                 if callable(generate_context):
                     reply = await generate_context(request, expected_config=config)

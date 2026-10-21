@@ -178,10 +178,10 @@ def test_received_unknown_usage_and_older_scope_remain_valid(world):
     database, actor, conversation, _, runtime = world
     first = reserved(world)
     with database.session() as db:
-        token, request, _ = attempts.claim(actor, first.id, db, runtime)
+        token, prepared, _ = attempts.claim(actor, first.id, db, runtime)
         attempts.settle(actor, first.id, token, d.MainReply(state='received', output=d.MainCandidate(
-            text='合成待核候选，用量未收到。', citations=(d.MainCitation(message_id=request.message_id,
-                quote_sha256=request.source_sha256),))), db, runtime)
+            text='合成待核候选，用量未收到。', citations=(d.MainCitation(message_id=prepared.request.message_id,
+                quote_sha256=prepared.request.source_sha256),))), db, runtime)
         current = service.read_conversation(actor, conversation.scope.conversation_id, db)
         service.save_message(actor, conversation.scope.conversation_id,
             d.AssistantMessageInput(request_id=uuid4(), expected_scope=current.scope,

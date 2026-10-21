@@ -103,6 +103,10 @@ def initialize_storage(database):
             return
         if found == expected_objects():
             return
+        # The positively identified rounds-v2 successor is accepted as-is.
+        from .rounds_v2_schema import expected_objects as rounds_v2_objects
+        if found == rounds_v2_objects():
+            return
         # Only the positively identified context-v1 family is rebuilt in place.
         if found != context_schema.expected_objects():
             raise ValueError('DATABASE_SCHEMA_MISMATCH')

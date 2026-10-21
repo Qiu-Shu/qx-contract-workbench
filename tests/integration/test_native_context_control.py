@@ -93,6 +93,36 @@ def test_native_context_authorization_executes_one_exact_loopback_send(native_co
     asyncio.run(scenario())
 
 
+def test_authorize_context_v2_requires_the_explicit_matching_rounds_shape(native_context):
+    from cn_contract.assistant.providers.rounds_codec import build_basis_rounds
+    n = native_context
+    async def scenario():
+        n.endpoint.append('http://127.0.0.1:9/chat/completions')
+        with n.database.session() as db:
+            row = service._owned(n.actor, n.scope.conversation_id, db)
+            scope, manifest, records = assemble_context(n.actor, row, n.submission.citation_ids, db,
+                                                        question=n.submission.content)
+            v2 = build_basis_rounds(n.submission.request_id, manifest, scope,
+                                    n.submission.expected_composer_revision, n.config, records)
+        payload = configure(n)
+        payload['basis'] = v2.model_dump(mode='json')
+        payload['max_rounds'] = 2
+        assert n.control.authorize_context(payload) == {'status': 'authorized'}
+        lease = n.registry.resolve(n.actor, n.scope)
+        assert lease.snapshot()[1].max_calls == 2
+        # The default shape stays single-round; mismatched pairs never grant.
+        for basis, rounds in ((n.basis.model_copy(update={'request_id': uuid4()}), 2),
+                              (v2.model_copy(update={'request_id': uuid4()}), 1)):
+            with denied():
+                n.control.authorize_context({'session_token': n.token,
+                    'basis': basis.model_dump(mode='json'), 'max_total_usd': '1',
+                    'valid_for_seconds': 120, 'max_rounds': rounds,
+                    'expected_config_version': payload['expected_config_version']})
+        with n.database.session() as db:
+            assert db.scalar(text('SELECT COUNT(*) FROM assistant_model_attempts')) == 0
+    asyncio.run(scenario())
+
+
 def test_native_context_grant_never_covers_plain_text_or_another_context(native_context):
     n = native_context
     async def scenario():

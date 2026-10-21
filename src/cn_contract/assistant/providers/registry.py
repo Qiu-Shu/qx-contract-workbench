@@ -222,6 +222,13 @@ class _RuntimeLease:
                 or request.source_sha256 != basis.content_sha256):
             raise ServiceError('BLOCKED_LIVE', 403)
 
+    def granted_context_format(self):
+        """The granted basis fixes the context format for the whole run."""
+        self.snapshot()
+        if type(self._basis) is d.MainContextSendBasis:
+            return self._basis.input_format
+        return 'library-context-v1'
+
     def _preflight(self):
         """Boolean revalidation for the transport; exceptions are denial, never leases."""
         try:
@@ -241,6 +248,23 @@ class _LeaseProvider:
     @property
     def config(self):
         return self._lease.snapshot()[0]
+
+    async def generate_rounds(self, prepared, *, expected_config=None):
+        """Bounded-rounds send: the granted basis must equal the embedded one."""
+        lease = self._lease
+        config, policy = lease.snapshot()
+        if expected_config is not None and _copy(d.MainModelConfig, expected_config) != config:
+            raise ServiceError('BLOCKED_LIVE', 403)
+        prepared = _copy(d.MainContextRoundsPreparedInput, prepared)
+        basis = lease._basis
+        if (type(basis) is not d.MainContextSendBasis or prepared.request.basis != basis
+                or basis.input_format != 'library-context-v2'):
+            raise ServiceError('BLOCKED_LIVE', 403)
+        require_policy(config, policy, lease._actor, prepared.request.scope, basis.manifest_sha256)
+        generate_rounds = getattr(lease._fixed_provider, 'generate_rounds', None)
+        if not callable(generate_rounds):
+            raise ServiceError('BLOCKED_LIVE', 403)
+        return await generate_rounds(prepared, expected_config=config, preflight=lease._preflight)
 
     async def generate(self, request, *, expected_config=None):
         lease = self._lease

@@ -3410,6 +3410,8 @@ class MainContextSelection(DomainModel):
     expected_scope: ScopeSnapshot
     expected_composer_revision: NonNegativeInt
     citation_ids: Annotated[tuple[UUID, ...], Field(min_length=1, max_length=8)]
+    # Explicit bounded-rounds preview shape; the default keeps the v1 template.
+    max_rounds: Annotated[int, Field(strict=True, ge=1, le=4)] = 1
 
     @field_validator('citation_ids')
     @classmethod
@@ -3508,8 +3510,9 @@ class MainContextSourceBinding(DomainModel):
 
 class MainContextSendBasis(DomainModel):
     """Immutable description of proposed input, never an authorization grant."""
-    input_format: Literal['library-context-v1'] = 'library-context-v1'
-    template_version: Literal['saved-library-context-system-v1'] = 'saved-library-context-system-v1'
+    input_format: Literal['library-context-v1', 'library-context-v2'] = 'library-context-v1'
+    template_version: Literal['saved-library-context-system-v1',
+                              'saved-library-context-system-v2'] = 'saved-library-context-system-v1'
     request_id: UUID
     expected_scope: ScopeSnapshot
     expected_composer_revision: NonNegativeInt
@@ -3523,6 +3526,9 @@ class MainContextSendBasis(DomainModel):
     def unique_source_bindings(self):
         ids = tuple(item.saved_citation_id for item in self.source_bindings)
         if len(set(ids)) != len(ids):
+            raise ValueError('CONTEXT_INPUT_INVALID')
+        if (self.input_format == 'library-context-v1') != (
+                self.template_version == 'saved-library-context-system-v1'):
             raise ValueError('CONTEXT_INPUT_INVALID')
         return self
 
@@ -3578,21 +3584,98 @@ class MainContextCandidate(DomainModel):
         return self
 
 
+class MainContextToolCall(DomainModel):
+    """One model-emitted plan item; the shape mirrors the fixed handler request."""
+    tool: AssistantLibraryTool
+    query: AssistantLibraryQuery | None = None
+    saved_citation_id: UUID | None = None
+
+    @model_validator(mode='after')
+    def exact_planned_tool_call(self):
+        search = self.tool == 'legal_library.search'
+        if search != (self.query is not None) or search == (self.saved_citation_id is not None):
+            raise ValueError('MODEL_OUTPUT_INVALID')
+        return self
+
+
+class MainContextToolPlan(DomainModel):
+    """A non-final round outcome: bounded fixed-tool calls, never free actions."""
+    calls: Annotated[tuple[MainContextToolCall, ...], Field(min_length=1, max_length=8)]
+
+
 class MainContextReply(DomainModel):
     state: Literal['received', 'sent_unknown', 'failed_before_send']
     provider_request_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] | None = None
     usage: MainUsage | None = None
     output: MainContextCandidate | None = None
+    tool_plan: MainContextToolPlan | None = None
     error_code: Literal['BLOCKED_LIVE', 'PROVIDER_ERROR', 'MODEL_OUTPUT_INVALID'] | None = None
 
     @model_validator(mode='after')
     def consistent_context_reply(self):
+        if self.output is not None and self.tool_plan is not None:
+            raise ValueError('a round is either a final candidate or a tool plan')
+        if self.tool_plan is not None and (self.state != 'received' or self.error_code is not None):
+            raise ValueError('tool plan requires a received validated response')
         if self.output is not None and (self.state != 'received' or self.error_code is not None):
             raise ValueError('output requires a received validated response')
-        if self.output is None and self.error_code is None:
+        if self.output is None and self.tool_plan is None and self.error_code is None:
             raise ValueError('failed response needs a fixed error code')
         if self.state != 'received' and (self.usage is not None or self.provider_request_id is not None):
             raise ValueError('unknown/unsent response cannot claim received usage')
+        return self
+
+
+class MainContextToolOutcomeCitation(DomainModel):
+    """Bounded receipt citation projection fed back to the model; never live data."""
+    saved_citation_id: UUID
+    title: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=2000)]
+    quote: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=1200)]
+    quote_sha256: SHA256
+
+    @model_validator(mode='after')
+    def exact_outcome_citation(self):
+        if hashlib.sha256(self.quote.encode('utf-8')).hexdigest() != self.quote_sha256:
+            raise ValueError('CONTEXT_INPUT_INVALID')
+        return self
+
+
+class MainContextToolOutcome(DomainModel):
+    """Deterministic projection of one persisted handler receipt."""
+    receipt_id: UUID
+    tool: AssistantLibraryTool
+    citations: Annotated[tuple[MainContextToolOutcomeCitation, ...], Field(max_length=8)] = ()
+
+
+class MainContextRoundExchange(DomainModel):
+    """One executed intermediate round: the emitted plan plus its receipt projections."""
+    round_no: Annotated[int, Field(strict=True, ge=1, le=3)]
+    plan: MainContextToolPlan
+    outcomes: Annotated[tuple[MainContextToolOutcome, ...], Field(min_length=1, max_length=8)]
+
+    @model_validator(mode='after')
+    def exact_round_exchange(self):
+        if len(self.outcomes) != len(self.plan.calls):
+            raise ValueError('CONTEXT_INPUT_INVALID')
+        return self
+
+
+class MainContextRoundsPreparedInput(DomainModel):
+    """Immutable input of any v2 round; round 1 carries no exchanges."""
+    request: MainContextRequest
+    round_no: Annotated[int, Field(strict=True, ge=1, le=4)]
+    exchanges: Annotated[tuple[MainContextRoundExchange, ...], Field(max_length=3)] = ()
+    wire_payload_json: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=524288)]
+
+    @model_validator(mode='after')
+    def exact_rounds_wire(self):
+        if self.round_no != len(self.exchanges) + 1:
+            raise ValueError('CONTEXT_INPUT_INVALID')
+        if tuple(item.round_no for item in self.exchanges) != tuple(range(1, self.round_no)):
+            raise ValueError('CONTEXT_INPUT_INVALID')
+        if self.round_no == 1 and (hashlib.sha256(self.wire_payload_json.encode('utf-8')).hexdigest()
+                != self.request.basis.wire_sha256):
+            raise ValueError('CONTEXT_INPUT_INVALID')
         return self
 
 
@@ -3634,7 +3717,7 @@ class MainContextAttemptView(DomainModel):
     id: UUID
     run_id: UUID
     scope: ScopeSnapshot
-    input_format: Literal['library-context-v1'] = 'library-context-v1'
+    input_format: Literal['library-context-v1', 'library-context-v2'] = 'library-context-v1'
     state: MainAttemptState
     reserved_usd: MainUSD
     unit: Literal['USD'] = 'USD'
@@ -3648,6 +3731,8 @@ class NativeContextAuthorization(DomainModel):
     basis: MainContextSendBasis
     max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
     valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
+    # Explicit bounded-rounds grant shape; the default keeps single-round bytes.
+    max_rounds: Annotated[int, Field(strict=True, ge=1, le=4)] = 1
 
 
 class MainGenerationHistoryItem(DomainModel):

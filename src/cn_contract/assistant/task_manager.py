@@ -106,7 +106,14 @@ class GenerationTasks:
         if previous is not None:
             return view
         # A valid Jev grant is explicitly ignored: zero reservation, zero calls.
-        self._dispatch(view.id, view.run_id, self._execute(actor, view.id, runtime, None))
+        if view.input_format == 'library-context-v2':
+            adapter = self.library_adapter
+            if adapter is None:
+                from .tools.library import LegalLibraryAdapter
+                adapter = LegalLibraryAdapter(None)
+            self._dispatch(view.id, view.run_id, self._execute_rounds(actor, view.id, runtime, adapter))
+        else:
+            self._dispatch(view.id, view.run_id, self._execute(actor, view.id, runtime, None))
         return view
 
     def submit_research(self, actor, conversation_id, request):
@@ -174,6 +181,10 @@ class GenerationTasks:
         # The original main lease still performs its own current-scope, session,
         # cancellation and permission checks after the optional wait.
         return await execute_attempt(actor, identifier, self.database, runtime)
+
+    async def _execute_rounds(self, actor, identifier, runtime, adapter):
+        from .rounds_runner import execute_context_run
+        return await execute_context_run(actor, identifier, self.database, runtime, adapter)
 
     def _release_unsent(self, run_id, *, local=False):
         try:

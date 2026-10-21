@@ -43,6 +43,10 @@ class MainModelRuntime:
     def check_execution(self, actor, request_id, request):
         pass
 
+    def granted_context_format(self):
+        """Trusted context format of the current grant; plain runtimes stay v1."""
+        return 'library-context-v1'
+
 
 def validated(model, data):
     with localcontext(Context(prec=60)):

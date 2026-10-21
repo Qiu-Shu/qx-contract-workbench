@@ -60,3 +60,21 @@ class DeepSeekProvider(DeepSeekTransport):
         return await self._generate(request, expected_config=expected_config,
             builder=context_build, decoder=context_decode, reply_type=d.MainContextReply,
             preflight=preflight if preflight is not None else (lambda: False))
+
+    async def generate_rounds(self, prepared: d.MainContextRoundsPreparedInput, *,
+                              expected_config: d.MainModelConfig | None = None,
+                              preflight=None) -> d.MainContextReply:
+        """Bounded-rounds send; the immutable stored wire is sent byte for byte."""
+        from .rounds_codec import decode_rounds_response
+        import json
+
+        def rounds_builder(_request, _config):
+            # The immutable persisted wire is sent byte for byte; never rebuilt here.
+            return json.loads(prepared.wire_payload_json)
+
+        def rounds_decode(raw, _request, config, secret):
+            return decode_rounds_response(raw, prepared.request, config, secret)
+
+        return await self._generate(prepared.request, expected_config=expected_config,
+            builder=rounds_builder, decoder=rounds_decode, reply_type=d.MainContextReply,
+            preflight=preflight if preflight is not None else (lambda: False))

@@ -195,8 +195,8 @@ def test_settle_rejects_forged_output_citations_but_keeps_real_usage(context_wor
     database, actor, view, submission, basis, runtime = context_world
     first = enqueue(context_world)
     with database.session() as db:
-        token, request, _ = attempts.claim(actor, first.id, db, runtime)
-        assert type(request) is d.MainContextRequest
+        token, prepared, _ = attempts.claim(actor, first.id, db, runtime)
+        assert type(prepared.request) is d.MainContextRequest
         forged = d.MainContextReply(state='received', provider_request_id='fictional-forged',
             usage=d.MainUsage(prompt_tokens=40, completion_tokens=20, total_tokens=60),
             output=d.MainContextCandidate(text='合成伪造引用候选', citations=(

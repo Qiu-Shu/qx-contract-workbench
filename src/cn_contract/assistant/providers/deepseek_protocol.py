@@ -96,6 +96,9 @@ def decode_response(raw, config, secret, *, parse_candidate, reply_type):
                 or message.get('reasoning_content') not in (None,'')):
             raise ValueError('unsupported message')
         candidate=parse_candidate(strict_json(message['content'],secret))
+        if isinstance(candidate, d.MainContextToolPlan):
+            return reply_type(state='received',provider_request_id=identifier,usage=usage,
+                              tool_plan=candidate)
         return reply_type(state='received',provider_request_id=identifier,usage=usage,output=candidate)
     except PrivateReflection:
         return reply_type(state='received',error_code='PROVIDER_ERROR')

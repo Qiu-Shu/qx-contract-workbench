@@ -167,7 +167,7 @@ def test_model_initializer_accepts_both_exact_known_structures(tmp_path):
         model_schema.initialize_storage(database)
         with closing(sqlite3.connect(database.engine.url.database)) as raw:
             rows = raw.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall()
-        assert storage_schema.identify_schema(rows) == 'assistant-rounds-v1'
+        assert storage_schema.identify_schema(rows) == 'assistant-rounds-v2'
     finally:
         database.engine.dispose()
     # A positively identified legacy V1 model family is still accepted as-is.
@@ -196,7 +196,7 @@ def test_fresh_bootstrap_matches_stepwise_upgrade(tmp_path, native):
         schema_migrations.upgrade_database(db)
         migrated = schema_migrations.database_rows(db)
     assert [tuple(row) for row in built] == [tuple(row) for row in migrated]
-    assert [tuple(row) for row in migrated] == storage_schema.schema_rows('assistant-rounds-v1')
+    assert [tuple(row) for row in migrated] == storage_schema.schema_rows('assistant-rounds-v2')
 
 
 def _old_source(path):

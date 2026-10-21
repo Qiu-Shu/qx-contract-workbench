@@ -1,0 +1,58 @@
+FFFFFFFFFFFFF                                                            [100%]
+================================== FAILURES ===================================
+E   ValueError: FILE_LIMIT_OR_LINK
+
+During handling of the above exception, another exception occurred:
+E   AssertionError: Regex pattern did not match.
+      Expected regex: 'ASSISTANT_MODEL'
+      Actual message: 'FILE_LIMIT_OR_LINK'
+D:\temp\qx-baseline-b2c2\tests\integration\test_assistant_model_backup.py:64: AssertionError: Regex pattern did not match.
+E   ValueError: FILE_LIMIT_OR_LINK
+
+During handling of the above exception, another exception occurred:
+E   AssertionError: Regex pattern did not match.
+      Expected regex: 'ASSISTANT_MODEL'
+      Actual message: 'FILE_LIMIT_OR_LINK'
+D:\temp\qx-baseline-b2c2\tests\integration\test_assistant_model_backup.py:64: AssertionError: Regex pattern did not match.
+E   ValueError: FILE_LIMIT_OR_LINK
+D:\temp\qx-baseline-b2c2\src\cn_contract\ops\workspace_backup.py:61: ValueError: FILE_LIMIT_OR_LINK
+E   ValueError: FILE_LIMIT_OR_LINK
+D:\temp\qx-baseline-b2c2\src\cn_contract\ops\workspace_backup.py:61: ValueError: FILE_LIMIT_OR_LINK
+E   ValueError: FILE_LIMIT_OR_LINK
+D:\temp\qx-baseline-b2c2\src\cn_contract\ops\workspace_backup.py:61: ValueError: FILE_LIMIT_OR_LINK
+E   ValueError: FILE_LIMIT_OR_LINK
+D:\temp\qx-baseline-b2c2\src\cn_contract\ops\workspace_backup.py:61: ValueError: FILE_LIMIT_OR_LINK
+E   ValueError: FILE_LIMIT_OR_LINK
+D:\temp\qx-baseline-b2c2\src\cn_contract\ops\workspace_backup.py:61: ValueError: FILE_LIMIT_OR_LINK
+E   ValueError: FILE_LIMIT_OR_LINK
+D:\temp\qx-baseline-b2c2\src\cn_contract\ops\workspace_backup.py:61: ValueError: FILE_LIMIT_OR_LINK
+E   ValueError: FILE_LIMIT_OR_LINK
+
+During handling of the above exception, another exception occurred:
+E   AssertionError: Regex pattern did not match.
+      Expected regex: 'ASSISTANT_MODEL'
+      Actual message: 'FILE_LIMIT_OR_LINK'
+D:\temp\qx-baseline-b2c2\tests\integration\test_assistant_model_backup.py:262: AssertionError: Regex pattern did not match.
+E   ValueError: FILE_LIMIT_OR_LINK
+D:\temp\qx-baseline-b2c2\src\cn_contract\ops\workspace_backup.py:61: ValueError: FILE_LIMIT_OR_LINK
+E   ValueError: FILE_LIMIT_OR_LINK
+D:\temp\qx-baseline-b2c2\src\cn_contract\ops\workspace_backup.py:61: ValueError: FILE_LIMIT_OR_LINK
+E   ValueError: FILE_LIMIT_OR_LINK
+D:\temp\qx-baseline-b2c2\src\cn_contract\ops\workspace_backup.py:61: ValueError: FILE_LIMIT_OR_LINK
+E   ValueError: FILE_LIMIT_OR_LINK
+D:\temp\qx-baseline-b2c2\src\cn_contract\ops\workspace_backup.py:61: ValueError: FILE_LIMIT_OR_LINK
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_model_backup.py::test_model_archive_rejects_noncontiguous_run_events[model_events]
+FAILED tests/integration/test_assistant_model_backup.py::test_model_archive_rejects_noncontiguous_run_events[message_event]
+FAILED tests/integration/test_assistant_model_backup.py::test_native_model_roundtrip_preserves_history_without_network[reserved]
+FAILED tests/integration/test_assistant_model_backup.py::test_native_model_roundtrip_preserves_history_without_network[sending]
+FAILED tests/integration/test_assistant_model_backup.py::test_native_model_roundtrip_preserves_history_without_network[received]
+FAILED tests/integration/test_assistant_model_backup.py::test_native_model_roundtrip_preserves_history_without_network[sent_unknown]
+FAILED tests/integration/test_assistant_model_backup.py::test_native_model_roundtrip_preserves_history_without_network[failed_before_send]
+FAILED tests/integration/test_assistant_model_backup.py::test_real_over_budget_receipt_is_preserved_without_adopting_output
+FAILED tests/integration/test_assistant_model_backup.py::test_restore_rejects_authenticated_but_inconsistent_model_archive[True]
+FAILED tests/integration/test_assistant_model_startup.py::test_restored_native_startup_keeps_model_history_quarantined[False]
+FAILED tests/integration/test_assistant_model_startup.py::test_restored_native_startup_keeps_model_history_quarantined[True]
+FAILED tests/integration/test_session_model_runtime.py::test_restored_quarantine_denies_generation_even_with_current_session_grant
+FAILED tests/integration/test_assistant_generation_history.py::test_restored_copy_allows_exact_history_read_and_blocks_writes
+13 failed in 43.58s

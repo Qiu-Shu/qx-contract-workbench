@@ -1,8 +1,8 @@
-"""assistant-rounds-v1: attempts rebuild with immutable bounded round occupancy.
+"""assistant-rounds-v1/v2: attempts rebuilds with immutable bounded round occupancy.
 
-B2c1 ships structure only: every writer occupies round 1 and multi-round
-archives fail closed in integrity validation until B2c2 defines their
-semantics.
+B2c1 ships the round-ledger structure; B2c2 widens input_format for the
+library-context-v2 tool-plan wire via a second fixed rebuild (rounds-v2) and
+defines the multi-round semantics opened by it.
 """
 from contextlib import closing
 import hashlib
@@ -19,12 +19,13 @@ from tests.integration.test_assistant_judge_schema import old_db
 
 PREVIOUS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1',
             'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
-            'assistant-context-v1')
-# Frozen exact rows of the immediately previous version; the rounds slice must
-# not move them.
+            'assistant-context-v1', 'assistant-rounds-v1')
+# Frozen exact rows of older versions; the rounds slices must not move them.
 HISTORICAL = {
     ('assistant-context-v1', False): '05948e37eb270d809a5875637891ae2bbe157c3e13f723833b0a99622152b404',
     ('assistant-context-v1', True): '501259f33c2563ca7583661e467a1d5022631c982534ece5ca8c561f95b73182',
+    ('assistant-rounds-v1', False): '80dc678f24b8de142ee4909d2b8981a18ee29afbd8e866322f0e8132d28268a9',
+    ('assistant-rounds-v1', True): 'a7a84afcdd7958d1995af241e447de7d04cae518044b2f50a2e5159c77f34c18',
 }
 
 _SHA_C = 'c' * 64
@@ -89,8 +90,8 @@ def _attempt_row(identifier, round_no):
 
 
 def test_rounds_is_current_and_keeps_every_older_version():
-    assert storage_schema.CURRENT_VERSION == 'assistant-rounds-v1'
-    assert storage_schema.VERSIONS == PREVIOUS + ('assistant-rounds-v1',)
+    assert storage_schema.CURRENT_VERSION == 'assistant-rounds-v2'
+    assert storage_schema.VERSIONS == PREVIOUS + ('assistant-rounds-v2',)
     for version in PREVIOUS:
         for native in (False, True):
             rows = storage_schema.schema_rows(version, native=native)
@@ -98,12 +99,13 @@ def test_rounds_is_current_and_keeps_every_older_version():
 
 
 @pytest.mark.parametrize('native', [False, True])
-def test_context_structure_is_frozen_against_future_initializer_changes(native):
-    rows = storage_schema.schema_rows('assistant-context-v1', native=native)
-    assert digest(rows) == HISTORICAL[('assistant-context-v1', native)]
+@pytest.mark.parametrize('version', ['assistant-context-v1', 'assistant-rounds-v1'])
+def test_older_context_structures_are_frozen(version, native):
+    rows = storage_schema.schema_rows(version, native=native)
+    assert digest(rows) == HISTORICAL[(version, native)]
 
 
-def test_rounds_rebuilds_only_the_attempts_table_and_input_trigger():
+def test_rounds_v1_rebuilds_only_the_attempts_table_and_input_trigger():
     previous = set(storage_schema.schema_rows('assistant-context-v1'))
     current = set(storage_schema.schema_rows('assistant-rounds-v1'))
     changed = {row[2] for row in current - previous} | {row[2] for row in previous - current}
@@ -123,6 +125,19 @@ def test_rounds_rebuilds_only_the_attempts_table_and_input_trigger():
             row for row in previous if row[1] == name)
 
 
+def test_rounds_v2_widens_only_the_input_format_check():
+    previous = set(storage_schema.schema_rows('assistant-rounds-v1'))
+    current = set(storage_schema.schema_rows('assistant-rounds-v2'))
+    # Exactly one object changes: the attempts table CHECK text.
+    assert {row[1] for row in current - previous} == {'assistant_model_attempts'}
+    assert {row[1] for row in previous - current} == {'assistant_model_attempts'}
+    attempts = next(row for row in current if row[0] == 'table' and row[1] == 'assistant_model_attempts')
+    assert "'library-context-v2'" in attempts[3]
+    before = next(row for row in previous if row[0] == 'table' and row[1] == 'assistant_model_attempts')
+    assert "'library-context-v2'" not in before[3]
+    assert attempts[3].replace(", 'library-context-v2'", '') == before[3]
+
+
 @pytest.mark.parametrize('native', [False, True])
 def test_context_with_model_rows_rebuilds_preserving_every_row(tmp_path, native):
     with closing(old_db(tmp_path/'old.db', 'assistant-context-v1', native)) as db:
@@ -130,7 +145,7 @@ def test_context_with_model_rows_rebuilds_preserving_every_row(tmp_path, native)
         before_attempts = db.execute('SELECT * FROM assistant_model_attempts').fetchall()
         before_receipts = db.execute('SELECT * FROM assistant_model_receipts').fetchall()
         before_outputs = db.execute('SELECT * FROM assistant_model_outputs').fetchall()
-        assert schema_migrations.upgrade_database(db) == 'assistant-rounds-v1'
+        assert schema_migrations.upgrade_database(db) == 'assistant-rounds-v2'
         after_attempts = db.execute('SELECT * FROM assistant_model_attempts').fetchall()
         # Every attempt row survives in column order with round_no appended as 1.
         assert after_attempts == [tuple(row) + (1,) for row in before_attempts]
@@ -138,13 +153,41 @@ def test_context_with_model_rows_rebuilds_preserving_every_row(tmp_path, native)
         assert db.execute('SELECT * FROM assistant_model_outputs').fetchall() == before_outputs
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
         assert schema_migrations.database_rows(db) == [tuple(row) for row in
-            storage_schema.schema_rows('assistant-rounds-v1', native=native)]
-        assert schema_migrations.upgrade_database(db) == 'assistant-rounds-v1'
+            storage_schema.schema_rows('assistant-rounds-v2', native=native)]
+        assert schema_migrations.upgrade_database(db) == 'assistant-rounds-v2'
 
 
+@pytest.mark.parametrize('native', [False, True])
+def test_rounds_v1_rows_rebuild_preserving_multi_round_occupancy(tmp_path, native):
+    with closing(old_db(tmp_path/'old.db', 'assistant-rounds-v1', native)) as db:
+        _seed_attempt_chain(db)
+        # A structurally occupied second round survives the v1 -> v2 rebuild.
+        keys = tuple(_attempt_row('a2', 2))
+        db.execute('INSERT INTO assistant_model_attempts (' + ','.join(keys) + ') VALUES ('
+                   + ','.join(':' + key for key in keys) + ')', _attempt_row('a2', 2))
+        db.commit()
+        before = db.execute('SELECT * FROM assistant_model_attempts ORDER BY round_no').fetchall()
+        assert schema_migrations.upgrade_database(db) == 'assistant-rounds-v2'
+        assert db.execute('SELECT * FROM assistant_model_attempts ORDER BY round_no').fetchall() == before
+        assert db.execute('PRAGMA foreign_key_check').fetchall() == []
+        assert schema_migrations.database_rows(db) == [tuple(row) for row in
+            storage_schema.schema_rows('assistant-rounds-v2', native=native)]
+        # The widened CHECK admits the v2 wire and still rejects unknown formats.
+        row = dict(_attempt_row('a3', 3), input_format='library-context-v2')
+        db.execute('INSERT INTO assistant_model_attempts (' + ','.join(tuple(row)) + ') VALUES ('
+                   + ','.join(':' + key for key in row) + ')', row)
+        db.commit()
+        bad = dict(_attempt_row('a4', 4), input_format='library-context-v3')
+        with pytest.raises(Exception, match='CHECK'):
+            db.execute('INSERT INTO assistant_model_attempts (' + ','.join(tuple(bad)) + ') VALUES ('
+                       + ','.join(':' + key for key in bad) + ')', bad)
+        db.rollback()
+
+
+@pytest.mark.parametrize('target', ['assistant-rounds-v1', 'assistant-rounds-v2'])
 @pytest.mark.parametrize('failure', ['drop_trigger', 'create', 'insert', 'drop_table',
                                      'rename', 'trigger_input', 'trigger_claim', 'trigger_delete'])
-def test_rounds_step_partial_failure_leaves_no_half_rebuild(tmp_path, monkeypatch, failure):
+def test_rounds_step_partial_failure_leaves_no_half_rebuild(tmp_path, monkeypatch, failure, target):
     with closing(old_db(tmp_path/'old.db', 'assistant-context-v1', False)) as db:
         _seed_attempt_chain(db)
         before = schema_migrations.database_rows(db)
@@ -152,9 +195,9 @@ def test_rounds_step_partial_failure_leaves_no_half_rebuild(tmp_path, monkeypatc
         index = {'drop_trigger': 0, 'create': 3, 'insert': 4, 'drop_table': 5,
                  'rename': 6, 'trigger_input': 7, 'trigger_claim': 8, 'trigger_delete': 9}[failure]
         actual = schema_migrations.statements_for
-        def faulty(target):
-            statements = actual(target)
-            if target != 'assistant-rounds-v1':
+        def faulty(version):
+            statements = actual(version)
+            if version != target:
                 return statements
             return statements[:index] + ('INVALID SQL',) + statements[index + 1:]
         monkeypatch.setattr(schema_migrations, 'statements_for', faulty)
@@ -171,7 +214,7 @@ def test_rounds_step_partial_failure_leaves_no_half_rebuild(tmp_path, monkeypatc
 @pytest.mark.parametrize('damage', ['trigger_claim', 'trigger_delete', 'old_trigger',
                                     'extra_index'])
 def test_partial_or_modified_rounds_schema_is_not_repaired(tmp_path, damage):
-    from cn_contract.assistant import context_schema, model_schema, rounds_schema
+    from cn_contract.assistant import context_schema, model_schema, rounds_schema, rounds_v2_schema
     database = Database('sqlite:///'+str(tmp_path/'partial.db'), tmp_path/'protected', load_settings())
     try:
         initialize_storage(database)
@@ -190,6 +233,8 @@ def test_partial_or_modified_rounds_schema_is_not_repaired(tmp_path, damage):
                     ON assistant_model_attempts BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END''')
             before = list(db.exec_driver_sql(
                 'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))
+        with pytest.raises(ValueError, match='DATABASE_SCHEMA_MISMATCH'):
+            rounds_v2_schema.initialize_storage(database)
         with pytest.raises(ValueError, match='DATABASE_SCHEMA_MISMATCH'):
             rounds_schema.initialize_storage(database)
         if damage in ('trigger_claim', 'trigger_delete', 'old_trigger'):
@@ -260,4 +305,4 @@ def test_fresh_bootstrap_matches_stepwise_upgrade(tmp_path, native):
         schema_migrations.upgrade_database(db)
         migrated = schema_migrations.database_rows(db)
     assert [tuple(row) for row in built] == [tuple(row) for row in migrated]
-    assert [tuple(row) for row in migrated] == storage_schema.schema_rows('assistant-rounds-v1')
+    assert [tuple(row) for row in migrated] == storage_schema.schema_rows('assistant-rounds-v2')
