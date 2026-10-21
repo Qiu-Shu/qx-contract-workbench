@@ -36,11 +36,13 @@
 
 资源首片在同后端的未压缩构建目录中减少 **48,880,941 字节（46.62 MiB）**；这不是安装器、整机启动或内存的综合结论。当前仍需持续测量核心包体、可输入时间和进程占用。
 
-最新 CH-06B2c2：在轮次账本底座上实现同 run 受限串行循环——新输入格式 `library-context-v2` 允许模型从 round 1 起输出工具计划（≤4 轮模型 / ≤8 次工具，DTO 层拒绝陌生工具），runner 按「model round → 固定 library handler → 下轮/final」串行推进；轮间授权以显式 max_rounds 形状演进（v2 ⟺ max_rounds>1，registry 租约新增 generate_rounds 分支），停止原因有界（rounds_exhausted / budget_exhausted / tool_limit / tool_rejected），轮间撤权立即闭合、恢复封存为 interrupted 不重发。结构版本 `assistant-rounds-v2` 将 input_format CHECK 加宽含 v2（复用 12 步重建序列，v1 冻结摘要固化入测试）；完整性校验开放 v2 多轮语义，plan↔tool.before↔receipt↔下轮 exchanges 精确绑定，篡改矩阵全拒；v1 输入字节与行为完全不变。本片目标 10 文件 240 项通过、广域回归 214 通过（13 个失败为基线同等复现的预存在环境家族）；四开发门 exit 0。[实际证据与限制](docs/testing/bounded-rounds/20261021/README.md)
+最新 CH-06B3：律师选片 GUI 三层落地——对话页勾选本会话已保存引用 1–8 条（保序、编辑/换对话即失效），服务器确定性预览在给出 request_id 时携带 send_basis（basis 的规范编码哈希 JS 无法自算，必须由服务器组装，DTO 逐字段一致性校验）；桌面新增 `authorize_context` 授权通道——桌面自行 CSRF POST 预览重建并全量比对，原生确认窗展示问题全文与片段清单，单次 lease 授权后发送一次资料辅助回答（v1 单轮锁定，max_rounds 锁 1），NETWORK_UNKNOWN 只经 by-request 找回不重发。前端全套件 66/66、桌面全套件 264/264、Python 关联回归 125 通过（2 个失败为基线同等复现的预存在环境家族）；端到端合成走通核验「预览→授权→发送→回环字节逐字节相等→历史呈现」全链；四开发门 exit 0。无 schema/依赖变更。[实际证据与限制](docs/testing/selection-gui/20261021/README.md)
+
+此前 CH-06B2c2：同 run 受限串行循环 runner 与 `library-context-v2` 工具计划协议（≤4 轮模型 / ≤8 次工具），轮间授权 max_rounds 显式形状，结构版本 `assistant-rounds-v2` CHECK 加宽，完整性开放 v2 多轮语义，v1 字节与行为完全不变。[B2c2 证据](docs/testing/bounded-rounds/20261021/README.md)
 
 此前长文检索在同合成样本上的 Python 跟踪分配峰值下降约87.7%，小样本耗时增加约6–8%；这项取舍和185项分批验证仍以[原阶段证据](docs/testing/library-memory/20261020/README.md)为准，不冒充本轮资源测量。
 
-CH-06B2c2 同 run 受限串行循环已完成（见上）；后续排期为律师选片 GUI、真实 DeepSeek 供应商接入（密钥仍不入库）与 CH-07 自动档案。[有界多轮执行合同](docs/plans/2026-10-21-bounded-rounds.md)含 B2c1/B2c2 全部定稿。
+CH-06B3 律师选片 GUI 已完成（见上）；后续排期为真实 DeepSeek 供应商接入（密钥仍不入库，用户已持有 API key）、CH-07 自动档案与 CH-08 产物导出。[选片 GUI 执行合同](docs/plans/2026-10-21-selection-gui.md)含三层设计定稿；[有界多轮执行合同](docs/plans/2026-10-21-bounded-rounds.md)含 B2c1/B2c2 全部定稿。
 
 ## 架构与边界
 

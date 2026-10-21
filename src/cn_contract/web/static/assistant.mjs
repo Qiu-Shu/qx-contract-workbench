@@ -10,10 +10,14 @@ const readonly=document.body.dataset.readonly==='true';
 let composer, materials, citations, timer, listCursor=null, listEpoch=0, closed=false;
 let generationTimer, pollTimer, generationKey=null;
 let pendingRoute=document.body.dataset.conversationId || null;
-const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing(),onCitation:(id,trigger)=>void citations.open(id,trigger)});
+const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing(),onCitation:(id,trigger)=>void citations.open(id,trigger),
+  onToggleCitation:id=>controller.toggleContextCitation(id),
+  onPreviewContext:()=>void safely(()=>controller.previewContext())});
 const controller=createDraftController(api,{readonly,
   nativeAuthorization:typeof window.desktopAssistant?.authorizeGeneration==='function'
     ?value=>window.desktopAssistant.authorizeGeneration(value):null,
+  nativeContextAuthorization:typeof window.desktopAssistant?.authorizeContext==='function'
+    ?value=>window.desktopAssistant.authorizeContext(value):null,
   onChange:state=>{
     drawState(state);
     renderer.selected(state.id);
@@ -56,7 +60,7 @@ function coordinateGeneration(state) {
   if(closed || !state.id || !state.view || state.status==='revoked') {
     generationKey=null;clearTimeout(pollTimer);pollTimer=null;return;
   }
-  if(state.generation.phase!=='tracking' && state.research?.phase!=='tracking') {clearTimeout(pollTimer);pollTimer=null;}
+  if(state.generation.phase!=='tracking' && state.research?.phase!=='tracking' && state.context?.phase!=='tracking') {clearTimeout(pollTimer);pollTimer=null;}
   else if(!pollTimer)pollTimer=setTimeout(async()=>{
     pollTimer=null;
     if(closed)return;
@@ -71,7 +75,8 @@ function coordinateGeneration(state) {
   if(state.loading || state.dirty || state.conflict || state.materialAction ||
       ['saving','error'].includes(state.status) ||
       ['checking','confirming','submitting','unknown'].includes(state.generation.phase) ||
-      ['checking','submitting','unknown'].includes(state.research?.phase))return;
+      ['checking','submitting','unknown'].includes(state.research?.phase) ||
+      ['checking','confirming','submitting','unknown'].includes(state.context?.phase))return;
   const key=JSON.stringify([state.view.scope,state.view.composer_revision,state.savedText,
     state.skill,state.view.messages.map(message=>message.id)]);
   if(key!==generationKey)generationTimer=setTimeout(()=>{
@@ -141,6 +146,7 @@ byId('refresh-run').addEventListener('click',()=>void (pendingRoute?open(pending
   if(id===controller.state.id)await controller.refreshGeneration();
 })));
 byId('recover-generation').addEventListener('click',()=>void safely(()=>controller.refreshGeneration()));
+byId('preview-context').addEventListener('click',()=>void safely(()=>controller.previewContext()));
 byId('cancel-run').addEventListener('click',()=>void safely(()=>controller.cancel()));
 for(const [id,choice] of [['keep-local','local'],['use-server','server']])
   byId(id).addEventListener('click',()=>void safely(()=>controller.resolveConflict(choice)));

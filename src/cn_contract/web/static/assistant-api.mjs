@@ -43,6 +43,8 @@ export const findResearchRequest=(id,key)=>request(conversation(id)+'/researches
 export const getResearchHistory=(id,ids)=>request(conversation(id)+'/research-history?'+
   new URLSearchParams(ids.map(value=>['message_id',value])));
 export const getSavedCitation=id=>request('/api/assistant/library-citations/'+encodeURIComponent(id));
+export const submitContextPreview=(id,body)=>request(conversation(id)+'/context-preview',{method:'POST',body});
+export const submitContextGeneration=(id,body)=>request(conversation(id)+'/context-generations',{method:'POST',body});
 
 const attachment=(id,file)=>conversation(id)+'/attachments/'+encodeURIComponent(file);
 export const getMaterials=id=>request(conversation(id)+'/materials');

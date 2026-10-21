@@ -96,6 +96,15 @@
           <p id="material-notice" role="status" aria-live="polite"></p>
           <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>
         </section>
+        <section id="context-panel" class="context-panel" aria-labelledby="context-heading" hidden>
+          <h2 id="context-heading">资料辅助回答</h2>
+          <p class="muted">从本次对话已保存的引用中选择一至八条；问题为当前已保存草稿。发送前可核对将发送的完整内容，发送经桌面原生窗口再次确认。</p>
+          <div id="context-citations" class="context-citations"></div>
+          <p id="context-count" class="muted" aria-live="polite"></p>
+          <div class="context-actions"><button id="preview-context" class="quiet-button" type="button" disabled>核对将发送的内容</button></div>
+          <div id="context-preview-box" class="context-preview" hidden></div>
+          <p id="context-status" role="status" aria-live="polite"></p>
+        </section>
         <div class="composer-footnote"><p id="save-status" role="status" aria-live="polite">{% if readonly %}此副本只读，不能保存修改。{% else %}输入后自动保存，也可手动保存。{% endif %}</p><p id="input-help">Enter 发送，Shift+Enter 换行；当前发送不可用。</p></div>
         <div class="generation-panel" aria-label="生成条件与状态">
           <p id="generation-note">{% if readonly %}恢复副本只读，可核对已有结果，不能发送或继续历史任务。{% else %}输入并保存文字后，将核对当前生成条件。{% endif %}</p>

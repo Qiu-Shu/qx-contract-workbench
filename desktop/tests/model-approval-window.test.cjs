@@ -87,10 +87,11 @@ test('approval stale guard, parent close, Escape and bounded timeout cancel with
 
 function page(read=async()=>details) {
   const html=fs.readFileSync(path.join(desktop,'model-approval.html'),'utf8'),elements=new Map(),events=new Map(),calls=[];
-  const document={activeElement:null,getElementById:id=>elements.get(id)},viewport={scrollY:0};
+  const document={activeElement:null,getElementById:id=>elements.get(id),createElement:()=>new Element()},viewport={scrollY:0};
   class Element {
     constructor(){this.textContent='';this.disabled=true;this.listeners={};}
     addEventListener(name,listener){this.listeners[name]=listener;}
+    append(...items){(this.children??=[]).push(...items);}
     focus(options){document.activeElement=this;if(options?.preventScroll!==true)viewport.scrollY=400;}
     set innerHTML(_value){throw Error('untrusted markup must never render');}
   }
@@ -317,4 +318,70 @@ test('missing Judge display keeps legacy choice and a rejected approval cannot r
   assert.equal(f.at('approval-cancel').disabled,false);assert.equal(f.document.activeElement,f.at('approval-cancel'));
   await f.at('approval-confirm').listeners.click();assert.deepEqual(plain(f.calls),[{main:true,judge:true}]);
   f.events.get('pagehide')();assert.equal(f.at('approval-judge-select').checked,false);
+});
+
+const contextDetails={kind:'library_context',content:'合成问题：请只根据下列已保存片段回答。',
+  model:'deepseek-flash',max_total_usd:'0.024576',recipient:'DeepSeek（api.deepseek.com）',
+  sources:[{saved_citation_id:'99999999-8888-7777-6666-555555555555',title:'合成片段标题',kind:'law_markdown',line_start:3,line_end:9}]};
+
+test('context approval validates the six-key display, sizes the taller window and keeps a boolean decision',async()=>{
+  const f=fixture();const pending=f.api.confirm({parent:f.parent,details:contextDetails,guard:()=>true});await tick();
+  const win=f.windows[0];assert(win);assert.equal(win.options.height,700);
+  const read=f.handlers.get('desktop:approval-state'),decide=f.handlers.get('desktop:approval-decision');
+  assert.equal(await decide(f.event(win),true),false,'reading the displayed state must precede approval');
+  assert.deepEqual(plain(await read(f.event(win))),contextDetails);
+  for(const value of [{main:true,judge:false},'true',1,undefined])assert.equal(await decide(f.event(win),value),false);
+  assert.equal(await decide(f.event(win),true),true);assert.equal(await pending,true);
+  assert.equal(f.timers.size,0);
+});
+
+test('context display schema rejects malformed sources and surplus keys before any window opens',async()=>{
+  const f=fixture(),source=contextDetails.sources[0];
+  for(const changed of [{...contextDetails,kind:'generation'},{...details,kind:'library_context'},
+    {...contextDetails,secret:'not-allowed'},{...contextDetails,sources:[]},
+    {...contextDetails,sources:Array(9).fill(source)},{...contextDetails,sources:null},
+    {...contextDetails,sources:[{...source,saved_citation_id:'not-a-uuid'}]},
+    {...contextDetails,sources:[{...source,kind:'other'}]},
+    {...contextDetails,sources:[{...source,title:' '}]},
+    {...contextDetails,sources:[{...source,line_start:0}]},
+    {...contextDetails,sources:[{...source,line_end:source.line_start-1}]},
+    {...contextDetails,sources:[{...source,extra:1}]},
+    {...contextDetails,model:'other'},{...contextDetails,recipient:'Other'},
+    {...contextDetails,max_total_usd:'0'}])
+    assert.equal(await f.api.confirm({parent:f.parent,details:changed,guard:()=>true}),false);
+  assert.equal(f.windows.length,0);
+});
+
+test('context page lists every saved passage as text, rewrites the copy and confirms with a plain boolean',async()=>{
+  const f=page(async()=>contextDetails);await tick();
+  assert.equal(f.at('approval-sources').hidden,false);
+  assert.equal(f.at('approval-sources-title').textContent,'随问题发送的已保存片段（1 条）');
+  const items=f.at('approval-sources-list').children;assert.equal(items.length,1);
+  assert.equal(items[0].textContent,'合成片段标题 · 法规 · 第 3–9 行 · 待核对');
+  assert.match(f.at('approval-intro').textContent,/只发送下列问题与所列已保存片段；本机原附件与其他内容不会发送。/);
+  assert.equal(f.at('approval-text-title').textContent,'本次发送的问题全文');
+  assert.equal(f.at('approval-content').textContent,contextDetails.content);
+  assert.match(f.at('approval-budget').textContent,/0\.024576/);
+  assert.equal(f.at('approval-judge').hidden,true,'context approval never offers Judge in v1');
+  assert.equal(f.document.activeElement,f.at('approval-cancel'));
+  assert.equal(f.at('approval-confirm').disabled,false);
+  await f.at('approval-confirm').listeners.click();assert.deepEqual(plain(f.calls),[true]);
+  const legacy=page();await tick();
+  assert.equal(legacy.at('approval-sources-list').children,undefined,'a generation page never lists passages');
+});
+
+test('malformed or late context display never enables confirmation',async()=>{
+  for(const value of [{...contextDetails,sources:[]},{...contextDetails,model:'other'},
+    {...contextDetails,extra:1},{...contextDetails,sources:'x'},
+    {...contextDetails,sources:[{...contextDetails.sources[0],line_start:0}]},
+    {...contextDetails,sources:[{...contextDetails.sources[0],kind:'other'}]}]){
+    const f=page(async()=>value);await tick();
+    assert.equal(f.at('approval-confirm').disabled,true);
+    assert.equal(f.at('approval-status').textContent,'确认内容无法读取，请取消后重新尝试发送。');
+    await f.at('approval-confirm').listeners.click();assert.deepEqual(f.calls,[]);
+  }
+  let release;const f=page(()=>new Promise(resolve=>release=resolve));await tick();
+  f.events.get('pagehide')();release(contextDetails);await tick();
+  assert.equal(f.at('approval-content').textContent,'');assert.equal(f.at('approval-confirm').disabled,true);
+  await f.at('approval-confirm').listeners.click();assert.deepEqual(f.calls,[]);
 });

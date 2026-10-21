@@ -20,7 +20,29 @@
   window.addEventListener('pagehide',()=>{gone=true;loaded=false;judgeSelect.checked=false;judgeSelect.disabled=true;at('approval-content').textContent='';});
   Promise.resolve().then(()=>api.state()).then(value=>{
     if(gone)return;
-    if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==(Object.hasOwn(value,'judge')?5:4)||
+    if(value?.kind==='library_context'){
+      if(Object.keys(value).length!==6||
+          !['kind','content','sources','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
+          typeof value.content!=='string'||!value.content.trim()||!Object.hasOwn(models,value.model)||
+          value.recipient!=='DeepSeek（api.deepseek.com）'||!budget(value.max_total_usd)||
+          !Array.isArray(value.sources)||!value.sources.length||value.sources.length>8)throw Error();
+      const list=at('approval-sources-list');
+      for(const source of value.sources){
+        if(!source||typeof source!=='object'||Array.isArray(source)||Object.keys(source).length!==5||
+            typeof source.title!=='string'||!source.title.trim()||
+            !['case_csv','law_markdown'].includes(source.kind)||
+            !Number.isSafeInteger(source.line_start)||!Number.isSafeInteger(source.line_end)||
+            source.line_start<1||source.line_end<source.line_start)throw Error();
+        const item=document.createElement('li');
+        item.textContent=`${source.title} · ${source.kind==='law_markdown'?'法规':'案例'} · 第 ${source.line_start}–${source.line_end} 行 · 待核对`;
+        list.append(item);
+      }
+      at('approval-sources').hidden=false;
+      at('approval-sources-title').textContent=`随问题发送的已保存片段（${value.sources.length} 条）`;
+      at('approval-intro').textContent='只发送下列问题与所列已保存片段；本机原附件与其他内容不会发送。结果保存为内部待核草稿。';
+      at('approval-text-title').textContent='本次发送的问题全文';
+    } else if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==(Object.hasOwn(value,'judge')?5:4)||
+        Object.hasOwn(value,'kind')||
         !['content','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
         typeof value.content!=='string'||!value.content.trim()||!Object.hasOwn(models,value.model)||
         value.recipient!=='DeepSeek（api.deepseek.com）'||!budget(value.max_total_usd))throw Error();

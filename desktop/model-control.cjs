@@ -9,11 +9,34 @@ const CODES = new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT',
   'BUDGET_EXCEEDED','CROSS_MATTER_DENIED']);
 const STATUSES = {configure:['configured'],disable:['disabled'],
   authorize:['authorized','existing'],revoke:['revoked'],configure_judge:['configured'],disable_judge:['disabled'],
-  authorize_judge:['authorized','existing'],revoke_judge:['revoked']};
+  authorize_judge:['authorized','existing'],revoke_judge:['revoked'],authorize_context:['authorized','existing']};
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const keys = (value, expected) => object(value) && Object.keys(value).length === expected.length &&
   expected.every(key => Object.hasOwn(value,key));
 const blocked = () => ({ok:false,code:'BLOCKED_LIVE'});
+
+function validContextBasis(basis) {
+  if (!keys(basis,['input_format','template_version','request_id','expected_scope',
+      'expected_composer_revision','system_sha256','manifest_sha256','source_bindings',
+      'config_sha256','wire_sha256']) || basis.input_format!=='library-context-v1' ||
+      basis.template_version!=='saved-library-context-system-v1' ||
+      typeof basis.request_id!=='string' || !UUID.test(basis.request_id) ||
+      !object(basis.expected_scope) ||
+      !Number.isSafeInteger(basis.expected_composer_revision) || basis.expected_composer_revision<0) return false;
+  for (const digest of ['system_sha256','manifest_sha256','config_sha256','wire_sha256'])
+    if (typeof basis[digest]!=='string' || !SHA256.test(basis[digest])) return false;
+  if (!Array.isArray(basis.source_bindings) || basis.source_bindings.length<1 ||
+      basis.source_bindings.length>8) return false;
+  const seen=new Set();
+  for (const binding of basis.source_bindings) {
+    if (!keys(binding,['saved_citation_id','citation_sha256']) ||
+        typeof binding.saved_citation_id!=='string' || !UUID.test(binding.saved_citation_id) ||
+        typeof binding.citation_sha256!=='string' || !SHA256.test(binding.citation_sha256) ||
+        seen.has(binding.saved_citation_id)) return false;
+    seen.add(binding.saved_citation_id);
+  }
+  return true;
+}
 
 function validPayload(operation, payload) {
   if (operation === 'disable' || operation === 'disable_judge') return keys(payload,[]);
@@ -22,6 +45,14 @@ function validPayload(operation, payload) {
     payload.secret.trim().length >= 16 && payload.secret.trim().length <= 512;
   const token = value => typeof value === 'string' && /^[\x21-\x7e]{1,256}$/.test(value);
   if (operation === 'revoke' || operation === 'revoke_judge') return keys(payload,['session_token']) && token(payload.session_token);
+  if (operation === 'authorize_context')
+    return keys(payload,['session_token','expected_config_version','basis','max_total_usd',
+      'valid_for_seconds','max_rounds']) && token(payload.session_token) &&
+      typeof payload.expected_config_version === 'string' && UUID.test(payload.expected_config_version) &&
+      validContextBasis(payload.basis) && payload.max_rounds === 1 &&
+      typeof payload.max_total_usd === 'string' && payload.max_total_usd.length <= 64 &&
+      Number.isSafeInteger(payload.valid_for_seconds) && payload.valid_for_seconds >= 1 &&
+      payload.valid_for_seconds <= 900;
   const judge = operation === 'authorize_judge';
   if ((!judge && operation !== 'authorize') || !keys(payload,['session_token','expected_config_version',
     'basis','max_total_usd','valid_for_seconds'])) return false;

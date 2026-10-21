@@ -1,6 +1,6 @@
 # TODO — 群兴法律工作台协作清单
 
-更新：2026-10-21。CH-06B2c2 从 `c81e1c3` 完成同 run 受限串行循环切片：新输入格式 `library-context-v2` 与工具计划响应协议（≤4 轮模型 / ≤8 工具）、轮间授权显式形状（max_rounds）、结构版本 `assistant-rounds-v2`（CHECK 加宽，复用 12 步重建）、runner 主循环与四种有界停止原因、恢复封存不重发、完整性开放多轮语义（plan↔工具↔回执↔下轮交换全绑定）；v1 字节与行为完全不变。律师选片界面仍待，安装版仍为0.4.1。此表用于协作排期；完成事实以 [TASK_STATUS](docs/TASK_STATUS.md) 与对应证据为准，完整验收条件以 [v2.1](docs/plans/chat-first-architecture-v2.1.md) 为准。
+更新：2026-10-21。CH-06B3 从 `51b2875` 完成律师选片 GUI 切片：对话页勾选本会话已保存引用 1–8 条（保序、编辑/换对话即失效），服务器确定性预览在给出 request_id 时携带 send_basis（JS 无法自算规范编码哈希），桌面原生确认窗经新 `authorize_context` 通道（CSRF POST 预览+全量一致性比对+片段清单）授权后发送一次资料辅助回答（v1 单轮锁定），NETWORK_UNKNOWN 只经 by-request 找回不重发。无 schema/依赖变更，真实 DeepSeek 供应商仍待接入，安装版仍为0.4.1。此表用于协作排期；完成事实以 [TASK_STATUS](docs/TASK_STATUS.md) 与对应证据为准，完整验收条件以 [v2.1](docs/plans/chat-first-architecture-v2.1.md) 为准。
 
 `[x]` 只表示写明范围的工程切片完成，不表示整个 CH 阶段、真实法律效果或生产完成。`[ ]` 表示仍有工作。未认领不代表可跳过依赖；协作者在自己的 PR 中写明任务 ID、改动范围和依赖，再更新本表的负责人/状态，避免重复实施。当前未指定具体协作者姓名。
 
@@ -24,6 +24,7 @@
 | CH-06B2b2 | 已完成资料发送闭合切片 | WorkBuddy | 新输入格式列、有序来源关联、原生一次许可（服务端重建核对、max_calls=1）、同 attempt 执行/撤销/费用、升级与备份恢复同片闭合；一次资料辅助回答经回环 HTTP 字节核验；旧V1字节和权限保持；选片GUI与真实供应商不在本片 | [本片证据](docs/testing/context-send/20261021/README.md) |
 | CH-06B2c1 | 已完成轮次账本底座切片 | WorkBuddy | attempts 重建支持 round_no（1–4、UNIQUE(run_id,round_no)、不可变触发器纳入新列）；FK OFF 重建窗口在三条迁移通道同序语句保证字节一致；完整性 fail-closed 拒绝多轮归档；行为不变恒 round 1；无 runner 循环/协议/授权变更 | [本片证据](docs/testing/bounded-rounds/20261021/README.md)；[执行合同](docs/plans/2026-10-21-bounded-rounds.md) |
 | CH-06B2c2 | 已完成受限串行循环切片 | WorkBuddy | `library-context-v2` 工具计划协议（≤4轮/≤8工具、DTO 层拒陌生 tool）；max_rounds 显式授权形状与 registry lease generate_rounds 分支；`assistant-rounds-v2` CHECK 加宽（12 步重建、v1 冻结摘要固化）；runner 主循环与 rounds_exhausted/budget_exhausted/tool_limit/tool_rejected 四停止；撤权走 claim-abandon 闭合、恢复封存 interrupted 不重发；完整性开放 v2 多轮全绑定；v1 字节与行为不变；真实供应商不在本片 | [本片证据](docs/testing/bounded-rounds/20261021/README.md)；[执行合同](docs/plans/2026-10-21-bounded-rounds.md) |
+| CH-06B3 | 已完成律师选片 GUI 切片 | WorkBuddy | 选片面板（本会话已保存引用 1–8 条保序勾选、编辑/换对话/撤选即失效）；预览扩展 send_basis（request_id 惰性铸造、DTO 逐字段一致性校验）；桌面 `authorize_context` 新通道（桌面自行 CSRF POST 预览重建 basis、六键确认窗片段清单、单次 lease）；前端三向互斥与发送分派、NETWORK_UNKNOWN 只找回不重发；无 schema/依赖变更，v1 单轮锁定，真实供应商不在本片 | [本片证据](docs/testing/selection-gui/20261021/README.md)；[执行合同](docs/plans/2026-10-21-selection-gui.md) |
 | WIN-PATH-01 | 已完成原件/qxbak源码切片 | Codex | 创建/读取/回滚统一I/O路径，逻辑引用不变；424关联、4开发门、16真实HTTP请求及双轴复核通过；原件父目录279→282字符。UNC/超长SQLite/任意长cnbak目标及新安装包未验 | [本片证据](docs/testing/contract-long-path/20261020/README.md)；CH-10仍需安装验收 |
 | CH-07 | P1 · 待实施 | 待认领 | 自动档案草稿与既有接待投影；逐字段来源、unknown/冲突、人工更正保护、版本冲突拒写及同事务回执 | CH-06、附件来源、接待版本接口 |
 | CH-08 | P1 · 待贯通 | 待认领 | 对话产物的客户/内部范围、复制和 Word 导出；复用既有导出，不从整页 DOM 复制内部信息 | CH-07 及原文引用 |
@@ -64,6 +65,8 @@ CH-05C/D1/D2 是协作细分标识，不替换 v2.1 中 CH-05 的总体验收；
 - [x] CH-06B2c1：`assistant-rounds-v1` 重建 attempts 表支持有界轮次（round_no 1–4 不可变、UNIQUE(run_id,round_no)），三条迁移通道 FK OFF 窗口同序闭合、新建与升级字节一致、数据行保留；完整性校验对多轮归档 fail-closed；[结构/迁移/损坏矩阵与关联回归证据](docs/testing/bounded-rounds/20261021/README.md)。行为不变（恒 round 1），循环 runner、工具计划协议与轮间授权仍待 B2c2。
 
 - [x] CH-06B2c2：`library-context-v2` 工具计划响应协议与同 run 受限串行循环 runner（model round→固定 library handler→下轮/final，≤4 轮模型/≤8 工具）；轮间授权显式形状 max_rounds；结构版本 `assistant-rounds-v2`（CHECK 加宽含 v2，复用 12 步重建、三条通道同片闭合）；四种有界停止原因与恢复封存不重发；完整性开放 v2 多轮语义（plan↔tool.before↔receipt↔下轮 exchanges 精确绑定，篡改矩阵全拒）；[runner/schema/授权/完整性矩阵与广域回归证据](docs/testing/bounded-rounds/20261021/README.md)。v1 字节与行为完全不变；真实供应商接入、律师选片 GUI 仍待排期。
+
+- [x] CH-06B3：律师选片 GUI 三层落地——网页选片面板（`assistant-context.mjs` 控制器：savedCitations 汇集、保序≤8、request_id 惰性铸造、点选/编辑/换对话即失效、与 generation/research 三向互斥）；预览扩展（`MainContextSelection.request_id` + `MainContextPreview.send_basis`，ready 且给 request_id 时服务器组装 v1/v2 basis，DTO 校验逐字段一致且 source_bindings 与 manifest.sources 同序）；桌面授权链（preload `authorizeContext` → `desktop:approve-context` 处理器自行 GET 草稿/材料 + CSRF POST context-preview 全量比对 → 确认窗六键 library_context 变体渲染片段清单 → 单次 lease → Python `_OPERATIONS` 分发既有 `authorize_context`）；发送走 context-generations，NETWORK_UNKNOWN 只经 by-request 找回；[前端/桌面/Python 关联回归与端到端合成走通证据](docs/testing/selection-gui/20261021/README.md)。无 schema/依赖变更；v1 单轮锁定（max_rounds 锁 1），真实供应商接入与 v2 多轮界面仍待排期。
 
 ## 数据及交付前提
 

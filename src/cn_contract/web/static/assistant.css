@@ -264,3 +264,13 @@ body.has-history.source-open .compose-section { position: static; }
 .citation-details { border-top: 1px solid var(--line); padding-top: 1rem; font-size: .8125rem; line-height: 1.7; }
 .citation-details dt { color: var(--muted); margin-top: .75rem; }
 .citation-details dd { margin: .25rem 0 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+
+.context-panel { margin-top: 1rem; padding: 1rem; border: 1px solid var(--line); border-radius: .5rem; }
+.context-panel h2 { font-size: 1rem; margin: 0 0 .5rem; }
+.context-citations { display: flex; flex-direction: column; gap: .25rem; margin-top: .75rem; max-height: 16rem; overflow-y: auto; }
+.context-citation { display: flex; gap: .5rem; align-items: flex-start; padding: .5rem; border-radius: .375rem; line-height: 1.5; overflow-wrap: anywhere; }
+.context-citation:hover { background: var(--selected); }
+.context-citation input { margin-top: .3rem; flex: none; }
+.context-actions { margin-top: .75rem; }
+.context-preview { margin-top: .75rem; padding: .75rem; border: 1px dashed var(--line); border-radius: .375rem; }
+#context-status[data-kind="error"] { color: var(--danger, #b3261e); }

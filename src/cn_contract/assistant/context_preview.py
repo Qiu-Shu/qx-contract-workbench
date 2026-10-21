@@ -5,6 +5,8 @@ from ..security import ServiceError
 from . import service
 from .attachment_records import items
 from .library_handlers import read_saved_citation
+from .providers.context_codec import build_basis
+from .providers.rounds_codec import build_basis_rounds
 from .providers.context_preview import build_preview, project_source
 
 _SCOPE_KEYS = ('workspace_id', 'conversation_id', 'scope_kind', 'scope_ref', 'binding_revision')
@@ -40,8 +42,14 @@ def preview_context(actor, conversation_id, selection, db, *, config=None):
     service._expected(conversation, selection)
     if not conversation['draft_input'].strip() or items(conversation, db):
         raise ServiceError('NOT_SUPPORTED', 422)
-    scope, manifest, _ = assemble_context(actor, conversation, selection.citation_ids, db)
+    scope, manifest, records = assemble_context(actor, conversation, selection.citation_ids, db)
     template = ('saved-library-context-system-v2' if selection.max_rounds > 1
                 else 'saved-library-context-system-v1')
-    return build_preview(manifest, scope, conversation['composer_revision'], config,
-                         template_version=template)
+    preview = build_preview(manifest, scope, conversation['composer_revision'], config,
+                            template_version=template)
+    if selection.request_id is not None and preview.state == 'ready':
+        builder = build_basis_rounds if selection.max_rounds > 1 else build_basis
+        basis = builder(selection.request_id, manifest, scope,
+                        conversation['composer_revision'], config, records)
+        preview = preview.model_copy(update={'send_basis': basis})
+    return preview

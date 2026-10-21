@@ -3412,6 +3412,8 @@ class MainContextSelection(DomainModel):
     citation_ids: Annotated[tuple[UUID, ...], Field(min_length=1, max_length=8)]
     # Explicit bounded-rounds preview shape; the default keeps the v1 template.
     max_rounds: Annotated[int, Field(strict=True, ge=1, le=4)] = 1
+    # When given and the preview is ready, the response carries a matching send basis.
+    request_id: UUID | None = None
 
     @field_validator('citation_ids')
     @classmethod
@@ -3459,50 +3461,6 @@ class MainContextManifest(DomainModel):
         return self
 
 
-class MainContextPreview(DomainModel):
-    scope: ScopeSnapshot
-    composer_revision: NonNegativeInt
-    manifest: MainContextManifest
-    manifest_sha256: SHA256
-    system_text: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=4096)]
-    state: Literal['not_configured', 'ready', 'input_too_large']
-    model: Literal['deepseek-flash', 'deepseek-v4-pro'] | None
-    config_sha256: SHA256 | None
-    max_input_bytes: Annotated[int, Field(strict=True, ge=1, le=262144)] | None
-    wire_payload_json: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=524288)] | None
-    wire_sha256: SHA256 | None
-    wire_bytes: PositiveInt | None
-    sending_enabled: Literal[False] = False
-
-    @model_validator(mode='after')
-    def consistent_context_preview(self):
-        from .config import canonical_json
-        manifest = canonical_json(self.manifest.model_dump(mode='json'))
-        if hashlib.sha256(manifest.encode('utf-8')).hexdigest() != self.manifest_sha256:
-            raise ValueError('CONTEXT_PREVIEW_INVALID')
-        configured = (self.model, self.config_sha256, self.max_input_bytes,
-            self.wire_payload_json, self.wire_sha256, self.wire_bytes)
-        if self.state == 'not_configured':
-            if any(value is not None for value in configured):
-                raise ValueError('CONTEXT_PREVIEW_INVALID')
-            return self
-        if any(value is None for value in configured):
-            raise ValueError('CONTEXT_PREVIEW_INVALID')
-        raw = self.wire_payload_json.encode('utf-8')
-        body = json.loads(self.wire_payload_json)
-        if (not isinstance(body, dict) or set(body) != {
-                'model', 'messages', 'max_tokens', 'stream', 'thinking', 'response_format'}
-                or canonical_json(body) != self.wire_payload_json or body['model'] != self.model
-                or body['messages'] != [{'role':'system', 'content':self.system_text}, {'role':'user', 'content':manifest}]
-                or type(body['max_tokens']) is not int or not 1 <= body['max_tokens'] <= 8192
-                or body['stream'] is not False or body['thinking'] != {'type':'disabled'}
-                or body['response_format'] != {'type':'json_object'}
-                or len(raw) != self.wire_bytes or hashlib.sha256(raw).hexdigest() != self.wire_sha256
-                or (self.state == 'ready') != (len(raw) <= self.max_input_bytes)):
-            raise ValueError('CONTEXT_PREVIEW_INVALID')
-        return self
-
-
 class MainContextSourceBinding(DomainModel):
     saved_citation_id: UUID
     citation_sha256: SHA256
@@ -3530,6 +3488,65 @@ class MainContextSendBasis(DomainModel):
         if (self.input_format == 'library-context-v1') != (
                 self.template_version == 'saved-library-context-system-v1'):
             raise ValueError('CONTEXT_INPUT_INVALID')
+        return self
+
+
+class MainContextPreview(DomainModel):
+    scope: ScopeSnapshot
+    composer_revision: NonNegativeInt
+    manifest: MainContextManifest
+    manifest_sha256: SHA256
+    system_text: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=4096)]
+    state: Literal['not_configured', 'ready', 'input_too_large']
+    model: Literal['deepseek-flash', 'deepseek-v4-pro'] | None
+    config_sha256: SHA256 | None
+    max_input_bytes: Annotated[int, Field(strict=True, ge=1, le=262144)] | None
+    wire_payload_json: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=524288)] | None
+    wire_sha256: SHA256 | None
+    wire_bytes: PositiveInt | None
+    sending_enabled: Literal[False] = False
+    # Data for the native approval step, never a grant; present only on request.
+    send_basis: MainContextSendBasis | None = None
+
+    @model_validator(mode='after')
+    def consistent_context_preview(self):
+        from .config import canonical_json
+        manifest = canonical_json(self.manifest.model_dump(mode='json'))
+        if hashlib.sha256(manifest.encode('utf-8')).hexdigest() != self.manifest_sha256:
+            raise ValueError('CONTEXT_PREVIEW_INVALID')
+        configured = (self.model, self.config_sha256, self.max_input_bytes,
+            self.wire_payload_json, self.wire_sha256, self.wire_bytes)
+        if self.state == 'not_configured':
+            if any(value is not None for value in configured):
+                raise ValueError('CONTEXT_PREVIEW_INVALID')
+            return self
+        if any(value is None for value in configured):
+            raise ValueError('CONTEXT_PREVIEW_INVALID')
+        raw = self.wire_payload_json.encode('utf-8')
+        body = json.loads(self.wire_payload_json)
+        if (not isinstance(body, dict) or set(body) != {
+                'model', 'messages', 'max_tokens', 'stream', 'thinking', 'response_format'}
+                or canonical_json(body) != self.wire_payload_json or body['model'] != self.model
+                or body['messages'] != [{'role':'system', 'content':self.system_text}, {'role':'user', 'content':manifest}]
+                or type(body['max_tokens']) is not int or not 1 <= body['max_tokens'] <= 8192
+                or body['stream'] is not False or body['thinking'] != {'type':'disabled'}
+                or body['response_format'] != {'type':'json_object'}
+                or len(raw) != self.wire_bytes or hashlib.sha256(raw).hexdigest() != self.wire_sha256
+                or (self.state == 'ready') != (len(raw) <= self.max_input_bytes)):
+            raise ValueError('CONTEXT_PREVIEW_INVALID')
+        if self.send_basis is not None:
+            basis = self.send_basis
+            if (self.state != 'ready' or basis.expected_scope != self.scope
+                    or basis.expected_composer_revision != self.composer_revision
+                    or basis.system_sha256 != hashlib.sha256(
+                        self.system_text.encode('utf-8')).hexdigest()
+                    or basis.manifest_sha256 != self.manifest_sha256
+                    or basis.config_sha256 != self.config_sha256
+                    or basis.wire_sha256 != self.wire_sha256
+                    or len(basis.source_bindings) != len(self.manifest.sources)
+                    or any(binding.saved_citation_id != source.saved_citation_id for binding, source
+                        in zip(basis.source_bindings, self.manifest.sources))):
+                raise ValueError('CONTEXT_PREVIEW_INVALID')
         return self
 
 

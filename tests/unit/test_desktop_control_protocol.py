@@ -23,8 +23,8 @@ def test_valid_frame_and_exact_sequence():
     assert parse_control_line(line(), NONCE, 1) == ('disable', {})
 
 
-@pytest.mark.parametrize('operation', ['configure_judge', 'disable_judge'])
-def test_fixed_judge_operations_share_the_existing_frame(operation):
+@pytest.mark.parametrize('operation', ['configure_judge', 'disable_judge', 'authorize_context'])
+def test_fixed_operations_share_the_existing_frame(operation):
     assert parse_control_line(line(operation=operation), NONCE, 1) == (operation, {})
 
 
@@ -95,6 +95,10 @@ class LocalControl:
         return {'status': 'disabled'}
 
     def authorize(self, payload):
+        return {'status': 'authorized'}
+
+    def authorize_context(self, payload):
+        self.loops.append(asyncio.get_running_loop())
         return {'status': 'authorized'}
 
     def revoke(self, payload):
@@ -180,4 +184,43 @@ def test_pipe_failure_or_eof_clears_both_on_the_application_loop(ending):
         if ending == 'unexpected-error':
             assert outputs[-1]['ok'] is False and outputs[-1]['code'] == 'BLOCKED_LIVE'
         assert 'SYNTHETIC_SECRET' not in repr(outputs)
+    asyncio.run(scenario())
+
+
+def test_authorize_context_dispatches_to_main_with_strict_acknowledgement():
+    from cn_contract.desktop_control import NativeControlHandler
+    async def scenario():
+        main, judge = LocalControl(), LocalControl()
+        outputs, exits = [], []
+        channel = ParentControlChannel(
+            BytesIO(line(operation='authorize_context', payload={'basis': {'synthetic': True}}).encode()),
+            NONCE, lambda **v: outputs.append(v), lambda: None, fatal=exits.append)
+        channel.bind(NativeControlHandler(main, judge))
+        worker = Thread(target=channel.watch)
+        worker.start()
+        while worker.is_alive(): await asyncio.sleep(.001)
+        worker.join()
+        assert exits == []
+        assert outputs == [dict(event='model-control-result', protocol=PROTOCOL,
+            nonce=NONCE, sequence=1, ok=True, status='authorized')]
+        assert main.loops and all(loop is asyncio.get_running_loop() for loop in main.loops)
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize('ack', [{'status': 'revoked'}, {'status': 'authorized', 'extra': 1}])
+def test_authorize_context_unexpected_acknowledgement_is_fatal(ack):
+    from cn_contract.desktop_control import NativeControlHandler
+    async def scenario():
+        main, judge = LocalControl(), LocalControl()
+        main.authorize_context = lambda payload: ack
+        outputs, exits = [], []
+        channel = ParentControlChannel(
+            BytesIO(line(operation='authorize_context', payload={}).encode()),
+            NONCE, lambda **v: outputs.append(v), lambda: None, fatal=exits.append)
+        channel.bind(NativeControlHandler(main, judge))
+        worker = Thread(target=channel.watch)
+        worker.start()
+        while worker.is_alive(): await asyncio.sleep(.001)
+        worker.join()
+        assert exits == [2] and outputs == []
     asyncio.run(scenario())

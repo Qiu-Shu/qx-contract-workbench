@@ -5,7 +5,30 @@ const {randomUUID}=require('node:crypto');
 function approvalDetails(value) {
   const budget=value=>typeof value==='string'&&/^(0|[1-9]\d{0,6})(\.\d{1,12})?$/.test(value)&&
     /[1-9]/.test(value)&&(Number(value.split('.')[0])<1000000||/^1000000(?:\.0{1,12})?$/.test(value));
+  if(value?.kind==='library_context'){
+    if(Object.keys(value).length!==6||
+        !['kind','content','sources','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
+        typeof value.content!=='string'||!value.content.trim()||Buffer.byteLength(value.content,'utf8')>65536||
+        !['deepseek-flash','deepseek-v4-pro'].includes(value.model)||value.recipient!=='DeepSeek（api.deepseek.com）'||
+        !budget(value.max_total_usd)||!Array.isArray(value.sources)||!value.sources.length||value.sources.length>8)return null;
+    const sources=[];
+    for(const source of value.sources){
+      if(!source||typeof source!=='object'||Array.isArray(source)||Object.keys(source).length!==5||
+          !['saved_citation_id','title','kind','line_start','line_end'].every(key=>Object.hasOwn(source,key))||
+          typeof source.saved_citation_id!=='string'||
+          !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(source.saved_citation_id)||
+          typeof source.title!=='string'||!source.title.trim()||source.title.length>2000||
+          !['case_csv','law_markdown'].includes(source.kind)||
+          !Number.isSafeInteger(source.line_start)||!Number.isSafeInteger(source.line_end)||
+          source.line_start<1||source.line_end<source.line_start)return null;
+      sources.push({saved_citation_id:source.saved_citation_id,title:source.title,kind:source.kind,
+        line_start:source.line_start,line_end:source.line_end});
+    }
+    return {kind:'library_context',content:value.content,sources,model:value.model,
+      max_total_usd:value.max_total_usd,recipient:value.recipient};
+  }
   if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==(Object.hasOwn(value,'judge')?5:4)||
+      Object.hasOwn(value,'kind')||
       !['content','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
       typeof value.content!=='string'||!value.content.trim()||Buffer.byteLength(value.content,'utf8')>65536||
       !['deepseek-flash','deepseek-v4-pro'].includes(value.model)||value.recipient!=='DeepSeek（api.deepseek.com）'||
@@ -78,7 +101,7 @@ function createModelApprovalWindow({BrowserWindow,ipcMain,session}) {
         isolated.setPermissionCheckHandler(()=>false);
         isolated.webRequest.onBeforeRequest({urls:['<all_urls>']},(request,callback)=>callback({cancel:!assets.has(request.url)}));
         listen(isolated,'will-download',event=>event.preventDefault());
-        const win=new BrowserWindow({parent,modal:true,width:640,height:snapshot.judge?700:540,minWidth:640,minHeight:540,
+        const win=new BrowserWindow({parent,modal:true,width:640,height:snapshot.judge||snapshot.kind?700:540,minWidth:640,minHeight:540,
           show:false,title:'确认本次发送 · 群兴法律工作台',backgroundColor:'#f2f5f8',autoHideMenuBar:true,
           webPreferences:{preload:path.join(__dirname,'model-approval-preload.cjs'),session:isolated,
             sandbox:true,contextIsolation:true,nodeIntegration:false,webSecurity:true,webviewTag:false}});job.window=win;

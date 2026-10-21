@@ -138,6 +138,29 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
         })();
         return flight;
       },
+      authorizeContext(value){
+        // One single-round library-context grant; the basis bytes were rebuilt by the server preview.
+        if(judge || used || !valid() || typeof backend.authorizeContextModel!=='function')
+          return Promise.resolve(rejected(judge?'BLOCKED_LIVE':'STATE_CONFLICT'));
+        used=true;
+        flight=(async()=>{
+          let ack;
+          try{
+            ack=await backend.authorizeContextModel({session_token:value.session_token,
+              expected_config_version:captured.config_version,basis:value.basis,
+              max_total_usd:budget,valid_for_seconds:120,max_rounds:1});
+          }catch{return terminate(backend,guard);}
+          if(!healthy(backend))return terminate(backend,guard);
+          if(exact(ack,['ok','code']) && ack.ok===false && CONTROL_CODES.has(ack.code))return rejected(ack.code);
+          if(!exact(ack,['ok','status']) || ack.ok!==true || !['authorized','existing'].includes(ack.status))
+            return terminate(backend,guard);
+          authorized=true;
+          if(ack.status==='authorized')grantedToken=value.session_token;
+          if(!valid()){await revoke();return rejected('STATE_CONFLICT');}
+          return okay();
+        })();
+        return flight;
+      },
       async revoke(){
         if(!open)return rejected('STATE_CONFLICT');
         if(flight)await flight;
