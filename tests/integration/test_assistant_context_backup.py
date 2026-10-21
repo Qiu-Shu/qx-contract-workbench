@@ -102,6 +102,7 @@ def test_context_archive_roundtrip_preserves_format_sources_and_blocks_resend(co
     'relation_missing', 'relation_order', 'relation_unknown_attempt',
     'format_plain_flip', 'question_tamper', 'basis_tamper',
     'wire_tamper', 'output_forged_citation', 'plain_row_with_relation',
+    'second_round',
 ])
 def test_context_archive_rejects_selection_and_format_corruption(context_world, tmp_path, fault):
     database, actor, view, submission, basis, runtime = context_world
@@ -140,6 +141,17 @@ def test_context_archive_rejects_selection_and_format_corruption(context_world, 
         forged['candidate']['citations'][0]['saved_citation_id'] = str(uuid4())
         corrupt(database, 'assistant_model_outputs',
                 'UPDATE assistant_model_outputs SET output_json=?', (canonical_json(forged),))
+    elif fault == 'second_round':
+        # B2c1 fail-closed: a hand-inserted second round is structurally
+        # occupiable but not yet validatable; intermediate-round semantics
+        # arrive with the bounded loop in B2c2.
+        with database.session() as db:
+            row = dict(db.execute(text('SELECT * FROM assistant_model_attempts')).mappings().one())
+        values = tuple(str(uuid4()) if key == 'id' else 2 if key == 'round_no' else value
+                       for key, value in row.items())
+        corrupt(database, 'assistant_model_attempts',
+                'INSERT INTO assistant_model_attempts (' + ','.join(row) + ') VALUES ('
+                + ','.join('?' for _ in row) + ')', values)
     else:
         # A plain-format sibling must never carry context relations.
         with database.session() as db:

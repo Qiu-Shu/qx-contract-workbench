@@ -154,7 +154,7 @@ def validate_library_records(db, *, allowed=True):
         return
     events = db.execute(text('''SELECT * FROM assistant_run_events WHERE lower(event_type) LIKE 'tool.%'
         OR lower(event_type) LIKE 'research.%' OR payload_json LIKE '%local-research-v1%' ''')).mappings().all()
-    if version not in ('assistant-library-v1', 'assistant-context-v1'):
+    if version not in ('assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1'):
         if events:
             _fail()
         return

@@ -12,7 +12,7 @@ import sqlite3
 from uuid import uuid4
 
 from ..intake.schema import STATEMENTS
-from ..schema_migrations import statements_for
+from ..schema_migrations import requires_foreign_keys_off, statements_for
 from ..storage_schema import VERSIONS, identify_schema, schema_rows
 
 
@@ -118,15 +118,22 @@ def upgrade(root):
                 'backup_sha256':_file_hash(backup)})
             # Keep the intake fault-injection seam and its historical DDL unchanged.
             statements=STATEMENTS if target=='intake-v1' else statements_for(target)
-            db.execute('BEGIN IMMEDIATE')
+            # A table-rebuild migration DROPs a referenced parent; open the FK
+            # OFF window before BEGIN and restore enforcement after the outcome.
+            fk_off=requires_foreign_keys_off(target)
+            if fk_off:db.execute('PRAGMA foreign_keys=OFF')
             try:
-                if _rows(db)!=before:raise ValueError('WORKSPACE_DATABASE_MISMATCH')
-                for sql in statements:db.execute(sql)
-                if _rows(db)!=after or db.execute('PRAGMA foreign_key_check').fetchall():
-                    raise ValueError('WORKSPACE_DATABASE_MISMATCH')
-                db.commit()
-            except BaseException:
-                db.rollback();raise
+                db.execute('BEGIN IMMEDIATE')
+                try:
+                    if _rows(db)!=before:raise ValueError('WORKSPACE_DATABASE_MISMATCH')
+                    for sql in statements:db.execute(sql)
+                    if _rows(db)!=after or db.execute('PRAGMA foreign_key_check').fetchall():
+                        raise ValueError('WORKSPACE_DATABASE_MISMATCH')
+                    db.commit()
+                except BaseException:
+                    db.rollback();raise
+            finally:
+                if fk_off:db.execute('PRAGMA foreign_keys=ON')
             marker={**marker,'schema_sha256':after_hash}
             _write_marker(root,marker)
             before=after

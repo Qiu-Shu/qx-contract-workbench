@@ -158,7 +158,8 @@ class NativeModelControl:
                 JOIN assistant_messages m ON m.id=r.message_id WHERE r.request_id=:request'''),
                 {'request': str(basis.request_id)}).mappings().first()
             if run is not None:
-                attempt = db.execute(text('SELECT * FROM assistant_model_attempts WHERE run_id=:id'),
+                attempt = db.execute(text('''SELECT * FROM assistant_model_attempts
+                    WHERE run_id=:id AND round_no=1'''),
                     {'id': run['id']}).mappings().first()
                 expected = basis.expected_scope.model_copy(update={
                     'input_revision': basis.expected_scope.input_revision+1})

@@ -1,0 +1,3047 @@
+...FF.................................................................FF [  6%]
+..FF...F..............................F................................. [ 12%]
+........................................................................ [ 19%]
+........................................................................ [ 25%]
+..................F.....................F............................... [ 31%]
+.........................................................F.F............ [ 38%]
+.....................................................F.................. [ 44%]
+............F............F.............................................. [ 51%]
+........................................................................ [ 57%]
+.....F.F.............................................................FFF [ 63%]
+FFFF......F.F........................................................FF. [ 70%]
+F.F...................F..........FF...............F..................... [ 76%]
+........................................................................ [ 82%]
+........................................................................ [ 89%]
+......FF......FFFFF..FFF.............F......................FF........FF [ 95%]
+................................................                         [100%]
+================================== FAILURES ===================================
+______ test_native_roundtrip_preserves_source_history_and_service_fence _______
+
+source = (WindowsPath('D:/temp-qx/rounds-wide/test_native_roundtrip_preserve0/中文资料库/main'), <cn_contract.persistence.Database o...26, 10, 21, 10, 21, 25, 500975, tzinfo=datetime.timezone.utc), review_status='unverified'), materials_revision=2), ...)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_native_roundtrip_preserve0')
+
+    def test_native_roundtrip_preserves_source_history_and_service_fence(source, tmp_path):
+        root, database, actor, cid, receipt, parsed, raw, request = source
+        anchor = parsed.parse.result.anchors[0]
+        current = attachments.read_materials(actor, cid, database=database)
+        again = attachments.parse_attachment(actor, cid, receipt.attachment.id,
+            d.AssistantAttachmentParseInput(request_id=uuid4(), expected_scope=current.scope), database=database)
+        current = attachments.read_materials(actor, cid, database=database)
+        attachments.select_materials(actor, cid, d.AssistantMaterialSelectionInput(request_id=uuid4(),
+            expected_scope=current.scope, items=()), database=database)
+        # The native maintenance lock is runtime state, established before comparison.
+        with local_server._worker_lock(root):
+            pass
+        before = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+        archive = tmp_path/'对话附件.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_attachment_backup.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_roundtrip_preserve0/对话附件.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_roundtrip_preserve0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+__________ test_long_parent_paths_create_restore_and_rebackup[long] ___________
+
+source = (WindowsPath('D:/temp-qx/rounds-wide/test_long_parent_paths_create_0/长路径资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料...26, 10, 21, 10, 21, 28, 800317, tzinfo=datetime.timezone.utc), review_status='unverified'), materials_revision=2), ...)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_long_parent_paths_create_0')
+
+    @pytest.mark.parametrize('source', ['long'], indirect=True)
+    def test_long_parent_paths_create_restore_and_rebackup(source, tmp_path):
+        from cn_contract.ops.file_paths import filesystem_path
+        root, database, actor, cid, receipt, _, raw, _ = source
+        original = root/'protected'/'assistant'/str(cid)/str(receipt.attachment.id)/'original.bin'
+        assert len(str(original.parent)) > 260
+        assert backup.checked_root(original.parent).name == str(receipt.attachment.id)
+        assert attachments.read_original(actor, cid, receipt.attachment.id, database=database) == raw
+        archive = tmp_path/'long.qxbak'
+>       workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+
+tests\integration\test_assistant_attachment_backup.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:260: in create_workspace_backup
+    with _worker_lock(root), TemporaryDirectory(prefix='.qx-backup-',dir=filesystem_path(root)) as temporary:
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\tempfile.py:950: in __exit__
+    self.cleanup()
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\tempfile.py:954: in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\tempfile.py:934: in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:1211: in _safe_shutil_rmtree
+    _try_trash(abs_path, recursive=True)
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:1005: in _try_trash
+    _platform_trash(abs_path)
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:137: in _platform_trash
+    path = _get_short_path(os.path.abspath(abs_path))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = '\\\\?\\D:\\temp-qx\\rounds-wide\\test_long_parent_paths_create_0\\长路径资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\main\\.qx-backup-q0jexf70'
+
+    def _get_short_path(path):
+        """调用 GetShortPathNameW 处理超长路径和特殊字符。"""
+        prefix = "\\\\?\\"
+        long_path = (prefix + "UNC" + path[1:]) if path.startswith("\\\\") else (prefix + path)
+        n = _kernel32.GetShortPathNameW(long_path, None, 0)
+        if not n:
+            err = GetLastError()
+>           raise OSError(err, FormatError(err), path)
+E           OSError: [Errno 53] 找不到网络路径。: '\\\\?\\D:\\temp-qx\\rounds-wide\\test_long_parent_paths_create_0\\长路径资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\main\\.qx-backup-q0jexf70'
+
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:126: OSError
+---------------------------- Captured stderr call -----------------------------
+[safe-delete][SAFE_DELETE_FAIL_CLOSED] {"target": "\\\\?\\D:\\temp-qx\\rounds-wide\\test_long_parent_paths_create_0\\长路径资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\main\\.qx-backup-q0jexf70", "reason": "trash-failed", "detail": "[Errno 53] 找不到网络路径。: '\\\\\\\\?\\\\D:\\\\temp-qx\\\\rounds-wide\\\\test_long_parent_paths_create_0\\\\长路径资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\\\main\\\\.qx-backup-q0jexf70'"}
+_______ test_old_qxbak_restores_current_schema_and_original[pre-intake] _______
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_old_qxbak_restores_curren0')
+version = 'pre-intake'
+
+    @pytest.mark.parametrize('version', ['pre-intake', 'intake-v1'])
+    def test_old_qxbak_restores_current_schema_and_original(tmp_path, version):
+        root, database, _, matter, document, intake, raw = legacy_world(tmp_path, native=True, version=version)
+        database.engine.dispose()
+        archive = tmp_path/'old.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        before = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+        archive_before = archive.read_bytes()
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_backup.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_old_qxbak_restores_curren0/old.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_old_qxbak_restores_curren0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_______ test_old_qxbak_restores_current_schema_and_original[intake-v1] ________
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_old_qxbak_restores_curren1')
+version = 'intake-v1'
+
+    @pytest.mark.parametrize('version', ['pre-intake', 'intake-v1'])
+    def test_old_qxbak_restores_current_schema_and_original(tmp_path, version):
+        root, database, _, matter, document, intake, raw = legacy_world(tmp_path, native=True, version=version)
+        database.engine.dispose()
+        archive = tmp_path/'old.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        before = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+        archive_before = archive.read_bytes()
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_backup.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_old_qxbak_restores_curren1/old.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_old_qxbak_restores_curren1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_current_native_restore_quarantines_runs_and_all_service_writes[queued] _
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_current_native_restore_qu0')
+state = 'queued'
+
+    @pytest.mark.parametrize('state', ['queued', 'awaiting_input'])
+    def test_current_native_restore_quarantines_runs_and_all_service_writes(tmp_path, state):
+        from cn_contract import domain as d
+        from cn_contract.assistant import service
+        from cn_contract.web.workspace_upgrade import upgrade
+        root, database, actor, _, _, _, _ = legacy_world(tmp_path, native=True)
+        try:
+            with local_server._worker_lock(root):
+                upgrade(root)
+            with database.session() as db:
+                conversation = service.create_conversation(actor,
+                    d.AssistantConversationCreateInput(request_id=uuid4()), db)
+                request = d.AssistantMessageInput(request_id=uuid4(), expected_scope=conversation.scope,
+                    expected_composer_revision=0, content='独立合成咨询，恢复时不得自动重新执行。')
+                run = service.save_message(actor, conversation.scope.conversation_id, request, db)
+                db.execute(text('UPDATE assistant_runs SET state=:state WHERE id=:id'),
+                           {'id':str(run.id), 'state':state})
+            archive = tmp_path/'current.qxbak'
+            workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>           result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_backup.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_current_native_restore_qu0/current.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_current_native_restore_qu0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_current_native_restore_quarantines_runs_and_all_service_writes[awaiting_input] _
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_current_native_restore_qu1')
+state = 'awaiting_input'
+
+    @pytest.mark.parametrize('state', ['queued', 'awaiting_input'])
+    def test_current_native_restore_quarantines_runs_and_all_service_writes(tmp_path, state):
+        from cn_contract import domain as d
+        from cn_contract.assistant import service
+        from cn_contract.web.workspace_upgrade import upgrade
+        root, database, actor, _, _, _, _ = legacy_world(tmp_path, native=True)
+        try:
+            with local_server._worker_lock(root):
+                upgrade(root)
+            with database.session() as db:
+                conversation = service.create_conversation(actor,
+                    d.AssistantConversationCreateInput(request_id=uuid4()), db)
+                request = d.AssistantMessageInput(request_id=uuid4(), expected_scope=conversation.scope,
+                    expected_composer_revision=0, content='独立合成咨询，恢复时不得自动重新执行。')
+                run = service.save_message(actor, conversation.scope.conversation_id, request, db)
+                db.execute(text('UPDATE assistant_runs SET state=:state WHERE id=:id'),
+                           {'id':str(run.id), 'state':state})
+            archive = tmp_path/'current.qxbak'
+            workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>           result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_backup.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_current_native_restore_qu1/current.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_current_native_restore_qu1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_legacy_restore_failure_never_publishes_or_changes_source[migration-True] _
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_legacy_restore_failure_ne3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161CD5369C0>
+native = True, failure = 'migration'
+
+    @pytest.mark.parametrize('native', [False, True])
+    @pytest.mark.parametrize('failure', ['ciphertext', 'migration'])
+    def test_legacy_restore_failure_never_publishes_or_changes_source(tmp_path, monkeypatch, native, failure):
+        from cn_contract import schema_migrations
+        from cn_contract.web import workspace_upgrade
+        root, database, _, _, _, _, _ = legacy_world(tmp_path, native=native)
+        try:
+            archive = tmp_path/('old.qxbak' if native else 'old.cnbak')
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            before = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            calls = []
+            def fail_upgrade(*args, **kwargs):
+                calls.append(True)
+                raise RuntimeError('synthetic migration failure')
+            monkeypatch.setattr(workspace_upgrade if native else schema_migrations,
+                                'upgrade' if native else 'upgrade_database', fail_upgrade)
+            if failure == 'ciphertext':
+                raw = bytearray(archive.read_bytes()); raw[-1] ^= 1; archive.write_bytes(raw)
+            archive_before = archive.read_bytes()
+            destination = tmp_path/'restored'
+            with pytest.raises(RuntimeError if failure == 'migration' else (ValueError, ServiceError)):
+                if native:
+>                   workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE)
+
+tests\integration\test_assistant_backup.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_legacy_restore_failure_ne3/old.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_legacy_restore_failure_ne3')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_______________ test_preview_stays_blocked_after_backup_restore _______________
+
+world = (<cn_contract.persistence.Database object at 0x00000161C5EE8F50>, Actor(user_id=UUID('43e3bb81-95bc-48a0-80f3-0dc53cdb...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161CE00B3B0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_preview_stays_blocked_aft0')
+library = (WindowsPath('D:/temp-qx/rounds-wide/test_preview_stays_blocked_aft0/library'), '# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+
+    def test_preview_stays_blocked_after_backup_restore(world, tmp_path, library):
+        from cn_contract.ops import workspace_backup
+        from tests.helpers.legacy_assistant_backup import PASSPHRASE
+        with boot(world, tmp_path, library[0]) as http:
+            body = selection(http)
+            with http.database.session() as db:
+                before_schema = db.execute(text('SELECT type,name,sql FROM sqlite_master ORDER BY type,name')).all()
+            assert http.client.post(http.url+'/context-preview', headers=http.headers, json=body).status_code == 200
+            with http.database.session() as db:
+                assert db.execute(text('SELECT type,name,sql FROM sqlite_master ORDER BY type,name')).all() == before_schema
+            source_root = http.root
+        archive = tmp_path/'context-preview.qxbak'
+        workspace_backup.create_workspace_backup(source_root, archive, PASSPHRASE, data_parent=tmp_path)
+>       restored = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_context_preview_routes.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_preview_stays_blocked_aft0/context-preview.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_preview_stays_blocked_aft0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_______ test_restored_copy_allows_exact_history_read_and_blocks_writes ________
+
+world = (<cn_contract.persistence.Database object at 0x00000161CE908290>, Actor(user_id=UUID('080847d0-56ad-4e2d-b7af-dd4bd5c3...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161CE2B4DA0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_restored_copy_allows_exac0')
+
+    def test_restored_copy_allows_exact_history_read_and_blocks_writes(world, tmp_path):
+        message_id, attempt = recorded(world)
+        root = Path(world[0].engine.url.database).parent
+        archive = tmp_path/'history.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       restored = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_generation_history.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restored_copy_allows_exac0/history.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restored_copy_allows_exac0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+___________ test_restored_copy_exposes_only_exact_generation_reads ____________
+
+world = (<cn_contract.persistence.Database object at 0x00000161CABC4B60>, Actor(user_id=UUID('050d41ed-e00d-477f-b4f0-a03bb30d...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D00773B0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_restored_copy_exposes_onl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0076A20>
+
+    def test_restored_copy_exposes_only_exact_generation_reads(world,tmp_path,monkeypatch):
+        database,actor,conversation,message,runtime=world
+        with database.session() as db:
+            first=attempts.enqueue_generation(actor,conversation.scope.conversation_id,message,db,runtime)
+        asyncio.run(execute_attempt(actor,first.id,database,runtime))
+        root=Path(database.engine.url.database).parent;archive=tmp_path/'generation.qxbak'
+        workspace_backup.create_workspace_backup(root,archive,PASSPHRASE,data_parent=tmp_path)
+>       restored=workspace_backup.restore_workspace_backup(archive,tmp_path/'restored',PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_generation_routes.py:288: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restored_copy_exposes_onl0/generation.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restored_copy_exposes_onl0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade[False-True] _
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_pre_judge_archives_retain0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D035F800>
+native = True, fail_migration = False
+
+    @pytest.mark.parametrize('native', [True, False])
+    @pytest.mark.parametrize('fail_migration', [False, True])
+    def test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade(tmp_path, monkeypatch, native, fail_migration):
+        from cn_contract.assistant import attachments, judge_schema
+        root, database, matter, document, raw, attachment = model_workspace(tmp_path, native)
+        archive = tmp_path/('pre-judge.qxbak' if native else 'pre-judge.cnbak')
+        try:
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            source_before = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            archive_before = archive.read_bytes()
+            if fail_migration:
+                monkeypatch.setattr(judge_schema, 'STATEMENTS', (*judge_schema.STATEMENTS, 'INVALID SQL'))
+            destination = tmp_path/'restored'
+            def restore():
+                return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+                        backup.restore_backup(archive, key_resolver=keys(), restore_parent=destination, settings=database.settings))
+            if fail_migration:
+                with pytest.raises(sqlite3.Error):
+                    restore()
+                assert not destination.exists() or not list(destination.iterdir())
+            else:
+>               result = restore()
+                         ^^^^^^^^^
+
+tests\integration\test_assistant_judge_upgrade_backup.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_judge_upgrade_backup.py:54: in restore
+    return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_judge_archives_retain0/pre-judge.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_judge_archives_retain0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade[True-True] _
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_pre_judge_archives_retain2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D12B1AF0>
+native = True, fail_migration = True
+
+    @pytest.mark.parametrize('native', [True, False])
+    @pytest.mark.parametrize('fail_migration', [False, True])
+    def test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade(tmp_path, monkeypatch, native, fail_migration):
+        from cn_contract.assistant import attachments, judge_schema
+        root, database, matter, document, raw, attachment = model_workspace(tmp_path, native)
+        archive = tmp_path/('pre-judge.qxbak' if native else 'pre-judge.cnbak')
+        try:
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            source_before = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            archive_before = archive.read_bytes()
+            if fail_migration:
+                monkeypatch.setattr(judge_schema, 'STATEMENTS', (*judge_schema.STATEMENTS, 'INVALID SQL'))
+            destination = tmp_path/'restored'
+            def restore():
+                return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+                        backup.restore_backup(archive, key_resolver=keys(), restore_parent=destination, settings=database.settings))
+            if fail_migration:
+                with pytest.raises(sqlite3.Error):
+>                   restore()
+
+tests\integration\test_assistant_judge_upgrade_backup.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_judge_upgrade_backup.py:54: in restore
+    return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_judge_archives_retain2/pre-judge.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_judge_archives_retain2')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+____ test_native_roundtrip_preserves_offline_history_and_blocks_execution _____
+
+ledger = (WindowsPath('D:/temp-qx/rounds-wide/test_native_roundtrip_preserve1/合成引用档案/main'), <cn_contract.persistence.Database ..., 'state': 'queued'}, created_at=datetime.datetime(2026, 10, 21, 10, 32, 34, 996213, tzinfo=datetime.timezone.utc)),)))
+library = (WindowsPath('D:/temp-qx/rounds-wide/test_native_roundtrip_preserve1/library'), '# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_native_roundtrip_preserve1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0DEC560>
+
+    def test_native_roundtrip_preserves_offline_history_and_blocks_execution(ledger, library, tmp_path, monkeypatch):
+        from cn_contract.assistant.library_handlers import begin_library_call, execute_library_handler, read_saved_citation
+        from cn_contract.assistant.tools.library import LegalLibraryAdapter
+        root, database, actor, run = ledger
+        first = search(ledger, library)
+        saved_id = first.receipt.result.citation_ids[0]
+        call = begin_library_call(actor, run.id, uuid4(), d.LibraryHandlerRequest(
+            tool='legal_library.read_original', saved_citation_id=saved_id), database)
+        second = execute_library_handler(actor, run.id, call.event_seq, database, LegalLibraryAdapter(library[0]))
+        with database.session() as db:
+            original = read_saved_citation(actor, saved_id, db)
+            assert original.citation.support_status == 'unverified'
+            assert second.receipt.result.result.citation == original.citation
+            assert second.receipt.result.citation_ids != (saved_id,)
+        # Neither archiving nor history reads can treat the external library as required archive contents.
+        def unavailable(*args, **kwargs):
+            pytest.fail('archive/history access must not re-read the external library')
+        monkeypatch.setattr(LegalLibraryAdapter, 'search', unavailable)
+        monkeypatch.setattr(LegalLibraryAdapter, 'read_original', unavailable)
+        with local_server._worker_lock(root):
+            pass
+        source_before = (root/'workbench.db').read_bytes()
+        archive = tmp_path/'library.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        archived = archive.read_bytes()
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_library_backup.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_roundtrip_preserve1/library.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_roundtrip_preserve1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_______ test_authenticated_corrupt_archive_rejected_without_publication _______
+
+ledger = (WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_corrupt_arc0/合成引用档案/main'), <cn_contract.persistence.Database ..., 'state': 'queued'}, created_at=datetime.datetime(2026, 10, 21, 10, 33, 28, 193244, tzinfo=datetime.timezone.utc)),)))
+library = (WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_corrupt_arc0/library'), '# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_corrupt_arc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0D40BC0>
+
+    def test_authenticated_corrupt_archive_rejected_without_publication(ledger, library, tmp_path, monkeypatch):
+        root, database, *_ = ledger
+        search(ledger, library)
+        corrupt(database, 'assistant_handler_receipts', 'UPDATE assistant_handler_receipts SET payload_sha256=?', ('0'*64,))
+        target = tmp_path/'bad.qxbak'
+        with pytest.raises(ValueError, match='ASSISTANT_LIBRARY'):
+            workspace_backup.create_workspace_backup(root, target, PASSPHRASE, data_parent=tmp_path)
+        assert not target.exists()
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup, '_file_references', lambda db: [])
+            workspace_backup.create_workspace_backup(root, target, PASSPHRASE, data_parent=tmp_path)
+        before, archived = (root/'workbench.db').read_bytes(), target.read_bytes()
+        destination = tmp_path/'rejected'
+        with pytest.raises(ValueError, match='ASSISTANT_LIBRARY'):
+>           workspace_backup.restore_workspace_backup(target, destination, PASSPHRASE)
+
+tests\integration\test_assistant_library_backup.py:227: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_authenticated_corrupt_arc0/bad.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_authenticated_corrupt_arc0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+
+During handling of the above exception, another exception occurred:
+
+ledger = (WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_corrupt_arc0/合成引用档案/main'), <cn_contract.persistence.Database ..., 'state': 'queued'}, created_at=datetime.datetime(2026, 10, 21, 10, 33, 28, 193244, tzinfo=datetime.timezone.utc)),)))
+library = (WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_corrupt_arc0/library'), '# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_corrupt_arc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0D40BC0>
+
+    def test_authenticated_corrupt_archive_rejected_without_publication(ledger, library, tmp_path, monkeypatch):
+        root, database, *_ = ledger
+        search(ledger, library)
+        corrupt(database, 'assistant_handler_receipts', 'UPDATE assistant_handler_receipts SET payload_sha256=?', ('0'*64,))
+        target = tmp_path/'bad.qxbak'
+        with pytest.raises(ValueError, match='ASSISTANT_LIBRARY'):
+            workspace_backup.create_workspace_backup(root, target, PASSPHRASE, data_parent=tmp_path)
+        assert not target.exists()
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup, '_file_references', lambda db: [])
+            workspace_backup.create_workspace_backup(root, target, PASSPHRASE, data_parent=tmp_path)
+        before, archived = (root/'workbench.db').read_bytes(), target.read_bytes()
+        destination = tmp_path/'rejected'
+>       with pytest.raises(ValueError, match='ASSISTANT_LIBRARY'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'ASSISTANT_LIBRARY'
+E         Actual message: 'FILE_LIMIT_OR_LINK'
+
+tests\integration\test_assistant_library_backup.py:226: AssertionError
+_ test_rehashed_outer_records_cannot_hide_invalid_citation_identity[restore] __
+
+ledger = (WindowsPath('D:/temp-qx/rounds-wide/test_rehashed_outer_records_ca1/合成引用档案/main'), <cn_contract.persistence.Database ..., 'state': 'queued'}, created_at=datetime.datetime(2026, 10, 21, 10, 33, 57, 898362, tzinfo=datetime.timezone.utc)),)))
+library = (WindowsPath('D:/temp-qx/rounds-wide/test_rehashed_outer_records_ca1/library'), '# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_rehashed_outer_records_ca1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D028C800>
+operation = 'restore'
+
+    @pytest.mark.parametrize('operation', ['create', 'restore'])
+    def test_rehashed_outer_records_cannot_hide_invalid_citation_identity(ledger, library, tmp_path, monkeypatch, operation):
+        from cn_contract.assistant.library_records import sha
+        from cn_contract.config import canonical_json
+        root, database, *_ = ledger
+        search(ledger, library)
+        with database.session() as db:
+            receipt = dict(db.execute(text('SELECT * FROM assistant_handler_receipts')).mappings().one())
+            citation = dict(db.execute(text('SELECT * FROM assistant_library_citations WHERE ordinal=0')).mappings().one())
+        value = json.loads(citation['citation_json'])
+        value['citation_id'] = '0'*64
+        raw = canonical_json(value)
+        result = json.loads(receipt['result_json'])
+        result['result']['page']['citations'][0] = value
+        result_raw = canonical_json(result)
+        corrupt(database, 'assistant_library_citations',
+            'UPDATE assistant_library_citations SET citation_json=?,citation_sha256=? WHERE id=?',
+            (raw, sha(raw), citation['id']))
+        corrupt(database, 'assistant_handler_receipts',
+            'UPDATE assistant_handler_receipts SET result_json=?,result_sha256=? WHERE id=?',
+            (result_raw, sha(result_raw), receipt['id']))
+        source_before = (root/'workbench.db').read_bytes()
+        archive = tmp_path/'invalid-content-identity.qxbak'
+        if operation == 'create':
+            with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            assert not archive.exists()
+        else:
+            # An authenticated hostile archive has both outer hashes recomputed; restore must still reject it.
+            with monkeypatch.context() as patch:
+                patch.setattr(workspace_backup, '_file_references', lambda db: [])
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            archive_before = archive.read_bytes()
+            destination = tmp_path/'must-not-publish'
+            with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+>               workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE)
+
+tests\integration\test_assistant_library_backup.py:338: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_rehashed_outer_records_ca1/invalid-content-identity.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_rehashed_outer_records_ca1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+
+During handling of the above exception, another exception occurred:
+
+ledger = (WindowsPath('D:/temp-qx/rounds-wide/test_rehashed_outer_records_ca1/合成引用档案/main'), <cn_contract.persistence.Database ..., 'state': 'queued'}, created_at=datetime.datetime(2026, 10, 21, 10, 33, 57, 898362, tzinfo=datetime.timezone.utc)),)))
+library = (WindowsPath('D:/temp-qx/rounds-wide/test_rehashed_outer_records_ca1/library'), '# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_rehashed_outer_records_ca1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D028C800>
+operation = 'restore'
+
+    @pytest.mark.parametrize('operation', ['create', 'restore'])
+    def test_rehashed_outer_records_cannot_hide_invalid_citation_identity(ledger, library, tmp_path, monkeypatch, operation):
+        from cn_contract.assistant.library_records import sha
+        from cn_contract.config import canonical_json
+        root, database, *_ = ledger
+        search(ledger, library)
+        with database.session() as db:
+            receipt = dict(db.execute(text('SELECT * FROM assistant_handler_receipts')).mappings().one())
+            citation = dict(db.execute(text('SELECT * FROM assistant_library_citations WHERE ordinal=0')).mappings().one())
+        value = json.loads(citation['citation_json'])
+        value['citation_id'] = '0'*64
+        raw = canonical_json(value)
+        result = json.loads(receipt['result_json'])
+        result['result']['page']['citations'][0] = value
+        result_raw = canonical_json(result)
+        corrupt(database, 'assistant_library_citations',
+            'UPDATE assistant_library_citations SET citation_json=?,citation_sha256=? WHERE id=?',
+            (raw, sha(raw), citation['id']))
+        corrupt(database, 'assistant_handler_receipts',
+            'UPDATE assistant_handler_receipts SET result_json=?,result_sha256=? WHERE id=?',
+            (result_raw, sha(result_raw), receipt['id']))
+        source_before = (root/'workbench.db').read_bytes()
+        archive = tmp_path/'invalid-content-identity.qxbak'
+        if operation == 'create':
+            with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            assert not archive.exists()
+        else:
+            # An authenticated hostile archive has both outer hashes recomputed; restore must still reject it.
+            with monkeypatch.context() as patch:
+                patch.setattr(workspace_backup, '_file_references', lambda db: [])
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            archive_before = archive.read_bytes()
+            destination = tmp_path/'must-not-publish'
+>           with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'ASSISTANT_LIBRARY_INTEGRITY'
+E             Actual message: 'FILE_LIMIT_OR_LINK'
+
+tests\integration\test_assistant_library_backup.py:337: AssertionError
+___ test_pre_library_archive_upgrade_is_complete_or_unpublished[False-True] ___
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_pre_library_archive_upgra0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0FC3B00>
+native = True, fail_migration = False
+
+    @pytest.mark.parametrize('native', [True, False])
+    @pytest.mark.parametrize('fail_migration', [False, True])
+    def test_pre_library_archive_upgrade_is_complete_or_unpublished(tmp_path, monkeypatch, native, fail_migration):
+        from cn_contract.assistant import attachments, library_schema
+        root, database, matter, document, raw, attachment = judge_workspace(tmp_path, native)
+        archive = tmp_path/('pre-library.qxbak' if native else 'pre-library.cnbak')
+        try:
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            original = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            archive_before = archive.read_bytes()
+            if fail_migration:
+                monkeypatch.setattr(library_schema, 'STATEMENTS', (*library_schema.STATEMENTS, 'INVALID SQL'))
+            destination = tmp_path/'restored'
+            def restore():
+                return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+                        backup.restore_backup(archive, key_resolver=keys(), restore_parent=destination, settings=database.settings))
+            if fail_migration:
+                with pytest.raises(sqlite3.Error):
+                    restore()
+                assert not destination.exists() or not list(destination.iterdir())
+            else:
+>               result = restore()
+                         ^^^^^^^^^
+
+tests\integration\test_assistant_library_upgrade_backup.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_library_upgrade_backup.py:81: in restore
+    return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_library_archive_upgra0/pre-library.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_library_archive_upgra0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+___ test_pre_library_archive_upgrade_is_complete_or_unpublished[True-True] ____
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_pre_library_archive_upgra2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0F1BAA0>
+native = True, fail_migration = True
+
+    @pytest.mark.parametrize('native', [True, False])
+    @pytest.mark.parametrize('fail_migration', [False, True])
+    def test_pre_library_archive_upgrade_is_complete_or_unpublished(tmp_path, monkeypatch, native, fail_migration):
+        from cn_contract.assistant import attachments, library_schema
+        root, database, matter, document, raw, attachment = judge_workspace(tmp_path, native)
+        archive = tmp_path/('pre-library.qxbak' if native else 'pre-library.cnbak')
+        try:
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            original = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            archive_before = archive.read_bytes()
+            if fail_migration:
+                monkeypatch.setattr(library_schema, 'STATEMENTS', (*library_schema.STATEMENTS, 'INVALID SQL'))
+            destination = tmp_path/'restored'
+            def restore():
+                return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+                        backup.restore_backup(archive, key_resolver=keys(), restore_parent=destination, settings=database.settings))
+            if fail_migration:
+                with pytest.raises(sqlite3.Error):
+>                   restore()
+
+tests\integration\test_assistant_library_upgrade_backup.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_library_upgrade_backup.py:81: in restore
+    return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_library_archive_upgra2/pre-library.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_library_archive_upgra2')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+______ test_model_archive_rejects_noncontiguous_run_events[model_events] ______
+
+world = (<cn_contract.persistence.Database object at 0x00000161D0D9F260>, Actor(user_id=UUID('424ef9c1-ae2d-4805-b2f2-ba07082b...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D0D9F950>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_model_archive_rejects_non0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0D9FCB0>
+event_kind = 'model_events'
+
+    @pytest.mark.parametrize('event_kind', ['model_events', 'message_event'])
+    def test_model_archive_rejects_noncontiguous_run_events(world, tmp_path, monkeypatch, event_kind):
+        database, actor, _, _, runtime = world
+        first = reserved(world)
+        asyncio.run(execute_attempt(actor, first.id, database, runtime))
+        selector = "event_type LIKE 'model.%'" if event_kind == 'model_events' else "event_type='message.accepted'"
+        corrupt(database, 'assistant_run_events', f'UPDATE assistant_run_events SET seq=seq+100 WHERE {selector}')
+        with database.session() as db, pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+            backup._file_references(db)
+        root = Path(database.engine.url.database).parent
+        rejected = tmp_path/'rejected-sequence.qxbak'
+        with pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+            workspace_backup.create_workspace_backup(root, rejected, PASSPHRASE, data_parent=tmp_path)
+        assert not rejected.exists()
+        # Independently exercise restoration with authenticated hostile fixture data.
+        hostile = tmp_path/'authenticated-invalid-sequence.qxbak'
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup, '_file_references', lambda db: [])
+            workspace_backup.create_workspace_backup(root, hostile, PASSPHRASE, data_parent=tmp_path)
+        before = (root/'workbench.db').read_bytes()
+        destination = tmp_path/'must-not-restore-events'
+        with pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+>           workspace_backup.restore_workspace_backup(hostile, destination, PASSPHRASE)
+
+tests\integration\test_assistant_model_backup.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_model_archive_rejects_non0/authenticated-invalid-sequence.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_model_archive_rejects_non0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = (<cn_contract.persistence.Database object at 0x00000161D0D9F260>, Actor(user_id=UUID('424ef9c1-ae2d-4805-b2f2-ba07082b...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D0D9F950>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_model_archive_rejects_non0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0D9FCB0>
+event_kind = 'model_events'
+
+    @pytest.mark.parametrize('event_kind', ['model_events', 'message_event'])
+    def test_model_archive_rejects_noncontiguous_run_events(world, tmp_path, monkeypatch, event_kind):
+        database, actor, _, _, runtime = world
+        first = reserved(world)
+        asyncio.run(execute_attempt(actor, first.id, database, runtime))
+        selector = "event_type LIKE 'model.%'" if event_kind == 'model_events' else "event_type='message.accepted'"
+        corrupt(database, 'assistant_run_events', f'UPDATE assistant_run_events SET seq=seq+100 WHERE {selector}')
+        with database.session() as db, pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+            backup._file_references(db)
+        root = Path(database.engine.url.database).parent
+        rejected = tmp_path/'rejected-sequence.qxbak'
+        with pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+            workspace_backup.create_workspace_backup(root, rejected, PASSPHRASE, data_parent=tmp_path)
+        assert not rejected.exists()
+        # Independently exercise restoration with authenticated hostile fixture data.
+        hostile = tmp_path/'authenticated-invalid-sequence.qxbak'
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup, '_file_references', lambda db: [])
+            workspace_backup.create_workspace_backup(root, hostile, PASSPHRASE, data_parent=tmp_path)
+        before = (root/'workbench.db').read_bytes()
+        destination = tmp_path/'must-not-restore-events'
+>       with pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'ASSISTANT_MODEL'
+E         Actual message: 'FILE_LIMIT_OR_LINK'
+
+tests\integration\test_assistant_model_backup.py:64: AssertionError
+_____ test_model_archive_rejects_noncontiguous_run_events[message_event] ______
+
+world = (<cn_contract.persistence.Database object at 0x00000161D0E2EB40>, Actor(user_id=UUID('283ac095-bcc4-48f5-97da-d516689e...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D0177080>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_model_archive_rejects_non1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D01770B0>
+event_kind = 'message_event'
+
+    @pytest.mark.parametrize('event_kind', ['model_events', 'message_event'])
+    def test_model_archive_rejects_noncontiguous_run_events(world, tmp_path, monkeypatch, event_kind):
+        database, actor, _, _, runtime = world
+        first = reserved(world)
+        asyncio.run(execute_attempt(actor, first.id, database, runtime))
+        selector = "event_type LIKE 'model.%'" if event_kind == 'model_events' else "event_type='message.accepted'"
+        corrupt(database, 'assistant_run_events', f'UPDATE assistant_run_events SET seq=seq+100 WHERE {selector}')
+        with database.session() as db, pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+            backup._file_references(db)
+        root = Path(database.engine.url.database).parent
+        rejected = tmp_path/'rejected-sequence.qxbak'
+        with pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+            workspace_backup.create_workspace_backup(root, rejected, PASSPHRASE, data_parent=tmp_path)
+        assert not rejected.exists()
+        # Independently exercise restoration with authenticated hostile fixture data.
+        hostile = tmp_path/'authenticated-invalid-sequence.qxbak'
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup, '_file_references', lambda db: [])
+            workspace_backup.create_workspace_backup(root, hostile, PASSPHRASE, data_parent=tmp_path)
+        before = (root/'workbench.db').read_bytes()
+        destination = tmp_path/'must-not-restore-events'
+        with pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+>           workspace_backup.restore_workspace_backup(hostile, destination, PASSPHRASE)
+
+tests\integration\test_assistant_model_backup.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_model_archive_rejects_non1/authenticated-invalid-sequence.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_model_archive_rejects_non1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = (<cn_contract.persistence.Database object at 0x00000161D0E2EB40>, Actor(user_id=UUID('283ac095-bcc4-48f5-97da-d516689e...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D0177080>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_model_archive_rejects_non1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D01770B0>
+event_kind = 'message_event'
+
+    @pytest.mark.parametrize('event_kind', ['model_events', 'message_event'])
+    def test_model_archive_rejects_noncontiguous_run_events(world, tmp_path, monkeypatch, event_kind):
+        database, actor, _, _, runtime = world
+        first = reserved(world)
+        asyncio.run(execute_attempt(actor, first.id, database, runtime))
+        selector = "event_type LIKE 'model.%'" if event_kind == 'model_events' else "event_type='message.accepted'"
+        corrupt(database, 'assistant_run_events', f'UPDATE assistant_run_events SET seq=seq+100 WHERE {selector}')
+        with database.session() as db, pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+            backup._file_references(db)
+        root = Path(database.engine.url.database).parent
+        rejected = tmp_path/'rejected-sequence.qxbak'
+        with pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+            workspace_backup.create_workspace_backup(root, rejected, PASSPHRASE, data_parent=tmp_path)
+        assert not rejected.exists()
+        # Independently exercise restoration with authenticated hostile fixture data.
+        hostile = tmp_path/'authenticated-invalid-sequence.qxbak'
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup, '_file_references', lambda db: [])
+            workspace_backup.create_workspace_backup(root, hostile, PASSPHRASE, data_parent=tmp_path)
+        before = (root/'workbench.db').read_bytes()
+        destination = tmp_path/'must-not-restore-events'
+>       with pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'ASSISTANT_MODEL'
+E         Actual message: 'FILE_LIMIT_OR_LINK'
+
+tests\integration\test_assistant_model_backup.py:64: AssertionError
+___ test_native_model_roundtrip_preserves_history_without_network[reserved] ___
+
+world = (<cn_contract.persistence.Database object at 0x00000161D058CBF0>, Actor(user_id=UUID('a1fecfa8-11a9-46b7-ab25-6206640c...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D1155010>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr0')
+state = 'reserved'
+
+    @pytest.mark.parametrize('state', ['reserved', 'sending', 'received', 'sent_unknown', 'failed_before_send'])
+    def test_native_model_roundtrip_preserves_history_without_network(world, tmp_path, state):
+        database, actor, conversation, request, runtime = world
+        first = reserved(world)
+        if state == 'received':
+            first = asyncio.run(execute_attempt(actor, first.id, database, runtime))
+        elif state != 'reserved':
+            with database.session() as db:
+                token, _, _ = attempts.claim(actor, first.id, db, runtime)
+            if state != 'sending':
+                with database.session() as db:
+                    attempts.settle(actor, first.id, token, d.MainReply(state=state, error_code='PROVIDER_ERROR'), db, runtime)
+        with database.session() as db:
+            before = dict(db.execute(text('SELECT * FROM assistant_model_attempts')).mappings().one())
+        root = Path(database.engine.url.database).parent
+        with local_server._worker_lock(root):
+            pass
+        original = (root/'workbench.db').read_bytes()
+        archive = tmp_path/'synthetic-model.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_model_backup.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr0/synthetic-model.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+___ test_native_model_roundtrip_preserves_history_without_network[sending] ____
+
+world = (<cn_contract.persistence.Database object at 0x00000161D1154C20>, Actor(user_id=UUID('14061fb0-c8c2-4be7-8153-c2100ba3...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D0F940B0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr1')
+state = 'sending'
+
+    @pytest.mark.parametrize('state', ['reserved', 'sending', 'received', 'sent_unknown', 'failed_before_send'])
+    def test_native_model_roundtrip_preserves_history_without_network(world, tmp_path, state):
+        database, actor, conversation, request, runtime = world
+        first = reserved(world)
+        if state == 'received':
+            first = asyncio.run(execute_attempt(actor, first.id, database, runtime))
+        elif state != 'reserved':
+            with database.session() as db:
+                token, _, _ = attempts.claim(actor, first.id, db, runtime)
+            if state != 'sending':
+                with database.session() as db:
+                    attempts.settle(actor, first.id, token, d.MainReply(state=state, error_code='PROVIDER_ERROR'), db, runtime)
+        with database.session() as db:
+            before = dict(db.execute(text('SELECT * FROM assistant_model_attempts')).mappings().one())
+        root = Path(database.engine.url.database).parent
+        with local_server._worker_lock(root):
+            pass
+        original = (root/'workbench.db').read_bytes()
+        archive = tmp_path/'synthetic-model.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_model_backup.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr1/synthetic-model.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+___ test_native_model_roundtrip_preserves_history_without_network[received] ___
+
+world = (<cn_contract.persistence.Database object at 0x00000161D0DB10D0>, Actor(user_id=UUID('99305036-55ce-46f8-8d58-aacd18c2...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D0F944A0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr2')
+state = 'received'
+
+    @pytest.mark.parametrize('state', ['reserved', 'sending', 'received', 'sent_unknown', 'failed_before_send'])
+    def test_native_model_roundtrip_preserves_history_without_network(world, tmp_path, state):
+        database, actor, conversation, request, runtime = world
+        first = reserved(world)
+        if state == 'received':
+            first = asyncio.run(execute_attempt(actor, first.id, database, runtime))
+        elif state != 'reserved':
+            with database.session() as db:
+                token, _, _ = attempts.claim(actor, first.id, db, runtime)
+            if state != 'sending':
+                with database.session() as db:
+                    attempts.settle(actor, first.id, token, d.MainReply(state=state, error_code='PROVIDER_ERROR'), db, runtime)
+        with database.session() as db:
+            before = dict(db.execute(text('SELECT * FROM assistant_model_attempts')).mappings().one())
+        root = Path(database.engine.url.database).parent
+        with local_server._worker_lock(root):
+            pass
+        original = (root/'workbench.db').read_bytes()
+        archive = tmp_path/'synthetic-model.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_model_backup.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr2/synthetic-model.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr2')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_native_model_roundtrip_preserves_history_without_network[sent_unknown] _
+
+world = (<cn_contract.persistence.Database object at 0x00000161D12D1BE0>, Actor(user_id=UUID('dbab824f-33f7-445e-bd6f-e5e2764d...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D12DF380>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr3')
+state = 'sent_unknown'
+
+    @pytest.mark.parametrize('state', ['reserved', 'sending', 'received', 'sent_unknown', 'failed_before_send'])
+    def test_native_model_roundtrip_preserves_history_without_network(world, tmp_path, state):
+        database, actor, conversation, request, runtime = world
+        first = reserved(world)
+        if state == 'received':
+            first = asyncio.run(execute_attempt(actor, first.id, database, runtime))
+        elif state != 'reserved':
+            with database.session() as db:
+                token, _, _ = attempts.claim(actor, first.id, db, runtime)
+            if state != 'sending':
+                with database.session() as db:
+                    attempts.settle(actor, first.id, token, d.MainReply(state=state, error_code='PROVIDER_ERROR'), db, runtime)
+        with database.session() as db:
+            before = dict(db.execute(text('SELECT * FROM assistant_model_attempts')).mappings().one())
+        root = Path(database.engine.url.database).parent
+        with local_server._worker_lock(root):
+            pass
+        original = (root/'workbench.db').read_bytes()
+        archive = tmp_path/'synthetic-model.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_model_backup.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr3/synthetic-model.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr3')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_native_model_roundtrip_preserves_history_without_network[failed_before_send] _
+
+world = (<cn_contract.persistence.Database object at 0x00000161D12D0B30>, Actor(user_id=UUID('b00bf98f-bf2f-4657-a2dd-5f85eff8...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D0F70410>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr4')
+state = 'failed_before_send'
+
+    @pytest.mark.parametrize('state', ['reserved', 'sending', 'received', 'sent_unknown', 'failed_before_send'])
+    def test_native_model_roundtrip_preserves_history_without_network(world, tmp_path, state):
+        database, actor, conversation, request, runtime = world
+        first = reserved(world)
+        if state == 'received':
+            first = asyncio.run(execute_attempt(actor, first.id, database, runtime))
+        elif state != 'reserved':
+            with database.session() as db:
+                token, _, _ = attempts.claim(actor, first.id, db, runtime)
+            if state != 'sending':
+                with database.session() as db:
+                    attempts.settle(actor, first.id, token, d.MainReply(state=state, error_code='PROVIDER_ERROR'), db, runtime)
+        with database.session() as db:
+            before = dict(db.execute(text('SELECT * FROM assistant_model_attempts')).mappings().one())
+        root = Path(database.engine.url.database).parent
+        with local_server._worker_lock(root):
+            pass
+        original = (root/'workbench.db').read_bytes()
+        archive = tmp_path/'synthetic-model.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_model_backup.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr4/synthetic-model.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_roundtrip_pr4')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_____ test_real_over_budget_receipt_is_preserved_without_adopting_output ______
+
+world = (<cn_contract.persistence.Database object at 0x00000161D0509850>, Actor(user_id=UUID('25346ba3-1cee-40d1-b953-5cb0586d...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D046FC50>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_real_over_budget_receipt_0')
+
+    def test_real_over_budget_receipt_is_preserved_without_adopting_output(world, tmp_path):
+        database, actor, _, _, runtime = world
+        runtime.policy = d.MainModelPolicy.model_validate(
+            {**runtime.policy.model_dump(mode='json'), 'max_total_usd':'0.1'})
+        first = reserved(world)
+        with database.session() as db:
+            token, _, _ = attempts.claim(actor, first.id, db, runtime)
+            attempts.settle(actor, first.id, token, d.MainReply(state='received',
+                usage=d.MainUsage(prompt_tokens=1000000,completion_tokens=0,total_tokens=1000000),
+                error_code='MODEL_OUTPUT_INVALID'), db, runtime)
+            view = attempts.read_attempt(actor, first.id, db)
+            assert view.receipt.estimated_cost_usd > runtime.policy.max_total_usd
+            assert view.output is None and backup._file_references(db) == []
+        archive = tmp_path/'actual-overage.qxbak'
+        workspace_backup.create_workspace_backup(Path(database.engine.url.database).parent, archive, PASSPHRASE, data_parent=tmp_path)
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'overage-restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_model_backup.py:210: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_real_over_budget_receipt_0/actual-overage.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_real_over_budget_receipt_0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+___ test_restore_rejects_authenticated_but_inconsistent_model_archive[True] ___
+
+world = (<cn_contract.persistence.Database object at 0x00000161D0C9CE30>, Actor(user_id=UUID('dcbe7fb8-469c-4533-a853-5ef175c9...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D0C32690>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_restore_rejects_authentic1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0C31430>
+native = True
+
+    @pytest.mark.parametrize('native', [True, False])
+    def test_restore_rejects_authenticated_but_inconsistent_model_archive(world, tmp_path, monkeypatch, native):
+        database, *_ = world
+        reserved(world)
+        source = Path(database.engine.url.database)
+        before = source.read_bytes()
+        archive = tmp_path/('bad-model.qxbak' if native else 'bad-model.cnbak')
+        if native:
+            corrupt(database, 'assistant_model_attempts', 'UPDATE assistant_model_attempts SET request_sha256=?', ('0'*64,))
+            before = source.read_bytes()
+            # Construct an authenticated hostile fixture while bypassing validation
+            # only during fixture assembly; restoration uses the real trust boundary.
+            with monkeypatch.context() as patch:
+                patch.setattr(workspace_backup, '_file_references', lambda db: [])
+                workspace_backup.create_workspace_backup(source.parent, archive, PASSPHRASE, data_parent=tmp_path)
+        else:
+            candidate = tmp_path/'nonnative-model.db'
+            with closing(sqlite3.connect(source)) as original, closing(sqlite3.connect(candidate)) as copied:
+                original.backup(copied)
+                copied.execute('DROP TABLE local_workspace_identity')
+                copied.commit()
+            nonnative = Database('sqlite:///'+str(candidate), tmp_path/'nonnative-files', database.settings, initialize_schema=False)
+            try:
+                with monkeypatch.context() as patch:
+                    patch.setattr(backup, '_collect_files', lambda db: ({}, []))
+                    write_old_cnbak(nonnative, archive)
+            finally:
+                nonnative.engine.dispose()
+        archive_before = archive.read_bytes()
+        destination = tmp_path/'must-not-publish'
+        with pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+            if native:
+>               workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE)
+
+tests\integration\test_assistant_model_backup.py:264: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restore_rejects_authentic1/bad-model.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restore_rejects_authentic1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = (<cn_contract.persistence.Database object at 0x00000161D0C9CE30>, Actor(user_id=UUID('dcbe7fb8-469c-4533-a853-5ef175c9...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D0C32690>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_restore_rejects_authentic1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0C31430>
+native = True
+
+    @pytest.mark.parametrize('native', [True, False])
+    def test_restore_rejects_authenticated_but_inconsistent_model_archive(world, tmp_path, monkeypatch, native):
+        database, *_ = world
+        reserved(world)
+        source = Path(database.engine.url.database)
+        before = source.read_bytes()
+        archive = tmp_path/('bad-model.qxbak' if native else 'bad-model.cnbak')
+        if native:
+            corrupt(database, 'assistant_model_attempts', 'UPDATE assistant_model_attempts SET request_sha256=?', ('0'*64,))
+            before = source.read_bytes()
+            # Construct an authenticated hostile fixture while bypassing validation
+            # only during fixture assembly; restoration uses the real trust boundary.
+            with monkeypatch.context() as patch:
+                patch.setattr(workspace_backup, '_file_references', lambda db: [])
+                workspace_backup.create_workspace_backup(source.parent, archive, PASSPHRASE, data_parent=tmp_path)
+        else:
+            candidate = tmp_path/'nonnative-model.db'
+            with closing(sqlite3.connect(source)) as original, closing(sqlite3.connect(candidate)) as copied:
+                original.backup(copied)
+                copied.execute('DROP TABLE local_workspace_identity')
+                copied.commit()
+            nonnative = Database('sqlite:///'+str(candidate), tmp_path/'nonnative-files', database.settings, initialize_schema=False)
+            try:
+                with monkeypatch.context() as patch:
+                    patch.setattr(backup, '_collect_files', lambda db: ({}, []))
+                    write_old_cnbak(nonnative, archive)
+            finally:
+                nonnative.engine.dispose()
+        archive_before = archive.read_bytes()
+        destination = tmp_path/'must-not-publish'
+>       with pytest.raises(ValueError, match='ASSISTANT_MODEL'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'ASSISTANT_MODEL'
+E         Actual message: 'FILE_LIMIT_OR_LINK'
+
+tests\integration\test_assistant_model_backup.py:262: AssertionError
+_____ test_restored_native_startup_keeps_model_history_quarantined[False] _____
+
+world = (<cn_contract.persistence.Database object at 0x00000161D12B2360>, Actor(user_id=UUID('31046633-4bd6-49e1-b66e-f068dc8f...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161CD77C890>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_restored_native_startup_k0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161CD77CB00>
+claimed = False
+
+    @pytest.mark.parametrize('claimed', [False, True])
+    def test_restored_native_startup_keeps_model_history_quarantined(world, tmp_path, monkeypatch, claimed):
+        database, actor, _, _, runtime = world
+        pending = enqueue(world)
+        if claimed:
+            with database.session() as db:
+                attempts.claim(actor, pending.id, db, runtime)
+        root = Path(database.engine.url.database).parent
+        archive = tmp_path/'synthetic-startup.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_model_startup.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restored_native_startup_k0/synthetic-startup.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restored_native_startup_k0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_____ test_restored_native_startup_keeps_model_history_quarantined[True] ______
+
+world = (<cn_contract.persistence.Database object at 0x00000161CDB3F080>, Actor(user_id=UUID('683d3ac4-c8d2-4c4f-82d0-0abe65c3...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D0A78D40>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_restored_native_startup_k1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D0A78710>
+claimed = True
+
+    @pytest.mark.parametrize('claimed', [False, True])
+    def test_restored_native_startup_keeps_model_history_quarantined(world, tmp_path, monkeypatch, claimed):
+        database, actor, _, _, runtime = world
+        pending = enqueue(world)
+        if claimed:
+            with database.session() as db:
+                attempts.claim(actor, pending.id, db, runtime)
+        root = Path(database.engine.url.database).parent
+        archive = tmp_path/'synthetic-startup.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_model_startup.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restored_native_startup_k1/synthetic-startup.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restored_native_startup_k1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_pre_model_archives_preserve_data_or_fail_without_publication[False-True] _
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_pre_model_archives_preser0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D12A3800>
+native = True, fail_migration = False
+
+    @pytest.mark.parametrize('native', [True, False])
+    @pytest.mark.parametrize('fail_migration', [False, True])
+    def test_pre_model_archives_preserve_data_or_fail_without_publication(tmp_path, monkeypatch, native, fail_migration):
+        root, database, matter, document, raw, source = old_workspace(tmp_path, native)
+        archive = tmp_path/('old.qxbak' if native else 'old.cnbak')
+        try:
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            before = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            archive_before = archive.read_bytes()
+            if fail_migration:
+                from cn_contract.assistant import model_schema
+                monkeypatch.setattr(model_schema, 'STATEMENTS', (*model_schema.STATEMENTS,'INVALID SQL'))
+            destination = tmp_path/'restored'
+            def restore():
+                return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+                    backup.restore_backup(archive, key_resolver=keys(), restore_parent=destination, settings=database.settings))
+            if fail_migration:
+                with pytest.raises(sqlite3.Error):
+                    restore()
+                assert not destination.exists() or not list(destination.iterdir())
+            else:
+>               result = restore()
+                         ^^^^^^^^^
+
+tests\integration\test_assistant_model_upgrade_backup.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_model_upgrade_backup.py:75: in restore
+    return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_model_archives_preser0/old.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_model_archives_preser0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_pre_model_archives_preserve_data_or_fail_without_publication[True-True] _
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_pre_model_archives_preser2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161CDB86E70>
+native = True, fail_migration = True
+
+    @pytest.mark.parametrize('native', [True, False])
+    @pytest.mark.parametrize('fail_migration', [False, True])
+    def test_pre_model_archives_preserve_data_or_fail_without_publication(tmp_path, monkeypatch, native, fail_migration):
+        root, database, matter, document, raw, source = old_workspace(tmp_path, native)
+        archive = tmp_path/('old.qxbak' if native else 'old.cnbak')
+        try:
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            before = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            archive_before = archive.read_bytes()
+            if fail_migration:
+                from cn_contract.assistant import model_schema
+                monkeypatch.setattr(model_schema, 'STATEMENTS', (*model_schema.STATEMENTS,'INVALID SQL'))
+            destination = tmp_path/'restored'
+            def restore():
+                return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+                    backup.restore_backup(archive, key_resolver=keys(), restore_parent=destination, settings=database.settings))
+            if fail_migration:
+                with pytest.raises(sqlite3.Error):
+>                   restore()
+
+tests\integration\test_assistant_model_upgrade_backup.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_model_upgrade_backup.py:75: in restore
+    return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_model_archives_preser2/old.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_pre_model_archives_preser2')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+____ test_corrupt_acceptance_rejected_on_create_and_authenticated_restore _____
+
+history = (WindowsPath('D:/temp-qx/rounds-wide/test_corrupt_acceptance_reject0/合成检索档案/main'), <cn_contract.persistence.Database ...e), citation_ids=()), created_at=datetime.datetime(2026, 10, 21, 10, 39, 49, 208275, tzinfo=datetime.timezone.utc)),)))
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_corrupt_acceptance_reject0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D12AFDA0>
+
+    def test_corrupt_acceptance_rejected_on_create_and_authenticated_restore(history, tmp_path, monkeypatch):
+        root, database, _, result = history
+        change_acceptance(database, result.run.id, 'call_id', str(uuid4()))
+        archive = tmp_path/'bad.qxbak'
+        with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+            workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        assert not archive.exists()
+        # Model an authenticated corrupt archive without weakening restore validation.
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup, '_file_references', lambda db: [])
+            workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        source, encrypted = (root/'workbench.db').read_bytes(), archive.read_bytes()
+        destination = tmp_path/'rejected'
+        with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+>           workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE)
+
+tests\integration\test_assistant_research_backup.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_corrupt_acceptance_reject0/bad.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_corrupt_acceptance_reject0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+
+During handling of the above exception, another exception occurred:
+
+history = (WindowsPath('D:/temp-qx/rounds-wide/test_corrupt_acceptance_reject0/合成检索档案/main'), <cn_contract.persistence.Database ...e), citation_ids=()), created_at=datetime.datetime(2026, 10, 21, 10, 39, 49, 208275, tzinfo=datetime.timezone.utc)),)))
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_corrupt_acceptance_reject0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D12AFDA0>
+
+    def test_corrupt_acceptance_rejected_on_create_and_authenticated_restore(history, tmp_path, monkeypatch):
+        root, database, _, result = history
+        change_acceptance(database, result.run.id, 'call_id', str(uuid4()))
+        archive = tmp_path/'bad.qxbak'
+        with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+            workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        assert not archive.exists()
+        # Model an authenticated corrupt archive without weakening restore validation.
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup, '_file_references', lambda db: [])
+            workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        source, encrypted = (root/'workbench.db').read_bytes(), archive.read_bytes()
+        destination = tmp_path/'rejected'
+>       with pytest.raises(ValueError, match='ASSISTANT_LIBRARY_INTEGRITY'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'ASSISTANT_LIBRARY_INTEGRITY'
+E         Actual message: 'FILE_LIMIT_OR_LINK'
+
+tests\integration\test_assistant_research_backup.py:66: AssertionError
+__ test_old_revoked_session_and_newer_draft_remain_offline_restorable[False] __
+
+history = (WindowsPath('D:/temp-qx/rounds-wide/test_old_revoked_session_and_n0/合成检索档案/main'), <cn_contract.persistence.Database ...ne), citation_ids=()), created_at=datetime.datetime(2026, 10, 21, 10, 40, 5, 279303, tzinfo=datetime.timezone.utc)),)))
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_old_revoked_session_and_n0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161CB357DD0>
+queued = False
+
+    @pytest.mark.parametrize('queued', [False, True])
+    def test_old_revoked_session_and_newer_draft_remain_offline_restorable(history, tmp_path, monkeypatch, queued):
+        root, database, actor, result = history
+        with database.session() as db:
+            if queued:
+                view = service.create_conversation(actor, d.AssistantConversationCreateInput(request_id=uuid4()), db)
+                result = research.enqueue_research(actor, view.scope.conversation_id, d.AssistantMessageInput(
+                    request_id=uuid4(), expected_scope=view.scope, expected_composer_revision=view.composer_revision,
+                    content='另一个待执行的合成检索', requested_skill='legal_research'), db)
+            current = service.read_conversation(actor, result.run.scope.conversation_id, db)
+            service.save_draft(actor, current.scope.conversation_id, d.AssistantDraftInput(
+                expected_scope=current.scope, expected_composer_revision=current.composer_revision, content='较新的独立合成草稿'), db)
+            db.execute(text('UPDATE sessions SET revoked=1'))
+        def forbidden(*args, **kwargs):
+            pytest.fail('offline archival or history performed library I/O')
+        monkeypatch.setattr(LegalLibraryAdapter, 'search', forbidden)
+        monkeypatch.setattr(LegalLibraryAdapter, 'read_original', forbidden)
+        archive = tmp_path/'valid.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       restored = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_backup.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_old_revoked_session_and_n0/valid.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_old_revoked_session_and_n0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+__ test_old_revoked_session_and_newer_draft_remain_offline_restorable[True] ___
+
+history = (WindowsPath('D:/temp-qx/rounds-wide/test_old_revoked_session_and_n1/合成检索档案/main'), <cn_contract.persistence.Database ...one), citation_ids=()), created_at=datetime.datetime(2026, 10, 21, 10, 40, 8, 88992, tzinfo=datetime.timezone.utc)),)))
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_old_revoked_session_and_n1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161CE687140>
+queued = True
+
+    @pytest.mark.parametrize('queued', [False, True])
+    def test_old_revoked_session_and_newer_draft_remain_offline_restorable(history, tmp_path, monkeypatch, queued):
+        root, database, actor, result = history
+        with database.session() as db:
+            if queued:
+                view = service.create_conversation(actor, d.AssistantConversationCreateInput(request_id=uuid4()), db)
+                result = research.enqueue_research(actor, view.scope.conversation_id, d.AssistantMessageInput(
+                    request_id=uuid4(), expected_scope=view.scope, expected_composer_revision=view.composer_revision,
+                    content='另一个待执行的合成检索', requested_skill='legal_research'), db)
+            current = service.read_conversation(actor, result.run.scope.conversation_id, db)
+            service.save_draft(actor, current.scope.conversation_id, d.AssistantDraftInput(
+                expected_scope=current.scope, expected_composer_revision=current.composer_revision, content='较新的独立合成草稿'), db)
+            db.execute(text('UPDATE sessions SET revoked=1'))
+        def forbidden(*args, **kwargs):
+            pytest.fail('offline archival or history performed library I/O')
+        monkeypatch.setattr(LegalLibraryAdapter, 'search', forbidden)
+        monkeypatch.setattr(LegalLibraryAdapter, 'read_original', forbidden)
+        archive = tmp_path/'valid.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       restored = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_backup.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_old_revoked_session_and_n1/valid.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_old_revoked_session_and_n1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+________ test_qxbak_recovery_reads_saved_snapshot_without_live_library ________
+
+world = (<cn_contract.persistence.Database object at 0x00000161CB86B4D0>, Actor(user_id=UUID('9a1e0c31-865a-4ee2-b383-08445e9b...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161CB12B140>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_qxbak_recovery_reads_save0')
+library = (WindowsPath('D:/temp-qx/rounds-wide/test_qxbak_recovery_reads_save0/library'), '# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n> 第二条 虚构引述租赁规则。\n第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n第四条 仅有相邻禁入标记。')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161CB129010>
+
+    def test_qxbak_recovery_reads_saved_snapshot_without_live_library(world,tmp_path,library,monkeypatch):
+        from cn_contract.assistant.tools.library import LegalLibraryAdapter
+        with boot(world,tmp_path,library[0]) as http:
+            result = submit(http)
+            source_root = http.root
+            saved = result['receipts'][0]['result']['citation_ids'][0]
+        archive = tmp_path/'research.qxbak'
+        workspace_backup.create_workspace_backup(source_root,archive,PASSPHRASE,data_parent=tmp_path)
+>       restored = workspace_backup.restore_workspace_backup(archive,tmp_path/'restore',PASSPHRASE)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_research_routes.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_qxbak_recovery_reads_save0/research.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_qxbak_recovery_reads_save0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+___________ test_contract_long_path_original_roundtrip_and_rebackup ___________
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_contract_long_path_origin0')
+record_property = <function record_property.<locals>.append_property at 0x00000161D484B1A0>
+
+    def test_contract_long_path_original_roundtrip_and_rebackup(tmp_path, record_property):
+        root, matter, version, raw, cookies = contract_source(tmp_path)
+        archive = tmp_path/'合同长路径.qxbak'
+>       created = workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_contract_long_path_backup.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:260: in create_workspace_backup
+    with _worker_lock(root), TemporaryDirectory(prefix='.qx-backup-',dir=filesystem_path(root)) as temporary:
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\tempfile.py:950: in __exit__
+    self.cleanup()
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\tempfile.py:954: in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\tempfile.py:934: in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:1211: in _safe_shutil_rmtree
+    _try_trash(abs_path, recursive=True)
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:1005: in _try_trash
+    _platform_trash(abs_path)
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:137: in _platform_trash
+    path = _get_short_path(os.path.abspath(abs_path))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = '\\\\?\\D:\\temp-qx\\rounds-wide\\test_contract_long_path_origin0\\中文合同资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\.qx-backup-hr432she'
+
+    def _get_short_path(path):
+        """调用 GetShortPathNameW 处理超长路径和特殊字符。"""
+        prefix = "\\\\?\\"
+        long_path = (prefix + "UNC" + path[1:]) if path.startswith("\\\\") else (prefix + path)
+        n = _kernel32.GetShortPathNameW(long_path, None, 0)
+        if not n:
+            err = GetLastError()
+>           raise OSError(err, FormatError(err), path)
+E           OSError: [Errno 53] 找不到网络路径。: '\\\\?\\D:\\temp-qx\\rounds-wide\\test_contract_long_path_origin0\\中文合同资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\.qx-backup-hr432she'
+
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:126: OSError
+---------------------------- Captured stderr call -----------------------------
+[safe-delete][SAFE_DELETE_FAIL_CLOSED] {"target": "\\\\?\\D:\\temp-qx\\rounds-wide\\test_contract_long_path_origin0\\中文合同资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\.qx-backup-hr432she", "reason": "trash-failed", "detail": "[Errno 53] 找不到网络路径。: '\\\\\\\\?\\\\D:\\\\temp-qx\\\\rounds-wide\\\\test_contract_long_path_origin0\\\\中文合同资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\\\.qx-backup-hr432she'"}
+______________ test_contract_long_path_hardlink_is_not_archived _______________
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_contract_long_path_hardli0')
+
+    def test_contract_long_path_hardlink_is_not_archived(tmp_path):
+        root, _, version, raw, _ = contract_source(tmp_path)
+        original = root/'protected'/version.storage_ref
+        linked = original.parent/'禁止硬链接.bin'
+        os.link(filesystem_path(original), filesystem_path(linked))
+        archive = tmp_path/'不得生成.qxbak'
+        try:
+            with pytest.raises(ValueError):
+                backup.checked_file(original, root/'protected')
+            with pytest.raises(ValueError):
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            assert not archive.exists()
+        finally:
+            filesystem_path(linked).chmod(0o600)
+            filesystem_path(linked).unlink()
+            filesystem_path(original).chmod(0o400)
+>       assert backup.checked_file(original, root/'protected') == raw
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_contract_long_path_backup.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_contract_long_path_hardli0/中文合同资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料...资料资料资料资料资料资料资料资料资料资料/protected/1f961000-9682-4f44-85cf-643143529ce3/9793691d-8a59-4523-91b6-6463e41d8703/original.bin')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_contract_long_path_hardli0/中文合同资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料/protected')
+
+    def checked_file(path, root, *, limit=FILE_LIMIT):
+        from .file_paths import filesystem_path
+        root = filesystem_path(checked_root(root))
+        path = filesystem_path(path)
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        meta = path.stat()
+        if meta.st_nlink != 1 or not stat.S_ISREG(meta.st_mode) or meta.st_size > limit:
+>           raise ValueError('INVALID_FILE')
+E           ValueError: INVALID_FILE
+
+src\cn_contract\ops\backup.py:104: ValueError
+_ test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only[reserved] _
+
+world = (<cn_contract.persistence.Database object at 0x00000161D37F07D0>, Actor(user_id=UUID('eb970133-0add-4f45-aa25-37e31b10...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D6A8BBC0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre0')
+state = 'reserved'
+
+    @pytest.mark.parametrize('state', ['reserved', 'sending', 'not_sent', 'sent_unknown', 'received'])
+    def test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only(world, tmp_path, state):
+        database, actor, run, request, runtime, attempt = stage(world, state)
+        root = Path(database.engine.url.database).parent
+        archive = tmp_path/'独立辅助合成备份.qxbak'
+        with local_server._worker_lock(root):
+            pass
+        with database.session() as db:
+            original_view = api().read_attempt(actor, attempt.id, db)
+            original_run = dict(db.execute(text('SELECT * FROM assistant_runs')).mappings().one())
+        before = (root/'workbench.db').read_bytes()
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        archived = archive.read_bytes()
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'恢复副本', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_judge_backup.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre0/独立辅助合成备份.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only[sending] _
+
+world = (<cn_contract.persistence.Database object at 0x00000161D6A80D40>, Actor(user_id=UUID('c213ea85-345a-407e-a60c-c221bc8e...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D6EDB3E0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre1')
+state = 'sending'
+
+    @pytest.mark.parametrize('state', ['reserved', 'sending', 'not_sent', 'sent_unknown', 'received'])
+    def test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only(world, tmp_path, state):
+        database, actor, run, request, runtime, attempt = stage(world, state)
+        root = Path(database.engine.url.database).parent
+        archive = tmp_path/'独立辅助合成备份.qxbak'
+        with local_server._worker_lock(root):
+            pass
+        with database.session() as db:
+            original_view = api().read_attempt(actor, attempt.id, db)
+            original_run = dict(db.execute(text('SELECT * FROM assistant_runs')).mappings().one())
+        before = (root/'workbench.db').read_bytes()
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        archived = archive.read_bytes()
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'恢复副本', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_judge_backup.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre1/独立辅助合成备份.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only[not_sent] _
+
+world = (<cn_contract.persistence.Database object at 0x00000161D6B29A00>, Actor(user_id=UUID('0f090d72-a8f1-4977-9796-807fd035...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D6A8BA10>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre2')
+state = 'not_sent'
+
+    @pytest.mark.parametrize('state', ['reserved', 'sending', 'not_sent', 'sent_unknown', 'received'])
+    def test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only(world, tmp_path, state):
+        database, actor, run, request, runtime, attempt = stage(world, state)
+        root = Path(database.engine.url.database).parent
+        archive = tmp_path/'独立辅助合成备份.qxbak'
+        with local_server._worker_lock(root):
+            pass
+        with database.session() as db:
+            original_view = api().read_attempt(actor, attempt.id, db)
+            original_run = dict(db.execute(text('SELECT * FROM assistant_runs')).mappings().one())
+        before = (root/'workbench.db').read_bytes()
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        archived = archive.read_bytes()
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'恢复副本', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_judge_backup.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre2/独立辅助合成备份.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre2')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only[sent_unknown] _
+
+world = (<cn_contract.persistence.Database object at 0x00000161D6A8B050>, Actor(user_id=UUID('8859bbd8-806a-4ea8-b933-12c7174a...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D67B6060>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre3')
+state = 'sent_unknown'
+
+    @pytest.mark.parametrize('state', ['reserved', 'sending', 'not_sent', 'sent_unknown', 'received'])
+    def test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only(world, tmp_path, state):
+        database, actor, run, request, runtime, attempt = stage(world, state)
+        root = Path(database.engine.url.database).parent
+        archive = tmp_path/'独立辅助合成备份.qxbak'
+        with local_server._worker_lock(root):
+            pass
+        with database.session() as db:
+            original_view = api().read_attempt(actor, attempt.id, db)
+            original_run = dict(db.execute(text('SELECT * FROM assistant_runs')).mappings().one())
+        before = (root/'workbench.db').read_bytes()
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        archived = archive.read_bytes()
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'恢复副本', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_judge_backup.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre3/独立辅助合成备份.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre3')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only[received] _
+
+world = (<cn_contract.persistence.Database object at 0x00000161D67B5E20>, Actor(user_id=UUID('72d9b68e-d3f1-49ae-a4bd-5d63de48...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D616EB10>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre4')
+state = 'received'
+
+    @pytest.mark.parametrize('state', ['reserved', 'sending', 'not_sent', 'sent_unknown', 'received'])
+    def test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only(world, tmp_path, state):
+        database, actor, run, request, runtime, attempt = stage(world, state)
+        root = Path(database.engine.url.database).parent
+        archive = tmp_path/'独立辅助合成备份.qxbak'
+        with local_server._worker_lock(root):
+            pass
+        with database.session() as db:
+            original_view = api().read_attempt(actor, attempt.id, db)
+            original_run = dict(db.execute(text('SELECT * FROM assistant_runs')).mappings().one())
+        before = (root/'workbench.db').read_bytes()
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+        archived = archive.read_bytes()
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'恢复副本', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_judge_backup.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre4/独立辅助合成备份.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_judge_qxbak_roundtrip_pre4')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_authenticated_invalid_judge_archive_is_rejected_before_publication[assistant_judge_attempts-UPDATE assistant_judge_attempts SET input_hash=?-params0] _
+
+world = (<cn_contract.persistence.Database object at 0x00000161CE1D56D0>, Actor(user_id=UUID('f42df9a9-3574-4d5f-958f-a33c0424...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D607BEC0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_invalid_jud0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D6079A00>
+table = 'assistant_judge_attempts'
+sql = 'UPDATE assistant_judge_attempts SET input_hash=?'
+params = ('0000000000000000000000000000000000000000000000000000000000000000',)
+
+    @pytest.mark.parametrize('table,sql,params', [
+        ('assistant_judge_attempts','UPDATE assistant_judge_attempts SET input_hash=?',('0'*64,)),
+        ('assistant_judge_receipts','UPDATE assistant_judge_receipts SET receipt_json=?',('{"fake":true}',)),
+        ('assistant_judge_decisions','UPDATE assistant_judge_decisions SET decision_json=?',('{"fake":true}',)),
+    ])
+    def test_authenticated_invalid_judge_archive_is_rejected_before_publication(world,tmp_path,monkeypatch,table,sql,params):
+        database,*_=stage(world,'received')
+        root=Path(database.engine.url.database).parent
+        corrupt(database,table,sql,params)
+        with database.session() as db,pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+            backup._file_references(db)
+        bad=tmp_path/'invalid-fixture.qxbak'
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup,'_file_references',lambda db:[])
+            workspace_backup.create_workspace_backup(root,bad,PASSPHRASE,data_parent=tmp_path)
+        before=(root/'workbench.db').read_bytes()
+        destination=tmp_path/'must-not-publish'
+        with pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+>           workspace_backup.restore_workspace_backup(bad,destination,PASSPHRASE)
+
+tests\integration\test_judge_backup.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_authenticated_invalid_jud0/invalid-fixture.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_authenticated_invalid_jud0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = (<cn_contract.persistence.Database object at 0x00000161CE1D56D0>, Actor(user_id=UUID('f42df9a9-3574-4d5f-958f-a33c0424...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D607BEC0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_invalid_jud0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D6079A00>
+table = 'assistant_judge_attempts'
+sql = 'UPDATE assistant_judge_attempts SET input_hash=?'
+params = ('0000000000000000000000000000000000000000000000000000000000000000',)
+
+    @pytest.mark.parametrize('table,sql,params', [
+        ('assistant_judge_attempts','UPDATE assistant_judge_attempts SET input_hash=?',('0'*64,)),
+        ('assistant_judge_receipts','UPDATE assistant_judge_receipts SET receipt_json=?',('{"fake":true}',)),
+        ('assistant_judge_decisions','UPDATE assistant_judge_decisions SET decision_json=?',('{"fake":true}',)),
+    ])
+    def test_authenticated_invalid_judge_archive_is_rejected_before_publication(world,tmp_path,monkeypatch,table,sql,params):
+        database,*_=stage(world,'received')
+        root=Path(database.engine.url.database).parent
+        corrupt(database,table,sql,params)
+        with database.session() as db,pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+            backup._file_references(db)
+        bad=tmp_path/'invalid-fixture.qxbak'
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup,'_file_references',lambda db:[])
+            workspace_backup.create_workspace_backup(root,bad,PASSPHRASE,data_parent=tmp_path)
+        before=(root/'workbench.db').read_bytes()
+        destination=tmp_path/'must-not-publish'
+>       with pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'ASSISTANT_JUDGE'
+E         Actual message: 'FILE_LIMIT_OR_LINK'
+
+tests\integration\test_judge_backup.py:122: AssertionError
+_ test_authenticated_invalid_judge_archive_is_rejected_before_publication[assistant_judge_receipts-UPDATE assistant_judge_receipts SET receipt_json=?-params1] _
+
+world = (<cn_contract.persistence.Database object at 0x00000161D607B4D0>, Actor(user_id=UUID('8fc655ce-5f64-42b0-9d1b-401771d4...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D13E46E0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_invalid_jud1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D13E5DC0>
+table = 'assistant_judge_receipts'
+sql = 'UPDATE assistant_judge_receipts SET receipt_json=?'
+params = ('{"fake":true}',)
+
+    @pytest.mark.parametrize('table,sql,params', [
+        ('assistant_judge_attempts','UPDATE assistant_judge_attempts SET input_hash=?',('0'*64,)),
+        ('assistant_judge_receipts','UPDATE assistant_judge_receipts SET receipt_json=?',('{"fake":true}',)),
+        ('assistant_judge_decisions','UPDATE assistant_judge_decisions SET decision_json=?',('{"fake":true}',)),
+    ])
+    def test_authenticated_invalid_judge_archive_is_rejected_before_publication(world,tmp_path,monkeypatch,table,sql,params):
+        database,*_=stage(world,'received')
+        root=Path(database.engine.url.database).parent
+        corrupt(database,table,sql,params)
+        with database.session() as db,pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+            backup._file_references(db)
+        bad=tmp_path/'invalid-fixture.qxbak'
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup,'_file_references',lambda db:[])
+            workspace_backup.create_workspace_backup(root,bad,PASSPHRASE,data_parent=tmp_path)
+        before=(root/'workbench.db').read_bytes()
+        destination=tmp_path/'must-not-publish'
+        with pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+>           workspace_backup.restore_workspace_backup(bad,destination,PASSPHRASE)
+
+tests\integration\test_judge_backup.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_authenticated_invalid_jud1/invalid-fixture.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_authenticated_invalid_jud1')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = (<cn_contract.persistence.Database object at 0x00000161D607B4D0>, Actor(user_id=UUID('8fc655ce-5f64-42b0-9d1b-401771d4...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161D13E46E0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_invalid_jud1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161D13E5DC0>
+table = 'assistant_judge_receipts'
+sql = 'UPDATE assistant_judge_receipts SET receipt_json=?'
+params = ('{"fake":true}',)
+
+    @pytest.mark.parametrize('table,sql,params', [
+        ('assistant_judge_attempts','UPDATE assistant_judge_attempts SET input_hash=?',('0'*64,)),
+        ('assistant_judge_receipts','UPDATE assistant_judge_receipts SET receipt_json=?',('{"fake":true}',)),
+        ('assistant_judge_decisions','UPDATE assistant_judge_decisions SET decision_json=?',('{"fake":true}',)),
+    ])
+    def test_authenticated_invalid_judge_archive_is_rejected_before_publication(world,tmp_path,monkeypatch,table,sql,params):
+        database,*_=stage(world,'received')
+        root=Path(database.engine.url.database).parent
+        corrupt(database,table,sql,params)
+        with database.session() as db,pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+            backup._file_references(db)
+        bad=tmp_path/'invalid-fixture.qxbak'
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup,'_file_references',lambda db:[])
+            workspace_backup.create_workspace_backup(root,bad,PASSPHRASE,data_parent=tmp_path)
+        before=(root/'workbench.db').read_bytes()
+        destination=tmp_path/'must-not-publish'
+>       with pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'ASSISTANT_JUDGE'
+E         Actual message: 'FILE_LIMIT_OR_LINK'
+
+tests\integration\test_judge_backup.py:122: AssertionError
+_ test_authenticated_invalid_judge_archive_is_rejected_before_publication[assistant_judge_decisions-UPDATE assistant_judge_decisions SET decision_json=?-params2] _
+
+world = (<cn_contract.persistence.Database object at 0x00000161CD052840>, Actor(user_id=UUID('f13fddaa-6e65-43be-bc7f-86269d42...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161CABB7CE0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_invalid_jud2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161CE9062A0>
+table = 'assistant_judge_decisions'
+sql = 'UPDATE assistant_judge_decisions SET decision_json=?'
+params = ('{"fake":true}',)
+
+    @pytest.mark.parametrize('table,sql,params', [
+        ('assistant_judge_attempts','UPDATE assistant_judge_attempts SET input_hash=?',('0'*64,)),
+        ('assistant_judge_receipts','UPDATE assistant_judge_receipts SET receipt_json=?',('{"fake":true}',)),
+        ('assistant_judge_decisions','UPDATE assistant_judge_decisions SET decision_json=?',('{"fake":true}',)),
+    ])
+    def test_authenticated_invalid_judge_archive_is_rejected_before_publication(world,tmp_path,monkeypatch,table,sql,params):
+        database,*_=stage(world,'received')
+        root=Path(database.engine.url.database).parent
+        corrupt(database,table,sql,params)
+        with database.session() as db,pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+            backup._file_references(db)
+        bad=tmp_path/'invalid-fixture.qxbak'
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup,'_file_references',lambda db:[])
+            workspace_backup.create_workspace_backup(root,bad,PASSPHRASE,data_parent=tmp_path)
+        before=(root/'workbench.db').read_bytes()
+        destination=tmp_path/'must-not-publish'
+        with pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+>           workspace_backup.restore_workspace_backup(bad,destination,PASSPHRASE)
+
+tests\integration\test_judge_backup.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_authenticated_invalid_jud2/invalid-fixture.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_authenticated_invalid_jud2')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = (<cn_contract.persistence.Database object at 0x00000161CD052840>, Actor(user_id=UUID('f13fddaa-6e65-43be-bc7f-86269d42...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x00000161CABB7CE0>)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_authenticated_invalid_jud2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000161CE9062A0>
+table = 'assistant_judge_decisions'
+sql = 'UPDATE assistant_judge_decisions SET decision_json=?'
+params = ('{"fake":true}',)
+
+    @pytest.mark.parametrize('table,sql,params', [
+        ('assistant_judge_attempts','UPDATE assistant_judge_attempts SET input_hash=?',('0'*64,)),
+        ('assistant_judge_receipts','UPDATE assistant_judge_receipts SET receipt_json=?',('{"fake":true}',)),
+        ('assistant_judge_decisions','UPDATE assistant_judge_decisions SET decision_json=?',('{"fake":true}',)),
+    ])
+    def test_authenticated_invalid_judge_archive_is_rejected_before_publication(world,tmp_path,monkeypatch,table,sql,params):
+        database,*_=stage(world,'received')
+        root=Path(database.engine.url.database).parent
+        corrupt(database,table,sql,params)
+        with database.session() as db,pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+            backup._file_references(db)
+        bad=tmp_path/'invalid-fixture.qxbak'
+        with monkeypatch.context() as patch:
+            patch.setattr(workspace_backup,'_file_references',lambda db:[])
+            workspace_backup.create_workspace_backup(root,bad,PASSPHRASE,data_parent=tmp_path)
+        before=(root/'workbench.db').read_bytes()
+        destination=tmp_path/'must-not-publish'
+>       with pytest.raises(ValueError,match='ASSISTANT_JUDGE'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'ASSISTANT_JUDGE'
+E         Actual message: 'FILE_LIMIT_OR_LINK'
+
+tests\integration\test_judge_backup.py:122: AssertionError
+__________ test_native_model_ciphertext_is_not_exported_or_restored ___________
+
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_native_model_ciphertext_i0')
+
+    def test_native_model_ciphertext_is_not_exported_or_restored(tmp_path):
+        parent = tmp_path / '独立 合成桌面'
+        root = parent / 'workspaces' / 'main'
+        local_server.initialize_workspace(root, 'synthetic-lawyer', 'fixture123', data_parent=parent)
+        vault = parent / 'model-credentials'
+        vault.mkdir()
+        marker = b'INDEPENDENT-SYNTHETIC-ENCRYPTED-CREDENTIAL-MARKER'
+        credential = vault / 'deepseek.bin'
+        credential.write_bytes(marker)
+        archive = tmp_path / 'synthetic.qxbak'
+        passphrase = 'independent-synthetic-backup-only'
+        workspace_backup.create_workspace_backup(root, archive, passphrase, data_parent=parent)
+        plain = tmp_path / 'synthetic-decrypted.zip'
+>       workspace_backup._decrypt(archive, plain, passphrase)
+
+tests\integration\test_native_credential_backup.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:167: in _decrypt
+    with _reader(archive, archive.parent, limit=LIMIT+HEADER_SIZE+16) as source:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_ciphertext_i0/synthetic.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_native_model_ciphertext_i0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+______ test_full_local_roundtrip_separate_root_and_old_sessions_revoked _______
+
+source = (WindowsPath('D:/temp-qx/rounds-wide/test_full_local_roundtrip_sepa0/中文 账户'), WindowsPath('D:/temp-qx/rounds-wide/test...srf': 'Offn78SBLfVjcv0hQ8gy8rfoKPTF2RfvW6UYOiQoktA', 'qx_session': 'onVPpXx_nS4piaGKKUOWAIf5_TbCpxYi-sOOiZ_aeJU'}, ...)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_full_local_roundtrip_sepa0')
+
+    def test_full_local_roundtrip_separate_root_and_old_sessions_revoked(source, tmp_path):
+        backup = feature()
+        parent, root, matter, document, intake, cookies, raw = source
+        before = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+        archive = tmp_path/'案件 备份.qxbak'
+        report = backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=parent)
+        assert report['archive_sha256'] == hashlib.sha256(archive.read_bytes()).hexdigest()
+        assert report['file_count'] >= 3
+        assert '独立虚构'.encode() not in archive.read_bytes()
+>       restored = backup.restore_workspace_backup(archive, parent/'restores', PASSPHRASE)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_backup.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_full_local_roundtrip_sepa0/案件 备份.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_full_local_roundtrip_sepa0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+________ test_restored_workspace_http_is_read_only_and_has_clear_entry ________
+
+source = (WindowsPath('D:/temp-qx/rounds-wide/test_restored_workspace_http_i0/中文 账户'), WindowsPath('D:/temp-qx/rounds-wide/test...srf': 'vw_YUU9a3sFiBU6VjUJ-3IWrR9wnWax1hzv5Xb-4xZk', 'qx_session': 'nj8642qMoD25gwMnd2Tt8trqeZO1sI1cfOIKxFl83ig'}, ...)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_restored_workspace_http_i0')
+
+    def test_restored_workspace_http_is_read_only_and_has_clear_entry(source, tmp_path):
+        module=feature();parent,root,matter,document,intake,*_=source
+        archive=tmp_path/'readonly.qxbak'
+        module.create_workspace_backup(root,archive,PASSPHRASE,data_parent=parent)
+>       result=module.restore_workspace_backup(archive,parent/'restores',PASSPHRASE)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_backup.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restored_workspace_http_i0/readonly.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_restored_workspace_http_i0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_________ test_extra_protected_files_preserved_and_hardlinks_rejected _________
+
+source = (WindowsPath('D:/temp-qx/rounds-wide/test_extra_protected_files_pre0/中文 账户'), WindowsPath('D:/temp-qx/rounds-wide/test...srf': 't5jTSFMmag0_Bt1ZYB268zxFdhjxurCJefsxucKkhVI', 'qx_session': '6vNgKzHlKHb_SeQblDTli1pYMNiJ-BH70-Wnvp9XPDs'}, ...)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_extra_protected_files_pre0')
+
+    def test_extra_protected_files_preserved_and_hardlinks_rejected(source, tmp_path):
+        import os
+        module = feature(); parent, root, *_ = source
+        attachment = root/'protected'/'人工证据.txt'; attachment.write_bytes(b'synthetic provenance')
+        archive = tmp_path/'extra.qxbak'
+        module.create_workspace_backup(root, archive, PASSPHRASE, data_parent=parent)
+>       report = module.restore_workspace_backup(archive, tmp_path/'copies', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_backup.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_extra_protected_files_pre0/extra.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_extra_protected_files_pre0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_______________________ test_committed_wal_is_included ________________________
+
+source = (WindowsPath('D:/temp-qx/rounds-wide/test_committed_wal_is_included0/中文 账户'), WindowsPath('D:/temp-qx/rounds-wide/test...srf': 'uIcAujclhkXZBSNr8_oqwA004lhRY8bD2m9TDnsUUDU', 'qx_session': 'P7E160l3T2H-vvIXQktWCbMjIybCQM6c10eD25_rjbg'}, ...)
+tmp_path = WindowsPath('D:/temp-qx/rounds-wide/test_committed_wal_is_included0')
+
+    def test_committed_wal_is_included(source,tmp_path):
+        module=feature();parent,root,*_=source
+        archive=tmp_path/'wal.qxbak'
+        with closing(sqlite3.connect(root/'workbench.db')) as writer:
+            assert writer.execute('PRAGMA journal_mode=WAL').fetchone()==('wal',)
+            writer.execute("UPDATE users SET username='wal-lawyer' WHERE username='local-lawyer'");writer.commit()
+            assert (root/'workbench.db-wal').stat().st_size>0
+            module.create_workspace_backup(root,archive,PASSPHRASE,data_parent=parent)
+>       result=module.restore_workspace_backup(archive,parent/'wal-restores',PASSPHRASE)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_backup.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/temp-qx/rounds-wide/test_committed_wal_is_included0/wal.qxbak')
+root = WindowsPath('//?/D:/temp-qx/rounds-wide/test_committed_wal_is_included0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_attachment_backup.py::test_native_roundtrip_preserves_source_history_and_service_fence
+FAILED tests/integration/test_assistant_attachment_backup.py::test_long_parent_paths_create_restore_and_rebackup[long]
+FAILED tests/integration/test_assistant_backup.py::test_old_qxbak_restores_current_schema_and_original[pre-intake]
+FAILED tests/integration/test_assistant_backup.py::test_old_qxbak_restores_current_schema_and_original[intake-v1]
+FAILED tests/integration/test_assistant_backup.py::test_current_native_restore_quarantines_runs_and_all_service_writes[queued]
+FAILED tests/integration/test_assistant_backup.py::test_current_native_restore_quarantines_runs_and_all_service_writes[awaiting_input]
+FAILED tests/integration/test_assistant_backup.py::test_legacy_restore_failure_never_publishes_or_changes_source[migration-True]
+FAILED tests/integration/test_assistant_context_preview_routes.py::test_preview_stays_blocked_after_backup_restore
+FAILED tests/integration/test_assistant_generation_history.py::test_restored_copy_allows_exact_history_read_and_blocks_writes
+FAILED tests/integration/test_assistant_generation_routes.py::test_restored_copy_exposes_only_exact_generation_reads
+FAILED tests/integration/test_assistant_judge_upgrade_backup.py::test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade[False-True]
+FAILED tests/integration/test_assistant_judge_upgrade_backup.py::test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade[True-True]
+FAILED tests/integration/test_assistant_library_backup.py::test_native_roundtrip_preserves_offline_history_and_blocks_execution
+FAILED tests/integration/test_assistant_library_backup.py::test_authenticated_corrupt_archive_rejected_without_publication
+FAILED tests/integration/test_assistant_library_backup.py::test_rehashed_outer_records_cannot_hide_invalid_citation_identity[restore]
+FAILED tests/integration/test_assistant_library_upgrade_backup.py::test_pre_library_archive_upgrade_is_complete_or_unpublished[False-True]
+FAILED tests/integration/test_assistant_library_upgrade_backup.py::test_pre_library_archive_upgrade_is_complete_or_unpublished[True-True]
+FAILED tests/integration/test_assistant_model_backup.py::test_model_archive_rejects_noncontiguous_run_events[model_events]
+FAILED tests/integration/test_assistant_model_backup.py::test_model_archive_rejects_noncontiguous_run_events[message_event]
+FAILED tests/integration/test_assistant_model_backup.py::test_native_model_roundtrip_preserves_history_without_network[reserved]
+FAILED tests/integration/test_assistant_model_backup.py::test_native_model_roundtrip_preserves_history_without_network[sending]
+FAILED tests/integration/test_assistant_model_backup.py::test_native_model_roundtrip_preserves_history_without_network[received]
+FAILED tests/integration/test_assistant_model_backup.py::test_native_model_roundtrip_preserves_history_without_network[sent_unknown]
+FAILED tests/integration/test_assistant_model_backup.py::test_native_model_roundtrip_preserves_history_without_network[failed_before_send]
+FAILED tests/integration/test_assistant_model_backup.py::test_real_over_budget_receipt_is_preserved_without_adopting_output
+FAILED tests/integration/test_assistant_model_backup.py::test_restore_rejects_authenticated_but_inconsistent_model_archive[True]
+FAILED tests/integration/test_assistant_model_startup.py::test_restored_native_startup_keeps_model_history_quarantined[False]
+FAILED tests/integration/test_assistant_model_startup.py::test_restored_native_startup_keeps_model_history_quarantined[True]
+FAILED tests/integration/test_assistant_model_upgrade_backup.py::test_pre_model_archives_preserve_data_or_fail_without_publication[False-True]
+FAILED tests/integration/test_assistant_model_upgrade_backup.py::test_pre_model_archives_preserve_data_or_fail_without_publication[True-True]
+FAILED tests/integration/test_assistant_research_backup.py::test_corrupt_acceptance_rejected_on_create_and_authenticated_restore
+FAILED tests/integration/test_assistant_research_backup.py::test_old_revoked_session_and_newer_draft_remain_offline_restorable[False]
+FAILED tests/integration/test_assistant_research_backup.py::test_old_revoked_session_and_newer_draft_remain_offline_restorable[True]
+FAILED tests/integration/test_assistant_research_routes.py::test_qxbak_recovery_reads_saved_snapshot_without_live_library
+FAILED tests/integration/test_contract_long_path_backup.py::test_contract_long_path_original_roundtrip_and_rebackup
+FAILED tests/integration/test_contract_long_path_backup.py::test_contract_long_path_hardlink_is_not_archived
+FAILED tests/integration/test_judge_backup.py::test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only[reserved]
+FAILED tests/integration/test_judge_backup.py::test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only[sending]
+FAILED tests/integration/test_judge_backup.py::test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only[not_sent]
+FAILED tests/integration/test_judge_backup.py::test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only[sent_unknown]
+FAILED tests/integration/test_judge_backup.py::test_judge_qxbak_roundtrip_preserves_receipts_and_restores_read_only[received]
+FAILED tests/integration/test_judge_backup.py::test_authenticated_invalid_judge_archive_is_rejected_before_publication[assistant_judge_attempts-UPDATE assistant_judge_attempts SET input_hash=?-params0]
+FAILED tests/integration/test_judge_backup.py::test_authenticated_invalid_judge_archive_is_rejected_before_publication[assistant_judge_receipts-UPDATE assistant_judge_receipts SET receipt_json=?-params1]
+FAILED tests/integration/test_judge_backup.py::test_authenticated_invalid_judge_archive_is_rejected_before_publication[assistant_judge_decisions-UPDATE assistant_judge_decisions SET decision_json=?-params2]
+FAILED tests/integration/test_native_credential_backup.py::test_native_model_ciphertext_is_not_exported_or_restored
+FAILED tests/integration/test_workspace_backup.py::test_full_local_roundtrip_separate_root_and_old_sessions_revoked
+FAILED tests/integration/test_workspace_backup.py::test_restored_workspace_http_is_read_only_and_has_clear_entry
+FAILED tests/integration/test_workspace_backup.py::test_extra_protected_files_preserved_and_hardlinks_rejected
+FAILED tests/integration/test_workspace_backup.py::test_committed_wal_is_included
+49 failed, 1079 passed, 1056 deselected in 1662.70s (0:27:42)

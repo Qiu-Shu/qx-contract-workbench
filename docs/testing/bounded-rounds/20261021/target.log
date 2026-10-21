@@ -1,0 +1,24 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.0.3, pluggy-1.6.0
+rootdir: D:\Documents\ChatGPT\律所项目
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collected 220 items
+
+tests\integration\test_assistant_rounds_schema.py .....................  [  9%]
+tests\integration\test_assistant_context_schema.py ..................... [ 19%]
+...............                                                          [ 25%]
+tests\integration\test_assistant_context_send.py ..............          [ 32%]
+tests\integration\test_native_context_control.py .......                 [ 35%]
+tests\integration\test_assistant_context_backup.py .................     [ 43%]
+tests\integration\test_assistant_context_routes.py ..                    [ 44%]
+tests\integration\test_assistant_model_schema.py ................        [ 51%]
+tests\integration\test_assistant_library_schema.py ..................... [ 60%]
+.................                                                        [ 68%]
+tests\integration\test_assistant_judge_schema.py ................        [ 75%]
+tests\integration\test_storage_schema_versions.py ..........             [ 80%]
+tests\integration\test_workspace_upgrade.py ............................ [ 93%]
+...............                                                          [100%]
+
+- generated xml file: C:\Users\ADMINI~1\AppData\Local\Temp\rounds-target.xml --
+======================= 220 passed in 472.44s (0:07:52) =======================

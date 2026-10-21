@@ -35,7 +35,7 @@ def test_library_chain_upgrades_judge_to_current_with_exact_delta(tmp_path):
             'assistant_model_input_citations', 'assistant_model_attempts'}
         assert {row[1] for row in set(before) - set(after)} == {
             'assistant_model_attempts', 'immutable_assistant_model_input'}
-        assert storage_schema.identify_schema(after) == 'assistant-context-v1'
+        assert storage_schema.identify_schema(after) == 'assistant-rounds-v1'
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
 
 

@@ -36,11 +36,11 @@
 
 资源首片在同后端的未压缩构建目录中减少 **48,880,941 字节（46.62 MiB）**；这不是安装器、整机启动或内存的综合结论。当前仍需持续测量核心包体、可输入时间和进程占用。
 
-最新 CH-06B2b2：`assistant-context-v1` 不可变输入格式、有序来源关联、原生一次许可（服务端重建核对、单次有效）与同 attempt 执行/撤销/费用、升级与备份恢复同片闭合；一次资料辅助回答经原生授权与 127.0.0.1 回环 HTTP 逐字节核验。本片目标 8 文件 120 项通过、新增 75 项；四开发门 exit 0；完整全套 3450 通过，51 个失败全部为基线同等复现的 qxbak 恢复环境类失败（本机 `\\?\` 路径 nlink 假阳性，自 WIN-PATH-01 起潜伏，另列待查）。律师选片 GUI、真实供应商与有界多轮不在本片。[实际证据与限制](docs/testing/context-send/20261021/README.md)
+最新 CH-06B2c1：schema `assistant-rounds-v1` 重建 `assistant_model_attempts` 表——破除 `UNIQUE(run_id)`，新增不可变 `round_no`（1–4）与 `UNIQUE(run_id, round_no)`，为同一 run 的有界多轮提供账本底座。三条迁移通道（归档升级、工作区打开升级、初始化）以同一固定语句序列执行，FK OFF 窗口显式开闭、提交前 foreign_key_check，新建库与逐步升级 sqlite_master 字节一致、既有数据行全部保留且落位 round 1。本片行为不变（恒 round 1，无循环 runner/协议/授权变更）；完整性校验对多轮归档 fail-closed，待 B2c2 定义中间轮语义后开放。本片目标 11 文件 220 项通过；四开发门 exit 0。[实际证据与限制](docs/testing/bounded-rounds/20261021/README.md)
 
 此前长文检索在同合成样本上的 Python 跟踪分配峰值下降约87.7%，小样本耗时增加约6–8%；这项取舍和185项分批验证仍以[原阶段证据](docs/testing/library-memory/20261020/README.md)为准，不冒充本轮资源测量。
 
-下一片CH-06B2c将在已闭合的单次资料回答之上扩展有界多轮（同run≤4轮模型/≤8工具），复用现有生命周期、取消与费用账本；律师选片GUI仍待排期。旧一次文字许可保持原范围。[发送与存储设计](docs/plans/2026-10-20-context-send-storage.md)已实施；[本片执行计划](docs/plans/2026-10-21-context-send.md)。
+下一片CH-06B2c2将在轮次账本底座上实现同run受限串行循环（model round→固定 library handler→下轮/final，≤4轮模型/≤8工具），含工具计划响应协议与轮间授权演进；律师选片GUI仍待排期。[有界多轮执行合同](docs/plans/2026-10-21-bounded-rounds.md)已立项。
 
 ## 架构与边界
 

@@ -2,6 +2,7 @@
 from .assistant.context_schema import FAMILY_TABLES as _CONTEXT_FAMILY_TABLES
 from .assistant.context_schema import expected_objects as context_objects
 from .assistant.library_schema import expected_objects as library_objects
+from .assistant.rounds_schema import expected_objects as rounds_objects
 from .assistant_judge_schema_baseline import ASSISTANT_JUDGE_V1_ROWS
 from .assistant_model_schema_baseline import ASSISTANT_MODEL_V1_ROWS
 from .assistant_attachment_schema_baseline import ASSISTANT_ATTACHMENTS_V1_ROWS
@@ -9,12 +10,13 @@ from .assistant_schema_baseline import ASSISTANT_V1_ROWS
 from .schema_baseline import INTAKE_V1_ROWS
 
 
-CURRENT_VERSION = 'assistant-context-v1'
-VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', CURRENT_VERSION)
+CURRENT_VERSION = 'assistant-rounds-v1'
+VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', CURRENT_VERSION)
 SUPPORTED_VERSIONS = VERSIONS
 _INTAKE_TABLES = frozenset(('intake_cases', 'intake_revisions'))
 _LIBRARY_ROWS = tuple(library_objects())
 _CONTEXT_ROWS = tuple(context_objects())
+_ROUNDS_ROWS = tuple(rounds_objects())
 _IDENTITY_ROWS = (
     ('index', 'sqlite_autoindex_local_workspace_identity_1', 'local_workspace_identity', None),
     ('table', 'local_workspace_identity', 'local_workspace_identity',
@@ -38,11 +40,12 @@ def schema_rows(version, *, native=False):
         result.extend(ASSISTANT_JUDGE_V1_ROWS)
     if version in VERSIONS[6:]:
         result.extend(_LIBRARY_ROWS)
-    if version == 'assistant-context-v1':
+    if version in ('assistant-context-v1', 'assistant-rounds-v1'):
         # The context migration alters the model family in place; replace its
-        # frozen V1 rows with the exact migrated structure.
+        # frozen V1 rows with the exact migrated structure. The rounds rebuild
+        # replaces the attempts table once more on top of that structure.
         result = [row for row in result if row[2] not in _CONTEXT_FAMILY_TABLES]
-        result.extend(_CONTEXT_ROWS)
+        result.extend(_ROUNDS_ROWS if version == 'assistant-rounds-v1' else _CONTEXT_ROWS)
     if native:
         result.extend(_IDENTITY_ROWS)
     if len({row[1] for row in result}) != len(result):

@@ -28,10 +28,11 @@ def digest(rows):
     return hashlib.sha256(json.dumps(rows, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
 
 
-def test_context_is_current_and_keeps_every_older_version():
-    assert storage_schema.CURRENT_VERSION == 'assistant-context-v1'
-    assert storage_schema.VERSIONS == PREVIOUS + ('assistant-context-v1',)
-    for version in PREVIOUS:
+def test_context_is_frozen_history_and_keeps_every_older_version():
+    # Currentness moved to assistant-rounds-v1; context stays a positively
+    # identified historical version with its exact rows frozen.
+    assert storage_schema.VERSIONS[:len(PREVIOUS) + 1] == PREVIOUS + ('assistant-context-v1',)
+    for version in PREVIOUS + ('assistant-context-v1',):
         for native in (False, True):
             rows = storage_schema.schema_rows(version, native=native)
             assert storage_schema.identify_schema(rows, native=native) == version
@@ -68,20 +69,24 @@ def test_all_historical_versions_upgrade_without_replacing_objects_or_rows(tmp_p
         db.execute("INSERT INTO users VALUES ('synthetic-user', 'old-user', 'not-a-real-password', '[]', 0)")
         db.commit()
         before = schema_migrations.database_rows(db)
-        assert schema_migrations.upgrade_database(db) == 'assistant-context-v1'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         after = schema_migrations.database_rows(db)
-        assert storage_schema.identify_schema(after, native=native) == 'assistant-context-v1'
+        assert storage_schema.identify_schema(after, native=native) == storage_schema.CURRENT_VERSION
         assert db.execute('SELECT username FROM users').fetchall() == [('old-user',)]
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
-        if version in ('assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1'):
+        if version in ('assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
+                       'assistant-context-v1'):
             formats = db.execute('SELECT input_format FROM assistant_model_attempts').fetchall()
             assert all(value == ('plain-text-v1',) for value in formats)
+        # The rounds rebuild lands every historical row on round 1.
+        rounds = db.execute('SELECT round_no FROM assistant_model_attempts').fetchall()
+        assert all(value == (1,) for value in rounds)
         # Shared old objects keep their original SQL; only the model family changes.
         old_objects = {row[1]: row for row in before}
         for row in after:
             if row[1] in old_objects and row[2] not in ('assistant_model_attempts',):
                 assert row == old_objects[row[1]]
-        assert schema_migrations.upgrade_database(db) == 'assistant-context-v1'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         assert schema_migrations.database_rows(db) == after
 
 
@@ -162,7 +167,7 @@ def test_model_initializer_accepts_both_exact_known_structures(tmp_path):
         model_schema.initialize_storage(database)
         with closing(sqlite3.connect(database.engine.url.database)) as raw:
             rows = raw.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall()
-        assert storage_schema.identify_schema(rows) == 'assistant-context-v1'
+        assert storage_schema.identify_schema(rows) == 'assistant-rounds-v1'
     finally:
         database.engine.dispose()
     # A positively identified legacy V1 model family is still accepted as-is.
@@ -191,7 +196,7 @@ def test_fresh_bootstrap_matches_stepwise_upgrade(tmp_path, native):
         schema_migrations.upgrade_database(db)
         migrated = schema_migrations.database_rows(db)
     assert [tuple(row) for row in built] == [tuple(row) for row in migrated]
-    assert [tuple(row) for row in migrated] == storage_schema.schema_rows('assistant-context-v1')
+    assert [tuple(row) for row in migrated] == storage_schema.schema_rows('assistant-rounds-v1')
 
 
 def _old_source(path):

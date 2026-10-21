@@ -118,8 +118,9 @@ def _events(db, row, run, value, output):
             _fail()
 
 
-def _validate(db, attempts, receipts, outputs, workspace, *, context_schema):
+def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rounds=False):
     from . import context_integrity
+    run_rounds = {}
     conversations = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_conversations')).mappings()}
     messages = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_messages')).mappings()}
     runs = {r['id']:r for r in db.execute(text('SELECT * FROM assistant_runs')).mappings()}
@@ -129,6 +130,14 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema):
     relations = 0
     for row in attempts:
         identifier, cid, run_id = (_uuid(row[key]) for key in ('id','conversation_id','run_id'))
+        if rounds:
+            # rounds-v1 rows carry the immutable round occupancy column; B2c1
+            # defines no intermediate-round semantics, so archives with more
+            # than one round per run fail closed (checked after the loop).
+            round_no = row['round_no']
+            if type(round_no) is not int or not 1 <= round_no <= 4:
+                _fail()
+            run_rounds.setdefault(run_id, []).append(round_no)
         for key in ('config_sha256','policy_sha256','request_sha256'):
             _hash(row[key])
         config = _model(d.MainModelConfig, row['config_json'], 32768)
@@ -234,6 +243,11 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema):
         owners = set(db.scalars(text('SELECT DISTINCT attempt_id FROM assistant_model_input_citations')))
         if not owners <= {r['id'] for r in attempts}:
             _fail()
+    for run_id, occupied in run_rounds.items():
+        # Round occupancy must be contiguous from 1; B2c1 writers only ever
+        # occupy round 1, so any multi-round archive is not yet validatable.
+        if sorted(occupied) != list(range(1, len(occupied) + 1)) or len(occupied) > 1:
+            _fail()
 
 
 def validate_model_records(db, *, allowed=True):
@@ -245,7 +259,7 @@ def validate_model_records(db, *, allowed=True):
     if version in ('pre-intake','intake-v1','assistant-v1','assistant-attachments-v1'):
         return
     if version not in ('assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
-                       'assistant-context-v1'):
+                       'assistant-context-v1', 'assistant-rounds-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     attempts = db.execute(text('SELECT * FROM assistant_model_attempts ORDER BY created_at,id')).mappings().all()
     receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_receipts')).mappings()}
@@ -268,7 +282,8 @@ def validate_model_records(db, *, allowed=True):
         # Pydantic decimal digit validation also normalizes using this context.
         with localcontext(Context(prec=60)):
             _validate(db, attempts, receipts, outputs, _uuid(identities[0]),
-                      context_schema=version == 'assistant-context-v1')
+                      context_schema=version in ('assistant-context-v1', 'assistant-rounds-v1'),
+                      rounds=version == 'assistant-rounds-v1')
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
         # Archive errors must not interpolate source text or model bodies.
         raise ValueError('ASSISTANT_MODEL_INTEGRITY') from None

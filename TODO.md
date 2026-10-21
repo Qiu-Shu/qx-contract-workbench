@@ -1,6 +1,6 @@
 # TODO — 群兴法律工作台协作清单
 
-更新：2026-10-21。CH-06B2b2 从 `09db5f6` 完成资料辅助发送闭合切片：不可变输入格式列、有序来源关联、原生一次许可、同 attempt 执行/撤销/费用与升级恢复同片闭合，一次资料辅助回答链路接通；律师选片界面仍待，安装版仍为0.4.1。此表用于协作排期；完成事实以 [TASK_STATUS](docs/TASK_STATUS.md) 与对应证据为准，完整验收条件以 [v2.1](docs/plans/chat-first-architecture-v2.1.md) 为准。
+更新：2026-10-21。CH-06B2c1 从 `f7f344e` 完成有界轮次账本底座切片：schema `assistant-rounds-v1` 重建 attempts 表（破除 UNIQUE(run_id)、新增不可变 round_no 1–4 与 UNIQUE(run_id,round_no)），三条迁移通道同片闭合、行为不变恒 round_no=1；多轮循环 runner 与工具计划协议留给 B2c2；律师选片界面仍待，安装版仍为0.4.1。此表用于协作排期；完成事实以 [TASK_STATUS](docs/TASK_STATUS.md) 与对应证据为准，完整验收条件以 [v2.1](docs/plans/chat-first-architecture-v2.1.md) 为准。
 
 `[x]` 只表示写明范围的工程切片完成，不表示整个 CH 阶段、真实法律效果或生产完成。`[ ]` 表示仍有工作。未认领不代表可跳过依赖；协作者在自己的 PR 中写明任务 ID、改动范围和依赖，再更新本表的负责人/状态，避免重复实施。当前未指定具体协作者姓名。
 
@@ -22,7 +22,8 @@
 | CH-06B2b1 | 已完成本机预览接口 | Codex | 服务器重建选定历史片段和问题，完整JSON/UTF-8预算，超限保留；无新许可/账本/模型调用/选片UI；644关联Python、4开发门、Windows HTTP9组通过 | [本片证据](docs/testing/context-preview/20261020/README.md) |
 | CH-06B2b2a | 已完成适配基础切片 | Codex | 独立上下文DTO/codec与共享传输；542关联、4开发门、双轴各6项通过；应用资料发送仍关闭，无新schema/账本 | [本片证据](docs/testing/context-provider/20261021/README.md) |
 | CH-06B2b2 | 已完成资料发送闭合切片 | WorkBuddy | 新输入格式列、有序来源关联、原生一次许可（服务端重建核对、max_calls=1）、同 attempt 执行/撤销/费用、升级与备份恢复同片闭合；一次资料辅助回答经回环 HTTP 字节核验；旧V1字节和权限保持；选片GUI与真实供应商不在本片 | [本片证据](docs/testing/context-send/20261021/README.md) |
-| CH-06B2c | P1 · 后续 | 待认领 | 同run≤4轮模型/≤8工具；复用现有生命周期、取消与费用账本 | CH-06B2b2 |
+| CH-06B2c1 | 已完成轮次账本底座切片 | WorkBuddy | attempts 重建支持 round_no（1–4、UNIQUE(run_id,round_no)、不可变触发器纳入新列）；FK OFF 重建窗口在三条迁移通道同序语句保证字节一致；完整性 fail-closed 拒绝多轮归档；行为不变恒 round 1；无 runner 循环/协议/授权变更 | [本片证据](docs/testing/bounded-rounds/20261021/README.md)；[执行合同](docs/plans/2026-10-21-bounded-rounds.md) |
+| CH-06B2c2 | P1 · 后续 | 待认领 | 同run受限串行循环 runner（model round→固定 library handler→下轮/final）、工具计划响应协议、轮间授权演进；≤4轮/≤8工具执行与有界停止原因；恢复封存 | CH-06B2c1 |
 | WIN-PATH-01 | 已完成原件/qxbak源码切片 | Codex | 创建/读取/回滚统一I/O路径，逻辑引用不变；424关联、4开发门、16真实HTTP请求及双轴复核通过；原件父目录279→282字符。UNC/超长SQLite/任意长cnbak目标及新安装包未验 | [本片证据](docs/testing/contract-long-path/20261020/README.md)；CH-10仍需安装验收 |
 | CH-07 | P1 · 待实施 | 待认领 | 自动档案草稿与既有接待投影；逐字段来源、unknown/冲突、人工更正保护、版本冲突拒写及同事务回执 | CH-06、附件来源、接待版本接口 |
 | CH-08 | P1 · 待贯通 | 待认领 | 对话产物的客户/内部范围、复制和 Word 导出；复用既有导出，不从整页 DOM 复制内部信息 | CH-07 及原文引用 |
@@ -59,6 +60,8 @@ CH-05C/D1/D2 是协作细分标识，不替换 v2.1 中 CH-05 的总体验收；
 - [x] CH-06B2b1：独立完整上下文预览接口、旧文字协议不变、无外发及恢复副本拒新预览；[关联回归和实际HTTP证据](docs/testing/context-preview/20261020/README.md)。未完成资料发送或新选片UI。
 
 - [x] CH-06B2b2：`assistant-context-v1` 不可变输入格式、有序来源关联、原生一次许可与备份恢复同片闭合，一次资料辅助回答链路接通；[关联回归、原生回环字节与升级恢复证据](docs/testing/context-send/20261021/README.md)。律师选片GUI、真实供应商与有界多轮仍待。
+
+- [x] CH-06B2c1：`assistant-rounds-v1` 重建 attempts 表支持有界轮次（round_no 1–4 不可变、UNIQUE(run_id,round_no)），三条迁移通道 FK OFF 窗口同序闭合、新建与升级字节一致、数据行保留；完整性校验对多轮归档 fail-closed；[结构/迁移/损坏矩阵与关联回归证据](docs/testing/bounded-rounds/20261021/README.md)。行为不变（恒 round 1），循环 runner、工具计划协议与轮间授权仍待 B2c2。
 
 ## 数据及交付前提
 

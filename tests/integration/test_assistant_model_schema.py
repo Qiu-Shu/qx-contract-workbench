@@ -18,7 +18,7 @@ from tests.integration.test_storage_schema_versions import rows
 
 
 def test_model_schema_is_an_additive_version():
-    assert CURRENT_VERSION == 'assistant-context-v1'
+    assert CURRENT_VERSION == 'assistant-rounds-v1'
     old = set(schema_rows('assistant-attachments-v1'))
     assert old < set(schema_rows(CURRENT_VERSION))
     assert identify_schema(schema_rows(CURRENT_VERSION)) == CURRENT_VERSION
@@ -72,9 +72,13 @@ def test_model_step_failure_preserves_old_attachment_schema(tmp_path, monkeypatc
 
 @pytest.fixture
 def ledger(workspace):
+    from cn_contract.assistant.context_schema import initialize_storage as context
     from cn_contract.assistant.model_schema import initialize_storage
+    from cn_contract.assistant.rounds_schema import initialize_storage as rounds
     database, actors, _, _ = workspace
     initialize_storage(database)
+    context(database)
+    rounds(database)
     value = conversation(workspace)
     with database.session() as db:
         run = service.save_message(actors['lawyer'], value.scope.conversation_id,
@@ -142,11 +146,14 @@ def test_model_receipts_and_outputs_are_append_only(ledger, table):
     ledger.rollback()
 
 
-def test_one_attempt_and_output_per_run(ledger):
+def test_one_attempt_per_round_and_output_per_run(ledger):
+    # assistant-rounds-v1: one attempt per (run, round_no); copying round 1
+    # collides with the occupied round, and one output per run stays unique.
     for sql in (
         '''INSERT INTO assistant_model_attempts SELECT 'another-attempt',run_id,conversation_id,
             policy_id,config_sha256,policy_sha256,request_sha256,input_json,config_json,policy_json,
-            reserved_usd,created_at,state,claim_sha256,updated_at FROM assistant_model_attempts''',
+            reserved_usd,created_at,state,claim_sha256,updated_at,input_format,round_no
+            FROM assistant_model_attempts''',
         "INSERT INTO assistant_model_receipts SELECT * FROM assistant_model_receipts",
         '''INSERT INTO assistant_model_outputs SELECT 'another-output',attempt_id,conversation_id,
             run_id,scope_json,output_json,created_at FROM assistant_model_outputs''',

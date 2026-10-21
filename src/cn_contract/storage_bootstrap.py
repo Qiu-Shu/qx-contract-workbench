@@ -21,8 +21,9 @@ def initialize_storage(database):
     from .assistant.judge_schema import initialize_storage as judge
     from .assistant.library_schema import initialize_storage as library
     from .assistant.context_schema import initialize_storage as context
+    from .assistant.rounds_schema import initialize_storage as rounds
     for init in (authorities, rules, facts, reviews, providers, queries, exports,
-                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context):
+                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds):
         init(database)
 
 

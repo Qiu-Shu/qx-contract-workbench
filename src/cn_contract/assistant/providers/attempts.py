@@ -114,8 +114,9 @@ def _budget(policy, db):
 
 
 def _previous(conversation_id, request_id, db):
+    # The submission round is always round 1; later rounds never redefine replay.
     return db.execute(text('''SELECT r.id,a.id AS attempt_id FROM assistant_runs r
-        LEFT JOIN assistant_model_attempts a ON a.run_id=r.id
+        LEFT JOIN assistant_model_attempts a ON a.run_id=r.id AND a.round_no=1
         WHERE r.conversation_id=:cid AND r.request_id=:request'''),
         {'cid':str(conversation_id), 'request':str(request_id)}).mappings().first()
 
@@ -174,9 +175,9 @@ def enqueue_generation(actor, conversation_id, request, db, runtime):
         identifier, at = uuid4(), service._at()
         db.execute(text('''INSERT INTO assistant_model_attempts
             (id,run_id,conversation_id,policy_id,config_sha256,policy_sha256,request_sha256,
-             input_json,config_json,policy_json,reserved_usd,created_at,state,updated_at,input_format)
+             input_json,config_json,policy_json,reserved_usd,created_at,state,updated_at,input_format,round_no)
             VALUES(:id,:run,:cid,:policy,:config_sha,:policy_sha,:request_sha,:input,:config,:policy_json,
-                   :reserved,:at,'reserved',:at,'plain-text-v1')'''), {'id':str(identifier), 'run':str(run.id),
+                   :reserved,:at,'reserved',:at,'plain-text-v1',1)'''), {'id':str(identifier), 'run':str(run.id),
             'cid':str(conversation_id), 'policy':str(policy.policy_id), 'config_sha':sha(encoded(config)),
             'policy_sha':sha(encoded(policy)), 'request_sha':sha(prepared.wire_payload_json),
             'input':encoded(prepared), 'config':encoded(config), 'policy_json':encoded(policy),
@@ -224,9 +225,9 @@ def enqueue_context(actor, conversation_id, request, db, runtime):
         identifier, at = uuid4(), service._at()
         db.execute(text('''INSERT INTO assistant_model_attempts
             (id,run_id,conversation_id,policy_id,config_sha256,policy_sha256,request_sha256,
-             input_json,config_json,policy_json,reserved_usd,created_at,state,updated_at,input_format)
+             input_json,config_json,policy_json,reserved_usd,created_at,state,updated_at,input_format,round_no)
             VALUES(:id,:run,:cid,:policy,:config_sha,:policy_sha,:request_sha,:input,:config,:policy_json,
-                   :reserved,:at,'reserved',:at,'library-context-v1')'''), {'id':str(identifier),
+                   :reserved,:at,'reserved',:at,'library-context-v1',1)'''), {'id':str(identifier),
             'run':str(run.id), 'cid':str(conversation_id), 'policy':str(policy.policy_id),
             'config_sha':sha(encoded(config)), 'policy_sha':sha(encoded(policy)),
             'request_sha':sha(prepared.wire_payload_json), 'input':encoded(prepared),

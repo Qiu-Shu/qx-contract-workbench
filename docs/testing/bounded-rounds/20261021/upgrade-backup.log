@@ -1,0 +1,260 @@
+F.F..F.F.                                                                [100%]
+================================== FAILURES ===================================
+_ test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade[False-True] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_judge_archives_retain0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BD8AD70D40>
+native = True, fail_migration = False
+
+    @pytest.mark.parametrize('native', [True, False])
+    @pytest.mark.parametrize('fail_migration', [False, True])
+    def test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade(tmp_path, monkeypatch, native, fail_migration):
+        from cn_contract.assistant import attachments, judge_schema
+        root, database, matter, document, raw, attachment = model_workspace(tmp_path, native)
+        archive = tmp_path/('pre-judge.qxbak' if native else 'pre-judge.cnbak')
+        try:
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            source_before = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            archive_before = archive.read_bytes()
+            if fail_migration:
+                monkeypatch.setattr(judge_schema, 'STATEMENTS', (*judge_schema.STATEMENTS, 'INVALID SQL'))
+            destination = tmp_path/'restored'
+            def restore():
+                return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+                        backup.restore_backup(archive, key_resolver=keys(), restore_parent=destination, settings=database.settings))
+            if fail_migration:
+                with pytest.raises(sqlite3.Error):
+                    restore()
+                assert not destination.exists() or not list(destination.iterdir())
+            else:
+>               result = restore()
+                         ^^^^^^^^^
+
+tests\integration\test_assistant_judge_upgrade_backup.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_judge_upgrade_backup.py:54: in restore
+    return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_judge_archives_retain0/pre-judge.qxbak')
+root = WindowsPath('//?/C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_judge_archives_retain0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+_ test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade[True-True] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_judge_archives_retain2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BD8BF31010>
+native = True, fail_migration = True
+
+    @pytest.mark.parametrize('native', [True, False])
+    @pytest.mark.parametrize('fail_migration', [False, True])
+    def test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade(tmp_path, monkeypatch, native, fail_migration):
+        from cn_contract.assistant import attachments, judge_schema
+        root, database, matter, document, raw, attachment = model_workspace(tmp_path, native)
+        archive = tmp_path/('pre-judge.qxbak' if native else 'pre-judge.cnbak')
+        try:
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            source_before = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            archive_before = archive.read_bytes()
+            if fail_migration:
+                monkeypatch.setattr(judge_schema, 'STATEMENTS', (*judge_schema.STATEMENTS, 'INVALID SQL'))
+            destination = tmp_path/'restored'
+            def restore():
+                return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+                        backup.restore_backup(archive, key_resolver=keys(), restore_parent=destination, settings=database.settings))
+            if fail_migration:
+                with pytest.raises(sqlite3.Error):
+>                   restore()
+
+tests\integration\test_assistant_judge_upgrade_backup.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_judge_upgrade_backup.py:54: in restore
+    return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_judge_archives_retain2/pre-judge.qxbak')
+root = WindowsPath('//?/C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_judge_archives_retain2')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+___ test_pre_library_archive_upgrade_is_complete_or_unpublished[False-True] ___
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_library_archive_upgra0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BD8C064800>
+native = True, fail_migration = False
+
+    @pytest.mark.parametrize('native', [True, False])
+    @pytest.mark.parametrize('fail_migration', [False, True])
+    def test_pre_library_archive_upgrade_is_complete_or_unpublished(tmp_path, monkeypatch, native, fail_migration):
+        from cn_contract.assistant import attachments, library_schema
+        root, database, matter, document, raw, attachment = judge_workspace(tmp_path, native)
+        archive = tmp_path/('pre-library.qxbak' if native else 'pre-library.cnbak')
+        try:
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            original = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            archive_before = archive.read_bytes()
+            if fail_migration:
+                monkeypatch.setattr(library_schema, 'STATEMENTS', (*library_schema.STATEMENTS, 'INVALID SQL'))
+            destination = tmp_path/'restored'
+            def restore():
+                return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+                        backup.restore_backup(archive, key_resolver=keys(), restore_parent=destination, settings=database.settings))
+            if fail_migration:
+                with pytest.raises(sqlite3.Error):
+                    restore()
+                assert not destination.exists() or not list(destination.iterdir())
+            else:
+>               result = restore()
+                         ^^^^^^^^^
+
+tests\integration\test_assistant_library_upgrade_backup.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_library_upgrade_backup.py:81: in restore
+    return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_library_archive_upgra0/pre-library.qxbak')
+root = WindowsPath('//?/C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_library_archive_upgra0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+___ test_pre_library_archive_upgrade_is_complete_or_unpublished[True-True] ____
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_library_archive_upgra2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BD8BF31190>
+native = True, fail_migration = True
+
+    @pytest.mark.parametrize('native', [True, False])
+    @pytest.mark.parametrize('fail_migration', [False, True])
+    def test_pre_library_archive_upgrade_is_complete_or_unpublished(tmp_path, monkeypatch, native, fail_migration):
+        from cn_contract.assistant import attachments, library_schema
+        root, database, matter, document, raw, attachment = judge_workspace(tmp_path, native)
+        archive = tmp_path/('pre-library.qxbak' if native else 'pre-library.cnbak')
+        try:
+            if native:
+                workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+            else:
+                write_old_cnbak(database, archive)
+            original = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            archive_before = archive.read_bytes()
+            if fail_migration:
+                monkeypatch.setattr(library_schema, 'STATEMENTS', (*library_schema.STATEMENTS, 'INVALID SQL'))
+            destination = tmp_path/'restored'
+            def restore():
+                return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+                        backup.restore_backup(archive, key_resolver=keys(), restore_parent=destination, settings=database.settings))
+            if fail_migration:
+                with pytest.raises(sqlite3.Error):
+>                   restore()
+
+tests\integration\test_assistant_library_upgrade_backup.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_library_upgrade_backup.py:81: in restore
+    return (workspace_backup.restore_workspace_backup(archive, destination, PASSPHRASE) if native else
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_library_archive_upgra2/pre-library.qxbak')
+root = WindowsPath('//?/C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1118/test_pre_library_archive_upgra2')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_judge_upgrade_backup.py::test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade[False-True]
+FAILED tests/integration/test_assistant_judge_upgrade_backup.py::test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade[True-True]
+FAILED tests/integration/test_assistant_library_upgrade_backup.py::test_pre_library_archive_upgrade_is_complete_or_unpublished[False-True]
+FAILED tests/integration/test_assistant_library_upgrade_backup.py::test_pre_library_archive_upgrade_is_complete_or_unpublished[True-True]
+4 failed, 5 passed in 22.41s

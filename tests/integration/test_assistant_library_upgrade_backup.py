@@ -90,7 +90,7 @@ def test_pre_library_archive_upgrade_is_complete_or_unpublished(tmp_path, monkey
             path = target/('workbench.db' if native else 'database.db')
             with closing(sqlite3.connect(path)) as db:
                 rows = db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall()
-                assert identify_schema(rows, native=native) == 'assistant-context-v1'
+                assert identify_schema(rows, native=native) == 'assistant-rounds-v1'
                 for table in library_schema.TABLES:
                     assert db.execute('SELECT COUNT(*) FROM '+table).fetchone() == (0,)
             restored = Database('sqlite:///'+str(path), target/'protected', database.settings, initialize_schema=False)

@@ -63,7 +63,7 @@ def test_pre_judge_archives_retain_sources_and_publish_only_complete_upgrade(tmp
             path = target/('workbench.db' if native else 'database.db')
             with closing(sqlite3.connect(path)) as db:
                 rows = db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall()
-                assert identify_schema(rows, native=native) == CURRENT_VERSION == 'assistant-context-v1'
+                assert identify_schema(rows, native=native) == CURRENT_VERSION == 'assistant-rounds-v1'
                 for table in judge_schema.TABLES:
                     assert db.execute('SELECT COUNT(*) FROM '+table).fetchone() == (0,)
             restored = Database('sqlite:///'+str(path), target/'protected', database.settings, initialize_schema=False)

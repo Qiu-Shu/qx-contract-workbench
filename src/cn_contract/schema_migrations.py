@@ -21,9 +21,24 @@ def statements_for(version):
         from .assistant.library_schema import STATEMENTS
     elif version == 'assistant-context-v1':
         from .assistant.context_schema import STATEMENTS
+    elif version == 'assistant-rounds-v1':
+        from .assistant.rounds_schema import STATEMENTS
     else:
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     return STATEMENTS
+
+
+def _module(version):
+    if version == 'assistant-rounds-v1':
+        from .assistant import rounds_schema
+        return rounds_schema
+    return None
+
+
+def requires_foreign_keys_off(version):
+    """Table-rebuild migrations DROP a referenced parent and need an FK OFF window."""
+    module = _module(version)
+    return bool(getattr(module, 'REQUIRES_FOREIGN_KEYS_OFF', False)) if module else False
 
 
 def upgrade_database(connection):
@@ -44,19 +59,30 @@ def upgrade_database(connection):
         raise ValueError('DATABASE_INTEGRITY')
     if version == CURRENT_VERSION:
         return version
-    connection.execute('BEGIN IMMEDIATE')
+    targets = VERSIONS[VERSIONS.index(version) + 1:]
+    # A table-rebuild migration DROPs a referenced parent table, which FK
+    # enforcement rejects; open an explicit FK OFF window before BEGIN and
+    # still run foreign_key_check before committing.
+    fk_off = any(requires_foreign_keys_off(target) for target in targets)
+    if fk_off:
+        connection.execute('PRAGMA foreign_keys=OFF')
     try:
-        if database_rows(connection) != before:
-            raise ValueError('DATABASE_SCHEMA_MISMATCH')
-        for target in VERSIONS[VERSIONS.index(version) + 1:]:
-            for statement in statements_for(target):
-                connection.execute(statement)
-            if database_rows(connection) != schema_rows(target, native=native):
+        connection.execute('BEGIN IMMEDIATE')
+        try:
+            if database_rows(connection) != before:
                 raise ValueError('DATABASE_SCHEMA_MISMATCH')
-        if connection.execute('PRAGMA foreign_key_check').fetchall():
-            raise ValueError('DATABASE_INTEGRITY')
-        connection.commit()
-    except BaseException:
-        connection.rollback()
-        raise
+            for target in targets:
+                for statement in statements_for(target):
+                    connection.execute(statement)
+                if database_rows(connection) != schema_rows(target, native=native):
+                    raise ValueError('DATABASE_SCHEMA_MISMATCH')
+            if connection.execute('PRAGMA foreign_key_check').fetchall():
+                raise ValueError('DATABASE_INTEGRITY')
+            connection.commit()
+        except BaseException:
+            connection.rollback()
+            raise
+    finally:
+        if fk_off:
+            connection.execute('PRAGMA foreign_keys=ON')
     return CURRENT_VERSION
