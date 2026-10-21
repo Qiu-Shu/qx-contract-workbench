@@ -20,6 +20,7 @@
 | CH-06B1 | 已完成内部持久化切片 | Codex | 持久引用、固定回执、8次工具额度、当前授权及schema/升级/恢复同片；完整回归3222通过，0跳过；未接UI/多轮模型 | [本片证据](docs/testing/library-ledger/20261020/README.md) |
 | CH-06B2a | 已完成本机检索与引用面板 | Codex | 一次关键词查询与历史原文片段；Python同输入分两批覆盖3271通过（首轮3233+原38项换盘补验），55顶层Node/8组源码浏览器通过；归档与旧记录误判已修，无真实模型/安装器验收 | [本片证据](docs/testing/library-chat/20261020/README.md) |
 | CH-06B2b1 | 已完成本机预览接口 | Codex | 服务器重建选定历史片段和问题，完整JSON/UTF-8预算，超限保留；无新许可/账本/模型调用/选片UI；644关联Python、4开发门、Windows HTTP9组通过 | [本片证据](docs/testing/context-preview/20261020/README.md) |
+| CH-06B2b2a | 已完成适配基础切片 | Codex | 独立上下文DTO/codec与共享传输；542关联、4开发门、双轴各6项通过；应用资料发送仍关闭，无新schema/账本 | [本片证据](docs/testing/context-provider/20261021/README.md) |
 | CH-06B2b2 | P1 · 下一片 | Codex；协作者认领前协调manager/许可/账本 | 新输入格式、独立具体许可、来源关联、原生确认与升级恢复同片闭合，再接一次资料辅助回答；旧V1字节和权限保持 | [存储及接线设计](docs/plans/2026-10-20-context-send-storage.md) |
 | CH-06B2c | P1 · 后续 | 待认领 | 同run≤4轮模型/≤8工具；复用现有生命周期、取消与费用账本 | CH-06B2b2 |
 | WIN-PATH-01 | 已完成原件/qxbak源码切片 | Codex | 创建/读取/回滚统一I/O路径，逻辑引用不变；424关联、4开发门、16真实HTTP请求及双轴复核通过；原件父目录279→282字符。UNC/超长SQLite/任意长cnbak目标及新安装包未验 | [本片证据](docs/testing/contract-long-path/20261020/README.md)；CH-10仍需安装验收 |

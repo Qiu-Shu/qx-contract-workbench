@@ -1,0 +1,22 @@
+{
+  "started": "2026-10-21T00:51:27.0782532+08:00",
+  "arguments": [
+    "-m",
+    "pytest",
+    ".local/context-provider-20261021/standards-probes.py",
+    "tests/unit/test_assistant_context_codec.py::test_complete_citation_identity_not_only_outbound_projection",
+    "tests/integration/test_assistant_main_provider.py::test_cancellation_propagates_without_resending",
+    "tests/integration/test_assistant_context_provider.py::test_permission_rechecked_after_secret_resolution",
+    "tests/integration/test_assistant_context_provider.py::test_truncated_transport_stays_unknown_without_retry",
+    "-q",
+    "-W",
+    "error",
+    "-o",
+    "junit_family=xunit1",
+    "--basetemp=D:/qx-cstd-9e82d06d",
+    "--junitxml=.local/context-provider-20261021/standards-probes.xml"
+  ],
+  "basetemp": "D:/qx-cstd-9e82d06d",
+  "executable": ".venv/Scripts/python.exe",
+  "cwd": "D:\\Documents\\ChatGPT\\律所项目"
+}

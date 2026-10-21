@@ -1,0 +1,128 @@
+{
+  "build_request_ast_unchanged": true,
+  "system_text_unchanged": true,
+  "compatibility_aliases": true,
+  "wire_cases": [
+    {
+      "bytes": 964,
+      "sha256": "e6d2373494102a49628f16c9956e66f32bc6460eeeb32e83b002487de64412d8"
+    },
+    {
+      "bytes": 979,
+      "sha256": "4ea9ea563e644d4302bc989bced86ce824d02d46ed1ef15f7291c51dff8d6bdc"
+    },
+    {
+      "bytes": 1946,
+      "sha256": "e0ed75a476f7de0011c04c6777213f50ab2251d39e52156f647c472bddff61fd"
+    },
+    {
+      "bytes": 60946,
+      "sha256": "e5225cb5a71ccfef49924f26b8ec48caab00fb46338900200b8e7b8833f7ee76"
+    }
+  ],
+  "reply_cases": [
+    {
+      "name": "valid",
+      "reply_sha256": "75414cb3c7173610efba02a7c4d43975d876574247915a62a186980bba9a91c4"
+    },
+    {
+      "name": "empty",
+      "reply_sha256": "8e75ab51c9285fc9b24b3af37e978f93b21590aee53af4cbcc348b6af6d8407d"
+    },
+    {
+      "name": "not_json",
+      "reply_sha256": "8e75ab51c9285fc9b24b3af37e978f93b21590aee53af4cbcc348b6af6d8407d"
+    },
+    {
+      "name": "duplicate",
+      "reply_sha256": "8e75ab51c9285fc9b24b3af37e978f93b21590aee53af4cbcc348b6af6d8407d"
+    },
+    {
+      "name": "nonfinite",
+      "reply_sha256": "8e75ab51c9285fc9b24b3af37e978f93b21590aee53af4cbcc348b6af6d8407d"
+    },
+    {
+      "name": "nonobject",
+      "reply_sha256": "8e75ab51c9285fc9b24b3af37e978f93b21590aee53af4cbcc348b6af6d8407d"
+    },
+    {
+      "name": "depth",
+      "reply_sha256": "8e75ab51c9285fc9b24b3af37e978f93b21590aee53af4cbcc348b6af6d8407d"
+    },
+    {
+      "name": "id_empty",
+      "reply_sha256": "8e75ab51c9285fc9b24b3af37e978f93b21590aee53af4cbcc348b6af6d8407d"
+    },
+    {
+      "name": "id_secret",
+      "reply_sha256": "4357175d0ffdf810c8807106758f174eb07a1900c63872ab519ed5877a68b105"
+    },
+    {
+      "name": "wrong_model",
+      "reply_sha256": "8e75ab51c9285fc9b24b3af37e978f93b21590aee53af4cbcc348b6af6d8407d"
+    },
+    {
+      "name": "created_bool",
+      "reply_sha256": "8e75ab51c9285fc9b24b3af37e978f93b21590aee53af4cbcc348b6af6d8407d"
+    },
+    {
+      "name": "object",
+      "reply_sha256": "8e75ab51c9285fc9b24b3af37e978f93b21590aee53af4cbcc348b6af6d8407d"
+    },
+    {
+      "name": "missing_usage",
+      "reply_sha256": "c13650d5ea15ccf315ce26ede0c16f7d2e425fe0b405af05776dd82826baef64"
+    },
+    {
+      "name": "usage_bool",
+      "reply_sha256": "caa9fca5fd84fbcc5365a45b76745ebce56c23ae2c3d9504e298f57bc719dfd2"
+    },
+    {
+      "name": "usage_over_budget",
+      "reply_sha256": "6039236d1f385058ad81f8510a9f3d56f30eee63ffa3ab8d9cc78a6ebc6da365"
+    },
+    {
+      "name": "choices_empty",
+      "reply_sha256": "d7f7128b739205ade3058fc30bbf252818195192c2baeba77eacaa086291b62c"
+    },
+    {
+      "name": "unknown_metadata",
+      "reply_sha256": "75414cb3c7173610efba02a7c4d43975d876574247915a62a186980bba9a91c4"
+    },
+    {
+      "name": "empty_content",
+      "reply_sha256": "d7f7128b739205ade3058fc30bbf252818195192c2baeba77eacaa086291b62c"
+    },
+    {
+      "name": "bad_content",
+      "reply_sha256": "d7f7128b739205ade3058fc30bbf252818195192c2baeba77eacaa086291b62c"
+    },
+    {
+      "name": "foreign_source",
+      "reply_sha256": "d7f7128b739205ade3058fc30bbf252818195192c2baeba77eacaa086291b62c"
+    },
+    {
+      "name": "candidate_extra",
+      "reply_sha256": "d7f7128b739205ade3058fc30bbf252818195192c2baeba77eacaa086291b62c"
+    },
+    {
+      "name": "tool",
+      "reply_sha256": "d7f7128b739205ade3058fc30bbf252818195192c2baeba77eacaa086291b62c"
+    },
+    {
+      "name": "reasoning",
+      "reply_sha256": "d7f7128b739205ade3058fc30bbf252818195192c2baeba77eacaa086291b62c"
+    },
+    {
+      "name": "escaped_secret",
+      "reply_sha256": "4357175d0ffdf810c8807106758f174eb07a1900c63872ab519ed5877a68b105"
+    },
+    {
+      "name": "finish",
+      "reply_sha256": "d7f7128b739205ade3058fc30bbf252818195192c2baeba77eacaa086291b62c"
+    }
+  ],
+  "baseline_sha256": "cd15eec8824219294b484fa46289f7a30ed0fefec4aa03eaf54557a6b2869598",
+  "main_sha256": "7c5a4f435747b75f0a629df26ea9dcfbc7129fb7b3be56f57ef6d1815d3bbf7d",
+  "network_used": false
+}

@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-21 CH-06B2b2a适配基础切片完成：新增明确上下文输入/模板、完整引用摘要及确定版本后继，复用既有预览重建精确wire；候选只接受选定UUID/hash，合法usage在拒绝候选时保留。公共DeepSeek HTTP/响应封套拆出共用，main.py 242→53行，旧V1 DTO/字节保持；默认预检拒绝且密钥前后各核验，无应用入口接线。最终542关联Python全部通过（含75新增）、四开发门exit0、500输入稳定；Spec6独立与Standards6（含4复用）通过，无待修项；旧4组wire/25响应逐字一致。WorkBuddy本轮wb-c11f6dc1285f实际completed，只读3文件，条件疑问已核对。有效RED、测试receipt字段误用6失败及旧Jev报告设置setup error保留并已修正复验；不冒称产品失败全消失。无新依赖/schema/队列；安装版0.4.1、真实材料/模型/云未动，未测GUI/冻结/安装器及总体资源收益。下一片B2b2仍须输入格式列/来源关系/原生许可/同attempt与升级恢复闭合后启用资料发送。[证据](testing/context-provider/20261021/README.md)、[执行计划](plans/2026-10-21-context-provider.md)。GitHub同步以随后独立回执为准。
+
 2026-10-21 WIN-PATH-01产品提交e387d8cac67cfc9e093747094b8d3454c953109f已正常同步GitHub；远端SHA与3,850文件树一致、历史106提交、仓库仍private。53个新增可达blob禁止路径及已知敏感模式0命中；3产品/测试和56证据暂存字节一致，493验证输入稳定，243本地链接存在；发布文档独立复核无必须修复项。[同步回执](testing/GITHUB-WINPATH01-20261020.md)。本片源码可靠性修复完成，安装版仍0.4.1，继续CH-06B2b2。
 
 2026-10-20 WIN-PATH-01合同原件长路径源码切片完成：唯一产品改动在persistence.py，复用现有filesystem/application路径工具，创建、读取、根初始化及事务清理一起适配；普通逻辑根、相对引用、授权/SHA/独占及事务所有权不变，无依赖/schema变更。最终424关联Python全部通过（含20新增单元及3集成）、四开发门exit0、493输入稳定；独立Spec4/Standards4通过、0待修发现。Windows实际TCP16请求通过合同上传解析/原件下载/qxbak/两次只读恢复，原件父目录279→282→282字符，数据库208/211字符，模型/Jev0，3服务器已退出。WorkBuddy本轮wb-b9aff7ba1c57实际completed，3文件只读计划复核，mkdir所有权意见已核对。有效RED及TCP首轮WinError10054保留；20次定向拒写与原探针重跑通过，但连接复位根因未定。旧cnbak普通路径回归不等于任意长目标支持；UNC/超长SQLite/GUI/冻结/新安装包未验，0.4.1与真实资料不变。下一片回到CH-06B2b2新输入/许可/来源/原生确认/升级恢复；[证据](testing/contract-long-path/20261020/README.md)、[计划与执行](plans/2026-10-20-contract-long-path.md)。GitHub同步以随后独立回执为准。

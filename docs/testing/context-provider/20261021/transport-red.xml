@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.407" timestamp="2026-10-21T00:42:06.275844+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_deepseek_transport_refactor" name="test_refused_preflight_does_not_resolve_secret_or_import_http" time="0.001"><failure message="AssertionError: shared DeepSeek transport is missing&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001C79B6F5D00&gt;('cn_contract.assistant.providers.deepseek_transport')&#10; +    where &lt;function find_spec at 0x000001C79B6F5D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001C7A09E44A0&gt;
+
+    def test_refused_preflight_does_not_resolve_secret_or_import_http(monkeypatch):
+&gt;       module = transport_api()
+                 ^^^^^^^^^^^^^^^
+
+tests\integration\test_deepseek_transport_refactor.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def transport_api():
+        name = 'cn_contract.assistant.providers.deepseek_transport'
+&gt;       assert importlib.util.find_spec(name) is not None, 'shared DeepSeek transport is missing'
+E       AssertionError: shared DeepSeek transport is missing
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000001C79B6F5D00&gt;('cn_contract.assistant.providers.deepseek_transport')
+E        +    where &lt;function find_spec at 0x000001C79B6F5D00&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_deepseek_transport_refactor.py:14: AssertionError</failure></testcase></testsuite></testsuites>

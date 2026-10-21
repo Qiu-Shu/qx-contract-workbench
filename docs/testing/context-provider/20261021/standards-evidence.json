@@ -1,0 +1,96 @@
+{
+  "baseline": "aa77af6903fd324bc3fd7cc4f5fb5b78a99a3aa9",
+  "captured_utc": "2026-10-20T16:52:01.866328+00:00",
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "static_checks": {
+    "_SYSTEM_AST_unchanged": true,
+    "build_request_AST_unchanged": true,
+    "existing_domain_prefix_unchanged": true,
+    "src/cn_contract/assistant/providers/registry.py_unchanged": true,
+    "src/cn_contract/assistant/providers/policy.py_unchanged": true,
+    "src/cn_contract/assistant/runner.py_unchanged": true,
+    "src/cn_contract/assistant/model_integrity.py_unchanged": true
+  },
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e708474664b6bc81b185d85ad13dfca5f98065d015020b877044471b473b5754"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "5248771a8f16f535d9a8db2334ee54eb3e9c33c9f7c6469be5e2d88f49fc341a"
+    },
+    {
+      "path": "docs/plans/2026-10-21-context-provider.md",
+      "sha256": "f956bfb22c1b216bd14d277eff828e12b52532f110b8135ab921175a04fe2318"
+    },
+    {
+      "path": "src/cn_contract/domain.py",
+      "sha256": "12265e60513aee3d6be241de40e7c0fdc610d2c877430275d690de590903d085"
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/main.py",
+      "sha256": "7c5a4f435747b75f0a629df26ea9dcfbc7129fb7b3be56f57ef6d1815d3bbf7d"
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/context.py",
+      "sha256": "fc1d6d08ebc6cb3d751c6cf9602e16a2c51d51103b400613a4315dea2b76e9fb"
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/context_codec.py",
+      "sha256": "b0c71231cde50ad61b94a150796a4e8d9c226f11183ba825682617fbc12761a6"
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/deepseek_protocol.py",
+      "sha256": "f3440ece212776f4cfe72af05af9d98032d4baf189843f9934e1f94c59015aa9"
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/deepseek_transport.py",
+      "sha256": "dfddd07a4efc9debaf75c810b66353ccd8063c45f17972f8e95d60cc0116af5c"
+    },
+    {
+      "path": "tests/unit/test_assistant_context_codec.py",
+      "sha256": "f06c2f444c18c5ef52602ab9ad8dc4ef3b31b7831c7ef23faf3e3433186ff254"
+    },
+    {
+      "path": "tests/integration/test_assistant_context_provider.py",
+      "sha256": "c97de72157e3a80a2b3d6276e5e1f9f99715e7d71cccc6cfd63b2b9aae429bc2"
+    },
+    {
+      "path": "tests/integration/test_deepseek_transport_refactor.py",
+      "sha256": "c08bd6eae14243c9225681f230f815fc2984adb650214c5ebd2ccb0da2546712"
+    }
+  ],
+  "test_command": {
+    "started": "2026-10-21T00:51:27.0782532+08:00",
+    "arguments": [
+      "-m",
+      "pytest",
+      ".local/context-provider-20261021/standards-probes.py",
+      "tests/unit/test_assistant_context_codec.py::test_complete_citation_identity_not_only_outbound_projection",
+      "tests/integration/test_assistant_main_provider.py::test_cancellation_propagates_without_resending",
+      "tests/integration/test_assistant_context_provider.py::test_permission_rechecked_after_secret_resolution",
+      "tests/integration/test_assistant_context_provider.py::test_truncated_transport_stays_unknown_without_retry",
+      "-q",
+      "-W",
+      "error",
+      "-o",
+      "junit_family=xunit1",
+      "--basetemp=D:/qx-cstd-9e82d06d",
+      "--junitxml=.local/context-provider-20261021/standards-probes.xml"
+    ],
+    "basetemp": "D:/qx-cstd-9e82d06d",
+    "executable": ".venv/Scripts/python.exe",
+    "cwd": "D:\\Documents\\ChatGPT\\律所项目"
+  },
+  "test_exit": 0,
+  "actual_independent_test_count": 6,
+  "limits": [
+    "synthetic loopback only",
+    "no broad suite",
+    "no application send wiring",
+    "no real model or credentials",
+    "no product or existing test edits"
+  ]
+}

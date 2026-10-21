@@ -1,0 +1,20 @@
+{
+  "task_id": "wb-c11f6dc1285f",
+  "state": "completed",
+  "scope": "3 exact files; read only; no product tests",
+  "disposition": [
+    {
+      "concern": "conditional: quote hash may be missing from MainContextSource",
+      "result": "closed by source inspection: quote_sha256 is a required field and already covered by preview tests"
+    },
+    {
+      "concern": "conditional: saved id and embedded citation id may be mixed",
+      "result": "closed by source inspection: outbound DTO has saved_citation_id, no id field; full CitationRef is bound locally by citation_sha256, not emitted wholesale"
+    },
+    {
+      "concern": "future DTO fields may not exist in CitationRef projection",
+      "result": "not a demonstrated current defect; all current projected fields exist; strict projection and tests protect current contract"
+    }
+  ],
+  "limits": "WorkBuddy did not read domain.py; conditional questions were not treated as confirmed defects. Root checked actual domain.py and new codec."
+}

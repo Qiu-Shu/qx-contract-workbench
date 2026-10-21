@@ -1,0 +1,39 @@
+{
+  "baseline": "aa77af6903fd324bc3fd7cc4f5fb5b78a99a3aa9",
+  "command": [
+    ".venv/Scripts/python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    ".local/context-provider-20261021/spec-context-probes.py",
+    "-q",
+    "--basetemp=D:/qx-spec-93cd1980",
+    "--junitxml=.local/context-provider-20261021/spec-context-probes.xml"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-10-20T16:49:51.7351719Z",
+  "seconds": 1.0412654,
+  "inputs_before": {
+    "docs/plans/2026-10-21-context-provider.md": "f956bfb22c1b216bd14d277eff828e12b52532f110b8135ab921175a04fe2318",
+    "src/cn_contract/assistant/providers/context.py": "fc1d6d08ebc6cb3d751c6cf9602e16a2c51d51103b400613a4315dea2b76e9fb",
+    "src/cn_contract/assistant/providers/context_codec.py": "b0c71231cde50ad61b94a150796a4e8d9c226f11183ba825682617fbc12761a6",
+    "src/cn_contract/assistant/providers/main.py": "7c5a4f435747b75f0a629df26ea9dcfbc7129fb7b3be56f57ef6d1815d3bbf7d",
+    "src/cn_contract/assistant/providers/deepseek_transport.py": "dfddd07a4efc9debaf75c810b66353ccd8063c45f17972f8e95d60cc0116af5c",
+    "src/cn_contract/domain.py": "12265e60513aee3d6be241de40e7c0fdc610d2c877430275d690de590903d085",
+    ".local/context-provider-20261021/spec-context-probes.py": "73334b7adedcd2219567dc96b80e533284413765d3e48d962f213ddcd2fd3e1b",
+    "src/cn_contract/assistant/providers/deepseek_protocol.py": "f3440ece212776f4cfe72af05af9d98032d4baf189843f9934e1f94c59015aa9"
+  },
+  "inputs_after": {
+    "docs/plans/2026-10-21-context-provider.md": "f956bfb22c1b216bd14d277eff828e12b52532f110b8135ab921175a04fe2318",
+    "src/cn_contract/assistant/providers/context.py": "fc1d6d08ebc6cb3d751c6cf9602e16a2c51d51103b400613a4315dea2b76e9fb",
+    "src/cn_contract/assistant/providers/context_codec.py": "b0c71231cde50ad61b94a150796a4e8d9c226f11183ba825682617fbc12761a6",
+    "src/cn_contract/assistant/providers/main.py": "7c5a4f435747b75f0a629df26ea9dcfbc7129fb7b3be56f57ef6d1815d3bbf7d",
+    "src/cn_contract/assistant/providers/deepseek_transport.py": "dfddd07a4efc9debaf75c810b66353ccd8063c45f17972f8e95d60cc0116af5c",
+    "src/cn_contract/domain.py": "12265e60513aee3d6be241de40e7c0fdc610d2c877430275d690de590903d085",
+    ".local/context-provider-20261021/spec-context-probes.py": "73334b7adedcd2219567dc96b80e533284413765d3e48d962f213ddcd2fd3e1b",
+    "src/cn_contract/assistant/providers/deepseek_protocol.py": "f3440ece212776f4cfe72af05af9d98032d4baf189843f9934e1f94c59015aa9"
+  },
+  "input_stable": true,
+  "scope": "Independent synthetic pure probes; no product DB/network/model."
+}

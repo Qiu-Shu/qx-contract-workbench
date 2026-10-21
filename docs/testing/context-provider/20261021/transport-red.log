@@ -1,0 +1,26 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_refused_preflight_does_not_resolve_secret_or_import_http ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C7A09E44A0>
+
+    def test_refused_preflight_does_not_resolve_secret_or_import_http(monkeypatch):
+>       module = transport_api()
+                 ^^^^^^^^^^^^^^^
+
+tests\integration\test_deepseek_transport_refactor.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def transport_api():
+        name = 'cn_contract.assistant.providers.deepseek_transport'
+>       assert importlib.util.find_spec(name) is not None, 'shared DeepSeek transport is missing'
+E       AssertionError: shared DeepSeek transport is missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x000001C79B6F5D00>('cn_contract.assistant.providers.deepseek_transport')
+E        +    where <function find_spec at 0x000001C79B6F5D00> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+tests\integration\test_deepseek_transport_refactor.py:14: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_deepseek_transport_refactor.py::test_refused_preflight_does_not_resolve_secret_or_import_http
+1 failed in 0.50s

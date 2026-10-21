@@ -3509,3 +3509,98 @@ class MainContextPreview(DomainModel):
                 or (self.state == 'ready') != (len(raw) <= self.max_input_bytes)):
             raise ValueError('CONTEXT_PREVIEW_INVALID')
         return self
+
+
+class MainContextSourceBinding(DomainModel):
+    saved_citation_id: UUID
+    citation_sha256: SHA256
+
+
+class MainContextSendBasis(DomainModel):
+    """Immutable description of proposed input, never an authorization grant."""
+    input_format: Literal['library-context-v1'] = 'library-context-v1'
+    template_version: Literal['saved-library-context-system-v1'] = 'saved-library-context-system-v1'
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+    system_sha256: SHA256
+    manifest_sha256: SHA256
+    source_bindings: Annotated[tuple[MainContextSourceBinding, ...], Field(min_length=1, max_length=8)]
+    config_sha256: SHA256
+    wire_sha256: SHA256
+
+    @model_validator(mode='after')
+    def unique_source_bindings(self):
+        ids = tuple(item.saved_citation_id for item in self.source_bindings)
+        if len(set(ids)) != len(ids):
+            raise ValueError('CONTEXT_INPUT_INVALID')
+        return self
+
+
+class MainContextRequest(DomainModel):
+    run_id: UUID
+    message_id: UUID
+    scope: ScopeSnapshot
+    composer_revision: NonNegativeInt
+    manifest: MainContextManifest
+    basis: MainContextSendBasis
+
+    @model_validator(mode='after')
+    def exact_context_identity(self):
+        from .config import canonical_json
+        expected = self.basis.expected_scope.model_dump()
+        expected['input_revision'] += 1
+        raw = canonical_json(self.manifest.model_dump(mode='json'))
+        if (self.scope.model_dump() != expected
+                or self.composer_revision != self.basis.expected_composer_revision + 1
+                or hashlib.sha256(raw.encode('utf-8')).hexdigest() != self.basis.manifest_sha256
+                or tuple(item.saved_citation_id for item in self.manifest.sources)
+                != tuple(item.saved_citation_id for item in self.basis.source_bindings)):
+            raise ValueError('CONTEXT_INPUT_INVALID')
+        return self
+
+
+class MainContextPreparedInput(DomainModel):
+    request: MainContextRequest
+    wire_payload_json: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=524288)]
+
+    @model_validator(mode='after')
+    def exact_context_wire(self):
+        if hashlib.sha256(self.wire_payload_json.encode('utf-8')).hexdigest() != self.request.basis.wire_sha256:
+            raise ValueError('CONTEXT_INPUT_INVALID')
+        return self
+
+
+class MainContextCitation(DomainModel):
+    saved_citation_id: UUID
+    quote_sha256: SHA256
+
+
+class MainContextCandidate(DomainModel):
+    text: AssistantText
+    citations: Annotated[tuple[MainContextCitation, ...], Field(max_length=8)] = ()
+
+    @model_validator(mode='after')
+    def unique_context_citations(self):
+        ids = tuple(item.saved_citation_id for item in self.citations)
+        if not self.text.strip() or len(ids) != len(set(ids)):
+            raise ValueError('MODEL_OUTPUT_INVALID')
+        return self
+
+
+class MainContextReply(DomainModel):
+    state: Literal['received', 'sent_unknown', 'failed_before_send']
+    provider_request_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] | None = None
+    usage: MainUsage | None = None
+    output: MainContextCandidate | None = None
+    error_code: Literal['BLOCKED_LIVE', 'PROVIDER_ERROR', 'MODEL_OUTPUT_INVALID'] | None = None
+
+    @model_validator(mode='after')
+    def consistent_context_reply(self):
+        if self.output is not None and (self.state != 'received' or self.error_code is not None):
+            raise ValueError('output requires a received validated response')
+        if self.output is None and self.error_code is None:
+            raise ValueError('failed response needs a fixed error code')
+        if self.state != 'received' and (self.usage is not None or self.provider_request_id is not None):
+            raise ValueError('unknown/unsent response cannot claim received usage')
+        return self

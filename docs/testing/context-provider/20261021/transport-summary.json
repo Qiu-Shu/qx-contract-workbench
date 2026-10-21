@@ -1,0 +1,100 @@
+{
+  "stage": "shared DeepSeek transport/protocol",
+  "baseline": "aa77af6903fd324bc3fd7cc4f5fb5b78a99a3aa9",
+  "files": [
+    {
+      "path": "src/cn_contract/assistant/providers/main.py",
+      "sha256": "7c5a4f435747b75f0a629df26ea9dcfbc7129fb7b3be56f57ef6d1815d3bbf7d",
+      "lines": 53
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/deepseek_transport.py",
+      "sha256": "dfddd07a4efc9debaf75c810b66353ccd8063c45f17972f8e95d60cc0116af5c",
+      "lines": 125
+    },
+    {
+      "path": "src/cn_contract/assistant/providers/deepseek_protocol.py",
+      "sha256": "f3440ece212776f4cfe72af05af9d98032d4baf189843f9934e1f94c59015aa9",
+      "lines": 104
+    },
+    {
+      "path": "tests/integration/test_deepseek_transport_refactor.py",
+      "sha256": "c08bd6eae14243c9225681f230f815fc2984adb650214c5ebd2ccb0da2546712",
+      "lines": 118
+    }
+  ],
+  "main_delta": {
+    "before_lines": 242,
+    "after_lines": 53,
+    "additions": 10,
+    "deletions": 199
+  },
+  "public_interfaces": [
+    "DeepSeekTransport(config, secret_resolver), inherited for_synthetic_loopback/is_synthetic",
+    "DeepSeekTransport._generate(request, *, expected_config=None, builder, decoder, reply_type, preflight=None)",
+    "builder(request, config) -> wire dict",
+    "decoder(raw_bytes, request, config, secret) -> reply_type",
+    "decode_response(raw, config, secret, *, parse_candidate, reply_type)",
+    "configuration(value), json_bytes(value), strict_json(raw, secret=''), PrivateReflection"
+  ],
+  "compatibility_aliases": [
+    "_configuration",
+    "_json_bytes",
+    "_strict_json",
+    "_PrivateReflection",
+    "_usage",
+    "_ENDPOINT",
+    "_LOOPBACK",
+    "_private",
+    "_protect_logs",
+    "_decode"
+  ],
+  "runs": [
+    {
+      "name": "transport-red",
+      "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_deepseek_transport_refactor.py -q --junitxml=.local/context-provider-20261021/transport-red.xml",
+      "exit_code": 1,
+      "failed": 1,
+      "seconds": 0.5,
+      "reason": "shared transport module missing"
+    },
+    {
+      "name": "transport-green",
+      "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_deepseek_transport_refactor.py tests/integration/test_assistant_main_provider.py -q --junitxml=.local/context-provider-20261021/transport-green.xml",
+      "exit_code": 0,
+      "passed": 60,
+      "seconds": 3.33
+    },
+    {
+      "name": "transport-targeted",
+      "exit_code": 1,
+      "passed": 177,
+      "errors": 1,
+      "seconds": 6.07,
+      "reason": "-W error turned existing record_property/xunit2 report setting warning into setup error"
+    },
+    {
+      "name": "transport-final",
+      "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_deepseek_transport_refactor.py tests/integration/test_assistant_main_provider.py tests/integration/test_jev_provider.py tests/unit/test_assistant_model_contract.py tests/unit/test_assistant_context_preview.py -q -W error -o junit_family=xunit1 --junitxml=.local/context-provider-20261021/transport-final.xml",
+      "exit_code": 0,
+      "passed": 178,
+      "seconds": 6.58,
+      "new_tests": 14
+    },
+    {
+      "name": "transport-compat",
+      "command": ".venv/Scripts/python.exe -X utf8 .local/context-provider-20261021/transport-compat.py",
+      "exit_code": 0,
+      "wire_cases": 4,
+      "exact_reply_cases": 25,
+      "build_ast_unchanged": true,
+      "system_text_unchanged": true
+    }
+  ],
+  "boundaries": [
+    "Only synthetic loopback HTTP in tests; no real provider/credentials/external HTTP",
+    "Preflight omitted preserves V1 caller-owned authorization; explicit checks require synchronous literal True before and after secret resolution",
+    "Canceled tasks still propagate asyncio.CancelledError; ordinary preflight exceptions produce fixed BLOCKED_LIVE without detail",
+    "No DTO/schema/registry/attempt/media-type/endpoint semantics change; no full suite or dependencies installed"
+  ]
+}

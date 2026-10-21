@@ -1,0 +1,37 @@
+{
+  "baseline": "aa77af6903fd324bc3fd7cc4f5fb5b78a99a3aa9",
+  "origin": "tool outputs preserved in conversation; no standalone XML for these initial runs",
+  "runs": [
+    {
+      "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/unit/test_assistant_context_codec.py -q",
+      "exit_code": 1,
+      "failed": 1,
+      "reason": "valid RED: context codec missing"
+    },
+    {
+      "command": "same unit file after first implementation",
+      "exit_code": 0,
+      "passed": 1
+    },
+    {
+      "command": "same unit file after expanded tests",
+      "exit_code": 0,
+      "passed": 40,
+      "warnings": 2,
+      "reason": "test instance.model_fields deprecated; corrected class access"
+    },
+    {
+      "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/integration/test_assistant_context_provider.py -q",
+      "exit_code": 1,
+      "passed": 15,
+      "failed": 6,
+      "reason": "test confused receipt.state with receipt.cost_status; corrected assertions; no product edit"
+    },
+    {
+      "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/unit/test_assistant_context_codec.py tests/integration/test_assistant_context_provider.py -q",
+      "exit_code": 0,
+      "passed": 61,
+      "seconds": 1.34
+    }
+  ]
+}

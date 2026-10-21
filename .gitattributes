@@ -74,3 +74,8 @@ tests/unit/test_assistant_context_preview.py -text whitespace=blank-at-eol,blank
 docs/testing/contract-long-path/** -text -whitespace
 tests/unit/test_contract_long_paths.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 tests/integration/test_contract_long_path_backup.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/testing/context-provider/** -text -whitespace
+tests/unit/test_assistant_context_codec.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_assistant_context_provider.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_deepseek_transport_refactor.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
