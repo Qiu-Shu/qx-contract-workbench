@@ -1,0 +1,1630 @@
+TAP version 13
+# Subtest: owned backend validates readiness, stops on EOF and rejects forged nonce
+ok 1 - owned backend validates readiness, stops on EOF and rejects forged nonce
+  ---
+  duration_ms: 324.109
+  type: 'test'
+  ...
+# Subtest: approval shows the exact rebuilt selection and authorizes the server-built basis once
+ok 2 - approval shows the exact rebuilt selection and authorizes the server-built basis once
+  ---
+  duration_ms: 59.722
+  type: 'test'
+  ...
+# Subtest: cancellation never authorizes and reports the fixed shape
+ok 3 - cancellation never authorizes and reports the fixed shape
+  ---
+  duration_ms: 12.6797
+  type: 'test'
+  ...
+# Subtest: a preview that is not ready or carries a tampered basis is denied before any window
+ok 4 - a preview that is not ready or carries a tampered basis is denied before any window
+  ---
+  duration_ms: 26.8674
+  type: 'test'
+  ...
+# Subtest: missing csrf cookie, busy desktop and malformed input are denied without a window
+ok 5 - missing csrf cookie, busy desktop and malformed input are denied without a window
+  ---
+  duration_ms: 15.5332
+  type: 'test'
+  ...
+# Subtest: Judge exposes an optional lease but its default budget cannot grant authority
+ok 6 - Judge exposes an optional lease but its default budget cannot grant authority
+  ---
+  duration_ms: 3.7965
+  type: 'test'
+  ...
+# Subtest: trusted synthetic Judge budget and captured configuration use separate authorization methods
+ok 7 - trusted synthetic Judge budget and captured configuration use separate authorization methods
+  ---
+  duration_ms: 0.9373
+  type: 'test'
+  ...
+# Subtest: Judge budget rejects noncanonical, nonpositive, over-limit and nonstring amounts
+ok 8 - Judge budget rejects noncanonical, nonpositive, over-limit and nonstring amounts
+  ---
+  duration_ms: 1.922
+  type: 'test'
+  ...
+# Subtest: Judge budget accepts its exact supported boundaries without floating point conversion
+ok 9 - Judge budget accepts its exact supported boundaries without floating point conversion
+  ---
+  duration_ms: 1.3028
+  type: 'test'
+  ...
+# Subtest: optional admission failures invoke the callback with null once without changing the backend
+ok 10 - optional admission failures invoke the callback with null once without changing the backend
+  ---
+  duration_ms: 2.653
+  type: 'test'
+  ...
+# Subtest: optional null callback failures are not retried or mistaken for authorization
+ok 11 - optional null callback failures are not retried or mistaken for authorization
+  ---
+  duration_ms: 0.4609
+  type: 'test'
+  ...
+# Subtest: an available Judge lease can be declined without disabling the successful Main flow
+ok 12 - an available Judge lease can be declined without disabling the successful Main flow
+  ---
+  duration_ms: 0.5247
+  type: 'test'
+  ...
+# Subtest: a known Judge denial can continue once without a grant or revocation
+ok 13 - a known Judge denial can continue once without a grant or revocation
+  ---
+  duration_ms: 0.6846
+  type: 'test'
+  ...
+# Subtest: Judge refuses a Main basis or another purpose without dispatching authority
+ok 14 - Judge refuses a Main basis or another purpose without dispatching authority
+  ---
+  duration_ms: 0.9649
+  type: 'test'
+  ...
+# Subtest: an open Judge lease locks configuration and a competing callback only receives null
+ok 15 - an open Judge lease locks configuration and a competing callback only receives null
+  ---
+  duration_ms: 12.8107
+  type: 'test'
+  ...
+# Subtest: Judge authorization is single-use and captures the original caller values through a late ACK
+ok 16 - Judge authorization is single-use and captures the original caller values through a late ACK
+  ---
+  duration_ms: 2.1667
+  type: 'test'
+  ...
+# Subtest: unknown Judge ACK or control failure stops its captured backend instead of falling back
+ok 17 - unknown Judge ACK or control failure stops its captured backend instead of falling back
+  ---
+  duration_ms: 1.1385
+  type: 'test'
+  ...
+# Subtest: post-grant callback failure or cancellation revokes only Judge authority
+ok 18 - post-grant callback failure or cancellation revokes only Judge authority
+  ---
+  duration_ms: 0.8486
+  type: 'test'
+  ...
+# Subtest: late Judge grants after navigation or backend replacement revoke the old session only
+ok 19 - late Judge grants after navigation or backend replacement revoke the old session only
+  ---
+  duration_ms: 2.7806
+  type: 'test'
+  ...
+# Subtest: existing Judge requests do not invent a new grant to revoke
+ok 20 - existing Judge requests do not invent a new grant to revoke
+  ---
+  duration_ms: 0.792
+  type: 'test'
+  ...
+# Subtest: failed Judge revocation waits for the owned backend shutdown and keeps its lock
+ok 21 - failed Judge revocation waits for the owned backend shutdown and keeps its lock
+  ---
+  duration_ms: 1.8878
+  type: 'test'
+  ...
+# Subtest: an active Judge configuration cannot lend or lose its lock through the optional callback
+ok 22 - an active Judge configuration cannot lend or lose its lock through the optional callback
+  ---
+  duration_ms: 1.0318
+  type: 'test'
+  ...
+# Subtest: a callback failure waits for its in-flight Judge grant before revoking once
+ok 23 - a callback failure waits for its in-flight Judge grant before revoking once
+  ---
+  duration_ms: 1.4406
+  type: 'test'
+  ...
+# Subtest: explicitly dropping Judge authority allows Main to continue and does not revoke twice
+ok 24 - explicitly dropping Judge authority allows Main to continue and does not revoke twice
+  ---
+  duration_ms: 0.5022
+  type: 'test'
+  ...
+# Subtest: new capability admits exact Judge authorization and revoke on the same sequence
+ok 25 - new capability admits exact Judge authorization and revoke on the same sequence
+  ---
+  duration_ms: 4.8329
+  type: 'test'
+  ...
+# Subtest: config-only child rejects authorization without writing or stopping existing controls
+ok 26 - config-only child rejects authorization without writing or stopping existing controls
+  ---
+  duration_ms: 0.559
+  type: 'test'
+  ...
+# Subtest: authorization capability without Judge configuration capability fails the handshake
+ok 27 - authorization capability without Judge configuration capability fails the handshake
+  ---
+  duration_ms: 0.4068
+  type: 'test'
+  ...
+# Subtest: Judge authorization refuses main basis without purpose
+ok 28 - Judge authorization refuses main basis without purpose
+  ---
+  duration_ms: 0.2935
+  type: 'test'
+  ...
+# Subtest: Judge authorization refuses different purpose
+ok 29 - Judge authorization refuses different purpose
+  ---
+  duration_ms: 0.38
+  type: 'test'
+  ...
+# Subtest: Judge authorization refuses injected policy
+ok 30 - Judge authorization refuses injected policy
+  ---
+  duration_ms: 0.4521
+  type: 'test'
+  ...
+# Subtest: Judge authorization refuses numeric budget
+ok 31 - Judge authorization refuses numeric budget
+  ---
+  duration_ms: 0.2918
+  type: 'test'
+  ...
+# Subtest: Judge authorization refuses wrong config version
+ok 32 - Judge authorization refuses wrong config version
+  ---
+  duration_ms: 0.2151
+  type: 'test'
+  ...
+# Subtest: Judge authorization refuses unknown scope grant
+ok 33 - Judge authorization refuses unknown scope grant
+  ---
+  duration_ms: 0.5685
+  type: 'test'
+  ...
+# Subtest: Judge authorization cannot compete with an outstanding Main operation
+ok 34 - Judge authorization cannot compete with an outstanding Main operation
+  ---
+  duration_ms: 1.0088
+  type: 'test'
+  ...
+# Subtest: Backend facade keeps Judge authorization names fixed
+ok 35 - Backend facade keeps Judge authorization names fixed
+  ---
+  duration_ms: 0.3556
+  type: 'test'
+  ...
+# Subtest: judge capability negotiates on the existing pipe and shares the sequence
+ok 36 - judge capability negotiates on the existing pipe and shares the sequence
+  ---
+  duration_ms: 4.6574
+  type: 'test'
+  ...
+# Subtest: legacy main capability cannot send judge frames or consume sequence
+ok 37 - legacy main capability cannot send judge frames or consume sequence
+  ---
+  duration_ms: 1.06
+  type: 'test'
+  ...
+# Subtest: unknown judge protocol is fatal before readiness
+ok 38 - unknown judge protocol is fatal before readiness
+  ---
+  duration_ms: 1.4791
+  type: 'test'
+  ...
+# Subtest: judge configure uses fixed trusted model without authorization or main calls
+ok 39 - judge configure uses fixed trusted model without authorization or main calls
+  ---
+  duration_ms: 1.7129
+  type: 'test'
+  ...
+# Subtest: judge refuses another provider model without reading a secret
+ok 40 - judge refuses another provider model without reading a secret
+  ---
+  duration_ms: 0.3422
+  type: 'test'
+  ...
+# Subtest: judge credential replacement clears configuration before reading a failed new secret
+ok 41 - judge credential replacement clears configuration before reading a failed new secret
+  ---
+  duration_ms: 0.7417
+  type: 'test'
+  ...
+# Subtest: failed disable closes owned backend before allowing credential edits
+ok 42 - failed disable closes owned backend before allowing credential edits
+  ---
+  duration_ms: 0.6484
+  type: 'test'
+  ...
+# Subtest: late configuration ack terminates obsolete runtime and never reports configured
+ok 43 - late configuration ack terminates obsolete runtime and never reports configured
+  ---
+  duration_ms: 0.45
+  type: 'test'
+  ...
+# Subtest: backend replacement discards judge status and cannot grant or reuse old state
+ok 44 - backend replacement discards judge status and cannot grant or reuse old state
+  ---
+  duration_ms: 0.451
+  type: 'test'
+  ...
+# Subtest: old backend is unaffected when storing a future judge credential
+ok 45 - old backend is unaffected when storing a future judge credential
+  ---
+  duration_ms: 0.4418
+  type: 'test'
+  ...
+# Subtest: judge settings use separate IPC namespace and accept only the judge status model
+ok 46 - judge settings use separate IPC namespace and accept only the judge status model
+  ---
+  duration_ms: 0.9842
+  type: 'test'
+  ...
+# Subtest: judge pipe rejects unimplemented grant and malformed disable without writes
+ok 47 - judge pipe rejects unimplemented grant and malformed disable without writes
+  ---
+  duration_ms: 0.5834
+  type: 'test'
+  ...
+# Subtest: optional Jev credentials and runtime have separate explicit actions and no automatic configuration
+ok 48 - optional Jev credentials and runtime have separate explicit actions and no automatic configuration
+  ---
+  duration_ms: 15.2545
+  type: 'test'
+  ...
+# Subtest: disabled credential actions do not dispatch and rechecking restores an unavailable Jev section
+ok 49 - disabled credential actions do not dispatch and rechecking restores an unavailable Jev section
+  ---
+  duration_ms: 2.9535
+  type: 'test'
+  ...
+# Subtest: initial reads hold one shared lock and never overlap the private control channel
+ok 50 - initial reads hold one shared lock and never overlap the private control channel
+  ---
+  duration_ms: 3.6117
+  type: 'test'
+  ...
+# Subtest: model operation locks both providers and return without queuing duplicate actions
+ok 51 - model operation locks both providers and return without queuing duplicate actions
+  ---
+  duration_ms: 3.1872
+  type: 'test'
+  ...
+# Subtest: judge operation locks both providers and return without queuing duplicate actions
+ok 52 - judge operation locks both providers and return without queuing duplicate actions
+  ---
+  duration_ms: 3.0905
+  type: 'test'
+  ...
+# Subtest: late Jev save response cannot revive settings or clear new input
+ok 53 - late Jev save response cannot revive settings or clear new input
+  ---
+  duration_ms: 3.2424
+  type: 'test'
+  ...
+# Subtest: late Jev runtime response cannot revive settings or clear new input
+ok 54 - late Jev runtime response cannot revive settings or clear new input
+  ---
+  duration_ms: 2.9322
+  type: 'test'
+  ...
+# Subtest: late Jev configure response cannot revive settings or clear new input
+ok 55 - late Jev configure response cannot revive settings or clear new input
+  ---
+  duration_ms: 3.1047
+  type: 'test'
+  ...
+# Subtest: Jev rejects a model from the other provider even without a selection change event
+ok 56 - Jev rejects a model from the other provider even without a selection change event
+  ---
+  duration_ms: 3.9376
+  type: 'test'
+  ...
+# Subtest: Jev error projection has no private text and corrupt storage remains replaceable
+ok 57 - Jev error projection has no private text and corrupt storage remains replaceable
+  ---
+  duration_ms: 4.0703
+  type: 'test'
+  ...
+# Subtest: return and document exit clear both unsubmitted passwords
+ok 58 - return and document exit clear both unsubmitted passwords
+  ---
+  duration_ms: 2.8637
+  type: 'test'
+  ...
+# Subtest: preload exposes only the six fixed Jev operations with isolated channels
+ok 59 - preload exposes only the six fixed Jev operations with isolated channels
+  ---
+  duration_ms: 2.0887
+  type: 'test'
+  ...
+# Subtest: Jev copy and initial controls describe optional configuration without claiming permission or a network test
+ok 60 - Jev copy and initial controls describe optional configuration without claiming permission or a network test
+  ---
+  duration_ms: 2.1677
+  type: 'test'
+  ...
+# Subtest: trusted authorization binds the private config version and exact bounded cost
+ok 61 - trusted authorization binds the private config version and exact bounded cost
+  ---
+  duration_ms: 4.1648
+  type: 'test'
+  ...
+# Subtest: the pro model uses an exact eight-place reservation without floating-point rounding
+ok 62 - the pro model uses an exact eight-place reservation without floating-point rounding
+  ---
+  duration_ms: 0.6541
+  type: 'test'
+  ...
+# Subtest: confirmation holds the config lock and a retained lease cannot authorize later
+ok 63 - confirmation holds the config lock and a retained lease cannot authorize later
+  ---
+  duration_ms: 5.7201
+  type: 'test'
+  ...
+# Subtest: a lease is single use and does not accept a second request basis
+ok 64 - a lease is single use and does not accept a second request basis
+  ---
+  duration_ms: 0.6347
+  type: 'test'
+  ...
+# Subtest: configuration loss before opening the trusted transaction rejects without executing the callback
+ok 65 - configuration loss before opening the trusted transaction rejects without executing the callback
+  ---
+  duration_ms: 0.3128
+  type: 'test'
+  ...
+# Subtest: an acknowledged grant whose document changed is revoked for the captured session
+ok 66 - an acknowledged grant whose document changed is revoked for the captured session
+  ---
+  duration_ms: 0.5545
+  type: 'test'
+  ...
+# Subtest: ambiguous authorization stops its backend without attempting automatic authorization again
+ok 67 - ambiguous authorization stops its backend without attempting automatic authorization again
+  ---
+  duration_ms: 0.5223
+  type: 'test'
+  ...
+# Subtest: unknown ACK and ACK plus terminal control failure both close the backend
+ok 68 - unknown ACK and ACK plus terminal control failure both close the backend
+  ---
+  duration_ms: 0.8674
+  type: 'test'
+  ...
+# Subtest: a confirmed authorization denial is never mistaken for consumer success
+ok 69 - a confirmed authorization denial is never mistaken for consumer success
+  ---
+  duration_ms: 0.8888
+  type: 'test'
+  ...
+# Subtest: a failed post-grant verification revokes and a denied revoke waits for owned backend shutdown
+ok 70 - a failed post-grant verification revokes and a denied revoke waits for owned backend shutdown
+  ---
+  duration_ms: 5.6559
+  type: 'test'
+  ...
+# Subtest: existing request acknowledgement is accepted without a new authorization capability
+ok 71 - existing request acknowledgement is accepted without a new authorization capability
+  ---
+  duration_ms: 0.598
+  type: 'test'
+  ...
+# Subtest: a late authorization on a replaced backend revokes the old session only
+ok 72 - a late authorization on a replaced backend revokes the old session only
+  ---
+  duration_ms: 1.3658
+  type: 'test'
+  ...
+# Subtest: failed post-grant verification plus a malformed revoke ACK closes the captured backend
+ok 73 - failed post-grant verification plus a malformed revoke ACK closes the captured backend
+  ---
+  duration_ms: 0.5066
+  type: 'test'
+  ...
+# Subtest: approval creates one isolated modal and only its exact main frame can read or explicitly decide
+ok 74 - approval creates one isolated modal and only its exact main frame can read or explicitly decide
+  ---
+  duration_ms: 17.4495
+  type: 'test'
+  ...
+# Subtest: approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision
+ok 75 - approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision
+  ---
+  duration_ms: 5.0563
+  type: 'test'
+  ...
+# Subtest: approval stale guard, parent close, Escape and bounded timeout cancel without a decision
+ok 76 - approval stale guard, parent close, Escape and bounded timeout cancel without a decision
+  ---
+  duration_ms: 8.7605
+  type: 'test'
+  ...
+# Subtest: approval default cancel focus preserves the initial top viewport
+ok 77 - approval default cancel focus preserves the initial top viewport
+  ---
+  duration_ms: 5.6007
+  type: 'test'
+  ...
+# Subtest: approval page renders full untrusted text as text and defaults focus to cancel
+ok 78 - approval page renders full untrusted text as text and defaults focus to cancel
+  ---
+  duration_ms: 2.4029
+  type: 'test'
+  ...
+# Subtest: approval page never confirms while loading and explicit confirm is sent only once
+ok 79 - approval page never confirms while loading and explicit confirm is sent only once
+  ---
+  duration_ms: 2.1273
+  type: 'test'
+  ...
+# Subtest: approval preload exposes only two dedicated calls and refuses truthy decision values
+ok 80 - approval preload exposes only two dedicated calls and refuses truthy decision values
+  ---
+  duration_ms: 2.6176
+  type: 'test'
+  ...
+# Subtest: approval still settles cancellation if optional session cleanup fails
+ok 81 - approval still settles cancellation if optional session cleanup fails
+  ---
+  duration_ms: 3.1652
+  type: 'test'
+  ...
+# Subtest: approval validates the display boundary and admits the full 65536-byte text without truncation
+ok 82 - approval validates the display boundary and admits the full 65536-byte text without truncation
+  ---
+  duration_ms: 4.2348
+  type: 'test'
+  ...
+# Subtest: approval blocks navigation, all external requests and cancels a crashed renderer
+ok 83 - approval blocks navigation, all external requests and cancels a crashed renderer
+  ---
+  duration_ms: 3.0219
+  type: 'test'
+  ...
+# Subtest: approval page loading failure and page departure never enable or dispatch confirmation
+ok 84 - approval page loading failure and page departure never enable or dispatch confirmation
+  ---
+  duration_ms: 3.2233
+  type: 'test'
+  ...
+# Subtest: approval presents optional Judge separately and accepts only the displayed exact selection
+ok 85 - approval presents optional Judge separately and accepts only the displayed exact selection
+  ---
+  duration_ms: 4.3124
+  type: 'test'
+  ...
+# Subtest: unavailable Judge cannot be forged as selected and cancellation remains independent
+ok 86 - unavailable Judge cannot be forged as selected and cancellation remains independent
+  ---
+  duration_ms: 3.78
+  type: 'test'
+  ...
+# Subtest: Judge display schema rejects missing fields, misleading budgets and surplus configuration
+ok 87 - Judge display schema rejects missing fields, misleading budgets and surplus configuration
+  ---
+  duration_ms: 5.4321
+  type: 'test'
+  ...
+# Subtest: legacy display cannot accept a new Judge selection and successive windows keep independent choices
+ok 88 - legacy display cannot accept a new Judge selection and successive windows keep independent choices
+  ---
+  duration_ms: 2.0016
+  type: 'test'
+  ...
+# Subtest: Judge page starts unselected, discloses the separate recipient and exact budget, and returns explicit choices
+ok 89 - Judge page starts unselected, discloses the separate recipient and exact budget, and returns explicit choices
+  ---
+  duration_ms: 3.2338
+  type: 'test'
+  ...
+# Subtest: unavailable Judge remains unselected and disabled without blocking main confirmation
+ok 90 - unavailable Judge remains unselected and disabled without blocking main confirmation
+  ---
+  duration_ms: 1.6792
+  type: 'test'
+  ...
+# Subtest: malformed or late Judge display never enables confirmation or restores a selection
+ok 91 - malformed or late Judge display never enables confirmation or restores a selection
+  ---
+  duration_ms: 5.5265
+  type: 'test'
+  ...
+# Subtest: preload forwards only booleans or exact Main and Judge selections
+ok 92 - preload forwards only booleans or exact Main and Judge selections
+  ---
+  duration_ms: 1.7392
+  type: 'test'
+  ...
+# Subtest: a displayed Judge choice cannot survive a stale guard, Escape or a later window
+ok 93 - a displayed Judge choice cannot survive a stale guard, Escape or a later window
+  ---
+  duration_ms: 6.2201
+  type: 'test'
+  ...
+# Subtest: missing Judge display keeps legacy choice and a rejected approval cannot resend either service
+ok 94 - missing Judge display keeps legacy choice and a rejected approval cannot resend either service
+  ---
+  duration_ms: 3.0433
+  type: 'test'
+  ...
+# Subtest: context approval validates the six-key display, sizes the taller window and keeps a boolean decision
+ok 95 - context approval validates the six-key display, sizes the taller window and keeps a boolean decision
+  ---
+  duration_ms: 2.3833
+  type: 'test'
+  ...
+# Subtest: context display schema rejects malformed sources and surplus keys before any window opens
+ok 96 - context display schema rejects malformed sources and surplus keys before any window opens
+  ---
+  duration_ms: 1.6791
+  type: 'test'
+  ...
+# Subtest: context page lists every saved passage as text, rewrites the copy and confirms with a plain boolean
+ok 97 - context page lists every saved passage as text, rewrites the copy and confirms with a plain boolean
+  ---
+  duration_ms: 3.1215
+  type: 'test'
+  ...
+# Subtest: malformed or late context display never enables confirmation
+ok 98 - malformed or late context display never enables confirmation
+  ---
+  duration_ms: 7.9122
+  type: 'test'
+  ...
+# Subtest: only trusted saved content and fixed model cost reach confirmation and one authorization
+ok 99 - only trusted saved content and fixed model cost reach confirmation and one authorization
+  ---
+  duration_ms: 61.8341
+  type: 'test'
+  ...
+# Subtest: cancel leaves no authorization and no second HTTP snapshot
+ok 100 - cancel leaves no authorization and no second HTTP snapshot
+  ---
+  duration_ms: 8.3929
+  type: 'test'
+  ...
+# Subtest: renderer-selected budget, malformed scope and other displayed conversations are refused before reads
+ok 101 - renderer-selected budget, malformed scope and other displayed conversations are refused before reads
+  ---
+  duration_ms: 2.7219
+  type: 'test'
+  ...
+# Subtest: only an exact numeric owned loopback origin can receive a session cookie
+ok 102 - only an exact numeric owned loopback origin can receive a session cookie
+  ---
+  duration_ms: 2.3011
+  type: 'test'
+  ...
+# Subtest: all scope fields and composer revisions are checked independently of the content digest
+ok 103 - all scope fields and composer revisions are checked independently of the content digest
+  ---
+  duration_ms: 36.6098
+  type: 'test'
+  ...
+# Subtest: unapproved capability cannot hide selected attachments or a busy run
+ok 104 - unapproved capability cannot hide selected attachments or a busy run
+  ---
+  duration_ms: 13.3107
+  type: 'test'
+  ...
+# Subtest: materials and capability scope mismatches cannot reach confirmation
+ok 105 - materials and capability scope mismatches cannot reach confirmation
+  ---
+  duration_ms: 9.1746
+  type: 'test'
+  ...
+# Subtest: changed saved content, composer or materials after confirmation never authorizes
+ok 106 - changed saved content, composer or materials after confirmation never authorizes
+  ---
+  duration_ms: 23.915
+  type: 'test'
+  ...
+# Subtest: ambiguous or target-specific cookies are rejected without authorization
+ok 107 - ambiguous or target-specific cookies are rejected without authorization
+  ---
+  duration_ms: 2.9798
+  type: 'test'
+  ...
+# Subtest: a replaced session cookie after confirmation fails before authorization
+ok 108 - a replaced session cookie after confirmation fails before authorization
+  ---
+  duration_ms: 6.5258
+  type: 'test'
+  ...
+# Subtest: a cookie change after authorized ACK revokes the captured session
+ok 109 - a cookie change after authorized ACK revokes the captured session
+  ---
+  duration_ms: 9.2159
+  type: 'test'
+  ...
+# Subtest: shared busy refuses duplicate clicks and wait includes the pending confirmation
+ok 110 - shared busy refuses duplicate clicks and wait includes the pending confirmation
+  ---
+  duration_ms: 6.1021
+  type: 'test'
+  ...
+# Subtest: document change during confirmation cannot authorize even if the window returns true
+ok 111 - document change during confirmation cannot authorize even if the window returns true
+  ---
+  duration_ms: 5.9021
+  type: 'test'
+  ...
+# Subtest: redirects, oversized bodies and malformed UTF8 are rejected as fixed errors
+ok 112 - redirects, oversized bodies and malformed UTF8 are rejected as fixed errors
+  ---
+  duration_ms: 18.9122
+  type: 'test'
+  ...
+# Subtest: repeated confirmation keeps the same request and budget and accepts an existing receipt
+ok 113 - repeated confirmation keeps the same request and budget and accepts an existing receipt
+  ---
+  duration_ms: 17.7152
+  type: 'test'
+  ...
+# Subtest: exhausted previous approval permits a new explicit one-call confirmation
+ok 114 - exhausted previous approval permits a new explicit one-call confirmation
+  ---
+  duration_ms: 9.8789
+  type: 'test'
+  ...
+# Subtest: a stalled owned HTTP response times out with fixed output and releases the busy lock
+ok 115 - a stalled owned HTTP response times out with fixed output and releases the busy lock
+  ---
+  duration_ms: 5006.1627
+  type: 'test'
+  ...
+# Subtest: HTTP permission denial and malformed JSON never forward server error text to the renderer
+ok 116 - HTTP permission denial and malformed JSON never forward server error text to the renderer
+  ---
+  duration_ms: 8.7257
+  type: 'test'
+  ...
+# Subtest: missing cookie and a cookie with header delimiters are refused before any request
+ok 117 - missing cookie and a cookie with header delimiters are refused before any request
+  ---
+  duration_ms: 0.9076
+  type: 'test'
+  ...
+# Subtest: a changed context identity cannot reuse the same guard function to approve
+ok 118 - a changed context identity cannot reuse the same guard function to approve
+  ---
+  duration_ms: 4.1364
+  type: 'test'
+  ...
+# Subtest: judge without trusted budget is displayed unavailable and does not prevent main-only consent
+ok 119 - judge without trusted budget is displayed unavailable and does not prevent main-only consent
+  ---
+  duration_ms: 5.7675
+  type: 'test'
+  ...
+# Subtest: separately selected judge uses the same complete draft and request with its own version and budget
+ok 120 - separately selected judge uses the same complete draft and request with its own version and budget
+  ---
+  duration_ms: 5.3271
+  type: 'test'
+  ...
+# Subtest: declining available optional judge grants only the main model
+ok 121 - declining available optional judge grants only the main model
+  ---
+  duration_ms: 7.107
+  type: 'test'
+  ...
+# Subtest: forged auxiliary consent, boolean expansion and extra choice fields never authorize
+ok 122 - forged auxiliary consent, boolean expansion and extra choice fields never authorize
+  ---
+  duration_ms: 15.2465
+  type: 'test'
+  ...
+# Subtest: known auxiliary refusal preserves the separately authorized main flow
+ok 123 - known auxiliary refusal preserves the separately authorized main flow
+  ---
+  duration_ms: 5.354
+  type: 'test'
+  ...
+# Subtest: unknown auxiliary ACK stops its captured backend and does not claim a successful main send
+ok 124 - unknown auxiliary ACK stops its captured backend and does not claim a successful main send
+  ---
+  duration_ms: 6.0357
+  type: 'test'
+  ...
+# Subtest: cookie changed after auxiliary grant withdraws both captured grants
+ok 125 - cookie changed after auxiliary grant withdraws both captured grants
+  ---
+  duration_ms: 6.7722
+  type: 'test'
+  ...
+# Subtest: main denial never grants the auxiliary and changed draft never grants either
+ok 126 - main denial never grants the auxiliary and changed draft never grants either
+  ---
+  duration_ms: 9.8908
+  type: 'test'
+  ...
+# Subtest: failure after the inner lease closes stops only the captured backend and waits for cleanup
+ok 127 - failure after the inner lease closes stops only the captured backend and waits for cleanup
+  ---
+  duration_ms: 6.6908
+  type: 'test'
+  ...
+# Subtest: cancelling the combined window neither grants nor leaves optional approval locked
+ok 128 - cancelling the combined window neither grants nor leaves optional approval locked
+  ---
+  duration_ms: 7.3088
+  type: 'test'
+  ...
+# Subtest: assistant model status is only served to an allowed page and validated
+ok 129 - assistant model status is only served to an allowed page and validated
+  ---
+  duration_ms: 2.4925
+  type: 'test'
+  ...
+# Subtest: assistant model switch toggles the two known models and persists only on success
+ok 130 - assistant model switch toggles the two known models and persists only on success
+  ---
+  duration_ms: 0.5882
+  type: 'test'
+  ...
+# Subtest: assistant model switch refuses strangers, the unconfigured and failed configures
+ok 131 - assistant model switch refuses strangers, the unconfigured and failed configures
+  ---
+  duration_ms: 0.7586
+  type: 'test'
+  ...
+# Subtest: startup auto-configure restores only a persisted known choice and never throws
+ok 132 - startup auto-configure restores only a persisted known choice and never throws
+  ---
+  duration_ms: 0.6
+  type: 'test'
+  ...
+# Subtest: a valid authorize_context command is framed and answered with the fixed statuses
+ok 133 - a valid authorize_context command is framed and answered with the fixed statuses
+  ---
+  duration_ms: 4.7399
+  type: 'test'
+  ...
+# Subtest: authorize_context missing-max-rounds is rejected before writing or consuming a sequence
+ok 134 - authorize_context missing-max-rounds is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 1.4997
+  type: 'test'
+  ...
+# Subtest: authorize_context multi-round-not-this-slice is rejected before writing or consuming a sequence
+ok 135 - authorize_context multi-round-not-this-slice is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.6021
+  type: 'test'
+  ...
+# Subtest: authorize_context v2-format-not-this-slice is rejected before writing or consuming a sequence
+ok 136 - authorize_context v2-format-not-this-slice is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.4652
+  type: 'test'
+  ...
+# Subtest: authorize_context template-mismatch is rejected before writing or consuming a sequence
+ok 137 - authorize_context template-mismatch is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.8434
+  type: 'test'
+  ...
+# Subtest: authorize_context extra-payload-key is rejected before writing or consuming a sequence
+ok 138 - authorize_context extra-payload-key is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.6092
+  type: 'test'
+  ...
+# Subtest: authorize_context extra-basis-key is rejected before writing or consuming a sequence
+ok 139 - authorize_context extra-basis-key is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.4156
+  type: 'test'
+  ...
+# Subtest: authorize_context bad-digest is rejected before writing or consuming a sequence
+ok 140 - authorize_context bad-digest is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.6204
+  type: 'test'
+  ...
+# Subtest: authorize_context empty-bindings is rejected before writing or consuming a sequence
+ok 141 - authorize_context empty-bindings is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.6579
+  type: 'test'
+  ...
+# Subtest: authorize_context ninth-binding is rejected before writing or consuming a sequence
+ok 142 - authorize_context ninth-binding is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.6376
+  type: 'test'
+  ...
+# Subtest: authorize_context duplicate-binding is rejected before writing or consuming a sequence
+ok 143 - authorize_context duplicate-binding is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.4546
+  type: 'test'
+  ...
+# Subtest: authorize_context binding-extra-key is rejected before writing or consuming a sequence
+ok 144 - authorize_context binding-extra-key is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.3091
+  type: 'test'
+  ...
+# Subtest: authorize_context bad-citation-id is rejected before writing or consuming a sequence
+ok 145 - authorize_context bad-citation-id is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.3797
+  type: 'test'
+  ...
+# Subtest: authorize_context bad-config-version is rejected before writing or consuming a sequence
+ok 146 - authorize_context bad-config-version is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.2985
+  type: 'test'
+  ...
+# Subtest: authorize_context overlong-validity is rejected before writing or consuming a sequence
+ok 147 - authorize_context overlong-validity is rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.4385
+  type: 'test'
+  ...
+# Subtest: two distinct citations in order are accepted
+ok 148 - two distinct citations in order are accepted
+  ---
+  duration_ms: 0.5468
+  type: 'test'
+  ...
+# Subtest: trusted backend configures and disables through one owned child without exposing protocol credentials
+ok 149 - trusted backend configures and disables through one owned child without exposing protocol credentials
+  ---
+  duration_ms: 170.7936
+  type: 'test'
+  ...
+# Subtest: legacy readiness still starts but model control remains unavailable
+ok 150 - legacy readiness still starts but model control remains unavailable
+  ---
+  duration_ms: 143.7813
+  type: 'test'
+  ...
+# Subtest: an owner stopped before startup cannot create a child or leave startup pending
+ok 151 - an owner stopped before startup cannot create a child or leave startup pending
+  ---
+  duration_ms: 0.6327
+  type: 'test'
+  ...
+# Subtest: synchronous process setup errors never expose their input or leave a startup timer
+ok 152 - synchronous process setup errors never expose their input or leave a startup timer
+  ---
+  duration_ms: 3.5356
+  type: 'test'
+  ...
+# Subtest: fragmented child pipe frames are reconstructed through their final newline
+ok 153 - fragmented child pipe frames are reconstructed through their final newline
+  ---
+  duration_ms: 120.7806
+  type: 'test'
+  ...
+# Subtest: a malformed second frame in the readiness chunk rejects startup
+ok 154 - a malformed second frame in the readiness chunk rejects startup
+  ---
+  duration_ms: 119.6193
+  type: 'test'
+  ...
+# Subtest: bad-nonce irreversibly closes the owned child and reports only one fixed failure
+ok 155 - bad-nonce irreversibly closes the owned child and reports only one fixed failure
+  ---
+  duration_ms: 117.3184
+  type: 'test'
+  ...
+# Subtest: partial-result irreversibly closes the owned child and reports only one fixed failure
+ok 156 - partial-result irreversibly closes the owned child and reports only one fixed failure
+  ---
+  duration_ms: 116.2268
+  type: 'test'
+  ...
+# Subtest: normal stop cancels pending control, permits EOF exit and does not announce failure
+ok 157 - normal stop cancels pending control, permits EOF exit and does not announce failure
+  ---
+  duration_ms: 120.2412
+  type: 'test'
+  ...
+# Subtest: stdout system errors stay inside the fixed failure boundary
+ok 158 - stdout system errors stay inside the fixed failure boundary
+  ---
+  duration_ms: 114.599
+  type: 'test'
+  ...
+# Subtest: stderr system errors stay inside the fixed failure boundary
+ok 159 - stderr system errors stay inside the fixed failure boundary
+  ---
+  duration_ms: 118.6823
+  type: 'test'
+  ...
+# Subtest: commands are serialized once, busy calls are rejected without allocating a sequence
+ok 160 - commands are serialized once, busy calls are rejected without allocating a sequence
+  ---
+  duration_ms: 0.6419
+  type: 'test'
+  ...
+# Subtest: business denials expose only fixed codes and do not poison the control pipe
+ok 161 - business denials expose only fixed codes and do not poison the control pipe
+  ---
+  duration_ms: 0.3848
+  type: 'test'
+  ...
+# Subtest: existing is an authorization-only success status
+ok 162 - existing is an authorization-only success status
+  ---
+  duration_ms: 0.1956
+  type: 'test'
+  ...
+# Subtest: wrong nonce rejects the pending command with a fixed fatal error
+ok 163 - wrong nonce rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2674
+  type: 'test'
+  ...
+# Subtest: future sequence rejects the pending command with a fixed fatal error
+ok 164 - future sequence rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2426
+  type: 'test'
+  ...
+# Subtest: unsafe sequence rejects the pending command with a fixed fatal error
+ok 165 - unsafe sequence rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1917
+  type: 'test'
+  ...
+# Subtest: wrong operation status rejects the pending command with a fixed fatal error
+ok 166 - wrong operation status rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2312
+  type: 'test'
+  ...
+# Subtest: unknown field rejects the pending command with a fixed fatal error
+ok 167 - unknown field rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.209
+  type: 'test'
+  ...
+# Subtest: wrong protocol rejects the pending command with a fixed fatal error
+ok 168 - wrong protocol rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2909
+  type: 'test'
+  ...
+# Subtest: duplicate key rejects the pending command with a fixed fatal error
+ok 169 - duplicate key rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1869
+  type: 'test'
+  ...
+# Subtest: noncanonical number rejects the pending command with a fixed fatal error
+ok 170 - noncanonical number rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.175
+  type: 'test'
+  ...
+# Subtest: extra whitespace rejects the pending command with a fixed fatal error
+ok 171 - extra whitespace rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2394
+  type: 'test'
+  ...
+# Subtest: invalid UTF8 rejects the pending command with a fixed fatal error
+ok 172 - invalid UTF8 rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1942
+  type: 'test'
+  ...
+# Subtest: UTF8 BOM rejects the pending command with a fixed fatal error
+ok 173 - UTF8 BOM rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.23
+  type: 'test'
+  ...
+# Subtest: CRLF rejects the pending command with a fixed fatal error
+ok 174 - CRLF rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.209
+  type: 'test'
+  ...
+# Subtest: extra empty frame rejects the pending command with a fixed fatal error
+ok 175 - extra empty frame rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.2188
+  type: 'test'
+  ...
+# Subtest: oversized incomplete frame rejects the pending command with a fixed fatal error
+ok 176 - oversized incomplete frame rejects the pending command with a fixed fatal error
+  ---
+  duration_ms: 0.1465
+  type: 'test'
+  ...
+# Subtest: every complete frame is handled, including a duplicate ack in the same buffer
+ok 177 - every complete frame is handled, including a duplicate ack in the same buffer
+  ---
+  duration_ms: 0.2746
+  type: 'test'
+  ...
+# Subtest: timeout and pipe-write failure are terminal and never retry a secret-bearing command
+ok 178 - timeout and pipe-write failure are terminal and never retry a secret-bearing command
+  ---
+  duration_ms: 18.2328
+  type: 'test'
+  ...
+# Subtest: invalid command inputs and UTF8 byte overflow are rejected before writing or consuming a sequence
+ok 179 - invalid command inputs and UTF8 byte overflow are rejected before writing or consuming a sequence
+  ---
+  duration_ms: 0.4901
+  type: 'test'
+  ...
+# Subtest: trusted secret consumer receives plaintext once but its returned value is never exposed
+ok 180 - trusted secret consumer receives plaintext once but its returned value is never exposed
+  ---
+  duration_ms: 29.5377
+  type: 'test'
+  ...
+# Subtest: missing credentials and invalid consumers never invoke a callback
+ok 181 - missing credentials and invalid consumers never invoke a callback
+  ---
+  duration_ms: 22.5628
+  type: 'test'
+  ...
+# Subtest: unavailable protection, corrupt bytes and rotation requirements block trusted consumption
+ok 182 - unavailable protection, corrupt bytes and rotation requirements block trusted consumption
+  ---
+  duration_ms: 26.9141
+  type: 'test'
+  ...
+# Subtest: a changed path during decrypt prevents the callback from receiving stale plaintext
+ok 183 - a changed path during decrypt prevents the callback from receiving stale plaintext
+  ---
+  duration_ms: 18.6791
+  type: 'test'
+  ...
+# Subtest: linked credentials are not decrypted or handed to a trusted callback
+ok 184 - linked credentials are not decrypted or handed to a trusted callback
+  ---
+  duration_ms: 20.861
+  type: 'test'
+  ...
+# Subtest: trusted consumption occupies the existing serial queue and drain until its callback settles
+ok 185 - trusted consumption occupies the existing serial queue and drain until its callback settles
+  ---
+  duration_ms: 28.6092
+  type: 'test'
+  ...
+# Subtest: consumer exceptions never expose plaintext and do not poison later store operations
+ok 186 - consumer exceptions never expose plaintext and do not poison later store operations
+  ---
+  duration_ms: 26.7398
+  type: 'test'
+  ...
+# Subtest: empty, save, restart, replace and remove expose only status and persist only ciphertext
+ok 187 - empty, save, restart, replace and remove expose only status and persist only ciphertext
+  ---
+  duration_ms: 49.5285
+  type: 'test'
+  ...
+# Subtest: save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext
+ok 188 - save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext
+  ---
+  duration_ms: 58.0338
+  type: 'test'
+  ...
+# Subtest: only Windows and all available asynchronous protection methods permit status and save
+ok 189 - only Windows and all available asynchronous protection methods permit status and save
+  ---
+  duration_ms: 7.7809
+  type: 'test'
+  ...
+# Subtest: status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors
+ok 190 - status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors
+  ---
+  duration_ms: 34.8937
+  type: 'test'
+  ...
+# Subtest: status validates actual decrypted data and reports rotation without rewriting stored bytes
+ok 191 - status validates actual decrypted data and reports rotation without rewriting stored bytes
+  ---
+  duration_ms: 44.0786
+  type: 'test'
+  ...
+# Subtest: remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable
+ok 192 - remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable
+  ---
+  duration_ms: 18.7966
+  type: 'test'
+  ...
+# Subtest: invalid parent paths return a fixed result rather than throwing or creating files
+ok 193 - invalid parent paths return a fixed result rather than throwing or creating files
+  ---
+  duration_ms: 5.3489
+  type: 'test'
+  ...
+# Subtest: a junction ancestor is rejected for every operation and the linked directory remains untouched
+ok 194 - a junction ancestor is rejected for every operation and the linked directory remains untouched
+  ---
+  duration_ms: 12.8486
+  type: 'test'
+  ...
+# Subtest: the credential directory cannot be a junction, dangling junction or ordinary file
+ok 195 - the credential directory cannot be a junction, dangling junction or ordinary file
+  ---
+  duration_ms: 155.3934
+  type: 'test'
+  ...
+# Subtest: credential symbolic links including dangling links are never read, replaced or removed
+ok 196 - credential symbolic links including dangling links are never read, replaced or removed
+  ---
+  duration_ms: 137.8225
+  type: 'test'
+  ...
+# Subtest: credential hard links and directories are rejected without touching either target
+ok 197 - credential hard links and directories are rejected without touching either target
+  ---
+  duration_ms: 16.2623
+  type: 'test'
+  ...
+# Subtest: a directory replaced by a junction during asynchronous encryption cannot redirect the write
+ok 198 - a directory replaced by a junction during asynchronous encryption cannot redirect the write
+  ---
+  duration_ms: 24.8014
+  type: 'test'
+  ...
+# Subtest: malformed encryption results and rejected encryption preserve old ciphertext and return a fixed error
+ok 199 - malformed encryption results and rejected encryption preserve old ciphertext and return a fixed error
+  ---
+  duration_ms: 24.4899
+  type: 'test'
+  ...
+# Subtest: flush or atomic replacement failures preserve old ciphertext and remove only the temporary ciphertext
+ok 200 - flush or atomic replacement failures preserve old ciphertext and remove only the temporary ciphertext
+  ---
+  duration_ms: 35.488
+  type: 'test'
+  ...
+# Subtest: status, save and remove share a serial queue and drain waits for already accepted operations
+ok 201 - status, save and remove share a serial queue and drain waits for already accepted operations
+  ---
+  duration_ms: 38.0881
+  type: 'test'
+  ...
+# Subtest: a failed operation does not poison the queue or prevent a later safe removal
+ok 202 - a failed operation does not poison the queue or prevent a later safe removal
+  ---
+  duration_ms: 19.4451
+  type: 'test'
+  ...
+# Subtest: status checks current file identity again after decrypting
+ok 203 - status checks current file identity again after decrypting
+  ---
+  duration_ms: 19.789
+  type: 'test'
+  ...
+# Subtest: oversized ciphertext is rejected before reading or decrypting it
+ok 204 - oversized ciphertext is rejected before reading or decrypting it
+  ---
+  duration_ms: 12.1529
+  type: 'test'
+  ...
+# Subtest: filesystem failures are fixed results and never expose file paths or raw exception messages
+ok 205 - filesystem failures are fixed results and never expose file paths or raw exception messages
+  ---
+  duration_ms: 22.4646
+  type: 'test'
+  ...
+# Subtest: only fixed provider identities can construct a store without consulting storage or creating paths
+ok 206 - only fixed provider identities can construct a store without consulting storage or creating paths
+  ---
+  duration_ms: 2.4237
+  type: 'test'
+  ...
+# Subtest: TypeSafe has its own protected envelope, survives recreation and never returns callback data
+ok 207 - TypeSafe has its own protected envelope, survives recreation and never returns callback data
+  ---
+  duration_ms: 18.3275
+  type: 'test'
+  ...
+# Subtest: TypeSafe preserves accepted key boundaries and escapes without accepting an oversized or multiline key
+ok 208 - TypeSafe preserves accepted key boundaries and escapes without accepting an oversized or multiline key
+  ---
+  duration_ms: 37.2081
+  type: 'test'
+  ...
+# Subtest: legacy DeepSeek ciphertext remains readable only through its default or explicit store
+ok 209 - legacy DeepSeek ciphertext remains readable only through its default or explicit store
+  ---
+  duration_ms: 19.95
+  type: 'test'
+  ...
+# Subtest: copying a TypeSafe ciphertext into DeepSeek cannot expose an envelope as a main-model key
+ok 210 - copying a TypeSafe ciphertext into DeepSeek cannot expose an envelope as a main-model key
+  ---
+  duration_ms: 13.0794
+  type: 'test'
+  ...
+# Subtest: TypeSafe rejects foreign, malformed, duplicate and extra envelope fields without consuming or rewriting them
+ok 211 - TypeSafe rejects foreign, malformed, duplicate and extra envelope fields without consuming or rewriting them
+  ---
+  duration_ms: 47.9154
+  type: 'test'
+  ...
+# Subtest: TypeSafe save, replace and remove preserve DeepSeek and the reverse operations preserve TypeSafe
+ok 212 - TypeSafe save, replace and remove preserve DeepSeek and the reverse operations preserve TypeSafe
+  ---
+  duration_ms: 47.8145
+  type: 'test'
+  ...
+# Subtest: TypeSafe refuses unavailable system protection and rotation without consuming a key or touching DeepSeek
+ok 213 - TypeSafe refuses unavailable system protection and rotation without consuming a key or touching DeepSeek
+  ---
+  duration_ms: 29.2844
+  type: 'test'
+  ...
+# Subtest: TypeSafe replacement failure preserves both providers and leaves no temporary ciphertext
+ok 214 - TypeSafe replacement failure preserves both providers and leaves no temporary ciphertext
+  ---
+  duration_ms: 36.2403
+  type: 'test'
+  ...
+# Subtest: TypeSafe rejects a linked credential file without reading, replacing or removing its DeepSeek target
+ok 215 - TypeSafe rejects a linked credential file without reading, replacing or removing its DeepSeek target
+  ---
+  duration_ms: 149.3854
+  type: 'test'
+  ...
+# Subtest: declared desktop bundle includes standalone credential modules without new dependencies
+ok 216 - declared desktop bundle includes standalone credential modules without new dependencies
+  ---
+  duration_ms: 83.1946
+  type: 'test'
+  ...
+# Subtest: credential writes revoke current runtime before touching the protected store
+ok 217 - credential writes revoke current runtime before touching the protected store
+  ---
+  duration_ms: 2.8516
+  type: 'test'
+  ...
+# Subtest: trusted model selection configures only the fixed catalog and never grants sending
+ok 218 - trusted model selection configures only the fixed catalog and never grants sending
+  ---
+  duration_ms: 2.472
+  type: 'test'
+  ...
+# Subtest: second model uses bounded trusted configuration and projections omit private metadata
+ok 219 - second model uses bounded trusted configuration and projections omit private metadata
+  ---
+  duration_ms: 0.404
+  type: 'test'
+  ...
+# Subtest: arbitrary configuration is refused without consuming credentials and clears prior configuration
+ok 220 - arbitrary configuration is refused without consuming credentials and clears prior configuration
+  ---
+  duration_ms: 1.1611
+  type: 'test'
+  ...
+# Subtest: credential read failure cannot preserve a prior configured model
+ok 221 - credential read failure cannot preserve a prior configured model
+  ---
+  duration_ms: 0.4651
+  type: 'test'
+  ...
+# Subtest: consumer completion does not turn a rejected configuration ACK into success
+ok 222 - consumer completion does not turn a rejected configuration ACK into success
+  ---
+  duration_ms: 0.2873
+  type: 'test'
+  ...
+# Subtest: malformed success ACK closes the captured backend and never exposes its extra fields
+ok 223 - malformed success ACK closes the captured backend and never exposes its extra fields
+  ---
+  duration_ms: 0.4884
+  type: 'test'
+  ...
+# Subtest: health failure arriving with a valid ACK prevents configuration adoption
+ok 224 - health failure arriving with a valid ACK prevents configuration adoption
+  ---
+  duration_ms: 0.3931
+  type: 'test'
+  ...
+# Subtest: backend replacement while reading the credential prevents its handoff
+ok 225 - backend replacement while reading the credential prevents its handoff
+  ---
+  duration_ms: 9.1176
+  type: 'test'
+  ...
+# Subtest: late configuration ACK stops only the old backend after process replacement
+ok 226 - late configuration ACK stops only the old backend after process replacement
+  ---
+  duration_ms: 1.3728
+  type: 'test'
+  ...
+# Subtest: an obsolete document cannot adopt an ACK or invoke page failure handling
+ok 227 - an obsolete document cannot adopt an ACK or invoke page failure handling
+  ---
+  duration_ms: 0.7289
+  type: 'test'
+  ...
+# Subtest: runtime operations refuse overlapping mutations instead of queuing them
+ok 228 - runtime operations refuse overlapping mutations instead of queuing them
+  ---
+  duration_ms: 0.6794
+  type: 'test'
+  ...
+# Subtest: failed revocation waits for backend stop and forbids the credential write
+ok 229 - failed revocation waits for backend stop and forbids the credential write
+  ---
+  duration_ms: 1.1152
+  type: 'test'
+  ...
+# Subtest: a failed backend stop latches unsafe state even after the backend reference is cleared
+ok 230 - a failed backend stop latches unsafe state even after the backend reference is cleared
+  ---
+  duration_ms: 0.3148
+  type: 'test'
+  ...
+# Subtest: credential and runtime IPC share a busy lock while the captured document guard remains valid
+ok 231 - credential and runtime IPC share a busy lock while the captured document guard remains valid
+  ---
+  duration_ms: 1.4333
+  type: 'test'
+  ...
+# Subtest: document epoch is rechecked after revocation before any credential write
+ok 232 - document epoch is rechecked after revocation before any credential write
+  ---
+  duration_ms: 0.6334
+  type: 'test'
+  ...
+# Subtest: navigation before IPC work starts prevents all runtime and credential work
+ok 233 - navigation before IPC work starts prevents all runtime and credential work
+  ---
+  duration_ms: 0.3002
+  type: 'test'
+  ...
+# Subtest: runtime status neither consumes credentials nor preserves metadata across backend replacement
+ok 234 - runtime status neither consumes credentials nor preserves metadata across backend replacement
+  ---
+  duration_ms: 0.3213
+  type: 'test'
+  ...
+# Subtest: native model settings preserve the running backend and return to the prior trusted conversation
+ok 235 - native model settings preserve the running backend and return to the prior trusted conversation
+  ---
+  duration_ms: 38.679
+  type: 'test'
+  ...
+# Subtest: unsaved page rejection keeps its backend and does not enter settings
+ok 236 - unsaved page rejection keeps its backend and does not enter settings
+  ---
+  duration_ms: 17.2531
+  type: 'test'
+  ...
+# Subtest: backup still stops the owned backend and returning restores the persisted model choice
+ok 237 - backup still stops the owned backend and returning restores the persisted model choice
+  ---
+  duration_ms: 23.6313
+  type: 'test'
+  ...
+# Subtest: restored read-only workspace can inspect credentials but cannot configure a model
+ok 238 - restored read-only workspace can inspect credentials but cannot configure a model
+  ---
+  duration_ms: 22.3784
+  type: 'test'
+  ...
+# Subtest: new runtime IPC rejects ordinary HTTP pages and subframes
+ok 239 - new runtime IPC rejects ordinary HTTP pages and subframes
+  ---
+  duration_ms: 14.732
+  type: 'test'
+  ...
+# Subtest: resuming never loads an untrusted previous URL
+ok 240 - resuming never loads an untrusted previous URL
+  ---
+  duration_ms: 12.0028
+  type: 'test'
+  ...
+# Subtest: a failure from an old backend cannot replace the current page
+ok 241 - a failure from an old backend cannot replace the current page
+  ---
+  duration_ms: 18.4443
+  type: 'test'
+  ...
+# Subtest: renderer failure blocks credential replacement until the configured backend has stopped
+ok 242 - renderer failure blocks credential replacement until the configured backend has stopped
+  ---
+  duration_ms: 12.8511
+  type: 'test'
+  ...
+# Subtest: send confirmation context uses only the displayed conversation and owned main frame
+ok 243 - send confirmation context uses only the displayed conversation and owned main frame
+  ---
+  duration_ms: 10.0581
+  type: 'test'
+  ...
+# Subtest: restored workspaces and replaced backends cannot approve a send
+ok 244 - restored workspaces and replaced backends cannot approve a send
+  ---
+  duration_ms: 25.9953
+  type: 'test'
+  ...
+# Subtest: startup restores a persisted model choice and disable clears it for the next start
+ok 245 - startup restores a persisted model choice and disable clears it for the next start
+  ---
+  duration_ms: 15.9812
+  type: 'test'
+  ...
+# Subtest: assistant page reads and switches the configured model while other pages are refused
+ok 246 - assistant page reads and switches the configured model while other pages are refused
+  ---
+  duration_ms: 31.7504
+  type: 'test'
+  ...
+# Subtest: judge menu shares trusted lifecycle while main and judge operations remain separate
+ok 247 - judge menu shares trusted lifecycle while main and judge operations remain separate
+  ---
+  duration_ms: 15.6302
+  type: 'test'
+  ...
+# Subtest: judge config is unavailable in a restored read-only workspace
+ok 248 - judge config is unavailable in a restored read-only workspace
+  ---
+  duration_ms: 14.9843
+  type: 'test'
+  ...
+# Subtest: shared native settings busy lock prevents main credential writes during judge configuration
+ok 249 - shared native settings busy lock prevents main credential writes during judge configuration
+  ---
+  duration_ms: 11.895
+  type: 'test'
+  ...
+# Subtest: native menu enters a distinct settings mode and only returns protected credential status
+ok 250 - native menu enters a distinct settings mode and only returns protected credential status
+  ---
+  duration_ms: 24.96
+  type: 'test'
+  ...
+# Subtest: each credential IPC rejects other windows, subframes, backend pages and the wrong mode
+ok 251 - each credential IPC rejects other windows, subframes, backend pages and the wrong mode
+  ---
+  duration_ms: 7.041
+  type: 'test'
+  ...
+# Subtest: a pending status read also locks mutation and rechecks permission on the next call
+ok 252 - a pending status read also locks mutation and rechecks permission on the next call
+  ---
+  duration_ms: 9.9137
+  type: 'test'
+  ...
+# Subtest: pending status/save operations reject duplicate IPC and quit waits for the operation
+ok 253 - pending status/save operations reject duplicate IPC and quit waits for the operation
+  ---
+  duration_ms: 9.3542
+  type: 'test'
+  ...
+# Subtest: store failures and unexpected fields never escape through IPC
+ok 254 - store failures and unexpected fields never escape through IPC
+  ---
+  duration_ms: 6.5189
+  type: 'test'
+  ...
+# Subtest: preload exposes only explicit credential operations and package includes their modules
+ok 255 - preload exposes only explicit credential operations and package includes their modules
+  ---
+  duration_ms: 2.4347
+  type: 'test'
+  ...
+# Subtest: credential form saves once, clears input immediately and labels stored credentials without enabling model use
+ok 256 - credential form saves once, clears input immediately and labels stored credentials without enabling model use
+  ---
+  duration_ms: 8.6949
+  type: 'test'
+  ...
+# Subtest: credential errors clear inputs, hide raw errors and leaving discards delayed responses
+ok 257 - credential errors clear inputs, hide raw errors and leaving discards delayed responses
+  ---
+  duration_ms: 3.4647
+  type: 'test'
+  ...
+# Subtest: credential remove and return clear an unsubmitted replacement
+ok 258 - credential remove and return clear an unsubmitted replacement
+  ---
+  duration_ms: 3.1178
+  type: 'test'
+  ...
+# Subtest: unavailable settings can be checked again and reopening the same mode refreshes status
+ok 259 - unavailable settings can be checked again and reopening the same mode refreshes status
+  ---
+  duration_ms: 3.5647
+  type: 'test'
+  ...
+# Subtest: a late old settings reply cannot erase text entered after reopening settings
+ok 260 - a late old settings reply cannot erase text entered after reopening settings
+  ---
+  duration_ms: 3.366
+  type: 'test'
+  ...
+# Subtest: model page checks storage before runtime and distinguishes stored credentials from configuration
+ok 261 - model page checks storage before runtime and distinguishes stored credentials from configuration
+  ---
+  duration_ms: 3.8821
+  type: 'test'
+  ...
+# Subtest: model page configures only a fixed selected ID, serializes actions and can switch or disable
+ok 262 - model page configures only a fixed selected ID, serializes actions and can switch or disable
+  ---
+  duration_ms: 3.204
+  type: 'test'
+  ...
+# Subtest: model page hides stale runtime configuration while replacing credentials and reads back serially
+ok 263 - model page hides stale runtime configuration while replacing credentials and reads back serially
+  ---
+  duration_ms: 3.0061
+  type: 'test'
+  ...
+# Subtest: model page runtime failure is separate from stored credentials and a recheck can recover
+ok 264 - model page runtime failure is separate from stored credentials and a recheck can recover
+  ---
+  duration_ms: 2.9567
+  type: 'test'
+  ...
+# Subtest: model page discards delayed configuration after leaving without clearing the new page input
+ok 265 - model page discards delayed configuration after leaving without clearing the new page input
+  ---
+  duration_ms: 2.9614
+  type: 'test'
+  ...
+# Subtest: model page allows credential maintenance when runtime is unavailable and restart stays unconfigured
+ok 266 - model page allows credential maintenance when runtime is unavailable and restart stays unconfigured
+  ---
+  duration_ms: 3.8829
+  type: 'test'
+  ...
+# Subtest: model page rejects unknown model projection and never renders raw runtime errors
+ok 267 - model page rejects unknown model projection and never renders raw runtime errors
+  ---
+  duration_ms: 2.4761
+  type: 'test'
+  ...
+# Subtest: library selection recognizes existing catalog without creating or repairing files
+ok 268 - library selection recognizes existing catalog without creating or repairing files
+  ---
+  duration_ms: 14.1091
+  type: 'test'
+  ...
+# Subtest: only owned loopback origin and exact setup document are allowed
+ok 269 - only owned loopback origin and exact setup document are allowed
+  ---
+  duration_ms: 0.5228
+  type: 'test'
+  ...
+# Subtest: clipboard permits writing only from the owned main frame, never reading
+ok 270 - clipboard permits writing only from the owned main frame, never reading
+  ---
+  duration_ms: 0.279
+  type: 'test'
+  ...
+1..270
+# tests 270
+# suites 0
+# pass 270
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5583.7838

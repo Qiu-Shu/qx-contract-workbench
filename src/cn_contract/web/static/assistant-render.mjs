@@ -257,6 +257,15 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
         (byId('send').disabled?'当前发送不可用。':local?'发送后查询本机资料。':'发送后生成内部待核草稿。');
       input.placeholder=local?'输入关键词，例如：合成买卖纠纷':'例如：客户遇到了什么问题，需要我们帮忙处理什么……';
       byId('add-material').disabled=readonly || state.loading || ['saving','conflict','revoked'].includes(state.status);
+      const switcher=byId('switch-model'),desktopModel=state.desktopModel;
+      switcher.hidden=!desktopModel?.available;
+      if(desktopModel?.available){
+        switcher.disabled=readonly || state.loading || desktopModel.busy===true ||
+          ['saving','conflict','revoked'].includes(state.status);
+        switcher.textContent=desktopModel.busy===true?'正在切换模型…':
+          desktopModel.model==='deepseek-v4-pro'?'模型：DeepSeek V4 Pro':
+          desktopModel.model==='deepseek-flash'?'模型：DeepSeek Flash':'切换模型';
+      }
       drawContextPanel(state,readonly);
     },
     conversations(page,{append=false,selected=null,onSelect}={}) {

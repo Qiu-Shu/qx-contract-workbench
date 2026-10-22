@@ -181,3 +181,25 @@ test('generated paragraphs keep wrapping and preserve whitespace in the styleshe
   assert.match(css,/\.generation-text[^}]*white-space:\s*pre-wrap/s);
   assert.match(css,/\.generation-text[^}]*overflow-wrap:\s*anywhere/s);
 });
+
+test('model switch button follows the desktop bridge state and guards',t=>{
+  const f=fixture(t);
+  f.render.state(state());assert.equal(f.at('switch-model').hidden,true,'no bridge state stays hidden');
+  f.render.state(state({desktopModel:{available:true,busy:false,model:'deepseek-flash'}}));
+  assert.equal(f.at('switch-model').hidden,false);assert.equal(f.at('switch-model').disabled,false);
+  assert.equal(f.at('switch-model').textContent,'模型：DeepSeek Flash');
+  f.render.state(state({desktopModel:{available:true,busy:false,model:'deepseek-v4-pro'}}));
+  assert.equal(f.at('switch-model').textContent,'模型：DeepSeek V4 Pro');
+  f.render.state(state({desktopModel:{available:true,busy:false,model:null}}));
+  assert.equal(f.at('switch-model').textContent,'切换模型');
+  f.render.state(state({desktopModel:{available:true,busy:true,model:'deepseek-flash'}}));
+  assert.equal(f.at('switch-model').disabled,true);assert.equal(f.at('switch-model').textContent,'正在切换模型…');
+  f.render.state(state({desktopModel:{available:true,busy:false,model:'deepseek-flash'}}),true);
+  assert.equal(f.at('switch-model').disabled,true,'readonly pages never switch');
+});
+
+test('model switch button sits left of save-draft in the template',()=>{
+  const html=readFileSync(new URL('../src/cn_contract/web/templates/assistant.html',import.meta.url),'utf8');
+  const actions=html.slice(html.indexOf('class="save-actions"'),html.indexOf('id="send"'));
+  assert.ok(actions.indexOf('id="switch-model"')<actions.indexOf('id="save-draft"'));
+});

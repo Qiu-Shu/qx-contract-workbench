@@ -148,6 +148,46 @@ byId('refresh-run').addEventListener('click',()=>void (pendingRoute?open(pending
 byId('recover-generation').addEventListener('click',()=>void safely(()=>controller.refreshGeneration()));
 byId('preview-context').addEventListener('click',()=>void safely(()=>controller.previewContext()));
 byId('cancel-run').addEventListener('click',()=>void safely(()=>controller.cancel()));
+// Desktop model switch: a saved credential can flip Flash/V4 Pro in place.
+const desktopBridge=window.desktopAssistant;
+function setDesktopModel(next){controller.state.desktopModel=next;drawState(controller.state);}
+async function refreshModelInfo(){
+  if(typeof desktopBridge?.modelStatus!=='function')return;
+  try{
+    const result=await desktopBridge.modelStatus();
+    if(closed||!result?.ok)return;
+    const runtime=result.runtime;
+    setDesktopModel({available:true,busy:false,
+      model:runtime?.state==='configured'?runtime.model:null});
+  }catch{/* the button simply stays hidden */}
+}
+void refreshModelInfo();
+byId('switch-model').addEventListener('click',async()=>{
+  if(typeof desktopBridge?.modelSwitch!=='function'||!controller.state.desktopModel?.available)return;
+  setDesktopModel({...controller.state.desktopModel,busy:true});
+  const fail=code=>{
+    if(closed)return;
+    setDesktopModel({available:true,busy:false,model:controller.state.desktopModel?.model??null});
+    byId('generation-status').dataset.kind='error';
+    byId('generation-status').textContent=code==='UNCONFIGURED'
+      ?'尚未配置本次运行的模型。请从菜单打开“主模型设置”完成配置。'
+      :'模型切换未完成。请稍后重试，或从菜单打开“主模型设置”。';
+  };
+  try{
+    const result=await desktopBridge.modelSwitch();
+    if(closed)return;
+    if(result?.ok===true&&result.runtime?.state==='configured'){
+      setDesktopModel({available:true,busy:false,model:result.runtime.model});
+      await safely(()=>controller.refreshGeneration());
+    }else fail(result?.code);
+  }catch{fail();}
+});
+// Returning from the desktop settings page can change the model runtime;
+// re-check the saved draft's generation conditions on focus.
+window.addEventListener('focus',()=>{
+  if(!closed&&controller.state.id&&!controller.state.loading)
+    void safely(()=>controller.refreshGeneration());
+});
 for(const [id,choice] of [['keep-local','local'],['use-server','server']])
   byId(id).addEventListener('click',()=>void safely(()=>controller.resolveConflict(choice)));
 byId('nav-toggle').addEventListener('click',()=>{

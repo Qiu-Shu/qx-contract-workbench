@@ -7,12 +7,13 @@ const vm=require('node:vm');
 const {EventEmitter}=require('node:events');
 const desktop=path.resolve(__dirname,'..');
 
-async function fixture(t,{recovered=false}={}) {
+async function fixture(t,{recovered=false,model}={}) {
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'qx-model-navigation-'));
   t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
   const workspace=recovered?'recovered/00000000-0000-4000-8000-000000000001':'main';
   fs.mkdirSync(path.join(root,'workspaces',workspace),{recursive:true});
-  if(recovered)fs.writeFileSync(path.join(root,'desktop-settings.json'),JSON.stringify({workspace}));
+  const initial={...(recovered?{workspace}:{}),...(model?{model}:{})};
+  if(Object.keys(initial).length)fs.writeFileSync(path.join(root,'desktop-settings.json'),JSON.stringify(initial));
   const handlers=new Map(),states=[],backends=[];let ready,win,menu,approvalOptions;
   const store={writes:0,async save(){this.writes++;return {status:'saved'};},
     async status(){return {status:'saved'};},async withSecret(fn){await fn('synthetic-settings-secret');return {status:'saved'};},async drain(){}};
@@ -67,13 +68,16 @@ test('unsaved page rejection keeps its backend and does not enter settings',asyn
   assert.equal(f.win.url,before);assert.equal(f.states.at(-1).mode,'ready');assert.equal(f.backends[0].stops,0);
 });
 
-test('backup still stops the owned backend and returning starts an unconfigured process',async t=>{
+test('backup still stops the owned backend and returning restores the persisted model choice',async t=>{
   const f=await fixture(t);await f.menu('主模型设置…');
   assert.equal((await f.handlers.get('desktop:model-configure')(f.event(),'deepseek-flash')).ok,true);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')).model,'deepseek-flash');
   await f.menu('备份案件资料…');assert.equal(f.backends[0].stops,1);assert.equal(f.states.at(-1).mode,'backup');
   assert.equal((await f.handlers.get('desktop:resume')(f.event())).ok,true);assert.equal(f.backends.length,2);
+  assert.equal(f.backends[1].configures,1,'the persisted choice is restored without reopening settings');
   await f.menu('主模型设置…');
-  assert.equal((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.state,'unconfigured');
+  const status=await f.handlers.get('desktop:model-runtime-status')(f.event());
+  assert.equal(status.runtime.state,'configured');assert.equal(status.runtime.model,'deepseek-flash');
 });
 
 test('restored read-only workspace can inspect credentials but cannot configure a model',async t=>{
@@ -124,8 +128,9 @@ test('renderer failure blocks credential replacement until the configured backen
   assert.equal(f.store.writes,1);
   assert.equal((await f.handlers.get('desktop:resume')(f.event())).ok,true);
   assert.equal(f.backends.length,2);
+  assert.equal(f.backends[1].configures,1,'the persisted choice is restored after a renderer failure');
   await f.menu('主模型设置…');
-  assert.equal((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.state,'unconfigured');
+  assert.equal((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.state,'configured');
 });
 
 test('send confirmation context uses only the displayed conversation and owned main frame',async t=>{
@@ -155,6 +160,41 @@ test('restored workspaces and replaced backends cannot approve a send',async t=>
   assert.notEqual(g.backends.at(-1),context.backend);
 });
 
+
+test('startup restores a persisted model choice and disable clears it for the next start',async t=>{
+  const f=await fixture(t,{model:'deepseek-v4-pro'});
+  assert.equal(f.backends[0].configures,1,'startup configures without opening settings');
+  await f.menu('主模型设置…');
+  const status=await f.handlers.get('desktop:model-runtime-status')(f.event());
+  assert.equal(status.runtime.state,'configured');assert.equal(status.runtime.model,'deepseek-v4-pro');
+  assert.equal((await f.handlers.get('desktop:model-disable')(f.event())).ok,true);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')).model,undefined);
+  await f.menu('重新打开工作台');
+  assert.equal(f.backends.length,2);assert.equal(f.backends[1].configures,0,'a cleared choice never auto-configures');
+  await f.menu('主模型设置…');
+  assert.equal((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.state,'unconfigured');
+});
+
+test('assistant page reads and switches the configured model while other pages are refused',async t=>{
+  const f=await fixture(t,{model:'deepseek-flash'});
+  const url='http://127.0.0.1:18001/assistant/00000000-0000-4000-8000-000000000003';
+  await f.win.loadURL(url);
+  assert.deepEqual(await f.handlers.get('desktop:assistant-model-status')(f.event()),
+    {ok:true,runtime:{state:'configured',model:'deepseek-flash'}});
+  const switched=await f.handlers.get('desktop:assistant-model-switch')(f.event());
+  assert.equal(switched.ok,true);assert.equal(switched.runtime.model,'deepseek-v4-pro');
+  assert.equal(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')).model,'deepseek-v4-pro');
+  const back=await f.handlers.get('desktop:assistant-model-switch')(f.event());
+  assert.equal(back.runtime.model,'deepseek-flash');
+  await f.win.loadURL('http://127.0.0.1:18001/login');
+  assert.equal((await f.handlers.get('desktop:assistant-model-status')(f.event())).ok,false,'login page');
+  await f.win.loadURL(url);
+  const subframe={sender:f.win.webContents,senderFrame:{url}};
+  assert.equal((await f.handlers.get('desktop:assistant-model-switch')(subframe)).ok,false,'subframe');
+  const g=await fixture(t,{recovered:true});
+  await g.win.loadURL('http://127.0.0.1:18001/assistant/00000000-0000-4000-8000-000000000003');
+  assert.equal((await g.handlers.get('desktop:assistant-model-status')(g.event())).ok,false,'recovered workspace');
+});
 
 test('judge menu shares trusted lifecycle while main and judge operations remain separate',async t=>{
   const f=await fixture(t);await f.menu('Jev 辅助设置…');

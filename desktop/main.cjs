@@ -10,6 +10,7 @@ const { registerModelSettings } = require('./model-settings.cjs');
 const { createModelSession } = require('./model-session.cjs');
 const { registerModelApproval } = require('./model-approval.cjs');
 const { createModelApprovalWindow } = require('./model-approval-window.cjs');
+const { registerAssistantModelBridge, autoConfigureModel } = require('./model-bridge.cjs');
 const { navigationAllowed, setupSenderAllowed, validLibraryRoot, clipboardWriteAllowed } = require('./policy.cjs');
 
 app.setName('群兴法律工作台验证版');
@@ -24,6 +25,7 @@ app.setPath('userData', dataParent);
 const setupURL = pathToFileURL(path.join(__dirname, 'setup.html')).href;
 const settingsPath = path.join(dataParent, 'desktop-settings.json');
 let win, backend, maintenance, modelSettings, modelApproval, approvalWindow, origin = '', stopping = false, busy = false;
+let mainModelSession = null;
 let settings = {}, state = {mode:'loading', message:'正在打开工作台…'};
 let documentEpoch=0, settingsReturn=null, activeBackend=null;
 function workspacePath(){return path.join(dataParent,'workspaces',settings.workspace||'main');}
@@ -93,7 +95,12 @@ async function startBackend(credentials = {}) {
     activeBackend={instance:owned,origin,workspace:settings.workspace||'main'};
     await win.loadURL(origin+'/login');
     if(activeBackend?.instance!==owned)return {ok:false};
-    setState({mode:'ready'}); return {ok:true};
+    setState({mode:'ready'});
+    // Owner-directed posture: a persisted model choice is restored into the
+    // process-local runtime automatically; the per-send native confirmation
+    // window is unchanged. Failure stays silent and leaves settings as fallback.
+    if (mainModelSession) await autoConfigureModel({settings, runtime:mainModelSession});
+    return {ok:true};
   } catch {
     if (backend) await backend.stop();
     await showError(); return {ok:false};
@@ -192,7 +199,8 @@ else {
         const info = fs.lstatSync(settingsPath);
         if (info.isSymbolicLink() || info.nlink !== 1 || info.size > 8192) throw new Error();
         const saved = JSON.parse(fs.readFileSync(settingsPath,'utf8'));
-        if (Object.keys(saved).some(k=>!['library_root','workspace'].includes(k)) || (saved.library_root && !path.isAbsolute(saved.library_root))
+        if (Object.keys(saved).some(k=>!['library_root','workspace','model'].includes(k)) || (saved.library_root && !path.isAbsolute(saved.library_root))
+            || (saved.model!==undefined && !['deepseek-flash','deepseek-v4-pro'].includes(saved.model))
             || (saved.workspace!==undefined && (typeof saved.workspace!=='string'||!/^main$|^recovered\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(saved.workspace)))) throw new Error();
         settings = saved;
       } catch { state = {mode:'error',message:'资料库设置无法读取。请保留资料目录并联系维护人员。'}; }
@@ -236,14 +244,33 @@ else {
     const sessionOptions={getBackend:()=>activeBackend?.instance===backend&&origin&&backend&&!backend.closing&&!activeBackend.workspace.startsWith('recovered/')?backend:null,
       onFailure:async owned=>{if(!stopping&&backend===owned)await showError(owned);}};
     const modelSession=createModelSession({store,...sessionOptions});
+    mainModelSession=modelSession;
+    const persistModel=model=>{try{saveSettings(model?{...settings,model}:(()=>{const next={...settings};delete next.model;return next;})());}catch{}};
+    // Persist the owner's model choice on settings-page success; only an explicit
+    // disable clears it (credential rotation keeps the choice for the next start).
+    const settingsRuntime=Object.freeze({...modelSession,
+      configure:(model,guard)=>modelSession.configure(model,guard).then(result=>{
+        if(result?.ok===true&&result.runtime?.state==='configured')persistModel(result.runtime.model);return result;}),
+      disable:guard=>modelSession.disable(guard).then(result=>{
+        if(result?.ok===true)persistModel(null);return result;})});
     const judgeStore=createModelCredentialStore({dataParent,safeStorage,platform:process.platform,provider:'typesafe'});
     const judgeSession=createModelSession({store:judgeStore,...sessionOptions,kind:'judge'});
     const settingsOptions={ipcMain,
       isAllowed:event=>!busy&&!stopping&&state.mode==='model-settings'&&isSetup(event),
       captureGuard:event=>{const epoch=documentEpoch;return ()=>epoch===documentEpoch&&!stopping&&state.mode==='model-settings'&&isSetup(event);},
       setBusy:value=>{busy=value;}};
-    const handlers=[registerModelSettings({...settingsOptions,store,runtime:modelSession}),
+    const handlers=[registerModelSettings({...settingsOptions,store,runtime:settingsRuntime}),
       registerModelSettings({...settingsOptions,store:judgeStore,runtime:judgeSession,kind:'judge'})];
+    // Assistant-page bridge: in-place model status and switch, main frame only.
+    const isAssistantPage=event=>{
+      const url=win&&!win.isDestroyed()?win.webContents.getURL():'';
+      return Boolean(!busy&&!stopping&&state.mode==='ready'&&origin&&url&&
+        (url===origin+'/assistant'||url.startsWith(origin+'/assistant/'))&&
+        event.sender===win.webContents&&event.senderFrame===win.webContents.mainFrame&&
+        event.senderFrame.url===url&&activeBackend?.instance===backend&&!backend.closing&&
+        !activeBackend.workspace.startsWith('recovered/'));
+    };
+    registerAssistantModelBridge({ipcMain,runtime:modelSession,isAllowed:isAssistantPage,persist:persistModel});
     modelSettings={wait:()=>Promise.allSettled(handlers.map(handler=>handler.wait()))};
     approvalWindow=createModelApprovalWindow({BrowserWindow,ipcMain,session});
     modelApproval=registerModelApproval({ipcMain,runtime:modelSession,judgeRuntime:judgeSession,

@@ -17,7 +17,7 @@ export function createDraftController(api, {
 } = {}) {
   const state = {id: null, view: null, text: '', savedText: '', skill: null,
     status: readonly ? 'readonly' : 'idle', error: null, conflict: null, dirty: false, loading: false,
-    materials: null, materialAction: null};
+    materials: null, materialAction: null, desktopModel: null};
   let epoch = 0, closed = false, channel = null, creating = null, pending = null, materialPending = null;
   let reading = false, paging = false, cancelling = false, generation = null, research = null, context = null;
 

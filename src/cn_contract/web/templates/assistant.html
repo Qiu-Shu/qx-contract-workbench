@@ -85,7 +85,7 @@
           <textarea id="composer" name="content" rows="4" maxlength="20000" placeholder="例如：客户遇到了什么问题，需要我们帮忙处理什么……" aria-describedby="input-help save-status"{% if readonly %} readonly{% endif %}></textarea>
           <div class="composer-actions">
             <button id="add-material" class="quiet-button" type="button" aria-expanded="false" aria-controls="material-picker"{% if readonly %} disabled{% endif %}>添加材料</button>
-            <div class="save-actions"><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="generation-note generation-status">发送</button></div>
+            <div class="save-actions"><button id="switch-model" type="button" hidden>切换模型</button><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="generation-note generation-status">发送</button></div>
           </div>
         </form>
         <section id="material-picker" class="material-picker" aria-label="添加本机 DOCX" hidden>

@@ -1,7 +1,9 @@
 const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('desktopAssistant',Object.freeze({
   authorizeGeneration:value=>ipcRenderer.invoke('desktop:approve-generation',value),
-  authorizeContext:value=>ipcRenderer.invoke('desktop:approve-context',value)
+  authorizeContext:value=>ipcRenderer.invoke('desktop:approve-context',value),
+  modelStatus:()=>ipcRenderer.invoke('desktop:assistant-model-status'),
+  modelSwitch:()=>ipcRenderer.invoke('desktop:assistant-model-switch')
 }));
 contextBridge.exposeInMainWorld('desktopSetup',Object.freeze({
   state:()=>ipcRenderer.invoke('desktop:state'),
