@@ -1,0 +1,81 @@
+{
+  "results": [
+    {
+      "name": "target",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-basis-20261023\\target_runner.py",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\pb-3451952d",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-basis-20261023\\target.xml"
+      ],
+      "started_utc": "2026-10-22T23:38:10.824473+00:00",
+      "exit_code": 2,
+      "seconds": 1.578,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "gate-1",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "cn_contract.cli",
+        "schema",
+        "--check"
+      ],
+      "started_utc": "2026-10-22T23:38:12.403154+00:00",
+      "exit_code": 0,
+      "seconds": 0.422
+    },
+    {
+      "name": "gate-2",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "scripts/verify_defaults.py"
+      ],
+      "started_utc": "2026-10-22T23:38:12.822500+00:00",
+      "exit_code": 0,
+      "seconds": 0.406
+    },
+    {
+      "name": "gate-3",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "started_utc": "2026-10-22T23:38:13.229637+00:00",
+      "exit_code": 0,
+      "seconds": 2.219
+    },
+    {
+      "name": "gate-4",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "started_utc": "2026-10-22T23:38:15.454790+00:00",
+      "exit_code": 0,
+      "seconds": 0.453
+    }
+  ],
+  "cause": "Unit and integration tests used the same module basename; renamed the integration file without product changes. Full original report remains local.",
+  "original_report_sha256": "37a7ec88f9804ef86c4380a8b13989ce422171bc68ba2978c230542a1581cdab"
+}

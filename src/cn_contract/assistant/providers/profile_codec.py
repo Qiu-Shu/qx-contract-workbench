@@ -33,10 +33,15 @@ def _validated(request):
 
 def build_request(request: d.MainProfileRequest, config: d.MainModelConfig) -> dict:
     request = _validated(request)
+    return _text_request(request.content, config)
+
+
+def _text_request(content, config):
+    """Shared with offline preparation; callers validate the current text."""
     config = configuration(config)
     # Identity, revisions and the stored archive stay on the server.
     body = {'model': config.model, 'messages': [{'role': 'system', 'content': _SYSTEM},
-        {'role': 'user', 'content': json_bytes({'content': request.content}).decode('utf-8')}],
+        {'role': 'user', 'content': json_bytes({'content': content}).decode('utf-8')}],
         'max_tokens': config.max_output_tokens, 'stream': False,
         'thinking': {'type': 'disabled'}, 'response_format': {'type': 'json_object'}}
     if len(json_bytes(body)) > config.max_input_bytes:

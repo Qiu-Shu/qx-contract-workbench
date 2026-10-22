@@ -112,3 +112,7 @@ tests/unit/test_judge_authorization_protocol.py -text whitespace=blank-at-eol,bl
 
 tests/unit/test_assistant_profile_codec.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/testing/profile-output/** -text -whitespace
+
+tests/unit/test_assistant_profile_preparation.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_assistant_profile_saved_preparation.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/testing/profile-basis/** -text -whitespace

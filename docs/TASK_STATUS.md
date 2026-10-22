@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-23 CH-07C2a离线发送准备完成：复用C1私有wire构建，basis绑定固定整理用途/handler、完整UTF-8请求/配置/模板摘要和本地档案基线/接待目标/修订/投影选择；prepare从实际saved run/message视图核对身份与保存前后版本。最终12文件380关联通过（54新增），0失败/错误/跳过，538输入稳定，四开发门exit0；Spec12、Standards9独立通过、0待修，旧DTO及C1字节保持兼容。合成service保存→prepare→合成响应解析实测通过，无模型/档案/接待写入。初始RED、测试同名收集冲突、两处开发夹具和独审长参数错误保留，不冒充产品失败或最终通过。本片没有新schema/native/registry/HTTP/自动保存；C2b须整体闭合用途许可、账本、固定钩子及迁移恢复，C3接档案侧栏。WorkBuddy本轮native_unavailable未派发，运行桌面、真实资料、安装版0.4.1不动；WIN-PATH-02仍开放，不重跑旧49分钟全套。GitHub同步以单独回执为准。[本片证据](testing/profile-basis/20261023/README.md)、[执行合同](plans/2026-10-23-profile-send-basis.md)。
+
 2026-10-23 CH-07C1产品与证据提交bcc5013e0b7ce66be7827d37a5b41da1f7802cbd已正常同步GitHub；远端SHA及4,331文件树一致，52新增不同blob扫描0命中。577关联通过、535固定输入、旧协议兼容与独立复核事实不变；本回执阶段只追加发布证据与导航修正，C2/C3及WIN-PATH-02仍未关闭。[同步回执](testing/GITHUB-PROFILE-OUTPUT-20261023.md)。
 
 2026-10-23 CH-07C1已实现独立的同次回答/当前文字档案提案协议，服务器填充出处并保持待核；默认关闭、有效回复后撤权保留用量。最终577关联Python通过，535输入稳定、四开发门通过；独审发现的数字日期隐式epoch及金额wire类型偏差已修复，Spec13和Standards8+4复验通过。旧324类DTO/既有方法、4组发送字节及20组响应保持兼容。此为协议/适配层，不代表自动建档已启用；C2仍须闭合用途授权、账本、固定原子保存钩子与恢复，C3接面板及本地联系方式。WIN-PATH-02仍开放，安装版0.4.1不变，本轮WorkBuddy无活动端点未派发。GitHub同步以单独回执为准。[本片证据](testing/profile-output/20261023/README.md)、[执行合同](plans/2026-10-23-profile-output.md)。

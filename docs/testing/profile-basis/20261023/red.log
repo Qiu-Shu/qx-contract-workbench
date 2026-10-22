@@ -1,0 +1,118 @@
+FFFFFF                                                                   [100%]
+================================== FAILURES ===================================
+_________ test_prepared_input_binds_complete_wire_and_local_save_plan _________
+tests\unit\test_assistant_profile_preparation.py:31: in test_prepared_input_binds_complete_wire_and_local_save_plan
+    approval = basis(request, project_intake=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_assistant_profile_preparation.py:25: in basis
+    return api().build_basis(draft(request), config(), base_profile_revision=request.base_profile_revision,
+           ^^^^^
+tests\unit\test_assistant_profile_preparation.py:13: in api
+    return importlib.import_module('cn_contract.assistant.providers.profile_preparation')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1324: in _find_and_load_unlocked
+    ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.profile_preparation'
+__ test_same_outbound_wire_different_local_plan_has_different_permission_key __
+tests\unit\test_assistant_profile_preparation.py:43: in test_same_outbound_wire_different_local_plan_has_different_permission_key
+    plain, projected = basis(), basis(project_intake=True)
+                       ^^^^^^^
+tests\unit\test_assistant_profile_preparation.py:25: in basis
+    return api().build_basis(draft(request), config(), base_profile_revision=request.base_profile_revision,
+           ^^^^^
+tests\unit\test_assistant_profile_preparation.py:13: in api
+    return importlib.import_module('cn_contract.assistant.providers.profile_preparation')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1324: in _find_and_load_unlocked
+    ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.profile_preparation'
+_ test_stale_or_constructed_request_cannot_reuse_basis[base_profile_revision-1] _
+tests\unit\test_assistant_profile_preparation.py:54: in test_stale_or_constructed_request_cannot_reuse_basis
+    api().prepare(request.model_copy(update={field: value}), basis(request), config(), composer_revision=4)
+    ^^^^^
+tests\unit\test_assistant_profile_preparation.py:13: in api
+    return importlib.import_module('cn_contract.assistant.providers.profile_preparation')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1324: in _find_and_load_unlocked
+    ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.profile_preparation'
+___ test_stale_or_constructed_request_cannot_reuse_basis[source_revision-2] ___
+tests\unit\test_assistant_profile_preparation.py:54: in test_stale_or_constructed_request_cannot_reuse_basis
+    api().prepare(request.model_copy(update={field: value}), basis(request), config(), composer_revision=4)
+    ^^^^^
+tests\unit\test_assistant_profile_preparation.py:13: in api
+    return importlib.import_module('cn_contract.assistant.providers.profile_preparation')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1324: in _find_and_load_unlocked
+    ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.profile_preparation'
+_ test_stale_or_constructed_request_cannot_reuse_basis[source_sha256-0000000000000000000000000000000000000000000000000000000000000000] _
+tests\unit\test_assistant_profile_preparation.py:54: in test_stale_or_constructed_request_cannot_reuse_basis
+    api().prepare(request.model_copy(update={field: value}), basis(request), config(), composer_revision=4)
+    ^^^^^
+tests\unit\test_assistant_profile_preparation.py:13: in api
+    return importlib.import_module('cn_contract.assistant.providers.profile_preparation')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1324: in _find_and_load_unlocked
+    ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.profile_preparation'
+______________ test_changed_composer_version_cannot_reuse_basis _______________
+tests\unit\test_assistant_profile_preparation.py:60: in test_changed_composer_version_cannot_reuse_basis
+    api().prepare(request, basis(request), config(), composer_revision=5)
+    ^^^^^
+tests\unit\test_assistant_profile_preparation.py:13: in api
+    return importlib.import_module('cn_contract.assistant.providers.profile_preparation')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1324: in _find_and_load_unlocked
+    ???
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.providers.profile_preparation'
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profile_preparation.py::test_prepared_input_binds_complete_wire_and_local_save_plan
+FAILED tests/unit/test_assistant_profile_preparation.py::test_same_outbound_wire_different_local_plan_has_different_permission_key
+FAILED tests/unit/test_assistant_profile_preparation.py::test_stale_or_constructed_request_cannot_reuse_basis[base_profile_revision-1]
+FAILED tests/unit/test_assistant_profile_preparation.py::test_stale_or_constructed_request_cannot_reuse_basis[source_revision-2]
+FAILED tests/unit/test_assistant_profile_preparation.py::test_stale_or_constructed_request_cannot_reuse_basis[source_sha256-0000000000000000000000000000000000000000000000000000000000000000]
+FAILED tests/unit/test_assistant_profile_preparation.py::test_changed_composer_version_cannot_reuse_basis
+6 failed in 0.44s

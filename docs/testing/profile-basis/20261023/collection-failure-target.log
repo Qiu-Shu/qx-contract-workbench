@@ -1,0 +1,13 @@
+
+=================================== ERRORS ====================================
+__ ERROR collecting tests/integration/test_assistant_profile_preparation.py ___
+import file mismatch:
+imported module 'test_assistant_profile_preparation' has this __file__ attribute:
+  D:\Documents\ChatGPT\律所项目\tests\unit\test_assistant_profile_preparation.py
+which is not the same as the test file we want to collect:
+  D:\Documents\ChatGPT\律所项目\tests\integration\test_assistant_profile_preparation.py
+HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules
+=========================== short test summary info ===========================
+ERROR tests/integration/test_assistant_profile_preparation.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.10s

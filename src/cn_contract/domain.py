@@ -4063,3 +4063,56 @@ class MainProfileCandidate(MainCandidate):
 
 class MainProfileReply(MainReply):
     output: MainProfileCandidate | None = None
+
+
+class MainProfileSendBasis(DomainModel):
+    """Description of outbound bytes and local save intent, never permission."""
+    input_format: Literal['profile-text-v1'] = 'profile-text-v1'
+    template_version: Literal['profile-text-system-v1'] = 'profile-text-system-v1'
+    purpose: Literal['reply_and_profile_draft'] = 'reply_and_profile_draft'
+    handler_id: Literal['profile.save'] = 'profile.save'
+    handler_version: Literal['1'] = '1'
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+    content_sha256: SHA256
+    base_profile_revision: NonNegativeInt
+    expected_intake_id: UUID | None
+    expected_intake_revision: PositiveInt | None
+    project_intake: StrictBool
+    system_sha256: SHA256
+    config_sha256: SHA256
+    wire_sha256: SHA256
+    wire_bytes: Annotated[int, Field(strict=True, ge=1, le=262144)]
+
+    @model_validator(mode='after')
+    def paired_intake_baseline(self):
+        if (self.expected_intake_id is None) != (self.expected_intake_revision is None):
+            raise ValueError('profile save target requires identity and revision')
+        if (self.expected_scope.scope_kind == 'intake'
+                and self.expected_intake_id != self.expected_scope.scope_ref):
+            raise ValueError('profile save target must match its intake scope')
+        return self
+
+
+class MainProfilePreparedInput(DomainModel):
+    request: MainProfileRequest
+    basis: MainProfileSendBasis
+    composer_revision: PositiveInt
+    wire_payload_json: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=262144)]
+
+    @model_validator(mode='after')
+    def exact_profile_submission(self):
+        request, basis = self.request, self.basis
+        expected = basis.expected_scope.model_copy(update={
+            'input_revision': basis.expected_scope.input_revision + 1})
+        if (request.scope != expected or self.composer_revision != basis.expected_composer_revision + 1
+                or request.source_revision != expected.input_revision
+                or request.source_sha256 != basis.content_sha256
+                or request.base_profile_revision != basis.base_profile_revision
+                or request.input_format != basis.input_format or request.template_version != basis.template_version):
+            raise ValueError('profile input differs from its submission basis')
+        wire = self.wire_payload_json.encode('utf-8')
+        if len(wire) != basis.wire_bytes or hashlib.sha256(wire).hexdigest() != basis.wire_sha256:
+            raise ValueError('profile wire differs from its submission basis')
+        return self

@@ -1,0 +1,29 @@
+{
+  "red": {
+    "tests": 6,
+    "failed": 6,
+    "exit_code": 1,
+    "cause": "New module was absent before implementation."
+  },
+  "development_fixture_corrections": [
+    {
+      "tests": 53,
+      "passed": 52,
+      "failed": 1,
+      "cause": "Timeout mutation repeated the fixture default 30; corrected to 31. No product fix required."
+    },
+    {
+      "tests": 1,
+      "failed": 1,
+      "cause": "Minimal local storage fixture has no model ledger; replaced wrong count query with explicit non-existence assertions. No product change."
+    }
+  ],
+  "standards_initial": {
+    "passed": 8,
+    "errors": 2,
+    "exit_code": 1,
+    "cause": "Synthetic long-text parameter became a Windows environment variable over 32767 characters; shortened only probe IDs.",
+    "local_original_log_sha256": "3c790aa075d83b96f03e35182542754d861a7c7c110441e93140b888f769a4a1"
+  },
+  "limits": "Development and reviewer harness errors are retained as failures; not counted as product RED or final passes."
+}

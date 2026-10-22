@@ -1,0 +1,57 @@
+{
+  "baseline": "37773d92f08e0b3bc2fed27064ceb011e8a72cd6",
+  "checks": [
+    {
+      "name": "complete_local_plan_and_wire_identity",
+      "passed": true
+    },
+    {
+      "name": "byte_for_byte_fixed_prior_C1_builder",
+      "passed": true
+    },
+    {
+      "name": "same_wire_distinct_save_plan_distinct_digest",
+      "passed": true
+    },
+    {
+      "name": "run_message_request_identity_rejection",
+      "passed": true
+    },
+    {
+      "name": "scope_and_composer_bridge_rejection",
+      "passed": true
+    },
+    {
+      "name": "constructed_and_nested_invalid_basis_rejected",
+      "passed": true
+    },
+    {
+      "name": "manual_edits_not_part_of_prepare_plan",
+      "passed": true
+    },
+    {
+      "name": "attachment_skill_and_empty_input_rejected",
+      "passed": true
+    },
+    {
+      "name": "config_and_template_changes_invalidate_basis",
+      "passed": true
+    },
+    {
+      "name": "exact_utf8_limit_and_one_byte_over",
+      "passed": true
+    },
+    {
+      "name": "serialized_wire_and_source_revision_tamper_rejected",
+      "passed": true
+    },
+    {
+      "name": "old_runtime_grants_format_and_plain_builder_refuse",
+      "passed": true
+    }
+  ],
+  "passed": 12,
+  "failed": 0,
+  "scope": "pure offline synthetic values, socket creation blocked; no DB or running process access",
+  "limits": "does not establish DB membership/current authority/current attachments or current profile versions"
+}
