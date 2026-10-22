@@ -15,7 +15,9 @@ import pytest
 from cn_contract.web import local_server
 
 
-def test_external_user_data_round_trip_and_default_boundary(tmp_path):
+def test_external_user_data_round_trip_and_default_boundary(tmp_path, monkeypatch):
+    # A custom pytest basetemp may itself be inside the real project's .local.
+    monkeypatch.setattr(local_server, 'PROJECT_ROOT', tmp_path / 'installation')
     parent = tmp_path / '中文 用户资料'
     root = parent / 'workspaces' / 'main'
     local_server.initialize_workspace(root, '桌面律师', 'fiction123', data_parent=parent)
@@ -25,6 +27,8 @@ def test_external_user_data_round_trip_and_default_boundary(tmp_path):
     assert (root / 'workbench.db').read_bytes() == before
     with pytest.raises(ValueError, match='PROJECT_LOCAL_DIRECTORY_REQUIRED'):
         local_server.build_local_app(root)
+    with pytest.raises(ValueError, match='PROJECT_LOCAL_DIRECTORY_REQUIRED'):
+        local_server.build_local_app(root, data_parent=tmp_path / 'other-user-data')
     for _ in range(2):
         with TestClient(local_server.build_local_app(root, data_parent=parent, port=18933)) as client:
             assert client.get('/api/matters').status_code == 401

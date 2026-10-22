@@ -25,6 +25,8 @@ def statements_for(version):
         from .assistant.rounds_schema import STATEMENTS
     elif version == 'assistant-rounds-v2':
         from .assistant.rounds_v2_schema import STATEMENTS
+    elif version == 'assistant-profiles-v1':
+        from .assistant.profile_schema import STATEMENTS
     else:
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     return STATEMENTS

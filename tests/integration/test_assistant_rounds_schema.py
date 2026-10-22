@@ -89,10 +89,9 @@ def _attempt_row(identifier, round_no):
             'round_no': round_no}
 
 
-def test_rounds_is_current_and_keeps_every_older_version():
-    assert storage_schema.CURRENT_VERSION == 'assistant-rounds-v2'
-    assert storage_schema.VERSIONS == PREVIOUS + ('assistant-rounds-v2',)
-    for version in PREVIOUS:
+def test_rounds_is_frozen_history_and_keeps_every_older_version():
+    assert storage_schema.VERSIONS[:len(PREVIOUS)+1] == PREVIOUS + ('assistant-rounds-v2',)
+    for version in PREVIOUS + ('assistant-rounds-v2',):
         for native in (False, True):
             rows = storage_schema.schema_rows(version, native=native)
             assert storage_schema.identify_schema(rows, native=native) == version
@@ -145,7 +144,7 @@ def test_context_with_model_rows_rebuilds_preserving_every_row(tmp_path, native)
         before_attempts = db.execute('SELECT * FROM assistant_model_attempts').fetchall()
         before_receipts = db.execute('SELECT * FROM assistant_model_receipts').fetchall()
         before_outputs = db.execute('SELECT * FROM assistant_model_outputs').fetchall()
-        assert schema_migrations.upgrade_database(db) == 'assistant-rounds-v2'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         after_attempts = db.execute('SELECT * FROM assistant_model_attempts').fetchall()
         # Every attempt row survives in column order with round_no appended as 1.
         assert after_attempts == [tuple(row) + (1,) for row in before_attempts]
@@ -153,8 +152,8 @@ def test_context_with_model_rows_rebuilds_preserving_every_row(tmp_path, native)
         assert db.execute('SELECT * FROM assistant_model_outputs').fetchall() == before_outputs
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
         assert schema_migrations.database_rows(db) == [tuple(row) for row in
-            storage_schema.schema_rows('assistant-rounds-v2', native=native)]
-        assert schema_migrations.upgrade_database(db) == 'assistant-rounds-v2'
+            storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=native)]
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
 
 
 @pytest.mark.parametrize('native', [False, True])
@@ -167,11 +166,11 @@ def test_rounds_v1_rows_rebuild_preserving_multi_round_occupancy(tmp_path, nativ
                    + ','.join(':' + key for key in keys) + ')', _attempt_row('a2', 2))
         db.commit()
         before = db.execute('SELECT * FROM assistant_model_attempts ORDER BY round_no').fetchall()
-        assert schema_migrations.upgrade_database(db) == 'assistant-rounds-v2'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         assert db.execute('SELECT * FROM assistant_model_attempts ORDER BY round_no').fetchall() == before
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
         assert schema_migrations.database_rows(db) == [tuple(row) for row in
-            storage_schema.schema_rows('assistant-rounds-v2', native=native)]
+            storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=native)]
         # The widened CHECK admits the v2 wire and still rejects unknown formats.
         row = dict(_attempt_row('a3', 3), input_format='library-context-v2')
         db.execute('INSERT INTO assistant_model_attempts (' + ','.join(tuple(row)) + ') VALUES ('
@@ -305,4 +304,4 @@ def test_fresh_bootstrap_matches_stepwise_upgrade(tmp_path, native):
         schema_migrations.upgrade_database(db)
         migrated = schema_migrations.database_rows(db)
     assert [tuple(row) for row in built] == [tuple(row) for row in migrated]
-    assert [tuple(row) for row in migrated] == storage_schema.schema_rows('assistant-rounds-v2')
+    assert [tuple(row) for row in migrated] == storage_schema.schema_rows(storage_schema.CURRENT_VERSION)

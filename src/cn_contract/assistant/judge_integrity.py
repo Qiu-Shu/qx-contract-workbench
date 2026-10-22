@@ -153,7 +153,7 @@ def validate_judge_records(db, *, allowed=True):
     if version in ('pre-intake','intake-v1','assistant-v1','assistant-attachments-v1','assistant-model-v1'):
         return
     if version not in ('assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1',
-                       'assistant-rounds-v1', 'assistant-rounds-v2'):
+                       'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     attempts = db.execute(text('SELECT * FROM assistant_judge_attempts ORDER BY created_at,id')).mappings().all()
     receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_judge_receipts')).mappings()}

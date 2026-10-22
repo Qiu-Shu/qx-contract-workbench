@@ -1,0 +1,2886 @@
+........................................................................ [ 38%]
+...............................................................FF.FF..FF [ 76%]
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                             [100%]
+================================== FAILURES ===================================
+________ test_upgrade_keeps_identity_login_case_and_independent_backup ________
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_upgrade_keep...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+
+    def test_upgrade_keeps_identity_login_case_and_independent_backup(legacy):
+        root,matter,marker=legacy
+>       with TestClient(local_server.build_local_app(root)) as client:
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_upgrade_keeps_identity_lo0/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_______ test_marker_write_failure_recovers_without_rerunning_migration ________
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_marker_write...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC0A07D40>
+
+    def test_marker_write_failure_recovers_without_rerunning_migration(legacy,monkeypatch):
+        root,matter,marker=legacy
+        from cn_contract.web import workspace_upgrade
+        original=workspace_upgrade._write_marker
+        def fail(*args):raise OSError('synthetic disk failure')
+        monkeypatch.setattr(workspace_upgrade,'_write_marker',fail)
+>       with pytest.raises(OSError):local_server.build_local_app(root)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_marker_write_failure_reco0/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+___________ test_migration_transaction_failure_leaves_legacy_schema ___________
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_migration_tr...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC0B455E0>
+
+    def test_migration_transaction_failure_leaves_legacy_schema(legacy,monkeypatch):
+        root,_,marker=legacy
+        from cn_contract.web import workspace_upgrade
+        monkeypatch.setattr(workspace_upgrade,'STATEMENTS',(*workspace_upgrade.STATEMENTS,'INVALID SQL'))
+>       with pytest.raises(sqlite3.Error):local_server.build_local_app(root)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_migration_transaction_fai0/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+______________ test_recovery_refuses_changed_extension_or_backup ______________
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_recovery_ref...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC0E0F4A0>
+
+    def test_recovery_refuses_changed_extension_or_backup(legacy,monkeypatch):
+        root,_,_=legacy
+        from cn_contract.web import workspace_upgrade
+        original=workspace_upgrade._write_marker
+        monkeypatch.setattr(workspace_upgrade,'_write_marker',lambda *args:(_ for _ in ()).throw(OSError('interrupted')))
+>       with pytest.raises(OSError):local_server.build_local_app(root)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_recovery_refuses_changed_0/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_______________ test_existing_workspace_does_not_run_create_all _______________
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_existing_wor...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC2141BE0>
+
+    def test_existing_workspace_does_not_run_create_all(legacy, monkeypatch):
+        root, _, _ = legacy
+>       with TestClient(local_server.build_local_app(root)) as client: login(client)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_existing_workspace_does_n0/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ma...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC22B6870>
+target = 'assistant-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
+        root, matter, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_marker_failure_0/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-attachments-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ma...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC240A870>
+target = 'assistant-attachments-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
+        root, matter, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_marker_failure_1/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-model-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ma...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC252C9E0>
+target = 'assistant-model-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
+        root, matter, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_marker_failure_2/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-judge-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ma...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC25FE300>
+target = 'assistant-judge-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
+        root, matter, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_marker_failure_3/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-library-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ma...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC27DE000>
+target = 'assistant-library-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
+        root, matter, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_marker_failure_4/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-context-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ma...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC2142240>
+target = 'assistant-context-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
+        root, matter, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_marker_failure_5/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-rounds-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ma...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC2A86FC0>
+target = 'assistant-rounds-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
+        root, matter, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_marker_failure_6/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-rounds-v2] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ma...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC2BD6210>
+target = 'assistant-rounds-v2'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
+        root, matter, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_marker_failure_7/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-profiles-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ma...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC2D2DD30>
+target = 'assistant-profiles-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    def test_assistant_marker_failure_recovers_without_repeating_completed_steps(legacy, monkeypatch, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import CURRENT_VERSION, VERSIONS, schema_rows
+        root, matter, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_marker_failure_8/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_ddl_failure_preserves_completed_steps[assistant-v1-intake-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_dd...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC2E925D0>
+target = 'assistant-v1', previous = 'intake-v1'
+
+    @pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
+                                                 ('assistant-attachments-v1', 'assistant-v1'),
+                                                 ('assistant-model-v1', 'assistant-attachments-v1'),
+                                                 ('assistant-judge-v1', 'assistant-model-v1'),
+                                                 ('assistant-library-v1', 'assistant-judge-v1'),
+                                                 ('assistant-context-v1', 'assistant-library-v1'),
+                                                 ('assistant-rounds-v1', 'assistant-context-v1'),
+                                                 ('assistant-rounds-v2', 'assistant-rounds-v1'),
+                                                 ('assistant-profiles-v1', 'assistant-rounds-v2')])
+    def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import identify_schema
+        root, matter, _ = legacy
+        original = workspace_upgrade.statements_for
+        monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda name:
+                            (*original(name), 'INVALID SQL') if name == target else original(name))
+>       with pytest.raises(sqlite3.Error): local_server.build_local_app(root)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ddl_failure_pre0/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_ddl_failure_preserves_completed_steps[assistant-attachments-v1-assistant-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_dd...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC2FE1EB0>
+target = 'assistant-attachments-v1', previous = 'assistant-v1'
+
+    @pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
+                                                 ('assistant-attachments-v1', 'assistant-v1'),
+                                                 ('assistant-model-v1', 'assistant-attachments-v1'),
+                                                 ('assistant-judge-v1', 'assistant-model-v1'),
+                                                 ('assistant-library-v1', 'assistant-judge-v1'),
+                                                 ('assistant-context-v1', 'assistant-library-v1'),
+                                                 ('assistant-rounds-v1', 'assistant-context-v1'),
+                                                 ('assistant-rounds-v2', 'assistant-rounds-v1'),
+                                                 ('assistant-profiles-v1', 'assistant-rounds-v2')])
+    def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import identify_schema
+        root, matter, _ = legacy
+        original = workspace_upgrade.statements_for
+        monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda name:
+                            (*original(name), 'INVALID SQL') if name == target else original(name))
+>       with pytest.raises(sqlite3.Error): local_server.build_local_app(root)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ddl_failure_pre1/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_ddl_failure_preserves_completed_steps[assistant-model-v1-assistant-attachments-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_dd...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC3142150>
+target = 'assistant-model-v1', previous = 'assistant-attachments-v1'
+
+    @pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
+                                                 ('assistant-attachments-v1', 'assistant-v1'),
+                                                 ('assistant-model-v1', 'assistant-attachments-v1'),
+                                                 ('assistant-judge-v1', 'assistant-model-v1'),
+                                                 ('assistant-library-v1', 'assistant-judge-v1'),
+                                                 ('assistant-context-v1', 'assistant-library-v1'),
+                                                 ('assistant-rounds-v1', 'assistant-context-v1'),
+                                                 ('assistant-rounds-v2', 'assistant-rounds-v1'),
+                                                 ('assistant-profiles-v1', 'assistant-rounds-v2')])
+    def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import identify_schema
+        root, matter, _ = legacy
+        original = workspace_upgrade.statements_for
+        monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda name:
+                            (*original(name), 'INVALID SQL') if name == target else original(name))
+>       with pytest.raises(sqlite3.Error): local_server.build_local_app(root)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ddl_failure_pre2/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_ddl_failure_preserves_completed_steps[assistant-judge-v1-assistant-model-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_dd...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC2A056D0>
+target = 'assistant-judge-v1', previous = 'assistant-model-v1'
+
+    @pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
+                                                 ('assistant-attachments-v1', 'assistant-v1'),
+                                                 ('assistant-model-v1', 'assistant-attachments-v1'),
+                                                 ('assistant-judge-v1', 'assistant-model-v1'),
+                                                 ('assistant-library-v1', 'assistant-judge-v1'),
+                                                 ('assistant-context-v1', 'assistant-library-v1'),
+                                                 ('assistant-rounds-v1', 'assistant-context-v1'),
+                                                 ('assistant-rounds-v2', 'assistant-rounds-v1'),
+                                                 ('assistant-profiles-v1', 'assistant-rounds-v2')])
+    def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import identify_schema
+        root, matter, _ = legacy
+        original = workspace_upgrade.statements_for
+        monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda name:
+                            (*original(name), 'INVALID SQL') if name == target else original(name))
+>       with pytest.raises(sqlite3.Error): local_server.build_local_app(root)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ddl_failure_pre3/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_ddl_failure_preserves_completed_steps[assistant-library-v1-assistant-judge-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_dd...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC3345D30>
+target = 'assistant-library-v1', previous = 'assistant-judge-v1'
+
+    @pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
+                                                 ('assistant-attachments-v1', 'assistant-v1'),
+                                                 ('assistant-model-v1', 'assistant-attachments-v1'),
+                                                 ('assistant-judge-v1', 'assistant-model-v1'),
+                                                 ('assistant-library-v1', 'assistant-judge-v1'),
+                                                 ('assistant-context-v1', 'assistant-library-v1'),
+                                                 ('assistant-rounds-v1', 'assistant-context-v1'),
+                                                 ('assistant-rounds-v2', 'assistant-rounds-v1'),
+                                                 ('assistant-profiles-v1', 'assistant-rounds-v2')])
+    def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import identify_schema
+        root, matter, _ = legacy
+        original = workspace_upgrade.statements_for
+        monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda name:
+                            (*original(name), 'INVALID SQL') if name == target else original(name))
+>       with pytest.raises(sqlite3.Error): local_server.build_local_app(root)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ddl_failure_pre4/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_ddl_failure_preserves_completed_steps[assistant-context-v1-assistant-library-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_dd...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC34A6A80>
+target = 'assistant-context-v1', previous = 'assistant-library-v1'
+
+    @pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
+                                                 ('assistant-attachments-v1', 'assistant-v1'),
+                                                 ('assistant-model-v1', 'assistant-attachments-v1'),
+                                                 ('assistant-judge-v1', 'assistant-model-v1'),
+                                                 ('assistant-library-v1', 'assistant-judge-v1'),
+                                                 ('assistant-context-v1', 'assistant-library-v1'),
+                                                 ('assistant-rounds-v1', 'assistant-context-v1'),
+                                                 ('assistant-rounds-v2', 'assistant-rounds-v1'),
+                                                 ('assistant-profiles-v1', 'assistant-rounds-v2')])
+    def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import identify_schema
+        root, matter, _ = legacy
+        original = workspace_upgrade.statements_for
+        monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda name:
+                            (*original(name), 'INVALID SQL') if name == target else original(name))
+>       with pytest.raises(sqlite3.Error): local_server.build_local_app(root)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ddl_failure_pre5/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_ddl_failure_preserves_completed_steps[assistant-rounds-v1-assistant-context-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_dd...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC35EE000>
+target = 'assistant-rounds-v1', previous = 'assistant-context-v1'
+
+    @pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
+                                                 ('assistant-attachments-v1', 'assistant-v1'),
+                                                 ('assistant-model-v1', 'assistant-attachments-v1'),
+                                                 ('assistant-judge-v1', 'assistant-model-v1'),
+                                                 ('assistant-library-v1', 'assistant-judge-v1'),
+                                                 ('assistant-context-v1', 'assistant-library-v1'),
+                                                 ('assistant-rounds-v1', 'assistant-context-v1'),
+                                                 ('assistant-rounds-v2', 'assistant-rounds-v1'),
+                                                 ('assistant-profiles-v1', 'assistant-rounds-v2')])
+    def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import identify_schema
+        root, matter, _ = legacy
+        original = workspace_upgrade.statements_for
+        monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda name:
+                            (*original(name), 'INVALID SQL') if name == target else original(name))
+>       with pytest.raises(sqlite3.Error): local_server.build_local_app(root)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ddl_failure_pre6/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_ddl_failure_preserves_completed_steps[assistant-rounds-v2-assistant-rounds-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_dd...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC37410D0>
+target = 'assistant-rounds-v2', previous = 'assistant-rounds-v1'
+
+    @pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
+                                                 ('assistant-attachments-v1', 'assistant-v1'),
+                                                 ('assistant-model-v1', 'assistant-attachments-v1'),
+                                                 ('assistant-judge-v1', 'assistant-model-v1'),
+                                                 ('assistant-library-v1', 'assistant-judge-v1'),
+                                                 ('assistant-context-v1', 'assistant-library-v1'),
+                                                 ('assistant-rounds-v1', 'assistant-context-v1'),
+                                                 ('assistant-rounds-v2', 'assistant-rounds-v1'),
+                                                 ('assistant-profiles-v1', 'assistant-rounds-v2')])
+    def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import identify_schema
+        root, matter, _ = legacy
+        original = workspace_upgrade.statements_for
+        monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda name:
+                            (*original(name), 'INVALID SQL') if name == target else original(name))
+>       with pytest.raises(sqlite3.Error): local_server.build_local_app(root)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ddl_failure_pre7/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_ddl_failure_preserves_completed_steps[assistant-profiles-v1-assistant-rounds-v2] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_dd...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC389DA90>
+target = 'assistant-profiles-v1', previous = 'assistant-rounds-v2'
+
+    @pytest.mark.parametrize('target, previous', [('assistant-v1', 'intake-v1'),
+                                                 ('assistant-attachments-v1', 'assistant-v1'),
+                                                 ('assistant-model-v1', 'assistant-attachments-v1'),
+                                                 ('assistant-judge-v1', 'assistant-model-v1'),
+                                                 ('assistant-library-v1', 'assistant-judge-v1'),
+                                                 ('assistant-context-v1', 'assistant-library-v1'),
+                                                 ('assistant-rounds-v1', 'assistant-context-v1'),
+                                                 ('assistant-rounds-v2', 'assistant-rounds-v1'),
+                                                 ('assistant-profiles-v1', 'assistant-rounds-v2')])
+    def test_assistant_ddl_failure_preserves_completed_steps(legacy, monkeypatch, target, previous):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import identify_schema
+        root, matter, _ = legacy
+        original = workspace_upgrade.statements_for
+        monkeypatch.setattr(workspace_upgrade, 'statements_for', lambda name:
+                            (*original(name), 'INVALID SQL') if name == target else original(name))
+>       with pytest.raises(sqlite3.Error): local_server.build_local_app(root)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_ddl_failure_pre8/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+___ test_assistant_pending_recovery_rejects_tampering[backup-assistant-v1] ____
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC3A14D40>
+damage = 'backup', target = 'assistant-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover0/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[backup-assistant-attachments-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC3B30D70>
+damage = 'backup', target = 'assistant-attachments-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover1/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[backup-assistant-model-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC3CA1E50>
+damage = 'backup', target = 'assistant-model-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover2/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[backup-assistant-judge-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC3D0A5A0>
+damage = 'backup', target = 'assistant-judge-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover3/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[backup-assistant-library-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC3ED1D90>
+damage = 'backup', target = 'assistant-library-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover4/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[backup-assistant-context-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC400A3F0>
+damage = 'backup', target = 'assistant-context-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover5/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[backup-assistant-rounds-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC413DD60>
+damage = 'backup', target = 'assistant-rounds-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover6/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[backup-assistant-rounds-v2] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC42AD6D0>
+damage = 'backup', target = 'assistant-rounds-v2'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover7/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[backup-assistant-profiles-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC440A060>
+damage = 'backup', target = 'assistant-profiles-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover8/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+___ test_assistant_pending_recovery_rejects_tampering[receipt-assistant-v1] ___
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC4564BF0>
+damage = 'receipt', target = 'assistant-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover9/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[receipt-assistant-attachments-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC46995B0>
+damage = 'receipt', target = 'assistant-attachments-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover10/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[receipt-assistant-model-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC47F4A40>
+damage = 'receipt', target = 'assistant-model-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover11/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[receipt-assistant-judge-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC4961D60>
+damage = 'receipt', target = 'assistant-judge-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover12/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[receipt-assistant-library-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC4A47A10>
+damage = 'receipt', target = 'assistant-library-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover13/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[receipt-assistant-context-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC4B62450>
+damage = 'receipt', target = 'assistant-context-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover14/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[receipt-assistant-rounds-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC4C85790>
+damage = 'receipt', target = 'assistant-rounds-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover15/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[receipt-assistant-rounds-v2] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC4DE3B60>
+damage = 'receipt', target = 'assistant-rounds-v2'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover16/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[receipt-assistant-profiles-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC4F22090>
+damage = 'receipt', target = 'assistant-profiles-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover17/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+___ test_assistant_pending_recovery_rejects_tampering[trigger-assistant-v1] ___
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC50608F0>
+damage = 'trigger', target = 'assistant-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover18/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[trigger-assistant-attachments-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC50E5850>
+damage = 'trigger', target = 'assistant-attachments-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover19/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[trigger-assistant-model-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC5312E40>
+damage = 'trigger', target = 'assistant-model-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover20/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[trigger-assistant-judge-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC5459CA0>
+damage = 'trigger', target = 'assistant-judge-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover21/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[trigger-assistant-library-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC55A1BB0>
+damage = 'trigger', target = 'assistant-library-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover22/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[trigger-assistant-context-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC5639A30>
+damage = 'trigger', target = 'assistant-context-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover23/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[trigger-assistant-rounds-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC584AE10>
+damage = 'trigger', target = 'assistant-rounds-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover24/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[trigger-assistant-rounds-v2] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC58ECA40>
+damage = 'trigger', target = 'assistant-rounds-v2'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover25/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+_ test_assistant_pending_recovery_rejects_tampering[trigger-assistant-profiles-v1] _
+
+legacy = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pe...anifest_sha256': '16a8d213a16e6741459085fe72409b36849a410595d1043ee9ad1ea193feedce', 'purpose': 'assisted_draft', ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEC2377D70>
+damage = 'trigger', target = 'assistant-profiles-v1'
+
+    @pytest.mark.parametrize('target', ['assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'])
+    @pytest.mark.parametrize('damage', ['backup', 'receipt', 'trigger'])
+    def test_assistant_pending_recovery_rejects_tampering(legacy, monkeypatch, damage, target):
+        from cn_contract.web import workspace_upgrade
+        from cn_contract.storage_schema import schema_rows
+        root, _, _ = legacy
+        original = workspace_upgrade._write_marker
+        target_hash = workspace_upgrade._hash(schema_rows(target, native=True))
+        def fail_assistant(root, marker):
+            if marker['schema_sha256'] == target_hash: raise OSError('synthetic assistant marker failure')
+            original(root, marker)
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', fail_assistant)
+>       with pytest.raises(OSError): local_server.build_local_app(root)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_workspace_upgrade.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\web\local_server.py:190: in build_local_app
+    root = _open_workspace(directory, data_parent=data_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+directory = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/profile-persistence-20261023/migration/regression-tmp/test_assistant_pending_recover26/.local/workbench')
+
+    def _open_workspace(directory, *, data_parent=None):
+        root = _workspace_path(directory, data_parent=data_parent)
+        for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
+                     'workbench.db-journal', 'protected', 'worker.lock'):
+            _safe_file(root / name)
+        marker = root / 'workspace.json'
+        if (not marker.is_file() or marker.stat().st_size > 4096
+                or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            raise ValueError('WORKSPACE_NOT_INITIALIZED')
+        payload = json.loads(marker.read_text(encoding='utf-8'))
+        expected = _marker()
+        if (type(payload) is not dict or set(payload) != set(expected) | {'workspace_id', 'schema_sha256'}
+                or any(payload[k] != v for k, v in expected.items())):
+            raise ValueError('WORKSPACE_POLICY_MISMATCH')
+        try:
+            if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
+                raise ValueError('WORKSPACE_ID_INVALID')
+            # Read-only validation precedes any create_all/trigger initialization.
+            with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+                from .workspace_upgrade import pending_matches
+                try:
+                    identify_schema(database_rows(db), native=True)
+                except ValueError:
+>                   raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E                   ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src\cn_contract\web\local_server.py:84: ValueError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_workspace_upgrade.py::test_upgrade_keeps_identity_login_case_and_independent_backup
+FAILED tests/integration/test_workspace_upgrade.py::test_marker_write_failure_recovers_without_rerunning_migration
+FAILED tests/integration/test_workspace_upgrade.py::test_migration_transaction_failure_leaves_legacy_schema
+FAILED tests/integration/test_workspace_upgrade.py::test_recovery_refuses_changed_extension_or_backup
+FAILED tests/integration/test_workspace_upgrade.py::test_existing_workspace_does_not_run_create_all
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-attachments-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-model-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-judge-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-library-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-context-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-rounds-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-rounds-v2]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_marker_failure_recovers_without_repeating_completed_steps[assistant-profiles-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_ddl_failure_preserves_completed_steps[assistant-v1-intake-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_ddl_failure_preserves_completed_steps[assistant-attachments-v1-assistant-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_ddl_failure_preserves_completed_steps[assistant-model-v1-assistant-attachments-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_ddl_failure_preserves_completed_steps[assistant-judge-v1-assistant-model-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_ddl_failure_preserves_completed_steps[assistant-library-v1-assistant-judge-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_ddl_failure_preserves_completed_steps[assistant-context-v1-assistant-library-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_ddl_failure_preserves_completed_steps[assistant-rounds-v1-assistant-context-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_ddl_failure_preserves_completed_steps[assistant-rounds-v2-assistant-rounds-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_ddl_failure_preserves_completed_steps[assistant-profiles-v1-assistant-rounds-v2]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[backup-assistant-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[backup-assistant-attachments-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[backup-assistant-model-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[backup-assistant-judge-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[backup-assistant-library-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[backup-assistant-context-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[backup-assistant-rounds-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[backup-assistant-rounds-v2]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[backup-assistant-profiles-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[receipt-assistant-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[receipt-assistant-attachments-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[receipt-assistant-model-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[receipt-assistant-judge-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[receipt-assistant-library-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[receipt-assistant-context-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[receipt-assistant-rounds-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[receipt-assistant-rounds-v2]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[receipt-assistant-profiles-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[trigger-assistant-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[trigger-assistant-attachments-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[trigger-assistant-model-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[trigger-assistant-judge-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[trigger-assistant-library-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[trigger-assistant-context-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[trigger-assistant-rounds-v1]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[trigger-assistant-rounds-v2]
+FAILED tests/integration/test_workspace_upgrade.py::test_assistant_pending_recovery_rejects_tampering[trigger-assistant-profiles-v1]
+50 failed, 138 passed in 148.12s (0:02:28)

@@ -1,0 +1,142 @@
+{
+  "recorded_utc": "2026-10-22T21:40:04.242483+00:00",
+  "scope": "Independent read-only source review after full-suite traceback. No test rerun, no src/tests edits, no desktop or actual workspace operation.",
+  "failure": {
+    "source": ".local/profile-persistence-20261023/target.log",
+    "traceback": "__________ test_long_parent_paths_create_restore_and_rebackup[long] ___________\ntests\\integration\\test_assistant_attachment_backup.py:136: in test_long_parent_paths_create_restore_and_rebackup\n    first = workspace_backup.restore_workspace_backup(archive, target_parent, PASSPHRASE)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc\\cn_contract\\ops\\workspace_backup.py:369: in restore_workspace_backup\n    published = parent/str(uuid4()); filesystem_path(root).rename(filesystem_path(published))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nC:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\pathlib.py:1363: in rename\n    os.rename(self, target)\nE   PermissionError: [WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\Documents\\\\ChatGPT\\\\律所项目\\\\.local\\\\pp-65c04927\\\\test_long_parent_paths_create_0\\\\恢复目录资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\\\.qx-restore-gc6dtft8\\\\workspace' -> '\\\\\\\\?\\\\D:\\\\Documents\\\\ChatGPT\\\\律所项目\\\\.local\\\\pp-65c04927\\\\test_long_parent_paths_create_0\\\\恢复目录资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\\\f32f66fd-dc45-470f-b148-fed3f4ccadee'\n",
+    "statement": "workspace_backup.py:369 Path.rename(workspace -> parent/uuid)",
+    "error": "PermissionError WinError 5",
+    "not_historical_error": "Not earlier WorkBuddy temporary-directory cleanup Errno53."
+  },
+  "confirmed": [
+    "Full-suite run reached final publish rename after unpack, historical integrity checks, upgrade, quarantine fence, final schema/database check, original digest checks and protected-file chmod had returned.",
+    "Previous isolated diagnostic ran this exact test once: 1 passed in 5.65s; it did not reproduce the full-suite failure and must not replace it.",
+    "Original failed source SQLite read-only inspection: assistant_profile_revisions=0 and assistant_profile_receipts=0.",
+    "Original source original.bin currently has nlink=1; its path length is 306. That post-failure observation cannot prove failure-time handle or metadata state.",
+    "Product code only chmods individual protected files; it does not chmod workspace or destination directories.",
+    "Parent will perform a separate first-79-node diagnostic. Its result is pending and is not claimed here."
+  ],
+  "resource_lifetime_review": [
+    {
+      "source": "src/cn_contract/ops/workspace_backup.py:55-85",
+      "resource": "_reader / _file file stream",
+      "finding": "Path.open rb is inside with; _file copies then context exits before next step."
+    },
+    {
+      "source": "src/cn_contract/ops/workspace_backup.py:119-128",
+      "resource": "_validate_database raw SQLite",
+      "finding": "contextlib.closing wraps sqlite3.connect; fetched rows retained, no returned connection/cursor."
+    },
+    {
+      "source": "src/cn_contract/ops/workspace_backup.py:132-151",
+      "resource": "_references SQLAlchemy",
+      "finding": "database.session exits; finally disposes engine. No concrete checked-out connection leak found."
+    },
+    {
+      "source": "src/cn_contract/ops/workspace_backup.py:188-227",
+      "resource": "_unpack archive and extracted outputs",
+      "finding": "ZipFile and each member/input/output use with; contexts have exited before _validate_database and _references return."
+    },
+    {
+      "source": "src/cn_contract/web/local_server.py:162-183; workspace_backup.py:357",
+      "resource": "worker.lock",
+      "finding": "Lock/unlock and stream with are exited before _fence and rename. Unlock exception would precede rename, not match observed stack."
+    },
+    {
+      "source": "src/cn_contract/web/workspace_upgrade.py:87-136",
+      "resource": "upgrade raw SQLite plus backup handles",
+      "finding": "All connections use closing, JSON/file writes use with. Current-schema fixture performs no additive migration loop."
+    },
+    {
+      "source": "src/cn_contract/ops/workspace_backup.py:303-342; src/cn_contract/queries/ledger.py:183-190",
+      "resource": "_fence/recover_inflight",
+      "finding": "Sessions close and outer finally disposes engine after recover_inflight and relocation verification. No helper creates another unowned Database here."
+    },
+    {
+      "source": "src/cn_contract/persistence.py:175-209",
+      "resource": "Session/engine lifetime contract",
+      "finding": "Session context closes checked-out connection; engine.dispose closes pool connections. Static paths show intended closure, not runtime proof."
+    },
+    {
+      "source": "tests/integration/test_assistant_attachment_backup.py:fixture source",
+      "resource": "Source fixture Database remains alive until test teardown",
+      "finding": "Points to source root, not newly extracted restore stage. Its existence alone cannot explain target-stage directory sharing conflict."
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "One of our restored-stage SQLite or file handles remains open at publish.",
+      "current_support": "Windows rename requires compatible delete sharing; static code has closure sites, no demonstrated leak.",
+      "test_to_falsify": "At exact rename boundary, record raw sqlite3 and dbapi2 connections for this stage and closure, checked-out SQLAlchemy state, file handles restricted to stage; all closed weakens this hypothesis.",
+      "limit": "Python object/gc counts or engine.dispose invocation alone cannot prove every native handle is closed."
+    },
+    {
+      "id": "H2",
+      "claim": "A directory handle (CWD, enumeration or watcher) prevents directory rename.",
+      "current_support": "Windows supports directory handles and their share mode is relevant; no product watcher/chdir/open-directory path seen in this restore chain.",
+      "test_to_falsify": "Capture cwd and native handles restricted to stage at failure. A file-only inventory can miss directory handles.",
+      "limit": "No native handle capture from original failure survives; do not attribute ownership without evidence."
+    },
+    {
+      "id": "H3",
+      "claim": "Readonly children deterministically prohibit parent publication.",
+      "current_support": "Only individual children receive S_IREAD; same logic passed isolated test. Python chmod on Windows changes readonly attribute, not DACL.",
+      "test_to_falsify": "Capture source/destination attributes and unchanged protected-file state; a controlled synthetic readonly-child directory rename can distinguish basic filesystem semantics if needed.",
+      "limit": "Not a justification to remove protection, chmod whole trees or weaken guards. Existing isolated PASS already argues against deterministic effect."
+    },
+    {
+      "id": "H4",
+      "claim": "Transient external filesystem or process interaction.",
+      "current_support": "Possible Windows error category; no observation identifying a process or filter.",
+      "test_to_falsify": "Failure-time operation/handle evidence matching this synthetic stage only; do not infer from a later passing run.",
+      "limit": "No attribution to antivirus, indexer, WorkBuddy or user process is supported."
+    },
+    {
+      "id": "H5",
+      "claim": "Order-sensitive mutation of runtime/filesystem functions or directory permissions.",
+      "current_support": "Full-suite failure vs isolated PASS; inspected first-79-node files show no rename/chmod/chdir monkeypatch. Shim contains conditional wrappers but current error stack does not show them.",
+      "test_to_falsify": "First-79-node reproduction with rename implementation identity, sitecustomize presence, source/destination existence/attributes, actual path/volume and stage-restricted ACL metadata.",
+      "limit": "Do not equate same test name with historic shim Errno53; do not change host hooks."
+    },
+    {
+      "id": "H6",
+      "claim": "Current additive profile schema deterministically breaks restore.",
+      "current_support": "No schema exception; empty profile rows; all schema and fence validation returned before failing OS rename.",
+      "test_to_falsify": "Current-source controlled restore with runtime connection accounting; source-level profile validation is pure DB and returns before rename.",
+      "limit": "No deterministic schema failure demonstrated; timing/resource regressions still need runtime evidence."
+    }
+  ],
+  "references": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew",
+      "supports": "FILE_SHARE_DELETE applies to rename/delete access; directory handles need FILE_FLAG_BACKUP_SEMANTICS. Mechanism only, not this failure cause."
+    },
+    {
+      "url": "https://docs.python.org/3.12/library/os.html#os.chmod",
+      "supports": "Windows chmod sets readonly flag through S_IREAD/S_IWRITE; it is not a general POSIX permission/DACL operation."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants",
+      "supports": "Readonly file attribute definition; not honored on directories."
+    }
+  ],
+  "conclusion": "ROOT_CAUSE_UNDETERMINED. No definite self-owned handle leak found by static review. Preserve Windows publish-rename acceptance as open; neither isolated PASS nor a possible sequential PASS proves repair.",
+  "do_not_claim": [
+    "overall 3819 PASS",
+    "Windows restore fixed",
+    "antivirus or WorkBuddy caused this failure",
+    "schema regression excluded with certainty"
+  ],
+  "source_sha256": {
+    "src/cn_contract/ops/workspace_backup.py": "76f91555f1a546f5d46158a696eac9de10099efad1e342aebd7abc7e5e58dfa8",
+    "src/cn_contract/ops/backup.py": "2ee210ff2dade8104bed7f227eec72c1ae163922e938a1c1fabb4ca5d7d29192",
+    "src/cn_contract/ops/file_paths.py": "5b7155dafe59419ba501888ac92d960f490172bcfa7d9405e41d7ab40ec6d5c9",
+    "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8",
+    "src/cn_contract/web/local_server.py": "d1b127e3307e482784ddc879c647b08536eef8b7dea4eee56e8287d3c7da9958",
+    "src/cn_contract/web/workspace_upgrade.py": "8decd333095685208914aae7e5c128ccc8415af6f99bb454f74537b8b0381b50",
+    "src/cn_contract/queries/ledger.py": "9b8880d3536ed4b351697c275fe3835d016e24f6b067c3b3e725756ea53b0c10",
+    "src/cn_contract/ops/storage.py": "e24f24b955a579961b4cc20561e19f821f762b59230311d7a193c1f6328be4ef",
+    "tests/integration/test_assistant_attachment_backup.py": "2c127c3be0ed4691b1a71796de7bcd5dceedb8c19c9d86ffc978550984d94fe3"
+  }
+}

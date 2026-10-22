@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.942" timestamp="2026-10-23T04:29:25.039488+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_profile_schema" name="test_profile_migration_is_additive_and_keeps_old_rows" time="1.339"><failure message="AssertionError: assert 'assistant-rounds-v2' == 'assistant-profiles-v1'&#10;  &#10;  - assistant-profiles-v1&#10;  ?           -  ^^^^   ^&#10;  + assistant-rounds-v2&#10;  ?             ^^^   ^">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1125/test_profile_migration_is_addi0')
+
+    def test_profile_migration_is_additive_and_keeps_old_rows(tmp_path):
+        with closing(old_db(tmp_path/'old.db', 'assistant-rounds-v2', False)) as db:
+            db.execute("INSERT INTO users VALUES ('synthetic-user','old-user','unused','[]',0)")
+            db.commit()
+            before = schema_migrations.database_rows(db)
+&gt;           assert schema_migrations.upgrade_database(db) == 'assistant-profiles-v1'
+E           AssertionError: assert 'assistant-rounds-v2' == 'assistant-profiles-v1'
+E             
+E             - assistant-profiles-v1
+E             ?           -  ^^^^   ^
+E             + assistant-rounds-v2
+E             ?             ^^^   ^
+
+tests\integration\test_assistant_profile_schema.py:13: AssertionError</failure></testcase></testsuite></testsuites>

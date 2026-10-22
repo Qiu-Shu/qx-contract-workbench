@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.271" timestamp="2026-10-23T04:34:04.597629+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_profile_store" name="test_projection_retry_and_recoverable_receipt" time="0.487"><failure message="ModuleNotFoundError: No module named 'cn_contract.assistant.profile_store'">workspace = (&lt;cn_contract.persistence.Database object at 0x0000021C9D002450&gt;, {'admin': Actor(user_id=UUID('fff04721-755d-40dd-a05... &lt;module 'cn_contract.assistant.service' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\service.py'&gt;)
+
+    def test_projection_retry_and_recoverable_receipt(workspace):
+&gt;       from cn_contract.assistant.profile_store import save_profile, read_profile, find_receipt
+E       ModuleNotFoundError: No module named 'cn_contract.assistant.profile_store'
+
+tests\integration\test_assistant_profile_store.py:23: ModuleNotFoundError</failure></testcase></testsuite></testsuites>

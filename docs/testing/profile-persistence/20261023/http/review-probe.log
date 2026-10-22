@@ -1,0 +1,26 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_reject_noop_retimed_after_newer_manual_intake ______________
+
+chain = ((WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1143/test_reject_noop_retimed_...ed', audience='internal', created_at=datetime.datetime(2026, 10, 22, 20, 41, 34, 21244, tzinfo=datetime.timezone.utc)))
+
+    def test_reject_noop_retimed_after_newer_manual_intake(chain):
+        source, _, first, _, second = chain
+        _, database, actor, *_ = source
+        with database.session() as db:
+            current = intake.read(first.intake_id,actor,db)
+            draft = d.IntakeDraft.model_validate(current.model_dump(include=set(d.IntakeDraft.model_fields)))
+            next_record = intake.save(current.id,d.IntakeUpdateInput(expected_revision=1,
+                draft=draft.model_copy(update={'title':'人工的新标题'})),actor,db)
+        assert next_record.revision == 2
+        later = (next_record.saved_at+timedelta(seconds=1)).isoformat()
+        corrupt(database,'assistant_profile_receipts',
+                'UPDATE assistant_profile_receipts SET created_at=? WHERE sequence=2',(later,))
+>       with pytest.raises(ValueError,match='ASSISTANT_PROFILE_INTEGRITY'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+.local\profile-persistence-20261023\http\review_probe.py:25: Failed
+=========================== short test summary info ===========================
+FAILED .local/profile-persistence-20261023/http/review_probe.py::test_reject_noop_retimed_after_newer_manual_intake
+1 failed in 2.02s

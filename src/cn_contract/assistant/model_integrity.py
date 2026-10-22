@@ -449,7 +449,7 @@ def validate_model_records(db, *, allowed=True):
     if version in ('pre-intake','intake-v1','assistant-v1','assistant-attachments-v1'):
         return
     if version not in ('assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
-                       'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2'):
+                       'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     attempts = db.execute(text('SELECT * FROM assistant_model_attempts ORDER BY created_at,id')).mappings().all()
     receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_receipts')).mappings()}
@@ -473,8 +473,8 @@ def validate_model_records(db, *, allowed=True):
         with localcontext(Context(prec=60)):
             _validate(db, attempts, receipts, outputs, _uuid(identities[0]),
                       context_schema=version in ('assistant-context-v1', 'assistant-rounds-v1',
-                                                 'assistant-rounds-v2'),
-                      rounds=('v2' if version == 'assistant-rounds-v2'
+                                                 'assistant-rounds-v2', 'assistant-profiles-v1'),
+                      rounds=('v2' if version in ('assistant-rounds-v2', 'assistant-profiles-v1')
                               else 'v1' if version == 'assistant-rounds-v1' else False))
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
         # Archive errors must not interpolate source text or model bodies.

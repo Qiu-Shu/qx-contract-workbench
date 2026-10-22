@@ -14,7 +14,7 @@ from cn_contract.assistant import service
 from cn_contract.ops import backup, workspace_backup
 from cn_contract.persistence import Database, read_original
 from cn_contract.security import authenticate, login
-from cn_contract.storage_schema import identify_schema
+from cn_contract.storage_schema import CURRENT_VERSION, identify_schema
 from cn_contract.web import local_server
 from tests.helpers.legacy_assistant_backup import write_old_cnbak, USERNAME, PASSWORD, PASSPHRASE
 from tests.helpers.synthetic_operations import keys
@@ -90,7 +90,7 @@ def test_pre_library_archive_upgrade_is_complete_or_unpublished(tmp_path, monkey
             path = target/('workbench.db' if native else 'database.db')
             with closing(sqlite3.connect(path)) as db:
                 rows = db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall()
-                assert identify_schema(rows, native=native) == 'assistant-rounds-v2'
+                assert identify_schema(rows, native=native) == CURRENT_VERSION
                 for table in library_schema.TABLES:
                     assert db.execute('SELECT COUNT(*) FROM '+table).fetchone() == (0,)
             restored = Database('sqlite:///'+str(path), target/'protected', database.settings, initialize_schema=False)

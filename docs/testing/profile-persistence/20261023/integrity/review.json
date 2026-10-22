@@ -1,0 +1,94 @@
+{
+  "reviewer": "profile_persistence_integrity",
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "reviewed_at_utc": "2026-10-22T20:44:27.613114+00:00",
+  "baseline": "2b72c9a02a25607761705811550323fa9fcfce00",
+  "scope": "Independent review of profile store/domain and migration/schema/version wiring; own integrity implementation excluded from independent approval.",
+  "source_sha256": {
+    "src/cn_contract/domain.py": "7839dbbdc13606a454f2cd5562a33b0c4333aa2f6ce875de006e40f93c77bd7d",
+    "src/cn_contract/assistant/profile_store.py": "79f49aab0b2b02d9bfd7dbf25b4db81bd686f5cc87f29eae3cb6f472cf65d22b",
+    "src/cn_contract/assistant/profile_schema.py": "f3643c243f873986a338c1e86f5b31d35275cb0d2f2ec0e3d440412b99233db0",
+    "src/cn_contract/storage_schema.py": "e05418d61978e30c7d46f7ca4e36a9b265bfb23bea8c7ef83db0d0b7793e72c6",
+    "src/cn_contract/schema_migrations.py": "0074617442a2d41e852ccf2fd069acf63ad029d94297789ab9b2a7b336a9631d",
+    "src/cn_contract/storage_bootstrap.py": "f7682ad34793f67b2d3cfd0a62b6c853b1c2ab1f600d4f51869349f8780ef83e",
+    "src/cn_contract/assistant/model_integrity.py": "4fce8ac4e2f8a6c0b31830af376bec0d501f384c03b8b996d803a786c6bee30f",
+    "src/cn_contract/assistant/judge_integrity.py": "24f0c4ba10c7ace6bcadf2c22889c3ac9e8f38dab115a8cbadd98f67f81cce22",
+    "src/cn_contract/assistant/library_integrity.py": "abeb6fc74746cfd157466e8ff26e74f948c72735e5517e868b902d8aca9fb485",
+    "src/cn_contract/assistant/attachment_integrity.py": "66c760ae4d02b1de5245ecef60f92ead387eee9e6bb6f07674e8240db4e22b73",
+    "src/cn_contract/intake/service.py": "ab5fa1b22123abfa9e87ebf4b94552fc68593c7dfcd422f07cb53934f50b252b",
+    "src/cn_contract/assistant/profile_integrity.py": "9f605f0671dd390c0f5c2ec42159cfdb00fc625b0c87bf3f7da34b385f6ac4e2",
+    "src/cn_contract/ops/backup.py": "2ee210ff2dade8104bed7f227eec72c1ae163922e938a1c1fabb4ca5d7d29192",
+    "tests/integration/test_assistant_profile_integrity.py": "97b924447fb61cad084bf7b4a18aac5c0b707ce61ef4f8ad3c24f4d9da2ee8eb"
+  },
+  "hashes_stable_during_final_capture": true,
+  "hash_binding_note": "Captured after targeted tests and final source read; parent final verification should bind the complete changed-input snapshot.",
+  "findings": [
+    {
+      "id": "PROFILE-READ-SCOPE",
+      "priority": 2,
+      "status": "fixed_and_retested",
+      "problem": "Rehashed profile payload could name another conversation/revision while read_profile returned it for the requested row.",
+      "fix": "_profile checks requested conversation, actual row revision and workspace identity as well as payload digest.",
+      "probe": "test_profile_read_rejects_rehashed_other_conversation"
+    },
+    {
+      "id": "RECEIPT-READ-DIGEST",
+      "priority": 2,
+      "status": "fixed_and_retested",
+      "problem": "find_receipt returned a DTO despite a damaged projection digest.",
+      "fix": "_receipt validates immutable request identity/digest and referenced profile/intake records and intake digest.",
+      "probe": "test_receipt_read_rejects_broken_projection_hash"
+    },
+    {
+      "id": "INTAKE-CREATION-NONCE",
+      "priority": 2,
+      "status": "fixed_and_retested",
+      "problem": "Predictable derived intake creation key could silently reuse an independently preexisting and later edited intake.",
+      "fix": "Reject a preexisting derived owner/request key before intake.create inside the same serialized savepoint.",
+      "probe": "test_projection_create_does_not_reuse_unrelated_intake_nonce"
+    }
+  ],
+  "checks": [
+    "Profile schema is additive, with two tables, four immutable triggers, composite foreign keys and bounded payloads.",
+    "Historical schema identifiers remain explicit; new current version retains rounds v2 handling in model integrity.",
+    "Bootstrap and both native/database migration paths consume the same fixed DDL; migration transaction and marker-recovery seams remain existing implementations.",
+    "All profile mutation writes, including intake creation, revisions, conversation link and receipt, are inside one savepoint.",
+    "Current authorization and restore fence precede idempotent returns; source file reads occur outside write transaction and scope/auth are rechecked.",
+    "Historical profile and receipt retrieval works from qxbak after old sessions are revoked; new writes are blocked.",
+    "No live model, remote service, real documents or existing desktop workspace was used."
+  ],
+  "external_review_fix": {
+    "reviewer": "profile_persistence_http",
+    "problem": "A no-change receipt could be retimed after a later manual intake revision while still claiming the older after version.",
+    "fix": "Reject any later intake revision whose saved_at is no later than receipt created_at.",
+    "test": "test_semantic_tamper_rejects_backup_before_publish[stale_intake_at_receipt_time]",
+    "status": "fixed_and_retested"
+  },
+  "test_result": {
+    "command": "python -m pytest tests/integration/test_assistant_profile_integrity.py .local/profile-persistence-20261023/integrity/review_probes.py -q --tb=short",
+    "passed": 31,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "formal_integrity_tests": 28,
+    "independent_store_probes": 3,
+    "reported_seconds": 37.9
+  },
+  "open_findings": [],
+  "limits": [
+    "Not a complete project audit or full regression run.",
+    "No GUI, frozen binary, installer, memory/RSS, real-model or cloud validation.",
+    "Synthetic binding-change test verifies historical tolerance; no current product rebind API was found."
+  ],
+  "evidence_sha256": {
+    "red.log": "c7739bd8caa73723ee913bd388d114ffcab3b07b2e06b55169d8e2f8261baf90",
+    "target.log": "aad5c6be094c851b97cbba7553aa8e986959df8321bc8988b7945ebd8b5184d6",
+    "final.log": "c38e49950184ea5710ac858a359ba2d7ae738fca58197304411e85ababf1c954",
+    "review-probes-valid.log": "0a452abc11e54f635f7b0cf3dd5e55fe17921c3c0d4f1f43f6fe2b0332681fea",
+    "review-probes-valid.xml": "c23355fc6ec5956dd7d666be154d2c983054ad6825b8688adaf62ef7c888b0e1",
+    "review-final.log": "81f4a02503b74f4c439ad32df165d6522113051f9c866cfc747fb415b45ad308",
+    "review-final.xml": "62853b1ef65f973c9184b76e98975a14f4117c6ee38a88d54468c5822a123e85",
+    "review_probes.py": "6308fcde696b5ddad2402945af84bac020ad94c45cbf44eca3cce749e5a8d241"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/integration/test_desktop_runtime.py",
+    "tests/integration/test_local_workbench.py::test_restart_preserves_accounts_cases_and_current_session",
+    "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\db-green-c7a2f50d",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-persistence-20261023\\desktop-boundary\\green.xml"
+  ],
+  "started_at": "2026-10-22T21:35:49.798121+00:00",
+  "elapsed_seconds": 23.577999999994063,
+  "exit_code": 0,
+  "counts": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

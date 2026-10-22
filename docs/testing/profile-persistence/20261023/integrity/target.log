@@ -1,0 +1,10 @@
+......................F                                                  [100%]
+================================== FAILURES ===================================
+__ test_qxbak_preserves_profile_intake_and_source_history_and_blocks_writes ___
+tests\integration\test_assistant_profile_integrity.py:176: in test_qxbak_preserves_profile_intake_and_source_history_and_blocks_writes
+    state = read_profile(actor, cid, db, revision=first.profile_revision)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: read_profile() takes 2 positional arguments but 3 positional arguments (and 1 keyword-only argument) were given
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_integrity.py::test_qxbak_preserves_profile_intake_and_source_history_and_blocks_writes
+1 failed, 22 passed in 30.82s

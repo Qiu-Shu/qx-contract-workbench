@@ -1,0 +1,22 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_external_user_data_round_trip_and_default_boundary ___________
+
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/db-red-657b85d6/test_external_user_data_round_0')
+
+    def test_external_user_data_round_trip_and_default_boundary(tmp_path):
+        parent = tmp_path / '中文 用户资料'
+        root = parent / 'workspaces' / 'main'
+        local_server.initialize_workspace(root, '桌面律师', 'fiction123', data_parent=parent)
+        before = (root / 'workbench.db').read_bytes()
+        with pytest.raises(ValueError, match='WORKSPACE_ALREADY_EXISTS'):
+            local_server.initialize_workspace(root, '其他账户', 'fiction123', data_parent=parent)
+        assert (root / 'workbench.db').read_bytes() == before
+>       with pytest.raises(ValueError, match='PROJECT_LOCAL_DIRECTORY_REQUIRED'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\integration\test_desktop_runtime.py:26: Failed
+=========================== short test summary info ===========================
+FAILED tests/integration/test_desktop_runtime.py::test_external_user_data_round_trip_and_default_boundary
+1 failed in 1.48s

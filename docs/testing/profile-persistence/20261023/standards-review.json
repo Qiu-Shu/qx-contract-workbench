@@ -1,0 +1,127 @@
+{
+  "axis": "Standards",
+  "reviewer": "profile_persistence_migration",
+  "completed_at": "2026-10-22T20:47:09.028690+00:00",
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "baseline": "2b72c9a02a25607761705811550323fa9fcfce00",
+  "comparison": "Tracked working diff against the fixed baseline plus complete contents of the three new files in scope.",
+  "author_independence": "Only other authors implementation reviewed; reviewer-owned schema, migration, initializer and four version gates excluded.",
+  "standards": [
+    "AGENTS.md project requirements: DTO centralization, backend authorization/version/source checks, UTC, immutable originals and audit, no unapproved external processing.",
+    "CONTRIBUTING.md implementation and validation: reuse existing engines/security/transactions/backup, no network waits inside SQLite write transactions, exact evidence boundaries.",
+    "docs/plans/2026-10-17-assistant-storage.md: service authorization, restored-copy write fence, explicit versions, historical backup validation."
+  ],
+  "scope": [
+    "src/cn_contract/domain.py",
+    "src/cn_contract/assistant/profile_store.py",
+    "src/cn_contract/web/assistant_profiles.py",
+    "src/cn_contract/intake/service.py",
+    "src/cn_contract/assistant/profile_integrity.py",
+    "src/cn_contract/ops/backup.py"
+  ],
+  "before": {
+    "src/cn_contract/domain.py": "7839dbbdc13606a454f2cd5562a33b0c4333aa2f6ce875de006e40f93c77bd7d",
+    "src/cn_contract/assistant/profile_store.py": "79f49aab0b2b02d9bfd7dbf25b4db81bd686f5cc87f29eae3cb6f472cf65d22b",
+    "src/cn_contract/web/assistant_profiles.py": "97e32cb30473160e9debaf9f8d85e7912dd764ef6bae6487df17469995903ed3",
+    "src/cn_contract/intake/service.py": "ab5fa1b22123abfa9e87ebf4b94552fc68593c7dfcd422f07cb53934f50b252b",
+    "src/cn_contract/assistant/profile_integrity.py": "9f605f0671dd390c0f5c2ec42159cfdb00fc625b0c87bf3f7da34b385f6ac4e2",
+    "src/cn_contract/ops/backup.py": "2ee210ff2dade8104bed7f227eec72c1ae163922e938a1c1fabb4ca5d7d29192"
+  },
+  "after": {
+    "src/cn_contract/domain.py": "7839dbbdc13606a454f2cd5562a33b0c4333aa2f6ce875de006e40f93c77bd7d",
+    "src/cn_contract/assistant/profile_store.py": "79f49aab0b2b02d9bfd7dbf25b4db81bd686f5cc87f29eae3cb6f472cf65d22b",
+    "src/cn_contract/web/assistant_profiles.py": "97e32cb30473160e9debaf9f8d85e7912dd764ef6bae6487df17469995903ed3",
+    "src/cn_contract/intake/service.py": "ab5fa1b22123abfa9e87ebf4b94552fc68593c7dfcd422f07cb53934f50b252b",
+    "src/cn_contract/assistant/profile_integrity.py": "9f605f0671dd390c0f5c2ec42159cfdb00fc625b0c87bf3f7da34b385f6ac4e2",
+    "src/cn_contract/ops/backup.py": "2ee210ff2dade8104bed7f227eec72c1ae163922e938a1c1fabb4ca5d7d29192"
+  },
+  "inputs_stable": true,
+  "checks": [
+    {
+      "id": "dto_boundary",
+      "locations": [
+        "src/cn_contract/domain.py:1578",
+        "src/cn_contract/domain.py:3967",
+        "src/cn_contract/domain.py:3983"
+      ],
+      "result": "New request/receipt and read-only intake metadata remain in domain.py. Typed tuples, UUIDs, UTC, target pairs and event consistency reuse existing domain contracts."
+    },
+    {
+      "id": "service_authority",
+      "locations": [
+        "src/cn_contract/assistant/profile_store.py:65",
+        "src/cn_contract/assistant/profile_store.py:78",
+        "src/cn_contract/assistant/profile_store.py:112",
+        "src/cn_contract/web/assistant_profiles.py:25",
+        "src/cn_contract/web/assistant_profiles.py:45"
+      ],
+      "result": "Current session/ownership/scope/version and restored-copy write checks are reused at service boundaries; HTTP validates authority before and after bounded body parsing and binds path conversation to request."
+    },
+    {
+      "id": "atomic_idempotent_history",
+      "locations": [
+        "src/cn_contract/assistant/profile_store.py:17",
+        "src/cn_contract/assistant/profile_store.py:45",
+        "src/cn_contract/assistant/profile_store.py:86",
+        "src/cn_contract/assistant/profile_store.py:146",
+        "src/cn_contract/assistant/profile_store.py:188"
+      ],
+      "result": "Exact request digest replay, profile identity/hash checks, immutable history inserts and intake/link/receipt savepoint share existing transaction API. Sources are read outside the final write transaction; no provider call or original-file mutation added."
+    },
+    {
+      "id": "intake_provenance_inheritance",
+      "locations": [
+        "src/cn_contract/intake/service.py:35",
+        "src/cn_contract/intake/service.py:56",
+        "src/cn_contract/intake/service.py:155"
+      ],
+      "result": "After ownership check, metadata derives from the nearest projection receipt and the whole intervening consultation history. Title-only edits keep summary provenance; a consultation replacement breaks it even if later restored. Client export remains a client_reply-only allowlist; internal export distinguishes summary from original words."
+    },
+    {
+      "id": "historical_integrity",
+      "locations": [
+        "src/cn_contract/assistant/profile_integrity.py:33",
+        "src/cn_contract/assistant/profile_integrity.py:59",
+        "src/cn_contract/assistant/profile_integrity.py:122",
+        "src/cn_contract/assistant/profile_integrity.py:157",
+        "src/cn_contract/assistant/profile_integrity.py:235"
+      ],
+      "result": "Backup validation replays typed canonical requests and exact historical message/material/intake versions, checks owner/workspace/sequence/digests and origin consistency, sanitizes errors and performs no external I/O or writes. It intentionally does not treat later access revocation as historical corruption."
+    },
+    {
+      "id": "backup_reuse",
+      "locations": [
+        "src/cn_contract/ops/backup.py:162",
+        "src/cn_contract/ops/backup.py:172"
+      ],
+      "result": "Only the shared validation chain gains validate_profile_records, forwarding the existing allow_assistant policy. No second backup pipeline or relaxed archive validation was introduced."
+    }
+  ],
+  "hard_violations": [],
+  "advisories": [
+    {
+      "priority": "low",
+      "blocking": false,
+      "locations": [
+        "src/cn_contract/assistant/profile_store.py:99",
+        "src/cn_contract/intake/service.py:35",
+        "src/cn_contract/assistant/profile_integrity.py:116"
+      ],
+      "observation": "Consultation origin rules are maintained across commit, intake read and historical replay. They currently agree; future edits can drift.",
+      "recommendation": "Keep their regression cases coordinated when changing provenance semantics; no immediate abstraction or source change required."
+    }
+  ],
+  "smell_review": {
+    "method": "Naming, duplication, cross-module reads, grouped fields, primitive types, repeated branching, scattered edits, multiple change reasons, speculative generalization, call chains, middlemen and inheritance used only as prompts; repository rules take precedence.",
+    "result": "No smell promoted to a hard rule violation; small origin duplication recorded as nonblocking maintenance advice."
+  },
+  "new_test_executions": 0,
+  "excluded": [
+    "Reviewer-owned schema/migration as independent evidence",
+    "Full regression and runtime acceptance",
+    "Live models, desktop/installer and real material validation",
+    "Other modified frontend/recovery files beyond the named source scope"
+  ],
+  "prior_review": ".local/profile-persistence-20261023/migration/review.json",
+  "conclusion": "No hard repository-standard violations found in the six stable reviewed sources. Static review is not a runtime or production pass."
+}

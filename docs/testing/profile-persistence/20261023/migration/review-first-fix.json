@@ -1,0 +1,135 @@
+{
+  "reviewer": "profile_persistence_migration",
+  "completed_at": "2026-10-22T20:41:32.7387615Z",
+  "mode": "independent read-only source review",
+  "scope": [
+    "ProfileCommitInput/ProfileCommitReceipt",
+    "assistant/profile_store.py",
+    "web/assistant_profiles.py"
+  ],
+  "excluded": [
+    "own schema implementation as independent evidence",
+    "live models",
+    "installer/desktop",
+    "full runtime validation",
+    "intake metadata helper still being completed by HTTP agent"
+  ],
+  "before": [
+    {
+      "path": "src/cn_contract/domain.py",
+      "sha256": "7839dbbdc13606a454f2cd5562a33b0c4333aa2f6ce875de006e40f93c77bd7d"
+    },
+    {
+      "path": "src/cn_contract/assistant/profile_store.py",
+      "sha256": "9c2610b581197ef4802a58b5a16c06af4c71270a2606426fbb3987a8772578e9"
+    },
+    {
+      "path": "src/cn_contract/web/assistant_profiles.py",
+      "sha256": "97e32cb30473160e9debaf9f8d85e7912dd764ef6bae6487df17469995903ed3"
+    }
+  ],
+  "after": [
+    {
+      "path": "src/cn_contract/domain.py",
+      "sha256": "7839dbbdc13606a454f2cd5562a33b0c4333aa2f6ce875de006e40f93c77bd7d"
+    },
+    {
+      "path": "src/cn_contract/assistant/profile_store.py",
+      "sha256": "79f49aab0b2b02d9bfd7dbf25b4db81bd686f5cc87f29eae3cb6f472cf65d22b"
+    },
+    {
+      "path": "src/cn_contract/web/assistant_profiles.py",
+      "sha256": "97e32cb30473160e9debaf9f8d85e7912dd764ef6bae6487df17469995903ed3"
+    }
+  ],
+  "inputs_stable": false,
+  "checks": [
+    {
+      "id": "authority",
+      "status": "reviewed",
+      "locations": [
+        "profile_store.py:63-80",
+        "profile_store.py:114-126",
+        "assistant_profiles.py:25-31"
+      ],
+      "conclusion": "Current session, lawyer role, owner/workspace/scope and existing projection intake checks precede reads and commits; restore/archived writes blocked."
+    },
+    {
+      "id": "http_boundary",
+      "status": "reviewed",
+      "locations": [
+        "assistant_profiles.py:45-52",
+        "request_context.py:21-25",
+        "request_context.py:46-58"
+      ],
+      "conclusion": "Authenticates before body, checks origin and CSRF on writes, reauthorizes after bounded parsing, rejects URL/body conversation mismatch."
+    },
+    {
+      "id": "sources_scope",
+      "status": "reviewed",
+      "locations": [
+        "profile_store.py:118-139",
+        "profile_store.py:194-196",
+        "profile_sources.py:18-68"
+      ],
+      "conclusion": "Sources rebuilt from authorized immutable messages and selected attachment versions; file bytes checked without holding write transaction; current auth, scope and optimistic revisions checked again on commit."
+    },
+    {
+      "id": "atomicity",
+      "status": "reviewed",
+      "locations": [
+        "profile_store.py:144-182",
+        "persistence.py:181-207"
+      ],
+      "conclusion": "BEGIN IMMEDIATE serializes writers; nested savepoint contains intake create/save, projection link, profile revision and receipt. No provider/network or original-file writes in transaction."
+    },
+    {
+      "id": "idempotency",
+      "status": "reviewed",
+      "locations": [
+        "profile_store.py:84-90",
+        "profile_store.py:186-196"
+      ],
+      "conclusion": "Exact request digest replays existing receipt before reading files; another payload with same key conflicts; fresh request uses exact profile and intake revision checks."
+    },
+    {
+      "id": "read_identity_fix",
+      "status": "reviewed",
+      "locations": [
+        "profile_store.py:45-60"
+      ],
+      "conclusion": "Fixed: loaded profile payload conversation and revision now match the selected row as well as content digest."
+    },
+    {
+      "id": "derived_intake_collision_fix",
+      "status": "reviewed",
+      "locations": [
+        "profile_store.py:147-154"
+      ],
+      "conclusion": "Fixed: existing owner+derived request key conflicts before intake.create, preventing incidental linkage to an existing record."
+    },
+    {
+      "id": "receipt_history_fix",
+      "status": "reviewed",
+      "locations": [
+        "profile_store.py:17-36"
+      ],
+      "conclusion": "Receipt read validates request hash/id/conversation and referenced profile/intake history; intake access and history digest are rechecked."
+    },
+    {
+      "id": "typed_request",
+      "status": "reviewed",
+      "locations": [
+        "domain.py:3967-4008"
+      ],
+      "conclusion": "Target intake identity/revision supplied together; manual edits bounded and unique; owner/session/confirmed state are excluded; receipt triple/changed/event constraints remain typed."
+    }
+  ],
+  "must_fix_findings": [],
+  "resolved_prior_findings": [
+    "profile read cid/revision binding",
+    "derived intake request key collision"
+  ],
+  "new_test_executions": 0,
+  "conclusion": "No additional must-fix findings in these stable reviewed sources; dynamic validation remains the main agent responsibility."
+}

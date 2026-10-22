@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="3" time="3.103" timestamp="2026-10-23T04:39:49.382939+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.profile-persistence-20261023.integrity.review_probes" name="test_profile_read_rejects_rehashed_other_conversation" time="0.772"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">.local\profile-persistence-20261023\integrity\review_probes.py:34: in test_profile_read_rejects_rehashed_other_conversation
+    with pytest.raises(ServiceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;</failure></testcase><testcase classname=".local.profile-persistence-20261023.integrity.review_probes" name="test_receipt_read_rejects_broken_projection_hash" time="0.718"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">.local\profile-persistence-20261023\integrity\review_probes.py:43: in test_receipt_read_rejects_broken_projection_hash
+    with pytest.raises(ServiceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;</failure></testcase><testcase classname=".local.profile-persistence-20261023.integrity.review_probes" name="test_projection_create_does_not_reuse_unrelated_intake_nonce" time="0.660"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">.local\profile-persistence-20261023\integrity\review_probes.py:60: in test_projection_create_does_not_reuse_unrelated_intake_nonce
+    with pytest.raises(ServiceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;</failure></testcase></testsuite></testsuites>

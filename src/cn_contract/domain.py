@@ -1578,6 +1578,9 @@ class IntakeRecord(IntakeDraft):
     saved_at: UTCDatetime
     matter_id: UUID | None
     verification_status: Literal['unverified'] = 'unverified'
+    consultation_origin: Literal['user', 'profile_summary'] = 'user'
+    source_conversation_id: UUID | None = None
+    source_profile_revision: NonNegativeInt | None = None
 
 
 class PositionInput(DomainModel):
@@ -3959,3 +3962,47 @@ class ProfileMergeResult(DomainModel):
     profile: ProfileDraftState
     changed: StrictBool
     projection: IntakeDraft | None
+
+
+class ProfileCommitInput(DomainModel):
+    request_id: UUID
+    patch: ProfilePatch
+    expected_intake_id: UUID | None = None
+    expected_intake_revision: PositiveInt | None = None
+    manual_edits: Annotated[tuple[ProfileEdit, ...], Field(max_length=12)] = ()
+    project_intake: StrictBool = False
+
+    @model_validator(mode='after')
+    def target_and_edits(self):
+        if (self.expected_intake_id is None) != (self.expected_intake_revision is None):
+            raise ValueError('intake identity and revision must be supplied together')
+        if len({edit.field for edit in self.manual_edits}) != len(self.manual_edits):
+            raise ValueError('manual fields must be unique')
+        return self
+
+
+class ProfileCommitReceipt(DomainModel):
+    conversation_id: UUID
+    sequence: PositiveInt
+    request_id: UUID
+    profile_revision: NonNegativeInt
+    profile_changed: StrictBool
+    intake_id: UUID | None
+    intake_revision: PositiveInt | None
+    intake_sha256: SHA256 | None
+    projection_changed: StrictBool
+    consultation_origin: Literal['user', 'profile_summary']
+    event_type: Literal['profile.saved', 'profile.unchanged']
+    audience: Literal['internal'] = 'internal'
+    created_at: UTCDatetime
+
+    @model_validator(mode='after')
+    def consistent_receipt(self):
+        if len({self.intake_id is None, self.intake_revision is None, self.intake_sha256 is None}) != 1:
+            raise ValueError('intake receipt requires identity, revision and digest')
+        if self.profile_changed and self.profile_revision == 0 or self.projection_changed and self.intake_id is None:
+            raise ValueError('changed receipt requires its saved revision')
+        expected = 'profile.saved' if self.profile_changed or self.projection_changed else 'profile.unchanged'
+        if self.event_type != expected:
+            raise ValueError('event must reflect actual changes')
+        return self

@@ -165,9 +165,11 @@ def _file_references(db, *, allow_assistant=True):
     from ..assistant.model_integrity import validate_model_records
     from ..assistant.judge_integrity import validate_judge_records
     from ..assistant.library_integrity import validate_library_records
+    from ..assistant.profile_integrity import validate_profile_records
     validate_model_records(db, allowed=allow_assistant)
     validate_judge_records(db, allowed=allow_assistant)
     validate_library_records(db, allowed=allow_assistant)
+    validate_profile_records(db, allowed=allow_assistant)
     items = file_references(db, allowed=allow_assistant)
     for row in db.scalars(select(DocumentRow)):
         value = strict_json(row.payload.encode())

@@ -88,7 +88,12 @@
   function localDate(iso) {if(!iso)return '';const date=new Date(iso);return new Date(date.getTime()-date.getTimezoneOffset()*60000).toISOString().slice(0,16);}
   function showSource(record) {
     byId('history-state').textContent='第 '+record.revision+' 版 · '+new Date(record.saved_at).toLocaleString('zh-CN')+' · 待核验';
-    byId('source-text').textContent=record.consultation||'本版尚未登记咨询原话。';
+    const summary=record.consultation_origin==='profile_summary';
+    byId('source-label').textContent=summary?'接待摘要':'咨询原话';
+    byId('source-description').textContent=summary?'来源：对话整理的接待摘要，仍待核验，不作为客户逐字原话。':'来源：人工登记的咨询记录，事实及法律依据待核。此处显示已保存文字。';
+    if(record.source_conversation_id)byId('source-description').append(document.createTextNode(' '),
+      link('查看来源会话 · 档案第 '+record.source_profile_revision+' 版','/assistant/'+encodeURIComponent(record.source_conversation_id)));
+    byId('source-text').textContent=record.consultation||'本版尚未登记'+(summary?'接待摘要。':'咨询原话。');
     const materials=record.materials.map(m=>m.name+'（'+{needed:'待补',received:'已收到待核',checked:'已核对'}[m.state]+'）').join('\n');
     byId('history-content').textContent='咨询主题：'+record.title+'\n联系备注：'+(record.contact||'尚未填写')+
       '\n本版接待状态：'+states[record.status]+'\n\n追问：\n'+(record.questions.join('\n')||'尚未填写')+
@@ -97,6 +102,7 @@
   }
   function populate(record) {
     saved=record;dirty=false;historyRequest++;
+    byId('consultation-label').textContent=record.consultation_origin==='profile_summary'?'接待摘要':'咨询原话';
     for(const name of ['title','contact','consultation','follow_up_note','status','client_reply','internal_notes'])form.elements[name].value=record[name];
     form.elements.questions.value=record.questions.join('\n');form.elements.follow_up_at.value=localDate(record.follow_up_at);
     byId('materials').replaceChildren();record.materials.forEach(materialRow);
@@ -120,7 +126,7 @@
   }
   form.addEventListener('input',markDirty);form.addEventListener('change',markDirty);
   on('add-material','click',()=>{materialRow();markDirty();});
-  on('intake-form','submit',async()=>{const value=draft();await transaction(async()=>{const record=await request(base,'PUT',{expected_revision:saved.revision,draft:value});populate(record);tell('这一版已保存，历史原话和旧版记录保留。');});});
+  on('intake-form','submit',async()=>{const value=draft();await transaction(async()=>{const record=await request(base,'PUT',{expected_revision:saved.revision,draft:value});populate(record);tell('这一版已保存，历史来源和旧版记录保留。');});});
   on('client-checked','change',controls);
   async function current() {if(!saved||dirty)throw new Error('请先保存当前修改。');const record=await request(base);if(record.revision!==saved.revision)throw new Error(errors.VERSION_CONFLICT);return record;}
   for(const audience of ['client','internal']) {
@@ -129,7 +135,7 @@
   }
   on('history-form','submit',async()=>{const sequence=++historyRequest;const version=Number(byId('history-revision').value);const record=await request(base+'/revisions/'+version);if(sequence===historyRequest)showSource(record);});
   on('reading-size','change',()=>{document.body.classList.toggle('read-large',byId('reading-size').value==='large');document.body.classList.toggle('read-largest',byId('reading-size').value==='largest');});
-  on('toggle-source','click',()=>{const panel=byId('source-panel');panel.hidden=!panel.hidden;byId('toggle-source').textContent=panel.hidden?'展开原话与版本':'收起原话与版本';byId('toggle-source').setAttribute('aria-expanded',String(!panel.hidden));});
+  on('toggle-source','click',()=>{const panel=byId('source-panel');panel.hidden=!panel.hidden;byId('toggle-source').textContent=panel.hidden?'展开来源与版本':'收起来源与版本';byId('toggle-source').setAttribute('aria-expanded',String(!panel.hidden));});
   const positions={sales:[['buyer','买方'],['seller','卖方']],service:[['customer','委托方'],['provider','服务方']],lease:[['lessee','承租方'],['lessor','出租方']],nda:[['recipient','接收方'],['discloser','披露方']]};
   function setPositions() {const select=byId('convert-position');select.replaceChildren();for(const [key,label] of positions[byId('convert-form').elements.contract_type.value]){const option=element('option',label);option.value=key;select.append(option);}}
   byId('convert-form').elements.contract_type.addEventListener('change',setPositions);setPositions();

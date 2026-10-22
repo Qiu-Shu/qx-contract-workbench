@@ -1,0 +1,22 @@
+{
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/integration/test_desktop_runtime.py::test_external_user_data_round_trip_and_default_boundary",
+    "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\db-red-657b85d6",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-persistence-20261023\\desktop-boundary\\red.xml"
+  ],
+  "started_at": "2026-10-22T21:34:26.199711+00:00",
+  "elapsed_seconds": 2.0309999999881256,
+  "exit_code": 1,
+  "counts": {
+    "tests": 1,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "log_encoding": "gb18030; original red.log retained, readable UTF-8 copy red-utf8.log",
+  "harness_note": "Pytest completed exit 1 with expected DID NOT RAISE; post-run log display initially attempted UTF-8 decoding and failed. Original JUnit and exit receipt retained; log then decoded without rerunning."
+}

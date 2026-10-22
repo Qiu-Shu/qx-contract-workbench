@@ -1,0 +1,36 @@
+{
+  "method": "Same workspace path; vary only trusted parent context. No app startup or file/database writes.",
+  "actual_project_root": "D:\\Documents\\ChatGPT\\律所项目",
+  "cases": [
+    {
+      "name": "actual_default_project_root",
+      "result": "allowed",
+      "resolved": "D:\\Documents\\ChatGPT\\律所项目\\.local\\db-red-657b85d6\\test_external_user_data_round_0\\中文 用户资料\\workspaces\\main"
+    },
+    {
+      "name": "actual_correct_explicit_parent",
+      "result": "allowed",
+      "resolved": "D:\\Documents\\ChatGPT\\律所项目\\.local\\db-red-657b85d6\\test_external_user_data_round_0\\中文 用户资料\\workspaces\\main"
+    },
+    {
+      "name": "actual_wrong_explicit_parent",
+      "result": "PROJECT_LOCAL_DIRECTORY_REQUIRED"
+    },
+    {
+      "name": "synthetic_default_project_root",
+      "result": "PROJECT_LOCAL_DIRECTORY_REQUIRED"
+    },
+    {
+      "name": "synthetic_correct_explicit_parent",
+      "result": "allowed",
+      "resolved": "D:\\Documents\\ChatGPT\\律所项目\\.local\\db-red-657b85d6\\test_external_user_data_round_0\\中文 用户资料\\workspaces\\main"
+    },
+    {
+      "name": "synthetic_default_local_child",
+      "result": "allowed",
+      "resolved": "D:\\Documents\\ChatGPT\\律所项目\\.local\\db-red-657b85d6\\test_external_user_data_round_0\\installation\\.local\\workspace"
+    }
+  ],
+  "assertions": 6,
+  "exit_code": 0
+}

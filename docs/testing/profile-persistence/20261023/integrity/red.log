@@ -1,0 +1,9 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_empty_workspace_profile_history_is_valid ________________
+tests\integration\test_assistant_profile_integrity.py:8: in test_empty_workspace_profile_history_is_valid
+    from cn_contract.assistant.profile_integrity import validate_profile_records
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.profile_integrity'
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_integrity.py::test_empty_workspace_profile_history_is_valid
+1 failed in 1.70s

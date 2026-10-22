@@ -1,0 +1,21 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________________ test_empty_profile_route_exists _______________________
+
+chat = (<starlette.testclient.TestClient object at 0x000002733CB08800>, <cn_contract.persistence.Database object at 0x0000027...Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1132/test_empty_profile_route_exist0/workspaces/main'))
+
+    def test_empty_profile_route_exists(chat):
+        client, _, _ = chat
+        headers = sign_in(client)
+        first = create(client, headers)
+        url = '/api/assistant/conversations/'+first['scope']['conversation_id']+'/profile'
+        response = client.get(url)
+>       assert response.status_code == 200, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"172bc42a-cea4-43d1-862e-e387bc8318a8","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests\integration\test_assistant_profile_routes.py:42: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_routes.py::test_empty_profile_route_exists
+1 failed in 2.51s

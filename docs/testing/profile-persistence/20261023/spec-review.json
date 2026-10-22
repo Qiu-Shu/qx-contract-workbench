@@ -1,0 +1,101 @@
+{
+  "reviewer": "profile_persistence_http",
+  "axis": "Spec",
+  "baseline": "2b72c9a02a25607761705811550323fa9fcfce00",
+  "created_at": "2026-10-22T20:44:44.326368+00:00",
+  "independent_scope": [
+    "profile_store/domain",
+    "profile_schema/migrations/bootstrap/version gates",
+    "profile_integrity/backup"
+  ],
+  "excluded_from_independent_review": [
+    "own HTTP routes, intake metadata, templates and browser code"
+  ],
+  "specifications": [
+    "docs/plans/2026-10-23-profile-persistence.md",
+    "docs/plans/chat-first-architecture-v2.1.md:5.1-5.6,6.5,6.7"
+  ],
+  "checks": [
+    {
+      "requirement": "保留原件、准确来源、未核事实及人工保护",
+      "result": "pass",
+      "basis": "save_profile复用来源核对及纯merge；DTO不开放owner/confirmed；未知/冲突与人工锁保留"
+    },
+    {
+      "requirement": "短事务、原子投影、幂等和版本比较",
+      "result": "pass",
+      "basis": "文件核对在事务外；提交重查scope/profile/intake；savepoint包含投影/修订/回执；旧请求返回原回执"
+    },
+    {
+      "requirement": "既有接待版本链与受众隔离",
+      "result": "pass",
+      "basis": "继续intake.create/save；正式转案不自动执行；内部回执独立于模型run事件；不新建CRM"
+    },
+    {
+      "requirement": "旧schema兼容与完整备份只读恢复",
+      "result": "pass",
+      "basis": "profiles为增量第11版本；rounds-v2保留；4历史验证器接入；qxbak接线且cnbak拒绝新档案"
+    },
+    {
+      "requirement": "历史重放不受当前撤权/材料重解析影响",
+      "result": "pass",
+      "basis": "只使用历史消息、历史选择和parse revision；不调用当前_owned或require_active"
+    },
+    {
+      "requirement": "本片未实现或超出范围",
+      "result": "none",
+      "basis": "模型提炼hook/新档案面板仍为后续CH07C，符合本片计划；未启用外发/付费/云部署"
+    }
+  ],
+  "findings": [
+    {
+      "id": "PROFILE-REPLAY-01",
+      "severity": "P2",
+      "description": "篡改no-op回执时间到人工新接待版本之后仍可引用旧版，离线重放未拒绝。",
+      "status": "fixed",
+      "fix": "检查回执after修订之后不存在保存时间<=回执时间的更高接待修订。",
+      "red": "http/review-probe.log",
+      "green": "http/review-probe-fixed.log",
+      "target_result": "1 passed in 1.86s"
+    }
+  ],
+  "open_findings": [],
+  "before_sha256": {
+    "src/cn_contract/domain.py": "7839dbbdc13606a454f2cd5562a33b0c4333aa2f6ce875de006e40f93c77bd7d",
+    "src/cn_contract/assistant/profile_store.py": "79f49aab0b2b02d9bfd7dbf25b4db81bd686f5cc87f29eae3cb6f472cf65d22b",
+    "src/cn_contract/assistant/profile_schema.py": "f3643c243f873986a338c1e86f5b31d35275cb0d2f2ec0e3d440412b99233db0",
+    "src/cn_contract/assistant/profile_integrity.py": "9f605f0671dd390c0f5c2ec42159cfdb00fc625b0c87bf3f7da34b385f6ac4e2",
+    "src/cn_contract/storage_schema.py": "e05418d61978e30c7d46f7ca4e36a9b265bfb23bea8c7ef83db0d0b7793e72c6",
+    "src/cn_contract/schema_migrations.py": "0074617442a2d41e852ccf2fd069acf63ad029d94297789ab9b2a7b336a9631d",
+    "src/cn_contract/storage_bootstrap.py": "f7682ad34793f67b2d3cfd0a62b6c853b1c2ab1f600d4f51869349f8780ef83e",
+    "src/cn_contract/assistant/attachment_integrity.py": "66c760ae4d02b1de5245ecef60f92ead387eee9e6bb6f07674e8240db4e22b73",
+    "src/cn_contract/assistant/model_integrity.py": "4fce8ac4e2f8a6c0b31830af376bec0d501f384c03b8b996d803a786c6bee30f",
+    "src/cn_contract/assistant/judge_integrity.py": "24f0c4ba10c7ace6bcadf2c22889c3ac9e8f38dab115a8cbadd98f67f81cce22",
+    "src/cn_contract/assistant/library_integrity.py": "abeb6fc74746cfd157466e8ff26e74f948c72735e5517e868b902d8aca9fb485",
+    "src/cn_contract/ops/backup.py": "2ee210ff2dade8104bed7f227eec72c1ae163922e938a1c1fabb4ca5d7d29192",
+    "docs/plans/2026-10-23-profile-persistence.md": "3b6b15a8258112701aea6303be572a510b39995cfa3ece308a39ad1fd1a15de5",
+    "docs/plans/chat-first-architecture-v2.1.md": "7d12e50fbfad075de2005aef48928d6dbccb7b6025b6b7bc5d2bc53e71e462b3"
+  },
+  "after_sha256": {
+    "src/cn_contract/domain.py": "7839dbbdc13606a454f2cd5562a33b0c4333aa2f6ce875de006e40f93c77bd7d",
+    "src/cn_contract/assistant/profile_store.py": "79f49aab0b2b02d9bfd7dbf25b4db81bd686f5cc87f29eae3cb6f472cf65d22b",
+    "src/cn_contract/assistant/profile_schema.py": "f3643c243f873986a338c1e86f5b31d35275cb0d2f2ec0e3d440412b99233db0",
+    "src/cn_contract/assistant/profile_integrity.py": "9f605f0671dd390c0f5c2ec42159cfdb00fc625b0c87bf3f7da34b385f6ac4e2",
+    "src/cn_contract/storage_schema.py": "e05418d61978e30c7d46f7ca4e36a9b265bfb23bea8c7ef83db0d0b7793e72c6",
+    "src/cn_contract/schema_migrations.py": "0074617442a2d41e852ccf2fd069acf63ad029d94297789ab9b2a7b336a9631d",
+    "src/cn_contract/storage_bootstrap.py": "f7682ad34793f67b2d3cfd0a62b6c853b1c2ab1f600d4f51869349f8780ef83e",
+    "src/cn_contract/assistant/attachment_integrity.py": "66c760ae4d02b1de5245ecef60f92ead387eee9e6bb6f07674e8240db4e22b73",
+    "src/cn_contract/assistant/model_integrity.py": "4fce8ac4e2f8a6c0b31830af376bec0d501f384c03b8b996d803a786c6bee30f",
+    "src/cn_contract/assistant/judge_integrity.py": "24f0c4ba10c7ace6bcadf2c22889c3ac9e8f38dab115a8cbadd98f67f81cce22",
+    "src/cn_contract/assistant/library_integrity.py": "abeb6fc74746cfd157466e8ff26e74f948c72735e5517e868b902d8aca9fb485",
+    "src/cn_contract/ops/backup.py": "2ee210ff2dade8104bed7f227eec72c1ae163922e938a1c1fabb4ca5d7d29192",
+    "docs/plans/2026-10-23-profile-persistence.md": "3b6b15a8258112701aea6303be572a510b39995cfa3ece308a39ad1fd1a15de5",
+    "docs/plans/chat-first-architecture-v2.1.md": "7d12e50fbfad075de2005aef48928d6dbccb7b6025b6b7bc5d2bc53e71e462b3"
+  },
+  "source_stable": true,
+  "limitations": [
+    "未把自己编写的HTTP/模板自检算独立审阅",
+    "没有重复宽跑；主代理负责最终统一回归",
+    "未验证真实模型/安装器/法律质量"
+  ]
+}

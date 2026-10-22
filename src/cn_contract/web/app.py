@@ -597,6 +597,8 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     register_assistant_routes(app,database)
     from .assistant_attachments import register_routes as register_assistant_attachments
     register_assistant_attachments(app,database)
+    from .assistant_profiles import register_routes as register_assistant_profiles
+    register_assistant_profiles(app,database)
     from .assistant_pages import register_routes as register_assistant_pages
     register_assistant_pages(app,database)
     from .assistant_generation import attach_generation

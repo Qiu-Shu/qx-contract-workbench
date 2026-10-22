@@ -32,15 +32,36 @@ def _owned(identifier, actor, db):
     return row
 
 
+def _consultation_source(db, identifier, revision):
+    if not db.scalar(text("SELECT 1 FROM sqlite_master WHERE type='table' AND name='assistant_profile_receipts'")):
+        return {}
+    source = db.execute(text('''SELECT consultation_origin, conversation_id, profile_revision, intake_revision
+        FROM assistant_profile_receipts WHERE intake_id=:id AND intake_revision<=:revision
+        AND projection_changed=1 ORDER BY intake_revision DESC LIMIT 1'''),
+        {'id':str(identifier), 'revision':revision}).mappings().first()
+    if source is None:
+        return {}
+    rows = db.execute(text('''SELECT revision,payload FROM intake_revisions WHERE intake_id=:id
+        AND revision>=:first AND revision<=:last ORDER BY revision'''),
+        {'id':str(identifier), 'first':source['intake_revision'], 'last':revision}).mappings().all()
+    # A manual replacement breaks provenance even if a later edit restores identical text.
+    if len(rows) != revision-source['intake_revision']+1 or len({json.loads(r['payload'])['consultation'] for r in rows}) != 1:
+        return {}
+    return {'consultation_origin':source['consultation_origin'],
+            'source_conversation_id':source['conversation_id'],
+            'source_profile_revision':source['profile_revision'] or 0}
+
+
 def read(identifier, actor, db, revision=None):
     owner = _owned(identifier, actor, db)
     row = db.execute(text('SELECT * FROM intake_revisions WHERE intake_id=:id AND revision=:revision'),
         {'id':str(identifier), 'revision':revision or owner['current_revision']}).mappings().first()
     if row is None:
         raise ServiceError('VERSION_CONFLICT', 409)
+    metadata = _consultation_source(db, identifier, row['revision'])
     return d.IntakeRecord(id=identifier, revision=row['revision'], saved_at=row['saved_at'],
         matter_id=owner['matter_id'], client_reply=row['client_reply'], internal_notes=row['internal_notes'],
-        **json.loads(row['payload']))
+        **json.loads(row['payload']), **metadata)
 
 
 def listing(actor, db, offset=0):
@@ -134,8 +155,11 @@ def export(identifier,value,actor,db):
         # Deliberate allowlist: no draft title, contact, history, or internal text.
         doc.add_paragraph(record.client_reply)
     else:
+        if record.source_conversation_id is not None:
+            doc.add_paragraph(f'来源会话 {record.source_conversation_id} · 档案第 {record.source_profile_revision} 版 · 待核验')
         for heading,content in (
-            ('咨询主题',record.title),('联系备注',record.contact),('咨询原话',record.consultation),
+            ('咨询主题',record.title),('联系备注',record.contact),
+            ('接待摘要' if record.consultation_origin=='profile_summary' else '咨询原话',record.consultation),
             ('追问清单','\n'.join(record.questions)),('材料清单','\n'.join(f'{m.name}（'+
              {'needed':'待补','received':'已收到，待核','checked':'已核对'}[m.state]+'）' for m in record.materials)),
             ('跟进', (record.follow_up_at.isoformat()+' UTC\n' if record.follow_up_at else '')+record.follow_up_note),

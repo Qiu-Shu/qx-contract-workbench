@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.450" timestamp="2026-10-23T05:34:26.447621+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_desktop_runtime" name="test_external_user_data_round_trip_and_default_boundary" time="0.451"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/db-red-657b85d6/test_external_user_data_round_0')
+
+    def test_external_user_data_round_trip_and_default_boundary(tmp_path):
+        parent = tmp_path / '中文 用户资料'
+        root = parent / 'workspaces' / 'main'
+        local_server.initialize_workspace(root, '桌面律师', 'fiction123', data_parent=parent)
+        before = (root / 'workbench.db').read_bytes()
+        with pytest.raises(ValueError, match='WORKSPACE_ALREADY_EXISTS'):
+            local_server.initialize_workspace(root, '其他账户', 'fiction123', data_parent=parent)
+        assert (root / 'workbench.db').read_bytes() == before
+&gt;       with pytest.raises(ValueError, match='PROJECT_LOCAL_DIRECTORY_REQUIRED'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\integration\test_desktop_runtime.py:26: Failed</failure></testcase></testsuite></testsuites>

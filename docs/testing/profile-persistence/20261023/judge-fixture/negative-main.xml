@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.381" timestamp="2026-10-23T05:35:01.020021+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_judge_authorization_protocol" name="test_dual_dispatch_routes_authorization_without_touching_main" time="0.253"><failure message="AssertionError: assert [('main', 'au...e', 'revoke')] == [('judge', 'a...e', 'revoke')]&#10;  &#10;  At index 0 diff: ('main', 'authorize') != ('judge', 'authorize')&#10;  Use -v to get more diff">def test_dual_dispatch_routes_authorization_without_touching_main():
+        async def exercise():
+            calls = []
+            class Service:
+                def __init__(self, name): self.name = name
+                def configure(self, payload): raise AssertionError('not configuring')
+                def authorize_context(self, payload): raise AssertionError('judge dispatch must not authorize main context')
+                def disable(self): calls.append((self.name, 'disable')); return {'status':'disabled'}
+                def authorize(self, payload): calls.append((self.name, 'authorize')); return {'status':'authorized'}
+                def revoke(self, payload): calls.append((self.name, 'revoke')); return {'status':'revoked'}
+            handler = control.NativeControlHandler(Service('main'), Service('judge'))
+            channel = control.ParentControlChannel(BytesIO(), 'synthetic', lambda **kw:None, lambda:None)
+            channel.bind(handler)
+            for operation, status in [('authorize_judge','authorized'),('revoke_judge','revoked')]:
+                assert await channel._dispatch(operation, {'session_token':'synthetic'}) == {'ok':True,'status':status}
+            assert calls == [('judge','authorize'),('judge','revoke')]
+            channel.close()
+            assert calls[-2:] == [('main','disable'),('judge','disable')]
+&gt;       asyncio.run(exercise())
+
+tests\unit\test_judge_authorization_protocol.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def exercise():
+        calls = []
+        class Service:
+            def __init__(self, name): self.name = name
+            def configure(self, payload): raise AssertionError('not configuring')
+            def authorize_context(self, payload): raise AssertionError('judge dispatch must not authorize main context')
+            def disable(self): calls.append((self.name, 'disable')); return {'status':'disabled'}
+            def authorize(self, payload): calls.append((self.name, 'authorize')); return {'status':'authorized'}
+            def revoke(self, payload): calls.append((self.name, 'revoke')); return {'status':'revoked'}
+        handler = control.NativeControlHandler(Service('main'), Service('judge'))
+        channel = control.ParentControlChannel(BytesIO(), 'synthetic', lambda **kw:None, lambda:None)
+        channel.bind(handler)
+        for operation, status in [('authorize_judge','authorized'),('revoke_judge','revoked')]:
+            assert await channel._dispatch(operation, {'session_token':'synthetic'}) == {'ok':True,'status':status}
+&gt;       assert calls == [('judge','authorize'),('judge','revoke')]
+E       AssertionError: assert [('main', 'au...e', 'revoke')] == [('judge', 'a...e', 'revoke')]
+E         
+E         At index 0 diff: ('main', 'authorize') != ('judge', 'authorize')
+E         Use -v to get more diff
+
+tests\unit\test_judge_authorization_protocol.py:34: AssertionError</failure></testcase></testsuite></testsuites>

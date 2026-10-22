@@ -1,0 +1,243 @@
+..................F..F.....                                              [100%]
+================================== FAILURES ===================================
+___ test_recheck_after_source_io_blocks_revocation_or_scope_change[restore] ___
+
+self = <sqlalchemy.engine.base.Connection object at 0x0000016C4C673C20>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000016C4C74F920>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000016C4C673E00>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x0000016C4C671670>
+parameters = [()]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000016C4C74F920>
+cursor = <sqlite3.Cursor object at 0x0000016C4C691340>
+statement = "INSERT INTO storage_state(key,value) VALUES ('restored_read_only','true')"
+parameters = ()
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000016C4C673E00>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.OperationalError: no such table: storage_state
+
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+workspace = (<cn_contract.persistence.Database object at 0x0000016C4C74DA30>, {'admin': Actor(user_id=UUID('4406ceab-4f95-4262-90f... <module 'cn_contract.assistant.service' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\service.py'>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000016C4C74D940>
+mutation = 'restore'
+
+    @pytest.mark.parametrize('mutation', ['session','scope','archive','restore'])
+    def test_recheck_after_source_io_blocks_revocation_or_scope_change(workspace, monkeypatch, mutation):
+        from cn_contract.assistant import profile_store
+        database, actor, value, request = setup(workspace)
+        original = profile_store.read_profile_sources
+        def changed(*args, **kwargs):
+            snapshot = original(*args, **kwargs)
+            with database.session() as db:
+                if mutation == 'session':
+                    db.get(SessionRow, str(actor.session_id)).revoked = True
+                elif mutation == 'scope':
+                    db.execute(text('UPDATE assistant_conversations SET input_revision=input_revision+1'))
+                elif mutation == 'archive':
+                    db.execute(text("UPDATE assistant_conversations SET archived_at='2026-01-01T00:00:00+00:00'"))
+                else:
+                    db.execute(text("INSERT INTO storage_state(key,value) VALUES ('restored_read_only','true')"))
+            return snapshot
+        monkeypatch.setattr(profile_store, 'read_profile_sources', changed)
+        with pytest.raises(ServiceError):
+>           save(actor, request, database)
+
+tests\integration\test_assistant_profile_store.py:168: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_store.py:22: in save
+    return save_profile(actor, request, database=database)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\profile_store.py:176: in save_profile
+    sources = read_profile_sources(actor, request.patch, database=database)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_store.py:164: in changed
+    db.execute(text("INSERT INTO storage_state(key,value) VALUES ('restored_read_only','true')"))
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2373: in execute
+    return self._execute_internal(
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2280: in _execute_internal
+    result = conn.execute(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+.venv\Lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000016C4C74F920>
+cursor = <sqlite3.Cursor object at 0x0000016C4C691340>
+statement = "INSERT INTO storage_state(key,value) VALUES ('restored_read_only','true')"
+parameters = ()
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000016C4C673E00>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: storage_state
+E       [SQL: INSERT INTO storage_state(key,value) VALUES ('restored_read_only','true')]
+E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+____________ test_manual_clear_and_legacy_page_edit_stay_protected ____________
+
+workspace = (<cn_contract.persistence.Database object at 0x0000016C4C6C4860>, {'admin': Actor(user_id=UUID('2a9b47a1-5ff8-43ee-b3b... <module 'cn_contract.assistant.service' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\service.py'>)
+
+    def test_manual_clear_and_legacy_page_edit_stay_protected(workspace):
+        from cn_contract.assistant.profile_store import read_profile
+        database, actor, value, request = setup(workspace)
+        first = save(actor, request, database)
+        with database.session() as db:
+            record = intake.read(first.intake_id, actor, db)
+            draft = d.IntakeDraft.model_validate(record.model_dump(include=set(d.IntakeDraft.model_fields)))
+            record = intake.save(record.id, d.IntakeUpdateInput(expected_revision=record.revision,
+                draft=draft.model_copy(update={'consultation':'律师在旧接待页面修正的合成表述'})), actor, db)
+        second = save(actor, next_request(request, first, expected_intake_revision=record.revision), database)
+        assert second.profile_changed and not second.projection_changed and second.consultation_origin == 'user'
+>       third = save(actor, next_request(request, second, manual_edits=(d.ProfileEdit(
+            field='consultation', value={'kind':'null'}),)), database)
+E       pydantic_core._pydantic_core.ValidationError: 1 validation error for ProfileEdit
+E       value.null.value
+E         Field required [type=missing, input_value={'kind': 'null'}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.13/v/missing
+
+tests\integration\test_assistant_profile_store.py:202: ValidationError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_store.py::test_recheck_after_source_io_blocks_revocation_or_scope_change[restore]
+FAILED tests/integration/test_assistant_profile_store.py::test_manual_clear_and_legacy_page_edit_stay_protected
+2 failed, 25 passed in 22.32s

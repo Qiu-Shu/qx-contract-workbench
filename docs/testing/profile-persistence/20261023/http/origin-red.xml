@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.782" timestamp="2026-10-23T04:40:24.247497+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_profile_routes" name="test_summary_source_survives_other_edits_but_not_consultation_replacement" time="0.677"><failure message="AssertionError: assert 'user' == 'profile_summary'&#10;  &#10;  - profile_summary&#10;  + user">chat = (&lt;starlette.testclient.TestClient object at 0x00000123CE7BCB60&gt;, &lt;cn_contract.persistence.Database object at 0x0000012...Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1140/test_summary_source_survives_o0/workspaces/main'))
+
+    def test_summary_source_survives_other_edits_but_not_consultation_replacement(chat):
+        from cn_contract import domain as d
+        client, _, _ = chat
+        headers = sign_in(client)
+        url, value = command(client, headers)
+        receipt = commit(client, headers, url, value)
+        intake_url = '/api/intakes/'+receipt['intake_id']
+        original = client.get(intake_url).json()
+        edited = {key:original[key] for key in d.IntakeDraft.model_fields}
+        edited['title'] = '只更改合成咨询标题'
+        second = client.put(intake_url, headers=headers, json={'expected_revision':1,'draft':edited})
+        assert second.status_code == 200
+&gt;       assert second.json()['consultation_origin'] == 'profile_summary'
+E       AssertionError: assert 'user' == 'profile_summary'
+E         
+E         - profile_summary
+E         + user
+
+tests\integration\test_assistant_profile_routes.py:197: AssertionError</failure></testcase></testsuite></testsuites>

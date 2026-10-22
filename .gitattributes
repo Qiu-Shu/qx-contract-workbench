@@ -88,3 +88,24 @@ tests/unit/test_assistant_profiles.py -text whitespace=blank-at-eol,blank-at-eof
 
 docs/testing/profile-sources/** -text -whitespace
 tests/integration/test_assistant_profile_sources.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/testing/profile-persistence/** -text -whitespace
+tests/integration/test_assistant_profile_*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+tests/integration/test_assistant_context_schema.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+tests/integration/test_assistant_judge_upgrade_backup.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+tests/integration/test_assistant_library_schema.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+tests/integration/test_assistant_library_upgrade_backup.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+tests/integration/test_assistant_model_schema.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+tests/integration/test_assistant_rounds_schema.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+tests/integration/test_desktop_runtime.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+tests/integration/test_workspace_upgrade.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+tests/unit/test_judge_authorization_protocol.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -23,8 +23,9 @@ def initialize_storage(database):
     from .assistant.context_schema import initialize_storage as context
     from .assistant.rounds_schema import initialize_storage as rounds
     from .assistant.rounds_v2_schema import initialize_storage as rounds_v2
+    from .assistant.profile_schema import initialize_storage as profiles
     for init in (authorities, rules, facts, reviews, providers, queries, exports,
-                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds, rounds_v2):
+                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds, rounds_v2, profiles):
         init(database)
 
 
