@@ -1,0 +1,225 @@
+{
+  "utc": "2026-10-22T19:39:56.894334+00:00",
+  "base": "0eb341a2d25da88b05ac4b62f16d45a77a6a140b",
+  "head": "2ac3bb2d03b5f70bb6fd4e045a72567029ed2eeb",
+  "new_commits": 1,
+  "blobs": 42,
+  "bytes": 429143,
+  "zip_text_members": 0,
+  "blocked_paths": [],
+  "pattern_findings": [],
+  "reviewed_synthetic_rejection_url_occurrences": 0,
+  "scope": "All new reachable Git blobs and ZIP text members; known pattern/path/contract identity checks, not exhaustive sensitive-content certification.",
+  "files": [
+    {
+      "sha": "4a7b68d3dc0eb617986746f57f09c22f661e21b8",
+      "path": ".gitattributes",
+      "bytes": 5101
+    },
+    {
+      "sha": "a0a010783881cbe49dee44d760b70a6325c78d1c",
+      "path": "README.md",
+      "bytes": 13467
+    },
+    {
+      "sha": "409eadbfa0055091288abe202ed328072e41e45b",
+      "path": "TODO.md",
+      "bytes": 20895
+    },
+    {
+      "sha": "d0f5dd5299eb1f5af5ff8a357dee9f7307c95bb6",
+      "path": "docs/TASK_STATUS.md",
+      "bytes": 116094
+    },
+    {
+      "sha": "f3793a7608537adefa773bd928810acf48873d97",
+      "path": "docs/plans/2026-10-16-chat-first-execution.md",
+      "bytes": 18022
+    },
+    {
+      "sha": "7939569040c88c6a842730fcc966fa7408c5a2d4",
+      "path": "docs/plans/2026-10-23-profile-sources.md",
+      "bytes": 2470
+    },
+    {
+      "sha": "5f55df08367a6f7f3784ee5623a6dd6146ff0558",
+      "path": "docs/testing/profile-sources/20261023/README.md",
+      "bytes": 4779
+    },
+    {
+      "sha": "dbb7579c4657dd8ed7b1ccd395277ec67da63638",
+      "path": "docs/testing/profile-sources/20261023/dev-01.log",
+      "bytes": 1104
+    },
+    {
+      "sha": "8aa44005343206a5cf3276e40c458da8e097841c",
+      "path": "docs/testing/profile-sources/20261023/dev-01.xml",
+      "bytes": 6065
+    },
+    {
+      "sha": "b552caee587cff4a93e893b7cbcb1a9134fc180b",
+      "path": "docs/testing/profile-sources/20261023/dev-02.log",
+      "bytes": 863
+    },
+    {
+      "sha": "15871884174125ac58280d2d5a8df02d5f344b0f",
+      "path": "docs/testing/profile-sources/20261023/dev-02.xml",
+      "bytes": 6760
+    },
+    {
+      "sha": "06d12d8929f1613981356e410c2d31657700f77b",
+      "path": "docs/testing/profile-sources/20261023/dev-03.log",
+      "bytes": 100
+    },
+    {
+      "sha": "b426f7f46b492ea05c3f65a221a46dbba3cdf177",
+      "path": "docs/testing/profile-sources/20261023/dev-03.xml",
+      "bytes": 524
+    },
+    {
+      "sha": "ba1842df366b49283352d507e7c2d46c88270ea0",
+      "path": "docs/testing/profile-sources/20261023/evidence-manifest.json",
+      "bytes": 5988
+    },
+    {
+      "sha": "51b7468eaabba2c120038d27d19658f4ed72686c",
+      "path": "docs/testing/profile-sources/20261023/green-duplicate.log",
+      "bytes": 100
+    },
+    {
+      "sha": "85f50495d8221da732616572facf2a80ebc4e6ae",
+      "path": "docs/testing/profile-sources/20261023/green-duplicate.xml",
+      "bytes": 398
+    },
+    {
+      "sha": "5706ade7b64f270acaf5be16526c486358636fc6",
+      "path": "docs/testing/profile-sources/20261023/publication-check.json",
+      "bytes": 154
+    },
+    {
+      "sha": "42d1a89014d0ee0692a0cc8c111ec9d9fa3eb84f",
+      "path": "docs/testing/profile-sources/20261023/red-confirmed.log",
+      "bytes": 1599
+    },
+    {
+      "sha": "a13e55cb9d8234bf6816d5d33128cf836c30ad7a",
+      "path": "docs/testing/profile-sources/20261023/red-confirmed.xml",
+      "bytes": 1716
+    },
+    {
+      "sha": "cd411db2ed116d50637d5d68918c1ab65337236a",
+      "path": "docs/testing/profile-sources/20261023/red-duplicate.log",
+      "bytes": 845
+    },
+    {
+      "sha": "a8b7f7ac4ca55a9e06e6d33688a149eb0ce6339b",
+      "path": "docs/testing/profile-sources/20261023/red-duplicate.xml",
+      "bytes": 899
+    },
+    {
+      "sha": "3240811369326a49cb4b5c20eebc4c7af8264323",
+      "path": "docs/testing/profile-sources/20261023/red.log",
+      "bytes": 2090
+    },
+    {
+      "sha": "85d35129bb544b7852ff17d8fccaaa7e28742868",
+      "path": "docs/testing/profile-sources/20261023/red.xml",
+      "bytes": 2646
+    },
+    {
+      "sha": "c8d31091dea52cdf680614d340503a1eaf601a30",
+      "path": "docs/testing/profile-sources/20261023/spec/output.log",
+      "bytes": 100
+    },
+    {
+      "sha": "daba074a0944616ac6d44a5149512c7f80543f98",
+      "path": "docs/testing/profile-sources/20261023/spec/report.json",
+      "bytes": 845
+    },
+    {
+      "sha": "4a53842174c4622f1a9316472f09ce4042368a16",
+      "path": "docs/testing/profile-sources/20261023/spec/results.xml",
+      "bytes": 1339
+    },
+    {
+      "sha": "1fe6bc848f89a45f0039eae6464ed4238fc0e0e0",
+      "path": "docs/testing/profile-sources/20261023/spec/run.py",
+      "bytes": 1417
+    },
+    {
+      "sha": "4f7e9f9d0d2fb7d0d55b491d117f655f61f6a2fc",
+      "path": "docs/testing/profile-sources/20261023/spec/test_spec.py",
+      "bytes": 5445
+    },
+    {
+      "sha": "c3fa793cbc34c7c3fa23190bef916cf2325a76a0",
+      "path": "docs/testing/profile-sources/20261023/standards/probe_sources.py",
+      "bytes": 3774
+    },
+    {
+      "sha": "c513b2e608b8659abfcd80e8c6d2547971ae47b2",
+      "path": "docs/testing/profile-sources/20261023/standards/probes-final.log",
+      "bytes": 100
+    },
+    {
+      "sha": "0f20a93970821a6470b002e4047427468908380e",
+      "path": "docs/testing/profile-sources/20261023/standards/probes-final.xml",
+      "bytes": 1823
+    },
+    {
+      "sha": "2ea302aaf8dc6ff581aead403305d5f6da7969c1",
+      "path": "docs/testing/profile-sources/20261023/standards/probes-initial.xml",
+      "bytes": 1823
+    },
+    {
+      "sha": "68fa9cf1e3bfbf64244f246bac8dba57b09984fc",
+      "path": "docs/testing/profile-sources/20261023/standards/review-final.json",
+      "bytes": 1884
+    },
+    {
+      "sha": "b57432db07b3eaf4b00a46ed831830652e37ee52",
+      "path": "docs/testing/profile-sources/20261023/standards/review-initial.json",
+      "bytes": 1265
+    },
+    {
+      "sha": "aa75681f3927463cc7844dca1d89365503065f98",
+      "path": "docs/testing/profile-sources/20261023/target-nodeids.txt",
+      "bytes": 275
+    },
+    {
+      "sha": "5840b151cd025cc33964a89cf4ce705a8e39c85b",
+      "path": "docs/testing/profile-sources/20261023/target-verification.json",
+      "bytes": 126660
+    },
+    {
+      "sha": "b1ca66285a2724f5216ba4df5a3b07232abbef59",
+      "path": "docs/testing/profile-sources/20261023/target.log",
+      "bytes": 275
+    },
+    {
+      "sha": "3005b6302234ccd14fb9051180c9fb0a5c138bfd",
+      "path": "docs/testing/profile-sources/20261023/target.xml",
+      "bytes": 39940
+    },
+    {
+      "sha": "d201001db1ebc9f6a93052ee37d32f3ee4cc7878",
+      "path": "docs/testing/profile-sources/20261023/verify.py",
+      "bytes": 3520
+    },
+    {
+      "sha": "9c08f1ead38590d874762841deafa80f5b8b54c5",
+      "path": "docs/testing/profile-sources/20261023/workbuddy-status.json",
+      "bytes": 314
+    },
+    {
+      "sha": "68d48be2d75736c8b23080b5076cec49137b04b6",
+      "path": "src/cn_contract/assistant/profile_sources.py",
+      "bytes": 3860
+    },
+    {
+      "sha": "1804d00e8651bb6f33482477e9cb34c03a956907",
+      "path": "tests/integration/test_assistant_profile_sources.py",
+      "bytes": 21805
+    }
+  ]
+}
