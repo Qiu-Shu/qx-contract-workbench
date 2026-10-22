@@ -1,0 +1,89 @@
+{
+  "scope": "Read-only publication-document and stored-evidence consistency review; no product tests, real data, live model, GUI, installer or network operations. Not a new independent product-code review.",
+  "baseline": "1a7072bb905568a24292a53f3f3133c7c9fbb4f6",
+  "documents_checked": 7,
+  "manifest": {
+    "entries": 53,
+    "unique_paths": 53,
+    "digest_and_size_verified": 53,
+    "issues": [],
+    "unlisted_files": [
+      "README.md",
+      "evidence-manifest.json"
+    ]
+  },
+  "target_xml": {
+    "tests": 577,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "target_unique_cases": 577,
+  "new_tests_in_target": 76,
+  "target_input_hashes": {
+    "before_count": 535,
+    "after_count": 535,
+    "before_after_identical": true,
+    "recorded_inputs_equal": true,
+    "current_after_mismatches": []
+  },
+  "target_exit_code": 0,
+  "gates": [
+    {
+      "name": "gate-1",
+      "exit_code": 0
+    },
+    {
+      "name": "gate-2",
+      "exit_code": 0
+    },
+    {
+      "name": "gate-3",
+      "exit_code": 0
+    },
+    {
+      "name": "gate-4",
+      "exit_code": 0
+    }
+  ],
+  "independent_spec": {
+    "groups": 13,
+    "passed": 13,
+    "failed": 0
+  },
+  "independent_standards": {
+    "standards": {
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "compatibility": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "local_document_links": {
+    "checked": 136,
+    "missing": []
+  },
+  "required_corrections": [],
+  "minor_documentation_observations": [
+    {
+      "file": "README.md",
+      "line": 23,
+      "observation": "Navigation labelled latest verified GitHub sync still links PROFILE-SOURCES, while line11 links newer PROFILE-PERSISTENCE. Refresh to actual current receipt after successful push; do not create a success claim before remote verification.",
+      "status": "Parent has scheduled closure in the separate post-push receipt commit; not yet independently verified.",
+      "planned_receipt": "docs/testing/GITHUB-PROFILE-OUTPUT-20261023.md"
+    }
+  ],
+  "completion_boundaries_confirmed": [
+    "CH-07C1 protocol candidate only; application registration/authorization/autosave/profile panel remain C2/C3",
+    "Prior full-suite 3816 passed / 3 failed is historical and not stated as current all green",
+    "WIN-PATH-02 remains open",
+    "WorkBuddy current native_unavailable and task_dispatched false; no historic success substituted",
+    "No real model, installer or automatic archive completion claimed"
+  ]
+}

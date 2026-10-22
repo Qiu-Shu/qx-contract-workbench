@@ -1,7 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
-最新接续（2026-10-23，CH-07C1）：协议切片及577项关联验证完成，自动保存仍待C2/C3；以[本片证据](docs/testing/profile-output/20261023/README.md)为准。下列CH-07B同步记录属于上一阶段。
-已同步：CH-07B后端源码与证据提交 `34a153e`，远端SHA与4,266文件树一致；Windows恢复发布问题仍开放。[同步回执](docs/testing/GITHUB-PROFILE-PERSISTENCE-20261023.md)。
+最新接续（2026-10-23，CH-07C1）：协议切片及577项关联验证完成，自动保存仍待C2/C3；以[本片证据](docs/testing/profile-output/20261023/README.md)为准。后续同步结果见下方回执。
+已同步：CH-07C1协议源码与证据 `bcc5013`，远端SHA及4,331文件树一致；自动建档接线和Windows恢复开放项继续推进。[同步回执](docs/testing/GITHUB-PROFILE-OUTPUT-20261023.md)。
 
 最新接续（2026-10-23）：CH-07B本地档案/接待原子保存、历史接口、迁移恢复已实现并独立复核。完整回归3816通过/3失败，两个旧测试夹具已修正、定向9/36通过；最终目录rename WinError5仍待定位，保留开放验收项，不称全套全绿。自动钩子与档案侧栏尚未接通；先核对本片诊断证据，再推进CH-07C。WorkBuddy本轮无活动端点未派发，安装版0.4.1不变。[本片证据](docs/testing/profile-persistence/20261023/README.md)。同步状态以独立回执为准。
 

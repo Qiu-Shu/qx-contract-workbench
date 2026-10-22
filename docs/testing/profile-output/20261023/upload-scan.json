@@ -1,0 +1,275 @@
+{
+  "utc": "2026-10-22T22:50:58.062859+00:00",
+  "base": "1a7072bb905568a24292a53f3f3133c7c9fbb4f6",
+  "head": "bcc5013e0b7ce66be7827d37a5b41da1f7802cbd",
+  "new_commits": 1,
+  "blobs": 52,
+  "bytes": 1051791,
+  "zip_text_members": 0,
+  "blocked_paths": [],
+  "pattern_findings": [],
+  "reviewed_synthetic_rejection_url_occurrences": 0,
+  "scope": "All new reachable Git blobs and ZIP text members; known pattern/path/contract identity checks, not exhaustive sensitive-content certification.",
+  "files": [
+    {
+      "sha": "aa6dc548a98391b8d025156ae78f477669389451",
+      "path": ".gitattributes",
+      "bytes": 6525
+    },
+    {
+      "sha": "ce48fb3c89792f0a58e074c802e24fdf14dc6e72",
+      "path": "README.md",
+      "bytes": 14688
+    },
+    {
+      "sha": "43c49101a4e31602614170989fe8be26463f24f4",
+      "path": "TODO.md",
+      "bytes": 21581
+    },
+    {
+      "sha": "6116088749ba6c5f530c0b929393e51d3b3639f7",
+      "path": "docs/TASK_STATUS.md",
+      "bytes": 119558
+    },
+    {
+      "sha": "6c67b98f070fa07a959d4baa225e2464b28f1080",
+      "path": "docs/plans/2026-10-16-chat-first-execution.md",
+      "bytes": 19085
+    },
+    {
+      "sha": "829cf710ec046c0b04cfd01025c51618fd4a3fc9",
+      "path": "docs/plans/2026-10-23-profile-output.md",
+      "bytes": 3545
+    },
+    {
+      "sha": "7d245d0d26ebb47db838f4a67a1ec265d7ff2c95",
+      "path": "docs/testing/profile-output/20261023/README.md",
+      "bytes": 4911
+    },
+    {
+      "sha": "b9a851f6556fe62cd82da777d5f665f9d6da752b",
+      "path": "docs/testing/profile-output/20261023/before-review-fix/compat.json",
+      "bytes": 753
+    },
+    {
+      "sha": "607e7bdf594033047fd4cab6c35338347d8a0618",
+      "path": "docs/testing/profile-output/20261023/before-review-fix/compat.py",
+      "bytes": 3877
+    },
+    {
+      "sha": "f6dea6a4acba8e725e4b19422f67ef4b69e35985",
+      "path": "docs/testing/profile-output/20261023/before-review-fix/target-nodeids.txt",
+      "bytes": 1018
+    },
+    {
+      "sha": "9988847c080782fcdb8bd7787371cef0a0064e40",
+      "path": "docs/testing/profile-output/20261023/before-review-fix/target-verification.json",
+      "bytes": 130259
+    },
+    {
+      "sha": "31846d51d23f40f14b32c121afc1c37989e4ad31",
+      "path": "docs/testing/profile-output/20261023/before-review-fix/target.log",
+      "bytes": 681
+    },
+    {
+      "sha": "67db697837326e72e82f8b9e04c3c69b103687e4",
+      "path": "docs/testing/profile-output/20261023/before-review-fix/target.xml",
+      "bytes": 127845
+    },
+    {
+      "sha": "aeabca61beb1599a08894314ee61bf959d43e989",
+      "path": "docs/testing/profile-output/20261023/before-review-fix/verify.py",
+      "bytes": 3519
+    },
+    {
+      "sha": "7d393a095b40277168900b2f251793645e4387f5",
+      "path": "docs/testing/profile-output/20261023/evidence-manifest.json",
+      "bytes": 8697
+    },
+    {
+      "sha": "c812b831609ec787eaa3ee2f70fd586a166b6a85",
+      "path": "docs/testing/profile-output/20261023/green-boundaries.xml",
+      "bytes": 8918
+    },
+    {
+      "sha": "455ee6b2551392251722a6e171d92eba1e396c96",
+      "path": "docs/testing/profile-output/20261023/green-first-corrected.xml",
+      "bytes": 412
+    },
+    {
+      "sha": "3d40eafc2a98f7ff7b7198cc01a9f5cc9e335ad7",
+      "path": "docs/testing/profile-output/20261023/green-first.xml",
+      "bytes": 1434
+    },
+    {
+      "sha": "4b24dab57a3c1964ffda0ee19228c5a64e5476b0",
+      "path": "docs/testing/profile-output/20261023/provider-corrected.xml",
+      "bytes": 11256
+    },
+    {
+      "sha": "c3b4fa2209d3e1d8e40c49b023af61389c947ab1",
+      "path": "docs/testing/profile-output/20261023/provider.xml",
+      "bytes": 12897
+    },
+    {
+      "sha": "61c1e9dc4a0553522c49a97d85f26c523c83be28",
+      "path": "docs/testing/profile-output/20261023/red-boundaries.xml",
+      "bytes": 11127
+    },
+    {
+      "sha": "891047a6df9e7390ed425ad033d6ef7744b1f4ff",
+      "path": "docs/testing/profile-output/20261023/red.log",
+      "bytes": 1351
+    },
+    {
+      "sha": "853a1e01bd65709c76389d2e876871b925223f7a",
+      "path": "docs/testing/profile-output/20261023/red.xml",
+      "bytes": 1729
+    },
+    {
+      "sha": "a6a63217fbde8e9a41f4c35ad3c461f6238b603d",
+      "path": "docs/testing/profile-output/20261023/review-green.xml",
+      "bytes": 12723
+    },
+    {
+      "sha": "de638d44bd508faa171c9987791183f5f4529c92",
+      "path": "docs/testing/profile-output/20261023/review-red.xml",
+      "bytes": 12552
+    },
+    {
+      "sha": "0abc167ec2a5f446c9696e1c40ec332cf1770697",
+      "path": "docs/testing/profile-output/20261023/review-summary.md",
+      "bytes": 1904
+    },
+    {
+      "sha": "5b46d7cbe7cb96e1906b57fe2f7e2cd10a8e5eb0",
+      "path": "docs/testing/profile-output/20261023/spec-review/final/probe.log",
+      "bytes": 1570
+    },
+    {
+      "sha": "3f2235ac797f77f8ea014fa889d0c45983e46414",
+      "path": "docs/testing/profile-output/20261023/spec-review/final/probe.py",
+      "bytes": 10760
+    },
+    {
+      "sha": "66e370dd1b19a9451c448e1f2a1d6799a5309f21",
+      "path": "docs/testing/profile-output/20261023/spec-review/final/report.json",
+      "bytes": 1568
+    },
+    {
+      "sha": "1085806c2c0f2131084c81f5ce19c6fd4eb576fd",
+      "path": "docs/testing/profile-output/20261023/spec-review/probe.log",
+      "bytes": 1192
+    },
+    {
+      "sha": "df9f26d695b651d6b1890a3e25c8a3f56fc966ee",
+      "path": "docs/testing/profile-output/20261023/spec-review/probe.py",
+      "bytes": 8507
+    },
+    {
+      "sha": "1be65d8169504e8a85aa84e45049024cb25ea728",
+      "path": "docs/testing/profile-output/20261023/spec-review/report.json",
+      "bytes": 1190
+    },
+    {
+      "sha": "f9b5abf02d78292c7f18712c1c4cf05ea061b9d7",
+      "path": "docs/testing/profile-output/20261023/standards-review/final/compatibility.log",
+      "bytes": 100
+    },
+    {
+      "sha": "9683b3a04a604f35511d1784902c01be9f4aa712",
+      "path": "docs/testing/profile-output/20261023/standards-review/final/compatibility.xml",
+      "bytes": 923
+    },
+    {
+      "sha": "232c2b86acf716b34610e315122be440fc32aad5",
+      "path": "docs/testing/profile-output/20261023/standards-review/final/input-stability.json",
+      "bytes": 1062
+    },
+    {
+      "sha": "54fc3dd5af491651d2abe35f7ad1f1622f00937b",
+      "path": "docs/testing/profile-output/20261023/standards-review/final/output.log",
+      "bytes": 100
+    },
+    {
+      "sha": "65c1fa76846ab89675b15f4c584f790ee926c016",
+      "path": "docs/testing/profile-output/20261023/standards-review/final/results.xml",
+      "bytes": 13687
+    },
+    {
+      "sha": "c915936115f314b58f9d2d511a3e5a9f88600e58",
+      "path": "docs/testing/profile-output/20261023/standards-review/final/review-input-hashes.json",
+      "bytes": 1041
+    },
+    {
+      "sha": "606c5275697a905245dfab26d3132e57b064951c",
+      "path": "docs/testing/profile-output/20261023/standards-review/output.log",
+      "bytes": 4520
+    },
+    {
+      "sha": "ba3858dcfad3c5f14b4f843ac93a3ea3649a4c10",
+      "path": "docs/testing/profile-output/20261023/standards-review/results.xml",
+      "bytes": 20278
+    },
+    {
+      "sha": "36c810babac9333e07acab828ea0e2e1830202f7",
+      "path": "docs/testing/profile-output/20261023/standards-review/review-input-hashes.json",
+      "bytes": 1041
+    },
+    {
+      "sha": "de7018b4288da8299f30289c228db8cbb093e433",
+      "path": "docs/testing/profile-output/20261023/standards-review/test_compatibility.py",
+      "bytes": 2144
+    },
+    {
+      "sha": "bb023a01c8795c6f548eb9f6fa0076e2eb24d46b",
+      "path": "docs/testing/profile-output/20261023/standards-review/test_review_probe.py",
+      "bytes": 3725
+    },
+    {
+      "sha": "c7670f5649979e22a3b43abb300ba955855fb990",
+      "path": "docs/testing/profile-output/20261023/target-verification.json",
+      "bytes": 130259
+    },
+    {
+      "sha": "222e04cc4dcefb62839c67212793388a55144483",
+      "path": "docs/testing/profile-output/20261023/target.log",
+      "bytes": 762
+    },
+    {
+      "sha": "71e19ff81062f8ab0492e5ceb1e3e601450fab78",
+      "path": "docs/testing/profile-output/20261023/target.xml",
+      "bytes": 129865
+    },
+    {
+      "sha": "4cdccb931853dca3903f97218b9d8b51d108e3da",
+      "path": "docs/testing/profile-output/20261023/workbuddy-status.json",
+      "bytes": 343
+    },
+    {
+      "sha": "4593590dd04cb70c359fe099b21d3fb972d6acac",
+      "path": "src/cn_contract/assistant/providers/main.py",
+      "bytes": 5629
+    },
+    {
+      "sha": "c3de2a37b3d5469543af86a28fa1aad0bcc4d8c3",
+      "path": "src/cn_contract/assistant/providers/profile_codec.py",
+      "bytes": 4540
+    },
+    {
+      "sha": "9fee3a3bbd69a1134f2566bd30febbd15db90cf0",
+      "path": "src/cn_contract/domain.py",
+      "bytes": 146761
+    },
+    {
+      "sha": "f70bcb4d2626f720444d1e5a2f7009d0a8514833",
+      "path": "tests/integration/test_assistant_profile_provider.py",
+      "bytes": 6145
+    },
+    {
+      "sha": "2bc3124cb388c4613d22e404c1eea1bb3ab75772",
+      "path": "tests/unit/test_assistant_profile_codec.py",
+      "bytes": 11234
+    }
+  ]
+}
