@@ -1,0 +1,26 @@
+{
+  "raw_scan_exit": 1,
+  "raw_findings_preserved": true,
+  "reviewed_findings": [
+    {
+      "path": "docs/testing/profile-persistence/20261023/collection.log",
+      "blob": "e53f4c8d4e8832ca87c52fb420e1d3a8975fa03c",
+      "occurrences": 1,
+      "classification": "exact known synthetic loopback rejection URL",
+      "real_credential": false
+    },
+    {
+      "path": "docs/testing/profile-persistence/20261023/target.xml",
+      "blob": "c5017c8038e04ed0bf6885e4c0a49fa149e334f4",
+      "occurrences": 1,
+      "classification": "exact known synthetic loopback rejection URL",
+      "real_credential": false
+    }
+  ],
+  "fixture_sources": [
+    "tests/integration/test_mcp_transport.py"
+  ],
+  "unexplained_findings": 0,
+  "blocked_paths": 0,
+  "scope": "Only the exact synthetic localhost rejection URL is reviewed; no general credential-url exemption."
+}

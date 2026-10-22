@@ -1,0 +1,101 @@
+{
+  "reviewed_at_utc": "2026-10-22T21:46:10.949228+00:00",
+  "commit": "34a153e3c9c698d43b136978e9a5ae66187b8b9e",
+  "scope": "Independent read-only publication wording/count/boundary review and other-author desktop_runtime fixture review. No product tests, no source/doc changes, no commit/push.",
+  "excluded_from_independent_implementation_review": [
+    "own HTTP/intake implementation",
+    "own judge authorization fixture"
+  ],
+  "findings": [],
+  "must_fix_count": 0,
+  "conclusion": "Publication wording matches raw evidence; no must-fix misstatement or omission found in reviewed scope. Windows restore publication remains open; not full-suite green.",
+  "confirmed": {
+    "full_suite_junit": {
+      "tests": 3819,
+      "passed": 3816,
+      "failed": 3,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 1
+    },
+    "four_gates_exit_zero": true,
+    "fixture_targets": {
+      "desktop_boundary": 9,
+      "judge_protocol": 36
+    },
+    "ordered_probe": {
+      "passed": 79,
+      "stable_inputs": 400,
+      "claimed_fix": false,
+      "limit": "Observational timing-affecting probe does not establish original WinError5 cause or resolution."
+    },
+    "final_inputs": {
+      "count": 532,
+      "actual_hash_mismatches": [],
+      "changed_since_full_suite": [
+        "tests/integration/test_desktop_runtime.py",
+        "tests/unit/test_judge_authorization_protocol.py"
+      ],
+      "production_source_unchanged_since_suite": true
+    },
+    "acceptance": "WIN-PATH-02 open; overall Windows recovery not complete; CH-07C model hook/archive panel not implemented; installer 0.4.1 unchanged.",
+    "desktop_fixture_review": "Synthetic installation root makes external data outside default root regardless of --basetemp; product _workspace_path guard is retained. Added wrong explicit parent rejection strengthens coverage. Existing auth/origin/restart assertions retained. No product source edit.",
+    "upload_scope": "Read publication-check and upload-scan-review: source/doc/synthetic evidence only; two reported credential_url hits are explicit pre-existing synthetic rejection test URLs. No real corpus/credentials/runtime/installer upload claimed. Actual remote push not yet part of this review."
+  },
+  "read_hashes_before": {
+    "README.md": "da26da5f89195a9bd2ff675c6082cba1a346038e82e67aa58d62d6c160706f6d",
+    "TODO.md": "766b21ad71f19955272c0ae0ba29af5d0b54e9eb0a8a6ced1f632469352e078f",
+    "docs/TASK_STATUS.md": "8b10a6b2aefaa7478026027261170357743d2126189541d795f358ee43af8225",
+    "docs/plans/2026-10-16-chat-first-execution.md": "430099e857bc3be876f21bc89464117fa942178d312b53324ff7ee3992c047dd",
+    "docs\\testing\\profile-persistence\\20261023\\README.md": "ab9250a1800904a019d8bd63a0f637fadecb3b143e93d0b4536cb2906f61c651",
+    "docs\\testing\\profile-persistence\\20261023\\final-verification.json": "6b1fa680960cebe8a640c1bc8c4c2c931289f72e6462c0a4d2e5d7a2b1b0d230",
+    "docs\\testing\\profile-persistence\\20261023\\target-verification.json": "8e42a4f3de19219859916c48e7d44b110a8705ea52108ea4b7add6d560ef2dfc",
+    "docs\\testing\\profile-persistence\\20261023\\target.xml": "e0c0b718a0ca420f46f9a6f0169e3030b7b5477fd5f0601b14c1b3e378b06d1a",
+    "docs\\testing\\profile-persistence\\20261023\\path-order-probe.json": "66529f3407f8952540c55422994bb8ed99d7d2a34b91fa7128fa2c3fb1caa682",
+    "docs\\testing\\profile-persistence\\20261023\\path-order-probe.xml": "681ce70eae94a9ec30f563cac93fb11e298445ca64f7bc42e423dd5a003ffdb6",
+    "docs\\testing\\profile-persistence\\20261023\\path-diagnostic-review.json": "cbc945916e45779094c6559faead2e416e33403b68617a2d7aefc711c74154e7",
+    "docs\\testing\\profile-persistence\\20261023\\desktop-boundary\\diagnosis.json": "a7c2c000a0f621587a8a1f286046f61c0e9414ba9fa4e5aab0049cda1f2d2296",
+    "docs\\testing\\profile-persistence\\20261023\\desktop-boundary\\green.json": "cbc406c7dc37981f1a6f5e8f17dc1aa5436e5f29843811714526c352515cb972",
+    "docs\\testing\\profile-persistence\\20261023\\desktop-boundary\\green.xml": "2a09012640cf002af891b4ee84b9c6dc5c923a878a58d75fb232b0435845d6e5",
+    "docs\\testing\\profile-persistence\\20261023\\desktop-boundary\\path-probe.json": "3540ac77189fc0dbfb85cc8524dea689f8b01e50a8f151f0b5d21b0e87b14efd",
+    "docs\\testing\\profile-persistence\\20261023\\judge-fixture\\report.json": "cfbf7c6db5a481486eb3ccab5d3fc41b9378ef01434cd5d86797954376476e2b",
+    "docs\\testing\\profile-persistence\\20261023\\judge-fixture\\target.xml": "e1e2bc45682ed0cbbafa895f81ebeab9bcf20d738f17e3105e0e5b8223744f9c",
+    "tests/integration/test_desktop_runtime.py": "f9f2ff78497d5fbc4f87d5e54448b102bfca9844e1616b801760c3e0b58bb563",
+    "src/cn_contract/web/local_server.py": "d1b127e3307e482784ddc879c647b08536eef8b7dea4eee56e8287d3c7da9958"
+  },
+  "read_hashes_after": {
+    "README.md": "da26da5f89195a9bd2ff675c6082cba1a346038e82e67aa58d62d6c160706f6d",
+    "TODO.md": "766b21ad71f19955272c0ae0ba29af5d0b54e9eb0a8a6ced1f632469352e078f",
+    "docs/TASK_STATUS.md": "8b10a6b2aefaa7478026027261170357743d2126189541d795f358ee43af8225",
+    "docs/plans/2026-10-16-chat-first-execution.md": "430099e857bc3be876f21bc89464117fa942178d312b53324ff7ee3992c047dd",
+    "docs\\testing\\profile-persistence\\20261023\\README.md": "ab9250a1800904a019d8bd63a0f637fadecb3b143e93d0b4536cb2906f61c651",
+    "docs\\testing\\profile-persistence\\20261023\\final-verification.json": "6b1fa680960cebe8a640c1bc8c4c2c931289f72e6462c0a4d2e5d7a2b1b0d230",
+    "docs\\testing\\profile-persistence\\20261023\\target-verification.json": "8e42a4f3de19219859916c48e7d44b110a8705ea52108ea4b7add6d560ef2dfc",
+    "docs\\testing\\profile-persistence\\20261023\\target.xml": "e0c0b718a0ca420f46f9a6f0169e3030b7b5477fd5f0601b14c1b3e378b06d1a",
+    "docs\\testing\\profile-persistence\\20261023\\path-order-probe.json": "66529f3407f8952540c55422994bb8ed99d7d2a34b91fa7128fa2c3fb1caa682",
+    "docs\\testing\\profile-persistence\\20261023\\path-order-probe.xml": "681ce70eae94a9ec30f563cac93fb11e298445ca64f7bc42e423dd5a003ffdb6",
+    "docs\\testing\\profile-persistence\\20261023\\path-diagnostic-review.json": "cbc945916e45779094c6559faead2e416e33403b68617a2d7aefc711c74154e7",
+    "docs\\testing\\profile-persistence\\20261023\\desktop-boundary\\diagnosis.json": "a7c2c000a0f621587a8a1f286046f61c0e9414ba9fa4e5aab0049cda1f2d2296",
+    "docs\\testing\\profile-persistence\\20261023\\desktop-boundary\\green.json": "cbc406c7dc37981f1a6f5e8f17dc1aa5436e5f29843811714526c352515cb972",
+    "docs\\testing\\profile-persistence\\20261023\\desktop-boundary\\green.xml": "2a09012640cf002af891b4ee84b9c6dc5c923a878a58d75fb232b0435845d6e5",
+    "docs\\testing\\profile-persistence\\20261023\\desktop-boundary\\path-probe.json": "3540ac77189fc0dbfb85cc8524dea689f8b01e50a8f151f0b5d21b0e87b14efd",
+    "docs\\testing\\profile-persistence\\20261023\\judge-fixture\\report.json": "cfbf7c6db5a481486eb3ccab5d3fc41b9378ef01434cd5d86797954376476e2b",
+    "docs\\testing\\profile-persistence\\20261023\\judge-fixture\\target.xml": "e1e2bc45682ed0cbbafa895f81ebeab9bcf20d738f17e3105e0e5b8223744f9c",
+    "tests/integration/test_desktop_runtime.py": "f9f2ff78497d5fbc4f87d5e54448b102bfca9844e1616b801760c3e0b58bb563",
+    "src/cn_contract/web/local_server.py": "d1b127e3307e482784ddc879c647b08536eef8b7dea4eee56e8287d3c7da9958"
+  },
+  "read_hashes_stable": true,
+  "evidence_sources": [
+    "docs/testing/profile-persistence/20261023/target.xml",
+    "docs/testing/profile-persistence/20261023/target-verification.json",
+    "docs/testing/profile-persistence/20261023/final-verification.json",
+    "docs/testing/profile-persistence/20261023/path-order-probe.xml",
+    "docs/testing/profile-persistence/20261023/path-order-probe.json",
+    "docs/testing/profile-persistence/20261023/desktop-boundary/diagnosis.json",
+    "docs/testing/profile-persistence/20261023/desktop-boundary/green.xml",
+    "docs/testing/profile-persistence/20261023/judge-fixture/report.json",
+    "docs/testing/profile-persistence/20261023/judge-fixture/target.xml",
+    ".local/profile-persistence-20261023/publication-check.json",
+    ".local/profile-persistence-20261023/upload-scan-review.json"
+  ]
+}
