@@ -1,0 +1,46 @@
+{
+  "checks": [
+    {
+      "name": "unicode_exact_source_conflicts_stay_unverified",
+      "passed": true
+    },
+    {
+      "name": "invalid_second_proposal_discards_entire_candidate",
+      "passed": true
+    },
+    {
+      "name": "received_and_checked_are_refused",
+      "passed": true
+    },
+    {
+      "name": "model_authority_and_contact_refused",
+      "passed": true
+    },
+    {
+      "name": "request_versions_hash_and_old_protocol_boundary",
+      "passed": true
+    },
+    {
+      "name": "nonempty_citations_and_duplicate_json_refused",
+      "passed": true
+    },
+    {
+      "name": "default_denied_before_key_or_network",
+      "passed": true
+    },
+    {
+      "name": "received_revocation_retains_usage",
+      "passed": true
+    },
+    {
+      "name": "one_post_returns_answer_and_proposals",
+      "passed": true
+    }
+  ],
+  "passed": 9,
+  "failed": 0,
+  "observation_integer_money_wire_accepted": true,
+  "observation_numeric_datetime_wire_accepted": true,
+  "numeric_datetime_normalized": "1970-01-01 00:00:01+00:00",
+  "scope": "independent synthetic text and loopback only; no DB, real provider or desktop process"
+}

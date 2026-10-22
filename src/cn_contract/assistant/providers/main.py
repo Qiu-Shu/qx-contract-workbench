@@ -47,6 +47,21 @@ def _decode(raw, request, config, secret):
 
 
 class DeepSeekProvider(DeepSeekTransport):
+    async def generate_profile(self, request: d.MainProfileRequest, *,
+                               expected_config: d.MainModelConfig | None = None,
+                               preflight=None) -> d.MainProfileReply:
+        """Explicit text/archive purpose; default denied, no application wiring yet."""
+        from .profile_codec import build_request as profile_build, decode_response as profile_decode
+        from .deepseek_transport import _allowed
+        check = preflight if preflight is not None else (lambda: False)
+        reply = await self._generate(request, expected_config=expected_config,
+            builder=profile_build, decoder=profile_decode, reply_type=d.MainProfileReply, preflight=check)
+        if reply.output is not None and not _allowed(check):
+            # Revocation discards the candidate, never the already received usage.
+            return d.MainProfileReply(state='received', usage=reply.usage,
+                provider_request_id=reply.provider_request_id, error_code='BLOCKED_LIVE')
+        return reply
+
     async def generate(self, request: d.MainRequest, *,
                        expected_config: d.MainModelConfig | None = None) -> d.MainReply:
         return await self._generate(request,expected_config=expected_config,

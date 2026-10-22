@@ -4006,3 +4006,60 @@ class ProfileCommitReceipt(DomainModel):
         if self.event_type != expected:
             raise ValueError('event must reflect actual changes')
         return self
+
+
+class MainProfileRequest(MainRequest):
+    """Trusted current saved text only; never grants authority to archive it."""
+    input_format: Literal['profile-text-v1'] = 'profile-text-v1'
+    template_version: Literal['profile-text-system-v1'] = 'profile-text-system-v1'
+    source_revision: PositiveInt
+    base_profile_revision: NonNegativeInt
+
+    @model_validator(mode='after')
+    def current_message_revision(self):
+        if self.source_revision != self.scope.input_revision:
+            raise ValueError('profile text must be the current saved user message')
+        return self
+
+
+class ProfileTextQuote(DomainModel):
+    start: NonNegativeInt
+    end: NonNegativeInt
+    quote: Annotated[AssistantText, Field(min_length=1)]
+
+    @model_validator(mode='after')
+    def exact_length(self):
+        if self.end - self.start != len(self.quote):
+            raise ValueError('profile quote offsets must use Unicode code points')
+        return self
+
+
+class ProfileTextChange(ProfileEdit):
+    origin: Literal['user_statement', 'model_inference']
+    quotes: Annotated[tuple[ProfileTextQuote, ...], Field(max_length=40)]
+
+    @field_validator('value', mode='before')
+    @classmethod
+    def explicit_wire_values(cls, value):
+        # Narrow this new model protocol without changing shared/manual values.
+        if isinstance(value, Mapping) and value.get('kind') in ('money', 'datetime'):
+            raw = value.get('value')
+            if type(raw) is not str:
+                raise ValueError('profile wire money and datetime require explicit strings')
+            if value['kind'] == 'datetime' and datetime.fromisoformat(raw).utcoffset() is None:
+                raise ValueError('profile wire datetime requires an explicit ISO timezone')
+        return value
+
+
+class MainProfileModelOutput(MainCandidate):
+    """Model wire input: no server IDs, hashes, permissions or review state."""
+    citations: Annotated[tuple[MainCitation, ...], Field(max_length=0)]
+    profile_changes: Annotated[tuple[ProfileTextChange, ...], Field(max_length=60)]
+
+
+class MainProfileCandidate(MainCandidate):
+    profile_patch: ProfilePatch
+
+
+class MainProfileReply(MainReply):
+    output: MainProfileCandidate | None = None

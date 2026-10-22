@@ -1,0 +1,25 @@
+FFF.....                                                                 [100%]
+================================== FAILURES ===================================
+____ test_wire_datetime_must_not_guess_epoch_from_numeric_string[20261024] ____
+.local\profile-output-20261023\standards-review\test_review_probe.py:42: in test_wire_datetime_must_not_guess_epoch_from_numeric_string
+    assert reply.output is None, f'bare numeric timestamp accepted as {actual!r}'
+E   AssertionError: bare numeric timestamp accepted as datetime.datetime(1970, 8, 23, 12, 3, 44, tzinfo=datetime.timezone.utc)
+E   assert MainProfileCandidate(text='合成待核回答', citations=(), profile_patch=ProfilePatch(schema_version='assistant.profile_patch.v...6-10-24T09:00:00+08:00；😀资料待补。', quote_sha256='1b24f7e58f51f4bb0e2673e2b0a66e89be59a3ede537fea717f33ed2eb63de24'),)),))) is None
+E    +  where MainProfileCandidate(text='合成待核回答', citations=(), profile_patch=ProfilePatch(schema_version='assistant.profile_patch.v...6-10-24T09:00:00+08:00；😀资料待补。', quote_sha256='1b24f7e58f51f4bb0e2673e2b0a66e89be59a3ede537fea717f33ed2eb63de24'),)),))) = MainProfileReply(state='received', provider_request_id='synthetic-standards-review', usage=MainUsage(prompt_tokens=25,...8:00；😀资料待补。', quote_sha256='1b24f7e58f51f4bb0e2673e2b0a66e89be59a3ede537fea717f33ed2eb63de24'),)),))), error_code=None).output
+___ test_wire_datetime_must_not_guess_epoch_from_numeric_string[1792803600] ___
+.local\profile-output-20261023\standards-review\test_review_probe.py:42: in test_wire_datetime_must_not_guess_epoch_from_numeric_string
+    assert reply.output is None, f'bare numeric timestamp accepted as {actual!r}'
+E   AssertionError: bare numeric timestamp accepted as datetime.datetime(2026, 10, 24, 1, 0, tzinfo=datetime.timezone.utc)
+E   assert MainProfileCandidate(text='合成待核回答', citations=(), profile_patch=ProfilePatch(schema_version='assistant.profile_patch.v...6-10-24T09:00:00+08:00；😀资料待补。', quote_sha256='1b24f7e58f51f4bb0e2673e2b0a66e89be59a3ede537fea717f33ed2eb63de24'),)),))) is None
+E    +  where MainProfileCandidate(text='合成待核回答', citations=(), profile_patch=ProfilePatch(schema_version='assistant.profile_patch.v...6-10-24T09:00:00+08:00；😀资料待补。', quote_sha256='1b24f7e58f51f4bb0e2673e2b0a66e89be59a3ede537fea717f33ed2eb63de24'),)),))) = MainProfileReply(state='received', provider_request_id='synthetic-standards-review', usage=MainUsage(prompt_tokens=25,...8:00；😀资料待补。', quote_sha256='1b24f7e58f51f4bb0e2673e2b0a66e89be59a3ede537fea717f33ed2eb63de24'),)),))), error_code=None).output
+__ test_wire_datetime_must_not_guess_epoch_from_numeric_string[1792803600.5] __
+.local\profile-output-20261023\standards-review\test_review_probe.py:42: in test_wire_datetime_must_not_guess_epoch_from_numeric_string
+    assert reply.output is None, f'bare numeric timestamp accepted as {actual!r}'
+E   AssertionError: bare numeric timestamp accepted as datetime.datetime(2026, 10, 24, 1, 0, 0, 500000, tzinfo=datetime.timezone.utc)
+E   assert MainProfileCandidate(text='合成待核回答', citations=(), profile_patch=ProfilePatch(schema_version='assistant.profile_patch.v...6-10-24T09:00:00+08:00；😀资料待补。', quote_sha256='1b24f7e58f51f4bb0e2673e2b0a66e89be59a3ede537fea717f33ed2eb63de24'),)),))) is None
+E    +  where MainProfileCandidate(text='合成待核回答', citations=(), profile_patch=ProfilePatch(schema_version='assistant.profile_patch.v...6-10-24T09:00:00+08:00；😀资料待补。', quote_sha256='1b24f7e58f51f4bb0e2673e2b0a66e89be59a3ede537fea717f33ed2eb63de24'),)),))) = MainProfileReply(state='received', provider_request_id='synthetic-standards-review', usage=MainUsage(prompt_tokens=25,...8:00；😀资料待补。', quote_sha256='1b24f7e58f51f4bb0e2673e2b0a66e89be59a3ede537fea717f33ed2eb63de24'),)),))), error_code=None).output
+=========================== short test summary info ===========================
+FAILED .local/profile-output-20261023/standards-review/test_review_probe.py::test_wire_datetime_must_not_guess_epoch_from_numeric_string[20261024]
+FAILED .local/profile-output-20261023/standards-review/test_review_probe.py::test_wire_datetime_must_not_guess_epoch_from_numeric_string[1792803600]
+FAILED .local/profile-output-20261023/standards-review/test_review_probe.py::test_wire_datetime_must_not_guess_epoch_from_numeric_string[1792803600.5]
+3 failed, 5 passed in 0.97s

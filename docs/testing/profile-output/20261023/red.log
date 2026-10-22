@@ -1,0 +1,24 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_same_response_builds_unverified_patch_with_server_owned_source_identity _
+
+    def test_same_response_builds_unverified_patch_with_server_owned_source_identity():
+>       codec=api()
+              ^^^^^
+
+tests\unit\test_assistant_profile_codec.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def api():
+        name='cn_contract.assistant.providers.profile_codec'
+>       assert importlib.util.find_spec(name) is not None, 'profile codec missing'
+E       AssertionError: profile codec missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x0000028C92135800>('cn_contract.assistant.providers.profile_codec')
+E        +    where <function find_spec at 0x0000028C92135800> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+tests\unit\test_assistant_profile_codec.py:14: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profile_codec.py::test_same_response_builds_unverified_patch_with_server_owned_source_identity
+1 failed in 0.46s

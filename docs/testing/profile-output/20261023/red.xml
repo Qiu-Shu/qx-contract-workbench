@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.393" timestamp="2026-10-23T06:31:53.573463+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_assistant_profile_codec" name="test_same_response_builds_unverified_patch_with_server_owned_source_identity" time="0.001"><failure message="AssertionError: profile codec missing&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000028C92135800&gt;('cn_contract.assistant.providers.profile_codec')&#10; +    where &lt;function find_spec at 0x0000028C92135800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">def test_same_response_builds_unverified_patch_with_server_owned_source_identity():
+&gt;       codec=api()
+              ^^^^^
+
+tests\unit\test_assistant_profile_codec.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def api():
+        name='cn_contract.assistant.providers.profile_codec'
+&gt;       assert importlib.util.find_spec(name) is not None, 'profile codec missing'
+E       AssertionError: profile codec missing
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000028C92135800&gt;('cn_contract.assistant.providers.profile_codec')
+E        +    where &lt;function find_spec at 0x0000028C92135800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\unit\test_assistant_profile_codec.py:14: AssertionError</failure></testcase></testsuite></testsuites>

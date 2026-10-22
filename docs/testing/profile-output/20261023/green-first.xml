@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.421" timestamp="2026-10-23T06:36:47.432775+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_assistant_profile_codec" name="test_same_response_builds_unverified_patch_with_server_owned_source_identity" time="0.005"><failure message="AssertionError: assert ('unverified' == 'unverified'&#10;  &#10;    unverified and '3.5E+4' == '35000'&#10;  &#10;  - 35000&#10;  + 3.5E+4)">def test_same_response_builds_unverified_patch_with_server_owned_source_identity():
+        codec=api()
+        snapshot,request=fixture()
+        result=codec.decode_response(response(request),request,config(),KEY)
+        assert result.error_code is None and result.usage.total_tokens==42
+        assert result.output.text=='请核对借款及付款材料。'
+        patch=result.output.profile_patch
+        assert patch.scope==snapshot.scope and patch.base_profile_revision==0
+        item=patch.changes[0]
+&gt;       assert item.verification=='unverified' and str(item.value.value)=='35000'
+E       AssertionError: assert ('unverified' == 'unverified'
+E         
+E           unverified and '3.5E+4' == '35000'
+E         
+E         - 35000
+E         + 3.5E+4)
+
+tests\unit\test_assistant_profile_codec.py:47: AssertionError</failure></testcase></testsuite></testsuites>

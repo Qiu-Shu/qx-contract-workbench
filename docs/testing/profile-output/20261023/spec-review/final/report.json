@@ -1,0 +1,62 @@
+{
+  "checks": [
+    {
+      "name": "unicode_exact_source_conflicts_stay_unverified",
+      "passed": true
+    },
+    {
+      "name": "invalid_second_proposal_discards_entire_candidate",
+      "passed": true
+    },
+    {
+      "name": "received_and_checked_are_refused",
+      "passed": true
+    },
+    {
+      "name": "model_authority_and_contact_refused",
+      "passed": true
+    },
+    {
+      "name": "request_versions_hash_and_old_protocol_boundary",
+      "passed": true
+    },
+    {
+      "name": "nonempty_citations_and_duplicate_json_refused",
+      "passed": true
+    },
+    {
+      "name": "default_denied_before_key_or_network",
+      "passed": true
+    },
+    {
+      "name": "received_revocation_retains_usage",
+      "passed": true
+    },
+    {
+      "name": "one_post_returns_answer_and_proposals",
+      "passed": true
+    },
+    {
+      "name": "new_integer_money_rejected_usage_retained",
+      "passed": true
+    },
+    {
+      "name": "new_nonexplicit_datetime_rejected_usage_retained",
+      "passed": true
+    },
+    {
+      "name": "new_explicit_timezones_accepted_merge_stays_unverified",
+      "passed": true
+    },
+    {
+      "name": "new_money_string_positive_shared_manual_type_unchanged",
+      "passed": true
+    }
+  ],
+  "passed": 13,
+  "original_groups_rerun": 9,
+  "new_groups": 4,
+  "failed": 0,
+  "prior_evidence_preserved": "../probe.py and ../report.json unchanged",
+  "scope": "independent synthetic text and loopback only; no DB, real provider or desktop process"
+}
