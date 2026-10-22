@@ -1,6 +1,6 @@
 # TODO — 群兴法律工作台协作清单
 
-最新接续（2026-10-23，CH-07C2a）：离线发送内容/保存计划绑定完成；380关联、四开发门、Spec12/Standards9通过。C2b仍须闭合原生用途许可、版本化账本、固定原子钩子及迁移恢复，自动保存尚未启用；以[本片证据](docs/testing/profile-basis/20261023/README.md)为准。同步以随后回执为准。
+最新接续（2026-10-23，CH-07C2a）：离线发送内容/保存计划绑定完成；380关联、四开发门、Spec12/Standards9通过。C2b仍须闭合原生用途许可、版本化账本、固定原子钩子及迁移恢复，自动保存尚未启用；以[本片证据](docs/testing/profile-basis/20261023/README.md)为准。`a84a156`已正常同步，远端SHA及4,370文件树一致；[回执](docs/testing/GITHUB-PROFILE-BASIS-20261023.md)。
 
 最新接续（2026-10-23，CH-07C1）：协议切片及577项关联验证完成，自动保存仍待C2/C3；以[本片证据](docs/testing/profile-output/20261023/README.md)为准。后续同步结果见下方回执。
 已同步：CH-07C1协议源码与证据 `bcc5013`，远端SHA及4,331文件树一致；自动建档接线和Windows恢复开放项继续推进。[同步回执](docs/testing/GITHUB-PROFILE-OUTPUT-20261023.md)。

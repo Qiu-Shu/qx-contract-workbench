@@ -1,0 +1,190 @@
+{
+  "utc": "2026-10-22T23:42:24.410905+00:00",
+  "base": "37773d92f08e0b3bc2fed27064ceb011e8a72cd6",
+  "head": "a84a156227be7ad9cead1fd1ea237773defee3c4",
+  "new_commits": 1,
+  "blobs": 35,
+  "bytes": 627157,
+  "zip_text_members": 0,
+  "blocked_paths": [],
+  "pattern_findings": [],
+  "reviewed_synthetic_rejection_url_occurrences": 0,
+  "scope": "All new reachable Git blobs and ZIP text members; known pattern/path/contract identity checks, not exhaustive sensitive-content certification.",
+  "files": [
+    {
+      "sha": "00bde775226b0f94f09eefef420b6dae09a37f33",
+      "path": ".gitattributes",
+      "bytes": 6825
+    },
+    {
+      "sha": "7c1e71aaaffef1f7c5293516606ebb6425a2e4de",
+      "path": "README.md",
+      "bytes": 15136
+    },
+    {
+      "sha": "4210390be45b0e461cebcc15cd47d0bb70f7e6cd",
+      "path": "TODO.md",
+      "bytes": 22350
+    },
+    {
+      "sha": "aada3d7a0fce3e7fd9bec014b6584249620f66e7",
+      "path": "docs/TASK_STATUS.md",
+      "bytes": 121107
+    },
+    {
+      "sha": "6bec942a30b30e95d66da44a5c05696ef53a26f6",
+      "path": "docs/plans/2026-10-16-chat-first-execution.md",
+      "bytes": 19587
+    },
+    {
+      "sha": "fcee08b59199f1d727a4e4e29bf68a78ca4f607a",
+      "path": "docs/plans/2026-10-23-profile-send-basis.md",
+      "bytes": 3991
+    },
+    {
+      "sha": "f0b267be38e74a510ba218b8815ed0ad13764d21",
+      "path": "docs/testing/profile-basis/20261023/README.md",
+      "bytes": 3463
+    },
+    {
+      "sha": "e63395df289f691ff383ceb380ac63a2a9196802",
+      "path": "docs/testing/profile-basis/20261023/collection-failure-target.log",
+      "bytes": 847
+    },
+    {
+      "sha": "15c72cf65def7db6b0ec3a4ea7583794eeeb8383",
+      "path": "docs/testing/profile-basis/20261023/collection-failure.json",
+      "bytes": 2377
+    },
+    {
+      "sha": "23b83e9d36f54d789f72ae799df44f073fe300bc",
+      "path": "docs/testing/profile-basis/20261023/development-record.json",
+      "bytes": 1030
+    },
+    {
+      "sha": "ab49e5248f7b1e99ce24ef2e2beb0468f661e86d",
+      "path": "docs/testing/profile-basis/20261023/evidence-manifest.json",
+      "bytes": 4517
+    },
+    {
+      "sha": "2a0f75cfc8226c1941baad1d9e6a6071046c6e58",
+      "path": "docs/testing/profile-basis/20261023/preflight.json",
+      "bytes": 578
+    },
+    {
+      "sha": "1c822dd4e7f544710fc499f3f8c26b596659651c",
+      "path": "docs/testing/profile-basis/20261023/red.json",
+      "bytes": 377
+    },
+    {
+      "sha": "94ce73f4f45d55d235becb0fd80e193502c97843",
+      "path": "docs/testing/profile-basis/20261023/red.log",
+      "bytes": 8139
+    },
+    {
+      "sha": "eb4d69a2ac1f59e349f036a7fa6f969c4721cc6e",
+      "path": "docs/testing/profile-basis/20261023/review-summary.md",
+      "bytes": 1314
+    },
+    {
+      "sha": "0524968ed885b5474372f58623435c2c941bd66c",
+      "path": "docs/testing/profile-basis/20261023/spec-review/probe.log",
+      "bytes": 1499
+    },
+    {
+      "sha": "5e19ad0515a722deb0f32fe717f81483e021cb8b",
+      "path": "docs/testing/profile-basis/20261023/spec-review/probe.py",
+      "bytes": 10170
+    },
+    {
+      "sha": "7514f7c851030ccb1116cef8135da832ebe782d0",
+      "path": "docs/testing/profile-basis/20261023/spec-review/report.json",
+      "bytes": 1497
+    },
+    {
+      "sha": "8ab25e1e4e45319d7f8ef5761a8cc1e4403cf543",
+      "path": "docs/testing/profile-basis/20261023/standards-review/final/README.md",
+      "bytes": 1870
+    },
+    {
+      "sha": "941a5ad3972d291a842dfb8e22c914b310b17137",
+      "path": "docs/testing/profile-basis/20261023/standards-review/final/input-stability.json",
+      "bytes": 901
+    },
+    {
+      "sha": "410c2debc28594d6280c6e6382cabaa6df53c7ad",
+      "path": "docs/testing/profile-basis/20261023/standards-review/final/integration-supplement.json",
+      "bytes": 244
+    },
+    {
+      "sha": "7514a71bfb5d11d3e3828c1e9974e33e282800bf",
+      "path": "docs/testing/profile-basis/20261023/standards-review/final/output.log",
+      "bytes": 100
+    },
+    {
+      "sha": "6215e72bffeadfcabfcb83f0cbd8c45b98ff7454",
+      "path": "docs/testing/profile-basis/20261023/standards-review/final/results.xml",
+      "bytes": 1810
+    },
+    {
+      "sha": "29f7ce87eed58e41d5484a9431a07e5f035a4404",
+      "path": "docs/testing/profile-basis/20261023/standards-review/input-hashes.json",
+      "bytes": 884
+    },
+    {
+      "sha": "842402d6050cd5d9485b347e27ddb1a1e697e0d3",
+      "path": "docs/testing/profile-basis/20261023/standards-review/test_review_probe.py",
+      "bytes": 4285
+    },
+    {
+      "sha": "517e989e74770b29d1dd51a0995aed62278a5e2c",
+      "path": "docs/testing/profile-basis/20261023/target-nodeids.txt",
+      "bytes": 587
+    },
+    {
+      "sha": "0e9024795eda396ee8774de76108bf0f1378f24c",
+      "path": "docs/testing/profile-basis/20261023/target-verification.json",
+      "bytes": 130538
+    },
+    {
+      "sha": "a27a60e3cf45f6714d6ef32775c15ce59e69d958",
+      "path": "docs/testing/profile-basis/20261023/target.log",
+      "bytes": 507
+    },
+    {
+      "sha": "4adf48454f221c65a51726bb33adfc00daa56960",
+      "path": "docs/testing/profile-basis/20261023/target.xml",
+      "bytes": 85152
+    },
+    {
+      "sha": "ae4bdfeabac520523adb16192ef32090d6279cd0",
+      "path": "docs/testing/profile-basis/20261023/verify.py",
+      "bytes": 3518
+    },
+    {
+      "sha": "33d65086ff561bcc7a14505c366a5ca09e29a39e",
+      "path": "src/cn_contract/assistant/providers/profile_codec.py",
+      "bytes": 4698
+    },
+    {
+      "sha": "960471839fc4406c98c00d16ca0563e4df4b7dc1",
+      "path": "src/cn_contract/assistant/providers/profile_preparation.py",
+      "bytes": 3209
+    },
+    {
+      "sha": "331b6336b7bc0cd60b6045a9d87f0709859869d6",
+      "path": "src/cn_contract/domain.py",
+      "bytes": 149393
+    },
+    {
+      "sha": "a7f1008c957289aebae8c4882f0ecd11a40f1d14",
+      "path": "tests/integration/test_assistant_profile_saved_preparation.py",
+      "bytes": 2775
+    },
+    {
+      "sha": "e79b4fd4793a5965e2a57d6020ed42afc06b1206",
+      "path": "tests/unit/test_assistant_profile_preparation.py",
+      "bytes": 11882
+    }
+  ]
+}

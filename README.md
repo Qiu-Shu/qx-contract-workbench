@@ -12,7 +12,7 @@ CH-07B 已实现本地档案与接待的原子保存、版本回查及恢复校�
 
 CH-07C1新增了同次回答与当前文字档案提案的独立协议；577项关联检查及独立复核通过。它保留来源和待核状态，默认关闭，自动保存钩子与档案面板尚待接线。[协议实测与后续边界](docs/testing/profile-output/20261023/README.md)。提交`bcc5013`已同步，[回执](docs/testing/GITHUB-PROFILE-OUTPUT-20261023.md)。
 
-CH-07C2a已补上离线发送准备：完整发送内容与档案/接待保存计划分别绑定，防止相同文字沿用不同用途或目标的记录；380项关联检查及两份独立复核通过。应用自动保存仍待C2b的许可、账本、迁移和固定保存流程闭合后启用。[本轮实测](docs/testing/profile-basis/20261023/README.md)。
+CH-07C2a已补上离线发送准备：完整发送内容与档案/接待保存计划分别绑定，防止相同文字沿用不同用途或目标的记录；380项关联检查及两份独立复核通过。应用自动保存仍待C2b的许可、账本、迁移和固定保存流程闭合后启用。[本轮实测](docs/testing/profile-basis/20261023/README.md)。提交`a84a156`已同步，[回执](docs/testing/GITHUB-PROFILE-BASIS-20261023.md)。
 
 ## 协作者从这里开始
 
@@ -22,7 +22,7 @@ CH-07C2a已补上离线发送准备：完整发送内容与档案/接待保存�
 - [对话式前端、模块解耦与轻量化 v2.1](docs/plans/chat-first-architecture-v2.1.md)
 - [下一步接线安排](docs/plans/2026-10-19-post-home-readiness.md)
 - [Windows 安装版与开发版说明](desktop/README.md)
-- [最近已核验的 GitHub 同步记录](docs/testing/GITHUB-PROFILE-OUTPUT-20261023.md)
+- [最近已核验的 GitHub 同步记录](docs/testing/GITHUB-PROFILE-BASIS-20261023.md)
 
 当前协作集成分支为 [`codex/contract-review-v2`](https://github.com/Qiu-Shu/qx-contract-workbench/tree/codex/contract-review-v2)。开始修改前先获取远端更新并查看 TODO；独立任务建议使用短分支和 PR，避免多人同时改动集成分支。每个完成阶段同步代码、实际验证记录、TODO 和 README。
 
