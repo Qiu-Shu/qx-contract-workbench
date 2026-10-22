@@ -1,0 +1,245 @@
+{
+  "utc": "2026-10-22T17:40:41.792686+00:00",
+  "base": "1a73e36f687b6dc0eab98892149737c02e8d9ce6",
+  "head": "03f46428d445306fd7c3a8a7094d0921b83f1cf1",
+  "new_commits": 1,
+  "blobs": 46,
+  "bytes": 427779,
+  "zip_text_members": 0,
+  "blocked_paths": [],
+  "pattern_findings": [],
+  "reviewed_synthetic_rejection_url_occurrences": 0,
+  "scope": "All new reachable Git blobs and ZIP text members; known pattern/path/contract identity checks, not exhaustive sensitive-content certification.",
+  "files": [
+    {
+      "sha": "76e1bad604df020d534ad61df5042aa78975ca00",
+      "path": ".gitattributes",
+      "bytes": 4771
+    },
+    {
+      "sha": "c0e8350319f53b9caa23f53ee49e80b65f13c4ab",
+      "path": "README.md",
+      "bytes": 12771
+    },
+    {
+      "sha": "cd80c8ae00a23a4b0f55a1caa4cef2d7e4de644d",
+      "path": "TODO.md",
+      "bytes": 19734
+    },
+    {
+      "sha": "381cf35f3b99ffaec42a84ba7bbcfdb298d69531",
+      "path": "docs/TASK_STATUS.md",
+      "bytes": 112432
+    },
+    {
+      "sha": "126011f35385c75fcfdd703ba13c8f06081e6302",
+      "path": "docs/plans/2026-10-23-intake-decoupling.md",
+      "bytes": 2532
+    },
+    {
+      "sha": "de193cc406dd614b47e83bd32e7a0f7ba87a7f8e",
+      "path": "docs/plans/2026-10-23-profile-draft-readiness.md",
+      "bytes": 14025
+    },
+    {
+      "sha": "2b97b4f0ce80cd2e0ab77cc24d25e6369e3cea3a",
+      "path": "docs/testing/intake-decoupling/20261023/README.md",
+      "bytes": 4481
+    },
+    {
+      "sha": "bfc05641a2aa01bdff6c4698e4d3db71cf49a761",
+      "path": "docs/testing/intake-decoupling/20261023/evidence-manifest.json",
+      "bytes": 5476
+    },
+    {
+      "sha": "f53c0f00a27a530de03762abb2a28642fb4a52fc",
+      "path": "docs/testing/intake-decoupling/20261023/green.log",
+      "bytes": 101
+    },
+    {
+      "sha": "b29b60ed2c46711ec93cec6263272768e8cc4e05",
+      "path": "docs/testing/intake-decoupling/20261023/green.xml",
+      "bytes": 2063
+    },
+    {
+      "sha": "da959f2291f439f390aab2fe43dd3fbaf77911fa",
+      "path": "docs/testing/intake-decoupling/20261023/import-after.json",
+      "bytes": 2970
+    },
+    {
+      "sha": "a9875e0016cd89278e715f953a8490ef03b1d784",
+      "path": "docs/testing/intake-decoupling/20261023/import-before.json",
+      "bytes": 2917
+    },
+    {
+      "sha": "b1dd6129818bff8432ef7ccd542bc0f8e9c42c4d",
+      "path": "docs/testing/intake-decoupling/20261023/import-red.log",
+      "bytes": 2554
+    },
+    {
+      "sha": "6b72fee52d60282c1b6f758234f3889151663dc3",
+      "path": "docs/testing/intake-decoupling/20261023/import-red.xml",
+      "bytes": 3576
+    },
+    {
+      "sha": "de0f5ba6f8b3f5bae7f957857c7b017bc02b335c",
+      "path": "docs/testing/intake-decoupling/20261023/measure_import.py",
+      "bytes": 1625
+    },
+    {
+      "sha": "afceae0d8c91733f33365748275c63aa51b38003",
+      "path": "docs/testing/intake-decoupling/20261023/publication-check.json",
+      "bytes": 154
+    },
+    {
+      "sha": "3d7eaace4f2a327a37b827873ab67f168b97207b",
+      "path": "docs/testing/intake-decoupling/20261023/publication_check.py",
+      "bytes": 1853
+    },
+    {
+      "sha": "c79c0a96025450434b22a5db9f9f789d14c93523",
+      "path": "docs/testing/intake-decoupling/20261023/spec-command.json",
+      "bytes": 2362
+    },
+    {
+      "sha": "32a152e8b0d9d3e9bd27e5ae808c1548767c157d",
+      "path": "docs/testing/intake-decoupling/20261023/spec-probes.log",
+      "bytes": 100
+    },
+    {
+      "sha": "96515c024836d6c8a160ec06a68be811af26b637",
+      "path": "docs/testing/intake-decoupling/20261023/spec-probes.py",
+      "bytes": 4937
+    },
+    {
+      "sha": "e00e23cb2ac1d61d101b8c669573341d869b8f5f",
+      "path": "docs/testing/intake-decoupling/20261023/spec-probes.xml",
+      "bytes": 1117
+    },
+    {
+      "sha": "e2c16f655e80eb6d978276785279b5e06849c1ea",
+      "path": "docs/testing/intake-decoupling/20261023/spec-review.md",
+      "bytes": 958
+    },
+    {
+      "sha": "8a628b1309b463b35509aece4076031f8b310e3b",
+      "path": "docs/testing/intake-decoupling/20261023/spec-run.py",
+      "bytes": 1656
+    },
+    {
+      "sha": "96cb2ba6cf7c2aff4b7c4af560cc6b56cb4c1734",
+      "path": "docs/testing/intake-decoupling/20261023/standards-probe.json",
+      "bytes": 782
+    },
+    {
+      "sha": "96a10861e5b0f3843e9677b05d6ce5e328f1cc8e",
+      "path": "docs/testing/intake-decoupling/20261023/standards-probe.log",
+      "bytes": 334
+    },
+    {
+      "sha": "8b5dc4f8548cf34eb9eeb73e99dbad73511ca367",
+      "path": "docs/testing/intake-decoupling/20261023/standards-review.md",
+      "bytes": 816
+    },
+    {
+      "sha": "6e38c5673b3542068397b451c477fc23d740b839",
+      "path": "docs/testing/intake-decoupling/20261023/standards_probe.py",
+      "bytes": 5055
+    },
+    {
+      "sha": "f1158e7ffb351f1bcbf86bfca796fb79b477d808",
+      "path": "docs/testing/intake-decoupling/20261023/target-nodeids.txt",
+      "bytes": 574
+    },
+    {
+      "sha": "6c53943cb5abe7f5fb59324bc63ff217837f1d7a",
+      "path": "docs/testing/intake-decoupling/20261023/target-verification.json",
+      "bytes": 126069
+    },
+    {
+      "sha": "b906a40acb66c3bb62d1b2085e8dd7b542d440f8",
+      "path": "docs/testing/intake-decoupling/20261023/target.log",
+      "bytes": 276
+    },
+    {
+      "sha": "ed8d60ac28e13c269cbd5488e17bd9799fd98d84",
+      "path": "docs/testing/intake-decoupling/20261023/target.xml",
+      "bytes": 31156
+    },
+    {
+      "sha": "ab71de3f3d6deda6b039b40e6def561d92d9f3e9",
+      "path": "docs/testing/intake-decoupling/20261023/verify.py",
+      "bytes": 3522
+    },
+    {
+      "sha": "05e364b9783fcb462a17c17158101c71fb5e4be6",
+      "path": "docs/testing/intake-decoupling/20261023/win-path-02-local.log",
+      "bytes": 100
+    },
+    {
+      "sha": "d89b1836b54e230f819fa5c4bbeaf04a4789c96f",
+      "path": "docs/testing/intake-decoupling/20261023/win-path-02-local.xml",
+      "bytes": 694
+    },
+    {
+      "sha": "d8b203dcd88a9e8e78236d5f450457bb511cc867",
+      "path": "docs/testing/intake-decoupling/20261023/win-path-02-original-location.log",
+      "bytes": 100
+    },
+    {
+      "sha": "b16f4eba8f0c8a4ae6ca992f4def39b434e5d9cf",
+      "path": "docs/testing/intake-decoupling/20261023/win-path-02-original-location.xml",
+      "bytes": 694
+    },
+    {
+      "sha": "f49c4532a72cc230a4a2ba4971ba45819c409717",
+      "path": "docs/testing/intake-decoupling/20261023/workbuddy-status.json",
+      "bytes": 353
+    },
+    {
+      "sha": "d5efb988969c8157fda57c29c7ed8b8748b47bfe",
+      "path": "docs/testing/model-ux/20261022/README.md",
+      "bytes": 3343
+    },
+    {
+      "sha": "d7fffdea088b6de8a9159bba707ea124875a8847",
+      "path": "docs/testing/selection-gui/20261021/README.md",
+      "bytes": 6851
+    },
+    {
+      "sha": "0a697a253a867aae20b0de0db819c7d855d993d6",
+      "path": "src/cn_contract/intake/service.py",
+      "bytes": 7410
+    },
+    {
+      "sha": "a917574e72ddd406ad01c3394e63c7714985e1cb",
+      "path": "src/cn_contract/matters.py",
+      "bytes": 2300
+    },
+    {
+      "sha": "c199921968f78c2a7bab67dd14e80af255f75aba",
+      "path": "src/cn_contract/record_codec.py",
+      "bytes": 395
+    },
+    {
+      "sha": "53c587eb5c89bf49f8bb2f30cd34f8450caabf15",
+      "path": "src/cn_contract/web/services.py",
+      "bytes": 14054
+    },
+    {
+      "sha": "8776c4c911e6c4027ff31aba405b7e073d956b8d",
+      "path": "src/cn_contract/web/storage.py",
+      "bytes": 6855
+    },
+    {
+      "sha": "4cee8e7f72dcaab18961aca155a311cd31376e5e",
+      "path": "tests/integration/test_intake.py",
+      "bytes": 9779
+    },
+    {
+      "sha": "64163abae30846a5cf0c45e509ee7987037a4a33",
+      "path": "tests/unit/test_intake_import_boundary.py",
+      "bytes": 1102
+    }
+  ]
+}

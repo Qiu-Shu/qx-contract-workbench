@@ -16,7 +16,7 @@
 - [对话式前端、模块解耦与轻量化 v2.1](docs/plans/chat-first-architecture-v2.1.md)
 - [下一步接线安排](docs/plans/2026-10-19-post-home-readiness.md)
 - [Windows 安装版与开发版说明](desktop/README.md)
-- [最近已核验的 GitHub 同步记录](docs/testing/GITHUB-MODELUX-20261022.md)
+- [最近已核验的 GitHub 同步记录](docs/testing/GITHUB-INTAKE-DECOUPLING-20261023.md)
 
 当前协作集成分支为 [`codex/contract-review-v2`](https://github.com/Qiu-Shu/qx-contract-workbench/tree/codex/contract-review-v2)。开始修改前先获取远端更新并查看 TODO；独立任务建议使用短分支和 PR，避免多人同时改动集成分支。每个完成阶段同步代码、实际验证记录、TODO 和 README。
 
