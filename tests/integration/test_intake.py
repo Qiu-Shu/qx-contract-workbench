@@ -127,13 +127,13 @@ def test_conversion_atomic_replay_and_membership_revocation(api):
 def test_conversion_service_failure_rolls_back_created_matter(api, monkeypatch):
     client,database,_,_=api
     headers=sign_in(client); first=create(client,headers)
-    from cn_contract.web import services
-    original=services.create_matter
+    from cn_contract import matters
+    original=matters.create_matter
     def fail(value,actor,db):
         original(value,actor,db)
         from cn_contract.security import ServiceError
         raise ServiceError('STATE_CONFLICT',409)
-    monkeypatch.setattr(services,'create_matter',fail)
+    monkeypatch.setattr(matters,'create_matter',fail)
     result=client.post('/api/intakes/'+first['id']+'/convert',headers=headers,json=conversion())
     assert result.status_code==409
     assert client.get('/api/matters').json()==[]

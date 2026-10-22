@@ -1,0 +1,43 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_intake_import_does_not_load_web_or_document_processing _________
+
+    def test_intake_import_does_not_load_web_or_document_processing():
+        probe = r'''
+    import importlib.abc
+    import sys
+    
+    blocked = ('cn_contract.web', 'docx', 'cn_contract.documents.ingest',
+               'cn_contract.review.workflow')
+    
+    class Guard(importlib.abc.MetaPathFinder):
+        def find_spec(self, fullname, path=None, target=None):
+            if any(fullname == name or fullname.startswith(name + '.') for name in blocked):
+                raise AssertionError('unexpected dependency: ' + fullname)
+    
+    sys.meta_path.insert(0, Guard())
+    from cn_contract.intake import service
+    assert all(callable(getattr(service, name)) for name in ('create', 'save', 'read', 'convert', 'export'))
+    assert not any(name == prefix or name.startswith(prefix + '.')
+                   for name in sys.modules for prefix in blocked)
+    '''
+        result = subprocess.run([sys.executable, '-X', 'utf8', '-c', probe],
+                                capture_output=True, text=True, timeout=30)
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 14, in <module>
+E           File "D:\Documents\ChatGPT\律所项目\src\cn_contract\intake\service.py", line 6, in <module>
+E             from docx import Document
+E           File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+E           File "<frozen importlib._bootstrap>", line 1322, in _find_and_load_unlocked
+E           File "<frozen importlib._bootstrap>", line 1262, in _find_spec
+E           File "<string>", line 11, in find_spec
+E         AssertionError: unexpected dependency: docx
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe', '-X', 'utf8', '-c', "\nimport impor...>", line 1262, in _find_spec\n  File "<string>", line 11, in find_spec\nAssertionError: unexpected dependency: docx\n').returncode
+
+tests\unit\test_intake_import_boundary.py:27: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_intake_import_boundary.py::test_intake_import_does_not_load_web_or_document_processing
+1 failed in 0.53s

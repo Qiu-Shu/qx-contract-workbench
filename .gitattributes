@@ -79,3 +79,6 @@ docs/testing/context-provider/** -text -whitespace
 tests/unit/test_assistant_context_codec.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 tests/integration/test_assistant_context_provider.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 tests/integration/test_deepseek_transport_refactor.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/testing/intake-decoupling/** -text -whitespace
+tests/unit/test_intake_import_boundary.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

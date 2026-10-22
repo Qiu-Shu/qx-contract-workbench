@@ -1,6 +1,6 @@
 # CH-06B3 律师选片 GUI 切片证据（2026-10-21）
 
-执行合同：[docs/plans/2026-10-21-selection-gui.md](../../plans/2026-10-21-selection-gui.md)。
+执行合同：[docs/plans/2026-10-21-selection-gui.md](../../../plans/2026-10-21-selection-gui.md)。
 基线：`51b2875`（CH-06B2c2 回执提交）。本片全部材料为虚构合成，无真实案件/密钥/供应商调用。
 
 ## 本片范围

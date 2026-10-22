@@ -3,14 +3,13 @@ from io import BytesIO
 import json
 from uuid import UUID, uuid4
 
-from docx import Document
 from sqlalchemy import text
 
 from .. import domain as d
 from ..persistence import SessionRow
 from ..security import ServiceError, _principal, authorize
-from ..web import services
-from ..web.storage import encode, now, sha
+from .. import matters
+from ..record_codec import encode, now, sha
 
 
 def _lawyer(actor, db):
@@ -111,13 +110,15 @@ def convert(identifier,value,actor,db):
     if record.revision!=value.expected_revision or record.status=='closed':
         raise ServiceError('VERSION_CONFLICT',409)
     # The caller's transaction covers both existing service writes and the link.
-    matter=services.create_matter(value.matter,actor,db)
+    matter=matters.create_matter(value.matter,actor,db)
     db.execute(text('UPDATE intake_cases SET matter_id=:matter,conversion_sha256=:digest WHERE id=:id'),
         {'id':str(identifier),'matter':str(matter.id),'digest':digest})
     return {'matter_id':str(matter.id),'intake_id':str(identifier),'revision':record.revision}
 
 
 def export(identifier,value,actor,db):
+    from docx import Document
+
     record=read(identifier,actor,db)
     if record.revision!=value.revision or (value.audience=='client' and not value.text_checked):
         raise ServiceError('VERSION_CONFLICT',409)

@@ -1,7 +1,5 @@
 """Protected HTTP job inputs and append-only decisions/events; explicit startup."""
-from datetime import datetime, timezone
-import hashlib
-import json
+from datetime import datetime
 from uuid import UUID, uuid4
 
 from sqlalchemy import ForeignKey, Integer, String, Text, UniqueConstraint, select
@@ -11,6 +9,7 @@ from ..domain import Actor, JobStatus, HumanDecision
 from ..persistence import Base, Database, UTCDateTime, SessionRow, DocumentRow, read_matter
 from ..security import ServiceError, authorize, _principal
 from ..review.storage import FindingDecisionRow
+from ..record_codec import now, encode, sha
 
 
 class JobRow(Base):
@@ -53,11 +52,6 @@ class HttpWriteRow(Base):
     request_sha256:Mapped[str]=mapped_column(String(64))
     response_matter_sha256:Mapped[str]=mapped_column(String(64))
     payload:Mapped[str]=mapped_column(Text)
-
-
-def now(): return datetime.now(timezone.utc)
-def encode(value): return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(',', ':'), allow_nan=False)
-def sha(value): return hashlib.sha256(encode(value).encode('utf-8')).hexdigest()
 
 
 def initialize_storage(database):
