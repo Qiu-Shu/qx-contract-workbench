@@ -90,7 +90,8 @@ async function startBackend(credentials = {}) {
     backend = new Backend(executable,args);
     const owned=backend;
     owned.on('failed', () => { if (!stopping && backend===owned) void showError(owned); });
-    const ready = await backend.start({data_parent:dataParent,...credentials,...settings});
+    const {model:_persistedModel,...backendSettings}=settings;
+    const ready = await backend.start({data_parent:dataParent,...credentials,...backendSettings});
     origin = `http://127.0.0.1:${ready.port}`;
     activeBackend={instance:owned,origin,workspace:settings.workspace||'main'};
     await win.loadURL(origin+'/login');

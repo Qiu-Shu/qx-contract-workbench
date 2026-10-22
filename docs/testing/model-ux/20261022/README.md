@@ -28,6 +28,7 @@ Python 后端零改动（`git diff` 可证），无需关联 pytest 家族复跑
 
 - `beforeCredentialChange` 曾一并清除持久化选择，导致"换密钥后重启不再自动配置"——违背所有者意图，改为仅显式停用清除；对应测试（渲染进程崩溃→换密钥→重启仍恢复配置）按新语义通过。
 - 自动配置由 fire-and-forget 改为 `await`（消除测试与真实启动的竞态）。
+- **推送后真实启动回归（当日修复）**：settings 的 `model` 键被展开进 `backend.start` 参数，而 `desktop_entry.py` 启动参数严格白名单不含 `model` → `BACKEND_REJECTED`，后端拉不起来。修复：main.cjs 传参前剔除 `model` 键（该键纯属桌面侧持久化）；model-settings-navigation 夹具 `Backend.start` 记录参数并新增断言"start 参数不得含 model 键"防回归。修复后桌面全套件 270/270；真实启动验证：python desktop_entry 进程拉起、回环端口监听正常（[desktop-suite-after-hotfix.log](desktop-suite-after-hotfix.log)）。
 
 ## 边界
 

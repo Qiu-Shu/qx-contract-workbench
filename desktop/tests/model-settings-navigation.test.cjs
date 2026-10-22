@@ -19,7 +19,7 @@ async function fixture(t,{recovered=false,model}={}) {
     async status(){return {status:'saved'};},async withSecret(fn){await fn('synthetic-settings-secret');return {status:'saved'};},async drain(){}};
   class Backend extends EventEmitter {
     constructor(){super();this.stops=0;this.configures=0;this.disables=0;this.judgeConfigures=0;this.judgeDisables=0;this.control={ready:true,enabled:true,judgeEnabled:true};backends.push(this);}
-    async start(){return {port:18000+backends.length};}
+    async start(params){this.startParams=params;return {port:18000+backends.length};}
     async stop(){this.stops++;this.closing=true;}
     async configureModel(){this.configures++;return {ok:true,status:'configured',config_sha256:'a'.repeat(64),config_version:'00000000-0000-4000-8000-000000000002'};}
     async disableModel(){this.disables++;return {ok:true,status:'disabled'};}
@@ -164,6 +164,7 @@ test('restored workspaces and replaced backends cannot approve a send',async t=>
 test('startup restores a persisted model choice and disable clears it for the next start',async t=>{
   const f=await fixture(t,{model:'deepseek-v4-pro'});
   assert.equal(f.backends[0].configures,1,'startup configures without opening settings');
+  assert.equal('model' in f.backends[0].startParams,false,'backend.start must not receive the desktop-only model key');
   await f.menu('主模型设置…');
   const status=await f.handlers.get('desktop:model-runtime-status')(f.event());
   assert.equal(status.runtime.state,'configured');assert.equal(status.runtime.model,'deepseek-v4-pro');
