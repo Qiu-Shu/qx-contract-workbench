@@ -1,0 +1,20 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+________ test_user_message_sources_merge_without_writes_or_draft_leak _________
+tests\integration\test_assistant_profile_sources.py:83: in test_user_message_sources_merge_without_writes_or_draft_leak
+    snapshot = read(database, actors['lawyer'], proposal)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_sources.py:23: in read
+    from cn_contract.assistant.profile_sources import read_profile_sources
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.profile_sources'
+_______ test_document_snapshot_reuses_original_and_exact_selected_parse _______
+tests\integration\test_assistant_profile_sources.py:156: in test_document_snapshot_reuses_original_and_exact_selected_parse
+    snapshot = read(database, actors['lawyer'], proposal)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_sources.py:23: in read
+    from cn_contract.assistant.profile_sources import read_profile_sources
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.profile_sources'
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_sources.py::test_user_message_sources_merge_without_writes_or_draft_leak
+FAILED tests/integration/test_assistant_profile_sources.py::test_document_snapshot_reuses_original_and_exact_selected_parse
+2 failed in 2.00s

@@ -1,0 +1,12 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_corrupt_selection_does_not_choose_last_duplicate ____________
+tests\integration\test_assistant_profile_sources.py:389: in test_corrupt_selection_does_not_choose_last_duplicate
+    denied(database,actors['lawyer'],proposal)
+tests\integration\test_assistant_profile_sources.py:69: in denied
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_sources.py::test_corrupt_selection_does_not_choose_last_duplicate
+1 failed in 1.57s

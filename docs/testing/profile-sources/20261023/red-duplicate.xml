@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.535" timestamp="2026-10-23T03:35:00.187500+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_profile_sources" name="test_corrupt_selection_does_not_choose_last_duplicate" time="0.753"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">tests\integration\test_assistant_profile_sources.py:389: in test_corrupt_selection_does_not_choose_last_duplicate
+    denied(database,actors['lawyer'],proposal)
+tests\integration\test_assistant_profile_sources.py:69: in denied
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;</failure></testcase></testsuite></testsuites>

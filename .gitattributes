@@ -85,3 +85,6 @@ tests/unit/test_intake_import_boundary.py -text whitespace=blank-at-eol,blank-at
 
 docs/testing/profile-merge/** -text -whitespace
 tests/unit/test_assistant_profiles.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/testing/profile-sources/** -text -whitespace
+tests/integration/test_assistant_profile_sources.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

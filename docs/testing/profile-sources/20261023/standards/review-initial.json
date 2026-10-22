@@ -1,0 +1,24 @@
+{
+  "kind": "independent_standards_review",
+  "baseline": "0eb341a2d25da88b05ac4b62f16d45a77a6a140b",
+  "command": ".venv/Scripts/python.exe -X utf8 -m pytest .local/profile-sources-20261023/standards/probe_sources.py -q --basetemp .local/profile-sources-20261023/standards/tmp --junitxml .local/profile-sources-20261023/standards/probes.xml",
+  "exit_code": 0,
+  "counts": {
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "source_sha256_before_probe": "310fd4a2af4e8766d4d12e6cc0b85abbbb5f04ff1636919e2c24fac8a9cb32ec",
+  "reviewed_sha256": {
+    "src/cn_contract/assistant/profile_sources.py": "be42b628ba213108eb5863403ad19b2daec7a85e5745bde3c2dd99e848718ddb",
+    "tests/integration/test_assistant_profile_sources.py": "d55f5f24486c6882624a708ffed41f4eea5dbda30f870b1c2f79588ce74fb23b",
+    "docs/plans/2026-10-23-profile-sources.md": "a35b255ddbd543840c63539e970a78402879c9ad58dc4cfd536dca7af31bb0a1"
+  },
+  "findings": [],
+  "notes": [
+    "Additional four static/import assertions passed before pytest run.",
+    "Product/primary tests were not edited. All probe databases and DOCX inputs were independently synthetic.",
+    "No persistence, HTTP/UI, models, installer or real materials exercised."
+  ]
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="1.979" timestamp="2026-10-23T03:31:09.768475+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_profile_sources" name="test_user_message_sources_merge_without_writes_or_draft_leak" time="0.482"><failure message="ModuleNotFoundError: No module named 'cn_contract.assistant.profile_sources'">tests\integration\test_assistant_profile_sources.py:83: in test_user_message_sources_merge_without_writes_or_draft_leak
+    snapshot = read(database, actors['lawyer'], proposal)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_sources.py:23: in read
+    from cn_contract.assistant.profile_sources import read_profile_sources
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.profile_sources'</failure></testcase><testcase classname="tests.integration.test_assistant_profile_sources" name="test_document_snapshot_reuses_original_and_exact_selected_parse" time="0.726"><failure message="ModuleNotFoundError: No module named 'cn_contract.assistant.profile_sources'">tests\integration\test_assistant_profile_sources.py:156: in test_document_snapshot_reuses_original_and_exact_selected_parse
+    snapshot = read(database, actors['lawyer'], proposal)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_sources.py:23: in read
+    from cn_contract.assistant.profile_sources import read_profile_sources
+E   ModuleNotFoundError: No module named 'cn_contract.assistant.profile_sources'</failure></testcase></testsuite></testsuites>

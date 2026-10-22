@@ -1,0 +1,13 @@
+................F.............                                           [100%]
+================================== FAILURES ===================================
+____________ test_unusable_document_source_fails_closed[unparsed] _____________
+tests\integration\test_assistant_profile_sources.py:172: in test_unusable_document_source_fails_closed
+    values = () if failure == 'unselected' else (d.AssistantMaterialRef(attachment_id=ref.attachment_id),)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 1 validation error for AssistantMaterialRef
+E   parse_revision
+E     Field required [type=missing, input_value={'attachment_id': UUID('f...6ef-b459-36b7fa2fb331')}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_sources.py::test_unusable_document_source_fails_closed[unparsed]
+1 failed, 29 passed in 17.88s

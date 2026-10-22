@@ -1,0 +1,41 @@
+{
+  "kind": "independent_standards_review_final",
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    ".local\\profile-sources-20261023\\standards\\probe_sources.py",
+    "-q",
+    "--basetemp",
+    ".local\\profile-sources-20261023\\standards\\tmp-final-221ae745",
+    "--junitxml",
+    ".local\\profile-sources-20261023\\standards\\probes-final.xml"
+  ],
+  "exit_code": 0,
+  "counts": {
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "before_sha256": {
+    "src/cn_contract/assistant/profile_sources.py": "be42b628ba213108eb5863403ad19b2daec7a85e5745bde3c2dd99e848718ddb",
+    "tests/integration/test_assistant_profile_sources.py": "d55f5f24486c6882624a708ffed41f4eea5dbda30f870b1c2f79588ce74fb23b",
+    "docs/plans/2026-10-23-profile-sources.md": "a35b255ddbd543840c63539e970a78402879c9ad58dc4cfd536dca7af31bb0a1",
+    ".local\\profile-sources-20261023\\standards\\probe_sources.py": "bd53c07f2a89300611d7904ae2056b23fe79ebf69cdc5d612e24e62e1bc260e1"
+  },
+  "after_sha256": {
+    "src/cn_contract/assistant/profile_sources.py": "be42b628ba213108eb5863403ad19b2daec7a85e5745bde3c2dd99e848718ddb",
+    "tests/integration/test_assistant_profile_sources.py": "d55f5f24486c6882624a708ffed41f4eea5dbda30f870b1c2f79588ce74fb23b",
+    "docs/plans/2026-10-23-profile-sources.md": "a35b255ddbd543840c63539e970a78402879c9ad58dc4cfd536dca7af31bb0a1",
+    ".local\\profile-sources-20261023\\standards\\probe_sources.py": "bd53c07f2a89300611d7904ae2056b23fe79ebf69cdc5d612e24e62e1bc260e1"
+  },
+  "input_hashes_stable": true,
+  "findings": [],
+  "limitations": [
+    "No persistence, UI, models, desktop or real materials exercised.",
+    "Refusal audit behavior is existing behavior; success path source assembly has no new records."
+  ]
+}

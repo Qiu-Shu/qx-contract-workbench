@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="1.934" timestamp="2026-10-23T03:30:55.831549+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_profile_sources" name="test_user_message_sources_merge_without_writes_or_draft_leak" time="0.492"><failure message="pydantic_core._pydantic_core.ValidationError: 1 validation error for ProfileMessageRef&#10;kind&#10;  Field required [type=missing, input_value={'conversation_id': UUID(...a2354394d33442ac2b259f'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests\integration\test_assistant_profile_sources.py:81: in test_user_message_sources_merge_without_writes_or_draft_leak
+    proposal = patch(value.scope, (msg_ref(value), msg_ref(value)))
+                                   ^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_sources.py:35: in msg_ref
+    return d.ProfileMessageRef(conversation_id=value.scope.conversation_id, message_id=msg.id,
+E   pydantic_core._pydantic_core.ValidationError: 1 validation error for ProfileMessageRef
+E   kind
+E     Field required [type=missing, input_value={'conversation_id': UUID(...a2354394d33442ac2b259f'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.integration.test_assistant_profile_sources" name="test_document_snapshot_reuses_original_and_exact_selected_parse" time="0.708"><failure message="pydantic_core._pydantic_core.ValidationError: 1 validation error for ProfileDocumentRef&#10;kind&#10;  Field required [type=missing, input_value={'conversation_id': UUID(..., page=None, bbox=None)}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests\integration\test_assistant_profile_sources.py:154: in test_document_snapshot_reuses_original_and_exact_selected_parse
+    proposal, parsed = parsed_source(material_workspace)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_sources.py:57: in parsed_source
+    ref = d.ProfileDocumentRef(conversation_id=cid, attachment_id=receipt.attachment.id,
+E   pydantic_core._pydantic_core.ValidationError: 1 validation error for ProfileDocumentRef
+E   kind
+E     Field required [type=missing, input_value={'conversation_id': UUID(..., page=None, bbox=None)}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase></testsuite></testsuites>

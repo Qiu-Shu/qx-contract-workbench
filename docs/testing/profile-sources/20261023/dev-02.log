@@ -1,0 +1,11 @@
+...............................F......                                   [100%]
+================================== FAILURES ===================================
+_________ test_document_capacity_dedup_and_unreferenced_unparsed_file _________
+tests\integration\test_assistant_profile_sources.py:293: in test_document_capacity_dedup_and_unreferenced_unparsed_file
+    receipt = attachments.ingest_attachment(actor,scope.conversation_id,request.model_copy(update={
+src\cn_contract\assistant\attachments.py:95: in ingest_attachment
+    raise ServiceError('FILE_LIMIT',413)
+E   cn_contract.security.ServiceError: request blocked
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_sources.py::test_document_capacity_dedup_and_unreferenced_unparsed_file
+1 failed, 37 passed in 28.84s
