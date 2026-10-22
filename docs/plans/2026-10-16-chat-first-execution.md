@@ -1,5 +1,7 @@
 # Chat-first execution ledger and first delivery slice
 
+- 2026-10-23 CH-07A: pure profile merge/provenance/manual protection and IntakeDraft projection completed. 400 focused/related tests (45 new), four development gates, stable 522 inputs; independent Spec 6 / Standards 9 passed after four findings fixed. Exact source matching is not authorization or factual verification. Model contact values rejected; trusted manual input only in this slice. No new tables, model calls, HTTP/UI, installer or resource claims. Next CH-07B closes profile/intake/receipt/event atomic persistence with migration and recovery; then CH-07C structured model output. [Evidence](../testing/profile-merge/20261023/README.md).
+
 User authority: on 2026-10-16 the user explicitly resumed unattended work, after confirming both code decoupling and installer/startup footprint are priorities. Enter sends; Shift+Enter adds a newline, with Chinese IME protection. The existing `codex/contract-review-v2` branch remains the integration branch. Do not resume real-material cloud transmission or treat this as deployment approval.
 
 Specification: [chat-first-architecture-v2.1.md](chat-first-architecture-v2.1.md). Original design supplied by the user is preserved on their Desktop. The revised specification is a design baseline; execution evidence belongs here and in `docs/testing/chat-first/`.

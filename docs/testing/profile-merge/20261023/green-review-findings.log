@@ -1,0 +1,31 @@
+.F.........................................                              [100%]
+================================== FAILURES ===================================
+___ test_unknown_does_not_erase_known_and_same_role_conflicts_are_parallel ____
+
+    def test_unknown_does_not_erase_known_and_same_role_conflicts_are_parallel():
+        s = source()
+        p = change(s, 'principal_amount', {'kind': 'money', 'value': '35000.00', 'unit': 'CNY'})
+        first = merge_profile(None, patch(s, [p]), s)
+        unknown = change(s, 'principal_amount', {'kind': 'null', 'value': None}, [])
+        replay = merge_profile(first.profile, patch(s, [p, unknown], 1), s)
+        assert not replay.changed
+        conflicting = change(s, 'principal_amount', {'kind': 'money', 'value': '36000', 'unit': 'CNY'})
+        payment = change(s, 'payment_amount', {'kind': 'money', 'value': '2000', 'unit': 'CNY'})
+        result = merge_profile(first.profile, patch(s, [conflicting, payment], 1), s)
+        fields = {f.field: f for f in result.profile.fields}
+        assert fields['principal_amount'].verification == 'conflicted'
+>       assert {str(x.value.value) for x in fields['principal_amount'].candidates} == {'35000', '36000'}
+E       AssertionError: assert {'3.5E+4', '3.6E+4'} == {'35000', '36000'}
+E         
+E         Extra items in the left set:
+E         '3.6E+4'
+E         '3.5E+4'
+E         Extra items in the right set:
+E         '36000'
+E         '35000'
+E         Use -v to get more diff
+
+tests\unit\test_assistant_profiles.py:73: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profiles.py::test_unknown_does_not_erase_known_and_same_role_conflicts_are_parallel
+1 failed, 42 passed in 0.93s

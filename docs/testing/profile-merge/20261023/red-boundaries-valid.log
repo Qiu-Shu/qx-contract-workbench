@@ -1,0 +1,18 @@
+......F...............................                                   [100%]
+================================== FAILURES ===================================
+_____ test_semantic_replay_decimal_spellings_source_order_and_new_source ______
+
+    def test_semantic_replay_decimal_spellings_source_order_and_new_source():
+        s = source('甲称付款0元。甲称付款0元。')
+        one = change(s, 'payment_amount', {'kind': 'money', 'value': '-0.00', 'unit': 'CNY'}, [ref(s, 0, 7)])
+        two = change(s, 'payment_amount', {'kind': 'money', 'value': '0', 'unit': 'CNY'}, [ref(s, 0, 7)])
+        first = merge_profile(None, patch(s, [one]), s)
+        same = merge_profile(first.profile, patch(s, [two], 1), s)
+>       assert not same.changed
+E       AssertionError: assert not True
+E        +  where True = ProfileMergeResult(profile=ProfileDraftState(scope=ScopeSnapshot(scope_kind='conversation', scope_ref=None, workspace_...a5e971220b31eba2d7a042c856bb'),))), protected_value=None, verification='conflicted'),)), changed=True, projection=None).changed
+
+tests\unit\test_assistant_profiles.py:150: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profiles.py::test_semantic_replay_decimal_spellings_source_order_and_new_source
+1 failed, 37 passed in 0.89s

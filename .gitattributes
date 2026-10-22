@@ -82,3 +82,6 @@ tests/integration/test_deepseek_transport_refactor.py -text whitespace=blank-at-
 
 docs/testing/intake-decoupling/** -text -whitespace
 tests/unit/test_intake_import_boundary.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/testing/profile-merge/** -text -whitespace
+tests/unit/test_assistant_profiles.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

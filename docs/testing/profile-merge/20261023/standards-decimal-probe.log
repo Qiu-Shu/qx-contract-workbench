@@ -1,0 +1,26 @@
+[
+  {
+    "precision": 28,
+    "input": "1.123456789",
+    "accepted": false,
+    "error_type": "ValidationError"
+  },
+  {
+    "precision": 28,
+    "input": "9999999999999999.99999999",
+    "accepted": true,
+    "stored": "9999999999999999.99999999"
+  },
+  {
+    "precision": 3,
+    "input": "1.123456789",
+    "accepted": true,
+    "stored": "1.123456789"
+  },
+  {
+    "precision": 3,
+    "input": "9999999999999999.99999999",
+    "accepted": true,
+    "stored": "9999999999999999.99999999"
+  }
+]

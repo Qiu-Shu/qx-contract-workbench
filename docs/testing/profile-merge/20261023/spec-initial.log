@@ -1,0 +1,18 @@
+FF....                                                                   [100%]
+================================== FAILURES ===================================
+___________ test_model_cannot_invent_contact_not_present_in_source ____________
+.local\profile-merge-20261023\spec-probes.py:15: in test_model_cannot_invent_contact_not_present_in_source
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_ test_inconsistent_previous_verification_is_not_returned_as_unknown_or_clear _
+.local\profile-merge-20261023\spec-probes.py:29: in test_inconsistent_previous_verification_is_not_returned_as_unknown_or_clear
+    assert field.verification == 'unverified'
+E   AssertionError: assert 'unknown' == 'unverified'
+E     
+E     - unverified
+E     + unknown
+=========================== short test summary info ===========================
+FAILED .local/profile-merge-20261023/spec-probes.py::test_model_cannot_invent_contact_not_present_in_source
+FAILED .local/profile-merge-20261023/spec-probes.py::test_inconsistent_previous_verification_is_not_returned_as_unknown_or_clear
+2 failed, 4 passed in 0.53s

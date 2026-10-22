@@ -1,0 +1,14 @@
+{
+  "exit_code": 0,
+  "command": "python -X utf8 -m pytest .local/profile-merge-20261023/standards-checks.py -q -o addopts= -o junit_family=xunit1 --junitxml=.local/profile-merge-20261023/standards-final.xml",
+  "before": {
+    "src/cn_contract/assistant/profiles.py": "DC2FA65BB194D3CD97A80CB77A0F0CA9466FF2F5895CBCF7B10402BBC9C565B4",
+    "src/cn_contract/domain.py": "F868F368348EC3837148D94992A77FCAE3FE5D6E396733C877C2D1C7D0347AC4",
+    "tests/unit/test_assistant_profiles.py": "B9021C14EC50035F2A59B93DCEC1569A50348099FD8D26CB3C73398436781C6B"
+  },
+  "after": {
+    "src/cn_contract/assistant/profiles.py": "DC2FA65BB194D3CD97A80CB77A0F0CA9466FF2F5895CBCF7B10402BBC9C565B4",
+    "src/cn_contract/domain.py": "F868F368348EC3837148D94992A77FCAE3FE5D6E396733C877C2D1C7D0347AC4",
+    "tests/unit/test_assistant_profiles.py": "B9021C14EC50035F2A59B93DCEC1569A50348099FD8D26CB3C73398436781C6B"
+  }
+}

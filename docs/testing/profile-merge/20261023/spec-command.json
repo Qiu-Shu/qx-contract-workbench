@@ -1,0 +1,34 @@
+{
+  "baseline": "a6d20edf8663222ce6469bae80edfc92c02627b2",
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "-q",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-merge-20261023\\spec-probes.py",
+    "--tb=short",
+    "-o",
+    "junit_family=xunit1",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-merge-20261023\\spec-probes.xml",
+    "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\spec-profile-a-20261023"
+  ],
+  "started_at": "2026-10-22T18:40:53.257023+00:00",
+  "ended_at": "2026-10-22T18:40:54.018481+00:00",
+  "exit_code": 0,
+  "inputs_before": {
+    "src/cn_contract/domain.py": "f868f368348ec3837148d94992a77fcae3fe5d6e396733c877c2d1c7d0347ac4",
+    "src/cn_contract/assistant/profiles.py": "dc2fa65bb194d3cd97a80cb77a0f0ca9466ff2f5895cbcf7b10402bbc9c565b4",
+    "tests/unit/test_assistant_profiles.py": "b9021c14ec50035f2a59b93dcec1569a50348099fd8d26cb3c73398436781c6b",
+    "src/cn_contract/record_codec.py": "842647f5e46da5b7b00892e437b140835e32ee04b2586961fed5976270d05c46"
+  },
+  "inputs_after": {
+    "src/cn_contract/domain.py": "f868f368348ec3837148d94992a77fcae3fe5d6e396733c877c2d1c7d0347ac4",
+    "src/cn_contract/assistant/profiles.py": "dc2fa65bb194d3cd97a80cb77a0f0ca9466ff2f5895cbcf7b10402bbc9c565b4",
+    "tests/unit/test_assistant_profiles.py": "b9021c14ec50035f2a59b93dcec1569a50348099fd8d26cb3c73398436781c6b",
+    "src/cn_contract/record_codec.py": "842647f5e46da5b7b00892e437b140835e32ee04b2586961fed5976270d05c46"
+  },
+  "inputs_unchanged": true,
+  "data": "independent synthetic pure DTO inputs only"
+}

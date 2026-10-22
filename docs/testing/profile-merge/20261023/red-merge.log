@@ -1,0 +1,30 @@
+.F.                                                                      [100%]
+================================== FAILURES ===================================
+___ test_unknown_does_not_erase_known_and_same_role_conflicts_are_parallel ____
+
+    def test_unknown_does_not_erase_known_and_same_role_conflicts_are_parallel():
+        s = source()
+        p = change(s, 'principal_amount', {'kind': 'money', 'value': '35000.00', 'unit': 'CNY'})
+        first = merge_profile(None, patch(s, [p]), s)
+        unknown = change(s, 'principal_amount', {'kind': 'null', 'value': None}, [])
+>       replay = merge_profile(first.profile, patch(s, [p, unknown], 1), s)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\unit\test_assistant_profiles.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+previous = ProfileDraftState(scope=ScopeSnapshot(scope_kind='conversation', scope_ref=None, workspace_id=UUID('00000000-0000-0000...33eb71b58a1ee573b06393b8ad64b9225f3999e33e59db737e8ffbf88c6'),)),), protected_value=None, verification='unverified'),))
+patch = ProfilePatch(schema_version='assistant.profile_patch.v1', scope=ScopeSnapshot(scope_kind='conversation', scope_ref=Non...t', value=NullFactValue(kind='null', value=None), origin='user_statement', verification='unverified', source_refs=())))
+source_snapshot = ProfileSourceSnapshot(scope=ScopeSnapshot(scope_kind='conversation', scope_ref=None, workspace_id=UUID('00000000-0000-...核实。', source_revision=1, created_at=datetime.datetime(2026, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)),), documents=())
+
+    def merge_profile(previous, patch, source_snapshot, *, project_intake=False):
+        patch = ProfilePatch.model_validate(patch.model_dump(mode='python'))
+        sources = ProfileSourceSnapshot.model_validate(source_snapshot.model_dump(mode='python'))
+        if patch.scope != sources.scope or patch.base_profile_revision != 0 or previous is not None:
+>           raise ValueError('profile scope/revision mismatch')
+E           ValueError: profile scope/revision mismatch
+
+src\cn_contract\assistant\profiles.py:16: ValueError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profiles.py::test_unknown_does_not_erase_known_and_same_role_conflicts_are_parallel
+1 failed, 2 passed in 0.44s

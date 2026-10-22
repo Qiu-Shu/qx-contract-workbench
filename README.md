@@ -27,6 +27,7 @@
 | Windows 0.4.1 安装版 | 合同人工工作稿、原文定位、接待、本地法律资料检索、口令加密备份及只读恢复 | [安装说明](desktop/README.md) |
 | 对话首页 | 持久草稿、技能卡选择、历史记录、事件续读、取消、切换清屏；Enter 发送、Shift+Enter 换行及中文输入保护 | [首页验证](docs/testing/chat-home/20261017/README.md) |
 | 建案前附件 | 对话归属的 DOCX 收件、版本/摘要与原文核对、受控恢复；无需暗建合同案件 | [当前状态](docs/TASK_STATUS.md) |
+| 自动档案内核（CH-07A） | 精确出处、unknown/冲突、金额角色、人工清空保护和接待投影的纯运算；400项关联验证通过。未接自动保存/主模型输出，联系方式只接受受信人工值 | [实测与边界](docs/testing/profile-merge/20261023/README.md) |
 | 主模型开发链 | DeepSeek 普通文字、系统保护凭据、日常配置、独立窗口确认具体文本、一次授权、费用记录和未知不重发 | [确认发送验证](docs/testing/native-send-confirmation/20261019/README.md) |
 | Jev 辅助基础 | 独立凭据、配置、账本和恢复；后端独立逐请求许可、同任务可选辅助及同窗独立确认已接通；生产辅助预算默认未配置 | [适配](docs/testing/jev-adapter/20261020/README.md) · [账本](docs/testing/jev-ledger/20261020/README.md) · [配置](docs/testing/jev-native/20261020/README.md) · [本片确认](docs/testing/jev-confirmation/20261020/README.md) |
 | 对话法库检索 | 选择“检索法律资料”，最多200字关键词、5条候选；原文片段/来源版本/待核状态可保存和回查；已保存引用可勾选用于单轮资料辅助回答 | [本机检索与引用面板](docs/testing/library-chat/20261020/README.md) · [选片界面](docs/testing/selection-gui/20261021/README.md) |

@@ -1,0 +1,26 @@
+.F....                                                                   [100%]
+================================== FAILURES ===================================
+_____ test_public_merge_rejects_nested_money_forgery_under_low_precision ______
+
+    def test_public_merge_rejects_nested_money_forgery_under_low_precision():
+        sources, patch = inputs()
+        proposal = patch.changes[0]
+        forged_money = proposal.value.model_copy(update={'value': Decimal('1.123456789')})
+        forged = patch.model_copy(update={'changes': (proposal.model_copy(update={'value': forged_money}),)})
+        with localcontext() as ctx:
+            ctx.prec = 3
+>           with pytest.raises(ValueError):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+.local\profile-merge-20261023\standards-checks.py:60: Failed
+============================== warnings summary ===============================
+.local/profile-merge-20261023/standards-checks.py::test_nested_construct_and_anchor_forgery_rejected
+  D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\pydantic\main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `ScopeSnapshot` - serialized value may not be as expected [field_name='scope', input_value={'scope_kind': 'conversat...'materials_revision': 0}, input_type=dict])
+    return self.__pydantic_serializer__.to_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED .local/profile-merge-20261023/standards-checks.py::test_public_merge_rejects_nested_money_forgery_under_low_precision
+1 failed, 5 passed, 1 warning in 0.87s

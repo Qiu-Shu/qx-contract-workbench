@@ -1,0 +1,21 @@
+......F                                                                  [100%]
+================================== FAILURES ===================================
+_________ test_previous_source_cannot_claim_a_different_conversation __________
+
+    def test_previous_source_cannot_claim_a_different_conversation():
+        sources, patch = inputs()
+        first = merge_profile(None, patch, sources)
+        field = first.profile.fields[0]
+        candidate = field.candidates[0]
+        wrong_ref = candidate.source_refs[0].model_copy(update={'conversation_id': UUID(int=999)})
+        wrong_candidate = candidate.model_copy(update={'source_refs': (wrong_ref,)})
+        previous = first.profile.model_copy(update={'fields': (field.model_copy(update={
+            'candidates': (wrong_candidate,)}),)})
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+.local\profile-merge-20261023\standards-checks.py:136: Failed
+=========================== short test summary info ===========================
+FAILED .local/profile-merge-20261023/standards-checks.py::test_previous_source_cannot_claim_a_different_conversation
+1 failed, 6 passed in 0.93s

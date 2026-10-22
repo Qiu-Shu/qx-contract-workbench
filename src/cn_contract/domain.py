@@ -3760,3 +3760,202 @@ class MainGenerationHistoryItem(DomainModel):
 class MainGenerationHistoryView(DomainModel):
     scope: ScopeSnapshot
     items: Annotated[tuple[MainGenerationHistoryItem, ...], Field(max_length=50)]
+
+
+ProfileField = Literal['title', 'contact', 'consultation', 'questions', 'materials',
+                       'follow_up_at', 'follow_up_note', 'client_reply', 'internal_notes',
+                       'principal_amount', 'interest_amount', 'payment_amount']
+
+
+class ProfileMessageRef(DomainModel):
+    kind: Literal['message']
+    conversation_id: UUID
+    message_id: UUID
+    source_revision: PositiveInt
+    start: NonNegativeInt
+    end: NonNegativeInt
+    quote: Annotated[AssistantText, Field(min_length=1)]
+    quote_sha256: SHA256
+
+    @model_validator(mode='after')
+    def exact_quote(self):
+        if self.end - self.start != len(self.quote) or hashlib.sha256(
+                self.quote.encode('utf-8')).hexdigest() != self.quote_sha256:
+            raise ValueError('profile message offsets/hash must match the exact quote')
+        return self
+
+
+class ProfileDocumentRef(DomainModel):
+    kind: Literal['document']
+    conversation_id: UUID
+    attachment_id: UUID
+    original_sha256: SHA256
+    parse_revision: PositiveInt
+    result_sha256: SHA256
+    anchor: Anchor
+
+    @model_validator(mode='after')
+    def anchor_belongs_to_attachment(self):
+        if self.anchor.document_version_id != self.attachment_id or not self.anchor.quote:
+            raise ValueError('profile document reference requires its own nonempty anchor')
+        return self
+
+
+ProfileSourceRef = Annotated[Union[ProfileMessageRef, ProfileDocumentRef], Field(discriminator='kind')]
+
+
+class ProfileDocumentSource(DomainModel):
+    """A selected, parsed attachment supplied by a trusted source assembler."""
+    conversation_id: UUID
+    attachment_id: UUID
+    original_name: IntakeLabel
+    original_sha256: SHA256
+    parse_revision: PositiveInt
+    result_sha256: SHA256
+    result: ParseResult
+
+
+class ProfileSourceSnapshot(DomainModel):
+    scope: ScopeSnapshot
+    messages: Annotated[tuple[AssistantMessageView, ...], Field(max_length=200)] = ()
+    documents: Annotated[tuple[ProfileDocumentSource, ...], Field(max_length=20)] = ()
+
+
+class ProfileListValue(DomainModel):
+    kind: Literal['list']
+    value: Annotated[tuple[IntakeLabel, ...], Field(max_length=30)]
+
+
+class ProfileMaterialsValue(DomainModel):
+    kind: Literal['materials']
+    value: Annotated[tuple[IntakeMaterial, ...], Field(max_length=30)]
+
+
+def _profile_money(value: object) -> Decimal:
+    # Check the exact tuple, not Decimal.normalize(), which uses ambient precision.
+    if type(value) not in (str, int, Decimal) or len(str(value)) > 80:
+        raise ValueError('bounded exact profile amount required')
+    try:
+        parsed = Decimal(value)
+    except DecimalException as exc:
+        raise ValueError('valid profile amount required') from exc
+    if not parsed.is_finite() or parsed < 0:
+        raise ValueError('finite nonnegative profile amount required')
+    if parsed == 0:
+        return Decimal(0)
+    sign, raw_digits, exponent = parsed.as_tuple()
+    digits = list(raw_digits)
+    while digits[-1] == 0:
+        digits.pop()
+        exponent += 1
+    places = max(0, -exponent)
+    whole = max(0, len(digits) + exponent)
+    if places > 8 or whole > 16 or whole + places > 24:
+        raise ValueError('profile amount requires at most 16 whole and 8 fractional digits')
+    return Decimal((sign, tuple(digits), exponent))
+
+
+class ProfileMoneyValue(DomainModel):
+    kind: Literal['money']
+    value: Annotated[Decimal, BeforeValidator(_profile_money)]
+    unit: Annotated[str, StringConstraints(pattern=r'^[A-Z]{3}$')]
+
+
+ProfileValue = Annotated[Union[TextFactValue, NullFactValue, DatetimeFactValue,
+                              ProfileListValue, ProfileMaterialsValue, ProfileMoneyValue],
+                         Field(discriminator='kind')]
+
+
+class ProfileEdit(DomainModel):
+    """Trusted manual edit; protection does not mean factual verification."""
+    field: ProfileField
+    value: ProfileValue
+
+    @model_validator(mode='after')
+    def field_type_and_limits(self):
+        expected = {'questions': 'list', 'materials': 'materials', 'follow_up_at': 'datetime',
+                    'principal_amount': 'money', 'interest_amount': 'money', 'payment_amount': 'money'}
+        if self.value.kind == 'null':
+            return self
+        if self.value.kind != expected.get(self.field, 'text'):
+            raise ValueError('profile field/value type mismatch')
+        if self.field in IntakeDraft.model_fields:
+            IntakeDraft.model_validate({'title': '待整理咨询', self.field: self.value.value})
+        return self
+
+
+class ProfileProposal(ProfileEdit):
+    origin: Literal['user_statement', 'document_statement', 'model_inference']
+    verification: Literal['unverified'] = 'unverified'
+    source_refs: Annotated[tuple[ProfileSourceRef, ...], Field(max_length=40)] = ()
+
+    @model_validator(mode='after')
+    def model_may_only_propose(self):
+        if self.field == 'contact' and self.value.kind != 'null':
+            raise ValueError('contact values require trusted local/manual input, never model inference')
+        if self.value.kind != 'null' and (not self.source_refs or self.value.value in ('', ())):
+            raise ValueError('known proposals require sources and nonempty values; unknown uses null')
+        if self.value.kind == 'materials' and any(x.state == 'checked' for x in self.value.value):
+            raise ValueError('model cannot check materials')
+        required_kind = {'user_statement': 'message', 'document_statement': 'document'}.get(self.origin)
+        if required_kind and any(r.kind != required_kind for r in self.source_refs):
+            raise ValueError('profile origin must match its source kind')
+        return self
+
+
+class ProfilePatch(DomainModel):
+    schema_version: Literal['assistant.profile_patch.v1'] = 'assistant.profile_patch.v1'
+    scope: ScopeSnapshot
+    base_profile_revision: NonNegativeInt
+    changes: Annotated[tuple[ProfileProposal, ...], Field(max_length=60)] = ()
+
+
+def _profile_verification(candidates, protected):
+    values = []
+    for value in [c.value for c in candidates if c.value.kind != 'null'] + (
+            [protected] if protected is not None else []):
+        if value not in values:
+            values.append(value)
+    return 'conflicted' if len(values) > 1 else 'unverified' if values else 'unknown'
+
+
+class ProfileFieldState(DomainModel):
+    field: ProfileField
+    candidates: Annotated[tuple[ProfileProposal, ...], Field(max_length=60)] = ()
+    protected_value: ProfileValue | None = None
+    verification: Literal['unknown', 'unverified', 'conflicted']
+
+    @model_validator(mode='after')
+    def consistent_field(self):
+        if any(x.field != self.field for x in self.candidates):
+            raise ValueError('profile candidates must use their containing field')
+        if self.protected_value is not None:
+            ProfileEdit(field=self.field, value=self.protected_value)
+        if self.verification != _profile_verification(self.candidates, self.protected_value):
+            raise ValueError('profile verification must reflect its candidates and protected value')
+        return self
+
+
+class ProfileDraftState(DomainModel):
+    scope: ScopeSnapshot
+    revision: NonNegativeInt
+    fields: Annotated[tuple[ProfileFieldState, ...], Field(max_length=12)] = ()
+
+    @model_validator(mode='after')
+    def historical_scope(self):
+        if len({f.field for f in self.fields}) != len(self.fields) or (self.fields and self.revision == 0):
+            raise ValueError('profile revision/fields are inconsistent')
+        for field in self.fields:
+            for candidate in field.candidates:
+                for ref in candidate.source_refs:
+                    limit = self.scope.input_revision if ref.kind == 'message' else self.scope.materials_revision
+                    revision = ref.source_revision if ref.kind == 'message' else ref.parse_revision
+                    if ref.conversation_id != self.scope.conversation_id or revision > limit:
+                        raise ValueError('historical profile source exceeds its conversation snapshot')
+        return self
+
+
+class ProfileMergeResult(DomainModel):
+    profile: ProfileDraftState
+    changed: StrictBool
+    projection: IntakeDraft | None

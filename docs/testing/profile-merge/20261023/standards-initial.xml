@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="6" time="0.802" timestamp="2026-10-23T02:38:27.011486+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_old_domain_unchanged_and_pure_import" file=".local\profile-merge-20261023\standards-checks.py" line="34" time="0.408" /><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_public_merge_rejects_nested_money_forgery_under_low_precision" file=".local\profile-merge-20261023\standards-checks.py" line="52" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">def test_public_merge_rejects_nested_money_forgery_under_low_precision():
+        sources, patch = inputs()
+        proposal = patch.changes[0]
+        forged_money = proposal.value.model_copy(update={'value': Decimal('1.123456789')})
+        forged = patch.model_copy(update={'changes': (proposal.model_copy(update={'value': forged_money}),)})
+        with localcontext() as ctx:
+            ctx.prec = 3
+&gt;           with pytest.raises(ValueError):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+.local\profile-merge-20261023\standards-checks.py:60: Failed</failure></testcase><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_nested_construct_and_anchor_forgery_rejected" file=".local\profile-merge-20261023\standards-checks.py" line="63" time="0.001" /><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_all_candidate_container_caps_revalidated" file=".local\profile-merge-20261023\standards-checks.py" line="81" time="0.006" /><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_utc_normalization_exact_money_and_controls" file=".local\profile-merge-20261023\standards-checks.py" line="98" time="0.001" /><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_source_roles_and_revision_are_not_inferred_or_authorized" file=".local\profile-merge-20261023\standards-checks.py" line="115" time="0.001" /></testsuite></testsuites>

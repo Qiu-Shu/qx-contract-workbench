@@ -1,0 +1,78 @@
+...FFF                                                                   [100%]
+================================== FAILURES ===================================
+__ test_document_source_must_match_selected_original_parse_and_exact_anchor ___
+
+    def test_document_source_must_match_selected_original_parse_and_exact_anchor():
+        s, r = document_source()
+        proposal = {**change(s, 'payment_amount', {'kind': 'money', 'value': '2000', 'unit': 'CNY'}, [r]),
+                    'origin': 'document_statement'}
+>       result = merge_profile(None, patch(s, [proposal]), s)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\unit\test_assistant_profiles.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\assistant\profiles.py:78: in merge_profile
+    message = messages.get(ref.message_id)
+                           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ProfileDocumentRef(kind='document', conversation_id=UUID('00000000-0000-0000-0000-000000000002'), attachment_id=UUID('...6860bad29fbef9f9cc31dbc35a52a7d17533d2a1e9048', start=0, end=9, table=None, row=None, cell=None, page=None, bbox=None))
+item = 'message_id'
+
+    def __getattr__(self, item: str) -> Any:
+        private_attributes = object.__getattribute__(self, '__private_attributes__')
+        if item in private_attributes:
+            attribute = private_attributes[item]
+            if hasattr(attribute, '__get__'):
+                return attribute.__get__(self, type(self))  # type: ignore
+    
+            try:
+                # Note: self.__pydantic_private__ cannot be None if self.__private_attributes__ has items
+                return self.__pydantic_private__[item]  # type: ignore
+            except KeyError as exc:
+                raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+        else:
+            # `__pydantic_extra__` can fail to be set if the model is not yet fully initialized.
+            # See `BaseModel.__repr_args__` for more details
+            try:
+                pydantic_extra = object.__getattribute__(self, '__pydantic_extra__')
+            except AttributeError:
+                pydantic_extra = None
+    
+            if pydantic_extra and item in pydantic_extra:
+                return pydantic_extra[item]
+            else:
+                if hasattr(self.__class__, item):
+                    return super().__getattribute__(item)  # Raises AttributeError if appropriate
+                else:
+                    # this is the current error
+>                   raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E                   AttributeError: 'ProfileDocumentRef' object has no attribute 'message_id'
+
+.venv\Lib\site-packages\pydantic\main.py:1042: AttributeError
+____ test_manual_clear_is_protected_and_new_model_value_only_a_suggestion _____
+
+    def test_manual_clear_is_protected_and_new_model_value_only_a_suggestion():
+        s = source()
+        first = merge_profile(None, patch(s, [change(s)]), s, project_intake=True)
+        edit = ProfileEdit(field='consultation', value={'kind': 'text', 'value': ''})
+>       cleared = merge_profile(first.profile, patch(s, [], 1), s,
+                                manual_edits=(edit,), project_intake=True)
+E       TypeError: merge_profile() got an unexpected keyword argument 'manual_edits'
+
+tests\unit\test_assistant_profiles.py:121: TypeError
+_ test_legacy_empty_fields_are_protected_and_human_changes_since_baseline_survive _
+
+    def test_legacy_empty_fields_are_protected_and_human_changes_since_baseline_survive():
+        s = source()
+        legacy = IntakeDraft(title='人工接待', status='waiting')
+>       result = merge_profile(None, patch(s, [change(s)]), s, intake_current=legacy, project_intake=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: merge_profile() got an unexpected keyword argument 'intake_current'
+
+tests\unit\test_assistant_profiles.py:134: TypeError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profiles.py::test_document_source_must_match_selected_original_parse_and_exact_anchor
+FAILED tests/unit/test_assistant_profiles.py::test_manual_clear_is_protected_and_new_model_value_only_a_suggestion
+FAILED tests/unit/test_assistant_profiles.py::test_legacy_empty_fields_are_protected_and_human_changes_since_baseline_survive
+3 failed, 3 passed in 0.44s

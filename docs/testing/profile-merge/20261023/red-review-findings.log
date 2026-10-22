@@ -1,0 +1,76 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+_ test_model_contact_requires_trusted_local_or_manual_input_even_with_a_source _
+
+    def test_model_contact_requires_trusted_local_or_manual_input_even_with_a_source():
+        s = source('没有联系方式的合成借款陈述。')
+        for origin in ('user_statement', 'document_statement', 'model_inference'):
+>           with pytest.raises(ValueError):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_assistant_profiles.py:315: Failed
+_____________ test_previous_derived_verification_cannot_be_forged _____________
+
+    def test_previous_derived_verification_cannot_be_forged():
+        s = source()
+        first = merge_profile(None, patch(s, [change(s)]), s)
+        forged = first.profile.model_copy(update={'fields': (
+            first.profile.fields[0].model_copy(update={'verification': 'unknown'}),)})
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_assistant_profiles.py:328: Failed
+________ test_profile_money_limits_do_not_depend_on_decimal_context[3] ________
+
+precision = 3
+
+    @pytest.mark.parametrize('precision', [3, 28, 60])
+    def test_profile_money_limits_do_not_depend_on_decimal_context(precision):
+        from cn_contract.domain import ProfileMoneyValue
+        with localcontext() as ctx:
+            ctx.prec = precision
+            for value in ('1.123456789', '10000000000000000', '1E-1000000', '1E+1000000'):
+>               with pytest.raises(ValueError):
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+E               Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_assistant_profiles.py:338: Failed
+_______ test_profile_money_limits_do_not_depend_on_decimal_context[28] ________
+
+precision = 28
+
+    @pytest.mark.parametrize('precision', [3, 28, 60])
+    def test_profile_money_limits_do_not_depend_on_decimal_context(precision):
+        from cn_contract.domain import ProfileMoneyValue
+        with localcontext() as ctx:
+            ctx.prec = precision
+            for value in ('1.123456789', '10000000000000000', '1E-1000000', '1E+1000000'):
+>               with pytest.raises(ValueError):
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+E               Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_assistant_profiles.py:338: Failed
+_______ test_profile_money_limits_do_not_depend_on_decimal_context[60] ________
+
+precision = 60
+
+    @pytest.mark.parametrize('precision', [3, 28, 60])
+    def test_profile_money_limits_do_not_depend_on_decimal_context(precision):
+        from cn_contract.domain import ProfileMoneyValue
+        with localcontext() as ctx:
+            ctx.prec = precision
+            for value in ('1.123456789', '10000000000000000', '1E-1000000', '1E+1000000'):
+>               with pytest.raises(ValueError):
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+E               Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_assistant_profiles.py:338: Failed
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profiles.py::test_model_contact_requires_trusted_local_or_manual_input_even_with_a_source
+FAILED tests/unit/test_assistant_profiles.py::test_previous_derived_verification_cannot_be_forged
+FAILED tests/unit/test_assistant_profiles.py::test_profile_money_limits_do_not_depend_on_decimal_context[3]
+FAILED tests/unit/test_assistant_profiles.py::test_profile_money_limits_do_not_depend_on_decimal_context[28]
+FAILED tests/unit/test_assistant_profiles.py::test_profile_money_limits_do_not_depend_on_decimal_context[60]
+5 failed, 38 deselected in 0.47s

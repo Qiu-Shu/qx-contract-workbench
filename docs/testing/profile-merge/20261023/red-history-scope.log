@@ -1,0 +1,42 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+__________ test_previous_sources_stay_within_historical_scope[bad0] ___________
+
+bad = {'conversation_id': UUID('00000000-0000-0000-0000-0000000003e7')}
+
+    @pytest.mark.parametrize('bad', [{'conversation_id': uid(999)}, {'source_revision': 2}])
+    def test_previous_sources_stay_within_historical_scope(bad):
+        s = source()
+        first = merge_profile(None, patch(s, [change(s)]), s)
+        field = first.profile.fields[0]
+        candidate = field.candidates[0]
+        forged = first.profile.model_copy(update={'fields': (field.model_copy(update={
+            'candidates': (candidate.model_copy(update={'source_refs': (candidate.source_refs[0].model_copy(update=bad),)}),)
+        }),)})
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_assistant_profiles.py:341: Failed
+__________ test_previous_sources_stay_within_historical_scope[bad1] ___________
+
+bad = {'source_revision': 2}
+
+    @pytest.mark.parametrize('bad', [{'conversation_id': uid(999)}, {'source_revision': 2}])
+    def test_previous_sources_stay_within_historical_scope(bad):
+        s = source()
+        first = merge_profile(None, patch(s, [change(s)]), s)
+        field = first.profile.fields[0]
+        candidate = field.candidates[0]
+        forged = first.profile.model_copy(update={'fields': (field.model_copy(update={
+            'candidates': (candidate.model_copy(update={'source_refs': (candidate.source_refs[0].model_copy(update=bad),)}),)
+        }),)})
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\unit\test_assistant_profiles.py:341: Failed
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profiles.py::test_previous_sources_stay_within_historical_scope[bad0]
+FAILED tests/unit/test_assistant_profiles.py::test_previous_sources_stay_within_historical_scope[bad1]
+2 failed, 43 deselected in 0.49s

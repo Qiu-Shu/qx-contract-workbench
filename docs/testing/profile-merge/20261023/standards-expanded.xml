@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="7" time="0.856" timestamp="2026-10-23T02:39:41.223519+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_old_domain_unchanged_and_pure_import" file=".local\profile-merge-20261023\standards-checks.py" line="34" time="0.422" /><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_public_merge_rejects_nested_money_forgery_under_low_precision" file=".local\profile-merge-20261023\standards-checks.py" line="52" time="0.001" /><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_nested_construct_and_datetime_forgery_rejected" file=".local\profile-merge-20261023\standards-checks.py" line="63" time="0.001" /><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_all_candidate_container_caps_revalidated" file=".local\profile-merge-20261023\standards-checks.py" line="81" time="0.006" /><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_utc_normalization_exact_money_and_controls" file=".local\profile-merge-20261023\standards-checks.py" line="98" time="0.001" /><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_source_roles_and_revision_are_not_inferred_or_authorized" file=".local\profile-merge-20261023\standards-checks.py" line="115" time="0.001" /><testcase classname=".local.profile-merge-20261023.standards-checks" name="test_previous_source_cannot_claim_a_different_conversation" file=".local\profile-merge-20261023\standards-checks.py" line="126" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">def test_previous_source_cannot_claim_a_different_conversation():
+        sources, patch = inputs()
+        first = merge_profile(None, patch, sources)
+        field = first.profile.fields[0]
+        candidate = field.candidates[0]
+        wrong_ref = candidate.source_refs[0].model_copy(update={'conversation_id': UUID(int=999)})
+        wrong_candidate = candidate.model_copy(update={'source_refs': (wrong_ref,)})
+        previous = first.profile.model_copy(update={'fields': (field.model_copy(update={
+            'candidates': (wrong_candidate,)}),)})
+&gt;       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+.local\profile-merge-20261023\standards-checks.py:136: Failed</failure></testcase></testsuite></testsuites>
