@@ -1,9 +1,11 @@
-"""Local DOCX receipts and immutable sources, independent of contract cases.
+"""Local file receipts and immutable sources, independent of contract cases.
 
 Commands own short transactions. The native host holds its existing workspace
 worker lock; maintenance stops that host before taking a complete qxbak snapshot.
 """
-from pathlib import Path
+from io import BytesIO
+from pathlib import Path, PurePath
+import zipfile
 from uuid import UUID, uuid4
 
 from sqlalchemy import text
@@ -11,7 +13,6 @@ from sqlalchemy import text
 from .. import domain as d
 from ..config import canonical_json
 from ..documents.docx_adapter import read_package, has_revisions, parse_docx
-from ..documents.ingest import _type
 from ..ops.storage import require_active
 from ..security import ServiceError
 from . import attachment_files as files, attachment_records as records
@@ -22,6 +23,40 @@ PARSER_VERSION = 'qx-docx-attachments-v1'
 MAX_CONVERSATION_FILES = 20
 MAX_CONVERSATION_MIB = 100
 MAX_PARSE_REVISIONS = 64
+
+
+def _assistant_type(data, name, mime):
+    """Content sniffing for assistant materials; the matter-side _type stays DOCX/PDF."""
+    extension = PurePath(name).suffix.lower()
+    if extension not in d.ASSISTANT_MATERIAL_MIME_EXT.get(mime, ()):
+        raise ServiceError('FILE_UNSUPPORTED', 400)
+    if mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        if data.startswith(b'PK\x03\x04'):
+            return 'docx'
+    elif mime == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        if data.startswith(b'PK\x03\x04'):
+            try:
+                with zipfile.ZipFile(BytesIO(data)) as package:
+                    if package.namelist():
+                        return 'xlsx'
+            except zipfile.BadZipFile:
+                pass
+    elif mime == 'application/pdf':
+        if data.startswith(b'%PDF-'):
+            return 'pdf'
+    elif mime == 'image/png':
+        if data.startswith(b'\x89PNG\r\n\x1a\n'):
+            return 'png'
+    elif mime == 'image/jpeg':
+        if data.startswith(b'\xff\xd8\xff'):
+            return 'jpeg'
+    elif mime == 'text/csv':
+        try:
+            if data.decode('utf-8-sig').strip():
+                return 'csv'
+        except UnicodeDecodeError:
+            pass
+    raise ServiceError('FILE_UNSUPPORTED', 400)
 
 
 def _validate(model, value):
@@ -72,9 +107,9 @@ def ingest_attachment(actor, cid, request, stream, *, database):
         _write(actor,cid,db)
     with files.stage(stream,database) as (temporary,size,checksum):
         data = temporary.read_bytes()
-        if _type(data,request.original_name,request.mime) != 'docx':
-            raise ServiceError('FILE_UNSUPPORTED',400)
-        read_package(data,database.settings)
+        kind = _assistant_type(data,request.original_name,request.mime)
+        if kind == 'docx':
+            read_package(data,database.settings)
         digest = _digest({'conversation_id':str(cid),'request':request.model_dump(mode='json'),
                           'sha256':checksum,'byte_size':size})
         identifier, created = uuid4(), None
@@ -175,6 +210,8 @@ def parse_attachment(actor,cid,identifier,request,*,database):
     with database.session() as db:
         row = _write(actor,cid,db)
         source = dict(records.owned_attachment(actor,cid,identifier,db))
+        if source['mime'] != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            raise ServiceError('FILE_UNSUPPORTED',400)
         previous = records.operation(cid,request.request_id,db)
         if previous:
             _same(previous,'parse',digest)

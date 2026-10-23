@@ -1,6 +1,7 @@
 """Bounded attachment transport; source storage and parsing live in the service."""
 import json
 import re
+from pathlib import PurePath
 from uuid import UUID
 
 from fastapi import Path, Query, Request
@@ -125,9 +126,11 @@ def register_routes(app, database):
 
     @app.get(base+'/attachments/{identifier}/original')
     def original(cid:UUID,identifier:UUID,request:Request):
+        view = service.read_attachment(authorize(request,cid),cid,identifier,database=database)
         raw = service.read_original(authorize(request,cid),cid,identifier,database=database)
+        suffix = PurePath(view.original_name).suffix.lower()
         return Response(raw,media_type='application/octet-stream',
-            headers={'Content-Disposition':f'attachment; filename="original-{identifier}.docx"'})
+            headers={'Content-Disposition':f'attachment; filename="original-{identifier}{suffix}"'})
 
     @app.post(base+'/attachments/{identifier}/parses')
     async def parse(cid:UUID,identifier:UUID,request:Request):

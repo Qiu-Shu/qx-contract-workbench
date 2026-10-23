@@ -1,0 +1,110 @@
+....................FF.................................................. [ 64%]
+.......................................                                  [100%]
+================================== FAILURES ===================================
+______ test_native_roundtrip_preserves_source_history_and_service_fence _______
+
+source = (WindowsPath('D:/pytest-base/ux02-evidence/test_native_roundtrip_preserve0/中文资料库/main'), <cn_contract.persistence.Data...(2026, 10, 23, 9, 51, 0, 21566, tzinfo=datetime.timezone.utc), review_status='unverified'), materials_revision=2), ...)
+tmp_path = WindowsPath('D:/pytest-base/ux02-evidence/test_native_roundtrip_preserve0')
+
+    def test_native_roundtrip_preserves_source_history_and_service_fence(source, tmp_path):
+        root, database, actor, cid, receipt, parsed, raw, request = source
+        anchor = parsed.parse.result.anchors[0]
+        current = attachments.read_materials(actor, cid, database=database)
+        again = attachments.parse_attachment(actor, cid, receipt.attachment.id,
+            d.AssistantAttachmentParseInput(request_id=uuid4(), expected_scope=current.scope), database=database)
+        current = attachments.read_materials(actor, cid, database=database)
+        attachments.select_materials(actor, cid, d.AssistantMaterialSelectionInput(request_id=uuid4(),
+            expected_scope=current.scope, items=()), database=database)
+        # The native maintenance lock is runtime state, established before comparison.
+        with local_server._worker_lock(root):
+            pass
+        before = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+        archive = tmp_path/'对话附件.qxbak'
+        workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+>       result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_attachment_backup.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:347: in restore_workspace_backup
+    summary = _file(archive,archive.parent,limit=LIMIT+HEADER_SIZE+16)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:85: in _file
+    with _reader(path, root, limit=limit) as stream: return _copy(stream, limit=limit)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('//?/D:/pytest-base/ux02-evidence/test_native_roundtrip_preserve0/对话附件.qxbak')
+root = WindowsPath('//?/D:/pytest-base/ux02-evidence/test_native_roundtrip_preserve0')
+
+    @contextmanager
+    def _reader(path, root, *, limit=FILE_LIMIT):
+        path, root = filesystem_path(path), filesystem_path(checked_root(root))
+        if not path.resolve(strict=True).is_relative_to(root): raise ValueError('FILE_OUTSIDE_ROOT')
+        for parent in (path, *path.parents):
+            if redirected(parent): raise ValueError('REDIRECTED_FILE')
+            if parent == root: break
+        before = path.stat()
+        if before.st_nlink != 1 or not stat.S_ISREG(before.st_mode) or before.st_size > limit:
+>           raise ValueError('FILE_LIMIT_OR_LINK')
+E           ValueError: FILE_LIMIT_OR_LINK
+
+src\cn_contract\ops\workspace_backup.py:61: ValueError
+__________ test_long_parent_paths_create_restore_and_rebackup[long] ___________
+
+source = (WindowsPath('D:/pytest-base/ux02-evidence/test_long_parent_paths_create_0/长路径资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料...2026, 10, 23, 9, 51, 3, 586374, tzinfo=datetime.timezone.utc), review_status='unverified'), materials_revision=2), ...)
+tmp_path = WindowsPath('D:/pytest-base/ux02-evidence/test_long_parent_paths_create_0')
+
+    @pytest.mark.parametrize('source', ['long'], indirect=True)
+    def test_long_parent_paths_create_restore_and_rebackup(source, tmp_path):
+        from cn_contract.ops.file_paths import filesystem_path
+        root, database, actor, cid, receipt, _, raw, _ = source
+        original = root/'protected'/'assistant'/str(cid)/str(receipt.attachment.id)/'original.bin'
+        assert len(str(original.parent)) > 260
+        assert backup.checked_root(original.parent).name == str(receipt.attachment.id)
+        assert attachments.read_original(actor, cid, receipt.attachment.id, database=database) == raw
+        archive = tmp_path/'long.qxbak'
+>       workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+
+tests\integration\test_assistant_attachment_backup.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:260: in create_workspace_backup
+    with _worker_lock(root), TemporaryDirectory(prefix='.qx-backup-',dir=filesystem_path(root)) as temporary:
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\tempfile.py:950: in __exit__
+    self.cleanup()
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\tempfile.py:954: in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\tempfile.py:934: in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:1211: in _safe_shutil_rmtree
+    _try_trash(abs_path, recursive=True)
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:1005: in _try_trash
+    _platform_trash(abs_path)
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:137: in _platform_trash
+    path = _get_short_path(os.path.abspath(abs_path))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = '\\\\?\\D:\\pytest-base\\ux02-evidence\\test_long_parent_paths_create_0\\长路径资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\main\\.qx-backup-cjs793pf'
+
+    def _get_short_path(path):
+        """调用 GetShortPathNameW 处理超长路径和特殊字符。"""
+        prefix = "\\\\?\\"
+        long_path = (prefix + "UNC" + path[1:]) if path.startswith("\\\\") else (prefix + path)
+        n = _kernel32.GetShortPathNameW(long_path, None, 0)
+        if not n:
+            err = GetLastError()
+>           raise OSError(err, FormatError(err), path)
+E           OSError: [Errno 53] 找不到网络路径。: '\\\\?\\D:\\pytest-base\\ux02-evidence\\test_long_parent_paths_create_0\\长路径资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\main\\.qx-backup-cjs793pf'
+
+F:\workbody\WorkBuddy\resources\app.asar.unpacked\cli\vendor\shim\sitecustomize.py:126: OSError
+---------------------------- Captured stderr call -----------------------------
+[safe-delete][SAFE_DELETE_FAIL_CLOSED] {"target": "\\\\?\\D:\\pytest-base\\ux02-evidence\\test_long_parent_paths_create_0\\长路径资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\main\\.qx-backup-cjs793pf", "reason": "trash-failed", "detail": "[Errno 53] 找不到网络路径。: '\\\\\\\\?\\\\D:\\\\pytest-base\\\\ux02-evidence\\\\test_long_parent_paths_create_0\\\\长路径资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\\\main\\\\.qx-backup-cjs793pf'"}
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_attachment_backup.py::test_native_roundtrip_preserves_source_history_and_service_fence
+FAILED tests/integration/test_assistant_attachment_backup.py::test_long_parent_paths_create_restore_and_rebackup[long]
+2 failed, 109 passed in 192.79s (0:03:12)

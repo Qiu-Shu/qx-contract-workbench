@@ -2669,17 +2669,34 @@ class DocumentParseInput(DomainModel):
 
 
 class AssistantMaterialPolicy(DomainModel):
-    policy_id: Literal['assistant-local-docx-v1'] = 'assistant-local-docx-v1'
+    policy_id: Literal['assistant-local-docx-v1', 'assistant-local-files-v2'] = 'assistant-local-docx-v1'
     material_mode: Literal['synthetic', 'local'] = 'synthetic'
     local_processing_accepted: Literal[True]
     external_processing: Literal[False] = False
+
+
+ASSISTANT_MATERIAL_MIME_EXT = {
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ('.docx',),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('.xlsx',),
+    'application/pdf': ('.pdf',),
+    'image/png': ('.png',),
+    'image/jpeg': ('.jpg', '.jpeg'),
+    'text/csv': ('.csv',),
+}
 
 
 class AssistantAttachmentInput(DomainModel):
     request_id: UUID
     expected_scope: ScopeSnapshot
     original_name: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=240)]
-    mime: Literal['application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+    mime: Literal[
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/pdf',
+        'image/png',
+        'image/jpeg',
+        'text/csv',
+    ]
     policy: AssistantMaterialPolicy
 
     @field_validator('original_name')
@@ -2687,9 +2704,16 @@ class AssistantAttachmentInput(DomainModel):
     def filename_only(cls, value):
         if value != value.strip() or any(ord(c) < 32 or c in '/\\:< >"|?*'.replace(' ', '') for c in value):
             raise ValueError('a plain filename is required')
-        if value.rstrip('.') != value or not value.lower().endswith('.docx'):
-            raise ValueError('DOCX filename required')
+        if value.rstrip('.') != value:
+            raise ValueError('a plain filename is required')
         return value
+
+    @model_validator(mode='after')
+    def extension_matches_mime(self):
+        from pathlib import PurePath
+        if PurePath(self.original_name).suffix.lower() not in ASSISTANT_MATERIAL_MIME_EXT[self.mime]:
+            raise ValueError('filename extension does not match the declared type')
+        return self
 
 
 class AssistantMaterialRef(DomainModel):

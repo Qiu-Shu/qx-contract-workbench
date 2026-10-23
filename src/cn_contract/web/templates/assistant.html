@@ -89,14 +89,16 @@
             <div class="save-actions"><button id="switch-model" type="button" hidden>切换模型</button><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="generation-note generation-status">发送</button></div>
           </div>
         </form>
-        <section id="material-picker" class="material-picker" aria-label="添加本机 DOCX" hidden>
-          <label for="material-file">选择 DOCX 文件</label>
-          <input id="material-file" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-          <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取此原件；内容待核实，不外发。</label>
+        <section id="material-picker" class="material-picker" aria-label="添加本机文件" hidden>
+          <label for="material-file">选择文件（Word、PDF、表格、图片），可多选，也可直接拖入本页面</label>
+          <input id="material-file" type="file" multiple accept=".docx,.pdf,.png,.jpg,.jpeg,.xlsx,.csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/png,image/jpeg,text/csv">
+          <div id="material-queue" class="material-queue" aria-live="polite"></div>
+          <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取这些原件；内容待核实，不外发。</label>
           {% if not local_materials_enabled %}<p class="muted">当前环境仅接收已登记的独立合成材料。</p>{% endif %}
           <p id="material-notice" role="status" aria-live="polite"></p>
-          <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>
+          <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="clear-material-queue" class="text-button" type="button" hidden>清空待传</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>
         </section>
+        <div id="drop-overlay" class="drop-overlay" hidden><p><strong>松开鼠标，把文件加入本次对话</strong></p><p class="muted">支持 Word、PDF、表格（XLSX/CSV）、图片（PNG/JPG），可一次多个</p></div>
         <section id="context-panel" class="context-panel" aria-labelledby="context-heading" hidden>
           <h2 id="context-heading">资料辅助回答</h2>
           <p class="muted">从本次对话已保存的引用中选择一至八条；问题为当前已保存草稿。发送前可核对将发送的完整内容，发送经桌面原生窗口再次确认。</p>
@@ -117,7 +119,7 @@
           <div class="capability-content">
             <p id="capability-details">“检索法律资料”支持本机关键词查询，其他所选能力尚未接入执行。普通文字生成以当前对话的条件为准。</p>
             {% if readonly %}<p>当前打开的是恢复副本，可查看已保存的记录，不能编辑、发送、添加材料或继续历史任务。</p>{% else %}<p>生成仅用于已获准的文字，结果是内部待核对草稿，未经律师审核，不能作为正式法律意见。支持档案确认的桌面中，普通文字回复同时整理本机档案草稿；保存结果以回执为准。选择能力不会自动发送，也不会将回复发送给客户。</p>{% endif %}
-            <p>DOCX 保存在本次对话，可以读取原文、核对读取范围及下载原件。含材料的对话暂不参与模型生成；保存和读取不会自动认定事实，也不会建立合同案件。</p>
+            <p>DOCX 材料保存在本次对话，可以读取原文、核对读取范围及下载原件；PDF、表格与图片保存原件供核对下载，暂不支持读取原文。含材料的对话暂不参与模型生成；保存和读取不会自动认定事实，也不会建立合同案件。</p>
             <p>继续办理可进入<a href="/workspace">工作区与接待</a>或<a href="/">合同工作台</a>。{% if library_enabled %}已连接的资料可在<a href="/library">法律资料库</a>检索。{% endif %}</p>
           </div>
         </details>

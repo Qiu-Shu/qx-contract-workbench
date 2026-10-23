@@ -25,11 +25,13 @@ class Element {
   fire(name,event={}){return this.listeners.get(name)?.(event);}
 }
 function dom() {
-  const elements=new Map();
+  const elements=new Map(),rootListeners=new Map();
   const root={
     body:new Element('body'),
     getElementById(id){if(!elements.has(id))elements.set(id,new Element());return elements.get(id);},
     createElement:tag=>new Element(tag),
+    addEventListener(name,listener){rootListeners.set(name,listener);},
+    fire(name,event={}){return rootListeners.get(name)?.(event);},
     querySelectorAll(selector){
       assert.equal(selector,'[data-material-write]');
       return [...elements.values()].flatMap(walk).filter(element=>element.dataset.materialWrite);
@@ -48,7 +50,7 @@ function fixture(t,{withMaterials=true}={}) {
     binding_revision:1,input_revision:0,materials_revision:id==='one'&&withMaterials?1:0},
     composer_revision:0,draft_input:'',messages:[]});
   const views={one:view('one'),two:view('two')};
-  const file=id=>({id,conversation_id:'one',original_name:`合成材料-${id}.docx`,byte_size:123});
+  const file=id=>({id,conversation_id:'one',original_name:`合成材料-${id}.docx`,mime,byte_size:123});
   const records={one:{items:withMaterials?[{attachment_id:'A',parse_revision:1},{attachment_id:'B',parse_revision:1}]:[],
     attachments:withMaterials?[file('A'),file('B')]:[]},two:{items:[],attachments:[]}};
   const api={
@@ -61,7 +63,7 @@ function fixture(t,{withMaterials=true}={}) {
       views[id].scope.materials_revision++;return {materials_revision:views[id].scope.materials_revision};
     },
     async uploadAttachment(id,body,source){
-      calls.push(['upload',id,body.request_id]);const attachment={...file(`upload-${calls.length}`),original_name:source.name};
+      calls.push(['upload',id,body.request_id]);const attachment={...file(`upload-${calls.length}`),original_name:source.name,mime:source.type};
       records[id].items.push({attachment_id:attachment.id,parse_revision:null});records[id].attachments.push(attachment);
       views[id].scope.materials_revision++;const result={attachment,materials_revision:views[id].scope.materials_revision};
       receipts.set(body.request_id,result);return copy(result);
@@ -151,7 +153,7 @@ test('revocation clears materials immediately and a delayed source response stay
 test('successful unknown-upload reconciliation disarms the picker instead of creating another receipt',async t=>{
   const f=fixture(t,{withMaterials:false});await f.controller.open('one');const normal=f.api.uploadAttachment;
   f.api.uploadAttachment=async(...args)=>{await normal(...args);throw Object.assign(Error('unknown'),{status:0,code:'NETWORK_UNKNOWN'});};
-  await f.root.getElementById('material-file').fire('change',{target:{files:[{name:'待核对上传.docx',type:mime}]}});
+  await f.root.getElementById('material-file').fire('change',{target:{files:[{name:'待核对上传.docx',type:mime,size:2048}]}});
   f.root.getElementById('material-consent').checked=true;
   await f.root.getElementById('material-consent').fire('change');
   await f.root.getElementById('upload-material').fire('click');
@@ -163,4 +165,72 @@ test('successful unknown-upload reconciliation disarms the picker instead of cre
   await f.root.getElementById('upload-material').fire('click');
   assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
   assert.equal(f.calls.filter(call=>call[0]==='lookup').length,1);
+});
+
+const fileStub=(name,type,size=1024)=>({name,type,size});
+function chipNames(f){return walk(f.root.getElementById('material-queue'))
+  .filter(element=>element.className==='queue-chip').map(chip=>chip.children[0].textContent);}
+
+test('multi-select builds a removable queue and uploads each file in order with its own receipt',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');
+  await f.root.getElementById('material-file').fire('change',{target:{files:[
+    fileStub('合同扫描.pdf','application/pdf'),fileStub('现场照片.png','image/png'),fileStub('清单.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')]}});
+  assert.deepEqual(chipNames(f).map(text=>text.split('（')[0]),['合同扫描.pdf','现场照片.png','清单.xlsx']);
+  assert.equal(f.root.getElementById('upload-material').textContent,'保存 3 个文件在本机');
+  const removeButtons=walk(f.root.getElementById('material-queue')).filter(element=>element.className==='queue-remove');
+  assert.equal(removeButtons.length,3);
+  await removeButtons[1].fire('click');
+  assert.deepEqual(chipNames(f).map(text=>text.split('（')[0]),['合同扫描.pdf','清单.xlsx']);
+  assert.equal(f.root.getElementById('upload-material').disabled,true,'consent still required');
+  f.root.getElementById('material-consent').checked=true;
+  await f.root.getElementById('material-consent').fire('change');
+  await f.root.getElementById('upload-material').fire('click');
+  assert.equal(f.calls.filter(call=>call[0]==='upload').length,2);
+  assert.equal(f.materials.hasSelection(),false);
+  assert.equal(f.root.getElementById('material-picker').hidden,true);
+  assert.equal(f.root.getElementById('material-notice').textContent,'2 个原件已保存到本次对话，点击材料可核对。');
+});
+
+test('a failed batch keeps the remaining queue and reports the partial count',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');
+  await f.root.getElementById('material-file').fire('change',{target:{files:[
+    fileStub('一.docx',mime),fileStub('二.docx',mime),fileStub('三.docx',mime)]}});
+  const normal=f.api.uploadAttachment;let attempts=0;
+  f.api.uploadAttachment=async(...args)=>{attempts++;if(attempts===2)throw Object.assign(Error('conflict'),{status:409,code:'STATE_CONFLICT'});return normal(...args);};
+  f.root.getElementById('material-consent').checked=true;
+  await f.root.getElementById('material-consent').fire('change');
+  await f.root.getElementById('upload-material').fire('click');
+  assert.equal(attempts,2,'stops at the first failure');
+  assert.deepEqual(chipNames(f).map(text=>text.split('（')[0]),['二.docx','三.docx']);
+  assert.equal(f.root.getElementById('material-notice').textContent.includes('已保存 1/3'),true);
+});
+
+test('dropping files on the page queues them and rejects unsupported types by name',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');
+  let prevented=0;
+  const event={dataTransfer:{types:['Files'],files:[fileStub('证据.pdf','application/pdf'),fileStub('程序.exe','application/x-msdownload')]},
+    preventDefault(){prevented++;}};
+  f.root.fire('dragover',event);
+  assert.equal(f.root.getElementById('drop-overlay').hidden,false);
+  f.root.fire('drop',event);
+  assert.equal(prevented,2);
+  assert.equal(f.root.getElementById('drop-overlay').hidden,true);
+  assert.equal(f.root.getElementById('material-picker').hidden,false,'drop opens the picker');
+  assert.deepEqual(chipNames(f).map(text=>text.split('（')[0]),['证据.pdf']);
+  assert.equal(f.root.getElementById('material-notice').textContent.includes('程序.exe'),true);
+});
+
+test('non-DOCX materials preview without a parse control and the queue clears on conversation switch',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');
+  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('扫描件.pdf','application/pdf')]}});
+  f.root.getElementById('material-consent').checked=true;
+  await f.root.getElementById('material-consent').fire('change');
+  await f.root.getElementById('upload-material').fire('click');
+  assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
+  const row=f.root.getElementById('material-list').children[0];
+  assert.ok(row);walk(row).find(element=>element.textContent==='查看信息').fire('click');await tick();
+  const host=f.root.getElementById('material-preview-content');
+  const labels=walk(host).map(element=>element.textContent);
+  assert.equal(labels.some(text=>['读取 DOCX','重新读取，保留历史版本','按所选方式读取'].includes(text)),false,'no parse action for PDF');
+  assert.equal(labels.some(text=>String(text).includes('暂不支持读取原文')),true);
 });
