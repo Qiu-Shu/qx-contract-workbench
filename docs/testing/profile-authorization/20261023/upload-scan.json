@@ -1,0 +1,220 @@
+{
+  "utc": "2026-10-23T02:51:59.919685+00:00",
+  "base": "60eb041536dc36dfd4133f0d09b909681146500c",
+  "head": "684e8e75e1a8f1b9f0dd80c2e96cffa26e3cc8e7",
+  "new_commits": 1,
+  "blobs": 41,
+  "bytes": 558257,
+  "zip_text_members": 0,
+  "blocked_paths": [],
+  "pattern_findings": [],
+  "reviewed_synthetic_rejection_url_occurrences": 0,
+  "scope": "All new reachable Git blobs and ZIP text members; known pattern/path/contract identity checks, not exhaustive sensitive-content certification.",
+  "files": [
+    {
+      "sha": "11df4700823ee8b32bfc7f24b3f5380f4ab95636",
+      "path": ".gitattributes",
+      "bytes": 7721
+    },
+    {
+      "sha": "de6e381a9734405cc58cd001d1e3004b1717d49f",
+      "path": "README.md",
+      "bytes": 16944
+    },
+    {
+      "sha": "61f49d4d7a340d9bff28a46aa6127c2669bcaee7",
+      "path": "TODO.md",
+      "bytes": 25481
+    },
+    {
+      "sha": "bb67964da3f01aba9c442126ff269e65933bcb57",
+      "path": "docs/TASK_STATUS.md",
+      "bytes": 123603
+    },
+    {
+      "sha": "d9f43dda108289935b488468251a3e577ed2284c",
+      "path": "docs/plans/2026-10-16-chat-first-execution.md",
+      "bytes": 21354
+    },
+    {
+      "sha": "a54c6d86c8be1695a54b217f5d79045e952beb84",
+      "path": "docs/plans/2026-10-23-profile-authorization.md",
+      "bytes": 3165
+    },
+    {
+      "sha": "5bf8f685bb7a8a7d42ba16298858187226ea8b2f",
+      "path": "docs/testing/profile-authorization/20261023/README.md",
+      "bytes": 2616
+    },
+    {
+      "sha": "d2cb07757decb55fc23d58f1b8b00896097f50d4",
+      "path": "docs/testing/profile-authorization/20261023/development-1.log",
+      "bytes": 1694
+    },
+    {
+      "sha": "4e045348dabef999b4b746d736fe70034ad094e6",
+      "path": "docs/testing/profile-authorization/20261023/development-1.xml",
+      "bytes": 11820
+    },
+    {
+      "sha": "c6177694b96837d95836dae8978810cf91ae4c92",
+      "path": "docs/testing/profile-authorization/20261023/development-2.log",
+      "bytes": 101
+    },
+    {
+      "sha": "0f9bd8efef6eb1c4d55195da71c71240fe1d1091",
+      "path": "docs/testing/profile-authorization/20261023/development-2.xml",
+      "bytes": 10461
+    },
+    {
+      "sha": "8aff6b9e9110c708a6ca9b8bbcb11ad67546bf4a",
+      "path": "docs/testing/profile-authorization/20261023/development-report.md",
+      "bytes": 4240
+    },
+    {
+      "sha": "57a46468aee4553032e75cfb041ba23bfbaaa004",
+      "path": "docs/testing/profile-authorization/20261023/evidence-manifest.json",
+      "bytes": 6457
+    },
+    {
+      "sha": "d247122633c3d95dc427609156d57b8894d61c39",
+      "path": "docs/testing/profile-authorization/20261023/git-byte-check.json",
+      "bytes": 3179
+    },
+    {
+      "sha": "ffcfc05a779273a36a1848f0c18dcce88178ae73",
+      "path": "docs/testing/profile-authorization/20261023/green1.log",
+      "bytes": 100
+    },
+    {
+      "sha": "70402bd51319d954d30930f187e9149d8019bfd8",
+      "path": "docs/testing/profile-authorization/20261023/plan-review.md",
+      "bytes": 6629
+    },
+    {
+      "sha": "23a1ca482cd4c804583f64bdf4650b2f6d588c03",
+      "path": "docs/testing/profile-authorization/20261023/preflight.json",
+      "bytes": 627
+    },
+    {
+      "sha": "e104aa78fafc66ffe788ba4ccb77dfb4021aeb94",
+      "path": "docs/testing/profile-authorization/20261023/red.log",
+      "bytes": 1875
+    },
+    {
+      "sha": "3598977a79d3661aeeed58307b3975f8c99ac77b",
+      "path": "docs/testing/profile-authorization/20261023/review-spec/input-stability.json",
+      "bytes": 4758
+    },
+    {
+      "sha": "ef5382231e6f5da039551c93694329a1108b8904",
+      "path": "docs/testing/profile-authorization/20261023/review-spec/inputs-before.json",
+      "bytes": 2691
+    },
+    {
+      "sha": "f53b2a9f375c615eec7770ff521ed177e909b8e5",
+      "path": "docs/testing/profile-authorization/20261023/review-spec/output.log",
+      "bytes": 101
+    },
+    {
+      "sha": "839e121ad086f9336031cbfd6523f7a8bb759527",
+      "path": "docs/testing/profile-authorization/20261023/review-spec/preparation.md",
+      "bytes": 796
+    },
+    {
+      "sha": "8754845adaa9c7db101692db3406867a03412f0b",
+      "path": "docs/testing/profile-authorization/20261023/review-spec/report.json",
+      "bytes": 855
+    },
+    {
+      "sha": "a61e18b718e51877616f3cb7290a7e2a3cd26c9b",
+      "path": "docs/testing/profile-authorization/20261023/review-spec/report.md",
+      "bytes": 3232
+    },
+    {
+      "sha": "71783fdc637e48ced5e8ebf73dc6097ab0be1d64",
+      "path": "docs/testing/profile-authorization/20261023/review-spec/results.xml",
+      "bytes": 2974
+    },
+    {
+      "sha": "f2de03ac51c93d5824b1f34c79ea86e16fee23ae",
+      "path": "docs/testing/profile-authorization/20261023/review-spec/test_independent_spec.py",
+      "bytes": 9294
+    },
+    {
+      "sha": "d233a126d8513f9cc160c0760880c36aaa7e0231",
+      "path": "docs/testing/profile-authorization/20261023/review-standards/REPORT.md",
+      "bytes": 3002
+    },
+    {
+      "sha": "cdc43881f6a9d85906a6d55509cb7f802fa921f8",
+      "path": "docs/testing/profile-authorization/20261023/review-standards/cold-import.json",
+      "bytes": 1302
+    },
+    {
+      "sha": "391bcd6fae8e49b15feedd1c296e2ea7c16a6975",
+      "path": "docs/testing/profile-authorization/20261023/review-standards/inputs-after.json",
+      "bytes": 1591
+    },
+    {
+      "sha": "722d4d53f766d189a1ef0360438a7b7be9b423fe",
+      "path": "docs/testing/profile-authorization/20261023/review-standards/output.log",
+      "bytes": 100
+    },
+    {
+      "sha": "6ad13dc538cb3d570969ce35dc79b518086b37aa",
+      "path": "docs/testing/profile-authorization/20261023/review-standards/results.xml",
+      "bytes": 1445
+    },
+    {
+      "sha": "04073181bd59301d93158e99df18bc68b315a0d7",
+      "path": "docs/testing/profile-authorization/20261023/review-standards/test_authorization_standards.py",
+      "bytes": 7512
+    },
+    {
+      "sha": "13a62af479f4eb89ad4d31851582391b2b979e7d",
+      "path": "docs/testing/profile-authorization/20261023/review-standards/verification.json",
+      "bytes": 376
+    },
+    {
+      "sha": "b10e2f8e3a670ce3c321cb7a6b83dd3e112702cb",
+      "path": "docs/testing/profile-authorization/20261023/review-summary.md",
+      "bytes": 2175
+    },
+    {
+      "sha": "357ebf34d5a21cd55f3aec454db7261aec111e7e",
+      "path": "docs/testing/profile-authorization/20261023/target-nodeids.txt",
+      "bytes": 690
+    },
+    {
+      "sha": "c47ea5c86151cb18cab846a90e910bbc0713c519",
+      "path": "docs/testing/profile-authorization/20261023/target-verification.json",
+      "bytes": 132805
+    },
+    {
+      "sha": "86a5a9e3e21efc7daedb4a21dfb9cedb5df2d791",
+      "path": "docs/testing/profile-authorization/20261023/target.log",
+      "bytes": 519
+    },
+    {
+      "sha": "f4078c40d360a3dad5e92fd16bb8cc0f24ac9c9f",
+      "path": "docs/testing/profile-authorization/20261023/target.xml",
+      "bytes": 90543
+    },
+    {
+      "sha": "7f4264af3219b530b19219aff065ef4b981613e2",
+      "path": "docs/testing/profile-authorization/20261023/verify.py",
+      "bytes": 3633
+    },
+    {
+      "sha": "722335407111c8d89f64e36af2cf03568dae7fe2",
+      "path": "src/cn_contract/assistant/providers/registry.py",
+      "bytes": 17356
+    },
+    {
+      "sha": "06dbf5fa99e13a1447d7649ecd92a6235ddf18f2",
+      "path": "tests/integration/test_assistant_profile_authorization.py",
+      "bytes": 22440
+    }
+  ]
+}
