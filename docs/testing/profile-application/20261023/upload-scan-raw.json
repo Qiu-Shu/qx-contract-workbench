@@ -1,0 +1,441 @@
+{
+  "utc": "2026-10-23T05:45:20.237493+00:00",
+  "base": "3d0e1859041572ed9c574e7a917afd044aedc6bf",
+  "head": "63f48c665ff661de5314f2b928bdeb2584a9f467",
+  "new_commits": 1,
+  "blobs": 84,
+  "bytes": 2109658,
+  "zip_text_members": 0,
+  "blocked_paths": [],
+  "pattern_findings": [
+    {
+      "path": "docs/testing/profile-application/20261023/target.xml",
+      "blob": "fd6f6fb9921746c0dae97079050115f423b271f3",
+      "pattern": "credential_url"
+    }
+  ],
+  "reviewed_synthetic_rejection_url_occurrences": 0,
+  "scope": "All new reachable Git blobs and ZIP text members; known pattern/path/contract identity checks, not exhaustive sensitive-content certification.",
+  "files": [
+    {
+      "sha": "90c44a2112360c1faf55904664a2909e3990b719",
+      "path": ".gitattributes",
+      "bytes": 9860
+    },
+    {
+      "sha": "e5e9da8666a446c771c3cf3bb4fb4c05f3fe9612",
+      "path": "README.md",
+      "bytes": 18071
+    },
+    {
+      "sha": "264ff6205e823631616b7e4bcec4ddb7420954fc",
+      "path": "TODO.md",
+      "bytes": 27265
+    },
+    {
+      "sha": "7d3ca289a585d9026daa878e0dc07391714b0a28",
+      "path": "docs/TASK_STATUS.md",
+      "bytes": 124848
+    },
+    {
+      "sha": "26168fd53128bb694cdc7fa996b5691d8e34bc89",
+      "path": "docs/plans/2026-10-16-chat-first-execution.md",
+      "bytes": 23398
+    },
+    {
+      "sha": "3930a82c8738133f266303c63b8895c0ae34c1d4",
+      "path": "docs/plans/2026-10-23-profile-application.md",
+      "bytes": 4956
+    },
+    {
+      "sha": "0fe2fc09f78782545956bcd16d6864bfa23e425e",
+      "path": "docs/testing/profile-application/20261023/README.md",
+      "bytes": 4462
+    },
+    {
+      "sha": "e2b151aa74068a5b1cb49a0aab7bd63f92ca818b",
+      "path": "docs/testing/profile-application/20261023/accepted-inputs.json",
+      "bytes": 65162
+    },
+    {
+      "sha": "be2f30bfa223f5488330c75dd746a30bf7539be8",
+      "path": "docs/testing/profile-application/20261023/continuation.json",
+      "bytes": 785
+    },
+    {
+      "sha": "94983f1ec07d9b3604fd646abdee51a0ada825ef",
+      "path": "docs/testing/profile-application/20261023/contract-green.log",
+      "bytes": 100
+    },
+    {
+      "sha": "4ac1840b83a1d3bcca3fe92804ec9a93e84ee3ce",
+      "path": "docs/testing/profile-application/20261023/contract-green.xml",
+      "bytes": 1609
+    },
+    {
+      "sha": "49a364ea13de2727d775bca81ffde820d5c171f7",
+      "path": "docs/testing/profile-application/20261023/contract-red.log",
+      "bytes": 840
+    },
+    {
+      "sha": "3a73cc22831fbb796b4b8c892a77caecb7c9f9c2",
+      "path": "docs/testing/profile-application/20261023/contract-red.xml",
+      "bytes": 936
+    },
+    {
+      "sha": "f1151ab8ee3a5a64903d7164ed6dc9ea2b586f49",
+      "path": "docs/testing/profile-application/20261023/development-http/commands.json",
+      "bytes": 1445
+    },
+    {
+      "sha": "72d3c87bfb7af029e190149722667074cdb69ffc",
+      "path": "docs/testing/profile-application/20261023/development-http/final-inputs.json",
+      "bytes": 635
+    },
+    {
+      "sha": "01287896e9a0e3501b99bb498191b76bf4e6ac44",
+      "path": "docs/testing/profile-application/20261023/development-http/green-01.log",
+      "bytes": 25493
+    },
+    {
+      "sha": "24f0c84526ef990a114545c4a3d53c6e55fb3838",
+      "path": "docs/testing/profile-application/20261023/development-http/green-02.log",
+      "bytes": 102
+    },
+    {
+      "sha": "ea7988b6bc6d876bdeda75d786e5aa36d994fdeb",
+      "path": "docs/testing/profile-application/20261023/development-http/material.log",
+      "bytes": 115
+    },
+    {
+      "sha": "2a35a2c22eea3603736e2ae256669db190b847ad",
+      "path": "docs/testing/profile-application/20261023/development-http/red.log",
+      "bytes": 2295
+    },
+    {
+      "sha": "ae66f569ab5fca374a7d355fc2b825c057c19646",
+      "path": "docs/testing/profile-application/20261023/development-native/actor-final.xml",
+      "bytes": 415
+    },
+    {
+      "sha": "e4c553418ebbd08cd646afa5b5653190f29622fe",
+      "path": "docs/testing/profile-application/20261023/development-native/commands.json",
+      "bytes": 4377
+    },
+    {
+      "sha": "dd19e9c770d8f7acea6a10455fd43efaf814f8bc",
+      "path": "docs/testing/profile-application/20261023/development-native/frozen-files.json",
+      "bytes": 1060
+    },
+    {
+      "sha": "97de76a49ea61d1f038eb0ba8aca56db7ac2d14b",
+      "path": "docs/testing/profile-application/20261023/development-native/green-initial.log",
+      "bytes": 102
+    },
+    {
+      "sha": "76b70aa0679f0b3457463709414c9cdac7d4828c",
+      "path": "docs/testing/profile-application/20261023/development-native/green-initial.xml",
+      "bytes": 4771
+    },
+    {
+      "sha": "fd1a447e3b8fe98c93b2d33c9490cf2669353274",
+      "path": "docs/testing/profile-application/20261023/development-native/native-final.log",
+      "bytes": 3307
+    },
+    {
+      "sha": "f7759e06f93c673b99344660d8d13a6f2d5e8077",
+      "path": "docs/testing/profile-application/20261023/development-native/native-final.xml",
+      "bytes": 25526
+    },
+    {
+      "sha": "6d7d8efffcf5469c986a33e1e57d19b469135554",
+      "path": "docs/testing/profile-application/20261023/development-native/native-target-final.log",
+      "bytes": 1446
+    },
+    {
+      "sha": "d5568c0bf86463ddb4e26e6594efc975a7524d7d",
+      "path": "docs/testing/profile-application/20261023/development-native/native-target-final.xml",
+      "bytes": 8127
+    },
+    {
+      "sha": "1df9350e658b58bc03c4be94ffd1006c6b969409",
+      "path": "docs/testing/profile-application/20261023/development-native/red-functional.log",
+      "bytes": 52059
+    },
+    {
+      "sha": "4aea9da2bd28e4ad340cbfc285e8c05d688e9ec2",
+      "path": "docs/testing/profile-application/20261023/development-native/red-functional.xml",
+      "bytes": 69814
+    },
+    {
+      "sha": "50c1857f43c778e66463354708ab4240e385f373",
+      "path": "docs/testing/profile-application/20261023/development-native/red.log",
+      "bytes": 44714
+    },
+    {
+      "sha": "a510483b279924576f58c58b1b21c41733229d84",
+      "path": "docs/testing/profile-application/20261023/development-native/red.xml",
+      "bytes": 47041
+    },
+    {
+      "sha": "6bc5b61cdc0af04083a9f1df45c0278da5529433",
+      "path": "docs/testing/profile-application/20261023/development-native/runs.json",
+      "bytes": 2129
+    },
+    {
+      "sha": "bc615ae389d6bea7a0ee43681df99c58b93c4abd",
+      "path": "docs/testing/profile-application/20261023/development-native/target-adjacent.log",
+      "bytes": 7790
+    },
+    {
+      "sha": "c494d195e5c743aa2373ec286216a1cda8023a6a",
+      "path": "docs/testing/profile-application/20261023/development-native/target-adjacent.xml",
+      "bytes": 29056
+    },
+    {
+      "sha": "72bd48a54b42e6e139e4b06ca388e3902ed54da1",
+      "path": "docs/testing/profile-application/20261023/evidence-manifest.json",
+      "bytes": 15714
+    },
+    {
+      "sha": "5b04afe51c42f117973267e36d3f083bf7f41794",
+      "path": "docs/testing/profile-application/20261023/plan-review/report.md",
+      "bytes": 2289
+    },
+    {
+      "sha": "b32392e5b7cb969e56bc3d7c6bd7ecd189ac3a38",
+      "path": "docs/testing/profile-application/20261023/preflight.json",
+      "bytes": 840
+    },
+    {
+      "sha": "576828302747c6cf4ee37d6f157c8dce6ed9063d",
+      "path": "docs/testing/profile-application/20261023/process-green-01.log",
+      "bytes": 1032
+    },
+    {
+      "sha": "30378bd6d7eb8241cd30cc641cffdc63d986f8ab",
+      "path": "docs/testing/profile-application/20261023/process-green-01.xml",
+      "bytes": 1375
+    },
+    {
+      "sha": "df880ccaaff963a55d8d2c100faf3531f04050ce",
+      "path": "docs/testing/profile-application/20261023/process-green-02.log",
+      "bytes": 100
+    },
+    {
+      "sha": "f94a1fbb11e1aa46bbd02432514464b149f178d4",
+      "path": "docs/testing/profile-application/20261023/process-green-02.xml",
+      "bytes": 422
+    },
+    {
+      "sha": "ef60f496546c1905f1dd95e9ce8a17fdd4b49915",
+      "path": "docs/testing/profile-application/20261023/process-red.log",
+      "bytes": 1201
+    },
+    {
+      "sha": "fc6b8f4c8747e7ef664a14c4bec4544193706b31",
+      "path": "docs/testing/profile-application/20261023/process-red.xml",
+      "bytes": 1191
+    },
+    {
+      "sha": "5140ffc599f126bd3768f9246e7e3707c3af741e",
+      "path": "docs/testing/profile-application/20261023/spec-review/command.json",
+      "bytes": 522
+    },
+    {
+      "sha": "bd1a403bf0cdc78fdf45a6924ffe557657d9c1c3",
+      "path": "docs/testing/profile-application/20261023/spec-review/input-stability.json",
+      "bytes": 4443
+    },
+    {
+      "sha": "12bb60af2a9d35849514c229e74287e35604766e",
+      "path": "docs/testing/profile-application/20261023/spec-review/inputs-before.json",
+      "bytes": 2530
+    },
+    {
+      "sha": "54101d77bcfb45a9cd5709c106f65ee3065f31a7",
+      "path": "docs/testing/profile-application/20261023/spec-review/output.log",
+      "bytes": 100
+    },
+    {
+      "sha": "5e4fe8af544de1f262b713bf44b2aeefa590e2b2",
+      "path": "docs/testing/profile-application/20261023/spec-review/report.json",
+      "bytes": 701
+    },
+    {
+      "sha": "0f070ef3ee07925fdb73c4dcdcdcf0e8d7f378a3",
+      "path": "docs/testing/profile-application/20261023/spec-review/report.md",
+      "bytes": 2289
+    },
+    {
+      "sha": "5fe64551d28763fe697a11f9aad0425877f79e49",
+      "path": "docs/testing/profile-application/20261023/spec-review/results.xml",
+      "bytes": 2041
+    },
+    {
+      "sha": "227ae593213d3cfb1bb3f87c4e57e88b7234334a",
+      "path": "docs/testing/profile-application/20261023/spec-review/test_spec_application.py",
+      "bytes": 7526
+    },
+    {
+      "sha": "c2d39a8127f49a24254a86d1d6d0639287fd0c05",
+      "path": "docs/testing/profile-application/20261023/spec-review/tracked-diff.txt",
+      "bytes": 6454
+    },
+    {
+      "sha": "a227a3647da382c362470d7a198ea071de54a406",
+      "path": "docs/testing/profile-application/20261023/standards-review/artifact-sha256.json",
+      "bytes": 722
+    },
+    {
+      "sha": "b4ddc43a4498c674fb4a19a6ab08f971be003f6d",
+      "path": "docs/testing/profile-application/20261023/standards-review/final.log",
+      "bytes": 778
+    },
+    {
+      "sha": "e94d9baf38c33cf334054df59f3b8ba20eae3695",
+      "path": "docs/testing/profile-application/20261023/standards-review/final.xml",
+      "bytes": 2304
+    },
+    {
+      "sha": "4432c784801c1a83792dffccecf72f5c7e9dddbb",
+      "path": "docs/testing/profile-application/20261023/standards-review/initial-final.log",
+      "bytes": 778
+    },
+    {
+      "sha": "a1fb0ae67d3c4931dfc76991303b0a71fad40da0",
+      "path": "docs/testing/profile-application/20261023/standards-review/initial-final.xml",
+      "bytes": 2304
+    },
+    {
+      "sha": "85f6c4e85d0d91379e18fccc2cf210c3228187f0",
+      "path": "docs/testing/profile-application/20261023/standards-review/initial-inputs-after.json",
+      "bytes": 30205
+    },
+    {
+      "sha": "f08f59505d1b5ed9ae7d91c3a33d342d6c52b58c",
+      "path": "docs/testing/profile-application/20261023/standards-review/initial-run-result.json",
+      "bytes": 1781
+    },
+    {
+      "sha": "35790d60ef04708df937da31f7342bd0987c326b",
+      "path": "docs/testing/profile-application/20261023/standards-review/inputs-after.json",
+      "bytes": 30205
+    },
+    {
+      "sha": "15ab04baf107aab6bdb2c8a2447de2a6ce7b92da",
+      "path": "docs/testing/profile-application/20261023/standards-review/preliminary.log",
+      "bytes": 778
+    },
+    {
+      "sha": "913cc6478e90f578a2378513afb91339359e20b3",
+      "path": "docs/testing/profile-application/20261023/standards-review/preliminary.xml",
+      "bytes": 2304
+    },
+    {
+      "sha": "741f5ee55ffb34e8d39c09519b9a714c4ccb01d4",
+      "path": "docs/testing/profile-application/20261023/standards-review/report.md",
+      "bytes": 2183
+    },
+    {
+      "sha": "9408063c3b50a388ffeaf6455db474fe107da8ef",
+      "path": "docs/testing/profile-application/20261023/standards-review/run-result.json",
+      "bytes": 1784
+    },
+    {
+      "sha": "11af1e66ef4de7f191ba0925c0dd5484c1ffa078",
+      "path": "docs/testing/profile-application/20261023/standards-review/run_review.py",
+      "bytes": 3231
+    },
+    {
+      "sha": "2a78bf8a7bc541a8458e02a0ff19489be589014c",
+      "path": "docs/testing/profile-application/20261023/standards-review/test_application_standards.py",
+      "bytes": 6810
+    },
+    {
+      "sha": "3c55fca4cad28213ce26828a7ef728d71f351f5b",
+      "path": "docs/testing/profile-application/20261023/target-verification.json",
+      "bytes": 135340
+    },
+    {
+      "sha": "470562784ba63ccc47fa40d14612ec3f575e4e7f",
+      "path": "docs/testing/profile-application/20261023/target.log",
+      "bytes": 5057
+    },
+    {
+      "sha": "fd6f6fb9921746c0dae97079050115f423b271f3",
+      "path": "docs/testing/profile-application/20261023/target.xml",
+      "bytes": 953927
+    },
+    {
+      "sha": "1e9ae39fa5b58b8a4ce14cc24e202c4ed5b7dd9d",
+      "path": "docs/testing/profile-application/20261023/verify.py",
+      "bytes": 3642
+    },
+    {
+      "sha": "e0676fa536ca6d7a235aa0d7b5b5cc7f833dc1bf",
+      "path": "src/cn_contract/assistant/native_model_control.py",
+      "bytes": 12692
+    },
+    {
+      "sha": "8fe9862a2de2b76a09da58991ace6ccb5e049289",
+      "path": "src/cn_contract/assistant/native_profile_control.py",
+      "bytes": 5440
+    },
+    {
+      "sha": "5d52f4ff2c64d6901768e2b2c8d3825650250799",
+      "path": "src/cn_contract/assistant/task_manager.py",
+      "bytes": 12372
+    },
+    {
+      "sha": "d9a3a8048980b0e1030559e55baab2c903bc760e",
+      "path": "src/cn_contract/desktop_control.py",
+      "bytes": 8642
+    },
+    {
+      "sha": "0383c9dafad57c2393b8db6c392a1b6ba98bd71c",
+      "path": "src/cn_contract/domain.py",
+      "bytes": 150385
+    },
+    {
+      "sha": "540ffcfae7093115632dcd96d7014fc36cd0309e",
+      "path": "src/cn_contract/web/assistant_generation.py",
+      "bytes": 7808
+    },
+    {
+      "sha": "d1d09a58d8f41f79f48aa9a4d6f47eac350459ee",
+      "path": "src/cn_contract/web/assistant_profile_generation.py",
+      "bytes": 2770
+    },
+    {
+      "sha": "3fb85ed9a5be65798e25c16c7532076af454a5f1",
+      "path": "tests/integration/test_assistant_profile_application.py",
+      "bytes": 18760
+    },
+    {
+      "sha": "0a1037ffd03a86ebf212df36548949a2565ba262",
+      "path": "tests/integration/test_native_profile_control.py",
+      "bytes": 19750
+    },
+    {
+      "sha": "6f95bacfef24a4f8bb63ef58f2d0c05e596185fa",
+      "path": "tests/integration/test_profile_native_http_process.py",
+      "bytes": 7240
+    },
+    {
+      "sha": "483ea5507bc1b765ec318ee4fcc81aeadacd3bc4",
+      "path": "tests/unit/test_assistant_profile_application_contract.py",
+      "bytes": 2501
+    },
+    {
+      "sha": "4761c31a8ce8ebdc1e8d48fb8ebe2a81c6a9e248",
+      "path": "tests/unit/test_desktop_control_protocol.py",
+      "bytes": 10260
+    },
+    {
+      "sha": "278ecc5708046f928cd8c2f7658ddd55fedb2682",
+      "path": "tests/unit/test_judge_authorization_protocol.py",
+      "bytes": 2024
+    }
+  ]
+}
