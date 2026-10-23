@@ -252,7 +252,8 @@ def _validate_rounds_replay(db, run_id, ordered, prepareds, plan_map):
         _fail()
 
 
-def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rounds=False):
+def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rounds=False,
+              profile_schema=False):
     from . import context_integrity
     run_attempts = {}
     prepareds = {}
@@ -284,15 +285,20 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
         allowed = ('plain-text-v1', 'library-context-v1')
         if rounds == 'v2':
             allowed = allowed + ('library-context-v2',)
+        if profile_schema:
+            allowed = allowed + ('profile-text-v1',)
         if fmt not in allowed:
             _fail()
         context = fmt in ('library-context-v1', 'library-context-v2')
+        profile = fmt == 'profile-text-v1'
         if fmt == 'library-context-v2':
             prepared = _model(d.MainContextRoundsPreparedInput, row['input_json'])
             if prepared.round_no != row['round_no']:
                 _fail()
         elif fmt == 'library-context-v1':
             prepared = _model(d.MainContextPreparedInput, row['input_json'])
+        elif profile:
+            prepared = _model(d.MainProfilePreparedInput, row['input_json'])
         else:
             prepared = _model(d.MainPreparedInput, row['input_json'])
         if context and prepared.request.basis.input_format != fmt:
@@ -300,6 +306,10 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
         prepareds[identifier] = prepared
         request, scope = prepared.request, prepared.request.scope
         source_sha = request.basis.manifest_sha256 if context else request.source_sha256
+        if profile:
+            from . import profile_model_integrity
+            from .providers.profile_preparation import basis_digest
+            source_sha = basis_digest(prepared.basis)
         question = request.manifest.question if context else request.content
         conversation, run = conversations.get(cid), runs.get(run_id)
         message = messages.get(str(request.message_id))
@@ -347,7 +357,9 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
             context_integrity.validate_context_selection(db, row, prepared)
             relations += len(request.manifest.sources)
         else:
-            if (sha(prepared.wire_payload_json) != row['request_sha256']
+            if profile:
+                profile_model_integrity.validate_input(db, row, prepared, config, policy, run, conversation)
+            elif (sha(prepared.wire_payload_json) != row['request_sha256']
                     or prepare(request, config).wire_payload_json != prepared.wire_payload_json):
                 _fail()
             if context_schema and db.scalar(text(
@@ -365,7 +377,7 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
         if rounds != 'v2':
             _events(db, row, run, value, output)
         if output is not None:
-            view = _model(d.MainContextOutputView if context else d.MainOutputView,
+            view = _model(d.MainContextOutputView if context else d.MainProfileOutputView if profile else d.MainOutputView,
                           output['output_json'], 262144)
             if (_uuid(output['id']) != str(view.id) or output['conversation_id'] != cid
                     or output['run_id'] != run_id or view.run_id != request.run_id
@@ -374,6 +386,8 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
                 _fail()
             if context:
                 context_integrity.validate_context_output(view, prepared)
+            elif profile:
+                profile_model_integrity.validate_output(db, row, prepared, view, run)
             elif any(c.message_id != request.message_id or c.quote_sha256 != request.source_sha256
                      for c in view.candidate.citations):
                 _fail()
@@ -438,6 +452,9 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
                 _fail()
             _events_rounds(db, run, ordered, receipts, outputs, plan_map, stop_map)
             _validate_rounds_replay(db, run_id, ordered, prepareds, plan_map)
+    if any(type(prepared) is d.MainProfilePreparedInput for prepared in prepareds.values()):
+        from .profile_integrity import validate_profile_records
+        validate_profile_records(db)
 
 
 def validate_model_records(db, *, allowed=True):
@@ -452,16 +469,15 @@ def validate_model_records(db, *, allowed=True):
                        'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2',
                        'assistant-profiles-v1', 'assistant-profile-model-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
-    if version == 'assistant-profile-model-v1':
-        # This migration is a storage prerequisite only. Do not bless new rows
-        # until purpose grants, settlement and fixed-handler replay are enabled
-        # together. Check before the empty-ledger shortcut, including orphan rows.
-        if db.scalar(text('''SELECT EXISTS(SELECT 1 FROM assistant_profile_handlers)
-                OR EXISTS(SELECT 1 FROM assistant_model_attempts WHERE input_format='profile-text-v1')''')):
-            raise ValueError('ASSISTANT_PROFILE_MODEL_NOT_ENABLED')
     attempts = db.execute(text('SELECT * FROM assistant_model_attempts ORDER BY created_at,id')).mappings().all()
     receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_receipts')).mappings()}
     outputs = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_outputs')).mappings()}
+    if version == 'assistant-profile-model-v1':
+        from .profile_model_integrity import validate_relations
+        try:
+            validate_relations(db, attempts, outputs)
+        except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
+            _fail()
     model_runs = set(db.scalars(text('''SELECT id FROM assistant_runs r WHERE selected_provider IS NOT NULL
         OR selected_model IS NOT NULL OR budget_json IS NOT NULL OR EXISTS (
             SELECT 1 FROM assistant_run_events e WHERE e.run_id=r.id AND e.event_type LIKE 'model.%')''')))
@@ -485,7 +501,8 @@ def validate_model_records(db, *, allowed=True):
                                                  'assistant-profile-model-v1'),
                       rounds=('v2' if version in ('assistant-rounds-v2', 'assistant-profiles-v1',
                                                  'assistant-profile-model-v1')
-                              else 'v1' if version == 'assistant-rounds-v1' else False))
+                              else 'v1' if version == 'assistant-rounds-v1' else False),
+                      profile_schema=version == 'assistant-profile-model-v1')
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
         # Archive errors must not interpolate source text or model bodies.
         raise ValueError('ASSISTANT_MODEL_INTEGRITY') from None

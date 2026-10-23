@@ -1,0 +1,317 @@
+diff --git a/src/cn_contract/assistant/model_integrity.py b/src/cn_contract/assistant/model_integrity.py
+index c36fd4d..ff06d84 100644
+--- a/src/cn_contract/assistant/model_integrity.py
++++ b/src/cn_contract/assistant/model_integrity.py
+@@ -252,7 +252,8 @@ def _validate_rounds_replay(db, run_id, ordered, prepareds, plan_map):
+         _fail()
+ 
+ 
+-def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rounds=False):
++def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rounds=False,
++              profile_schema=False):
+     from . import context_integrity
+     run_attempts = {}
+     prepareds = {}
+@@ -284,15 +285,20 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
+         allowed = ('plain-text-v1', 'library-context-v1')
+         if rounds == 'v2':
+             allowed = allowed + ('library-context-v2',)
++        if profile_schema:
++            allowed = allowed + ('profile-text-v1',)
+         if fmt not in allowed:
+             _fail()
+         context = fmt in ('library-context-v1', 'library-context-v2')
++        profile = fmt == 'profile-text-v1'
+         if fmt == 'library-context-v2':
+             prepared = _model(d.MainContextRoundsPreparedInput, row['input_json'])
+             if prepared.round_no != row['round_no']:
+                 _fail()
+         elif fmt == 'library-context-v1':
+             prepared = _model(d.MainContextPreparedInput, row['input_json'])
++        elif profile:
++            prepared = _model(d.MainProfilePreparedInput, row['input_json'])
+         else:
+             prepared = _model(d.MainPreparedInput, row['input_json'])
+         if context and prepared.request.basis.input_format != fmt:
+@@ -300,6 +306,10 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
+         prepareds[identifier] = prepared
+         request, scope = prepared.request, prepared.request.scope
+         source_sha = request.basis.manifest_sha256 if context else request.source_sha256
++        if profile:
++            from . import profile_model_integrity
++            from .providers.profile_preparation import basis_digest
++            source_sha = basis_digest(prepared.basis)
+         question = request.manifest.question if context else request.content
+         conversation, run = conversations.get(cid), runs.get(run_id)
+         message = messages.get(str(request.message_id))
+@@ -347,7 +357,9 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
+             context_integrity.validate_context_selection(db, row, prepared)
+             relations += len(request.manifest.sources)
+         else:
+-            if (sha(prepared.wire_payload_json) != row['request_sha256']
++            if profile:
++                profile_model_integrity.validate_input(db, row, prepared, config, policy, run, conversation)
++            elif (sha(prepared.wire_payload_json) != row['request_sha256']
+                     or prepare(request, config).wire_payload_json != prepared.wire_payload_json):
+                 _fail()
+             if context_schema and db.scalar(text(
+@@ -365,7 +377,7 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
+         if rounds != 'v2':
+             _events(db, row, run, value, output)
+         if output is not None:
+-            view = _model(d.MainContextOutputView if context else d.MainOutputView,
++            view = _model(d.MainContextOutputView if context else d.MainProfileOutputView if profile else d.MainOutputView,
+                           output['output_json'], 262144)
+             if (_uuid(output['id']) != str(view.id) or output['conversation_id'] != cid
+                     or output['run_id'] != run_id or view.run_id != request.run_id
+@@ -374,6 +386,8 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
+                 _fail()
+             if context:
+                 context_integrity.validate_context_output(view, prepared)
++            elif profile:
++                profile_model_integrity.validate_output(db, row, prepared, view, run)
+             elif any(c.message_id != request.message_id or c.quote_sha256 != request.source_sha256
+                      for c in view.candidate.citations):
+                 _fail()
+@@ -438,6 +452,9 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
+                 _fail()
+             _events_rounds(db, run, ordered, receipts, outputs, plan_map, stop_map)
+             _validate_rounds_replay(db, run_id, ordered, prepareds, plan_map)
++    if any(type(prepared) is d.MainProfilePreparedInput for prepared in prepareds.values()):
++        from .profile_integrity import validate_profile_records
++        validate_profile_records(db)
+ 
+ 
+ def validate_model_records(db, *, allowed=True):
+@@ -452,16 +469,15 @@ def validate_model_records(db, *, allowed=True):
+                        'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2',
+                        'assistant-profiles-v1', 'assistant-profile-model-v1'):
+         raise ValueError('DATABASE_SCHEMA_MISMATCH')
+-    if version == 'assistant-profile-model-v1':
+-        # This migration is a storage prerequisite only. Do not bless new rows
+-        # until purpose grants, settlement and fixed-handler replay are enabled
+-        # together. Check before the empty-ledger shortcut, including orphan rows.
+-        if db.scalar(text('''SELECT EXISTS(SELECT 1 FROM assistant_profile_handlers)
+-                OR EXISTS(SELECT 1 FROM assistant_model_attempts WHERE input_format='profile-text-v1')''')):
+-            raise ValueError('ASSISTANT_PROFILE_MODEL_NOT_ENABLED')
+     attempts = db.execute(text('SELECT * FROM assistant_model_attempts ORDER BY created_at,id')).mappings().all()
+     receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_receipts')).mappings()}
+     outputs = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_outputs')).mappings()}
++    if version == 'assistant-profile-model-v1':
++        from .profile_model_integrity import validate_relations
++        try:
++            validate_relations(db, attempts, outputs)
++        except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
++            _fail()
+     model_runs = set(db.scalars(text('''SELECT id FROM assistant_runs r WHERE selected_provider IS NOT NULL
+         OR selected_model IS NOT NULL OR budget_json IS NOT NULL OR EXISTS (
+             SELECT 1 FROM assistant_run_events e WHERE e.run_id=r.id AND e.event_type LIKE 'model.%')''')))
+@@ -485,7 +501,8 @@ def validate_model_records(db, *, allowed=True):
+                                                  'assistant-profile-model-v1'),
+                       rounds=('v2' if version in ('assistant-rounds-v2', 'assistant-profiles-v1',
+                                                  'assistant-profile-model-v1')
+-                              else 'v1' if version == 'assistant-rounds-v1' else False))
++                              else 'v1' if version == 'assistant-rounds-v1' else False),
++                      profile_schema=version == 'assistant-profile-model-v1')
+     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
+         # Archive errors must not interpolate source text or model bodies.
+         raise ValueError('ASSISTANT_MODEL_INTEGRITY') from None
+diff --git a/src/cn_contract/assistant/providers/attempts.py b/src/cn_contract/assistant/providers/attempts.py
+index 2950642..0d01d9b 100644
+--- a/src/cn_contract/assistant/providers/attempts.py
++++ b/src/cn_contract/assistant/providers/attempts.py
+@@ -34,11 +34,17 @@ def _input(row):
+         return _model(d.MainContextPreparedInput, row['input_json'])
+     if fmt == 'library-context-v2':
+         return _model(d.MainContextRoundsPreparedInput, row['input_json'])
++    if fmt == 'profile-text-v1':
++        return _model(d.MainProfilePreparedInput, row['input_json'])
+     raise ValueError('ASSISTANT_MODEL_INTEGRITY')
+ 
+ 
+ def _wire(prepared, config):
+     """Deterministic rebuild for the decoded format."""
++    if isinstance(prepared, d.MainProfilePreparedInput):
++        from .deepseek_protocol import json_bytes
++        from .profile_codec import build_request
++        return json_bytes(build_request(prepared.request, config)).decode('utf-8')
+     if isinstance(prepared, d.MainContextRoundsPreparedInput):
+         return rounds_codec.prepare_rounds(prepared.request, prepared.round_no,
+                                            prepared.exchanges, config).wire_payload_json
+@@ -90,6 +96,9 @@ def read_attempt(actor, identifier, db):
+     values = dict(id=row['id'], run_id=row['run_id'], scope=prepared.request.scope,
+         state=row['state'], reserved_usd=row['reserved_usd'],
+         receipt=_model(d.MainReceipt, usage) if usage else None)
++    if isinstance(prepared, d.MainProfilePreparedInput):
++        return validated(d.MainProfileAttemptView, dict(values,
++            output=_model(d.MainProfileOutputView, output) if output else None))
+     if _is_context(prepared):
+         return validated(d.MainContextAttemptView, dict(values,
+             input_format=row['input_format'],
+@@ -104,6 +113,7 @@ def _event(run_id, event_type, payload, db):
+     db.execute(text('''INSERT INTO assistant_run_events(run_id,seq,event_type,audience,payload_json,created_at)
+         VALUES(:id,:seq,:type,'internal',:payload,:at)'''), {'id':str(run_id), 'seq':sequence,
+         'type':event_type, 'payload':canonical_json(payload), 'at':service._at()})
++    return sequence
+ 
+ 
+ def _budget(policy, db):
+@@ -139,7 +149,7 @@ def _replay(actor, conversation_id, message, previous, config, policy, db, *, co
+     service.save_message(actor, conversation_id, message, db)
+     row = _row(previous['attempt_id'], db)
+     prepared = _input(row)
+-    if context != _is_context(prepared):
++    if isinstance(prepared, d.MainProfilePreparedInput) or context != _is_context(prepared):
+         raise ServiceError('VERSION_CONFLICT', 409)
+     if (policy is None or row['config_sha256'] != sha(encoded(config))
+             or row['policy_sha256'] != sha(encoded(policy))
+@@ -200,6 +210,13 @@ def enqueue_generation(actor, conversation_id, request, db, runtime):
+     return read_attempt(actor, identifier, db)
+ 
+ 
++def enqueue_profile(actor, conversation_id, request, db, runtime, *, project_intake=False):
++    """Explicit profile purpose; public model entries never infer this format."""
++    from . import profile_attempts
++    return profile_attempts.enqueue(actor, conversation_id, request, db, runtime,
++                                    project_intake=project_intake)
++
++
+ def enqueue_context(actor, conversation_id, request, db, runtime):
+     """Register one source-bound answer; the format is fixed by this trusted entry."""
+     from ..context_preview import assemble_context
+@@ -268,6 +285,9 @@ def enqueue_context(actor, conversation_id, request, db, runtime):
+ 
+ 
+ def _current(actor, row, db, runtime):
++    if row['input_format'] == 'profile-text-v1':
++        from . import profile_attempts
++        return profile_attempts.current(actor, row, db, runtime)
+     require_active(db)
+     run = service._owned_run(actor, UUID(row['run_id']), db)
+     conversation = service._owned(actor, UUID(row['conversation_id']), db)
+@@ -355,6 +375,9 @@ def claim(actor, identifier, db, runtime):
+ def settle(actor, identifier, token, reply, db, runtime):
+     require_active(db)
+     row = _row(identifier, db)
++    if row['input_format'] == 'profile-text-v1':
++        from . import profile_attempts
++        return profile_attempts.settle(actor, identifier, token, reply, db, runtime)
+     if row['state'] != 'sending' or row['claim_sha256'] != sha(token):
+         raise ServiceError('STATE_CONFLICT', 409)
+     prepared = _input(row)
+diff --git a/src/cn_contract/assistant/providers/profile_preparation.py b/src/cn_contract/assistant/providers/profile_preparation.py
+index 9604718..7e9208f 100644
+--- a/src/cn_contract/assistant/providers/profile_preparation.py
++++ b/src/cn_contract/assistant/providers/profile_preparation.py
+@@ -1,11 +1,17 @@
+ """Offline profile send description; no grants, storage, secrets or network."""
+ from hashlib import sha256
++from uuid import NAMESPACE_URL, uuid5
+ 
+ from ... import domain as d
+ from . import profile_codec
+ from .deepseek_protocol import configuration, json_bytes
+ 
+ 
++# Expanded source identities can be much larger than the provider's short quotes.
++# Keep 16 KiB for the bounded output envelope within the existing 256 KiB reader.
++MAX_CANDIDATE_BYTES = 240 * 1024
++
++
+ def _validated(kind, value):
+     if type(value) is not kind:
+         raise ValueError('PROFILE_INPUT_INVALID')
+@@ -56,3 +62,36 @@ def prepare(run: d.AssistantRunView, message: d.AssistantMessageView, basis: d.M
+         source_revision=message.source_revision, base_profile_revision=basis.base_profile_revision)
+     return d.MainProfilePreparedInput(request=request, basis=basis, composer_revision=composer_revision,
+         wire_payload_json=json_bytes(profile_codec.build_request(request, config)).decode('utf-8'))
++
++
++def validate_candidate(candidate, request):
++    """Keep live settlement and historical replay on the same text-only contract."""
++    candidate = _validated(d.MainProfileCandidate, candidate)
++    request = _validated(d.MainProfileRequest, request)
++    if len(json_bytes(candidate.model_dump(mode='json'))) > MAX_CANDIDATE_BYTES:
++        raise ValueError('PROFILE_OUTPUT_INVALID')
++    patch = candidate.profile_patch
++    if (candidate.citations or patch.scope != request.scope
++            or patch.base_profile_revision != request.base_profile_revision):
++        raise ValueError('PROFILE_OUTPUT_INVALID')
++    for change in patch.changes:
++        if (change.origin not in ('user_statement', 'model_inference')
++                or change.value.kind == 'materials' and any(item.state != 'needed' for item in change.value.value)):
++            raise ValueError('PROFILE_OUTPUT_INVALID')
++        for ref in change.source_refs:
++            if (type(ref) is not d.ProfileMessageRef or ref.conversation_id != request.scope.conversation_id
++                    or ref.message_id != request.message_id or ref.source_revision != request.source_revision
++                    or request.content[ref.start:ref.end] != ref.quote
++                    or _sha(ref.quote.encode('utf-8')) != ref.quote_sha256):
++                raise ValueError('PROFILE_OUTPUT_INVALID')
++    return candidate
++
++
++def commit_request(prepared, candidate):
++    """A fixed event cannot acquire a second saving identity on replay."""
++    prepared = _validated(d.MainProfilePreparedInput, prepared)
++    candidate = validate_candidate(candidate, prepared.request)
++    basis = prepared.basis
++    return d.ProfileCommitInput(request_id=uuid5(NAMESPACE_URL, 'qx-profile.save:1:' + str(prepared.request.run_id)),
++        patch=candidate.profile_patch, expected_intake_id=basis.expected_intake_id,
++        expected_intake_revision=basis.expected_intake_revision, project_intake=basis.project_intake)
+diff --git a/src/cn_contract/assistant/runner.py b/src/cn_contract/assistant/runner.py
+index 5a22761..242fe1e 100644
+--- a/src/cn_contract/assistant/runner.py
++++ b/src/cn_contract/assistant/runner.py
+@@ -13,11 +13,17 @@ async def execute_attempt(actor, identifier, database, runtime):
+             return attempts.read_attempt(actor, identifier, db)
+     token, prepared, config = claimed
+     request = prepared.request
+-    reply_type = d.MainContextReply if type(request) is d.MainContextRequest else d.MainReply
++    reply_type = (d.MainProfileReply if type(prepared) is d.MainProfilePreparedInput
++                  else d.MainContextReply if type(request) is d.MainContextRequest else d.MainReply)
+     cancelled = False
+     try:
+         async with asyncio.timeout(config.timeout_seconds):
+-            if type(prepared) is d.MainContextRoundsPreparedInput:
++            if type(prepared) is d.MainProfilePreparedInput:
++                generate_profile = getattr(runtime.provider, 'generate_profile', None)
++                if not callable(generate_profile):
++                    raise ValueError('profile provider required')
++                reply = await generate_profile(prepared, expected_config=config)
++            elif type(prepared) is d.MainContextRoundsPreparedInput:
+                 generate_rounds = getattr(runtime.provider, 'generate_rounds', None)
+                 if not callable(generate_rounds):
+                     raise ValueError('rounds provider required')
+diff --git a/src/cn_contract/domain.py b/src/cn_contract/domain.py
+index 331b633..3708131 100644
+--- a/src/cn_contract/domain.py
++++ b/src/cn_contract/domain.py
+@@ -3757,7 +3757,7 @@ class NativeContextAuthorization(DomainModel):
+ 
+ class MainGenerationHistoryItem(DomainModel):
+     message_id: UUID
+-    attempt: MainAttemptView | MainContextAttemptView
++    attempt: MainAttemptView | MainContextAttemptView | MainProfileAttemptView
+ 
+ 
+ class MainGenerationHistoryView(DomainModel):
+@@ -4065,6 +4065,19 @@ class MainProfileReply(MainReply):
+     output: MainProfileCandidate | None = None
+ 
+ 
++class MainProfileOutputView(MainOutputView):
++    candidate: MainProfileCandidate
++
++
++class MainProfileAttemptView(MainAttemptView):
++    input_format: Literal['profile-text-v1'] = 'profile-text-v1'
++    output: MainProfileOutputView | None
++
++
++MainGenerationHistoryItem.model_rebuild()
++MainGenerationHistoryView.model_rebuild()
++
++
+ class MainProfileSendBasis(DomainModel):
+     """Description of outbound bytes and local save intent, never permission."""
+     input_format: Literal['profile-text-v1'] = 'profile-text-v1'

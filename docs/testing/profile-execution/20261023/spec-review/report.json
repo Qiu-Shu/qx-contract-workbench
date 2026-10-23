@@ -1,0 +1,41 @@
+{
+  "axis": "Spec",
+  "baseline": "9a0d2df3767dc8252f1530be4f949583fd250af2",
+  "findings": [],
+  "passed": 7,
+  "failed": 0,
+  "exit_code": 0,
+  "duration_seconds": 7.77,
+  "input_count": 19,
+  "inputs_stable": 19,
+  "network_calls": 0,
+  "product_modified": false,
+  "scope": "Independent synthetic probes and bounded read-only spec review; no full suite, real provider, real data, installed app, or independent full restore run",
+  "evidence": [
+    "command.json",
+    "results.xml",
+    "output.log",
+    "exit-code.txt",
+    "inputs-before.json",
+    "input-stability.json",
+    "tracked-diff.txt"
+  ],
+  "preflight": [
+    {
+      "kind": "probe import path error",
+      "file": "initial.log",
+      "exit_code": 2
+    },
+    {
+      "kind": "probe bytes type error",
+      "file": "first.log",
+      "exit_code": 1
+    },
+    {
+      "kind": "pre-freeze corrected probe, not added to final count",
+      "passed": 1,
+      "file": "second.log",
+      "exit_code": 0
+    }
+  ]
+}

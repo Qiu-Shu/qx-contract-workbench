@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="6" time="3.460" timestamp="2026-10-23T11:43:16.754918+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[False-response.ready]" time="0.450"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_assistant_profile_model_integrity.py:36: in test_profile_events_without_a_model_ledger_are_never_empty
+    with pytest.raises(ValueError, match='^ASSISTANT_MODEL_INTEGRITY$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[False-profile.saved]" time="0.406"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_assistant_profile_model_integrity.py:36: in test_profile_events_without_a_model_ledger_are_never_empty
+    with pytest.raises(ValueError, match='^ASSISTANT_MODEL_INTEGRITY$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[False-profile.blocked]" time="0.392"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_assistant_profile_model_integrity.py:36: in test_profile_events_without_a_model_ledger_are_never_empty
+    with pytest.raises(ValueError, match='^ASSISTANT_MODEL_INTEGRITY$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[True-response.ready]" time="0.390"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_assistant_profile_model_integrity.py:36: in test_profile_events_without_a_model_ledger_are_never_empty
+    with pytest.raises(ValueError, match='^ASSISTANT_MODEL_INTEGRITY$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[True-profile.saved]" time="0.392"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_assistant_profile_model_integrity.py:36: in test_profile_events_without_a_model_ledger_are_never_empty
+    with pytest.raises(ValueError, match='^ASSISTANT_MODEL_INTEGRITY$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[True-profile.blocked]" time="0.402"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_assistant_profile_model_integrity.py:36: in test_profile_events_without_a_model_ledger_are_never_empty
+    with pytest.raises(ValueError, match='^ASSISTANT_MODEL_INTEGRITY$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase></testsuite></testsuites>

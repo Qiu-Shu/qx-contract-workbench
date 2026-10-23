@@ -1,0 +1,23 @@
+.........................................F.....................          [100%]
+================================== FAILURES ===================================
+_ test_profile_history_remains_valid_after_legitimate_later_actions[convert_intake] _
+tests\integration\test_assistant_profile_model_integrity.py:288: in test_profile_history_remains_valid_after_legitimate_later_actions
+    intake.convert(record.id, d.IntakeConvertInput(expected_revision=record.revision,
+src\cn_contract\intake\service.py:134: in convert
+    matter=matters.create_matter(value.matter,actor,db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\matters.py:38: in create_matter
+    register_default_cards(principal, matter_id=matter.id, db=db)
+src\cn_contract\rules\loader.py:64: in register_default_cards
+    return tuple(register_rule(rule,actor,matter_id=matter_id,db=db,metadata=metadata)
+src\cn_contract\rules\loader.py:64: in <genexpr>
+    return tuple(register_rule(rule,actor,matter_id=matter_id,db=db,metadata=metadata)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\rules\loader.py:70: in register_rule
+    require_storage(db)
+src\cn_contract\rules\storage.py:85: in require_storage
+    raise RuntimeError('rules.initialize_storage(database) required')
+E   RuntimeError: rules.initialize_storage(database) required
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_history_remains_valid_after_legitimate_later_actions[convert_intake]
+1 failed, 62 passed in 59.78s

@@ -3757,7 +3757,7 @@ class NativeContextAuthorization(DomainModel):
 
 class MainGenerationHistoryItem(DomainModel):
     message_id: UUID
-    attempt: MainAttemptView | MainContextAttemptView
+    attempt: MainAttemptView | MainContextAttemptView | MainProfileAttemptView
 
 
 class MainGenerationHistoryView(DomainModel):
@@ -4063,6 +4063,19 @@ class MainProfileCandidate(MainCandidate):
 
 class MainProfileReply(MainReply):
     output: MainProfileCandidate | None = None
+
+
+class MainProfileOutputView(MainOutputView):
+    candidate: MainProfileCandidate
+
+
+class MainProfileAttemptView(MainAttemptView):
+    input_format: Literal['profile-text-v1'] = 'profile-text-v1'
+    output: MainProfileOutputView | None
+
+
+MainGenerationHistoryItem.model_rebuild()
+MainGenerationHistoryView.model_rebuild()
 
 
 class MainProfileSendBasis(DomainModel):

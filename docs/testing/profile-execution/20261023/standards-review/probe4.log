@@ -1,0 +1,18 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__ test_live_accepted_expanded_profile_remains_readable_by_history_validator __
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:143: in test_live_accepted_expanded_profile_remains_readable_by_history_validator
+    result = attempts.read_attempt(actor, first.id, db)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:101: in read_attempt
+    output=_model(d.MainProfileOutputView, output) if output else None))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:20: in _model
+    return validated(model, strict_json(raw))
+                            ^^^^^^^^^^^^^^^^
+src\cn_contract\review\model_adapter.py:37: in strict_json
+    raise ValueError('bounded raw text required')
+E   ValueError: bounded raw text required
+=========================== short test summary info ===========================
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_live_accepted_expanded_profile_remains_readable_by_history_validator
+1 failed in 1.95s

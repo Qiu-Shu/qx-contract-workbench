@@ -1,0 +1,16 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+___ test_profile_receipt_without_adopted_output_cannot_be_a_partial_commit ____
+tests\integration\test_assistant_profile_model_integrity.py:258: in test_profile_receipt_without_adopted_output_cannot_be_a_partial_commit
+    with pytest.raises(ValueError, match='^ASSISTANT_MODEL_INTEGRITY$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_____ test_profile_result_sequence_boolean_cannot_impersonate_receipt_one _____
+tests\integration\test_assistant_profile_model_integrity.py:270: in test_profile_result_sequence_boolean_cannot_impersonate_receipt_one
+    with pytest.raises(ValueError, match='^ASSISTANT_MODEL_INTEGRITY$'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_receipt_without_adopted_output_cannot_be_a_partial_commit
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_result_sequence_boolean_cannot_impersonate_receipt_one
+2 failed, 52 deselected in 2.22s

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="36" skipped="0" tests="49" time="24.183" timestamp="2026-10-23T11:48:06.567248+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[False-response.ready]" time="0.480" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[False-profile.saved]" time="0.390" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[False-profile.blocked]" time="0.391" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[True-response.ready]" time="0.387" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[True-profile.saved]" time="0.394" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_events_without_a_model_ledger_are_never_empty[True-profile.blocked]" time="0.391" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_empty_successor_runs_all_archive_validators[False]" time="0.256" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_empty_successor_runs_all_archive_validators[True]" time="0.293" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_attempt_is_not_accepted_as_plain_history[False]" time="0.430" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_attempt_is_not_accepted_as_plain_history[True]" time="0.434" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_handler_alone_cannot_escape_empty_ledger_guard[False]" time="0.671" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_handler_alone_cannot_escape_empty_ledger_guard[True]" time="0.700" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_format_rejects_backup_and_authenticated_restore" time="2.219" /><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_history_preserves_state_and_shared_cost_validation[reserved]" time="0.387"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:137: in test_profile_history_preserves_state_and_shared_cost_validation
+    view, _, _ = profile_history(profile_world, state=state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_history_preserves_state_and_shared_cost_validation[sending]" time="0.391"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:137: in test_profile_history_preserves_state_and_shared_cost_validation
+    view, _, _ = profile_history(profile_world, state=state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_history_preserves_state_and_shared_cost_validation[received]" time="0.386"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:137: in test_profile_history_preserves_state_and_shared_cost_validation
+    view, _, _ = profile_history(profile_world, state=state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_history_preserves_state_and_shared_cost_validation[sent_unknown]" time="0.761"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:137: in test_profile_history_preserves_state_and_shared_cost_validation
+    view, _, _ = profile_history(profile_world, state=state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_history_preserves_state_and_shared_cost_validation[failed_before_send]" time="0.385"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:137: in test_profile_history_preserves_state_and_shared_cost_validation
+    view, _, _ = profile_history(profile_world, state=state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_handler_without_profile_revision_is_still_complete[unchanged]" time="0.399"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:153: in test_profile_handler_without_profile_revision_is_still_complete
+    view, _, _ = profile_history(profile_world, project_intake=False, empty=outcome == 'unchanged')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_handler_without_profile_revision_is_still_complete[blocked]" time="0.403"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:153: in test_profile_handler_without_profile_revision_is_still_complete
+    view, _, _ = profile_history(profile_world, project_intake=False, empty=outcome == 'unchanged')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[missing_handler]" time="0.414"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[extra_event]" time="0.418"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[ready_basis]" time="0.412"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[result_sequence]" time="0.382"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[result_outcome]" time="0.386"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[external_event]" time="0.390"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[event_order]" time="0.384"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[handler_basis]" time="0.378"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[receipt_request]" time="0.389"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[receipt_actor]" time="0.845"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[receipt_patch]" time="0.384"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[profile_field]" time="0.385"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[output_quote]" time="0.383"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[output_old_message]" time="0.381"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[output_citation]" time="0.431"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[output_document_origin]" time="0.386"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[output_received_material]" time="0.382"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery[output_base]" time="0.386"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:167: in test_profile_archive_rejects_rehashed_source_receipt_and_event_forgery
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[source_hash]" time="0.384"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[original_digest]" time="0.389"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[basis_composer]" time="0.385"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[base_profile]" time="0.387"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[target]" time="0.702"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[request_id]" time="0.391"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[wire]" time="0.403"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[policy_calls]" time="0.395"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[policy_extra_basis]" time="0.393"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[mixed_format]" time="0.416"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase><testcase classname="tests.integration.test_assistant_profile_model_integrity" name="test_profile_archive_checks_whole_basis_original_submission_and_common_ledger[fee]" time="0.434"><failure message="ValueError: exact synthetic loopback required">tests\integration\test_assistant_profile_model_integrity.py:241: in test_profile_archive_checks_whole_basis_original_submission_and_common_ledger
+    profile_history(profile_world)
+tests\integration\test_assistant_profile_model_integrity.py:118: in profile_history
+    provider = DeepSeekProvider.for_synthetic_loopback(config(), lambda: KEY, 'http://127.0.0.1:1')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\deepseek_transport.py:57: in for_synthetic_loopback
+    if match is None or int(match[1])&gt;65535:raise ValueError('exact synthetic loopback required')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ValueError: exact synthetic loopback required</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,44 @@
+F..F...                                                                  [100%]
+================================== FAILURES ===================================
+_ test_profile_attempt_sends_once_and_atomically_saves_unverified_profile_and_history _
+tests\integration\test_assistant_profile_execution.py:112: in test_profile_attempt_sends_once_and_atomically_saves_unverified_profile_and_history
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:107: in scenario
+    assert db.scalar(text('SELECT count(*) FROM intake_cases')) == 1
+E   AssertionError: assert 0 == 1
+E    +  where 0 = scalar(<sqlalchemy.sql.elements.TextClause object at 0x000002068E43C0E0>)
+E    +    where scalar = <sqlalchemy.orm.session.Session object at 0x000002068E019A60>.scalar
+E    +    and   <sqlalchemy.sql.elements.TextClause object at 0x000002068E43C0E0> = text('SELECT count(*) FROM intake_cases')
+_ test_save_failure_preserves_answer_fees_and_one_blocked_handler[denial_audit] _
+tests\integration\test_assistant_profile_execution.py:396: in test_save_failure_preserves_answer_fees_and_one_blocked_handler
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:395: in scenario
+    assert db.scalar(text('SELECT count(*) FROM audit_events')) == previous_audits+(failure == 'denial_audit')
+E   AssertionError: assert 0 == (0 + 'denial_audit' == 'denial_audit'
+E    +  where 0 = scalar(<sqlalchemy.sql.elements.TextClause object at 0x000002068E9511F0>)
+E    +    where scalar = <sqlalchemy.orm.session.Session object at 0x000002068E1C3560>.scalar
+E    +    and   <sqlalchemy.sql.elements.TextClause object at 0x000002068E9511F0> = text('SELECT count(*) FROM audit_events')
+E     
+E       denial_audit)
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_execution.py::test_profile_attempt_sends_once_and_atomically_saves_unverified_profile_and_history
+FAILED tests/integration/test_assistant_profile_execution.py::test_save_failure_preserves_answer_fees_and_one_blocked_handler[denial_audit]
+2 failed, 5 passed, 22 deselected in 4.78s

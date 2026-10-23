@@ -1,9 +1,15 @@
 """Offline profile send description; no grants, storage, secrets or network."""
 from hashlib import sha256
+from uuid import NAMESPACE_URL, uuid5
 
 from ... import domain as d
 from . import profile_codec
 from .deepseek_protocol import configuration, json_bytes
+
+
+# Expanded source identities can be much larger than the provider's short quotes.
+# Keep 16 KiB for the bounded output envelope within the existing 256 KiB reader.
+MAX_CANDIDATE_BYTES = 240 * 1024
 
 
 def _validated(kind, value):
@@ -56,3 +62,36 @@ def prepare(run: d.AssistantRunView, message: d.AssistantMessageView, basis: d.M
         source_revision=message.source_revision, base_profile_revision=basis.base_profile_revision)
     return d.MainProfilePreparedInput(request=request, basis=basis, composer_revision=composer_revision,
         wire_payload_json=json_bytes(profile_codec.build_request(request, config)).decode('utf-8'))
+
+
+def validate_candidate(candidate, request):
+    """Keep live settlement and historical replay on the same text-only contract."""
+    candidate = _validated(d.MainProfileCandidate, candidate)
+    request = _validated(d.MainProfileRequest, request)
+    if len(json_bytes(candidate.model_dump(mode='json'))) > MAX_CANDIDATE_BYTES:
+        raise ValueError('PROFILE_OUTPUT_INVALID')
+    patch = candidate.profile_patch
+    if (candidate.citations or patch.scope != request.scope
+            or patch.base_profile_revision != request.base_profile_revision):
+        raise ValueError('PROFILE_OUTPUT_INVALID')
+    for change in patch.changes:
+        if (change.origin not in ('user_statement', 'model_inference')
+                or change.value.kind == 'materials' and any(item.state != 'needed' for item in change.value.value)):
+            raise ValueError('PROFILE_OUTPUT_INVALID')
+        for ref in change.source_refs:
+            if (type(ref) is not d.ProfileMessageRef or ref.conversation_id != request.scope.conversation_id
+                    or ref.message_id != request.message_id or ref.source_revision != request.source_revision
+                    or request.content[ref.start:ref.end] != ref.quote
+                    or _sha(ref.quote.encode('utf-8')) != ref.quote_sha256):
+                raise ValueError('PROFILE_OUTPUT_INVALID')
+    return candidate
+
+
+def commit_request(prepared, candidate):
+    """A fixed event cannot acquire a second saving identity on replay."""
+    prepared = _validated(d.MainProfilePreparedInput, prepared)
+    candidate = validate_candidate(candidate, prepared.request)
+    basis = prepared.basis
+    return d.ProfileCommitInput(request_id=uuid5(NAMESPACE_URL, 'qx-profile.save:1:' + str(prepared.request.run_id)),
+        patch=candidate.profile_patch, expected_intake_id=basis.expected_intake_id,
+        expected_intake_revision=basis.expected_intake_revision, project_intake=basis.project_intake)

@@ -1,0 +1,164 @@
+FFFFFFFFFF                                                               [100%]
+================================== FAILURES ===================================
+_ test_failure_after_real_profile_write_rolls_back_business_but_retains_fee_and_audit[exception] _
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:32: in test_failure_after_real_profile_write_rolls_back_business_but_retains_fee_and_audit
+    runtime, first, token, reply = ready(profile_world)
+                                   ^^^^^^^^^^^^^^^^^^^^
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:19: in ready
+    _, runtime, _, _ = authorize(world, unsent_provider(), project_intake=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+_ test_failure_after_real_profile_write_rolls_back_business_but_retains_fee_and_audit[deny] _
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:32: in test_failure_after_real_profile_write_rolls_back_business_but_retains_fee_and_audit
+    runtime, first, token, reply = ready(profile_world)
+                                   ^^^^^^^^^^^^^^^^^^^^
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:19: in ready
+    _, runtime, _, _ = authorize(world, unsent_provider(), project_intake=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+_ test_caller_catches_ledger_error_then_commits_without_half_profile[receipt] _
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:59: in test_caller_catches_ledger_error_then_commits_without_half_profile
+    runtime, first, token, reply = ready(profile_world)
+                                   ^^^^^^^^^^^^^^^^^^^^
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:19: in ready
+    _, runtime, _, _ = authorize(world, unsent_provider(), project_intake=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+_ test_caller_catches_ledger_error_then_commits_without_half_profile[output] __
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:59: in test_caller_catches_ledger_error_then_commits_without_half_profile
+    runtime, first, token, reply = ready(profile_world)
+                                   ^^^^^^^^^^^^^^^^^^^^
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:19: in ready
+    _, runtime, _, _ = authorize(world, unsent_provider(), project_intake=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+_ test_caller_catches_ledger_error_then_commits_without_half_profile[handler] _
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:59: in test_caller_catches_ledger_error_then_commits_without_half_profile
+    runtime, first, token, reply = ready(profile_world)
+                                   ^^^^^^^^^^^^^^^^^^^^
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:19: in ready
+    _, runtime, _, _ = authorize(world, unsent_provider(), project_intake=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+__ test_caller_catches_ledger_error_then_commits_without_half_profile[ready] __
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:59: in test_caller_catches_ledger_error_then_commits_without_half_profile
+    runtime, first, token, reply = ready(profile_world)
+                                   ^^^^^^^^^^^^^^^^^^^^
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:19: in ready
+    _, runtime, _, _ = authorize(world, unsent_provider(), project_intake=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+__ test_caller_catches_ledger_error_then_commits_without_half_profile[saved] __
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:59: in test_caller_catches_ledger_error_then_commits_without_half_profile
+    runtime, first, token, reply = ready(profile_world)
+                                   ^^^^^^^^^^^^^^^^^^^^
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:19: in ready
+    _, runtime, _, _ = authorize(world, unsent_provider(), project_intake=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+_ test_caller_catches_ledger_error_then_commits_without_half_profile[finished] _
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:59: in test_caller_catches_ledger_error_then_commits_without_half_profile
+    runtime, first, token, reply = ready(profile_world)
+                                   ^^^^^^^^^^^^^^^^^^^^
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:19: in ready
+    _, runtime, _, _ = authorize(world, unsent_provider(), project_intake=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+__ test_candidate_boundary_rejects_bypassed_dto_without_losing_usage[quote] ___
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:86: in test_candidate_boundary_rejects_bypassed_dto_without_losing_usage
+    runtime, first, token, reply = ready(profile_world)
+                                   ^^^^^^^^^^^^^^^^^^^^
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:19: in ready
+    _, runtime, _, _ = authorize(world, unsent_provider(), project_intake=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+__ test_candidate_boundary_rejects_bypassed_dto_without_losing_usage[scope] ___
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:86: in test_candidate_boundary_rejects_bypassed_dto_without_losing_usage
+    runtime, first, token, reply = ready(profile_world)
+                                   ^^^^^^^^^^^^^^^^^^^^
+.local\profile-execution-20261023\standards-review\test_standards_probe.py:19: in ready
+    _, runtime, _, _ = authorize(world, unsent_provider(), project_intake=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+=========================== short test summary info ===========================
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_failure_after_real_profile_write_rolls_back_business_but_retains_fee_and_audit[exception]
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_failure_after_real_profile_write_rolls_back_business_but_retains_fee_and_audit[deny]
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_caller_catches_ledger_error_then_commits_without_half_profile[receipt]
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_caller_catches_ledger_error_then_commits_without_half_profile[output]
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_caller_catches_ledger_error_then_commits_without_half_profile[handler]
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_caller_catches_ledger_error_then_commits_without_half_profile[ready]
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_caller_catches_ledger_error_then_commits_without_half_profile[saved]
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_caller_catches_ledger_error_then_commits_without_half_profile[finished]
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_candidate_boundary_rejects_bypassed_dto_without_losing_usage[quote]
+FAILED .local/profile-execution-20261023/standards-review/test_standards_probe.py::test_candidate_boundary_rejects_bypassed_dto_without_losing_usage[scope]
+10 failed in 5.34s

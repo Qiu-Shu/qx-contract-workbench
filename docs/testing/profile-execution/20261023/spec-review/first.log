@@ -1,0 +1,64 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_valid_wire_candidate_cannot_persist_an_unreadable_expanded_output ____
+
+profile_world = (<cn_contract.persistence.Database object at 0x00000272A1DC9BE0>, Actor(user_id=UUID('6c1ad378-4b9d-4b14-b12a-69ad9637...ntent='�׳ƽ��35000Ԫ��', request_id=UUID('3eff3d71-b934-4f02-a7da-7b8aaf9ba486'), requested_skill=None, attachment_ids=()))
+
+    def test_valid_wire_candidate_cannot_persist_an_unreadable_expanded_output(profile_world):
+        database, actor, _, _ = profile_world
+        async def scenario():
+            provider = unsent_provider()
+            _, runtime, _, _ = authorize(profile_world, provider)
+            first = enqueue(profile_world, runtime)
+            with database.session() as db:
+                token, prepared, config = attempts.claim(actor, first.id, db, runtime)
+            value = candidate()
+            change = value['profile_changes'][0]
+            change['quotes'] = [copy.deepcopy(change['quotes'][0]) for _ in range(40)]
+            value['profile_changes'] = [copy.deepcopy(change) for _ in range(30)]
+            raw = response(prepared.request, value)
+            assert len(raw.encode()) < config.max_response_bytes
+            reply = profile_codec.decode_response(raw, prepared.request, config, KEY)
+            assert reply.output is not None and reply.usage.total_tokens == 42
+            with database.session() as db:
+                attempts.settle(actor, first.id, token, reply, db, runtime)
+            with database.session() as db:
+                # Valid provider output must remain readable or be rejected before
+                # storing candidate/profile; received usage must survive either way.
+                result = attempts.read_attempt(actor, first.id, db)
+                assert result.receipt.usage.total_tokens == 42
+    
+>       asyncio.run(scenario())
+
+.local\profile-execution-20261023\spec-review\test_spec_execution.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def scenario():
+        provider = unsent_provider()
+        _, runtime, _, _ = authorize(profile_world, provider)
+        first = enqueue(profile_world, runtime)
+        with database.session() as db:
+            token, prepared, config = attempts.claim(actor, first.id, db, runtime)
+        value = candidate()
+        change = value['profile_changes'][0]
+        change['quotes'] = [copy.deepcopy(change['quotes'][0]) for _ in range(40)]
+        value['profile_changes'] = [copy.deepcopy(change) for _ in range(30)]
+        raw = response(prepared.request, value)
+>       assert len(raw.encode()) < config.max_response_bytes
+                   ^^^^^^^^^^
+E       AttributeError: 'bytes' object has no attribute 'encode'. Did you mean: 'decode'?
+
+.local\profile-execution-20261023\spec-review\test_spec_execution.py:33: AttributeError
+=========================== short test summary info ===========================
+FAILED .local/profile-execution-20261023/spec-review/test_spec_execution.py::test_valid_wire_candidate_cannot_persist_an_unreadable_expanded_output
+1 failed in 1.73s

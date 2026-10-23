@@ -126,3 +126,8 @@ docs/testing/profile-trusted-preparation/** -text -whitespace
 tests/integration/test_assistant_material_snapshot_decode.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 tests/integration/test_assistant_profile_authorization.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/testing/profile-authorization/** -text -whitespace
+tests/unit/test_assistant_profile_execution_contract.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_assistant_profile_execution.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_assistant_profile_execution_limits.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_assistant_profile_execution_backup.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/testing/profile-execution/** -text -whitespace

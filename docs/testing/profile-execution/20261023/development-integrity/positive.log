@@ -1,0 +1,116 @@
+FFFFFFF                                                                  [100%]
+================================== FAILURES ===================================
+__ test_profile_history_preserves_state_and_shared_cost_validation[reserved] __
+tests\integration\test_assistant_profile_model_integrity.py:137: in test_profile_history_preserves_state_and_shared_cost_validation
+    view, _, _ = profile_history(profile_world, state=state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:119: in profile_history
+    _, runtime, _, _ = authorize(profile_world, provider, project_intake=project_intake)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+__ test_profile_history_preserves_state_and_shared_cost_validation[sending] ___
+tests\integration\test_assistant_profile_model_integrity.py:137: in test_profile_history_preserves_state_and_shared_cost_validation
+    view, _, _ = profile_history(profile_world, state=state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:119: in profile_history
+    _, runtime, _, _ = authorize(profile_world, provider, project_intake=project_intake)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+__ test_profile_history_preserves_state_and_shared_cost_validation[received] __
+tests\integration\test_assistant_profile_model_integrity.py:137: in test_profile_history_preserves_state_and_shared_cost_validation
+    view, _, _ = profile_history(profile_world, state=state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:119: in profile_history
+    _, runtime, _, _ = authorize(profile_world, provider, project_intake=project_intake)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+_ test_profile_history_preserves_state_and_shared_cost_validation[sent_unknown] _
+tests\integration\test_assistant_profile_model_integrity.py:137: in test_profile_history_preserves_state_and_shared_cost_validation
+    view, _, _ = profile_history(profile_world, state=state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:119: in profile_history
+    _, runtime, _, _ = authorize(profile_world, provider, project_intake=project_intake)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+_ test_profile_history_preserves_state_and_shared_cost_validation[failed_before_send] _
+tests\integration\test_assistant_profile_model_integrity.py:137: in test_profile_history_preserves_state_and_shared_cost_validation
+    view, _, _ = profile_history(profile_world, state=state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:119: in profile_history
+    _, runtime, _, _ = authorize(profile_world, provider, project_intake=project_intake)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+_ test_profile_handler_without_profile_revision_is_still_complete[unchanged] __
+tests\integration\test_assistant_profile_model_integrity.py:153: in test_profile_handler_without_profile_revision_is_still_complete
+    view, _, _ = profile_history(profile_world, project_intake=False, empty=outcome == 'unchanged')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:119: in profile_history
+    _, runtime, _, _ = authorize(profile_world, provider, project_intake=project_intake)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+__ test_profile_handler_without_profile_revision_is_still_complete[blocked] ___
+tests\integration\test_assistant_profile_model_integrity.py:153: in test_profile_handler_without_profile_revision_is_still_complete
+    view, _, _ = profile_history(profile_world, project_intake=False, empty=outcome == 'unchanged')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_model_integrity.py:119: in profile_history
+    _, runtime, _, _ = authorize(profile_world, provider, project_intake=project_intake)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in authorize
+    return registry, registry.resolve(actor, basis.expected_scope), basis, policy
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\registry.py:143: in resolve
+    self._check_loop(bind=True)
+src\cn_contract\assistant\providers\registry.py:58: in _check_loop
+    raise ServiceError('BLOCKED_LIVE', 403)
+E   cn_contract.security.ServiceError: request not authorized
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_history_preserves_state_and_shared_cost_validation[reserved]
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_history_preserves_state_and_shared_cost_validation[sending]
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_history_preserves_state_and_shared_cost_validation[received]
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_history_preserves_state_and_shared_cost_validation[sent_unknown]
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_history_preserves_state_and_shared_cost_validation[failed_before_send]
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_handler_without_profile_revision_is_still_complete[unchanged]
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_handler_without_profile_revision_is_still_complete[blocked]
+7 failed, 42 deselected in 4.05s

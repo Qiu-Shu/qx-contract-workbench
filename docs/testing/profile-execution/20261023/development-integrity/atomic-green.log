@@ -1,0 +1,18 @@
+...F.                                                                    [100%]
+================================== FAILURES ===================================
+_ test_profile_history_remains_valid_after_legitimate_later_actions[convert_intake] _
+tests\integration\test_assistant_profile_model_integrity.py:289: in test_profile_history_remains_valid_after_legitimate_later_actions
+    matter=d.MatterCreateInput(title='合成转案',contract_type='loan',review_mode='signing',
+E   pydantic_core._pydantic_core.ValidationError: 3 validation errors for MatterCreateInput
+E   contract_type
+E     Input should be 'sales', 'service', 'lease', 'nda' or 'unknown' [type=enum, input_value='loan', input_type=str]
+E       For further information visit https://errors.pydantic.dev/2.13/v/enum
+E   review_mode
+E     Input should be 'pre_sign' or 'post_sign' [type=enum, input_value='signing', input_type=str]
+E       For further information visit https://errors.pydantic.dev/2.13/v/enum
+E   position
+E     Input should be 'buyer', 'seller', 'customer', 'provider', 'lessor', 'lessee', 'discloser', 'recipient', 'mutual', 'party_a' or 'party_b' [type=enum, input_value='lender', input_type=str]
+E       For further information visit https://errors.pydantic.dev/2.13/v/enum
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_profile_history_remains_valid_after_legitimate_later_actions[convert_intake]
+1 failed, 4 passed, 49 deselected in 3.66s

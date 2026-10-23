@@ -241,5 +241,10 @@ def test_basis_cannot_be_used_as_existing_registry_permission_or_ledger_format()
     with pytest.raises(ServiceError) as failure:
         registry.grant(policy, UUID(int=28), basis=approval)
     assert failure.value.code == 'BLOCKED_LIVE' and calls == []
-    with pytest.raises(ValueError, match='ASSISTANT_MODEL_INTEGRITY'):
-        _input({'input_format': 'profile-text-v1', 'input_json': '{}'})
+    # The ledger now supports complete prepared inputs. Neither an empty object
+    # nor an offline description alone becomes a valid persisted submission.
+    for raw in ('{}', encoded(approval)):
+        with pytest.raises(ValueError):
+            _input({'input_format': 'profile-text-v1', 'input_json': raw})
+    prepared = api().prepare(*saved(), approval, config(), composer_revision=4)
+    assert _input({'input_format':'profile-text-v1', 'input_json':encoded(prepared)}) == prepared

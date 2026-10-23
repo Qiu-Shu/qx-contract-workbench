@@ -13,11 +13,17 @@ async def execute_attempt(actor, identifier, database, runtime):
             return attempts.read_attempt(actor, identifier, db)
     token, prepared, config = claimed
     request = prepared.request
-    reply_type = d.MainContextReply if type(request) is d.MainContextRequest else d.MainReply
+    reply_type = (d.MainProfileReply if type(prepared) is d.MainProfilePreparedInput
+                  else d.MainContextReply if type(request) is d.MainContextRequest else d.MainReply)
     cancelled = False
     try:
         async with asyncio.timeout(config.timeout_seconds):
-            if type(prepared) is d.MainContextRoundsPreparedInput:
+            if type(prepared) is d.MainProfilePreparedInput:
+                generate_profile = getattr(runtime.provider, 'generate_profile', None)
+                if not callable(generate_profile):
+                    raise ValueError('profile provider required')
+                reply = await generate_profile(prepared, expected_config=config)
+            elif type(prepared) is d.MainContextRoundsPreparedInput:
                 generate_rounds = getattr(runtime.provider, 'generate_rounds', None)
                 if not callable(generate_rounds):
                     raise ValueError('rounds provider required')

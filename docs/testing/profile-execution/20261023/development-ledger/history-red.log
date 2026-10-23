@@ -1,0 +1,11 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_history_roundtrip_preserves_legacy_plain_and_new_profile_shapes _____
+tests\integration\test_assistant_profile_execution.py:101: in test_history_roundtrip_preserves_legacy_plain_and_new_profile_shapes
+    assert type(roundtrip.attempt) is kind
+E   AssertionError: assert <class 'cn_contract.domain.MainProfileAttemptView'> is <class 'cn_contract.domain.MainAttemptView'>
+E    +  where <class 'cn_contract.domain.MainProfileAttemptView'> = type(MainProfileAttemptView(id=UUID('13a99492-8f8c-4da8-a2a6-d102c7da8d94'), run_id=UUID('284d3556-cbd3-4785-9983-3069be951..., state='reserved', reserved_usd=Decimal('0.1'), unit='USD', receipt=None, output=None, input_format='profile-text-v1'))
+E    +    where MainProfileAttemptView(id=UUID('13a99492-8f8c-4da8-a2a6-d102c7da8d94'), run_id=UUID('284d3556-cbd3-4785-9983-3069be951..., state='reserved', reserved_usd=Decimal('0.1'), unit='USD', receipt=None, output=None, input_format='profile-text-v1') = MainGenerationHistoryItem(message_id=UUID('5bc82f6b-5195-431c-9d50-f4d9a94beede'), attempt=MainProfileAttemptView(id=U... state='reserved', reserved_usd=Decimal('0.1'), unit='USD', receipt=None, output=None, input_format='profile-text-v1')).attempt
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_execution.py::test_history_roundtrip_preserves_legacy_plain_and_new_profile_shapes
+1 failed in 1.07s

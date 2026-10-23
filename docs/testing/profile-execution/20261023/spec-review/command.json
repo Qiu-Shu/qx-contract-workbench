@@ -1,0 +1,5 @@
+{
+  "command": ".venv/Scripts/python.exe -m pytest .local/profile-execution-20261023/spec-review/test_spec_execution.py -q --basetemp .local/profile-execution-20261023/spec-review/final-temp --junitxml .local/profile-execution-20261023/spec-review/results.xml",
+  "pythonpath": "src;.;tests/integration",
+  "baseline": "9a0d2df3767dc8252f1530be4f949583fd250af2"
+}

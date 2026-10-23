@@ -1,0 +1,11 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_fixed_commit_binds_the_same_plan_without_manual_edits __________
+tests\unit\test_assistant_profile_execution_contract.py:24: in test_fixed_commit_binds_the_same_plan_without_manual_edits
+    assert callable(build), 'profile fixed commit contract is missing'
+E   AssertionError: profile fixed commit contract is missing
+E   assert False
+E    +  where False = callable(None)
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profile_execution_contract.py::test_fixed_commit_binds_the_same_plan_without_manual_edits
+1 failed in 0.46s

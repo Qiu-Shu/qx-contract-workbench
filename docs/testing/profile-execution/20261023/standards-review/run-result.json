@@ -1,0 +1,28 @@
+{
+  "baseline": "9a0d2df3767dc8252f1530be4f949583fd250af2",
+  "started_at": "2026-10-23T03:55:56.770019+00:00",
+  "completed_at": "2026-10-23T03:56:06.183584+00:00",
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    ".local/profile-execution-20261023/standards-review/test_standards_probe.py",
+    "-q",
+    "--tb=short",
+    "--basetemp=.local/profile-execution-20261023/standards-review/temp-final",
+    "--junitxml=.local/profile-execution-20261023/standards-review/final.xml"
+  ],
+  "cwd": "D:\\Documents\\ChatGPT\\律所项目",
+  "exit_code": 0,
+  "counts": {
+    "tests": 14,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "input_count": 554,
+  "inputs_stable": true,
+  "changed_inputs": []
+}

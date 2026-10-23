@@ -34,11 +34,17 @@ def _input(row):
         return _model(d.MainContextPreparedInput, row['input_json'])
     if fmt == 'library-context-v2':
         return _model(d.MainContextRoundsPreparedInput, row['input_json'])
+    if fmt == 'profile-text-v1':
+        return _model(d.MainProfilePreparedInput, row['input_json'])
     raise ValueError('ASSISTANT_MODEL_INTEGRITY')
 
 
 def _wire(prepared, config):
     """Deterministic rebuild for the decoded format."""
+    if isinstance(prepared, d.MainProfilePreparedInput):
+        from .deepseek_protocol import json_bytes
+        from .profile_codec import build_request
+        return json_bytes(build_request(prepared.request, config)).decode('utf-8')
     if isinstance(prepared, d.MainContextRoundsPreparedInput):
         return rounds_codec.prepare_rounds(prepared.request, prepared.round_no,
                                            prepared.exchanges, config).wire_payload_json
@@ -90,6 +96,9 @@ def read_attempt(actor, identifier, db):
     values = dict(id=row['id'], run_id=row['run_id'], scope=prepared.request.scope,
         state=row['state'], reserved_usd=row['reserved_usd'],
         receipt=_model(d.MainReceipt, usage) if usage else None)
+    if isinstance(prepared, d.MainProfilePreparedInput):
+        return validated(d.MainProfileAttemptView, dict(values,
+            output=_model(d.MainProfileOutputView, output) if output else None))
     if _is_context(prepared):
         return validated(d.MainContextAttemptView, dict(values,
             input_format=row['input_format'],
@@ -104,6 +113,7 @@ def _event(run_id, event_type, payload, db):
     db.execute(text('''INSERT INTO assistant_run_events(run_id,seq,event_type,audience,payload_json,created_at)
         VALUES(:id,:seq,:type,'internal',:payload,:at)'''), {'id':str(run_id), 'seq':sequence,
         'type':event_type, 'payload':canonical_json(payload), 'at':service._at()})
+    return sequence
 
 
 def _budget(policy, db):
@@ -139,7 +149,7 @@ def _replay(actor, conversation_id, message, previous, config, policy, db, *, co
     service.save_message(actor, conversation_id, message, db)
     row = _row(previous['attempt_id'], db)
     prepared = _input(row)
-    if context != _is_context(prepared):
+    if isinstance(prepared, d.MainProfilePreparedInput) or context != _is_context(prepared):
         raise ServiceError('VERSION_CONFLICT', 409)
     if (policy is None or row['config_sha256'] != sha(encoded(config))
             or row['policy_sha256'] != sha(encoded(policy))
@@ -198,6 +208,13 @@ def enqueue_generation(actor, conversation_id, request, db, runtime):
                 'reserved_usd':str(reserved), 'unit':'USD'})})
         _event(run.id, 'model.reserved', {'attempt_id':str(identifier), 'state':'queued'}, db)
     return read_attempt(actor, identifier, db)
+
+
+def enqueue_profile(actor, conversation_id, request, db, runtime, *, project_intake=False):
+    """Explicit profile purpose; public model entries never infer this format."""
+    from . import profile_attempts
+    return profile_attempts.enqueue(actor, conversation_id, request, db, runtime,
+                                    project_intake=project_intake)
 
 
 def enqueue_context(actor, conversation_id, request, db, runtime):
@@ -268,6 +285,9 @@ def enqueue_context(actor, conversation_id, request, db, runtime):
 
 
 def _current(actor, row, db, runtime):
+    if row['input_format'] == 'profile-text-v1':
+        from . import profile_attempts
+        return profile_attempts.current(actor, row, db, runtime)
     require_active(db)
     run = service._owned_run(actor, UUID(row['run_id']), db)
     conversation = service._owned(actor, UUID(row['conversation_id']), db)
@@ -355,6 +375,9 @@ def claim(actor, identifier, db, runtime):
 def settle(actor, identifier, token, reply, db, runtime):
     require_active(db)
     row = _row(identifier, db)
+    if row['input_format'] == 'profile-text-v1':
+        from . import profile_attempts
+        return profile_attempts.settle(actor, identifier, token, reply, db, runtime)
     if row['state'] != 'sending' or row['claim_sha256'] != sha(token):
         raise ServiceError('STATE_CONFLICT', 409)
     prepared = _input(row)

@@ -1,0 +1,25 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_profile_attempt_sends_once_and_atomically_saves_unverified_profile_and_history _
+tests\integration\test_assistant_profile_execution.py:88: in test_profile_attempt_sends_once_and_atomically_saves_unverified_profile_and_history
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:62: in scenario
+    first = enqueue(profile_world, runtime, project_intake=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_profile_execution.py:50: in enqueue
+    assert hasattr(attempts, 'enqueue_profile'), 'profile ledger entry is not implemented'
+E   AssertionError: profile ledger entry is not implemented
+E   assert False
+E    +  where False = hasattr(attempts, 'enqueue_profile')
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_execution.py::test_profile_attempt_sends_once_and_atomically_saves_unverified_profile_and_history
+1 failed in 1.64s

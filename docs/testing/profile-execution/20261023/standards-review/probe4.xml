@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.910" timestamp="2026-10-23T11:51:30.676604+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.profile-execution-20261023.standards-review.test_standards_probe" name="test_live_accepted_expanded_profile_remains_readable_by_history_validator" time="0.882"><failure message="ValueError: bounded raw text required">.local\profile-execution-20261023\standards-review\test_standards_probe.py:143: in test_live_accepted_expanded_profile_remains_readable_by_history_validator
+    result = attempts.read_attempt(actor, first.id, db)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:101: in read_attempt
+    output=_model(d.MainProfileOutputView, output) if output else None))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:20: in _model
+    return validated(model, strict_json(raw))
+                            ^^^^^^^^^^^^^^^^
+src\cn_contract\review\model_adapter.py:37: in strict_json
+    raise ValueError('bounded raw text required')
+E   ValueError: bounded raw text required</failure></testcase></testsuite></testsuites>

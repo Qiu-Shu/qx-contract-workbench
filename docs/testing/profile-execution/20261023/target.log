@@ -1,0 +1,47 @@
+.................................................................F...... [ 10%]
+........................................................................ [ 21%]
+........................................................................ [ 32%]
+........................................................................ [ 43%]
+........................................................................ [ 53%]
+........................................................................ [ 64%]
+........................................................................ [ 75%]
+........................................................................ [ 86%]
+........................................................................ [ 97%]
+....................                                                     [100%]
+================================== FAILURES ===================================
+_ test_basis_cannot_be_used_as_existing_registry_permission_or_ledger_format __
+tests\unit\test_assistant_profile_preparation.py:245: in test_basis_cannot_be_used_as_existing_registry_permission_or_ledger_format
+    _input({'input_format': 'profile-text-v1', 'input_json': '{}'})
+src\cn_contract\assistant\providers\attempts.py:38: in _input
+    return _model(d.MainProfilePreparedInput, row['input_json'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:20: in _model
+    return validated(model, strict_json(raw))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\policy.py:53: in validated
+    return model.model_validate(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 4 validation errors for MainProfilePreparedInput
+E   request
+E     Field required [type=missing, input_value={}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   basis
+E     Field required [type=missing, input_value={}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   composer_revision
+E     Field required [type=missing, input_value={}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   wire_payload_json
+E     Field required [type=missing, input_value={}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+
+During handling of the above exception, another exception occurred:
+tests\unit\test_assistant_profile_preparation.py:244: in test_basis_cannot_be_used_as_existing_registry_permission_or_ledger_format
+    with pytest.raises(ValueError, match='ASSISTANT_MODEL_INTEGRITY'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'ASSISTANT_MODEL_INTEGRITY'
+E     Actual message: '4 validation errors for MainProfilePreparedInput\nrequest\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\nbasis\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\ncomposer_revision\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\nwire_payload_json\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing'
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profile_preparation.py::test_basis_cannot_be_used_as_existing_registry_permission_or_ledger_format
+1 failed, 667 passed in 592.97s (0:09:52)
