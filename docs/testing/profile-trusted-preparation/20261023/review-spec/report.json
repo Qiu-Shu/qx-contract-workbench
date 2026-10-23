@@ -1,0 +1,33 @@
+{
+  "baseline": "2997d4602d842c6cab8e514a4c7340085910ad0c",
+  "axis": "Spec",
+  "phase": "initial",
+  "product_sha256": "a2690e45121d139e9cc9fa430add1558d2ab472460f5d3914d43e80116a0a2da",
+  "findings": [
+    {
+      "id": "SPEC-01",
+      "priority": "P2",
+      "status": "open",
+      "path": "src/cn_contract/assistant/profile_preparation_service.py",
+      "line": 47,
+      "summary": "Malformed non-array material snapshot is accepted as empty selection",
+      "dependency": "src/cn_contract/assistant/attachment_records.py:47"
+    }
+  ],
+  "independent_tests": {
+    "total": 8,
+    "passed": 4,
+    "failed": 4,
+    "exit_code": 1,
+    "seconds": 4.15,
+    "junit": "results-initial.xml",
+    "log": "output-initial.log"
+  },
+  "stability": {
+    "inputs": 13,
+    "all_unchanged": true
+  },
+  "no_product_edits": true,
+  "no_runtime_entry_activation": true,
+  "full_regression_run": false
+}

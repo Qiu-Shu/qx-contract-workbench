@@ -1,0 +1,193 @@
+FFFFFFFFFFFFFFFFFFFF.                                                    [100%]
+================================== FAILURES ===================================
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-{}] _
+tests\integration\test_assistant_material_snapshot_decode.py:40: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-""] _
+tests\integration\test_assistant_material_snapshot_decode.py:40: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-null] _
+tests\integration\test_assistant_material_snapshot_decode.py:42: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    attachments.read_materials(actor, cid, database=database)
+src\cn_contract\assistant\attachments.py:140: in read_materials
+    return d.AssistantMaterialsView(scope=_snapshot(row),items=records.items(row,db),
+                                                               ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\attachment_records.py:47: in items
+    return tuple(d.AssistantMaterialRef.model_validate(value) for value in json.loads(raw))
+                                                                           ^^^^^^^^^^^^^^^
+E   TypeError: 'NoneType' object is not iterable
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-false] _
+tests\integration\test_assistant_material_snapshot_decode.py:42: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    attachments.read_materials(actor, cid, database=database)
+src\cn_contract\assistant\attachments.py:140: in read_materials
+    return d.AssistantMaterialsView(scope=_snapshot(row),items=records.items(row,db),
+                                                               ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\attachment_records.py:47: in items
+    return tuple(d.AssistantMaterialRef.model_validate(value) for value in json.loads(raw))
+                                                                           ^^^^^^^^^^^^^^^
+E   TypeError: 'bool' object is not iterable
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-42] _
+tests\integration\test_assistant_material_snapshot_decode.py:42: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    attachments.read_materials(actor, cid, database=database)
+src\cn_contract\assistant\attachments.py:140: in read_materials
+    return d.AssistantMaterialsView(scope=_snapshot(row),items=records.items(row,db),
+                                                               ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\attachment_records.py:47: in items
+    return tuple(d.AssistantMaterialRef.model_validate(value) for value in json.loads(raw))
+                                                                           ^^^^^^^^^^^^^^^
+E   TypeError: 'int' object is not iterable
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-[{}]] _
+tests\integration\test_assistant_material_snapshot_decode.py:42: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    attachments.read_materials(actor, cid, database=database)
+src\cn_contract\assistant\attachments.py:140: in read_materials
+    return d.AssistantMaterialsView(scope=_snapshot(row),items=records.items(row,db),
+                                                               ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\attachment_records.py:47: in items
+    return tuple(d.AssistantMaterialRef.model_validate(value) for value in json.loads(raw))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\attachment_records.py:47: in <genexpr>
+    return tuple(d.AssistantMaterialRef.model_validate(value) for value in json.loads(raw))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 2 validation errors for AssistantMaterialRef
+E   attachment_id
+E     Field required [type=missing, input_value={}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   parse_revision
+E     Field required [type=missing, input_value={}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-[] _
+tests\integration\test_assistant_material_snapshot_decode.py:42: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    attachments.read_materials(actor, cid, database=database)
+src\cn_contract\assistant\attachments.py:140: in read_materials
+    return d.AssistantMaterialsView(scope=_snapshot(row),items=records.items(row,db),
+                                                               ^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\attachment_records.py:47: in items
+    return tuple(d.AssistantMaterialRef.model_validate(value) for value in json.loads(raw))
+                                                                           ^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\json\__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\json\decoder.py:338: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\json\decoder.py:356: in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+E   json.decoder.JSONDecodeError: Expecting value: line 1 column 2 (char 1)
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-[{"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}]] _
+tests\integration\test_assistant_material_snapshot_decode.py:40: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-[{"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000002", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000003", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000004", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000005", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000006", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000007", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000008", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000009", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000a", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000b", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000c", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000d", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000e", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000f", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000010", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000011", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000012", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000013", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000014", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000015", "parse_revision": null}]] _
+tests\integration\test_assistant_material_snapshot_decode.py:40: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-[{"attachment_id":"00000000-0000-0000-0000-000000000001","attachment_id":"00000000-0000-0000-0000-000000000002","parse_revision":null}]] _
+tests\integration\test_assistant_material_snapshot_decode.py:40: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-{}] _
+tests\integration\test_assistant_material_snapshot_decode.py:40: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-""] _
+tests\integration\test_assistant_material_snapshot_decode.py:40: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-null] _
+tests\integration\test_assistant_material_snapshot_decode.py:44: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    attachments.find_material_request(actor, cid, request_id, database=database)
+src\cn_contract\assistant\attachments.py:132: in find_material_request
+    items=tuple(d.AssistantMaterialRef.model_validate(item) for item in json.loads(row['items_json'])))
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: 'NoneType' object is not iterable
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-false] _
+tests\integration\test_assistant_material_snapshot_decode.py:44: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    attachments.find_material_request(actor, cid, request_id, database=database)
+src\cn_contract\assistant\attachments.py:132: in find_material_request
+    items=tuple(d.AssistantMaterialRef.model_validate(item) for item in json.loads(row['items_json'])))
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: 'bool' object is not iterable
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-42] _
+tests\integration\test_assistant_material_snapshot_decode.py:44: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    attachments.find_material_request(actor, cid, request_id, database=database)
+src\cn_contract\assistant\attachments.py:132: in find_material_request
+    items=tuple(d.AssistantMaterialRef.model_validate(item) for item in json.loads(row['items_json'])))
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: 'int' object is not iterable
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-[{}]] _
+tests\integration\test_assistant_material_snapshot_decode.py:44: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    attachments.find_material_request(actor, cid, request_id, database=database)
+src\cn_contract\assistant\attachments.py:132: in find_material_request
+    items=tuple(d.AssistantMaterialRef.model_validate(item) for item in json.loads(row['items_json'])))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\attachments.py:132: in <genexpr>
+    items=tuple(d.AssistantMaterialRef.model_validate(item) for item in json.loads(row['items_json'])))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 2 validation errors for AssistantMaterialRef
+E   attachment_id
+E     Field required [type=missing, input_value={}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   parse_revision
+E     Field required [type=missing, input_value={}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-[] _
+tests\integration\test_assistant_material_snapshot_decode.py:44: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    attachments.find_material_request(actor, cid, request_id, database=database)
+src\cn_contract\assistant\attachments.py:132: in find_material_request
+    items=tuple(d.AssistantMaterialRef.model_validate(item) for item in json.loads(row['items_json'])))
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\json\__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\json\decoder.py:338: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\json\decoder.py:356: in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+E   json.decoder.JSONDecodeError: Expecting value: line 1 column 2 (char 1)
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-[{"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}]] _
+tests\integration\test_assistant_material_snapshot_decode.py:40: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-[{"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000002", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000003", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000004", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000005", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000006", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000007", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000008", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000009", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000a", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000b", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000c", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000d", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000e", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000f", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000010", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000011", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000012", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000013", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000014", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000015", "parse_revision": null}]] _
+tests\integration\test_assistant_material_snapshot_decode.py:40: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-[{"attachment_id":"00000000-0000-0000-0000-000000000001","attachment_id":"00000000-0000-0000-0000-000000000002","parse_revision":null}]] _
+tests\integration\test_assistant_material_snapshot_decode.py:40: in test_malformed_selection_is_rejected_by_current_and_receipt_reads
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-{}]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-""]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-null]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-false]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-42]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-[{}]]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-[]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-[{"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}]]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-[{"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000002", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000003", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000004", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000005", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000006", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000007", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000008", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000009", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000a", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000b", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000c", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000d", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000e", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000f", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000010", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000011", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000012", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000013", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000014", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000015", "parse_revision": null}]]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[current-[{"attachment_id":"00000000-0000-0000-0000-000000000001","attachment_id":"00000000-0000-0000-0000-000000000002","parse_revision":null}]]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-{}]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-""]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-null]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-false]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-42]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-[{}]]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-[]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-[{"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}]]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-[{"attachment_id": "00000000-0000-0000-0000-000000000001", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000002", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000003", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000004", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000005", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000006", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000007", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000008", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000009", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000a", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000b", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000c", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000d", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000e", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-00000000000f", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000010", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000011", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000012", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000013", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000014", "parse_revision": null}, {"attachment_id": "00000000-0000-0000-0000-000000000015", "parse_revision": null}]]
+FAILED tests/integration/test_assistant_material_snapshot_decode.py::test_malformed_selection_is_rejected_by_current_and_receipt_reads[receipt-[{"attachment_id":"00000000-0000-0000-0000-000000000001","attachment_id":"00000000-0000-0000-0000-000000000002","parse_revision":null}]]
+20 failed, 1 passed in 10.17s

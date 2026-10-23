@@ -1,5 +1,4 @@
 """Conversation material snapshots, with current authorization at every entry."""
-import json
 from uuid import UUID
 
 from sqlalchemy import text
@@ -7,7 +6,7 @@ from sqlalchemy import text
 from .. import domain as d
 from ..config import canonical_json
 from ..security import ServiceError
-from .attachment_integrity import parse_result_json
+from .attachment_integrity import _json, parse_result_json
 from .service import _at, _digest, _owned, _snapshot
 
 
@@ -37,6 +36,18 @@ def expected(conversation, scope):
         raise ServiceError('VERSION_CONFLICT', 409)
 
 
+def decode_items(raw):
+    """Use the same selection bounds for current and historical snapshots."""
+    try:
+        values = _json(raw)
+        if type(values) is not list or len(values) > 20:
+            raise ValueError('invalid material selection')
+        return d.AssistantMaterialSelectionInput.distinct_attachments(
+            tuple(d.AssistantMaterialRef.model_validate(value) for value in values))
+    except (ValueError, TypeError):
+        raise ServiceError('VERSION_CONFLICT', 409) from None
+
+
 def items(conversation, db):
     if conversation['materials_revision'] == 0:
         return ()
@@ -44,7 +55,7 @@ def items(conversation, db):
         {'cid':conversation['id'],'rev':conversation['materials_revision']})
     if raw is None:
         raise ServiceError('VERSION_CONFLICT', 409)
-    return tuple(d.AssistantMaterialRef.model_validate(value) for value in json.loads(raw))
+    return decode_items(raw)
 
 
 def snapshot(conversation, values, kind, request_id, digest, actor, db):

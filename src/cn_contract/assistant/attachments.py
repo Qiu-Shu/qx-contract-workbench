@@ -3,7 +3,6 @@
 Commands own short transactions. The native host holds its existing workspace
 worker lock; maintenance stops that host before taking a complete qxbak snapshot.
 """
-import json
 from pathlib import Path
 from uuid import UUID, uuid4
 
@@ -129,7 +128,7 @@ def find_material_request(actor,cid,request_id,*,database):
         row = records.operation(cid,request_id,db)
         return None if row is None else d.AssistantMaterialReceipt(request_id=row['request_id'],
             kind=row['kind'],materials_revision=row['revision'],
-            items=tuple(d.AssistantMaterialRef.model_validate(item) for item in json.loads(row['items_json'])))
+            items=records.decode_items(row['items_json']))
 
 
 def read_materials(actor,cid,*,database):

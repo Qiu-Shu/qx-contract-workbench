@@ -1,0 +1,33 @@
+{
+  "baseline": "2997d4602d842c6cab8e514a4c7340085910ad0c",
+  "axis": "Spec",
+  "phase": "final",
+  "open_findings": 0,
+  "findings": [
+    {
+      "id": "SPEC-01",
+      "priority": "P2",
+      "status": "closed",
+      "fix": "shared decode_items validates JSON array, bounds and duplicate attachment identities; current and historical reads use same decoder"
+    }
+  ],
+  "independent_tests": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "exit_code": 0,
+    "seconds": 4.11,
+    "junit": "results-final.xml",
+    "log": "output-final.log",
+    "same_probe_source": true
+  },
+  "initial_evidence_preserved": true,
+  "stability": {
+    "inputs": 16,
+    "all_unchanged": true,
+    "manifest": "input-stability-final.json"
+  },
+  "no_product_edits": true,
+  "no_runtime_entry_activation": true,
+  "full_regression_run": false
+}

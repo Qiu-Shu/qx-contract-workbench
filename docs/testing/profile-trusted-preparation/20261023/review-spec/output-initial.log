@@ -1,0 +1,28 @@
+FFFF....                                                                 [100%]
+================================== FAILURES ===================================
+_ test_non_array_material_snapshot_must_not_become_empty_selection[{}-basis] __
+.local\profile-trusted-preparation-20261023\review-spec\test_independent_spec.py:35: in test_non_array_material_snapshot_must_not_become_empty_selection
+    with database.session() as db, pytest.raises(ServiceError) as error:
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_non_array_material_snapshot_must_not_become_empty_selection[{}-prepared] _
+.local\profile-trusted-preparation-20261023\review-spec\test_independent_spec.py:35: in test_non_array_material_snapshot_must_not_become_empty_selection
+    with database.session() as db, pytest.raises(ServiceError) as error:
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_non_array_material_snapshot_must_not_become_empty_selection[""-basis] __
+.local\profile-trusted-preparation-20261023\review-spec\test_independent_spec.py:35: in test_non_array_material_snapshot_must_not_become_empty_selection
+    with database.session() as db, pytest.raises(ServiceError) as error:
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_non_array_material_snapshot_must_not_become_empty_selection[""-prepared] _
+.local\profile-trusted-preparation-20261023\review-spec\test_independent_spec.py:35: in test_non_array_material_snapshot_must_not_become_empty_selection
+    with database.session() as db, pytest.raises(ServiceError) as error:
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+=========================== short test summary info ===========================
+FAILED .local/profile-trusted-preparation-20261023/review-spec/test_independent_spec.py::test_non_array_material_snapshot_must_not_become_empty_selection[{}-basis]
+FAILED .local/profile-trusted-preparation-20261023/review-spec/test_independent_spec.py::test_non_array_material_snapshot_must_not_become_empty_selection[{}-prepared]
+FAILED .local/profile-trusted-preparation-20261023/review-spec/test_independent_spec.py::test_non_array_material_snapshot_must_not_become_empty_selection[""-basis]
+FAILED .local/profile-trusted-preparation-20261023/review-spec/test_independent_spec.py::test_non_array_material_snapshot_must_not_become_empty_selection[""-prepared]
+4 failed, 4 passed in 4.15s

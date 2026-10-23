@@ -1,0 +1,9 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_forged_dto_is_revalidated_without_echoing_payload[config] ________
+tests\integration\test_assistant_profile_trusted_preparation.py:310: in test_forged_dto_is_revalidated_without_echoing_payload
+    assert not warning_records
+E   assert not [<warnings.WarningMessage object at 0x000002C379C33B90>]
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_trusted_preparation.py::test_forged_dto_is_revalidated_without_echoing_payload[config]
+1 failed in 1.33s

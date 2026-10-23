@@ -121,3 +121,6 @@ tests/integration/test_assistant_profile_model_schema.py -text whitespace=blank-
 tests/integration/test_assistant_profile_model_integrity.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 tests/fixtures/profile_model_schema_predecessors.json -text -whitespace
 docs/testing/profile-model-schema/** -text -whitespace
+tests/integration/test_assistant_profile_trusted_preparation.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/testing/profile-trusted-preparation/** -text -whitespace
+tests/integration/test_assistant_material_snapshot_decode.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

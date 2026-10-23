@@ -1,0 +1,46 @@
+.............................F.................                          [100%]
+================================== FAILURES ===================================
+______ test_actual_run_and_message_cannot_be_substituted[other_message] _______
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: UNIQUE constraint failed: assistant_runs.message_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_assistant_profile_trusted_preparation.py:199: in test_actual_run_and_message_cannot_be_substituted
+    db.execute(text('UPDATE '+table+' SET '+','.join(key+'=:'+key for key in updates)+' WHERE id=:id'),
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2373: in execute
+    return self._execute_internal(
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2280: in _execute_internal
+    result = conn.execute(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+.venv\Lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: assistant_runs.message_id
+E   [SQL: UPDATE assistant_runs SET message_id=? WHERE id=?]
+E   [parameters: ('978c952c-bc65-403f-b9e2-935653ae0b43', 'ea9e5044-03fc-4c4c-b4d2-b7efd071b17a')]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+============================== warnings summary ===============================
+tests/integration/test_assistant_profile_trusted_preparation.py::test_forged_dto_is_revalidated_without_echoing_payload[config]
+  D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\pydantic\main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `int` - serialized value may not be as expected [field_name='max_output_tokens', input_value='private malformed text', input_type=str])
+    return self.__pydantic_serializer__.to_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_trusted_preparation.py::test_actual_run_and_message_cannot_be_substituted[other_message]
+1 failed, 46 passed, 1 warning in 22.77s
