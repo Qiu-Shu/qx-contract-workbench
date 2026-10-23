@@ -89,6 +89,30 @@ class GenerationTasks:
         self._dispatch(view.id, view.run_id, self._execute(actor, view.id, runtime, auxiliary))
         return view
 
+    def submit_profile(self, actor, conversation_id, request):
+        """One profile-purpose answer, using the existing single-attempt lifecycle."""
+        if type(request) is not d.MainProfileSubmission:
+            raise ValueError('profile submission required')
+        request = d.MainProfileSubmission.model_validate(request.model_dump(mode='python'))
+        message = d.AssistantMessageInput.model_validate(
+            request.model_dump(mode='python', exclude={'project_intake'}))
+        with self.database.session() as db:
+            conversation = service._owned(actor, conversation_id, db)
+            runtime = resolve_runtime(self.runtime, actor, service._snapshot(conversation))
+            if runtime is None:
+                raise ServiceError('BLOCKED_LIVE', 403)
+            previous = db.scalar(text('''SELECT id FROM assistant_runs
+                WHERE conversation_id=:cid AND request_id=:request'''),
+                {'cid':str(conversation_id), 'request':str(request.request_id)})
+            if previous is None:
+                self._admit()
+            view = attempts.enqueue_profile(actor, conversation_id, message, db, runtime,
+                                            project_intake=request.project_intake)
+        if previous is None:
+            # The committed purpose-bound lease never reserves or runs Jev.
+            self._dispatch(view.id, view.run_id, self._execute(actor, view.id, runtime, None))
+        return view
+
     def submit_context(self, actor, conversation_id, request):
         """One source-bound answer; the context branch never reserves or runs Jev."""
         request = d.MainContextSubmission.model_validate(request.model_dump(mode='python'))

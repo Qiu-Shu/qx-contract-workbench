@@ -1,0 +1,86 @@
+[
+  {
+    "name": "red",
+    "exit": 1,
+    "classification": "auxiliary test config setup failure",
+    "tests": 28,
+    "failures": 28,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": "15.346",
+    "log": "red.log",
+    "junit": "red.xml"
+  },
+  {
+    "name": "red-functional",
+    "exit": 1,
+    "classification": "valid functional RED: missing native entry and pipe operation",
+    "tests": 28,
+    "failures": 28,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": "15.246",
+    "log": "red-functional.log",
+    "junit": "red-functional.xml"
+  },
+  {
+    "name": "green-initial",
+    "exit": 0,
+    "classification": "initial native target GREEN",
+    "tests": 28,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": "14.993",
+    "log": "green-initial.log",
+    "junit": "green-initial.xml"
+  },
+  {
+    "name": "target-adjacent",
+    "exit": 1,
+    "classification": "expanded tests: one actor fixture failure and eight disk budget setup errors",
+    "tests": 135,
+    "failures": 1,
+    "errors": 8,
+    "skipped": 0,
+    "seconds": "52.711",
+    "log": "target-adjacent.log",
+    "junit": "target-adjacent.xml"
+  },
+  {
+    "name": "native-final",
+    "exit": 1,
+    "classification": "D drive rerun: 93 adjacent cases pass; one native actor fixture fails",
+    "tests": 135,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": "52.324",
+    "log": "native-final.log",
+    "junit": "native-final.xml"
+  },
+  {
+    "name": "native-target-final",
+    "exit": 1,
+    "classification": "native only: 41 pass; actor role enum fixture failure",
+    "tests": 42,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": "20.367",
+    "log": "native-target-final.log",
+    "junit": "native-target-final.xml"
+  },
+  {
+    "name": "actor-final",
+    "exit": 0,
+    "classification": "final corrected actor fixture isolated regression",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": "1.527",
+    "log": "actor-final.log",
+    "junit": "actor-final.xml"
+  }
+]

@@ -1,0 +1,12 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_private_pipe_authorizes_one_http_profile_job_and_history_never_resends _
+tests\integration\test_profile_native_http_process.py:111: in test_private_pipe_authorizes_one_http_profile_job_and_history_never_resends
+    assert client.get(base + '/generation-history').status_code == 200
+E   AssertionError: assert 422 == 200
+E    +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+E    +    where <Response [422 Unprocessable Entity]> = get(('/api/assistant/conversations/f1320fe7-79f2-487a-92a8-1f145aaf2028' + '/generation-history'))
+E    +      where get = <httpx.Client object at 0x0000023760EEC500>.get
+=========================== short test summary info ===========================
+FAILED tests/integration/test_profile_native_http_process.py::test_private_pipe_authorizes_one_http_profile_job_and_history_never_resends
+1 failed in 2.84s

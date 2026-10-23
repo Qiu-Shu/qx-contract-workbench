@@ -1,0 +1,122 @@
+{
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "runs": [
+    {
+      "phase": "red",
+      "executable": ".venv/Scripts/python.exe",
+      "args": [
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/integration/test_native_profile_control.py",
+        "--tb=short",
+        "--junitxml=.local/profile-application-20261023/development-native/red.xml"
+      ],
+      "combined_output": ".local/profile-application-20261023/development-native/red.log"
+    },
+    {
+      "phase": "red-functional",
+      "executable": ".venv/Scripts/python.exe",
+      "args": [
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/integration/test_native_profile_control.py",
+        "--tb=short",
+        "--junitxml=.local/profile-application-20261023/development-native/red-functional.xml"
+      ],
+      "combined_output": ".local/profile-application-20261023/development-native/red-functional.log"
+    },
+    {
+      "phase": "green-initial",
+      "executable": ".venv/Scripts/python.exe",
+      "args": [
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/integration/test_native_profile_control.py",
+        "--tb=short",
+        "--junitxml=.local/profile-application-20261023/development-native/green-initial.xml"
+      ],
+      "combined_output": ".local/profile-application-20261023/development-native/green-initial.log"
+    },
+    {
+      "phase": "target-adjacent",
+      "executable": ".venv/Scripts/python.exe",
+      "args": [
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/integration/test_native_profile_control.py",
+        "tests/integration/test_native_model_control.py",
+        "tests/integration/test_native_context_control.py",
+        "tests/unit/test_desktop_control_protocol.py",
+        "tests/unit/test_judge_authorization_protocol.py",
+        "--tb=short",
+        "--junitxml=.local/profile-application-20261023/development-native/target-adjacent.xml"
+      ],
+      "combined_output": ".local/profile-application-20261023/development-native/target-adjacent.log"
+    },
+    {
+      "phase": "native-final",
+      "executable": ".venv/Scripts/python.exe",
+      "args": [
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/integration/test_native_profile_control.py",
+        "tests/integration/test_native_model_control.py",
+        "tests/integration/test_native_context_control.py",
+        "tests/unit/test_desktop_control_protocol.py",
+        "tests/unit/test_judge_authorization_protocol.py",
+        "--tb=short",
+        "--basetemp=.local/profile-application-20261023/development-native/tmp-native-final",
+        "--junitxml=.local/profile-application-20261023/development-native/native-final.xml"
+      ],
+      "combined_output": ".local/profile-application-20261023/development-native/native-final.log"
+    },
+    {
+      "phase": "native-target-final",
+      "executable": ".venv/Scripts/python.exe",
+      "args": [
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/integration/test_native_profile_control.py",
+        "--tb=short",
+        "--basetemp=.local/profile-application-20261023/development-native/tmp-native-target",
+        "--junitxml=.local/profile-application-20261023/development-native/native-target-final.xml"
+      ],
+      "combined_output": ".local/profile-application-20261023/development-native/native-target-final.log"
+    },
+    {
+      "phase": "actor-final",
+      "executable": ".venv/Scripts/python.exe",
+      "args": [
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/integration/test_native_profile_control.py::test_existing_request_requires_exact_original_profile_registration[actor]",
+        "--tb=short",
+        "--basetemp=.local/profile-application-20261023/development-native/tmp-actor-final",
+        "--junitxml=.local/profile-application-20261023/development-native/actor-final.xml"
+      ],
+      "combined_output": ".local/profile-application-20261023/development-native/actor-final.log"
+    }
+  ],
+  "note": "All materials, credentials and actors are independently synthetic; only explicit loopback provider was exercised. No git commit, real model, private material, or HTTP authorization endpoint."
+}

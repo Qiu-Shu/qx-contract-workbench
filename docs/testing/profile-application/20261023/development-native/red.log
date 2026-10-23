@@ -1,0 +1,620 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFF                                             [100%]
+================================== FAILURES ===================================
+_ test_native_profile_authorization_reuses_one_grant_and_existing_completed_request _
+tests\integration\test_native_profile_control.py:116: in test_native_profile_authorization_reuses_one_grant_and_existing_completed_request
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:93: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[profile-False] _
+tests\integration\test_native_profile_control.py:137: in test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:125: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[profile-True] _
+tests\integration\test_native_profile_control.py:137: in test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:125: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[target-False] _
+tests\integration\test_native_profile_control.py:137: in test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:125: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[target-True] _
+tests\integration\test_native_profile_control.py:137: in test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:125: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+___________ test_authorization_tombstone_cannot_be_revived[revoke] ____________
+tests\integration\test_native_profile_control.py:175: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:144: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+__________ test_authorization_tombstone_cannot_be_revived[configure] __________
+tests\integration\test_native_profile_control.py:175: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:144: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+___________ test_authorization_tombstone_cannot_be_revived[expired] ___________
+tests\integration\test_native_profile_control.py:175: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:144: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+___________ test_authorization_tombstone_cannot_be_revived[session] ___________
+tests\integration\test_native_profile_control.py:175: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:144: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+__________ test_authorization_tombstone_cannot_be_revived[restored] ___________
+tests\integration\test_native_profile_control.py:175: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:144: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+__________ test_authorization_tombstone_cannot_be_revived[disabled] ___________
+tests\integration\test_native_profile_control.py:175: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:144: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+__________ test_authorization_tombstone_cannot_be_revived[archived] ___________
+tests\integration\test_native_profile_control.py:175: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:144: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_____ test_strict_native_payload_and_unapproved_basis_do_not_grant[extra] _____
+tests\integration\test_native_profile_control.py:199: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:182: in scenario
+    payload = configure(n, enabled=change != 'disabled_config')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+____ test_strict_native_payload_and_unapproved_basis_do_not_grant[rounds] _____
+tests\integration\test_native_profile_control.py:199: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:182: in scenario
+    payload = configure(n, enabled=change != 'disabled_config')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_strict_native_payload_and_unapproved_basis_do_not_grant[coerced_duration] _
+tests\integration\test_native_profile_control.py:199: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:182: in scenario
+    payload = configure(n, enabled=change != 'disabled_config')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_____ test_strict_native_payload_and_unapproved_basis_do_not_grant[plan] ______
+tests\integration\test_native_profile_control.py:199: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:182: in scenario
+    payload = configure(n, enabled=change != 'disabled_config')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_____ test_strict_native_payload_and_unapproved_basis_do_not_grant[wire] ______
+tests\integration\test_native_profile_control.py:199: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:182: in scenario
+    payload = configure(n, enabled=change != 'disabled_config')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+____ test_strict_native_payload_and_unapproved_basis_do_not_grant[budget] _____
+tests\integration\test_native_profile_control.py:199: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:182: in scenario
+    payload = configure(n, enabled=change != 'disabled_config')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_strict_native_payload_and_unapproved_basis_do_not_grant[disabled_config] _
+tests\integration\test_native_profile_control.py:199: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:182: in scenario
+    payload = configure(n, enabled=change != 'disabled_config')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+________ test_profile_and_plain_authorizations_cannot_be_interchanged _________
+tests\integration\test_native_profile_control.py:222: in test_profile_and_plain_authorizations_cannot_be_interchanged
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:205: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+__ test_existing_request_requires_exact_original_profile_registration[plain] __
+tests\integration\test_native_profile_control.py:267: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:229: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_existing_request_requires_exact_original_profile_registration[missing_attempt] _
+tests\integration\test_native_profile_control.py:267: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:229: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+__ test_existing_request_requires_exact_original_profile_registration[basis] __
+tests\integration\test_native_profile_control.py:267: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:229: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_existing_request_requires_exact_original_profile_registration[config] __
+tests\integration\test_native_profile_control.py:267: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:229: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_existing_request_requires_exact_original_profile_registration[digest] __
+tests\integration\test_native_profile_control.py:267: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:229: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_existing_request_requires_exact_original_profile_registration[message] _
+tests\integration\test_native_profile_control.py:267: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:229: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+_ test_existing_request_requires_exact_original_profile_registration[session] _
+tests\integration\test_native_profile_control.py:267: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:229: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+___ test_private_profile_pipe_round_trip_returns_only_fixed_acknowledgement ___
+tests\integration\test_native_profile_control.py:290: in test_private_profile_pipe_round_trip_returns_only_fixed_acknowledgement
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:273: in scenario
+    payload = configure(n)
+              ^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:56: in configure
+    result = n.control.configure({'config': config(enabled=enabled).model_dump(mode='json'), 'secret': SECRET})
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_assistant_main_provider.py:32: in config
+    return d.MainModelConfig(enabled=True, model='deepseek-flash',
+E   TypeError: cn_contract.domain.MainModelConfig() got multiple values for keyword argument 'enabled'
+=========================== short test summary info ===========================
+FAILED tests/integration/test_native_profile_control.py::test_native_profile_authorization_reuses_one_grant_and_existing_completed_request
+FAILED tests/integration/test_native_profile_control.py::test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[profile-False]
+FAILED tests/integration/test_native_profile_control.py::test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[profile-True]
+FAILED tests/integration/test_native_profile_control.py::test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[target-False]
+FAILED tests/integration/test_native_profile_control.py::test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[target-True]
+FAILED tests/integration/test_native_profile_control.py::test_authorization_tombstone_cannot_be_revived[revoke]
+FAILED tests/integration/test_native_profile_control.py::test_authorization_tombstone_cannot_be_revived[configure]
+FAILED tests/integration/test_native_profile_control.py::test_authorization_tombstone_cannot_be_revived[expired]
+FAILED tests/integration/test_native_profile_control.py::test_authorization_tombstone_cannot_be_revived[session]
+FAILED tests/integration/test_native_profile_control.py::test_authorization_tombstone_cannot_be_revived[restored]
+FAILED tests/integration/test_native_profile_control.py::test_authorization_tombstone_cannot_be_revived[disabled]
+FAILED tests/integration/test_native_profile_control.py::test_authorization_tombstone_cannot_be_revived[archived]
+FAILED tests/integration/test_native_profile_control.py::test_strict_native_payload_and_unapproved_basis_do_not_grant[extra]
+FAILED tests/integration/test_native_profile_control.py::test_strict_native_payload_and_unapproved_basis_do_not_grant[rounds]
+FAILED tests/integration/test_native_profile_control.py::test_strict_native_payload_and_unapproved_basis_do_not_grant[coerced_duration]
+FAILED tests/integration/test_native_profile_control.py::test_strict_native_payload_and_unapproved_basis_do_not_grant[plan]
+FAILED tests/integration/test_native_profile_control.py::test_strict_native_payload_and_unapproved_basis_do_not_grant[wire]
+FAILED tests/integration/test_native_profile_control.py::test_strict_native_payload_and_unapproved_basis_do_not_grant[budget]
+FAILED tests/integration/test_native_profile_control.py::test_strict_native_payload_and_unapproved_basis_do_not_grant[disabled_config]
+FAILED tests/integration/test_native_profile_control.py::test_profile_and_plain_authorizations_cannot_be_interchanged
+FAILED tests/integration/test_native_profile_control.py::test_existing_request_requires_exact_original_profile_registration[plain]
+FAILED tests/integration/test_native_profile_control.py::test_existing_request_requires_exact_original_profile_registration[missing_attempt]
+FAILED tests/integration/test_native_profile_control.py::test_existing_request_requires_exact_original_profile_registration[basis]
+FAILED tests/integration/test_native_profile_control.py::test_existing_request_requires_exact_original_profile_registration[config]
+FAILED tests/integration/test_native_profile_control.py::test_existing_request_requires_exact_original_profile_registration[digest]
+FAILED tests/integration/test_native_profile_control.py::test_existing_request_requires_exact_original_profile_registration[message]
+FAILED tests/integration/test_native_profile_control.py::test_existing_request_requires_exact_original_profile_registration[session]
+FAILED tests/integration/test_native_profile_control.py::test_private_profile_pipe_round_trip_returns_only_fixed_acknowledgement
+28 failed in 15.40s

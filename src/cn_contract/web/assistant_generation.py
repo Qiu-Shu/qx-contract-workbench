@@ -77,6 +77,8 @@ def attach_generation(app, database, runtime=None, *, judge_runtime=None):
     register_routes(app,database,tasks)
     from .assistant_context import register_routes as context_routes
     context_routes(app,database,runtime)
+    from .assistant_profile_generation import register_routes as profile_routes
+    profile_routes(app,database,runtime,tasks)
     previous=app.router.lifespan_context
 
     @asynccontextmanager

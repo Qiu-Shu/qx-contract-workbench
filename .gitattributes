@@ -131,3 +131,18 @@ tests/integration/test_assistant_profile_execution.py -text whitespace=blank-at-
 tests/integration/test_assistant_profile_execution_limits.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 tests/integration/test_assistant_profile_execution_backup.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/testing/profile-execution/** -text -whitespace
+
+docs/testing/profile-application/** -text -whitespace
+src/cn_contract/domain.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/assistant/native_profile_control.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/assistant/native_model_control.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/assistant/task_manager.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/desktop_control.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/assistant_generation.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/assistant_profile_generation.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/unit/test_assistant_profile_application_contract.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/unit/test_desktop_control_protocol.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/unit/test_judge_authorization_protocol.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_assistant_profile_application.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_native_profile_control.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_profile_native_http_process.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

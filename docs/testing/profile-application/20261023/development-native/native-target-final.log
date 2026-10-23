@@ -1,0 +1,21 @@
+...............................F..........                               [100%]
+================================== FAILURES ===================================
+__ test_existing_request_requires_exact_original_profile_registration[actor] __
+tests\integration\test_native_profile_control.py:298: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:287: in scenario
+    {d.Role.handling_lawyer}, db))
+     ^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: type object 'Role' has no attribute 'handling_lawyer'
+=========================== short test summary info ===========================
+FAILED tests/integration/test_native_profile_control.py::test_existing_request_requires_exact_original_profile_registration[actor]
+1 failed, 41 passed in 20.40s

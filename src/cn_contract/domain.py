@@ -4108,6 +4108,25 @@ class MainProfileSendBasis(DomainModel):
         return self
 
 
+class MainProfileSelection(DomainModel):
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+    project_intake: StrictBool = False
+
+
+class MainProfileSubmission(AssistantMessageInput):
+    project_intake: StrictBool = False
+
+
+class NativeProfileAuthorization(DomainModel):
+    session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
+    expected_config_version: UUID
+    basis: MainProfileSendBasis
+    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
+    valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
+
+
 class MainProfilePreparedInput(DomainModel):
     request: MainProfileRequest
     basis: MainProfileSendBasis

@@ -1,0 +1,126 @@
+diff --git a/src/cn_contract/assistant/native_model_control.py b/src/cn_contract/assistant/native_model_control.py
+index 61efb64..e0676fa 100644
+--- a/src/cn_contract/assistant/native_model_control.py
++++ b/src/cn_contract/assistant/native_model_control.py
+@@ -138,6 +138,12 @@ class NativeModelControl:
+             self._intents[basis.request_id] = fingerprint, token
+         return {'status': 'authorized'}
+ 
++    @_fixed_errors
++    def authorize_profile(self, payload):
++        from .native_profile_control import authorize
++        self._check_loop()
++        return authorize(self, _payload(d.NativeProfileAuthorization, payload))
++
+     @_fixed_errors
+     def authorize_context(self, payload):
+         """One native grant for a server-rebuilt library-context basis; no new scopes."""
+diff --git a/src/cn_contract/assistant/task_manager.py b/src/cn_contract/assistant/task_manager.py
+index 525f398..5d52f4f 100644
+--- a/src/cn_contract/assistant/task_manager.py
++++ b/src/cn_contract/assistant/task_manager.py
+@@ -89,6 +89,30 @@ class GenerationTasks:
+         self._dispatch(view.id, view.run_id, self._execute(actor, view.id, runtime, auxiliary))
+         return view
+ 
++    def submit_profile(self, actor, conversation_id, request):
++        """One profile-purpose answer, using the existing single-attempt lifecycle."""
++        if type(request) is not d.MainProfileSubmission:
++            raise ValueError('profile submission required')
++        request = d.MainProfileSubmission.model_validate(request.model_dump(mode='python'))
++        message = d.AssistantMessageInput.model_validate(
++            request.model_dump(mode='python', exclude={'project_intake'}))
++        with self.database.session() as db:
++            conversation = service._owned(actor, conversation_id, db)
++            runtime = resolve_runtime(self.runtime, actor, service._snapshot(conversation))
++            if runtime is None:
++                raise ServiceError('BLOCKED_LIVE', 403)
++            previous = db.scalar(text('''SELECT id FROM assistant_runs
++                WHERE conversation_id=:cid AND request_id=:request'''),
++                {'cid':str(conversation_id), 'request':str(request.request_id)})
++            if previous is None:
++                self._admit()
++            view = attempts.enqueue_profile(actor, conversation_id, message, db, runtime,
++                                            project_intake=request.project_intake)
++        if previous is None:
++            # The committed purpose-bound lease never reserves or runs Jev.
++            self._dispatch(view.id, view.run_id, self._execute(actor, view.id, runtime, None))
++        return view
++
+     def submit_context(self, actor, conversation_id, request):
+         """One source-bound answer; the context branch never reserves or runs Jev."""
+         request = d.MainContextSubmission.model_validate(request.model_dump(mode='python'))
+diff --git a/src/cn_contract/desktop_control.py b/src/cn_contract/desktop_control.py
+index 4b89419..d9a3a80 100644
+--- a/src/cn_contract/desktop_control.py
++++ b/src/cn_contract/desktop_control.py
+@@ -14,7 +14,7 @@ JUDGE_AUTH_PROTOCOL = 'qx-judge-authorization-v1'
+ MAX_BYTES = 32768
+ MAX_SEQUENCE = 9007199254740991
+ _OPERATIONS = {'configure', 'disable', 'authorize', 'revoke', 'configure_judge', 'disable_judge',
+-               'authorize_judge', 'revoke_judge', 'authorize_context'}
++               'authorize_judge', 'revoke_judge', 'authorize_context', 'authorize_profile'}
+ _CODES = {'BLOCKED_LIVE', 'VERSION_CONFLICT', 'STATE_CONFLICT', 'BUDGET_EXCEEDED', 'CROSS_MATTER_DENIED'}
+ 
+ 
+@@ -24,6 +24,7 @@ class NativeControlHandler:
+         self.configure, self.disable = main.configure, main.disable
+         self.authorize, self.revoke = main.authorize, main.revoke
+         self.authorize_context = main.authorize_context
++        self.authorize_profile = main.authorize_profile
+         self.configure_judge, self.disable_judge = judge.configure, judge.disable
+         self._judge = judge
+ 
+@@ -147,7 +148,8 @@ class ParentControlChannel:
+                     'authorize':{'authorized','existing'}, 'revoke':{'revoked'},
+                     'configure_judge':{'configured'}, 'disable_judge':{'disabled'},
+                     'authorize_judge':{'authorized','existing'}, 'revoke_judge':{'revoked'},
+-                    'authorize_context':{'authorized','existing'}}[operation]
++                    'authorize_context':{'authorized','existing'},
++                    'authorize_profile':{'authorized','existing'}}[operation]
+         if type(result) is not dict or result.get('status') not in expected:
+             raise ValueError('CONTROL_REJECTED')
+         configuring = operation in ('configure', 'configure_judge')
+diff --git a/src/cn_contract/domain.py b/src/cn_contract/domain.py
+index 3708131..0383c9d 100644
+--- a/src/cn_contract/domain.py
++++ b/src/cn_contract/domain.py
+@@ -4108,6 +4108,25 @@ class MainProfileSendBasis(DomainModel):
+         return self
+ 
+ 
++class MainProfileSelection(DomainModel):
++    request_id: UUID
++    expected_scope: ScopeSnapshot
++    expected_composer_revision: NonNegativeInt
++    project_intake: StrictBool = False
++
++
++class MainProfileSubmission(AssistantMessageInput):
++    project_intake: StrictBool = False
++
++
++class NativeProfileAuthorization(DomainModel):
++    session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
++    expected_config_version: UUID
++    basis: MainProfileSendBasis
++    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
++    valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
++
++
+ class MainProfilePreparedInput(DomainModel):
+     request: MainProfileRequest
+     basis: MainProfileSendBasis
+diff --git a/src/cn_contract/web/assistant_generation.py b/src/cn_contract/web/assistant_generation.py
+index 87f6226..540ffcf 100644
+--- a/src/cn_contract/web/assistant_generation.py
++++ b/src/cn_contract/web/assistant_generation.py
+@@ -77,6 +77,8 @@ def attach_generation(app, database, runtime=None, *, judge_runtime=None):
+     register_routes(app,database,tasks)
+     from .assistant_context import register_routes as context_routes
+     context_routes(app,database,runtime)
++    from .assistant_profile_generation import register_routes as profile_routes
++    profile_routes(app,database,runtime,tasks)
+     previous=app.router.lifespan_context
+ 
+     @asynccontextmanager

@@ -1,0 +1,11 @@
+F
+================================== FAILURES ===================================
+__ test_profile_preview_selection_does_not_accept_caller_text_or_permission ___
+tests\unit\test_assistant_profile_application_contract.py:17: in test_profile_preview_selection_does_not_accept_caller_text_or_permission
+    value = d.MainProfileSelection(**selection())
+            ^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'cn_contract.domain' has no attribute 'MainProfileSelection'. Did you mean: 'MainContextSelection'?
+=========================== short test summary info ===========================
+FAILED tests/unit/test_assistant_profile_application_contract.py::test_profile_preview_selection_does_not_accept_caller_text_or_permission
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 0.50s

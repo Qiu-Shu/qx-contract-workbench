@@ -101,6 +101,8 @@ class LocalControl:
         self.loops.append(asyncio.get_running_loop())
         return {'status': 'authorized'}
 
+    authorize_profile = authorize_context
+
     def revoke(self, payload):
         return {'status': 'revoked'}
 

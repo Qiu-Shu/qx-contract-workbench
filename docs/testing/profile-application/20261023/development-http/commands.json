@@ -1,0 +1,33 @@
+[
+  {
+    "passed": 0,
+    "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_assistant_profile_application.py -q --basetemp=.local/profile-application-20261023/development-http/red-tmp",
+    "stage": "red",
+    "failed": 2,
+    "note": "Expected missing submit_profile and profile-preview route failures",
+    "exit_code": 1
+  },
+  {
+    "passed": 24,
+    "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_assistant_profile_application.py -q --basetemp=.local/profile-application-20261023/development-http/green-01-tmp",
+    "stage": "green-01",
+    "failed": 13,
+    "note": "All thirteen failures were absent native authorize_profile dependency, not a passing run",
+    "exit_code": 1
+  },
+  {
+    "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_assistant_profile_application.py -q -k stored_material --basetemp=.local/profile-application-20261023/development-http/material-tmp",
+    "stage": "material",
+    "exit_code": 0,
+    "deselected": 37,
+    "passed": 1
+  },
+  {
+    "passed": 38,
+    "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_assistant_profile_application.py -q --basetemp=.local/profile-application-20261023/development-http/green-02-tmp",
+    "stage": "green-02",
+    "failed": 0,
+    "note": "Final full owned test module after native entry became available; synthetic local only",
+    "exit_code": 0
+  }
+]

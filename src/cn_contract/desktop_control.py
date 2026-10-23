@@ -14,7 +14,7 @@ JUDGE_AUTH_PROTOCOL = 'qx-judge-authorization-v1'
 MAX_BYTES = 32768
 MAX_SEQUENCE = 9007199254740991
 _OPERATIONS = {'configure', 'disable', 'authorize', 'revoke', 'configure_judge', 'disable_judge',
-               'authorize_judge', 'revoke_judge', 'authorize_context'}
+               'authorize_judge', 'revoke_judge', 'authorize_context', 'authorize_profile'}
 _CODES = {'BLOCKED_LIVE', 'VERSION_CONFLICT', 'STATE_CONFLICT', 'BUDGET_EXCEEDED', 'CROSS_MATTER_DENIED'}
 
 
@@ -24,6 +24,7 @@ class NativeControlHandler:
         self.configure, self.disable = main.configure, main.disable
         self.authorize, self.revoke = main.authorize, main.revoke
         self.authorize_context = main.authorize_context
+        self.authorize_profile = main.authorize_profile
         self.configure_judge, self.disable_judge = judge.configure, judge.disable
         self._judge = judge
 
@@ -147,7 +148,8 @@ class ParentControlChannel:
                     'authorize':{'authorized','existing'}, 'revoke':{'revoked'},
                     'configure_judge':{'configured'}, 'disable_judge':{'disabled'},
                     'authorize_judge':{'authorized','existing'}, 'revoke_judge':{'revoked'},
-                    'authorize_context':{'authorized','existing'}}[operation]
+                    'authorize_context':{'authorized','existing'},
+                    'authorize_profile':{'authorized','existing'}}[operation]
         if type(result) is not dict or result.get('status') not in expected:
             raise ValueError('CONTROL_REJECTED')
         configuring = operation in ('configure', 'configure_judge')

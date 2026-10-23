@@ -139,6 +139,12 @@ class NativeModelControl:
         return {'status': 'authorized'}
 
     @_fixed_errors
+    def authorize_profile(self, payload):
+        from .native_profile_control import authorize
+        self._check_loop()
+        return authorize(self, _payload(d.NativeProfileAuthorization, payload))
+
+    @_fixed_errors
     def authorize_context(self, payload):
         """One native grant for a server-rebuilt library-context basis; no new scopes."""
         self._check_loop()

@@ -1,0 +1,37 @@
+{
+  "baseline": "3d0e1859041572ed9c574e7a917afd044aedc6bf",
+  "started_at": "2026-10-23T04:48:08.437673+00:00",
+  "completed_at": "2026-10-23T04:48:16.560280+00:00",
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    ".local/profile-application-20261023/standards-review/test_application_standards.py",
+    "-q",
+    "--tb=short",
+    "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-application-20261023\\standards-review\\temp-final",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-application-20261023\\standards-review\\final.xml"
+  ],
+  "cwd": "D:\\Documents\\ChatGPT\\律所项目",
+  "exit_code": 0,
+  "counts": {
+    "tests": 10,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "input_count": 265,
+  "inputs_stable": true,
+  "product_hashes": {
+    "src/cn_contract/domain.py": "7deb7ede235f78e42970a1a4efee28156e6dce53fc1bb23c220cffffdacc826f",
+    "src/cn_contract/assistant/native_profile_control.py": "013175a71d4181c298a8c192374410872bc86f1669ca50344887f1ad0a151a1a",
+    "src/cn_contract/assistant/native_model_control.py": "156c7842247a872ab22aa32e2157204d9a24a6f013f89775e477c43a73fc96b3",
+    "src/cn_contract/desktop_control.py": "2362f8949696095ebfe94ae9159e0b7b70a3bd93f1c3a580e5c9395be4a63366",
+    "src/cn_contract/assistant/task_manager.py": "87b88b2b327f3597ce8df6cf87cc7aee6847c0f0ce666601a94638e3e468139c",
+    "src/cn_contract/web/assistant_profile_generation.py": "d6cfbb970479b19ea838f7413224a2b58307e0e84cb3c2a22df4148abfadcf56",
+    "src/cn_contract/web/assistant_generation.py": "691c9351746f9e13b1ff26279cfc51cac9309808d5e032991db6593fafbf2df5"
+  },
+  "changed_inputs": []
+}

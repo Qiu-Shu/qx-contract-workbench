@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="2.814" timestamp="2026-10-23T12:41:21.528736+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_profile_native_http_process" name="test_private_pipe_authorizes_one_http_profile_job_and_history_never_resends" time="1.788"><failure message="AssertionError: assert 422 == 200&#10; +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code&#10; +    where &lt;Response [422 Unprocessable Entity]&gt; = get(('/api/assistant/conversations/f1320fe7-79f2-487a-92a8-1f145aaf2028' + '/generation-history'))&#10; +      where get = &lt;httpx.Client object at 0x0000023760EEC500&gt;.get">tests\integration\test_profile_native_http_process.py:111: in test_private_pipe_authorizes_one_http_profile_job_and_history_never_resends
+    assert client.get(base + '/generation-history').status_code == 200
+E   AssertionError: assert 422 == 200
+E    +  where 422 = &lt;Response [422 Unprocessable Entity]&gt;.status_code
+E    +    where &lt;Response [422 Unprocessable Entity]&gt; = get(('/api/assistant/conversations/f1320fe7-79f2-487a-92a8-1f145aaf2028' + '/generation-history'))
+E    +      where get = &lt;httpx.Client object at 0x0000023760EEC500&gt;.get</failure></testcase></testsuite></testsuites>

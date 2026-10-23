@@ -1,0 +1,17 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_private_pipe_authorizes_one_http_profile_job_and_history_never_resends _
+tests\integration\test_profile_native_http_process.py:79: in test_private_pipe_authorizes_one_http_profile_job_and_history_never_resends
+    authorized = control('authorize_profile', payload)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_profile_native_http_process.py:40: in control
+    result = send(dict(event='model-control', protocol='qx-model-control-v1', nonce=nonce,
+tests\integration\test_profile_native_http_process.py:35: in send
+    return json.loads(lines.get(timeout=30))
+                      ^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\queue.py:179: in get
+    raise Empty
+E   _queue.Empty
+=========================== short test summary info ===========================
+FAILED tests/integration/test_profile_native_http_process.py::test_private_pipe_authorizes_one_http_profile_job_and_history_never_resends
+1 failed in 32.79s

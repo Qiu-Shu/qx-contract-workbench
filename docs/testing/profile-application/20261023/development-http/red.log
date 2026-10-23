@@ -1,0 +1,32 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_______________ test_profile_submission_has_explicit_task_entry _______________
+
+    def test_profile_submission_has_explicit_task_entry():
+>       assert callable(getattr(GenerationTasks, 'submit_profile', None))
+E       AssertionError: assert False
+E        +  where False = callable(None)
+E        +    where None = getattr(GenerationTasks, 'submit_profile', None)
+
+tests\integration\test_assistant_profile_application.py:8: AssertionError
+______ test_profile_preview_describes_current_draft_without_registration ______
+
+world = (<cn_contract.persistence.Database object at 0x000001AA8D3F2960>, Actor(user_id=UUID('8d9fc75f-e227-4920-9bd0-d3e992d7...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AA8D8B65A0>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/red-tmp/test_profile_preview_describes0')
+
+    def test_profile_preview_describes_current_draft_without_registration(world, tmp_path):
+        with boot(world, tmp_path) as http:
+            current = save_draft(http)
+            response = http.client.post(http.url+'/profile-preview', headers=http.headers, json={
+                'request_id':http.body['request_id'], 'expected_scope':current['scope'],
+                'expected_composer_revision':current['composer_revision']})
+>           assert response.status_code == 200, response.text
+E           AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"c6749217-aede-42f2-817d-b2d180789993","retryable":false}
+E           assert 404 == 200
+E            +  where 404 = <Response [404 Not Found]>.status_code
+
+tests\integration\test_assistant_profile_application.py:17: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_submission_has_explicit_task_entry
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_preview_describes_current_draft_without_registration
+2 failed in 1.69s

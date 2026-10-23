@@ -1,0 +1,9 @@
+..........                                                               [100%]
+============================== warnings summary ===============================
+.local/profile-application-20261023/standards-review/test_application_standards.py::test_copied_dto_mutation_is_revalidated_before_grant_or_registration[project_intake]
+  D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\pydantic\main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `bool` - serialized value may not be as expected [field_name='project_intake', input_value=1, input_type=int])
+    return self.__pydantic_serializer__.to_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+10 passed, 1 warning in 8.15s

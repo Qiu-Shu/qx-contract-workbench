@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="28" skipped="0" tests="28" time="15.246" timestamp="2026-10-23T12:39:36.520603+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_native_profile_control" name="test_native_profile_authorization_reuses_one_grant_and_existing_completed_request" time="0.549"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657993F50&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657993F50&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D656DAF8C0&gt;, actor=Actor(user_id=UUID('dc8173aa...at/completions'], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657993F50&gt;).control">tests\integration\test_native_profile_control.py:117: in test_native_profile_authorization_reuses_one_grant_and_existing_completed_request
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:95: in scenario
+    assert authorize(n, payload) == {'status': 'authorized'}
+           ^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657993F50&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657993F50&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D656DAF8C0&gt;, actor=Actor(user_id=UUID('dc8173aa...at/completions'], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657993F50&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[profile-False]" time="0.466"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AB92B0&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AB92B0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6577E6330&gt;, actor=Actor(user_id=UUID('1aee7933...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AB92B0&gt;).control">tests\integration\test_native_profile_control.py:138: in test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:131: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AB92B0&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AB92B0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6577E6330&gt;, actor=Actor(user_id=UUID('1aee7933...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AB92B0&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[profile-True]" time="0.458"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA7FE0&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA7FE0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657ABA900&gt;, actor=Actor(user_id=UUID('cc16a044...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA7FE0&gt;).control">tests\integration\test_native_profile_control.py:138: in test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:128: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA7FE0&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA7FE0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657ABA900&gt;, actor=Actor(user_id=UUID('cc16a044...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA7FE0&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[target-False]" time="0.468"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B12F30&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B12F30&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6578288F0&gt;, actor=Actor(user_id=UUID('44bb2309...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B12F30&gt;).control">tests\integration\test_native_profile_control.py:138: in test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:131: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B12F30&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B12F30&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6578288F0&gt;, actor=Actor(user_id=UUID('44bb2309...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B12F30&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization[target-True]" time="0.502"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657695DC0&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657695DC0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6577E6E70&gt;, actor=Actor(user_id=UUID('a04a83fc...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657695DC0&gt;).control">tests\integration\test_native_profile_control.py:138: in test_current_save_baseline_is_rebuilt_before_new_or_repeated_authorization
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:128: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657695DC0&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657695DC0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6577E6E70&gt;, actor=Actor(user_id=UUID('a04a83fc...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657695DC0&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_authorization_tombstone_cannot_be_revived[revoke]" time="0.461"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657A128D0&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657A128D0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6526E7470&gt;, actor=Actor(user_id=UUID('347f670f...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657A128D0&gt;).control">tests\integration\test_native_profile_control.py:176: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:146: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657A128D0&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657A128D0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6526E7470&gt;, actor=Actor(user_id=UUID('347f670f...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657A128D0&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_authorization_tombstone_cannot_be_revived[configure]" time="0.471"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA4AA0&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA4AA0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6579933B0&gt;, actor=Actor(user_id=UUID('40745fe9...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA4AA0&gt;).control">tests\integration\test_native_profile_control.py:176: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:146: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA4AA0&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA4AA0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6579933B0&gt;, actor=Actor(user_id=UUID('40745fe9...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AA4AA0&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_authorization_tombstone_cannot_be_revived[expired]" time="0.457"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B895B0&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B895B0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657AB9C70&gt;, actor=Actor(user_id=UUID('cd5c5bc3...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B895B0&gt;).control">tests\integration\test_native_profile_control.py:176: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:146: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B895B0&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B895B0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657AB9C70&gt;, actor=Actor(user_id=UUID('cd5c5bc3...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B895B0&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_authorization_tombstone_cannot_be_revived[session]" time="0.468"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657BEE960&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657BEE960&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657B8BFE0&gt;, actor=Actor(user_id=UUID('8263c0c0...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657BEE960&gt;).control">tests\integration\test_native_profile_control.py:176: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:146: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657BEE960&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657BEE960&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657B8BFE0&gt;, actor=Actor(user_id=UUID('8263c0c0...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657BEE960&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_authorization_tombstone_cannot_be_revived[restored]" time="0.456"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B23440&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B23440&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657AA7DA0&gt;, actor=Actor(user_id=UUID('5d398d03...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B23440&gt;).control">tests\integration\test_native_profile_control.py:176: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:146: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B23440&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B23440&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657AA7DA0&gt;, actor=Actor(user_id=UUID('5d398d03...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657B23440&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_authorization_tombstone_cannot_be_revived[disabled]" time="0.458"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AEDD30&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AEDD30&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6577E77D0&gt;, actor=Actor(user_id=UUID('65635066...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AEDD30&gt;).control">tests\integration\test_native_profile_control.py:176: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:146: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AEDD30&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AEDD30&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D6577E77D0&gt;, actor=Actor(user_id=UUID('65635066...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657AEDD30&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_authorization_tombstone_cannot_be_revived[archived]" time="0.456"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D5D2E0&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D5D2E0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657B8ADE0&gt;, actor=Actor(user_id=UUID('f3af4284...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D5D2E0&gt;).control">tests\integration\test_native_profile_control.py:176: in test_authorization_tombstone_cannot_be_revived
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:146: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D5D2E0&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D5D2E0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657B8ADE0&gt;, actor=Actor(user_id=UUID('f3af4284...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D5D2E0&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_strict_native_payload_and_unapproved_basis_do_not_grant[extra]" time="0.457"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658DD3830&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658DD3830&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657BEE420&gt;, actor=Actor(user_id=UUID('ec578023...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658DD3830&gt;).control">tests\integration\test_native_profile_control.py:200: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:197: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658DD3830&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658DD3830&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657BEE420&gt;, actor=Actor(user_id=UUID('ec578023...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658DD3830&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_strict_native_payload_and_unapproved_basis_do_not_grant[rounds]" time="0.455"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D6EC30&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D6EC30&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658D6E810&gt;, actor=Actor(user_id=UUID('7720e2eb...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D6EC30&gt;).control">tests\integration\test_native_profile_control.py:200: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:197: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D6EC30&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D6EC30&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658D6E810&gt;, actor=Actor(user_id=UUID('7720e2eb...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D6EC30&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_strict_native_payload_and_unapproved_basis_do_not_grant[coerced_duration]" time="0.462"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D65640&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D65640&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658DD32F0&gt;, actor=Actor(user_id=UUID('6a4717c2...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D65640&gt;).control">tests\integration\test_native_profile_control.py:200: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:197: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D65640&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D65640&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658DD32F0&gt;, actor=Actor(user_id=UUID('6a4717c2...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D65640&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_strict_native_payload_and_unapproved_basis_do_not_grant[plan]" time="0.470"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C68F20&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C68F20&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657BEE510&gt;, actor=Actor(user_id=UUID('406f8e73...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C68F20&gt;).control">tests\integration\test_native_profile_control.py:200: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:197: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C68F20&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C68F20&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657BEE510&gt;, actor=Actor(user_id=UUID('406f8e73...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C68F20&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_strict_native_payload_and_unapproved_basis_do_not_grant[wire]" time="0.600"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D64C50&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D64C50&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658DD3200&gt;, actor=Actor(user_id=UUID('11503158...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D64C50&gt;).control">tests\integration\test_native_profile_control.py:200: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:197: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D64C50&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D64C50&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658DD3200&gt;, actor=Actor(user_id=UUID('11503158...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658D64C50&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_strict_native_payload_and_unapproved_basis_do_not_grant[budget]" time="0.489"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C90320&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C90320&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657C68B90&gt;, actor=Actor(user_id=UUID('5b32a3f0...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C90320&gt;).control">tests\integration\test_native_profile_control.py:200: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:197: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C90320&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C90320&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657C68B90&gt;, actor=Actor(user_id=UUID('5b32a3f0...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C90320&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_strict_native_payload_and_unapproved_basis_do_not_grant[disabled_config]" time="0.461"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D017C0&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D017C0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657C90920&gt;, actor=Actor(user_id=UUID('5369856f...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D017C0&gt;).control">tests\integration\test_native_profile_control.py:200: in test_strict_native_payload_and_unapproved_basis_do_not_grant
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:197: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D017C0&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D017C0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657C90920&gt;, actor=Actor(user_id=UUID('5369856f...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D017C0&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_profile_and_plain_authorizations_cannot_be_interchanged" time="0.464"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C7DBE0&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C7DBE0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658D48F50&gt;, actor=Actor(user_id=UUID('2f11740e...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C7DBE0&gt;).control">tests\integration\test_native_profile_control.py:223: in test_profile_and_plain_authorizations_cannot_be_interchanged
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:213: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C7DBE0&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C7DBE0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658D48F50&gt;, actor=Actor(user_id=UUID('2f11740e...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C7DBE0&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_existing_request_requires_exact_original_profile_registration[plain]" time="0.483"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658F91520&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658F91520&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657C7FE00&gt;, actor=Actor(user_id=UUID('a4ee50bd...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658F91520&gt;).control">tests\integration\test_native_profile_control.py:268: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:266: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658F91520&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658F91520&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657C7FE00&gt;, actor=Actor(user_id=UUID('a4ee50bd...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658F91520&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_existing_request_requires_exact_original_profile_registration[missing_attempt]" time="0.453"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCE690&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCE690&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658F93110&gt;, actor=Actor(user_id=UUID('d72b9f1a...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCE690&gt;).control">tests\integration\test_native_profile_control.py:268: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:266: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCE690&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCE690&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658F93110&gt;, actor=Actor(user_id=UUID('d72b9f1a...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCE690&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_existing_request_requires_exact_original_profile_registration[basis]" time="0.498"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCC1D0&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCC1D0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658EFDD30&gt;, actor=Actor(user_id=UUID('607f9eaf...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCC1D0&gt;).control">tests\integration\test_native_profile_control.py:268: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:243: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCC1D0&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCC1D0&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658EFDD30&gt;, actor=Actor(user_id=UUID('607f9eaf...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCC1D0&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_existing_request_requires_exact_original_profile_registration[config]" time="0.456"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FBB110&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FBB110&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658F915B0&gt;, actor=Actor(user_id=UUID('f30fd535...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FBB110&gt;).control">tests\integration\test_native_profile_control.py:268: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:243: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FBB110&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FBB110&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658F915B0&gt;, actor=Actor(user_id=UUID('f30fd535...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FBB110&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_existing_request_requires_exact_original_profile_registration[digest]" time="0.457"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C1E120&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C1E120&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658EFC6E0&gt;, actor=Actor(user_id=UUID('3fe6706c...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C1E120&gt;).control">tests\integration\test_native_profile_control.py:268: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:243: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C1E120&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C1E120&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D658EFC6E0&gt;, actor=Actor(user_id=UUID('3fe6706c...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657C1E120&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_existing_request_requires_exact_original_profile_registration[message]" time="0.502"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCF830&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCF830&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657C7EC60&gt;, actor=Actor(user_id=UUID('8cb8fe20...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCF830&gt;).control">tests\integration\test_native_profile_control.py:268: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:243: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCF830&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCF830&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657C7EC60&gt;, actor=Actor(user_id=UUID('8cb8fe20...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D658FCF830&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_existing_request_requires_exact_original_profile_registration[session]" time="0.456"><failure message="AssertionError: private profile authorization is missing&#10;assert False&#10; +  where False = callable(None)&#10; +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D03770&gt;, 'authorize_profile', None)&#10; +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D03770&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657D037A0&gt;, actor=Actor(user_id=UUID('de20a895...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D03770&gt;).control">tests\integration\test_native_profile_control.py:268: in test_existing_request_requires_exact_original_profile_registration
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:243: in scenario
+    authorize(n, payload)
+tests\integration\test_native_profile_control.py:63: in authorize
+    assert callable(getattr(n.control, 'authorize_profile', None)), 'private profile authorization is missing'
+E   AssertionError: private profile authorization is missing
+E   assert False
+E    +  where False = callable(None)
+E    +    where None = getattr(&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D03770&gt;, 'authorize_profile', None)
+E    +      where &lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D03770&gt; = namespace(database=&lt;cn_contract.persistence.Database object at 0x000001D657D037A0&gt;, actor=Actor(user_id=UUID('de20a895...[], endpoints=[], control=&lt;cn_contract.assistant.native_model_control.NativeModelControl object at 0x000001D657D03770&gt;).control</failure></testcase><testcase classname="tests.integration.test_native_profile_control" name="test_private_profile_pipe_round_trip_returns_only_fixed_acknowledgement" time="0.447"><failure message="ValueError: CONTROL_REJECTED">tests\integration\test_native_profile_control.py:291: in test_private_profile_pipe_round_trip_returns_only_fixed_acknowledgement
+    asyncio.run(scenario())
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\integration\test_native_profile_control.py:277: in scenario
+    assert parse_control_line(frame, 'synthetic', 1) == ('authorize_profile', payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\desktop_control.py:85: in parse_control_line
+    raise ValueError('CONTROL_REJECTED') from None
+E   ValueError: CONTROL_REJECTED</failure></testcase></testsuite></testsuites>

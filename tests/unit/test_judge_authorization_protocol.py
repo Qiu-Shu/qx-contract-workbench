@@ -23,6 +23,7 @@ def test_dual_dispatch_routes_authorization_without_touching_main():
             def __init__(self, name): self.name = name
             def configure(self, payload): raise AssertionError('not configuring')
             def authorize_context(self, payload): raise AssertionError('judge dispatch must not authorize main context')
+            authorize_profile = authorize_context
             def disable(self): calls.append((self.name, 'disable')); return {'status':'disabled'}
             def authorize(self, payload): calls.append((self.name, 'authorize')); return {'status':'authorized'}
             def revoke(self, payload): calls.append((self.name, 'revoke')); return {'status':'revoked'}

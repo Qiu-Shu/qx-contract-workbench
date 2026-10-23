@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="32.756" timestamp="2026-10-23T12:38:29.982944+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_profile_native_http_process" name="test_private_pipe_authorizes_one_http_profile_job_and_history_never_resends" time="31.670"><failure message="_queue.Empty">tests\integration\test_profile_native_http_process.py:79: in test_private_pipe_authorizes_one_http_profile_job_and_history_never_resends
+    authorized = control('authorize_profile', payload)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_profile_native_http_process.py:40: in control
+    result = send(dict(event='model-control', protocol='qx-model-control-v1', nonce=nonce,
+tests\integration\test_profile_native_http_process.py:35: in send
+    return json.loads(lines.get(timeout=30))
+                      ^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\queue.py:179: in get
+    raise Empty
+E   _queue.Empty</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.429" timestamp="2026-10-23T12:36:50.003094+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_assistant_profile_application_contract" name="test_profile_preview_selection_does_not_accept_caller_text_or_permission" time="0.000"><failure message="AttributeError: module 'cn_contract.domain' has no attribute 'MainProfileSelection'. Did you mean: 'MainContextSelection'?">tests\unit\test_assistant_profile_application_contract.py:17: in test_profile_preview_selection_does_not_accept_caller_text_or_permission
+    value = d.MainProfileSelection(**selection())
+            ^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'cn_contract.domain' has no attribute 'MainProfileSelection'. Did you mean: 'MainContextSelection'?</failure></testcase></testsuite></testsuites>

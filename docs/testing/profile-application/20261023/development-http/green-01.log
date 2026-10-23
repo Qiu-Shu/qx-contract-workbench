@@ -1,0 +1,339 @@
+..................FFFFFFF..FFFFFF....                                    [100%]
+================================== FAILURES ===================================
+___ test_profile_generation_rejects_untrusted_controls_and_sources[extra0] ____
+
+world = (<cn_contract.persistence.Database object at 0x000001AF62D348F0>, Actor(user_id=UUID('492d6845-7a7d-41c7-9aac-c4d746e9...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF62DB7D10>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_profile_generation_reject0')
+extra = {'policy': {}}
+
+    @pytest.mark.parametrize('extra', [{'policy':{}}, {'basis':{}}, {'profile_patch':{}},
+        {'input_format':'profile-text-v1'}, {'project_intake':'true'}, {'requested_skill':'contract_review'},
+        {'attachment_ids':[str(uuid4())]}])
+    def test_profile_generation_rejects_untrusted_controls_and_sources(world, tmp_path, extra):
+        with native_http(world, tmp_path) as http:
+>           grant(http)
+
+tests\integration\test_assistant_profile_application.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF62EBB740>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': 'ff395b75-dfac-4275-a4ad-e73cd085c966', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+___ test_profile_generation_rejects_untrusted_controls_and_sources[extra1] ____
+
+world = (<cn_contract.persistence.Database object at 0x000001AF62DE68A0>, Actor(user_id=UUID('c9d2b449-2763-49fa-a38a-d663bddc...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF62E2B140>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_profile_generation_reject1')
+extra = {'basis': {}}
+
+    @pytest.mark.parametrize('extra', [{'policy':{}}, {'basis':{}}, {'profile_patch':{}},
+        {'input_format':'profile-text-v1'}, {'project_intake':'true'}, {'requested_skill':'contract_review'},
+        {'attachment_ids':[str(uuid4())]}])
+    def test_profile_generation_rejects_untrusted_controls_and_sources(world, tmp_path, extra):
+        with native_http(world, tmp_path) as http:
+>           grant(http)
+
+tests\integration\test_assistant_profile_application.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF62FCBB60>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': '891dbbc5-963a-42ed-8148-54adbac02d09', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+___ test_profile_generation_rejects_untrusted_controls_and_sources[extra2] ____
+
+world = (<cn_contract.persistence.Database object at 0x000001AF5BC237D0>, Actor(user_id=UUID('a65fbae8-bfff-4856-9a50-19331424...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF630C1BE0>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_profile_generation_reject2')
+extra = {'profile_patch': {}}
+
+    @pytest.mark.parametrize('extra', [{'policy':{}}, {'basis':{}}, {'profile_patch':{}},
+        {'input_format':'profile-text-v1'}, {'project_intake':'true'}, {'requested_skill':'contract_review'},
+        {'attachment_ids':[str(uuid4())]}])
+    def test_profile_generation_rejects_untrusted_controls_and_sources(world, tmp_path, extra):
+        with native_http(world, tmp_path) as http:
+>           grant(http)
+
+tests\integration\test_assistant_profile_application.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF630E92B0>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': '789642b0-289c-4338-b714-7c7f5af0f501', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+___ test_profile_generation_rejects_untrusted_controls_and_sources[extra3] ____
+
+world = (<cn_contract.persistence.Database object at 0x000001AF627A1700>, Actor(user_id=UUID('27c424d6-330b-4af2-8309-734fcbfc...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF6316F140>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_profile_generation_reject3')
+extra = {'input_format': 'profile-text-v1'}
+
+    @pytest.mark.parametrize('extra', [{'policy':{}}, {'basis':{}}, {'profile_patch':{}},
+        {'input_format':'profile-text-v1'}, {'project_intake':'true'}, {'requested_skill':'contract_review'},
+        {'attachment_ids':[str(uuid4())]}])
+    def test_profile_generation_rejects_untrusted_controls_and_sources(world, tmp_path, extra):
+        with native_http(world, tmp_path) as http:
+>           grant(http)
+
+tests\integration\test_assistant_profile_application.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF63190350>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': '162a5694-0fa1-425b-bb34-0e1e5b010edc', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+___ test_profile_generation_rejects_untrusted_controls_and_sources[extra4] ____
+
+world = (<cn_contract.persistence.Database object at 0x000001AF630C1D90>, Actor(user_id=UUID('4da5ebec-6afc-4a44-abe1-2c2cc824...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF63285280>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_profile_generation_reject4')
+extra = {'project_intake': 'true'}
+
+    @pytest.mark.parametrize('extra', [{'policy':{}}, {'basis':{}}, {'profile_patch':{}},
+        {'input_format':'profile-text-v1'}, {'project_intake':'true'}, {'requested_skill':'contract_review'},
+        {'attachment_ids':[str(uuid4())]}])
+    def test_profile_generation_rejects_untrusted_controls_and_sources(world, tmp_path, extra):
+        with native_http(world, tmp_path) as http:
+>           grant(http)
+
+tests\integration\test_assistant_profile_application.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF633A55E0>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': 'bb6838ae-7e27-4c3b-805b-4dbf6689cba7', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+___ test_profile_generation_rejects_untrusted_controls_and_sources[extra5] ____
+
+world = (<cn_contract.persistence.Database object at 0x000001AF6334C380>, Actor(user_id=UUID('7311bca0-0576-4086-ad1a-81ac8560...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF633D13A0>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_profile_generation_reject5')
+extra = {'requested_skill': 'contract_review'}
+
+    @pytest.mark.parametrize('extra', [{'policy':{}}, {'basis':{}}, {'profile_patch':{}},
+        {'input_format':'profile-text-v1'}, {'project_intake':'true'}, {'requested_skill':'contract_review'},
+        {'attachment_ids':[str(uuid4())]}])
+    def test_profile_generation_rejects_untrusted_controls_and_sources(world, tmp_path, extra):
+        with native_http(world, tmp_path) as http:
+>           grant(http)
+
+tests\integration\test_assistant_profile_application.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF6348A210>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': '4ab4c073-d23c-4f44-b365-081574f14e41', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+___ test_profile_generation_rejects_untrusted_controls_and_sources[extra6] ____
+
+world = (<cn_contract.persistence.Database object at 0x000001AF634FFE30>, Actor(user_id=UUID('95f07828-a477-4059-acac-6dc2a3ef...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF6355A3C0>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_profile_generation_reject6')
+extra = {'attachment_ids': ['a6eec146-34f7-44ee-85f3-6e2099a5faff']}
+
+    @pytest.mark.parametrize('extra', [{'policy':{}}, {'basis':{}}, {'profile_patch':{}},
+        {'input_format':'profile-text-v1'}, {'project_intake':'true'}, {'requested_skill':'contract_review'},
+        {'attachment_ids':[str(uuid4())]}])
+    def test_profile_generation_rejects_untrusted_controls_and_sources(world, tmp_path, extra):
+        with native_http(world, tmp_path) as http:
+>           grant(http)
+
+tests\integration\test_assistant_profile_application.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF63644050>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': '30a87abf-b33e-4267-ad98-b26b3d7c3563', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+____ test_profile_generation_needs_matching_native_purpose_grant[revoked] _____
+
+world = (<cn_contract.persistence.Database object at 0x000001AF638C4B30>, Actor(user_id=UUID('0befeaa1-dd62-41b5-a425-9dfc5282...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF638D6540>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_profile_generation_needs_2')
+kind = 'revoked'
+
+    @pytest.mark.parametrize('kind', ['missing', 'ordinary', 'revoked', 'changed_plan', 'stale_draft'])
+    def test_profile_generation_needs_matching_native_purpose_grant(world, tmp_path, kind):
+        with native_http(world, tmp_path) as http:
+            if kind == 'ordinary':
+                plain = d.MainSendApproval(request_id=UUID(http.body['request_id']),
+                    expected_scope=d.ScopeSnapshot.model_validate(http.body['expected_scope']),
+                    expected_composer_revision=http.body['expected_composer_revision'],
+                    content_sha256=http.basis['content_sha256'])
+                http.client.portal.call(http.control.authorize, http.authorization | {'basis':plain.model_dump(mode='json')})
+            elif kind != 'missing':
+>               grant(http)
+
+tests\integration\test_assistant_profile_application.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF639BBEC0>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': '2d360de5-96f0-4757-abb5-cff87fde5fb2', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+__ test_profile_generation_needs_matching_native_purpose_grant[changed_plan] __
+
+world = (<cn_contract.persistence.Database object at 0x000001AF6369ED20>, Actor(user_id=UUID('875b2120-b78f-4816-8f3b-6d657936...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF63662E10>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_profile_generation_needs_3')
+kind = 'changed_plan'
+
+    @pytest.mark.parametrize('kind', ['missing', 'ordinary', 'revoked', 'changed_plan', 'stale_draft'])
+    def test_profile_generation_needs_matching_native_purpose_grant(world, tmp_path, kind):
+        with native_http(world, tmp_path) as http:
+            if kind == 'ordinary':
+                plain = d.MainSendApproval(request_id=UUID(http.body['request_id']),
+                    expected_scope=d.ScopeSnapshot.model_validate(http.body['expected_scope']),
+                    expected_composer_revision=http.body['expected_composer_revision'],
+                    content_sha256=http.basis['content_sha256'])
+                http.client.portal.call(http.control.authorize, http.authorization | {'basis':plain.model_dump(mode='json')})
+            elif kind != 'missing':
+>               grant(http)
+
+tests\integration\test_assistant_profile_application.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF63A84140>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': '6cea7def-8840-4d15-b09d-0a21332b1374', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+__ test_profile_generation_needs_matching_native_purpose_grant[stale_draft] ___
+
+world = (<cn_contract.persistence.Database object at 0x000001AF6353EF90>, Actor(user_id=UUID('84a2c09f-1898-48e1-a9e8-ddc49690...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF63AD8D10>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_profile_generation_needs_4')
+kind = 'stale_draft'
+
+    @pytest.mark.parametrize('kind', ['missing', 'ordinary', 'revoked', 'changed_plan', 'stale_draft'])
+    def test_profile_generation_needs_matching_native_purpose_grant(world, tmp_path, kind):
+        with native_http(world, tmp_path) as http:
+            if kind == 'ordinary':
+                plain = d.MainSendApproval(request_id=UUID(http.body['request_id']),
+                    expected_scope=d.ScopeSnapshot.model_validate(http.body['expected_scope']),
+                    expected_composer_revision=http.body['expected_composer_revision'],
+                    content_sha256=http.basis['content_sha256'])
+                http.client.portal.call(http.control.authorize, http.authorization | {'basis':plain.model_dump(mode='json')})
+            elif kind != 'missing':
+>               grant(http)
+
+tests\integration\test_assistant_profile_application.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF63BB5B20>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': 'c5a44f3c-dcc0-4077-8c1a-8c4629c7bd5e', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+________ test_native_profile_http_sends_once_and_reuses_existing_reads ________
+
+world = (<cn_contract.persistence.Database object at 0x000001AF6353D5B0>, Actor(user_id=UUID('4a671765-617c-4792-ac30-25baba9b...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF63BF9D30>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_native_profile_http_sends0')
+
+    def test_native_profile_http_sends_once_and_reuses_existing_reads(world, tmp_path):
+        with server(archive_response(), pause=.15) as (endpoint, received, seen):
+            with native_http(world, tmp_path, endpoint=endpoint, project_intake=True) as http:
+>               grant(http)
+
+tests\integration\test_assistant_profile_application.py:187: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF63D0DEB0>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': 'f977d6d8-1776-4f13-8554-e236dcd572bd', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+_ test_inflight_profile_revocation_or_cancel_keeps_usage_without_archive[revoke] _
+
+world = (<cn_contract.persistence.Database object at 0x000001AF637D9DC0>, Actor(user_id=UUID('3ac47278-a266-401a-970b-c8944849...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF63D316D0>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_inflight_profile_revocati0')
+change = 'revoke'
+
+    @pytest.mark.parametrize('change', ['revoke', 'cancel'])
+    def test_inflight_profile_revocation_or_cancel_keeps_usage_without_archive(world, tmp_path, change):
+        with server(archive_response(), pause=.2) as (endpoint, received, seen):
+            with native_http(world, tmp_path, endpoint=endpoint) as http:
+>               grant(http)
+
+tests\integration\test_assistant_profile_application.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF63E5F6B0>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': '140958b0-e71d-4520-b881-d41118a60738', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+_ test_inflight_profile_revocation_or_cancel_keeps_usage_without_archive[cancel] _
+
+world = (<cn_contract.persistence.Database object at 0x000001AF63E5C230>, Actor(user_id=UUID('766aa92e-bfa7-42c2-a815-751ce9d8...skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x000001AF63EA5160>)
+tmp_path = WindowsPath('D:/Documents/ChatGPT/������Ŀ/.local/profile-application-20261023/development-http/green-01-tmp/test_inflight_profile_revocati1')
+change = 'cancel'
+
+    @pytest.mark.parametrize('change', ['revoke', 'cancel'])
+    def test_inflight_profile_revocation_or_cancel_keeps_usage_without_archive(world, tmp_path, change):
+        with server(archive_response(), pause=.2) as (endpoint, received, seen):
+            with native_http(world, tmp_path, endpoint=endpoint) as http:
+>               grant(http)
+
+tests\integration\test_assistant_profile_application.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+http = namespace(client=<starlette.testclient.TestClient object at 0x000001AF63FB0080>, app=<fastapi.applications.FastAPI obj...2}, 'expected_config_version': '9cc1f8dc-c00c-40e4-a5e9-942823c79a4a', 'max_total_usd': '1', 'valid_for_seconds': 120})
+
+    def grant(http):
+>       assert http.client.portal.call(http.control.authorize_profile, http.authorization) == {'status':'authorized'}
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NativeModelControl' object has no attribute 'authorize_profile'
+
+tests\integration\test_assistant_profile_application.py:52: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_generation_rejects_untrusted_controls_and_sources[extra0]
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_generation_rejects_untrusted_controls_and_sources[extra1]
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_generation_rejects_untrusted_controls_and_sources[extra2]
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_generation_rejects_untrusted_controls_and_sources[extra3]
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_generation_rejects_untrusted_controls_and_sources[extra4]
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_generation_rejects_untrusted_controls_and_sources[extra5]
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_generation_rejects_untrusted_controls_and_sources[extra6]
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_generation_needs_matching_native_purpose_grant[revoked]
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_generation_needs_matching_native_purpose_grant[changed_plan]
+FAILED tests/integration/test_assistant_profile_application.py::test_profile_generation_needs_matching_native_purpose_grant[stale_draft]
+FAILED tests/integration/test_assistant_profile_application.py::test_native_profile_http_sends_once_and_reuses_existing_reads
+FAILED tests/integration/test_assistant_profile_application.py::test_inflight_profile_revocation_or_cancel_keeps_usage_without_archive[revoke]
+FAILED tests/integration/test_assistant_profile_application.py::test_inflight_profile_revocation_or_cancel_keeps_usage_without_archive[cancel]
+13 failed, 24 passed in 22.46s
