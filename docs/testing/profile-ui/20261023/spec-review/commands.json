@@ -1,0 +1,32 @@
+{
+  "cwd": "D:\\Documents\\ChatGPT\\律所项目",
+  "commands": [
+    [
+      "node",
+      [
+        "node",
+        "--test",
+        "--test-reporter=spec",
+        "--test-reporter-destination=stdout",
+        "--test-reporter=junit",
+        "--test-reporter-destination=D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-ui-20261023\\spec-review\\node.xml",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-ui-20261023\\spec-review\\spec-ui-probes.mjs"
+      ]
+    ],
+    [
+      "python",
+      [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-ui-20261023\\spec-review\\test_history_spec.py",
+        "-q",
+        "-W",
+        "error",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-ui-20261023\\spec-review\\合成隔离-01",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-ui-20261023\\spec-review\\python.xml"
+      ]
+    ]
+  ],
+  "fixture_reuse": "Only pre-test fixture declarations are copied from two existing Node test files; their test cases are not executed."
+}

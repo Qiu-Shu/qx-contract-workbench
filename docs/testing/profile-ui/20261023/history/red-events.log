@@ -1,0 +1,38 @@
+.FF........................                                              [100%]
+================================== FAILURES ===================================
+_ test_profile_history_rejects_handler_event_payload_disagreement[response.ready] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000001A972650BF0>, Actor(user_id=UUID('17583b37-4c97-4632-97e6-e21c2ac8...ntent='甲称借款35000元。', request_id=UUID('d510773d-7e48-4e54-8fec-ff054832c99e'), requested_skill=None, attachment_ids=()))
+event = 'response.ready'
+
+    @pytest.mark.parametrize('event', ['response.ready', 'profile.saved'])
+    def test_profile_history_rejects_handler_event_payload_disagreement(profile_world, event):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        corrupt(database, 'assistant_run_events',
+                'UPDATE assistant_run_events SET payload_json=? WHERE event_type=?', ('{}', event))
+>       with pytest.raises(ServiceError) as failure:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+
+tests\integration\test_assistant_profile_history.py:51: Failed
+_ test_profile_history_rejects_handler_event_payload_disagreement[profile.saved] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000001A972653FE0>, Actor(user_id=UUID('e93d5565-898a-4b5f-ab3c-5e39653b...ntent='甲称借款35000元。', request_id=UUID('a93c0668-ea23-46ac-b9b4-7394e9036663'), requested_skill=None, attachment_ids=()))
+event = 'profile.saved'
+
+    @pytest.mark.parametrize('event', ['response.ready', 'profile.saved'])
+    def test_profile_history_rejects_handler_event_payload_disagreement(profile_world, event):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        corrupt(database, 'assistant_run_events',
+                'UPDATE assistant_run_events SET payload_json=? WHERE event_type=?', ('{}', event))
+>       with pytest.raises(ServiceError) as failure:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+
+tests\integration\test_assistant_profile_history.py:51: Failed
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_handler_event_payload_disagreement[response.ready]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_handler_event_payload_disagreement[profile.saved]
+2 failed, 25 passed in 14.48s

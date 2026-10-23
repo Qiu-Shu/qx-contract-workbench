@@ -203,3 +203,31 @@ test('model switch button sits left of save-draft in the template',()=>{
   const actions=html.slice(html.indexOf('class="save-actions"'),html.indexOf('id="send"'));
   assert.ok(actions.indexOf('id="switch-model"')<actions.indexOf('id="save-draft"'));
 });
+
+test('profile result distinguishes saved, unchanged and blocked using server receipt',t=>{
+  const f=fixture(t),s=state();s.view.messages=messages();
+  const attempt=item(mid).attempt;attempt.input_format='profile-text-v1';
+  s.generation.items=[{message_id:mid,attempt}];
+  f.render.state(s);assert.match(f.at('history').textContent,/档案保存状态尚未确认/);
+  attempt.profile_save={outcome:'applied',reason_code:null,receipt:{conversation_id:cid,
+    profile_revision:3,profile_changed:true,projection_changed:true,intake_revision:2,event_type:'profile.saved'}};
+  f.render.state(s);assert.match(f.at('history').textContent,/档案草稿已更新.*版本 3/);
+  assert.match(f.at('history').textContent,/接待草稿已更新.*版本 2/);
+  attempt.profile_save={outcome:'unchanged',reason_code:null,receipt:{conversation_id:cid,
+    profile_revision:3,profile_changed:false,projection_changed:false,event_type:'profile.unchanged'}};
+  f.render.state(s);assert.match(f.at('history').textContent,/无需更新.*版本 3/);
+  attempt.profile_save={outcome:'blocked',reason_code:'PRIVATE_INTERNAL_REASON',receipt:null};
+  f.render.state(s);assert.match(f.at('history').textContent,/本次档案草稿未保存/);
+  assert.doesNotMatch(f.at('history').textContent,/PRIVATE_INTERNAL_REASON|档案草稿已更新/);
+});
+
+test('foreign or absent profile receipts never claim a saved draft',t=>{
+  const f=fixture(t),s=state();s.view.messages=messages();
+  const attempt=item(mid).attempt;attempt.input_format='profile-text-v1';
+  s.generation.items=[{message_id:mid,attempt}];
+  for(const receipt of [null,{conversation_id:'other',profile_revision:4,profile_changed:true,event_type:'profile.saved'}]){
+    attempt.profile_save={outcome:'applied',receipt};f.render.state(s);
+    assert.match(f.at('history').textContent,/档案保存状态尚未确认/);
+    assert.doesNotMatch(f.at('history').textContent,/档案草稿已更新/);
+  }
+});

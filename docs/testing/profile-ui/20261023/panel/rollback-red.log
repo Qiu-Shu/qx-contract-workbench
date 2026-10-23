@@ -1,0 +1,47 @@
+✔ starts hidden, reads only on open, and closes with keyboard focus restored (4.1779ms)
+✔ renders literal candidates, protected explicit null, exact money and unresolved states (1.0712ms)
+✔ source details preserve complete message and document anchor provenance (0.6347ms)
+✔ empty revision zero explains missing draft without claiming generation or saving (0.3697ms)
+✔ history accepts bounded integer versions, gets exact endpoint argument, and can reread latest (1.5664ms)
+✔ huge revision counts use one numeric input rather than enumerating all versions (0.4251ms)
+✔ wrong historical revision is never presented as the selected version (0.6189ms)
+✔ workspace conversation binding and scope boundaries reject mismatched snapshots (0.7779ms)
+✔ historical input and material revisions are allowed but future or malformed ones are refused (0.5902ms)
+✔ switching loading or revocation clears old data and discards late responses (0.986ms)
+✔ pagehide clears records and prevents subsequent or late reads (0.2327ms)
+✔ newer reads win and close prevents pending data or notices from returning (0.9701ms)
+✔ network failure clears old success and raw diagnostics, then permits explicit reread (0.5429ms)
+✔ authorization errors erase all profile values without retaining diagnostics (0.4573ms)
+✔ a growing current input snapshot does not erase a still valid historical profile (0.258ms)
+✖ a rollback below the displayed source snapshot clears now-incompatible content (0.8404ms)
+✔ no conversation, unresolved scope, loading, and revoked state cannot issue reads (0.3284ms)
+✔ quote offsets use Unicode code points and reject broken source ranges (1.0546ms)
+✔ invalid values, claimed verification and model contact proposals never render (0.9271ms)
+✔ list material and date values preserve original text and honest material status (0.3677ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 19
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 84.7243
+
+✖ failing tests:
+
+test at scripts\test_assistant_profile_panel.mjs:150:1
+✖ a rollback below the displayed source snapshot clears now-incompatible content (0.8404ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:153:12)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

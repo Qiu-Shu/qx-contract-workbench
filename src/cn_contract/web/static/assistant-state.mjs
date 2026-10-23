@@ -13,7 +13,7 @@ const activeRuns = new Set(['queued', 'preparing', 'routing', 'retrieving', 'gen
 
 export function createDraftController(api, {
   onChange = () => {}, onConversation = () => {}, uuid = () => crypto.randomUUID(), readonly = false,
-  nativeAuthorization = null, nativeContextAuthorization = null,
+  nativeAuthorization = null, nativeContextAuthorization = null, nativeProfileAuthorization = null,
 } = {}) {
   const state = {id: null, view: null, text: '', savedText: '', skill: null,
     status: readonly ? 'readonly' : 'idle', error: null, conflict: null, dirty: false, loading: false,
@@ -281,7 +281,7 @@ export function createDraftController(api, {
     } catch (error) { return fail(error, token); }
     finally { if (cancelling === marker) cancelling = false; }
   }
-  const workflowHost={state,readonly,uuid,notify,nativeAuthorization,nativeContextAuthorization,
+  const workflowHost={state,readonly,uuid,notify,nativeAuthorization,nativeContextAuthorization,nativeProfileAuthorization,
     token:()=>epoch,current,fail,
     blocked:()=>Boolean((pending || creating) && !channel || materialPending || state.status==='error'),
     busy:()=>Boolean(channel || pending || creating || materialPending || reading),
@@ -337,7 +337,11 @@ export function createDraftController(api, {
       context.unknown()?context.send():
       state.skill==='legal_research'?research.send():
       !state.skill && state.context?.selected.length?context.send():generation.send(),
-    previewContext:()=>context.preview(),toggleContextCitation:id=>context.toggle(id),
+    previewContext:()=>context.preview(),
+    toggleContextCitation(id){
+      const selected=state.context.selected.join(',');context.toggle(id);
+      if(selected!==state.context.selected.join(',')){generation.changed();notify();}
+    },
     refreshGeneration:refreshWorkflows,
     upload: (file,policy) => file ? material('upload',{original_name:file.name,mime:file.type,policy},{file}) : Promise.resolve(false),
     parse: (attachment,baseline_view=null) => material('parse',{baseline_view},{attachment}),

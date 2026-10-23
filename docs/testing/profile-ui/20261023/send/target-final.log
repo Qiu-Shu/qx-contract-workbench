@@ -1,0 +1,152 @@
+✔ saved citations enumerate from own search receipts in order and dedupe (3.9082ms)
+✔ selection keeps click order, toggles off, and refuses a ninth citation (1.0581ms)
+✔ preview carries the fixed request and validates the deterministic response (2.9728ms)
+✔ editing the question or the selection invalidates the preview and remints the request (1.4618ms)
+✔ broken preview responses are rejected as invalid and never enable sending (3.7877ms)
+✔ send confirms natively once, submits the same request and hands off to tracking (2.2172ms)
+✔ native cancellation never submits and returns to idle (0.7078ms)
+✔ unknown submit outcome is recovered by the original lookup without resending (0.8875ms)
+✔ without the desktop bridge preview works but sending stays closed (0.3858ms)
+✔ skill selection, materials, readonly or empty draft block selection and send (0.4635ms)
+✔ revocation discards selection state and pending context work immediately (7.3021ms)
+✔ entry rechecks readiness after input changes and returns to the saved text (10.3432ms)
+✔ entry rechecks readiness after a skill selection is immediately cancelled (1.8661ms)
+✔ unknown network outcome repeated send and refresh use original lookup without resubmission (2.2872ms)
+✔ late capability success cannot authorize another conversation (2.2541ms)
+✔ history response for a former binding is rejected and cannot be displayed (0.9969ms)
+✔ a delayed history authorization error after revocation cannot restore old state (0.8852ms)
+✔ a failed capability read is attempted once and does not create an automatic retry loop (0.8657ms)
+✔ shipped entry injects only the dedicated native authorization bridge when present (0.6243ms)
+✔ entry does not enqueue capability reads while a native confirmation is outstanding (2.666ms)
+PASS default, read-only, selected skill and local materials never dispatch
+PASS one click snapshots input, saves first and double click dispatches one fixed request
+PASS editing while initial save waits aborts send instead of sending the newer text
+PASS editing while capability waits invalidates ready and requires a fresh click
+PASS acknowledgement preserves new input and queued saves use the accepted composer revision
+PASS lost registration reply is recovered by original request only and preserves later edits
+PASS unknown not found stays unknown across send and refresh without replacing its key
+PASS unknown draft and material writes cannot be crossed by sending
+PASS registration conflict retains local and remote drafts for explicit resolution
+PASS old ready scope cannot authorize current text
+PASS old ready revision cannot authorize current text
+PASS old ready digest cannot authorize current text
+PASS old ready basis cannot authorize current text
+PASS edit invalidates a previously ready capability synchronously
+PASS ordinary BLOCKED_LIVE 403 retains draft and current identity
+PASS ordinary BUDGET_EXCEEDED 403 retains draft and current identity
+PASS ordinary CALL_LIMIT_EXCEEDED 403 retains draft and current identity
+PASS revocation discards delayed registration and clears current results
+PASS switch and close discard late history success and late authorization failure
+PASS history batches visible messages, retains older attempts and has no provider action on reopen
+PASS cancelling reads receipt and candidates without a second generation POST
+PASS historical scope change clears results and rejects late capability
+PASS known registration survives readback failure and newer draft can be saved after reconciliation
+PASS known registration and independent remote edit leave a resolvable composer conflict
+PASS completed older messages and attempts survive pagination and a later send
+PASS same text retyped during submission is preserved as new input
+PASS send during a background capability read waits then registers exactly the clicked input
+PASS native confirmation uses one fixed saved-draft request even when capability is already ready
+PASS native cancellation preserves input and refreshes never open a confirmation
+PASS native failures stay fixed and require another explicit confirmation without posting
+PASS confirmation stays busy across capability refresh and repeated send clicks
+PASS editing or retyping identical text during native confirmation invalidates the approval
+PASS scope composer materials and skill changes invalidate native approval before POST
+PASS switch close and revocation discard late native approval without touching the next page
+PASS native-approved unknown POST is recovered only by the same request without a new approval
+PASS native bridge cannot override missing configuration readonly skill or attachment guards
+36 generation state groups passed
+✔ scripts\test_assistant_generation_state.mjs (94.9565ms)
+PASS attachment-only action creates one conversation and never clears text typed during upload
+PASS unknown upload checks receipt before retry, retains chosen file and never duplicates
+PASS revocation clears pending attachment and late response cannot repopulate another view
+PASS material scope conflict preserves text and file until explicit resolution
+4 attachment state groups passed
+✔ scripts\test_assistant_material_state.mjs (60.5702ms)
+✔ desktop ordinary text previews the saved source and submits one flat profile DTO (13.1628ms)
+✔ older client keeps plain send: {"bridge":false} (1.2117ms)
+✔ older client keeps plain send: {"apis":false} (1.6185ms)
+✔ refresh reads capability and history without previewing or opening native approval (1.0116ms)
+✔ invalid profile preview request_id rejects without native approval or plain fallback (0.8649ms)
+✔ invalid profile preview expected_scope rejects without native approval or plain fallback (0.5252ms)
+✔ invalid profile preview expected_composer_revision rejects without native approval or plain fallback (0.6052ms)
+✔ invalid profile preview content_sha256 rejects without native approval or plain fallback (0.5252ms)
+✔ invalid profile preview project_intake rejects without native approval or plain fallback (0.7225ms)
+✔ invalid profile preview purpose rejects without native approval or plain fallback (0.8104ms)
+✔ invalid profile preview input_format rejects without native approval or plain fallback (0.5888ms)
+✔ invalid profile preview handler_id rejects without native approval or plain fallback (0.4492ms)
+✔ invalid profile preview base_profile_revision rejects without native approval or plain fallback (0.4351ms)
+✔ invalid profile preview expected_intake_revision rejects without native approval or plain fallback (0.4528ms)
+✔ invalid profile preview wire_bytes rejects without native approval or plain fallback (0.3982ms)
+✔ invalid profile preview wire_sha256 rejects without native approval or plain fallback (1.0293ms)
+✔ native profile acknowledgement is strict: {"ok":true} (0.4785ms)
+✔ native profile acknowledgement is strict: {"ok":true,"status":"ready"} (0.5029ms)
+✔ native profile acknowledgement is strict: {"ok":"true","status":"authorized"} (0.3185ms)
+✔ native profile acknowledgement is strict: {"ok":true,"status":"authorized","extra":"untrusted"} (0.3062ms)
+✔ native profile acknowledgement is strict: {"ok":true,"status":"authorized","canceled":true} (0.3304ms)
+✔ native profile acknowledgement is strict: {"ok":false,"status":"authorized"} (0.2865ms)
+✔ cancelled profile approval preserves text without registration (0.3595ms)
+✔ pending profile approval is invalidated by edit (0.6049ms)
+✔ pending profile approval is invalidated by retype (0.3639ms)
+✔ pending profile approval is invalidated by skill (0.3962ms)
+✔ pending profile approval is invalidated by skill-reset (0.3656ms)
+✔ pending profile approval is invalidated by scope (0.4639ms)
+✔ pending profile approval is invalidated by composer (0.4ms)
+✔ pending profile approval is invalidated by materials (1.0585ms)
+✔ pending profile approval is invalidated by attachments (0.6668ms)
+✔ pending profile approval is invalidated by context (0.6272ms)
+✔ pending profile approval is invalidated by context-reset (0.4274ms)
+✔ late profile approval after switch is ignored (0.5637ms)
+✔ late profile approval after close is ignored (0.4464ms)
+✔ late profile approval after revoke is ignored (0.4064ms)
+✔ profile send cannot bypass readonly (0.3694ms)
+✔ profile send cannot bypass unconfigured (0.3652ms)
+✔ profile send cannot bypass busy (0.3735ms)
+✔ profile send cannot bypass restored_read_only (0.4028ms)
+✔ profile send cannot bypass skill (0.2902ms)
+✔ profile send cannot bypass materials (0.4642ms)
+✔ profile send cannot bypass attachments (0.6188ms)
+✔ profile send cannot bypass awaiting_input (1.0052ms)
+✔ existing native acknowledgement only reads the original request, including when not yet found (0.7208ms)
+✔ profile transport loss reconciles by request without repost or new approval and preserves later edits (0.6171ms)
+✔ existing native acknowledgement recovers a profile attempt without submitting again (0.5597ms)
+✔ plain attempt under a profile request is not accepted as a profile registration (0.3959ms)
+✔ profile preview transport failure never opens native confirmation or falls back to plain (0.3444ms)
+✔ definite profile rejection permits only a fresh explicit profile approval (0.6797ms)
+PASS blank and skill selection do not create records; read-only never writes
+PASS single save channel preserves input typed during an older acknowledgement
+PASS unknown creation requires explicit retry and preserves its original request identity
+PASS unknown write is reconciled by exact scope, revision and content before newer input saves
+PASS unknown write not committed can replay only after unchanged baseline is read
+PASS unknown write scope mismatch retains both drafts until explicit choice
+PASS unknown write revision mismatch retains both drafts until explicit choice
+PASS unknown write content mismatch retains both drafts until explicit choice
+PASS version conflict allows explicitly keeping local text against the new server version
+PASS refresh never overwrites unsaved input and detects independent remote edits
+PASS switch waits for save and rejects switching after failed persistence
+PASS late page reads and revocation cannot contaminate a newer conversation
+PASS current permission revocation clears text, history, skill and identity immediately
+PASS older pages deduplicate in chronological order and preserve pending input
+PASS empty page with a cursor can keep paging; refresh retains already loaded history
+PASS cancel reads the persisted result and preserves unsaved text
+PASS close discards delayed replies and removes in-memory content
+PASS unknown write stays dirty even when the user edits back to the saved baseline
+PASS create replay cannot silently overwrite a draft edited in another window
+PASS a late refresh cannot roll back a completed newer save
+PASS disjoint refreshed history starts its own cursor instead of hiding unread messages
+PASS an older read finishing does not release the busy guard on a newer read
+PASS a failed page read leaves no old identity available for accidental draft saves
+PASS late create response after close cannot change identity or notify the page
+PASS replayed PUT racing the original can recognize the original successful write
+PASS external 401 revocation clears unknown writes and rejects delayed reconciliation
+PASS external 403 revocation clears unknown writes and rejects delayed reconciliation
+PASS external non-authorization errors cannot clear conversation data
+28 assistant state checks passed
+✔ scripts\test_assistant_state.mjs (67.0875ms)
+ℹ tests 73
+ℹ suites 0
+ℹ pass 73
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 137.9601

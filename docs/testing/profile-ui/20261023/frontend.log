@@ -1,0 +1,927 @@
+TAP version 13
+# Subtest: source snapshots display only literal text with provenance and pending review
+ok 1 - source snapshots display only literal text with provenance and pending review
+  ---
+  duration_ms: 2.2589
+  type: 'test'
+  ...
+# Subtest: closing invalidates a pending response and restores a connected trigger or composer
+ok 2 - closing invalidates a pending response and restores a connected trigger or composer
+  ---
+  duration_ms: 0.9328
+  type: 'test'
+  ...
+# Subtest: scope rebinding, switching, loading and revocation clear panel and reject late data
+ok 3 - scope rebinding, switching, loading and revocation clear panel and reject late data
+  ---
+  duration_ms: 0.9966
+  type: 'test'
+  ...
+# Subtest: saved UUID and conversation identity must match; ordinary draft revision does not erase snapshot
+ok 4 - saved UUID and conversation identity must match; ordinary draft revision does not erase snapshot
+  ---
+  duration_ms: 1.527
+  type: 'test'
+  ...
+# Subtest: lookup authorization error clears and cannot render raw diagnostics
+ok 5 - lookup authorization error clears and cannot render raw diagnostics
+  ---
+  duration_ms: 0.4325
+  type: 'test'
+  ...
+# Subtest: result statuses distinguish unavailable, incomplete and zero hits
+ok 6 - result statuses distinguish unavailable, incomplete and zero hits
+  ---
+  duration_ms: 0.6495
+  type: 'test'
+  ...
+# Subtest: card click passes only saved UUID and malformed IDs are never links
+ok 7 - card click passes only saved UUID and malformed IDs are never links
+  ---
+  duration_ms: 0.4946
+  type: 'test'
+  ...
+# Subtest: shared renderer uses local send rules while ordinary native approval remains distinct
+ok 8 - shared renderer uses local send rules while ordinary native approval remains distinct
+  ---
+  duration_ms: 1.5344
+  type: 'test'
+  ...
+# Subtest: saved citations enumerate from own search receipts in order and dedupe
+ok 9 - saved citations enumerate from own search receipts in order and dedupe
+  ---
+  duration_ms: 5.6914
+  type: 'test'
+  ...
+# Subtest: selection keeps click order, toggles off, and refuses a ninth citation
+ok 10 - selection keeps click order, toggles off, and refuses a ninth citation
+  ---
+  duration_ms: 1.6087
+  type: 'test'
+  ...
+# Subtest: preview carries the fixed request and validates the deterministic response
+ok 11 - preview carries the fixed request and validates the deterministic response
+  ---
+  duration_ms: 3.2498
+  type: 'test'
+  ...
+# Subtest: editing the question or the selection invalidates the preview and remints the request
+ok 12 - editing the question or the selection invalidates the preview and remints the request
+  ---
+  duration_ms: 1.4375
+  type: 'test'
+  ...
+# Subtest: broken preview responses are rejected as invalid and never enable sending
+ok 13 - broken preview responses are rejected as invalid and never enable sending
+  ---
+  duration_ms: 4.5062
+  type: 'test'
+  ...
+# Subtest: send confirms natively once, submits the same request and hands off to tracking
+ok 14 - send confirms natively once, submits the same request and hands off to tracking
+  ---
+  duration_ms: 2.2465
+  type: 'test'
+  ...
+# Subtest: native cancellation never submits and returns to idle
+ok 15 - native cancellation never submits and returns to idle
+  ---
+  duration_ms: 1.0355
+  type: 'test'
+  ...
+# Subtest: unknown submit outcome is recovered by the original lookup without resending
+ok 16 - unknown submit outcome is recovered by the original lookup without resending
+  ---
+  duration_ms: 1.1565
+  type: 'test'
+  ...
+# Subtest: without the desktop bridge preview works but sending stays closed
+ok 17 - without the desktop bridge preview works but sending stays closed
+  ---
+  duration_ms: 0.6216
+  type: 'test'
+  ...
+# Subtest: skill selection, materials, readonly or empty draft block selection and send
+ok 18 - skill selection, materials, readonly or empty draft block selection and send
+  ---
+  duration_ms: 0.663
+  type: 'test'
+  ...
+# Subtest: revocation discards selection state and pending context work immediately
+ok 19 - revocation discards selection state and pending context work immediately
+  ---
+  duration_ms: 7.5893
+  type: 'test'
+  ...
+# Subtest: entry rechecks readiness after input changes and returns to the saved text
+ok 20 - entry rechecks readiness after input changes and returns to the saved text
+  ---
+  duration_ms: 11.5895
+  type: 'test'
+  ...
+# Subtest: entry rechecks readiness after a skill selection is immediately cancelled
+ok 21 - entry rechecks readiness after a skill selection is immediately cancelled
+  ---
+  duration_ms: 2.3703
+  type: 'test'
+  ...
+# Subtest: unknown network outcome repeated send and refresh use original lookup without resubmission
+ok 22 - unknown network outcome repeated send and refresh use original lookup without resubmission
+  ---
+  duration_ms: 2.5616
+  type: 'test'
+  ...
+# Subtest: late capability success cannot authorize another conversation
+ok 23 - late capability success cannot authorize another conversation
+  ---
+  duration_ms: 2.151
+  type: 'test'
+  ...
+# Subtest: history response for a former binding is rejected and cannot be displayed
+ok 24 - history response for a former binding is rejected and cannot be displayed
+  ---
+  duration_ms: 1.5957
+  type: 'test'
+  ...
+# Subtest: a delayed history authorization error after revocation cannot restore old state
+ok 25 - a delayed history authorization error after revocation cannot restore old state
+  ---
+  duration_ms: 1.2527
+  type: 'test'
+  ...
+# Subtest: a failed capability read is attempted once and does not create an automatic retry loop
+ok 26 - a failed capability read is attempted once and does not create an automatic retry loop
+  ---
+  duration_ms: 1.6268
+  type: 'test'
+  ...
+# Subtest: shipped entry injects only the dedicated native authorization bridge when present
+ok 27 - shipped entry injects only the dedicated native authorization bridge when present
+  ---
+  duration_ms: 0.8257
+  type: 'test'
+  ...
+# Subtest: entry does not enqueue capability reads while a native confirmation is outstanding
+ok 28 - entry does not enqueue capability reads while a native confirmation is outstanding
+  ---
+  duration_ms: 3.47
+  type: 'test'
+  ...
+# Subtest: send follows the generation gate and existing draft/readonly guards
+ok 29 - send follows the generation gate and existing draft/readonly guards
+  ---
+  duration_ms: 4.2819
+  type: 'test'
+  ...
+# Subtest: generation uncertainty has its own status and lookup action, without relabeling a saved draft
+ok 30 - generation uncertainty has its own status and lookup action, without relabeling a saved draft
+  ---
+  duration_ms: 1.9363
+  type: 'test'
+  ...
+# Subtest: capability states give distinct truthful explanations
+ok 31 - capability states give distinct truthful explanations
+  ---
+  duration_ms: 1.0111
+  type: 'test'
+  ...
+# Subtest: results stay with their matching input in chronological history and have source anchors
+ok 32 - results stay with their matching input in chronological history and have source anchors
+  ---
+  duration_ms: 1.78
+  type: 'test'
+  ...
+# Subtest: model text remains literal with whitespace and source links only target loaded messages
+ok 33 - model text remains literal with whitespace and source links only target loaded messages
+  ---
+  duration_ms: 0.992
+  type: 'test'
+  ...
+# Subtest: unrelated items and prior conversation content are cleared on switching or revocation
+ok 34 - unrelated items and prior conversation content are cleared on switching or revocation
+  ---
+  duration_ms: 0.8596
+  type: 'test'
+  ...
+# Subtest: an updated attempt replaces its former state, and draft edits retain unchanged history nodes
+ok 35 - an updated attempt replaces its former state, and draft edits retain unchanged history nodes
+  ---
+  duration_ms: 0.7772
+  type: 'test'
+  ...
+# Subtest: unknown, estimated and proven unsent cost remain distinct without rounding decimal values
+ok 36 - unknown, estimated and proven unsent cost remain distinct without rounding decimal values
+  ---
+  duration_ms: 0.89
+  type: 'test'
+  ...
+# Subtest: generation errors expose a fixed recovery explanation rather than raw diagnostics
+ok 37 - generation errors expose a fixed recovery explanation rather than raw diagnostics
+  ---
+  duration_ms: 0.4856
+  type: 'test'
+  ...
+# Subtest: native send offers confirmation of the full text recipient and fee ceiling before submission
+ok 38 - native send offers confirmation of the full text recipient and fee ceiling before submission
+  ---
+  duration_ms: 0.6244
+  type: 'test'
+  ...
+# Subtest: native failures distinguish confirmation from unknown POST without exposing diagnostics
+ok 39 - native failures distinguish confirmation from unknown POST without exposing diagnostics
+  ---
+  duration_ms: 0.4721
+  type: 'test'
+  ...
+# Subtest: failed capability reads can be retried before any task exists
+ok 40 - failed capability reads can be retried before any task exists
+  ---
+  duration_ms: 0.2789
+  type: 'test'
+  ...
+# Subtest: initial template keeps send disabled, recovery hidden and describes controlled generation
+ok 41 - initial template keeps send disabled, recovery hidden and describes controlled generation
+  ---
+  duration_ms: 0.6319
+  type: 'test'
+  ...
+# Subtest: generated paragraphs keep wrapping and preserve whitespace in the stylesheet
+ok 42 - generated paragraphs keep wrapping and preserve whitespace in the stylesheet
+  ---
+  duration_ms: 0.3585
+  type: 'test'
+  ...
+# Subtest: model switch button follows the desktop bridge state and guards
+ok 43 - model switch button follows the desktop bridge state and guards
+  ---
+  duration_ms: 0.5502
+  type: 'test'
+  ...
+# Subtest: model switch button sits left of save-draft in the template
+ok 44 - model switch button sits left of save-draft in the template
+  ---
+  duration_ms: 0.4311
+  type: 'test'
+  ...
+# Subtest: profile result distinguishes saved, unchanged and blocked using server receipt
+ok 45 - profile result distinguishes saved, unchanged and blocked using server receipt
+  ---
+  duration_ms: 1.0396
+  type: 'test'
+  ...
+# Subtest: foreign or absent profile receipts never claim a saved draft
+ok 46 - foreign or absent profile receipts never claim a saved draft
+  ---
+  duration_ms: 0.6379
+  type: 'test'
+  ...
+# PASS default, read-only, selected skill and local materials never dispatch
+# PASS one click snapshots input, saves first and double click dispatches one fixed request
+# PASS editing while initial save waits aborts send instead of sending the newer text
+# PASS editing while capability waits invalidates ready and requires a fresh click
+# PASS acknowledgement preserves new input and queued saves use the accepted composer revision
+# PASS lost registration reply is recovered by original request only and preserves later edits
+# PASS unknown not found stays unknown across send and refresh without replacing its key
+# PASS unknown draft and material writes cannot be crossed by sending
+# PASS registration conflict retains local and remote drafts for explicit resolution
+# PASS old ready scope cannot authorize current text
+# PASS old ready revision cannot authorize current text
+# PASS old ready digest cannot authorize current text
+# PASS old ready basis cannot authorize current text
+# PASS edit invalidates a previously ready capability synchronously
+# PASS ordinary BLOCKED_LIVE 403 retains draft and current identity
+# PASS ordinary BUDGET_EXCEEDED 403 retains draft and current identity
+# PASS ordinary CALL_LIMIT_EXCEEDED 403 retains draft and current identity
+# PASS revocation discards delayed registration and clears current results
+# PASS switch and close discard late history success and late authorization failure
+# PASS history batches visible messages, retains older attempts and has no provider action on reopen
+# PASS cancelling reads receipt and candidates without a second generation POST
+# PASS historical scope change clears results and rejects late capability
+# PASS known registration survives readback failure and newer draft can be saved after reconciliation
+# PASS known registration and independent remote edit leave a resolvable composer conflict
+# PASS completed older messages and attempts survive pagination and a later send
+# PASS same text retyped during submission is preserved as new input
+# PASS send during a background capability read waits then registers exactly the clicked input
+# PASS native confirmation uses one fixed saved-draft request even when capability is already ready
+# PASS native cancellation preserves input and refreshes never open a confirmation
+# PASS native failures stay fixed and require another explicit confirmation without posting
+# PASS confirmation stays busy across capability refresh and repeated send clicks
+# PASS editing or retyping identical text during native confirmation invalidates the approval
+# PASS scope composer materials and skill changes invalidate native approval before POST
+# PASS switch close and revocation discard late native approval without touching the next page
+# PASS native-approved unknown POST is recovered only by the same request without a new approval
+# PASS native bridge cannot override missing configuration readonly skill or attachment guards
+# 36 generation state groups passed
+# Subtest: scripts\\test_assistant_generation_state.mjs
+ok 5 - scripts\\test_assistant_generation_state.mjs
+  ---
+  duration_ms: 109.5918
+  type: 'test'
+  ...
+# Subtest: late parse completion cannot reopen a preview explicitly closed by the lawyer
+ok 48 - late parse completion cannot reopen a preview explicitly closed by the lawyer
+  ---
+  duration_ms: 11.191
+  type: 'test'
+  ...
+# Subtest: late parse completion cannot replace a newer attachment preview
+ok 49 - late parse completion cannot replace a newer attachment preview
+  ---
+  duration_ms: 2.6899
+  type: 'test'
+  ...
+# Subtest: switching conversations suppresses the prior parse callback while the target is loading
+ok 50 - switching conversations suppresses the prior parse callback while the target is loading
+  ---
+  duration_ms: 2.4281
+  type: 'test'
+  ...
+# Subtest: new conversation clears prior material rows, preview and unsubmitted picker selection
+ok 51 - new conversation clears prior material rows, preview and unsubmitted picker selection
+  ---
+  duration_ms: 1.7794
+  type: 'test'
+  ...
+# Subtest: revocation clears materials immediately and a delayed source response stays discarded
+ok 52 - revocation clears materials immediately and a delayed source response stays discarded
+  ---
+  duration_ms: 1.5457
+  type: 'test'
+  ...
+# Subtest: successful unknown-upload reconciliation disarms the picker instead of creating another receipt
+ok 53 - successful unknown-upload reconciliation disarms the picker instead of creating another receipt
+  ---
+  duration_ms: 1.581
+  type: 'test'
+  ...
+# PASS attachment-only action creates one conversation and never clears text typed during upload
+# PASS unknown upload checks receipt before retry, retains chosen file and never duplicates
+# PASS revocation clears pending attachment and late response cannot repopulate another view
+# PASS material scope conflict preserves text and file until explicit resolution
+# 4 attachment state groups passed
+# Subtest: scripts\\test_assistant_material_state.mjs
+ok 7 - scripts\\test_assistant_material_state.mjs
+  ---
+  duration_ms: 67.4786
+  type: 'test'
+  ...
+# Subtest: desktop ordinary text previews the saved source and submits one flat profile DTO
+ok 55 - desktop ordinary text previews the saved source and submits one flat profile DTO
+  ---
+  duration_ms: 18.5797
+  type: 'test'
+  ...
+# Subtest: older client keeps plain send: {"bridge":false}
+ok 56 - older client keeps plain send: {"bridge":false}
+  ---
+  duration_ms: 1.6681
+  type: 'test'
+  ...
+# Subtest: older client keeps plain send: {"apis":false}
+ok 57 - older client keeps plain send: {"apis":false}
+  ---
+  duration_ms: 1.9921
+  type: 'test'
+  ...
+# Subtest: refresh reads capability and history without previewing or opening native approval
+ok 58 - refresh reads capability and history without previewing or opening native approval
+  ---
+  duration_ms: 0.8151
+  type: 'test'
+  ...
+# Subtest: invalid profile preview request_id rejects without native approval or plain fallback
+ok 59 - invalid profile preview request_id rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.9131
+  type: 'test'
+  ...
+# Subtest: invalid profile preview expected_scope rejects without native approval or plain fallback
+ok 60 - invalid profile preview expected_scope rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.9622
+  type: 'test'
+  ...
+# Subtest: invalid profile preview expected_composer_revision rejects without native approval or plain fallback
+ok 61 - invalid profile preview expected_composer_revision rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.5851
+  type: 'test'
+  ...
+# Subtest: invalid profile preview content_sha256 rejects without native approval or plain fallback
+ok 62 - invalid profile preview content_sha256 rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.4535
+  type: 'test'
+  ...
+# Subtest: invalid profile preview project_intake rejects without native approval or plain fallback
+ok 63 - invalid profile preview project_intake rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.5563
+  type: 'test'
+  ...
+# Subtest: invalid profile preview purpose rejects without native approval or plain fallback
+ok 64 - invalid profile preview purpose rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.5885
+  type: 'test'
+  ...
+# Subtest: invalid profile preview input_format rejects without native approval or plain fallback
+ok 65 - invalid profile preview input_format rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.466
+  type: 'test'
+  ...
+# Subtest: invalid profile preview handler_id rejects without native approval or plain fallback
+ok 66 - invalid profile preview handler_id rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.4862
+  type: 'test'
+  ...
+# Subtest: invalid profile preview base_profile_revision rejects without native approval or plain fallback
+ok 67 - invalid profile preview base_profile_revision rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.4721
+  type: 'test'
+  ...
+# Subtest: invalid profile preview expected_intake_revision rejects without native approval or plain fallback
+ok 68 - invalid profile preview expected_intake_revision rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.4637
+  type: 'test'
+  ...
+# Subtest: invalid profile preview wire_bytes rejects without native approval or plain fallback
+ok 69 - invalid profile preview wire_bytes rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.9328
+  type: 'test'
+  ...
+# Subtest: invalid profile preview wire_sha256 rejects without native approval or plain fallback
+ok 70 - invalid profile preview wire_sha256 rejects without native approval or plain fallback
+  ---
+  duration_ms: 0.5423
+  type: 'test'
+  ...
+# Subtest: native profile acknowledgement is strict: {"ok":true}
+ok 71 - native profile acknowledgement is strict: {"ok":true}
+  ---
+  duration_ms: 0.4669
+  type: 'test'
+  ...
+# Subtest: native profile acknowledgement is strict: {"ok":true,"status":"ready"}
+ok 72 - native profile acknowledgement is strict: {"ok":true,"status":"ready"}
+  ---
+  duration_ms: 0.4325
+  type: 'test'
+  ...
+# Subtest: native profile acknowledgement is strict: {"ok":"true","status":"authorized"}
+ok 73 - native profile acknowledgement is strict: {"ok":"true","status":"authorized"}
+  ---
+  duration_ms: 0.3268
+  type: 'test'
+  ...
+# Subtest: native profile acknowledgement is strict: {"ok":true,"status":"authorized","extra":"untrusted"}
+ok 74 - native profile acknowledgement is strict: {"ok":true,"status":"authorized","extra":"untrusted"}
+  ---
+  duration_ms: 0.3535
+  type: 'test'
+  ...
+# Subtest: native profile acknowledgement is strict: {"ok":true,"status":"authorized","canceled":true}
+ok 75 - native profile acknowledgement is strict: {"ok":true,"status":"authorized","canceled":true}
+  ---
+  duration_ms: 0.3648
+  type: 'test'
+  ...
+# Subtest: native profile acknowledgement is strict: {"ok":false,"status":"authorized"}
+ok 76 - native profile acknowledgement is strict: {"ok":false,"status":"authorized"}
+  ---
+  duration_ms: 0.4943
+  type: 'test'
+  ...
+# Subtest: cancelled profile approval preserves text without registration
+ok 77 - cancelled profile approval preserves text without registration
+  ---
+  duration_ms: 0.6841
+  type: 'test'
+  ...
+# Subtest: pending profile approval is invalidated by edit
+ok 78 - pending profile approval is invalidated by edit
+  ---
+  duration_ms: 0.7631
+  type: 'test'
+  ...
+# Subtest: pending profile approval is invalidated by retype
+ok 79 - pending profile approval is invalidated by retype
+  ---
+  duration_ms: 0.363
+  type: 'test'
+  ...
+# Subtest: pending profile approval is invalidated by skill
+ok 80 - pending profile approval is invalidated by skill
+  ---
+  duration_ms: 0.3883
+  type: 'test'
+  ...
+# Subtest: pending profile approval is invalidated by skill-reset
+ok 81 - pending profile approval is invalidated by skill-reset
+  ---
+  duration_ms: 0.3532
+  type: 'test'
+  ...
+# Subtest: pending profile approval is invalidated by scope
+ok 82 - pending profile approval is invalidated by scope
+  ---
+  duration_ms: 0.3862
+  type: 'test'
+  ...
+# Subtest: pending profile approval is invalidated by composer
+ok 83 - pending profile approval is invalidated by composer
+  ---
+  duration_ms: 0.9407
+  type: 'test'
+  ...
+# Subtest: pending profile approval is invalidated by materials
+ok 84 - pending profile approval is invalidated by materials
+  ---
+  duration_ms: 0.6378
+  type: 'test'
+  ...
+# Subtest: pending profile approval is invalidated by attachments
+ok 85 - pending profile approval is invalidated by attachments
+  ---
+  duration_ms: 0.4244
+  type: 'test'
+  ...
+# Subtest: pending profile approval is invalidated by context
+ok 86 - pending profile approval is invalidated by context
+  ---
+  duration_ms: 0.5732
+  type: 'test'
+  ...
+# Subtest: pending profile approval is invalidated by context-reset
+ok 87 - pending profile approval is invalidated by context-reset
+  ---
+  duration_ms: 0.3798
+  type: 'test'
+  ...
+# Subtest: late profile approval after switch is ignored
+ok 88 - late profile approval after switch is ignored
+  ---
+  duration_ms: 0.5026
+  type: 'test'
+  ...
+# Subtest: late profile approval after close is ignored
+ok 89 - late profile approval after close is ignored
+  ---
+  duration_ms: 0.3771
+  type: 'test'
+  ...
+# Subtest: late profile approval after revoke is ignored
+ok 90 - late profile approval after revoke is ignored
+  ---
+  duration_ms: 0.379
+  type: 'test'
+  ...
+# Subtest: profile send cannot bypass readonly
+ok 91 - profile send cannot bypass readonly
+  ---
+  duration_ms: 0.352
+  type: 'test'
+  ...
+# Subtest: profile send cannot bypass unconfigured
+ok 92 - profile send cannot bypass unconfigured
+  ---
+  duration_ms: 0.3278
+  type: 'test'
+  ...
+# Subtest: profile send cannot bypass busy
+ok 93 - profile send cannot bypass busy
+  ---
+  duration_ms: 0.3064
+  type: 'test'
+  ...
+# Subtest: profile send cannot bypass restored_read_only
+ok 94 - profile send cannot bypass restored_read_only
+  ---
+  duration_ms: 0.4821
+  type: 'test'
+  ...
+# Subtest: profile send cannot bypass skill
+ok 95 - profile send cannot bypass skill
+  ---
+  duration_ms: 0.2782
+  type: 'test'
+  ...
+# Subtest: profile send cannot bypass materials
+ok 96 - profile send cannot bypass materials
+  ---
+  duration_ms: 0.3259
+  type: 'test'
+  ...
+# Subtest: profile send cannot bypass attachments
+ok 97 - profile send cannot bypass attachments
+  ---
+  duration_ms: 0.7954
+  type: 'test'
+  ...
+# Subtest: profile send cannot bypass awaiting_input
+ok 98 - profile send cannot bypass awaiting_input
+  ---
+  duration_ms: 0.5122
+  type: 'test'
+  ...
+# Subtest: existing native acknowledgement only reads the original request, including when not yet found
+ok 99 - existing native acknowledgement only reads the original request, including when not yet found
+  ---
+  duration_ms: 0.52
+  type: 'test'
+  ...
+# Subtest: profile transport loss reconciles by request without repost or new approval and preserves later edits
+ok 100 - profile transport loss reconciles by request without repost or new approval and preserves later edits
+  ---
+  duration_ms: 0.5842
+  type: 'test'
+  ...
+# Subtest: existing native acknowledgement recovers a profile attempt without submitting again
+ok 101 - existing native acknowledgement recovers a profile attempt without submitting again
+  ---
+  duration_ms: 0.5266
+  type: 'test'
+  ...
+# Subtest: plain attempt under a profile request is not accepted as a profile registration
+ok 102 - plain attempt under a profile request is not accepted as a profile registration
+  ---
+  duration_ms: 0.3984
+  type: 'test'
+  ...
+# Subtest: profile preview transport failure never opens native confirmation or falls back to plain
+ok 103 - profile preview transport failure never opens native confirmation or falls back to plain
+  ---
+  duration_ms: 0.352
+  type: 'test'
+  ...
+# Subtest: definite profile rejection permits only a fresh explicit profile approval
+ok 104 - definite profile rejection permits only a fresh explicit profile approval
+  ---
+  duration_ms: 0.6534
+  type: 'test'
+  ...
+# Subtest: starts hidden, reads only on open, and closes with keyboard focus restored
+ok 105 - starts hidden, reads only on open, and closes with keyboard focus restored
+  ---
+  duration_ms: 6.8848
+  type: 'test'
+  ...
+# Subtest: renders literal candidates, protected explicit null, exact money and unresolved states
+ok 106 - renders literal candidates, protected explicit null, exact money and unresolved states
+  ---
+  duration_ms: 2.0313
+  type: 'test'
+  ...
+# Subtest: source details preserve complete message and document anchor provenance
+ok 107 - source details preserve complete message and document anchor provenance
+  ---
+  duration_ms: 1.2696
+  type: 'test'
+  ...
+# Subtest: empty revision zero explains missing draft without claiming generation or saving
+ok 108 - empty revision zero explains missing draft without claiming generation or saving
+  ---
+  duration_ms: 0.6284
+  type: 'test'
+  ...
+# Subtest: current profile null is an honest empty state while absent historical versions remain errors
+ok 109 - current profile null is an honest empty state while absent historical versions remain errors
+  ---
+  duration_ms: 1.3365
+  type: 'test'
+  ...
+# Subtest: history accepts bounded integer versions, gets exact endpoint argument, and can reread latest
+ok 110 - history accepts bounded integer versions, gets exact endpoint argument, and can reread latest
+  ---
+  duration_ms: 2.7522
+  type: 'test'
+  ...
+# Subtest: huge revision counts use one numeric input rather than enumerating all versions
+ok 111 - huge revision counts use one numeric input rather than enumerating all versions
+  ---
+  duration_ms: 0.8018
+  type: 'test'
+  ...
+# Subtest: wrong historical revision is never presented as the selected version
+ok 112 - wrong historical revision is never presented as the selected version
+  ---
+  duration_ms: 0.8748
+  type: 'test'
+  ...
+# Subtest: workspace conversation binding and scope boundaries reject mismatched snapshots
+ok 113 - workspace conversation binding and scope boundaries reject mismatched snapshots
+  ---
+  duration_ms: 1.3094
+  type: 'test'
+  ...
+# Subtest: historical input and material revisions are allowed but future or malformed ones are refused
+ok 114 - historical input and material revisions are allowed but future or malformed ones are refused
+  ---
+  duration_ms: 1.1968
+  type: 'test'
+  ...
+# Subtest: switching loading or revocation clears old data and discards late responses
+ok 115 - switching loading or revocation clears old data and discards late responses
+  ---
+  duration_ms: 2.538
+  type: 'test'
+  ...
+# Subtest: pagehide clears records and prevents subsequent or late reads
+ok 116 - pagehide clears records and prevents subsequent or late reads
+  ---
+  duration_ms: 0.3732
+  type: 'test'
+  ...
+# Subtest: newer reads win and close prevents pending data or notices from returning
+ok 117 - newer reads win and close prevents pending data or notices from returning
+  ---
+  duration_ms: 0.4407
+  type: 'test'
+  ...
+# Subtest: network failure clears old success and raw diagnostics, then permits explicit reread
+ok 118 - network failure clears old success and raw diagnostics, then permits explicit reread
+  ---
+  duration_ms: 0.9405
+  type: 'test'
+  ...
+# Subtest: authorization errors erase all profile values without retaining diagnostics
+ok 119 - authorization errors erase all profile values without retaining diagnostics
+  ---
+  duration_ms: 0.9773
+  type: 'test'
+  ...
+# Subtest: a growing current input snapshot does not erase a still valid historical profile
+ok 120 - a growing current input snapshot does not erase a still valid historical profile
+  ---
+  duration_ms: 0.5358
+  type: 'test'
+  ...
+# Subtest: a rollback below the displayed source snapshot clears now-incompatible content
+ok 121 - a rollback below the displayed source snapshot clears now-incompatible content
+  ---
+  duration_ms: 1.6492
+  type: 'test'
+  ...
+# Subtest: no conversation, unresolved scope, loading, and revoked state cannot issue reads
+ok 122 - no conversation, unresolved scope, loading, and revoked state cannot issue reads
+  ---
+  duration_ms: 0.5729
+  type: 'test'
+  ...
+# Subtest: quote offsets use Unicode code points and reject broken source ranges
+ok 123 - quote offsets use Unicode code points and reject broken source ranges
+  ---
+  duration_ms: 0.747
+  type: 'test'
+  ...
+# Subtest: invalid values, claimed verification and model contact proposals never render
+ok 124 - invalid values, claimed verification and model contact proposals never render
+  ---
+  duration_ms: 1.112
+  type: 'test'
+  ...
+# Subtest: list material and date values preserve original text and honest material status
+ok 125 - list material and date values preserve original text and honest material status
+  ---
+  duration_ms: 0.4474
+  type: 'test'
+  ...
+# Subtest: explicit local research saves keywords and dispatches once without model configuration
+ok 126 - explicit local research saves keywords and dispatches once without model configuration
+  ---
+  duration_ms: 6.0235
+  type: 'test'
+  ...
+# Subtest: skill click alone preserves text and never dispatches
+ok 127 - skill click alone preserves text and never dispatches
+  ---
+  duration_ms: 4.8739
+  type: 'test'
+  ...
+# Subtest: readonly, attachments, empty or overlong keyword never dispatch
+ok 128 - readonly, attachments, empty or overlong keyword never dispatch
+  ---
+  duration_ms: 1.1434
+  type: 'test'
+  ...
+# Subtest: edit or skill change during save aborts the clicked search
+ok 129 - edit or skill change during save aborts the clicked search
+  ---
+  duration_ms: 2.1487
+  type: 'test'
+  ...
+# Subtest: unknown registration uses original lookup even after skill changes and never resends
+ok 130 - unknown registration uses original lookup even after skill changes and never resends
+  ---
+  duration_ms: 1.1714
+  type: 'test'
+  ...
+# Subtest: unknown not-found stays unresolved and prevents competing model or material work
+ok 131 - unknown not-found stays unresolved and prevents competing model or material work
+  ---
+  duration_ms: 0.8673
+  type: 'test'
+  ...
+# Subtest: registration proof followed by read failure unlocks newer draft without resubmitting
+ok 132 - registration proof followed by read failure unlocks newer draft without resubmitting
+  ---
+  duration_ms: 0.8886
+  type: 'test'
+  ...
+# Subtest: switch and revocation discard late research history immediately
+ok 133 - switch and revocation discard late research history immediately
+  ---
+  duration_ms: 2.2257
+  type: 'test'
+  ...
+# Subtest: history rejects unrelated messages and receipt scopes but allows authorized older revisions
+ok 134 - history rejects unrelated messages and receipt scopes but allows authorized older revisions
+  ---
+  duration_ms: 1.2732
+  type: 'test'
+  ...
+# Subtest: authorization error clears entire active view and history
+ok 135 - authorization error clears entire active view and history
+  ---
+  duration_ms: 0.6824
+  type: 'test'
+  ...
+# PASS blank and skill selection do not create records; read-only never writes
+# PASS single save channel preserves input typed during an older acknowledgement
+# PASS unknown creation requires explicit retry and preserves its original request identity
+# PASS unknown write is reconciled by exact scope, revision and content before newer input saves
+# PASS unknown write not committed can replay only after unchanged baseline is read
+# PASS unknown write scope mismatch retains both drafts until explicit choice
+# PASS unknown write revision mismatch retains both drafts until explicit choice
+# PASS unknown write content mismatch retains both drafts until explicit choice
+# PASS version conflict allows explicitly keeping local text against the new server version
+# PASS refresh never overwrites unsaved input and detects independent remote edits
+# PASS switch waits for save and rejects switching after failed persistence
+# PASS late page reads and revocation cannot contaminate a newer conversation
+# PASS current permission revocation clears text, history, skill and identity immediately
+# PASS older pages deduplicate in chronological order and preserve pending input
+# PASS empty page with a cursor can keep paging; refresh retains already loaded history
+# PASS cancel reads the persisted result and preserves unsaved text
+# PASS close discards delayed replies and removes in-memory content
+# PASS unknown write stays dirty even when the user edits back to the saved baseline
+# PASS create replay cannot silently overwrite a draft edited in another window
+# PASS a late refresh cannot roll back a completed newer save
+# PASS disjoint refreshed history starts its own cursor instead of hiding unread messages
+# PASS an older read finishing does not release the busy guard on a newer read
+# PASS a failed page read leaves no old identity available for accidental draft saves
+# PASS late create response after close cannot change identity or notify the page
+# PASS replayed PUT racing the original can recognize the original successful write
+# PASS external 401 revocation clears unknown writes and rejects delayed reconciliation
+# PASS external 403 revocation clears unknown writes and rejects delayed reconciliation
+# PASS external non-authorization errors cannot clear conversation data
+# 28 assistant state checks passed
+# Subtest: scripts\\test_assistant_state.mjs
+ok 11 - scripts\\test_assistant_state.mjs
+  ---
+  duration_ms: 79.2486
+  type: 'test'
+  ...
+# Subtest: same-origin transport carries CSRF only on writes and preserves original request identity
+ok 137 - same-origin transport carries CSRF only on writes and preserves original request identity
+  ---
+  duration_ms: 1.8788
+  type: 'test'
+  ...
+# Subtest: network and invalid responses are unknown, not proof a write failed
+ok 138 - network and invalid responses are unknown, not proof a write failed
+  ---
+  duration_ms: 1.5278
+  type: 'test'
+  ...
+# Subtest: generation transport keeps registration explicit and history bounded to requested identities
+ok 139 - generation transport keeps registration explicit and history bounded to requested identities
+  ---
+  duration_ms: 1.8706
+  type: 'test'
+  ...
+# Subtest: transport abandons a stalled connection with an unknown outcome
+ok 140 - transport abandons a stalled connection with an unknown outcome
+  ---
+  duration_ms: 0.6084
+  type: 'test'
+  ...
+# Subtest: Enter, Shift+Enter, held keys and composition boundaries keep native input intact
+ok 141 - Enter, Shift+Enter, held keys and composition boundaries keep native input intact
+  ---
+  duration_ms: 2.0538
+  type: 'test'
+  ...
+1..141
+# tests 141
+# suites 0
+# pass 141
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 164.4552

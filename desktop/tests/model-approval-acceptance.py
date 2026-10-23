@@ -45,17 +45,18 @@ def main():
     modes.add_argument('--judge', action='store_true')
     modes.add_argument('--judge-closed', action='store_true')
     modes.add_argument('--profile', action='store_true')
+    modes.add_argument('--profile-ui', action='store_true')
     options = parser.parse_args()
     if options.frozen and options.legacy_frozen: parser.error('choose one frozen argument')
     target = options.target.resolve(); target.mkdir(parents=True, exist_ok=False)
     frozen = options.frozen or options.legacy_frozen
     if frozen: frozen = frozen.resolve(); assert frozen.is_file()
-    if options.profile and frozen: parser.error('profile acceptance is source-only')
+    if (options.profile or options.profile_ui) and frozen: parser.error('profile acceptance is source-only')
     judge_mode = options.judge or options.judge_closed
     data = target/'中文 合成确认资料'; launch = target/'launch'; launch.mkdir()
     report = {'status': 'running', 'checks': [], 'source_before': hashes(), 'real_model_execution': 'not_requested',
         'backend': 'frozen_grant_without_send' if frozen else 'source_loopback', 'exit_code': 1,
-        'page_errors': [], 'requests': [], 'profile_mode': options.profile, 'judge_mode': 'synthetic_budget' if options.judge else
+        'page_errors': [], 'requests': [], 'profile_mode': options.profile, 'profile_ui': options.profile_ui, 'judge_mode': 'synthetic_budget' if options.judge else
             'production_default_closed' if options.judge_closed else 'legacy_main',
         'frozen_network_observation': 'not_instrumented' if frozen else None}
     if frozen: report['exe_sha256'] = hashlib.sha256(frozen.read_bytes()).hexdigest()
@@ -87,8 +88,14 @@ def main():
                 source = json.loads(body['messages'][1]['content'])
                 assert source['content'] in ((CONTENT, JUDGE_CONTENT) if options.judge else (CONTENT,))
                 posts.append({'provider': 'main', 'content_sha256': hashlib.sha256(source['content'].encode()).hexdigest()})
-                candidate = {'text': '独立合成候选：交货事项仍需律师核对。', 'citations': [
-                    {'message_id': source['message_id'], 'quote_sha256': source['quote_sha256']}]}
+                if options.profile_ui:
+                    assert set(source) == {'content'}, 'ARCHIVE_HISTORY_MUST_STAY_LOCAL'
+                    candidate = {'text': '独立合成候选：交货事项仍需律师核对。', 'citations': [],
+                        'profile_changes': [{'field':'consultation','value':{'kind':'text','value':CONTENT},
+                            'origin':'user_statement','quotes':[{'start':0,'end':len(CONTENT),'quote':CONTENT}]}]}
+                else:
+                    candidate = {'text': '独立合成候选：交货事项仍需律师核对。', 'citations': [
+                        {'message_id': source['message_id'], 'quote_sha256': source['quote_sha256']}]}
                 response = {'id': 'synthetic-native-confirmation', 'model': 'deepseek-flash',
                     'object': 'chat.completion', 'created': 1, 'choices': [{'index': 0, 'finish_reason': 'stop',
                     'message': {'role': 'assistant', 'content': json.dumps(candidate, ensure_ascii=False)}}],
@@ -202,7 +209,10 @@ def main():
             page.locator('#resume').click(); expect(page.locator('#send')).to_be_enabled()
             assert capability()['state'] == 'unapproved' and not posts
             passed('configured_saved_draft_requires_native_confirmation_without_observed_loopback_post')
-            if options.profile:
+            if options.profile_ui:
+                from profile_ui_acceptance import run_profile_ui
+                run_profile_ui(page, modal, closing_action, command_native, save, passed, posts, LONG, CONTENT)
+            elif options.profile:
                 from profile_approval_acceptance import run_profile
                 run_profile(page, modal, closing_action, command_native, save, settings, passed, posts, LONG)
             else:
@@ -286,9 +296,11 @@ def main():
         assert not report.get('provider_error'), 'UNEXPECTED_SYNTHETIC_PROVIDER_REQUEST'
         assert all(r['url'].startswith(('file:','http://127.0.0.1:')) for r in report['requests'])
         report['generation_posts']=sum(r['method']=='POST' and r['url'].endswith('/generations') for r in report['requests'])
+        report['profile_generation_posts']=sum(r['method']=='POST' and r['url'].endswith('/profile-generations') for r in report['requests'])
         main_count = 0 if frozen or options.profile else 2 if options.judge else 1
         judge_count = 1 if options.judge and not frozen else 0
-        assert report['generation_posts']==main_count
+        assert report['generation_posts']==(0 if options.profile_ui else main_count)
+        if options.profile_ui: assert report['profile_generation_posts']==1
         report['provider_order'] = [p['provider'] for p in posts]
         report['provider_posts'] = {'main': sum(p['provider']=='main' for p in posts),
             'judge': sum(p['provider']=='judge' for p in posts)}
@@ -324,6 +336,11 @@ def main():
                 report['profile_counts']={name:conn.execute('SELECT COUNT(*) FROM '+name).fetchone()[0]
                     for name in ('assistant_profile_revisions','assistant_profile_receipts','assistant_profile_handlers','intake_cases')}
                 assert not any(report['profile_counts'].values()),report['profile_counts']
+            if options.profile_ui:
+                report['profile_counts']={name:conn.execute('SELECT COUNT(*) FROM '+name).fetchone()[0]
+                    for name in ('assistant_profile_revisions','assistant_profile_receipts','assistant_profile_handlers','intake_cases')}
+                assert set(report['profile_counts'].values())=={1},report['profile_counts']
+                assert conn.execute('SELECT outcome FROM assistant_profile_handlers').fetchone()[0]=='applied'
             if judge_count:
                 run_id = conn.execute('SELECT run_id FROM assistant_judge_attempts').fetchone()[0]
         if judge_count:

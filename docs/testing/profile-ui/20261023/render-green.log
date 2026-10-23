@@ -1,0 +1,26 @@
+✔ send follows the generation gate and existing draft/readonly guards (2.0128ms)
+✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.4152ms)
+✔ capability states give distinct truthful explanations (0.4764ms)
+✔ results stay with their matching input in chronological history and have source anchors (0.8ms)
+✔ model text remains literal with whitespace and source links only target loaded messages (0.4497ms)
+✔ unrelated items and prior conversation content are cleared on switching or revocation (0.4429ms)
+✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.3472ms)
+✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.5414ms)
+✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.3235ms)
+✔ native send offers confirmation of the full text recipient and fee ceiling before submission (0.4207ms)
+✔ native failures distinguish confirmation from unknown POST without exposing diagnostics (0.2089ms)
+✔ failed capability reads can be retried before any task exists (0.1534ms)
+✔ initial template keeps send disabled, recovery hidden and describes controlled generation (0.4457ms)
+✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.1958ms)
+✔ model switch button follows the desktop bridge state and guards (0.2225ms)
+✔ model switch button sits left of save-draft in the template (0.2152ms)
+✔ profile result distinguishes saved, unchanged and blocked using server receipt (0.632ms)
+✔ foreign or absent profile receipts never claim a saved draft (0.3019ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73.3598

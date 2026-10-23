@@ -16,16 +16,22 @@ async function digest(text) {
 }
 
 export function createGenerationController(api,host) {
-  const {state,readonly,uuid,notify,nativeAuthorization}=host;
-  const nativeConfirmation=typeof nativeAuthorization==='function';
+  const {state,readonly,uuid,notify,nativeAuthorization,nativeProfileAuthorization}=host;
+  const profileMode=typeof nativeProfileAuthorization==='function' &&
+    typeof api.submitProfilePreview==='function' && typeof api.submitProfileGeneration==='function';
+  const nativeConfirmation=profileMode || typeof nativeAuthorization==='function';
   let epoch=0, edits=0, work=null, workKind=null, pending=null, capabilityBasis=null;
-  state.generation={phase:'idle',capability:null,canSend:false,items:[],error:null,nativeConfirmation};
-  const available = () => api.getGenerationCapability && api.submitGeneration && api.findGenerationRequest;
+  const initial=()=>({phase:'idle',capability:null,canSend:false,items:[],error:null,nativeConfirmation,profileMode});
+  state.generation=initial();
+  const available = () => api.getGenerationCapability &&
+    (profileMode?api.submitProfileGeneration:api.submitGeneration) && api.findGenerationRequest;
   const token = () => ({epoch,host:host.token()});
   const current = value => value.epoch===epoch && host.current(value.host);
   const allowed = () => !readonly && !state.loading && state.status!=='revoked' && !state.conflict &&
-    !state.skill && !state.materials?.items?.length && Boolean(state.text.trim()) && !host.blocked();
-  const basis = () => ({scope:state.view?.scope,revision:state.view?.composer_revision,text:state.savedText,edits});
+    !state.skill && !state.materials?.items?.length && Boolean(state.text.trim()) && !host.blocked() &&
+    (!profileMode || !state.materials?.attachments?.length && !state.context?.selected?.length &&
+      (!state.view?.latest_run || ['completed','cancelled','failed','interrupted','blocked'].includes(state.view.latest_run.state)));
+  const basis = () => ({scope:{...state.view?.scope},revision:state.view?.composer_revision,text:state.savedText,edits});
   const sameBasis = value => value && edits===value.edits && state.text===value.text &&
     state.savedText===value.text && state.view?.composer_revision===value.revision && sameScope(value.scope,state.view?.scope);
   const tracking = () => state.generation.items.some(item=>active(item.attempt));
@@ -41,7 +47,7 @@ export function createGenerationController(api,host) {
   }
   function reset() {
     epoch++;work=null;workKind=null;pending=null;capabilityBasis=null;
-    state.generation={phase:'idle',capability:null,canSend:false,items:[],error:null,nativeConfirmation};
+    state.generation=initial();
   }
   function changed() {
     edits++;capabilityBasis=null;state.generation.capability=null;state.generation.canSend=false;
@@ -83,8 +89,28 @@ export function createGenerationController(api,host) {
   }
   function checkedRegistration(attempt,body) {
     checkedAttempt(attempt,body.expected_scope);
-    if(!sameScope(attempt.scope,{...body.expected_scope,input_revision:body.expected_scope.input_revision+1}))throw invalid();
+    if(!sameScope(attempt.scope,{...body.expected_scope,input_revision:body.expected_scope.input_revision+1}) ||
+        body.project_intake===true && attempt.input_format!=='profile-text-v1')throw invalid();
     return attempt;
+  }
+  function checkedProfilePreview(preview,selection,hash) {
+    const fields=['input_format','template_version','purpose','handler_id','handler_version','request_id',
+      'expected_scope','expected_composer_revision','content_sha256','base_profile_revision','expected_intake_id',
+      'expected_intake_revision','project_intake','system_sha256','config_sha256','wire_sha256','wire_bytes'];
+    const integer=(value,min=0)=>Number.isSafeInteger(value) && value>=min;
+    const uuidValue=value=>typeof value==='string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(value);
+    if(!preview || Object.keys(preview).length!==fields.length || !fields.every(field=>Object.hasOwn(preview,field)) ||
+        preview.input_format!=='profile-text-v1' || preview.template_version!=='profile-text-system-v1' ||
+        preview.purpose!=='reply_and_profile_draft' || preview.handler_id!=='profile.save' || preview.handler_version!=='1' ||
+        preview.request_id!==selection.request_id || !sameScope(preview.expected_scope,selection.expected_scope) ||
+        preview.expected_composer_revision!==selection.expected_composer_revision || preview.content_sha256!==hash ||
+        preview.project_intake!==true || !integer(preview.base_profile_revision) || !integer(preview.wire_bytes,1) ||
+        preview.wire_bytes>262144 || !['system_sha256','config_sha256','wire_sha256'].every(field=>
+          typeof preview[field]==='string' && /^[0-9a-f]{64}$/.test(preview[field])) ||
+        (preview.expected_intake_id===null ? preview.expected_intake_revision!==null :
+          !uuidValue(preview.expected_intake_id) || !integer(preview.expected_intake_revision,1)) ||
+        selection.expected_scope.scope_kind==='intake' && preview.expected_intake_id!==selection.expected_scope.scope_ref)
+      throw invalid();
   }
   async function history(value) {
     const view=state.view,id=state.id;
@@ -159,13 +185,23 @@ export function createGenerationController(api,host) {
       if(!sendable(cap) || !allowed()) {state.generation.phase='idle';notify();return false;}
       const body=Object.freeze({request_id:uuid(),expected_scope:Object.freeze({...state.view.scope}),
         expected_composer_revision:state.view.composer_revision,content:clicked.text,
-        requested_skill:null,attachment_ids:Object.freeze([])});
+        requested_skill:null,attachment_ids:Object.freeze([]),...(profileMode?{project_intake:true}:{})});
+      let existing=false;
       if(nativeConfirmation) {
         const stamp=basis(),id=state.id;
+        const selection=profileMode?Object.freeze({request_id:body.request_id,expected_scope:body.expected_scope,
+          expected_composer_revision:body.expected_composer_revision,project_intake:true}):null;
+        if(profileMode) {
+          const preview=await api.submitProfilePreview(id,selection);
+          if(!current(value))return false;
+          checkedProfilePreview(preview,selection,cap.content_sha256);
+          if(!sameBasis(stamp) || id!==state.id || !allowed())return failed({code:'INPUT_CHANGED',status:409},value);
+        }
         state.generation.phase='confirming';notify();
         let approval;
         try {
-          approval=await nativeAuthorization(Object.freeze({conversation_id:id,request_id:body.request_id,
+          approval=profileMode?await nativeProfileAuthorization(Object.freeze({conversation_id:id,...selection})):
+            await nativeAuthorization(Object.freeze({conversation_id:id,request_id:body.request_id,
             expected_scope:body.expected_scope,expected_composer_revision:body.expected_composer_revision,
             content_sha256:cap.content_sha256}));
         } catch {return failed({code:'NATIVE_CONFIRMATION_FAILED',status:0},value);}
@@ -174,15 +210,19 @@ export function createGenerationController(api,host) {
         if(approval?.canceled===true && approval.ok===false) {
           state.generation.phase='idle';notify();return false;
         }
-        if(approval?.ok!==true || approval.canceled===true)
+        if(approval?.ok!==true || approval.canceled===true || profileMode &&
+            (Object.keys(approval).length!==2 || !['authorized','existing'].includes(approval.status)))
           return failed({code:'NATIVE_CONFIRMATION_FAILED',status:0},value);
+        existing=profileMode && approval.status==='existing';
       }
       pending={id:state.id,body,edits:clicked.edits,result:null};
       state.generation.phase='submitting';state.generation.capability=null;capabilityBasis=null;notify();
       try {
-        const result=await api.submitGeneration(pending.id,body);
-        if(!current(value))return false;
-        pending.result=checkedRegistration(result,body);
+        if(!existing) {
+          const result=profileMode?await api.submitProfileGeneration(pending.id,body):await api.submitGeneration(pending.id,body);
+          if(!current(value))return false;
+          pending.result=checkedRegistration(result,body);
+        }
       } catch(error) {
         if(!current(value))return false;
         const definite=error.status>=400 && error.status<500 && !['NETWORK_UNKNOWN','NETWORK_ERROR','INVALID_RESPONSE'].includes(error.code);

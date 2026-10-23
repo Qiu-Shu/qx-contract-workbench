@@ -4,10 +4,11 @@ import {createRenderer,errorText} from './assistant-render.mjs';
 import {bindComposer} from './assistant-composer.mjs';
 import {bindMaterials} from './assistant-materials.mjs';
 import {bindCitations} from './assistant-citations.mjs';
+import {bindProfile} from './assistant-profile.mjs';
 
 const byId=id=>document.getElementById(id);
 const readonly=document.body.dataset.readonly==='true';
-let composer, materials, citations, timer, listCursor=null, listEpoch=0, closed=false;
+let composer, materials, citations, profile, timer, listCursor=null, listEpoch=0, closed=false;
 let generationTimer, pollTimer, generationKey=null;
 let pendingRoute=document.body.dataset.conversationId || null;
 const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing(),onCitation:(id,trigger)=>void citations.open(id,trigger),
@@ -18,6 +19,8 @@ const controller=createDraftController(api,{readonly,
     ?value=>window.desktopAssistant.authorizeGeneration(value):null,
   nativeContextAuthorization:typeof window.desktopAssistant?.authorizeContext==='function'
     ?value=>window.desktopAssistant.authorizeContext(value):null,
+  nativeProfileAuthorization:typeof window.desktopAssistant?.authorizeProfile==='function'
+    ?value=>window.desktopAssistant.authorizeProfile(value):null,
   onChange:state=>{
     drawState(state);
     renderer.selected(state.id);
@@ -36,7 +39,7 @@ const controller=createDraftController(api,{readonly,
 
 function drawState(state) {
   renderer.state(state,readonly);
-  materials?.state(state);citations?.state(state);
+  materials?.state(state);citations?.state(state);profile?.state(state);
   if(pendingRoute && !state.id && state.status!=='revoked') {
     byId('composer').disabled=true;byId('save-draft').disabled=true;byId('send').disabled=true;
     byId('add-material').disabled=true;
@@ -110,8 +113,9 @@ composer=bindComposer({input:byId('composer'),form:byId('composer-form'),
   },
   onSend:()=>{clearTimeout(timer);void safely(()=>controller.send());},
 });
-materials=bindMaterials({controller,readonly,onPreview:()=>citations?.close()});
-citations=bindCitations({controller,onOpen:()=>materials.close()});
+materials=bindMaterials({controller,readonly,onPreview:()=>{citations?.close();profile?.close();}});
+citations=bindCitations({controller,onOpen:()=>{materials.close();profile?.close();}});
+profile=bindProfile({controller,api,onOpen:()=>{materials.close();citations.close();}});
 
 const examples={client_reply:'这是客户的咨询，帮我理清诉求并起草回复：',
   material_organize:'请帮我整理这次咨询的事实线索和待补材料：',
@@ -220,7 +224,7 @@ window.addEventListener('beforeunload',event=>{
 });
 window.addEventListener('pagehide',()=>{
   closed=true;++listEpoch;clearTimeout(timer);clearTimeout(generationTimer);clearTimeout(pollTimer);
-  composer.dispose();materials.dispose();citations.dispose();controller.close();
+  composer.dispose();materials.dispose();citations.dispose();profile.close();controller.close();
 });
 
 drawState(controller.state);

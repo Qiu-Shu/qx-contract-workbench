@@ -169,3 +169,20 @@ desktop/tests/profile-native.test.cjs -text whitespace=blank-at-eol,blank-at-eof
 desktop/tests/profile_approval_acceptance.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 src/cn_contract/web/app.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 tests/integration/test_assistant_frontend.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/testing/profile-ui/** -text -whitespace
+desktop/tests/profile_ui_acceptance.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+scripts/test_assistant_generation_render.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+scripts/test_assistant_profile_generation.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+scripts/test_assistant_profile_panel.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/assistant/providers/attempts.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/assistant/providers/profile_history.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/static/assistant-api.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/static/assistant-generation.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/static/assistant-profile.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/static/assistant-render.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/static/assistant-state.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/static/assistant.css -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/static/assistant.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/templates/assistant.html -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_assistant_profile_history.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

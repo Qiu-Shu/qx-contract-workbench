@@ -1,0 +1,38 @@
+{
+  "baseline": "5d5e688b14ac53b81029184413cd37ce631b144c",
+  "cwd": "D:\\Documents\\ChatGPT\\律所项目",
+  "results": [
+    {
+      "name": "panel",
+      "command": [
+        "C:/Program Files/nodejs/node.exe",
+        "--test",
+        "--test-reporter=tap",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-ui-20261023\\standards-review\\panel-probes.mjs"
+      ],
+      "started_utc": "2026-10-23T08:50:22.971726+00:00",
+      "exit_code": 0,
+      "seconds": 0.109
+    },
+    {
+      "name": "history",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-ui-20261023\\standards-review\\fresh-d-01",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-ui-20261023\\standards-review\\history.xml",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\profile-ui-20261023\\standards-review\\test_history_probes.py"
+      ],
+      "started_utc": "2026-10-23T08:50:23.078479+00:00",
+      "exit_code": 0,
+      "seconds": 4.25
+    }
+  ],
+  "input_count": 555,
+  "inputs_equal": true
+}

@@ -1,0 +1,25 @@
+✔ starts hidden, reads only on open, and closes with keyboard focus restored (4.6944ms)
+✔ renders literal candidates, protected explicit null, exact money and unresolved states (1.1371ms)
+✔ source details preserve complete message and document anchor provenance (0.6275ms)
+✔ empty revision zero explains missing draft without claiming generation or saving (0.3525ms)
+✔ history accepts bounded integer versions, gets exact endpoint argument, and can reread latest (1.839ms)
+✔ huge revision counts use one numeric input rather than enumerating all versions (0.4907ms)
+✔ wrong historical revision is never presented as the selected version (0.5949ms)
+✔ workspace conversation binding and scope boundaries reject mismatched snapshots (0.8023ms)
+✔ historical input and material revisions are allowed but future or malformed ones are refused (0.6441ms)
+✔ switching loading or revocation clears old data and discards late responses (1.7147ms)
+✔ pagehide clears records and prevents subsequent or late reads (0.3565ms)
+✔ newer reads win and close prevents pending data or notices from returning (1.0474ms)
+✔ network failure clears old success and raw diagnostics, then permits explicit reread (0.5466ms)
+✔ authorization errors erase all profile values without retaining diagnostics (0.4918ms)
+✔ a growing current input snapshot does not erase a still valid historical profile (0.2386ms)
+✔ invalid values, claimed verification and model contact proposals never render (0.9477ms)
+✔ list material and date values preserve original text and honest material status (0.8616ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.0836

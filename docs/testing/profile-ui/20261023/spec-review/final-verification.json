@@ -1,0 +1,65 @@
+{
+  "baseline": "5d5e688b14ac53b81029184413cd37ce631b144c",
+  "essential_findings": [],
+  "independent_node": {
+    "exit_code": 0,
+    "passed": 3
+  },
+  "independent_python_initial": {
+    "collection_errors": 1,
+    "child_exit_code": null,
+    "runner_exit_code": 1
+  },
+  "independent_python_after_path_fix": {
+    "exit_code": 1,
+    "passed": 2,
+    "failed": 1,
+    "failure": "synthetic fixture rules-storage flag missing before intake conversion"
+  },
+  "independent_python_single_supplement": {
+    "exit_code": 0,
+    "passed": 1
+  },
+  "distinct_independent_cases_final_passed": 6,
+  "single_all_green_run_claimed": false,
+  "product_and_contract_input_count": 21,
+  "product_and_contract_inputs_unchanged": true,
+  "product_and_contract_hashes": {
+    "docs/plans/2026-10-23-profile-ui.md": "6d4f8d3e11c0334ab6ab8379f786a182f6a2a4a991602f0216cc0a0b41267027",
+    "scripts/test_assistant_profile_generation.mjs": "ba2d88a7b54bd05da2b92c11dcc58fd41b8808f577d1699a177841cfc8dac7b3",
+    "scripts/test_assistant_profile_panel.mjs": "fa1008d0d2fb121c8c7a29ce907ed4d48414defca1e4ec13c6a06ac1f8c24991",
+    "src/cn_contract/assistant/model_integrity.py": "3acba310648056bfec2a094e7ca7baaee0d49cf086bd8c4f198841f5cea22159",
+    "src/cn_contract/assistant/profile_model_integrity.py": "747a44eb031c4809a5e21ba864d89b5321ef3646feb514d94fd920c105c2ae87",
+    "src/cn_contract/assistant/profile_store.py": "79f49aab0b2b02d9bfd7dbf25b4db81bd686f5cc87f29eae3cb6f472cf65d22b",
+    "src/cn_contract/assistant/providers/attempts.py": "2cb5d3aaaa347eb8db7b4e0ab5d945f0b6c84a2906df3f64ada1fd56f05c6092",
+    "src/cn_contract/assistant/providers/profile_history.py": "e7f5576f80af0a5763c731bc0be92292614681e3865c02c76b83695128b26904",
+    "src/cn_contract/domain.py": "128bed24d191ed99a35b084fd82cf8cdcb86df951b34ab4c6ca380da2a85673c",
+    "src/cn_contract/web/app.py": "d60a4c273b5dee59dc109aed35f0eae1e5a034a47f92e1377abc9322eb96a7cd",
+    "src/cn_contract/web/static/assistant-api.mjs": "441a59984c656e3957b91c9ab82fb4b3ec075f5ca0f9697cdf19f48c3ebaec5e",
+    "src/cn_contract/web/static/assistant-generation.mjs": "a93e63b5f92cc70bdd43065cde510b24b56708f2054132aa4db8db057e2e6522",
+    "src/cn_contract/web/static/assistant-profile.mjs": "06b1e491e807a69aab39b05135290db4264f08486b44f30d4321cf92f45ef1aa",
+    "src/cn_contract/web/static/assistant-render.mjs": "c5707ea05468cc3f806733bc291485fa96f21b8bac504bb29074ce7117826990",
+    "src/cn_contract/web/static/assistant-state.mjs": "6d42f8f79039df1c542fd09bbc33901e3f5b269f2ee24a2809330c4f1e17b83e",
+    "src/cn_contract/web/static/assistant.css": "56799aeea47f51aff65a0cdba8b2fbd8b5e3884a1e5c3ec1f5fa78c92fc729f5",
+    "src/cn_contract/web/static/assistant.mjs": "0ea915ee26be7b0efd0147f58b4e4cf6293074395b2930fe2e6f0e36651860d3",
+    "src/cn_contract/web/templates/assistant.html": "09bdd099c3b141cdd429b45a5343fc337c05489dc0ec7ec1a4a54f19e91eb1ca",
+    "tests/integration/test_assistant_profile_execution.py": "83dbb425f62aa6b66bf2ece83f226e01296e76f185af6a0512d9d844b78df30d",
+    "tests/integration/test_assistant_profile_history.py": "d9fe48d1852bcd80ae5901824442e63a8ff901f806391ca6abcf1ac980b5c4c2",
+    "tests/integration/test_assistant_profile_model_integrity.py": "4de7131fa75a46ad46be088cf4ed062480c88ad2b7d87cf1b902e87807252ac0"
+  },
+  "supplement_all_inputs": 28,
+  "supplement_all_inputs_stable": true,
+  "parent_windows_artifact_only": {
+    "source_count": 627,
+    "source_before_equals_after": true,
+    "review_overlap_count": 20,
+    "review_overlap_sha_matches": true,
+    "independently_executed": false
+  },
+  "limitations": [
+    "no actual Windows run by this reviewer",
+    "no actual vendor request",
+    "no full Python or author Node suite rerun",
+    "no installed application or real materials touched"
+  ]
+}

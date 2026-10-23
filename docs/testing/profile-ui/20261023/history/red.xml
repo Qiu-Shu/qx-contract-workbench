@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.633" timestamp="2026-10-23T16:40:23.309392+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_profile_history" name="test_saved_profile_history_returns_verified_commit_without_original_request_id" time="0.517"><failure message="KeyError: 'profile_save'">profile_world = (&lt;cn_contract.persistence.Database object at 0x0000019C40C8BBF0&gt;, Actor(user_id=UUID('876358f7-756a-429b-9a2d-2aa9d2f5...ntent='甲称借款35000元。', request_id=UUID('42e75799-ed03-40dc-ae63-8ae8d2655770'), requested_skill=None, attachment_ids=()))
+
+    def test_saved_profile_history_returns_verified_commit_without_original_request_id(profile_world):
+        database, actor, conversation, _ = profile_world
+        result, prepared, _ = profile_history(profile_world)
+        before = state(database)
+        with database.session() as db:
+            current = service._owned(actor, conversation.scope.conversation_id, db)
+            restored = history.read_history(actor, current, d.MainGenerationHistoryQuery(
+                message_ids=(prepared.request.message_id,)), db).items[0].attempt
+        assert restored == result
+&gt;       saved = restored.model_dump(mode='json')['profile_save']
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'profile_save'
+
+tests\integration\test_assistant_profile_history.py:22: KeyError</failure></testcase></testsuite></testsuites>

@@ -45,6 +45,10 @@ export const getResearchHistory=(id,ids)=>request(conversation(id)+'/research-hi
 export const getSavedCitation=id=>request('/api/assistant/library-citations/'+encodeURIComponent(id));
 export const submitContextPreview=(id,body)=>request(conversation(id)+'/context-preview',{method:'POST',body});
 export const submitContextGeneration=(id,body)=>request(conversation(id)+'/context-generations',{method:'POST',body});
+export const submitProfilePreview=(id,body)=>request(conversation(id)+'/profile-preview',{method:'POST',body});
+export const submitProfileGeneration=(id,body)=>request(conversation(id)+'/profile-generations',{method:'POST',body});
+export const getProfile=(id,revision)=>request(conversation(id)+'/profile'+
+  (revision===undefined?'':'/revisions/'+encodeURIComponent(revision)));
 
 const attachment=(id,file)=>conversation(id)+'/attachments/'+encodeURIComponent(file);
 export const getMaterials=id=>request(conversation(id)+'/materials');

@@ -1,0 +1,53 @@
+{
+  "detector": {
+    "exit_code": 0,
+    "file": "impeccable.json"
+  },
+  "boundary": "Only read-only module and test edited; actual browser/window acceptance, full suite and final Git sync belong to root integration. No real model, data, network writes or git mutation.",
+  "inputs": [
+    {
+      "sha256": "06b1e491e807a69aab39b05135290db4264f08486b44f30d4321cf92f45ef1aa",
+      "path": "src/cn_contract/web/static/assistant-profile.mjs"
+    },
+    {
+      "sha256": "fa1008d0d2fb121c8c7a29ce907ed4d48414defca1e4ec13c6a06ac1f8c24991",
+      "path": "scripts/test_assistant_profile_panel.mjs"
+    }
+  ],
+  "tests": {
+    "command": "node --test --test-reporter=tap scripts/test_assistant_profile_panel.mjs",
+    "fail": 0,
+    "pass": 21,
+    "tests": 21,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "timestamp": "2026-10-23T08:45:28.4624947Z",
+  "task": "CH-07C3 read-only profile panel",
+  "red": [
+    {
+      "file": "red.log",
+      "pass": 0,
+      "tests": 17,
+      "fail": 17,
+      "reason": "missing exported binder",
+      "exit_code": 1
+    },
+    {
+      "file": "rollback-red.log",
+      "pass": 19,
+      "tests": 20,
+      "fail": 1,
+      "reason": "current revisions rollback retained incompatible displayed snapshot",
+      "exit_code": 1
+    },
+    {
+      "file": "null-red.log",
+      "pass": 20,
+      "tests": 21,
+      "fail": 1,
+      "reason": "actual no-profile null response wrongly treated as read failure",
+      "exit_code": 1
+    }
+  ]
+}

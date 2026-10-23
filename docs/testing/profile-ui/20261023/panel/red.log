@@ -1,0 +1,433 @@
+✖ starts hidden, reads only on open, and closes with keyboard focus restored (2.6568ms)
+✖ renders literal candidates, protected explicit null, exact money and unresolved states (0.2757ms)
+✖ source details preserve complete message and document anchor provenance (0.2299ms)
+✖ empty revision zero explains missing draft without claiming generation or saving (0.217ms)
+✖ history accepts bounded integer versions, gets exact endpoint argument, and can reread latest (0.2563ms)
+✖ huge revision counts use one numeric input rather than enumerating all versions (0.2071ms)
+✖ wrong historical revision is never presented as the selected version (0.2272ms)
+✖ workspace conversation binding and scope boundaries reject mismatched snapshots (0.2148ms)
+✖ historical input and material revisions are allowed but future or malformed ones are refused (0.2091ms)
+✖ switching loading or revocation clears old data and discards late responses (0.257ms)
+✖ pagehide clears records and prevents subsequent or late reads (0.1986ms)
+✖ newer reads win and close prevents pending data or notices from returning (0.1706ms)
+✖ network failure clears old success and raw diagnostics, then permits explicit reread (0.1374ms)
+✖ authorization errors erase all profile values without retaining diagnostics (0.1401ms)
+✖ a growing current input snapshot does not erase a still valid historical profile (0.14ms)
+✖ invalid values, claimed verification and model contact proposals never render (0.2107ms)
+✖ list material and date values preserve original text and honest material status (0.163ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 0
+ℹ fail 17
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.8455
+
+✖ failing tests:
+
+test at scripts\test_assistant_profile_panel.mjs:66:1
+✖ starts hidden, reads only on open, and closes with keyboard focus restored (2.6568ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:67:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.start (node:internal/test_runner/test:1257:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:73:1
+✖ renders literal candidates, protected explicit null, exact money and unresolved states (0.2757ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:74:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:80:1
+✖ source details preserve complete message and document anchor provenance (0.2299ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:81:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:87:1
+✖ empty revision zero explains missing draft without claiming generation or saving (0.217ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:88:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:92:1
+✖ history accepts bounded integer versions, gets exact endpoint argument, and can reread latest (0.2563ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:93:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:101:1
+✖ huge revision counts use one numeric input rather than enumerating all versions (0.2071ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:102:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:105:1
+✖ wrong historical revision is never presented as the selected version (0.2272ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:106:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:109:1
+✖ workspace conversation binding and scope boundaries reject mismatched snapshots (0.2148ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:111:13)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:115:1
+✖ historical input and material revisions are allowed but future or malformed ones are refused (0.2091ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:116:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:121:1
+✖ switching loading or revocation clears old data and discards late responses (0.257ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:124:13)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:128:1
+✖ pagehide clears records and prevents subsequent or late reads (0.1986ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:129:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:132:1
+✖ newer reads win and close prevents pending data or notices from returning (0.1706ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:133:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:137:1
+✖ network failure clears old success and raw diagnostics, then permits explicit reread (0.1374ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:138:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:142:1
+✖ authorization errors erase all profile values without retaining diagnostics (0.1401ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:143:42)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:146:1
+✖ a growing current input snapshot does not erase a still valid historical profile (0.14ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:147:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:150:1
+✖ invalid values, claimed verification and model contact proposals never render (0.2107ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:155:13)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_profile_panel.mjs:158:1
+✖ list material and date values preserve original text and honest material status (0.163ms)
+  AssertionError [ERR_ASSERTION]: profile panel must export its read-only binder
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:58:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:159:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

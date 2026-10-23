@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="2.557" timestamp="2026-10-23T16:55:54.794373+08:00" hostname="PC-20260920HQJZ"><testcase classname=".local.profile-ui-20261023.spec-review.test_history_spec" name="test_receipt_survives_edit_conversion_and_new_session_without_regrant" time="0.519"><failure message="RuntimeError: rules.initialize_storage(database) required">profile_world = (&lt;cn_contract.persistence.Database object at 0x0000017387468950&gt;, Actor(user_id=UUID('b66d2c4d-efaf-4bef-8681-3d09c10e...ntent='甲称借款35000元。', request_id=UUID('c9817a17-b4e8-42f1-9bca-7565b6ae3dd8'), requested_skill=None, attachment_ids=()))
+
+    def test_receipt_survives_edit_conversion_and_new_session_without_regrant(profile_world):
+        database, actor, *_ = profile_world
+        original, _, _ = profile_history(profile_world)
+        with database.session() as db:
+            record = intake.read(original.profile_save.receipt.intake_id, actor, db)
+            draft = d.IntakeDraft.model_validate(record.model_dump(include=set(d.IntakeDraft.model_fields)))
+            changed = intake.save(record.id, d.IntakeUpdateInput(expected_revision=record.revision,
+                draft=draft.model_copy(update={'consultation':'后续律师独立更正，不改变原保存回执。'})), actor, db)
+&gt;           intake.convert(changed.id, d.IntakeConvertInput(expected_revision=changed.revision,
+                matter=d.MatterCreateInput(title='合成转换', contract_type='unknown', review_mode='pre_sign',
+                    position='party_a', objectives=('独立历史复核',))), actor, db)
+
+.local\profile-ui-20261023\spec-review\test_history_spec.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\intake\service.py:134: in convert
+    matter=matters.create_matter(value.matter,actor,db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\matters.py:38: in create_matter
+    register_default_cards(principal, matter_id=matter.id, db=db)
+src\cn_contract\rules\loader.py:64: in register_default_cards
+    return tuple(register_rule(rule,actor,matter_id=matter_id,db=db,metadata=metadata)
+src\cn_contract\rules\loader.py:64: in &lt;genexpr&gt;
+    return tuple(register_rule(rule,actor,matter_id=matter_id,db=db,metadata=metadata)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\rules\loader.py:70: in register_rule
+    require_storage(db)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+db = &lt;sqlalchemy.orm.session.Session object at 0x000001738743BFE0&gt;
+
+    def require_storage(db):
+        if not getattr(configured_database(db),'_rules_storage_initialized',False):
+&gt;           raise RuntimeError('rules.initialize_storage(database) required')
+E           RuntimeError: rules.initialize_storage(database) required
+
+src\cn_contract\rules\storage.py:85: RuntimeError</failure></testcase><testcase classname=".local.profile-ui-20261023.spec-review.test_history_spec" name="test_rehashed_wire_only_permission_cannot_support_profile_save_history" time="0.497" /><testcase classname=".local.profile-ui-20261023.spec-review.test_history_spec" name="test_removed_finish_event_does_not_leave_an_applied_ui_receipt" time="0.478" /></testsuite></testsuites>

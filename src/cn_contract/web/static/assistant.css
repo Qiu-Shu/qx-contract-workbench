@@ -274,3 +274,8 @@ body.has-history.source-open .compose-section { position: static; }
 .context-actions { margin-top: .75rem; }
 .context-preview { margin-top: .75rem; padding: .75rem; border: 1px dashed var(--line); border-radius: .375rem; }
 #context-status[data-kind="error"] { color: var(--danger, #b3261e); }
+.profile-history { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+.profile-history input { width: 5rem; max-width: 100%; padding: .5rem; }
+#profile-content { overflow-wrap: anywhere; }
+#profile-content h3 { font-size: 1rem; margin: 1.5rem 0 .5rem; }
+#profile-content blockquote { margin: .75rem 0; white-space: pre-wrap; }

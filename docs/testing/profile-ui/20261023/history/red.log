@@ -1,0 +1,23 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_saved_profile_history_returns_verified_commit_without_original_request_id _
+
+profile_world = (<cn_contract.persistence.Database object at 0x0000019C40C8BBF0>, Actor(user_id=UUID('876358f7-756a-429b-9a2d-2aa9d2f5...ntent='甲称借款35000元。', request_id=UUID('42e75799-ed03-40dc-ae63-8ae8d2655770'), requested_skill=None, attachment_ids=()))
+
+    def test_saved_profile_history_returns_verified_commit_without_original_request_id(profile_world):
+        database, actor, conversation, _ = profile_world
+        result, prepared, _ = profile_history(profile_world)
+        before = state(database)
+        with database.session() as db:
+            current = service._owned(actor, conversation.scope.conversation_id, db)
+            restored = history.read_history(actor, current, d.MainGenerationHistoryQuery(
+                message_ids=(prepared.request.message_id,)), db).items[0].attempt
+        assert restored == result
+>       saved = restored.model_dump(mode='json')['profile_save']
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'profile_save'
+
+tests\integration\test_assistant_profile_history.py:22: KeyError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_history.py::test_saved_profile_history_returns_verified_commit_without_original_request_id
+1 failed in 1.67s

@@ -1,0 +1,37 @@
+{
+  "phase": "CH-07C3 profile save history",
+  "result": "passed",
+  "related_tests": 190,
+  "new_tests": 38,
+  "exit_code": 0,
+  "seconds": 130.83,
+  "scope": "Read-only per-attempt profile_save, fixed handler and receipt proof. Plain/context unchanged.",
+  "network": "New tests use in-memory synthetic replies; existing related tests use loopback only.",
+  "red": {
+    "integrity_corrected": "2 failed, 25 passed: ready/result payload corruption accepted",
+    "matrix_green": "27 passed",
+    "integrity_initial": "18 failed, 9 passed: 2 event-binding failures plus 16 wrong ServiceError message assertions",
+    "initial": "1 failed: missing profile_save"
+  },
+  "related_files": [
+    "tests/integration/test_assistant_profile_history.py",
+    "tests/integration/test_assistant_profile_execution.py",
+    "tests/integration/test_assistant_profile_execution_limits.py",
+    "tests/integration/test_assistant_profile_execution_backup.py",
+    "tests/integration/test_assistant_profile_model_integrity.py",
+    "tests/integration/test_assistant_profile_application.py",
+    "tests/unit/test_assistant_profile_execution_contract.py",
+    "tests/unit/test_assistant_model_contract.py"
+  ],
+  "source_sha256": {
+    "tests/integration/test_assistant_profile_history.py": "d9fe48d1852bcd80ae5901824442e63a8ff901f806391ca6abcf1ac980b5c4c2",
+    "src/cn_contract/domain.py": "128bed24d191ed99a35b084fd82cf8cdcb86df951b34ab4c6ca380da2a85673c",
+    "src/cn_contract/assistant/providers/profile_history.py": "e7f5576f80af0a5763c731bc0be92292614681e3865c02c76b83695128b26904",
+    "src/cn_contract/assistant/providers/attempts.py": "2cb5d3aaaa347eb8db7b4e0ab5d945f0b6c84a2906df3f64ada1fd56f05c6092"
+  },
+  "limitations": [
+    "No live provider, installed app, or new installer exercised by this agent.",
+    "No commit or push performed by this agent.",
+    "Per-attempt read proof reuses existing integrity and receipt checks; full archive validators remain responsible for whole-store consistency."
+  ]
+}

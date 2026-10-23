@@ -1,0 +1,152 @@
+TAP version 13
+# Subtest: starts hidden, reads only on open, and closes with keyboard focus restored
+ok 1 - starts hidden, reads only on open, and closes with keyboard focus restored
+  ---
+  duration_ms: 3.9205
+  type: 'test'
+  ...
+# Subtest: renders literal candidates, protected explicit null, exact money and unresolved states
+ok 2 - renders literal candidates, protected explicit null, exact money and unresolved states
+  ---
+  duration_ms: 1.2658
+  type: 'test'
+  ...
+# Subtest: source details preserve complete message and document anchor provenance
+ok 3 - source details preserve complete message and document anchor provenance
+  ---
+  duration_ms: 0.6463
+  type: 'test'
+  ...
+# Subtest: empty revision zero explains missing draft without claiming generation or saving
+ok 4 - empty revision zero explains missing draft without claiming generation or saving
+  ---
+  duration_ms: 0.3677
+  type: 'test'
+  ...
+# Subtest: current profile null is an honest empty state while absent historical versions remain errors
+not ok 5 - current profile null is an honest empty state while absent historical versions remain errors
+  ---
+  duration_ms: 1.0894
+  type: 'test'
+  location: 'D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_profile_panel.mjs:92:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_profile_panel.mjs:93:49)
+    async Test.run (node:internal/test_runner/test:1404:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:969:7)
+  ...
+# Subtest: history accepts bounded integer versions, gets exact endpoint argument, and can reread latest
+ok 6 - history accepts bounded integer versions, gets exact endpoint argument, and can reread latest
+  ---
+  duration_ms: 1.7235
+  type: 'test'
+  ...
+# Subtest: huge revision counts use one numeric input rather than enumerating all versions
+ok 7 - huge revision counts use one numeric input rather than enumerating all versions
+  ---
+  duration_ms: 0.5254
+  type: 'test'
+  ...
+# Subtest: wrong historical revision is never presented as the selected version
+ok 8 - wrong historical revision is never presented as the selected version
+  ---
+  duration_ms: 0.5774
+  type: 'test'
+  ...
+# Subtest: workspace conversation binding and scope boundaries reject mismatched snapshots
+ok 9 - workspace conversation binding and scope boundaries reject mismatched snapshots
+  ---
+  duration_ms: 0.7907
+  type: 'test'
+  ...
+# Subtest: historical input and material revisions are allowed but future or malformed ones are refused
+ok 10 - historical input and material revisions are allowed but future or malformed ones are refused
+  ---
+  duration_ms: 0.6639
+  type: 'test'
+  ...
+# Subtest: switching loading or revocation clears old data and discards late responses
+ok 11 - switching loading or revocation clears old data and discards late responses
+  ---
+  duration_ms: 0.9324
+  type: 'test'
+  ...
+# Subtest: pagehide clears records and prevents subsequent or late reads
+ok 12 - pagehide clears records and prevents subsequent or late reads
+  ---
+  duration_ms: 0.2706
+  type: 'test'
+  ...
+# Subtest: newer reads win and close prevents pending data or notices from returning
+ok 13 - newer reads win and close prevents pending data or notices from returning
+  ---
+  duration_ms: 0.7856
+  type: 'test'
+  ...
+# Subtest: network failure clears old success and raw diagnostics, then permits explicit reread
+ok 14 - network failure clears old success and raw diagnostics, then permits explicit reread
+  ---
+  duration_ms: 0.6166
+  type: 'test'
+  ...
+# Subtest: authorization errors erase all profile values without retaining diagnostics
+ok 15 - authorization errors erase all profile values without retaining diagnostics
+  ---
+  duration_ms: 0.5348
+  type: 'test'
+  ...
+# Subtest: a growing current input snapshot does not erase a still valid historical profile
+ok 16 - a growing current input snapshot does not erase a still valid historical profile
+  ---
+  duration_ms: 0.3083
+  type: 'test'
+  ...
+# Subtest: a rollback below the displayed source snapshot clears now-incompatible content
+ok 17 - a rollback below the displayed source snapshot clears now-incompatible content
+  ---
+  duration_ms: 1.06
+  type: 'test'
+  ...
+# Subtest: no conversation, unresolved scope, loading, and revoked state cannot issue reads
+ok 18 - no conversation, unresolved scope, loading, and revoked state cannot issue reads
+  ---
+  duration_ms: 0.3831
+  type: 'test'
+  ...
+# Subtest: quote offsets use Unicode code points and reject broken source ranges
+ok 19 - quote offsets use Unicode code points and reject broken source ranges
+  ---
+  duration_ms: 0.5378
+  type: 'test'
+  ...
+# Subtest: invalid values, claimed verification and model contact proposals never render
+ok 20 - invalid values, claimed verification and model contact proposals never render
+  ---
+  duration_ms: 0.9146
+  type: 'test'
+  ...
+# Subtest: list material and date values preserve original text and honest material status
+ok 21 - list material and date values preserve original text and honest material status
+  ---
+  duration_ms: 0.38
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 20
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 90.473

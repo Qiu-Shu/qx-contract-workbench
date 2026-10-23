@@ -4069,9 +4069,26 @@ class MainProfileOutputView(MainOutputView):
     candidate: MainProfileCandidate
 
 
+class MainProfileSaveView(DomainModel):
+    outcome: Literal['applied', 'unchanged', 'blocked']
+    reason_code: Literal['version_conflict', 'save_failed'] | None
+    receipt: ProfileCommitReceipt | None
+
+    @model_validator(mode='after')
+    def consistent_save(self):
+        if self.outcome == 'blocked':
+            if self.reason_code is None or self.receipt is not None:
+                raise ValueError('blocked save requires a reason and no receipt')
+        elif (self.reason_code is not None or self.receipt is None
+                or self.receipt.event_type != ('profile.saved' if self.outcome == 'applied' else 'profile.unchanged')):
+            raise ValueError('save outcome requires its matching receipt')
+        return self
+
+
 class MainProfileAttemptView(MainAttemptView):
     input_format: Literal['profile-text-v1'] = 'profile-text-v1'
     output: MainProfileOutputView | None
+    profile_save: MainProfileSaveView | None = None
 
 
 MainGenerationHistoryItem.model_rebuild()

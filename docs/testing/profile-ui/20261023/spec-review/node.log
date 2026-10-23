@@ -1,0 +1,11 @@
+✔ existing plus failed GET never reauthorizes or reposts; later authorization loss clears state (6.5254ms)
+✔ acknowledged profile POST followed by permission loss cannot leave local result or trigger another send (1.3061ms)
+✔ closed and reopened profile reads reject the earlier response without clearing the newer panel (2.2999ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.6362

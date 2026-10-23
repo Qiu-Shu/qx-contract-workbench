@@ -95,6 +95,21 @@ function renderAttempt(attempt,visible,onCitation) {
     if(links.children.length)section.append(links);
     else section.append(node('p','未提供可定位到当前记录的原文引用。','generation-note'));
   } else section.append(node('p',attemptText[attempt.state] || '生成状态待核对。','generation-note'));
+  if(attempt.input_format==='profile-text-v1' && output) {
+    const saved=attempt.profile_save,receipt=saved?.receipt;
+    let text='档案保存状态尚未确认，请重新读取记录。';
+    if(saved?.outcome==='blocked')text='本次档案草稿未保存；回答已保留，请核对资料后再处理。';
+    else if(receipt?.conversation_id===attempt.scope.conversation_id &&
+        Number.isSafeInteger(receipt.profile_revision) && receipt.profile_revision>=0) {
+      if(saved?.outcome==='applied' && receipt.event_type==='profile.saved') {
+        text=receipt.profile_changed?`档案草稿已更新 · 版本 ${receipt.profile_revision} · 待核对。`:'档案内容无需更新。';
+        if(receipt.projection_changed && Number.isSafeInteger(receipt.intake_revision) && receipt.intake_revision>0)
+          text+=` 接待草稿已更新 · 版本 ${receipt.intake_revision}。`;
+      } else if(saved?.outcome==='unchanged' && receipt.event_type==='profile.unchanged')
+        text=`档案无需更新 · 版本 ${receipt.profile_revision}；未新增修订。`;
+    }
+    section.append(node('p',text,'generation-note'));
+  }
   const receipt=attempt.receipt;
   if(receipt?.error_code)section.append(node('p',generationErrorText({code:receipt.error_code}),'generation-note'));
   const cost=receipt?.cost_status==='estimated' && receipt.estimated_cost_usd!==null
@@ -243,7 +258,8 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
             ?`已选 ${state.context.selected.length} 条已保存片段。先点“核对将发送的内容”，确认无误后再发送；发送经桌面原生窗口核对问题全文与片段清单，结果仍需律师核对。`
           :state.skill?'该能力尚未接入执行。取消选择后可核对普通文字的生成条件。'
           :nativeConfirmation && ['unapproved','ready','budget_exhausted'].includes(generation?.capability?.state)
-            ?'点击“确认并发送”后，在原生确认窗口核对完整文字、接收方与费用上限；确认后才发送，结果仍需律师核对。'
+            ?generation.profileMode?'确认后生成回复，并整理本机待核档案草稿。请在原生窗口核对完整文字、接收方、费用与保存目标；实际保存以结果回执为准。'
+              :'点击“确认并发送”后，在原生确认窗口核对完整文字、接收方与费用上限；确认后才发送，结果仍需律师核对。'
             :generationCapabilityText[generation?.capability?.state] || '输入并保存文字后，将核对当前生成条件。';
       const phaseText={checking:'正在核对生成条件…',confirming:'请在原生确认窗口核对本次文字、接收方与费用上限；尚未发送。',submitting:'正在提交生成请求…',
         unknown:'发送结果尚不确定。请查找发送结果，避免重复发送。',tracking:'生成已登记，正在核对结果…'};

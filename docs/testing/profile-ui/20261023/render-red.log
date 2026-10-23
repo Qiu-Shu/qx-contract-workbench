@@ -1,0 +1,72 @@
+✔ send follows the generation gate and existing draft/readonly guards (2.178ms)
+✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.4861ms)
+✔ capability states give distinct truthful explanations (0.4912ms)
+✔ results stay with their matching input in chronological history and have source anchors (0.9246ms)
+✔ model text remains literal with whitespace and source links only target loaded messages (0.5203ms)
+✔ unrelated items and prior conversation content are cleared on switching or revocation (0.4588ms)
+✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.402ms)
+✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.5002ms)
+✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.283ms)
+✔ native send offers confirmation of the full text recipient and fee ceiling before submission (0.3429ms)
+✔ native failures distinguish confirmation from unknown POST without exposing diagnostics (0.2359ms)
+✔ failed capability reads can be retried before any task exists (0.1988ms)
+✔ initial template keeps send disabled, recovery hidden and describes controlled generation (0.4889ms)
+✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.2308ms)
+✔ model switch button follows the desktop bridge state and guards (0.2844ms)
+✔ model switch button sits left of save-draft in the template (0.2518ms)
+✖ profile result distinguishes saved, unchanged and blocked using server receipt (0.8507ms)
+✖ foreign or absent profile receipts never claim a saved draft (0.3557ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 16
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 80.6067
+
+✖ failing tests:
+
+test at scripts\test_assistant_generation_render.mjs:207:1
+✖ profile result distinguishes saved, unchanged and blocked using server receipt (0.8507ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /档案保存状态尚未确认/. Input:
+  
+  '律师输入第一段原文\n' +
+    '第二行模型生成 · 内部草稿 · 待核对未经律师审核，不是正式法律意见。内部合成草稿 22222222-2222-4222-8222-222222222222核对本次输入原文估算费用 0.001234 USD；实际扣费待核对。律师输入第二次输入'
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:211:28)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '律师输入第一段原文\n第二行模型生成 · 内部草稿 · 待核对未经律师审核，不是正式法律意见。内部合成草稿 22222222-2222-4222-8222-222222222222核对本次输入原文估算费用 0.001234 USD；实际扣费待核对。律师输入第二次输入',
+    expected: /档案保存状态尚未确认/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_generation_render.mjs:224:1
+✖ foreign or absent profile receipts never claim a saved draft (0.3557ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /档案保存状态尚未确认/. Input:
+  
+  '律师输入第一段原文\n' +
+    '第二行模型生成 · 内部草稿 · 待核对未经律师审核，不是正式法律意见。内部合成草稿 22222222-2222-4222-8222-222222222222核对本次输入原文估算费用 0.001234 USD；实际扣费待核对。律师输入第二次输入'
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_generation_render.mjs:230:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '律师输入第一段原文\n第二行模型生成 · 内部草稿 · 待核对未经律师审核，不是正式法律意见。内部合成草稿 22222222-2222-4222-8222-222222222222核对本次输入原文估算费用 0.001234 USD；实际扣费待核对。律师输入第二次输入',
+    expected: /档案保存状态尚未确认/,
+    operator: 'match',
+    diff: 'simple'
+  }

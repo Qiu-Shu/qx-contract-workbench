@@ -1,0 +1,1827 @@
+.FF.......FFFFFFFFFFFFFFFF.                                              [100%]
+================================== FAILURES ===================================
+_ test_profile_history_rejects_handler_event_payload_disagreement[response.ready] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DE469580>, Actor(user_id=UUID('526a512e-8547-4907-a398-55d82f01...ntent='甲称借款35000元。', request_id=UUID('96c86125-7383-4f4e-92b9-3607779e4c8c'), requested_skill=None, attachment_ids=()))
+event = 'response.ready'
+
+    @pytest.mark.parametrize('event', ['response.ready', 'profile.saved'])
+    def test_profile_history_rejects_handler_event_payload_disagreement(profile_world, event):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        corrupt(database, 'assistant_run_events',
+                'UPDATE assistant_run_events SET payload_json=? WHERE event_type=?', ('{}', event))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+
+tests\integration\test_assistant_profile_history.py:51: Failed
+_ test_profile_history_rejects_handler_event_payload_disagreement[profile.saved] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DE965670>, Actor(user_id=UUID('29f61d71-22ca-4855-8b3e-45b9e15c...ntent='甲称借款35000元。', request_id=UUID('ffebd8b0-e961-4432-9283-aa09529c0f7d'), requested_skill=None, attachment_ids=()))
+event = 'profile.saved'
+
+    @pytest.mark.parametrize('event', ['response.ready', 'profile.saved'])
+    def test_profile_history_rejects_handler_event_payload_disagreement(profile_world, event):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        corrupt(database, 'assistant_run_events',
+                'UPDATE assistant_run_events SET payload_json=? WHERE event_type=?', ('{}', event))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+
+tests\integration\test_assistant_profile_history.py:51: Failed
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[missing_handler] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFA807D0>, Actor(user_id=UUID('30cf34fd-f2e1-4ed5-b613-07a30719...ntent='甲称借款35000元。', request_id=UUID('fcd096c2-6dd5-42d0-a8a3-2e41a3686957'), requested_skill=None, attachment_ids=()))
+tamper = 'missing_handler'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('30cf34fd-f2e1-4ed5-b613-07a30719ca47'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('3befc5b7-a416-422e-ae93-22f70fdd9c03'))
+row = {'id': 'e303c7df-79d4-460e-9f3e-33344963f86b', 'run_id': '80d5b98b-e6d1-468c-a929-5aa46d4e31f8', 'conversation_id': '6...e0902de74aabf86b8', 'updated_at': '2026-10-23T08:43:09.777450+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('80d5b98b-e6d1-468c-a929-5aa46d4e31f8'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('05d24506-f353-4d66-9b11-14b59eb2fd77'), run_id=UUID('80d5b98b-e6d1-468c-a929-5aa46d4e31...9491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 9, 777450, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFA8C6B0>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFA807D0>, Actor(user_id=UUID('30cf34fd-f2e1-4ed5-b613-07a30719...ntent='甲称借款35000元。', request_id=UUID('fcd096c2-6dd5-42d0-a8a3-2e41a3686957'), requested_skill=None, attachment_ids=()))
+tamper = 'missing_handler'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[handler_run] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFA47830>, Actor(user_id=UUID('f2091298-90c2-4ab8-a69b-12d1dcc5...ntent='甲称借款35000元。', request_id=UUID('1c449d28-573f-4d16-98b9-42daf35cee9e'), requested_skill=None, attachment_ids=()))
+tamper = 'handler_run'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('f2091298-90c2-4ab8-a69b-12d1dcc5c9b4'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('7fe5730e-15df-4df3-994a-b18d5de3556c'))
+row = {'id': 'bf1c4dbe-8a24-4756-8191-b5dde6d65a24', 'run_id': '6bb12f2e-6be8-4064-a64f-3ee706fe1c26', 'conversation_id': 'e...3c6c3f51f8468487d', 'updated_at': '2026-10-23T08:43:10.296057+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('6bb12f2e-6be8-4064-a64f-3ee706fe1c26'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('b21bdb5a-30f5-4af2-9f8e-d17d10b33e33'), run_id=UUID('6bb12f2e-6be8-4064-a64f-3ee706fe1c...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 10, 296057, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFA83590>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFA47830>, Actor(user_id=UUID('f2091298-90c2-4ab8-a69b-12d1dcc5...ntent='甲称借款35000元。', request_id=UUID('1c449d28-573f-4d16-98b9-42daf35cee9e'), requested_skill=None, attachment_ids=()))
+tamper = 'handler_run'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[handler_output] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFACC800>, Actor(user_id=UUID('366cd98d-d9d4-45bc-b25d-6a5dfdcc...ntent='甲称借款35000元。', request_id=UUID('7ee476f2-7816-4b3f-86ba-ce676bfd60e8'), requested_skill=None, attachment_ids=()))
+tamper = 'handler_output'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('366cd98d-d9d4-45bc-b25d-6a5dfdcc046e'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('2747f476-cd68-4823-952a-54fa886b0158'))
+row = {'id': '3abc10e1-4937-43dc-8abb-2bf745fac9c6', 'run_id': '3e079a95-65b4-4170-a5f7-a550df84bf47', 'conversation_id': '1...939fee44feb402207', 'updated_at': '2026-10-23T08:43:10.796740+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('3e079a95-65b4-4170-a5f7-a550df84bf47'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('fec3c890-62a8-4b0c-beb3-e12d8bc35c28'), run_id=UUID('3e079a95-65b4-4170-a5f7-a550df84bf...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 10, 796740, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFB50F80>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFACC800>, Actor(user_id=UUID('366cd98d-d9d4-45bc-b25d-6a5dfdcc...ntent='甲称借款35000元。', request_id=UUID('7ee476f2-7816-4b3f-86ba-ce676bfd60e8'), requested_skill=None, attachment_ids=()))
+tamper = 'handler_output'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[handler_conversation] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFB19520>, Actor(user_id=UUID('14e06cd0-43a3-4ab5-9b9c-122dcdf0...ntent='甲称借款35000元。', request_id=UUID('3903d3e7-ecee-4897-b5b1-01879743d7d2'), requested_skill=None, attachment_ids=()))
+tamper = 'handler_conversation'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('14e06cd0-43a3-4ab5-9b9c-122dcdf0a1ee'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('d8e6a9a9-b228-4fc1-a411-441f4b23b0d1'))
+row = {'id': '6a828207-a09d-4f16-9f5b-fa08840e4007', 'run_id': '43d610a6-33b7-4679-82d4-c3e0d11fc0df', 'conversation_id': '8...43c571edb4492d725', 'updated_at': '2026-10-23T08:43:11.450511+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('43d610a6-33b7-4679-82d4-c3e0d11fc0df'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('45b1d757-8f9d-4fd2-a747-e90d2ac995a1'), run_id=UUID('43d610a6-33b7-4679-82d4-c3e0d11fc0...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 11, 450511, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFBFF440>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFB19520>, Actor(user_id=UUID('14e06cd0-43a3-4ab5-9b9c-122dcdf0...ntent='甲称借款35000元。', request_id=UUID('3903d3e7-ecee-4897-b5b1-01879743d7d2'), requested_skill=None, attachment_ids=()))
+tamper = 'handler_conversation'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[handler_basis] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFB9F6B0>, Actor(user_id=UUID('3d936393-aaa6-4ae3-bcb1-ba315af4...ntent='甲称借款35000元。', request_id=UUID('1479f13d-4aed-4f97-b838-ba1f9a3e6812'), requested_skill=None, attachment_ids=()))
+tamper = 'handler_basis'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('3d936393-aaa6-4ae3-bcb1-ba315af49c6e'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('a5477499-885f-4c58-a806-b7503560b05a'))
+row = {'id': 'd205b63a-59b7-45e8-b58c-20fd31599b41', 'run_id': 'ea19ee30-2827-43d6-b8b2-f7f902a8c83a', 'conversation_id': 'b...4a3a7722b01ab8ee0', 'updated_at': '2026-10-23T08:43:11.951053+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('ea19ee30-2827-43d6-b8b2-f7f902a8c83a'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('41b00164-eb80-4600-9e51-88bffffa5658'), run_id=UUID('ea19ee30-2827-43d6-b8b2-f7f902a8c8...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 11, 951053, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFCCC170>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFB9F6B0>, Actor(user_id=UUID('3d936393-aaa6-4ae3-bcb1-ba315af4...ntent='甲称借款35000元。', request_id=UUID('1479f13d-4aed-4f97-b838-ba1f9a3e6812'), requested_skill=None, attachment_ids=()))
+tamper = 'handler_basis'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[handler_sequence] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFCD3E30>, Actor(user_id=UUID('d8282855-3b47-4b08-8728-dbd01d9c...ntent='甲称借款35000元。', request_id=UUID('1f814d93-ff34-401f-bfb3-41b5c52a1cdc'), requested_skill=None, attachment_ids=()))
+tamper = 'handler_sequence'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('d8282855-3b47-4b08-8728-dbd01d9c0818'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('7319ec2c-0cb2-4b82-980c-86715f7d67a4'))
+row = {'id': '45ac5fce-5aff-4c65-8139-13528884a6f1', 'run_id': '06ec82df-20de-43f6-b6fc-ceb9fb9ae746', 'conversation_id': '1...1118f83a12ac4e805', 'updated_at': '2026-10-23T08:43:12.454495+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('06ec82df-20de-43f6-b6fc-ceb9fb9ae746'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('c92b317e-05aa-4699-94f5-9eeea9f76d6b'), run_id=UUID('06ec82df-20de-43f6-b6fc-ceb9fb9ae7...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 12, 454495, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFCADBE0>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFCD3E30>, Actor(user_id=UUID('d8282855-3b47-4b08-8728-dbd01d9c...ntent='甲称借款35000元。', request_id=UUID('1f814d93-ff34-401f-bfb3-41b5c52a1cdc'), requested_skill=None, attachment_ids=()))
+tamper = 'handler_sequence'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[missing_receipt] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFC9CDA0>, Actor(user_id=UUID('298fc4fa-e70a-42b4-8a6a-4c3822d6...ntent='甲称借款35000元。', request_id=UUID('e967fe2b-dd81-442a-89d3-062a7145b0da'), requested_skill=None, attachment_ids=()))
+tamper = 'missing_receipt'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('298fc4fa-e70a-42b4-8a6a-4c3822d67076'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('ee2878a4-ab92-49bc-93d4-4567b49ac98b'))
+row = {'id': '9a6f3b8f-0b66-4224-9874-dde760f272c4', 'run_id': 'a4d46682-a397-4775-bb1b-e6ce69a6faa8', 'conversation_id': '8...c5fc5f29fdfd49e56', 'updated_at': '2026-10-23T08:43:12.950499+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('a4d46682-a397-4775-bb1b-e6ce69a6faa8'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('813ab98c-299d-439e-b315-2c888fa8812c'), run_id=UUID('a4d46682-a397-4775-bb1b-e6ce69a6fa...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 12, 950499, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFD6C980>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFC9CDA0>, Actor(user_id=UUID('298fc4fa-e70a-42b4-8a6a-4c3822d6...ntent='甲称借款35000元。', request_id=UUID('e967fe2b-dd81-442a-89d3-062a7145b0da'), requested_skill=None, attachment_ids=()))
+tamper = 'missing_receipt'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[receipt_actor] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFDFD010>, Actor(user_id=UUID('41e29823-d1fb-400d-9de4-78ec5854...ntent='甲称借款35000元。', request_id=UUID('b44ddd15-1281-4d8f-8dca-e04d16a11b31'), requested_skill=None, attachment_ids=()))
+tamper = 'receipt_actor'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('41e29823-d1fb-400d-9de4-78ec5854ee15'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('68945f5c-0df2-4b4e-afdb-66118ff21e35'))
+row = {'id': '6da12ad7-80e8-4cb4-87c9-786a45171a41', 'run_id': 'b262a889-5a6a-4cc2-8783-c9f956c04d93', 'conversation_id': 'e...cbc00ab7c8a986209', 'updated_at': '2026-10-23T08:43:13.459161+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('b262a889-5a6a-4cc2-8783-c9f956c04d93'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('2f186100-298d-492f-9d01-0a23e0fa052c'), run_id=UUID('b262a889-5a6a-4cc2-8783-c9f956c04d...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 13, 459161, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFD532C0>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFDFD010>, Actor(user_id=UUID('41e29823-d1fb-400d-9de4-78ec5854...ntent='甲称借款35000元。', request_id=UUID('b44ddd15-1281-4d8f-8dca-e04d16a11b31'), requested_skill=None, attachment_ids=()))
+tamper = 'receipt_actor'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[receipt_session] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFD54C50>, Actor(user_id=UUID('7d8b7562-cb9c-4513-aac6-3dbf9173...ntent='甲称借款35000元。', request_id=UUID('fe5185c4-5652-46e2-98a0-d94fcf34179d'), requested_skill=None, attachment_ids=()))
+tamper = 'receipt_session'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('7d8b7562-cb9c-4513-aac6-3dbf9173e729'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('5d85aa24-7ca6-4de1-a2bf-da97b9892330'))
+row = {'id': '5df3d65e-a433-4cc5-9c4f-788e11413ce7', 'run_id': 'e0e38a93-160a-44d4-9b0c-76b3c0508442', 'conversation_id': 'd...c754f9abee0eb5fc0', 'updated_at': '2026-10-23T08:43:14.020882+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('e0e38a93-160a-44d4-9b0c-76b3c0508442'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('0869b15c-9297-4368-8fb8-bfc32aa5780e'), run_id=UUID('e0e38a93-160a-44d4-9b0c-76b3c05084...9491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 14, 20882, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFDBF320>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFD54C50>, Actor(user_id=UUID('7d8b7562-cb9c-4513-aac6-3dbf9173...ntent='甲称借款35000元。', request_id=UUID('fe5185c4-5652-46e2-98a0-d94fcf34179d'), requested_skill=None, attachment_ids=()))
+tamper = 'receipt_session'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[receipt_request] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFDBD640>, Actor(user_id=UUID('982c9ab0-686d-42c4-930a-28c78fa4...ntent='甲称借款35000元。', request_id=UUID('740cc410-ee20-464d-b366-11e68ab4a298'), requested_skill=None, attachment_ids=()))
+tamper = 'receipt_request'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('982c9ab0-686d-42c4-930a-28c78fa44f2e'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('576a7f59-27e9-45bc-858d-bd28a6cd20da'))
+row = {'id': 'a78e2cd7-2e78-4f4a-98cf-383662a69dd4', 'run_id': 'd2f0ff2b-1787-43cd-b5ac-728ba5ddf728', 'conversation_id': '3...a2ed602057f8ede15', 'updated_at': '2026-10-23T08:43:14.559406+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('d2f0ff2b-1787-43cd-b5ac-728ba5ddf728'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('ac095d7a-f36c-4546-8301-8d0e8ce634db'), run_id=UUID('d2f0ff2b-1787-43cd-b5ac-728ba5ddf7...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 14, 559406, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFD6CB90>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFDBD640>, Actor(user_id=UUID('982c9ab0-686d-42c4-930a-28c78fa4...ntent='甲称借款35000元。', request_id=UUID('740cc410-ee20-464d-b366-11e68ab4a298'), requested_skill=None, attachment_ids=()))
+tamper = 'receipt_request'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[receipt_revision] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFCD2B70>, Actor(user_id=UUID('cd99a3f0-14f0-4b21-8855-4f3bcdf3...ntent='甲称借款35000元。', request_id=UUID('b1c94a88-ae92-4b59-bb9d-86319a3f626f'), requested_skill=None, attachment_ids=()))
+tamper = 'receipt_revision'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\profile_history.py:22: in read_save
+    return _read(actor, row, prepared, view, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\profile_history.py:75: in _read
+    result = profile_store._receipt(saved, actor, db) if saved else None
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\profile_store.py:29: in _receipt
+    _profile(result.conversation_id, db, result.profile_revision)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cid = UUID('18c7b996-4129-4453-8f1a-2bc9c7f37c08')
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFDFF830>
+revision = 99
+
+    def _profile(cid, db, revision=None):
+        row = db.execute(text('''SELECT p.revision,p.profile_json,p.profile_sha256,c.workspace_id
+            FROM assistant_profile_revisions p JOIN assistant_conversations c ON c.id=p.conversation_id
+            WHERE p.conversation_id=:cid AND (:rev IS NULL OR p.revision=:rev) ORDER BY p.revision DESC LIMIT 1'''),
+            {'cid': str(cid), 'rev': revision}).mappings().first()
+        if row is None:
+            if revision is not None:
+>               raise ServiceError('VERSION_CONFLICT', 409)
+E               cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\profile_store.py:52: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFCD2B70>, Actor(user_id=UUID('cd99a3f0-14f0-4b21-8855-4f3bcdf3...ntent='甲称借款35000元。', request_id=UUID('b1c94a88-ae92-4b59-bb9d-86319a3f626f'), requested_skill=None, attachment_ids=()))
+tamper = 'receipt_revision'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[output_run] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFDFD0A0>, Actor(user_id=UUID('77322196-65ee-4781-8fa8-a9bd2316...ntent='甲称借款35000元。', request_id=UUID('e1fc9073-0ae7-45f2-8d8b-254949133602'), requested_skill=None, attachment_ids=()))
+tamper = 'output_run'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('77322196-65ee-4781-8fa8-a9bd231652ea'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('de2ebf29-9570-4880-9da1-548a595cf4ef'))
+row = {'id': 'f95ee85d-52dd-4e64-b950-9f858b40bae2', 'run_id': '531efdc3-b479-4ec8-a520-1478967169fc', 'conversation_id': '4...856fd850052f7f1d0', 'updated_at': '2026-10-23T08:43:15.625629+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('531efdc3-b479-4ec8-a520-1478967169fc'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('bffcaf51-97fc-496a-8327-65e748314a83'), run_id=UUID('49d81e6c-756f-499a-91b5-c343faa69c...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 15, 625629, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFC04E90>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFDFD0A0>, Actor(user_id=UUID('77322196-65ee-4781-8fa8-a9bd2316...ntent='甲称借款35000元。', request_id=UUID('e1fc9073-0ae7-45f2-8d8b-254949133602'), requested_skill=None, attachment_ids=()))
+tamper = 'output_run'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[output_scope] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFB9E5D0>, Actor(user_id=UUID('3685b3ac-2d58-4838-b051-4e585b95...ntent='甲称借款35000元。', request_id=UUID('9d809151-7af0-4460-85a9-5bebd4e35808'), requested_skill=None, attachment_ids=()))
+tamper = 'output_scope'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('3685b3ac-2d58-4838-b051-4e585b953d8d'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('0ec644d5-2faf-4d48-95d0-25f84126a19b'))
+row = {'id': '9296b4d6-cddc-4939-85cd-b320c89c7964', 'run_id': 'd4e3d24b-ebe6-4955-a58d-d7e5e16485ec', 'conversation_id': '4...ec49cd610deec8d02', 'updated_at': '2026-10-23T08:43:16.135690+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('d4e3d24b-ebe6-4955-a58d-d7e5e16485ec'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('e41f5819-8649-40c5-a94b-190344496698'), run_id=UUID('d4e3d24b-ebe6-4955-a58d-d7e5e16485...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 16, 135690, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFB0C830>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFB9E5D0>, Actor(user_id=UUID('3685b3ac-2d58-4838-b051-4e585b95...ntent='甲称借款35000元。', request_id=UUID('9d809151-7af0-4460-85a9-5bebd4e35808'), requested_skill=None, attachment_ids=()))
+tamper = 'output_scope'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[output_quote] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFAE7350>, Actor(user_id=UUID('e90d8b70-b2be-454b-847c-e94fd75c...ntent='甲称借款35000元。', request_id=UUID('d9ea15a5-f77c-4428-8f86-9c0d6fec7f49'), requested_skill=None, attachment_ids=()))
+tamper = 'output_quote'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('e90d8b70-b2be-454b-847c-e94fd75ca6ed'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('0d6b91e4-5af3-4f24-afe3-14e0a1f4267b'))
+row = {'id': '989a7236-6831-416b-8bc1-373f5a056bd8', 'run_id': 'e320f629-41c8-4850-95f6-aaaeed36e82e', 'conversation_id': '6...7069fda2bfeba953d', 'updated_at': '2026-10-23T08:43:16.713592+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('e320f629-41c8-4850-95f6-aaaeed36e82e'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('75d6e238-fc82-4777-bc03-cdae12561636'), run_id=UUID('e320f629-41c8-4850-95f6-aaaeed36e8...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 16, 713592, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFA681A0>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFAE7350>, Actor(user_id=UUID('e90d8b70-b2be-454b-847c-e94fd75c...ntent='甲称借款35000元。', request_id=UUID('d9ea15a5-f77c-4428-8f86-9c0d6fec7f49'), requested_skill=None, attachment_ids=()))
+tamper = 'output_quote'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+_ test_profile_history_rejects_corrupt_output_handler_and_receipt_links[message_content] _
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFA45760>, Actor(user_id=UUID('0a4be5ae-a146-46c1-b8c5-a151d30f...ntent='甲称借款35000元。', request_id=UUID('dd5281d8-24e7-42df-8b49-9778d4381e02'), requested_skill=None, attachment_ids=()))
+tamper = 'message_content'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+        with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+>           read(database, actor, view.id)
+
+tests\integration\test_assistant_profile_history.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:103: in read_attempt
+    output=view, profile_save=read_save(actor, row, prepared, view, db)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('0a4be5ae-a146-46c1-b8c5-a151d30f9a34'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('b500bd4d-62b8-45e4-b2a8-d054b5fa7ac1'))
+row = {'id': '9334ba82-5257-4219-9333-0b1a1823a0cb', 'run_id': '169b1043-e3b6-4b7d-9f27-35f52186e459', 'conversation_id': '1...eabd96ab8336b3a86', 'updated_at': '2026-10-23T08:43:17.207800+00:00', 'input_format': 'profile-text-v1', 'round_no': 1}
+prepared = MainProfilePreparedInput(request=MainProfileRequest(run_id=UUID('169b1043-e3b6-4b7d-9f27-35f52186e459'), scope=ScopeSn...r"}],"model":"deepseek-flash","response_format":{"type":"json_object"},"stream":false,"thinking":{"type":"disabled"}}')
+view = MainProfileOutputView(id=UUID('83932815-f507-433c-bbae-040db4ce66dd'), run_id=UUID('169b1043-e3b6-4b7d-9f27-35f52186e4...491fd1213a72162da'),))))), created_at=datetime.datetime(2026, 10, 23, 8, 43, 17, 207800, tzinfo=datetime.timezone.utc))
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DFA326C0>
+
+    def read_save(actor, row, prepared, view, db):
+        """Called after conversation ownership; historical revisions stay historical."""
+        try:
+            return _read(actor, row, prepared, view, db)
+        except (ValueError, TypeError, KeyError):
+>           raise ServiceError('VERSION_CONFLICT', 409) from None
+E           cn_contract.security.ServiceError: request blocked
+
+src\cn_contract\assistant\providers\profile_history.py:24: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0DFA45760>, Actor(user_id=UUID('0a4be5ae-a146-46c1-b8c5-a151d30f...ntent='甲称借款35000元。', request_id=UUID('dd5281d8-24e7-42df-8b49-9778d4381e02'), requested_skill=None, attachment_ids=()))
+tamper = 'message_content'
+
+    @pytest.mark.parametrize('tamper', ['missing_handler', 'handler_run', 'handler_output', 'handler_conversation',
+        'handler_basis', 'handler_sequence', 'missing_receipt', 'receipt_actor', 'receipt_session',
+        'receipt_request', 'receipt_revision', 'output_run', 'output_scope', 'output_quote', 'message_content'])
+    def test_profile_history_rejects_corrupt_output_handler_and_receipt_links(profile_world, tamper):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        if tamper == 'missing_handler':
+            corrupt(database, 'assistant_profile_handlers', 'DELETE FROM assistant_profile_handlers')
+        elif tamper.startswith('handler_'):
+            column = {'handler_run':'run_id', 'handler_output':'output_id', 'handler_conversation':'conversation_id',
+                      'handler_basis':'basis_sha256', 'handler_sequence':'profile_receipt_sequence'}[tamper]
+            value = '0' * 64 if column == 'basis_sha256' else 99 if tamper == 'handler_sequence' else str(uuid4())
+            corrupt(database, 'assistant_profile_handlers', f'UPDATE assistant_profile_handlers SET {column}=?', (value,))
+        elif tamper == 'missing_receipt':
+            corrupt(database, 'assistant_profile_receipts', 'DELETE FROM assistant_profile_receipts')
+        elif tamper.startswith('receipt_'):
+            column = {'receipt_actor':'actor_id', 'receipt_session':'session_id', 'receipt_request':'request_id',
+                      'receipt_revision':'profile_revision'}[tamper]
+            corrupt(database, 'assistant_profile_receipts', f'UPDATE assistant_profile_receipts SET {column}=?',
+                    (99 if tamper == 'receipt_revision' else str(uuid4()),))
+        elif tamper == 'message_content':
+            corrupt(database, 'assistant_messages', "UPDATE assistant_messages SET content='不同的合成原话'")
+        else:
+            value = view.output.model_dump(mode='json')
+            if tamper == 'output_run':
+                value['run_id'] = str(uuid4())
+            elif tamper == 'output_scope':
+                value['scope']['conversation_id'] = str(uuid4())
+            else:
+                ref = value['candidate']['profile_patch']['changes'][0]['source_refs'][0]
+                ref['quote'] = '乙称借款99000元'
+                ref['quote_sha256'] = sha(ref['quote'])
+            corrupt(database, 'assistant_model_outputs', 'UPDATE assistant_model_outputs SET output_json=?',
+                    (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')),))
+>       with pytest.raises(ServiceError, match='VERSION_CONFLICT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'VERSION_CONFLICT'
+E         Actual message: 'request blocked'
+
+tests\integration\test_assistant_profile_history.py:116: AssertionError
+________________ test_profile_history_keeps_ownership_boundary ________________
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0D9D76C60>, Actor(user_id=UUID('504a5d95-dac1-43a8-99a3-ee3a77bb...ntent='甲称借款35000元。', request_id=UUID('c7f02699-4a87-44a7-a1e2-93b2391a60c2'), requested_skill=None, attachment_ids=()))
+
+    def test_profile_history_keeps_ownership_boundary(profile_world):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        with database.session() as db:
+            provision_user('history-other', 'fixture123', {d.Role.HANDLING_LAWYER}, db, local_workbench_password=True)
+            token, _ = login('history-other', 'fixture123', db)
+            other = authenticate(token, db)
+        with pytest.raises(ServiceError, match='CROSS_MATTER_DENIED'):
+>           read(database, other, view.id)
+
+tests\integration\test_assistant_profile_history.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_assistant_profile_history.py:42: in read
+    return attempts.read_attempt(actor, identifier, db)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\assistant\providers\attempts.py:92: in read_attempt
+    service._owned(actor, UUID(row['conversation_id']), db)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+actor = Actor(user_id=UUID('68d1c474-d35c-451e-9c0b-a101fa539cc0'), roles=frozenset({<Role.HANDLING_LAWYER: 'handling_lawyer'>}), session_id=UUID('d5e46989-3419-47cc-ac22-aedb52b56c77'))
+identifier = UUID('4260b49a-aafb-40f0-ad69-0ff45b6be8dc')
+db = <sqlalchemy.orm.session.Session object at 0x000002C0DE5119A0>
+
+    def _owned(actor, identifier, db):
+        current = _current(actor, db)
+        row = db.execute(text('SELECT * FROM assistant_conversations WHERE id=:id AND owner_id=:owner'),
+            {'id':str(identifier), 'owner':str(current.user_id)}).mappings().first()
+        if row is None or row['workspace_id'] != str(_workspace_id(db)):
+>           raise ServiceError('CROSS_MATTER_DENIED', 403)
+E           cn_contract.security.ServiceError: request not authorized
+
+src\cn_contract\assistant\service.py:66: ServiceError
+
+During handling of the above exception, another exception occurred:
+
+profile_world = (<cn_contract.persistence.Database object at 0x000002C0D9D76C60>, Actor(user_id=UUID('504a5d95-dac1-43a8-99a3-ee3a77bb...ntent='甲称借款35000元。', request_id=UUID('c7f02699-4a87-44a7-a1e2-93b2391a60c2'), requested_skill=None, attachment_ids=()))
+
+    def test_profile_history_keeps_ownership_boundary(profile_world):
+        database, actor, *_ = profile_world
+        view, _, _ = profile_history(profile_world)
+        with database.session() as db:
+            provision_user('history-other', 'fixture123', {d.Role.HANDLING_LAWYER}, db, local_workbench_password=True)
+            token, _ = login('history-other', 'fixture123', db)
+            other = authenticate(token, db)
+>       with pytest.raises(ServiceError, match='CROSS_MATTER_DENIED'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'CROSS_MATTER_DENIED'
+E         Actual message: 'request not authorized'
+
+tests\integration\test_assistant_profile_history.py:127: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_handler_event_payload_disagreement[response.ready]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_handler_event_payload_disagreement[profile.saved]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[missing_handler]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[handler_run]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[handler_output]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[handler_conversation]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[handler_basis]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[handler_sequence]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[missing_receipt]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[receipt_actor]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[receipt_session]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[receipt_request]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[receipt_revision]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[output_run]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[output_scope]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[output_quote]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_rejects_corrupt_output_handler_and_receipt_links[message_content]
+FAILED tests/integration/test_assistant_profile_history.py::test_profile_history_keeps_ownership_boundary
+18 failed, 9 passed in 14.79s

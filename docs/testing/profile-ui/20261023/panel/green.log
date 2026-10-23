@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: starts hidden, reads only on open, and closes with keyboard focus restored
+ok 1 - starts hidden, reads only on open, and closes with keyboard focus restored
+  ---
+  duration_ms: 4.2187
+  type: 'test'
+  ...
+# Subtest: renders literal candidates, protected explicit null, exact money and unresolved states
+ok 2 - renders literal candidates, protected explicit null, exact money and unresolved states
+  ---
+  duration_ms: 1.1266
+  type: 'test'
+  ...
+# Subtest: source details preserve complete message and document anchor provenance
+ok 3 - source details preserve complete message and document anchor provenance
+  ---
+  duration_ms: 0.5792
+  type: 'test'
+  ...
+# Subtest: empty revision zero explains missing draft without claiming generation or saving
+ok 4 - empty revision zero explains missing draft without claiming generation or saving
+  ---
+  duration_ms: 0.3577
+  type: 'test'
+  ...
+# Subtest: current profile null is an honest empty state while absent historical versions remain errors
+ok 5 - current profile null is an honest empty state while absent historical versions remain errors
+  ---
+  duration_ms: 0.7632
+  type: 'test'
+  ...
+# Subtest: history accepts bounded integer versions, gets exact endpoint argument, and can reread latest
+ok 6 - history accepts bounded integer versions, gets exact endpoint argument, and can reread latest
+  ---
+  duration_ms: 1.5083
+  type: 'test'
+  ...
+# Subtest: huge revision counts use one numeric input rather than enumerating all versions
+ok 7 - huge revision counts use one numeric input rather than enumerating all versions
+  ---
+  duration_ms: 0.5672
+  type: 'test'
+  ...
+# Subtest: wrong historical revision is never presented as the selected version
+ok 8 - wrong historical revision is never presented as the selected version
+  ---
+  duration_ms: 0.5204
+  type: 'test'
+  ...
+# Subtest: workspace conversation binding and scope boundaries reject mismatched snapshots
+ok 9 - workspace conversation binding and scope boundaries reject mismatched snapshots
+  ---
+  duration_ms: 0.797
+  type: 'test'
+  ...
+# Subtest: historical input and material revisions are allowed but future or malformed ones are refused
+ok 10 - historical input and material revisions are allowed but future or malformed ones are refused
+  ---
+  duration_ms: 0.6719
+  type: 'test'
+  ...
+# Subtest: switching loading or revocation clears old data and discards late responses
+ok 11 - switching loading or revocation clears old data and discards late responses
+  ---
+  duration_ms: 1.3257
+  type: 'test'
+  ...
+# Subtest: pagehide clears records and prevents subsequent or late reads
+ok 12 - pagehide clears records and prevents subsequent or late reads
+  ---
+  duration_ms: 0.2048
+  type: 'test'
+  ...
+# Subtest: newer reads win and close prevents pending data or notices from returning
+ok 13 - newer reads win and close prevents pending data or notices from returning
+  ---
+  duration_ms: 0.3216
+  type: 'test'
+  ...
+# Subtest: network failure clears old success and raw diagnostics, then permits explicit reread
+ok 14 - network failure clears old success and raw diagnostics, then permits explicit reread
+  ---
+  duration_ms: 0.431
+  type: 'test'
+  ...
+# Subtest: authorization errors erase all profile values without retaining diagnostics
+ok 15 - authorization errors erase all profile values without retaining diagnostics
+  ---
+  duration_ms: 0.4351
+  type: 'test'
+  ...
+# Subtest: a growing current input snapshot does not erase a still valid historical profile
+ok 16 - a growing current input snapshot does not erase a still valid historical profile
+  ---
+  duration_ms: 0.2657
+  type: 'test'
+  ...
+# Subtest: a rollback below the displayed source snapshot clears now-incompatible content
+ok 17 - a rollback below the displayed source snapshot clears now-incompatible content
+  ---
+  duration_ms: 0.9983
+  type: 'test'
+  ...
+# Subtest: no conversation, unresolved scope, loading, and revoked state cannot issue reads
+ok 18 - no conversation, unresolved scope, loading, and revoked state cannot issue reads
+  ---
+  duration_ms: 0.3535
+  type: 'test'
+  ...
+# Subtest: quote offsets use Unicode code points and reject broken source ranges
+ok 19 - quote offsets use Unicode code points and reject broken source ranges
+  ---
+  duration_ms: 0.5382
+  type: 'test'
+  ...
+# Subtest: invalid values, claimed verification and model contact proposals never render
+ok 20 - invalid values, claimed verification and model contact proposals never render
+  ---
+  duration_ms: 1.0452
+  type: 'test'
+  ...
+# Subtest: list material and date values preserve original text and honest material status
+ok 21 - list material and date values preserve original text and honest material status
+  ---
+  duration_ms: 0.4871
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 83.8312

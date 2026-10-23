@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="13" failures="0" skipped="0" tests="75" time="45.997" timestamp="2026-10-23T16:47:20.552490+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_keeps_two_outputs_in_request_order_without_runtime_or_provider_calls" time="1.220" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_legacy_queued_message_is_omitted_without_dispatch" time="0.824" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_reserved_attempt_is_returned_without_output_or_runtime_lookup" time="0.932" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rejects_empty_malformed_duplicate_or_over_limit_queries[query0]" time="0.772" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rejects_empty_malformed_duplicate_or_over_limit_queries[query1]" time="0.755" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rejects_empty_malformed_duplicate_or_over_limit_queries[query2]" time="0.632" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rejects_empty_malformed_duplicate_or_over_limit_queries[query3]" time="0.661" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rejects_empty_malformed_duplicate_or_over_limit_queries[query4]" time="0.589" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rejects_empty_malformed_duplicate_or_over_limit_queries[query5]" time="0.613" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rejects_empty_malformed_duplicate_or_over_limit_queries[query6]" time="0.609" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_accepts_fifty_owned_messages_and_bounds_response_dto" time="0.666" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rejects_entire_batch_with_foreign_or_missing_message[other_conversation]" time="0.718" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rejects_entire_batch_with_foreign_or_missing_message[missing]" time="0.892" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_checks_authentication_and_owner_before_query_validation" time="1.034" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rechecks_current_session_role_and_workspace[session-401]" time="1.326" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rechecks_current_session_role_and_workspace[expired-401]" time="0.772" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rechecks_current_session_role_and_workspace[disabled-401]" time="0.787" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rechecks_current_session_role_and_workspace[role-403]" time="0.713" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rechecks_current_session_role_and_workspace[workspace-403]" time="0.834" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rechecks_current_case_and_intake_access[matter]" time="1.074" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rechecks_current_case_and_intake_access[intake]" time="1.151" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_history_rechecks_current_case_and_intake_access[projection]" time="0.757" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_old_binding_cannot_flow_into_current_conversation_history[binding_revision]" time="0.716" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_old_binding_cannot_flow_into_current_conversation_history[scope_reference]" time="0.747" /><testcase classname="tests.integration.test_assistant_generation_history" name="test_restored_copy_allows_exact_history_read_and_blocks_writes" time="2.241" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_authorized_unicode_text_over_model_wire_limit_returns_fixed_error" time="0.820" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_default_runtime_disabled_without_blocking_local_drafts" time="0.781" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_saved_draft_capability_does_not_probe_provider_or_expose_policy" time="0.661" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_capability_and_post_recheck_actual_policy[disabled-unconfigured]" time="0.642" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_capability_and_post_recheck_actual_policy[missing_policy-unapproved]" time="0.673" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_capability_and_post_recheck_actual_policy[expired-unapproved]" time="0.668" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_capability_and_post_recheck_actual_policy[wrong_actor-unapproved]" time="0.650" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_capability_and_post_recheck_actual_policy[wrong_source-unapproved]" time="0.621" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_capability_and_post_recheck_actual_policy[tiny_budget-budget_exhausted]" time="0.724" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_async_submission_returns_before_provider_and_replay_only_reads_same_attempt" time="0.737" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_auth_csrf_and_ownership_are_checked_before_body" time="0.861" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_session_revoked_while_body_arrives_cannot_create_attempt" time="0.657" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_http_never_accepts_runtime_policy_skill_or_attachment_egress[body_change0]" time="0.651" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_http_never_accepts_runtime_policy_skill_or_attachment_egress[body_change1]" time="0.570" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_http_never_accepts_runtime_policy_skill_or_attachment_egress[body_change2]" time="0.593" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_http_never_accepts_runtime_policy_skill_or_attachment_egress[body_change3]" time="0.584" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_http_never_accepts_runtime_policy_skill_or_attachment_egress[body_change4]" time="0.597" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_oversized_or_duplicate_json_is_rejected_without_registration" time="0.714" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_old_queued_message_and_lookup_never_gain_execution" time="0.633" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_attempt_read_uses_current_owner_and_session" time="0.863" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_native_shutdown_seals_inflight_before_database_disposal_and_restart_never_resends" time="0.823" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_restored_copy_exposes_only_exact_generation_reads" time="2.672" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_without_started_lifespan_capability_and_post_cannot_claim_ready" time="0.616" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_selected_local_attachment_blocks_capability_and_plain_text_dispatch" time="0.729" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_generation_lifecycle_is_nested_inside_live_worker_and_can_restart" time="0.577" /><testcase classname="tests.integration.test_assistant_generation_routes" name="test_capability_observes_task_capacity_on_lifespan_loop" time="0.621" /><testcase classname="tests.integration.test_assistant_context_send" name="test_context_answer_roundtrip_preserves_format_sources_and_bytes" time="0.058"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_context_answer_roundtrip_0')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_context_answer_roundtrip_0/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_context_replay_is_idempotent_and_conflicts_on_change" time="0.087"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_context_replay_is_idempot0')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_context_replay_is_idempot0/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_unapproved_context_registration_sends_nothing[missing]" time="0.082"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_unapproved_context_regist0')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_unapproved_context_regist0/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_unapproved_context_registration_sends_nothing[disabled]" time="0.071"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_unapproved_context_regist1')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_unapproved_context_regist1/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_unapproved_context_registration_sends_nothing[expired]" time="0.067"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_unapproved_context_regist2')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_unapproved_context_regist2/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_unapproved_context_registration_sends_nothing[manifest]" time="0.070"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_unapproved_context_regist3')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_unapproved_context_regist3/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_unapproved_context_registration_sends_nothing[config]" time="0.060"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_unapproved_context_regist4')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_unapproved_context_regist4/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_registration_rolls_back_message_attempt_and_relations_together" time="0.066"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_registration_rolls_back_m0')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_registration_rolls_back_m0/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_settle_rejects_forged_output_citations_but_keeps_real_usage" time="0.067"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_settle_rejects_forged_out0')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_settle_rejects_forged_out0/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_cancel_before_claim_releases_context_reservation" time="0.083"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_cancel_before_claim_relea0')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_cancel_before_claim_relea0/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_recovery_marks_context_states_without_redispatch" time="0.077"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_recovery_marks_context_st0')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_recovery_marks_context_st0/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_context_branch_never_reserves_or_runs_jev" time="0.070"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_context_branch_never_rese0')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_context_branch_never_rese0/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_plain_and_context_history_coexist_with_distinct_views" time="0.072"><error message="failed on setup with &quot;ValueError: LIBRARY_DISK_BUDGET&quot;">tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_plain_and_context_history0')
+
+    @pytest.fixture
+    def library(tmp_path):
+        laws = tmp_path / 'laws'
+        laws.mkdir()
+        text = ('# 完全虚构资料\n目录\n第一条 租赁\n第二条 保管\n'
+                '第一条 这是完全虚构的租赁正文，不能作为正式法律依据。\n'
+                '&gt; 第二条 虚构引述租赁规则。\n'
+                '第三条 另一个租赁正文。\n第三条 重复租赁条号待核。\n'
+                '第四条 仅有相邻禁入标记。')
+        (laws / '吉林虚构规则_20250101.md').write_text(text, encoding='utf-8', newline='')
+        (laws / '只在标题命中.md').write_text('第一条 这是另一个独立资料。', encoding='utf-8')
+        cases = tmp_path / 'cases.csv'
+        with cases.open('w', encoding='utf-8', newline='') as stream:
+            writer = csv.writer(stream)
+            writer.writerow(['标题', '案号', '法院', '文书内容', '判决时间', '原始链接'])
+            writer.writerow(['纯虚构租赁案', '(2025)虚001号', '虚构法院',
+                             '重复内容。' * 260 + '目标租赁正文。' + '重复内容。' * 300,
+                             '2025-04-05', 'https://fiction.invalid/case'])
+            writer.writerow(['空正文租赁目录', '(2025)虚002号', '虚构法院', '', 'not-a-date', ''])
+            writer.writerow(['隔壁资料', '(2025)虚003号', '虚构法院', '只有相邻文书禁入标记。', '', ''])
+        root = tmp_path / 'library'
+&gt;       import_laws(root, laws, 'synthetic')
+
+tests\integration\test_assistant_library_adapter.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\library\law_sections.py:137: in import_laws
+    check_budget(root, force=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/pytest-of-Administrator/pytest-1160/test_plain_and_context_history0/library')
+
+    def check_budget(root, *, additional_bytes=0, force=False):
+        root = Path(root)
+        if not force and not additional_bytes and time.monotonic() - _last.get(str(root), -100) &lt; 5:
+            return
+        existing = root
+        while not existing.exists():
+            existing = existing.parent
+        if shutil.disk_usage(existing).free &lt; 40 * GIB + additional_bytes:
+&gt;           raise ValueError('LIBRARY_DISK_BUDGET')
+E           ValueError: LIBRARY_DISK_BUDGET
+
+src\cn_contract\library\budget.py:49: ValueError</error></testcase><testcase classname="tests.integration.test_assistant_context_send" name="test_v1_history_item_dump_bytes_are_unchanged_by_the_union" time="0.001" /><testcase classname="tests.integration.test_assistant_frontend" name="test_browser_module_behaviour[test_assistant_state.mjs]" time="0.108" /><testcase classname="tests.integration.test_assistant_frontend" name="test_browser_module_behaviour[test_assistant_transport_input.mjs]" time="0.117" /><testcase classname="tests.integration.test_assistant_frontend" name="test_browser_module_behaviour[test_assistant_material_state.mjs]" time="0.096" /><testcase classname="tests.integration.test_assistant_frontend" name="test_browser_module_behaviour[test_assistant_material_dom.mjs]" time="0.116" /><testcase classname="tests.integration.test_assistant_frontend" name="test_browser_module_behaviour[test_assistant_generation_state.mjs]" time="0.134" /><testcase classname="tests.integration.test_assistant_frontend" name="test_browser_module_behaviour[test_assistant_generation_render.mjs]" time="0.128" /><testcase classname="tests.integration.test_assistant_frontend" name="test_browser_module_behaviour[test_assistant_generation_entry.mjs]" time="0.136" /><testcase classname="tests.integration.test_assistant_frontend" name="test_browser_module_behaviour[test_assistant_profile_generation.mjs]" time="0.146" /><testcase classname="tests.integration.test_assistant_frontend" name="test_browser_module_behaviour[test_assistant_profile_panel.mjs]" time="0.135" /><testcase classname="tests.integration.test_assistant_frontend" name="test_chat_module_import_graph_is_served_as_javascript" time="0.680" /></testsuite></testsuites>
