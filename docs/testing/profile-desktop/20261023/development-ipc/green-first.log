@@ -1,0 +1,306 @@
+TAP version 13
+# Subtest: profile IPC uses trusted saved text, direct basis, fixed cost and native authorized status
+ok 1 - profile IPC uses trusted saved text, direct basis, fixed cost and native authorized status
+  ---
+  duration_ms: 30.23
+  type: 'test'
+  ...
+# Subtest: existing receipt remains distinguishable and never creates a second grant
+ok 2 - existing receipt remains distinguishable and never creates a second grant
+  ---
+  duration_ms: 7.3671
+  type: 'test'
+  ...
+# Subtest: profile requires literal native acceptance false
+ok 3 - profile requires literal native acceptance false
+  ---
+  duration_ms: 11.1745
+  type: 'test'
+  ...
+# Subtest: profile requires literal native acceptance {"main":true,"judge":false}
+ok 4 - profile requires literal native acceptance {"main":true,"judge":false}
+  ---
+  duration_ms: 3.893
+  type: 'test'
+  ...
+# Subtest: profile requires literal native acceptance null
+ok 5 - profile requires literal native acceptance null
+  ---
+  duration_ms: 3.5961
+  type: 'test'
+  ...
+# Subtest: strict five selection fields reject renderer bytes, budgets, skills, attachments and malformed scope
+ok 6 - strict five selection fields reject renderer bytes, budgets, skills, attachments and malformed scope
+  ---
+  duration_ms: 1.2031
+  type: 'test'
+  ...
+# Subtest: profile IPC rejects a foreign sender, conversation and non-owned origin before cookie reads
+ok 7 - profile IPC rejects a foreign sender, conversation and non-owned origin before cookie reads
+  ---
+  duration_ms: 1.1754
+  type: 'test'
+  ...
+# Subtest: profile checks every scope field in draft
+ok 8 - profile checks every scope field in draft
+  ---
+  duration_ms: 11.1233
+  type: 'test'
+  ...
+# Subtest: profile checks every scope field in materials
+ok 9 - profile checks every scope field in materials
+  ---
+  duration_ms: 10.6551
+  type: 'test'
+  ...
+# Subtest: profile checks every scope field in basis
+ok 10 - profile checks every scope field in basis
+  ---
+  duration_ms: 14.9296
+  type: 'test'
+  ...
+# Subtest: only a current nonblank text-only draft with no active run can be approved
+ok 11 - only a current nonblank text-only draft with no active run can be approved
+  ---
+  duration_ms: 17.4512
+  type: 'test'
+  ...
+# Subtest: changing profile basis input_format after confirmation prevents authorization
+ok 12 - changing profile basis input_format after confirmation prevents authorization
+  ---
+  duration_ms: 4.8451
+  type: 'test'
+  ...
+# Subtest: changing profile basis template_version after confirmation prevents authorization
+ok 13 - changing profile basis template_version after confirmation prevents authorization
+  ---
+  duration_ms: 4.0473
+  type: 'test'
+  ...
+# Subtest: changing profile basis purpose after confirmation prevents authorization
+ok 14 - changing profile basis purpose after confirmation prevents authorization
+  ---
+  duration_ms: 5.9147
+  type: 'test'
+  ...
+# Subtest: changing profile basis handler_id after confirmation prevents authorization
+ok 15 - changing profile basis handler_id after confirmation prevents authorization
+  ---
+  duration_ms: 4.473
+  type: 'test'
+  ...
+# Subtest: changing profile basis handler_version after confirmation prevents authorization
+ok 16 - changing profile basis handler_version after confirmation prevents authorization
+  ---
+  duration_ms: 5.142
+  type: 'test'
+  ...
+# Subtest: changing profile basis request_id after confirmation prevents authorization
+ok 17 - changing profile basis request_id after confirmation prevents authorization
+  ---
+  duration_ms: 4.549
+  type: 'test'
+  ...
+# Subtest: changing profile basis expected_composer_revision after confirmation prevents authorization
+ok 18 - changing profile basis expected_composer_revision after confirmation prevents authorization
+  ---
+  duration_ms: 3.9932
+  type: 'test'
+  ...
+# Subtest: changing profile basis content_sha256 after confirmation prevents authorization
+ok 19 - changing profile basis content_sha256 after confirmation prevents authorization
+  ---
+  duration_ms: 3.9314
+  type: 'test'
+  ...
+# Subtest: changing profile basis base_profile_revision after confirmation prevents authorization
+ok 20 - changing profile basis base_profile_revision after confirmation prevents authorization
+  ---
+  duration_ms: 3.9814
+  type: 'test'
+  ...
+# Subtest: changing profile basis expected_intake_id after confirmation prevents authorization
+ok 21 - changing profile basis expected_intake_id after confirmation prevents authorization
+  ---
+  duration_ms: 4.0425
+  type: 'test'
+  ...
+# Subtest: changing profile basis expected_intake_revision after confirmation prevents authorization
+ok 22 - changing profile basis expected_intake_revision after confirmation prevents authorization
+  ---
+  duration_ms: 4.9323
+  type: 'test'
+  ...
+# Subtest: changing profile basis project_intake after confirmation prevents authorization
+ok 23 - changing profile basis project_intake after confirmation prevents authorization
+  ---
+  duration_ms: 4.369
+  type: 'test'
+  ...
+# Subtest: changing profile basis system_sha256 after confirmation prevents authorization
+ok 24 - changing profile basis system_sha256 after confirmation prevents authorization
+  ---
+  duration_ms: 4.6374
+  type: 'test'
+  ...
+# Subtest: changing profile basis config_sha256 after confirmation prevents authorization
+ok 25 - changing profile basis config_sha256 after confirmation prevents authorization
+  ---
+  duration_ms: 3.9309
+  type: 'test'
+  ...
+# Subtest: changing profile basis wire_sha256 after confirmation prevents authorization
+ok 26 - changing profile basis wire_sha256 after confirmation prevents authorization
+  ---
+  duration_ms: 3.9564
+  type: 'test'
+  ...
+# Subtest: changing profile basis wire_bytes after confirmation prevents authorization
+ok 27 - changing profile basis wire_bytes after confirmation prevents authorization
+  ---
+  duration_ms: 4.7319
+  type: 'test'
+  ...
+# Subtest: a reordered but identical complete basis remains valid and does not mutate native details
+ok 28 - a reordered but identical complete basis remains valid and does not mutate native details
+  ---
+  duration_ms: 4.3102
+  type: 'test'
+  ...
+# Subtest: direct preview rejects legacy wrappers, missing and additional basis fields
+ok 29 - direct preview rejects legacy wrappers, missing and additional basis fields
+  ---
+  duration_ms: 7.3202
+  type: 'test'
+  ...
+# Subtest: existing intake target and its revision are shown exactly
+ok 30 - existing intake target and its revision are shown exactly
+  ---
+  duration_ms: 4.1243
+  type: 'test'
+  ...
+# Subtest: saved text or materials changed after confirmation cannot be authorized
+ok 31 - saved text or materials changed after confirmation cannot be authorized
+  ---
+  duration_ms: 17.8829
+  type: 'test'
+  ...
+# Subtest: missing or ambiguous CSRF and endpoint-specific session cookies fail closed
+ok 32 - missing or ambiguous CSRF and endpoint-specific session cookies fail closed
+  ---
+  duration_ms: 1.4289
+  type: 'test'
+  ...
+# Subtest: cookie replacement while confirmation is open is denied before native authorization
+ok 33 - cookie replacement while confirmation is open is denied before native authorization
+  ---
+  duration_ms: 2.8927
+  type: 'test'
+  ...
+# Subtest: late cookie replacement cleans up only a new authorized grant
+ok 34 - late cookie replacement cleans up only a new authorized grant
+  ---
+  duration_ms: 4.1886
+  type: 'test'
+  ...
+# Subtest: late cookie replacement cleans up only a new existing grant
+ok 35 - late cookie replacement cleans up only a new existing grant
+  ---
+  duration_ms: 5.4556
+  type: 'test'
+  ...
+# Subtest: profile shares pending, busy, wait and runtime lock with both older IPC channels
+ok 36 - profile shares pending, busy, wait and runtime lock with both older IPC channels
+  ---
+  duration_ms: 4.2003
+  type: 'test'
+  ...
+# Subtest: replaced parent identity invalidates profile consent
+ok 37 - replaced parent identity invalidates profile consent
+  ---
+  duration_ms: 2.4793
+  type: 'test'
+  ...
+# Subtest: replaced session identity invalidates profile consent
+ok 38 - replaced session identity invalidates profile consent
+  ---
+  duration_ms: 2.3251
+  type: 'test'
+  ...
+# Subtest: replaced backend identity invalidates profile consent
+ok 39 - replaced backend identity invalidates profile consent
+  ---
+  duration_ms: 2.7048
+  type: 'test'
+  ...
+# Subtest: replaced origin identity invalidates profile consent
+ok 40 - replaced origin identity invalidates profile consent
+  ---
+  duration_ms: 2.2115
+  type: 'test'
+  ...
+# Subtest: replaced conversation_id identity invalidates profile consent
+ok 41 - replaced conversation_id identity invalidates profile consent
+  ---
+  duration_ms: 2.3398
+  type: 'test'
+  ...
+# Subtest: invalidated document guard prevents profile consent
+ok 42 - invalidated document guard prevents profile consent
+  ---
+  duration_ms: 2.3319
+  type: 'test'
+  ...
+# Subtest: unknown or malformed native ACK never becomes a successful profile status
+not ok 43 - unknown or malformed native ACK never becomes a successful profile status
+  ---
+  duration_ms: 4.6426
+  type: 'test'
+  location: 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-approval.test.cjs:260:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   code: 'STATE_CONFLICT',
+    -   code: 'BLOCKED_LIVE',
+        ok: false
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    ok: false
+    code: 'BLOCKED_LIVE'
+  actual:
+    ok: false
+    code: 'STATE_CONFLICT'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:263:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1404:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:969:7)
+  ...
+# Subtest: HTTP redirects, malformed JSON and excessive or invalid UTF8 bodies produce only fixed errors
+ok 44 - HTTP redirects, malformed JSON and excessive or invalid UTF8 bodies produce only fixed errors
+  ---
+  duration_ms: 8.5167
+  type: 'test'
+  ...
+# Subtest: preload exposes a frozen profile selector on the dedicated approval channel
+ok 45 - preload exposes a frozen profile selector on the dedicated approval channel
+  ---
+  duration_ms: 0.9065
+  type: 'test'
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 44
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 333.0196

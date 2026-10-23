@@ -1,6 +1,7 @@
 const http=require('node:http');
 const {createHash}=require('node:crypto');
 const {TextDecoder}=require('node:util');
+const {validProfileInput,createProfileSnapshot}=require('./profile-approval.cjs');
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const SCOPE=['workspace_id','conversation_id','scope_kind','scope_ref','binding_revision','input_revision','materials_revision'];
 const CODES=new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT','BUDGET_EXCEEDED',
@@ -190,6 +191,7 @@ async function contextSnapshot(context,input,base,guard,expectedToken) {
 }
 function registerModelApproval({ipcMain,runtime,judgeRuntime,captureContext,isBusy,setBusy,confirm}) {
   let pending=null;
+  const profileSnapshot=createProfileSnapshot({tokenFor,csrfCookie,readJSON,postJSON,check,fail});
   async function approve(event,value) {
     if(pending || !check(()=>!isBusy()))return denied('STATE_CONFLICT');
     let context,input;
@@ -258,11 +260,11 @@ function registerModelApproval({ipcMain,runtime,judgeRuntime,captureContext,isBu
     finally{pending=null;setBusy(false);}
   }
   ipcMain.handle('desktop:approve-generation',approve);
-  async function approveContext(event,value) {
+  async function approveSelection(event,value,profile=false) {
     if(pending || !check(()=>!isBusy()))return denied('STATE_CONFLICT');
     let context,input;
     try{
-      if(!validContextInput(value))return denied();
+      if(!(profile?validProfileInput(value):validContextInput(value)))return denied();
       input=structuredClone(value);context=captureContext(event);
       if(!context || !validOrigin(context.origin) || context.conversation_id!==input.conversation_id ||
           !check(context.guard))return denied('ACCESS_DENIED');
@@ -274,34 +276,42 @@ function registerModelApproval({ipcMain,runtime,judgeRuntime,captureContext,isBu
         .every(key=>next[key]===context[key]));
     };
     const base='/api/assistant/conversations/'+input.conversation_id;
+    const takeSnapshot=profile?profileSnapshot:contextSnapshot;
+    const authorize=profile?'authorizeProfile':'authorizeContext';
     setBusy(true);
     const task=Promise.resolve().then(()=>runtime.withAuthorization(context.backend,guard,async lease=>{
-      if(typeof lease?.authorizeContext!=='function')return denied();
-      const before=await contextSnapshot(context,input,base,guard);
+      if(typeof lease?.[authorize]!=='function')return denied();
+      const before=await takeSnapshot(context,input,base,guard);
       if(!check(guard))return denied('STATE_CONFLICT');
       const accepted=await confirm({parent:context.parent,guard,
-        details:{kind:'library_context',content:before.content,sources:before.sources,
+        details:{kind:profile?'profile_draft':'library_context',content:before.content,
+          ...(profile?{basis:structuredClone(before.basis)}:{sources:before.sources}),
           model:lease.model,max_total_usd:lease.max_total_usd,recipient:'DeepSeek（api.deepseek.com）'}});
       if(accepted!==true)return {ok:false,code:'APPROVAL_CANCELED',canceled:true};
       if(!check(guard))return denied('STATE_CONFLICT');
-      const after=await contextSnapshot(context,input,base,guard,before.token);
+      const after=await takeSnapshot(context,input,base,guard,before.token);
       if(after.content!==before.content || after.basisKey!==before.basisKey || !check(guard))
         return denied('STATE_CONFLICT');
-      const result=await lease.authorizeContext({session_token:after.token,basis:before.basis});
+      const result=await lease[authorize]({session_token:after.token,basis:before.basis});
       if(!result.ok)return result;
-      await tokenFor(context,[base+'?limit=1',base+'/materials'],guard,after.token);
+      await tokenFor(context,after.paths || [base+'?limit=1',base+'/materials'],guard,after.token);
       return result;
     }));
     pending=task;
     try{
       const result=await task;
-      if(result?.ok===true)return {ok:true};
+      if(result?.ok===true){
+        if(!profile)return {ok:true};
+        return exact(result,['ok','status']) && ['authorized','existing'].includes(result.status)
+          ?{ok:true,status:result.status}:denied();
+      }
       return {ok:false,code:CODES.has(result?.code)?result.code:'BLOCKED_LIVE',
         ...(result?.canceled===true?{canceled:true}:{})};
     }catch{return denied();}
     finally{pending=null;setBusy(false);}
   }
-  ipcMain.handle('desktop:approve-context',approveContext);
+  ipcMain.handle('desktop:approve-context',(event,value)=>approveSelection(event,value));
+  ipcMain.handle('desktop:approve-profile',(event,value)=>approveSelection(event,value,true));
   return {wait:()=>Promise.allSettled([pending])};
 }
 module.exports={registerModelApproval};

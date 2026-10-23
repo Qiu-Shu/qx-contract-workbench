@@ -26,7 +26,7 @@ function fixture() {
   const schedule=(fn,ms)=>{const value={fn,ms,unref(){}};timers.add(value);return value;};
   const module={exports:{}};
   vm.runInNewContext(fs.readFileSync(path.join(desktop,'model-approval-window.cjs'),'utf8'),{
-    module,exports:module.exports,require,__dirname:desktop,Buffer,
+    module,exports:module.exports,require:require('node:module').createRequire(path.join(desktop,'model-approval-window.cjs')),__dirname:desktop,Buffer,
     setTimeout:schedule,setInterval:schedule,clearTimeout:value=>timers.delete(value),clearInterval:value=>timers.delete(value)});
   const api=module.exports.createModelApprovalWindow({BrowserWindow:Window,ipcMain,session});
   const parent=new EventEmitter();parent.isDestroyed=()=>false;parent.webContents=new EventEmitter();
@@ -384,4 +384,72 @@ test('malformed or late context display never enables confirmation',async()=>{
   f.events.get('pagehide')();release(contextDetails);await tick();
   assert.equal(f.at('approval-content').textContent,'');assert.equal(f.at('approval-confirm').disabled,true);
   await f.at('approval-confirm').listeners.click();assert.deepEqual(f.calls,[]);
+});
+
+const profileBasis=()=>({input_format:'profile-text-v1',template_version:'profile-text-system-v1',
+  purpose:'reply_and_profile_draft',handler_id:'profile.save',handler_version:'1',
+  request_id:'11111111-1111-4111-8111-111111111111',
+  expected_scope:{workspace_id:'22222222-2222-4222-8222-222222222222',
+    conversation_id:'33333333-3333-4333-8333-333333333333',scope_kind:'conversation',scope_ref:null,
+    binding_revision:1,input_revision:2,materials_revision:0},expected_composer_revision:3,
+  content_sha256:'a'.repeat(64),base_profile_revision:4,expected_intake_id:null,
+  expected_intake_revision:null,project_intake:false,system_sha256:'b'.repeat(64),
+  config_sha256:'c'.repeat(64),wire_sha256:'d'.repeat(64),wire_bytes:1024});
+const profileDetails=()=>({...details,kind:'profile_draft',basis:profileBasis()});
+
+test('profile modal snapshots the complete save plan and allows only a presented boolean decision',async()=>{
+  const f=fixture(),value=profileDetails();
+  const pending=f.api.confirm({parent:f.parent,details:value,guard:()=>true});await tick();
+  const win=f.windows[0];assert(win);assert.equal(win.options.height,700);
+  value.basis.base_profile_revision=999;value.basis.expected_scope.input_revision=999;
+  const read=f.handlers.get('desktop:approval-state'),decide=f.handlers.get('desktop:approval-decision');
+  assert.equal(await decide(f.event(win),true),false);
+  assert.deepEqual(plain(await read(f.event(win))),profileDetails());
+  assert.equal(await decide(f.event(win),{main:true,judge:true}),false);
+  assert.equal(await decide(f.event(win),true),true);assert.equal(await pending,true);
+  assert.equal(f.timers.size,0);
+});
+
+test('profile modal rejects invalid save plans and extra authorization fields before opening',async()=>{
+  const f=fixture();
+  for(const change of [{purpose:'plain'},{project_intake:1},{base_profile_revision:-1},
+    {expected_intake_id:'44444444-4444-4444-8444-444444444444'},
+    {wire_bytes:262145},{extra:1}]){
+    const value=profileDetails();Object.assign(value.basis,change);
+    assert.equal(await f.api.confirm({parent:f.parent,details:value,guard:()=>true}),false);
+  }
+  for(const extra of [{judge:{available:true,max_total_usd:'1'}},{session_token:'synthetic'}, {sources:[]}])
+    assert.equal(await f.api.confirm({parent:f.parent,details:{...profileDetails(),...extra},guard:()=>true}),false);
+  assert.equal(f.windows.length,0);
+});
+
+test('profile page explains each save target without promising an intake or verifying facts',async()=>{
+  for(const project of [false,true])for(const linked of [false,true]){
+    const value=profileDetails();value.basis.project_intake=project;
+    if(linked){value.basis.expected_intake_id='44444444-4444-4444-8444-444444444444';value.basis.expected_intake_revision=7;}
+    const f=page(async()=>value);await tick();
+    assert.equal(f.at('approval-profile').hidden,false);
+    assert.match(f.at('approval-profile-target').textContent,/本次对话.*版本 4/);
+    const intake=f.at('approval-profile-intake').textContent;
+    if(!project)assert.match(intake,/不同步接待记录/);
+    else if(linked){assert.match(intake,/版本 7/);assert.match(intake,/44444444-4444-4444-8444-444444444444/);}
+    else assert.match(intake,/有可用于接待的字段并形成有效变更时.*接待草稿/);
+    assert.match(f.html,/<p id="approval-profile-note"[^>]*>[^<]*待核草稿[^<]*律师[^<]*更正/);
+    assert.equal(f.at('approval-content').textContent,value.content);
+    assert.equal(f.at('approval-judge').hidden,true);
+    assert.equal(f.document.activeElement,f.at('approval-cancel'));
+    await f.at('approval-confirm').listeners.click();assert.deepEqual(plain(f.calls),[true]);
+    f.events.get('pagehide')();assert.equal(f.at('approval-profile-target').textContent,'');
+    assert.equal(f.at('approval-profile-intake').textContent,'');
+  }
+});
+
+test('profile page refuses invalid target display and leaves ordinary chat unchanged',async()=>{
+  for(const change of [{project_intake:'false'},{base_profile_revision:-1},{expected_intake_revision:7}]){
+    const value=profileDetails();Object.assign(value.basis,change);
+    const f=page(async()=>value);await tick();assert.equal(f.at('approval-confirm').disabled,true);
+    assert.match(f.at('approval-status').textContent,/无法读取/);
+  }
+  const f=page();await tick();assert.equal(f.at('approval-profile').hidden,true);
+  assert.equal(f.at('approval-confirm').disabled,false);
 });

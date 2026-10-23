@@ -1,0 +1,58 @@
+{
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "files": [
+    "desktop/profile-basis.cjs",
+    "desktop/model-control.cjs",
+    "desktop/backend.cjs",
+    "desktop/model-session.cjs",
+    "desktop/tests/profile-native.test.cjs"
+  ],
+  "runs": [
+    {
+      "phase": "red",
+      "command": [
+        "node",
+        "--test",
+        "desktop/tests/profile-native.test.cjs"
+      ],
+      "exit": 1,
+      "tests": 44,
+      "passed": 8,
+      "failed": 36,
+      "classification": "Valid functional failure: profile request not sent, backend/lease methods and shared basis unavailable",
+      "log": ".local/profile-desktop-20261023/development-native/red.log"
+    },
+    {
+      "phase": "green-initial",
+      "command": [
+        "node",
+        "--test",
+        "desktop/tests/profile-native.test.cjs"
+      ],
+      "exit": 0,
+      "tests": 44,
+      "passed": 44,
+      "failed": 0,
+      "log": ".local/profile-desktop-20261023/development-native/green-initial.log"
+    },
+    {
+      "phase": "target-adjacent",
+      "command": [
+        "node",
+        "--test",
+        "desktop/tests/profile-native.test.cjs",
+        "desktop/tests/model-control.test.cjs",
+        "desktop/tests/model-approval-session.test.cjs",
+        "desktop/tests/model-session.test.cjs",
+        "desktop/tests/context-approval.test.cjs",
+        "desktop/tests/judge-approval-session.test.cjs"
+      ],
+      "exit": 0,
+      "tests": 129,
+      "passed": 129,
+      "failed": 0,
+      "log": ".local/profile-desktop-20261023/development-native/target-adjacent.log"
+    }
+  ],
+  "limitations": "Synthetic Node tests only. No Python changes or full suite, no real vendor, no private material, no git commit. Parent owns independent review, full Node regression and actual Windows verification."
+}

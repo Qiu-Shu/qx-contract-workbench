@@ -1,0 +1,502 @@
+TAP version 13
+# Subtest: approval shows the exact rebuilt selection and authorizes the server-built basis once
+ok 1 - approval shows the exact rebuilt selection and authorizes the server-built basis once
+  ---
+  duration_ms: 42.6441
+  type: 'test'
+  ...
+# Subtest: cancellation never authorizes and reports the fixed shape
+ok 2 - cancellation never authorizes and reports the fixed shape
+  ---
+  duration_ms: 9.0602
+  type: 'test'
+  ...
+# Subtest: a preview that is not ready or carries a tampered basis is denied before any window
+ok 3 - a preview that is not ready or carries a tampered basis is denied before any window
+  ---
+  duration_ms: 19.9626
+  type: 'test'
+  ...
+# Subtest: missing csrf cookie, busy desktop and malformed input are denied without a window
+ok 4 - missing csrf cookie, busy desktop and malformed input are denied without a window
+  ---
+  duration_ms: 21.1276
+  type: 'test'
+  ...
+# Subtest: only trusted saved content and fixed model cost reach confirmation and one authorization
+ok 5 - only trusted saved content and fixed model cost reach confirmation and one authorization
+  ---
+  duration_ms: 41.9133
+  type: 'test'
+  ...
+# Subtest: cancel leaves no authorization and no second HTTP snapshot
+ok 6 - cancel leaves no authorization and no second HTTP snapshot
+  ---
+  duration_ms: 7.9239
+  type: 'test'
+  ...
+# Subtest: renderer-selected budget, malformed scope and other displayed conversations are refused before reads
+ok 7 - renderer-selected budget, malformed scope and other displayed conversations are refused before reads
+  ---
+  duration_ms: 1.7811
+  type: 'test'
+  ...
+# Subtest: only an exact numeric owned loopback origin can receive a session cookie
+ok 8 - only an exact numeric owned loopback origin can receive a session cookie
+  ---
+  duration_ms: 1.4485
+  type: 'test'
+  ...
+# Subtest: all scope fields and composer revisions are checked independently of the content digest
+ok 9 - all scope fields and composer revisions are checked independently of the content digest
+  ---
+  duration_ms: 27.2574
+  type: 'test'
+  ...
+# Subtest: unapproved capability cannot hide selected attachments or a busy run
+ok 10 - unapproved capability cannot hide selected attachments or a busy run
+  ---
+  duration_ms: 11.1703
+  type: 'test'
+  ...
+# Subtest: materials and capability scope mismatches cannot reach confirmation
+ok 11 - materials and capability scope mismatches cannot reach confirmation
+  ---
+  duration_ms: 8.3012
+  type: 'test'
+  ...
+# Subtest: changed saved content, composer or materials after confirmation never authorizes
+ok 12 - changed saved content, composer or materials after confirmation never authorizes
+  ---
+  duration_ms: 16.4156
+  type: 'test'
+  ...
+# Subtest: ambiguous or target-specific cookies are rejected without authorization
+ok 13 - ambiguous or target-specific cookies are rejected without authorization
+  ---
+  duration_ms: 1.8482
+  type: 'test'
+  ...
+# Subtest: a replaced session cookie after confirmation fails before authorization
+ok 14 - a replaced session cookie after confirmation fails before authorization
+  ---
+  duration_ms: 4.1181
+  type: 'test'
+  ...
+# Subtest: a cookie change after authorized ACK revokes the captured session
+ok 15 - a cookie change after authorized ACK revokes the captured session
+  ---
+  duration_ms: 5.9902
+  type: 'test'
+  ...
+# Subtest: shared busy refuses duplicate clicks and wait includes the pending confirmation
+ok 16 - shared busy refuses duplicate clicks and wait includes the pending confirmation
+  ---
+  duration_ms: 3.4951
+  type: 'test'
+  ...
+# Subtest: document change during confirmation cannot authorize even if the window returns true
+ok 17 - document change during confirmation cannot authorize even if the window returns true
+  ---
+  duration_ms: 4.0989
+  type: 'test'
+  ...
+# Subtest: redirects, oversized bodies and malformed UTF8 are rejected as fixed errors
+ok 18 - redirects, oversized bodies and malformed UTF8 are rejected as fixed errors
+  ---
+  duration_ms: 15.5505
+  type: 'test'
+  ...
+# Subtest: repeated confirmation keeps the same request and budget and accepts an existing receipt
+ok 19 - repeated confirmation keeps the same request and budget and accepts an existing receipt
+  ---
+  duration_ms: 9.0551
+  type: 'test'
+  ...
+# Subtest: exhausted previous approval permits a new explicit one-call confirmation
+ok 20 - exhausted previous approval permits a new explicit one-call confirmation
+  ---
+  duration_ms: 6.2318
+  type: 'test'
+  ...
+# Subtest: a stalled owned HTTP response times out with fixed output and releases the busy lock
+ok 21 - a stalled owned HTTP response times out with fixed output and releases the busy lock
+  ---
+  duration_ms: 5017.0312
+  type: 'test'
+  ...
+# Subtest: HTTP permission denial and malformed JSON never forward server error text to the renderer
+ok 22 - HTTP permission denial and malformed JSON never forward server error text to the renderer
+  ---
+  duration_ms: 26.7345
+  type: 'test'
+  ...
+# Subtest: missing cookie and a cookie with header delimiters are refused before any request
+ok 23 - missing cookie and a cookie with header delimiters are refused before any request
+  ---
+  duration_ms: 1.1211
+  type: 'test'
+  ...
+# Subtest: a changed context identity cannot reuse the same guard function to approve
+ok 24 - a changed context identity cannot reuse the same guard function to approve
+  ---
+  duration_ms: 3.0969
+  type: 'test'
+  ...
+# Subtest: judge without trusted budget is displayed unavailable and does not prevent main-only consent
+ok 25 - judge without trusted budget is displayed unavailable and does not prevent main-only consent
+  ---
+  duration_ms: 4.2661
+  type: 'test'
+  ...
+# Subtest: separately selected judge uses the same complete draft and request with its own version and budget
+ok 26 - separately selected judge uses the same complete draft and request with its own version and budget
+  ---
+  duration_ms: 4.6012
+  type: 'test'
+  ...
+# Subtest: declining available optional judge grants only the main model
+ok 27 - declining available optional judge grants only the main model
+  ---
+  duration_ms: 3.8445
+  type: 'test'
+  ...
+# Subtest: forged auxiliary consent, boolean expansion and extra choice fields never authorize
+ok 28 - forged auxiliary consent, boolean expansion and extra choice fields never authorize
+  ---
+  duration_ms: 12.0957
+  type: 'test'
+  ...
+# Subtest: known auxiliary refusal preserves the separately authorized main flow
+ok 29 - known auxiliary refusal preserves the separately authorized main flow
+  ---
+  duration_ms: 4.0584
+  type: 'test'
+  ...
+# Subtest: unknown auxiliary ACK stops its captured backend and does not claim a successful main send
+ok 30 - unknown auxiliary ACK stops its captured backend and does not claim a successful main send
+  ---
+  duration_ms: 4.1597
+  type: 'test'
+  ...
+# Subtest: cookie changed after auxiliary grant withdraws both captured grants
+ok 31 - cookie changed after auxiliary grant withdraws both captured grants
+  ---
+  duration_ms: 4.7529
+  type: 'test'
+  ...
+# Subtest: main denial never grants the auxiliary and changed draft never grants either
+ok 32 - main denial never grants the auxiliary and changed draft never grants either
+  ---
+  duration_ms: 7.2645
+  type: 'test'
+  ...
+# Subtest: failure after the inner lease closes stops only the captured backend and waits for cleanup
+ok 33 - failure after the inner lease closes stops only the captured backend and waits for cleanup
+  ---
+  duration_ms: 17.9233
+  type: 'test'
+  ...
+# Subtest: cancelling the combined window neither grants nor leaves optional approval locked
+ok 34 - cancelling the combined window neither grants nor leaves optional approval locked
+  ---
+  duration_ms: 4.9664
+  type: 'test'
+  ...
+# Subtest: profile IPC uses trusted saved text, direct basis, fixed cost and native authorized status
+ok 35 - profile IPC uses trusted saved text, direct basis, fixed cost and native authorized status
+  ---
+  duration_ms: 48.3761
+  type: 'test'
+  ...
+# Subtest: existing receipt remains distinguishable and never creates a second grant
+ok 36 - existing receipt remains distinguishable and never creates a second grant
+  ---
+  duration_ms: 14.4534
+  type: 'test'
+  ...
+# Subtest: profile requires literal native acceptance false
+ok 37 - profile requires literal native acceptance false
+  ---
+  duration_ms: 6.9463
+  type: 'test'
+  ...
+# Subtest: profile requires literal native acceptance {"main":true,"judge":false}
+ok 38 - profile requires literal native acceptance {"main":true,"judge":false}
+  ---
+  duration_ms: 4.781
+  type: 'test'
+  ...
+# Subtest: profile requires literal native acceptance null
+ok 39 - profile requires literal native acceptance null
+  ---
+  duration_ms: 4.0536
+  type: 'test'
+  ...
+# Subtest: strict five selection fields reject renderer bytes, budgets, skills, attachments and malformed scope
+ok 40 - strict five selection fields reject renderer bytes, budgets, skills, attachments and malformed scope
+  ---
+  duration_ms: 1.415
+  type: 'test'
+  ...
+# Subtest: profile IPC rejects a foreign sender, conversation and non-owned origin before cookie reads
+ok 41 - profile IPC rejects a foreign sender, conversation and non-owned origin before cookie reads
+  ---
+  duration_ms: 1.46
+  type: 'test'
+  ...
+# Subtest: profile checks every scope field in draft
+ok 42 - profile checks every scope field in draft
+  ---
+  duration_ms: 16.2319
+  type: 'test'
+  ...
+# Subtest: profile checks every scope field in materials
+ok 43 - profile checks every scope field in materials
+  ---
+  duration_ms: 18.8343
+  type: 'test'
+  ...
+# Subtest: profile checks every scope field in basis
+ok 44 - profile checks every scope field in basis
+  ---
+  duration_ms: 22.366
+  type: 'test'
+  ...
+# Subtest: only a current nonblank text-only draft with no active run can be approved
+ok 45 - only a current nonblank text-only draft with no active run can be approved
+  ---
+  duration_ms: 28.4058
+  type: 'test'
+  ...
+# Subtest: changing profile basis input_format after confirmation prevents authorization
+ok 46 - changing profile basis input_format after confirmation prevents authorization
+  ---
+  duration_ms: 9.9401
+  type: 'test'
+  ...
+# Subtest: changing profile basis template_version after confirmation prevents authorization
+ok 47 - changing profile basis template_version after confirmation prevents authorization
+  ---
+  duration_ms: 21.6385
+  type: 'test'
+  ...
+# Subtest: changing profile basis purpose after confirmation prevents authorization
+ok 48 - changing profile basis purpose after confirmation prevents authorization
+  ---
+  duration_ms: 5.933
+  type: 'test'
+  ...
+# Subtest: changing profile basis handler_id after confirmation prevents authorization
+ok 49 - changing profile basis handler_id after confirmation prevents authorization
+  ---
+  duration_ms: 18.3987
+  type: 'test'
+  ...
+# Subtest: changing profile basis handler_version after confirmation prevents authorization
+ok 50 - changing profile basis handler_version after confirmation prevents authorization
+  ---
+  duration_ms: 7.9169
+  type: 'test'
+  ...
+# Subtest: changing profile basis request_id after confirmation prevents authorization
+ok 51 - changing profile basis request_id after confirmation prevents authorization
+  ---
+  duration_ms: 6.6409
+  type: 'test'
+  ...
+# Subtest: changing profile basis expected_composer_revision after confirmation prevents authorization
+ok 52 - changing profile basis expected_composer_revision after confirmation prevents authorization
+  ---
+  duration_ms: 6.1914
+  type: 'test'
+  ...
+# Subtest: changing profile basis content_sha256 after confirmation prevents authorization
+ok 53 - changing profile basis content_sha256 after confirmation prevents authorization
+  ---
+  duration_ms: 5.2697
+  type: 'test'
+  ...
+# Subtest: changing profile basis base_profile_revision after confirmation prevents authorization
+ok 54 - changing profile basis base_profile_revision after confirmation prevents authorization
+  ---
+  duration_ms: 5.5499
+  type: 'test'
+  ...
+# Subtest: changing profile basis expected_intake_id after confirmation prevents authorization
+ok 55 - changing profile basis expected_intake_id after confirmation prevents authorization
+  ---
+  duration_ms: 5.9907
+  type: 'test'
+  ...
+# Subtest: changing profile basis expected_intake_revision after confirmation prevents authorization
+ok 56 - changing profile basis expected_intake_revision after confirmation prevents authorization
+  ---
+  duration_ms: 4.6774
+  type: 'test'
+  ...
+# Subtest: changing profile basis project_intake after confirmation prevents authorization
+ok 57 - changing profile basis project_intake after confirmation prevents authorization
+  ---
+  duration_ms: 4.3486
+  type: 'test'
+  ...
+# Subtest: changing profile basis system_sha256 after confirmation prevents authorization
+ok 58 - changing profile basis system_sha256 after confirmation prevents authorization
+  ---
+  duration_ms: 4.5729
+  type: 'test'
+  ...
+# Subtest: changing profile basis config_sha256 after confirmation prevents authorization
+ok 59 - changing profile basis config_sha256 after confirmation prevents authorization
+  ---
+  duration_ms: 4.4611
+  type: 'test'
+  ...
+# Subtest: changing profile basis wire_sha256 after confirmation prevents authorization
+ok 60 - changing profile basis wire_sha256 after confirmation prevents authorization
+  ---
+  duration_ms: 5.8105
+  type: 'test'
+  ...
+# Subtest: changing profile basis wire_bytes after confirmation prevents authorization
+ok 61 - changing profile basis wire_bytes after confirmation prevents authorization
+  ---
+  duration_ms: 4.4235
+  type: 'test'
+  ...
+# Subtest: a reordered but identical complete basis remains valid and does not mutate native details
+ok 62 - a reordered but identical complete basis remains valid and does not mutate native details
+  ---
+  duration_ms: 5.3518
+  type: 'test'
+  ...
+# Subtest: direct preview rejects legacy wrappers, missing and additional basis fields
+ok 63 - direct preview rejects legacy wrappers, missing and additional basis fields
+  ---
+  duration_ms: 8.4323
+  type: 'test'
+  ...
+# Subtest: existing intake target and its revision are shown exactly
+ok 64 - existing intake target and its revision are shown exactly
+  ---
+  duration_ms: 8.9441
+  type: 'test'
+  ...
+# Subtest: saved text or materials changed after confirmation cannot be authorized
+ok 65 - saved text or materials changed after confirmation cannot be authorized
+  ---
+  duration_ms: 14.2394
+  type: 'test'
+  ...
+# Subtest: a valid changed intake identity and revision after confirmation also prevent authorization
+ok 66 - a valid changed intake identity and revision after confirmation also prevent authorization
+  ---
+  duration_ms: 4.4433
+  type: 'test'
+  ...
+# Subtest: renderer or confirmation-detail mutation cannot change the captured profile selection
+ok 67 - renderer or confirmation-detail mutation cannot change the captured profile selection
+  ---
+  duration_ms: 4.4478
+  type: 'test'
+  ...
+# Subtest: completed historical skill work does not impersonate a current profile skill selection
+ok 68 - completed historical skill work does not impersonate a current profile skill selection
+  ---
+  duration_ms: 6.2601
+  type: 'test'
+  ...
+# Subtest: missing or ambiguous CSRF and endpoint-specific session cookies fail closed
+ok 69 - missing or ambiguous CSRF and endpoint-specific session cookies fail closed
+  ---
+  duration_ms: 1.3575
+  type: 'test'
+  ...
+# Subtest: cookie replacement while confirmation is open is denied before native authorization
+ok 70 - cookie replacement while confirmation is open is denied before native authorization
+  ---
+  duration_ms: 2.6298
+  type: 'test'
+  ...
+# Subtest: late cookie replacement cleans up only a new authorized grant
+ok 71 - late cookie replacement cleans up only a new authorized grant
+  ---
+  duration_ms: 4.3591
+  type: 'test'
+  ...
+# Subtest: late cookie replacement cleans up only a new existing grant
+ok 72 - late cookie replacement cleans up only a new existing grant
+  ---
+  duration_ms: 4.1131
+  type: 'test'
+  ...
+# Subtest: profile shares pending, busy, wait and runtime lock with both older IPC channels
+ok 73 - profile shares pending, busy, wait and runtime lock with both older IPC channels
+  ---
+  duration_ms: 3.1184
+  type: 'test'
+  ...
+# Subtest: replaced parent identity invalidates profile consent
+ok 74 - replaced parent identity invalidates profile consent
+  ---
+  duration_ms: 2.4445
+  type: 'test'
+  ...
+# Subtest: replaced session identity invalidates profile consent
+ok 75 - replaced session identity invalidates profile consent
+  ---
+  duration_ms: 2.418
+  type: 'test'
+  ...
+# Subtest: replaced backend identity invalidates profile consent
+ok 76 - replaced backend identity invalidates profile consent
+  ---
+  duration_ms: 2.3807
+  type: 'test'
+  ...
+# Subtest: replaced origin identity invalidates profile consent
+ok 77 - replaced origin identity invalidates profile consent
+  ---
+  duration_ms: 13.4588
+  type: 'test'
+  ...
+# Subtest: replaced conversation_id identity invalidates profile consent
+ok 78 - replaced conversation_id identity invalidates profile consent
+  ---
+  duration_ms: 2.7943
+  type: 'test'
+  ...
+# Subtest: invalidated document guard prevents profile consent
+ok 79 - invalidated document guard prevents profile consent
+  ---
+  duration_ms: 2.7868
+  type: 'test'
+  ...
+# Subtest: unknown or malformed native ACK never becomes a successful profile status
+ok 80 - unknown or malformed native ACK never becomes a successful profile status
+  ---
+  duration_ms: 17.2939
+  type: 'test'
+  ...
+# Subtest: HTTP redirects, malformed JSON and excessive or invalid UTF8 bodies produce only fixed errors
+ok 81 - HTTP redirects, malformed JSON and excessive or invalid UTF8 bodies produce only fixed errors
+  ---
+  duration_ms: 7.7653
+  type: 'test'
+  ...
+# Subtest: preload exposes a frozen profile selector on the dedicated approval channel
+ok 82 - preload exposes a frozen profile selector on the dedicated approval channel
+  ---
+  duration_ms: 0.9263
+  type: 'test'
+  ...
+1..82
+# tests 82
+# suites 0
+# pass 82
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5361.4294

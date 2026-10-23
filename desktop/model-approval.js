@@ -6,6 +6,7 @@
   const budget=value=>typeof value==='string'&&/^(0|[1-9]\d{0,6})(\.\d{1,12})?$/.test(value)&&
     /[1-9]/.test(value)&&(Number(value.split('.')[0])<1000000||/^1000000(?:\.0{1,12})?$/.test(value));
   let loaded=false,pending=false,gone=false,judgeOffered=false,judgeAvailable=false;
+  at('approval-profile').hidden=true;
   judgeSelect.checked=false;judgeSelect.disabled=true;judgeSection.hidden=true;
   async function decide(value) {
     if(gone||pending||(value&&!loaded))return;
@@ -17,10 +18,32 @@
   }
   cancel.addEventListener('click',()=>decide(false));
   confirm.addEventListener('click',()=>decide(judgeOffered?{main:true,judge:judgeAvailable&&judgeSelect.checked===true}:true));
-  window.addEventListener('pagehide',()=>{gone=true;loaded=false;judgeSelect.checked=false;judgeSelect.disabled=true;at('approval-content').textContent='';});
+  window.addEventListener('pagehide',()=>{
+    gone=true;loaded=false;judgeSelect.checked=false;judgeSelect.disabled=true;
+    for(const id of ['approval-content','approval-profile-target','approval-profile-intake'])at(id).textContent='';
+  });
   Promise.resolve().then(()=>api.state()).then(value=>{
     if(gone)return;
-    if(value?.kind==='library_context'){
+    if(value?.kind==='profile_draft'){
+      // The isolated window receives a fully validated basis from the main process.
+      // Recheck the fields used for display before enabling a decision.
+      const basis=value.basis,uuid=v=>typeof v==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(v);
+      if(Object.keys(value).length!==6||
+          !['kind','content','basis','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
+          typeof value.content!=='string'||!value.content.trim()||!Object.hasOwn(models,value.model)||
+          value.recipient!=='DeepSeek（api.deepseek.com）'||!budget(value.max_total_usd)||
+          !basis||basis.purpose!=='reply_and_profile_draft'||basis.handler_id!=='profile.save'||
+          !Number.isSafeInteger(basis.base_profile_revision)||basis.base_profile_revision<0||
+          typeof basis.project_intake!=='boolean'||
+          !(basis.expected_intake_id===null&&basis.expected_intake_revision===null||
+            uuid(basis.expected_intake_id)&&Number.isSafeInteger(basis.expected_intake_revision)&&basis.expected_intake_revision>0))throw Error();
+      at('approval-profile-target').textContent=`本次对话的档案草稿 · 当前版本 ${basis.base_profile_revision}`;
+      at('approval-profile-intake').textContent=!basis.project_intake?'本次不同步接待记录。':
+        basis.expected_intake_id?`尝试同步至已关联接待 · 当前版本 ${basis.expected_intake_revision} · 标识 ${basis.expected_intake_id}`:
+          '有可用于接待的字段并形成有效变更时，尝试创建接待草稿；没有变更时不新建。';
+      at('approval-profile').hidden=false;
+      at('approval-intro').textContent='只发送下列本次文字，用于回复与整理待核档案草稿。下方保存目标的历史正文、本机附件与法库资料不会随本次请求发送。';
+    } else if(value?.kind==='library_context'){
       if(Object.keys(value).length!==6||
           !['kind','content','sources','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
           typeof value.content!=='string'||!value.content.trim()||!Object.hasOwn(models,value.model)||

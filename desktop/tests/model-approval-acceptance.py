@@ -44,16 +44,18 @@ def main():
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument('--judge', action='store_true')
     modes.add_argument('--judge-closed', action='store_true')
+    modes.add_argument('--profile', action='store_true')
     options = parser.parse_args()
     if options.frozen and options.legacy_frozen: parser.error('choose one frozen argument')
     target = options.target.resolve(); target.mkdir(parents=True, exist_ok=False)
     frozen = options.frozen or options.legacy_frozen
     if frozen: frozen = frozen.resolve(); assert frozen.is_file()
+    if options.profile and frozen: parser.error('profile acceptance is source-only')
     judge_mode = options.judge or options.judge_closed
     data = target/'中文 合成确认资料'; launch = target/'launch'; launch.mkdir()
     report = {'status': 'running', 'checks': [], 'source_before': hashes(), 'real_model_execution': 'not_requested',
         'backend': 'frozen_grant_without_send' if frozen else 'source_loopback', 'exit_code': 1,
-        'page_errors': [], 'requests': [], 'judge_mode': 'synthetic_budget' if options.judge else
+        'page_errors': [], 'requests': [], 'profile_mode': options.profile, 'judge_mode': 'synthetic_budget' if options.judge else
             'production_default_closed' if options.judge_closed else 'legacy_main',
         'frozen_network_observation': 'not_instrumented' if frozen else None}
     if frozen: report['exe_sha256'] = hashlib.sha256(frozen.read_bytes()).hexdigest()
@@ -200,79 +202,83 @@ def main():
             page.locator('#resume').click(); expect(page.locator('#send')).to_be_enabled()
             assert capability()['state'] == 'unapproved' and not posts
             passed('configured_saved_draft_requires_native_confirmation_without_observed_loopback_post')
-            page.locator('#send').click(); approval = modal()
-            judge_choice(approval)
-            assert approval.locator('#approval-content').inner_text() == LONG
-            assert approval.locator('script').count() == 1, 'CONTENT_MUST_REMAIN_TEXT'
-            expect(approval.locator('#approval-budget')).to_contain_text('0.024576')
-            expect(approval.locator('#approval-cancel')).to_be_focused()
-            assert approval.evaluate('()=>scrollY===0 && document.querySelector("#approval-budget").getBoundingClientRect().bottom<innerHeight')
-            command_native('capture',target='approval',name='approval-initial.png')
-            for width,height,zoom,name in [(820,740,1,'approval-100'),(760,760,1.5,'approval-150'),(640,540,2,'approval-200')]:
-                command_native('window', target='approval', width=width, height=height, zoom=zoom)
-                approval.wait_for_timeout(60)
-                assert approval.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1')
-                approval.locator('#approval-confirm').scroll_into_view_if_needed()
-                assert approval.locator('#approval-confirm').evaluate('el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&document.elementFromPoint(r.x+5,r.y+5)===el}')
-                command_native('capture', target='approval', name=name+'.png')
-            approval.locator('#approval-cancel').focus(); closing_action(approval,lambda:approval.keyboard.press('Enter'))
-            expect(page.locator('#composer')).to_have_value(LONG); expect(page.locator('#send')).to_be_enabled()
-            assert not posts; assert capability()['state'] == 'unapproved'
-            passed('full_text_literal_markup_small_window_scales_and_default_cancel_preserve_draft')
-            save(CONTENT); expect(page.locator('#send')).to_be_enabled(); page.locator('#send').click(); approval = modal()
-            judge_choice(approval)
-            changed = page.evaluate("""async()=>{const url='/api/assistant/conversations/'+location.pathname.split('/').pop();
-              const v=await(await fetch(url)).json();const csrf=decodeURIComponent(document.cookie.split('; ').find(x=>x.startsWith('qx_csrf=')).split('=')[1]);
-              return (await fetch(url+'/draft',{method:'PUT',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},
-                body:JSON.stringify({expected_scope:v.scope,expected_composer_revision:v.composer_revision,content:'另一处更新的独立合成内容'})})).status;}""")
-            assert changed == 200; closing_action(approval,lambda:approval.locator('#approval-confirm').click())
-            expect(page.locator('#generation-status')).to_contain_text('本次发送确认未完成')
-            assert not posts
-            page.reload(); expect(page.locator('#composer')).to_have_value('另一处更新的独立合成内容')
-            save(CONTENT); expect(page.locator('#send')).to_be_enabled()
-            passed('saved_draft_changed_during_confirmation_never_registers_or_sends_old_text')
-            if frozen:
-                # Deliberately invoke only the fixed native approval API; never the sending form.
-                page.evaluate("""async()=>{const id=location.pathname.split('/').pop();const cap=await(await fetch('/api/assistant/conversations/'+id+'/generation-capability')).json();
-                  window.probeApproval=null;desktopAssistant.authorizeGeneration({conversation_id:id,request_id:crypto.randomUUID(),expected_scope:cap.scope,
-                    expected_composer_revision:cap.composer_revision,content_sha256:cap.content_sha256}).then(x=>window.probeApproval=x);}""")
-                approval=modal(); judge_choice(approval)
-                if options.judge: approval.locator('#approval-judge-select').check()
-                command_native('capture', target='approval', name='approval-frozen-selection.png')
-                closing_action(approval,lambda:approval.locator('#approval-confirm').click())
-                page.wait_for_function('()=>window.probeApproval!==null'); assert page.evaluate('()=>window.probeApproval') == {'ok': True}
-                assert capability()['state'] == 'ready' and not posts
-                settings()
-                if judge_mode:
-                    page.locator('#judge-disable').click(); expect(page.locator('#judge-runtime-status')).to_contain_text('未配置')
-                page.locator('#model-disable').click(); expect(page.locator('#model-runtime-status')).to_contain_text('未配置')
-                page.locator('#resume').click(); assert capability()['state'] == 'unconfigured'
-                passed('frozen_private_authorization_consumes_confirmation_then_disable_without_generation_submission')
+            if options.profile:
+                from profile_approval_acceptance import run_profile
+                run_profile(page, modal, closing_action, command_native, save, settings, passed, posts, LONG)
             else:
-                page.locator('#send').click(); approval=modal(); judge_choice(approval)
-                command_native('capture', target='approval', name='approval-main-only.png')
-                closing_action(approval,lambda:approval.locator('#approval-confirm').click())
-                expect(page.locator('.generation-text')).to_contain_text('独立合成候选', timeout=45000)
-                assert len(posts) == 1; expect(page.locator('#composer')).to_have_value('')
-                page.reload(); expect(page.locator('.generation-text')).to_contain_text('独立合成候选')
-                assert len(posts) == 1
-                passed('one_confirmed_send_reaches_existing_queue_loopback_receipt_and_history_reload_without_resend')
-                if judge_mode:
-                    assert [p['provider'] for p in posts] == ['main']
-                    passed('independent_judge_configuration_does_not_send_when_unselected_or_default_closed')
-                if options.judge:
-                    save(JUDGE_CONTENT); page.locator('#send').click(); approval=modal(); judge_choice(approval)
-                    assert approval.locator('#approval-content').inner_text() == JUDGE_CONTENT
-                    approval.locator('#approval-judge-select').check()
-                    command_native('capture', target='approval', name='approval-dual-selection.png')
+                page.locator('#send').click(); approval = modal()
+                judge_choice(approval)
+                assert approval.locator('#approval-content').inner_text() == LONG
+                assert approval.locator('script').count() == 1, 'CONTENT_MUST_REMAIN_TEXT'
+                expect(approval.locator('#approval-budget')).to_contain_text('0.024576')
+                expect(approval.locator('#approval-cancel')).to_be_focused()
+                assert approval.evaluate('()=>scrollY===0 && document.querySelector("#approval-budget").getBoundingClientRect().bottom<innerHeight')
+                command_native('capture',target='approval',name='approval-initial.png')
+                for width,height,zoom,name in [(820,740,1,'approval-100'),(760,760,1.5,'approval-150'),(640,540,2,'approval-200')]:
+                    command_native('window', target='approval', width=width, height=height, zoom=zoom)
+                    approval.wait_for_timeout(60)
+                    assert approval.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1')
+                    approval.locator('#approval-confirm').scroll_into_view_if_needed()
+                    assert approval.locator('#approval-confirm').evaluate('el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&document.elementFromPoint(r.x+5,r.y+5)===el}')
+                    command_native('capture', target='approval', name=name+'.png')
+                approval.locator('#approval-cancel').focus(); closing_action(approval,lambda:approval.keyboard.press('Enter'))
+                expect(page.locator('#composer')).to_have_value(LONG); expect(page.locator('#send')).to_be_enabled()
+                assert not posts; assert capability()['state'] == 'unapproved'
+                passed('full_text_literal_markup_small_window_scales_and_default_cancel_preserve_draft')
+                save(CONTENT); expect(page.locator('#send')).to_be_enabled(); page.locator('#send').click(); approval = modal()
+                judge_choice(approval)
+                changed = page.evaluate("""async()=>{const url='/api/assistant/conversations/'+location.pathname.split('/').pop();
+                  const v=await(await fetch(url)).json();const csrf=decodeURIComponent(document.cookie.split('; ').find(x=>x.startsWith('qx_csrf=')).split('=')[1]);
+                  return (await fetch(url+'/draft',{method:'PUT',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},
+                    body:JSON.stringify({expected_scope:v.scope,expected_composer_revision:v.composer_revision,content:'另一处更新的独立合成内容'})})).status;}""")
+                assert changed == 200; closing_action(approval,lambda:approval.locator('#approval-confirm').click())
+                expect(page.locator('#generation-status')).to_contain_text('本次发送确认未完成')
+                assert not posts
+                page.reload(); expect(page.locator('#composer')).to_have_value('另一处更新的独立合成内容')
+                save(CONTENT); expect(page.locator('#send')).to_be_enabled()
+                passed('saved_draft_changed_during_confirmation_never_registers_or_sends_old_text')
+                if frozen:
+                    # Deliberately invoke only the fixed native approval API; never the sending form.
+                    page.evaluate("""async()=>{const id=location.pathname.split('/').pop();const cap=await(await fetch('/api/assistant/conversations/'+id+'/generation-capability')).json();
+                      window.probeApproval=null;desktopAssistant.authorizeGeneration({conversation_id:id,request_id:crypto.randomUUID(),expected_scope:cap.scope,
+                        expected_composer_revision:cap.composer_revision,content_sha256:cap.content_sha256}).then(x=>window.probeApproval=x);}""")
+                    approval=modal(); judge_choice(approval)
+                    if options.judge: approval.locator('#approval-judge-select').check()
+                    command_native('capture', target='approval', name='approval-frozen-selection.png')
                     closing_action(approval,lambda:approval.locator('#approval-confirm').click())
-                    expect(page.locator('.generation-text')).to_have_count(2, timeout=45000)
-                    expect(page.locator('#composer')).to_have_value('')
-                    assert [p['provider'] for p in posts] == ['main', 'judge', 'main']
-                    page.reload(); expect(page.locator('.generation-text')).to_have_count(2)
-                    assert [p['provider'] for p in posts] == ['main', 'judge', 'main']
-                    command_native('capture', name='assistant-two-synthetic-results.png')
-                    passed('explicit_dual_selection_runs_judge_then_main_once_and_reload_does_not_resend')
+                    page.wait_for_function('()=>window.probeApproval!==null'); assert page.evaluate('()=>window.probeApproval') == {'ok': True}
+                    assert capability()['state'] == 'ready' and not posts
+                    settings()
+                    if judge_mode:
+                        page.locator('#judge-disable').click(); expect(page.locator('#judge-runtime-status')).to_contain_text('未配置')
+                    page.locator('#model-disable').click(); expect(page.locator('#model-runtime-status')).to_contain_text('未配置')
+                    page.locator('#resume').click(); assert capability()['state'] == 'unconfigured'
+                    passed('frozen_private_authorization_consumes_confirmation_then_disable_without_generation_submission')
+                else:
+                    page.locator('#send').click(); approval=modal(); judge_choice(approval)
+                    command_native('capture', target='approval', name='approval-main-only.png')
+                    closing_action(approval,lambda:approval.locator('#approval-confirm').click())
+                    expect(page.locator('.generation-text')).to_contain_text('独立合成候选', timeout=45000)
+                    assert len(posts) == 1; expect(page.locator('#composer')).to_have_value('')
+                    page.reload(); expect(page.locator('.generation-text')).to_contain_text('独立合成候选')
+                    assert len(posts) == 1
+                    passed('one_confirmed_send_reaches_existing_queue_loopback_receipt_and_history_reload_without_resend')
+                    if judge_mode:
+                        assert [p['provider'] for p in posts] == ['main']
+                        passed('independent_judge_configuration_does_not_send_when_unselected_or_default_closed')
+                    if options.judge:
+                        save(JUDGE_CONTENT); page.locator('#send').click(); approval=modal(); judge_choice(approval)
+                        assert approval.locator('#approval-content').inner_text() == JUDGE_CONTENT
+                        approval.locator('#approval-judge-select').check()
+                        command_native('capture', target='approval', name='approval-dual-selection.png')
+                        closing_action(approval,lambda:approval.locator('#approval-confirm').click())
+                        expect(page.locator('.generation-text')).to_have_count(2, timeout=45000)
+                        expect(page.locator('#composer')).to_have_value('')
+                        assert [p['provider'] for p in posts] == ['main', 'judge', 'main']
+                        page.reload(); expect(page.locator('.generation-text')).to_have_count(2)
+                        assert [p['provider'] for p in posts] == ['main', 'judge', 'main']
+                        command_native('capture', name='assistant-two-synthetic-results.png')
+                        passed('explicit_dual_selection_runs_judge_then_main_once_and_reload_does_not_resend')
             page.close(); report['electron_exit']=proc.wait(timeout=45); assert report['electron_exit']==0
         report['bootstrap']=json.loads((launch/'bootstrap.json').read_text('utf-8'))
         assert all(w=={'nodeIntegration':False,'contextIsolation':True,'sandbox':True,'webSecurity':True} for w in report['bootstrap']['windows'])
@@ -280,7 +286,7 @@ def main():
         assert not report.get('provider_error'), 'UNEXPECTED_SYNTHETIC_PROVIDER_REQUEST'
         assert all(r['url'].startswith(('file:','http://127.0.0.1:')) for r in report['requests'])
         report['generation_posts']=sum(r['method']=='POST' and r['url'].endswith('/generations') for r in report['requests'])
-        main_count = 0 if frozen else 2 if options.judge else 1
+        main_count = 0 if frozen or options.profile else 2 if options.judge else 1
         judge_count = 1 if options.judge and not frozen else 0
         assert report['generation_posts']==main_count
         report['provider_order'] = [p['provider'] for p in posts]
@@ -291,14 +297,18 @@ def main():
         judge_grants = [c for c in report['bootstrap'].get('judge_controls', []) if c['operation']=='authorize']
         assert len(judge_grants) == (1 if options.judge else 0), judge_grants
         assert all(c['ok'] and c['status']=='authorized' for c in judge_grants)
-        if frozen:
+        if options.profile:
+            grants=[c for c in report['bootstrap'].get('model_controls',[]) if c['operation']=='authorize_profile']
+            assert grants==[{'operation':'authorize_profile','ok':True,'status':'authorized'}],grants
+            assert not any(r['method']=='POST' and r['url'].endswith('/profile-generations') for r in report['requests'])
+        if frozen or options.profile:
             assert report['bootstrap']['model_controls'][-1] == {'operation': 'disable', 'ok': True, 'status': 'disabled'}
             if judge_mode:
                 assert report['bootstrap']['judge_controls'][-1] == {'operation': 'disable', 'ok': True, 'status': 'disabled'}
         if not frozen:
             report['network']=json.loads((launch/'network-tripwire.json').read_text('utf-8'))
             assert report['network'] == ({'main': main_count, 'judge': judge_count, 'blocked_other_httpx_requests': 0}
-                if judge_mode else {'loopback_calls': 1, 'external_requests': 0})
+                if judge_mode else {'loopback_calls': main_count, 'external_requests': 0})
         database = data/'workspaces/main/workbench.db'
         with sqlite3.connect(database.as_uri()+'?mode=ro', uri=True) as conn:
             conn.execute('PRAGMA query_only=ON')
@@ -309,7 +319,11 @@ def main():
             assert all(count == (judge_count if name.startswith('assistant_judge_') else main_count)
                 for name, count in report['counts'].items()), report['counts']
             assert [r[0] for r in conn.execute('SELECT content FROM assistant_messages ORDER BY source_revision')] == (
-                [] if frozen else [CONTENT, JUDGE_CONTENT] if options.judge else [CONTENT])
+                [] if frozen or options.profile else [CONTENT, JUDGE_CONTENT] if options.judge else [CONTENT])
+            if options.profile:
+                report['profile_counts']={name:conn.execute('SELECT COUNT(*) FROM '+name).fetchone()[0]
+                    for name in ('assistant_profile_revisions','assistant_profile_receipts','assistant_profile_handlers','intake_cases')}
+                assert not any(report['profile_counts'].values()),report['profile_counts']
             if judge_count:
                 run_id = conn.execute('SELECT run_id FROM assistant_judge_attempts').fetchone()[0]
         if judge_count:

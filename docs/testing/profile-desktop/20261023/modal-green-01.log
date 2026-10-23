@@ -1,0 +1,56 @@
+✔ approval creates one isolated modal and only its exact main frame can read or explicitly decide (9.8645ms)
+✔ approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision (1.529ms)
+✔ approval stale guard, parent close, Escape and bounded timeout cancel without a decision (4.5378ms)
+✔ approval default cancel focus preserves the initial top viewport (1.62ms)
+✔ approval page renders full untrusted text as text and defaults focus to cancel (1.8373ms)
+✔ approval page never confirms while loading and explicit confirm is sent only once (1.0974ms)
+✔ approval preload exposes only two dedicated calls and refuses truthy decision values (0.8386ms)
+✔ approval still settles cancellation if optional session cleanup fails (1.2792ms)
+✔ approval validates the display boundary and admits the full 65536-byte text without truncation (1.4295ms)
+✔ approval blocks navigation, all external requests and cancels a crashed renderer (1.2142ms)
+✔ approval page loading failure and page departure never enable or dispatch confirmation (1.5755ms)
+✔ approval presents optional Judge separately and accepts only the displayed exact selection (2.4575ms)
+✔ unavailable Judge cannot be forged as selected and cancellation remains independent (1.7836ms)
+✔ Judge display schema rejects missing fields, misleading budgets and surplus configuration (1.4673ms)
+✔ legacy display cannot accept a new Judge selection and successive windows keep independent choices (1.0581ms)
+✔ Judge page starts unselected, discloses the separate recipient and exact budget, and returns explicit choices (2.137ms)
+✔ unavailable Judge remains unselected and disabled without blocking main confirmation (0.8143ms)
+✔ malformed or late Judge display never enables confirmation or restores a selection (4.6452ms)
+✔ preload forwards only booleans or exact Main and Judge selections (0.7407ms)
+✔ a displayed Judge choice cannot survive a stale guard, Escape or a later window (2.6056ms)
+✔ missing Judge display keeps legacy choice and a rejected approval cannot resend either service (1.4405ms)
+✔ context approval validates the six-key display, sizes the taller window and keeps a boolean decision (1.2955ms)
+✔ context display schema rejects malformed sources and surplus keys before any window opens (0.9054ms)
+✔ context page lists every saved passage as text, rewrites the copy and confirms with a plain boolean (1.9168ms)
+✔ malformed or late context display never enables confirmation (4.1415ms)
+✔ profile modal snapshots the complete save plan and allows only a presented boolean decision (1.4846ms)
+✔ profile modal rejects invalid save plans and extra authorization fields before opening (0.9838ms)
+✖ profile page explains each save target without promising an intake or verifying facts (2.0927ms)
+✔ profile page refuses invalid target display and leaves ordinary chat unchanged (3.1639ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 28
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 115.9806
+
+✖ failing tests:
+
+test at desktop\tests\model-approval-window.test.cjs:426:1
+✖ profile page explains each save target without promising an intake or verifying facts (2.0927ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /待核草稿.*律师.*更正/. Input:
+  
+  ''
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:437:12)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: /待核草稿.*律师.*更正/,
+    operator: 'match',
+    diff: 'simple'
+  }

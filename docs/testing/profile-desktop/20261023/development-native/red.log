@@ -1,0 +1,763 @@
+✖ private profile request uses its explicit five-field operation and trusted ACK (2.9396ms)
+✖ backend profile entry delegates to its current private control only (0.409ms)
+✖ canonical profile basis validates all 17 fields and returns an independent ordered copy (0.2952ms)
+✖ profile basis rejects extra without a pipe request (0.3369ms)
+✖ profile basis rejects missing without a pipe request (0.2381ms)
+✖ profile basis rejects format without a pipe request (0.2654ms)
+✖ profile basis rejects template without a pipe request (0.2418ms)
+✖ profile basis rejects purpose without a pipe request (0.2511ms)
+✖ profile basis rejects handler without a pipe request (0.2444ms)
+✖ profile basis rejects handlerVersion without a pipe request (0.2382ms)
+✖ profile basis rejects request without a pipe request (0.2752ms)
+✖ profile basis rejects digest without a pipe request (0.2144ms)
+✖ profile basis rejects boolean without a pipe request (0.2332ms)
+✖ profile basis rejects integer without a pipe request (0.1557ms)
+✖ profile basis rejects unsafe without a pipe request (0.1598ms)
+✖ profile basis rejects wire without a pipe request (0.1597ms)
+✖ profile basis rejects emptyWire without a pipe request (0.1615ms)
+✖ profile basis rejects scopeExtra without a pipe request (0.1742ms)
+✖ profile basis rejects scopeRef without a pipe request (0.1588ms)
+✖ profile basis rejects scopeKind without a pipe request (0.1592ms)
+✖ profile basis rejects scopeId without a pipe request (0.1492ms)
+✖ profile basis rejects scopeRevision without a pipe request (0.1644ms)
+✖ profile basis rejects negative without a pipe request (0.154ms)
+✖ profile basis rejects pairedId without a pipe request (0.1856ms)
+✖ profile basis rejects pairedRevision without a pipe request (0.1628ms)
+✖ profile basis rejects intakeScope without a pipe request (0.162ms)
+✔ private profile payload rejects extra (0.8454ms)
+✔ private profile payload rejects missing (0.1892ms)
+✔ private profile payload rejects token (0.2189ms)
+✔ private profile payload rejects version (0.2045ms)
+✔ private profile payload rejects budget (0.2058ms)
+✔ private profile payload rejects duration (0.1606ms)
+✖ profile lease retains the trusted status through callback and outer authorization (2.3434ms)
+✔ callback success cannot invent a profile acknowledgement or override rejection (0.4097ms)
+✖ existing profile ACK on cancel never revokes another grant (0.4309ms)
+✖ existing profile ACK on throw never revokes another grant (0.405ms)
+✖ existing profile ACK on navigation never revokes another grant (0.2933ms)
+✖ existing profile ACK on explicit never revokes another grant (0.2122ms)
+✖ new profile grant is revoked when post-confirmation guard changes (0.3262ms)
+✖ profile lease is single use, holds the configuration lock, and snapshots caller data (29.7082ms)
+✖ malformed profile acknowledgement {"ok":true,"status":"pending"} stops its captured backend (0.5662ms)
+✖ malformed profile acknowledgement {"ok":true,"status":"authorized","extra":1} stops its captured backend (0.2416ms)
+✖ malformed profile acknowledgement null stops its captured backend (0.1614ms)
+✔ plain and context success shapes remain unchanged (0.4025ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 8
+ℹ fail 36
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 118.2063
+
+✖ failing tests:
+
+test at desktop\tests\profile-native.test.cjs:52:1
+✖ private profile request uses its explicit five-field operation and trusted ACK (2.9396ms)
+  AssertionError [ERR_ASSERTION]: valid profile authorization must reach the existing private pipe
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:54:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.start (node:internal/test_runner/test:1257:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:62:1
+✖ backend profile entry delegates to its current private control only (0.409ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:64:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:71:1
+✖ canonical profile basis validates all 17 fields and returns an independent ordered copy (0.2952ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:72:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects extra without a pipe request (0.3369ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects missing without a pipe request (0.2381ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects format without a pipe request (0.2654ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects template without a pipe request (0.2418ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects purpose without a pipe request (0.2511ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects handler without a pipe request (0.2444ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects handlerVersion without a pipe request (0.2382ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects request without a pipe request (0.2752ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects digest without a pipe request (0.2144ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects boolean without a pipe request (0.2332ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects integer without a pipe request (0.1557ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects unsafe without a pipe request (0.1598ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects wire without a pipe request (0.1597ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects emptyWire without a pipe request (0.1615ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects scopeExtra without a pipe request (0.1742ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects scopeRef without a pipe request (0.1588ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects scopeKind without a pipe request (0.1592ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects scopeId without a pipe request (0.1492ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects scopeRevision without a pipe request (0.1644ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects negative without a pipe request (0.154ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects pairedId without a pipe request (0.1856ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects pairedRevision without a pipe request (0.1628ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:99:57
+✖ profile basis rejects intakeScope without a pipe request (0.162ms)
+  Error: Cannot find module '../profile-basis.cjs'
+  Require stack:
+  - D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+      at Module._load (node:internal/modules/cjs/loader:1341:5)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+      at Module.require (node:internal/modules/cjs/loader:1674:12)
+      at require (node:internal/modules/helpers:157:16)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:101:51)
+      at Test.runInAsyncScope (node:async_hooks:227:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'D:\\Documents\\ChatGPT\\律所项目\\desktop\\tests\\profile-native.test.cjs' ]
+  }
+
+test at desktop\tests\profile-native.test.cjs:116:1
+✖ profile lease retains the trusted status through callback and outer authorization (2.3434ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'BLOCKED_LIVE',
+  +   ok: false
+  -   ok: true,
+  -   status: 'authorized'
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:125:12)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: false, code: 'BLOCKED_LIVE' },
+    expected: { ok: true, status: 'authorized' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:141:65
+✖ existing profile ACK on cancel never revokes another grant (0.4309ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'profile'
+  - ]
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:151:40)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'profile' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:141:65
+✖ existing profile ACK on throw never revokes another grant (0.405ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'profile'
+  - ]
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:151:40)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'profile' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:141:65
+✖ existing profile ACK on navigation never revokes another grant (0.2933ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'profile'
+  - ]
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:151:40)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'profile' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:141:65
+✖ existing profile ACK on explicit never revokes another grant (0.2122ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'profile'
+  - ]
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:151:40)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'profile' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:154:1
+✖ new profile grant is revoked when post-confirmation guard changes (0.3262ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'BLOCKED_LIVE',
+  -   code: 'STATE_CONFLICT',
+      ok: false
+    }
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:157:10)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: false, code: 'BLOCKED_LIVE' },
+    expected: { ok: false, code: 'STATE_CONFLICT' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:161:1
+✖ profile lease is single use, holds the configuration lock, and snapshots caller data (29.7082ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'STATE_CONFLICT'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:170:23)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'STATE_CONFLICT',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:177:3
+✖ malformed profile acknowledgement {"ok":true,"status":"pending"} stops its captured backend (0.5662ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'stop'
+  - ]
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:180:12)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'stop' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:177:3
+✖ malformed profile acknowledgement {"ok":true,"status":"authorized","extra":1} stops its captured backend (0.2416ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'stop'
+  - ]
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:180:12)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'stop' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-native.test.cjs:177:3
+✖ malformed profile acknowledgement null stops its captured backend (0.1614ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'stop'
+  - ]
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-native.test.cjs:180:12)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'stop' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

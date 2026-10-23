@@ -43,6 +43,10 @@ class ObservedBackend extends Backend {
     const result=await super.authorizeModel(payload);
     (report.model_controls ||= []).push({operation:'authorize',ok:result.ok,status:result.status});save();return result;
   }
+  async authorizeProfileModel(payload){
+    const result=await super.authorizeProfileModel(payload);
+    (report.model_controls ||= []).push({operation:'authorize_profile',ok:result.ok,status:result.status});save();return result;
+  }
   async revokeModel(payload){
     const result=await super.revokeModel(payload);
     (report.model_controls ||= []).push({operation:'revoke',ok:result.ok,status:result.status});save();return result;

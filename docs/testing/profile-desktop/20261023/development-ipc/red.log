@@ -1,0 +1,1003 @@
+✖ profile IPC uses trusted saved text, direct basis, fixed cost and native authorized status (22.5024ms)
+✖ existing receipt remains distinguishable and never creates a second grant (2.185ms)
+✖ profile requires literal native acceptance false (1.3034ms)
+✖ profile requires literal native acceptance {"main":true,"judge":false} (1.0056ms)
+✖ profile requires literal native acceptance null (1.1093ms)
+✖ strict five selection fields reject renderer bytes, budgets, skills, attachments and malformed scope (1.6241ms)
+✖ profile IPC rejects a foreign sender, conversation and non-owned origin before cookie reads (1.0736ms)
+✖ profile checks every scope field in draft (1.0729ms)
+✖ profile checks every scope field in materials (1.0955ms)
+✖ profile checks every scope field in basis (1.0675ms)
+✖ only a current nonblank text-only draft with no active run can be approved (1.03ms)
+✖ changing profile basis input_format after confirmation prevents authorization (0.9899ms)
+✖ changing profile basis template_version after confirmation prevents authorization (2.563ms)
+✖ changing profile basis purpose after confirmation prevents authorization (0.9025ms)
+✖ changing profile basis handler_id after confirmation prevents authorization (0.8348ms)
+✖ changing profile basis handler_version after confirmation prevents authorization (1.6819ms)
+✖ changing profile basis request_id after confirmation prevents authorization (0.7483ms)
+✖ changing profile basis expected_composer_revision after confirmation prevents authorization (0.9148ms)
+✖ changing profile basis content_sha256 after confirmation prevents authorization (0.7329ms)
+✖ changing profile basis base_profile_revision after confirmation prevents authorization (0.7334ms)
+✖ changing profile basis expected_intake_id after confirmation prevents authorization (0.6973ms)
+✖ changing profile basis expected_intake_revision after confirmation prevents authorization (0.7264ms)
+✖ changing profile basis project_intake after confirmation prevents authorization (0.6846ms)
+✖ changing profile basis system_sha256 after confirmation prevents authorization (1.2589ms)
+✖ changing profile basis config_sha256 after confirmation prevents authorization (0.8909ms)
+✖ changing profile basis wire_sha256 after confirmation prevents authorization (0.8542ms)
+✖ changing profile basis wire_bytes after confirmation prevents authorization (1.014ms)
+✖ a reordered but identical complete basis remains valid and does not mutate native details (1.0417ms)
+✖ direct preview rejects legacy wrappers, missing and additional basis fields (1.0188ms)
+✖ existing intake target and its revision are shown exactly (0.9093ms)
+✖ saved text or materials changed after confirmation cannot be authorized (0.8408ms)
+✖ missing or ambiguous CSRF and endpoint-specific session cookies fail closed (0.8953ms)
+✖ cookie replacement while confirmation is open is denied before native authorization (1.8222ms)
+✖ late cookie replacement cleans up only a new authorized grant (1.014ms)
+✖ late cookie replacement cleans up only a new existing grant (0.885ms)
+✖ profile shares pending, busy, wait and runtime lock with both older IPC channels (1.1228ms)
+✖ replaced parent identity invalidates profile consent (0.8777ms)
+✖ replaced session identity invalidates profile consent (0.8281ms)
+✖ replaced backend identity invalidates profile consent (0.8272ms)
+✖ replaced origin identity invalidates profile consent (0.7963ms)
+✖ replaced conversation_id identity invalidates profile consent (0.8494ms)
+✖ invalidated document guard prevents profile consent (1.1592ms)
+✖ unknown or malformed native ACK never becomes a successful profile status (0.9079ms)
+✖ HTTP redirects, malformed JSON and excessive or invalid UTF8 bodies produce only fixed errors (0.9164ms)
+✖ preload exposes a frozen profile selector on the dedicated approval channel (0.9098ms)
+ℹ tests 45
+ℹ suites 0
+ℹ pass 0
+ℹ fail 45
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 160.8335
+
+✖ failing tests:
+
+test at desktop\tests\profile-approval.test.cjs:91:1
+✖ profile IPC uses trusted saved text, direct basis, fixed cost and native authorized status (22.5024ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:93:28)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:108:1
+✖ existing receipt remains distinguishable and never creates a second grant (2.185ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:110:28)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:114:60
+✖ profile requires literal native acceptance false (1.3034ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:116:28)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:114:60
+✖ profile requires literal native acceptance {"main":true,"judge":false} (1.0056ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:116:28)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:114:60
+✖ profile requires literal native acceptance null (1.1093ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:116:28)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:120:1
+✖ strict five selection fields reject renderer bytes, budgets, skills, attachments and malformed scope (1.6241ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:128:52)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:134:1
+✖ profile IPC rejects a foreign sender, conversation and non-owned origin before cookie reads (1.0736ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:136:28)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:146:53
+✖ profile checks every scope field in draft (1.0729ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:152:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:146:53
+✖ profile checks every scope field in materials (1.0955ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:152:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:146:53
+✖ profile checks every scope field in basis (1.0675ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:152:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:157:1
+✖ only a current nonblank text-only draft with no active run can be approved (1.03ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:164:36)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis input_format after confirmation prevents authorization (0.9899ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis template_version after confirmation prevents authorization (2.563ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis purpose after confirmation prevents authorization (0.9025ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis handler_id after confirmation prevents authorization (0.8348ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis handler_version after confirmation prevents authorization (1.6819ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis request_id after confirmation prevents authorization (0.7483ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis expected_composer_revision after confirmation prevents authorization (0.9148ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis content_sha256 after confirmation prevents authorization (0.7329ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis base_profile_revision after confirmation prevents authorization (0.7334ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis expected_intake_id after confirmation prevents authorization (0.6973ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis expected_intake_revision after confirmation prevents authorization (0.7264ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis project_intake after confirmation prevents authorization (0.6846ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis system_sha256 after confirmation prevents authorization (1.2589ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis config_sha256 after confirmation prevents authorization (0.8909ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis wire_sha256 after confirmation prevents authorization (0.8542ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:175:3
+✖ changing profile basis wire_bytes after confirmation prevents authorization (1.014ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:177:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:181:1
+✖ a reordered but identical complete basis remains valid and does not mutate native details (1.0417ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:184:28)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:188:1
+✖ direct preview rejects legacy wrappers, missing and additional basis fields (1.0188ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:192:59)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:197:1
+✖ existing intake target and its revision are shown exactly (0.9093ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:200:28)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:205:1
+✖ saved text or materials changed after confirmation cannot be authorized (0.8408ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:209:78)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:215:1
+✖ missing or ambiguous CSRF and endpoint-specific session cookies fail closed (0.8953ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:219:65)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:226:1
+✖ cookie replacement while confirmation is open is denied before native authorization (1.8222ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:228:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:231:47
+✖ late cookie replacement cleans up only a new authorized grant (1.014ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:233:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:231:47
+✖ late cookie replacement cleans up only a new existing grant (0.885ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:233:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:238:1
+✖ profile shares pending, busy, wait and runtime lock with both older IPC channels (1.1228ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:240:19)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:250:76
+✖ replaced parent identity invalidates profile consent (0.8777ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:252:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:250:76
+✖ replaced session identity invalidates profile consent (0.8281ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:252:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:250:76
+✖ replaced backend identity invalidates profile consent (0.8272ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:252:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:250:76
+✖ replaced origin identity invalidates profile consent (0.7963ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:252:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:250:76
+✖ replaced conversation_id identity invalidates profile consent (0.8494ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:252:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:255:1
+✖ invalidated document guard prevents profile consent (1.1592ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:257:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:260:1
+✖ unknown or malformed native ACK never becomes a successful profile status (0.9079ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:263:30)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:267:1
+✖ HTTP redirects, malformed JSON and excessive or invalid UTF8 bodies produce only fixed errors (0.9164ms)
+  AssertionError [ERR_ASSERTION]: profile approval IPC is registered
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at Object.invoke (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:83:12)
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:274:55)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at desktop\tests\profile-approval.test.cjs:278:1
+✖ preload exposes a frozen profile selector on the dedicated approval channel (0.9098ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\profile-approval.test.cjs:285:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

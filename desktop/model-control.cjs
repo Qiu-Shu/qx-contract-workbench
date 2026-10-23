@@ -1,4 +1,5 @@
 const {TextDecoder} = require('node:util');
+const {validProfileBasis} = require('./profile-basis.cjs');
 
 const PROTOCOL = 'qx-model-control-v1';
 const JUDGE_PROTOCOL = 'qx-judge-control-v1';
@@ -9,7 +10,8 @@ const CODES = new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT',
   'BUDGET_EXCEEDED','CROSS_MATTER_DENIED']);
 const STATUSES = {configure:['configured'],disable:['disabled'],
   authorize:['authorized','existing'],revoke:['revoked'],configure_judge:['configured'],disable_judge:['disabled'],
-  authorize_judge:['authorized','existing'],revoke_judge:['revoked'],authorize_context:['authorized','existing']};
+  authorize_judge:['authorized','existing'],revoke_judge:['revoked'],authorize_context:['authorized','existing'],
+  authorize_profile:['authorized','existing']};
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const keys = (value, expected) => object(value) && Object.keys(value).length === expected.length &&
   expected.every(key => Object.hasOwn(value,key));
@@ -45,6 +47,12 @@ function validPayload(operation, payload) {
     payload.secret.trim().length >= 16 && payload.secret.trim().length <= 512;
   const token = value => typeof value === 'string' && /^[\x21-\x7e]{1,256}$/.test(value);
   if (operation === 'revoke' || operation === 'revoke_judge') return keys(payload,['session_token']) && token(payload.session_token);
+  if (operation === 'authorize_profile')
+    return keys(payload,['session_token','expected_config_version','basis','max_total_usd','valid_for_seconds']) &&
+      token(payload.session_token) && typeof payload.expected_config_version === 'string' &&
+      UUID.test(payload.expected_config_version) && validProfileBasis(payload.basis) &&
+      typeof payload.max_total_usd === 'string' && payload.max_total_usd.length <= 64 &&
+      Number.isSafeInteger(payload.valid_for_seconds) && payload.valid_for_seconds >= 1 && payload.valid_for_seconds <= 900;
   if (operation === 'authorize_context')
     return keys(payload,['session_token','expected_config_version','basis','max_total_usd',
       'valid_for_seconds','max_rounds']) && token(payload.session_token) &&

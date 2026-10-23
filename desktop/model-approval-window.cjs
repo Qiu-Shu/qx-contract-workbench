@@ -1,10 +1,22 @@
 const path=require('node:path');
 const {pathToFileURL}=require('node:url');
 const {randomUUID}=require('node:crypto');
+const {canonicalProfileBasis}=require('./profile-basis.cjs');
 
 function approvalDetails(value) {
   const budget=value=>typeof value==='string'&&/^(0|[1-9]\d{0,6})(\.\d{1,12})?$/.test(value)&&
     /[1-9]/.test(value)&&(Number(value.split('.')[0])<1000000||/^1000000(?:\.0{1,12})?$/.test(value));
+  if(value?.kind==='profile_draft'){
+    if(Object.keys(value).length!==6||
+        !['kind','content','basis','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
+        typeof value.content!=='string'||!value.content.trim()||Buffer.byteLength(value.content,'utf8')>65536||
+        !['deepseek-flash','deepseek-v4-pro'].includes(value.model)||value.recipient!=='DeepSeek（api.deepseek.com）'||
+        !budget(value.max_total_usd))return null;
+    const basis=canonicalProfileBasis(value.basis);
+    if(!basis)return null;
+    return {kind:'profile_draft',content:value.content,basis,model:value.model,
+      max_total_usd:value.max_total_usd,recipient:value.recipient};
+  }
   if(value?.kind==='library_context'){
     if(Object.keys(value).length!==6||
         !['kind','content','sources','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||

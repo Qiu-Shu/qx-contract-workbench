@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: profile wire rejects mismatched nonce and cannot recover on a later valid ACK
+ok 1 - profile wire rejects mismatched nonce and cannot recover on a later valid ACK
+  ---
+  duration_ms: 2.9442
+  type: 'test'
+  ...
+# Subtest: profile wire rejects mismatched sequence and cannot recover on a later valid ACK
+ok 2 - profile wire rejects mismatched sequence and cannot recover on a later valid ACK
+  ---
+  duration_ms: 0.3781
+  type: 'test'
+  ...
+# Subtest: profile wire rejects mismatched status and cannot recover on a later valid ACK
+ok 3 - profile wire rejects mismatched status and cannot recover on a later valid ACK
+  ---
+  duration_ms: 0.3433
+  type: 'test'
+  ...
+# Subtest: profile timeout clears its request and late ACK never reopens the channel
+ok 4 - profile timeout clears its request and late ACK never reopens the channel
+  ---
+  duration_ms: 15.307
+  type: 'test'
+  ...
+# Subtest: late fresh ACK after backend replacement revokes only captured backend and closes it if revoke fails
+ok 5 - late fresh ACK after backend replacement revokes only captured backend and closes it if revoke fails
+  ---
+  duration_ms: 1.3439
+  type: 'test'
+  ...
+# Subtest: unawaited inner request is still awaited and callback cannot upgrade an existing ACK
+ok 6 - unawaited inner request is still awaited and callback cannot upgrade an existing ACK
+  ---
+  duration_ms: 0.8127
+  type: 'test'
+  ...
+# Subtest: native rejection cannot be papered over by callback and releases the configuration lock
+ok 7 - native rejection cannot be papered over by callback and releases the configuration lock
+  ---
+  duration_ms: 0.4173
+  type: 'test'
+  ...
+# Subtest: canonical scope rejects invisible own additions and never shares caller references
+ok 8 - canonical scope rejects invisible own additions and never shares caller references
+  ---
+  duration_ms: 0.1437
+  type: 'test'
+  ...
+# Subtest: new profile runtime modules and their local dependencies are explicit package entries
+ok 9 - new profile runtime modules and their local dependencies are explicit package entries
+  ---
+  duration_ms: 0.7854
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 79.0269

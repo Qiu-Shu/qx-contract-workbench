@@ -1,0 +1,70 @@
+✔ approval creates one isolated modal and only its exact main frame can read or explicitly decide (12.4382ms)
+✔ approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision (3.8725ms)
+✔ approval stale guard, parent close, Escape and bounded timeout cancel without a decision (4.8695ms)
+✔ approval default cancel focus preserves the initial top viewport (1.9392ms)
+✔ approval page renders full untrusted text as text and defaults focus to cancel (2.0854ms)
+✔ approval page never confirms while loading and explicit confirm is sent only once (1.1906ms)
+✔ approval preload exposes only two dedicated calls and refuses truthy decision values (0.9513ms)
+✔ approval still settles cancellation if optional session cleanup fails (1.3685ms)
+✔ approval validates the display boundary and admits the full 65536-byte text without truncation (1.6572ms)
+✔ approval blocks navigation, all external requests and cancels a crashed renderer (1.2758ms)
+✔ approval page loading failure and page departure never enable or dispatch confirmation (1.7741ms)
+✔ approval presents optional Judge separately and accepts only the displayed exact selection (2.6578ms)
+✔ unavailable Judge cannot be forged as selected and cancellation remains independent (2.0166ms)
+✔ Judge display schema rejects missing fields, misleading budgets and surplus configuration (1.6898ms)
+✔ legacy display cannot accept a new Judge selection and successive windows keep independent choices (1.1254ms)
+✔ Judge page starts unselected, discloses the separate recipient and exact budget, and returns explicit choices (2.2333ms)
+✔ unavailable Judge remains unselected and disabled without blocking main confirmation (0.8813ms)
+✔ malformed or late Judge display never enables confirmation or restores a selection (5.2418ms)
+✔ preload forwards only booleans or exact Main and Judge selections (0.7622ms)
+✔ a displayed Judge choice cannot survive a stale guard, Escape or a later window (7.3797ms)
+✔ missing Judge display keeps legacy choice and a rejected approval cannot resend either service (1.7442ms)
+✔ context approval validates the six-key display, sizes the taller window and keeps a boolean decision (1.1797ms)
+✔ context display schema rejects malformed sources and surplus keys before any window opens (1.2549ms)
+✔ context page lists every saved passage as text, rewrites the copy and confirms with a plain boolean (3.0017ms)
+✔ malformed or late context display never enables confirmation (4.7916ms)
+✖ profile modal snapshots the complete save plan and allows only a presented boolean decision (16.1997ms)
+✔ profile modal rejects invalid save plans and extra authorization fields before opening (2.4652ms)
+✖ profile page explains each save target without promising an intake or verifying facts (2.2801ms)
+✖ profile page refuses invalid target display and leaves ordinary chat unchanged (2.8915ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 26
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 164.8133
+
+✖ failing tests:
+
+test at desktop\tests\model-approval-window.test.cjs:400:1
+✖ profile modal snapshots the complete save plan and allows only a presented boolean decision (16.1997ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert(win)
+  
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:403:26)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at desktop\tests\model-approval-window.test.cjs:426:1
+✖ profile page explains each save target without promising an intake or verifying facts (2.2801ms)
+  TypeError: Cannot read properties of undefined (reading 'hidden')
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:431:42)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7)
+
+test at desktop\tests\model-approval-window.test.cjs:447:1
+✖ profile page refuses invalid target display and leaves ordinary chat unchanged (2.8915ms)
+  TypeError: Cannot read properties of undefined (reading 'hidden')
+      at TestContext.<anonymous> (D:\Documents\ChatGPT\律所项目\desktop\tests\model-approval-window.test.cjs:453:68)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7)

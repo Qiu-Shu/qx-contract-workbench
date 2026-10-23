@@ -58,6 +58,7 @@ class Backend extends EventEmitter {
   authorizeModel(payload) { return this._model('authorize',payload); }
   revokeModel(payload) { return this._model('revoke',payload); }
   authorizeContextModel(payload) { return this._model('authorize_context',payload); }
+  authorizeProfileModel(payload) { return this._model('authorize_profile',payload); }
   _model(operation,payload) {
     return this.control ? this.control.request(operation,payload) : Promise.resolve({ok:false,code:'BLOCKED_LIVE'});
   }

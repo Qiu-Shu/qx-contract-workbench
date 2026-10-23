@@ -1,3 +1,4 @@
+const {canonicalProfileBasis}=require('./profile-basis.cjs');
 const MODELS=new Map([
   ['deepseek-flash',['0.3','1.2']],
   ['deepseek-v4-pro',['1.32','3.96']]
@@ -100,7 +101,7 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
       try{return await callback(null);}catch{return rejected();}
     }
     active=true;
-    let open=true,used=false,authorized=false,grantedToken=null,flight=null;
+    let open=true,used=false,authorized=false,grantedToken=null,flight=null,profileStatus=null;
     const budget=judge?judgeBudget:reservation(captured.model);
     const valid=()=>open && metadata===captured && matches(backend,guard) && supportsAuthorization();
     async function revoke() {
@@ -161,6 +162,31 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
         })();
         return flight;
       },
+      authorizeProfile(value){
+        if(judge || used || !valid() || typeof backend.authorizeProfileModel!=='function')
+          return Promise.resolve(rejected(judge?'BLOCKED_LIVE':'STATE_CONFLICT'));
+        used=true;
+        try{value=structuredClone(value);}catch{return Promise.resolve(rejected());}
+        const basis=canonicalProfileBasis(value?.basis);
+        if(!exact(value,['session_token','basis']) || typeof value.session_token!=='string' ||
+            !/^[\x21-\x7e]{1,256}$/.test(value.session_token) || basis===null)return Promise.resolve(rejected());
+        flight=(async()=>{
+          let ack;
+          try{
+            ack=await backend.authorizeProfileModel({session_token:value.session_token,
+              expected_config_version:captured.config_version,basis,max_total_usd:budget,valid_for_seconds:120});
+          }catch{return terminate(backend,guard);}
+          if(!healthy(backend))return terminate(backend,guard);
+          if(exact(ack,['ok','code']) && ack.ok===false && CONTROL_CODES.has(ack.code))return rejected(ack.code);
+          if(!exact(ack,['ok','status']) || ack.ok!==true || !['authorized','existing'].includes(ack.status))
+            return terminate(backend,guard);
+          authorized=true;profileStatus=ack.status;
+          if(profileStatus==='authorized')grantedToken=value.session_token;
+          if(!valid()){await revoke();return rejected('STATE_CONFLICT');}
+          return {ok:true,status:profileStatus};
+        })();
+        return flight;
+      },
       async revoke(){
         if(!open)return rejected('STATE_CONFLICT');
         if(flight)await flight;
@@ -176,7 +202,7 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
         return result?.canceled===true ? {ok:false,code:'APPROVAL_CANCELED',canceled:true} :
           rejected(CONTROL_CODES.has(result?.code)?result.code:'BLOCKED_LIVE');
       }
-      return okay();
+      return profileStatus===null ? okay() : {ok:true,status:profileStatus};
     }catch{
       if(flight)await flight;
       await revoke();return rejected();

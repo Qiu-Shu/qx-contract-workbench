@@ -146,3 +146,26 @@ tests/unit/test_judge_authorization_protocol.py -text whitespace=blank-at-eol,bl
 tests/integration/test_assistant_profile_application.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 tests/integration/test_native_profile_control.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 tests/integration/test_profile_native_http_process.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/testing/profile-desktop/** -text -whitespace
+desktop/backend.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/model-approval-window.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/model-approval.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/model-approval.css -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/model-approval.html -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/model-approval.js -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/model-control.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/model-session.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/package.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/preload.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/profile-approval.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/profile-basis.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/tests/judge-settings-ui.test.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/tests/model-approval-acceptance.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/tests/model-approval-window.test.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/tests/model-credentials-acceptance.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/tests/profile-approval.test.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/tests/profile-native.test.cjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/tests/profile_approval_acceptance.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/cn_contract/web/app.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/integration/test_assistant_frontend.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
