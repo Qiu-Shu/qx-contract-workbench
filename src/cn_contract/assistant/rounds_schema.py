@@ -105,7 +105,8 @@ def initialize_storage(database):
             return
         # The positively identified rounds-v2 successor is accepted as-is.
         from .rounds_v2_schema import expected_objects as rounds_v2_objects
-        if found == rounds_v2_objects():
+        from .profile_model_schema import expected_context_objects as profile_model_objects
+        if found == rounds_v2_objects() or found == profile_model_objects():
             return
         # Only the positively identified context-v1 family is rebuilt in place.
         if found != context_schema.expected_objects():

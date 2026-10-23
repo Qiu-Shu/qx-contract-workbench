@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.668" timestamp="2026-10-23T08:50:48.938275+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_model_schema" name="test_model_schema_is_an_additive_version" time="0.001"><failure message="AssertionError: assert 'assistant-profile-model-v1' == 'assistant-profiles-v1'&#10;  &#10;  - assistant-profiles-v1&#10;  ?                  ^&#10;  + assistant-profile-model-v1&#10;  ?                  ^^^^^^">tests\integration\test_assistant_model_schema.py:21: in test_model_schema_is_an_additive_version
+    assert CURRENT_VERSION == 'assistant-profiles-v1'
+E   AssertionError: assert 'assistant-profile-model-v1' == 'assistant-profiles-v1'
+E     
+E     - assistant-profiles-v1
+E     ?                  ^
+E     + assistant-profile-model-v1
+E     ?                  ^^^^^^</failure></testcase></testsuite></testsuites>

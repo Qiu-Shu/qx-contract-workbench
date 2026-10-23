@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+2026-10-23 CH-07C2b1：自动建档的存储前置切片完成。新命名schema及固定保存回执保留旧11版44摘要，三迁移通道与五族旧完整性校验接续；新格式/新回执仍fail-closed，未启用自动归档。20文件初轮630/632通过，2项旧测试预期修正后两个文件54通过；四开发门通过，542份输入稳定、产品源码未变，Spec6/Standards30独立通过。修复新摘要CHECK的NUL尾缀漏洞。安装版0.4.1和WIN-PATH-02开放项不变；未碰真实资料/模型/云。[证据](docs/testing/profile-model-schema/20261023/README.md)。
+
 最新接续（2026-10-23，CH-07C2a）：离线发送内容/保存计划绑定完成；380关联、四开发门、Spec12/Standards9通过。C2b仍须闭合原生用途许可、版本化账本、固定原子钩子及迁移恢复，自动保存尚未启用；以[本片证据](docs/testing/profile-basis/20261023/README.md)为准。`a84a156`已正常同步，远端SHA及4,370文件树一致；[回执](docs/testing/GITHUB-PROFILE-BASIS-20261023.md)。
 
 最新接续（2026-10-23，CH-07C1）：协议切片及577项关联验证完成，自动保存仍待C2/C3；以[本片证据](docs/testing/profile-output/20261023/README.md)为准。后续同步结果见下方回执。
@@ -41,7 +43,8 @@
 | CH-07B | P1 · 后端已实现，整体验收未关闭 | Codex接续 | 原子档案/接待/回执、历史与人工接口、迁移恢复完成代码和定向验证；全套3816/3819，两个旧夹具修正后9/36通过，长路径发布WinError5根因未定。保留原失败，勿将补验算成一次全绿 | [执行合同](docs/plans/2026-10-23-profile-persistence.md) · [证据](docs/testing/profile-persistence/20261023/README.md) |
 | CH-07C1 | 已完成协议切片 | Codex | 当前文字同次回答/提案、出处由服务器填充、撤权保留用量；577关联、4门、Spec13/Standards8+4通过；未启用应用自动建档 | [实测](docs/testing/profile-output/20261023/README.md) |
 | CH-07C2a | 已完成离线准备切片 | Codex | 同wire不同保存计划使用不同basis摘要；实际saved views身份/版本桥接；380关联、4门、Spec12/Standards9；无运行许可或自动存档 | [合同](docs/plans/2026-10-23-profile-send-basis.md) · [证据](docs/testing/profile-basis/20261023/README.md) |
-| CH-07C2b/C3 | P1 · 待接线 | Codex接续 | C2b同时闭合用途授权/完整basis绑定/账本/固定原子保存钩子/迁移恢复；旧handler表和完整性版本白名单须显式升级。C3接面板和本地联系方式。不得暗增第二付费提炼或默认创建空接待 | CH-07B、CH-07C1、CH-07C2a |
+| CH-07C2b1 | 已完成存储前置切片 | Codex | 630/632初轮、旧断言修正后54补验/4门/Spec6/Standards30；旧签名与旧校验保留，新格式和handler记录仍禁止验收，自动归档未启用 | [合同](docs/plans/2026-10-23-profile-model-schema.md) · [证据](docs/testing/profile-model-schema/20261023/README.md) |
+| CH-07C2b2/C3 | P1 · 待接线 | Codex接续 | C2b同时闭合用途授权/完整basis绑定/账本/固定原子保存钩子/迁移恢复；新schema已准备；还须实现同一次执行语义重放，移除封闭guard须与完整链路同片验收。C3接面板和本地联系方式。不得暗增第二付费提炼或默认创建空接待 | CH-07B、CH-07C1、CH-07C2a |
 | CH-08 | P1 · 待贯通 | 待认领 | 对话产物的客户/内部范围、复制和 Word 导出；复用既有导出，不从整页 DOM 复制内部信息 | CH-07 及原文引用 |
 | CH-09-续 | P1 · 随新增表同步 | 对应模块作者 | 现有对话/附件/调用账本恢复已覆盖；新增档案/成果仍需完整备份、旧版本兼容、只读拒写和不重发 | 与 CH-07/08 同片实施 |
 | CH-10 | P1 · 待整体验收 | 待认领 | 新安装候选贯通聊天→收件→生成→档案→引用→导出；断网/Jev缺席、中文路径/输入/缩放、升级与资源实测；不覆盖本机真实资料 | 核心链具备可测范围 |

@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-23 CH-07C2b1：自动建档的存储前置切片完成。新命名schema及固定保存回执保留旧11版44摘要，三迁移通道与五族旧完整性校验接续；新格式/新回执仍fail-closed，未启用自动归档。20文件初轮630/632通过，2项旧测试预期修正后两个文件54通过；四开发门通过，542份输入稳定、产品源码未变，Spec6/Standards30独立通过。修复新摘要CHECK的NUL尾缀漏洞。安装版0.4.1和WIN-PATH-02开放项不变；未碰真实资料/模型/云。[实测](testing/profile-model-schema/20261023/README.md)、[执行合同](plans/2026-10-23-profile-model-schema.md)。GitHub以随后同步回执为准。
+
 2026-10-23 CH-07C2a产品与合成证据提交a84a156227be7ad9cead1fd1ea237773defee3c4已正常同步GitHub；远端SHA及4,370文件树一致。35新增不同blob扫描0命中，538输入未变化、34暂存源码/测试/证据字节一致。发布回执仅追加文档，不改变380关联与独审结果；自动保存接线及WIN-PATH-02仍待办。[同步回执](testing/GITHUB-PROFILE-BASIS-20261023.md)。
 
 2026-10-23 CH-07C2a离线发送准备完成：复用C1私有wire构建，basis绑定固定整理用途/handler、完整UTF-8请求/配置/模板摘要和本地档案基线/接待目标/修订/投影选择；prepare从实际saved run/message视图核对身份与保存前后版本。最终12文件380关联通过（54新增），0失败/错误/跳过，538输入稳定，四开发门exit0；Spec12、Standards9独立通过、0待修，旧DTO及C1字节保持兼容。合成service保存→prepare→合成响应解析实测通过，无模型/档案/接待写入。初始RED、测试同名收集冲突、两处开发夹具和独审长参数错误保留，不冒充产品失败或最终通过。本片没有新schema/native/registry/HTTP/自动保存；C2b须整体闭合用途许可、账本、固定钩子及迁移恢复，C3接档案侧栏。WorkBuddy本轮native_unavailable未派发，运行桌面、真实资料、安装版0.4.1不动；WIN-PATH-02仍开放，不重跑旧49分钟全套。GitHub同步以单独回执为准。[本片证据](testing/profile-basis/20261023/README.md)、[执行合同](plans/2026-10-23-profile-send-basis.md)。

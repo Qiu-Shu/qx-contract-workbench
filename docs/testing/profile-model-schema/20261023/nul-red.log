@@ -1,0 +1,10 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_handler_rejects_incomplete_or_forged_outcome[nul-suffix-sha] ______
+tests\integration\test_assistant_profile_model_schema.py:221: in test_handler_rejects_incomplete_or_forged_outcome
+    with pytest.raises(sqlite3.IntegrityError, match='CHECK|NOT NULL'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'sqlite3.IntegrityError'>
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_model_schema.py::test_handler_rejects_incomplete_or_forged_outcome[nul-suffix-sha]
+1 failed in 5.10s

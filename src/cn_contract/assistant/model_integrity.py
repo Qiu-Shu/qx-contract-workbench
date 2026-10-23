@@ -449,8 +449,16 @@ def validate_model_records(db, *, allowed=True):
     if version in ('pre-intake','intake-v1','assistant-v1','assistant-attachments-v1'):
         return
     if version not in ('assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
-                       'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'):
+                       'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2',
+                       'assistant-profiles-v1', 'assistant-profile-model-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
+    if version == 'assistant-profile-model-v1':
+        # This migration is a storage prerequisite only. Do not bless new rows
+        # until purpose grants, settlement and fixed-handler replay are enabled
+        # together. Check before the empty-ledger shortcut, including orphan rows.
+        if db.scalar(text('''SELECT EXISTS(SELECT 1 FROM assistant_profile_handlers)
+                OR EXISTS(SELECT 1 FROM assistant_model_attempts WHERE input_format='profile-text-v1')''')):
+            raise ValueError('ASSISTANT_PROFILE_MODEL_NOT_ENABLED')
     attempts = db.execute(text('SELECT * FROM assistant_model_attempts ORDER BY created_at,id')).mappings().all()
     receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_receipts')).mappings()}
     outputs = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_outputs')).mappings()}
@@ -473,8 +481,10 @@ def validate_model_records(db, *, allowed=True):
         with localcontext(Context(prec=60)):
             _validate(db, attempts, receipts, outputs, _uuid(identities[0]),
                       context_schema=version in ('assistant-context-v1', 'assistant-rounds-v1',
-                                                 'assistant-rounds-v2', 'assistant-profiles-v1'),
-                      rounds=('v2' if version in ('assistant-rounds-v2', 'assistant-profiles-v1')
+                                                 'assistant-rounds-v2', 'assistant-profiles-v1',
+                                                 'assistant-profile-model-v1'),
+                      rounds=('v2' if version in ('assistant-rounds-v2', 'assistant-profiles-v1',
+                                                 'assistant-profile-model-v1')
                               else 'v1' if version == 'assistant-rounds-v1' else False))
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
         # Archive errors must not interpolate source text or model bodies.

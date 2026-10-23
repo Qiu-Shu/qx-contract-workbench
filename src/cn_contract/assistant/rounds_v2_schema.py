@@ -101,6 +101,9 @@ def initialize_storage(database):
             return
         if found == expected_objects():
             return
+        from .profile_model_schema import expected_context_objects as profile_model_objects
+        if found == profile_model_objects():
+            return
         # Only the positively identified rounds-v1 family is rebuilt in place.
         if found != rounds_schema.expected_objects():
             raise ValueError('DATABASE_SCHEMA_MISMATCH')

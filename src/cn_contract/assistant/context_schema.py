@@ -60,7 +60,8 @@ def initialize_storage(database):
         # accepted as-is.
         from .rounds_schema import expected_objects as rounds_objects
         from .rounds_v2_schema import expected_objects as rounds_v2_objects
-        if found == rounds_objects() or found == rounds_v2_objects():
+        from .profile_model_schema import expected_context_objects as profile_model_objects
+        if found == rounds_objects() or found == rounds_v2_objects() or found == profile_model_objects():
             return
         # Only the positively identified V1 model family is migrated in place.
         if found != model_schema.expected_objects():

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="2.913" timestamp="2026-10-23T08:51:30.645581+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_library_schema" name="test_library_chain_upgrades_judge_to_current_with_exact_delta" time="2.232"><failure message="AssertionError: assert {'assistant_h...eceipts', ...} == {'assistant_h...le_revisions'}&#10;  &#10;  Extra items in the left set:&#10;  'assistant_profile_handlers'&#10;  Use -v to get more diff">tests\integration\test_assistant_library_schema.py:33: in test_library_chain_upgrades_judge_to_current_with_exact_delta
+    assert {row[2] for row in set(after) - set(before)} == {
+E   AssertionError: assert {'assistant_h...eceipts', ...} == {'assistant_h...le_revisions'}
+E     
+E     Extra items in the left set:
+E     'assistant_profile_handlers'
+E     Use -v to get more diff</failure></testcase></testsuite></testsuites>

@@ -60,7 +60,8 @@ def file_references(db, *, allowed=True):
     if version in ('pre-intake', 'intake-v1', 'assistant-v1'):
         return []
     if version not in ('assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
-                       'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1'):
+                       'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2',
+                       'assistant-profiles-v1', 'assistant-profile-model-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     originals = db.execute(text('SELECT * FROM assistant_attachments ORDER BY id')).mappings().all()
     parses = db.execute(text('SELECT * FROM assistant_attachment_parses ORDER BY attachment_id,revision')).mappings().all()

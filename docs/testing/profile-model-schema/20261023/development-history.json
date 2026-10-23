@@ -1,0 +1,43 @@
+{
+  "base_commit": "e133d5c39475388c6f8763d488cbbf3808e6855e",
+  "schema_red": {
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest -q tests/integration/test_assistant_profile_model_schema.py::test_upgrade_opens_profile_format_but_not_unknown_formats",
+    "exit_code": 1,
+    "tests": 1,
+    "expected_failure": "Old CHECK refuses profile-text-v1",
+    "log": "red.log"
+  },
+  "guard_initial_fixture_error": {
+    "exit_code": 1,
+    "tests": 2,
+    "log": "guard-red.log",
+    "reason": "Fixture initially used only Database base tables, omitted initialize_storage; fixed test fixture before valid RED."
+  },
+  "guard_valid_red": {
+    "exit_code": 1,
+    "tests": 2,
+    "log": "guard-red-valid.log",
+    "xml": "guard-red-valid.xml",
+    "reason": "Successor schema recognized, old model_integrity whitelist rejects it."
+  },
+  "guard_development_green": {
+    "exit_code": 0,
+    "tests": 7,
+    "log": "guard-green.log",
+    "xml": "guard-green.xml",
+    "scope": "Includes unsupported profile format/handler guard and authenticated hostile archive restore."
+  },
+  "nul_red": {
+    "exit_code": 1,
+    "tests": 1,
+    "log": "nul-red.log",
+    "reason": "64 hexadecimal characters plus NUL suffix incorrectly accepted by SQLite text length/GLOB."
+  },
+  "nul_green": {
+    "exit_code": 0,
+    "tests": 1,
+    "log": "nul-green.log",
+    "reason": "Added byte length to new hash CHECK."
+  },
+  "note": "Development passes overlap final target run, never add counts. Historical unrelated 3819 full suite is not rerun."
+}

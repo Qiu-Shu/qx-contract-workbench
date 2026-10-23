@@ -1,0 +1,14 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________ test_model_schema_is_an_additive_version ___________________
+tests\integration\test_assistant_model_schema.py:21: in test_model_schema_is_an_additive_version
+    assert CURRENT_VERSION == 'assistant-profiles-v1'
+E   AssertionError: assert 'assistant-profile-model-v1' == 'assistant-profiles-v1'
+E     
+E     - assistant-profiles-v1
+E     ?                  ^
+E     + assistant-profile-model-v1
+E     ?                  ^^^^^^
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_model_schema.py::test_model_schema_is_an_additive_version
+1 failed in 0.71s

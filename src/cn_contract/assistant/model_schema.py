@@ -57,8 +57,10 @@ def initialize_storage(database):
             from .context_schema import expected_model_objects
             from .rounds_schema import expected_model_objects as rounds_model_objects
             from .rounds_v2_schema import expected_model_objects as rounds_v2_model_objects
+            from .profile_model_schema import expected_model_objects as profile_model_objects
             if (found != expected_objects() and found != expected_model_objects()
-                    and found != rounds_model_objects() and found != rounds_v2_model_objects()):
+                    and found != rounds_model_objects() and found != rounds_v2_model_objects()
+                    and found != profile_model_objects()):
                 raise ValueError('DATABASE_SCHEMA_MISMATCH')
             return
         for statement in STATEMENTS:

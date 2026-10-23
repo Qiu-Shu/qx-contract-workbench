@@ -1,0 +1,68 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+___________ test_empty_successor_runs_all_archive_validators[False] ___________
+
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/pm-red-empty/test_empty_successor_runs_all_0')
+native = False
+
+    @pytest.mark.parametrize('native', [False, True])
+    def test_empty_successor_runs_all_archive_validators(tmp_path, native):
+        database = Database('sqlite:///'+str(tmp_path/'empty.db'), tmp_path/'protected', load_settings())
+        try:
+            if native:
+                with database.session() as db:
+                    db.execute(text('CREATE TABLE local_workspace_identity (id TEXT PRIMARY KEY NOT NULL)'))
+            with database.session() as db:
+                rows = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+>               assert storage_schema.identify_schema(rows, native=native) == 'assistant-profile-model-v1'
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_profile_model_integrity.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+rows = [('index', 'sqlite_autoindex_approvals_1', 'approvals', None), ('index', 'sqlite_autoindex_approvals_2', 'approvals', ...', 'authority_verifications', None), ('index', 'sqlite_autoindex_document_versions_1', 'document_versions', None), ...]
+
+    def identify_schema(rows, *, native=False):
+        actual = list(rows)
+        for version in VERSIONS:
+            if actual == schema_rows(version, native=native):
+                return version
+>       raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E       ValueError: DATABASE_SCHEMA_MISMATCH
+
+src\cn_contract\storage_schema.py:79: ValueError
+___________ test_empty_successor_runs_all_archive_validators[True] ____________
+
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/pm-red-empty/test_empty_successor_runs_all_1')
+native = True
+
+    @pytest.mark.parametrize('native', [False, True])
+    def test_empty_successor_runs_all_archive_validators(tmp_path, native):
+        database = Database('sqlite:///'+str(tmp_path/'empty.db'), tmp_path/'protected', load_settings())
+        try:
+            if native:
+                with database.session() as db:
+                    db.execute(text('CREATE TABLE local_workspace_identity (id TEXT PRIMARY KEY NOT NULL)'))
+            with database.session() as db:
+                rows = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+>               assert storage_schema.identify_schema(rows, native=native) == 'assistant-profile-model-v1'
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_assistant_profile_model_integrity.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+rows = [('index', 'sqlite_autoindex_approvals_1', 'approvals', None), ('index', 'sqlite_autoindex_approvals_2', 'approvals', ...', 'authority_verifications', None), ('index', 'sqlite_autoindex_document_versions_1', 'document_versions', None), ...]
+
+    def identify_schema(rows, *, native=False):
+        actual = list(rows)
+        for version in VERSIONS:
+            if actual == schema_rows(version, native=native):
+                return version
+>       raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E       ValueError: DATABASE_SCHEMA_MISMATCH
+
+src\cn_contract\storage_schema.py:79: ValueError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_empty_successor_runs_all_archive_validators[False]
+FAILED tests/integration/test_assistant_profile_model_integrity.py::test_empty_successor_runs_all_archive_validators[True]
+2 failed in 1.16s

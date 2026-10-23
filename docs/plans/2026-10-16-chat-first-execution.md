@@ -1,5 +1,7 @@
 # Chat-first execution ledger and first delivery slice
 
+- 2026-10-23 CH-07C2b1：自动建档的存储前置切片完成。新命名schema及固定保存回执保留旧11版44摘要，三迁移通道与五族旧完整性校验接续；新格式/新回执仍fail-closed，未启用自动归档。20文件初轮630/632通过，2项旧测试预期修正后两个文件54通过；四开发门通过，542份输入稳定、产品源码未变，Spec6/Standards30独立通过。修复新摘要CHECK的NUL尾缀漏洞。安装版0.4.1和WIN-PATH-02开放项不变；未碰真实资料/模型/云。 [Evidence](../testing/profile-model-schema/20261023/README.md)。
+
 - 2026-10-23 CH-07C2a: offline send basis binds exact C1 wire/config/template and separate local profile/intake save plan. Actual saved run/message views bridge request identity and scope/composer revisions. 380 related tests (54 new), four gates, 538 stable inputs; independent Spec12/Standards9 pass. No new runtime authorization, schema, ledger, archive hook or UI. C2b must close these together before activation; WIN-PATH-02 remains open. [Evidence](../testing/profile-basis/20261023/README.md).
 
 - 2026-10-23 CH-07C1: explicit current-text answer/profile proposal codec and lazy provider entry completed; 577 related tests, four development gates, 535 stable inputs. Independent Spec13 / Standards8+4 passed after fixing numeric-date coercion and money wire types. Old wire behavior preserved. No registry, purpose grant, save hook, GUI or automatic archive activation; C2/C3 remain. [Evidence](../testing/profile-output/20261023/README.md).

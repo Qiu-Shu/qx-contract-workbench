@@ -1,0 +1,13 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_library_chain_upgrades_judge_to_current_with_exact_delta ________
+tests\integration\test_assistant_library_schema.py:33: in test_library_chain_upgrades_judge_to_current_with_exact_delta
+    assert {row[2] for row in set(after) - set(before)} == {
+E   AssertionError: assert {'assistant_h...eceipts', ...} == {'assistant_h...le_revisions'}
+E     
+E     Extra items in the left set:
+E     'assistant_profile_handlers'
+E     Use -v to get more diff
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_library_schema.py::test_library_chain_upgrades_judge_to_current_with_exact_delta
+1 failed in 2.95s

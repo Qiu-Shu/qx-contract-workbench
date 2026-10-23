@@ -22,9 +22,8 @@ HISTORICAL = {False: '4fefc5cdee01545b2d0bf50e4fe26765a07877d058b3f5379677767a71
               True: 'faa7dd186c64d993df4a836977ca9cb1b622ed951856645abdeb1163b0c750bc'}
 
 
-def test_profile_is_current_and_keeps_frozen_rounds_history():
-    assert storage_schema.CURRENT_VERSION == 'assistant-profiles-v1'
-    assert storage_schema.VERSIONS == PREVIOUS + ('assistant-profiles-v1',)
+def test_profile_keeps_frozen_rounds_history():
+    assert storage_schema.VERSIONS[:len(PREVIOUS)+1] == PREVIOUS + ('assistant-profiles-v1',)
     for native in (False, True):
         rows = storage_schema.schema_rows('assistant-rounds-v2', native=native)
         assert hashlib.sha256(json.dumps(rows, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest() == HISTORICAL[native]
@@ -36,7 +35,9 @@ def test_profile_migration_is_additive_and_keeps_old_rows(tmp_path):
         db.execute("INSERT INTO users VALUES ('synthetic-user','old-user','unused','[]',0)")
         db.commit()
         before = schema_migrations.database_rows(db)
-        assert schema_migrations.upgrade_database(db) == 'assistant-profiles-v1'
+        for statement in profile_schema.STATEMENTS:
+            db.execute(statement)
+        db.commit()
         after = schema_migrations.database_rows(db)
         assert set(before) < set(after)
         assert {row[2] for row in set(after)-set(before)} == {
@@ -52,14 +53,14 @@ def test_all_historical_versions_upgrade_without_losing_rows(tmp_path, version, 
         db.execute("INSERT INTO users VALUES ('synthetic-user','old-user','unused','[]',0)")
         db.commit()
         before = schema_migrations.database_rows(db)
-        assert schema_migrations.upgrade_database(db) == 'assistant-profiles-v1'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         after = schema_migrations.database_rows(db)
         assert {row[1] for row in set(before)-set(after)} <= {
             'assistant_model_attempts', 'immutable_assistant_model_input'}
-        assert after == storage_schema.schema_rows('assistant-profiles-v1', native=native)
+        assert after == storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=native)
         assert db.execute('SELECT username FROM users').fetchall() == [('old-user',)]
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
-        assert schema_migrations.upgrade_database(db) == 'assistant-profiles-v1'
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         assert schema_migrations.database_rows(db) == after
 
 
@@ -109,7 +110,7 @@ def test_fresh_bootstrap_matches_migration_and_reinitialize_is_noop(tmp_path, na
         with closing(old_db(tmp_path/'old.db', 'assistant-rounds-v2', native)) as db:
             schema_migrations.upgrade_database(db)
             assert before == schema_migrations.database_rows(db)
-        assert before == storage_schema.schema_rows('assistant-profiles-v1', native=native)
+        assert before == storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=native)
     finally:
         database.engine.dispose()
 

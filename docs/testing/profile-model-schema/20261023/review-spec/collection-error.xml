@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="1.095" timestamp="2026-10-23T08:38:48.115963+08:00" hostname="PC-20260920HQJZ"><testcase classname="" name=".local.profile-model-schema-20261023.review-spec.test_independent_spec" time="0.000"><error message="collection failure">ImportError while importing test module 'D:\Documents\ChatGPT\律所项目\.local\profile-model-schema-20261023\review-spec\test_independent_spec.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.local\profile-model-schema-20261023\review-spec\test_independent_spec.py:15: in &lt;module&gt;
+    from tests.integration.test_assistant_attachment_backup import corrupt
+tests\integration\test_assistant_attachment_backup.py:22: in &lt;module&gt;
+    from tests.integration.test_assistant_attachments import sample
+tests\integration\test_assistant_attachments.py:14: in &lt;module&gt;
+    from test_assistant_storage import workspace, conversation
+E   ModuleNotFoundError: No module named 'test_assistant_storage'</error></testcase></testsuite></testsuites>

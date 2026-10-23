@@ -1,0 +1,49 @@
+{
+  "baseline": "e133d5c39475388c6f8763d488cbbf3808e6855e",
+  "axis": "Spec",
+  "findings": [],
+  "required_fixes": 0,
+  "scope": "Contract plus current working-tree storage-schema, migration, initialization and integrity implementation; no activation/provider/native/HTTP scope.",
+  "probe_command": ".venv/Scripts/python.exe -X utf8 -m pytest .local/profile-model-schema-20261023/review-spec/test_independent_spec.py -q --basetemp=.local/pm-spec-final-20261023 --junitxml=.local/profile-model-schema-20261023/review-spec/results.xml",
+  "probe_exit_code": 0,
+  "probes": {
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "names": [
+      "test_orphan_handler_precedes_empty_model_return[True]",
+      "test_orphan_handler_precedes_empty_model_return[False]",
+      "test_new_attempt_refused_before_any_legacy_shape_or_identity",
+      "test_real_legacy_profile_replayed_and_tamper_refused_on_successor",
+      "test_nonempty_legacy_model_retains_context_and_v2_rounds_validation",
+      "test_new_empty_family_still_rejects_legacy_model_digest_tamper"
+    ]
+  },
+  "input_files": 14,
+  "all_inputs_unchanged": true,
+  "initial_probe_error": "Collection only: existing integration helper sibling import required tests/integration on sys.path; corrected only independent review harness and retained collection-error.xml. No product implementation change.",
+  "static_checks": [
+    "11 predecessor versions, ordinary/native raw and normalized freeze contract; 22 signature records",
+    "All initialization composition and successor acceptance branches",
+    "Shared statements_for and FK-OFF requirement for bootstrap, staged DB and native/qxbak migrations",
+    "All five legacy record-validator new-version branches, including profile and library no-early-return",
+    "Exact profile-text/new-handler refusal before empty model return",
+    "Existing backup shared validation and no production runtime connection",
+    "New handler fixed identity, success/failure shape, FK/unique and immutable constraints"
+  ],
+  "limits": [
+    "Did not rerun migration agent tests or full suite",
+    "No real data, active desktop, network supplier, installation or cloud checks",
+    "New-format historical replay and actual handler adoption remain disabled; future cross-record semantic validation belongs to C2b2",
+    "WIN-PATH-02 remains open"
+  ],
+  "post_test_document_update": {
+    "path": "docs/plans/2026-10-23-profile-model-schema.md",
+    "sha256": "741d62694950072a06ef94f385b6d2588688f21faf03ccc92691213761c371ab",
+    "reason": "After completed probes, parent added nonblocking C2b2 semantics: dedicated table preserves fixed-event/atomic receipt semantics; blocked receipt terminal; no replacement event or refreshed authority bypass.",
+    "product_files_checked": 13,
+    "product_files_still_identical": true,
+    "test_rerun": false
+  }
+}
