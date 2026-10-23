@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+2026-10-23 CH-07C2b2b-A完成档案用途许可内核：完整保存计划绑定许可，普通聊天/资料回答/档案用途互相隔离，发送前后检查到期、撤权及配置变化，晚到候选丢弃而保留已收到用量。一次13文件379项关联通过（新增文件58项已包含），四开发门通过，546份工作区输入稳定。只修改现有registry，应用自动归档仍关闭；持久调用消费、费用和原子保存/历史恢复继续接线。 [本片实测](docs/testing/profile-authorization/20261023/README.md)。GitHub同步以随后回执为准。
+
 2026-10-23 CH-07C2b2a已完成可信数据库装配：读取实际消息、原请求摘要及档案/接待基线，拒绝跨会话、旧绑定和版本变化，同时隔离发送后新草稿；共用附件选择校验拒绝损坏快照。单次13文件源码回归393项通过（可信装配49项、附件解码22项已包含），四开发门通过、545份输入稳定，独立复核见证据。发送、费用与原子保存仍由C2b2b闭合，自动归档入口继续关闭；安装版0.4.1及WIN-PATH-02状态未变。 [实测](docs/testing/profile-trusted-preparation/20261023/README.md)。GitHub产品同步已核验，见下方回执。
 
 CH-07C2b2a源码与合成证据 `105ae27` 已同步，远端SHA及4,514文件树一致；[同步回执](docs/testing/GITHUB-PROFILE-TRUSTED-PREPARATION-20261023.md)。
@@ -49,7 +51,8 @@ CH-07C2b2a源码与合成证据 `105ae27` 已同步，远端SHA及4,514文件树
 | CH-07C2a | 已完成离线准备切片 | Codex | 同wire不同保存计划使用不同basis摘要；实际saved views身份/版本桥接；380关联、4门、Spec12/Standards9；无运行许可或自动存档 | [合同](docs/plans/2026-10-23-profile-send-basis.md) · [证据](docs/testing/profile-basis/20261023/README.md) |
 | CH-07C2b1 | 已完成存储前置切片 | Codex | 630/632初轮、旧断言修正后54补验/4门/Spec6/Standards30；旧签名与旧校验保留，新格式和handler记录仍禁止验收，自动归档未启用 | [合同](docs/plans/2026-10-23-profile-model-schema.md) · [证据](docs/testing/profile-model-schema/20261023/README.md) |
 | CH-07C2b2a | 已完成内部核验 | Codex | 393关联/四门通过；实际消息与原请求摘要绑定，当前版本重建；发送和自动保存仍封闭 | [合同](docs/plans/2026-10-23-profile-trusted-preparation.md) · [证据](docs/testing/profile-trusted-preparation/20261023/README.md) |
-| CH-07C2b2b/C3 | P1 · 待接线 | Codex接续 | C2b同时闭合用途授权/完整basis绑定/账本/固定原子保存钩子/迁移恢复；新schema已准备；还须实现同一次执行语义重放，移除封闭guard须与完整链路同片验收。C3接面板和本地联系方式。不得暗增第二付费提炼或默认创建空接待 | CH-07B、CH-07C1、CH-07C2a、CH-07C2b2a |
+| CH-07C2b2b-A | 已完成内部许可 | Codex | 379关联及四门通过；完整保存计划用途隔离、发送前后失效检查；持久claim/费用/保存未接通 | [合同](docs/plans/2026-10-23-profile-authorization.md) · [证据](docs/testing/profile-authorization/20261023/README.md) |
+| CH-07C2b2b/C3 | P1 · 待整体接线 | Codex接续 | C2b同时闭合用途授权/完整basis绑定/账本/固定原子保存钩子/迁移恢复；新schema已准备；还须实现同一次执行语义重放，移除封闭guard须与完整链路同片验收。C3接面板和本地联系方式。不得暗增第二付费提炼或默认创建空接待 | CH-07B、CH-07C1、CH-07C2a、CH-07C2b2a、CH-07C2b2b-A |
 | CH-08 | P1 · 待贯通 | 待认领 | 对话产物的客户/内部范围、复制和 Word 导出；复用既有导出，不从整页 DOM 复制内部信息 | CH-07 及原文引用 |
 | CH-09-续 | P1 · 随新增表同步 | 对应模块作者 | 现有对话/附件/调用账本恢复已覆盖；新增档案/成果仍需完整备份、旧版本兼容、只读拒写和不重发 | 与 CH-07/08 同片实施 |
 | CH-10 | P1 · 待整体验收 | 待认领 | 新安装候选贯通聊天→收件→生成→档案→引用→导出；断网/Jev缺席、中文路径/输入/缩放、升级与资源实测；不覆盖本机真实资料 | 核心链具备可测范围 |

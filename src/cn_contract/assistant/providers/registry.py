@@ -83,13 +83,21 @@ class MainModelRegistry:
         session_id = _session_id(session_id)
         policy = _copy(d.MainModelPolicy, policy)
         if basis is not None:
-            basis = (_copy(d.MainContextSendBasis, basis) if isinstance(basis, d.MainContextSendBasis)
+            basis = (_copy(d.MainProfileSendBasis, basis) if isinstance(basis, d.MainProfileSendBasis)
+                     else _copy(d.MainContextSendBasis, basis) if isinstance(basis, d.MainContextSendBasis)
                      else _copy(d.MainSendApproval, basis))
         config = self._current_config()
         if (not config.enabled or policy.config_sha256 != sha(encoded(config))
                 or policy.expires_at <= datetime.now(timezone.utc)):
             raise ServiceError('BLOCKED_LIVE', 403)
-        if basis is not None and isinstance(basis, d.MainContextSendBasis):
+        if isinstance(basis, d.MainProfileSendBasis):
+            from .profile_preparation import basis_digest
+            if (basis.expected_scope.workspace_id != policy.workspace_id
+                    or policy.allowed_content_sha256s != (basis_digest(basis),)
+                    or basis.config_sha256 != sha(encoded(config)) or policy.max_calls != 1
+                    or not callable(getattr(self._provider, 'generate_profile', None))):
+                raise ServiceError('BLOCKED_LIVE', 403)
+        elif isinstance(basis, d.MainContextSendBasis):
             if (basis.expected_scope.workspace_id != policy.workspace_id
                     or policy.allowed_content_sha256s != (basis.manifest_sha256,)
                     or basis.config_sha256 != sha(encoded(config))):
@@ -174,8 +182,8 @@ class _RuntimeLease:
         if self._basis is None:
             return
         basis = self._basis
-        if isinstance(basis, d.MainContextSendBasis):
-            # A context grant never authorizes plain-text drafts.
+        if isinstance(basis, (d.MainContextSendBasis, d.MainProfileSendBasis)):
+            # A specialized grant never authorizes plain-text drafts.
             raise ServiceError('BLOCKED_LIVE', 403)
         if (scope != basis.expected_scope or composer_revision != basis.expected_composer_revision
                 or content_sha256 != basis.content_sha256):
@@ -201,6 +209,37 @@ class _RuntimeLease:
                                                         for item in basis.source_bindings)):
             raise ServiceError('BLOCKED_LIVE', 403)
 
+    def check_profile_submission(self, actor, request, basis):
+        """Bind the original text to the whole granted local save plan."""
+        from . import profile_preparation
+        request = _copy(d.AssistantMessageInput, request)
+        basis = _copy(d.MainProfileSendBasis, basis)
+        config, policy = self.snapshot_for(actor, request.expected_scope)
+        if type(self._basis) is not d.MainProfileSendBasis or self._basis != basis:
+            raise ServiceError('BLOCKED_LIVE', 403)
+        require_policy(config, policy, actor, request.expected_scope, profile_preparation.basis_digest(basis))
+        if policy.max_calls != 1 or not callable(getattr(self._fixed_provider, 'generate_profile', None)):
+            raise ServiceError('BLOCKED_LIVE', 403)
+        try:
+            rebuilt = profile_preparation.build_basis(request, config,
+                base_profile_revision=basis.base_profile_revision, expected_intake_id=basis.expected_intake_id,
+                expected_intake_revision=basis.expected_intake_revision, project_intake=basis.project_intake)
+            if rebuilt != basis:
+                raise ValueError
+        except (ValueError, TypeError):
+            raise ServiceError('BLOCKED_LIVE', 403) from None
+
+    def check_profile_execution(self, actor, request_id, prepared):
+        """A request without its save basis and exact current wire is insufficient."""
+        prepared = _copy(d.MainProfilePreparedInput, prepared)
+        self.snapshot_for(actor, prepared.request.scope)
+        basis = prepared.basis
+        if request_id != basis.request_id:
+            raise ServiceError('BLOCKED_LIVE', 403)
+        submission = d.AssistantMessageInput(request_id=request_id, expected_scope=basis.expected_scope,
+            expected_composer_revision=basis.expected_composer_revision, content=prepared.request.content)
+        self.check_profile_submission(actor, submission, basis)
+
     def check_execution(self, actor, request_id, request):
         if isinstance(request, d.MainContextRequest):
             request = _copy(d.MainContextRequest, request)
@@ -214,7 +253,7 @@ class _RuntimeLease:
         if self._basis is None:
             return
         basis = self._basis
-        if isinstance(basis, d.MainContextSendBasis):
+        if isinstance(basis, (d.MainContextSendBasis, d.MainProfileSendBasis)):
             raise ServiceError('BLOCKED_LIVE', 403)
         expected = basis.expected_scope.model_copy(update={
             'input_revision': basis.expected_scope.input_revision+1})
@@ -225,9 +264,19 @@ class _RuntimeLease:
     def granted_context_format(self):
         """The granted basis fixes the context format for the whole run."""
         self.snapshot()
+        if isinstance(self._basis, d.MainProfileSendBasis):
+            raise ServiceError('BLOCKED_LIVE', 403)
         if type(self._basis) is d.MainContextSendBasis:
             return self._basis.input_format
         return 'library-context-v1'
+
+    def _profile_preflight(self, prepared):
+        """Repeat current policy/configuration and full content checks at transport boundaries."""
+        try:
+            self.check_profile_execution(self._actor, prepared.basis.request_id, prepared)
+            return True
+        except Exception:
+            return False
 
     def _preflight(self):
         """Boolean revalidation for the transport; exceptions are denial, never leases."""
@@ -248,6 +297,20 @@ class _LeaseProvider:
     @property
     def config(self):
         return self._lease.snapshot()[0]
+
+    async def generate_profile(self, prepared, *, expected_config=None):
+        lease = self._lease
+        config, _ = lease.snapshot()
+        if expected_config is not None and _copy(d.MainModelConfig, expected_config) != config:
+            raise ServiceError('BLOCKED_LIVE', 403)
+        prepared = _copy(d.MainProfilePreparedInput, prepared)
+        lease.check_profile_execution(lease._actor, prepared.basis.request_id, prepared)
+        reply = _copy(d.MainProfileReply, await lease._fixed_provider.generate_profile(
+            prepared.request, expected_config=config, preflight=lambda: lease._profile_preflight(prepared)))
+        if reply.output is not None and not lease._profile_preflight(prepared):
+            return d.MainProfileReply(state='received', usage=reply.usage,
+                provider_request_id=reply.provider_request_id, error_code='BLOCKED_LIVE')
+        return reply
 
     async def generate_rounds(self, prepared, *, expected_config=None):
         """Bounded-rounds send: the granted basis must equal the embedded one."""
@@ -282,7 +345,7 @@ class _LeaseProvider:
                 raise ServiceError('BLOCKED_LIVE', 403)
             return await generate_context(request, expected_config=config, preflight=lease._preflight)
         request = _copy(d.MainRequest, request)
-        if isinstance(lease._basis, d.MainContextSendBasis):
+        if isinstance(lease._basis, (d.MainContextSendBasis, d.MainProfileSendBasis)):
             raise ServiceError('BLOCKED_LIVE', 403)
         require_policy(config, policy, lease._actor, request.scope, request.source_sha256)
         if lease._basis is not None:
