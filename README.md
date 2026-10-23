@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+CH-07C3a源码与合成证据 `1a03d89` 已同步GitHub，远端SHA及4,949项文件树一致；[同步回执](docs/testing/GITHUB-PROFILE-UI-20261023.md)。
+
 CH-07C2d源码及合成证据 `2dd5392` 已同步GitHub，远端SHA与4,832项文件树一致；[同步回执](docs/testing/GITHUB-PROFILE-DESKTOP-20261023.md)。
 
 CH-07C2c源码与合成证据 `63f48c6` 已同步，远端SHA及4,758文件树一致；[同步回执](docs/testing/GITHUB-PROFILE-APPLICATION-20261023.md)。
@@ -42,7 +44,7 @@ CH-07C2d完成可信桌面档案用途确认入口：复用原生窗口和私有
 - [对话式前端、模块解耦与轻量化 v2.1](docs/plans/chat-first-architecture-v2.1.md)
 - [下一步接线安排](docs/plans/2026-10-19-post-home-readiness.md)
 - [Windows 安装版与开发版说明](desktop/README.md)
-- [最近已核验的 GitHub 同步记录](docs/testing/GITHUB-PROFILE-APPLICATION-20261023.md)
+- [最近已核验的 GitHub 同步记录](docs/testing/GITHUB-PROFILE-UI-20261023.md)
 
 当前协作集成分支为 [`codex/contract-review-v2`](https://github.com/Qiu-Shu/qx-contract-workbench/tree/codex/contract-review-v2)。开始修改前先获取远端更新并查看 TODO；独立任务建议使用短分支和 PR，避免多人同时改动集成分支。每个完成阶段同步代码、实际验证记录、TODO 和 README。
 
