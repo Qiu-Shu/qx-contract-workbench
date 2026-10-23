@@ -1,0 +1,401 @@
+{
+  "utc": "2026-10-23T07:45:38.374894+00:00",
+  "base": "d3c3b173af0fe3f3f0d878df6793a601e181d081",
+  "head": "2dd53924b9e218efcc538935c5ac6f89cffbef60",
+  "new_commits": 1,
+  "blobs": 76,
+  "bytes": 1422354,
+  "zip_text_members": 0,
+  "blocked_paths": [],
+  "pattern_findings": [
+    {
+      "path": "desktop/tests/profile-approval.test.cjs",
+      "blob": "868a3c38b744ccdd068f773bea8baa8581530f7c",
+      "pattern": "credential_url"
+    }
+  ],
+  "reviewed_synthetic_rejection_url_occurrences": 0,
+  "scope": "All new reachable Git blobs and ZIP text members; known pattern/path/contract identity checks, not exhaustive sensitive-content certification.",
+  "files": [
+    {
+      "sha": "318d7aeea55e01d2e0bd3ad74ebc13f7150344c7",
+      "path": ".gitattributes",
+      "bytes": 12062
+    },
+    {
+      "sha": "bc6ac6e8ca4211cba5654b1bfcd5f8b4e9217548",
+      "path": "README.md",
+      "bytes": 18659
+    },
+    {
+      "sha": "31cdf57875e4975d45874b43228de7aa3a00eb4a",
+      "path": "TODO.md",
+      "bytes": 28207
+    },
+    {
+      "sha": "3d0afdee4ac6f99fdd9ec4c01437e111c08cc875",
+      "path": "desktop/backend.cjs",
+      "bytes": 4096
+    },
+    {
+      "sha": "4688279fe9a7fb9e2a5a79f43fffbe073b8cfd11",
+      "path": "desktop/model-approval-window.cjs",
+      "bytes": 8682
+    },
+    {
+      "sha": "5097c0c7aa18e26feb372c456bf688f604fd41b3",
+      "path": "desktop/model-approval.cjs",
+      "bytes": 18504
+    },
+    {
+      "sha": "31862900527bd781097b076e103d10f182d2238a",
+      "path": "desktop/model-approval.css",
+      "bytes": 2426
+    },
+    {
+      "sha": "d0514e5d05d1064bfab11fdcd253df0ba587e5f9",
+      "path": "desktop/model-approval.html",
+      "bytes": 3090
+    },
+    {
+      "sha": "f2acc2eb42845d73d0d9abc45aa2d25b7aeabdf8",
+      "path": "desktop/model-approval.js",
+      "bytes": 7264
+    },
+    {
+      "sha": "360ff1e8ce89144375a30b4cc9142f84285a5ed3",
+      "path": "desktop/model-control.cjs",
+      "bytes": 11301
+    },
+    {
+      "sha": "c2475a1a23b8d75b6b16d5a617bdea392fc1c03e",
+      "path": "desktop/model-session.cjs",
+      "bytes": 13843
+    },
+    {
+      "sha": "d2073f503556194986c846e60eba4689733c4437",
+      "path": "desktop/package.json",
+      "bytes": 1595
+    },
+    {
+      "sha": "187c8787dcaa73461c687b8f1d7adba06f7b1f08",
+      "path": "desktop/preload.cjs",
+      "bytes": 1783
+    },
+    {
+      "sha": "61f97ebe0b2bbfccc6261734db1430dcc65e6435",
+      "path": "desktop/profile-approval.cjs",
+      "bytes": 3523
+    },
+    {
+      "sha": "7ec6fc63e95b56c42dd5dfc69e58ca7e3376dd0e",
+      "path": "desktop/profile-basis.cjs",
+      "bytes": 2690
+    },
+    {
+      "sha": "4fd07b05420c55fdd62f719e3d504f958ed22c3e",
+      "path": "desktop/tests/judge-settings-ui.test.cjs",
+      "bytes": 13725
+    },
+    {
+      "sha": "9a31e3456b7193d7938dbdfb7dcc61fb4a3e9849",
+      "path": "desktop/tests/model-approval-acceptance.py",
+      "bytes": 28010
+    },
+    {
+      "sha": "35cf7b0d8b49470fce3ef720b53574b88f9d5048",
+      "path": "desktop/tests/model-approval-window.test.cjs",
+      "bytes": 32130
+    },
+    {
+      "sha": "00e149e8ae8855a15192d78eb521b430489ad69e",
+      "path": "desktop/tests/model-credentials-acceptance.cjs",
+      "bytes": 7756
+    },
+    {
+      "sha": "868a3c38b744ccdd068f773bea8baa8581530f7c",
+      "path": "desktop/tests/profile-approval.test.cjs",
+      "bytes": 19513
+    },
+    {
+      "sha": "0fd786c643d726a62b6c9b9501393b62154590ce",
+      "path": "desktop/tests/profile-native.test.cjs",
+      "bytes": 12212
+    },
+    {
+      "sha": "1d4d8bac4576bcb05614652521c5973b6f0486e6",
+      "path": "desktop/tests/profile_approval_acceptance.py",
+      "bytes": 4553
+    },
+    {
+      "sha": "4335e85a093d69ee024e67c4d451070b0790b8f8",
+      "path": "docs/TASK_STATUS.md",
+      "bytes": 125488
+    },
+    {
+      "sha": "cd5ea638a1038283358791ee0e7648bfd52488a2",
+      "path": "docs/plans/2026-10-16-chat-first-execution.md",
+      "bytes": 24005
+    },
+    {
+      "sha": "ea7172326aaa416b8e89d25fba6ff56f73ad38b0",
+      "path": "docs/plans/2026-10-23-profile-desktop.md",
+      "bytes": 6134
+    },
+    {
+      "sha": "9c315197e5d97cc789bb853d05be47f707652cb7",
+      "path": "docs/testing/profile-desktop/20261023/README.md",
+      "bytes": 4432
+    },
+    {
+      "sha": "7bfdca0f4f2818f6f9196670fea0b0ceb5d47280",
+      "path": "docs/testing/profile-desktop/20261023/desktop.log",
+      "bytes": 81671
+    },
+    {
+      "sha": "9281af6a7487d1fdc3a7fb50339b4f22dc6d4fb8",
+      "path": "docs/testing/profile-desktop/20261023/development-ipc/README.md",
+      "bytes": 3035
+    },
+    {
+      "sha": "869edf7e37bdf65072bb33f32dcf4f652b7201ba",
+      "path": "docs/testing/profile-desktop/20261023/development-ipc/awaiting-input-red.log",
+      "bytes": 10646
+    },
+    {
+      "sha": "bca99a78381ced528ce77c34aa2ecc03476c9d45",
+      "path": "docs/testing/profile-desktop/20261023/development-ipc/green-first.log",
+      "bytes": 10827
+    },
+    {
+      "sha": "31f3b1ae16c94d468cd6e26d07bcf90a4619ec2a",
+      "path": "docs/testing/profile-desktop/20261023/development-ipc/green-target.log",
+      "bytes": 18638
+    },
+    {
+      "sha": "4e22f3ac27115318a0b21acfca5abb4d3cb35954",
+      "path": "docs/testing/profile-desktop/20261023/development-ipc/inputs.json",
+      "bytes": 639
+    },
+    {
+      "sha": "b1f149fe0cebba86ea6ad7dbcf3b7843abe9e0eb",
+      "path": "docs/testing/profile-desktop/20261023/development-ipc/red.log",
+      "bytes": 44960
+    },
+    {
+      "sha": "922be99de1db1714c0d181ebc9eca454938cd111",
+      "path": "docs/testing/profile-desktop/20261023/development-native/frozen-files.json",
+      "bytes": 789
+    },
+    {
+      "sha": "5db6b698256a081249faa2957ba9ee8879333795",
+      "path": "docs/testing/profile-desktop/20261023/development-native/green-initial.log",
+      "bytes": 3403
+    },
+    {
+      "sha": "2dfcbdf794b57f7f12952b3f38ea7dab960b9ed1",
+      "path": "docs/testing/profile-desktop/20261023/development-native/red.log",
+      "bytes": 40305
+    },
+    {
+      "sha": "836b02a457102b5c0975ec9941cb8205c4c2e1e8",
+      "path": "docs/testing/profile-desktop/20261023/development-native/runs.json",
+      "bytes": 1799
+    },
+    {
+      "sha": "269d1303b19a99bc5b790f4f0a7c31f4f0587c8b",
+      "path": "docs/testing/profile-desktop/20261023/development-native/target-adjacent.log",
+      "bytes": 11394
+    },
+    {
+      "sha": "bd38b739b3a07df03f713eae57da11f87a3d0b60",
+      "path": "docs/testing/profile-desktop/20261023/evidence-manifest.json",
+      "bytes": 8732
+    },
+    {
+      "sha": "a0a1fe95f6221a8b3632f8e68a464021150153a3",
+      "path": "docs/testing/profile-desktop/20261023/frontend.log",
+      "bytes": 20773
+    },
+    {
+      "sha": "0e6e9a47f2bfa9ec99fc6be65b72711b30438ac4",
+      "path": "docs/testing/profile-desktop/20261023/initial-verification/desktop.log",
+      "bytes": 81669
+    },
+    {
+      "sha": "fb1dd882cf30ceb5e64a83340870728eed3e7fdd",
+      "path": "docs/testing/profile-desktop/20261023/initial-verification/frontend.log",
+      "bytes": 20771
+    },
+    {
+      "sha": "bf9da265f1eda91890892392fa3b9eacea659b80",
+      "path": "docs/testing/profile-desktop/20261023/initial-verification/verification.json",
+      "bytes": 149665
+    },
+    {
+      "sha": "cfadb38b15b6528dab797ecdb41c5068603af63c",
+      "path": "docs/testing/profile-desktop/20261023/modal-green-01.log",
+      "bytes": 3863
+    },
+    {
+      "sha": "66d4426f03c9e95b31d2dd535ee2c426cdc71599",
+      "path": "docs/testing/profile-desktop/20261023/modal-green-02.log",
+      "bytes": 3099
+    },
+    {
+      "sha": "969be78fac29719e19a74dfa1e223a9b82e9572c",
+      "path": "docs/testing/profile-desktop/20261023/modal-red.log",
+      "bytes": 4821
+    },
+    {
+      "sha": "4aa1e64a025b31418e7bd2ffe368949941a4971a",
+      "path": "docs/testing/profile-desktop/20261023/plan-review.md",
+      "bytes": 4383
+    },
+    {
+      "sha": "d92d5eff44d852df68b68d20ff0e2c0d67833287",
+      "path": "docs/testing/profile-desktop/20261023/preflight.json",
+      "bytes": 503
+    },
+    {
+      "sha": "cab3a71321bd10270638648a4a145feea75a6463",
+      "path": "docs/testing/profile-desktop/20261023/spec-review/command.json",
+      "bytes": 443
+    },
+    {
+      "sha": "ed38658c7f4924bca9e5061544d42be8adb8ddb2",
+      "path": "docs/testing/profile-desktop/20261023/spec-review/inputs-after.json",
+      "bytes": 2244
+    },
+    {
+      "sha": "fc3f7c7f4e5d271ebd764e6094d93d73dfd23bd3",
+      "path": "docs/testing/profile-desktop/20261023/spec-review/output.log",
+      "bytes": 875
+    },
+    {
+      "sha": "3cd77fbbef508dc3b94aed229143c04e1598c5f4",
+      "path": "docs/testing/profile-desktop/20261023/spec-review/report.md",
+      "bytes": 4335
+    },
+    {
+      "sha": "d8767bf2a7cff71b510e7d173297df4225e61b9a",
+      "path": "docs/testing/profile-desktop/20261023/spec-review/results.xml",
+      "bytes": 2223
+    },
+    {
+      "sha": "ebae1365717d10e1cb5032eaeff27f4cf8fb8838",
+      "path": "docs/testing/profile-desktop/20261023/spec-review/run-review.py",
+      "bytes": 2627
+    },
+    {
+      "sha": "cd269ce040482e7c276c738b0280e983f6719bf1",
+      "path": "docs/testing/profile-desktop/20261023/spec-review/spec-probes.cjs",
+      "bytes": 7057
+    },
+    {
+      "sha": "186bb9d6f7b0cb31ac667eda76dcc30f6429e451",
+      "path": "docs/testing/profile-desktop/20261023/spec-review/summary.json",
+      "bytes": 311
+    },
+    {
+      "sha": "c9aba5fbebc915c4d4fc1d0fb6ac2daa79755d0e",
+      "path": "docs/testing/profile-desktop/20261023/standards-review/artifact-sha256.json",
+      "bytes": 700
+    },
+    {
+      "sha": "295b99427943221d4fb1a90dc7cc23ebc7e4b6fb",
+      "path": "docs/testing/profile-desktop/20261023/standards-review/inputs-after.json",
+      "bytes": 5789
+    },
+    {
+      "sha": "bd6e397bf2c16b31c23bed972bd917a451f0ac93",
+      "path": "docs/testing/profile-desktop/20261023/standards-review/probe.log",
+      "bytes": 2229
+    },
+    {
+      "sha": "f18b88a67380edfc7ade49622c7a63853d1d8eef",
+      "path": "docs/testing/profile-desktop/20261023/standards-review/probes.cjs",
+      "bytes": 6986
+    },
+    {
+      "sha": "24d6f10bd26f2c053a27ed160aa1be7bdfd5a6bb",
+      "path": "docs/testing/profile-desktop/20261023/standards-review/report.json",
+      "bytes": 369
+    },
+    {
+      "sha": "7b898f5c752bd77ec64d98e8a9d52577420f1a3f",
+      "path": "docs/testing/profile-desktop/20261023/standards-review/report.md",
+      "bytes": 3268
+    },
+    {
+      "sha": "1f20acefed8d7089fcc297cc770fe00616136137",
+      "path": "docs/testing/profile-desktop/20261023/standards-review/run-result.json",
+      "bytes": 469
+    },
+    {
+      "sha": "c879d76c8fdde278851684bc3f91d8e0e30a5cf5",
+      "path": "docs/testing/profile-desktop/20261023/standards-review/run.py",
+      "bytes": 1646
+    },
+    {
+      "sha": "4910cc5124aeba5a37bbf6296e812b20e856c747",
+      "path": "docs/testing/profile-desktop/20261023/static-green.log",
+      "bytes": 102
+    },
+    {
+      "sha": "f12106d5e78efbe17ea85c5ea7b26f93be454d2b",
+      "path": "docs/testing/profile-desktop/20261023/static-green.xml",
+      "bytes": 3125
+    },
+    {
+      "sha": "7328edc459cf43ace87da604b376f077ea367338",
+      "path": "docs/testing/profile-desktop/20261023/static-red.log",
+      "bytes": 1314
+    },
+    {
+      "sha": "8ff3a350cc0711cf7bd5380bed83caedd1acb19e",
+      "path": "docs/testing/profile-desktop/20261023/verification.json",
+      "bytes": 149665
+    },
+    {
+      "sha": "fbb259378bbc301863a8f24545cbb31eae0bccf9",
+      "path": "docs/testing/profile-desktop/20261023/verify.py",
+      "bytes": 2136
+    },
+    {
+      "sha": "9d3c018f995a7a9be97d2975a49ff5ecd028c736",
+      "path": "docs/testing/profile-desktop/20261023/windows-01.log",
+      "bytes": 2120
+    },
+    {
+      "sha": "19a6020990a5f7d93e79a3a14314ca6e755474b9",
+      "path": "docs/testing/profile-desktop/20261023/windows-01/report.json",
+      "bytes": 76034
+    },
+    {
+      "sha": "bd470d86fe5cd51f4b0ea1c82bff104412b4e640",
+      "path": "docs/testing/profile-desktop/20261023/windows-02.log",
+      "bytes": 489
+    },
+    {
+      "sha": "7f7af742fa853a4e52de7952edfe2787505021d1",
+      "path": "docs/testing/profile-desktop/20261023/windows-02/launch/bootstrap.json",
+      "bytes": 1604
+    },
+    {
+      "sha": "a997a7baecc19d6ac1d15d3a59b96b28b39ecfe7",
+      "path": "docs/testing/profile-desktop/20261023/windows-02/report.json",
+      "bytes": 160197
+    },
+    {
+      "sha": "ab7f4117a9b2fe185bf55d652a2d35176eed2f5f",
+      "path": "src/cn_contract/web/app.py",
+      "bytes": 40097
+    },
+    {
+      "sha": "01efe8b79a77a6a1e244fd6dd64e61fb36740ca5",
+      "path": "tests/integration/test_assistant_frontend.py",
+      "bytes": 1832
+    }
+  ]
+}
