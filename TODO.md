@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+CH-07C2b1源码与合成证据 `35fc88a` 已同步，远端SHA及4,438文件树一致；[同步回执](docs/testing/GITHUB-PROFILE-MODEL-SCHEMA-20261023.md)。
+
 2026-10-23 CH-07C2b1：自动建档的存储前置切片完成。新命名schema及固定保存回执保留旧11版44摘要，三迁移通道与五族旧完整性校验接续；新格式/新回执仍fail-closed，未启用自动归档。20文件初轮630/632通过，2项旧测试预期修正后两个文件54通过；四开发门通过，542份输入稳定、产品源码未变，Spec6/Standards30独立通过。修复新摘要CHECK的NUL尾缀漏洞。安装版0.4.1和WIN-PATH-02开放项不变；未碰真实资料/模型/云。[证据](docs/testing/profile-model-schema/20261023/README.md)。
 
 最新接续（2026-10-23，CH-07C2a）：离线发送内容/保存计划绑定完成；380关联、四开发门、Spec12/Standards9通过。C2b仍须闭合原生用途许可、版本化账本、固定原子钩子及迁移恢复，自动保存尚未启用；以[本片证据](docs/testing/profile-basis/20261023/README.md)为准。`a84a156`已正常同步，远端SHA及4,370文件树一致；[回执](docs/testing/GITHUB-PROFILE-BASIS-20261023.md)。

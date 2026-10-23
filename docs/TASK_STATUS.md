@@ -1,5 +1,7 @@
 # 任务实际状态
 
+CH-07C2b1源码与合成证据 `35fc88a` 已同步，远端SHA及4,438文件树一致；[同步回执](testing/GITHUB-PROFILE-MODEL-SCHEMA-20261023.md)。
+
 2026-10-23 CH-07C2b1：自动建档的存储前置切片完成。新命名schema及固定保存回执保留旧11版44摘要，三迁移通道与五族旧完整性校验接续；新格式/新回执仍fail-closed，未启用自动归档。20文件初轮630/632通过，2项旧测试预期修正后两个文件54通过；四开发门通过，542份输入稳定、产品源码未变，Spec6/Standards30独立通过。修复新摘要CHECK的NUL尾缀漏洞。安装版0.4.1和WIN-PATH-02开放项不变；未碰真实资料/模型/云。[实测](testing/profile-model-schema/20261023/README.md)、[执行合同](plans/2026-10-23-profile-model-schema.md)。GitHub以随后同步回执为准。
 
 2026-10-23 CH-07C2a产品与合成证据提交a84a156227be7ad9cead1fd1ea237773defee3c4已正常同步GitHub；远端SHA及4,370文件树一致。35新增不同blob扫描0命中，538输入未变化、34暂存源码/测试/证据字节一致。发布回执仅追加文档，不改变380关联与独审结果；自动保存接线及WIN-PATH-02仍待办。[同步回执](testing/GITHUB-PROFILE-BASIS-20261023.md)。
