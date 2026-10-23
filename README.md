@@ -1,6 +1,6 @@
 # 群兴法律工作台
 
-CH-07C2b1源码与合成证据 `35fc88a` 已同步，远端SHA及4,438文件树一致；[同步回执](docs/testing/GITHUB-PROFILE-MODEL-SCHEMA-20261023.md)。
+CH-07C2b2a源码与合成证据 `105ae27` 已同步，远端SHA及4,514文件树一致；[同步回执](docs/testing/GITHUB-PROFILE-TRUSTED-PREPARATION-20261023.md)。
 
 面向宋萌律师及约 10 名受邀试用者的 Windows 法律工作台。复用现有合同审查、接待、法律资料库及持衡工程，逐步贯通“对话或上传材料 → 辅助处理 → 原文核对 → 档案草稿 → 工作成果”。暂不建设收费、订阅或交易系统。
 
@@ -28,7 +28,7 @@ CH-07C2b2a已完成可信数据库装配：读取实际消息、原请求摘要�
 - [对话式前端、模块解耦与轻量化 v2.1](docs/plans/chat-first-architecture-v2.1.md)
 - [下一步接线安排](docs/plans/2026-10-19-post-home-readiness.md)
 - [Windows 安装版与开发版说明](desktop/README.md)
-- [最近已核验的 GitHub 同步记录](docs/testing/GITHUB-PROFILE-BASIS-20261023.md)
+- [最近已核验的 GitHub 同步记录](docs/testing/GITHUB-PROFILE-TRUSTED-PREPARATION-20261023.md)
 
 当前协作集成分支为 [`codex/contract-review-v2`](https://github.com/Qiu-Shu/qx-contract-workbench/tree/codex/contract-review-v2)。开始修改前先获取远端更新并查看 TODO；独立任务建议使用短分支和 PR，避免多人同时改动集成分支。每个完成阶段同步代码、实际验证记录、TODO 和 README。
 
