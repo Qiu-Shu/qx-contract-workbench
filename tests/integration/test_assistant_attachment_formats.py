@@ -34,6 +34,7 @@ def sample_xlsx():
 
 SAMPLES = {
     ('合成材料.docx', DOCX): sample_docx(),
+    ('合成旧版文档.doc', 'application/msword'): b'\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1' + bytes(120),
     ('合成合同扫描.pdf', 'application/pdf'): b'%PDF-1.4\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF\n',
     ('合成照片.png', 'image/png'): b'\x89PNG\r\n\x1a\n' + bytes(64),
     ('合成照片.jpg', 'image/jpeg'): b'\xff\xd8\xff\xe0' + bytes(64) + b'\xff\xd9',
@@ -94,6 +95,9 @@ def test_content_sniffing_rejects_mismatch_and_fake_bytes(format_workspace):
     # Empty csv text is refused.
     with pytest.raises(ServiceError):
         a.ingest_attachment(actor, cid, input_for(value, '空表.csv', 'text/csv'), BytesIO(b'  \n'), database=database)
+    # A fake .doc without the OLE2 compound magic is refused.
+    with pytest.raises(ServiceError):
+        a.ingest_attachment(actor, cid, input_for(value, '伪装旧文档.doc', 'application/msword'), BytesIO(b'PK\x03\x04' + bytes(64)), database=database)
 
 
 def test_parse_stays_docx_only(format_workspace):

@@ -5,13 +5,14 @@ import {errorText} from './assistant-render.mjs';
 const DOCX_MIME='application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 const ACCEPTED={
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document':['.docx'],
+  'application/msword':['.doc'],
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':['.xlsx'],
   'application/pdf':['.pdf'],
   'image/png':['.png'],
   'image/jpeg':['.jpg','.jpeg'],
   'text/csv':['.csv'],
 };
-const KIND_LABEL={docx:'Word',xlsx:'表格',csv:'表格',pdf:'PDF',png:'图片',jpeg:'图片'};
+const KIND_LABEL={docx:'Word',doc:'Word',xlsx:'表格',csv:'表格',pdf:'PDF',png:'图片',jpeg:'图片'};
 function accepted(file) {
   const name=(file.name||'').toLowerCase();
   const mime=file.type||'';
@@ -25,6 +26,7 @@ function accepted(file) {
 function kindOf(attachment) {
   const mime=attachment.mime||'';
   if(mime===DOCX_MIME)return 'docx';
+  if(mime==='application/msword')return 'doc';
   if(mime==='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')return 'xlsx';
   if(mime==='application/pdf')return 'pdf';
   if(mime==='image/png')return 'png';

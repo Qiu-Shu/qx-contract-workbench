@@ -2677,6 +2677,7 @@ class AssistantMaterialPolicy(DomainModel):
 
 ASSISTANT_MATERIAL_MIME_EXT = {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ('.docx',),
+    'application/msword': ('.doc',),
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('.xlsx',),
     'application/pdf': ('.pdf',),
     'image/png': ('.png',),
@@ -2691,6 +2692,7 @@ class AssistantAttachmentInput(DomainModel):
     original_name: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=240)]
     mime: Literal[
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/msword',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'application/pdf',
         'image/png',

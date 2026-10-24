@@ -208,7 +208,7 @@ test('a failed batch keeps the remaining queue and reports the partial count',as
 test('dropping files on the page queues them and rejects unsupported types by name',async t=>{
   const f=fixture(t,{withMaterials:false});await f.controller.open('one');
   let prevented=0;
-  const event={dataTransfer:{types:['Files'],files:[fileStub('证据.pdf','application/pdf'),fileStub('程序.exe','application/x-msdownload')]},
+  const event={dataTransfer:{types:['Files'],files:[fileStub('证据.pdf','application/pdf'),fileStub('旧版合同.doc','application/msword'),fileStub('程序.exe','application/x-msdownload')]},
     preventDefault(){prevented++;}};
   f.root.fire('dragover',event);
   assert.equal(f.root.getElementById('drop-overlay').hidden,false);
@@ -216,7 +216,7 @@ test('dropping files on the page queues them and rejects unsupported types by na
   assert.equal(prevented,2);
   assert.equal(f.root.getElementById('drop-overlay').hidden,true);
   assert.equal(f.root.getElementById('material-picker').hidden,false,'drop opens the picker');
-  assert.deepEqual(chipNames(f).map(text=>text.split('（')[0]),['证据.pdf']);
+  assert.deepEqual(chipNames(f).map(text=>text.split('（')[0]),['证据.pdf','旧版合同.doc']);
   assert.equal(f.root.getElementById('material-notice').textContent.includes('程序.exe'),true);
 });
 

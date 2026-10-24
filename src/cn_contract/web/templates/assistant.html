@@ -91,7 +91,7 @@
         </form>
         <section id="material-picker" class="material-picker" aria-label="添加本机文件" hidden>
           <label for="material-file">选择文件（Word、PDF、表格、图片），可多选，也可直接拖入本页面</label>
-          <input id="material-file" type="file" multiple accept=".docx,.pdf,.png,.jpg,.jpeg,.xlsx,.csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/png,image/jpeg,text/csv">
+          <input id="material-file" type="file" multiple accept=".docx,.doc,.pdf,.png,.jpg,.jpeg,.xlsx,.csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/png,image/jpeg,text/csv">
           <div id="material-queue" class="material-queue" aria-live="polite"></div>
           <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取这些原件；内容待核实，不外发。</label>
           {% if not local_materials_enabled %}<p class="muted">当前环境仅接收已登记的独立合成材料。</p>{% endif %}

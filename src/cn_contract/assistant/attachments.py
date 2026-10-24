@@ -33,6 +33,10 @@ def _assistant_type(data, name, mime):
     if mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
         if data.startswith(b'PK\x03\x04'):
             return 'docx'
+    elif mime == 'application/msword':
+        # Legacy .doc is an OLE2 compound file; reading stays DOCX-only.
+        if data.startswith(b'\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1'):
+            return 'doc'
     elif mime == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
         if data.startswith(b'PK\x03\x04'):
             try:
