@@ -39,7 +39,9 @@
 - [x] 当前 account active / mapping guard / 旧CID投影接账号暂停；恢复、撤权、归档状态优先于 target_changed；零代际行为保持。
 - [x] 独立合成测试覆盖两代链、D2d前置grant、篡改重算摘要仍拒绝、跨owner/workspace/binding占用、checkpoint/时间/撤权、SQL不可变、迁移三路径、真实两次qxbak恢复、恢复只读及相应样本零run；不把直接SQL样本称运行切换。
 - [x] 根代理执行关联回归及四开发门，独立冻结复核代码与证据；814不同Python、192 Node通过。额外浏览器WinError5失败如实保留；全仓/安装版/真实账号未运行标 NOT_RUN。
-- [ ] 只提交本轮授权源码、文档和独立合成样本，fetch 后正常推送并比对远端 SHA 与递归文件树；HumanLayer 回读、Obsidian 成功回执、TencentDB Stop 按轮收尾。
+- [x] 只提交本轮授权源码、文档和独立合成样本，fetch 后正常推送并比对远端 SHA 与递归文件树；产品6e36cb5及5,073条目一致，[回执](../testing/weixin-generations/20261024/github-sync.md)。
+
+HumanLayer回读、Obsidian成功回执与TencentDB Stop按当前AGENTS逐轮收尾，实际成功/待同步状态见本聊天本轮最终答复；不能以GitHub推送代替记忆成功。
 
 ## 文件与审查焦点
 

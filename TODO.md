@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+D2f 产品 `6e36cb5` 已同步 GitHub，远端 SHA、tree 及5,073个受控条目一致；[同步回执](docs/testing/weixin-generations/20261024/github-sync.md)。
+
 最新接续（2026-10-24 UTC，D2f）：跨对话generation的14字段不可变存储/升级/历史校验/两代qxbak及账号级暂停已实现，32前驱指纹不变；814不同Python、192 Node与四开发检查通过，[实测](docs/testing/weixin-generations/20261024/README.md)。独立发现未来目标revision漏洞已RED→GREEN。下一片D2g：显式追加/切换服务、当前桌面权限/CAS/未知结果恢复，再接页面和按代际收件；当前无公开追加服务，不称可转案。额外浏览器回归在恢复目录rename复现WinError5，该组FAIL，WIN-PATH-02仍开放；原生崩溃、真实微信/模型、E限期许可和安装版状态不变。
 
 D2e 产品 `a42c415` 已同步 GitHub，远端 SHA、tree 及 5,061 个受控条目一致；[同步回执](docs/testing/weixin-desktop/20261024/github-sync.md)。
