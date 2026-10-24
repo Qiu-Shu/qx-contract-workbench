@@ -19,7 +19,7 @@ function fixture(options={}){
   const controller={state:{id:'one',status:'saved',materials:{items:[],attachments:[]}},save:async()=>true,revoke(error){return error.status===403;}};
   let sequence=0;
   const api={request:async(path,options={})=>{calls.push([path,options]);return path.endsWith('task-drafts')?{items:[],unassigned_events:[],binding:null}:path==='/api/matters'?[]:{id:'binding',cursor:0};},
-    getParse:async()=>({reading_status:'readable'}),getMaterials:async()=>controller.state.materials};
+    getParse:async()=>({reading_status:'readable',parser_version:'qx-docx-attachments-v1',baseline_view:'original'}),getMaterials:async()=>controller.state.materials};
   const tasks=bindTaskDrafts({root,controller,api,uuid:()=>`key-${++sequence}`,...options});tasks.state(controller.state);
   return {root,controller,api,tasks,calls};
 }
@@ -34,8 +34,65 @@ test('unreadable and pending media are both included, never silently dropped',as
   for(const label of f.root.getElementById('task-attachments').children)label.children[0].checked=true;
   await f.root.getElementById('task-collect').fire('click');
   const batch=f.calls.find(([path])=>path.endsWith('/batches'))[1].body;
-  assert.deepEqual(batch.events[0].media.map(m=>m.status),['pending','unsupported']);
+  assert.deepEqual(batch.events[0].media.map(m=>m.status),['pending','pending']);
   assert.equal(batch.events[0].start_new,true);f.tasks.dispose();
+});
+
+for(const [name,reading_status,parser_version,baseline_view,want] of [
+  ['native original','readable','qx-pdf-attachments-v1','original','ready'],
+  ['partial scan','partial','qx-pdf-attachments-v1','original','pending'],
+  ['failed encrypted','failed','qx-pdf-attachments-v1',null,'pending'],
+  ['foreign parser','readable','qx-docx-attachments-v1','original','pending'],
+  ['revision baseline','readable','qx-pdf-attachments-v1','accepted_view','pending'],
+])test('PDF collection requires an exact complete original parse: '+name,async()=>{
+  const f=fixture();await tick();
+  const file={id:'pdf',original_name:'合成合同.pdf',mime:'application/pdf',sha256:'b'.repeat(64)};
+  f.controller.state.materials={attachments:[file],items:[{attachment_id:'pdf',parse_revision:3}]};
+  f.api.getParse=async()=>({reading_status,parser_version,baseline_view});f.tasks.state(f.controller.state);
+  f.root.getElementById('task-attachments').children[0].children[0].checked=true;
+  await f.root.getElementById('task-collect').fire('click');
+  const batch=f.calls.find(([path])=>path.endsWith('/batches'))[1].body;
+  assert.equal(batch.events[0].media[0].status,want);
+  assert.equal(batch.events[0].media[0].parse_revision,want==='ready'?3:undefined);
+  assert.equal(f.calls.some(([path])=>path.includes('/review')||path.includes('/runs')),false);
+  f.tasks.dispose();
+});
+
+test('ready PDF appears as a main contract and its later complete parse can resolve the inbound record',async()=>{
+  const f=fixture();await tick();
+  const file={id:'pdf',original_name:'合成合同.pdf',mime:'application/pdf',sha256:'b'.repeat(64)};
+  f.controller.state.materials={attachments:[file],items:[{attachment_id:'pdf',parse_revision:2}]};
+  f.api.getParse=async()=>({reading_status:'readable',parser_version:'qx-pdf-attachments-v1',baseline_view:'original'});
+  const draft={id:'draft',state:'collecting',revision:2,instruction:'合成审查',blockers:[],events:[{
+    id:'event',media:[{media_id:'incoming',name:file.original_name,mime:file.mime,status:'ready',attachment_id:'pdf',parse_revision:1}]}]};
+  f.api.request=async(path,options={})=>{f.calls.push([path,options]);return path.endsWith('task-drafts')?{items:[draft],unassigned_events:[]}:draft;};
+  await f.tasks.refresh();f.root.getElementById('task-select').value='draft';f.root.getElementById('task-select').fire('change');
+  const main=walk(f.root.getElementById('task-current')).find(el=>el.tagName==='select');
+  assert.ok(main,'PDF must be available for main contract selection');assert.equal(main.value,'pdf');
+  await taskButton(f,'更新读取状态').fire('click');
+  const patch=f.calls.find(([,options])=>options.method==='PATCH');assert.ok(patch);
+  assert.deepEqual(patch[1].body.media_resolutions[0].replacement,{
+    media_id:'incoming',name:'合成合同.pdf',mime:'application/pdf',status:'ready',attachment_id:'pdf',sha256:'b'.repeat(64),parse_revision:2});
+  f.tasks.dispose();
+});
+
+test('partial PDF stays blocked and offers an explicit exclusion without resolving it as ready',async()=>{
+  const f=fixture();await tick();
+  const file={id:'pdf',original_name:'扫描合同.pdf',mime:'application/pdf',sha256:'b'.repeat(64)};
+  f.controller.state.materials={attachments:[file],items:[{attachment_id:'pdf',parse_revision:1}]};
+  f.api.getParse=async()=>({reading_status:'partial',parser_version:'qx-pdf-attachments-v1',baseline_view:'original'});
+  const draft={id:'draft',state:'collecting',revision:2,instruction:'合成审查',blockers:['media_pending'],events:[{
+    id:'event',media:[{media_id:'incoming',name:file.original_name,mime:file.mime,status:'pending',attachment_id:'pdf'}]}]};
+  f.api.request=async(path,options={})=>{f.calls.push([path,options]);return path.endsWith('task-drafts')?{items:[draft],unassigned_events:[]}:draft;};
+  await f.tasks.refresh();f.root.getElementById('task-select').value='draft';f.root.getElementById('task-select').fire('change');
+  assert.equal(taskButton(f,'冻结材料').disabled,true);
+  await taskButton(f,'更新读取状态').fire('click');
+  assert.match(f.root.getElementById('task-notice').textContent,/人工核对/);
+  assert.equal(f.calls.some(([,o])=>o.method==='PATCH'),false);
+  const reason=walk(f.root.getElementById('task-current')).find(el=>el.tagName==='input');reason.value='另行人工核对扫描件';
+  await taskButton(f,'记录原因并排除此项').fire('click');
+  const patch=f.calls.find(([,o])=>o.method==='PATCH');assert.equal(patch[1].body.media_resolutions[0].action,'exclude');
+  f.tasks.dispose();
 });
 test('an uncertain collection retries the identical batch and preserves text',async()=>{
   const f=fixture();await tick();const original=f.api.request;let fail=true;

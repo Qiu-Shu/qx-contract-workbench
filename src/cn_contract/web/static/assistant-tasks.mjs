@@ -1,9 +1,10 @@
 import {errorText} from './assistant-render.mjs';
 
 const DOCX='application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+const PDF='application/pdf';
 const labels={collecting:'收集中',paused:'已暂停',cancelled:'已取消',frozen:'材料已冻结',prepared:'待选择案件',
   awaiting_facts:'等待事实确认',completed:'模拟审查已完成',blocked:'已阻断',failed:'处理失败',running:'正在模拟审查',queued:'等待执行'};
-const blockers={instruction_required:'补充审查指令',main_contract_required:'补充可读取的 DOCX 主合同',
+const blockers={instruction_required:'补充审查指令',main_contract_required:'补充完整可读取的 DOCX 或 PDF 主合同',
   main_contract_selection_required:'选择一份主合同',main_contract_unavailable:'重新核对主合同',
   media_pending:'有材料等待读取',media_unsupported:'有材料尚不支持读取',media_not_readable:'有材料未完整读取',
   media_revision_conflict:'同一材料包含不同读取版本'};
@@ -99,10 +100,14 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   }
   async function media(file,materials,mediaId=file.id){
     const revision=materials.items?.find(item=>item.attachment_id===file.id)?.parse_revision;
-    const value={media_id:mediaId,name:file.original_name,mime:file.mime,status:file.mime===DOCX?'pending':'unsupported',attachment_id:file.id};
-    if(file.mime===DOCX&&revision){
+    const supported=file.mime===DOCX||file.mime===PDF;
+    const value={media_id:mediaId,name:file.original_name,mime:file.mime,status:supported?'pending':'unsupported',attachment_id:file.id};
+    if(supported&&revision){
       const parsed=await api.getParse(cid,file.id,revision);
-      if(parsed.reading_status==='readable')Object.assign(value,{status:'ready',sha256:file.sha256,parse_revision:revision});
+      const formatMatches=file.mime===PDF?
+        parsed.parser_version==='qx-pdf-attachments-v1'&&parsed.baseline_view==='original':
+        parsed.parser_version==='qx-docx-attachments-v1'&&['original','accepted_view','rejected_view'].includes(parsed.baseline_view);
+      if(parsed.reading_status==='readable'&&formatMatches)Object.assign(value,{status:'ready',sha256:file.sha256,parse_revision:revision});
     }
     return value;
   }
@@ -153,7 +158,9 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
         const materials=await api.getMaterials(cid),file=materials.attachments.find(item=>item.id===original.attachment_id);
         if(!file){tell('尚未找到对应的已上传原件。');return;}
         const replacement=await media(file,materials,original.media_id);
-        if(replacement.status!=='ready'){tell('请先在下方材料区完成 DOCX 读取，再更新此项。');return;}
+        if(replacement.status!=='ready'){tell(file.mime===PDF?
+          '请先在下方材料区完整读取 PDF；扫描、注释等未读项需人工核对，可排除此项或换用完整可读材料。':
+          '请先在下方材料区完成 DOCX 读取，再更新此项。');return;}
         await update(draft,{media_resolutions:[{event_id:event.id,media_id:original.media_id,action:'resolve',replacement}]});
       }));
       if(!excluded){
@@ -221,7 +228,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
         for(const event of draft.events)for(const original of event.media){
           const resolved=[...(draft.media_resolutions||[])].reverse().find(item=>item.event_id===event.id&&item.media_id===original.media_id);
           const value=resolved?.replacement||original;
-          if(resolved?.action!=='exclude'&&value.status==='ready'&&value.mime===DOCX)available.set(value.attachment_id,value);
+          if(resolved?.action!=='exclude'&&value.status==='ready'&&[DOCX,PDF].includes(value.mime))available.set(value.attachment_id,value);
         }
         if(available.size){
           const label=node('label','主合同'),main=node('select');main.disabled=!writable();label.append(main);host.append(label);

@@ -128,7 +128,7 @@ def _manifest(actor, row, db, *, check_files=False):
                     blockers.append('media_' + selected.status)
                 elif selected.reading_status != 'readable':
                     blockers.append('media_not_readable')
-                elif selected.mime != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                elif selected.mime not in {'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf'}:
                     blockers.append('media_unsupported')
                 else:
                     previous = ready.get(selected.attachment_id)

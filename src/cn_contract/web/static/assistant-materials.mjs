@@ -103,17 +103,21 @@ export function bindMaterials({controller,readonly=false,root=document,onPreview
       const parsed=revision?await api.getParse(cid,attachment.id,revision):null;
       if(!current())return;
       const kind=kindOf(attachment);
+      const readableKind=kind==='docx'||kind==='pdf';
       host.replaceChildren();
       host.append(node('p',`${KIND_LABEL[kind]} · ${(attachment.byte_size/1024).toFixed(1)} KiB · 原件已保存 · 待核实`));
       const download=node('a','下载受保护原件');download.href=api.originalUrl(cid,attachment.id);download.download='';host.append(download);
-      if(kind!=='docx')host.append(node('p','该格式暂不支持读取原文，原件仅在本机保存，可下载核对。'));
-      if(!parsed && kind==='docx')host.append(node('p','此版本尚未读取，读取只在本机进行。'));
+      if(!readableKind)host.append(node('p','该格式暂不支持读取原文，原件仅在本机保存，可下载核对。'));
+      if(!parsed && readableKind)host.append(node('p','此版本尚未读取，读取只在本机进行。'));
       else if(parsed){
         const labels={readable:'已读取，内容仍待核实',partial:'部分可读，有未读项待核对',needs_baseline:'含修订，需要选择读取方式',failed:'读取失败，原件保留，可重新读取'};
-        host.append(node('p',`读取版本 ${revision} · ${labels[parsed.reading_status]}`));
+        const status=kind==='pdf'&&parsed.reading_status==='needs_baseline'?'读取状态异常，请重新读取':labels[parsed.reading_status];
+        host.append(node('p',`读取版本 ${revision} · ${status}`));
+        if(kind==='pdf'&&parsed.reading_status!=='readable')host.append(node('p',
+          'PDF 未完整读取，需人工核对。扫描、注释等未读项不可冻结为审查材料；可在任务中排除或换用完整可读材料，原件仍保留。'));
       }
-      if(!readonly && selected && kind==='docx'){
-        if(parsed?.reading_status==='needs_baseline'){
+      if(!readonly && selected && readableKind){
+        if(kind==='docx'&&parsed?.reading_status==='needs_baseline'){
           const label=node('label','选择保留原稿还是采用修订');
           const select=root.createElement('select');select.setAttribute('aria-label','修订读取方式');
           for(const [value,title] of [['','请选择'],['original','原始内容'],['accepted_view','接受修订后的内容'],['rejected_view','拒绝修订后的内容']]){
@@ -122,7 +126,7 @@ export function bindMaterials({controller,readonly=false,root=document,onPreview
           label.append(select);host.append(label);
           const button=action('按所选方式读取',()=>parse(attachment,select.value));button.disabled=true;
           select.addEventListener('change',()=>{button.disabled=!select.value;});host.append(button);
-        } else host.append(action(parsed?'重新读取，保留历史版本':'读取 DOCX',()=>parse(attachment)));
+        } else host.append(action(parsed?'重新读取，保留历史版本':kind==='docx'?'读取 DOCX':'读取 PDF',()=>parse(attachment)));
       }
       if(parsed?.result){
         const issues=[...parsed.result.quality_issues,...parsed.result.unsupported_parts];
@@ -134,7 +138,7 @@ export function bindMaterials({controller,readonly=false,root=document,onPreview
         function append(){
           const batch=parsed.result.anchors.slice(rendered,rendered+100);
           for(const anchor of batch){const paragraph=node('section','');
-            const location=node('p',`${anchor.part_name} · ${anchor.element_id}`);location.className='source-location';
+            const location=node('p',`${anchor.part_name} · ${anchor.page?`第 ${anchor.page} 页 · `:''}${anchor.element_id}`);location.className='source-location';
             paragraph.append(location,node('p',anchor.quote));section.insertBefore(paragraph,more);}
           rendered+=batch.length;more.hidden=rendered>=parsed.result.anchors.length;
         }
@@ -213,7 +217,7 @@ export function bindMaterials({controller,readonly=false,root=document,onPreview
         const info=node('div','');info.className='material-info';info.append(node('strong',attachment.original_name),
           node('p',`${KIND_LABEL[kindOf(attachment)]} · `+(selected?(selected.parse_revision?`读取版本 ${selected.parse_revision} · 待核实`:'原件已保存 · 尚未读取'):'已移出本次材料 · 原件仍保留')));
         const buttons=node('div','');buttons.className='material-actions';
-        buttons.append(action(kindOf(attachment)==='docx'?'核对原文':'查看信息',()=>preview(attachment)));
+        buttons.append(action(['docx','pdf'].includes(kindOf(attachment))?'核对原文':'查看信息',()=>preview(attachment)));
         if(!readonly){
           const button=action(selected?'移出本次':'加入本次',()=>write(()=>{
             const current=controller.state.materials.items;

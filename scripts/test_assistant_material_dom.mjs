@@ -58,7 +58,7 @@ function fixture(t,{withMaterials=true}={}) {
     async getMaterials(id){return copy({scope:views[id].scope,...records[id]});},
     async saveDraft(id,body){views[id]={...views[id],draft_input:body.content,composer_revision:views[id].composer_revision+1};return copy(views[id]);},
     async parseAttachment(id,attachment,body){
-      calls.push(['parse',id,attachment,body.request_id]);
+      calls.push(['parse',id,attachment,body.request_id,body.baseline_view]);
       records[id].items=records[id].items.map(item=>item.attachment_id===attachment?{...item,parse_revision:item.parse_revision+1}:item);
       views[id].scope.materials_revision++;return {materials_revision:views[id].scope.materials_revision};
     },
@@ -80,7 +80,7 @@ function fixture(t,{withMaterials=true}={}) {
 }
 async function preview(f,index=0) {
   const row=f.root.getElementById('material-list').children[index];
-  assert.ok(row);walk(row).find(element=>element.textContent==='核对原文').fire('click');await tick();
+  assert.ok(row);walk(row).find(element=>element.tagName==='button').fire('click');await tick();
 }
 async function beginParse(f) {
   const gate=deferred(),normal=f.api.parseAttachment;
@@ -220,9 +220,9 @@ test('dropping files on the page queues them and rejects unsupported types by na
   assert.equal(f.root.getElementById('material-notice').textContent.includes('程序.exe'),true);
 });
 
-test('non-DOCX materials preview without a parse control and the queue clears on conversation switch',async t=>{
+test('non-readable formats preview without a parse control',async t=>{
   const f=fixture(t,{withMaterials:false});await f.controller.open('one');
-  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('扫描件.pdf','application/pdf')]}});
+  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('清单.csv','text/csv')]}});
   f.root.getElementById('material-consent').checked=true;
   await f.root.getElementById('material-consent').fire('change');
   await f.root.getElementById('upload-material').fire('click');
@@ -231,8 +231,42 @@ test('non-DOCX materials preview without a parse control and the queue clears on
   assert.ok(row);walk(row).find(element=>element.textContent==='查看信息').fire('click');await tick();
   const host=f.root.getElementById('material-preview-content');
   const labels=walk(host).map(element=>element.textContent);
-  assert.equal(labels.some(text=>['读取 DOCX','重新读取，保留历史版本','按所选方式读取'].includes(text)),false,'no parse action for PDF');
+  assert.equal(labels.some(text=>['读取 DOCX','读取 PDF','重新读取，保留历史版本','按所选方式读取'].includes(text)),false,'no parse action for CSV');
   assert.equal(labels.some(text=>String(text).includes('暂不支持读取原文')),true);
+});
+
+test('PDF preview offers local reading, protected originals and page anchored excerpts without a revision chooser',async t=>{
+  const f=fixture(t,{withMaterials:false});
+  f.records.one={attachments:[{id:'P',conversation_id:'one',original_name:'合成合同.pdf',mime:'application/pdf',byte_size:123}],
+    items:[{attachment_id:'P',parse_revision:null}]};
+  await f.controller.open('one');await preview(f);
+  button(f.root,'material-preview-content','读取 PDF').fire('click');await tick();await tick();
+  assert.equal(f.calls.find(call=>call[0]==='parse')[4],null,'PDF uses the original/default baseline, never a DOCX revision choice');
+  const links=walk(f.root.getElementById('material-preview-content')).filter(el=>el.tagName==='a');
+  assert.equal(links[0].href,'/api/assistant/conversations/one/attachments/P/original');
+  f.records.one.items[0].parse_revision=1;
+  globalThis.fetch=async()=>({ok:true,json:async()=>({reading_status:'partial',parser_version:'qx-pdf-attachments-v1',baseline_view:'original',result:{
+    quality_issues:['OCR_NOT_DEPLOYED:page:2'],unsupported_parts:['page:2'],anchors:[
+      {part_name:'page:1',element_id:'span:0',page:1,quote:'独立虚构价款：13750元',bbox:[1,2,3,4]}]}})});
+  await f.controller.refresh();await preview(f);
+  const content=walk(f.root.getElementById('material-preview-content'));
+  assert.ok(content.some(el=>el.textContent==='独立虚构价款：13750元'));
+  assert.ok(content.some(el=>String(el.textContent).includes('第 1 页')));
+  assert.ok(content.some(el=>String(el.textContent).includes('人工核对')&&String(el.textContent).includes('不可冻结')));
+  assert.equal(content.some(el=>el.tagName==='select'),false);
+  assert.equal(content.some(el=>String(el.textContent).includes('暂不支持读取原文')),false);
+  button(f.root,'material-preview-content','重新读取，保留历史版本');
+});
+
+test('PDF never shows DOCX revision choices even when a malformed read status asks for a baseline',async t=>{
+  const f=fixture(t,{withMaterials:false});
+  f.records.one={attachments:[{id:'P',conversation_id:'one',original_name:'合成合同.pdf',mime:'application/pdf',byte_size:123}],
+    items:[{attachment_id:'P',parse_revision:1}]};
+  globalThis.fetch=async()=>({ok:true,json:async()=>({reading_status:'needs_baseline',result:null})});
+  await f.controller.open('one');await preview(f);
+  const content=walk(f.root.getElementById('material-preview-content'));
+  assert.equal(content.some(el=>el.tagName==='select'),false);
+  button(f.root,'material-preview-content','重新读取，保留历史版本');
 });
 
 for(const choice of ['', 'synthetic'])test('desktop material purpose remains explicit: '+(choice||'local default'),async t=>{

@@ -29,6 +29,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--assisted', action='store_true', help='use the desktop assisted-draft policy')
+    parser.add_argument('--format', choices=('docx', 'pdf'), default='docx',
+        help='synthetic source format: registered DOCX fixture (default) or the fixed task-pdf-v1 native PDF')
     parser.add_argument('--order', choices=('instruction-first', 'material-first'), default='instruction-first',
         help='collection order: save the instruction before the material (default) or the material before the instruction')
     args = parser.parse_args()
@@ -48,10 +50,13 @@ def main():
         matter = create_matter(d.MatterCreateInput(title='浏览器独立虚构案件', contract_type='sales',
             review_mode='pre_sign', position='buyer', objectives=('核对独立合成合同',)), actor, db)
     cid = conversation.scope.conversation_id
-    if args.assisted:
+    if args.format == 'pdf':
+        source_path = Path(__file__).resolve().parents[1]/'tests/fixtures/task-pdf-v1/native-sales.pdf'
+    elif args.assisted:
         source_path = Path(__file__).resolve().parents[1]/'tests/fixtures/assisted-v1/sales-01.docx'
     else:
         _, _, source_path, _ = select_fixture('sales')
+    format_label = args.format.upper()
     from cn_contract.acceptance.assisted_registry import load_seed_policy
     app = create_app(settings, database=database, assistant_home_enabled=True,
         purpose='assisted_draft' if args.assisted else 'mock_demo',
@@ -71,7 +76,7 @@ def main():
     os.environ.setdefault('PLAYWRIGHT_BROWSERS_PATH', str(Path(__file__).resolve().parents[1]/'.local/scrapling/browsers'))
     from playwright.sync_api import sync_playwright, expect
     report = {'scope':'synthetic Chromium + source FastAPI; not installed Electron acceptance',
-              'purpose':app.state.purpose, 'order':args.order,
+              'purpose':app.state.purpose, 'order':args.order, 'format':args.format,
               'steps':[], 'external_browser_requests':[], 'page_errors':[]}
     base = f'http://127.0.0.1:{port}'
     try:
@@ -102,7 +107,7 @@ def main():
                 page.locator('#upload-material').click()
                 expect(page.locator('#material-list')).to_contain_text(source_path.name)
                 page.get_by_role('button', name='核对原文', exact=True).click()
-                page.get_by_role('button', name='读取 DOCX', exact=True).click()
+                page.get_by_role('button', name='读取 ' + format_label, exact=True).click()
                 expect(page.locator('#material-preview')).to_contain_text('已读取，内容仍待核实')
                 page.locator('#close-material-preview').click()
             if args.order == 'instruction-first':
@@ -113,12 +118,12 @@ def main():
                 assert task_id
                 report['steps'].append('instruction persisted before material collection')
                 upload_and_parse()
-                report['steps'].append('registered synthetic DOCX uploaded and parsed through browser controls')
+                report['steps'].append(f'registered synthetic {format_label} uploaded and parsed through browser controls')
                 page.locator('#task-attachments input[type=checkbox]').check()
                 page.locator('#task-collect').click()
             else:
                 upload_and_parse()
-                report['steps'].append('registered synthetic DOCX uploaded and parsed through browser controls')
+                report['steps'].append(f'registered synthetic {format_label} uploaded and parsed through browser controls')
                 page.locator('#task-attachments input[type=checkbox]').check()
                 page.locator('#task-collect').click()
                 expect(page.locator('#task-current')).to_contain_text('补充审查指令')
@@ -140,7 +145,7 @@ def main():
             page.get_by_role('button', name='准备材料并确认事实', exact=True).click()
             page.wait_for_url('**/facts')
             expect(page.locator('#facts [data-fact]').first).to_be_visible()
-            report['steps'].append('frozen DOCX copied to case and unconfirmed facts rendered')
+            report['steps'].append(f'frozen {format_label} copied to case and unconfirmed facts rendered')
             for decision in page.locator('#facts select[name=decision]').all():
                 decision.select_option('confirmed')
             with page.expect_response(lambda r:'/facts/confirm' in r.url and r.request.method=='POST') as confirmation:

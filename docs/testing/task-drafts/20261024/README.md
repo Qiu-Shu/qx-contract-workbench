@@ -1,5 +1,7 @@
 # 持久合同任务 A＋B：实现与验收
 
+本页固定记录 A＋B 实施时的范围；后续 C 合成 PDF 桥接的实际完成情况见 [C 验收](../../task-pdf/20261024/README.md)。下文 C 的 NOT_RUN 属于 A＋B 检查点。
+
 日期：2026-10-24。工作区：`D:\Documents\ChatGPT\律所项目`。沿 `codex/contract-review-v2`，基线 `f9e6bf45e78a58ff094fa21b8dcc47fd465fb227`；开始时工作区干净。当前记录仅对应源码和独立虚构材料，安装版仍为 0.4.1。
 
 ## 本片行为

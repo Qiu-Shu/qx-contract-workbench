@@ -100,11 +100,11 @@ def test_content_sniffing_rejects_mismatch_and_fake_bytes(format_workspace):
         a.ingest_attachment(actor, cid, input_for(value, '伪装旧文档.doc', 'application/msword'), BytesIO(b'PK\x03\x04' + bytes(64)), database=database)
 
 
-def test_parse_stays_docx_only(format_workspace):
+@pytest.mark.parametrize('name,mime', [key for key in SAMPLES if key[1] not in (DOCX, 'application/pdf')])
+def test_reading_stays_docx_and_pdf_only(format_workspace, name, mime):
     from cn_contract.assistant import attachments as a
     database, actors, value = format_workspace
     actor, cid = actors['lawyer'], value.scope.conversation_id
-    name, mime = ('合成合同扫描.pdf', 'application/pdf')
     receipt = a.ingest_attachment(actor, cid, input_for(value, name, mime),
                                   BytesIO(SAMPLES[(name, mime)]), database=database)
     current = a.read_materials(actor, cid, database=database)

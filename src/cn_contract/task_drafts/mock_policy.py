@@ -41,7 +41,7 @@ def sources(execution, actor, db):
             policy = d.AssistantMaterialPolicy.model_validate_json(row['policy_json'])
             if policy.material_mode != 'synthetic' or row['sha256'] not in registered:
                 raise ServiceError('DATA_POLICY_UNAPPROVED', 409)
-            if row['mime'] != DOCX_MIME:
+            if row['mime'] not in {DOCX_MIME, 'application/pdf'}:
                 raise ServiceError('FILE_UNSUPPORTED', 400)
             parsed = attachment_records.parse_view(attachment_records.parse_row(
                 execution.manifest.conversation_id, media.attachment_id, media.parse_revision, db))

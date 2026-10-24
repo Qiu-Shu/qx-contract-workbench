@@ -214,8 +214,11 @@ def parse_attachment(actor,cid,identifier,request,*,database):
     with database.session() as db:
         row = _write(actor,cid,db)
         source = dict(records.owned_attachment(actor,cid,identifier,db))
-        if source['mime'] != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        if source['mime'] not in {'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf'}:
             raise ServiceError('FILE_UNSUPPORTED',400)
+        pdf = source['mime'] == 'application/pdf'
+        if pdf and request.baseline_view not in {None, d.BaselineView.ORIGINAL}:
+            raise ServiceError('BASELINE_REQUIRED',400)
         previous = records.operation(cid,request.request_id,db)
         if previous:
             _same(previous,'parse',digest)
@@ -229,12 +232,18 @@ def parse_attachment(actor,cid,identifier,request,*,database):
     result, failure, result_json = None, None, None
     baseline = request.baseline_view
     try:
-        _,parts = read_package(raw,database.settings)
-        if has_revisions(parts) and baseline is None:
-            status,failure = 'needs_baseline','BASELINE_REQUIRED'
+        if pdf:
+            from ..documents.pdf_adapter import parse_pdf
+            baseline = d.BaselineView.ORIGINAL
+            result = parse_pdf(raw,identifier,database.settings)
         else:
-            baseline = baseline or d.BaselineView.ORIGINAL
-            result = parse_docx(raw,d.DocumentParseInput(id=identifier,baseline_view=baseline),database.settings)
+            _,parts = read_package(raw,database.settings)
+            if has_revisions(parts) and baseline is None:
+                status,failure = 'needs_baseline','BASELINE_REQUIRED'
+            else:
+                baseline = baseline or d.BaselineView.ORIGINAL
+                result = parse_docx(raw,d.DocumentParseInput(id=identifier,baseline_view=baseline),database.settings)
+        if result is not None:
             status = 'partial' if result.unsupported_parts or result.quality_issues or not result.anchors else 'readable'
             result_json = canonical_json(result.model_dump(mode='json'))
             if len(result_json.encode('utf-8')) > MAX_PARSE_JSON_BYTES:
@@ -265,7 +274,7 @@ def parse_attachment(actor,cid,identifier,request,*,database):
              reading_status,result_json,result_sha256,failure_code,actor_id,created_at)
             VALUES (:cid,:id,:rev,:rid,:digest,:parser,:baseline,:status,:result,:sha,:failure,:actor,:at)'''),
             {'cid':str(cid),'id':str(identifier),'rev':revision,'rid':str(request.request_id),'digest':digest,
-             'parser':PARSER_VERSION,'baseline':baseline.value if baseline else None,'status':status,
+             'parser':'qx-pdf-attachments-v1' if pdf else PARSER_VERSION,'baseline':baseline.value if baseline else None,'status':status,
              'result':result_json,
              'sha':_digest(result.model_dump(mode='json')) if result else None,'failure':failure,'actor':str(actor.user_id),'at':_at()})
         values = tuple(d.AssistantMaterialRef(attachment_id=identifier,parse_revision=revision)

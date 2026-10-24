@@ -1,0 +1,13 @@
+{
+  "id": "task-pdf-v1",
+  "synthetic": true,
+  "source": "independent fictional native-text fixture; no user documents",
+  "generator": "generate.py using Codex bundled ReportLab 4.4.9, invariant=1, STSong-Light CID font",
+  "file": "native-sales.pdf",
+  "sha256": "8e5640e6e341f785f4e24166f56658527246004c67450ce672b80b08a7e141cd",
+  "bytes": 4157,
+  "pages": 2,
+  "expected_parts": ["page:1:read", "page:2:read"],
+  "expected_quotes": ["价款：13750元", "预付款：20000元"],
+  "limitations": ["mock input only", "not a legal quality benchmark", "CID font rendering may use viewer font substitution"]
+}

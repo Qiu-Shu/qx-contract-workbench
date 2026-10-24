@@ -53,7 +53,8 @@ async def multipart_input(request, limit):
 
 
 def register_routes(app, database):
-    database._assistant_synthetic_hashes = app.state.synthetic_upload_hashes
+    from ..task_drafts.synthetic import PDF_HASHES
+    database._assistant_synthetic_hashes = app.state.synthetic_upload_hashes | PDF_HASHES
     base = '/api/assistant/conversations/{cid}'
 
     def authorize(request, cid, *, write=False, attachment=None):

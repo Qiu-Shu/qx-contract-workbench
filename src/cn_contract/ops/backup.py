@@ -199,8 +199,9 @@ def _registered_hashes():
     from ..review.synthetic import EXPECTED_HASHES
     from ..acceptance.registry import load_dataset
     from ..acceptance.assisted_registry import load_seed_policy
+    from ..task_drafts.synthetic import PDF_HASHES
     return (set(EXPECTED_HASHES.values()) | {s.sha256 for s in load_dataset()}
-            | set(load_seed_policy().document_hashes))
+            | set(load_seed_policy().document_hashes) | PDF_HASHES)
 
 
 def _collect_files(db):
