@@ -1,5 +1,6 @@
 """Credential-free synthetic accounts and immutable exact peer mappings."""
 from contextlib import contextmanager
+from datetime import datetime, timedelta
 from uuid import uuid4
 
 from sqlalchemy import text
@@ -114,6 +115,34 @@ def _require_mapping(reason):
         raise ServiceError('CROSS_MATTER_DENIED', 403)
 
 
+def _activity_time(account_id, db, *, now, after=False, floor=()):
+    """Keep UTC causal order when the wall clock repeats or moves backwards."""
+    queries = [
+        'SELECT created_at stamp FROM weixin_accounts WHERE id=:id',
+        'SELECT revoked_at stamp FROM weixin_accounts WHERE id=:id',
+        'SELECT created_at stamp FROM weixin_peer_bindings WHERE account_id=:id',
+        'SELECT revoked_at stamp FROM weixin_peer_bindings WHERE account_id=:id',
+        'SELECT created_at stamp FROM weixin_poll_receipts WHERE account_id=:id',
+    ]
+    if db.scalar(text("SELECT 1 FROM sqlite_master WHERE type='table' AND name='weixin_dispatch_receipts'")):
+        queries.append('SELECT created_at stamp FROM weixin_dispatch_receipts WHERE account_id=:id')
+    # Normalizing Z to +00:00 also orders whole seconds before fractional seconds.
+    latest = db.scalar(text("SELECT MAX(replace(stamp,'Z','+00:00')) FROM ("+
+        ' UNION ALL '.join(queries)+')'), {'id':str(account_id)})
+    try:
+        current = datetime.fromisoformat(now.replace('Z','+00:00'))
+        previous = [datetime.fromisoformat(value.replace('Z','+00:00'))
+                    for value in (latest,*floor) if value is not None]
+        if any(value.utcoffset() != timedelta(0) for value in (current,*previous)):
+            raise ValueError('UTC required')
+        if previous:
+            bound = max(previous) + (timedelta(microseconds=1) if after else timedelta(0))
+            current = max(current,bound)
+        return current.isoformat().replace('+00:00','Z')
+    except (ValueError,TypeError,OverflowError):
+        raise ServiceError('VERSION_CONFLICT',409) from None
+
+
 def create_synthetic_account(actor, request, *, database):
     request = d.WeixinAccountCreateInput.model_validate(request.model_dump(mode='python'))
     with _transaction(database) as db:
@@ -149,7 +178,9 @@ def bind_synthetic_peer(actor, account_id, request, *, database):
         value = d.WeixinPeerBindingSnapshot(id=uuid4(), account_id=account.id,
             sender_peer_id=request.sender_peer_id, task_binding_id=request.task_binding_id,
             scope=request.expected_scope, scope_sha256=_digest(request.expected_scope.model_dump(mode='json')),
-            created_at=_at())
+            created_at=_activity_time(account.id,db,now=_at(),floor=(db.scalar(text(
+                'SELECT created_at FROM task_channel_bindings WHERE id=:id'),
+                {'id':str(request.task_binding_id)}),)))
         _require_mapping(_mapping_reason(current, account, value, db))
         previous = db.execute(text('''SELECT * FROM weixin_peer_bindings
             WHERE (account_id=:account AND sender_peer_id=:peer) OR task_binding_id=:binding'''),
@@ -194,7 +225,8 @@ def _revoke(actor, identifier, request, database, *, peer):
             if value.revoke_reason != request.reason:
                 raise ServiceError('VERSION_CONFLICT', 409)
             return value
-        changes = {'revoked_at':_at(), 'revoked_by':str(current.user_id), 'revoke_reason':request.reason}
+        changes = {'revoked_at':_activity_time(value.account_id if peer else value.id,db,now=_at(),after=True),
+                   'revoked_by':str(current.user_id), 'revoke_reason':request.reason}
         table = 'weixin_peer_bindings' if peer else 'weixin_accounts'
         db.execute(text('UPDATE '+table+''' SET revoked_at=:revoked_at,revoked_by=:revoked_by,
             revoke_reason=:revoke_reason WHERE id=:id'''), {**changes, 'id':str(identifier)})

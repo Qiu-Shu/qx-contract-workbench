@@ -4634,3 +4634,30 @@ class WeixinPollInput(DomainModel):
     request_id: UUID
     expected_revision: NonNegativeInt
     expected_cursor: WeixinCursor
+
+
+class WeixinDispatchReceipt(DomainModel):
+    """Immutable TaskInbox acknowledgement; assignment and draft state may change later."""
+    id: UUID
+    descriptor_id: UUID
+    account_id: UUID
+    mapping_id: UUID
+    actor_id: UUID
+    task_binding_id: UUID
+    task_event_id: UUID
+    source_event_id: Annotated[str, StringConstraints(strict=True, pattern=r'^wx1:[a-f0-9]{64}$')]
+    payload_sha256: SHA256
+    expected_task_cursor: NonNegativeInt
+    next_task_cursor: PositiveInt
+    created_at: UTCDatetime
+    receipt_sha256: SHA256
+
+    @model_validator(mode='after')
+    def complete_hashed_dispatch(self):
+        from .config import canonical_json
+        if self.next_task_cursor != self.expected_task_cursor + 1:
+            raise ValueError('dispatch advances the local task cursor exactly once')
+        raw = canonical_json(self.model_dump(mode='json', exclude={'receipt_sha256'})).encode('utf-8')
+        if hashlib.sha256(raw).hexdigest() != self.receipt_sha256:
+            raise ValueError('dispatch receipt hash mismatch')
+        return self

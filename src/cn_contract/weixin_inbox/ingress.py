@@ -204,7 +204,7 @@ def record_synthetic_poll(actor, account_id, request, raw_response, *, database)
                 request_sha256=request_hash, response_sha256=response_hash,
                 expected_revision=request.expected_revision, next_revision=request.expected_revision+1,
                 expected_cursor=request.expected_cursor, next_cursor=cursor,
-                descriptor_count=len(descriptors), created_at=_at().replace('+00:00', 'Z'),
+                descriptor_count=len(descriptors), created_at=accounts._activity_time(account.id,db,now=_at()),
                 descriptors=[item.model_dump(mode='json') for item in descriptors])
             receipt = d.WeixinPollReceipt(**values, receipt_sha256=_digest(values))
             _insert('weixin_poll_receipts', receipt.model_dump(mode='json', exclude={'descriptors'}), db)

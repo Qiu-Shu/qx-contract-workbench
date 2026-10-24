@@ -1,0 +1,140 @@
+"""Verify fixed synthetic dispatch provenance without replaying or granting access."""
+import hashlib
+
+from sqlalchemy import text
+
+from .. import domain as d
+from ..config import canonical_json
+from ..security import ServiceError
+from ..storage_schema import identify_schema
+from ..task_drafts.integrity import _at
+from ..weixin_offline import event_id
+from .integrity import _canonical_model, _row_ids, _uuid
+
+
+def _fail():
+    raise ValueError('WEIXIN_DISPATCH_INTEGRITY')
+
+
+def _rows(db, table):
+    return {row['id']:row for row in db.execute(text('SELECT * FROM '+table)).mappings()}
+
+
+def _validate(db, rows, workspace):
+    accounts = _rows(db, 'weixin_accounts')
+    mappings = _rows(db, 'weixin_peer_bindings')
+    bindings = _rows(db, 'task_channel_bindings')
+    conversations = _rows(db, 'assistant_conversations')
+    events = _rows(db, 'task_inbox_events')
+    users = set(db.scalars(text('SELECT id FROM users')))
+    descriptors, grouped = {}, {}
+    for row in db.execute(text('SELECT * FROM weixin_inbox_descriptors ORDER BY poll_id,ordinal')).mappings():
+        _row_ids(row, ('id', 'poll_id', 'mapping_id', 'prior_descriptor_id'))
+        payload = _canonical_model(d.TaskInboxEventInput, row['payload_json']) if row['payload_json'] is not None else None
+        value = d.WeixinInboxDescriptor(**{key:item for key,item in row.items() if key != 'payload_json'}, payload=payload)
+        descriptors[row['id']] = value
+        grouped.setdefault(row['poll_id'], []).append(value)
+    polls = {}
+    for row in db.execute(text('SELECT * FROM weixin_poll_receipts')).mappings():
+        _row_ids(row, ('id', 'account_id', 'request_id'))
+        polls[row['id']] = d.WeixinPollReceipt(**row, descriptors=tuple(grouped.pop(row['id'], ())))
+    if grouped:
+        _fail()
+
+    dispatched, intervals = {}, {}
+    for row in rows:
+        _row_ids(row, ('id', 'descriptor_id', 'account_id', 'mapping_id', 'actor_id', 'task_binding_id', 'task_event_id'))
+        receipt = d.WeixinDispatchReceipt(**row)
+        descriptor = descriptors[str(receipt.descriptor_id)]
+        poll = polls[str(descriptor.poll_id)]
+        account_row = accounts[str(receipt.account_id)]
+        _row_ids(account_row, ('id', 'workspace_id', 'owner_id', 'revoked_by'))
+        account = d.WeixinAccountSnapshot(**account_row)
+        mapping_row = mappings[str(receipt.mapping_id)]
+        _row_ids(mapping_row, ('id', 'account_id', 'task_binding_id', 'revoked_by'))
+        scope = _canonical_model(d.ScopeSnapshot, mapping_row['scope_json'])
+        mapping = d.WeixinPeerBindingSnapshot(**{key:item for key,item in mapping_row.items() if key != 'scope_json'}, scope=scope)
+        binding_row = bindings[str(receipt.task_binding_id)]
+        _row_ids(binding_row, ('id', 'conversation_id'))
+        binding = d.TaskChannelBindingView(**binding_row)
+        conversation = conversations[str(binding.conversation_id)]
+        _row_ids(conversation, ('id', 'workspace_id', 'owner_id'))
+        event = events[str(receipt.task_event_id)]
+        _row_ids(event, ('id', 'binding_id'))
+        payload = _canonical_model(d.TaskInboxEventInput, event['payload_json'])
+        event_at = _at(event['created_at'])
+        if (descriptor.status != 'accepted_pending_dispatch' or descriptor.prior_descriptor_id is not None
+                or descriptor.mapping_id != mapping.id or descriptor.payload is None
+                or poll.account_id != account.id or mapping.account_id != account.id
+                or account.owner_id != receipt.actor_id or str(receipt.actor_id) not in users
+                or str(account.workspace_id) != workspace
+                or mapping.sender_peer_id != descriptor.sender_peer_id
+                or mapping.task_binding_id != receipt.task_binding_id
+                or conversation['owner_id'] != str(receipt.actor_id) or conversation['workspace_id'] != workspace
+                or str(scope.workspace_id) != workspace or scope.conversation_id != binding.conversation_id
+                or event['binding_id'] != str(binding.id)
+                or descriptor.source_event_id != event_id(account.bot_account_id, descriptor.sender_peer_id, descriptor.upstream_message_id)
+                or receipt.source_event_id != descriptor.source_event_id
+                or event['event_id'] != receipt.source_event_id or payload.event_id != receipt.source_event_id
+                or event['payload_json'] != canonical_json(descriptor.payload.model_dump(mode='json'))
+                or hashlib.sha256(event['payload_json'].encode('utf-8')).hexdigest() != receipt.payload_sha256
+                or event['payload_sha256'] != receipt.payload_sha256
+                or mapping.created_at < account.created_at or mapping.created_at < binding.created_at
+                or mapping.created_at < _at(conversation['created_at']) or poll.created_at < mapping.created_at
+                or receipt.created_at < event_at
+                or receipt.created_at < mapping.created_at or receipt.created_at < poll.created_at
+                or account.revoked_at is not None and account.revoked_at <= receipt.created_at
+                or mapping.revoked_at is not None and mapping.revoked_at <= receipt.created_at
+                or type(binding_row['cursor']) is not int or binding.cursor < receipt.next_task_cursor):
+            _fail()
+        if str(descriptor.id) in dispatched:
+            _fail()
+        dispatched[str(descriptor.id)] = receipt
+        intervals.setdefault(str(binding.id), []).append(receipt)
+
+    for history in intervals.values():
+        previous = None
+        for receipt in sorted(history, key=lambda item:(item.created_at, item.expected_task_cursor)):
+            if previous is not None and receipt.expected_task_cursor < previous.next_task_cursor:
+                _fail()
+            previous = receipt
+
+    prefixes = {}
+    for descriptor in sorted(descriptors.values(), key=lambda item:(
+            str(item.mapping_id), polls[str(item.poll_id)].next_revision, item.ordinal)):
+        if descriptor.status != 'accepted_pending_dispatch':
+            continue
+        missing, previous = prefixes.get(str(descriptor.mapping_id), (False, None))
+        receipt = dispatched.get(str(descriptor.id))
+        if receipt is not None:
+            if missing or previous is not None and (receipt.created_at < previous.created_at
+                    or receipt.expected_task_cursor < previous.next_task_cursor):
+                _fail()
+            previous = receipt
+        prefixes[str(descriptor.mapping_id)] = (missing or receipt is None, previous)
+
+
+def validate_dispatch_records(db, *, allow_dispatch=False):
+    """Return no file refs; dispatched history belongs only in a full native archive."""
+    try:
+        schema = [tuple(row) for row in db.execute(text(
+            'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+        native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
+        version = identify_schema(schema, native=native)
+        if version != 'weixin-dispatch-v1':
+            return []
+        rows = db.execute(text('SELECT * FROM weixin_dispatch_receipts ORDER BY created_at,id')).mappings().all()
+        if not rows:
+            return []
+    except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError, ServiceError):
+        raise ValueError('WEIXIN_DISPATCH_INTEGRITY') from None
+    if not allow_dispatch:
+        raise ServiceError('DATA_POLICY_UNAPPROVED', 409)
+    try:
+        identities = db.scalars(text('SELECT id FROM local_workspace_identity')).all() if native else []
+        if len(identities) != 1:
+            _fail()
+        _validate(db, rows, _uuid(identities[0]))
+    except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError, ServiceError):
+        raise ValueError('WEIXIN_DISPATCH_INTEGRITY') from None
+    return []
