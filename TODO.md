@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+最新接续（2026-10-25，D2g1）：八字段输入、当前root/前代/新目标权限、完整scope与gen/hash/checkpoint CAS、原子追加/固定查询及真实故障/丢ACK/竞争/新进程/两代恢复已验；310不同Python、192 Node和四门通过，[证据](docs/testing/weixin-generation-service/20261025/README.md)。下一片按代际恢复接收/分发与明确HTTP/桌面操作；当前仍暂停收件，不称可运行切换。可信微信身份/资格与E限期许可仍待，0.4.1、原生崩溃及上轮WIN-PATH-02失败开放，本片浏览器NOT_RUN。
+
 D2f 产品 `6e36cb5` 已同步 GitHub，远端 SHA、tree 及5,073个受控条目一致；[同步回执](docs/testing/weixin-generations/20261024/github-sync.md)。
 
 最新接续（2026-10-24 UTC，D2f）：跨对话generation的14字段不可变存储/升级/历史校验/两代qxbak及账号级暂停已实现，32前驱指纹不变；814不同Python、192 Node与四开发检查通过，[实测](docs/testing/weixin-generations/20261024/README.md)。独立发现未来目标revision漏洞已RED→GREEN。下一片D2g：显式追加/切换服务、当前桌面权限/CAS/未知结果恢复，再接页面和按代际收件；当前无公开追加服务，不称可转案。额外浏览器回归在恢复目录rename复现WinError5，该组FAIL，WIN-PATH-02仍开放；原生崩溃、真实微信/模型、E限期许可和安装版状态不变。

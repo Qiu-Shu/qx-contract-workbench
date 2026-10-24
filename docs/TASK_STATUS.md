@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-25 D2g1 已完成显式代际追加/固定查询后端：当前principal/fence/schema17先核，root/前代/新目标当前ACL、完整scope与gen/hash/checkpoint CAS、因果时间及pre/post历史验证，旧来源和游标不改；恢复/撤权后查询仅metadata且当前权限仍核。根12模块310不同Python、192 Node与四开发门通过、独立冻结复核完成，[实测](testing/weixin-generation-service/20261025/README.md)。schema/暂停guard未改，尚无运行时切换、HTTP/UI或新账号/模型能力；浏览器/安装版等NOT_RUN，0.4.1、原生崩溃及上轮WIN-PATH-02失败继续开放。
+
 D2f 产品 `6e36cb5` 已同步 GitHub，远端 SHA、tree 及5,073个受控条目一致；[同步回执](testing/weixin-generations/20261024/github-sync.md)。
 
 2026-10-24 UTC D2f 已完成跨对话目标代际底座：schema17只追加generation表/集中DTO，32前驱native/non-native指纹保留；完整新旧历史、scope来源时间、账号暂停及永久撤权、普通TaskDraft继续人工处理、真实两代qxbak和篡改拒绝均有证据。最终24模块814不同Python、192 Node和四开发门通过；未来版本缺口经独审实际复现并RED→GREEN，[本轮实测](testing/weixin-generations/20261024/README.md)。旧workspace夹具58 setup errors已修并整组68通过；额外浏览器恢复在发布目录rename遇WinError5，该组FAIL，不以独立备份通过覆盖。无显式追加/切换服务、无新微信/模型能力；下一片D2g接当前权限/CAS/查询恢复。0.4.1、原生崩溃、WIN-PATH-02仍开放；全仓/安装版等NOT_RUN。

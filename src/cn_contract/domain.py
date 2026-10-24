@@ -4767,3 +4767,21 @@ class WeixinPeerGeneration(DomainModel):
         if hashlib.sha256(raw).hexdigest() != self.generation_sha256:
             raise ValueError('generation hash mismatch')
         return self
+
+
+class WeixinPeerGenerationInput(DomainModel):
+    request_id: UUID
+    expected_generation: NonNegativeInt
+    expected_previous_generation_sha256: SHA256 | None
+    expected_previous_scope_sha256: SHA256
+    expected_checkpoint_revision: NonNegativeInt
+    task_binding_id: UUID
+    expected_scope: ScopeSnapshot
+    reason: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200),
+                      AfterValidator(_weixin_refresh_reason)]
+
+    @model_validator(mode='after')
+    def complete_generation_predecessor(self):
+        if (self.expected_generation == 0) != (self.expected_previous_generation_sha256 is None):
+            raise ValueError('only generation zero omits its predecessor hash')
+        return self

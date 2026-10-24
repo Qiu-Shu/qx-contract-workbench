@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+2026-10-25 D2g1 已完成当前身份下的显式代际追加、完整CAS与固定结果查询；310不同Python、192 Node和四开发检查通过，独立复核完成，[实测](docs/testing/weixin-generation-service/20261025/README.md)。服务保存记录后仍暂停微信收件，尚无HTTP/页面或运行时切换；真实微信/模型关闭，WIN-PATH-02与原生崩溃仍开放。
+
 D2f 产品 `6e36cb5` 已同步 GitHub，远端 SHA、tree 及5,073个受控条目一致；[同步回执](docs/testing/weixin-generations/20261024/github-sync.md)。
 
 2026-10-24 UTC D2f 已完成跨对话收件代际的存储、升级与恢复底座：schema17仅追加不可变记录，保留旧映射/回执，真实来源版本和时间均校验。814不同Python、192 Node及四开发检查通过，独立复核完成；[实际证据](docs/testing/weixin-generations/20261024/README.md)。显式切换服务仍待，带代际账号暂不执行微信收件，普通任务可继续。额外浏览器恢复目录发布遇WinError5，本轮该组FAIL，WIN-PATH-02和原生崩溃继续开放；真实微信/模型与安装版状态不变。
