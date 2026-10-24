@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+最新接续（2026-10-24，D2a）：合成账号/精确 peer 映射/完整 poll 回执的存储底座、历史校验、前驱升级和 qxbak 恢复已完成；587 个不同关联 Python 用例最终通过、四开发门退出 0，[实际证据及原失败](docs/testing/weixin-inbox/20261024/README.md)。下一片 D2b：当前桌面 principal 下的合成账号/映射服务和原子 record_synthetic_poll，先完整持久化逐条结果，再 revision CAS 提交账号 opaque 游标；幂等回读、未知结果恢复、撤权及分类失败事务边界须真实验证。D2c 再分发到共享 TaskDraft。真实认证、网络、下载解密、发送/Outbox、E 有限期模型许可仍未实施/NOT_RUN，安装版 0.4.1、原生崩溃和 WIN-PATH-02 保持开放。
+
 D1 产品 `8c7db52` 已同步 GitHub，本地/远端 SHA、tree 及 5,009 个受控条目一致；[D1 同步回执](docs/testing/weixin-offline/20261024/github-sync.md)。
 
 最新接续（2026-10-24，D1）：官方微信离线预览完成，123 项协议单元＋12 项作用域集成及155项关联回归通过，合计290个不同用例；四开发检查通过，[D1 证据](docs/testing/weixin-offline/20261024/README.md)。下一片 D2：可信身份映射、账号级完整 Inbox/checkpoint 与撤权/恢复，先保证上游事件持久处理后才推进账号游标。真实账号、下载解密、发送/Outbox 和 E 模型仍关闭。本聊天持续开发 heartbeat 已开启，每30分钟接续可执行切片并在有完成变更时正常推送；HumanLayer五分钟轮询保持暂停，按轮收尾。

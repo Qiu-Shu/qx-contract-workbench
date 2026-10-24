@@ -42,8 +42,7 @@ def test_every_predecessor_keeps_exact_raw_and_backup_fingerprints(item):
 
 
 def test_task_family_is_a_named_additive_successor():
-    assert storage_schema.VERSIONS == PREVIOUS + (TARGET,)
-    assert storage_schema.CURRENT_VERSION == TARGET
+    assert storage_schema.VERSIONS[:len(PREVIOUS)+1] == PREVIOUS + (TARGET,)
     before = set(storage_schema.schema_rows(PREVIOUS[-1]))
     after = set(storage_schema.schema_rows(TARGET))
     assert before < after
@@ -58,13 +57,13 @@ def test_each_historical_schema_upgrades_to_tasks_without_losing_rows(tmp_path, 
     with closing(old_db(tmp_path/'old.db', version, native)) as db:
         db.execute("INSERT INTO users VALUES ('synthetic-user','old-user','unused','[]',0)")
         db.commit()
-        assert schema_migrations.upgrade_database(db) == TARGET
-        assert schema_migrations.database_rows(db) == storage_schema.schema_rows(TARGET, native=native)
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
+        assert schema_migrations.database_rows(db) == storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=native)
         assert db.execute('SELECT username FROM users').fetchall() == [('old-user',)]
         assert db.execute('SELECT * FROM task_executions').fetchall() == []
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
         assert db.execute('PRAGMA foreign_keys').fetchone() == (1,)
-        assert schema_migrations.upgrade_database(db) == TARGET
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
 
 
 def test_failed_task_migration_leaves_legacy_schema_and_rows_intact(tmp_path, monkeypatch):
@@ -86,7 +85,7 @@ def test_fresh_and_upgraded_tasks_have_same_schema(tmp_path):
         initialize_storage(database)
         with closing(sqlite3.connect(database.engine.url.database)) as db:
             actual = schema_migrations.database_rows(db)
-        assert actual == storage_schema.schema_rows(TARGET)
+        assert actual == storage_schema.schema_rows(storage_schema.CURRENT_VERSION)
         with closing(old_db(tmp_path/'old.db', PREVIOUS[-1], False)) as db:
             schema_migrations.upgrade_database(db)
             assert schema_migrations.database_rows(db) == actual

@@ -167,11 +167,13 @@ def _file_references(db, *, allow_assistant=True):
     from ..assistant.library_integrity import validate_library_records
     from ..assistant.profile_integrity import validate_profile_records
     from ..task_drafts.integrity import validate_task_records
+    from ..weixin_inbox.integrity import validate_weixin_records
     validate_model_records(db, allowed=allow_assistant)
     validate_judge_records(db, allowed=allow_assistant)
     validate_library_records(db, allowed=allow_assistant)
     validate_profile_records(db, allowed=allow_assistant)
     validate_task_records(db, allowed=allow_assistant)
+    validate_weixin_records(db, allow_inbox=allow_assistant)
     items = file_references(db, allowed=allow_assistant)
     for row in db.scalars(select(DocumentRow)):
         value = strict_json(row.payload.encode())
@@ -380,6 +382,7 @@ def restore_backup(backup_ref, *, key_resolver, restore_parent, settings):
                 storage_payload = {'restored_at': datetime.now(timezone.utc).isoformat(), 'state': 'quarantined', 'external_highwater': None,
                     'old_sessions_revoked': True, 'jobs_quarantined': len(jobs), 'assistant_jobs_quarantined': assistant_jobs,
                     'task_executions_quarantined': task_executions, 'task_inbox_enabled': False,
+                    'weixin_inbox_enabled': False,
                     'live_egress': False, 'current_approvals_valid': False}
                 db.add(storage.RestoreFenceRow(ref=str(fence), archive_sha256=digest(raw), manifest_sha256=digest(manifest_raw), payload=encode(storage_payload).decode()))
                 grouped = {}

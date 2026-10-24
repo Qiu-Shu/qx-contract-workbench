@@ -26,8 +26,9 @@ def initialize_storage(database):
     from .assistant.profile_schema import initialize_storage as profiles
     from .assistant.profile_model_schema import initialize_storage as profile_model
     from .task_drafts.schema import initialize_storage as task_drafts
+    from .weixin_inbox.schema import initialize_storage as weixin_inbox
     for init in (authorities, rules, facts, reviews, providers, queries, exports,
-                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds, rounds_v2, profiles, profile_model, task_drafts):
+                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds, rounds_v2, profiles, profile_model, task_drafts, weixin_inbox):
         init(database)
 
 

@@ -4447,3 +4447,161 @@ class WeixinOfflinePlan(DomainModel):
                 or self.batch.next_cursor != self.scope.task_cursor + 1):
             raise ValueError('planned task cursor differs from preview scope')
         return self
+
+
+def _weixin_identity(value: str) -> str:
+    if not value or any(character.isspace() or ord(character) < 32 for character in value):
+        raise ValueError('exact nonblank identity required')
+    return value
+
+
+WeixinIdentity = Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256),
+    AfterValidator(_weixin_identity)]
+WeixinCursor = Annotated[str, StringConstraints(strict=True, max_length=262144)]
+WeixinInboxReason = Literal['sender_unbound', 'binding_revoked', 'scope_stale', 'scope_denied',
+    'recipient_mismatch', 'message_unsupported', 'message_invalid', 'event_conflict',
+    'previously_blocked', 'replayed']
+
+
+def _weixin_revocation(value):
+    fields = (value.revoked_at, value.revoked_by, value.revoke_reason)
+    if any(item is not None for item in fields):
+        if (any(item is None for item in fields) or value.revoked_at < value.created_at
+                or not value.revoke_reason.strip()):
+            raise ValueError('revocation requires actor, reason and a later timestamp')
+    return value
+
+
+class WeixinAccountSnapshot(DomainModel):
+    """Credential-free synthetic identity and committed account cursor, without authentication."""
+    id: UUID
+    workspace_id: UUID
+    owner_id: UUID
+    bot_account_id: WeixinIdentity
+    mode: Literal['synthetic'] = 'synthetic'
+    initial_cursor: WeixinCursor
+    checkpoint_revision: NonNegativeInt
+    upstream_cursor: WeixinCursor
+    created_at: UTCDatetime
+    revoked_at: UTCDatetime | None = None
+    revoked_by: UUID | None = None
+    revoke_reason: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)] | None = None
+
+    @model_validator(mode='after')
+    def complete_revocation(self):
+        return _weixin_revocation(self)
+
+
+class WeixinPeerBindingSnapshot(DomainModel):
+    """Historical exact peer-to-conversation mapping; no remote credential or session."""
+    id: UUID
+    account_id: UUID
+    sender_peer_id: WeixinIdentity
+    task_binding_id: UUID
+    scope: ScopeSnapshot
+    scope_sha256: SHA256
+    created_at: UTCDatetime
+    revoked_at: UTCDatetime | None = None
+    revoked_by: UUID | None = None
+    revoke_reason: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)] | None = None
+
+    @model_validator(mode='after')
+    def complete_scope_and_revocation(self):
+        from .config import canonical_json
+        raw = canonical_json(self.scope.model_dump(mode='json')).encode('utf-8')
+        if hashlib.sha256(raw).hexdigest() != self.scope_sha256:
+            raise ValueError('scope hash does not match the historical scope')
+        return _weixin_revocation(self)
+
+
+class WeixinInboxDescriptor(DomainModel):
+    """A durable synthetic outcome; accepted descriptions grant no task or file capability."""
+    id: UUID
+    poll_id: UUID
+    ordinal: Annotated[int, Field(strict=True, ge=1, le=100)]
+    sender_peer_id: WeixinIdentity | None = None
+    upstream_message_id: Annotated[str, StringConstraints(strict=True, pattern=r'^(0|[1-9][0-9]{0,19})$')] | None = None
+    source_event_id: Annotated[str, StringConstraints(strict=True, pattern=r'^wx1:[a-f0-9]{64}$')] | None = None
+    source_sha256: SHA256
+    status: Literal['accepted_pending_dispatch', 'blocked', 'duplicate']
+    reason: WeixinInboxReason | None = None
+    mapping_id: UUID | None = None
+    prior_descriptor_id: UUID | None = None
+    payload: TaskInboxEventInput | None = None
+
+    @model_validator(mode='after')
+    def complete_safe_outcome(self):
+        source = (self.sender_peer_id, self.upstream_message_id, self.source_event_id)
+        if any(value is not None for value in source) and any(value is None for value in source):
+            raise ValueError('source identity requires exact peer, message ID and event ID')
+        if self.upstream_message_id is not None and int(self.upstream_message_id) > 2**64-1:
+            raise ValueError('source message ID exceeds uint64')
+        if self.status == 'accepted_pending_dispatch':
+            if (self.mapping_id is None or self.source_event_id is None or self.payload is None
+                    or self.reason is not None or self.prior_descriptor_id is not None):
+                raise ValueError('accepted outcome requires mapped source and safe payload only')
+            self._safe_payload()
+        elif self.status == 'duplicate':
+            if (self.prior_descriptor_id is None or self.source_event_id is None
+                    or self.payload is not None or self.reason != 'replayed'):
+                raise ValueError('duplicate outcome requires a prior source and no payload')
+        elif self.payload is not None or self.reason is None or self.reason == 'replayed':
+            raise ValueError('blocked outcome requires a fixed reason and no payload')
+        if self.prior_descriptor_id is not None and (self.source_event_id is None
+                or self.status == 'blocked' and self.reason not in ('event_conflict', 'previously_blocked')):
+            raise ValueError('prior descriptor is only valid for an identified repeat')
+        if self.status == 'blocked' and self.reason in ('event_conflict', 'previously_blocked') and self.prior_descriptor_id is None:
+            raise ValueError('repeated blocked outcome requires its original descriptor')
+        return self
+
+    def _safe_payload(self):
+        import re
+        import unicodedata
+        from pathlib import PureWindowsPath
+
+        value = self.payload
+        if value.event_id != self.source_event_id or value.task_id is not None or value.start_new:
+            raise ValueError('inbox payload cannot select or start a task')
+        if value.reply_to_event_id is not None and re.fullmatch(r'wx1:[a-f0-9]{64}', value.reply_to_event_id) is None:
+            raise ValueError('reply must use a source event namespace')
+        mime = {'.pdf':'application/pdf', '.docx':'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}
+        for item in value.media:
+            name = item.name
+            if (item.status != 'pending' or item.attachment_id is not None or item.sha256 is not None
+                    or item.parse_revision is not None or PureWindowsPath(name).suffix.lower() not in mime
+                    or mime[PureWindowsPath(name).suffix.lower()] != item.mime
+                    or name in ('.', '..') or name[-1:] in (' ', '.') or PureWindowsPath(name).is_reserved()
+                    or any(character in '/\\:<>"|?*' or unicodedata.category(character).startswith('C') for character in name)
+                    or re.fullmatch(re.escape(self.source_event_id)+r':(?:[0-9]|1[0-9])', item.media_id) is None):
+                raise ValueError('inbox media is only a safe pending DOCX/PDF description')
+
+
+class WeixinPollReceipt(DomainModel):
+    """Complete immutable poll accounting; its digest includes every ordered outcome."""
+    id: UUID
+    account_id: UUID
+    request_id: UUID
+    request_sha256: SHA256
+    response_sha256: SHA256
+    expected_revision: NonNegativeInt
+    next_revision: PositiveInt
+    expected_cursor: WeixinCursor
+    next_cursor: WeixinCursor
+    descriptor_count: Annotated[int, Field(strict=True, ge=0, le=100)]
+    receipt_sha256: SHA256
+    created_at: UTCDatetime
+    descriptors: Annotated[tuple[WeixinInboxDescriptor, ...], Field(max_length=100)]
+
+    @model_validator(mode='after')
+    def complete_hashed_poll(self):
+        from .config import canonical_json
+        if (self.next_revision != self.expected_revision + 1
+                or self.descriptor_count != len(self.descriptors)
+                or tuple(value.ordinal for value in self.descriptors) != tuple(range(1, self.descriptor_count+1))
+                or any(value.poll_id != self.id for value in self.descriptors)
+                or len({value.id for value in self.descriptors}) != len(self.descriptors)):
+            raise ValueError('poll requires all ordered descriptors and one checkpoint revision')
+        raw = canonical_json(self.model_dump(mode='json', exclude={'receipt_sha256'})).encode('utf-8')
+        if hashlib.sha256(raw).hexdigest() != self.receipt_sha256:
+            raise ValueError('poll receipt hash mismatch')
+        return self

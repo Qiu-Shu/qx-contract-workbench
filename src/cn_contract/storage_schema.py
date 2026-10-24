@@ -7,6 +7,7 @@ from .assistant.rounds_v2_schema import expected_objects as rounds_v2_objects
 from .assistant.profile_schema import expected_objects as profile_objects
 from .assistant.profile_model_schema import expected_objects as profile_model_objects
 from .task_drafts.schema import expected_objects as task_objects
+from .weixin_inbox.schema import expected_objects as weixin_objects
 from .assistant_judge_schema_baseline import ASSISTANT_JUDGE_V1_ROWS
 from .assistant_model_schema_baseline import ASSISTANT_MODEL_V1_ROWS
 from .assistant_attachment_schema_baseline import ASSISTANT_ATTACHMENTS_V1_ROWS
@@ -14,8 +15,8 @@ from .assistant_schema_baseline import ASSISTANT_V1_ROWS
 from .schema_baseline import INTAKE_V1_ROWS
 
 
-CURRENT_VERSION = 'task-drafts-v1'
-VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', CURRENT_VERSION)
+CURRENT_VERSION = 'weixin-inbox-v1'
+VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', CURRENT_VERSION)
 SUPPORTED_VERSIONS = VERSIONS
 _INTAKE_TABLES = frozenset(('intake_cases', 'intake_revisions'))
 _LIBRARY_ROWS = tuple(library_objects())
@@ -25,6 +26,7 @@ _ROUNDS_V2_ROWS = tuple(rounds_v2_objects())
 _PROFILE_ROWS = tuple(profile_objects())
 _PROFILE_MODEL_ROWS = tuple(profile_model_objects())
 _TASK_ROWS = tuple(task_objects())
+_WEIXIN_ROWS = tuple(weixin_objects())
 _IDENTITY_ROWS = (
     ('index', 'sqlite_autoindex_local_workspace_identity_1', 'local_workspace_identity', None),
     ('table', 'local_workspace_identity', 'local_workspace_identity',
@@ -61,6 +63,8 @@ def schema_rows(version, *, native=False):
         result.extend(_PROFILE_ROWS)
     if version in VERSIONS[12:]:
         result.extend(_TASK_ROWS)
+    if version in VERSIONS[13:]:
+        result.extend(_WEIXIN_ROWS)
     if native:
         result.extend(_IDENTITY_ROWS)
     if len({row[1] for row in result}) != len(result):
