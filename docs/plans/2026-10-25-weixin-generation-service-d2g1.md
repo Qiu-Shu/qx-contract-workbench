@@ -38,6 +38,6 @@ find不调用require_active，不要求历史scope仍等于当前snapshot，恢�
 - [x] 独立atomic模块验证SQL/commit前回滚、commit后丢ACK只find、新Database/进程、同CAS竞争、poll竞争；结果与完整旧表字节/计数核对。
 - [x] 独立backup模块用真实服务生成两代再qxbak往返，find可读且追加BLOCKED_LIVE；旧历史精确保留，恢复无自动执行。独立最终16通过。
 - [x] 根代理12模块310不同Python、192 Node和四开发门通过，独立冻结复核完成；只累计最终不同case，所有中间失败分类保留，[实测](../testing/weixin-generation-service/20261025/README.md)。
-- [ ] 更新README/TODO/TASK_STATUS和实际证据，扫描仅授权源码/文档/独立合成数据，fetch后正常commit/push并核远端SHA/树；本轮三端记忆按AGENTS收尾。
+- [x] 更新README/TODO/TASK_STATUS和实际证据，扫描12份授权源码/文档/独立合成测试，fetch后正常commit/push；40be816与远端SHA/树/5,082条目一致，[回执](../testing/weixin-generation-service/20261025/github-sync.md)。本轮三端记忆按AGENTS实际成功/待同步回执另行收尾。
 
 审查重点：旧request重放与latest CAS分离；跨对象ACL和归档/转案；首条及后代完整历史校验；INSERT后独立审计提交风险；目标真实来源/回拨时间；恢复find只读且业务guard不解除。仅domain.py与新generations.py为产品修改，测试辅助文件独立。全仓、安装版、真实微信/模型/合同/付费/签发/外发NOT_RUN；0.4.1、原生长进程崩溃和WIN-PATH-02保持开放。本片不重试漂绿上轮浏览器WinError5，不称其已修。
