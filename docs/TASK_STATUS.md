@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-24 D1 离线协议适配已实施：从精确 bot/peer 与当前桌面律师作用域生成只读预览；账号 opaque cursor 与任务整数 cursor 分离，uint64 ID 无损归一，DOCX/PDF 仅 pending，不具备附件读取/执行权限。当前身份、scope/材料/绑定/游标及案件撤权、归档、恢复隔离均有合成集成证据；权限拒绝可复用既有审计。5文件290个不同 Python 用例通过、四开发检查退出0，独立复核无遗留项。[D1 实测](testing/weixin-offline/20261024/README.md)、[官方协议核验](research/2026-10-24-weixin-protocol-d.md)。真实身份绑定持久化、complete Inbox/checkpoint、登录/轮询/下载解密/发送及真实模型仍未实现或 NOT_RUN；D1没有新增HTTP/IPC、数据库结构或依赖。
+
 C 产品提交 `4b62f06` 已同步 GitHub，本地/远端 SHA、tree 及 5,002 个受控条目一致；[C 同步回执](testing/task-pdf/20261024/github-sync.md)。
 
 2026-10-24 持久合同任务 A＋B 已实施：多条消息/附件先收集后冻结，超量/歧义消息不丢弃，明确材料版本后复用案件、事实确认与 Mock 结果；新增 task-drafts-v1 与备份恢复来源校验。正常 assisted 桌面通过持久合成任务准入完成 Mock，不改变全局模式；普通审查和真实材料仍受原保护。WorkBuddy 已核实 Kimi-K3 并参与独立复核。实际验证和未验项见 [本片证据](testing/task-drafts/20261024/README.md)。C 合成 PDF 桥接现已完成：PDF 只接受 original、完整可读才冻结，沿用现有案件/事实/Mock，不放宽普通合同上传政策；130 项关联 Python、170 项 Node、PDF 两种顺序及 DOCX 浏览器回归、已完成 PDF 的 qxbak 恢复与四开发门均通过。[C 实测](testing/task-pdf/20261024/README.md)。安装版 0.4.1、D—E 及 WIN-PATH-02 未标完成。 功能关联382项以独立模块/短组方式通过；单进程原生访问冲突仍待专项复现，未更新安装版。

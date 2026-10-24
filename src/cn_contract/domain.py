@@ -4409,3 +4409,41 @@ class TaskExecutionPrepareInput(DomainModel):
 class TaskExecutionReviewInput(DomainModel):
     request_id: UUID
     review: ReviewStartInput
+
+
+class WeixinOfflineScope(DomainModel):
+    """Local preview scope; this does not authenticate a remote Weixin account."""
+    bot_account_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)]
+    sender_peer_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)]
+    owner_id: UUID
+    session_id: UUID
+    binding_id: UUID
+    expected_scope: ScopeSnapshot
+    task_cursor: NonNegativeInt
+    upstream_cursor: Annotated[str, StringConstraints(strict=True, max_length=262144)]
+
+    @field_validator('bot_account_id', 'sender_peer_id')
+    @classmethod
+    def exact_nonblank_identity(cls, value):
+        if not value.strip() or any(character.isspace() or ord(character) < 32 for character in value):
+            raise ValueError('exact nonblank identity required')
+        return value
+
+
+class WeixinOfflinePlan(DomainModel):
+    """Read-only translation, never a durable inbox or cursor receipt."""
+    scope: WeixinOfflineScope
+    response_sha256: SHA256
+    next_upstream_cursor: Annotated[str, StringConstraints(strict=True, max_length=262144)]
+    batch: TaskInboxBatchInput | None
+    event_payload_hashes: Annotated[dict[str, SHA256], Field(max_length=100)]
+
+    @model_validator(mode='after')
+    def exact_planned_events(self):
+        expected = {event.event_id for event in self.batch.events} if self.batch else set()
+        if set(self.event_payload_hashes) != expected:
+            raise ValueError('message hashes must identify exactly the planned events')
+        if self.batch and (self.batch.expected_cursor != self.scope.task_cursor
+                or self.batch.next_cursor != self.scope.task_cursor + 1):
+            raise ValueError('planned task cursor differs from preview scope')
+        return self
