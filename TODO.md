@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+D2d 产品 `ba03b02` 已同步 GitHub，远端 SHA、tree 及 5,051 个受控条目一致；[同步回执](docs/testing/weixin-reauthorization/20261024/github-sync.md)。
+
 最新接续（2026-10-24，D2d）：同目标input/material scope显式refresh、不可变grant链、CAS/未知结果找回及历史生效边界已实现；925不同Python用例最终通过、四门exit0，[实测](docs/testing/weixin-reauthorization/20261024/README.md)。独立发现UTC表示排序反例已RED→GREEN并重跑受影响链路。下一片跨目标/转案generation及可信transport入口；E有限期模型许可仍待。真实微信/模型、新安装包及原生崩溃/WIN-PATH-02状态不变。
 
 D2c 产品 `64a435e` 已同步 GitHub，远端 SHA、tree 及 5,040 个受控条目一致；[同步回执](docs/testing/weixin-dispatch/20261024/github-sync.md)。

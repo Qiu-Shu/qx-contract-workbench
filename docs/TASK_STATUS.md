@@ -1,5 +1,7 @@
 # 任务实际状态
 
+D2d 产品 `ba03b02` 已同步 GitHub，远端 SHA、tree 及 5,051 个受控条目一致；[同步回执](testing/weixin-reauthorization/20261024/github-sync.md)。
+
 2026-10-24 D2d 已完成同目标显式重新授权：追加第16版12字段不可变grant和集中DTO，完整当前scope/ACL/CAS及旧pending继续、blocked不复活、撤权/恢复隔离已验证。实际故障/丢ACK/并发/新进程、本地合成DOCX上传后重新授权与人工关联、两代qxbak及损坏归档拒绝均通过；26模块925不同Python用例最终有通过证据，四开发门exit0，30前驱指纹不变。独立发现UTC格式排序缺陷已RED→GREEN，18源码/8XML冻结复核无剩余确认缺陷。[证据](testing/weixin-reauthorization/20261024/README.md)。跨目标generation/可信入口和E许可未完成；真实微信/模型/安装包NOT_RUN，0.4.1、原生崩溃和WIN-PATH-02开放。
 
 D2c 产品 `64a435e` 已同步 GitHub，远端 SHA、tree 及 5,040 个受控条目一致；[同步回执](testing/weixin-dispatch/20261024/github-sync.md)。

@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+D2d 产品 `ba03b02` 已同步 GitHub，远端 SHA、tree 及 5,051 个受控条目一致；[同步回执](docs/testing/weixin-reauthorization/20261024/github-sync.md)。
+
 2026-10-24 D2d 同目标显式重新授权已实施：输入/材料版本变化可在当前桌面权限下追加不可变grant，旧mapping与历史回执不改，撤权/归档/跨目标保持阻断。26模块925个不同关联Python用例最终通过，四开发门exit0；[实测](docs/testing/weixin-reauthorization/20261024/README.md)。下一片跨目标generation/可信入口仍待；真实微信、模型和安装版状态不变。
 
 D2c 产品 `64a435e` 已同步 GitHub，远端 SHA、tree 及 5,040 个受控条目一致；[同步回执](docs/testing/weixin-dispatch/20261024/github-sync.md)。
