@@ -25,7 +25,7 @@
 
 两份 XML 按 classname/name 去重无重叠。源与 XML SHA 留在 `verification-summary.json`。账号归档补丁后执行的最终 212 项包含全部新 API 和归档路径；232 项验证未改动的 D1/D2a 关联行为。
 
-8 项原子验收使用**实际 public 服务**创建账号和映射，不通过 SQL 夹具冒充运行收件：descriptor 插入、checkpoint 更新、commit 前三个故障均回滚全部结果与游标；实际 commit 后故意丢失回执可查询找回，重放不增行；两个独立 Session 并发相同请求回读同一结果，不同请求同 revision 仅一条成功；新 Python 进程可找回已提交完整回执；服务生成历史经真实 qxbak 往返逐表相等、恢复拒绝 record 重放、源全部文件字节不变。TaskInbox/draft/execution/assistant run 始终 0。
+8 项原子验收使用**实际 public 服务**创建账号和映射，不通过 SQL 夹具冒充运行收件：descriptor 插入、checkpoint 更新、commit 前三个故障均回滚全部结果与游标；实际 commit 后故意丢失回执可查询找回，重放不增行；两个独立 Session 并发相同请求回读同一结果，不同请求同 revision 仅一条成功；新 Python 进程可找回已提交完整回执；服务生成历史经真实 qxbak 往返后，4 张 Weixin 历史表逐行相等、恢复拒绝 record 重放、源全部文件字节不变。TaskInbox/draft/execution/assistant run 始终 0。
 
 四开发门均以 `.venv/Scripts/python.exe -B -X utf8` 执行且 exit 0：`-m cn_contract.cli schema --check`、`scripts/verify_defaults.py`、`scripts/verify_sources.py --mode development`、`scripts/verify_runtime_dependencies.py --mode development`。来源保留 13 项 NOT_PRODUCTION_APPROVED；依赖 55 runtime＋1 build、native_build_verified=false、network_calls=0。
 
