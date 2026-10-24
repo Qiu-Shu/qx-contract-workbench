@@ -4,6 +4,7 @@ import hashlib
 from sqlalchemy import text
 
 from .. import domain as d
+from ..assistant.profile_integrity import _scope
 from ..config import canonical_json
 from ..security import ServiceError
 from ..storage_schema import identify_schema
@@ -21,6 +22,9 @@ def _rows(db, table):
 
 
 def _validate(db, rows, workspace):
+    from .grant_integrity import _histories, _scope_at
+
+    grant_histories = _histories(db, workspace)
     accounts = _rows(db, 'weixin_accounts')
     mappings = _rows(db, 'weixin_peer_bindings')
     bindings = _rows(db, 'task_channel_bindings')
@@ -54,6 +58,7 @@ def _validate(db, rows, workspace):
         _row_ids(mapping_row, ('id', 'account_id', 'task_binding_id', 'revoked_by'))
         scope = _canonical_model(d.ScopeSnapshot, mapping_row['scope_json'])
         mapping = d.WeixinPeerBindingSnapshot(**{key:item for key,item in mapping_row.items() if key != 'scope_json'}, scope=scope)
+        effective_scope = _scope_at(mapping, grant_histories.get(str(mapping.id), ()), receipt.created_at)
         binding_row = bindings[str(receipt.task_binding_id)]
         _row_ids(binding_row, ('id', 'conversation_id'))
         binding = d.TaskChannelBindingView(**binding_row)
@@ -63,6 +68,7 @@ def _validate(db, rows, workspace):
         _row_ids(event, ('id', 'binding_id'))
         payload = _canonical_model(d.TaskInboxEventInput, event['payload_json'])
         event_at = _at(event['created_at'])
+        _scope(db, effective_scope, conversation, workspace, receipt.created_at)
         if (descriptor.status != 'accepted_pending_dispatch' or descriptor.prior_descriptor_id is not None
                 or descriptor.mapping_id != mapping.id or descriptor.payload is None
                 or poll.account_id != account.id or mapping.account_id != account.id
@@ -121,7 +127,7 @@ def validate_dispatch_records(db, *, allow_dispatch=False):
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
         version = identify_schema(schema, native=native)
-        if version != 'weixin-dispatch-v1':
+        if version not in ('weixin-dispatch-v1', 'weixin-reauthorization-v1'):
             return []
         rows = db.execute(text('SELECT * FROM weixin_dispatch_receipts ORDER BY created_at,id')).mappings().all()
         if not rows:

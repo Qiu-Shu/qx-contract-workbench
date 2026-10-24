@@ -326,6 +326,7 @@ def _fence(root, refs, archive_hash, manifest_hash):
                 'task_executions_quarantined':task_executions,'task_inbox_enabled':False,
                 'weixin_inbox_enabled':False,
                 'weixin_dispatch_enabled':False,
+                'weixin_reauthorization_enabled':False,
                 'model_attempts_interrupted':model_attempts,
                 'judge_attempts_interrupted':judge_attempts,
                 'live_egress':False,'current_approvals_valid':False,'external_highwater':None}).decode()))

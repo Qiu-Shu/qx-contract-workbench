@@ -188,7 +188,7 @@ def native_task_workspace(tmp_path):
     root = tmp_path/'workspace'
     local_server.initialize_workspace(root,'synthetic-lawyer','fiction123',data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        for table in ('weixin_dispatch_receipts','weixin_inbox_descriptors','weixin_poll_receipts','weixin_peer_bindings','weixin_accounts'):
+        for table in ('weixin_peer_scope_grants','weixin_dispatch_receipts','weixin_inbox_descriptors','weixin_poll_receipts','weixin_peer_bindings','weixin_accounts'):
             db.execute('DROP TABLE '+table)
         db.commit()
         marker = json.loads((root/'workspace.json').read_text('utf-8'))

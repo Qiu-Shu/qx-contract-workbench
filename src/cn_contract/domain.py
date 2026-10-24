@@ -4661,3 +4661,46 @@ class WeixinDispatchReceipt(DomainModel):
         if hashlib.sha256(raw).hexdigest() != self.receipt_sha256:
             raise ValueError('dispatch receipt hash mismatch')
         return self
+
+
+def _weixin_refresh_reason(value):
+    if not value.strip() or value != value.strip():
+        raise ValueError('explicit refresh reason must be nonblank and trimmed')
+    return value
+
+
+class WeixinPeerRefreshInput(DomainModel):
+    request_id: UUID
+    expected_grant_revision: NonNegativeInt
+    expected_scope_sha256: SHA256
+    expected_scope: ScopeSnapshot
+    reason: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200),
+                      AfterValidator(_weixin_refresh_reason)]
+
+
+class WeixinPeerScopeGrant(DomainModel):
+    """Immutable explicit authorization for newer versions of the same local target."""
+    id: UUID
+    mapping_id: UUID
+    request_id: UUID
+    actor_id: UUID
+    revision: PositiveInt
+    previous_scope_sha256: SHA256
+    scope: ScopeSnapshot
+    scope_sha256: SHA256
+    checkpoint_revision: NonNegativeInt
+    created_at: UTCDatetime
+    reason: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200),
+                      AfterValidator(_weixin_refresh_reason)]
+    grant_sha256: SHA256
+
+    @model_validator(mode='after')
+    def complete_hashed_authorization(self):
+        from .config import canonical_json
+        scope = canonical_json(self.scope.model_dump(mode='json')).encode('utf-8')
+        raw = canonical_json(self.model_dump(mode='json', exclude={'grant_sha256'})).encode('utf-8')
+        if hashlib.sha256(scope).hexdigest() != self.scope_sha256:
+            raise ValueError('authorization scope hash mismatch')
+        if hashlib.sha256(raw).hexdigest() != self.grant_sha256:
+            raise ValueError('authorization grant hash mismatch')
+        return self

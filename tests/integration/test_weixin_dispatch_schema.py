@@ -40,8 +40,7 @@ def test_all_fourteen_predecessors_keep_frozen_fingerprints(item):
 
 
 def test_dispatch_is_an_additive_successor_without_changing_inbox_schema():
-    assert storage_schema.VERSIONS == PREVIOUS + (TARGET,)
-    assert storage_schema.CURRENT_VERSION == TARGET
+    assert storage_schema.VERSIONS[:len(PREVIOUS)+1] == PREVIOUS + (TARGET,)
     before = set(storage_schema.schema_rows('weixin-inbox-v1'))
     after = set(storage_schema.schema_rows(TARGET))
     assert before < after
@@ -54,12 +53,12 @@ def test_every_predecessor_upgrades_preserving_old_rows(tmp_path, version, nativ
     with closing(old_db(tmp_path/'old.db',version,native)) as db:
         db.execute("INSERT INTO users VALUES ('synthetic-user','old-user','unused','[]',0)")
         db.commit()
-        assert schema_migrations.upgrade_database(db) == TARGET
-        assert schema_migrations.database_rows(db) == storage_schema.schema_rows(TARGET,native=native)
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
+        assert schema_migrations.database_rows(db) == storage_schema.schema_rows(storage_schema.CURRENT_VERSION,native=native)
         assert db.execute('SELECT username FROM users').fetchall() == [('old-user',)]
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
         assert db.execute('PRAGMA foreign_keys').fetchone() == (1,)
-        assert schema_migrations.upgrade_database(db) == TARGET
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
 
 
 @pytest.mark.parametrize('native', [False,True])
@@ -95,7 +94,7 @@ def test_fresh_reinitialized_and_upgraded_dispatch_structures_are_equal(tmp_path
         initialize_storage(database)
         with closing(sqlite3.connect(database.engine.url.database)) as db:
             actual = schema_migrations.database_rows(db)
-        assert actual == storage_schema.schema_rows(TARGET)
+        assert actual == storage_schema.schema_rows(storage_schema.CURRENT_VERSION)
         with closing(old_db(tmp_path/'old.db','weixin-inbox-v1',False)) as db:
             schema_migrations.upgrade_database(db)
             assert schema_migrations.database_rows(db) == actual
@@ -176,6 +175,7 @@ def native_inbox_workspace(tmp_path):
     root = tmp_path/'workspace'
     local_server.initialize_workspace(root,'synthetic-lawyer','fiction123',data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as db:
+        db.execute('DROP TABLE weixin_peer_scope_grants')
         db.execute('DROP TABLE weixin_dispatch_receipts')
         db.commit()
         marker = json.loads((root/'workspace.json').read_text('utf-8'))
@@ -199,9 +199,10 @@ def test_native_upgrade_records_verified_backup_and_preserves_workspace_identity
         assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-inbox-v1',native=True)
         assert db.execute('SELECT id FROM local_workspace_identity').fetchall() == [(marker['workspace_id'],)]
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        assert schema_migrations.database_rows(db) == storage_schema.schema_rows(TARGET,native=True)
-        assert local_server._schema_hash(db) == receipt['after_schema']
-    assert json.loads((root/'workspace.json').read_text('utf-8'))['schema_sha256'] == receipt['after_schema']
+        assert schema_migrations.database_rows(db) == storage_schema.schema_rows(storage_schema.CURRENT_VERSION,native=True)
+        assert local_server._schema_hash(db) == digest(storage_schema.schema_rows(storage_schema.CURRENT_VERSION,native=True))
+    assert receipt['after_schema'] == digest(storage_schema.schema_rows(TARGET,native=True))
+    assert json.loads((root/'workspace.json').read_text('utf-8'))['schema_sha256'] == digest(storage_schema.schema_rows(storage_schema.CURRENT_VERSION,native=True))
 
 
 @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
@@ -234,8 +235,9 @@ def test_native_committed_ddl_marker_gap_accepts_only_intact_receipt(native_inbo
         local_server._open_workspace(root,data_parent=root.parent)
         with local_server._worker_lock(root):
             workspace_upgrade.upgrade(root)
-        assert list((root/'upgrade-backups').iterdir()) == folders
-        assert json.loads((root/'workspace.json').read_text('utf-8'))['schema_sha256'] == receipt['after_schema']
+        assert {p for p in (root/'upgrade-backups').iterdir() if p.name.startswith('weixin-dispatch-')} == set(folders)
+        assert receipt['after_schema'] == digest(storage_schema.schema_rows(TARGET,native=True))
+        assert json.loads((root/'workspace.json').read_text('utf-8'))['schema_sha256'] == digest(storage_schema.schema_rows(storage_schema.CURRENT_VERSION,native=True))
 
 
 def test_native_failed_dispatch_ddl_preserves_prior_schema_and_marker(native_inbox_workspace,monkeypatch):

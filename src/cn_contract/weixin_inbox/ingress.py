@@ -158,7 +158,7 @@ def _describe(current, account, message, poll_id, ordinal, originals, db, settin
                     scope = d.WeixinOfflineScope(bot_account_id=account.bot_account_id,
                         sender_peer_id=mapping.sender_peer_id, owner_id=current.user_id,
                         session_id=current.session_id, binding_id=mapping.task_binding_id,
-                        expected_scope=mapping.scope, task_cursor=0, upstream_cursor=account.upstream_cursor)
+                        expected_scope=accounts._effective_scope(mapping,db), task_cursor=0, upstream_cursor=account.upstream_cursor)
                     payload = wire._event(message, scope, settings)
                     canonical_json(payload.model_dump(mode='json')).encode('utf-8')
                     values.update(status='accepted_pending_dispatch', reason=None, payload=payload)

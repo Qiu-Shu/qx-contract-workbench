@@ -60,15 +60,16 @@ def _mapping_row(identifier, db):
     return row
 
 
-def _mapping_reason(current, account, mapping, db):
+def _mapping_reason(current, account, mapping, db, *, scope=None):
     """Classify current authority without audit writes or transaction side effects."""
     if account.revoked_at is not None or mapping.revoked_at is not None:
         return 'binding_revoked'
     try:
         current = _current(current, db)
         workspace = _workspace_id(db)
+        scope = scope if scope is not None else _effective_scope(mapping, db)
         if (account.owner_id != current.user_id or account.workspace_id != workspace
-                or mapping.account_id != account.id or mapping.scope.workspace_id != workspace):
+                or mapping.account_id != account.id or scope.workspace_id != workspace):
             return 'scope_denied'
         binding = db.execute(text('SELECT * FROM task_channel_bindings WHERE id=:id'),
                              {'id':str(mapping.task_binding_id)}).mappings().first()
@@ -78,9 +79,9 @@ def _mapping_reason(current, account, mapping, db):
                          {'id':binding['conversation_id']}).mappings().first()
         if (row is None or row['owner_id'] != str(current.user_id)
                 or row['workspace_id'] != str(workspace)
-                or row['id'] != str(mapping.scope.conversation_id)):
+                or row['id'] != str(scope.conversation_id)):
             return 'scope_denied'
-        if row['archived_at'] is not None or _snapshot(row) != mapping.scope:
+        if row['archived_at'] is not None or _snapshot(row) != scope:
             return 'scope_stale'
 
         def matter_access(identifier):
@@ -126,13 +127,15 @@ def _activity_time(account_id, db, *, now, after=False, floor=()):
     ]
     if db.scalar(text("SELECT 1 FROM sqlite_master WHERE type='table' AND name='weixin_dispatch_receipts'")):
         queries.append('SELECT created_at stamp FROM weixin_dispatch_receipts WHERE account_id=:id')
-    # Normalizing Z to +00:00 also orders whole seconds before fractional seconds.
-    latest = db.scalar(text("SELECT MAX(replace(stamp,'Z','+00:00')) FROM ("+
-        ' UNION ALL '.join(queries)+')'), {'id':str(account_id)})
+    if db.scalar(text("SELECT 1 FROM sqlite_master WHERE type='table' AND name='weixin_peer_scope_grants'")):
+        queries.append('''SELECT grant_record.created_at stamp FROM weixin_peer_scope_grants grant_record
+            JOIN weixin_peer_bindings mapping ON mapping.id=grant_record.mapping_id WHERE mapping.account_id=:id''')
+    stamps = db.scalars(text('SELECT stamp FROM ('+
+        ' UNION ALL '.join(queries)+') WHERE stamp IS NOT NULL'), {'id':str(account_id)})
     try:
         current = datetime.fromisoformat(now.replace('Z','+00:00'))
         previous = [datetime.fromisoformat(value.replace('Z','+00:00'))
-                    for value in (latest,*floor) if value is not None]
+                    for value in (*stamps,*floor) if value is not None]
         if any(value.utcoffset() != timedelta(0) for value in (current,*previous)):
             raise ValueError('UTC required')
         if previous:
@@ -239,3 +242,115 @@ def revoke_synthetic_account(actor, account_id, request, *, database):
 
 def revoke_synthetic_peer(actor, mapping_id, request, *, database):
     return _revoke(actor, mapping_id, request, database, peer=True)
+
+
+def _same_target(left, right):
+    return all(getattr(left,key)==getattr(right,key) for key in (
+        'workspace_id','conversation_id','scope_kind','scope_ref','binding_revision'))
+
+
+def _newer_scope(previous, current):
+    return (_same_target(previous,current) and current!=previous
+        and current.input_revision>=previous.input_revision
+        and current.materials_revision>=previous.materials_revision)
+
+
+def _grant_table(db):
+    if db.scalar(text("SELECT 1 FROM sqlite_master WHERE type='table' AND name='weixin_peer_scope_grants'")):
+        return True
+    from ..storage_schema import identify_schema
+    rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+    try:
+        identify_schema(rows,native=any(row[0]=='table' and row[1]=='local_workspace_identity' for row in rows))
+    except ValueError:
+        raise ServiceError('VERSION_CONFLICT',409) from None
+    return False
+
+
+def _grant(row):
+    try:
+        values=dict(row);raw=values.pop('scope_json')
+        values['scope']=d.ScopeSnapshot.model_validate_json(raw)
+        if raw!=canonical_json(values['scope'].model_dump(mode='json')):
+            raise ValueError('noncanonical scope')
+        return d.WeixinPeerScopeGrant(**values)
+    except (ValueError,TypeError):
+        raise ServiceError('VERSION_CONFLICT',409) from None
+
+
+def _grant_history(mapping, db):
+    if not _grant_table(db):
+        return ()
+    history=tuple(_grant(row) for row in db.execute(text('''SELECT * FROM weixin_peer_scope_grants
+        WHERE mapping_id=:id ORDER BY revision'''),{'id':str(mapping.id)}).mappings())
+    previous=mapping.scope;at=mapping.created_at
+    owner=db.scalar(text('SELECT owner_id FROM weixin_accounts WHERE id=:id'),{'id':str(mapping.account_id)})
+    for revision,value in enumerate(history,1):
+        if (value.mapping_id!=mapping.id or str(value.actor_id)!=owner or value.revision!=revision
+                or value.previous_scope_sha256!=_digest(previous.model_dump(mode='json'))
+                or not _newer_scope(previous,value.scope) or value.created_at<=at):
+            raise ServiceError('VERSION_CONFLICT',409)
+        previous=value.scope;at=value.created_at
+    return history
+
+
+def _effective_scope(mapping, db, *, at=None):
+    history=_grant_history(mapping,db)
+    if at is not None:
+        try:
+            boundary=at if isinstance(at,datetime) else datetime.fromisoformat(at.replace('Z','+00:00'))
+            if boundary.utcoffset()!=timedelta(0):raise ValueError('UTC required')
+        except (ValueError,TypeError,AttributeError):
+            raise ServiceError('VERSION_CONFLICT',409) from None
+        history=tuple(value for value in history if value.created_at<=boundary)
+    return history[-1].scope if history else mapping.scope
+
+
+def refresh_synthetic_peer(actor, mapping_id, request, *, database):
+    """Explicitly authorize newer input/material versions; never change the target."""
+    request=d.WeixinPeerRefreshInput.model_validate(request.model_dump(mode='python'))
+    with _transaction(database) as db:
+        current=_current(actor,db)
+        row=_mapping_row(mapping_id,db)
+        account,current=_account(current,row['account_id'],db)
+        mapping=_mapping(row)
+        history=_grant_history(mapping,db)
+        existing=next((value for value in history if value.request_id==request.request_id),None)
+        if existing is not None:
+            if (request.expected_grant_revision!=existing.revision-1
+                    or request.expected_scope_sha256!=existing.previous_scope_sha256
+                    or request.expected_scope!=existing.scope or request.reason!=existing.reason):
+                raise ServiceError('VERSION_CONFLICT',409)
+            _require_mapping(_mapping_reason(current,account,mapping,db))
+            return existing
+        previous=history[-1].scope if history else mapping.scope
+        if (request.expected_grant_revision!=len(history)
+                or request.expected_scope_sha256!=_digest(previous.model_dump(mode='json'))
+                or not _newer_scope(previous,request.expected_scope)):
+            raise ServiceError('VERSION_CONFLICT',409)
+        _require_mapping(_mapping_reason(current,account,mapping,db,scope=request.expected_scope))
+        if not _grant_table(db):
+            raise ServiceError('VERSION_CONFLICT',409)
+        values=dict(id=str(uuid4()),mapping_id=str(mapping.id),request_id=str(request.request_id),
+            actor_id=str(current.user_id),revision=len(history)+1,
+            previous_scope_sha256=request.expected_scope_sha256,scope=request.expected_scope.model_dump(mode='json'),
+            scope_sha256=_digest(request.expected_scope.model_dump(mode='json')),
+            checkpoint_revision=account.checkpoint_revision,reason=request.reason,
+            created_at=_activity_time(account.id,db,now=_at(),after=True))
+        grant=d.WeixinPeerScopeGrant(**values,grant_sha256=_digest(values))
+        stored=grant.model_dump(mode='json',exclude={'scope'})
+        stored['scope_json']=canonical_json(grant.scope.model_dump(mode='json'))
+        db.execute(text('INSERT INTO weixin_peer_scope_grants ('+','.join(stored)+') VALUES ('+
+            ','.join(':'+key for key in stored)+')'),stored)
+    return grant
+
+
+def find_peer_scope_grant(actor, mapping_id, request_id, *, database):
+    """Read a fixed refresh result under current authority, including restored copies."""
+    with _transaction(database) as db:
+        current=_current(actor,db)
+        row=_mapping_row(mapping_id,db)
+        account,current=_account(current,row['account_id'],db,active=False)
+        mapping=_mapping(row)
+        _require_mapping(_mapping_reason(current,account,mapping,db))
+        return next((value for value in _grant_history(mapping,db) if str(value.request_id)==str(request_id)),None)
