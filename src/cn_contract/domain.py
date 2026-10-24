@@ -4191,3 +4191,221 @@ class MainProfilePreparedInput(DomainModel):
         if len(wire) != basis.wire_bytes or hashlib.sha256(wire).hexdigest() != basis.wire_sha256:
             raise ValueError('profile wire differs from its submission basis')
         return self
+
+
+class TaskMediaInput(DomainModel):
+    media_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)]
+    name: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=240)]
+    mime: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)]
+    status: Literal['pending', 'unsupported', 'ready'] = 'pending'
+    attachment_id: UUID | None = None
+    sha256: SHA256 | None = None
+    parse_revision: PositiveInt | None = None
+
+    @model_validator(mode='after')
+    def complete_ready_reference(self):
+        if self.status == 'ready' and any(value is None for value in
+                (self.attachment_id, self.sha256, self.parse_revision)):
+            raise ValueError('ready media requires an attachment, hash and parse revision')
+        if self.attachment_id is None and (self.sha256 is not None or self.parse_revision is not None):
+            raise ValueError('media metadata requires an attachment')
+        return self
+
+
+class TaskInboxEventInput(DomainModel):
+    event_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)]
+    text: Annotated[str, StringConstraints(strict=True, max_length=20000)] = ''
+    task_id: UUID | None = None
+    reply_to_event_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)] | None = Field(
+        default=None, exclude_if=lambda value: value is None)
+    start_new: StrictBool = False
+    media: Annotated[tuple[TaskMediaInput, ...], Field(max_length=20)] = ()
+
+    @model_validator(mode='after')
+    def usable_event(self):
+        if not self.text.strip() and not self.media:
+            raise ValueError('an event requires text or media')
+        if self.start_new and (self.task_id is not None or self.reply_to_event_id is not None):
+            raise ValueError('explicit task and new task are mutually exclusive')
+        if len({item.media_id for item in self.media}) != len(self.media):
+            raise ValueError('media IDs must be unique within the event')
+        return self
+
+
+class TaskInboxBatchInput(DomainModel):
+    expected_cursor: NonNegativeInt
+    next_cursor: PositiveInt
+    events: Annotated[tuple[TaskInboxEventInput, ...], Field(min_length=1, max_length=100)]
+
+    @model_validator(mode='after')
+    def increasing_cursor(self):
+        if self.next_cursor <= self.expected_cursor:
+            raise ValueError('cursor must advance')
+        if len({event.event_id for event in self.events}) != len(self.events):
+            raise ValueError('duplicate event IDs in a batch')
+        return self
+
+
+class TaskChannelBindingView(DomainModel):
+    id: UUID
+    conversation_id: UUID
+    channel: Literal['synthetic'] = 'synthetic'
+    cursor: NonNegativeInt
+    created_at: UTCDatetime
+
+
+class TaskInboxEventView(DomainModel):
+    id: UUID
+    binding_id: UUID
+    event_id: NonEmpty
+    text: str
+    task_id: UUID | None
+    reply_to_event_id: str | None = Field(default=None,exclude_if=lambda value: value is None)
+    start_new: StrictBool
+    media: tuple[TaskMediaInput, ...]
+    association: Literal['assigned', 'unassigned']
+    created_at: UTCDatetime
+
+
+class TaskManifestMedia(TaskMediaInput):
+    result_sha256: SHA256 | None = None
+    reading_status: Literal['readable', 'partial', 'needs_baseline', 'failed'] | None = None
+    excluded: StrictBool = False
+    exclusion_reason: NonEmpty | None = None
+
+
+class TaskManifestEvent(DomainModel):
+    id: UUID
+    event_id: NonEmpty
+    payload_sha256: SHA256
+    text: str
+    media: tuple[TaskManifestMedia, ...]
+
+
+class TaskDraftManifest(DomainModel):
+    draft_id: UUID
+    conversation_id: UUID
+    scope: ScopeSnapshot
+    revision: PositiveInt
+    instruction: str
+    main_attachment_id: UUID | None
+    events: tuple[TaskManifestEvent, ...]
+    review_status: Literal['unverified'] = 'unverified'
+    synthetic: Literal[True] = True
+
+
+class TaskMediaResolutionInput(DomainModel):
+    event_id: UUID
+    media_id: NonEmpty
+    action: Literal['resolve', 'exclude']
+    replacement: TaskMediaInput | None = None
+    reason: Annotated[NonEmpty, Field(max_length=1000)] | None = None
+
+    @model_validator(mode='after')
+    def explicit_resolution(self):
+        if self.action == 'resolve':
+            if (self.replacement is None or self.replacement.status != 'ready'
+                    or self.replacement.media_id != self.media_id):
+                raise ValueError('resolution requires a ready reference with the same media ID')
+        elif self.replacement is not None or self.reason is None:
+            raise ValueError('exclusion requires a reason and no replacement')
+        return self
+
+
+class TaskMediaResolutionView(TaskMediaResolutionInput):
+    id: UUID
+    revision: PositiveInt
+    created_at: UTCDatetime
+
+
+TaskExecutionState = Literal['prepared', 'creating_matter', 'awaiting_facts', 'queued',
+    'running', 'completed', 'failed', 'blocked']
+
+
+class TaskExecutionView(DomainModel):
+    id: UUID
+    draft_id: UUID
+    revision: PositiveInt
+    manifest_sha256: SHA256
+    manifest: TaskDraftManifest
+    state: TaskExecutionState
+    matter_id: UUID | None = None
+    job_id: UUID | None = None
+    review_run_id: UUID | None = None
+    document_versions: Mapping[UUID, SHA256] = Field(default_factory=dict)
+    source_versions: Mapping[UUID, UUID] = Field(default_factory=dict)
+    prepare_request_id: UUID | None = None
+    review_request_id: UUID | None = None
+    review_input_sha256: SHA256 | None = None
+    error: Annotated[str, StringConstraints(strict=True, max_length=200)] | None = None
+    created_at: UTCDatetime
+    updated_at: UTCDatetime
+
+
+class TaskDraftView(DomainModel):
+    id: UUID
+    conversation_id: UUID
+    parent_draft_id: UUID | None
+    revision: PositiveInt
+    state: Literal['collecting', 'paused', 'cancelled', 'frozen']
+    instruction: str
+    main_attachment_id: UUID | None
+    events: tuple[TaskInboxEventView, ...]
+    media_resolutions: tuple[TaskMediaResolutionView, ...]
+    manifest_sha256: SHA256
+    blockers: tuple[str, ...]
+    execution: TaskExecutionView | None
+    created_at: UTCDatetime
+    updated_at: UTCDatetime
+
+
+class TaskDraftListView(DomainModel):
+    binding: TaskChannelBindingView | None
+    items: tuple[TaskDraftView, ...]
+    unassigned_events: tuple[TaskInboxEventView, ...]
+
+
+class TaskInboxBatchReceipt(DomainModel):
+    binding: TaskChannelBindingView
+    events: tuple[TaskInboxEventView, ...]
+    drafts: tuple[TaskDraftView, ...]
+
+
+class TaskDraftUpdateInput(DomainModel):
+    expected_revision: PositiveInt
+    action: Literal['update', 'assign', 'pause', 'resume', 'cancel'] = 'update'
+    instruction: Annotated[str, StringConstraints(strict=True, max_length=20000)] | None = None
+    event_ids: Annotated[tuple[UUID, ...], Field(max_length=100)] = ()
+    main_attachment_id: UUID | None = None
+    media_resolutions: Annotated[tuple[TaskMediaResolutionInput, ...], Field(max_length=100)] = ()
+
+    @model_validator(mode='after')
+    def explicit_changes(self):
+        if len(set(self.event_ids)) != len(self.event_ids):
+            raise ValueError('duplicate event IDs')
+        if self.action == 'assign' and not self.event_ids:
+            raise ValueError('assignment requires event IDs')
+        if self.action != 'assign' and self.event_ids:
+            raise ValueError('event IDs are only accepted by assignment')
+        if self.action != 'update' and (self.instruction is not None or self.main_attachment_id is not None):
+            raise ValueError('content changes require update')
+        if self.media_resolutions and self.action != 'update':
+            raise ValueError('media resolution requires update')
+        if len({(item.event_id,item.media_id) for item in self.media_resolutions}) != len(self.media_resolutions):
+            raise ValueError('duplicate media resolutions')
+        return self
+
+
+class TaskFreezeInput(DomainModel):
+    expected_revision: PositiveInt
+    manifest_sha256: SHA256
+
+
+class TaskExecutionPrepareInput(DomainModel):
+    matter_id: UUID
+    request_id: UUID
+
+
+class TaskExecutionReviewInput(DomainModel):
+    request_id: UUID
+    review: ReviewStartInput

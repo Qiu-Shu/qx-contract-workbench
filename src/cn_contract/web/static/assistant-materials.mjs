@@ -65,6 +65,7 @@ export function bindMaterials({controller,readonly=false,root=document,onPreview
     upload.disabled=held || !queue.length || !byId('material-consent').checked;
     upload.textContent=queue.length>1?`保存 ${queue.length} 个文件在本机`:'保存在本机';
     byId('material-file').disabled=byId('material-consent').disabled=held;
+    if(byId('material-purpose'))byId('material-purpose').disabled=held;
     for(const chip of byId('material-queue').children)
       for(const child of chip.children)if(child.tagName==='button')child.disabled=held;
   }
@@ -151,7 +152,8 @@ export function bindMaterials({controller,readonly=false,root=document,onPreview
   byId('material-consent').addEventListener('change',enableUpload);
   byId('upload-material').addEventListener('click',async()=>{
     if(!queue.length || !byId('material-consent').checked)return;
-    const policy={policy_id:'assistant-local-files-v2',material_mode:root.body.dataset.localMaterials==='true'?'local':'synthetic',
+    const mode=root.body.dataset.localMaterials==='true'&&byId('material-purpose')?.value!=='synthetic'?'local':'synthetic';
+    const policy={policy_id:'assistant-local-files-v2',material_mode:mode,
       local_processing_accepted:true,external_processing:false};
     const batch=[...queue];let saved=0;
     for(const file of batch){

@@ -21,7 +21,9 @@ def legacy(tmp_path,monkeypatch):
         matter=create_case(client,login(client),title='升级前合成案件')
     # Remove versioned extensions, recreating the fixed pre-intake schema.
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        for table in ('assistant_profile_handlers', 'assistant_profile_receipts', 'assistant_profile_revisions',
+        for table in ('task_media_resolutions', 'task_executions', 'task_draft_events',
+                      'task_drafts', 'task_inbox_events', 'task_channel_bindings',
+                      'assistant_profile_handlers', 'assistant_profile_receipts', 'assistant_profile_revisions',
                       'assistant_model_input_citations', 'assistant_library_citations', 'assistant_handler_receipts',
                       'assistant_judge_decisions', 'assistant_judge_receipts', 'assistant_judge_attempts',
                       'assistant_model_outputs', 'assistant_model_receipts', 'assistant_model_attempts',
@@ -30,6 +32,8 @@ def legacy(tmp_path,monkeypatch):
                       'assistant_conversations', 'intake_revisions','intake_cases'):
             db.execute('DROP TABLE IF EXISTS '+table)
         db.commit()
+        from cn_contract.storage_schema import schema_rows
+        assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
         marker=json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256']=local_server._schema_hash(db)
     (root/'workspace.json').write_text(json.dumps(marker),encoding='utf-8')

@@ -14,6 +14,28 @@
   --read-size: 1rem;
   --sidebar-size: 14.5rem;
 }
+.task-draft-panel { margin: 1rem 0; border-block: 1px solid var(--line); padding: 1rem 0; }
+.task-draft-panel > summary { font-weight: 600; cursor: pointer; line-height: 1.7; }
+.task-draft-panel > summary span { display: block; margin-left: 1.1rem; font-size: .875rem; font-weight: 400; }
+.task-draft-body { display: grid; gap: .75rem; padding-top: 1rem; }
+.task-draft-body textarea, .task-draft-body select, .task-draft-body input[type="text"] { width: 100%; padding: .6rem; border: 1px solid var(--line); border-radius: .4rem; color: var(--text); background: var(--surface); }
+.task-draft-body textarea { resize: vertical; }
+.task-draft-body p { line-height: 1.7; overflow-wrap: anywhere; }
+.task-attachment-field { min-width: 0; margin: 0; border: 0; padding: 0; }
+.task-attachment-field legend { margin-bottom: .5rem; }
+.task-attachments { display: grid; gap: .5rem; }
+.task-attachments label { display: flex; align-items: start; gap: .5rem; overflow-wrap: anywhere; }
+.task-attachments input { margin-top: .3rem; flex-shrink: 0; }
+.task-current { display: grid; gap: .75rem; }
+.task-current:empty { display: none; }
+.task-current details { padding: .75rem 0; border-block: 1px solid var(--line); }
+.task-current label { display: grid; gap: .4rem; }
+.task-current > button { justify-self: start; }
+.task-actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.task-event + .task-event { border-top: 1px solid var(--line); }
+.task-event, .task-media-row { display: grid; gap: .5rem; padding-block: .5rem; }
+.task-media-row button { justify-self: start; }
+.task-saved-instruction { white-space: pre-wrap; }
 * { box-sizing: border-box; }
 body { margin: 0; }
 button, select, textarea { font: inherit; }

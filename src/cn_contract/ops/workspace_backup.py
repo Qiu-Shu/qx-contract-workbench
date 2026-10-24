@@ -317,10 +317,13 @@ def _fence(root, refs, archive_hash, manifest_hash):
             model_attempts = recover_attempts(db)
             from ..assistant.service import quarantine_runs
             assistant_jobs = quarantine_runs(db)
+            from ..task_drafts.service import quarantine_executions
+            task_executions = quarantine_executions(db)
             db.add(storage.RestoreFenceRow(ref=str(uuid4()),archive_sha256=archive_hash,
                 manifest_sha256=manifest_hash,payload=encode({'restored_at':datetime.now(timezone.utc).isoformat(),
                 'state':'quarantined','old_sessions_revoked':True,'jobs_quarantined':len(pending),
                 'assistant_jobs_quarantined':assistant_jobs,
+                'task_executions_quarantined':task_executions,'task_inbox_enabled':False,
                 'model_attempts_interrupted':model_attempts,
                 'judge_attempts_interrupted':judge_attempts,
                 'live_egress':False,'current_approvals_valid':False,'external_highwater':None}).decode()))

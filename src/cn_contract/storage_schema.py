@@ -6,6 +6,7 @@ from .assistant.rounds_schema import expected_objects as rounds_objects
 from .assistant.rounds_v2_schema import expected_objects as rounds_v2_objects
 from .assistant.profile_schema import expected_objects as profile_objects
 from .assistant.profile_model_schema import expected_objects as profile_model_objects
+from .task_drafts.schema import expected_objects as task_objects
 from .assistant_judge_schema_baseline import ASSISTANT_JUDGE_V1_ROWS
 from .assistant_model_schema_baseline import ASSISTANT_MODEL_V1_ROWS
 from .assistant_attachment_schema_baseline import ASSISTANT_ATTACHMENTS_V1_ROWS
@@ -13,8 +14,8 @@ from .assistant_schema_baseline import ASSISTANT_V1_ROWS
 from .schema_baseline import INTAKE_V1_ROWS
 
 
-CURRENT_VERSION = 'assistant-profile-model-v1'
-VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1', CURRENT_VERSION)
+CURRENT_VERSION = 'task-drafts-v1'
+VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', CURRENT_VERSION)
 SUPPORTED_VERSIONS = VERSIONS
 _INTAKE_TABLES = frozenset(('intake_cases', 'intake_revisions'))
 _LIBRARY_ROWS = tuple(library_objects())
@@ -23,6 +24,7 @@ _ROUNDS_ROWS = tuple(rounds_objects())
 _ROUNDS_V2_ROWS = tuple(rounds_v2_objects())
 _PROFILE_ROWS = tuple(profile_objects())
 _PROFILE_MODEL_ROWS = tuple(profile_model_objects())
+_TASK_ROWS = tuple(task_objects())
 _IDENTITY_ROWS = (
     ('index', 'sqlite_autoindex_local_workspace_identity_1', 'local_workspace_identity', None),
     ('table', 'local_workspace_identity', 'local_workspace_identity',
@@ -46,17 +48,19 @@ def schema_rows(version, *, native=False):
         result.extend(ASSISTANT_JUDGE_V1_ROWS)
     if version in VERSIONS[6:]:
         result.extend(_LIBRARY_ROWS)
-    if version in ('assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1'):
+    if version in VERSIONS[7:]:
         # The context migration alters the model family in place; replace its
         # frozen V1 rows with the exact migrated structure. The two rounds
         # rebuilds replace the attempts table once more on top of that.
         result = [row for row in result if row[2] not in _CONTEXT_FAMILY_TABLES]
         result.extend(_CONTEXT_ROWS if version == 'assistant-context-v1'
                       else _ROUNDS_ROWS if version == 'assistant-rounds-v1'
-                      else _PROFILE_MODEL_ROWS if version == 'assistant-profile-model-v1'
+                      else _PROFILE_MODEL_ROWS if version in VERSIONS[11:]
                       else _ROUNDS_V2_ROWS)
     if version == 'assistant-profiles-v1':
         result.extend(_PROFILE_ROWS)
+    if version in VERSIONS[12:]:
+        result.extend(_TASK_ROWS)
     if native:
         result.extend(_IDENTITY_ROWS)
     if len({row[1] for row in result}) != len(result):

@@ -234,3 +234,15 @@ test('non-DOCX materials preview without a parse control and the queue clears on
   assert.equal(labels.some(text=>['读取 DOCX','重新读取，保留历史版本','按所选方式读取'].includes(text)),false,'no parse action for PDF');
   assert.equal(labels.some(text=>String(text).includes('暂不支持读取原文')),true);
 });
+
+for(const choice of ['', 'synthetic'])test('desktop material purpose remains explicit: '+(choice||'local default'),async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');
+  const policies=[],normal=f.api.uploadAttachment;
+  f.api.uploadAttachment=async(id,body,file)=>{policies.push(body.policy);return normal(id,body,file);};
+  f.root.getElementById('material-purpose').value=choice;
+  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('登记合成.docx',mime)]}});
+  f.root.getElementById('material-consent').checked=true;
+  await f.root.getElementById('material-consent').fire('change');
+  await f.root.getElementById('upload-material').fire('click');
+  assert.equal(policies.length,1);assert.equal(policies[0].material_mode,choice||'local');
+});

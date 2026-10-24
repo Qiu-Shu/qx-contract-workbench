@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>群兴 · 历史模拟结果</title><link rel="stylesheet" href="/static/workspace.css"></head>
+<body>
+  <header class="workspace-header"><a href="/recovery" class="brand">群兴法律工作台</a><span>恢复副本 · 只读核对</span></header>
+  <main class="workspace-main recovery-main">
+    <h1>历史模拟结果</h1>
+    <p class="notice">这是备份中已保存的模拟结果，真实模型未运行。历史结论和批准不代表当前有效；此页仅供核对，不能继续执行或批准。</p>
+    <nav aria-label="恢复资料导航"><a href="/assistant/{{ execution.manifest.conversation_id }}#task-{{ execution.draft_id }}">返回来源会话</a>{% if execution.matter_id %} · <a href="/recovery/matters/{{ execution.matter_id }}">查看恢复案件与原件</a>{% endif %}</nav>
+    <section aria-labelledby="task-summary"><h2 id="task-summary">任务与版本</h2>
+      <p class="reading-text">{{ execution.manifest.instruction }}</p>
+      <p>冻结第 {{ execution.revision }} 版 · 保存于 {{ execution.created_at }}</p>
+      <details><summary>核对任务编号与材料摘要</summary>
+        <p class="muted">任务草稿 {{ execution.draft_id }}<br>执行记录 {{ execution.id }}<br>材料清单 SHA256 {{ execution.manifest_sha256 }}</p>
+        {% if run %}<p class="muted">模拟审查记录 {{ run.id }}<br>结果保存于 {{ run.finished_at or run.started_at }}</p>{% endif %}
+        {% for document in documents %}<h3>{{ document.name }}</h3><p class="muted">文档版本 {{ document.id }}<br>原件 SHA256 {{ document.sha256 }}</p>{% else %}<p>此任务尚未保存案件文档版本。</p>{% endfor %}
+      </details>
+    </section>
+    {% if run %}
+    <section aria-labelledby="history-limitations"><h2 id="history-limitations">结果限制</h2>
+      <p>以下内容保持备份时的状态，不能据此声称合同无风险或已取得当前批准。</p>
+      {% for limitation in run.limitations %}<p class="reading-text">{{ limitation }}</p>{% endfor %}
+    </section>
+    <section aria-labelledby="history-coverage"><h2 id="history-coverage">18 维覆盖 · 历史状态</h2>
+      {% for item in run.coverage %}<article data-coverage-id="{{ item.coverage_id }}">
+        <h3>{{ item.coverage_id }} {{ coverage_names[item.coverage_id] }}</h3>
+        <p>{{ {'reviewed_issue':'发现待处置问题','reviewed_no_issue':'已审阅未发现问题','insufficient_material':'材料不足','unsupported':'当前不支持','not_applicable':'不适用'}[item.status] }}</p>
+        {% if item.rationale %}<p class="reading-text">{{ item.rationale }}</p>{% endif %}
+      </article>{% endfor %}
+    </section>
+    <section aria-labelledby="history-findings"><h2 id="history-findings">历史模拟意见</h2>
+      {% for finding in run.findings %}<article>
+        <h3>意见 {{ loop.index }} · {{ {'high':'高风险','medium':'中等风险','low':'低风险','info':'提示'}[finding.severity] }}</h3>
+        <p class="reading-text">{{ finding.analysis }}</p>
+        <p class="reading-text">业务影响：{{ finding.business_effect }}</p>
+        <p class="reading-text">原始建议：{{ finding.recommendation }}</p>
+        <details><summary>核对意见与原文位置编号</summary><p class="muted">意见 {{ finding.id }}<br>相关维度 {{ finding.coverage_ids|join('、') }}</p>{% for anchor in finding.anchor_ids %}<p class="muted">原文位置 {{ anchor }}</p>{% endfor %}{% for anchor in finding.cross_anchor_ids %}<p class="muted">关联原文位置 {{ anchor }}</p>{% endfor %}</details>
+      </article>{% else %}<p>此记录没有保存模拟意见；覆盖状态与限制仍须逐项核对。</p>{% endfor %}
+    </section>
+    {% else %}<section><h2>尚无已保存结果</h2><p>备份中的此任务尚未完成模拟审查。请回到原工作区核对后续进度。</p></section>{% endif %}
+  </main>
+</body>
+</html>

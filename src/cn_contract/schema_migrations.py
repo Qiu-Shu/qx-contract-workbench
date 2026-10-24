@@ -29,6 +29,8 @@ def statements_for(version):
         from .assistant.profile_schema import STATEMENTS
     elif version == 'assistant-profile-model-v1':
         from .assistant.profile_model_schema import STATEMENTS
+    elif version == 'task-drafts-v1':
+        from .task_drafts.schema import STATEMENTS
     else:
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     return STATEMENTS

@@ -237,7 +237,7 @@ def validate_profile_records(db, *, allowed=True):
     schema = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
     native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
     version = identify_schema(schema, native=native)
-    if version not in ('assistant-profiles-v1', 'assistant-profile-model-v1'):
+    if version not in ('assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1'):
         return
     receipts = db.execute(text('SELECT * FROM assistant_profile_receipts ORDER BY conversation_id,sequence')).mappings().all()
     revisions = db.execute(text('SELECT * FROM assistant_profile_revisions ORDER BY conversation_id,revision')).mappings().all()

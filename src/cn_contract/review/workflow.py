@@ -57,6 +57,11 @@ def current_manifest(context,actor,db,config,*,allow_finished=False):
         if config!=assisted_configuration(policy):raise ServiceError('VERSION_CONFLICT',409)
         require_documents(policy,context.document_versions,actor,db)
         provider='assisted_manual'
+    elif config.get('task_execution_id') is not None:
+        from ..task_drafts.mock_policy import require_mock_execution
+        if config.get('provider') != 'mock':
+            raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+        require_mock_execution(config['task_execution_id'], context, actor, db)
     elif is_assisted(db):
         raise ServiceError('DATA_POLICY_UNAPPROVED',409)
     current_ids=set(db.scalars(select(DocumentRow.id).where(DocumentRow.matter_id==str(matter.id))))
@@ -288,9 +293,11 @@ def coverage_for(context,findings,processed,parses,*,failed=False):
     return tuple(out)
 
 
-def run_review(context,model,*,actor,db,usage_limit=None,require_legal_rules=False):
+def run_review(context,model,*,actor,db,usage_limit=None,require_legal_rules=False,task_execution_id=None):
     require_storage(db);require_provider(model)
     config=prompt_configuration(model_configuration(model))
+    if task_execution_id is not None:
+        config['task_execution_id']=str(task_execution_id)
     manifest,anchors,parses,selection,actual=current_manifest(context,actor,db,config)
     projected=_project(actual,selection)
     for aid in projected.authority_ids: read_authority(aid,actor,matter_id=actual.matter.id,db=db)

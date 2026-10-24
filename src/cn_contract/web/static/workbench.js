@@ -129,7 +129,15 @@ async function loadFacts(){clear('anchors');await anchors();const snapshot=await
   }if(assisted){populateCandidateAnchors('candidate-fact-anchor');const confirmation=document.querySelector('#facts-form button');confirmation.disabled=!snapshot.facts.length;on('candidate-fact-form','submit',async event=>{const form=new FormData(event.currentTarget);const selected=allAnchors.find(a=>a.id===form.get('anchor_id'));const version=documents.find(v=>v.id===selected?.document_version_id);if(!selected||!version||!selected.sourceEligible)throw new Error('请选择当前可以消费的原文位置。');const kind=form.get('kind'),unit=form.get('unit').trim();if(kind==='decimal'&&!unit)throw new Error('精确数值必须按原文填写单位，不能猜测或自动换算。');await api(base+'/facts/candidates',{method:'POST',idempotency:key(),body:{document_version_id:version.id,document_sha256:version.sha256,fact_version:snapshot.version,candidates:[{field:form.get('field'),typed_value:{kind,value:form.get('value')},unit:unit||null,anchor_ids:[selected.id]}]}});candidateContext=null;await loadFacts();tell('候选已保存为新版本；请逐项核对完整事实快照。');});}on('facts-form','submit',async()=>{const decisions=snapshot.facts.map(f=>{const c=host.querySelector('[data-fact="'+f.id+'"]');const decision=c.querySelector('[name=decision]').value;const typed=structuredClone(f.typed_value);const value=c.querySelector('[name=value]').value;
       if(decision==='corrected'){if(typed.kind==='bool')typed.value=value==='true';else if(typed.kind==='integer')typed.value=Number(value);else if('amount'in typed)typed.amount=value;else typed.value=value;}
       return {fact_id:f.id,decision,confirmed_value:typed,reason:c.querySelector('[name=reason]').value};});const saved=await api(base+'/facts/confirm',{method:'POST',body:{fact_version:snapshot.version,decisions},idempotency:key()});await loadFacts();tell('事实已保存为新版本 '+saved.version+'。可进入18维审查。');});}
-async function latestRun(){const list=await api(base+'/reviews');if(!list.length)return null;run=await api(base+'/reviews/'+encodeURIComponent(list[0].id));return run;}
+async function latestRun(){const list=await api(base+'/reviews');if(!list.length)return null;run=await api(base+'/reviews/'+encodeURIComponent(list[0].id));renderRunSource();return run;}
+function renderRunSource(){
+  const host=document.getElementById('review-run-status');if(!host)return;
+  host.textContent=run?.manifest?.model_provider==='mock'
+    ?'本次已保存结果：模拟审查 · 真实模型未运行 · 内部待核对。'
+    :run?.manifest?.model_provider==='assisted_manual'
+      ?'本次已保存结果：离线人工候选 · 真实模型未运行 · 律师处置待核。'
+      :'本次结果来源待核对。';
+}
 function coverage(){const host=clear('coverage');if(!host)return;for(const item of run.coverage){const c=el('div',undefined,'card');c.append(el('strong',item.coverage_id+' '+(coverageNames.get(item.coverage_id)||'待核对维度')),el('p',coverageStates[item.status]||item.status));if(item.rationale)c.append(el('p',item.rationale,'muted'));host.append(c);}}
 function basisEditor(form,previous,sources,nextCursor){
   const details=el('details'),summary=el('summary','本条意见的法源核验与谈判标准');details.append(summary);

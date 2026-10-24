@@ -58,7 +58,7 @@ def test_empty_successor_runs_all_archive_validators(tmp_path, native):
                 db.execute(text('CREATE TABLE local_workspace_identity (id TEXT PRIMARY KEY NOT NULL)'))
         with database.session() as db:
             rows = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
-            assert storage_schema.identify_schema(rows, native=native) == 'assistant-profile-model-v1'
+            assert storage_schema.identify_schema(rows, native=native) == storage_schema.CURRENT_VERSION
             assert backup._file_references(db) == []
             assert backup._file_references(db, allow_assistant=False) == []
     finally:

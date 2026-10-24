@@ -20,6 +20,7 @@ from ..documents.ingest import parse_document
 from ..exports import approvals
 from ..exports import storage as exports_storage
 from . import storage as s
+from ..task_drafts.mock_policy import require_mock_case
 
 
 def current_versions(matter_id, actor, db):
@@ -33,15 +34,17 @@ def public_version(version):
     return version.model_dump(mode='json', exclude={'storage_ref'})
 
 
-def candidate_parse(matter_id, version_id, actor, db):
+def candidate_parse(matter_id, version_id, actor, db, *, synthetic_task=False):
     version = read_version(matter_id, version_id, actor, db)
     if version.id not in {v.id for v in current_versions(matter_id, actor, db)}:
         raise ServiceError('VERSION_CONFLICT', 409)
     from ..review.proposals import is_assisted,require_policy,require_documents
-    if is_assisted(db):
+    if synthetic_task:
+        require_mock_case(matter_id, actor, db)
+    if is_assisted(db) and not synthetic_task:
         require_documents(require_policy(db,matter_id),(version,),actor,db)
     parsed = parse_document(version, None, actor=actor, db=db)
-    if is_assisted(db):
+    if is_assisted(db) and not synthetic_task:
         facts=()
     else:
         facts = extract_document_candidates(parsed, MockProvider(), matter_id=matter_id, actor=actor, db=db)
@@ -151,11 +154,15 @@ def verify_review_input(matter_id, value, actor, db):
     return ctx
 
 
-def review(matter_id, value, actor, db):
+def review(matter_id, value, actor, db, *, synthetic_task=False, task_execution_id=None):
     from ..review.proposals import is_assisted
-    if is_assisted(db):raise ServiceError('NOT_SUPPORTED',409)
+    if synthetic_task:
+        require_mock_case(matter_id, actor, db)
+    elif is_assisted(db):raise ServiceError('NOT_SUPPORTED',409)
+    if synthetic_task and task_execution_id is None:
+        raise ServiceError('DATA_POLICY_UNAPPROVED', 409)
     ctx = verify_review_input(matter_id, value, actor, db)
-    return str(run_review(ctx, MockProvider(), actor=actor, db=db).id)
+    return str(run_review(ctx, MockProvider(), actor=actor, db=db, task_execution_id=task_execution_id).id)
 
 
 def current_run(matter_id, run_id, digest, actor, db):

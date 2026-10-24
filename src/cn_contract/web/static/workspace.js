@@ -71,7 +71,7 @@
     });
     load().catch(error=>tell(error.message,true));
     request('/api/matters').then(matters=>{const host=byId('recent-matters');host.replaceChildren();for(const m of matters){const row=element('div',undefined,'record-row');row.append(link(m.title,'/matters/'+encodeURIComponent(m.id)));host.append(row);}if(!matters.length)host.append(element('p','尚无合同案件。可从接待转案，或在合同工作台新建。','muted'));}).catch(error=>tell(error.message,true));
-    request('/api/workspace/tasks').then(tasks=>{const host=byId('running-tasks');host.replaceChildren();for(const t of tasks){const row=element('div',undefined,'record-row');row.append(link(t.title,'/matters/'+encodeURIComponent(t.matter_id)),element('span',t.stage,'state'));host.append(row);}if(!tasks.length)host.append(element('p','当前没有正在执行的任务。','muted'));}).catch(error=>tell(error.message,true));
+    request('/api/workspace/tasks').then(tasks=>{const host=byId('running-tasks');host.replaceChildren();for(const t of tasks){const row=element('div',undefined,'record-row');row.append(link(t.title,t.href||'/matters/'+encodeURIComponent(t.matter_id)),element('span',t.stage,'state'));host.append(row);}if(!tasks.length)host.append(element('p','当前没有待跟进的任务。','muted'));}).catch(error=>tell(error.message,true));
     return;
   }
 

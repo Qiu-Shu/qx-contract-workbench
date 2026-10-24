@@ -16,6 +16,7 @@ from .assistant_attachments import is_attachment_read_path
 from .assistant_generation import is_generation_read_path
 from .assistant_research import is_research_read_path
 from .assistant_profiles import is_profile_read_path
+from .task_drafts import is_task_read_path
 
 
 def attach_recovery(app, database):
@@ -34,6 +35,7 @@ def attach_recovery(app, database):
         safe_api = safe_api or is_generation_read_path(path)
         safe_api = safe_api or is_research_read_path(path)
         safe_api = safe_api or is_profile_read_path(path)
+        safe_api = safe_api or is_task_read_path(path)
         if ((request.method not in ('GET','HEAD','OPTIONS') and path not in ('/api/login','/api/logout'))
                 or path.startswith('/api/') and not safe_api):
             return JSONResponse({'code':'BLOCKED_LIVE'},status_code=409)
@@ -72,6 +74,29 @@ def attach_recovery(app, database):
             artifacts.extend({'id':r.ref,'kind':'历史修订 Word'} for r in db.scalars(select(ExportRecordRow).where(
                 ExportRecordRow.matter_id==str(matter_id),ExportRecordRow.kind=='patch_result')) if json.loads(r.payload).get('status')=='applied')
         return render(title=title,matter_id=matter_id,documents=documents,artifacts=artifacts,record=None,cases=None)
+
+    @app.get('/recovery/task-executions/{identifier}',response_class=HTMLResponse)
+    def task_history(identifier:UUID,request:Request):
+        from ..domain import CoverageId
+        from ..exports.audience_filter import DIMENSIONS
+        from ..review.storage import read_run
+        from ..task_drafts.service import read_execution
+        with database.session() as db:
+            actor=actor_in(request,db)
+            execution=read_execution(actor,identifier,db)
+            run=None
+            if execution.review_run_id is not None:
+                run=read_run(execution.matter_id,execution.review_run_id,actor,db=db,current=False)
+                if (run.manifest.model_provider!='mock' or run.id!=execution.review_run_id
+                        or dict(run.manifest.document_hashes)!=dict(execution.document_versions)):
+                    raise ServiceError('VERSION_CONFLICT',409)
+            names={media.attachment_id:media.name for event in execution.manifest.events for media in event.media}
+            sources={version:names.get(source,'原件') for source,version in execution.source_versions.items()}
+            documents=[{'id':version,'sha256':digest,'name':sources.get(version,'原件')}
+                       for version,digest in execution.document_versions.items()]
+        return HTMLResponse(app.state.template_environment.get_template('recovery_task.html').render(
+            execution=execution,run=run,documents=documents,
+            coverage_names=dict(zip(CoverageId,DIMENSIONS,strict=True))))
 
     @app.get('/recovery/intakes/{identifier}',response_class=HTMLResponse)
     def intake(identifier:UUID,request:Request,revision:int|None=None):

@@ -5,10 +5,11 @@ import {bindComposer} from './assistant-composer.mjs';
 import {bindMaterials} from './assistant-materials.mjs';
 import {bindCitations} from './assistant-citations.mjs';
 import {bindProfile} from './assistant-profile.mjs';
+import {bindTaskDrafts} from './assistant-tasks.mjs';
 
 const byId=id=>document.getElementById(id);
 const readonly=document.body.dataset.readonly==='true';
-let composer, materials, citations, profile, timer, listCursor=null, listEpoch=0, closed=false;
+let composer, materials, citations, profile, tasks, timer, listCursor=null, listEpoch=0, closed=false;
 let generationTimer, pollTimer, generationKey=null;
 let pendingRoute=document.body.dataset.conversationId || null;
 const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing(),onCitation:(id,trigger)=>void citations.open(id,trigger),
@@ -39,7 +40,7 @@ const controller=createDraftController(api,{readonly,
 
 function drawState(state) {
   renderer.state(state,readonly);
-  materials?.state(state);citations?.state(state);profile?.state(state);
+  materials?.state(state);citations?.state(state);profile?.state(state);tasks?.state(state);
   if(pendingRoute && !state.id && state.status!=='revoked') {
     byId('composer').disabled=true;byId('save-draft').disabled=true;byId('send').disabled=true;
     byId('add-material').disabled=true;
@@ -99,6 +100,7 @@ async function loadList(append=false) {
   finally { if(epoch===listEpoch)byId('more-conversations').disabled=false; }
 }
 async function open(id) {
+  if(tasks?.hasPending()){notice('请先保存任务卡中的补充内容，或清空未保存的输入与勾选，再切换对话。');return;}
   clearTimeout(timer);
   pendingRoute=id;
   const done=await safely(()=>controller.open(id));
@@ -116,6 +118,7 @@ composer=bindComposer({input:byId('composer'),form:byId('composer-form'),
 materials=bindMaterials({controller,readonly,onPreview:()=>{citations?.close();profile?.close();}});
 citations=bindCitations({controller,onOpen:()=>{materials.close();profile?.close();}});
 profile=bindProfile({controller,api,onOpen:()=>{materials.close();citations.close();}});
+tasks=bindTaskDrafts({controller,api,readonly});
 
 const examples={client_reply:'这是客户的咨询，帮我理清诉求并起草回复：',
   material_organize:'请帮我整理这次咨询的事实线索和待补材料：',
@@ -123,6 +126,7 @@ const examples={client_reply:'这是客户的咨询，帮我理清诉求并起�
   content_draft:'请围绕这个法律主题起草一段文案：',
   legal_research:''};
 document.querySelectorAll('[data-skill]').forEach(button=>button.addEventListener('click',()=>{
+  if(button.dataset.skill==='contract_review'){closeMenu();tasks.open();return;}
   controller.selectSkill(button.dataset.skill);
   if(examples[button.dataset.skill] && !controller.state.text && !composer.isComposing()) {
     controller.edit(examples[button.dataset.skill]);
@@ -134,6 +138,7 @@ byId('clear-skill').addEventListener('click',()=>{controller.selectSkill(null);b
 byId('save-draft').addEventListener('click',()=>{clearTimeout(timer);void safely(()=>
   controller.state.status==='error'?controller.retry():controller.save());});
 byId('new-conversation').addEventListener('click',async()=>{
+  if(tasks.hasPending()){notice('请先保存任务卡中的补充内容，或清空未保存的输入与勾选，再新建对话。');return;}
   clearTimeout(timer);
   if(await safely(()=>controller.newConversation())) {
     pendingRoute=null;drawState(controller.state);closeMenu();byId('composer').focus();
@@ -213,6 +218,7 @@ byId('body-size').addEventListener('change',event=>{
   document.body.classList.toggle('read-largest',event.target.value==='20');
 });
 byId('logout').addEventListener('click',async()=>{
+  if(tasks.hasPending()){notice('任务卡仍有未保存的内容，请先保存或清空后退出。');return;}
   clearTimeout(timer);
   if(!await safely(()=>controller.save()) || !controller.canLeave())return;
   if(await safely(()=>api.request('/api/logout',{method:'POST'}))) {
@@ -220,11 +226,11 @@ byId('logout').addEventListener('click',async()=>{
   }
 });
 window.addEventListener('beforeunload',event=>{
-  if(!controller.canLeave() || composer.isComposing() || materials.hasSelection()) {event.preventDefault();event.returnValue='';}
+  if(!controller.canLeave() || composer.isComposing() || materials.hasSelection() || tasks.hasPending()) {event.preventDefault();event.returnValue='';}
 });
 window.addEventListener('pagehide',()=>{
   closed=true;++listEpoch;clearTimeout(timer);clearTimeout(generationTimer);clearTimeout(pollTimer);
-  composer.dispose();materials.dispose();citations.dispose();profile.close();controller.close();
+  composer.dispose();materials.dispose();citations.dispose();profile.close();tasks.dispose();controller.close();
 });
 
 drawState(controller.state);

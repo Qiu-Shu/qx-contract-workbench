@@ -16,7 +16,7 @@
       <h2 id="common-heading">常用能力</h2>
       <button type="button" data-skill="client_reply" aria-pressed="false">回复客户</button>
       <button type="button" data-skill="material_organize" aria-pressed="false">整理资料</button>
-      <button type="button" data-skill="contract_review" aria-pressed="false">审查合同</button>
+      <button type="button" data-skill="contract_review" aria-pressed="false">审查合同 · 模拟</button>
       <button type="button" data-skill="content_draft" aria-pressed="false">创作文案</button>
     </nav>
     <section class="sidebar-section recent-section" aria-labelledby="recent-heading">
@@ -66,6 +66,22 @@
         <div class="conflict-actions"><button id="keep-local" type="button">保留当前文字并保存</button><button id="use-server" class="quiet-button" type="button">使用已保存文字</button></div>
       </section>
 
+      <details id="task-draft-panel" class="task-draft-panel">
+        <summary>模拟合同任务<span class="muted">逐次收集指令与材料，保存在本机</span></summary>
+        <div class="task-draft-body">
+          <p class="muted">仅用于合成材料的模拟流程。可先写指令或先传附件，再多次补充；冻结后进入事实确认，确认完成再运行模拟审查。</p>
+          <label for="task-select">正在处理的任务</label>
+          <select id="task-select"><option value="">新建模拟任务</option></select>
+          <div id="task-current" class="task-current"></div>
+          <label for="task-instruction">本次补充的审查指令</label>
+          <textarea id="task-instruction" rows="3" maxlength="20000" placeholder="例如：请重点核对付款与交付约定。"{% if readonly %} disabled{% endif %}></textarea>
+          <fieldset class="task-attachment-field"><legend>本次收集的已上传附件</legend><div id="task-attachments" class="task-attachments"></div></fieldset>
+          <div class="task-actions"><button id="task-collect" type="button"{% if readonly %} disabled{% endif %}>保存本次补充</button><button id="task-refresh" type="button" class="text-button">刷新任务状态</button><button id="task-retry" type="button" class="quiet-button" hidden>重试同一次操作</button></div>
+          <p id="task-notice" role="status" aria-live="polite"></p>
+          <div id="task-unassigned"></div>
+        </div>
+      </details>
+
       <section class="compose-section" aria-label="输入、保存与生成草稿">
         <section id="material-section" class="material-section" aria-labelledby="material-heading" hidden>
           <h2 id="material-heading">本次材料</h2>
@@ -74,7 +90,7 @@
         <div id="skill-cards" class="skill-cards" aria-label="选择本次能力">
           <button type="button" data-skill="client_reply" aria-pressed="false"><strong>回复客户</strong><span>理清诉求，组织回复</span></button>
           <button type="button" data-skill="material_organize" aria-pressed="false"><strong>整理资料</strong><span>梳理经过，列出缺口</span></button>
-          <button type="button" data-skill="contract_review" aria-pressed="false"><strong>审查合同</strong><span>核对条款，整理意见</span></button>
+          <button type="button" data-skill="contract_review" aria-pressed="false"><strong>审查合同 · 模拟</strong><span>收集材料，确认事实后模拟审查</span></button>
           <button type="button" data-skill="content_draft" aria-pressed="false"><strong>创作文案</strong><span>整理选题，起草内容</span></button>
         </div>
         <div class="skill-options">
@@ -94,6 +110,7 @@
           <input id="material-file" type="file" multiple accept=".docx,.doc,.pdf,.png,.jpg,.jpeg,.xlsx,.csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/png,image/jpeg,text/csv">
           <div id="material-queue" class="material-queue" aria-live="polite"></div>
           <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取这些原件；内容待核实，不外发。</label>
+          {% if local_materials_enabled %}<label for="material-purpose">本次材料用途</label><select id="material-purpose"{% if readonly %} disabled{% endif %}><option value="local">本机材料 · 人工工作稿</option><option value="synthetic">已登记合成演示材料 · 可用于模拟任务</option></select><p class="muted">合成用途只接收系统已登记的演示文件；选择此项不会把真实材料认定为合成材料。</p>{% endif %}
           {% if not local_materials_enabled %}<p class="muted">当前环境仅接收已登记的独立合成材料。</p>{% endif %}
           <p id="material-notice" role="status" aria-live="polite"></p>
           <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="clear-material-queue" class="text-button" type="button" hidden>清空待传</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>

@@ -78,8 +78,7 @@ def test_upgrade_opens_profile_format_but_not_unknown_formats(tmp_path):
 
 
 def test_version_changes_only_attempts_check_and_adds_handler_family():
-    assert storage_schema.VERSIONS == PREVIOUS + (TARGET,)
-    assert storage_schema.CURRENT_VERSION == TARGET
+    assert storage_schema.VERSIONS[:len(PREVIOUS)+1] == PREVIOUS + (TARGET,)
     old = set(storage_schema.schema_rows('assistant-profiles-v1'))
     new = set(storage_schema.schema_rows(TARGET))
     assert {row[1] for row in old-new} == {'assistant_model_attempts'}
@@ -92,13 +91,13 @@ def test_every_predecessor_upgrades_without_losing_rows(tmp_path, version, nativ
     with closing(old_db(tmp_path/'before.db', version, native)) as db:
         db.execute("INSERT INTO users VALUES ('synthetic-user','old-user','unused','[]',0)")
         db.commit()
-        assert schema_migrations.upgrade_database(db) == TARGET
-        assert schema_migrations.database_rows(db) == storage_schema.schema_rows(TARGET, native=native)
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
+        assert schema_migrations.database_rows(db) == storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=native)
         assert db.execute('SELECT username FROM users').fetchall() == [('old-user',)]
         assert db.execute('SELECT * FROM assistant_profile_handlers').fetchall() == []
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
         assert db.execute('PRAGMA foreign_keys').fetchone() == (1,)
-        assert schema_migrations.upgrade_database(db) == TARGET
+        assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
 
 
 @pytest.mark.parametrize('native', [False, True])
@@ -196,7 +195,7 @@ def test_fresh_upgrade_and_repeat_initialization_have_identical_structure(tmp_pa
         with closing(old_db(tmp_path/'before.db', 'assistant-profiles-v1', native)) as db:
             schema_migrations.upgrade_database(db)
             assert schema_migrations.database_rows(db) == before
-        assert before == storage_schema.schema_rows(TARGET, native=native)
+        assert before == storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=native)
     finally:
         database.engine.dispose()
 
