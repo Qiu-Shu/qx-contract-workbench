@@ -2,6 +2,8 @@
 
 2026-10-24 已落地持久合同任务 A＋B：对话页“审查合同 · 模拟”可分次收集指令与附件，冻结后进入原有事实确认及 Mock 内部审查，工作区共享任务状态。真实微信、PDF 任务桥接及真实合同模型继续留待 C—E；安装版仍为 0.4.1。本轮源码与合成验收详见 [实现和实际证据](docs/testing/task-drafts/20261024/README.md)，不据此认定生产或法律质量完成。
 
+A＋B 产品提交 `0178859` 已同步 GitHub，远端 SHA、tree 及递归 4,992 个受控条目与本地一致；[同步回执](docs/testing/task-drafts/20261024/github-sync.md)。原生长进程访问冲突仍待根因定位，两个紧密合成探针未复现；[诊断记录](docs/testing/task-drafts/20261024/native-crash.md)。
+
 CH-07C3a源码与合成证据 `1a03d89` 已同步GitHub，远端SHA及4,949项文件树一致；[同步回执](docs/testing/GITHUB-PROFILE-UI-20261023.md)。
 
 CH-07C2d源码及合成证据 `2dd5392` 已同步GitHub，远端SHA与4,832项文件树一致；[同步回执](docs/testing/GITHUB-PROFILE-DESKTOP-20261023.md)。
