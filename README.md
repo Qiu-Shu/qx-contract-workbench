@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+D2b 产品 `f161660` 已同步 GitHub，远端 SHA、tree 及 5,029 个受控条目一致；[同步回执](docs/testing/weixin-ingress/20261024/github-sync.md)。
+
 2026-10-24 D2b 合成账号与原子收件已实施：当前桌面身份下创建精确映射，完整逐条结果与账号游标同事务提交，固定回执支持幂等和新进程找回；444 个不同关联 Python 用例及四开发门通过。[实际证据](docs/testing/weixin-ingress/20261024/README.md)。仍无真实微信认证/轮询，待 D2c 接共享 TaskDraft 分发；安装版、真实模型和稳定性开放项不变。
 
 D2a 产品 `41874db` 已同步 GitHub，远端 SHA、tree 及 5,020 个受控条目一致；[同步回执](docs/testing/weixin-inbox/20261024/github-sync.md)。

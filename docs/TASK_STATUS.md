@@ -1,5 +1,7 @@
 # 任务实际状态
 
+D2b 产品 `f161660` 已同步 GitHub，远端 SHA、tree 及 5,029 个受控条目一致；[同步回执](testing/weixin-ingress/20261024/github-sync.md)。
+
 2026-10-24 D2b 已完成本机合成账号/精确 peer 映射和原子完整收件服务：数据库真实 principal/owner/workspace、当前 ACL/完整scope/案件归档守卫、一次撤权、逐条 blocked/duplicate/conflict、空poll、完整 receipt 与 checkpoint CAS 同 commit、未知结果查询均有实际证据。9 文件 444 个不同关联 Python 用例通过、0失败/错误/跳过、1条有意伪造输入的序列化warning，四开发门退出0；SQL/commit故障、实际提交后回执丢失、双Session竞争、新进程找回及真实qxbak均已验证。独立冻结复核无遗留可证实发现。[D2b 实测](testing/weixin-ingress/20261024/README.md)。尚无真实账号认证/transport或TaskDraft分发；D2c待接，过期映射刷新当前阻断，真实微信/模型/安装包NOT_RUN，原生崩溃与WIN-PATH-02保持开放。
 
 D2a 产品 `41874db` 已同步 GitHub，远端 SHA、tree 及 5,020 个受控条目一致；[同步回执](testing/weixin-inbox/20261024/github-sync.md)。
