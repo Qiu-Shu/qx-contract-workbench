@@ -1,5 +1,7 @@
 # 任务实际状态
 
+D2a 产品 `41874db` 已同步 GitHub，远端 SHA、tree 及 5,020 个受控条目一致；[同步回执](testing/weixin-inbox/20261024/github-sync.md)。
+
 2026-10-24 D2a 已完成合成微信收件存储底座：追加第 14 个版本 weixin-inbox-v1 的 4 表和 4 DTO，账号/精确 peer scope、不可变完整回执、连续游标链、重复/冲突/撤权及引用归属均有完整性校验；前驱 26 组 native/non-native 指纹不改，旧六类来源校验在后继版本仍生效。16 文件 587 个不同关联 Python 用例最终通过、四开发门退出 0；C 盘资源 guard 造成的首轮 23 setup errors 在 D 盘独立合成目录复验通过，未改 guard。独立发现的跨 peer 引用缺陷已 RED→GREEN 并复验；两代 qxbak 精确保留历史且无任务执行。[D2a 实测](testing/weixin-inbox/20261024/README.md)。直接 SQL 夹具不代表运行收件，D2b 原子收件/checkpoint API、D2c 共享任务分发仍未实现；真实微信/模型和安装包 NOT_RUN。运行 SQLite 未加密；原生崩溃和 WIN-PATH-02 继续开放。
 
 D1 产品 `8c7db52` 已同步 GitHub，本地/远端 SHA、tree 及 5,009 个受控条目一致；[D1 同步回执](testing/weixin-offline/20261024/github-sync.md)。

@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+D2a 产品 `41874db` 已同步 GitHub，远端 SHA、tree 及 5,020 个受控条目一致；[同步回执](docs/testing/weixin-inbox/20261024/github-sync.md)。
+
 2026-10-24 D2a 合成微信收件存储底座已实施：追加账号/精确 peer 映射、不可变完整回执和历史完整性校验，闭合升级及两代 qxbak 恢复；587 个不同关联 Python 用例最终通过、四开发门退出 0，保留首轮环境错误和独立复核修复记录。[D2a 实测](docs/testing/weixin-inbox/20261024/README.md)。运行收件 API、游标事务提交及任务分发待 D2b/D2c；真实微信、产品真实模型和新安装包未启用。
 
 D1 产品 `8c7db52` 已同步 GitHub，本地/远端 SHA、tree 及 5,009 个受控条目一致；[D1 同步回执](docs/testing/weixin-offline/20261024/github-sync.md)。

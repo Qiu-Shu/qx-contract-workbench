@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+D2a 产品 `41874db` 已同步 GitHub，远端 SHA、tree 及 5,020 个受控条目一致；[同步回执](docs/testing/weixin-inbox/20261024/github-sync.md)。
+
 最新接续（2026-10-24，D2a）：合成账号/精确 peer 映射/完整 poll 回执的存储底座、历史校验、前驱升级和 qxbak 恢复已完成；587 个不同关联 Python 用例最终通过、四开发门退出 0，[实际证据及原失败](docs/testing/weixin-inbox/20261024/README.md)。下一片 D2b：当前桌面 principal 下的合成账号/映射服务和原子 record_synthetic_poll，先完整持久化逐条结果，再 revision CAS 提交账号 opaque 游标；幂等回读、未知结果恢复、撤权及分类失败事务边界须真实验证。D2c 再分发到共享 TaskDraft。真实认证、网络、下载解密、发送/Outbox、E 有限期模型许可仍未实施/NOT_RUN，安装版 0.4.1、原生崩溃和 WIN-PATH-02 保持开放。
 
 D1 产品 `8c7db52` 已同步 GitHub，本地/远端 SHA、tree 及 5,009 个受控条目一致；[D1 同步回执](docs/testing/weixin-offline/20261024/github-sync.md)。
