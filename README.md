@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+C 产品提交 `4b62f06` 已同步 GitHub，本地/远端 SHA、tree 及 5,002 个受控条目一致；[C 同步回执](docs/testing/task-pdf/20261024/github-sync.md)。
+
 2026-10-24 已落地持久合同任务 A＋B：对话页“审查合同 · 模拟”可分次收集指令与附件，冻结后进入原有事实确认及 Mock 内部审查，工作区共享任务状态。C 的合成 PDF 桥接也已完成：原生文字 PDF 可从对话进入同一任务，人工确认事实后生成 Mock 结果；[PDF 实测](docs/testing/task-pdf/20261024/README.md)。真实微信与真实合同模型留待 D—E；安装版仍为 0.4.1。本轮源码与合成验收详见 [实现和实际证据](docs/testing/task-drafts/20261024/README.md)，不据此认定生产或法律质量完成。
 
 A＋B 产品提交 `0178859` 已同步 GitHub，远端 SHA、tree 及递归 4,992 个受控条目与本地一致；[同步回执](docs/testing/task-drafts/20261024/github-sync.md)。原生长进程访问冲突仍待根因定位，两个紧密合成探针未复现；[诊断记录](docs/testing/task-drafts/20261024/native-crash.md)。
@@ -48,7 +50,7 @@ CH-07C2d完成可信桌面档案用途确认入口：复用原生窗口和私有
 - [对话式前端、模块解耦与轻量化 v2.1](docs/plans/chat-first-architecture-v2.1.md)
 - [下一步接线安排](docs/plans/2026-10-19-post-home-readiness.md)
 - [Windows 安装版与开发版说明](desktop/README.md)
-- [最近已核验的 GitHub 同步记录](docs/testing/GITHUB-PROFILE-UI-20261023.md)
+- [最近已核验的 GitHub 同步记录](docs/testing/task-pdf/20261024/github-sync.md)
 
 当前协作集成分支为 [`codex/contract-review-v2`](https://github.com/Qiu-Shu/qx-contract-workbench/tree/codex/contract-review-v2)。开始修改前先获取远端更新并查看 TODO；独立任务建议使用短分支和 PR，避免多人同时改动集成分支。每个完成阶段同步代码、实际验证记录、TODO 和 README。
 
