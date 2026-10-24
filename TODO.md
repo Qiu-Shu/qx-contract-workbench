@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+D2c 产品 `64a435e` 已同步 GitHub，远端 SHA、tree 及 5,040 个受控条目一致；[同步回执](docs/testing/weixin-dispatch/20261024/github-sync.md)。
+
 最新接续（2026-10-24，D2c）：合成accepted描述至共享TaskInbox/TaskDraft的受控分发及不可变回执已实施；同事务/来源碰撞/顺序/当前权限/恢复、两种聚合顺序、歧义待分配、冻结补充、同UTC刻度因果时间均有证据，679不同关联Python用例最终通过、四开发门退出0。[实测](docs/testing/weixin-dispatch/20261024/README.md)。下一片：过期scope映射在当前桌面身份下的显式重新授权，保留历史、不隐式复活撤销映射；再接可信transport入口和E有限期合同模型许可。真实账号/模型、下载发送、新安装包仍关闭/NOT_RUN，原生崩溃和WIN-PATH-02开放。
 
 D2b 产品 `f161660` 已同步 GitHub，远端 SHA、tree 及 5,029 个受控条目一致；[同步回执](docs/testing/weixin-ingress/20261024/github-sync.md)。
