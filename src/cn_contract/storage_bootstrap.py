@@ -29,8 +29,9 @@ def initialize_storage(database):
     from .weixin_inbox.schema import initialize_storage as weixin_inbox
     from .weixin_inbox.dispatch_schema import initialize_storage as weixin_dispatch
     from .weixin_inbox.grant_schema import initialize_storage as weixin_grant
+    from .weixin_inbox.generation_schema import initialize_storage as weixin_generation
     for init in (authorities, rules, facts, reviews, providers, queries, exports,
-                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds, rounds_v2, profiles, profile_model, task_drafts, weixin_inbox, weixin_dispatch, weixin_grant):
+                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds, rounds_v2, profiles, profile_model, task_drafts, weixin_inbox, weixin_dispatch, weixin_grant, weixin_generation):
         init(database)
 
 

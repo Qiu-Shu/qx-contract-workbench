@@ -127,7 +127,7 @@ def validate_dispatch_records(db, *, allow_dispatch=False):
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
         version = identify_schema(schema, native=native)
-        if version not in ('weixin-dispatch-v1', 'weixin-reauthorization-v1'):
+        if version not in ('weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1'):
             return []
         rows = db.execute(text('SELECT * FROM weixin_dispatch_receipts ORDER BY created_at,id')).mappings().all()
         if not rows:

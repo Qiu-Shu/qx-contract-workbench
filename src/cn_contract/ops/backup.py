@@ -170,6 +170,7 @@ def _file_references(db, *, allow_assistant=True):
     from ..weixin_inbox.integrity import validate_weixin_records
     from ..weixin_inbox.dispatch_integrity import validate_dispatch_records
     from ..weixin_inbox.grant_integrity import validate_peer_scope_grants
+    from ..weixin_inbox.generation_integrity import validate_peer_generations
     validate_model_records(db, allowed=allow_assistant)
     validate_judge_records(db, allowed=allow_assistant)
     validate_library_records(db, allowed=allow_assistant)
@@ -178,6 +179,7 @@ def _file_references(db, *, allow_assistant=True):
     validate_weixin_records(db, allow_inbox=allow_assistant)
     validate_dispatch_records(db, allow_dispatch=allow_assistant)
     validate_peer_scope_grants(db, allow_grants=allow_assistant)
+    validate_peer_generations(db, allow_generations=allow_assistant)
     items = file_references(db, allowed=allow_assistant)
     for row in db.scalars(select(DocumentRow)):
         value = strict_json(row.payload.encode())
@@ -389,6 +391,7 @@ def restore_backup(backup_ref, *, key_resolver, restore_parent, settings):
                     'weixin_inbox_enabled': False,
                     'weixin_dispatch_enabled': False,
                     'weixin_reauthorization_enabled': False,
+                    'weixin_generation_enabled': False,
                     'live_egress': False, 'current_approvals_valid': False}
                 db.add(storage.RestoreFenceRow(ref=str(fence), archive_sha256=digest(raw), manifest_sha256=digest(manifest_raw), payload=encode(storage_payload).decode()))
                 grouped = {}

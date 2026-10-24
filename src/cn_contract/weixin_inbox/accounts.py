@@ -38,7 +38,7 @@ def _account(actor, identifier, db, *, active=True):
         value = d.WeixinAccountSnapshot(**row)
     except (ValueError, TypeError):
         raise ServiceError('VERSION_CONFLICT', 409) from None
-    if active and value.revoked_at is not None:
+    if active and (value.revoked_at is not None or _has_generations(value.id, db)):
         raise ServiceError('STATE_CONFLICT', 409)
     return value, current
 
@@ -71,6 +71,8 @@ def _mapping_reason(current, account, mapping, db, *, scope=None):
         if (account.owner_id != current.user_id or account.workspace_id != workspace
                 or mapping.account_id != account.id or scope.workspace_id != workspace):
             return 'scope_denied'
+        if _has_generations(account.id, db):
+            return 'scope_stale'
         binding = db.execute(text('SELECT * FROM task_channel_bindings WHERE id=:id'),
                              {'id':str(mapping.task_binding_id)}).mappings().first()
         if binding is None or binding['channel'] != 'synthetic':
@@ -130,6 +132,9 @@ def _activity_time(account_id, db, *, now, after=False, floor=()):
     if db.scalar(text("SELECT 1 FROM sqlite_master WHERE type='table' AND name='weixin_peer_scope_grants'")):
         queries.append('''SELECT grant_record.created_at stamp FROM weixin_peer_scope_grants grant_record
             JOIN weixin_peer_bindings mapping ON mapping.id=grant_record.mapping_id WHERE mapping.account_id=:id''')
+    if db.scalar(text("SELECT 1 FROM sqlite_master WHERE type='table' AND name='weixin_peer_generations'")):
+        queries.append('''SELECT generation.created_at stamp FROM weixin_peer_generations generation
+            JOIN weixin_peer_bindings mapping ON mapping.id=generation.root_mapping_id WHERE mapping.account_id=:id''')
     stamps = db.scalars(text('SELECT stamp FROM ('+
         ' UNION ALL '.join(queries)+') WHERE stamp IS NOT NULL'), {'id':str(account_id)})
     try:
@@ -264,6 +269,21 @@ def _grant_table(db):
         identify_schema(rows,native=any(row[0]=='table' and row[1]=='local_workspace_identity' for row in rows))
     except ValueError:
         raise ServiceError('VERSION_CONFLICT',409) from None
+    return False
+
+
+def _has_generations(account_id, db):
+    """Pause this account until a runtime generation resolver is implemented."""
+    if db.scalar(text("SELECT 1 FROM sqlite_master WHERE type='table' AND name='weixin_peer_generations'")):
+        return db.scalar(text('''SELECT 1 FROM weixin_peer_generations generation
+            JOIN weixin_peer_bindings mapping ON mapping.id=generation.root_mapping_id
+            WHERE mapping.account_id=:id LIMIT 1'''), {'id':str(account_id)}) is not None
+    from ..storage_schema import identify_schema
+    rows = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+    try:
+        identify_schema(rows, native=any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in rows))
+    except ValueError:
+        raise ServiceError('VERSION_CONFLICT', 409) from None
     return False
 
 

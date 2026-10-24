@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+2026-10-24 UTC D2f 已完成跨对话收件代际的存储、升级与恢复底座：schema17仅追加不可变记录，保留旧映射/回执，真实来源版本和时间均校验。814不同Python、192 Node及四开发检查通过，独立复核完成；[实际证据](docs/testing/weixin-generations/20261024/README.md)。显式切换服务仍待，带代际账号暂不执行微信收件，普通任务可继续。额外浏览器恢复目录发布遇WinError5，本轮该组FAIL，WIN-PATH-02和原生崩溃继续开放；真实微信/模型与安装版状态不变。
+
 D2e 产品 `a42c415` 已同步 GitHub，远端 SHA、tree 及 5,061 个受控条目一致；[同步回执](docs/testing/weixin-desktop/20261024/github-sync.md)。
 
 2026-10-24 D2e 已把本机合成收件授权接入现有对话页：可读当前状态、明确更新同目标授权、丢回执只查询，恢复与撤权保持阻断。255不同Python、192个Node及3组浏览器验收通过，四开发门exit0；[实际证据](docs/testing/weixin-desktop/20261024/README.md)。真实微信仍未接通，跨目标generation与E模型许可待接，安装版与稳定性开放项不变。

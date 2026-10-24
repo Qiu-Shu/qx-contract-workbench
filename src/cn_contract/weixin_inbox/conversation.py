@@ -47,7 +47,8 @@ def _refresh_context(actor, cid, db):
     current, row, mapping, account, _ = _context(actor, cid, db)
     require_active(db)
     if (row['archived_at'] is not None or mapping is None
-            or account.revoked_at is not None or mapping.revoked_at is not None):
+            or account.revoked_at is not None or mapping.revoked_at is not None
+            or accounts._has_generations(account.id, db)):
         raise ServiceError('STATE_CONFLICT', 409)
     return current, mapping.id
 
@@ -67,6 +68,8 @@ def read_authorization(actor, cid, *, database):
             state = 'revoked'
         elif mapping is None:
             state = 'unbound'
+        elif accounts._has_generations(account.id, db):
+            state = 'target_changed'
         elif current == authorized:
             state = 'current'
         elif accounts._newer_scope(authorized, current):

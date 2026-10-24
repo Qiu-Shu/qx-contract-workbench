@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-24 UTC D2f 已完成跨对话目标代际底座：schema17只追加generation表/集中DTO，32前驱native/non-native指纹保留；完整新旧历史、scope来源时间、账号暂停及永久撤权、普通TaskDraft继续人工处理、真实两代qxbak和篡改拒绝均有证据。最终24模块814不同Python、192 Node和四开发门通过；未来版本缺口经独审实际复现并RED→GREEN，[本轮实测](testing/weixin-generations/20261024/README.md)。旧workspace夹具58 setup errors已修并整组68通过；额外浏览器恢复在发布目录rename遇WinError5，该组FAIL，不以独立备份通过覆盖。无显式追加/切换服务、无新微信/模型能力；下一片D2g接当前权限/CAS/查询恢复。0.4.1、原生崩溃、WIN-PATH-02仍开放；全仓/安装版等NOT_RUN。
+
 D2e 产品 `a42c415` 已同步 GitHub，远端 SHA、tree 及 5,061 个受控条目一致；[同步回执](testing/weixin-desktop/20261024/github-sync.md)。
 
 2026-10-24 D2e 已完成对话页本机合成收件授权入口：新增集中View DTO、CID只读投影/显式POST及固定request GET查找，真实恢复middleware精确读白名单接续；页面仅同目标版本变化可明确更新，未知结果不重发，迟到CID/撤权/恢复隔离守卫通过。9模块255不同Python、14模块192 Node及三组浏览器通过，四门exit0；真实丢ACK后grant2/POST2、qxbak恢复GET200/POST409、DOCX/PDF旧Mock闭环均有证据。[实测](testing/weixin-desktop/20261024/README.md)。未改schema16；跨目标generation、真实微信/模型/E许可仍未实施；安装版0.4.1、原生崩溃、WIN-PATH-02开放。

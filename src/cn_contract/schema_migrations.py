@@ -37,6 +37,8 @@ def statements_for(version):
         from .weixin_inbox.dispatch_schema import STATEMENTS
     elif version == 'weixin-reauthorization-v1':
         from .weixin_inbox.grant_schema import STATEMENTS
+    elif version == 'weixin-generations-v1':
+        from .weixin_inbox.generation_schema import STATEMENTS
     else:
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     return STATEMENTS

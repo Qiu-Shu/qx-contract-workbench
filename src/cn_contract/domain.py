@@ -4735,3 +4735,35 @@ class WeixinConversationAuthorizationView(DomainModel):
                 or self.state == 'refresh_required' and not newer):
             raise ValueError('projection state must describe the exact current scope')
         return self
+
+
+class WeixinPeerGeneration(DomainModel):
+    """Immutable target history only; no runtime authority or dispatch capability."""
+    id: UUID
+    root_mapping_id: UUID
+    generation: PositiveInt
+    request_id: UUID
+    actor_id: UUID
+    task_binding_id: UUID
+    scope: ScopeSnapshot
+    scope_sha256: SHA256
+    previous_generation_sha256: SHA256 | None
+    previous_scope_sha256: SHA256
+    checkpoint_revision: NonNegativeInt
+    created_at: UTCDatetime
+    reason: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200),
+                      AfterValidator(_weixin_refresh_reason)]
+    generation_sha256: SHA256
+
+    @model_validator(mode='after')
+    def complete_hashed_generation(self):
+        from .config import canonical_json
+        if (self.generation == 1) != (self.previous_generation_sha256 is None):
+            raise ValueError('only the first generation omits its predecessor hash')
+        scope = canonical_json(self.scope.model_dump(mode='json')).encode('utf-8')
+        raw = canonical_json(self.model_dump(mode='json', exclude={'generation_sha256'})).encode('utf-8')
+        if hashlib.sha256(scope).hexdigest() != self.scope_sha256:
+            raise ValueError('generation scope hash mismatch')
+        if hashlib.sha256(raw).hexdigest() != self.generation_sha256:
+            raise ValueError('generation hash mismatch')
+        return self
