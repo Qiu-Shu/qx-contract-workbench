@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+D2e 产品 `a42c415` 已同步 GitHub，远端 SHA、tree 及 5,061 个受控条目一致；[同步回执](docs/testing/weixin-desktop/20261024/github-sync.md)。
+
 最新接续（2026-10-24，D2e）：现有任务卡的本机收件授权投影/显式refresh/未知结果查询已接，当前CID/CSRF/同源/权限及真实recovery精确两GET入口已验；255不同Python、192 Node及三组浏览器通过、四门exit0。[实测](docs/testing/weixin-desktop/20261024/README.md)。跨目标/转案generation及可信远端身份仍待；真实微信/模型、新安装包、原生崩溃与WIN-PATH-02状态不变。
 
 D2d 产品 `ba03b02` 已同步 GitHub，远端 SHA、tree 及 5,051 个受控条目一致；[同步回执](docs/testing/weixin-reauthorization/20261024/github-sync.md)。
