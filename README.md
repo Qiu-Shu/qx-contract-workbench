@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+D1 产品 `8c7db52` 已同步 GitHub，本地/远端 SHA、tree 及 5,009 个受控条目一致；[D1 同步回执](docs/testing/weixin-offline/20261024/github-sync.md)。
+
 2026-10-24 D1 已完成官方微信协议的离线预览适配：精确账号/发送者范围、无损消息 ID、独立游标及 pending 文件已验证；290 个关联 Python 用例及四开发检查通过。[D1 实测](docs/testing/weixin-offline/20261024/README.md)。这是源码离线能力，未连接真实微信或启用轮询。
 
 C 产品提交 `4b62f06` 已同步 GitHub，本地/远端 SHA、tree 及 5,002 个受控条目一致；[C 同步回执](docs/testing/task-pdf/20261024/github-sync.md)。
@@ -52,7 +54,7 @@ CH-07C2d完成可信桌面档案用途确认入口：复用原生窗口和私有
 - [对话式前端、模块解耦与轻量化 v2.1](docs/plans/chat-first-architecture-v2.1.md)
 - [下一步接线安排](docs/plans/2026-10-19-post-home-readiness.md)
 - [Windows 安装版与开发版说明](desktop/README.md)
-- [最近已核验的 GitHub 同步记录](docs/testing/task-pdf/20261024/github-sync.md)
+- [最近已核验的 GitHub 同步记录](docs/testing/weixin-offline/20261024/github-sync.md)
 
 当前协作集成分支为 [`codex/contract-review-v2`](https://github.com/Qiu-Shu/qx-contract-workbench/tree/codex/contract-review-v2)。开始修改前先获取远端更新并查看 TODO；独立任务建议使用短分支和 PR，避免多人同时改动集成分支。每个完成阶段同步代码、实际验证记录、TODO 和 README。
 
