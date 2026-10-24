@@ -70,6 +70,13 @@
         <summary>模拟合同任务<span class="muted">逐次收集指令与材料，保存在本机</span></summary>
         <div class="task-draft-body">
           <p class="muted">仅用于合成材料的模拟流程。可先写指令或先传附件，再多次补充；冻结后进入事实确认，确认完成再运行模拟审查。</p>
+          <section id="weixin-authorization" class="weixin-authorization" aria-labelledby="weixin-heading">
+            <h3 id="weixin-heading">微信收件授权 · 离线测试</h3>
+            <p id="weixin-state" role="status" aria-live="polite">正在核对本机收件授权…</p>
+            <p class="muted">仅更新同一目标的输入和材料版本；真实微信未接通。</p>
+            <div class="task-actions"><button id="weixin-authorize" type="button" class="quiet-button" hidden disabled>更新本机授权</button><button id="weixin-read" type="button" class="text-button" disabled>重新读取授权状态</button><button id="weixin-find" type="button" class="quiet-button" hidden disabled>查找本次授权结果</button></div>
+            <p id="weixin-notice" role="status" aria-live="polite"></p>
+          </section>
           <label for="task-select">正在处理的任务</label>
           <select id="task-select"><option value="">新建模拟任务</option></select>
           <div id="task-current" class="task-current"></div>

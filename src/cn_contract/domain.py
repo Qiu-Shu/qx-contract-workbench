@@ -4704,3 +4704,34 @@ class WeixinPeerScopeGrant(DomainModel):
         if hashlib.sha256(raw).hexdigest() != self.grant_sha256:
             raise ValueError('authorization grant hash mismatch')
         return self
+
+
+class WeixinConversationAuthorizationView(DomainModel):
+    """Current desktop projection, without account identities or grant reasons."""
+    mode: Literal['synthetic'] = 'synthetic'
+    state: Literal['unbound', 'current', 'refresh_required', 'target_changed', 'revoked', 'archived', 'restored_blocked']
+    current_scope: ScopeSnapshot
+    authorized_scope: ScopeSnapshot | None
+    grant_revision: NonNegativeInt
+    scope_sha256: SHA256 | None
+
+    @model_validator(mode='after')
+    def complete_authorization_projection(self):
+        from .config import canonical_json
+        if self.authorized_scope is None:
+            if (self.state not in ('unbound', 'archived', 'restored_blocked')
+                    or self.scope_sha256 is not None or self.grant_revision != 0):
+                raise ValueError('unbound projection cannot invent authority')
+            return self
+        raw = canonical_json(self.authorized_scope.model_dump(mode='json')).encode('utf-8')
+        if self.state == 'unbound' or hashlib.sha256(raw).hexdigest() != self.scope_sha256:
+            raise ValueError('bound projection requires its exact scope hash')
+        same_target = all(getattr(self.current_scope, key) == getattr(self.authorized_scope, key) for key in (
+            'workspace_id', 'conversation_id', 'scope_kind', 'scope_ref', 'binding_revision'))
+        newer = (same_target and self.current_scope != self.authorized_scope
+            and self.current_scope.input_revision >= self.authorized_scope.input_revision
+            and self.current_scope.materials_revision >= self.authorized_scope.materials_revision)
+        if (self.state == 'current' and self.current_scope != self.authorized_scope
+                or self.state == 'refresh_required' and not newer):
+            raise ValueError('projection state must describe the exact current scope')
+        return self

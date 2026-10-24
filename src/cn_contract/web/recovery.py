@@ -17,6 +17,7 @@ from .assistant_generation import is_generation_read_path
 from .assistant_research import is_research_read_path
 from .assistant_profiles import is_profile_read_path
 from .task_drafts import is_task_read_path
+from .weixin_authorization import is_weixin_authorization_read_path
 
 
 def attach_recovery(app, database):
@@ -36,6 +37,7 @@ def attach_recovery(app, database):
         safe_api = safe_api or is_research_read_path(path)
         safe_api = safe_api or is_profile_read_path(path)
         safe_api = safe_api or is_task_read_path(path)
+        safe_api = safe_api or is_weixin_authorization_read_path(path)
         if ((request.method not in ('GET','HEAD','OPTIONS') and path not in ('/api/login','/api/logout'))
                 or path.startswith('/api/') and not safe_api):
             return JSONResponse({'code':'BLOCKED_LIVE'},status_code=409)

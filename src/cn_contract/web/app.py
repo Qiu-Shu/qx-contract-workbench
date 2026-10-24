@@ -586,7 +586,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
                         'assistant.css','assistant-api.mjs','assistant-state.mjs','assistant-render.mjs',
                         'assistant-composer.mjs','assistant-materials.mjs','assistant-generation.mjs',
                         'assistant-research.mjs','assistant-context.mjs','assistant-citations.mjs','assistant-profile.mjs',
-                        'assistant-tasks.mjs','assistant.mjs'}:raise ServiceError('NOT_SUPPORTED',404)
+                        'assistant-tasks.mjs','assistant-weixin.mjs','assistant.mjs'}:raise ServiceError('NOT_SUPPORTED',404)
         return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith(('.js','.mjs')) else 'text/css')
     from .draft_confirmation import register_routes
     register_routes(app,database,authenticate_first,body_input,write)
@@ -604,6 +604,8 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     register_assistant_pages(app,database)
     from .task_drafts import register_routes as register_task_drafts
     register_task_drafts(app,database)
+    from .weixin_authorization import register_routes as register_weixin_authorization
+    register_weixin_authorization(app,database)
     from .assistant_generation import attach_generation
     attach_generation(app,database,assistant_model_runtime,judge_runtime=assistant_judge_runtime)
     return app
