@@ -4605,3 +4605,32 @@ class WeixinPollReceipt(DomainModel):
         if hashlib.sha256(raw).hexdigest() != self.receipt_sha256:
             raise ValueError('poll receipt hash mismatch')
         return self
+
+
+class WeixinAccountCreateInput(DomainModel):
+    """An explicit local synthetic account; owner and workspace are server-owned."""
+    bot_account_id: WeixinIdentity
+    initial_cursor: WeixinCursor = ''
+
+
+class WeixinPeerBindInput(DomainModel):
+    sender_peer_id: WeixinIdentity
+    task_binding_id: UUID
+    expected_scope: ScopeSnapshot
+
+
+class WeixinRevokeInput(DomainModel):
+    reason: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)]
+
+    @field_validator('reason')
+    @classmethod
+    def nonblank_reason(cls, value):
+        if not value.strip():
+            raise ValueError('revocation reason must not be blank')
+        return value
+
+
+class WeixinPollInput(DomainModel):
+    request_id: UUID
+    expected_revision: NonNegativeInt
+    expected_cursor: WeixinCursor
