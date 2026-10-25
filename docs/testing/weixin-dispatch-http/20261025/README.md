@@ -44,6 +44,6 @@
 
 此片无新UI、pending列表、raw preview、transport/下载解密/外发或可信微信绑定。微信pending附件目前无attachment_id，现有页面尚不能选择另行上传的原件；后端显式resolution及DOCX/PDF桥可后续复用。可信身份/账号资格/数据政策及E有限期模型授权仍待。
 
-真实微信/合同/产品模型/付费、全仓长单进程、Node、浏览器/Electron/安装版0.4.1均NOT_RUN；0.4.1未更新，WIN-PATH-02/原生AV仍OPEN。WorkBuddy本轮NOT_RUN，未采用产出。GitHub后续按实际回执，用户AGENTS保持未暂存。HumanLayer旧pending因Windows argv限长待同步，收尾结果按实际回执；Obsidian成功才称已保存，TencentDB沿正常Stop。
+真实微信/合同/产品模型/付费、全仓长单进程、Node、浏览器/Electron/安装版0.4.1均NOT_RUN；0.4.1未更新，WIN-PATH-02/原生AV仍OPEN。WorkBuddy本轮NOT_RUN，未采用产出。产品`dd46b6a`已正常推送，远端SHA/tree及5,688条目一致，[同步回执](github-sync.md)；用户AGENTS保持未暂存。HumanLayer旧pending因Windows argv限长待同步，收尾结果按实际回执；Obsidian成功才称已保存，TencentDB沿正常Stop。
 
 最终[证据独审](final-evidence-review.md)独立复算701/64、48对发布字节、566输入与唯一未用测试摘要例外，0确认问题；未重跑测试，后续Git同步回执不在该快照内。
