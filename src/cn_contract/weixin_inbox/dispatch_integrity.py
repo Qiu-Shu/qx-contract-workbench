@@ -21,7 +21,7 @@ def _rows(db, table):
     return {row['id']:row for row in db.execute(text('SELECT * FROM '+table)).mappings()}
 
 
-def _validate(db, rows, workspace):
+def _validate(db, rows, workspace, *, generation_dispatch=False):
     from .grant_integrity import _histories, _scope_at
     from .provenance_integrity import _targets
 
@@ -52,8 +52,9 @@ def _validate(db, rows, workspace):
         _row_ids(row, ('id', 'descriptor_id', 'account_id', 'mapping_id', 'actor_id', 'task_binding_id', 'task_event_id'))
         receipt = d.WeixinDispatchReceipt(**row)
         descriptor = descriptors[str(receipt.descriptor_id)]
-        if str(descriptor.id) in targets:
-            _fail()  # Generation-aware delivery is a separate runtime slice.
+        target = targets.get(str(descriptor.id))
+        if target is not None and not generation_dispatch:
+            _fail()
         poll = polls[str(descriptor.poll_id)]
         account_row = accounts[str(receipt.account_id)]
         _row_ids(account_row, ('id', 'workspace_id', 'owner_id', 'revoked_by'))
@@ -62,7 +63,10 @@ def _validate(db, rows, workspace):
         _row_ids(mapping_row, ('id', 'account_id', 'task_binding_id', 'revoked_by'))
         scope = _canonical_model(d.ScopeSnapshot, mapping_row['scope_json'])
         mapping = d.WeixinPeerBindingSnapshot(**{key:item for key,item in mapping_row.items() if key != 'scope_json'}, scope=scope)
-        effective_scope = _scope_at(mapping, grant_histories.get(str(mapping.id), ()), receipt.created_at)
+        effective_scope = target.scope if target else _scope_at(mapping, grant_histories.get(str(mapping.id), ()), receipt.created_at)
+        fixed_binding_id = target.task_binding_id if target else mapping.task_binding_id
+        root_binding = bindings[str(mapping.task_binding_id)]
+        root_conversation = conversations[root_binding['conversation_id']]
         binding_row = bindings[str(receipt.task_binding_id)]
         _row_ids(binding_row, ('id', 'conversation_id'))
         binding = d.TaskChannelBindingView(**binding_row)
@@ -79,9 +83,10 @@ def _validate(db, rows, workspace):
                 or account.owner_id != receipt.actor_id or str(receipt.actor_id) not in users
                 or str(account.workspace_id) != workspace
                 or mapping.sender_peer_id != descriptor.sender_peer_id
-                or mapping.task_binding_id != receipt.task_binding_id
+                or fixed_binding_id != receipt.task_binding_id
                 or conversation['owner_id'] != str(receipt.actor_id) or conversation['workspace_id'] != workspace
-                or str(scope.workspace_id) != workspace or scope.conversation_id != binding.conversation_id
+                or str(scope.workspace_id) != workspace or str(effective_scope.workspace_id) != workspace
+                or effective_scope.conversation_id != binding.conversation_id
                 or event['binding_id'] != str(binding.id)
                 or descriptor.source_event_id != event_id(account.bot_account_id, descriptor.sender_peer_id, descriptor.upstream_message_id)
                 or receipt.source_event_id != descriptor.source_event_id
@@ -89,8 +94,9 @@ def _validate(db, rows, workspace):
                 or event['payload_json'] != canonical_json(descriptor.payload.model_dump(mode='json'))
                 or hashlib.sha256(event['payload_json'].encode('utf-8')).hexdigest() != receipt.payload_sha256
                 or event['payload_sha256'] != receipt.payload_sha256
-                or mapping.created_at < account.created_at or mapping.created_at < binding.created_at
-                or mapping.created_at < _at(conversation['created_at']) or poll.created_at < mapping.created_at
+                or mapping.created_at < account.created_at or mapping.created_at < _at(root_binding['created_at'])
+                or mapping.created_at < _at(root_conversation['created_at']) or poll.created_at < mapping.created_at
+                or target is not None and receipt.created_at < target.created_at
                 or receipt.created_at < event_at
                 or receipt.created_at < mapping.created_at or receipt.created_at < poll.created_at
                 or account.revoked_at is not None and account.revoked_at <= receipt.created_at
@@ -114,14 +120,18 @@ def _validate(db, rows, workspace):
             str(item.mapping_id), polls[str(item.poll_id)].next_revision, item.ordinal)):
         if descriptor.status != 'accepted_pending_dispatch':
             continue
-        missing, previous = prefixes.get(str(descriptor.mapping_id), (False, None))
+        mapping_id = str(descriptor.mapping_id)
+        target = targets.get(str(descriptor.id))
+        binding_id = str(target.task_binding_id) if target else mappings[mapping_id]['task_binding_id']
+        stream = (mapping_id, binding_id) if generation_dispatch else mapping_id
+        missing, previous = prefixes.get(stream, (False, None))
         receipt = dispatched.get(str(descriptor.id))
         if receipt is not None:
             if missing or previous is not None and (receipt.created_at < previous.created_at
                     or receipt.expected_task_cursor < previous.next_task_cursor):
                 _fail()
             previous = receipt
-        prefixes[str(descriptor.mapping_id)] = (missing or receipt is None, previous)
+        prefixes[stream] = (missing or receipt is None, previous)
 
 
 def validate_dispatch_records(db, *, allow_dispatch=False):
@@ -131,7 +141,7 @@ def validate_dispatch_records(db, *, allow_dispatch=False):
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
         version = identify_schema(schema, native=native)
-        if version not in ('weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1'):
+        if version not in ('weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1'):
             return []
         rows = db.execute(text('SELECT * FROM weixin_dispatch_receipts ORDER BY created_at,id')).mappings().all()
         if not rows:
@@ -144,7 +154,19 @@ def validate_dispatch_records(db, *, allow_dispatch=False):
         identities = db.scalars(text('SELECT id FROM local_workspace_identity')).all() if native else []
         if len(identities) != 1:
             _fail()
-        _validate(db, rows, _uuid(identities[0]))
+        workspace = _uuid(identities[0])
+        generation_dispatch = version == 'weixin-generation-dispatch-v1'
+        _validate(db, rows, workspace, generation_dispatch=generation_dispatch)
+        if generation_dispatch:
+            from .integrity import validate_weixin_records
+            from .grant_integrity import validate_peer_scope_grants
+            from .generation_integrity import _validate as validate_generation_chain
+            validate_weixin_records(db, allow_inbox=True)
+            validate_peer_scope_grants(db, allow_grants=True)
+            generation_rows = db.execute(text(
+                'SELECT * FROM weixin_peer_generations ORDER BY root_mapping_id,generation')).mappings().all()
+            # Call the pure parent check; public generation validation also checks dispatch.
+            validate_generation_chain(db, generation_rows, workspace, allow_target_polls=True, allow_target_dispatch=True)
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError, ServiceError):
         raise ValueError('WEIXIN_DISPATCH_INTEGRITY') from None
     return []

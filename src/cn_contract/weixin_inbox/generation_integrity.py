@@ -30,7 +30,7 @@ def _scope_sources(db, scope, at):
                 _fail()
 
 
-def _validate(db, rows, workspace, *, allow_target_polls=False):
+def _validate(db, rows, workspace, *, allow_target_polls=False, allow_target_dispatch=False):
     tables = {}
     for table in ('weixin_accounts', 'weixin_peer_bindings', 'task_channel_bindings', 'assistant_conversations'):
         tables[table] = {row['id']:row for row in db.execute(text('SELECT * FROM '+table)).mappings()}
@@ -43,8 +43,9 @@ def _validate(db, rows, workspace, *, allow_target_polls=False):
         if not allow_target_polls:
             activities.setdefault(row['account_id'], []).append(at)
         polls.setdefault(row['account_id'], []).append((row['next_revision'], at))
-    for row in db.execute(text('SELECT account_id,created_at FROM weixin_dispatch_receipts')).mappings():
-        activities.setdefault(row['account_id'], []).append(_at(row['created_at']))
+    if not allow_target_dispatch:
+        for row in db.execute(text('SELECT account_id,created_at FROM weixin_dispatch_receipts')).mappings():
+            activities.setdefault(row['account_id'], []).append(_at(row['created_at']))
     for mapping_id, history in grants.items():
         account_id = tables['weixin_peer_bindings'][mapping_id]['account_id']
         activities.setdefault(account_id, []).extend(value.created_at for value in history)
@@ -104,7 +105,7 @@ def validate_peer_generations(db, *, allow_generations=False):
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
         version = identify_schema(schema, native=native)
-        if version not in ('weixin-generations-v1', 'weixin-target-provenance-v1'):
+        if version not in ('weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1'):
             return []
         rows = db.execute(text('SELECT * FROM weixin_peer_generations ORDER BY root_mapping_id,generation')).mappings().all()
         if not rows:
@@ -123,7 +124,9 @@ def validate_peer_generations(db, *, allow_generations=False):
         validate_weixin_records(db, allow_inbox=True)
         validate_dispatch_records(db, allow_dispatch=True)
         validate_peer_scope_grants(db, allow_grants=True)
-        _validate(db, rows, _uuid(identities[0]), allow_target_polls=version=='weixin-target-provenance-v1')
+        _validate(db, rows, _uuid(identities[0]),
+            allow_target_polls=version in ('weixin-target-provenance-v1', 'weixin-generation-dispatch-v1'),
+            allow_target_dispatch=version=='weixin-generation-dispatch-v1')
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError, ServiceError):
         raise ValueError('WEIXIN_GENERATION_INTEGRITY') from None
     return []

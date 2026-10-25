@@ -22,6 +22,7 @@ from tests.integration.test_weixin_provenance_backup import original_material
 
 
 PREVIOUS = 'weixin-generations-v1'
+NEXT = 'weixin-target-provenance-v1'
 
 
 def old_history(world):
@@ -30,6 +31,7 @@ def old_history(world):
     history['generation'] = append_generation(history)
     root, database = history['root'], history['database']
     with database.session() as db:
+        db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
         db.execute(text('DROP TABLE weixin_descriptor_generations'))
         assert identify_schema([tuple(row) for row in db.execute(text(
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))], native=True) == PREVIOUS
@@ -132,13 +134,14 @@ def marker_gap(history, monkeypatch):
     def interrupted(*args):
         raise OSError('independent synthetic interrupted marker finalization')
     with monkeypatch.context() as patch:
+        patch.setattr(workspace_upgrade, 'VERSIONS', workspace_upgrade.VERSIONS[:18])
         patch.setattr(workspace_upgrade, '_write_marker', interrupted)
         with local_server._worker_lock(root), pytest.raises(OSError, match='interrupted marker'):
             workspace_upgrade.upgrade(root)
     assert (root/'workspace.json').read_bytes() == marker
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        assert workspace_upgrade._rows(db) == schema_rows(CURRENT_VERSION, native=True)
-    return root/('upgrade-'+CURRENT_VERSION+'.json')
+        assert workspace_upgrade._rows(db) == schema_rows(NEXT, native=True)
+    return root/('upgrade-'+NEXT+'.json')
 
 
 def corrupt_generation_file(path, identifier):
@@ -194,7 +197,7 @@ def test_business_change_after_upgrade_receipt_is_rechecked_before_ddl(world, mo
     injected = []
     def publish_then_corrupt(path, value):
         atomic(path, value)
-        if path.name == 'upgrade-'+CURRENT_VERSION+'.json':
+        if path.name == 'upgrade-'+NEXT+'.json':
             corrupt_generation_file(root/'workbench.db', history['generation'].id)
             # Windows byte-range locking prevents reading worker.lock while it is held.
             injected.append(disk_state(root, skip=('worker.lock',)))

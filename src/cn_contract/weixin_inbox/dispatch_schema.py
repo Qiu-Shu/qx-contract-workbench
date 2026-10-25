@@ -34,7 +34,9 @@ def initialize_storage(database):
             "ORDER BY type,name")]
         if found:
             if found != expected_objects():
-                raise ValueError('DATABASE_SCHEMA_MISMATCH')
+                from .generation_dispatch_schema import expected_dispatch_objects
+                if found != expected_dispatch_objects():
+                    raise ValueError('DATABASE_SCHEMA_MISMATCH')
             return
         for statement in STATEMENTS:
             connection.exec_driver_sql(statement)

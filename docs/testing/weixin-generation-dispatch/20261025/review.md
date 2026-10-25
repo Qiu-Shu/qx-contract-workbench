@@ -1,0 +1,26 @@
+# 最终产品审查快照
+
+交叉作者范围、0遗留与已闭合发现见两个独立报告。以下产品SHA与根最终组一致；两项旧测试body兼容更正不改变产品。
+
+- src/cn_contract/assistant/attachment_integrity.py SHA256 `85dec2891560c43ef4c3bf91b377b69081b26966aa3902f2802e0a7bb4e3e8ea`
+- src/cn_contract/assistant/judge_integrity.py SHA256 `f89440c7b1789bb60985a0a085f51883d4970db53c18c50743938880fbdfb6d0`
+- src/cn_contract/assistant/library_integrity.py SHA256 `0c456e11823c72ba67455b516864af5a07675d2dc2ac7f2ddf21558e3d141d9a`
+- src/cn_contract/assistant/model_integrity.py SHA256 `369d25612b78310c2b1ce1ceb2b9f591fa1565bb78a22cb7ab6268fbd1374b85`
+- src/cn_contract/assistant/profile_integrity.py SHA256 `fcde6597659082d49d0f7aef1721d473319922fddd90b0eb535638eb43bb8863`
+- src/cn_contract/schema_migrations.py SHA256 `425fb17605fb77ed167aaa53e0d5605ac2253015c2da170cc0877569e30a5bbc`
+- src/cn_contract/storage_bootstrap.py SHA256 `288d7e8d687a5c7411bf626d6459200abc32d9fa335495530533e56c8ee0dc0c`
+- src/cn_contract/storage_schema.py SHA256 `497280ccab7291b1441c83557846780fdf8488f9de898c6d6df9edb4a5a2af1e`
+- src/cn_contract/task_drafts/integrity.py SHA256 `bbef69cc9c14e1a366e89c4da55b09b70b10ffb5e2b1f03769b65c18c9bf27c4`
+- src/cn_contract/weixin_inbox/dispatch.py SHA256 `a0d4dc1f99a6414e5696b69d6d07fc9e897038a6717586c10d6b85932619e2db`
+- src/cn_contract/weixin_inbox/dispatch_integrity.py SHA256 `aa31cb8d5e58fe3861264ffd1a585decce656816ebc69d13cff67c4f028eadcd`
+- src/cn_contract/weixin_inbox/dispatch_schema.py SHA256 `1d0597fbe8fc780768c27b2052032ddb74eb8a0cfa3b331ba299676f61edbb09`
+- src/cn_contract/weixin_inbox/generation_dispatch.py SHA256 `69e84f0d57f35b6c0098f5d89ebcc7511a387719d0865f94634913a75eecfa88`
+- src/cn_contract/weixin_inbox/generation_dispatch_schema.py SHA256 `b1517e165dd158fe20f09de4518b906cf5c23552694ab372dab0f79976d72604`
+- src/cn_contract/weixin_inbox/generation_ingress.py SHA256 `2f3b979676c2027e9ba4454ae8f212bad623765cba2b43bf2ec9626701138af7`
+- src/cn_contract/weixin_inbox/generation_integrity.py SHA256 `95fde49967f4b61e9e7bc246606ee095941298afd553ebd23d0c02e68e2d3075`
+- src/cn_contract/weixin_inbox/generations.py SHA256 `695ea817b6a657e0a735aec18df44a060b30e5a8490818e37761cd16d65d7034`
+- src/cn_contract/weixin_inbox/grant_integrity.py SHA256 `8ac28b18b897772ed67e55183706d4b09c167102082160db73ca9da8caa138b4`
+- src/cn_contract/weixin_inbox/integrity.py SHA256 `33720be403c9c4c9a0bf92b8b3203c3eacd6a9672eb3d3d9a4e7b4f38f0e8424`
+- src/cn_contract/weixin_inbox/provenance_integrity.py SHA256 `08c6d89a1303be7b29a442313ebde3256d3fd072d5e41bf8ba869b5bc8e8eb37`
+
+新文件generation_dispatch.py/generation_dispatch_schema.py的摘要同见机器manifest；不把Git回执编辑计入测试。

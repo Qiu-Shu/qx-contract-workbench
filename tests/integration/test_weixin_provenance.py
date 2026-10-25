@@ -126,6 +126,7 @@ def test_schema18_empty_later_poll_preserves_the_generation_prefix(world):
     from tests.helpers.synthetic_weixin_inbox import insert,poll_receipt
     api();h=setup_history(world);generation=append(h)
     with h['database'].session() as db:
+        db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
         account=db.execute(text('SELECT * FROM weixin_accounts WHERE id=:id'),{'id':str(h['account'].id)}).mappings().one()
         at=generation.created_at+timedelta(microseconds=1)
         poll=poll_receipt(h['account'].id,account['checkpoint_revision'],account['upstream_cursor'],account['upstream_cursor'],(),at)

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="9" skipped="0" tests="11" time="10.402" timestamp="2026-10-25T19:32:10.834591+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_late_generation_one_delivery_keeps_its_target_and_independent_stream_cursor" time="0.815"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: binding_id&#10;[SQL: SELECT count(*) FROM task_drafts WHERE binding_id=?]&#10;[parameters: ('644594ad-4eb8-4e3b-a745-7c3455b1fc90',)]&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: no such column: binding_id
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_weixin_generation_dispatch_integrity.py:68: in test_late_generation_one_delivery_keeps_its_target_and_independent_stream_cursor
+    assert db.scalar(text('SELECT count(*) FROM task_drafts WHERE binding_id=:id'),
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2421: in scalar
+    return self._execute_internal(
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2266: in _execute_internal
+    return conn.scalar(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1310: in scalar
+    return meth(
+.venv\Lib\site-packages\sqlalchemy\sql\elements.py:544: in _execute_on_scalar
+    return self._execute_on_connection(
+.venv\Lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: binding_id
+E   [SQL: SELECT count(*) FROM task_drafts WHERE binding_id=?]
+E   [parameters: ('644594ad-4eb8-4e3b-a745-7c3455b1fc90',)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_frozen_v18_still_rejects_the_same_nonzero_delivery" time="0.715" /><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_zero_stream_may_continue_after_generations_only_under_v19" time="0.780" /><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_public_dispatch_validator_checks_rehashed_generation_parents" time="0.876"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_weixin_generation_dispatch_integrity.py:99: in test_public_dispatch_validator_checks_rehashed_generation_parents
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_recomputed_receipt_cannot_move_or_change_fixed_delivery[wrong_target]" time="0.760"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_weixin_generation_dispatch_integrity.py:116: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_recomputed_receipt_cannot_move_or_change_fixed_delivery[before_generation]" time="0.727"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_weixin_generation_dispatch_integrity.py:116: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_recomputed_receipt_cannot_move_or_change_fixed_delivery[before_poll]" time="0.730"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_weixin_generation_dispatch_integrity.py:116: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_recomputed_receipt_cannot_move_or_change_fixed_delivery[payload]" time="0.778"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_weixin_generation_dispatch_integrity.py:116: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_recomputed_receipt_cannot_move_or_change_fixed_delivery[event]" time="0.729"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_weixin_generation_dispatch_integrity.py:116: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_recomputed_receipt_cannot_move_or_change_fixed_delivery[actor]" time="0.799"><failure message="sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) FOREIGN KEY constraint failed&#10;[SQL: UPDATE weixin_dispatch_receipts SET actor_id=? WHERE id=?]&#10;[parameters: ('ca65fc36-536c-4d54-8b0c-f3dd78c74565', 'cfccb55f-3c9a-4fa5-9315-d05d5bc71568')]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: FOREIGN KEY constraint failed
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_weixin_generation_dispatch_integrity.py:113: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    corrupt(db,'UPDATE weixin_dispatch_receipts SET '+field+'=:value WHERE id=:id',
+tests\integration\test_weixin_dispatch_integrity.py:62: in corrupt
+    db.execute(text(sql), values or {})
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2373: in execute
+    return self._execute_internal(
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2280: in _execute_internal
+    result = conn.execute(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+.venv\Lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) FOREIGN KEY constraint failed
+E   [SQL: UPDATE weixin_dispatch_receipts SET actor_id=? WHERE id=?]
+E   [parameters: ('ca65fc36-536c-4d54-8b0c-f3dd78c74565', 'cfccb55f-3c9a-4fa5-9315-d05d5bc71568')]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_integrity" name="test_prefix_cannot_skip_an_earlier_descriptor_in_the_same_generation" time="1.006"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_weixin_generation_dispatch_integrity.py:123: in test_prefix_cannot_skip_an_earlier_descriptor_in_the_same_generation
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase></testsuite></testsuites>

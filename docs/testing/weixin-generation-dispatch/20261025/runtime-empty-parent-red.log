@@ -1,0 +1,16 @@
+.FF                                                                      [100%]
+================================== FAILURES ===================================
+_ test_no_generation_query_still_validates_complete_legacy_parents[receipt_time] _
+tests\integration\test_weixin_generation_dispatch.py:290: in test_no_generation_query_still_validates_complete_legacy_parents
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_ test_no_generation_query_still_validates_complete_legacy_parents[checkpoint] _
+tests\integration\test_weixin_generation_dispatch.py:290: in test_no_generation_query_still_validates_complete_legacy_parents
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_dispatch.py::test_no_generation_query_still_validates_complete_legacy_parents[receipt_time]
+FAILED tests/integration/test_weixin_generation_dispatch.py::test_no_generation_query_still_validates_complete_legacy_parents[checkpoint]
+2 failed, 1 passed, 26 deselected in 3.29s

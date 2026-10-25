@@ -17,6 +17,7 @@ from tests.integration.test_assistant_judge_schema import old_db
 
 
 TARGET='weixin-target-provenance-v1'
+CURRENT=storage_schema.CURRENT_VERSION
 TABLE='weixin_descriptor_generations'
 FIXTURES=Path(__file__).parents[1]/'fixtures'
 FROZEN=json.loads((FIXTURES/'weixin_provenance_schema_predecessors.json').read_text('utf-8'))
@@ -70,12 +71,12 @@ def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(t
     with closing(old_db(tmp_path/'old.db',version,native)) as connection:
         connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
         connection.commit()
-        assert schema_migrations.upgrade_database(connection)==TARGET
-        assert schema_migrations.database_rows(connection)==storage_schema.schema_rows(TARGET,native=native)
+        assert schema_migrations.upgrade_database(connection)==CURRENT
+        assert schema_migrations.database_rows(connection)==storage_schema.schema_rows(CURRENT,native=native)
         assert connection.execute('SELECT username FROM users').fetchall()==[('old-schema-user',)]
         assert connection.execute('PRAGMA foreign_key_check').fetchall()==[]
         assert connection.execute('PRAGMA foreign_keys').fetchone()==(1,)
-        assert schema_migrations.upgrade_database(connection)==TARGET
+        assert schema_migrations.upgrade_database(connection)==CURRENT
 
 
 @pytest.mark.parametrize('native',[False,True])
@@ -108,9 +109,9 @@ def test_fresh_repeated_initialization_matches_upgraded_exact_structure(tmp_path
         initialize_storage(database);initialize_storage(database)
         with closing(sqlite3.connect(database.engine.url.database)) as connection:
             actual=schema_migrations.database_rows(connection)
-        assert actual==storage_schema.schema_rows(TARGET)
+        assert actual==storage_schema.schema_rows(CURRENT)
         with closing(old_db(tmp_path/'old.db','weixin-generations-v1',False)) as connection:
-            assert schema_migrations.upgrade_database(connection)==TARGET
+            assert schema_migrations.upgrade_database(connection)==CURRENT
             assert schema_migrations.database_rows(connection)==actual
     finally:database.engine.dispose()
 
@@ -198,23 +199,27 @@ def test_empty_current_schema_passes_all_registered_backup_family_checks(tmp_pat
     finally:database.engine.dispose()
 
 
-def native_predecessor(tmp_path):
+def native_predecessor(tmp_path,monkeypatch):
     from cn_contract.web import local_server
     root=tmp_path/'独立虚构来源升级'
     local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction123',data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as connection:
+        connection.execute('DROP INDEX weixin_dispatch_binding_cursor')
         connection.execute('DROP TABLE IF EXISTS '+TABLE);connection.commit()
         marker=json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256']=local_server._schema_hash(connection)
         assert schema_migrations.database_rows(connection)==storage_schema.schema_rows('weixin-generations-v1',native=True)
     (root/'workspace.json').write_text(json.dumps(marker),encoding='utf-8')
+    from cn_contract.web import workspace_upgrade
+    monkeypatch.setattr(workspace_upgrade,'VERSIONS',storage_schema.VERSIONS[:18])
+    monkeypatch.setattr(local_server,'CURRENT_VERSION',TARGET)
     return root,marker
 
 
-def test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity(tmp_path):
+def test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity(tmp_path,monkeypatch):
     schema()
     from cn_contract.web import local_server,workspace_upgrade
-    root,marker=native_predecessor(tmp_path)
+    root,marker=native_predecessor(tmp_path,monkeypatch)
     with local_server._worker_lock(root):workspace_upgrade.upgrade(root)
     receipt=json.loads((root/('upgrade-'+TARGET+'.json')).read_text('utf-8'))
     assert receipt['before_schema']==marker['schema_sha256'] and receipt['workspace_id']==marker['workspace_id']
@@ -232,7 +237,7 @@ def test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_ident
 def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
     schema()
     from cn_contract.web import local_server,workspace_upgrade
-    root,marker=native_predecessor(tmp_path);write_marker=workspace_upgrade._write_marker
+    root,marker=native_predecessor(tmp_path,monkeypatch);write_marker=workspace_upgrade._write_marker
     def interrupted(*args):raise OSError('independent synthetic marker write interruption')
     monkeypatch.setattr(workspace_upgrade,'_write_marker',interrupted)
     with local_server._worker_lock(root),pytest.raises(OSError):workspace_upgrade.upgrade(root)
@@ -259,7 +264,7 @@ def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(
 def test_native_failed_ddl_preserves_predecessor_schema_and_marker(tmp_path,monkeypatch):
     schema()
     from cn_contract.web import local_server,workspace_upgrade
-    root,marker=native_predecessor(tmp_path);original=workspace_upgrade.statements_for
+    root,marker=native_predecessor(tmp_path,monkeypatch);original=workspace_upgrade.statements_for
     monkeypatch.setattr(workspace_upgrade,'statements_for',lambda version:
         (*original(version),'INVALID PROVENANCE SQL') if version==TARGET else original(version))
     with local_server._worker_lock(root),pytest.raises(sqlite3.Error):workspace_upgrade.upgrade(root)

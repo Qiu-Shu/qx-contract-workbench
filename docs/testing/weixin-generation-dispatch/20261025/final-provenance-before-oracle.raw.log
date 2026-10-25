@@ -1,0 +1,71 @@
+........................................................................ [ 66%]
+.................................FFF                                     [100%]
+================================== FAILURES ===================================
+_ test_rehashed_hostile_generation_archive_is_rejected_without_publication[previous_scope] _
+tests\integration\test_weixin_generation_backup.py:140: in test_rehashed_hostile_generation_archive_is_rejected_without_publication
+    workspace_backup.create_workspace_backup(root,refused,PASSPHRASE,data_parent=tmp_path)
+src\cn_contract\ops\workspace_backup.py:277: in create_workspace_backup
+    _references(root,inventory,source=True)
+src\cn_contract\ops\workspace_backup.py:142: in _references
+    refs = _file_references(db)
+           ^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\backup.py:182: in _file_references
+    validate_dispatch_records(db, allow_dispatch=allow_assistant)
+src\cn_contract\weixin_inbox\dispatch_integrity.py:171: in validate_dispatch_records
+    raise ValueError('WEIXIN_DISPATCH_INTEGRITY') from None
+E   ValueError: WEIXIN_DISPATCH_INTEGRITY
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_weixin_generation_backup.py:139: in test_rehashed_hostile_generation_archive_is_rejected_without_publication
+    with pytest.raises(ValueError,match='WEIXIN_GENERATION_INTEGRITY'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'WEIXIN_GENERATION_INTEGRITY'
+E     Actual message: 'WEIXIN_DISPATCH_INTEGRITY'
+_ test_rehashed_hostile_generation_archive_is_rejected_without_publication[checkpoint] _
+tests\integration\test_weixin_generation_backup.py:140: in test_rehashed_hostile_generation_archive_is_rejected_without_publication
+    workspace_backup.create_workspace_backup(root,refused,PASSPHRASE,data_parent=tmp_path)
+src\cn_contract\ops\workspace_backup.py:277: in create_workspace_backup
+    _references(root,inventory,source=True)
+src\cn_contract\ops\workspace_backup.py:142: in _references
+    refs = _file_references(db)
+           ^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\backup.py:182: in _file_references
+    validate_dispatch_records(db, allow_dispatch=allow_assistant)
+src\cn_contract\weixin_inbox\dispatch_integrity.py:171: in validate_dispatch_records
+    raise ValueError('WEIXIN_DISPATCH_INTEGRITY') from None
+E   ValueError: WEIXIN_DISPATCH_INTEGRITY
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_weixin_generation_backup.py:139: in test_rehashed_hostile_generation_archive_is_rejected_without_publication
+    with pytest.raises(ValueError,match='WEIXIN_GENERATION_INTEGRITY'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'WEIXIN_GENERATION_INTEGRITY'
+E     Actual message: 'WEIXIN_DISPATCH_INTEGRITY'
+_ test_rehashed_hostile_generation_archive_is_rejected_without_publication[root_target] _
+tests\integration\test_weixin_generation_backup.py:140: in test_rehashed_hostile_generation_archive_is_rejected_without_publication
+    workspace_backup.create_workspace_backup(root,refused,PASSPHRASE,data_parent=tmp_path)
+src\cn_contract\ops\workspace_backup.py:277: in create_workspace_backup
+    _references(root,inventory,source=True)
+src\cn_contract\ops\workspace_backup.py:142: in _references
+    refs = _file_references(db)
+           ^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\backup.py:182: in _file_references
+    validate_dispatch_records(db, allow_dispatch=allow_assistant)
+src\cn_contract\weixin_inbox\dispatch_integrity.py:171: in validate_dispatch_records
+    raise ValueError('WEIXIN_DISPATCH_INTEGRITY') from None
+E   ValueError: WEIXIN_DISPATCH_INTEGRITY
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_weixin_generation_backup.py:139: in test_rehashed_hostile_generation_archive_is_rejected_without_publication
+    with pytest.raises(ValueError,match='WEIXIN_GENERATION_INTEGRITY'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'WEIXIN_GENERATION_INTEGRITY'
+E     Actual message: 'WEIXIN_DISPATCH_INTEGRITY'
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_backup.py::test_rehashed_hostile_generation_archive_is_rejected_without_publication[previous_scope]
+FAILED tests/integration/test_weixin_generation_backup.py::test_rehashed_hostile_generation_archive_is_rejected_without_publication[checkpoint]
+FAILED tests/integration/test_weixin_generation_backup.py::test_rehashed_hostile_generation_archive_is_rejected_without_publication[root_target]
+3 failed, 105 passed in 123.70s (0:02:03)

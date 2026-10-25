@@ -12,6 +12,7 @@ from cn_contract.ops import backup
 from cn_contract.persistence import SessionRow,UserRow
 from cn_contract.ops.storage import RestoreFenceRow
 from cn_contract.security import ServiceError
+from cn_contract.storage_schema import identify_schema
 from cn_contract.weixin_inbox import accounts,dispatch,ingress
 from cn_contract.weixin_inbox.provenance_integrity import validate_descriptor_generations
 from tests.helpers.synthetic_weixin_generation_service import append,request as generation_request
@@ -105,7 +106,11 @@ def test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes(
             if change=='session':db.get(SessionRow,str(h['actor'].session_id)).revoked=True
             elif change=='role':db.get(UserRow,str(h['actor'].user_id)).roles='["assistant"]'
             elif change=='restore':db.add(RestoreFenceRow(ref=str(uuid4()),archive_sha256='1'*64,manifest_sha256='2'*64,payload='{}'))
-            elif change=='schema17':db.execute(text('DROP TABLE weixin_descriptor_generations'))
+            elif change=='schema17':
+                db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
+                db.execute(text('DROP TABLE weixin_descriptor_generations'))
+                rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+                assert identify_schema(rows,native=True)=='weixin-generations-v1'
     before=snapshot(h['database']) if change!='schema17' else None
     with pytest.raises(ServiceError) as error:receive(h,[message(91)],value=value)
     assert error.value.code==('AUTHORIZATION_REQUIRED' if change=='session' else 'CROSS_MATTER_DENIED' if change=='role'

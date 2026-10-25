@@ -1,0 +1,81 @@
+..............................................F......................F.. [ 31%]
+........................................................................ [ 62%]
+........................................................................ [ 93%]
+................                                                         [100%]
+================================== FAILURES ===================================
+_ test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance[binding] _
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: UNIQUE constraint failed: weixin_dispatch_receipts.task_binding_id, weixin_dispatch_receipts.expected_task_cursor
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_weixin_dispatch_integrity.py:216: in test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance
+    corrupt(db, 'UPDATE weixin_dispatch_receipts SET '+key+'=:value WHERE id=:id', {'id':target, 'value':value})
+tests\integration\test_weixin_dispatch_integrity.py:62: in corrupt
+    db.execute(text(sql), values or {})
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2373: in execute
+    return self._execute_internal(
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2280: in _execute_internal
+    result = conn.execute(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+.venv\Lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: weixin_dispatch_receipts.task_binding_id, weixin_dispatch_receipts.expected_task_cursor
+E   [SQL: UPDATE weixin_dispatch_receipts SET task_binding_id=? WHERE id=?]
+E   [parameters: ('3d36b961-aea2-48ca-bfb2-210c10d053ab', '14be900c-3adc-4cfe-85a3-fa88f74f3f10')]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+_ test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance[overlap] _
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.IntegrityError: UNIQUE constraint failed: weixin_dispatch_receipts.task_binding_id, weixin_dispatch_receipts.expected_task_cursor
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_weixin_dispatch_integrity.py:271: in test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance
+    corrupt(db, 'UPDATE weixin_dispatch_receipts SET expected_task_cursor=0,next_task_cursor=1 WHERE id=:id', {'id':receipts[1]['id']})
+tests\integration\test_weixin_dispatch_integrity.py:62: in corrupt
+    db.execute(text(sql), values or {})
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2373: in execute
+    return self._execute_internal(
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2280: in _execute_internal
+    result = conn.execute(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+.venv\Lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: weixin_dispatch_receipts.task_binding_id, weixin_dispatch_receipts.expected_task_cursor
+E   [SQL: UPDATE weixin_dispatch_receipts SET expected_task_cursor=0,next_task_cursor=1 WHERE id=?]
+E   [parameters: ('b678d28a-ccf8-486c-aa92-4aed74affa04',)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_dispatch_integrity.py::test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance[binding]
+FAILED tests/integration/test_weixin_dispatch_integrity.py::test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance[overlap]
+2 failed, 230 passed in 160.88s (0:02:40)

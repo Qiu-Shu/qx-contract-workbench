@@ -1,0 +1,16 @@
+{
+  "v18_public_validator_rejects": true,
+  "new_fixed_query_returned_corrupt_receipt": false,
+  "new_fixed_query_refusal": "ServiceError: request blocked",
+  "source_before": {
+    "src/cn_contract/weixin_inbox/generation_dispatch.py": "69e84f0d57f35b6c0098f5d89ebcc7511a387719d0865f94634913a75eecfa88",
+    "src/cn_contract/weixin_inbox/dispatch_integrity.py": "aa31cb8d5e58fe3861264ffd1a585decce656816ebc69d13cff67c4f028eadcd",
+    "src/cn_contract/weixin_inbox/generation_integrity.py": "95fde49967f4b61e9e7bc246606ee095941298afd553ebd23d0c02e68e2d3075"
+  },
+  "source_after": {
+    "src/cn_contract/weixin_inbox/generation_dispatch.py": "69e84f0d57f35b6c0098f5d89ebcc7511a387719d0865f94634913a75eecfa88",
+    "src/cn_contract/weixin_inbox/dispatch_integrity.py": "aa31cb8d5e58fe3861264ffd1a585decce656816ebc69d13cff67c4f028eadcd",
+    "src/cn_contract/weixin_inbox/generation_integrity.py": "95fde49967f4b61e9e7bc246606ee095941298afd553ebd23d0c02e68e2d3075"
+  },
+  "source_stable": true
+}

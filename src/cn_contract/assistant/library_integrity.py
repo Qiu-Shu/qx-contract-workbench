@@ -155,7 +155,7 @@ def validate_library_records(db, *, allowed=True):
     events = db.execute(text('''SELECT * FROM assistant_run_events WHERE lower(event_type) LIKE 'tool.%'
         OR lower(event_type) LIKE 'research.%' OR payload_json LIKE '%local-research-v1%' ''')).mappings().all()
     if version not in ('assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1',
-                       'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1'):
+                       'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1'):
         if events:
             _fail()
         return

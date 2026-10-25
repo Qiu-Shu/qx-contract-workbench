@@ -61,7 +61,7 @@ def file_references(db, *, allowed=True):
         return []
     if version not in ('assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
                        'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2',
-                       'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1'):
+                       'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     originals = db.execute(text('SELECT * FROM assistant_attachments ORDER BY id')).mappings().all()
     parses = db.execute(text('SELECT * FROM assistant_attachment_parses ORDER BY attachment_id,revision')).mappings().all()

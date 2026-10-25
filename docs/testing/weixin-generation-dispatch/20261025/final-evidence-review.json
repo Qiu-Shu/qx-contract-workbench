@@ -1,0 +1,410 @@
+{
+  "audit_at": "2026-10-25T12:13:06.313524+00:00",
+  "baseline": "86daac9c6d13dae49dc30eac60113bda711625a9",
+  "reviewer_test_execution": "NOT_RUN; receipt/XML/SHA/AST audit only",
+  "findings": [],
+  "python_distinct": 1329,
+  "executed_modules": 45,
+  "group_results": {
+    "final-new": {
+      "testcases": 48,
+      "passed": 48,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-schema": {
+      "testcases": 151,
+      "passed": 151,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-native": {
+      "testcases": 60,
+      "passed": 60,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-migration": {
+      "testcases": 176,
+      "passed": 176,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-legacy": {
+      "testcases": 110,
+      "passed": 110,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-dispatch": {
+      "testcases": 38,
+      "passed": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-integrity": {
+      "testcases": 232,
+      "passed": 232,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-targets": {
+      "testcases": 101,
+      "passed": 101,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-ingress": {
+      "testcases": 52,
+      "passed": 52,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-provenance": {
+      "testcases": 108,
+      "passed": 108,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-routes": {
+      "testcases": 87,
+      "passed": 87,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-task": {
+      "testcases": 98,
+      "passed": 98,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-preview": {
+      "testcases": 68,
+      "passed": 68,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "new_cases": {
+    "tests.integration.test_weixin_generation_dispatch": 29,
+    "tests.integration.test_weixin_generation_dispatch_integrity": 11,
+    "tests.integration.test_weixin_generation_dispatch_atomic": 8,
+    "tests.integration.test_weixin_generation_dispatch_schema": 52
+  },
+  "four_gate_exit_codes": {
+    "gate-schema": 0,
+    "gate-defaults": 0,
+    "gate-sources": 0,
+    "gate-dependencies": 0
+  },
+  "native_selected": 60,
+  "native_deselected": 213,
+  "input_union": 564,
+  "cross_group_identical_current_inputs": 562,
+  "two_test_body_exceptions": {
+    "tests/integration/test_weixin_generation_backup.py": {
+      "function": "test_rehashed_hostile_generation_archive_is_rejected_without_publication",
+      "body_only": true,
+      "external_name_import_references": [],
+      "old_hash_groups": [
+        "final-new",
+        "final-schema",
+        "final-native",
+        "final-migration",
+        "final-legacy",
+        "final-dispatch",
+        "final-routes",
+        "final-task",
+        "final-preview",
+        "gate-schema",
+        "gate-defaults",
+        "gate-sources",
+        "gate-dependencies"
+      ],
+      "fully_rerun_group": "final-provenance",
+      "full_rerun_passed": 108
+    },
+    "tests/integration/test_weixin_dispatch_integrity.py": {
+      "function": "test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance",
+      "body_only": true,
+      "external_name_import_references": [],
+      "old_hash_groups": [
+        "final-new",
+        "final-schema",
+        "final-native",
+        "final-migration",
+        "final-legacy",
+        "final-dispatch",
+        "final-routes",
+        "final-task",
+        "final-preview",
+        "gate-schema",
+        "gate-defaults",
+        "gate-sources",
+        "gate-dependencies"
+      ],
+      "fully_rerun_group": "final-integrity",
+      "full_rerun_passed": 232
+    }
+  },
+  "final_product_sha256": {
+    "src/cn_contract/assistant/attachment_integrity.py": "85dec2891560c43ef4c3bf91b377b69081b26966aa3902f2802e0a7bb4e3e8ea",
+    "src/cn_contract/assistant/judge_integrity.py": "f89440c7b1789bb60985a0a085f51883d4970db53c18c50743938880fbdfb6d0",
+    "src/cn_contract/assistant/library_integrity.py": "0c456e11823c72ba67455b516864af5a07675d2dc2ac7f2ddf21558e3d141d9a",
+    "src/cn_contract/assistant/model_integrity.py": "369d25612b78310c2b1ce1ceb2b9f591fa1565bb78a22cb7ab6268fbd1374b85",
+    "src/cn_contract/assistant/profile_integrity.py": "fcde6597659082d49d0f7aef1721d473319922fddd90b0eb535638eb43bb8863",
+    "src/cn_contract/schema_migrations.py": "425fb17605fb77ed167aaa53e0d5605ac2253015c2da170cc0877569e30a5bbc",
+    "src/cn_contract/storage_bootstrap.py": "288d7e8d687a5c7411bf626d6459200abc32d9fa335495530533e56c8ee0dc0c",
+    "src/cn_contract/storage_schema.py": "497280ccab7291b1441c83557846780fdf8488f9de898c6d6df9edb4a5a2af1e",
+    "src/cn_contract/task_drafts/integrity.py": "bbef69cc9c14e1a366e89c4da55b09b70b10ffb5e2b1f03769b65c18c9bf27c4",
+    "src/cn_contract/weixin_inbox/dispatch.py": "a0d4dc1f99a6414e5696b69d6d07fc9e897038a6717586c10d6b85932619e2db",
+    "src/cn_contract/weixin_inbox/dispatch_integrity.py": "aa31cb8d5e58fe3861264ffd1a585decce656816ebc69d13cff67c4f028eadcd",
+    "src/cn_contract/weixin_inbox/dispatch_schema.py": "1d0597fbe8fc780768c27b2052032ddb74eb8a0cfa3b331ba299676f61edbb09",
+    "src/cn_contract/weixin_inbox/generation_dispatch.py": "69e84f0d57f35b6c0098f5d89ebcc7511a387719d0865f94634913a75eecfa88",
+    "src/cn_contract/weixin_inbox/generation_dispatch_schema.py": "b1517e165dd158fe20f09de4518b906cf5c23552694ab372dab0f79976d72604",
+    "src/cn_contract/weixin_inbox/generation_ingress.py": "2f3b979676c2027e9ba4454ae8f212bad623765cba2b43bf2ec9626701138af7",
+    "src/cn_contract/weixin_inbox/generation_integrity.py": "95fde49967f4b61e9e7bc246606ee095941298afd553ebd23d0c02e68e2d3075",
+    "src/cn_contract/weixin_inbox/generations.py": "695ea817b6a657e0a735aec18df44a060b30e5a8490818e37761cd16d65d7034",
+    "src/cn_contract/weixin_inbox/grant_integrity.py": "8ac28b18b897772ed67e55183706d4b09c167102082160db73ca9da8caa138b4",
+    "src/cn_contract/weixin_inbox/integrity.py": "33720be403c9c4c9a0bf92b8b3203c3eacd6a9672eb3d3d9a4e7b4f38f0e8424",
+    "src/cn_contract/weixin_inbox/provenance_integrity.py": "08c6d89a1303be7b29a442313ebde3256d3fd072d5e41bf8ba869b5bc8e8eb37"
+  },
+  "review_snapshots_current": true,
+  "artifact_ledger_count": 76,
+  "public_file_count": 80,
+  "public_bytes_frozen": true,
+  "public_file_sha256": {
+    "backup-oracle-review.md": "d8c10aeb74400044098467c8957b3332e0a116763d2b2dff815aba867b30f96f",
+    "compat-after.log": "861fb25863798d4773d4813f02e1c77d4dd199bf3f826fc4252bbd642151b14b",
+    "compat-after.xml": "cc1dbb1f18613aec397e7ed309747b6cf049dd1279491669bddd4824268d009f",
+    "compat-before.log": "664d208e7ad4140d83adeb094e70c029a93ec84fe41758d46ca26b34991ee6e4",
+    "compat-before.xml": "bcf9180ba261647723ee84dd3a02d506600b903fb858fe01cecaa940d1dfe508",
+    "compat-extra.log": "cab959a11cd9887734f6cfc0a4bd9bf861ec97ee53b541002ba0df6eee27244f",
+    "compat-extra.xml": "aab8d3239a5f02d1621705996aba854192c12523c4f7223b53663647852f0e27",
+    "final-dispatch.log": "c9ad64c42f1b87cd84f0741499a2947d184784e18d2b37b9c0b2c1d743d1128b",
+    "final-dispatch.xml": "5c53a0d8ecd8d9f2879530cec9b9fcbcef02e58017556a105516776560180566",
+    "final-ingress.log": "1aedc6a0d545092a1569c6e7ba83a174bf8bf260ddce27c8140cfb8431686f8f",
+    "final-ingress.xml": "e737fa4f2913329ae4eeaf7551634cef81e0e2d600158ac2fe09f8e27db42ff9",
+    "final-integrity-before-fixture.raw.log": "1c6085e384c64807f3fdbd949c90325b7dbfd0b7f518a602c9dc76f5b4fd7d5d",
+    "final-integrity-before-fixture.xml": "f36bd9cfeb3ccbe88845b231a5c4542de493038b55c30a74acfb540d718dc78d",
+    "final-integrity.log": "b54f40ab8ca410b5ee53241974232f9dd703c868ff4b362257fd691a06f51b0b",
+    "final-integrity.xml": "aec7005919b5fd552d0a1a41a6204c92b44189863101858d4da91752b9dedfbb",
+    "final-legacy.log": "cf8c737d0e851ed842d12730c57517160cdcfcb6a4dc38b588715866bc63c850",
+    "final-legacy.xml": "c5aec63b6c4d58283ab999d0178c2896740d402c7a09b614dbf51c1a270cd7f6",
+    "final-migration.log": "850a68ff374ab257f16f43235261a6bdf0aba31186a43ddcf749095995c24e8d",
+    "final-migration.xml": "45a35e4dbf8dea5ae55d52ce01f4fcb87cad4af5142059b4818f85038354cc77",
+    "final-native.log": "2ed6065050361a56519d9f412e489f4ac9984aa8309253d4102e2bd0c7a2774a",
+    "final-native.xml": "ebc6984638f91cd32f0786ee1a96f10514d406fbdfd1fbdda75d694573316262",
+    "final-new.log": "099c5c5149659fe9c1d0da9ac0ec358b1fcc4019de0b90d4e7bcf05ec4d400ec",
+    "final-new.xml": "ae9aafe0123619ae4db67195fe3a93591cfe1c9a008e0a8f6e11870806161def",
+    "final-preview.log": "ff8ea32d8e7e51b3bafe8b345ce492120132a79dad0a1bb1b1a90fcc688db619",
+    "final-preview.xml": "3507fe9c5150a2a25da3f07e44bfbd4e1887001a2a5162285a8544e5012655bd",
+    "final-provenance-before-oracle.raw.log": "77c83087c5c746cc0d59f2eae12d396670636ab90a495d870bb511463ed33ffa",
+    "final-provenance-before-oracle.xml": "ae9a71b4b74fdf91937790a9373355fa9f660ec0ec76a9afdf8315ff1819e074",
+    "final-provenance.log": "b77e79baeb63aa950033f68431fa9d2608e748d712e6ece9d7010ff476175d4c",
+    "final-provenance.xml": "362609ed5760b597afaa5f357628dba1c67b7ad3b76ab4eae7a2d742e42acdc5",
+    "final-routes.log": "3a863db079074f8ffff4bf57b538f5126a3d60743cb3e7712deae8e7d0def16c",
+    "final-routes.xml": "0998f4d1b3f64de3d0700d626fed4fd830495732ce722165e8a54c8ab52d7aba",
+    "final-schema.log": "0751e899d3e24c8d6b427af2387706211fcb7f30c2a31b06ee8ca38eccec30b7",
+    "final-schema.xml": "91b42b6a2b13e783777cbfa07ea97f622b9d5710cdb43d5c0111674ed39d8512",
+    "final-targets.log": "f91ae18d4fd257f91879965e45127ed39f31647a10604645eccdf2a15e826ca7",
+    "final-targets.xml": "55966deca6092848efa404121cd139f6fff922c6bd5ed8fb1cbe48875401f8b7",
+    "final-task.log": "b196d97fd33082f2743458a1c56f0b94ca3655f0cf19a5026c216888a5c8465f",
+    "final-task.xml": "24e2604354788c35f61d971f5dd2e33895718d39cdda9d95ba9e45eca5c3261d",
+    "gate-defaults.log": "d9eb18fcefa75a1cc61e13f806bcffc5472ebaed389987c6cd0a2daf807f4f25",
+    "gate-dependencies.log": "14d4433e3fca84895513bf496a7273e4c07686da65294c0187cbf69222a02e17",
+    "gate-schema.log": "a18b3b9c8ca028ea291784790f88c5133f212fe296939c73c592988ed43efa50",
+    "gate-sources.log": "40ae4d5b45180f7ae597f641118dd73482ae820ec4f9f292e10b848d9376638e",
+    "independent-no-generation-query-green-final-run.json": "b60dc2a11a7f5faa2fd91c79635472640d9ac516e8027b13d38c6c95c49c3dd1",
+    "independent-no-generation-query-green-final.json": "0349d8edf8467b15a180723a4b1f350118088d7789a6e0bfc07908586f29468c",
+    "independent-no-generation-query-green-final.log": "329ee677c303e02851962be853370b13fbb1611c4bef2f664c4da2d76209f5e7",
+    "independent-no-generation-query-red.json": "d1f9a0d6bf5b1a028d94bce0614f2cac0abd2c3e7b0150f42d45aeb6438d3927",
+    "independent-no-generation-query-red.log": "2795b85188386f7920e0a4bb990ff513bc029d45ec02a65f2b3ac469837aedc1",
+    "independent-no-generation-query.py": "be7a40ce5531e8f170aa260980134238183bca92f7e3bb4b487efcc6362cbdd0",
+    "independent-v18-upgrade-probe.json": "5e4ba826dacb3acd083059c031990245d8697bde67d1f3ddd1f0867e4ff2bf31",
+    "independent-v18-upgrade-probe.log": "6946673fa1f86990bd4ec2098053a244fc1f0340d5c1fe5cb08032b5f96d8616",
+    "independent-v18-upgrade-probe.py": "543ae0aa4427c28be765f9da1d53b7bb76aa116abf2d0179f30156e80048083b",
+    "independent-v18-upgrade-probe.xml": "9183e300eddc590da11c5116588f641d5051365b3650392f82873818662d66e9",
+    "independent-v18-upgrade-proof.json": "cfb011cb05b93261c17b7af72fdc96701e4282527f2e75b25e16df6381e19edd",
+    "integrity-formal-red.log": "eaec283c74d911cf5cfd78a432d026c172c8bc8b8a54deb7a4e9462fdf5ce4a0",
+    "integrity-formal-red.xml": "2d7c56ddeaa1ee0b03b5c347cabaf011e5812d6e62b80e373a78f304301f22fa",
+    "integrity-red-fixed.log": "d4b767165059b4defd4f646bb0cf3c7e8458599d1df7c5b3c684d743bfc58dd2",
+    "integrity-red-fixed.xml": "6d5a0bd42d5e5eca85896494f10b4fa24f3e173fdd2c4f29c419455a28ddee17",
+    "integrity-red.log": "f475f924cba2f6f3ee6dd23162c2c1cba2943ed1ca19f4ebf5a32f1ecde986ae",
+    "integrity-red.xml": "5d7f087a74602a33680c5552a1a3308032f036d5076bd742fc1c99f2d7d04a40",
+    "README.md": "87c09eab3e6985d0a54adff6b17a0ecc5ab81cc26396a77f900df233c7b8716a",
+    "review.md": "71a02f18bd710284705e88e9ab370530494ab7f6a9eac7b7f17f2bb1d059a9f8",
+    "runtime-cross-review.json": "7651fb19b3e83d41e4ccc40b8d643c71669cd53e7a28c368b2e70d35244b9705",
+    "runtime-cross-review.md": "bf700665649b44f9d57e446f90222002fe4a2f0918ffdba6e55085840f515c6a",
+    "runtime-empty-parent-green.log": "c44752c81df641e14a6035c61a66f6d84bef8eeb19133e11e4176adc24b09cec",
+    "runtime-empty-parent-green.xml": "ccf2d05f43835ed87b3d4f6c44d48e7794efcf2b30a91a141427db970b1f727d",
+    "runtime-empty-parent-red.log": "e3e93d131d372e87bf8559389e5a7b9b06647d4808d78f2e609ae805699e9c7b",
+    "runtime-empty-parent-red.xml": "5cc92e31fbbd13ab80e73a5b50bcad19c69a4b8c5ddddd8f1cfa9705c8c20541",
+    "runtime-final.log": "10e5e332832045375d2af0564d94fccd644f6e4f5319287cc31d477b28cd1f23",
+    "runtime-final.xml": "ebdb80e2d8c8565d1c55603135ab2e3a10946a951a2fcfc1dceb6827735cc598",
+    "runtime-integrity-review-manifest.json": "4f7ba1d55f7705687f6d7d1721f0aa997ad18220ab842cb6f9c152eb5a9e38ce",
+    "runtime-integrity-review.md": "1e075fb3008be7b02beaa12121e8cff7d84192c6c31320c561a42134294c18cf",
+    "runtime-red.log": "65179496693d6f174dd1db597276f12dae4a56fe3ec094ab53730cebeae2f896",
+    "runtime-red.xml": "2ed9ead459ef40dacf27804782473381b7f01543b30fac7d4cbbbf31f9450162",
+    "storage-freeze.json": "2ac00b32d0c9483f8bb6e62b89da6bfe06bcf8fe2ef5a3e0cdc66f993feceaac",
+    "storage-red.log": "ea469b343b7a1dcf058727597e02a5809844fffa1e6407741479cb25b6c70db2",
+    "storage-red.xml": "521d44be57da55d344b2898658663619809c43fb127312db7e52e9df701dc682",
+    "storage-summary.json": "b04d6161186bacb091dda5c569d91c0cfde4f79ed696ef5650a751e211592380",
+    "test-compatibility-review.md": "2ebf7af9925011a5e7891cfe14b1ce952fbf0618d3574cd7bd1ccdaa7faa3ddc",
+    "test-only-correction-proof.json": "d4f134baeb296065819259978f9aeb55b6c07a1a006cc1a690fd926d784596e3",
+    "verification-summary.json": "c2806c5e1dc4dacaeaa5a036a9f4e21551e0a88ad058368b5f6a52278d66ce7b",
+    "workbuddy-result.json": "17438efaa997563fe34348c8c3887e684b5862ba6ee78bd6298e851fc4c4be82"
+  },
+  "failure_history": {
+    "storage-red": {
+      "testcases": 52,
+      "passed": 37,
+      "failures": 15,
+      "errors": 0,
+      "skipped": 0
+    },
+    "runtime-red": {
+      "testcases": 2,
+      "passed": 0,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    "runtime-empty-parent-red": {
+      "testcases": 3,
+      "passed": 1,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    "runtime-empty-parent-green": {
+      "testcases": 3,
+      "passed": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "integrity-red": {
+      "testcases": 11,
+      "passed": 2,
+      "failures": 9,
+      "errors": 0,
+      "skipped": 0
+    },
+    "integrity-red-fixed": {
+      "testcases": 11,
+      "passed": 3,
+      "failures": 8,
+      "errors": 0,
+      "skipped": 0
+    },
+    "integrity-formal-red": {
+      "testcases": 11,
+      "passed": 3,
+      "failures": 8,
+      "errors": 0,
+      "skipped": 0
+    },
+    "compat-before": {
+      "testcases": 5,
+      "passed": 1,
+      "failures": 3,
+      "errors": 1,
+      "skipped": 0
+    },
+    "compat-after": {
+      "testcases": 5,
+      "passed": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "compat-extra": {
+      "testcases": 153,
+      "passed": 153,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-integrity-before-fixture": {
+      "testcases": 232,
+      "passed": 230,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-provenance-before-oracle": {
+      "testcases": 108,
+      "passed": 105,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "independent_v18_probe": {
+    "passed": 1,
+    "included_in_root_totals": false
+  },
+  "workbuddy": {
+    "task_id": "wb-bg-3c9f00ccb078",
+    "state": "cancelled",
+    "requested_model_id": "kimi-k3-2",
+    "actual_model_id": "kimi-k3-2",
+    "model_verified": true,
+    "model_source": "native ACP session/load",
+    "permissions": [
+      {
+        "tool": "Bash",
+        "allowed": false,
+        "target": null
+      }
+    ],
+    "retry_safe": false,
+    "worker_released": true,
+    "report_produced": false,
+    "outputs_adopted": false,
+    "note": "No retry; root independently implemented and verified compatibility fixes"
+  },
+  "not_run": [
+    "whole repository long-process",
+    "Node/frontend",
+    "browser/Electron",
+    "installed 0.4.1",
+    "real WeChat/contracts/models/paid calls"
+  ],
+  "open": [
+    "WIN-PATH-02 rename WinError5",
+    "native long-process AV"
+  ],
+  "initial_failed_run_product_stability": {
+    "final-integrity-before-fixture": {
+      "exit_code": 1,
+      "before_equals_after": true,
+      "twenty_product_hashes_unchanged": true
+    },
+    "final-provenance-before-oracle": {
+      "exit_code": 1,
+      "before_equals_after": true,
+      "twenty_product_hashes_unchanged": true
+    }
+  },
+  "publication_claims_subreview": {
+    "findings": [],
+    "execution": "Read-only document/raw receipt audit; no tests executed"
+  },
+  "subsequent_git_only_receipt_edits": "Excluded",
+  "report_md_sha256": "1918ed75e3bac63d25ef6ec258447c85fa5337c94c737a52f8ccf8b5dab2e0dc"
+}

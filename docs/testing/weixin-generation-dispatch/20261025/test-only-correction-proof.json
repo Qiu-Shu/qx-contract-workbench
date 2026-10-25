@@ -1,0 +1,16 @@
+{
+  "tests/integration/test_weixin_generation_backup.py": {
+    "before_sha256": "bf079d2ef8fb6b4c92de7355e221e7e5a3ffcf49c4d199877a974dbbf5591e15",
+    "after_sha256": "749da024fa2779a8c5b271978f54d23b68d3cde13e9937a58bc9ce0278c1ae1a",
+    "only_changed_top_level_function": "test_rehashed_hostile_generation_archive_is_rejected_without_publication",
+    "all_helpers_imports_fixtures_unchanged": true,
+    "external_name_or_import_references": []
+  },
+  "tests/integration/test_weixin_dispatch_integrity.py": {
+    "before_sha256": "5ad7ede827704aa5bb31688f5ddc0d31ad76a3198aa00bceac18722b4fa82722",
+    "after_sha256": "db595b5bb3a3f1bddcd85d23b5cf1d7d6130b7429832ab1eb7411555f43e8d4e",
+    "only_changed_top_level_function": "test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance",
+    "all_helpers_imports_fixtures_unchanged": true,
+    "external_name_or_import_references": []
+  }
+}

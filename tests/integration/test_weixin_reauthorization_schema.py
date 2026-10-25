@@ -180,6 +180,8 @@ def native_dispatch_workspace(tmp_path):
     root = tmp_path/'workspace'
     local_server.initialize_workspace(root,'synthetic-lawyer','fiction123',data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as db:
+        db.execute('DROP INDEX weixin_dispatch_binding_cursor')
+        db.execute('DROP TABLE weixin_descriptor_generations')
         db.execute('DROP TABLE weixin_peer_generations')
         db.execute('DROP TABLE weixin_peer_scope_grants')
         db.commit()

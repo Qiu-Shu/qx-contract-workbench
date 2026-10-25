@@ -202,6 +202,7 @@ def native_grant_workspace(tmp_path, monkeypatch):
     root = tmp_path/'workspace'
     local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as db:
+        db.execute('DROP INDEX weixin_dispatch_binding_cursor')
         db.execute('DROP TABLE IF EXISTS weixin_descriptor_generations')
         db.execute('DROP TABLE IF EXISTS weixin_peer_generations')
         db.commit()
@@ -282,11 +283,12 @@ def test_native_failed_generation_ddl_preserves_prior_schema_and_marker(native_g
     assert json.loads((root/'workspace.json').read_text('utf-8')) == marker
 
 
-def test_native_workspace_advances_two_versions_with_distinct_verified_receipts(tmp_path):
+def test_native_workspace_advances_all_later_versions_with_distinct_verified_receipts(tmp_path):
     from cn_contract.web import local_server,workspace_upgrade
     root=tmp_path/'two-step-workspace'
     local_server.initialize_workspace(root,'synthetic-lawyer','fiction123',data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as db:
+        db.execute('DROP INDEX weixin_dispatch_binding_cursor')
         db.execute('DROP TABLE weixin_descriptor_generations')
         db.execute('DROP TABLE weixin_peer_generations');db.commit()
         marker=json.loads((root/'workspace.json').read_text('utf-8'))
@@ -295,7 +297,7 @@ def test_native_workspace_advances_two_versions_with_distinct_verified_receipts(
     (root/'workspace.json').write_text(json.dumps(marker),encoding='utf-8')
     with local_server._worker_lock(root):workspace_upgrade.upgrade(root)
     before=marker['schema_sha256']
-    for version in (TARGET,CURRENT):
+    for version in storage_schema.VERSIONS[16:]:
         receipt=json.loads((root/('upgrade-'+version+'.json')).read_text('utf-8'))
         assert receipt['workspace_id']==marker['workspace_id'] and receipt['before_schema']==before
         saved=root/receipt['backup']

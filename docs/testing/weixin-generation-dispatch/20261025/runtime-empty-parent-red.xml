@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="3" time="3.245" timestamp="2026-10-25T19:36:56.337055+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_generation_dispatch" name="test_no_generation_query_keeps_valid_legacy_receipt_readable" time="0.651" /><testcase classname="tests.integration.test_weixin_generation_dispatch" name="test_no_generation_query_still_validates_complete_legacy_parents[receipt_time]" time="0.653"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">tests\integration\test_weixin_generation_dispatch.py:290: in test_no_generation_query_still_validates_complete_legacy_parents
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch" name="test_no_generation_query_still_validates_complete_legacy_parents[checkpoint]" time="0.718"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">tests\integration\test_weixin_generation_dispatch.py:290: in test_no_generation_query_still_validates_complete_legacy_parents
+    with pytest.raises(ServiceError) as error:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;</failure></testcase></testsuite></testsuites>

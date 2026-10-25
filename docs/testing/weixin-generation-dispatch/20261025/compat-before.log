@@ -1,0 +1,45 @@
+FFF.E                                                                    [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_native_upgrade_records_verified_backup_and_preserves_workspace_identity _
+tests\integration\test_weixin_dispatch_schema.py:184: in native_inbox_workspace
+    assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-inbox-v1',native=True)
+E   assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E
+E     At index 103 diff: ('index', 'sqlite_autoindex_weixin_descriptor_generations_1', 'weixin_descriptor_generations', None) != ('index', 'sqlite_autoindex_weixin_inbox_descriptors_1', 'weixin_inbox_descriptors', None)
+E     Left contains 4 more items, first extra item: ('trigger', 'immutable_weixin_poll_receipts_delete', 'weixin_poll_receipts', "CREATE TRIGGER immutable_weixin_poll_receipts_delete BEFORE DELETE ON weixin_poll_receipts BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E     Use -v to get more diff
+================================== FAILURES ===================================
+_ test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity _
+tests\integration\test_weixin_provenance_schema.py:217: in test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity
+    root,marker=native_predecessor(tmp_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_provenance_schema.py:209: in native_predecessor
+    assert schema_migrations.database_rows(connection)==storage_schema.schema_rows('weixin-generations-v1',native=True)
+E   AssertionError: assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E
+E     At index 123 diff: ('index', 'weixin_dispatch_binding_cursor', 'weixin_dispatch_receipts', 'CREATE UNIQUE INDEX weixin_dispatch_binding_cursor ON weixin_dispatch_receipts(task_binding_id,expected_task_cursor)') != ('table', 'approvals', 'approvals', 'CREATE TABLE approvals (\n\tid VARCHAR(36) NOT NULL, \n\tmatter_id VARCHAR(36) NOT NULL, \n\tapprover_id VARCHAR(36) NOT NULL, \n\tstatus VARCHAR(20) NOT NULL, \n\tpayload TEXT NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (matter_id, id), \n\tFOREIGN KEY(matter_id) REFERENCES matters (id), \n\tFOREIGN KEY(approver_id) REFEREN...
+E
+E     ...Full output truncated (3 lines hidden), use '-vv' to show
+_ test_native_workspace_advances_two_versions_with_distinct_verified_receipts _
+tests\integration\test_weixin_generation_schema.py:294: in test_native_workspace_advances_two_versions_with_distinct_verified_receipts
+    assert schema_migrations.database_rows(db)==storage_schema.schema_rows('weixin-reauthorization-v1',native=True)
+E   AssertionError: assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E
+E     At index 119 diff: ('index', 'weixin_dispatch_binding_cursor', 'weixin_dispatch_receipts', 'CREATE UNIQUE INDEX weixin_dispatch_binding_cursor ON weixin_dispatch_receipts(task_binding_id,expected_task_cursor)') != ('table', 'approvals', 'approvals', 'CREATE TABLE approvals (\n\tid VARCHAR(36) NOT NULL, \n\tmatter_id VARCHAR(36) NOT NULL, \n\tapprover_id VARCHAR(36) NOT NULL, \n\tstatus VARCHAR(20) NOT NULL, \n\tpayload TEXT NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (matter_id, id), \n\tFOREIGN KEY(matter_id) REFERENCES matters (id), \n\tFOREIGN KEY(approver_id) REFEREN...
+E
+E     ...Full output truncated (3 lines hidden), use '-vv' to show
+_ test_valid_old_history_upgrades_once_preserving_rows_identity_and_originals _
+tests\integration\test_workspace_upgrade_semantic_preflight.py:104: in test_valid_old_history_upgrades_once_preserving_rows_identity_and_originals
+    history = old_history(world)
+              ^^^^^^^^^^^^^^^^^^
+tests\integration\test_workspace_upgrade_semantic_preflight.py:34: in old_history
+    assert identify_schema([tuple(row) for row in db.execute(text(
+src\cn_contract\storage_schema.py:107: in identify_schema
+    raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E   ValueError: DATABASE_SCHEMA_MISMATCH
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_workspace_advances_two_versions_with_distinct_verified_receipts
+FAILED tests/integration/test_workspace_upgrade_semantic_preflight.py::test_valid_old_history_upgrades_once_preserving_rows_identity_and_originals
+ERROR tests/integration/test_weixin_dispatch_schema.py::test_native_upgrade_records_verified_backup_and_preserves_workspace_identity
+3 failed, 1 passed, 1 error in 4.94s

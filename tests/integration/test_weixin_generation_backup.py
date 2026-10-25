@@ -135,8 +135,9 @@ def test_rehashed_hostile_generation_archive_is_rejected_without_publication(wor
             corrupt(db,'UPDATE weixin_peer_generations SET task_binding_id=:binding,scope_json=:scope WHERE generation=1',
                 {'binding':str(h['binding'].id),'scope':canonical_json(h['grant'].scope.model_dump(mode='json'))})
         rehash_chain(db)
+    # v19 dispatch validates generation parents before the archive's generation step.
     refused=tmp_path/'不得创建损坏备份.qxbak'
-    with pytest.raises(ValueError,match='WEIXIN_GENERATION_INTEGRITY'):
+    with pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
         workspace_backup.create_workspace_backup(root,refused,PASSPHRASE,data_parent=tmp_path)
     assert not refused.exists()
     hostile=tmp_path/'认证但损坏代际.qxbak'
@@ -144,7 +145,7 @@ def test_rehashed_hostile_generation_archive_is_rejected_without_publication(wor
         patch.setattr(workspace_backup,'_file_references',lambda db:[])
         workspace_backup.create_workspace_backup(root,hostile,PASSPHRASE,data_parent=tmp_path)
     original=files(root);raw=hostile.read_bytes();destination=tmp_path/'不得发布目标代际'
-    with pytest.raises(ValueError,match='WEIXIN_GENERATION_INTEGRITY'):
+    with pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
         workspace_backup.restore_workspace_backup(hostile,destination,PASSPHRASE)
     assert not destination.exists() or not list(destination.iterdir())
     assert hostile.read_bytes()==raw and files(root)==original

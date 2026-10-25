@@ -1,0 +1,28 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_two_message_orders_enter_one_fixed_generation_draft_without_execution[False] _
+tests\integration\test_weixin_generation_dispatch.py:30: in test_two_message_orders_enter_one_fixed_generation_draft_without_execution
+    service = api(); history = setup_history(world); generation = append(history)
+              ^^^^^
+tests\integration\test_weixin_generation_dispatch.py:19: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5d needs an explicit fixed-target dispatch service'
+E   AssertionError: D2g5d needs an explicit fixed-target dispatch service
+E   assert None is not None
+E    +  where None = <function find_spec at 0x00000108D1F25800>('cn_contract.weixin_inbox.generation_dispatch')
+E    +    where <function find_spec at 0x00000108D1F25800> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_two_message_orders_enter_one_fixed_generation_draft_without_execution[True] _
+tests\integration\test_weixin_generation_dispatch.py:30: in test_two_message_orders_enter_one_fixed_generation_draft_without_execution
+    service = api(); history = setup_history(world); generation = append(history)
+              ^^^^^
+tests\integration\test_weixin_generation_dispatch.py:19: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5d needs an explicit fixed-target dispatch service'
+E   AssertionError: D2g5d needs an explicit fixed-target dispatch service
+E   assert None is not None
+E    +  where None = <function find_spec at 0x00000108D1F25800>('cn_contract.weixin_inbox.generation_dispatch')
+E    +    where <function find_spec at 0x00000108D1F25800> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_dispatch.py::test_two_message_orders_enter_one_fixed_generation_draft_without_execution[False]
+FAILED tests/integration/test_weixin_generation_dispatch.py::test_two_message_orders_enter_one_fixed_generation_draft_without_execution[True]
+2 failed in 2.13s

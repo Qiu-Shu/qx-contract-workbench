@@ -1,0 +1,52 @@
+...FFFFFFFF                                                              [100%]
+================================== FAILURES ===================================
+______ test_public_dispatch_validator_checks_rehashed_generation_parents ______
+tests\integration\test_weixin_generation_dispatch_integrity.py:100: in test_public_dispatch_validator_checks_rehashed_generation_parents
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_ test_recomputed_receipt_cannot_move_or_change_fixed_delivery[wrong_target] __
+tests\integration\test_weixin_generation_dispatch_integrity.py:119: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_ test_recomputed_receipt_cannot_move_or_change_fixed_delivery[before_generation] _
+tests\integration\test_weixin_generation_dispatch_integrity.py:119: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+__ test_recomputed_receipt_cannot_move_or_change_fixed_delivery[before_poll] __
+tests\integration\test_weixin_generation_dispatch_integrity.py:119: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+____ test_recomputed_receipt_cannot_move_or_change_fixed_delivery[payload] ____
+tests\integration\test_weixin_generation_dispatch_integrity.py:119: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_____ test_recomputed_receipt_cannot_move_or_change_fixed_delivery[event] _____
+tests\integration\test_weixin_generation_dispatch_integrity.py:119: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_____ test_recomputed_receipt_cannot_move_or_change_fixed_delivery[actor] _____
+tests\integration\test_weixin_generation_dispatch_integrity.py:115: in test_recomputed_receipt_cannot_move_or_change_fixed_delivery
+    value=str(provision_user('synthetic-other-delivery','independent-password',{d.Role.HANDLING_LAWYER},db).id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'UUID' object has no attribute 'id'
+____ test_prefix_cannot_skip_an_earlier_descriptor_in_the_same_generation _____
+tests\integration\test_weixin_generation_dispatch_integrity.py:126: in test_prefix_cannot_skip_an_earlier_descriptor_in_the_same_generation
+    with h['database'].session() as db,pytest.raises(ValueError,match='WEIXIN_DISPATCH_INTEGRITY'):
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_dispatch_integrity.py::test_public_dispatch_validator_checks_rehashed_generation_parents
+FAILED tests/integration/test_weixin_generation_dispatch_integrity.py::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[wrong_target]
+FAILED tests/integration/test_weixin_generation_dispatch_integrity.py::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[before_generation]
+FAILED tests/integration/test_weixin_generation_dispatch_integrity.py::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[before_poll]
+FAILED tests/integration/test_weixin_generation_dispatch_integrity.py::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[payload]
+FAILED tests/integration/test_weixin_generation_dispatch_integrity.py::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[event]
+FAILED tests/integration/test_weixin_generation_dispatch_integrity.py::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[actor]
+FAILED tests/integration/test_weixin_generation_dispatch_integrity.py::test_prefix_cannot_skip_an_earlier_descriptor_in_the_same_generation
+8 failed, 3 passed in 9.70s

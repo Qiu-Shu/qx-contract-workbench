@@ -205,7 +205,7 @@ def test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance(histor
                 'receipt_uuid':('id', target.upper()), 'descriptor_uuid':('descriptor_id', first['descriptor_id'].upper()),
             }[damage]
             # Remove its other receipt so UNIQUE does not obscure the provenance rejection.
-            if damage == 'task_event':
+            if damage in ('task_event','binding'):
                 corrupt(db, 'DELETE FROM weixin_dispatch_receipts WHERE id=:id', {'id':peer_receipt['id']})
             if damage == 'descriptor_uuid':
                 db.execute(text('PRAGMA defer_foreign_keys=ON'))
@@ -268,6 +268,11 @@ def test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance(histor
             corrupt(db, 'UPDATE task_channel_bindings SET cursor=:cursor WHERE id=:id',
                 {'id':first['task_binding_id'], 'cursor':0 if damage == 'cursor_behind' else 9.5})
         elif damage == 'overlap':
+            # v19 SQL forbids this slot collision; retain the exact v18 archive rejection.
+            from cn_contract.storage_schema import identify_schema
+            db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
+            rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+            assert identify_schema(rows,native=True)=='weixin-target-provenance-v1'
             corrupt(db, 'UPDATE weixin_dispatch_receipts SET expected_task_cursor=0,next_task_cursor=1 WHERE id=:id', {'id':receipts[1]['id']})
             rehash_receipt(db, receipts[1]['id'])
         elif damage == 'receipt_order':

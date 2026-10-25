@@ -57,23 +57,50 @@ def _stored(identifier, db):
         _conflict()
 
 
-def _verified(receipt, account, descriptor, mapping, db):
+def _verified(receipt, account, descriptor, mapping, db, *, binding_id=None):
+    binding_id = binding_id if binding_id is not None else mapping.task_binding_id
     if (receipt.account_id!=account.id or receipt.mapping_id!=mapping.id
             or receipt.actor_id!=account.owner_id or receipt.descriptor_id!=descriptor.id
-            or receipt.task_binding_id!=mapping.task_binding_id
+            or receipt.task_binding_id!=binding_id
             or receipt.source_event_id!=descriptor.source_event_id
             or receipt.payload_sha256!=_digest(descriptor.payload.model_dump(mode='json'))):
         _conflict()
     row=db.execute(text('SELECT * FROM task_inbox_events WHERE id=:id'),
         {'id':str(receipt.task_event_id)}).mappings().first()
     cursor=db.scalar(text('SELECT cursor FROM task_channel_bindings WHERE id=:id'),
-        {'id':str(mapping.task_binding_id)})
-    if (row is None or row['binding_id']!=str(mapping.task_binding_id)
+        {'id':str(binding_id)})
+    if (row is None or row['binding_id']!=str(binding_id)
             or row['event_id']!=receipt.source_event_id or row['payload_sha256']!=receipt.payload_sha256
             or row['payload_json']!=canonical_json(descriptor.payload.model_dump(mode='json'))
             or cursor is None or cursor<receipt.next_task_cursor):
         _conflict()
     return receipt
+
+
+def _deliver(current, account, descriptor, mapping, db, *, binding_id=None, after=False, floor=()):
+    """Receive the fixed source and acknowledgement in the caller's transaction."""
+    binding_id = binding_id if binding_id is not None else mapping.task_binding_id
+    collision=db.scalar(text('''SELECT id FROM task_inbox_events
+        WHERE binding_id=:binding AND event_id=:event'''),
+        {'binding':str(binding_id),'event':descriptor.source_event_id})
+    if collision is not None:
+        _conflict()
+    binding=tasks.read_binding(current,binding_id,db)
+    received=tasks.receive_batch(current,binding.id,d.TaskInboxBatchInput(expected_cursor=binding.cursor,
+        next_cursor=binding.cursor+1,events=(descriptor.payload,)),db)
+    if len(received.events)!=1 or received.binding.cursor!=binding.cursor+1:
+        _conflict()
+    event_at=db.scalar(text('SELECT created_at FROM task_inbox_events WHERE id=:id'),
+        {'id':str(received.events[0].id)})
+    values=dict(id=str(uuid4()),descriptor_id=str(descriptor.id),account_id=str(account.id),
+        mapping_id=str(mapping.id),actor_id=str(current.user_id),task_binding_id=str(binding.id),
+        task_event_id=str(received.events[0].id),source_event_id=descriptor.source_event_id,
+        payload_sha256=_digest(descriptor.payload.model_dump(mode='json')),
+        expected_task_cursor=binding.cursor,next_task_cursor=received.binding.cursor,
+        created_at=accounts._activity_time(account.id,db,now=_at(),after=after,floor=(*floor,event_at)))
+    receipt=d.WeixinDispatchReceipt(**values,receipt_sha256=_digest(values))
+    ingress._insert('weixin_dispatch_receipts',receipt.model_dump(mode='json'),db)
+    return _verified(receipt,account,descriptor,mapping,db,binding_id=binding.id)
 
 
 def find_dispatch_receipt(actor, descriptor_id, *, database):
@@ -106,25 +133,5 @@ def dispatch_synthetic_descriptor(actor, descriptor_id, *, database):
                 {'mapping':str(mapping.id)})
             if earliest!=str(descriptor.id):
                 _conflict()
-            collision=db.scalar(text('''SELECT id FROM task_inbox_events
-                WHERE binding_id=:binding AND event_id=:event'''),
-                {'binding':str(mapping.task_binding_id),'event':descriptor.source_event_id})
-            if collision is not None:
-                _conflict()
-            binding=tasks.read_binding(current,mapping.task_binding_id,db)
-            received=tasks.receive_batch(current,binding.id,d.TaskInboxBatchInput(expected_cursor=binding.cursor,
-                next_cursor=binding.cursor+1,events=(descriptor.payload,)),db)
-            if len(received.events)!=1 or received.binding.cursor!=binding.cursor+1:
-                _conflict()
-            values=dict(id=str(uuid4()),descriptor_id=str(descriptor.id),account_id=str(account.id),
-                mapping_id=str(mapping.id),actor_id=str(current.user_id),task_binding_id=str(binding.id),
-                task_event_id=str(received.events[0].id),source_event_id=descriptor.source_event_id,
-                payload_sha256=_digest(descriptor.payload.model_dump(mode='json')),
-                expected_task_cursor=binding.cursor,next_task_cursor=received.binding.cursor,
-                created_at=accounts._activity_time(account.id,db,now=_at(),floor=(db.scalar(text(
-                    'SELECT created_at FROM task_inbox_events WHERE id=:id'),
-                    {'id':str(received.events[0].id)}),)))
-            receipt=d.WeixinDispatchReceipt(**values,receipt_sha256=_digest(values))
-            ingress._insert('weixin_dispatch_receipts',receipt.model_dump(mode='json'),db)
-            _verified(receipt,account,descriptor,mapping,db)
+            receipt=_deliver(current,account,descriptor,mapping,db)
     return receipt

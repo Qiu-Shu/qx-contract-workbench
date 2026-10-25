@@ -175,6 +175,8 @@ def test_recomputed_hash_cannot_hide_invalid_target_chain_or_activity_boundary(g
             values['scope_json'] = canonical_json(first['scope'])
             insert(db, 'weixin_peer_bindings', values)
         elif damage in ('before_poll', 'equal_dispatch', 'equal_grant', 'equal_binding', 'equal_previous'):
+            if damage == 'equal_dispatch':
+                db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
             if damage == 'before_poll':
                 at = sample['polls'][-1].created_at-timedelta(microseconds=1)
             elif damage == 'equal_dispatch':
@@ -192,6 +194,7 @@ def test_recomputed_hash_cannot_hide_invalid_target_chain_or_activity_boundary(g
                 {'id':str(identifier), 'at':first['created_at'], 'actor':first['actor_id'], 'reason':'独立虚构代际前撤权'})
         elif damage == 'later_poll':
             # Frozen v17 forbids all later polls; v18 validates their complete prefixes.
+            db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
             db.execute(text('DROP TABLE weixin_descriptor_generations'))
             poll = sample['polls'][-1]
             at = d.WeixinPeerGeneration(**first).created_at+timedelta(seconds=5)
@@ -199,6 +202,8 @@ def test_recomputed_hash_cannot_hide_invalid_target_chain_or_activity_boundary(g
             insert(db, 'weixin_poll_receipts', later.model_dump(mode='json', exclude={'descriptors'}))
             db.execute(text('UPDATE weixin_accounts SET checkpoint_revision=4 WHERE id=:id'), {'id':str(mapping.account_id)})
         elif damage == 'later_dispatch':
+            # Frozen v18 keeps the global dispatch barrier; v19 versions delivery separately.
+            db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
             at = d.WeixinPeerGeneration(**first).created_at+timedelta(seconds=5)
             corrupt(db, 'UPDATE weixin_dispatch_receipts SET created_at=:at WHERE id=:id', {'id':sample['receipts'][-1]['id'], 'at':at.isoformat().replace('+00:00','Z')})
             rehash_receipt(db, sample['receipts'][-1]['id'])
