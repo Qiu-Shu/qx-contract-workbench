@@ -53,6 +53,15 @@ def _refresh_context(actor, cid, db):
     return current, mapping.id
 
 
+def _generation_context(actor, cid, db):
+    current, row, mapping, account, _ = _context(actor, cid, db)
+    require_active(db)
+    if (row['archived_at'] is not None or mapping is None
+            or account.revoked_at is not None or mapping.revoked_at is not None):
+        raise ServiceError('STATE_CONFLICT', 409)
+    return current, mapping.id
+
+
 def read_authorization(actor, cid, *, database):
     """Read actual local binding state without creating accounts, tasks or grants."""
     with database.session() as db:
@@ -97,3 +106,29 @@ def find_refresh(actor, cid, request_id, *, database):
             return None
         mapping_id = mapping.id
     return accounts.find_peer_scope_grant(current, mapping_id, request_id, database=database)
+
+
+def _generation_receipt(value):
+    fields = set(d.WeixinGenerationReceiptView.model_fields) - {'mode', 'state'}
+    return d.WeixinGenerationReceiptView(**value.model_dump(mode='python', include=fields))
+
+
+def append_generation(actor, cid, request, *, database):
+    """Resolve the root CID only; the atomic service authorizes the new target."""
+    from . import generations
+    with database.session() as db:
+        current, mapping_id = _generation_context(actor, cid, db)
+    return _generation_receipt(generations.append_synthetic_generation(
+        current, mapping_id, request, database=database))
+
+
+def find_generation(actor, cid, request_id, *, database):
+    """A fixed receipt never resumes intake or inherits historical target access."""
+    from . import generations
+    with database.session() as db:
+        current, _, mapping, _, _ = _context(actor, cid, db)
+        if mapping is None:
+            return None
+        mapping_id = mapping.id
+    value = generations.find_peer_generation(current, mapping_id, request_id, database=database)
+    return _generation_receipt(value) if value is not None else None

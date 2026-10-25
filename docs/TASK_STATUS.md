@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-25 D2g2 已完成代际历史的根CID HTTP接线：集中11字段脱敏回执、受保护POST及固定request GET，恢复精确读白名单；最终事务复用D2g1，不更改schema17或暂停guard。根10模块241不同Python、192 Node与四门通过，Standards/Spec独立审阅无确认遗留项，[实测](testing/weixin-generation-http/20261025/README.md)。WorkBuddy虽核实Kimi-K3，本次Bash权限拒绝后取消、未完成审查，由本机独立Spec代理替代。最新CAS head/UI、按代际运行、可信微信及E许可未完成；浏览器/安装版/真实账号模型等NOT_RUN，0.4.1、原生崩溃、WIN-PATH-02不关闭。
+
 恢复诊断工具提交 `9c2acd2` 已正常同步GitHub，远端SHA/tree与5,117条目一致；[同步回执](testing/restore-publication/20261025/github-sync.md)。
 
 2026-10-25 恢复发布诊断切片：仅开发脚本新增显式阶段/本进程句柄观察和25永久测试；root共4模块70不同Python、默认及诊断浏览器、四开发门通过，[实测](testing/restore-publication/20261025/README.md)。工具parent过滤与non-file handle误报经实际RED→GREEN修正；原WIN-PATH-02本轮未自然复现、无产品修补，仍OPEN，独立原生崩溃和0.4.1安装版状态不变。D2g按代际运行与HTTP/桌面接线、可信微信身份/资格及E有限期授权仍待。

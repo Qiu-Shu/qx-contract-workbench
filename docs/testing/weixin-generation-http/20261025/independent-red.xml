@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="14" skipped="0" tests="14" time="11.123" timestamp="2026-10-25T14:45:02.631717+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_generation_receipt_reads_have_an_exact_recovery_path_predicate" time="0.001"><failure message="AssertionError: assert False&#10; +  where False = &lt;function is_weixin_authorization_read_path at 0x000001606800CCC0&gt;((('/api/assistant/conversations/8d5e386d-46ec-492e-95e8-09ca12504deb/weixin-authorization/generations' + '/by-request/') + 'c1a4b94c-152a-42bf-8ecd-f49f18533142'))">def test_generation_receipt_reads_have_an_exact_recovery_path_predicate():
+        module = importlib.import_module('cn_contract.web.weixin_authorization')
+        predicate = module.is_weixin_authorization_read_path
+        base = endpoint(uuid4()); key = str(uuid4())
+&gt;       assert predicate(base+'/by-request/'+key)
+E       AssertionError: assert False
+E        +  where False = &lt;function is_weixin_authorization_read_path at 0x000001606800CCC0&gt;((('/api/assistant/conversations/8d5e386d-46ec-492e-95e8-09ca12504deb/weixin-authorization/generations' + '/by-request/') + 'c1a4b94c-152a-42bf-8ecd-f49f18533142'))
+
+tests\integration\test_weixin_generation_routes_recovery.py:72: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_actual_fenced_app_reads_fixed_generation_and_blocks_writes_and_nearby_paths" time="0.878"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;6ad06213-62c7-490d-abde-8e08164f4063&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">native = (&lt;fastapi.applications.FastAPI object at 0x00000160693A6EA0&gt;, WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_actual_fenced_app_reads_f0/workspaces/main'))
+
+    def test_actual_fenced_app_reads_fixed_generation_and_blocks_writes_and_nearby_paths(native):
+        from cn_contract.web import local_server
+        original_app, root = native
+        with TestClient(original_app) as client:
+&gt;           h = setup((client, original_app.state.database, root)); receipt = saved(h)
+                                                                              ^^^^^^^^
+
+tests\integration\test_weixin_generation_routes_recovery.py:83:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h = {'account': WeixinAccountSnapshot(id=UUID('efa19540-2706-4a22-b287-c4a60cd2c5ae'), workspace_id=UUID('1f13b141-2dcf-44...7fc3f/weixin-authorization/generations', 'client': &lt;starlette.testclient.TestClient object at 0x0000016067FEBE60&gt;, ...}
+
+    def saved(h):
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"6ad06213-62c7-490d-abde-8e08164f4063","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:55: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_fixed_generation_metadata_survives_target_growth_archive_and_logical_revocation[archive]" time="0.662"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;020a494c-9878-44b0-a740-1c17adb7dbff&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x00000160695D6750&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_fixed_generation_metadata0/workspaces/main'))
+damage = 'archive'
+
+    @pytest.mark.parametrize('damage', ['archive', 'scope_growth', 'account_revoked'])
+    def test_fixed_generation_metadata_survives_target_growth_archive_and_logical_revocation(chat, damage):
+&gt;       h = setup(chat); receipt = saved(h); client = h['client']; database = h['database']
+                                   ^^^^^^^^
+
+tests\integration\test_weixin_generation_routes_recovery.py:108:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h = {'account': WeixinAccountSnapshot(id=UUID('bca3f645-2078-49c5-bb65-d37154bd4bd7'), workspace_id=UUID('081f72a7-5691-4f...9f96b/weixin-authorization/generations', 'client': &lt;starlette.testclient.TestClient object at 0x00000160695D6750&gt;, ...}
+
+    def saved(h):
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"020a494c-9878-44b0-a740-1c17adb7dbff","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:55: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_fixed_generation_metadata_survives_target_growth_archive_and_logical_revocation[scope_growth]" time="0.639"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;ee0aea42-3496-4ead-8546-c10c9ab44d8f&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x00000160698AA480&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_fixed_generation_metadata1/workspaces/main'))
+damage = 'scope_growth'
+
+    @pytest.mark.parametrize('damage', ['archive', 'scope_growth', 'account_revoked'])
+    def test_fixed_generation_metadata_survives_target_growth_archive_and_logical_revocation(chat, damage):
+&gt;       h = setup(chat); receipt = saved(h); client = h['client']; database = h['database']
+                                   ^^^^^^^^
+
+tests\integration\test_weixin_generation_routes_recovery.py:108:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h = {'account': WeixinAccountSnapshot(id=UUID('7cf0730d-0bc7-4fda-83ef-8bd04db887bf'), workspace_id=UUID('894cad51-e1ed-42...2e5f1/weixin-authorization/generations', 'client': &lt;starlette.testclient.TestClient object at 0x00000160698AA480&gt;, ...}
+
+    def saved(h):
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"ee0aea42-3496-4ead-8546-c10c9ab44d8f","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:55: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_fixed_generation_metadata_survives_target_growth_archive_and_logical_revocation[account_revoked]" time="0.624"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;875bff10-cb60-4006-8b4f-9f8017a4c7f6&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x0000016069A19D60&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_fixed_generation_metadata2/workspaces/main'))
+damage = 'account_revoked'
+
+    @pytest.mark.parametrize('damage', ['archive', 'scope_growth', 'account_revoked'])
+    def test_fixed_generation_metadata_survives_target_growth_archive_and_logical_revocation(chat, damage):
+&gt;       h = setup(chat); receipt = saved(h); client = h['client']; database = h['database']
+                                   ^^^^^^^^
+
+tests\integration\test_weixin_generation_routes_recovery.py:108:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h = {'account': WeixinAccountSnapshot(id=UUID('0ec723c1-8d8e-44c5-8051-95fafd8333ee'), workspace_id=UUID('bf9ffd0b-86df-4d...d7081/weixin-authorization/generations', 'client': &lt;starlette.testclient.TestClient object at 0x0000016069A19D60&gt;, ...}
+
+    def saved(h):
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"875bff10-cb60-4006-8b4f-9f8017a4c7f6","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:55: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_recorded_target_current_matter_acl_is_required_before_history_is_disclosed" time="0.688"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;9ac7048e-960b-44e7-811c-0cbaea8ee359&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x0000016069B8B1A0&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_recorded_target_current_m0/workspaces/main'))
+
+    def test_recorded_target_current_matter_acl_is_required_before_history_is_disclosed(chat):
+&gt;       h = setup(chat, target_matter=True); saved(h)
+                                             ^^^^^^^^
+
+tests\integration\test_weixin_generation_routes_recovery.py:128:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h = {'account': WeixinAccountSnapshot(id=UUID('308da7d1-a34f-47ec-84c1-0502a5d1c5ce'), workspace_id=UUID('f62c6705-7356-40...48191/weixin-authorization/generations', 'client': &lt;starlette.testclient.TestClient object at 0x0000016069B8B1A0&gt;, ...}
+
+    def saved(h):
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"9ac7048e-960b-44e7-811c-0cbaea8ee359","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:55: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_current_root_authority_is_checked_before_and_after_reading_body[owner-403-before_body]" time="0.650"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;241582e8-77d2-4194-8ef8-35a7c94b2f38&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 403&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x0000016069D05790&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_current_root_authority_is0/workspaces/main'))
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000016069E36930&gt;
+when = 'before_body', damage = 'owner', expected = 403
+
+    @pytest.mark.parametrize('when', ['before_body', 'after_body'])
+    @pytest.mark.parametrize('damage,expected', [('owner',403), ('archive',409), ('account_revoked',409)])
+    def test_current_root_authority_is_checked_before_and_after_reading_body(chat, monkeypatch, when, damage, expected):
+        h = setup(chat); route = importlib.import_module('cn_contract.web.weixin_authorization')
+        original = route.body_input; read = []
+        def change():
+            if damage == 'account_revoked':
+                accounts.revoke_synthetic_account(h['actor'], h['account'].id,
+                    d.WeixinRevokeInput(reason='独立合成读取请求时撤权'), database=h['database'])
+            else:
+                with h['database'].session() as db:
+                    if damage == 'owner':
+                        db.execute(text('''UPDATE assistant_conversations SET owner_id=(
+                            SELECT id FROM users WHERE username=:name) WHERE id=:id'''),
+                            {'id':h['view']['scope']['conversation_id'], 'name':'另一合成律师'})
+                    else:
+                        db.execute(text('UPDATE assistant_conversations SET archived_at=:at WHERE id=:id'),
+                            {'id':h['view']['scope']['conversation_id'], 'at':now().isoformat()})
+        async def changed(request, model):
+            assert when == 'after_body', 'root authority must be checked before body parsing'
+            value = await original(request, model); read.append(True); change()
+            return value
+        if when == 'before_body':
+            change()
+        monkeypatch.setattr(route, 'body_input', changed)
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == expected, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"241582e8-77d2-4194-8ef8-35a7c94b2f38","retryable":false}
+E       assert 404 == 403
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:167: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_current_root_authority_is_checked_before_and_after_reading_body[owner-403-after_body]" time="0.636"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;31b48eba-db8d-4fff-8404-298923da8350&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 403&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x0000016069E72E70&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_current_root_authority_is1/workspaces/main'))
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000016069FA5AC0&gt;
+when = 'after_body', damage = 'owner', expected = 403
+
+    @pytest.mark.parametrize('when', ['before_body', 'after_body'])
+    @pytest.mark.parametrize('damage,expected', [('owner',403), ('archive',409), ('account_revoked',409)])
+    def test_current_root_authority_is_checked_before_and_after_reading_body(chat, monkeypatch, when, damage, expected):
+        h = setup(chat); route = importlib.import_module('cn_contract.web.weixin_authorization')
+        original = route.body_input; read = []
+        def change():
+            if damage == 'account_revoked':
+                accounts.revoke_synthetic_account(h['actor'], h['account'].id,
+                    d.WeixinRevokeInput(reason='独立合成读取请求时撤权'), database=h['database'])
+            else:
+                with h['database'].session() as db:
+                    if damage == 'owner':
+                        db.execute(text('''UPDATE assistant_conversations SET owner_id=(
+                            SELECT id FROM users WHERE username=:name) WHERE id=:id'''),
+                            {'id':h['view']['scope']['conversation_id'], 'name':'另一合成律师'})
+                    else:
+                        db.execute(text('UPDATE assistant_conversations SET archived_at=:at WHERE id=:id'),
+                            {'id':h['view']['scope']['conversation_id'], 'at':now().isoformat()})
+        async def changed(request, model):
+            assert when == 'after_body', 'root authority must be checked before body parsing'
+            value = await original(request, model); read.append(True); change()
+            return value
+        if when == 'before_body':
+            change()
+        monkeypatch.setattr(route, 'body_input', changed)
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == expected, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"31b48eba-db8d-4fff-8404-298923da8350","retryable":false}
+E       assert 404 == 403
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:167: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_current_root_authority_is_checked_before_and_after_reading_body[archive-409-before_body]" time="0.656"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;bcf11f3f-a1bd-402b-bfc4-3059b12b6822&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 409&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x000001606A04E1E0&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_current_root_authority_is2/workspaces/main'))
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001606A114410&gt;
+when = 'before_body', damage = 'archive', expected = 409
+
+    @pytest.mark.parametrize('when', ['before_body', 'after_body'])
+    @pytest.mark.parametrize('damage,expected', [('owner',403), ('archive',409), ('account_revoked',409)])
+    def test_current_root_authority_is_checked_before_and_after_reading_body(chat, monkeypatch, when, damage, expected):
+        h = setup(chat); route = importlib.import_module('cn_contract.web.weixin_authorization')
+        original = route.body_input; read = []
+        def change():
+            if damage == 'account_revoked':
+                accounts.revoke_synthetic_account(h['actor'], h['account'].id,
+                    d.WeixinRevokeInput(reason='独立合成读取请求时撤权'), database=h['database'])
+            else:
+                with h['database'].session() as db:
+                    if damage == 'owner':
+                        db.execute(text('''UPDATE assistant_conversations SET owner_id=(
+                            SELECT id FROM users WHERE username=:name) WHERE id=:id'''),
+                            {'id':h['view']['scope']['conversation_id'], 'name':'另一合成律师'})
+                    else:
+                        db.execute(text('UPDATE assistant_conversations SET archived_at=:at WHERE id=:id'),
+                            {'id':h['view']['scope']['conversation_id'], 'at':now().isoformat()})
+        async def changed(request, model):
+            assert when == 'after_body', 'root authority must be checked before body parsing'
+            value = await original(request, model); read.append(True); change()
+            return value
+        if when == 'before_body':
+            change()
+        monkeypatch.setattr(route, 'body_input', changed)
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == expected, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"bcf11f3f-a1bd-402b-bfc4-3059b12b6822","retryable":false}
+E       assert 404 == 409
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:167: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_current_root_authority_is_checked_before_and_after_reading_body[archive-409-after_body]" time="0.847"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;a4bbbc39-959d-498c-af55-d0bf9a2306bb&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 409&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x000001606A0FF530&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_current_root_authority_is3/workspaces/main'))
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001606A269E80&gt;
+when = 'after_body', damage = 'archive', expected = 409
+
+    @pytest.mark.parametrize('when', ['before_body', 'after_body'])
+    @pytest.mark.parametrize('damage,expected', [('owner',403), ('archive',409), ('account_revoked',409)])
+    def test_current_root_authority_is_checked_before_and_after_reading_body(chat, monkeypatch, when, damage, expected):
+        h = setup(chat); route = importlib.import_module('cn_contract.web.weixin_authorization')
+        original = route.body_input; read = []
+        def change():
+            if damage == 'account_revoked':
+                accounts.revoke_synthetic_account(h['actor'], h['account'].id,
+                    d.WeixinRevokeInput(reason='独立合成读取请求时撤权'), database=h['database'])
+            else:
+                with h['database'].session() as db:
+                    if damage == 'owner':
+                        db.execute(text('''UPDATE assistant_conversations SET owner_id=(
+                            SELECT id FROM users WHERE username=:name) WHERE id=:id'''),
+                            {'id':h['view']['scope']['conversation_id'], 'name':'另一合成律师'})
+                    else:
+                        db.execute(text('UPDATE assistant_conversations SET archived_at=:at WHERE id=:id'),
+                            {'id':h['view']['scope']['conversation_id'], 'at':now().isoformat()})
+        async def changed(request, model):
+            assert when == 'after_body', 'root authority must be checked before body parsing'
+            value = await original(request, model); read.append(True); change()
+            return value
+        if when == 'before_body':
+            change()
+        monkeypatch.setattr(route, 'body_input', changed)
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == expected, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"a4bbbc39-959d-498c-af55-d0bf9a2306bb","retryable":false}
+E       assert 404 == 409
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:167: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_current_root_authority_is_checked_before_and_after_reading_body[account_revoked-409-before_body]" time="0.679"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;b83365e6-843a-4840-b965-d9250f8cdcc3&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 409&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x000001606A2B22D0&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_current_root_authority_is4/workspaces/main'))
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001606A3E83E0&gt;
+when = 'before_body', damage = 'account_revoked', expected = 409
+
+    @pytest.mark.parametrize('when', ['before_body', 'after_body'])
+    @pytest.mark.parametrize('damage,expected', [('owner',403), ('archive',409), ('account_revoked',409)])
+    def test_current_root_authority_is_checked_before_and_after_reading_body(chat, monkeypatch, when, damage, expected):
+        h = setup(chat); route = importlib.import_module('cn_contract.web.weixin_authorization')
+        original = route.body_input; read = []
+        def change():
+            if damage == 'account_revoked':
+                accounts.revoke_synthetic_account(h['actor'], h['account'].id,
+                    d.WeixinRevokeInput(reason='独立合成读取请求时撤权'), database=h['database'])
+            else:
+                with h['database'].session() as db:
+                    if damage == 'owner':
+                        db.execute(text('''UPDATE assistant_conversations SET owner_id=(
+                            SELECT id FROM users WHERE username=:name) WHERE id=:id'''),
+                            {'id':h['view']['scope']['conversation_id'], 'name':'另一合成律师'})
+                    else:
+                        db.execute(text('UPDATE assistant_conversations SET archived_at=:at WHERE id=:id'),
+                            {'id':h['view']['scope']['conversation_id'], 'at':now().isoformat()})
+        async def changed(request, model):
+            assert when == 'after_body', 'root authority must be checked before body parsing'
+            value = await original(request, model); read.append(True); change()
+            return value
+        if when == 'before_body':
+            change()
+        monkeypatch.setattr(route, 'body_input', changed)
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == expected, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"b83365e6-843a-4840-b965-d9250f8cdcc3","retryable":false}
+E       assert 404 == 409
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:167: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_current_root_authority_is_checked_before_and_after_reading_body[account_revoked-409-after_body]" time="0.690"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;ecf0daca-c1c5-41ce-a6f9-c654cb2bd532&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 409&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x000001606A3CF4A0&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_current_root_authority_is5/workspaces/main'))
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001606A533050&gt;
+when = 'after_body', damage = 'account_revoked', expected = 409
+
+    @pytest.mark.parametrize('when', ['before_body', 'after_body'])
+    @pytest.mark.parametrize('damage,expected', [('owner',403), ('archive',409), ('account_revoked',409)])
+    def test_current_root_authority_is_checked_before_and_after_reading_body(chat, monkeypatch, when, damage, expected):
+        h = setup(chat); route = importlib.import_module('cn_contract.web.weixin_authorization')
+        original = route.body_input; read = []
+        def change():
+            if damage == 'account_revoked':
+                accounts.revoke_synthetic_account(h['actor'], h['account'].id,
+                    d.WeixinRevokeInput(reason='独立合成读取请求时撤权'), database=h['database'])
+            else:
+                with h['database'].session() as db:
+                    if damage == 'owner':
+                        db.execute(text('''UPDATE assistant_conversations SET owner_id=(
+                            SELECT id FROM users WHERE username=:name) WHERE id=:id'''),
+                            {'id':h['view']['scope']['conversation_id'], 'name':'另一合成律师'})
+                    else:
+                        db.execute(text('UPDATE assistant_conversations SET archived_at=:at WHERE id=:id'),
+                            {'id':h['view']['scope']['conversation_id'], 'at':now().isoformat()})
+        async def changed(request, model):
+            assert when == 'after_body', 'root authority must be checked before body parsing'
+            value = await original(request, model); read.append(True); change()
+            return value
+        if when == 'before_body':
+            change()
+        monkeypatch.setattr(route, 'body_input', changed)
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == expected, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"ecf0daca-c1c5-41ce-a6f9-c654cb2bd532","retryable":false}
+E       assert 404 == 409
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:167: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_http_commit_with_lost_ack_is_recovered_by_get_without_resubmitting" time="0.665"><failure message="AssertionError: D2g2 needs the CID-owned generation wrapper&#10;assert False&#10; +  where False = hasattr(conversation, 'append_generation')">chat = (&lt;starlette.testclient.TestClient object at 0x000001606A531EE0&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_http_commit_with_lost_ack0/workspaces/main'))
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001606A654F80&gt;
+
+    def test_http_commit_with_lost_ack_is_recovered_by_get_without_resubmitting(chat, monkeypatch):
+        h = setup(chat)
+&gt;       assert hasattr(conversation, 'append_generation'), 'D2g2 needs the CID-owned generation wrapper'
+E       AssertionError: D2g2 needs the CID-owned generation wrapper
+E       assert False
+E        +  where False = hasattr(conversation, 'append_generation')
+
+tests\integration\test_weixin_generation_routes_recovery.py:175: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes_recovery" name="test_target_cid_cannot_reverse_resolve_the_original_mapping" time="0.672"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;f29b898d-3097-41b6-992d-0ff8e9a797de&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x000001606A7061E0&gt;, &lt;cn_contract.persistence.Database object at 0x0000016...tGPT/律所项目/.local/weixin-generation-http-20261025/independent-red-tmp/test_target_cid_cannot_reverse0/workspaces/main'))
+
+    def test_target_cid_cannot_reverse_resolve_the_original_mapping(chat):
+&gt;       h = setup(chat); saved(h); target_base = endpoint(h['target']['scope']['conversation_id'])
+                         ^^^^^^^^
+
+tests\integration\test_weixin_generation_routes_recovery.py:201:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h = {'account': WeixinAccountSnapshot(id=UUID('9c6ec6d5-6d62-4b1f-a36a-dd245367b764'), workspace_id=UUID('59ba34f3-e0bd-44...07898/weixin-authorization/generations', 'client': &lt;starlette.testclient.TestClient object at 0x000001606A7061E0&gt;, ...}
+
+    def saved(h):
+        response = h['client'].post(h['base'], headers=h['headers'], json=h['request'])
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"f29b898d-3097-41b6-992d-0ff8e9a797de","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\integration\test_weixin_generation_routes_recovery.py:55: AssertionError</failure></testcase></testsuite></testsuites>

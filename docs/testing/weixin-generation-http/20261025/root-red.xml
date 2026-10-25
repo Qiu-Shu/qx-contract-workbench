@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="50" skipped="0" tests="50" time="20.416" timestamp="2026-10-25T14:45:38.616710+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_is_frozen_and_only_exposes_fixed_historical_metadata[1]" time="0.001"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:26: in test_receipt_is_frozen_and_only_exposes_fixed_historical_metadata
+    value = model()(**values(generation=number, previous_generation_sha256=None if number == 1 else 'c'*64))
+            ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_is_frozen_and_only_exposes_fixed_historical_metadata[2]" time="0.001"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:26: in test_receipt_is_frozen_and_only_exposes_fixed_historical_metadata
+    value = model()(**values(generation=number, previous_generation_sha256=None if number == 1 else 'c'*64))
+            ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes0]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes1]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes2]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes3]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes4]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes5]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes6]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes7]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes8]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes9]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes10]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes11]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes12]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes13]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes14]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes15]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes16]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes17]" time="0.001"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes18]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_receipt" name="test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope[changes19]" time="0.000"><failure message="AssertionError: D2g2 needs a private bounded HTTP receipt&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationReceiptView')">tests\unit\test_weixin_generation_receipt.py:44: in test_receipt_rejects_invented_authority_private_fields_and_inconsistent_scope
+    model()(**values(**changes))
+    ^^^^^^^
+tests\unit\test_weixin_generation_receipt.py:12: in model
+    assert hasattr(d, 'WeixinGenerationReceiptView'), 'D2g2 needs a private bounded HTTP receipt'
+E   AssertionError: D2g2 needs a private bounded HTTP receipt
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationReceiptView')</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_http_two_generations_replay_old_request_and_fixed_query_preserve_history" time="0.909"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;69699e2d-3623-4308-b228-c8725f707f01&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:52: in test_http_two_generations_replay_old_request_and_fixed_query_preserve_history
+    first = receipt(client.post(base+'/generations', headers=headers, json=first_request), first_request)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_routes.py:38: in receipt
+    assert response.status_code == 200, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"69699e2d-3623-4308-b228-c8725f707f01","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_unbound_get_is_null_and_post_cannot_reverse_resolve_new_target" time="0.850"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;8c0f5a4f-a00a-4147-884b-a07c7ce346d6&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:79: in test_unbound_get_is_null_and_post_cannot_reverse_resolve_new_target
+    assert first.status_code == 200, first.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"8c0f5a4f-a00a-4147-884b-a07c7ce346d6","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_authentication_precedes_unknown_root_and_json" time="0.683"><failure message="AssertionError: assert 404 == 401&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code&#10; +    where &lt;Response [404 Not Found]&gt; = post(('/api/assistant/conversations/1c6268db-a629-485d-be0e-76766bf28590/weixin-authorization' + '/generations'), content='not-json')&#10; +      where post = &lt;starlette.testclient.TestClient object at 0x000001A8C092FB90&gt;.post">tests\integration\test_weixin_generation_routes.py:91: in test_authentication_precedes_unknown_root_and_json
+    assert client.post(base+'/generations', content='not-json').status_code == 401
+E   AssertionError: assert 404 == 401
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+E    +    where &lt;Response [404 Not Found]&gt; = post(('/api/assistant/conversations/1c6268db-a629-485d-be0e-76766bf28590/weixin-authorization' + '/generations'), content='not-json')
+E    +      where post = &lt;starlette.testclient.TestClient object at 0x000001A8C092FB90&gt;.post</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_current_root_authority_is_checked_before_parsing[csrf]" time="0.789"><failure message="assert 404 == 403&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:112: in test_current_root_authority_is_checked_before_parsing
+    assert response.status_code == (409 if damage in ('archived','account_revoked','mapping_revoked') else 403)
+E   assert 404 == 403
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_current_root_authority_is_checked_before_parsing[origin]" time="0.740"><failure message="assert 404 == 403&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:112: in test_current_root_authority_is_checked_before_parsing
+    assert response.status_code == (409 if damage in ('archived','account_revoked','mapping_revoked') else 403)
+E   assert 404 == 403
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_current_root_authority_is_checked_before_parsing[fetch_site]" time="0.688"><failure message="assert 404 == 403&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:112: in test_current_root_authority_is_checked_before_parsing
+    assert response.status_code == (409 if damage in ('archived','account_revoked','mapping_revoked') else 403)
+E   assert 404 == 403
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_current_root_authority_is_checked_before_parsing[owner]" time="0.714"><failure message="assert 404 == 403&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:112: in test_current_root_authority_is_checked_before_parsing
+    assert response.status_code == (409 if damage in ('archived','account_revoked','mapping_revoked') else 403)
+E   assert 404 == 403
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_current_root_authority_is_checked_before_parsing[unknown]" time="0.604"><failure message="assert 404 == 403&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:112: in test_current_root_authority_is_checked_before_parsing
+    assert response.status_code == (409 if damage in ('archived','account_revoked','mapping_revoked') else 403)
+E   assert 404 == 403
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_current_root_authority_is_checked_before_parsing[workspace]" time="0.643"><failure message="assert 404 == 403&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:112: in test_current_root_authority_is_checked_before_parsing
+    assert response.status_code == (409 if damage in ('archived','account_revoked','mapping_revoked') else 403)
+E   assert 404 == 403
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_current_root_authority_is_checked_before_parsing[archived]" time="0.663"><failure message="assert 404 == 409&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:112: in test_current_root_authority_is_checked_before_parsing
+    assert response.status_code == (409 if damage in ('archived','account_revoked','mapping_revoked') else 403)
+E   assert 404 == 409
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_current_root_authority_is_checked_before_parsing[account_revoked]" time="0.714"><failure message="assert 404 == 409&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:112: in test_current_root_authority_is_checked_before_parsing
+    assert response.status_code == (409 if damage in ('archived','account_revoked','mapping_revoked') else 403)
+E   assert 404 == 409
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_current_root_authority_is_checked_before_parsing[mapping_revoked]" time="0.627"><failure message="assert 404 == 409&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:112: in test_current_root_authority_is_checked_before_parsing
+    assert response.status_code == (409 if damage in ('archived','account_revoked','mapping_revoked') else 403)
+E   assert 404 == 409
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_generation_body_is_strict_and_bounded[json]" time="0.635"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;b580ec10-12c4-4931-bc04-82076ca1006a&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 422&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:120: in test_generation_body_is_strict_and_bounded
+    assert response.status_code == expected, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"b580ec10-12c4-4931-bc04-82076ca1006a","retryable":false}
+E   assert 404 == 422
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_generation_body_is_strict_and_bounded[duplicate]" time="0.616"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;d88baf9d-f7b2-45dd-a382-913696a74c07&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 422&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:120: in test_generation_body_is_strict_and_bounded
+    assert response.status_code == expected, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"d88baf9d-f7b2-45dd-a382-913696a74c07","retryable":false}
+E   assert 404 == 422
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_generation_body_is_strict_and_bounded[size]" time="0.630"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;029725e0-1d95-4041-bc43-9e839873a294&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 413&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:120: in test_generation_body_is_strict_and_bounded
+    assert response.status_code == expected, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"029725e0-1d95-4041-bc43-9e839873a294","retryable":false}
+E   assert 404 == 413
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_body_cannot_choose_root_or_server_authority[root_mapping_id]" time="0.713"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;039f85ca-861b-4d53-a428-90ef832c161d&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 422&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:130: in test_body_cannot_choose_root_or_server_authority
+    assert response.status_code == 422, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"039f85ca-861b-4d53-a428-90ef832c161d","retryable":false}
+E   assert 404 == 422
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_body_cannot_choose_root_or_server_authority[mapping_id]" time="0.824"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;5eff6af1-0c1b-42a1-8217-743ca5db0f14&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 422&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:130: in test_body_cannot_choose_root_or_server_authority
+    assert response.status_code == 422, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"5eff6af1-0c1b-42a1-8217-743ca5db0f14","retryable":false}
+E   assert 404 == 422
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_body_cannot_choose_root_or_server_authority[account_id]" time="0.632"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;f1a47d29-1261-4879-af56-55f9246adc15&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 422&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:130: in test_body_cannot_choose_root_or_server_authority
+    assert response.status_code == 422, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"f1a47d29-1261-4879-af56-55f9246adc15","retryable":false}
+E   assert 404 == 422
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_body_cannot_choose_root_or_server_authority[actor_id]" time="0.628"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;3cce0a0a-09df-4102-940e-c9ae4499cba1&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 422&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:130: in test_body_cannot_choose_root_or_server_authority
+    assert response.status_code == 422, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"3cce0a0a-09df-4102-940e-c9ae4499cba1","retryable":false}
+E   assert 404 == 422
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_body_cannot_choose_root_or_server_authority[created_at]" time="0.619"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;f2450018-0365-4522-a35f-7a128bfc6c61&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 422&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:130: in test_body_cannot_choose_root_or_server_authority
+    assert response.status_code == 422, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"f2450018-0365-4522-a35f-7a128bfc6c61","retryable":false}
+E   assert 404 == 422
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_body_cannot_choose_root_or_server_authority[mode]" time="0.628"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;d060846e-8606-4651-9aac-8e19b6b261ef&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 422&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:130: in test_body_cannot_choose_root_or_server_authority
+    assert response.status_code == 422, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"d060846e-8606-4651-9aac-8e19b6b261ef","retryable":false}
+E   assert 404 == 422
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_committed_request_changes_and_old_cas_are_conflicts[scope]" time="0.619"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;f4c25e05-c36b-4cc4-82f2-4fb8e560564c&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:138: in test_committed_request_changes_and_old_cas_are_conflicts
+    first = receipt(client.post(base+'/generations', headers=headers, json=value), value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_routes.py:38: in receipt
+    assert response.status_code == 200, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"f4c25e05-c36b-4cc4-82f2-4fb8e560564c","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_committed_request_changes_and_old_cas_are_conflicts[hash]" time="0.620"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;3263ae8b-5bba-4e71-8ea5-9d5a046bcfca&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:138: in test_committed_request_changes_and_old_cas_are_conflicts
+    first = receipt(client.post(base+'/generations', headers=headers, json=value), value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_routes.py:38: in receipt
+    assert response.status_code == 200, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"3263ae8b-5bba-4e71-8ea5-9d5a046bcfca","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_committed_request_changes_and_old_cas_are_conflicts[checkpoint]" time="0.715"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;882fc71c-8b75-4c8d-a175-d5c91991a369&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:138: in test_committed_request_changes_and_old_cas_are_conflicts
+    first = receipt(client.post(base+'/generations', headers=headers, json=value), value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_routes.py:38: in receipt
+    assert response.status_code == 200, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"882fc71c-8b75-4c8d-a175-d5c91991a369","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_committed_request_changes_and_old_cas_are_conflicts[binding]" time="0.636"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;c6f90f79-c6c1-4f57-ba7d-b8363ae07d62&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:138: in test_committed_request_changes_and_old_cas_are_conflicts
+    first = receipt(client.post(base+'/generations', headers=headers, json=value), value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_routes.py:38: in receipt
+    assert response.status_code == 200, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"c6f90f79-c6c1-4f57-ba7d-b8363ae07d62","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_committed_request_changes_and_old_cas_are_conflicts[reason]" time="0.623"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;e857178d-f752-49a9-878f-2d1b8688916a&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:138: in test_committed_request_changes_and_old_cas_are_conflicts
+    first = receipt(client.post(base+'/generations', headers=headers, json=value), value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_routes.py:38: in receipt
+    assert response.status_code == 200, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"e857178d-f752-49a9-878f-2d1b8688916a","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_receipt_does_not_disclose_private_identity_or_reason" time="0.632"><failure message="AssertionError: {&quot;code&quot;:&quot;NOT_SUPPORTED&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;e904920f-6a48-4c4b-af29-4a785e674bfb&quot;,&quot;retryable&quot;:false}&#10;assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">tests\integration\test_weixin_generation_routes.py:156: in test_receipt_does_not_disclose_private_identity_or_reason
+    first = receipt(response,value)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_routes.py:38: in receipt
+    assert response.status_code == 200, response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"e904920f-6a48-4c4b-af29-4a785e674bfb","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = &lt;Response [404 Not Found]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_weixin_generation_routes" name="test_get_is_same_origin_and_exact_recovery_predicate" time="0.659"><failure message="AssertionError: assert False&#10; +  where False = &lt;function is_weixin_authorization_read_path at 0x000001A8C067E2A0&gt;('/api/assistant/conversations/c2f3577a-4b22-45f1-b9c4-a86c4824f897/weixin-authorization/generations/by-request/3a5fd0e0-d57d-4561-acc2-88871940cf71')">tests\integration\test_weixin_generation_routes.py:169: in test_get_is_same_origin_and_exact_recovery_predicate
+    assert predicate(path)
+E   AssertionError: assert False
+E    +  where False = &lt;function is_weixin_authorization_read_path at 0x000001A8C067E2A0&gt;('/api/assistant/conversations/c2f3577a-4b22-45f1-b9c4-a86c4824f897/weixin-authorization/generations/by-request/3a5fd0e0-d57d-4561-acc2-88871940cf71')</failure></testcase></testsuite></testsuites>

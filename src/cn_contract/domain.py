@@ -4785,3 +4785,28 @@ class WeixinPeerGenerationInput(DomainModel):
         if (self.expected_generation == 0) != (self.expected_previous_generation_sha256 is None):
             raise ValueError('only generation zero omits its predecessor hash')
         return self
+
+
+class WeixinGenerationReceiptView(DomainModel):
+    """Historical HTTP metadata; its full-record digest is an opaque receipt."""
+    mode: Literal['synthetic'] = 'synthetic'
+    state: Literal['history_only'] = 'history_only'
+    generation: PositiveInt
+    request_id: UUID
+    scope: ScopeSnapshot
+    scope_sha256: SHA256
+    previous_generation_sha256: SHA256 | None
+    previous_scope_sha256: SHA256
+    checkpoint_revision: NonNegativeInt
+    created_at: UTCDatetime
+    generation_sha256: SHA256
+
+    @model_validator(mode='after')
+    def complete_historical_receipt(self):
+        from .config import canonical_json
+        if (self.generation == 1) != (self.previous_generation_sha256 is None):
+            raise ValueError('only the first generation omits its predecessor hash')
+        raw = canonical_json(self.scope.model_dump(mode='json')).encode('utf-8')
+        if hashlib.sha256(raw).hexdigest() != self.scope_sha256:
+            raise ValueError('receipt scope hash mismatch')
+        return self
