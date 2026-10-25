@@ -1,0 +1,50 @@
+{
+  "seconds": 0.0023015000006125774,
+  "connection_close_returned": true,
+  "original_exception_type": "PermissionError",
+  "original_winerror": 5,
+  "original_errno": 13,
+  "same_exception_object": true,
+  "wrappers_restored": true,
+  "events": [
+    {
+      "phase": "publish:before",
+      "handles": [
+        {
+          "handle": 700,
+          "path": "workbench.db",
+          "access": "0x12019f"
+        }
+      ],
+      "scan_status": "OK",
+      "cwd_inside_stage": false,
+      "stage_path_length": 132
+    },
+    {
+      "phase": "publish:failure",
+      "handles": [
+        {
+          "handle": 700,
+          "path": "workbench.db",
+          "access": "0x12019f"
+        }
+      ],
+      "scan_status": "OK",
+      "cwd_inside_stage": false,
+      "stage_path_length": 132,
+      "exception_type": "PermissionError",
+      "errno": 13,
+      "winerror": 5
+    }
+  ],
+  "source_sha256_before": {
+    "scripts/restore_publish_diagnostics.py": "4c62d3dc2eb48cb3f353972ccb483a91239e768bc395b0eb344686d65ed3d937",
+    "scripts/restore_handles.py": "f6a146712c948eff729280daaf852271ea27b8155cd64de74177aea161e3b755"
+  },
+  "source_sha256_after": {
+    "scripts/restore_publish_diagnostics.py": "4c62d3dc2eb48cb3f353972ccb483a91239e768bc395b0eb344686d65ed3d937",
+    "scripts/restore_handles.py": "f6a146712c948eff729280daaf852271ea27b8155cd64de74177aea161e3b755"
+  },
+  "published": false,
+  "stage_remains": true
+}

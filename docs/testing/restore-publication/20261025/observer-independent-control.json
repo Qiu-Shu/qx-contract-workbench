@@ -1,0 +1,40 @@
+{
+  "seconds": 0.0006605000016861595,
+  "connection_close_returned": true,
+  "original_exception_type": "PermissionError",
+  "original_winerror": 5,
+  "original_errno": 13,
+  "same_exception_object": true,
+  "wrappers_restored": true,
+  "events": [
+    {
+      "phase": "publish:before",
+      "handles": [],
+      "scan_status": "ERROR",
+      "cwd_inside_stage": false,
+      "stage_path_length": 113,
+      "scan_exception_type": "OSError"
+    },
+    {
+      "phase": "publish:failure",
+      "handles": [],
+      "scan_status": "ERROR",
+      "cwd_inside_stage": false,
+      "stage_path_length": 113,
+      "scan_exception_type": "OSError",
+      "exception_type": "PermissionError",
+      "errno": 13,
+      "winerror": 5
+    }
+  ],
+  "source_sha256_before": {
+    "scripts/restore_publish_diagnostics.py": "941b64929429b9f23be568845b3de34a68c2d2b5a89a424001e00177098f4f55",
+    "scripts/restore_handles.py": "0d54e945d8ca4507c6f387107af03bec8186f3715a89f4e38497a1fa71100577"
+  },
+  "source_sha256_after": {
+    "scripts/restore_publish_diagnostics.py": "941b64929429b9f23be568845b3de34a68c2d2b5a89a424001e00177098f4f55",
+    "scripts/restore_handles.py": "0d54e945d8ca4507c6f387107af03bec8186f3715a89f4e38497a1fa71100577"
+  },
+  "published": false,
+  "stage_remains": true
+}

@@ -5,6 +5,7 @@ worker, provider, real Weixin account, transport or installed Electron is starte
 """
 import argparse
 from collections import Counter
+from contextlib import nullcontext
 import hashlib
 import json
 import os
@@ -73,6 +74,8 @@ def start_server(app):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--restore-diagnostics', action='store_true',
+                        help='observe synthetic restore stages and own-process handles')
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
@@ -215,7 +218,16 @@ def main():
 
             archive = output/'browser-synthetic.qxbak'
             workspace_backup.create_workspace_backup(root,archive,PASSPHRASE,data_parent=output)
-            restored_info = workspace_backup.restore_workspace_backup(archive,output/'browser-restored',PASSPHRASE)
+            observer = nullcontext()
+            if args.restore_diagnostics:
+                if __package__:
+                    from .restore_publish_diagnostics import observe_restore
+                else:
+                    from restore_publish_diagnostics import observe_restore
+                report['restore_diagnostics'] = []
+                observer = observe_restore(output/'browser-restored', report['restore_diagnostics'])
+            with observer:
+                restored_info = workspace_backup.restore_workspace_backup(archive,output/'browser-restored',PASSPHRASE)
             restored_root = Path(restored_info['restored_root'])
             restored = Database('sqlite:///'+str(restored_root/'workbench.db'),restored_root/'protected',settings,initialize_schema=False)
             backup._mark_storage_flags(restored)

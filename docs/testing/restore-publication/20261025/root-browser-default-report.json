@@ -1,0 +1,150 @@
+{
+  "scope": "synthetic local Chromium + source FastAPI; installed Electron NOT_RUN",
+  "purpose": "mock_demo",
+  "product_source_sha256": {
+    "src/cn_contract/domain.py": "34721511100fe7afbf33c5d3cdbc1e6673004c0f253e01708816772e70598271",
+    "src/cn_contract/weixin_inbox/accounts.py": "a2c493fbf799694d5eeda35f26577b6102916e628d2dc6092ec57c6e152b2bc5",
+    "src/cn_contract/weixin_inbox/conversation.py": "e29b0a783d0d2a1221a2bf738b0917abf81d1cf3c1cf7071fdf21c622775b908",
+    "src/cn_contract/web/weixin_authorization.py": "0aa53ebf3e191846add8c078f32f9cd4a672f5c6d8032d258f8960ff6898d6ae",
+    "src/cn_contract/web/app.py": "f10b0cd3694ba3677878602358d130d07ee92ce7c47eee988bcad82a26b1caf9",
+    "src/cn_contract/web/recovery.py": "db9361d5a5944bc51474635844b6e65656d2c9c171f824efd6e1d10e8c39230f",
+    "src/cn_contract/web/static/assistant-weixin.mjs": "b614c67d441439af68d5a84d63a6f65c5c8e5a8912bb81d0241aa85994921880",
+    "src/cn_contract/web/static/assistant.mjs": "a13c995cb67a452f37500c5c63a5be8bcc05bbba4b354631c674253158ead795",
+    "src/cn_contract/web/static/assistant.css": "251cc56b069e0012bf624081fef1a1098dba27e6e14d1818f3037f54cc269f47",
+    "src/cn_contract/web/templates/assistant.html": "20c94f5fa661646c7e99835301adc273f4c36eff432ac6c7272c9e40b8d1fcaf"
+  },
+  "steps": [
+    "unbound page reads actual absence without creating a mapping or grant",
+    "bound GET and reload remain current with zero grants and zero authorization POST",
+    "sales_basic.docx browser upload makes scope stale; focused Enter explicitly creates exactly one grant",
+    "reload reads current grant without another POST",
+    "service_basic.docx upload then actual committed POST with aborted ACK; explicit GET finds the fixed receipt without resending",
+    "actual authenticated qxbak restore + attach_recovery middleware renders read-only; GET receipt survives and POST is BLOCKED_LIVE",
+    "public peer revocation is rendered as irreversible revoked state"
+  ],
+  "external_browser_requests": [],
+  "page_errors": [],
+  "authorization_requests": [
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/f3ea2186-f9ef-456b-9ffa-f2295aadde13/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization"
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization/refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization"
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization/refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization/refreshes/by-request/8b03d5b0-fee6-4363-8bf9-ada293899123"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/a1024531-acad-49dc-8cdf-a8791c56438f/weixin-authorization"
+    }
+  ],
+  "screenshots": [
+    "browser-desktop-stale.png",
+    "browser-narrow-stale.png",
+    "browser-restored.png"
+  ],
+  "viewports": {
+    "desktop": 1280,
+    "narrow": 360,
+    "horizontal_overflow": false,
+    "keyboard_focus": true
+  },
+  "lost_ack_grant_revision": 2,
+  "source_counts_before_restore": {
+    "weixin_accounts": 1,
+    "weixin_peer_bindings": 1,
+    "weixin_peer_scope_grants": 2,
+    "weixin_poll_receipts": 0,
+    "weixin_inbox_descriptors": 0,
+    "weixin_dispatch_receipts": 0,
+    "task_inbox_events": 0,
+    "task_drafts": 0,
+    "task_executions": 0,
+    "assistant_attachments": 2,
+    "assistant_model_attempts": 0,
+    "assistant_runs": 0,
+    "review_runs": 0
+  },
+  "restored_counts": {
+    "weixin_accounts": 1,
+    "weixin_peer_bindings": 1,
+    "weixin_peer_scope_grants": 2,
+    "weixin_poll_receipts": 0,
+    "weixin_inbox_descriptors": 0,
+    "weixin_dispatch_receipts": 0,
+    "task_inbox_events": 0,
+    "task_drafts": 0,
+    "task_executions": 0,
+    "assistant_attachments": 2,
+    "assistant_model_attempts": 0,
+    "assistant_runs": 0,
+    "review_runs": 0
+  },
+  "restored_lookup_status": 200,
+  "restored_post_status": 409,
+  "source_counts_final": {
+    "weixin_accounts": 1,
+    "weixin_peer_bindings": 1,
+    "weixin_peer_scope_grants": 2,
+    "weixin_poll_receipts": 0,
+    "weixin_inbox_descriptors": 0,
+    "weixin_dispatch_receipts": 0,
+    "task_inbox_events": 0,
+    "task_drafts": 0,
+    "task_executions": 0,
+    "assistant_attachments": 2,
+    "assistant_model_attempts": 0,
+    "assistant_runs": 0,
+    "review_runs": 0
+  },
+  "authorization_request_counts": {
+    "GET": 12,
+    "POST": 2
+  },
+  "script_sha256": "4df207f4c649abfeafcf1cc4a9bcffafc9e8f1cc7a7675407edbd8ca9ca2348c",
+  "status": "PASS"
+}

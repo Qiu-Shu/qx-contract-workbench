@@ -1,0 +1,31 @@
+{
+  "command": [
+    "D:\\Documents\\ChatGPT\\\u5f8b\u6240\u9879\u76ee\\.venv\\Scripts\\python.exe",
+    "-B",
+    "-X",
+    "utf8",
+    ".local/restore-publish-20261025/layout-control.py"
+  ],
+  "exit_code": 0,
+  "known_os_handle_from_msvcrt": 368,
+  "entry_bytes": 40,
+  "process_information_class": 51,
+  "matches": [
+    {
+      "first_field": 368,
+      "second_field": 1,
+      "third_field": 32758,
+      "first_field_filetype": 1,
+      "third_field_filetype": 0
+    }
+  ],
+  "default_scanner": [
+    {
+      "handle": 368,
+      "path": "independent-control.bin",
+      "access": "0x12019f"
+    }
+  ],
+  "conclusion": "Current NtQueryInformationProcess class51 first field equals actual OS file HANDLE; reviewer confused a different system-wide layout. No product or diagnostic source changes warranted. This is current-host evidence, not a stable API guarantee.",
+  "source_sha256": "f6a146712c948eff729280daaf852271ea27b8155cd64de74177aea161e3b755"
+}

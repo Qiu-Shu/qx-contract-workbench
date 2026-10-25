@@ -1,0 +1,238 @@
+{
+  "baseline": "1defbed1a9f86bd0026d57bd78b7cb19cb55290f",
+  "workspace": "D:\\Documents\\ChatGPT\\律所项目",
+  "pytest_groups": [
+    {
+      "label": "root-observer-final",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/unit/test_restore_publish_diagnostics.py",
+        "--basetemp",
+        ".local/restore-publish-20261025/observer-root-final-tmp",
+        "-q",
+        "--tb=short",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\restore-publish-20261025\\root-observer-final.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 1.703,
+      "test_count": 25
+    },
+    {
+      "label": "root-recovery-regression",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_workspace_backup.py",
+        "tests/integration/test_assistant_attachment_backup.py",
+        "--basetemp",
+        ".local/restore-publish-20261025/recovery-regression-tmp",
+        "-q",
+        "--tb=short",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\restore-publish-20261025\\root-recovery-regression.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 80.328,
+      "test_count": 42
+    },
+    {
+      "label": "root-long-original",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_contract_long_path_backup.py",
+        "--basetemp",
+        ".local/restore-publish-20261025/long-original-tmp",
+        "-q",
+        "--tb=short",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\restore-publish-20261025\\root-long-original.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 11.078,
+      "test_count": 3
+    }
+  ],
+  "distinct_python_tests": 70,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "browser_runs": [
+    {
+      "label": "root-browser-default",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/validate_weixin_authorization_browser.py",
+        "--output",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\restore-publish-20261025\\root-browser-default"
+      ],
+      "exit_code": 0,
+      "seconds": 7.218,
+      "source_before": {
+        "scripts/restore_handles.py": "f6a146712c948eff729280daaf852271ea27b8155cd64de74177aea161e3b755",
+        "scripts/restore_publish_diagnostics.py": "4c62d3dc2eb48cb3f353972ccb483a91239e768bc395b0eb344686d65ed3d937",
+        "scripts/validate_weixin_authorization_browser.py": "4df207f4c649abfeafcf1cc4a9bcffafc9e8f1cc7a7675407edbd8ca9ca2348c",
+        "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6",
+        "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8"
+      },
+      "source_after": {
+        "scripts/restore_handles.py": "f6a146712c948eff729280daaf852271ea27b8155cd64de74177aea161e3b755",
+        "scripts/restore_publish_diagnostics.py": "4c62d3dc2eb48cb3f353972ccb483a91239e768bc395b0eb344686d65ed3d937",
+        "scripts/validate_weixin_authorization_browser.py": "4df207f4c649abfeafcf1cc4a9bcffafc9e8f1cc7a7675407edbd8ca9ca2348c",
+        "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6",
+        "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8"
+      },
+      "source_unchanged": true,
+      "report_sha256": "3acffcf9edbb98d979c5cc65a4227c9ed36263c02013834c3d9832267bcf05f0"
+    },
+    {
+      "label": "root-browser-diagnostic",
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/validate_weixin_authorization_browser.py",
+        "--output",
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\restore-publish-20261025\\root-browser-diagnostic",
+        "--restore-diagnostics"
+      ],
+      "exit_code": 0,
+      "seconds": 7.859,
+      "source_before": {
+        "scripts/restore_handles.py": "f6a146712c948eff729280daaf852271ea27b8155cd64de74177aea161e3b755",
+        "scripts/restore_publish_diagnostics.py": "4c62d3dc2eb48cb3f353972ccb483a91239e768bc395b0eb344686d65ed3d937",
+        "scripts/validate_weixin_authorization_browser.py": "4df207f4c649abfeafcf1cc4a9bcffafc9e8f1cc7a7675407edbd8ca9ca2348c",
+        "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6",
+        "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8"
+      },
+      "source_after": {
+        "scripts/restore_handles.py": "f6a146712c948eff729280daaf852271ea27b8155cd64de74177aea161e3b755",
+        "scripts/restore_publish_diagnostics.py": "4c62d3dc2eb48cb3f353972ccb483a91239e768bc395b0eb344686d65ed3d937",
+        "scripts/validate_weixin_authorization_browser.py": "4df207f4c649abfeafcf1cc4a9bcffafc9e8f1cc7a7675407edbd8ca9ca2348c",
+        "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6",
+        "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8"
+      },
+      "source_unchanged": true,
+      "report_sha256": "5b9a6be02619bb7b5d364c2a2816073e7bef3d408b42f3dcb9e83858d1e447d9"
+    }
+  ],
+  "investigation": {
+    "baseline_browser_runs": [
+      {
+        "label": "browser-baseline-agent",
+        "exit_code": 0,
+        "seconds": 7.075268268585205,
+        "report_sha256": "b6c2d8665042bf33b5428c6e5b48fa9549a6a66922d66348e52b586385d621a2",
+        "status": "PASS"
+      },
+      {
+        "label": "browser-baseline-agent-2",
+        "exit_code": 0,
+        "seconds": 7.814142227172852,
+        "report_sha256": "d783b706fa66997bd6da5c74a79bbe088033e55eafb90917951d1015777553dd",
+        "status": "PASS"
+      },
+      {
+        "label": "browser-baseline-agent-3",
+        "exit_code": 0,
+        "seconds": 6.660897731781006,
+        "report_sha256": "24473c6be4108d6aa678f1d15c973d66f567d2d4d3cd40f9ab8c2f3340363d2c",
+        "status": "PASS"
+      }
+    ],
+    "baseline_tight_attempts": 4,
+    "baseline_tight_failures": 0,
+    "actual_lifecycle_attempts": 9,
+    "original_bug_naturally_reproduced_this_slice": false,
+    "WIN-PATH-02": "OPEN",
+    "native_crash": "OPEN"
+  },
+  "gates": {
+    "schema": {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "cn_contract.cli",
+        "schema",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    "defaults": {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_defaults.py"
+      ],
+      "exit_code": 0
+    },
+    "sources": {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0
+    },
+    "dependencies": {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0
+    }
+  },
+  "source_sha256": {
+    "scripts/restore_handles.py": "f6a146712c948eff729280daaf852271ea27b8155cd64de74177aea161e3b755",
+    "scripts/restore_publish_diagnostics.py": "4c62d3dc2eb48cb3f353972ccb483a91239e768bc395b0eb344686d65ed3d937",
+    "scripts/validate_weixin_authorization_browser.py": "4df207f4c649abfeafcf1cc4a9bcffafc9e8f1cc7a7675407edbd8ca9ca2348c",
+    "tests/unit/test_restore_publish_diagnostics.py": "b485da23184d18f77f62d68652e273abd0d6fe1e7ff2635e54a09a431735d80a",
+    "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6",
+    "src/cn_contract/ops/backup.py": "01e4b386b9c1fa38ed5c4e21876da5da0b6d5c7d219a62890f3fc88fbd83f919",
+    "src/cn_contract/ops/file_paths.py": "5b7155dafe59419ba501888ac92d960f490172bcfa7d9405e41d7ab40ec6d5c9",
+    "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8",
+    "src/cn_contract/web/workspace_upgrade.py": "8decd333095685208914aae7e5c128ccc8415af6f99bb454f74537b8b0381b50"
+  },
+  "src_diff_from_baseline": [],
+  "AGENTS_sha256": "e0fcf27d3a2b5aca6c09d5372c869a312dfc6dba558dcb67581ef9f5ffbe755f",
+  "not_run": [
+    "whole_repository",
+    "Node_regression",
+    "installed_Electron",
+    "Linux",
+    "real_Weixin_account",
+    "real_product_model",
+    "real_contract_egress",
+    "paid_product_call",
+    "legal_signing"
+  ]
+}

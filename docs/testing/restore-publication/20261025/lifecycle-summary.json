@@ -1,0 +1,277 @@
+{
+  "lifecycle-normal": {
+    "restore_attempts": 3,
+    "successful_restores": 3,
+    "publish_samples": 3,
+    "publish_native_handle_counts": [
+      0,
+      0,
+      0
+    ],
+    "publish_live_cursor_counts": [
+      0,
+      0,
+      0
+    ],
+    "phase_exit_samples": 18,
+    "exit_native_handle_counts": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "exit_non_worker_handle_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "upgrade_exit_worker_handle_counts": [
+      1,
+      1,
+      1
+    ],
+    "tracked_connection_identity_count": 0,
+    "all_tracked_connection_identities_closed": true,
+    "gc_enabled_at_publish": [
+      true,
+      true,
+      true
+    ],
+    "command": [
+      ".local/restore-publish-20261025/restore_observer.py",
+      "--label",
+      "lifecycle-normal",
+      "--count",
+      "3"
+    ],
+    "exit_code": 0
+  },
+  "lifecycle-gc-disabled": {
+    "restore_attempts": 3,
+    "successful_restores": 3,
+    "publish_samples": 3,
+    "publish_native_handle_counts": [
+      0,
+      0,
+      0
+    ],
+    "publish_live_cursor_counts": [
+      0,
+      0,
+      0
+    ],
+    "phase_exit_samples": 18,
+    "exit_native_handle_counts": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "exit_non_worker_handle_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "upgrade_exit_worker_handle_counts": [
+      1,
+      1,
+      1
+    ],
+    "tracked_connection_identity_count": 0,
+    "all_tracked_connection_identities_closed": true,
+    "gc_enabled_at_publish": [
+      false,
+      false,
+      false
+    ],
+    "command": [
+      ".local/restore-publish-20261025/restore_observer.py",
+      "--label",
+      "lifecycle-gc-disabled",
+      "--count",
+      "3",
+      "--disable-gc"
+    ],
+    "exit_code": 0
+  },
+  "lifecycle-cursors-gc-disabled": {
+    "restore_attempts": 3,
+    "successful_restores": 3,
+    "publish_samples": 3,
+    "publish_native_handle_counts": [
+      0,
+      0,
+      0
+    ],
+    "publish_live_cursor_counts": [
+      0,
+      0,
+      0
+    ],
+    "phase_exit_samples": 18,
+    "exit_native_handle_counts": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "exit_non_worker_handle_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "upgrade_exit_worker_handle_counts": [
+      1,
+      1,
+      1
+    ],
+    "tracked_connection_identity_count": 12,
+    "all_tracked_connection_identities_closed": true,
+    "gc_enabled_at_publish": [
+      false,
+      false,
+      false
+    ],
+    "command": [
+      ".local/restore-publish-20261025/restore_observer.py",
+      "--label",
+      "lifecycle-cursors-gc-disabled",
+      "--count",
+      "3",
+      "--disable-gc",
+      "--trace-sql"
+    ],
+    "exit_code": 0
+  },
+  "cursor_control": {
+    "argv": [
+      ".local/restore-publish-20261025/cursor_probe.py"
+    ],
+    "root": "D:\\Documents\\ChatGPT\\律所项目\\.local\\restore-publish-20261025\\cursor-1cc68ad843354e8294a696b4f3337736",
+    "results": [
+      {
+        "case": "fully_consumed",
+        "connection_close_returned": true,
+        "handles_before_publish": [],
+        "publish": "success"
+      },
+      {
+        "case": "pending_after_connection_close",
+        "connection_close_returned": true,
+        "handles_before_publish": [
+          {
+            "handle": 340,
+            "path": "D:\\Documents\\ChatGPT\\律所项目\\.local\\restore-publish-20261025\\cursor-1cc68ad843354e8294a696b4f3337736\\pending_after_connection_close\\workbench.db",
+            "access": "0x12019f"
+          }
+        ],
+        "publish": "failure",
+        "winerror": 5,
+        "exception": "PermissionError"
+      },
+      {
+        "case": "pending_cursor_explicitly_closed",
+        "connection_close_returned": true,
+        "handles_before_publish": [],
+        "publish": "success"
+      }
+    ],
+    "exit_code": 1
+  },
+  "source_sha256": {
+    "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6",
+    "src/cn_contract/ops/backup.py": "01e4b386b9c1fa38ed5c4e21876da5da0b6d5c7d219a62890f3fc88fbd83f919",
+    "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8",
+    "src/cn_contract/web/local_server.py": "d1b127e3307e482784ddc879c647b08536eef8b7dea4eee56e8287d3c7da9958",
+    "src/cn_contract/web/workspace_upgrade.py": "8decd333095685208914aae7e5c128ccc8415af6f99bb454f74537b8b0381b50",
+    "src/cn_contract/queries/ledger.py": "9b8880d3536ed4b351697c275fe3835d016e24f6b067c3b3e725756ea53b0c10"
+  },
+  "limitation": "The only exact WinError5 here is the intentional pending-cursor control. Nine actual restores succeeded and do not identify or repair the historical failure. Own-process snapshots do not observe external process handles or exclude observer effects."
+}

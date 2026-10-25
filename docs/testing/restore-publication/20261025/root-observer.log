@@ -1,0 +1,12 @@
+..............F.........                                                 [100%]
+================================== FAILURES ===================================
+___ test_calls_outside_the_exact_restore_stage_and_parent_produce_no_events ___
+tests\unit\test_restore_publish_diagnostics.py:208: in test_calls_outside_the_exact_restore_stage_and_parent_produce_no_events
+    assert events == [] and len(calls) == len(candidates)*6+1
+E   AssertionError: assert ([{'cwd_inside...nError', ...}] == []
+E
+E     Left contains 2 more items, first extra item: {'cwd_inside_stage': False, 'handles': [], 'phase': 'publish:before', 'scan_exception_type': 'AssertionError', ...}
+E     Use -v to get more diff)
+=========================== short test summary info ===========================
+FAILED tests/unit/test_restore_publish_diagnostics.py::test_calls_outside_the_exact_restore_stage_and_parent_produce_no_events
+1 failed, 23 passed in 0.92s

@@ -1,0 +1,16 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_observer_records_one_actual_publication_without_changing_the_operation _
+tests\unit\test_restore_publish_diagnostics.py:23: in test_observer_records_one_actual_publication_without_changing_the_operation
+    observer = api()
+               ^^^^^
+tests\unit\test_restore_publish_diagnostics.py:10: in api
+    assert importlib.util.find_spec(name) is not None, 'restore publication observation module is required'
+E   AssertionError: restore publication observation module is required
+E   assert None is not None
+E    +  where None = <function find_spec at 0x00000185796F5800>('scripts.restore_publish_diagnostics')
+E    +    where <function find_spec at 0x00000185796F5800> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+=========================== short test summary info ===========================
+FAILED tests/unit/test_restore_publish_diagnostics.py::test_observer_records_one_actual_publication_without_changing_the_operation
+1 failed in 0.16s

@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-25 恢复发布诊断切片：仅开发脚本新增显式阶段/本进程句柄观察和25永久测试；root共4模块70不同Python、默认及诊断浏览器、四开发门通过，[实测](testing/restore-publication/20261025/README.md)。工具parent过滤与non-file handle误报经实际RED→GREEN修正；原WIN-PATH-02本轮未自然复现、无产品修补，仍OPEN，独立原生崩溃和0.4.1安装版状态不变。D2g按代际运行与HTTP/桌面接线、可信微信身份/资格及E有限期授权仍待。
+
 D2g1 产品 `40be816` 已同步 GitHub，远端SHA/tree及5,082条目一致；[同步回执](testing/weixin-generation-service/20261025/github-sync.md)。
 
 2026-10-25 D2g1 已完成显式代际追加/固定查询后端：当前principal/fence/schema17先核，root/前代/新目标当前ACL、完整scope与gen/hash/checkpoint CAS、因果时间及pre/post历史验证，旧来源和游标不改；恢复/撤权后查询仅metadata且当前权限仍核。根12模块310不同Python、192 Node与四开发门通过、独立冻结复核完成，[实测](testing/weixin-generation-service/20261025/README.md)。schema/暂停guard未改，尚无运行时切换、HTTP/UI或新账号/模型能力；浏览器/安装版等NOT_RUN，0.4.1、原生崩溃及上轮WIN-PATH-02失败继续开放。
