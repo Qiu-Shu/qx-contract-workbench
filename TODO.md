@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+2026-10-25 D2g4 已将明确目标历史登记接入原对话页：预览零写、缺绑定才在明确保存时创建、两阶段丢回执只查、版本变化/迟到响应/撤权及导航守卫已验；真实qxbak恢复继续只读。根12模块229不同Python、15脚本233 Node、两组本机浏览器、四开发门均通过；同一独立审查者Spec/Standards两轴0遗留（非两名代理），[实测](docs/testing/weixin-generation-ui/20261025/README.md)。D2g3欠缺的独立Standards已在本轮补完0确认违规，旧阶段记录保留。当前账号仍暂停，按代际接收/分发、可信微信及E许可待接；安装版0.4.1未更新，全仓/安装版/真实微信模型等NOT_RUN，原生崩溃和WIN-PATH-02保持OPEN。
+
 D2g3 产品 `d6627de` 已正常同步GitHub，远端SHA/tree及5,197条目一致；[同步回执](docs/testing/weixin-generation-head/20261025/github-sync.md)。
 
 最新接续（2026-10-25，D2g3）：七字段history_only head、根CID精确GET和同事务root/latest ACL/历史/checkpoint已接，HTTP head→两代POST、旧CAS、真实锁竞争、坏历史/schema、恢复和零写均实测；298不同Python、192 Node及四门通过，独立Spec复核完成，[证据](docs/testing/weixin-generation-head/20261025/README.md)。下一片明确桌面操作，再接按代际接收分发；当前仍暂停。宿主thread limit和WorkBuddy Bash拒绝使独立Standards未完成，不称双独立审查；可信微信/E许可、0.4.1、原生崩溃/WIN-PATH-02状态不变。

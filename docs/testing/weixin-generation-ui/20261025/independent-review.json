@@ -1,0 +1,145 @@
+{
+  "reviewer": "/root/d2g3_head_atomic",
+  "axis": "Spec and Standards: same independent reviewer, not two independent review agents",
+  "scope": "D2g4 current leaf, main integration, old authorization interlock, template/CSS, static allowlist, frontend test bridge",
+  "baseline": "5f3353cf87be3767108c8e4736aa4ff4484cdd44",
+  "reviewed_at_utc": "2026-10-25T08:00:13Z",
+  "findings": [],
+  "status": "NO_CONFIRMED_BLOCKERS_IN_REVIEWED_SCOPE",
+  "inputs_unchanged": true,
+  "changed_inputs": [],
+  "inputs": [
+    {
+      "path": "src/cn_contract/web/app.py",
+      "sha256": "2b6d0a6387cc6b35f7b3ed460688a52306c7572411dc2822086ab431ad0c9d14"
+    },
+    {
+      "path": "src/cn_contract/web/static/assistant-weixin-generations.mjs",
+      "sha256": "ffbec4f241a3aaaadb13ed553c9a68dc60d956b3e69bcb466c652fbc2e0bdf75"
+    },
+    {
+      "path": "src/cn_contract/web/static/assistant-weixin.mjs",
+      "sha256": "cd85ade8d9d5875a7e9a9e3373b89aace9668ff79de2121dc3e95eddd9dd7fa0"
+    },
+    {
+      "path": "src/cn_contract/web/static/assistant.mjs",
+      "sha256": "f77a8ee5f06d33a6447373c53945ca745607983bbb274db609b870e31829406e"
+    },
+    {
+      "path": "src/cn_contract/web/static/assistant.css",
+      "sha256": "462f0bf64736f8866eb6bfa55fb33215ddead203fd2abecf5e0fc09bbb438aa7"
+    },
+    {
+      "path": "src/cn_contract/web/templates/assistant.html",
+      "sha256": "42903dbd8d6c6420f3492bec7f2472e3fac3603b4614960cf2391ef97c14a965"
+    },
+    {
+      "path": "tests/integration/test_assistant_frontend.py",
+      "sha256": "ac0445dab0a8b320dcf0789d2b68170fb750baecec7adbf5cabe940f546a012a"
+    },
+    {
+      "path": "scripts/test_assistant_weixin_generations.mjs",
+      "sha256": "f816fece130349fed4d3dfe7bb7e4a4d598388d49965f35c478de134479f70fc"
+    },
+    {
+      "path": "docs/plans/2026-10-25-weixin-generation-ui-d2g4.md",
+      "sha256": "413a4e449c0db6dbfae1debbf2a62278a9e4adfd28e95d2d60d9b1309828b9e0"
+    }
+  ],
+  "fixed_findings": [
+    "prepare invalidated by refresh selection epoch",
+    "older prepare cannot clear a newer read loading state",
+    "valid stored receipt separated from authorization-refresh failure",
+    "binding lookup after scope growth cannot restore stale prepared authority",
+    "binding acknowledgement rechecks UI stability before generation POST",
+    "receipt requires valid UTC created_at"
+  ],
+  "verification": [
+    {
+      "command": "bundled Node --test --test-reporter=tap scripts/test_assistant_weixin_generations.mjs",
+      "log": "node-independent-final.tap",
+      "exit_code": 0,
+      "tests": 41,
+      "passed": 41,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "pytest test_assistant_frontend.py::test_chat_module_import_graph_is_served_as_javascript test_assistant_frontend.py::test_browser_module_behaviour[test_assistant_weixin_generations.mjs]",
+      "log": "independent-frontend.log",
+      "junit": "independent-frontend.xml",
+      "exit_code": 0,
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "note": "the Node-wrapper case reruns the same 41 Node tests; do not add those again"
+    },
+    {
+      "command": "bundled Node --test --test-reporter=tap scripts/test_assistant_weixin.mjs",
+      "log": "node-legacy-independent.tap",
+      "exit_code": 0,
+      "tests": 22,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "note": "may overlap the root full Node regression"
+    }
+  ],
+  "red_evidence": [
+    "node-independent-red.tap: missing-module suite 1 failed, not 35 behavior failures",
+    "node-independent-races-red.tap: 35 passed, 5 failed of 40",
+    "node-independent-receipt-red.tap: 35 passed, 6 failed of 41"
+  ],
+  "review_notes": [
+    "root CID and full predecessor CAS remain server validated; this slice has no backend authority or runtime changes",
+    "only explicit save causes binding/generation POST; unknown outcomes only query fixed GETs",
+    "navigation guards cover open/new/logout/beforeunload; pagehide disposes both authorization modules",
+    "new module is an exact allowlisted static resource; other arbitrary static paths remain denied",
+    "readonly is passed to the leaf and backend recovery fence remains authoritative; labels state historical data and paused intake",
+    "dynamic strings use textContent; CSS is local and no external resources or dependencies were added"
+  ],
+  "limitations": [
+    "independent browser and installed Electron NOT_RUN; browser run results belong to root verification",
+    "full repository and real WeChat/model/contracts/paid/external sending NOT_RUN",
+    "safeScope is a lightweight UI shape guard, not a replacement for server DTO validation",
+    "receipt full-record digest is intentionally opaque; browser checks scope digest and bound CAS metadata only",
+    "Spec and Standards were reviewed by the same independent reviewer; host agent-thread limit prevented a separate Standards agent, so this is not two independent review agents"
+  ],
+  "axes": {
+    "Spec": {
+      "status": "NO_CONFIRMED_BLOCKERS_IN_REVIEWED_SCOPE",
+      "sources": [
+        "docs/plans/2026-10-25-weixin-generation-ui-d2g4.md",
+        "root delegated D2g4 behavior contract",
+        "existing D2g1-D2g3 HTTP and paused-runtime contracts"
+      ],
+      "findings": [],
+      "fixed_findings": [
+        "prepare invalidated by refresh selection epoch",
+        "older prepare cannot clear a newer read loading state",
+        "valid stored receipt separated from authorization-refresh failure",
+        "binding lookup after scope growth cannot restore stale prepared authority",
+        "binding acknowledgement rechecks UI stability before generation POST",
+        "receipt requires valid UTC created_at"
+      ],
+      "scope": "explicit read/prepare/save, exact CAS and fixed receipt, two-stage unknown recovery, scope/epoch/current authority, readonly and navigation"
+    },
+    "Standards": {
+      "status": "NO_CONFIRMED_VIOLATIONS_IN_REVIEWED_SCOPE",
+      "sources": [
+        "AGENTS.md: preserve existing architecture, synthetic-only verification, privacy and phase evidence",
+        "CONTRIBUTING.md: reuse existing modules; backend ACL/version authority; RED before implementation and scoped evidence",
+        "ponytail full: minimum sufficient change, boundary validation, meaningful behavioral checks",
+        "code-review skill Fowler smell baseline: judgment only, repository rules prevail"
+      ],
+      "findings": [],
+      "judgement_calls": [
+        "state machine stays in one new existing-framework leaf and reuses API transport; no new frontend framework or dependency",
+        "short existing authorization hooks serve concrete sibling interlock, not a generic event abstraction",
+        "small scope/hash helpers remain local; no speculative shared DTO engine or backend security substitution",
+        "template text uses textContent and CSS stays scoped; no external font, animation, image or runtime request"
+      ]
+    }
+  }
+}

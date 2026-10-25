@@ -1,0 +1,28 @@
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\律所项目\scripts\validate_weixin_generation_browser.py", line 254, in <module>
+    main()
+  File "D:\Documents\ChatGPT\律所项目\scripts\validate_weixin_generation_browser.py", line 128, in main
+    open_panel(base)
+  File "D:\Documents\ChatGPT\律所项目\scripts\validate_weixin_generation_browser.py", line 118, in open_panel
+    expect(element('state')).to_contain_text('当前目标历史')
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 22185, in to_contain_text
+    self._sync(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 303, in to_contain_text
+    await self._expect_impl(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 128, in _expect_impl
+    _record_soft_or_raise(
+  File "D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 60, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to contain text '当前目标历史'
+Actual value: 打开后可核对目标历史。
+Call log:
+  - Expect "to_contain_text" locator("#weixin-generation-state") with timeout 5000ms
+  - waiting for locator("#weixin-generation-state")
+    14 × locator resolved to <p role="status" aria-live="polite" id="weixin-generation-state">打开后可核对目标历史。</p>
+       - unexpected value "打开后可核对目标历史。"
+
+Aria snapshot:
+- status: 打开后可核对目标历史。

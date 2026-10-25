@@ -311,3 +311,7 @@ body.has-history.source-open .compose-section { position: static; }
 .weixin-authorization { margin: 1rem 0; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
 .weixin-authorization h3 { margin: 0 0 .5rem; font-size: 1rem; }
 .weixin-authorization p { margin: .5rem 0; overflow-wrap: anywhere; }
+.weixin-generation-panel { margin-top: 1rem; }
+.weixin-generation-panel label { display: block; margin: .75rem 0 .375rem; }
+.weixin-generation-panel select, .weixin-generation-panel textarea { width: 100%; max-width: 100%; }
+.weixin-generation-preview { white-space: pre-wrap; font-variant-numeric: tabular-nums; }

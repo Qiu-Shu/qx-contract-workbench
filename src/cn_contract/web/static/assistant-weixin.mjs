@@ -3,12 +3,12 @@ import {errorText} from './assistant-render.mjs';
 const labels={unbound:'本对话尚未绑定本机合成收件；真实微信未接通。',
   current:'本机收件授权与当前输入和材料版本一致。',
   refresh_required:'输入或材料版本已变化，需显式更新同一目标的收件授权。',
-  target_changed:'授权目标或版本已改变，请重新核对映射；这里不能跨目标重新绑定。',
+  target_changed:'授权目标或版本已改变；历史记录不会自动更新收件。',
   revoked:'收件授权已撤销，不能在这里恢复。',archived:'对话已归档，不能更新收件授权。',
   restored_blocked:'恢复副本只读，可核对授权记录，不能更新或继续收件。'};
 
 export function bindWeixinAuthorization({controller,api,root=document,readonly=false,
-  uuid=()=>crypto.randomUUID()}={}){
+  uuid=()=>crypto.randomUUID(),isBlocked=()=>false,onActivityChange=()=>{}}={}){
   const byId=id=>root.getElementById(id);
   let cid=null,epoch=0,reading=0,signature='',data=null,closed=false,revoked=false;
   let busy=false,loading=false,pending=null;
@@ -18,7 +18,7 @@ export function bindWeixinAuthorization({controller,api,root=document,readonly=f
   const base=()=>'/api/assistant/conversations/'+encodeURIComponent(cid)+'/weixin-authorization';
   const stable=()=>!controller.state.loading&&!controller.state.dirty&&!controller.state.conflict&&
     !controller.state.materialAction&&!['saving','error','revoked'].includes(controller.state.status);
-  const writable=()=>active()&&!readonly&&!busy&&!loading&&!pending&&stable()&&data?.state==='refresh_required';
+  const writable=()=>active()&&!readonly&&!busy&&!loading&&!pending&&!isBlocked()&&stable()&&data?.state==='refresh_required';
   const tell=text=>{byId('weixin-notice').textContent=text;};
   function receiptMatches(value,operation){
     const fields=['workspace_id','conversation_id','scope_kind','scope_ref','binding_revision','input_revision','materials_revision'];
@@ -54,14 +54,14 @@ export function bindWeixinAuthorization({controller,api,root=document,readonly=f
         throw {code:'STATE_CONFLICT'};
       data=result;return true;
     }catch(error){if(valid(token)&&read===reading){data=null;failure(error);}return false;}
-    finally{if(valid(token)&&read===reading){loading=false;render();}}
+    finally{if(valid(token)&&read===reading){loading=false;render();onActivityChange();}}
   }
   async function authorize(){
     if(!writable())return false;
     const token=key(),operation={path:base(),body:{request_id:uuid(),expected_grant_revision:data.grant_revision,
       expected_scope_sha256:data.scope_sha256,expected_scope:structuredClone(data.current_scope),
       reason:'对话页显式更新同目标输入和材料授权'}};
-    busy=true;render();tell('正在保存本次明确授权…');
+    busy=true;render();onActivityChange();tell('正在保存本次明确授权…');
     try{
       const receipt=await api.request(operation.path+'/refresh',{method:'POST',body:operation.body});
       if(!valid(token))return false;
@@ -75,11 +75,11 @@ export function bindWeixinAuthorization({controller,api,root=document,readonly=f
         }else{failure(error);if(active())await refresh();}
       }
       return false;
-    }finally{if(valid(token)){busy=false;render();}}
+    }finally{if(valid(token)){busy=false;render();onActivityChange();}}
   }
   async function find(){
     if(!active()||!pending||busy||loading)return false;
-    const token=key(),operation=pending;busy=true;render();
+    const token=key(),operation=pending;busy=true;render();onActivityChange();
     try{
       const result=await api.request(operation.path+'/refreshes/by-request/'+encodeURIComponent(operation.body.request_id));
       if(!valid(token)||pending!==operation)return false;
@@ -89,14 +89,14 @@ export function bindWeixinAuthorization({controller,api,root=document,readonly=f
       if(valid(token))tell('已找到本次授权回执；当前可用状态以上方重新读取结果为准。');
       return true;
     }catch(error){if(valid(token))failure(error);return false;}
-    finally{if(valid(token)){busy=false;render();}}
+    finally{if(valid(token)){busy=false;render();onActivityChange();}}
   }
   byId('weixin-authorize').addEventListener('click',authorize);
   byId('weixin-read').addEventListener('click',refresh);
   byId('weixin-find').addEventListener('click',find);
   render();
   return {
-    refresh,hasPending:()=>busy||!!pending,
+    refresh,updateControls:render,projection:()=>data,hasPending:()=>busy||!!pending,
     state(state){
       if(closed)return;
       if(state.status==='revoked'){revoked=true;cid=null;clear();tell('当前权限已变化。');return;}

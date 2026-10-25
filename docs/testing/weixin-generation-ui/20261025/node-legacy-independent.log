@@ -1,0 +1,142 @@
+TAP version 13
+# Subtest: projection reads only and explicit update submits the displayed exact scope
+ok 1 - projection reads only and explicit update submits the displayed exact scope
+  ---
+  duration_ms: 4.9218
+  type: 'test'
+  ...
+# Subtest: state never offers automatic or inappropriate authorization: unbound
+ok 2 - state never offers automatic or inappropriate authorization: unbound
+  ---
+  duration_ms: 0.4949
+  type: 'test'
+  ...
+# Subtest: state never offers automatic or inappropriate authorization: current
+ok 3 - state never offers automatic or inappropriate authorization: current
+  ---
+  duration_ms: 0.35
+  type: 'test'
+  ...
+# Subtest: state never offers automatic or inappropriate authorization: target_changed
+ok 4 - state never offers automatic or inappropriate authorization: target_changed
+  ---
+  duration_ms: 0.3263
+  type: 'test'
+  ...
+# Subtest: state never offers automatic or inappropriate authorization: revoked
+ok 5 - state never offers automatic or inappropriate authorization: revoked
+  ---
+  duration_ms: 0.3597
+  type: 'test'
+  ...
+# Subtest: state never offers automatic or inappropriate authorization: archived
+ok 6 - state never offers automatic or inappropriate authorization: archived
+  ---
+  duration_ms: 0.356
+  type: 'test'
+  ...
+# Subtest: state never offers automatic or inappropriate authorization: restored_blocked
+ok 7 - state never offers automatic or inappropriate authorization: restored_blocked
+  ---
+  duration_ms: 0.2835
+  type: 'test'
+  ...
+# Subtest: local action prevents changing authorization while the working snapshot is unstable {"dirty":true}
+ok 8 - local action prevents changing authorization while the working snapshot is unstable {"dirty":true}
+  ---
+  duration_ms: 0.4663
+  type: 'test'
+  ...
+# Subtest: local action prevents changing authorization while the working snapshot is unstable {"loading":true}
+ok 9 - local action prevents changing authorization while the working snapshot is unstable {"loading":true}
+  ---
+  duration_ms: 0.3871
+  type: 'test'
+  ...
+# Subtest: local action prevents changing authorization while the working snapshot is unstable {"materialAction":{}}
+ok 10 - local action prevents changing authorization while the working snapshot is unstable {"materialAction":{}}
+  ---
+  duration_ms: 0.362
+  type: 'test'
+  ...
+# Subtest: local action prevents changing authorization while the working snapshot is unstable {"conflict":{}}
+ok 11 - local action prevents changing authorization while the working snapshot is unstable {"conflict":{}}
+  ---
+  duration_ms: 0.3021
+  type: 'test'
+  ...
+# Subtest: local action prevents changing authorization while the working snapshot is unstable {"status":"saving"}
+ok 12 - local action prevents changing authorization while the working snapshot is unstable {"status":"saving"}
+  ---
+  duration_ms: 0.3571
+  type: 'test'
+  ...
+# Subtest: readonly current projection cannot authorize
+ok 13 - readonly current projection cannot authorize
+  ---
+  duration_ms: 0.2972
+  type: 'test'
+  ...
+# Subtest: unknown write keeps one request and only queries its result
+ok 14 - unknown write keeps one request and only queries its result
+  ---
+  duration_ms: 0.6406
+  type: 'test'
+  ...
+# Subtest: late projection never paints a different conversation
+ok 15 - late projection never paints a different conversation
+  ---
+  duration_ms: 0.3477
+  type: 'test'
+  ...
+# Subtest: disposed module ignores pending projection
+ok 16 - disposed module ignores pending projection
+  ---
+  duration_ms: 0.3763
+  type: 'test'
+  ...
+# Subtest: a newer read wins within the same conversation
+ok 17 - a newer read wins within the same conversation
+  ---
+  duration_ms: 0.3948
+  type: 'test'
+  ...
+# Subtest: double click cannot submit a second authorization
+ok 18 - double click cannot submit a second authorization
+  ---
+  duration_ms: 0.4288
+  type: 'test'
+  ...
+# Subtest: projection for a different CID is discarded before any action
+ok 19 - projection for a different CID is discarded before any action
+  ---
+  duration_ms: 0.4827
+  type: 'test'
+  ...
+# Subtest: a current-permission denial clears the projection and pending action
+ok 20 - a current-permission denial clears the projection and pending action
+  ---
+  duration_ms: 1.2348
+  type: 'test'
+  ...
+# Subtest: conflict never retries a POST and refreshes the actual projection
+ok 21 - conflict never retries a POST and refreshes the actual projection
+  ---
+  duration_ms: 0.3958
+  type: 'test'
+  ...
+# Subtest: an unrelated or incomplete JSON response never claims authorization was saved
+ok 22 - an unrelated or incomplete JSON response never claims authorization was saved
+  ---
+  duration_ms: 0.4422
+  type: 'test'
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 70.1446

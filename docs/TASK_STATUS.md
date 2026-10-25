@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-25 D2g4 已将明确目标历史登记接入原对话页：预览零写、缺绑定才在明确保存时创建、两阶段丢回执只查、版本变化/迟到响应/撤权及导航守卫已验；真实qxbak恢复继续只读。根12模块229不同Python、15脚本233 Node、两组本机浏览器、四开发门均通过；同一独立审查者Spec/Standards两轴0遗留（非两名代理），[实测](testing/weixin-generation-ui/20261025/README.md)。D2g3欠缺的独立Standards已在本轮补完0确认违规，旧阶段记录保留。当前账号仍暂停，按代际接收/分发、可信微信及E许可待接；安装版0.4.1未更新，全仓/安装版/真实微信模型等NOT_RUN，原生崩溃和WIN-PATH-02保持OPEN。
+
 D2g3 产品 `d6627de` 已正常同步GitHub，远端SHA/tree及5,197条目一致；[同步回执](testing/weixin-generation-head/20261025/github-sync.md)。
 
 2026-10-25 D2g3 已实现最新代际七字段只读head：根与最新目标当前权限、完整历史及checkpoint同一个BEGIN IMMEDIATE快照，零代取持久grant/mapping而非当前scope，未绑定null；精确恢复GET不解锁写或收件。根14模块298不同Python、192 Node、四开发门通过，独立Spec无确认阻断；[实际证据](testing/weixin-generation-head/20261025/README.md)。最初同名测试收集错误及两项403/409预期错误均保留和分类；无产品guard妥协。独立Standards代理因宿主限额/WorkBuddy Bash拒绝未完成，root核查不冒充第二独立审阅。页面/按代际运行、可信微信、E许可未做，浏览器/全仓/安装版/真实账户等NOT_RUN，原生崩溃及WIN-PATH-02保持OPEN。

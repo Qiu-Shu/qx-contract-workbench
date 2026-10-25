@@ -76,6 +76,21 @@
             <p class="muted">仅更新同一目标的输入和材料版本；真实微信未接通。</p>
             <div class="task-actions"><button id="weixin-authorize" type="button" class="quiet-button" hidden disabled>更新本机授权</button><button id="weixin-read" type="button" class="text-button" disabled>重新读取授权状态</button><button id="weixin-find" type="button" class="quiet-button" hidden disabled>查找本次授权结果</button></div>
             <p id="weixin-notice" role="status" aria-live="polite"></p>
+            <details id="weixin-generation-panel" class="weixin-generation-panel">
+              <summary>追加目标历史记录</summary>
+              <p class="muted">仅在本机登记新的目标历史；真实微信未接通，保存后收件仍暂停。</p>
+              <p id="weixin-generation-state" role="status" aria-live="polite">打开后可核对目标历史。</p>
+              <button id="weixin-generation-read" type="button" class="text-button">重新读取历史与目标</button>
+              <label for="weixin-generation-target">选择新的目标对话</label>
+              <select id="weixin-generation-target" disabled><option value="">请先读取目标历史</option></select>
+              <button id="weixin-generation-more" type="button" class="text-button" hidden>更多目标对话</button>
+              <label for="weixin-generation-reason">本次追加的理由</label>
+              <textarea id="weixin-generation-reason" rows="2" maxlength="200" disabled placeholder="例如：后续材料改在新的对话中继续核对。"></textarea>
+              <button id="weixin-generation-prepare" type="button" class="quiet-button" disabled>核对本次目标</button>
+              <p id="weixin-generation-preview" class="weixin-generation-preview" aria-live="polite"></p>
+              <div class="task-actions"><button id="weixin-generation-save" type="button" class="quiet-button" disabled>保存目标历史</button><button id="weixin-generation-clear" type="button" class="text-button" disabled>清空本次选择</button><button id="weixin-generation-find" type="button" class="quiet-button" hidden disabled>查找本次结果</button></div>
+              <p id="weixin-generation-notice" role="status" aria-live="polite"></p>
+            </details>
           </section>
           <label for="task-select">正在处理的任务</label>
           <select id="task-select"><option value="">新建模拟任务</option></select>

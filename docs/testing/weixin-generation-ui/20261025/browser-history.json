@@ -1,0 +1,154 @@
+{
+  "scope": "source FastAPI + local synthetic Chromium; installed Electron NOT_RUN",
+  "purpose": "mock_demo",
+  "product_source_sha256": {
+    "src/cn_contract/web/static/assistant-weixin-generations.mjs": "ffbec4f241a3aaaadb13ed553c9a68dc60d956b3e69bcb466c652fbc2e0bdf75",
+    "src/cn_contract/web/static/assistant-weixin.mjs": "cd85ade8d9d5875a7e9a9e3373b89aace9668ff79de2121dc3e95eddd9dd7fa0",
+    "src/cn_contract/web/static/assistant.mjs": "f77a8ee5f06d33a6447373c53945ca745607983bbb274db609b870e31829406e",
+    "src/cn_contract/web/static/assistant.css": "462f0bf64736f8866eb6bfa55fb33215ddead203fd2abecf5e0fc09bbb438aa7",
+    "src/cn_contract/web/templates/assistant.html": "42903dbd8d6c6420f3492bec7f2472e3fac3603b4614960cf2391ef97c14a965"
+  },
+  "steps": [
+    "read/preview zero writes; focused Enter creates missing binding then generation one exactly once",
+    "generation two commits with lost ACK; fixed request GET confirms receipt, no second POST",
+    "binding commits with lost ACK; GET only confirms binding; a second explicit save appends generation three",
+    "actual qxbak restore preserves three histories; UI disables writes, fixed receipt GET200 and fenced POST409"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization/generations/head"
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/conversations/75828050-7bba-4a53-bcae-e9c6bfc7dd44/task-bindings"
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization/generations"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization/generations/head"
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization/generations"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization/generations/by-request/5225f53f-27ec-4f4b-a89e-d23aee5098a1"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization/generations/head"
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/conversations/159a0c17-6d4d-4eac-bfd8-18aaae528bc0/task-bindings"
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization/generations"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization/generations/head"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization"
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/6c71dc27-a373-42f3-82bd-73354c39c069/weixin-authorization/generations/head"
+    }
+  ],
+  "external_browser_requests": [],
+  "page_errors": [],
+  "screenshots": [
+    "browser-desktop-preview.png",
+    "browser-narrow-preview.png"
+  ],
+  "initial_counts": {
+    "weixin_accounts": 1,
+    "weixin_peer_bindings": 1,
+    "weixin_peer_scope_grants": 0,
+    "weixin_poll_receipts": 0,
+    "weixin_inbox_descriptors": 0,
+    "weixin_dispatch_receipts": 0,
+    "task_inbox_events": 0,
+    "task_drafts": 0,
+    "task_executions": 0,
+    "assistant_attachments": 0,
+    "assistant_model_attempts": 0,
+    "assistant_runs": 0,
+    "review_runs": 0,
+    "weixin_peer_generations": 0,
+    "task_channel_bindings": 2
+  },
+  "viewports": {
+    "desktop": 1280,
+    "narrow": 360,
+    "horizontal_overflow": false,
+    "keyboard_focus": true
+  },
+  "source_counts": {
+    "weixin_accounts": 1,
+    "weixin_peer_bindings": 1,
+    "weixin_peer_scope_grants": 0,
+    "weixin_poll_receipts": 0,
+    "weixin_inbox_descriptors": 0,
+    "weixin_dispatch_receipts": 0,
+    "task_inbox_events": 0,
+    "task_drafts": 0,
+    "task_executions": 0,
+    "assistant_attachments": 0,
+    "assistant_model_attempts": 0,
+    "assistant_runs": 0,
+    "review_runs": 0,
+    "weixin_peer_generations": 3,
+    "task_channel_bindings": 4
+  },
+  "restored_counts": {
+    "weixin_accounts": 1,
+    "weixin_peer_bindings": 1,
+    "weixin_peer_scope_grants": 0,
+    "weixin_poll_receipts": 0,
+    "weixin_inbox_descriptors": 0,
+    "weixin_dispatch_receipts": 0,
+    "task_inbox_events": 0,
+    "task_drafts": 0,
+    "task_executions": 0,
+    "assistant_attachments": 0,
+    "assistant_model_attempts": 0,
+    "assistant_runs": 0,
+    "review_runs": 0,
+    "weixin_peer_generations": 3,
+    "task_channel_bindings": 4
+  },
+  "restored_lookup_status": 200,
+  "restored_post_status": 409,
+  "request_counts": {
+    "GET": 11,
+    "POST": 5
+  },
+  "script_sha256": "2c4c3a9b30b6f65063a684e2613ea2f7fb2ff7e7fa169ad0b3b0ec5d4b9cc735",
+  "status": "PASS"
+}

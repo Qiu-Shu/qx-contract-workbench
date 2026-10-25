@@ -1,0 +1,330 @@
+TAP version 13
+# Subtest: closed panel never reads or writes merely because a conversation became current
+ok 1 - closed panel never reads or writes merely because a conversation became current
+  ---
+  duration_ms: 5.1188
+  type: 'test'
+  ...
+# Subtest: explicit reading filters root latest archived targets and paginates without a write
+ok 2 - explicit reading filters root latest archived targets and paginates without a write
+  ---
+  duration_ms: 3.945
+  type: 'test'
+  ...
+# Subtest: prepare reads current target and task binding and never creates a missing binding
+ok 3 - prepare reads current target and task binding and never creates a missing binding
+  ---
+  duration_ms: 1.1679
+  type: 'test'
+  ...
+# Subtest: explicit save with a known binding submits the frozen complete eight field CAS
+ok 4 - explicit save with a known binding submits the frozen complete eight field CAS
+  ---
+  duration_ms: 2.5627
+  type: 'test'
+  ...
+# Subtest: explicit save creates an absent synthetic target binding before generation and sends no binding body
+ok 5 - explicit save creates an absent synthetic target binding before generation and sends no binding body
+  ---
+  duration_ms: 1.2158
+  type: 'test'
+  ...
+# Subtest: readonly users may read historical head and targets but cannot prepare or save writes
+ok 6 - readonly users may read historical head and targets but cannot prepare or save writes
+  ---
+  duration_ms: 0.5871
+  type: 'test'
+  ...
+# Subtest: unbound null head cannot invent generation zero checkpoint or a writable preview
+ok 7 - unbound null head cannot invent generation zero checkpoint or a writable preview
+  ---
+  duration_ms: 0.3077
+  type: 'test'
+  ...
+# Subtest: unbound revoked archived restored and absent authorization projections forbid writes
+ok 8 - unbound revoked archived restored and absent authorization projections forbid writes
+  ---
+  duration_ms: 2.108
+  type: 'test'
+  ...
+# Subtest: a locally unstable dirty snapshot cannot save a prepared generation
+ok 9 - a locally unstable dirty snapshot cannot save a prepared generation
+  ---
+  duration_ms: 0.6937
+  type: 'test'
+  ...
+# Subtest: a locally unstable loading snapshot cannot save a prepared generation
+ok 10 - a locally unstable loading snapshot cannot save a prepared generation
+  ---
+  duration_ms: 0.5881
+  type: 'test'
+  ...
+# Subtest: a locally unstable materials snapshot cannot save a prepared generation
+ok 11 - a locally unstable materials snapshot cannot save a prepared generation
+  ---
+  duration_ms: 0.5447
+  type: 'test'
+  ...
+# Subtest: a locally unstable conflict snapshot cannot save a prepared generation
+ok 12 - a locally unstable conflict snapshot cannot save a prepared generation
+  ---
+  duration_ms: 0.9625
+  type: 'test'
+  ...
+# Subtest: a locally unstable saving snapshot cannot save a prepared generation
+ok 13 - a locally unstable saving snapshot cannot save a prepared generation
+  ---
+  duration_ms: 0.5262
+  type: 'test'
+  ...
+# Subtest: another module pending action blocks preparation and save
+ok 14 - another module pending action blocks preparation and save
+  ---
+  duration_ms: 0.4635
+  type: 'test'
+  ...
+# Subtest: changing target discards the frozen preview until another explicit prepare
+ok 15 - changing target discards the frozen preview until another explicit prepare
+  ---
+  duration_ms: 0.5031
+  type: 'test'
+  ...
+# Subtest: changing reason discards the frozen preview until another explicit prepare
+ok 16 - changing reason discards the frozen preview until another explicit prepare
+  ---
+  duration_ms: 0.4304
+  type: 'test'
+  ...
+# Subtest: unsaved selection reason and preparing activity protect against navigation and known form may clear
+ok 17 - unsaved selection reason and preparing activity protect against navigation and known form may clear
+  ---
+  duration_ms: 0.5004
+  type: 'test'
+  ...
+# Subtest: unknown binding creation only queries task drafts and requires another explicit save after finding binding
+ok 18 - unknown binding creation only queries task drafts and requires another explicit save after finding binding
+  ---
+  duration_ms: 1.0496
+  type: 'test'
+  ...
+# Subtest: missing or mismatched binding lookup keeps unknown operation and cannot clear or repeat create
+ok 19 - missing or mismatched binding lookup keeps unknown operation and cannot clear or repeat create
+  ---
+  duration_ms: 0.6314
+  type: 'test'
+  ...
+# Subtest: unknown generation POST keeps exact request and lookup alone resolves null then fixed receipt
+ok 20 - unknown generation POST keeps exact request and lookup alone resolves null then fixed receipt
+  ---
+  duration_ms: 0.9939
+  type: 'test'
+  ...
+# Subtest: unrelated request receipt remains unknown and never claims a saved generation
+ok 21 - unrelated request receipt remains unknown and never claims a saved generation
+  ---
+  duration_ms: 1.1814
+  type: 'test'
+  ...
+# Subtest: unrelated generation receipt remains unknown and never claims a saved generation
+ok 22 - unrelated generation receipt remains unknown and never claims a saved generation
+  ---
+  duration_ms: 1.9543
+  type: 'test'
+  ...
+# Subtest: unrelated mode or state receipt remains unknown and never claims a saved generation
+ok 23 - unrelated mode or state receipt remains unknown and never claims a saved generation
+  ---
+  duration_ms: 1.1931
+  type: 'test'
+  ...
+# Subtest: unrelated checkpoint or predecessor receipt remains unknown and never claims a saved generation
+ok 24 - unrelated checkpoint or predecessor receipt remains unknown and never claims a saved generation
+  ---
+  duration_ms: 1.172
+  type: 'test'
+  ...
+# Subtest: unrelated scope or digest receipt remains unknown and never claims a saved generation
+ok 25 - unrelated scope or digest receipt remains unknown and never claims a saved generation
+  ---
+  duration_ms: 1.2442
+  type: 'test'
+  ...
+# Subtest: 409 never retries a write and requires a fresh head and explicit preview
+ok 26 - 409 never retries a write and requires a fresh head and explicit preview
+  ---
+  duration_ms: 0.5992
+  type: 'test'
+  ...
+# Subtest: current permission denial 401 revokes pending display and never retries
+ok 27 - current permission denial 401 revokes pending display and never retries
+  ---
+  duration_ms: 0.5185
+  type: 'test'
+  ...
+# Subtest: current permission denial 403 revokes pending display and never retries
+ok 28 - current permission denial 403 revokes pending display and never retries
+  ---
+  duration_ms: 0.503
+  type: 'test'
+  ...
+# Subtest: double click cannot submit two generation writes while the first receipt is outstanding
+ok 29 - double click cannot submit two generation writes while the first receipt is outstanding
+  ---
+  duration_ms: 1.6272
+  type: 'test'
+  ...
+# Subtest: a late root head cannot paint or prepare after current conversation changes
+ok 30 - a late root head cannot paint or prepare after current conversation changes
+  ---
+  duration_ms: 0.4467
+  type: 'test'
+  ...
+# Subtest: disposed module ignores pending head and disables all write controls
+ok 31 - disposed module ignores pending head and disables all write controls
+  ---
+  duration_ms: 0.3639
+  type: 'test'
+  ...
+# Subtest: target change while current target is loading cannot produce a stale writable preview
+ok 32 - target change while current target is loading cannot produce a stale writable preview
+  ---
+  duration_ms: 0.4806
+  type: 'test'
+  ...
+# Subtest: root scope revision change invalidates a prepared head without silently preserving write authority
+ok 33 - root scope revision change invalidates a prepared head without silently preserving write authority
+  ---
+  duration_ms: 0.385
+  type: 'test'
+  ...
+# Subtest: a newer explicit read wins when the older head returns last
+ok 34 - a newer explicit read wins when the older head returns last
+  ---
+  duration_ms: 0.4378
+  type: 'test'
+  ...
+# Subtest: controller revocation ignores late target or binding responses and prevents the next write
+ok 35 - controller revocation ignores late target or binding responses and prevents the next write
+  ---
+  duration_ms: 0.8309
+  type: 'test'
+  ...
+# Subtest: refresh invalidates an already loading prepare so its late target cannot resurrect the preview
+not ok 36 - refresh invalidates an already loading prepare so its late target cannot resurrect the preview
+  ---
+  duration_ms: 1.1457
+  type: 'test'
+  location: 'D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_weixin_generations.mjs:289:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    false !== true
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_weixin_generations.mjs:293:10)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: an old prepare finishing cannot unlock controls while a newer head refresh is still pending
+not ok 37 - an old prepare finishing cannot unlock controls while a newer head refresh is still pending
+  ---
+  duration_ms: 1.2316
+  type: 'test'
+  location: 'D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_weixin_generations.mjs:297:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    false !== true
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_weixin_generations.mjs:302:10)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: a valid stored receipt is not relabelled unknown merely because the authorization refresh fails
+not ok 38 - a valid stored receipt is not relabelled unknown merely because the authorization refresh fails
+  ---
+  duration_ms: 0.8715
+  type: 'test'
+  location: 'D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_weixin_generations.mjs:306:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /已保存/. Input:
+
+    '保存结果尚未确认。请查找本次结果，不会自动重发或继续写入。'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: '保存结果尚未确认。请查找本次结果，不会自动重发或继续写入。'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_weixin_generations.mjs:310:10)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: scope growth during an unknown binding operation preserves lookup but invalidates later write authority
+not ok 39 - scope growth during an unknown binding operation preserves lookup but invalidates later write authority
+  ---
+  duration_ms: 0.9568
+  type: 'test'
+  location: 'D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_weixin_generations.mjs:314:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    false !== true
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_weixin_generations.mjs:319:10)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: a stable UI that becomes dirty during binding creation cannot proceed with the generation POST
+not ok 40 - a stable UI that becomes dirty during binding creation cannot proceed with the generation POST
+  ---
+  duration_ms: 2.2116
+  type: 'test'
+  location: 'D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_weixin_generations.mjs:322:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    2 !== 1
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_weixin_generations.mjs:327:10)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..40
+# tests 40
+# suites 0
+# pass 35
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 111.3715
