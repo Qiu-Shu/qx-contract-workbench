@@ -1,6 +1,6 @@
 # TODO — 群兴法律工作台协作清单
 
-2026-10-25 已补齐原生升级前历史语义校验：只读复用现有完整来源校验，在升级写入前和DDL写锁内按原版本核验，pending恢复同时核旧备份与current；真实v17→v18非法poll洗白反例已RED→GREEN。15模块427不同Python（含9新）/四开发门通过，两名独立审查0遗留及2独立快照/释放探针通过，[实际证据](docs/testing/upgrade-preflight/20261025/README.md)。schema18/旧guard保留，v19代际分发为下一片；真实微信/模型关闭，0.4.1未更新，全仓/Node/浏览器/安装版等NOT_RUN，WIN-PATH-02/原生AV开放。GitHub待实际同步回执。
+2026-10-25 已补齐原生升级前历史语义校验：只读复用现有完整来源校验，在升级写入前和DDL写锁内按原版本核验，pending恢复同时核旧备份与current；真实v17→v18非法poll洗白反例已RED→GREEN。15模块427不同Python（含9新）/四开发门通过，两名独立审查0遗留及2独立快照/释放探针通过，[实际证据](docs/testing/upgrade-preflight/20261025/README.md)。schema18/旧guard保留，v19代际分发为下一片；真实微信/模型关闭，0.4.1未更新，全仓/Node/浏览器/安装版等NOT_RUN，WIN-PATH-02/原生AV开放。产品`619c898`已正常推送，SHA/tree及5,538条目一致，[同步回执](docs/testing/upgrade-preflight/20261025/github-sync.md)。
 
 D2g5c产品`71802a6`已正常同步GitHub，远端SHA/tree及5,496条目一致；[同步回执](docs/testing/weixin-generation-ingress/20261025/github-sync.md)。
 

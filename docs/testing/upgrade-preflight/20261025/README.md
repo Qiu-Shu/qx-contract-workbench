@@ -43,3 +43,5 @@
 GitHub按后续实际同步回执核对；用户AGENTS保持未暂存。HumanLayer/Obsidian按本轮独立回执收尾，TencentDB沿正常Stop，不预报尚未发生的成功。
 
 [最终独立证据复算](final-evidence-review.md)确认427不同用例、272输入、失败边界与发布字节一致，0发现；后续Git回执不在该审查快照内。
+
+产品`619c898`已正常推送，远端SHA/tree及5,538条目一致，[实际GitHub回执](github-sync.md)；后续文档提交独立于上述产品快照。
