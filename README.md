@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+恢复诊断工具提交 `9c2acd2` 已正常同步GitHub，远端SHA/tree与5,117条目一致；[同步回执](docs/testing/restore-publication/20261025/github-sync.md)。
+
 2026-10-25 已补齐恢复发布诊断工具：显式开关采集阶段/自身句柄与发布结果，默认流程保持；根70不同Python、默认/诊断浏览器及四开发门通过，[实际证据](docs/testing/restore-publication/20261025/README.md)。本片未修产品恢复代码，WIN-PATH-02与原生崩溃继续开放；按代际运行、真实微信身份与E许可仍待。
 
 D2g1 产品 `40be816` 已同步 GitHub，远端SHA/tree及5,082条目一致；[同步回执](docs/testing/weixin-generation-service/20261025/github-sync.md)。

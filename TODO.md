@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+恢复诊断工具提交 `9c2acd2` 已正常同步GitHub，远端SHA/tree与5,117条目一致；[同步回执](docs/testing/restore-publication/20261025/github-sync.md)。
+
 最新接续（2026-10-25，恢复诊断）：开发观察器与默认scanner实际校准完成，根70不同Python、默认/诊断浏览器和四门通过，[证据](docs/testing/restore-publication/20261025/README.md)。原WinError5未自然复现，未猜测修补，WIN-PATH-02/原生崩溃保持OPEN；下一步用显式诊断捕获实际失败，继续D2g按代际接收/分发与明确HTTP/桌面操作，真实微信/模型保持关闭。
 
 D2g1 产品 `40be816` 已同步 GitHub，远端SHA/tree及5,082条目一致；[同步回执](docs/testing/weixin-generation-service/20261025/github-sync.md)。

@@ -1,5 +1,7 @@
 # 任务实际状态
 
+恢复诊断工具提交 `9c2acd2` 已正常同步GitHub，远端SHA/tree与5,117条目一致；[同步回执](testing/restore-publication/20261025/github-sync.md)。
+
 2026-10-25 恢复发布诊断切片：仅开发脚本新增显式阶段/本进程句柄观察和25永久测试；root共4模块70不同Python、默认及诊断浏览器、四开发门通过，[实测](testing/restore-publication/20261025/README.md)。工具parent过滤与non-file handle误报经实际RED→GREEN修正；原WIN-PATH-02本轮未自然复现、无产品修补，仍OPEN，独立原生崩溃和0.4.1安装版状态不变。D2g按代际运行与HTTP/桌面接线、可信微信身份/资格及E有限期授权仍待。
 
 D2g1 产品 `40be816` 已同步 GitHub，远端SHA/tree及5,082条目一致；[同步回执](testing/weixin-generation-service/20261025/github-sync.md)。
