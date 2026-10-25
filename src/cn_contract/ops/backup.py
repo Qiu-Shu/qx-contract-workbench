@@ -171,6 +171,7 @@ def _file_references(db, *, allow_assistant=True):
     from ..weixin_inbox.dispatch_integrity import validate_dispatch_records
     from ..weixin_inbox.grant_integrity import validate_peer_scope_grants
     from ..weixin_inbox.generation_integrity import validate_peer_generations
+    from ..weixin_inbox.provenance_integrity import validate_descriptor_generations
     validate_model_records(db, allowed=allow_assistant)
     validate_judge_records(db, allowed=allow_assistant)
     validate_library_records(db, allowed=allow_assistant)
@@ -180,6 +181,7 @@ def _file_references(db, *, allow_assistant=True):
     validate_dispatch_records(db, allow_dispatch=allow_assistant)
     validate_peer_scope_grants(db, allow_grants=allow_assistant)
     validate_peer_generations(db, allow_generations=allow_assistant)
+    validate_descriptor_generations(db, allow_provenance=allow_assistant)
     items = file_references(db, allowed=allow_assistant)
     for row in db.scalars(select(DocumentRow)):
         value = strict_json(row.payload.encode())

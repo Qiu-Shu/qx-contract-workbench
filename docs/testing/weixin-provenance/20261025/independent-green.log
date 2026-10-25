@@ -1,0 +1,192 @@
+........................................................................ [ 72%]
+.....................FFFFFF                                              [100%]
+================================== FAILURES ===================================
+_ test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity _
+
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-green-temp/test_native_upgrade_saves_veri0')
+
+    def test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity(tmp_path):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:217:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:204: in native_predecessor
+    local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction-schema-password',data_parent=tmp_path)
+src\cn_contract\web\local_server.py:119: in initialize_workspace
+    _credentials(username, password)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+username = 'synthetic-schema-lawyer', password = 'fiction-schema-password'
+
+    def _credentials(username, password):
+        if (type(username) is not str or not 1 <= len(username) <= 128 or username != username.strip()
+                or any(category(c) in ('Cc', 'Cf') for c in username)
+                or type(password) is not str or not 6 <= len(password) <= 12):
+>           raise ValueError('LOCAL_CREDENTIALS_INVALID')
+E           ValueError: LOCAL_CREDENTIALS_INVALID
+
+src\cn_contract\web\local_server.py:46: ValueError
+_ test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[None] _
+
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-green-temp/test_native_committed_ddl_mark0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C747622D20>
+damage = None
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path);write_marker=workspace_upgrade._write_marker
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:235:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:204: in native_predecessor
+    local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction-schema-password',data_parent=tmp_path)
+src\cn_contract\web\local_server.py:119: in initialize_workspace
+    _credentials(username, password)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+username = 'synthetic-schema-lawyer', password = 'fiction-schema-password'
+
+    def _credentials(username, password):
+        if (type(username) is not str or not 1 <= len(username) <= 128 or username != username.strip()
+                or any(category(c) in ('Cc', 'Cf') for c in username)
+                or type(password) is not str or not 6 <= len(password) <= 12):
+>           raise ValueError('LOCAL_CREDENTIALS_INVALID')
+E           ValueError: LOCAL_CREDENTIALS_INVALID
+
+src\cn_contract\web\local_server.py:46: ValueError
+_ test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[backup] _
+
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-green-temp/test_native_committed_ddl_mark1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C747622D80>
+damage = 'backup'
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path);write_marker=workspace_upgrade._write_marker
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:235:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:204: in native_predecessor
+    local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction-schema-password',data_parent=tmp_path)
+src\cn_contract\web\local_server.py:119: in initialize_workspace
+    _credentials(username, password)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+username = 'synthetic-schema-lawyer', password = 'fiction-schema-password'
+
+    def _credentials(username, password):
+        if (type(username) is not str or not 1 <= len(username) <= 128 or username != username.strip()
+                or any(category(c) in ('Cc', 'Cf') for c in username)
+                or type(password) is not str or not 6 <= len(password) <= 12):
+>           raise ValueError('LOCAL_CREDENTIALS_INVALID')
+E           ValueError: LOCAL_CREDENTIALS_INVALID
+
+src\cn_contract\web\local_server.py:46: ValueError
+_ test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[receipt] _
+
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-green-temp/test_native_committed_ddl_mark2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C7476230B0>
+damage = 'receipt'
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path);write_marker=workspace_upgrade._write_marker
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:235:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:204: in native_predecessor
+    local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction-schema-password',data_parent=tmp_path)
+src\cn_contract\web\local_server.py:119: in initialize_workspace
+    _credentials(username, password)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+username = 'synthetic-schema-lawyer', password = 'fiction-schema-password'
+
+    def _credentials(username, password):
+        if (type(username) is not str or not 1 <= len(username) <= 128 or username != username.strip()
+                or any(category(c) in ('Cc', 'Cf') for c in username)
+                or type(password) is not str or not 6 <= len(password) <= 12):
+>           raise ValueError('LOCAL_CREDENTIALS_INVALID')
+E           ValueError: LOCAL_CREDENTIALS_INVALID
+
+src\cn_contract\web\local_server.py:46: ValueError
+_ test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[trigger] _
+
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-green-temp/test_native_committed_ddl_mark3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C747621E50>
+damage = 'trigger'
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path);write_marker=workspace_upgrade._write_marker
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:235:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:204: in native_predecessor
+    local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction-schema-password',data_parent=tmp_path)
+src\cn_contract\web\local_server.py:119: in initialize_workspace
+    _credentials(username, password)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+username = 'synthetic-schema-lawyer', password = 'fiction-schema-password'
+
+    def _credentials(username, password):
+        if (type(username) is not str or not 1 <= len(username) <= 128 or username != username.strip()
+                or any(category(c) in ('Cc', 'Cf') for c in username)
+                or type(password) is not str or not 6 <= len(password) <= 12):
+>           raise ValueError('LOCAL_CREDENTIALS_INVALID')
+E           ValueError: LOCAL_CREDENTIALS_INVALID
+
+src\cn_contract\web\local_server.py:46: ValueError
+_______ test_native_failed_ddl_preserves_predecessor_schema_and_marker ________
+
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-green-temp/test_native_failed_ddl_preserv0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C747621EE0>
+
+    def test_native_failed_ddl_preserves_predecessor_schema_and_marker(tmp_path,monkeypatch):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path);original=workspace_upgrade.statements_for
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:262:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:204: in native_predecessor
+    local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction-schema-password',data_parent=tmp_path)
+src\cn_contract\web\local_server.py:119: in initialize_workspace
+    _credentials(username, password)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+username = 'synthetic-schema-lawyer', password = 'fiction-schema-password'
+
+    def _credentials(username, password):
+        if (type(username) is not str or not 1 <= len(username) <= 128 or username != username.strip()
+                or any(category(c) in ('Cc', 'Cf') for c in username)
+                or type(password) is not str or not 6 <= len(password) <= 12):
+>           raise ValueError('LOCAL_CREDENTIALS_INVALID')
+E           ValueError: LOCAL_CREDENTIALS_INVALID
+
+src\cn_contract\web\local_server.py:46: ValueError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[None]
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[backup]
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[receipt]
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[trigger]
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_failed_ddl_preserves_predecessor_schema_and_marker
+6 failed, 93 passed in 83.93s (0:01:23)

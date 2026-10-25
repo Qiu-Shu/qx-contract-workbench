@@ -1,0 +1,267 @@
+{
+  "verified_at_utc": "2026-10-25T09:41:06.653667+00:00",
+  "execution_owner": "/root",
+  "review_mode": "Independent read-only verification of completed raw JSON/XML/TAP/gate logs, no test rerun.",
+  "python": {
+    "tests": 1094,
+    "modules": 33,
+    "passed": 1093,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "new": 142,
+    "new_passed": 142,
+    "duplicate_case_keys": [],
+    "groups": [
+      {
+        "label": "final-schema",
+        "tests": 208,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "seconds": 205.203,
+        "source_before_equals_after": true,
+        "current_files_match": true,
+        "source_count": 32,
+        "failures_detail": []
+      },
+      {
+        "label": "final-provenance",
+        "tests": 41,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "seconds": 34.875,
+        "source_before_equals_after": true,
+        "current_files_match": true,
+        "source_count": 34,
+        "failures_detail": []
+      },
+      {
+        "label": "final-generations",
+        "tests": 83,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "seconds": 51.218,
+        "source_before_equals_after": true,
+        "current_files_match": true,
+        "source_count": 32,
+        "failures_detail": []
+      },
+      {
+        "label": "final-inbox",
+        "tests": 226,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "seconds": 110.641,
+        "source_before_equals_after": true,
+        "current_files_match": true,
+        "source_count": 34,
+        "failures_detail": []
+      },
+      {
+        "label": "final-services",
+        "tests": 101,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "seconds": 72.282,
+        "source_before_equals_after": true,
+        "current_files_match": true,
+        "source_count": 34,
+        "failures_detail": []
+      },
+      {
+        "label": "final-head-preview",
+        "tests": 126,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "seconds": 71.61,
+        "source_before_equals_after": true,
+        "current_files_match": true,
+        "source_count": 38,
+        "failures_detail": []
+      },
+      {
+        "label": "final-attachments-model",
+        "tests": 133,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 1,
+        "seconds": 128.547,
+        "source_before_equals_after": true,
+        "current_files_match": true,
+        "source_count": 33,
+        "failures_detail": [
+          {
+            "classname": "tests.integration.test_assistant_attachment_backup",
+            "name": "test_long_parent_paths_create_restore_and_rebackup[long]",
+            "message": "sqlite3.OperationalError: unable to open database file"
+          }
+        ]
+      },
+      {
+        "label": "final-judge-library",
+        "tests": 78,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "seconds": 104.968,
+        "source_before_equals_after": true,
+        "current_files_match": true,
+        "source_count": 33,
+        "failures_detail": []
+      },
+      {
+        "label": "final-task",
+        "tests": 98,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "seconds": 120.375,
+        "source_before_equals_after": true,
+        "current_files_match": true,
+        "source_count": 33,
+        "failures_detail": []
+      }
+    ],
+    "count_note": "Only nine final JUnit groups; prior RED/reruns/reviewer105/baseline reproduction are excluded from1094."
+  },
+  "source_hash_union_count": 63,
+  "all_final_source_hashes_match_current": true,
+  "node": {
+    "tests": 233,
+    "passed": 233,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0,
+    "exit_code": 0,
+    "scripts": 15,
+    "unique_invocation_scripts": true,
+    "unique_top_level_case_names": true,
+    "counting_note": "233 unique TAP case names match runner summary. Numeric ok labels alone are not keys because Node emits three plain-assert script file cases with file ordinal labels.",
+    "source_before_equals_after": true,
+    "current_files_match": true,
+    "reviewer_reran": false
+  },
+  "gates": [
+    {
+      "label": "schema",
+      "exit_code": 0,
+      "source_before_equals_after": true,
+      "current_files_match": true,
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "cn_contract.cli",
+        "schema",
+        "--check"
+      ],
+      "result": {
+        "ok": true,
+        "schema_path": "D:\\Documents\\ChatGPT\\律所项目\\schemas\\review-report.v2.schema.json",
+        "operation": "check"
+      }
+    },
+    {
+      "label": "defaults",
+      "exit_code": 0,
+      "source_before_equals_after": true,
+      "current_files_match": true,
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_defaults.py"
+      ],
+      "result": "0e4acba46c67b731cd9662d7b118217ddc55047ab69315961c7f78dfcfa9c887"
+    },
+    {
+      "label": "sources",
+      "exit_code": 0,
+      "source_before_equals_after": true,
+      "current_files_match": true,
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "result": {
+        "ok": true,
+        "errors": [],
+        "warnings": [
+          "NOT_PRODUCTION_APPROVED:G01",
+          "NOT_PRODUCTION_APPROVED:G02",
+          "NOT_PRODUCTION_APPROVED:G03",
+          "NOT_PRODUCTION_APPROVED:G04",
+          "NOT_PRODUCTION_APPROVED:G05",
+          "NOT_PRODUCTION_APPROVED:G06",
+          "NOT_PRODUCTION_APPROVED:G07",
+          "NOT_PRODUCTION_APPROVED:G08",
+          "NOT_PRODUCTION_APPROVED:G09",
+          "NOT_PRODUCTION_APPROVED:G10",
+          "NOT_PRODUCTION_APPROVED:G11",
+          "NOT_PRODUCTION_APPROVED:G12",
+          "NOT_PRODUCTION_APPROVED:G13"
+        ],
+        "checked_sources": 13
+      }
+    },
+    {
+      "label": "dependencies",
+      "exit_code": 0,
+      "source_before_equals_after": true,
+      "current_files_match": true,
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "result": {
+        "ok": true,
+        "mode": "development",
+        "checked_packages": 55,
+        "checked_build_packages": 1,
+        "errors": [],
+        "native_build_verified": false,
+        "network_calls": 0
+      }
+    }
+  ],
+  "baseline_failure_note": "The single current long-path second-backup failure remains OPEN; matching single baseline failure is attribution only and is not added as a second current failure.",
+  "overall_regression_status": "1093_PASS_1_OPEN_BASELINE_FAILURE",
+  "not_run": [
+    "all repository test suite",
+    "browser",
+    "installed native application",
+    "real Weixin accounts or transmission",
+    "real model and paid calls",
+    "WIN-PATH-02 or existing native crash reproduction"
+  ]
+}

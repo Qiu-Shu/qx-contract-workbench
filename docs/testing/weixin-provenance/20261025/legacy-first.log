@@ -1,0 +1,340 @@
+................................FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF...F... [ 37%]
+..............................EEEEEE.................................... [ 74%]
+..........................F......................                        [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_native_upgrade_records_verified_backup_and_preserves_workspace_identity _
+tests\integration\test_weixin_generation_schema.py:208: in native_grant_workspace
+    assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E   assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E
+E     At index 103 diff: ('index', 'sqlite_autoindex_weixin_descriptor_generations_1', 'weixin_descriptor_generations', None) != ('index', 'sqlite_autoindex_weixin_dispatch_receipts_1', 'weixin_dispatch_receipts', None)
+E     Left contains 4 more items, first extra item: ('trigger', 'immutable_weixin_poll_receipts_delete', 'weixin_poll_receipts', "CREATE TRIGGER immutable_weixin_poll_receipts_delete BEFORE DELETE ON weixin_poll_receipts BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E     Use -v to get more diff
+_ ERROR at setup of test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[None] _
+tests\integration\test_weixin_generation_schema.py:208: in native_grant_workspace
+    assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E   assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E
+E     At index 103 diff: ('index', 'sqlite_autoindex_weixin_descriptor_generations_1', 'weixin_descriptor_generations', None) != ('index', 'sqlite_autoindex_weixin_dispatch_receipts_1', 'weixin_dispatch_receipts', None)
+E     Left contains 4 more items, first extra item: ('trigger', 'immutable_weixin_poll_receipts_delete', 'weixin_poll_receipts', "CREATE TRIGGER immutable_weixin_poll_receipts_delete BEFORE DELETE ON weixin_poll_receipts BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E     Use -v to get more diff
+_ ERROR at setup of test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[backup] _
+tests\integration\test_weixin_generation_schema.py:208: in native_grant_workspace
+    assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E   assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E
+E     At index 103 diff: ('index', 'sqlite_autoindex_weixin_descriptor_generations_1', 'weixin_descriptor_generations', None) != ('index', 'sqlite_autoindex_weixin_dispatch_receipts_1', 'weixin_dispatch_receipts', None)
+E     Left contains 4 more items, first extra item: ('trigger', 'immutable_weixin_poll_receipts_delete', 'weixin_poll_receipts', "CREATE TRIGGER immutable_weixin_poll_receipts_delete BEFORE DELETE ON weixin_poll_receipts BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E     Use -v to get more diff
+_ ERROR at setup of test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[receipt] _
+tests\integration\test_weixin_generation_schema.py:208: in native_grant_workspace
+    assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E   assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E
+E     At index 103 diff: ('index', 'sqlite_autoindex_weixin_descriptor_generations_1', 'weixin_descriptor_generations', None) != ('index', 'sqlite_autoindex_weixin_dispatch_receipts_1', 'weixin_dispatch_receipts', None)
+E     Left contains 4 more items, first extra item: ('trigger', 'immutable_weixin_poll_receipts_delete', 'weixin_poll_receipts', "CREATE TRIGGER immutable_weixin_poll_receipts_delete BEFORE DELETE ON weixin_poll_receipts BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E     Use -v to get more diff
+_ ERROR at setup of test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[trigger] _
+tests\integration\test_weixin_generation_schema.py:208: in native_grant_workspace
+    assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E   assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E
+E     At index 103 diff: ('index', 'sqlite_autoindex_weixin_descriptor_generations_1', 'weixin_descriptor_generations', None) != ('index', 'sqlite_autoindex_weixin_dispatch_receipts_1', 'weixin_dispatch_receipts', None)
+E     Left contains 4 more items, first extra item: ('trigger', 'immutable_weixin_poll_receipts_delete', 'weixin_poll_receipts', "CREATE TRIGGER immutable_weixin_poll_receipts_delete BEFORE DELETE ON weixin_poll_receipts BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E     Use -v to get more diff
+_ ERROR at setup of test_native_failed_generation_ddl_preserves_prior_schema_and_marker _
+tests\integration\test_weixin_generation_schema.py:208: in native_grant_workspace
+    assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E   assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E
+E     At index 103 diff: ('index', 'sqlite_autoindex_weixin_descriptor_generations_1', 'weixin_descriptor_generations', None) != ('index', 'sqlite_autoindex_weixin_dispatch_receipts_1', 'weixin_dispatch_receipts', None)
+E     Left contains 4 more items, first extra item: ('trigger', 'immutable_weixin_poll_receipts_delete', 'weixin_poll_receipts', "CREATE TRIGGER immutable_weixin_poll_receipts_delete BEFORE DELETE ON weixin_poll_receipts BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E     Use -v to get more diff
+================================== FAILURES ===================================
+______ test_generations_append_one_family_to_the_unchanged_grant_schema _______
+tests\integration\test_weixin_generation_schema.py:36: in test_generations_append_one_family_to_the_unchanged_grant_schema
+    assert storage_schema.VERSIONS == PREVIOUS + (TARGET,)
+E   AssertionError: assert ('pre-intake'...udge-v1', ...) == ('pre-intake'...udge-v1', ...)
+E
+E     Left contains one more item: 'weixin-target-provenance-v1'
+E     Use -v to get more diff
+____ test_every_predecessor_upgrades_preserving_old_rows[False-pre-intake] ____
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+____ test_every_predecessor_upgrades_preserving_old_rows[False-intake-v1] _____
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+___ test_every_predecessor_upgrades_preserving_old_rows[False-assistant-v1] ___
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-assistant-attachments-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-assistant-model-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-assistant-judge-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-assistant-library-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-assistant-context-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-assistant-rounds-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-assistant-rounds-v2] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-assistant-profiles-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-assistant-profile-model-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+__ test_every_predecessor_upgrades_preserving_old_rows[False-task-drafts-v1] __
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-weixin-inbox-v1] __
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-weixin-dispatch-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[False-weixin-reauthorization-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+____ test_every_predecessor_upgrades_preserving_old_rows[True-pre-intake] _____
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_____ test_every_predecessor_upgrades_preserving_old_rows[True-intake-v1] _____
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+___ test_every_predecessor_upgrades_preserving_old_rows[True-assistant-v1] ____
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-assistant-attachments-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-assistant-model-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-assistant-judge-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-assistant-library-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-assistant-context-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-assistant-rounds-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-assistant-rounds-v2] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-assistant-profiles-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-assistant-profile-model-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+__ test_every_predecessor_upgrades_preserving_old_rows[True-task-drafts-v1] ___
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+__ test_every_predecessor_upgrades_preserving_old_rows[True-weixin-inbox-v1] __
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-weixin-dispatch-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+_ test_every_predecessor_upgrades_preserving_old_rows[True-weixin-reauthorization-v1] _
+tests\integration\test_weixin_generation_schema.py:50: in test_every_predecessor_upgrades_preserving_old_rows
+    assert schema_migrations.upgrade_database(db) == TARGET
+E   AssertionError: assert 'weixin-target-provenance-v1' == 'weixin-generations-v1'
+E
+E     - weixin-generations-v1
+E     + weixin-target-provenance-v1
+____ test_fresh_reinitialized_and_upgraded_generation_structures_are_equal ____
+tests\integration\test_weixin_generation_schema.py:91: in test_fresh_reinitialized_and_upgraded_generation_structures_are_equal
+    assert actual == storage_schema.schema_rows(TARGET)
+E   assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E
+E     At index 102 diff: ('index', 'sqlite_autoindex_weixin_descriptor_generations_1', 'weixin_descriptor_generations', None) != ('index', 'sqlite_autoindex_weixin_dispatch_receipts_1', 'weixin_dispatch_receipts', None)
+E     Left contains 4 more items, first extra item: ('trigger', 'immutable_weixin_poll_receipts_delete', 'weixin_poll_receipts', "CREATE TRIGGER immutable_weixin_poll_receipts_delete BEFORE DELETE ON weixin_poll_receipts BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E     Use -v to get more diff
+_ test_recomputed_hash_cannot_hide_invalid_target_chain_or_activity_boundary[later_poll] _
+tests\integration\test_weixin_generation_integrity.py:209: in test_recomputed_hash_cannot_hide_invalid_target_chain_or_activity_boundary
+    with pytest.raises(ValueError, match='WEIXIN_GENERATION_INTEGRITY'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_schema.py::test_generations_append_one_family_to_the_unchanged_grant_schema
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-pre-intake]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-intake-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-assistant-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-assistant-attachments-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-assistant-model-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-assistant-judge-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-assistant-library-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-assistant-context-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-assistant-rounds-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-assistant-rounds-v2]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-assistant-profiles-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-assistant-profile-model-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-task-drafts-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-weixin-inbox-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-weixin-dispatch-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[False-weixin-reauthorization-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-pre-intake]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-intake-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-assistant-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-assistant-attachments-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-assistant-model-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-assistant-judge-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-assistant-library-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-assistant-context-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-assistant-rounds-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-assistant-rounds-v2]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-assistant-profiles-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-assistant-profile-model-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-task-drafts-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-weixin-inbox-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-weixin-dispatch-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_every_predecessor_upgrades_preserving_old_rows[True-weixin-reauthorization-v1]
+FAILED tests/integration/test_weixin_generation_schema.py::test_fresh_reinitialized_and_upgraded_generation_structures_are_equal
+FAILED tests/integration/test_weixin_generation_integrity.py::test_recomputed_hash_cannot_hide_invalid_target_chain_or_activity_boundary[later_poll]
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_upgrade_records_verified_backup_and_preserves_workspace_identity
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[None]
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[backup]
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[receipt]
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[trigger]
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_failed_generation_ddl_preserves_prior_schema_and_marker
+35 failed, 152 passed, 6 errors in 143.80s (0:02:23)

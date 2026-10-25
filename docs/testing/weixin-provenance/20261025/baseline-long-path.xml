@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="3.599" timestamp="2026-10-25T17:36:57.075674+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_assistant_attachment_backup" name="test_long_parent_paths_create_restore_and_rebackup[long]" time="3.006"><failure message="sqlite3.OperationalError: unable to open database file">tests\integration\test_assistant_attachment_backup.py:142: in test_long_parent_paths_create_restore_and_rebackup
+    workspace_backup.create_workspace_backup(restored_root, again, PASSPHRASE, data_parent=tmp_path)
+.local\weixin-provenance-20261025\baseline-9c04b4d\src\cn_contract\ops\workspace_backup.py:277: in create_workspace_backup
+    _validate_database(snapshot)
+.local\weixin-provenance-20261025\baseline-run.py:45: in validate_observer
+    result = original(root)
+             ^^^^^^^^^^^^^^
+.local\weixin-provenance-20261025\baseline-9c04b4d\src\cn_contract\ops\workspace_backup.py:119: in _validate_database
+    with closing(sqlite3.connect((root/'workbench.db').as_uri()+'?mode=ro', uri=True)) as connection:
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: unable to open database file</failure></testcase></testsuite></testsuites>

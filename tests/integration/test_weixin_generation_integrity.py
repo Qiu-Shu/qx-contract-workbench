@@ -28,7 +28,7 @@ def validator():
     return importlib.import_module('cn_contract.weixin_inbox.generation_integrity').validate_peer_generations
 
 
-@pytest.mark.parametrize('version', [value for value in VERSIONS if value != 'weixin-generations-v1'])
+@pytest.mark.parametrize('version', [value for value in VERSIONS if value not in ('weixin-generations-v1', 'weixin-target-provenance-v1')])
 @pytest.mark.parametrize('native', [False, True])
 def test_known_pre_generation_schema_is_still_readable(version, native):
     with closing(sqlite3.connect(':memory:')) as connection:
@@ -191,6 +191,8 @@ def test_recomputed_hash_cannot_hide_invalid_target_chain_or_activity_boundary(g
             corrupt(db, 'UPDATE '+table+' SET revoked_at=:at,revoked_by=:actor,revoke_reason=:reason WHERE id=:id',
                 {'id':str(identifier), 'at':first['created_at'], 'actor':first['actor_id'], 'reason':'独立虚构代际前撤权'})
         elif damage == 'later_poll':
+            # Frozen v17 forbids all later polls; v18 validates their complete prefixes.
+            db.execute(text('DROP TABLE weixin_descriptor_generations'))
             poll = sample['polls'][-1]
             at = d.WeixinPeerGeneration(**first).created_at+timedelta(seconds=5)
             later = poll_receipt(mapping.account_id, 3, poll.next_cursor, poll.next_cursor, (), at)

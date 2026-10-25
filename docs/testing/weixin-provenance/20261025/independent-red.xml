@@ -1,0 +1,1105 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="63" skipped="0" tests="99" time="49.708" timestamp="2026-10-25T16:59:45.252428+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[pre-intake]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[pre-intake-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[intake-v1]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[intake-v1-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-v1]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-v1-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-attachments-v1]" time="0.001" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-attachments-v1-native]" time="0.001" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-model-v1]" time="0.001" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-model-v1-native]" time="0.001" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-judge-v1]" time="0.001" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-judge-v1-native]" time="0.001" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-library-v1]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-library-v1-native]" time="0.001" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-context-v1]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-context-v1-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-rounds-v1]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-rounds-v1-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-rounds-v2]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-rounds-v2-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-profiles-v1]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-profiles-v1-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-profile-model-v1]" time="0.003" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[assistant-profile-model-v1-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[task-drafts-v1]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[task-drafts-v1-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[weixin-inbox-v1]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[weixin-inbox-v1-native]" time="0.003" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[weixin-dispatch-v1]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[weixin-dispatch-v1-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[weixin-reauthorization-v1]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[weixin-reauthorization-v1-native]" time="0.002" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[weixin-generations-v1]" time="0.003" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_all_seventeen_predecessors_keep_independently_frozen_structure[weixin-generations-v1-native]" time="0.003" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_fixture_preserves_original_thirty_two_and_adds_only_generation_predecessor" time="0.001" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_provenance_is_one_additive_family_without_rewriting_generation_schema" time="0.001"><failure message="AssertionError: assert ('pre-intake'...udge-v1', ...) == ('pre-intake'...udge-v1', ...)&#10;  &#10;  Right contains one more item: 'weixin-target-provenance-v1'&#10;  Use -v to get more diff">def test_provenance_is_one_additive_family_without_rewriting_generation_schema():
+&gt;       assert storage_schema.VERSIONS[:len(PREVIOUS)+1]==PREVIOUS+(TARGET,)
+E       AssertionError: assert ('pre-intake'...udge-v1', ...) == ('pre-intake'...udge-v1', ...)
+E
+E         Right contains one more item: 'weixin-target-provenance-v1'
+E         Use -v to get more diff
+
+tests\integration\test_weixin_provenance_schema.py:61: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-pre-intake]" time="0.821"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade0')
+version = 'pre-intake', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-intake-v1]" time="0.898"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade1')
+version = 'intake-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-assistant-v1]" time="0.969"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade2')
+version = 'assistant-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-assistant-attachments-v1]" time="1.014"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade3')
+version = 'assistant-attachments-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-assistant-model-v1]" time="1.108"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade4')
+version = 'assistant-model-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-assistant-judge-v1]" time="1.291"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade5')
+version = 'assistant-judge-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-assistant-library-v1]" time="1.260"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade6')
+version = 'assistant-library-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-assistant-context-v1]" time="1.252"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade7')
+version = 'assistant-context-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-assistant-rounds-v1]" time="1.240"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade8')
+version = 'assistant-rounds-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-assistant-rounds-v2]" time="1.217"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade9')
+version = 'assistant-rounds-v2', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-assistant-profiles-v1]" time="1.312"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade10')
+version = 'assistant-profiles-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-assistant-profile-model-v1]" time="1.290"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade11')
+version = 'assistant-profile-model-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-task-drafts-v1]" time="1.454"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade12')
+version = 'task-drafts-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-weixin-inbox-v1]" time="1.605"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade13')
+version = 'weixin-inbox-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-weixin-dispatch-v1]" time="1.752"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade14')
+version = 'weixin-dispatch-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-weixin-reauthorization-v1]" time="1.641"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade15')
+version = 'weixin-reauthorization-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[False-weixin-generations-v1]" time="1.584"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade16')
+version = 'weixin-generations-v1', native = False
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-pre-intake]" time="0.821"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade17')
+version = 'pre-intake', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-intake-v1]" time="0.988"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade18')
+version = 'intake-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-assistant-v1]" time="0.979"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade19')
+version = 'assistant-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-assistant-attachments-v1]" time="1.029"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade20')
+version = 'assistant-attachments-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-assistant-model-v1]" time="1.100"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade21')
+version = 'assistant-model-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-assistant-judge-v1]" time="1.203"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade22')
+version = 'assistant-judge-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-assistant-library-v1]" time="1.316"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade23')
+version = 'assistant-library-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-assistant-context-v1]" time="1.999"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade24')
+version = 'assistant-context-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-assistant-rounds-v1]" time="3.232"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade25')
+version = 'assistant-rounds-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-assistant-rounds-v2]" time="1.262"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade26')
+version = 'assistant-rounds-v2', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-assistant-profiles-v1]" time="1.338"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade27')
+version = 'assistant-profiles-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-assistant-profile-model-v1]" time="1.431"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade28')
+version = 'assistant-profile-model-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-task-drafts-v1]" time="1.487"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade29')
+version = 'task-drafts-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-weixin-inbox-v1]" time="1.578"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade30')
+version = 'weixin-inbox-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-weixin-dispatch-v1]" time="1.683"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade31')
+version = 'weixin-dispatch-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-weixin-reauthorization-v1]" time="1.699"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade32')
+version = 'weixin-reauthorization-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows[True-weixin-generations-v1]" time="1.622"><failure message="AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'&#10;  &#10;  - weixin-target-provenance-v1&#10;  + weixin-generations-v1">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_every_predecessor_upgrade33')
+version = 'weixin-generations-v1', native = True
+
+    @pytest.mark.parametrize('version',PREVIOUS)
+    @pytest.mark.parametrize('native',[False,True])
+    def test_every_predecessor_upgrades_and_repeats_without_losing_prior_user_rows(tmp_path,version,native):
+        with closing(old_db(tmp_path/'old.db',version,native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','old-schema-user','unused','[]',0)")
+            connection.commit()
+&gt;           assert schema_migrations.upgrade_database(connection)==TARGET
+E           AssertionError: assert 'weixin-generations-v1' == 'weixin-target-provenance-v1'
+E
+E             - weixin-target-provenance-v1
+E             + weixin-generations-v1
+
+tests\integration\test_weixin_provenance_schema.py:73: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_provenance_ddl_failure_rolls_back_added_objects_and_preserves_old_data[False]" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_provenance_ddl_failure_ro0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000023B4C136510&gt;
+native = False
+
+    @pytest.mark.parametrize('native',[False,True])
+    def test_provenance_ddl_failure_rolls_back_added_objects_and_preserves_old_data(tmp_path,monkeypatch,native):
+&gt;       schema()
+
+tests\integration\test_weixin_provenance_schema.py:83:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_provenance_ddl_failure_rolls_back_added_objects_and_preserves_old_data[True]" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_provenance_ddl_failure_ro1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000023B4C1250A0&gt;
+native = True
+
+    @pytest.mark.parametrize('native',[False,True])
+    def test_provenance_ddl_failure_rolls_back_added_objects_and_preserves_old_data(tmp_path,monkeypatch,native):
+&gt;       schema()
+
+tests\integration\test_weixin_provenance_schema.py:83:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_unknown_schema_is_not_repaired_or_upgraded" time="1.660" /><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_fresh_repeated_initialization_matches_upgraded_exact_structure" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_fresh_repeated_initializa0')
+
+    def test_fresh_repeated_initialization_matches_upgraded_exact_structure(tmp_path):
+&gt;       schema();database=Database('sqlite:///'+str(tmp_path/'fresh.db'),tmp_path/'protected',load_settings())
+        ^^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:106:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_partial_provenance_schema_cannot_be_silently_repaired[trigger]" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_partial_provenance_schema0')
+damage = 'trigger'
+
+    @pytest.mark.parametrize('damage',['trigger','column','index'])
+    def test_partial_provenance_schema_cannot_be_silently_repaired(tmp_path,damage):
+&gt;       module=schema();database=Database('sqlite:///'+str(tmp_path/'partial.db'),tmp_path/'protected',load_settings())
+               ^^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:120:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_partial_provenance_schema_cannot_be_silently_repaired[column]" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_partial_provenance_schema1')
+damage = 'column'
+
+    @pytest.mark.parametrize('damage',['trigger','column','index'])
+    def test_partial_provenance_schema_cannot_be_silently_repaired(tmp_path,damage):
+&gt;       module=schema();database=Database('sqlite:///'+str(tmp_path/'partial.db'),tmp_path/'protected',load_settings())
+               ^^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:120:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_partial_provenance_schema_cannot_be_silently_repaired[index]" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_partial_provenance_schema2')
+damage = 'index'
+
+    @pytest.mark.parametrize('damage',['trigger','column','index'])
+    def test_partial_provenance_schema_cannot_be_silently_repaired(tmp_path,damage):
+&gt;       module=schema();database=Database('sqlite:///'+str(tmp_path/'partial.db'),tmp_path/'protected',load_settings())
+               ^^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:120:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_seven_fields_exact_primary_key_and_three_real_foreign_keys" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">def test_seven_fields_exact_primary_key_and_three_real_foreign_keys():
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:152:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_provenance_cannot_be_changed_or_deleted[UPDATE]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">operation = 'UPDATE'
+
+    @pytest.mark.parametrize('operation',['UPDATE','DELETE'])
+    def test_provenance_cannot_be_changed_or_deleted(operation):
+&gt;       with closing(table()) as connection,pytest.raises(sqlite3.IntegrityError,match='IMMUTABLE_RECORD'):
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:164:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_provenance_cannot_be_changed_or_deleted[DELETE]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">operation = 'DELETE'
+
+    @pytest.mark.parametrize('operation',['UPDATE','DELETE'])
+    def test_provenance_cannot_be_changed_or_deleted(operation):
+&gt;       with closing(table()) as connection,pytest.raises(sqlite3.IntegrityError,match='IMMUTABLE_RECORD'):
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:164:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_provenance_field_is_required_even_with_update_trigger_disabled[descriptor_id]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">field = 'descriptor_id'
+
+    @pytest.mark.parametrize('field',COLUMNS)
+    def test_every_provenance_field_is_required_even_with_update_trigger_disabled(field):
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:170:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_provenance_field_is_required_even_with_update_trigger_disabled[generation_id]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">field = 'generation_id'
+
+    @pytest.mark.parametrize('field',COLUMNS)
+    def test_every_provenance_field_is_required_even_with_update_trigger_disabled(field):
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:170:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_provenance_field_is_required_even_with_update_trigger_disabled[generation_sha256]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">field = 'generation_sha256'
+
+    @pytest.mark.parametrize('field',COLUMNS)
+    def test_every_provenance_field_is_required_even_with_update_trigger_disabled(field):
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:170:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_provenance_field_is_required_even_with_update_trigger_disabled[task_binding_id]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">field = 'task_binding_id'
+
+    @pytest.mark.parametrize('field',COLUMNS)
+    def test_every_provenance_field_is_required_even_with_update_trigger_disabled(field):
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:170:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_provenance_field_is_required_even_with_update_trigger_disabled[scope_sha256]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">field = 'scope_sha256'
+
+    @pytest.mark.parametrize('field',COLUMNS)
+    def test_every_provenance_field_is_required_even_with_update_trigger_disabled(field):
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:170:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_provenance_field_is_required_even_with_update_trigger_disabled[payload_sha256]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">field = 'payload_sha256'
+
+    @pytest.mark.parametrize('field',COLUMNS)
+    def test_every_provenance_field_is_required_even_with_update_trigger_disabled(field):
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:170:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_every_provenance_field_is_required_even_with_update_trigger_disabled[provenance_sha256]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">field = 'provenance_sha256'
+
+    @pytest.mark.parametrize('field',COLUMNS)
+    def test_every_provenance_field_is_required_even_with_update_trigger_disabled(field):
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:170:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_each_descriptor_can_have_only_one_provenance_row" time="0.000"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">def test_each_descriptor_can_have_only_one_provenance_row():
+&gt;       with closing(table()) as connection,pytest.raises(sqlite3.IntegrityError):
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:176:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_missing_parent_is_rejected_by_sqlite_foreign_key_enforcement[descriptor_id]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">field = 'descriptor_id'
+
+    @pytest.mark.parametrize('field',['descriptor_id','generation_id','task_binding_id'])
+    def test_missing_parent_is_rejected_by_sqlite_foreign_key_enforcement(field):
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:182:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_missing_parent_is_rejected_by_sqlite_foreign_key_enforcement[generation_id]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">field = 'generation_id'
+
+    @pytest.mark.parametrize('field',['descriptor_id','generation_id','task_binding_id'])
+    def test_missing_parent_is_rejected_by_sqlite_foreign_key_enforcement(field):
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:182:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_missing_parent_is_rejected_by_sqlite_foreign_key_enforcement[task_binding_id]" time="0.001"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">field = 'task_binding_id'
+
+    @pytest.mark.parametrize('field',['descriptor_id','generation_id','task_binding_id'])
+    def test_missing_parent_is_rejected_by_sqlite_foreign_key_enforcement(field):
+&gt;       with closing(table()) as connection:
+                     ^^^^^^^
+
+tests\integration\test_weixin_provenance_schema.py:182:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_weixin_provenance_schema.py:140: in table
+    module=schema();connection=sqlite3.connect(':memory:')
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_empty_current_schema_passes_all_registered_backup_family_checks[False]" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_empty_current_schema_pass0')
+allowed = False
+
+    @pytest.mark.parametrize('allowed',[False,True])
+    def test_empty_current_schema_passes_all_registered_backup_family_checks(tmp_path,allowed):
+&gt;       schema()
+
+tests\integration\test_weixin_provenance_schema.py:192:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_empty_current_schema_passes_all_registered_backup_family_checks[True]" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_empty_current_schema_pass1')
+allowed = True
+
+    @pytest.mark.parametrize('allowed',[False,True])
+    def test_empty_current_schema_passes_all_registered_backup_family_checks(tmp_path,allowed):
+&gt;       schema()
+
+tests\integration\test_weixin_provenance_schema.py:192:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_native_upgrade_saves_veri0')
+
+    def test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity(tmp_path):
+&gt;       schema()
+
+tests\integration\test_weixin_provenance_schema.py:215:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[None]" time="0.003"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_native_committed_ddl_mark0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000023B4C1AF0B0&gt;
+damage = None
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+&gt;       schema()
+
+tests\integration\test_weixin_provenance_schema.py:233:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[backup]" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_native_committed_ddl_mark1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000023B4C2266F0&gt;
+damage = 'backup'
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+&gt;       schema()
+
+tests\integration\test_weixin_provenance_schema.py:233:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[receipt]" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_native_committed_ddl_mark2')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000023B4C1ADDF0&gt;
+damage = 'receipt'
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+&gt;       schema()
+
+tests\integration\test_weixin_provenance_schema.py:233:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[trigger]" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_native_committed_ddl_mark3')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000023B4C1ACF50&gt;
+damage = 'trigger'
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+&gt;       schema()
+
+tests\integration\test_weixin_provenance_schema.py:233:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_schema" name="test_native_failed_ddl_preserves_predecessor_schema_and_marker" time="0.002"><failure message="AssertionError: D2g5b needs immutable additive provenance DDL&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')&#10; +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-red-temp/test_native_failed_ddl_preserv0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000023B4C1AE960&gt;
+
+    def test_native_failed_ddl_preserves_predecessor_schema_and_marker(tmp_path,monkeypatch):
+&gt;       schema()
+
+tests\integration\test_weixin_provenance_schema.py:260:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def schema():
+        name='cn_contract.weixin_inbox.provenance_schema'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5b needs immutable additive provenance DDL'
+E       AssertionError: D2g5b needs immutable additive provenance DDL
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x0000023B4514D8A0&gt;('cn_contract.weixin_inbox.provenance_schema')
+E        +    where &lt;function find_spec at 0x0000023B4514D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_provenance_schema.py:32: AssertionError</failure></testcase></testsuite></testsuites>

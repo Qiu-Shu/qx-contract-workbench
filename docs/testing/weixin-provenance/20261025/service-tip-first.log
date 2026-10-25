@@ -1,0 +1,21 @@
+...................................................................F..F. [ 72%]
+............................                                             [100%]
+================================== FAILURES ===================================
+_ test_both_generation_services_require_exact_schema17_without_automatic_upgrade[append-pre_inbox_schema] _
+tests\integration\test_weixin_generation_service.py:290: in test_both_generation_services_require_exact_schema17_without_automatic_upgrade
+    assert identify_schema(before, native=True) == VERSIONS[12]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\storage_schema.py:103: in identify_schema
+    raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E   ValueError: DATABASE_SCHEMA_MISMATCH
+_ test_both_generation_services_require_exact_schema17_without_automatic_upgrade[find-pre_inbox_schema] _
+tests\integration\test_weixin_generation_service.py:290: in test_both_generation_services_require_exact_schema17_without_automatic_upgrade
+    assert identify_schema(before, native=True) == VERSIONS[12]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\storage_schema.py:103: in identify_schema
+    raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E   ValueError: DATABASE_SCHEMA_MISMATCH
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_service.py::test_both_generation_services_require_exact_schema17_without_automatic_upgrade[append-pre_inbox_schema]
+FAILED tests/integration/test_weixin_generation_service.py::test_both_generation_services_require_exact_schema17_without_automatic_upgrade[find-pre_inbox_schema]
+2 failed, 98 passed in 80.85s (0:01:20)

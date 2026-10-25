@@ -1,0 +1,16 @@
+{
+  "status": "EXPECTED_GIT_LINE_ENDING_NORMALIZATION",
+  "tested_worktree_bytes_unchanged": true,
+  "other_authorized_index_bytes_match_worktree": true,
+  "note": "Verification SHA256 values describe the actual Windows worktree inputs. Git stores this JSON fixture with LF per existing attributes; no source statements or schema fingerprints changed.",
+  "files": [
+    {
+      "path": "tests/fixtures/weixin_provenance_schema_predecessors.json",
+      "working_sha256": "e1da302b0883876260bc6c1b3eb240d76418d8ca79380c8e0dd70d00dddf848b",
+      "index_sha256": "1d2e610db7c71dfa70b68460c61af1dbf6e6d15d94967d37efb19d0baf84cf94",
+      "only_crlf_to_lf": true,
+      "json_semantically_equal": true,
+      "entries": 34
+    }
+  ]
+}

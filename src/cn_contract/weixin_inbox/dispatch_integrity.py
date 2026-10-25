@@ -23,8 +23,10 @@ def _rows(db, table):
 
 def _validate(db, rows, workspace):
     from .grant_integrity import _histories, _scope_at
+    from .provenance_integrity import _targets
 
     grant_histories = _histories(db, workspace)
+    targets = _targets(db)
     accounts = _rows(db, 'weixin_accounts')
     mappings = _rows(db, 'weixin_peer_bindings')
     bindings = _rows(db, 'task_channel_bindings')
@@ -50,6 +52,8 @@ def _validate(db, rows, workspace):
         _row_ids(row, ('id', 'descriptor_id', 'account_id', 'mapping_id', 'actor_id', 'task_binding_id', 'task_event_id'))
         receipt = d.WeixinDispatchReceipt(**row)
         descriptor = descriptors[str(receipt.descriptor_id)]
+        if str(descriptor.id) in targets:
+            _fail()  # Generation-aware delivery is a separate runtime slice.
         poll = polls[str(descriptor.poll_id)]
         account_row = accounts[str(receipt.account_id)]
         _row_ids(account_row, ('id', 'workspace_id', 'owner_id', 'revoked_by'))
@@ -127,7 +131,7 @@ def validate_dispatch_records(db, *, allow_dispatch=False):
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
         version = identify_schema(schema, native=native)
-        if version not in ('weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1'):
+        if version not in ('weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1'):
             return []
         rows = db.execute(text('SELECT * FROM weixin_dispatch_receipts ORDER BY created_at,id')).mappings().all()
         if not rows:

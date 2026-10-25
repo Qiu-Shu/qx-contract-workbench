@@ -42,8 +42,10 @@ def _row_ids(row, keys):
 
 def _validate(db, groups, workspace):
     from .grant_integrity import _histories, _scope_at
+    from .provenance_integrity import _targets
 
     grant_histories = _histories(db, workspace)
+    targets = _targets(db)
     accounts, mapping_rows, poll_rows, descriptor_rows = groups
     users = set(db.scalars(text('SELECT id FROM users')))
     conversations = {row['id']:row for row in db.execute(text('SELECT * FROM assistant_conversations')).mappings()}
@@ -130,8 +132,11 @@ def _validate(db, groups, workspace):
                     if (mapping is None or mapping.revoked_at is not None and mapping.revoked_at <= poll.created_at
                             or account.revoked_at is not None and account.revoked_at <= poll.created_at):
                         _fail()
-                    scope = _scope_at(mapping, grant_histories.get(str(mapping.id), ()), poll.created_at)
-                    binding = task_bindings[str(mapping.task_binding_id)]
+                    target = targets.get(str(value.id))
+                    scope = target.scope if target else _scope_at(mapping, grant_histories.get(str(mapping.id), ()), poll.created_at)
+                    binding = task_bindings[str(target.task_binding_id if target else mapping.task_binding_id)]
+                    if conversations[binding['conversation_id']]['owner_id'] != str(account.owner_id):
+                        _fail()
                     _scope(db, scope, conversations[binding['conversation_id']], workspace, poll.created_at)
                     for source_account, source in known_sources.get(value.payload.reply_to_event_id,()):
                         if (source_account != account_id or source.sender_peer_id != value.sender_peer_id
@@ -153,7 +158,7 @@ def validate_weixin_records(db, *, allow_inbox=False):
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
         version = identify_schema(schema,native=native)
-        if version not in ('weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1'):
+        if version not in ('weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1'):
             return []
         groups = [db.execute(text('SELECT * FROM '+table+(
             ' ORDER BY account_id,next_revision' if table == 'weixin_poll_receipts' else

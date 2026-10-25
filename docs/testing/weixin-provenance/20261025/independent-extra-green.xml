@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="6" time="18.613" timestamp="2026-10-25T17:11:58.606207+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_provenance_independent" name="test_public_provenance_checks_rehashed_parent_chain_even_without_sidecars[False]" time="2.522" /><testcase classname="tests.integration.test_weixin_provenance_independent" name="test_public_provenance_checks_rehashed_parent_chain_even_without_sidecars[True]" time="2.272" /><testcase classname="tests.integration.test_weixin_provenance_backup" name="test_two_real_qxbak_roundtrips_preserve_provenance_originals_and_all_pause_fences" time="6.541" /><testcase classname="tests.integration.test_weixin_provenance_backup" name="test_authenticated_ordinary_cnbak_cannot_publish_nonzero_provenance" time="1.473" /><testcase classname="tests.integration.test_weixin_provenance_backup" name="test_authenticated_rehashed_wrong_target_archive_never_publishes[past]" time="1.842"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'WEIXIN_PROVENANCE_INTEGRITY'&#10;  Actual message: 'WEIXIN_INBOX_INTEGRITY'">world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-extra-tmp/test_authenticated_reh...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 9, 12, 13, 393290, tzinfo=datetime.timezone.utc)))
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-extra-tmp/test_authenticated_rehashed_wr0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001D734F78590&gt;
+replacement = 'past'
+
+    @pytest.mark.parametrize('replacement', ['past', 'future'])
+    def test_authenticated_rehashed_wrong_target_archive_never_publishes(world, tmp_path, monkeypatch, replacement):
+        history = chain(world)
+        database, root = history['database'], history['root']
+        if replacement == 'past':
+            descriptor, generation = history['two'][1], history['first']
+        else:
+            descriptor, generation = history['one'][1], history['second']
+        with database.session() as db:
+            rewrite(db, descriptor.id, generation_id=str(generation.id), generation_sha256=generation.generation_sha256,
+                task_binding_id=str(generation.task_binding_id), scope_sha256=generation.scope_sha256)
+        refused = tmp_path/'不得创建错误来源.qxbak'
+        with pytest.raises(ValueError, match='WEIXIN_PROVENANCE_INTEGRITY'):
+&gt;           workspace_backup.create_workspace_backup(root, refused, PASSPHRASE, data_parent=tmp_path)
+
+tests\integration\test_weixin_provenance_backup.py:159:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:273: in create_workspace_backup
+    _references(root,inventory,source=True)
+src\cn_contract\ops\workspace_backup.py:138: in _references
+    refs = _file_references(db)
+           ^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\backup.py:180: in _file_references
+    validate_weixin_records(db, allow_inbox=allow_assistant)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+db = &lt;sqlalchemy.orm.session.Session object at 0x000001D734FA88C0&gt;
+
+    def validate_weixin_records(db, *, allow_inbox=False):
+        """Return no file refs; nonempty account history requires a complete workspace archive."""
+        try:
+            schema = [tuple(row) for row in db.execute(text(
+                'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+            native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
+            version = identify_schema(schema,native=native)
+            if version not in ('weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1'):
+                return []
+            groups = [db.execute(text('SELECT * FROM '+table+(
+                ' ORDER BY account_id,next_revision' if table == 'weixin_poll_receipts' else
+                ' ORDER BY poll_id,ordinal' if table == 'weixin_inbox_descriptors' else ' ORDER BY id'))).mappings().all()
+                for table in TABLES]
+            if not any(groups):
+                return []
+        except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError, ServiceError):
+            raise ValueError('WEIXIN_INBOX_INTEGRITY') from None
+        if not allow_inbox:
+            raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+        try:
+            identities = db.scalars(text('SELECT id FROM local_workspace_identity')).all() if native else []
+            if len(identities) != 1:
+                _fail()
+            _validate(db,groups,_uuid(identities[0]))
+        except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError, ServiceError):
+&gt;           raise ValueError('WEIXIN_INBOX_INTEGRITY') from None
+E           ValueError: WEIXIN_INBOX_INTEGRITY
+
+src\cn_contract\weixin_inbox\integrity.py:179: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-extra-tmp/test_authenticated_reh...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 9, 12, 13, 393290, tzinfo=datetime.timezone.utc)))
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-extra-tmp/test_authenticated_rehashed_wr0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001D734F78590&gt;
+replacement = 'past'
+
+    @pytest.mark.parametrize('replacement', ['past', 'future'])
+    def test_authenticated_rehashed_wrong_target_archive_never_publishes(world, tmp_path, monkeypatch, replacement):
+        history = chain(world)
+        database, root = history['database'], history['root']
+        if replacement == 'past':
+            descriptor, generation = history['two'][1], history['first']
+        else:
+            descriptor, generation = history['one'][1], history['second']
+        with database.session() as db:
+            rewrite(db, descriptor.id, generation_id=str(generation.id), generation_sha256=generation.generation_sha256,
+                task_binding_id=str(generation.task_binding_id), scope_sha256=generation.scope_sha256)
+        refused = tmp_path/'不得创建错误来源.qxbak'
+&gt;       with pytest.raises(ValueError, match='WEIXIN_PROVENANCE_INTEGRITY'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'WEIXIN_PROVENANCE_INTEGRITY'
+E         Actual message: 'WEIXIN_INBOX_INTEGRITY'
+
+tests\integration\test_weixin_provenance_backup.py:158: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_provenance_backup" name="test_authenticated_rehashed_wrong_target_archive_never_publishes[future]" time="2.642"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'WEIXIN_PROVENANCE_INTEGRITY'&#10;  Actual message: 'WEIXIN_INBOX_INTEGRITY'">world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-extra-tmp/test_authenticated_reh...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 9, 12, 15, 968749, tzinfo=datetime.timezone.utc)))
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-extra-tmp/test_authenticated_rehashed_wr1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001D734F5F5F0&gt;
+replacement = 'future'
+
+    @pytest.mark.parametrize('replacement', ['past', 'future'])
+    def test_authenticated_rehashed_wrong_target_archive_never_publishes(world, tmp_path, monkeypatch, replacement):
+        history = chain(world)
+        database, root = history['database'], history['root']
+        if replacement == 'past':
+            descriptor, generation = history['two'][1], history['first']
+        else:
+            descriptor, generation = history['one'][1], history['second']
+        with database.session() as db:
+            rewrite(db, descriptor.id, generation_id=str(generation.id), generation_sha256=generation.generation_sha256,
+                task_binding_id=str(generation.task_binding_id), scope_sha256=generation.scope_sha256)
+        refused = tmp_path/'不得创建错误来源.qxbak'
+        with pytest.raises(ValueError, match='WEIXIN_PROVENANCE_INTEGRITY'):
+&gt;           workspace_backup.create_workspace_backup(root, refused, PASSPHRASE, data_parent=tmp_path)
+
+tests\integration\test_weixin_provenance_backup.py:159:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\cn_contract\ops\workspace_backup.py:273: in create_workspace_backup
+    _references(root,inventory,source=True)
+src\cn_contract\ops\workspace_backup.py:138: in _references
+    refs = _file_references(db)
+           ^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\backup.py:180: in _file_references
+    validate_weixin_records(db, allow_inbox=allow_assistant)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+db = &lt;sqlalchemy.orm.session.Session object at 0x000001D734C24290&gt;
+
+    def validate_weixin_records(db, *, allow_inbox=False):
+        """Return no file refs; nonempty account history requires a complete workspace archive."""
+        try:
+            schema = [tuple(row) for row in db.execute(text(
+                'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+            native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
+            version = identify_schema(schema,native=native)
+            if version not in ('weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1'):
+                return []
+            groups = [db.execute(text('SELECT * FROM '+table+(
+                ' ORDER BY account_id,next_revision' if table == 'weixin_poll_receipts' else
+                ' ORDER BY poll_id,ordinal' if table == 'weixin_inbox_descriptors' else ' ORDER BY id'))).mappings().all()
+                for table in TABLES]
+            if not any(groups):
+                return []
+        except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError, ServiceError):
+            raise ValueError('WEIXIN_INBOX_INTEGRITY') from None
+        if not allow_inbox:
+            raise ServiceError('DATA_POLICY_UNAPPROVED',409)
+        try:
+            identities = db.scalars(text('SELECT id FROM local_workspace_identity')).all() if native else []
+            if len(identities) != 1:
+                _fail()
+            _validate(db,groups,_uuid(identities[0]))
+        except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError, ServiceError):
+&gt;           raise ValueError('WEIXIN_INBOX_INTEGRITY') from None
+E           ValueError: WEIXIN_INBOX_INTEGRITY
+
+src\cn_contract\weixin_inbox\integrity.py:179: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-extra-tmp/test_authenticated_reh...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 9, 12, 15, 968749, tzinfo=datetime.timezone.utc)))
+tmp_path = WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-provenance-20261025/independent-extra-tmp/test_authenticated_rehashed_wr1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001D734F5F5F0&gt;
+replacement = 'future'
+
+    @pytest.mark.parametrize('replacement', ['past', 'future'])
+    def test_authenticated_rehashed_wrong_target_archive_never_publishes(world, tmp_path, monkeypatch, replacement):
+        history = chain(world)
+        database, root = history['database'], history['root']
+        if replacement == 'past':
+            descriptor, generation = history['two'][1], history['first']
+        else:
+            descriptor, generation = history['one'][1], history['second']
+        with database.session() as db:
+            rewrite(db, descriptor.id, generation_id=str(generation.id), generation_sha256=generation.generation_sha256,
+                task_binding_id=str(generation.task_binding_id), scope_sha256=generation.scope_sha256)
+        refused = tmp_path/'不得创建错误来源.qxbak'
+&gt;       with pytest.raises(ValueError, match='WEIXIN_PROVENANCE_INTEGRITY'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'WEIXIN_PROVENANCE_INTEGRITY'
+E         Actual message: 'WEIXIN_INBOX_INTEGRITY'
+
+tests\integration\test_weixin_provenance_backup.py:158: AssertionError</failure></testcase></testsuite></testsuites>

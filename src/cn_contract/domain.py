@@ -4845,3 +4845,22 @@ class WeixinGenerationPreview(DomainModel):
         if self.head.scope != self.plan.scope.expected_scope:
             raise ValueError('preview scope differs from persistent generation head')
         return self
+
+
+class WeixinDescriptorGeneration(DomainModel):
+    """Immutable parent links for one original accepted nonzero-generation source."""
+    descriptor_id: UUID
+    generation_id: UUID
+    generation_sha256: SHA256
+    task_binding_id: UUID
+    scope_sha256: SHA256
+    payload_sha256: SHA256
+    provenance_sha256: SHA256
+
+    @model_validator(mode='after')
+    def complete_provenance_hash(self):
+        from .config import canonical_json
+        raw=canonical_json(self.model_dump(mode='json',exclude={'provenance_sha256'})).encode('utf-8')
+        if hashlib.sha256(raw).hexdigest()!=self.provenance_sha256:
+            raise ValueError('descriptor generation provenance hash mismatch')
+        return self

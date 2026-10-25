@@ -1,0 +1,89 @@
+{
+  "status": "OPEN_BASELINE_REPRODUCED",
+  "reviewed_at_utc": "2026-10-25T09:38:07.479611+00:00",
+  "baseline_commit": "9c04b4d40a51435106d774d71afa46934917e0cc",
+  "test": "tests/integration/test_assistant_attachment_backup.py::test_long_parent_paths_create_restore_and_rebackup[long]",
+  "baseline_result": {
+    "tests": 1,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 1,
+    "pytest_summary_seconds": 3.64,
+    "harness_seconds": 3.922
+  },
+  "current_root_regression": {
+    "tests": 133,
+    "passed": 132,
+    "failed": 1,
+    "exit_code": 1,
+    "evidence": [
+      "final-attachments-model.json",
+      "final-attachments-model.xml",
+      "final-attachments-model.log"
+    ]
+  },
+  "actual_baseline_module": "D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\baseline-9c04b4d\\src\\cn_contract\\ops\\workspace_backup.py",
+  "workspace_backup_sha256": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6",
+  "workspace_backup_current_identical": true,
+  "test_sha256": "2c127c3be0ed4691b1a71796de7bcd5dceedb8c19c9d86ffc978550984d94fe3",
+  "test_identical_to_baseline": true,
+  "baseline_source_manifest_sha256": "831da83c5d8b9327eb52bf21cf264733bb718e2f8559575566e05c995afedbba",
+  "baseline_archive_sha256": "6fbcd279d306bd252a09f62837d6b6e19c65c1d8f368b7095685baa15b54ecee",
+  "snapshot_all_files_still_match_git_archive": true,
+  "product_module_count": 144,
+  "all_product_modules_imported_from_baseline": true,
+  "current_basetemp_length": 87,
+  "baseline_basetemp_length": 87,
+  "observed_failure": {
+    "stage": "second create_workspace_backup of restored workspace; _validate_database(snapshot)",
+    "error_type": "sqlite3.OperationalError",
+    "message": "unable to open database file",
+    "source_line": 119,
+    "raw_extended_database": "\\\\?\\D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\baseline-xxxxxxxxxxxxxxxxxx\\test_long_parent_paths_create_0\\恢复目录资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\09c67ca4-597a-4d4f-9a6e-14fe3fa5e912\\.qx-backup-i3yf6rl7\\snapshot\\workbench.db",
+    "raw_extended_database_length": 267,
+    "effective_application_database": "D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\baseline-xxxxxxxxxxxxxxxxxx\\test_long_parent_paths_create_0\\恢复目录资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料资料\\09c67ca4-597a-4d4f-9a6e-14fe3fa5e912\\.qx-backup-i3yf6rl7\\snapshot\\workbench.db",
+    "effective_application_database_length": 263,
+    "effective_uri_length": 823,
+    "path_length_note": "Observer recorded267 including extended prefix; frozen _validate_database application_path removes4 prefix characters, giving263 for actual SQLite database path. Derived from exact pure source operation, not a second runtime probe.",
+    "file_existed": true,
+    "prior_validation_calls_passed": 6
+  },
+  "conclusion": "The identical long-path rebackup symptom is reproducible at pre-slice9c04b4d with the unchanged old test, same87-character basetemp and identical backup module. It is an existing open blocker outside D2g5b provenance implementation; no fix or all-green regression claim is made.",
+  "evidence": [
+    "baseline-preparation.json",
+    "baseline-run.py",
+    "baseline-long-path.json",
+    "baseline-long-path.xml",
+    "baseline-long-path.log"
+  ],
+  "command": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-B",
+    "-X",
+    "utf8",
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\baseline-run.py"
+  ],
+  "pytest_argv": [
+    "tests/integration/test_assistant_attachment_backup.py::test_long_parent_paths_create_restore_and_rebackup[long]",
+    "-q",
+    "--tb=short",
+    "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\baseline-xxxxxxxxxxxxxxxxxx",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\baseline-long-path.xml"
+  ],
+  "pythonpath": "D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\baseline-9c04b4d\\src;D:\\Documents\\ChatGPT\\律所项目;D:\\Documents\\ChatGPT\\律所项目\\tests\\integration",
+  "harness_first_error": {
+    "exit_code": 4,
+    "evidence": [
+      "baseline-harness-first.log",
+      "baseline-harness-first.json",
+      "baseline-harness-first.xml"
+    ],
+    "classification": "Harness import-path issue: current repository root missing from PYTHONPATH for tests package. Corrected environment only; no product test executed in that first attempt."
+  },
+  "limits": [
+    "No product or test file edited; only private baseline-* snapshot/harness/evidence created.",
+    "No root-cause fix implemented; earlier WIN-PATH-02 and native crash remain OPEN independently.",
+    "Current133-case regression retains1FAIL; baseline repro is not added as a second unique current failure or counted as a passing test."
+  ]
+}

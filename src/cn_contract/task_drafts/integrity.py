@@ -205,7 +205,7 @@ def validate_task_records(db, *, allowed=True):
     """Old schemas stay readable; task history always requires a native archive."""
     schema = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
     native = any(row[1] == 'local_workspace_identity' for row in schema)
-    if identify_schema(schema, native=native) not in ('task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1'):
+    if identify_schema(schema, native=native) not in ('task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1'):
         return
     tables = ('task_channel_bindings','task_inbox_events','task_drafts','task_draft_events',
               'task_executions','task_media_resolutions')

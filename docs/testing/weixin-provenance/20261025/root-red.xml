@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="34" skipped="0" tests="34" time="9.166" timestamp="2026-10-25T17:02:12.158245+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_seven_field_link_is_frozen_and_canonical_roundtrip" time="0.001"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:25: in test_seven_field_link_is_frozen_and_canonical_roundtrip
+    value=model()(**values())
+          ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_hash_covers_every_parent_and_payload[descriptor_id]" time="0.001"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:34: in test_hash_covers_every_parent_and_payload
+    with pytest.raises(ValidationError):model()(**value)
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_hash_covers_every_parent_and_payload[generation_id]" time="0.001"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:34: in test_hash_covers_every_parent_and_payload
+    with pytest.raises(ValidationError):model()(**value)
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_hash_covers_every_parent_and_payload[task_binding_id]" time="0.001"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:34: in test_hash_covers_every_parent_and_payload
+    with pytest.raises(ValidationError):model()(**value)
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_hash_covers_every_parent_and_payload[generation_sha256]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:34: in test_hash_covers_every_parent_and_payload
+    with pytest.raises(ValidationError):model()(**value)
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_hash_covers_every_parent_and_payload[scope_sha256]" time="0.001"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:34: in test_hash_covers_every_parent_and_payload
+    with pytest.raises(ValidationError):model()(**value)
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_hash_covers_every_parent_and_payload[payload_sha256]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:34: in test_hash_covers_every_parent_and_payload
+    with pytest.raises(ValidationError):model()(**value)
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_digest_format_is_strict_even_when_recomputed[generation_sha256]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:40: in test_digest_format_is_strict_even_when_recomputed
+    with pytest.raises(ValidationError):model()(**value)
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_digest_format_is_strict_even_when_recomputed[scope_sha256]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:40: in test_digest_format_is_strict_even_when_recomputed
+    with pytest.raises(ValidationError):model()(**value)
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_digest_format_is_strict_even_when_recomputed[payload_sha256]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:40: in test_digest_format_is_strict_even_when_recomputed
+    with pytest.raises(ValidationError):model()(**value)
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_digest_format_is_strict_even_when_recomputed[provenance_sha256]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:40: in test_digest_format_is_strict_even_when_recomputed
+    with pytest.raises(ValidationError):model()(**value)
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_link_cannot_add_body_time_or_execution_authority[scope]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:45: in test_link_cannot_add_body_time_or_execution_authority
+    with pytest.raises(ValidationError):model()(**values(),**{extra:'unsupported'})
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_link_cannot_add_body_time_or_execution_authority[created_at]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:45: in test_link_cannot_add_body_time_or_execution_authority
+    with pytest.raises(ValidationError):model()(**values(),**{extra:'unsupported'})
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_link_cannot_add_body_time_or_execution_authority[generation]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:45: in test_link_cannot_add_body_time_or_execution_authority
+    with pytest.raises(ValidationError):model()(**values(),**{extra:'unsupported'})
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_link_cannot_add_body_time_or_execution_authority[account_id]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:45: in test_link_cannot_add_body_time_or_execution_authority
+    with pytest.raises(ValidationError):model()(**values(),**{extra:'unsupported'})
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_link_cannot_add_body_time_or_execution_authority[peer]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:45: in test_link_cannot_add_body_time_or_execution_authority
+    with pytest.raises(ValidationError):model()(**values(),**{extra:'unsupported'})
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_link_cannot_add_body_time_or_execution_authority[can_dispatch]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:45: in test_link_cannot_add_body_time_or_execution_authority
+    with pytest.raises(ValidationError):model()(**values(),**{extra:'unsupported'})
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.unit.test_weixin_descriptor_generation" name="test_link_cannot_add_body_time_or_execution_authority[mode]" time="0.000"><failure message="AssertionError: D2g5b needs a centralized immutable descriptor generation&#10;assert False&#10; +  where False = hasattr(d, 'WeixinDescriptorGeneration')">tests\unit\test_weixin_descriptor_generation.py:45: in test_link_cannot_add_body_time_or_execution_authority
+    with pytest.raises(ValidationError):model()(**values(),**{extra:'unsupported'})
+                                        ^^^^^^^
+tests\unit\test_weixin_descriptor_generation.py:12: in model
+    assert hasattr(d,'WeixinDescriptorGeneration'),'D2g5b needs a centralized immutable descriptor generation'
+E   AssertionError: D2g5b needs a centralized immutable descriptor generation
+E   assert False
+E    +  where False = hasattr(d, 'WeixinDescriptorGeneration')</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_two_actual_poll_prefixes_resolve_then_backup_without_rewriting_old_history" time="0.508"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:41: in test_two_actual_poll_prefixes_resolve_then_backup_without_rewriting_old_history
+    api();h=chain(world);before=snapshot(h['database']);validate(h)
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_recomputed_metadata_cannot_change_historical_target[missing]" time="0.448"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:57: in test_recomputed_metadata_cannot_change_historical_target
+    api();h=chain(world);one,two=h['one'][1],h['two'][1]
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_recomputed_metadata_cannot_change_historical_target[future_generation]" time="0.453"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:57: in test_recomputed_metadata_cannot_change_historical_target
+    api();h=chain(world);one,two=h['one'][1],h['two'][1]
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_recomputed_metadata_cannot_change_historical_target[old_generation]" time="0.470"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:57: in test_recomputed_metadata_cannot_change_historical_target
+    api();h=chain(world);one,two=h['one'][1],h['two'][1]
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_recomputed_metadata_cannot_change_historical_target[binding]" time="0.429"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:57: in test_recomputed_metadata_cannot_change_historical_target
+    api();h=chain(world);one,two=h['one'][1],h['two'][1]
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_recomputed_metadata_cannot_change_historical_target[scope]" time="0.442"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:57: in test_recomputed_metadata_cannot_change_historical_target
+    api();h=chain(world);one,two=h['one'][1],h['two'][1]
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_recomputed_metadata_cannot_change_historical_target[payload]" time="0.423"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:57: in test_recomputed_metadata_cannot_change_historical_target
+    api();h=chain(world);one,two=h['one'][1],h['two'][1]
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_recomputed_metadata_cannot_change_historical_target[digest]" time="0.498"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:57: in test_recomputed_metadata_cannot_change_historical_target
+    api();h=chain(world);one,two=h['one'][1],h['two'][1]
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_sidecar_cannot_adopt_or_revive_non_target_originals[root_zero]" time="0.537"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:73: in test_sidecar_cannot_adopt_or_revive_non_target_originals
+    api();h=chain(world)
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_sidecar_cannot_adopt_or_revive_non_target_originals[blocked]" time="0.543"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:73: in test_sidecar_cannot_adopt_or_revive_non_target_originals
+    api();h=chain(world)
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_sidecar_cannot_adopt_or_revive_non_target_originals[duplicate]" time="0.537"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:73: in test_sidecar_cannot_adopt_or_revive_non_target_originals
+    api();h=chain(world)
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_known_accepted_reply_cannot_cross_a_generation_boundary[1]" time="0.554"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:93: in test_known_accepted_reply_cannot_cross_a_generation_boundary
+    api();h=setup_history(world);first=append(h)
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_known_accepted_reply_cannot_cross_a_generation_boundary[91]" time="0.552"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:93: in test_known_accepted_reply_cannot_cross_a_generation_boundary
+    api();h=setup_history(world);first=append(h)
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_unknown_reply_stays_unknown_and_other_zero_generation_peer_has_no_sidecar" time="0.482"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:105: in test_unknown_reply_stays_unknown_and_other_zero_generation_peer_has_no_sidecar
+    api();h=setup_history(world);first=append(h)
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_complete_account_prefix_and_strict_utc_time_boundary_still_hold[checkpoint]" time="0.474"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:113: in test_complete_account_prefix_and_strict_utc_time_boundary_still_hold
+    api();h=chain(world)
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_provenance" name="test_complete_account_prefix_and_strict_utc_time_boundary_still_hold[same_utc_boundary]" time="0.476"><failure message="AssertionError: D2g5b needs historical descriptor target validation&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')&#10; +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_provenance.py:113: in test_complete_account_prefix_and_strict_utc_time_boundary_still_hold
+    api();h=chain(world)
+    ^^^^^
+tests\integration\test_weixin_provenance.py:24: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5b needs historical descriptor target validation'
+E   AssertionError: D2g5b needs historical descriptor target validation
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000002912B91D8A0&gt;('cn_contract.weixin_inbox.provenance_integrity')
+E    +    where &lt;function find_spec at 0x000002912B91D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase></testsuite></testsuites>

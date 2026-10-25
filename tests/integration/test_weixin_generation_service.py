@@ -275,9 +275,11 @@ def test_complete_history_damage_is_generic_conflict_before_append_or_unknown_lo
 
 @pytest.mark.parametrize('changed', ['previous_schema', 'pre_inbox_schema', 'unknown_schema'])
 @pytest.mark.parametrize('operation', ['append', 'find'])
-def test_both_generation_services_require_exact_schema17_without_automatic_upgrade(history, changed, operation):
+def test_both_generation_services_reject_prior_or_unknown_schema_without_upgrade(history, changed, operation):
     service = api(); database = history['database']; actor = history['actor']; mapping = history['mapping']
     with database.session() as db:
+        if changed in ('previous_schema','pre_inbox_schema'):
+            db.execute(text('DROP TABLE weixin_descriptor_generations'))
         if changed == 'pre_inbox_schema':
             for name in ('weixin_peer_generations', 'weixin_peer_scope_grants', 'weixin_dispatch_receipts',
                     'weixin_inbox_descriptors', 'weixin_poll_receipts', 'weixin_peer_bindings', 'weixin_accounts'):
@@ -288,6 +290,8 @@ def test_both_generation_services_require_exact_schema17_without_automatic_upgra
         before = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         if changed == 'pre_inbox_schema':
             assert identify_schema(before, native=True) == VERSIONS[12]
+        elif changed == 'previous_schema':
+            assert identify_schema(before, native=True) == VERSIONS[15]
     function = service.append_synthetic_generation if operation == 'append' else service.find_peer_generation
     denied('VERSION_CONFLICT', function, actor, mapping.id, request(history) if operation == 'append' else uuid4(), database=database)
     with database.session() as db:
@@ -354,3 +358,17 @@ def test_service_revalidates_model_copy_before_any_generation_append(history):
         service.append_synthetic_generation(history['actor'], history['mapping'].id,
             value.model_copy(update={'expected_generation':False}), database=database)
     assert state(database) == before
+
+
+def test_schema17_public_generation_append_and_lookup_remain_supported(history):
+    service=api();database=history['database'];actor=history['actor'];mapping=history['mapping']
+    with database.session() as db:
+        db.execute(text('DROP TABLE weixin_descriptor_generations'))
+        rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+        assert identify_schema(rows,native=True)=='weixin-generations-v1'
+    value=request(history)
+    created=service.append_synthetic_generation(actor,mapping.id,value,database=database)
+    assert service.find_peer_generation(actor,mapping.id,value.request_id,database=database)==created
+    with database.session() as db:
+        rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+        assert identify_schema(rows,native=True)=='weixin-generations-v1'

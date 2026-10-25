@@ -1,0 +1,62 @@
+........................................................................ [ 34%]
+........................................................................ [ 69%]
+.........................................................FFFFF.          [100%]
+================================== FAILURES ===================================
+_ test_native_upgrade_records_verified_backup_and_preserves_workspace_identity _
+tests\integration\test_weixin_generation_schema.py:221: in test_native_upgrade_records_verified_backup_and_preserves_workspace_identity
+    assert receipt['before_schema'] == marker['schema_sha256']
+E   AssertionError: assert 'fc4426f0d78b...8998d17a10f03' == 'fb1ddb0fd5d2...7b5b996f80cbe'
+E
+E     - fb1ddb0fd5d2aa2d6df4b36d1f82a69ed246b22a7303be0deef7b5b996f80cbe
+E     + fc4426f0d78bf7f015be2f238f19fe81571ae84d4096636b0fb8998d17a10f03
+___ test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[None] ____
+tests\integration\test_weixin_generation_schema.py:247: in test_native_committed_ddl_marker_gap_accepts_only_intact_receipt
+    receipt = json.loads(receipt_path.read_text('utf-8'))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\final-schema-tmp\\test_native_committed_ddl_mark4\\workspace\\upgrade-weixin-target-provenance-v1.json'
+__ test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[backup] ___
+tests\integration\test_weixin_generation_schema.py:247: in test_native_committed_ddl_marker_gap_accepts_only_intact_receipt
+    receipt = json.loads(receipt_path.read_text('utf-8'))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\final-schema-tmp\\test_native_committed_ddl_mark5\\workspace\\upgrade-weixin-target-provenance-v1.json'
+__ test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[receipt] __
+tests\integration\test_weixin_generation_schema.py:247: in test_native_committed_ddl_marker_gap_accepts_only_intact_receipt
+    receipt = json.loads(receipt_path.read_text('utf-8'))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\final-schema-tmp\\test_native_committed_ddl_mark6\\workspace\\upgrade-weixin-target-provenance-v1.json'
+__ test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[trigger] __
+tests\integration\test_weixin_generation_schema.py:247: in test_native_committed_ddl_marker_gap_accepts_only_intact_receipt
+    receipt = json.loads(receipt_path.read_text('utf-8'))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\final-schema-tmp\\test_native_committed_ddl_mark7\\workspace\\upgrade-weixin-target-provenance-v1.json'
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_upgrade_records_verified_backup_and_preserves_workspace_identity
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[None]
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[backup]
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[receipt]
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[trigger]
+5 failed, 202 passed in 353.40s (0:05:53)

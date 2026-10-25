@@ -1,0 +1,77 @@
+..................................F..................................... [ 31%]
+.................................................................FFFFF.. [ 63%]
+........................................................................ [ 95%]
+..........                                                               [100%]
+================================== FAILURES ===================================
+_______ test_schema18_empty_later_poll_preserves_the_generation_prefix ________
+tests\integration\test_weixin_provenance.py:131: in test_schema18_empty_later_poll_preserves_the_generation_prefix
+    poll=poll_receipt(h['account'].id,account['checkpoint_revision'],account['cursor'],account['cursor'],(),at)
+                                                                     ^^^^^^^^^^^^^^^^^
+lib/sqlalchemy/cyextension/resultproxy.pyx:57: in sqlalchemy.cyextension.resultproxy.BaseRow._get_by_key_impl_mapping
+    ???
+lib/sqlalchemy/cyextension/resultproxy.pyx:63: in sqlalchemy.cyextension.resultproxy.BaseRow._get_by_key_impl
+    ???
+.venv\Lib\site-packages\sqlalchemy\engine\result.py:215: in _key_not_found
+    self._key_fallback(key, None)
+.venv\Lib\site-packages\sqlalchemy\engine\cursor.py:851: in _key_fallback
+    raise exc.NoSuchColumnError(
+E   sqlalchemy.exc.NoSuchColumnError: Could not locate column in row for column 'cursor'
+_ test_native_upgrade_records_verified_backup_and_preserves_workspace_identity _
+tests\integration\test_weixin_generation_schema.py:221: in test_native_upgrade_records_verified_backup_and_preserves_workspace_identity
+    assert receipt['before_schema'] == marker['schema_sha256']
+E   AssertionError: assert 'fc4426f0d78b...8998d17a10f03' == 'fb1ddb0fd5d2...7b5b996f80cbe'
+E
+E     - fb1ddb0fd5d2aa2d6df4b36d1f82a69ed246b22a7303be0deef7b5b996f80cbe
+E     + fc4426f0d78bf7f015be2f238f19fe81571ae84d4096636b0fb8998d17a10f03
+___ test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[None] ____
+tests\integration\test_weixin_generation_schema.py:247: in test_native_committed_ddl_marker_gap_accepts_only_intact_receipt
+    receipt = json.loads(receipt_path.read_text('utf-8'))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\revised-tmp\\test_native_committed_ddl_mark0\\workspace\\upgrade-weixin-target-provenance-v1.json'
+__ test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[backup] ___
+tests\integration\test_weixin_generation_schema.py:247: in test_native_committed_ddl_marker_gap_accepts_only_intact_receipt
+    receipt = json.loads(receipt_path.read_text('utf-8'))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\revised-tmp\\test_native_committed_ddl_mark1\\workspace\\upgrade-weixin-target-provenance-v1.json'
+__ test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[receipt] __
+tests\integration\test_weixin_generation_schema.py:247: in test_native_committed_ddl_marker_gap_accepts_only_intact_receipt
+    receipt = json.loads(receipt_path.read_text('utf-8'))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\revised-tmp\\test_native_committed_ddl_mark2\\workspace\\upgrade-weixin-target-provenance-v1.json'
+__ test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[trigger] __
+tests\integration\test_weixin_generation_schema.py:247: in test_native_committed_ddl_marker_gap_accepts_only_intact_receipt
+    receipt = json.loads(receipt_path.read_text('utf-8'))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-provenance-20261025\\revised-tmp\\test_native_committed_ddl_mark3\\workspace\\upgrade-weixin-target-provenance-v1.json'
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_provenance.py::test_schema18_empty_later_poll_preserves_the_generation_prefix
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_upgrade_records_verified_backup_and_preserves_workspace_identity
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[None]
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[backup]
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[receipt]
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[trigger]
+6 failed, 220 passed in 316.75s (0:05:16)

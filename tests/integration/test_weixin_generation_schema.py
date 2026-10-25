@@ -16,6 +16,7 @@ from tests.integration.test_assistant_judge_schema import old_db
 
 
 TARGET = 'weixin-generations-v1'
+CURRENT = storage_schema.CURRENT_VERSION
 FROZEN = json.loads((Path(__file__).parents[1]/'fixtures/weixin_generation_schema_predecessors.json').read_text('utf-8'))
 PREVIOUS = tuple(item['version'] for item in FROZEN if not item['native'])
 
@@ -33,8 +34,8 @@ def test_all_sixteen_predecessors_keep_frozen_fingerprints(item):
 
 
 def test_generations_append_one_family_to_the_unchanged_grant_schema():
-    assert storage_schema.VERSIONS == PREVIOUS + (TARGET,)
-    assert storage_schema.CURRENT_VERSION == TARGET
+    assert storage_schema.VERSIONS[:17] == PREVIOUS + (TARGET,)
+    assert storage_schema.identify_schema(storage_schema.schema_rows(TARGET)) == TARGET
     before = set(storage_schema.schema_rows('weixin-reauthorization-v1'))
     after = set(storage_schema.schema_rows(TARGET))
     assert before < after
@@ -47,12 +48,12 @@ def test_every_predecessor_upgrades_preserving_old_rows(tmp_path, version, nativ
     with closing(old_db(tmp_path/'old.db', version, native)) as db:
         db.execute("INSERT INTO users VALUES ('synthetic-user','old-user','unused','[]',0)")
         db.commit()
-        assert schema_migrations.upgrade_database(db) == TARGET
-        assert schema_migrations.database_rows(db) == storage_schema.schema_rows(TARGET, native=native)
+        assert schema_migrations.upgrade_database(db) == CURRENT
+        assert schema_migrations.database_rows(db) == storage_schema.schema_rows(CURRENT, native=native)
         assert db.execute('SELECT username FROM users').fetchall() == [('old-user',)]
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []
         assert db.execute('PRAGMA foreign_keys').fetchone() == (1,)
-        assert schema_migrations.upgrade_database(db) == TARGET
+        assert schema_migrations.upgrade_database(db) == CURRENT
 
 
 @pytest.mark.parametrize('native', [False, True])
@@ -88,7 +89,7 @@ def test_fresh_reinitialized_and_upgraded_generation_structures_are_equal(tmp_pa
         initialize_storage(database)
         with closing(sqlite3.connect(database.engine.url.database)) as db:
             actual = schema_migrations.database_rows(db)
-        assert actual == storage_schema.schema_rows(TARGET)
+        assert actual == storage_schema.schema_rows(CURRENT)
         with closing(old_db(tmp_path/'old.db', 'weixin-reauthorization-v1', False)) as db:
             schema_migrations.upgrade_database(db)
             assert schema_migrations.database_rows(db) == actual
@@ -196,17 +197,22 @@ def test_backup_validates_empty_existing_families_in_the_generation_schema(tmp_p
 
 
 @pytest.fixture
-def native_grant_workspace(tmp_path):
+def native_grant_workspace(tmp_path, monkeypatch):
     from cn_contract.web import local_server
     root = tmp_path/'workspace'
     local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as db:
+        db.execute('DROP TABLE IF EXISTS weixin_descriptor_generations')
         db.execute('DROP TABLE IF EXISTS weixin_peer_generations')
         db.commit()
         marker = json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256'] = local_server._schema_hash(db)
         assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
     (root/'workspace.json').write_text(json.dumps(marker), encoding='utf-8')
+    # Keep this historical crash-gap family at16->17; provenance tests cover17->18.
+    from cn_contract.web import workspace_upgrade
+    monkeypatch.setattr(workspace_upgrade, 'VERSIONS', storage_schema.VERSIONS[:17])
+    monkeypatch.setattr(local_server, 'CURRENT_VERSION', TARGET)
     return root, marker
 
 
@@ -274,3 +280,30 @@ def test_native_failed_generation_ddl_preserves_prior_schema_and_marker(native_g
     with closing(sqlite3.connect(root/'workbench.db')) as db:
         assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
     assert json.loads((root/'workspace.json').read_text('utf-8')) == marker
+
+
+def test_native_workspace_advances_two_versions_with_distinct_verified_receipts(tmp_path):
+    from cn_contract.web import local_server,workspace_upgrade
+    root=tmp_path/'two-step-workspace'
+    local_server.initialize_workspace(root,'synthetic-lawyer','fiction123',data_parent=tmp_path)
+    with closing(sqlite3.connect(root/'workbench.db')) as db:
+        db.execute('DROP TABLE weixin_descriptor_generations')
+        db.execute('DROP TABLE weixin_peer_generations');db.commit()
+        marker=json.loads((root/'workspace.json').read_text('utf-8'))
+        marker['schema_sha256']=local_server._schema_hash(db)
+        assert schema_migrations.database_rows(db)==storage_schema.schema_rows('weixin-reauthorization-v1',native=True)
+    (root/'workspace.json').write_text(json.dumps(marker),encoding='utf-8')
+    with local_server._worker_lock(root):workspace_upgrade.upgrade(root)
+    before=marker['schema_sha256']
+    for version in (TARGET,CURRENT):
+        receipt=json.loads((root/('upgrade-'+version+'.json')).read_text('utf-8'))
+        assert receipt['workspace_id']==marker['workspace_id'] and receipt['before_schema']==before
+        saved=root/receipt['backup']
+        assert hashlib.sha256(saved.read_bytes()).hexdigest()==receipt['backup_sha256']
+        with closing(sqlite3.connect(saved)) as db:
+            assert local_server._schema_hash(db)==before
+        before=receipt['after_schema']
+    with closing(sqlite3.connect(root/'workbench.db')) as db:
+        assert schema_migrations.database_rows(db)==storage_schema.schema_rows(CURRENT,native=True)
+        assert local_server._schema_hash(db)==before
+    assert json.loads((root/'workspace.json').read_text('utf-8'))['schema_sha256']==before

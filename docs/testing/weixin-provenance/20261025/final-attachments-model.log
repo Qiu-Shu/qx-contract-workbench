@@ -1,0 +1,15 @@
+..F..................................................................... [ 54%]
+.............................................................            [100%]
+================================== FAILURES ===================================
+__________ test_long_parent_paths_create_restore_and_rebackup[long] ___________
+tests\integration\test_assistant_attachment_backup.py:142: in test_long_parent_paths_create_restore_and_rebackup
+    workspace_backup.create_workspace_backup(restored_root, again, PASSPHRASE, data_parent=tmp_path)
+src\cn_contract\ops\workspace_backup.py:277: in create_workspace_backup
+    _validate_database(snapshot)
+src\cn_contract\ops\workspace_backup.py:119: in _validate_database
+    with closing(sqlite3.connect((root/'workbench.db').as_uri()+'?mode=ro', uri=True)) as connection:
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: unable to open database file
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_attachment_backup.py::test_long_parent_paths_create_restore_and_rebackup[long]
+1 failed, 132 passed in 127.70s (0:02:07)
