@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="3.418" timestamp="2026-10-25T16:21:19.070497+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_generation_preview" name="test_actual_qxbak_restored_copy_cannot_preview_or_consume_generation" time="2.309"><failure message="AssertionError: assert 'AUTHORIZATION_REQUIRED' == 'BLOCKED_LIVE'&#10;  &#10;  - BLOCKED_LIVE&#10;  + AUTHORIZATION_REQUIRED">tests\integration\test_weixin_generation_preview.py:200: in test_actual_qxbak_restored_copy_cannot_preview_or_consume_generation
+    assert error.value.code=='BLOCKED_LIVE'
+E   AssertionError: assert 'AUTHORIZATION_REQUIRED' == 'BLOCKED_LIVE'
+E
+E     - BLOCKED_LIVE
+E     + AUTHORIZATION_REQUIRED</failure></testcase></testsuite></testsuites>

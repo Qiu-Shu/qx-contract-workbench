@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="6" time="4.806" timestamp="2026-10-25T16:13:52.193646+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_generation_preview_atomic" name="test_preview_and_new_generation_serialize_complete_snapshot_or_stale_head_conflict[preview]" time="0.671"><failure message="AssertionError: D2g5a needs a read-only generation preview service&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-generation-preview-20261025/independent-red-temp/test_preview_an...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 8, 13, 53, 884046, tzinfo=datetime.timezone.utc)))
+winner = 'preview'
+
+    @pytest.mark.parametrize('winner',['preview','append'])
+    def test_preview_and_new_generation_serialize_complete_snapshot_or_stale_head_conflict(world,winner):
+&gt;       service()
+
+tests\integration\test_weixin_generation_preview_atomic.py:66:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def service():
+        name='cn_contract.weixin_inbox.generation_preview'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5a needs a read-only generation preview service'
+E       AssertionError: D2g5a needs a read-only generation preview service
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E        +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_generation_preview_atomic.py:26: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview_atomic" name="test_preview_and_new_generation_serialize_complete_snapshot_or_stale_head_conflict[append]" time="0.594"><failure message="AssertionError: D2g5a needs a read-only generation preview service&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-generation-preview-20261025/independent-red-temp/test_preview_an...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 8, 13, 54, 575893, tzinfo=datetime.timezone.utc)))
+winner = 'append'
+
+    @pytest.mark.parametrize('winner',['preview','append'])
+    def test_preview_and_new_generation_serialize_complete_snapshot_or_stale_head_conflict(world,winner):
+&gt;       service()
+
+tests\integration\test_weixin_generation_preview_atomic.py:66:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def service():
+        name='cn_contract.weixin_inbox.generation_preview'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5a needs a read-only generation preview service'
+E       AssertionError: D2g5a needs a read-only generation preview service
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E        +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_generation_preview_atomic.py:26: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview_atomic" name="test_actual_peer_revocation_wins_lock_before_preview_and_no_raw_candidate_is_returned" time="0.589"><failure message="AssertionError: D2g5a needs a read-only generation preview service&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-generation-preview-20261025/independent-red-temp/test_actual_pee...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 8, 13, 55, 171138, tzinfo=datetime.timezone.utc)))
+
+    def test_actual_peer_revocation_wins_lock_before_preview_and_no_raw_candidate_is_returned(world):
+&gt;       service()
+
+tests\integration\test_weixin_generation_preview_atomic.py:95:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def service():
+        name='cn_contract.weixin_inbox.generation_preview'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5a needs a read-only generation preview service'
+E       AssertionError: D2g5a needs a read-only generation preview service
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E        +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_generation_preview_atomic.py:26: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview_atomic" name="test_restored_fence_rejects_preview_without_reactivating_or_changing_source_history" time="0.591"><failure message="AssertionError: D2g5a needs a read-only generation preview service&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-generation-preview-20261025/independent-red-temp/test_restored_f...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 8, 13, 55, 767000, tzinfo=datetime.timezone.utc)))
+
+    def test_restored_fence_rejects_preview_without_reactivating_or_changing_source_history(world):
+&gt;       service()
+
+tests\integration\test_weixin_generation_preview_atomic.py:108:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def service():
+        name='cn_contract.weixin_inbox.generation_preview'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5a needs a read-only generation preview service'
+E       AssertionError: D2g5a needs a read-only generation preview service
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E        +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_generation_preview_atomic.py:26: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview_atomic" name="test_corrupt_generation_history_rejects_preview_instead_of_trusting_a_well_formed_head" time="0.615"><failure message="AssertionError: D2g5a needs a read-only generation preview service&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-generation-preview-20261025/independent-red-temp/test_corrupt_ge...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 8, 13, 56, 388738, tzinfo=datetime.timezone.utc)))
+
+    def test_corrupt_generation_history_rejects_preview_instead_of_trusting_a_well_formed_head(world):
+&gt;       service()
+
+tests\integration\test_weixin_generation_preview_atomic.py:118:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def service():
+        name='cn_contract.weixin_inbox.generation_preview'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5a needs a read-only generation preview service'
+E       AssertionError: D2g5a needs a read-only generation preview service
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E        +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_generation_preview_atomic.py:26: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview_atomic" name="test_preview_survives_reopened_database_with_no_rows_written_and_runtime_pause_still_enforced" time="0.587"><failure message="AssertionError: D2g5a needs a read-only generation preview service&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-generation-preview-20261025/independent-red-temp/test_preview_su...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 8, 13, 56, 980010, tzinfo=datetime.timezone.utc)))
+
+    def test_preview_survives_reopened_database_with_no_rows_written_and_runtime_pause_still_enforced(world):
+&gt;       service()
+
+tests\integration\test_weixin_generation_preview_atomic.py:128:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def service():
+        name='cn_contract.weixin_inbox.generation_preview'
+&gt;       assert importlib.util.find_spec(name) is not None, 'D2g5a needs a read-only generation preview service'
+E       AssertionError: D2g5a needs a read-only generation preview service
+E       assert None is not None
+E        +  where None = &lt;function find_spec at 0x000002618CDFD8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E        +    where &lt;function find_spec at 0x000002618CDFD8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E        +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util
+
+tests\integration\test_weixin_generation_preview_atomic.py:26: AssertionError</failure></testcase></testsuite></testsuites>

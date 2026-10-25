@@ -1,0 +1,37 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_current_projected_matter_denial_keeps_business_fixed_and_checks_audit_contract _
+
+world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.local/weixin-generation-preview-20261025/independent-audit-red-temp/test_curr...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 8, 18, 21, 594944, tzinfo=datetime.timezone.utc)))
+
+    def test_current_projected_matter_denial_keeps_business_fixed_and_checks_audit_contract(world):
+        from cn_contract.matters import create_matter
+        from cn_contract.persistence import MembershipRow
+        service()
+        h=setup(world)
+        with h['database'].session() as db:
+            matter=create_matter(d.MatterCreateInput(title='独立虚构预览权限案件',contract_type='sales',
+                review_mode='pre_sign',position='buyer',objectives=('仅当前权限验收',)),h['actor'],db)
+            intake=uuid4()
+            db.execute(text('''INSERT INTO intake_cases(id,owner_id,request_id,request_sha256,current_revision,matter_id)
+                VALUES(:id,:owner,:request,:sha,1,:matter)'''),dict(id=str(intake),owner=str(h['actor'].user_id),
+                    request=str(uuid4()),sha='a'*64,matter=str(matter.id)))
+            db.execute(text('UPDATE assistant_conversations SET projection_intake_id=:intake WHERE id=:id'),
+                {'intake':str(intake),'id':str(h['first'].scope.conversation_id)})
+            db.delete(db.get(MembershipRow,(str(matter.id),str(h['actor'].user_id))))
+        before=fixed_state(h['database'])
+        assert outcome(lambda:preview(h))==('CROSS_MATTER_DENIED',403)
+        after=fixed_state(h['database'])
+        assert {name:rows for name,rows in after.items() if name!='audit_events'}=={
+            name:rows for name,rows in before.items() if name!='audit_events'}
+>       assert after['audit_events']==before['audit_events'], 'plan promises zero audit writes for every failure'
+E       AssertionError: plan promises zero audit writes for every failure
+E       assert [('563a7a44-d...562Z"}'), ...] == [('563a7a44-d...562Z"}'), ...]
+E
+E         Left contains one more item: ('76a48550-737f-4de0-b805-b87f9872488b', '0a591caa-7078-46f0-8a6a-b209b94ed267', 'b71f7941-796a-4e0e-98a9-5666a16c9b46...sha256":"f113dd3f02b36b14d7f601093d1e02b0d0af7e6012ff52cd2de1ad0381fd2ee4","timestamp":"2026-10-25T08:18:21.911545Z"}')
+E         Use -v to get more diff
+
+tests\integration\test_weixin_generation_preview_atomic.py:169: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_preview_atomic.py::test_current_projected_matter_denial_keeps_business_fixed_and_checks_audit_contract
+1 failed in 2.17s

@@ -1,0 +1,12 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_actual_qxbak_restored_copy_cannot_preview_or_consume_generation _____
+tests\integration\test_weixin_generation_preview.py:200: in test_actual_qxbak_restored_copy_cannot_preview_or_consume_generation
+    assert error.value.code=='BLOCKED_LIVE'
+E   AssertionError: assert 'AUTHORIZATION_REQUIRED' == 'BLOCKED_LIVE'
+E
+E     - BLOCKED_LIVE
+E     + AUTHORIZATION_REQUIRED
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_preview.py::test_actual_qxbak_restored_copy_cannot_preview_or_consume_generation
+1 failed in 3.47s

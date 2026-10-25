@@ -4831,3 +4831,17 @@ class WeixinGenerationHeadView(DomainModel):
         if hashlib.sha256(raw).hexdigest() != self.scope_sha256:
             raise ValueError('head scope hash mismatch')
         return self
+
+
+class WeixinGenerationPreview(DomainModel):
+    """Hypothetical translation; never an intake receipt or runtime authorization."""
+    mode: Literal['synthetic'] = 'synthetic'
+    state: Literal['preview_only'] = 'preview_only'
+    head: WeixinGenerationHeadView
+    plan: WeixinOfflinePlan
+
+    @model_validator(mode='after')
+    def same_preview_target(self):
+        if self.head.scope != self.plan.scope.expected_scope:
+            raise ValueError('preview scope differs from persistent generation head')
+        return self

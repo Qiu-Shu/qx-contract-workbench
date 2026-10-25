@@ -1,0 +1,114 @@
+{
+  "reviewer": "/root/d2g3_head_atomic",
+  "review_style": "same independent reviewer on two axes, not two independent review agents",
+  "baseline": "074738034bdfb0f5231f003c9d12522793ee5928",
+  "reviewed_at_utc": "2026-10-25T08:20:30Z",
+  "status": "NO_CONFIRMED_REMAINING_BLOCKERS_IN_REVIEWED_SCOPE",
+  "axes": {
+    "Spec": {
+      "sources": [
+        "docs/plans/2026-10-25-weixin-generation-preview-d2g5a.md",
+        "root D2g5a delegated interface contract",
+        "D2g1-D2g4 persistent generation and paused runtime boundary"
+      ],
+      "findings": [],
+      "verified": [
+        "expected_head is fully revalidated and compared to the actual persistent head in one transaction",
+        "_root active=True preserves identity, current root ACL, restore, archival and revocation checks",
+        "complete history and latest binding/target/current full scope are checked under the same BEGIN IMMEDIATE lock",
+        "current owner/session/task cursor/account cursor come from database records, not client claims",
+        "only translate_response is called; wrapper is explicitly preview_only, never durable inbox, dedup result, cursor receipt or authority",
+        "legacy ingress and dispatch pause guards remain unchanged, including generation integrity activity boundary"
+      ]
+    },
+    "Standards": {
+      "sources": [
+        "AGENTS.md: synthetic-only evidence, DTO concentration, backend authority, current tests and no runtime expansion",
+        "CONTRIBUTING.md: existing architecture reuse, RED before implementation, scoped evidence, no privacy or dependency expansion",
+        "ponytail full and code-review Fowler smell baseline, applied as judgment"
+      ],
+      "findings": [],
+      "verified": [
+        "one 4-field DTO in domain.py plus one 29-line generation preview service",
+        "reuses existing codec, validated history, target resolution and transaction; no new schema, transport, route, UI or dependency",
+        "no file or network I/O inside the transaction; bounded existing parser only",
+        "independent behavior tests cover actual SQLite lock competition, restart, recovery, corruption, pause and preserved security denial audit"
+      ]
+    }
+  },
+  "inputs": [
+    {
+      "path": "src/cn_contract/domain.py",
+      "sha256": "16540538fe08a600d441e38991f4cb6d89913ddd0bad4ff755a13f9c8c0ac8e1"
+    },
+    {
+      "path": "src/cn_contract/weixin_inbox/generation_preview.py",
+      "sha256": "369eff7d04fd3a39f992d1feab5983ea06575389f0c695110fb682180c820381"
+    },
+    {
+      "path": "tests/integration/test_weixin_generation_preview_atomic.py",
+      "sha256": "639711730a295f316aaa3bc2293e729decdc81718e595edbe4af68716b54f61c"
+    },
+    {
+      "path": "docs/plans/2026-10-25-weixin-generation-preview-d2g5a.md",
+      "sha256": "fe26842b94a1adce937be4a08d4eb6dcb7599c674764348b99265ff3802965f3"
+    }
+  ],
+  "source_and_test_inputs_unchanged": true,
+  "all_inputs_unchanged": false,
+  "changed_inputs": [
+    "docs/plans/2026-10-25-weixin-generation-preview-d2g5a.md"
+  ],
+  "document_change": "Plan audit promise was corrected by root after an independent real 403 counterexample; product code was unchanged. The current corrected plan hash is recorded.",
+  "verification": [
+    {
+      "command": ".venv/Scripts/python.exe -B -X utf8 -m pytest tests/integration/test_weixin_generation_preview_atomic.py --basetemp=.local/weixin-generation-preview-20261025/independent-final-temp --junitxml=.local/weixin-generation-preview-20261025/independent-final.xml -q",
+      "environment": "PYTHONPATH=src;tests/integration",
+      "exit_code": 0,
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "duration_seconds": 6.11,
+      "log": "independent-final.log",
+      "junit": "independent-final.xml"
+    }
+  ],
+  "red_evidence": [
+    {
+      "log": "independent-red.log",
+      "junit": "independent-red.xml",
+      "exit_code": 1,
+      "failed": 6,
+      "cause": "generation_preview module absent; valid interface RED, no fixture errors"
+    },
+    {
+      "log": "independent-audit-red.log",
+      "junit": "independent-audit-red.xml",
+      "exit_code": 1,
+      "failed": 1,
+      "cause": "Original plan claimed zero audit writes on all failures; actual projected-matter membership denial correctly persisted one authorization_denied audit"
+    }
+  ],
+  "resolved_contract_issue": {
+    "issue": "Zero audit writes on all failures was inconsistent with existing security.deny",
+    "resolution": "Preserve existing security audit; success and empty poll write no business/audit rows, rejection writes no business rows and may record an existing denial audit",
+    "root_confirmed": true,
+    "product_changed_for_issue": false,
+    "final_test": "test_current_projected_matter_denial_keeps_business_fixed_and_preserves_security_audit",
+    "assertions": [
+      "CROSS_MATTER_DENIED status 403",
+      "all observed business rows unchanged",
+      "exactly one appended authorization_denied audit with the denied matter and current actor"
+    ]
+  },
+  "limitations": [
+    "No independent full repository, browser, installed Electron, real WeChat, real model, private contract, paid or external-send runs; NOT_RUN",
+    "The earlier 6-test GREEN is superseded by the final 7-test run, not added to it",
+    "Root unit/main/regression runs are not this reviewer test evidence and may overlap related modules",
+    "Protocol preview does not authenticate a remote peer, prove message freshness, persist deduplication or retarget old stored sources/replies",
+    "Current generation integrity forbids post-generation poll/dispatch; runtime versioning is explicitly future work",
+    "Permission denials intentionally preserve existing security audit commits; zero-write claims apply to successful previews and business effects, not all failure audits"
+  ]
+}

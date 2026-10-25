@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="40" skipped="0" tests="40" time="25.889" timestamp="2026-10-25T16:16:21.367483+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_preview_has_four_frozen_fields_and_roundtrips[0]" time="0.001"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:28: in test_preview_has_four_frozen_fields_and_roundtrips
+    value=model()(**values(generation))
+          ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_preview_has_four_frozen_fields_and_roundtrips[1]" time="0.001"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:28: in test_preview_has_four_frozen_fields_and_roundtrips
+    value=model()(**values(generation))
+          ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_preview_has_four_frozen_fields_and_roundtrips[2]" time="0.000"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:28: in test_preview_has_four_frozen_fields_and_roundtrips
+    value=model()(**values(generation))
+          ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_preview_cannot_claim_acceptance_receipt_or_runtime_authority[change0]" time="0.000"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:38: in test_preview_cannot_claim_acceptance_receipt_or_runtime_authority
+    with pytest.raises(ValidationError):model()(**values(),**change)
+                                        ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_preview_cannot_claim_acceptance_receipt_or_runtime_authority[change1]" time="0.000"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:38: in test_preview_cannot_claim_acceptance_receipt_or_runtime_authority
+    with pytest.raises(ValidationError):model()(**values(),**change)
+                                        ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_preview_cannot_claim_acceptance_receipt_or_runtime_authority[change2]" time="0.000"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:38: in test_preview_cannot_claim_acceptance_receipt_or_runtime_authority
+    with pytest.raises(ValidationError):model()(**values(),**change)
+                                        ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_preview_cannot_claim_acceptance_receipt_or_runtime_authority[change3]" time="0.000"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:38: in test_preview_cannot_claim_acceptance_receipt_or_runtime_authority
+    with pytest.raises(ValidationError):model()(**values(),**change)
+                                        ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_preview_cannot_claim_acceptance_receipt_or_runtime_authority[change4]" time="0.000"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:38: in test_preview_cannot_claim_acceptance_receipt_or_runtime_authority
+    with pytest.raises(ValidationError):model()(**values(),**change)
+                                        ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_preview_cannot_claim_acceptance_receipt_or_runtime_authority[change5]" time="0.000"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:38: in test_preview_cannot_claim_acceptance_receipt_or_runtime_authority
+    with pytest.raises(ValidationError):model()(**values(),**change)
+                                        ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_head_and_translated_target_scope_must_match_exactly" time="0.001"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:43: in test_head_and_translated_target_scope_must_match_exactly
+    with pytest.raises(ValidationError):model()(head=original['head'],plan=other['plan'])
+                                        ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_same_conversation_different_revision_cannot_match_preview_head[binding_revision]" time="0.001"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:50: in test_same_conversation_different_revision_cannot_match_preview_head
+    with pytest.raises(ValidationError):model()(head=changed,plan=original['plan'])
+                                        ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_same_conversation_different_revision_cannot_match_preview_head[input_revision]" time="0.001"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:50: in test_same_conversation_different_revision_cannot_match_preview_head
+    with pytest.raises(ValidationError):model()(head=changed,plan=original['plan'])
+                                        ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.unit.test_weixin_generation_preview_view" name="test_same_conversation_different_revision_cannot_match_preview_head[materials_revision]" time="0.001"><failure message="AssertionError: D2g5a needs a centralized preview-only DTO&#10;assert False&#10; +  where False = hasattr(d, 'WeixinGenerationPreview')">tests\unit\test_weixin_generation_preview_view.py:50: in test_same_conversation_different_revision_cannot_match_preview_head
+    with pytest.raises(ValidationError):model()(head=changed,plan=original['plan'])
+                                        ^^^^^^^
+tests\unit\test_weixin_generation_preview_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationPreview'), 'D2g5a needs a centralized preview-only DTO'
+E   AssertionError: D2g5a needs a centralized preview-only DTO
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationPreview')</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_zero_last_grant_or_latest_generation_supplies_scope_and_both_distinct_cursors[0]" time="0.748"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:59: in test_zero_last_grant_or_latest_generation_supplies_scope_and_both_distinct_cursors
+    value=preview(h,raw(message(91),message(92,file=True)),expected)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_zero_last_grant_or_latest_generation_supplies_scope_and_both_distinct_cursors[1]" time="0.658"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:59: in test_zero_last_grant_or_latest_generation_supplies_scope_and_both_distinct_cursors
+    value=preview(h,raw(message(91),message(92,file=True)),expected)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_zero_last_grant_or_latest_generation_supplies_scope_and_both_distinct_cursors[2]" time="0.700"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:59: in test_zero_last_grant_or_latest_generation_supplies_scope_and_both_distinct_cursors
+    value=preview(h,raw(message(91),message(92,file=True)),expected)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_empty_poll_is_only_a_cursor_hypothesis_with_no_task_batch[True]" time="0.614"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:74: in test_empty_poll_is_only_a_cursor_hypothesis_with_no_task_batch
+    value=preview(h,raw() if cursor_present else b'{"ret":0,"msgs":[]}')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_empty_poll_is_only_a_cursor_hypothesis_with_no_task_batch[False]" time="0.853"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:74: in test_empty_poll_is_only_a_cursor_hypothesis_with_no_task_batch
+    value=preview(h,raw() if cursor_present else b'{"ret":0,"msgs":[]}')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_stale_or_forged_complete_head_is_not_current_authority[generation]" time="0.874"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:90: in test_stale_or_forged_complete_head_is_not_current_authority
+    with pytest.raises(ServiceError) as error:preview(h,raw(message(92)),value)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_stale_or_forged_complete_head_is_not_current_authority[generation_sha256]" time="0.966"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:90: in test_stale_or_forged_complete_head_is_not_current_authority
+    with pytest.raises(ServiceError) as error:preview(h,raw(message(92)),value)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_stale_or_forged_complete_head_is_not_current_authority[checkpoint_revision]" time="0.867"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:90: in test_stale_or_forged_complete_head_is_not_current_authority
+    with pytest.raises(ServiceError) as error:preview(h,raw(message(92)),value)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_stale_or_forged_complete_head_is_not_current_authority[scope]" time="0.877"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:90: in test_stale_or_forged_complete_head_is_not_current_authority
+    with pytest.raises(ServiceError) as error:preview(h,raw(message(92)),value)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_expected_head_is_revalidated_against_model_copy_bypass" time="0.873"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:98: in test_expected_head_is_revalidated_against_model_copy_bypass
+    with pytest.raises(ValidationError):preview(h,raw(message(93)),bad)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_target_full_scope_must_still_equal_persistent_authorized_scope[binding_revision]" time="0.886"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:108: in test_current_target_full_scope_must_still_equal_persistent_authorized_scope
+    with pytest.raises(ServiceError) as error:preview(h,raw(message(94)),expected)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_target_full_scope_must_still_equal_persistent_authorized_scope[input_revision]" time="0.903"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:108: in test_current_target_full_scope_must_still_equal_persistent_authorized_scope
+    with pytest.raises(ServiceError) as error:preview(h,raw(message(94)),expected)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_target_full_scope_must_still_equal_persistent_authorized_scope[materials_revision]" time="1.002"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:108: in test_current_target_full_scope_must_still_equal_persistent_authorized_scope
+    with pytest.raises(ServiceError) as error:preview(h,raw(message(94)),expected)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_identity_root_target_and_permanent_revoke_guards_precede_translation[session]" time="0.881"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:133: in test_current_identity_root_target_and_permanent_revoke_guards_precede_translation
+    with pytest.raises(ServiceError):preview(h,b'invalid protocol must not be reached',expected)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_identity_root_target_and_permanent_revoke_guards_precede_translation[role]" time="0.906"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:133: in test_current_identity_root_target_and_permanent_revoke_guards_precede_translation
+    with pytest.raises(ServiceError):preview(h,b'invalid protocol must not be reached',expected)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_identity_root_target_and_permanent_revoke_guards_precede_translation[root_archive]" time="0.883"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:133: in test_current_identity_root_target_and_permanent_revoke_guards_precede_translation
+    with pytest.raises(ServiceError):preview(h,b'invalid protocol must not be reached',expected)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_identity_root_target_and_permanent_revoke_guards_precede_translation[target_archive]" time="0.876"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:133: in test_current_identity_root_target_and_permanent_revoke_guards_precede_translation
+    with pytest.raises(ServiceError):preview(h,b'invalid protocol must not be reached',expected)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_identity_root_target_and_permanent_revoke_guards_precede_translation[account]" time="0.881"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:133: in test_current_identity_root_target_and_permanent_revoke_guards_precede_translation
+    with pytest.raises(ServiceError):preview(h,b'invalid protocol must not be reached',expected)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_identity_root_target_and_permanent_revoke_guards_precede_translation[peer]" time="0.993"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:133: in test_current_identity_root_target_and_permanent_revoke_guards_precede_translation
+    with pytest.raises(ServiceError):preview(h,b'invalid protocol must not be reached',expected)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_identity_root_target_and_permanent_revoke_guards_precede_translation[owner]" time="1.165"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:133: in test_current_identity_root_target_and_permanent_revoke_guards_precede_translation
+    with pytest.raises(ServiceError):preview(h,b'invalid protocol must not be reached',expected)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_current_identity_root_target_and_permanent_revoke_guards_precede_translation[workspace]" time="1.084"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:133: in test_current_identity_root_target_and_permanent_revoke_guards_precede_translation
+    with pytest.raises(ServiceError):preview(h,b'invalid protocol must not be reached',expected)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_invalid_or_mixed_peer_poll_is_wholly_rejected_without_a_partial_preview[{]" time="0.899"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:141: in test_invalid_or_mixed_peer_poll_is_wholly_rejected_without_a_partial_preview
+    with pytest.raises(ServiceError):preview(h,data)
+                                     ^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_invalid_or_mixed_peer_poll_is_wholly_rejected_without_a_partial_preview[{&quot;ret&quot;:0,&quot;ret&quot;:0}]" time="0.874"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:141: in test_invalid_or_mixed_peer_poll_is_wholly_rejected_without_a_partial_preview
+    with pytest.raises(ServiceError):preview(h,data)
+                                     ^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_invalid_or_mixed_peer_poll_is_wholly_rejected_without_a_partial_preview[{&quot;ret&quot;: 0, &quot;msgs&quot;: [{&quot;message_id&quot;: 96, &quot;from_user_id&quot;: &quot;synthetic-peer-two&quot;, &quot;to_user_id&quot;: &quot;synthetic-dispatch-bot&quot;, &quot;message_type&quot;: 1, &quot;message_state&quot;: 2, &quot;item_list&quot;: [{&quot;type&quot;: 1, &quot;text_item&quot;: {&quot;text&quot;: &quot;\xe8\xaf\xb7\xe5\xae\xa1\xe6\x9f\xa5\xe7\x8b\xac\xe7\xab\x8b\xe8\x99\x9a\xe6\x9e\x84\xe5\x90\x88\xe5\x90\x8c&quot;}}]}], &quot;get_updates_buf&quot;: &quot;synthetic-hypothetical-next&quot;}]" time="1.022"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:141: in test_invalid_or_mixed_peer_poll_is_wholly_rejected_without_a_partial_preview
+    with pytest.raises(ServiceError):preview(h,data)
+                                     ^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_invalid_or_mixed_peer_poll_is_wholly_rejected_without_a_partial_preview[{&quot;ret&quot;: 0, &quot;msgs&quot;: [{&quot;message_id&quot;: 96, &quot;from_user_id&quot;: &quot;synthetic-peer&quot;, &quot;to_user_id&quot;: &quot;synthetic-dispatch-bot&quot;, &quot;message_type&quot;: 1, &quot;message_state&quot;: 2, &quot;item_list&quot;: [{&quot;type&quot;: 1, &quot;text_item&quot;: {&quot;text&quot;: &quot;\xe8\xaf\xb7\xe5\xae\xa1\xe6\x9f\xa5\xe7\x8b\xac\xe7\xab\x8b\xe8\x99\x9a\xe6\x9e\x84\xe5\x90\x88\xe5\x90\x8c&quot;}}]}, {&quot;message_id&quot;: 96, &quot;from_user_id&quot;: &quot;synthetic-peer&quot;, &quot;to_user_id&quot;: &quot;synthetic-dispatch-bot&quot;, &quot;message_type&quot;: 1, &quot;message_state&quot;: 2, &quot;item_list&quot;: [{&quot;type&quot;: 1, &quot;text_item&quot;: {&quot;text&quot;: &quot;\xe8\xaf\xb7\xe5\xae\xa1\xe6\x9f\xa5\xe7\x8b\xac\xe7\xab\x8b\xe8\x99\x9a\xe6\x9e\x84\xe5\x90\x88\xe5\x90\x8c&quot;}}]}], &quot;get_updates_buf&quot;: &quot;synthetic-hypothetical-next&quot;}]" time="0.849"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:141: in test_invalid_or_mixed_peer_poll_is_wholly_rejected_without_a_partial_preview
+    with pytest.raises(ServiceError):preview(h,data)
+                                     ^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_invalid_or_mixed_peer_poll_is_wholly_rejected_without_a_partial_preview[{&quot;ret&quot;: 0, &quot;msgs&quot;: [{&quot;message_id&quot;: 96, &quot;from_user_id&quot;: &quot;synthetic-peer&quot;, &quot;to_user_id&quot;: &quot;synthetic-dispatch-bot&quot;, &quot;message_type&quot;: 1, &quot;message_state&quot;: 2, &quot;item_list&quot;: [{&quot;type&quot;: 1, &quot;text_item&quot;: {&quot;text&quot;: &quot;\xe8\xaf\xb7\xe5\xae\xa1\xe6\x9f\xa5\xe7\x8b\xac\xe7\xab\x8b\xe8\x99\x9a\xe6\x9e\x84\xe5\x90\x88\xe5\x90\x8c&quot;}}]}, {&quot;message_id&quot;: 97, &quot;from_user_id&quot;: &quot;unknown&quot;, &quot;to_user_id&quot;: &quot;synthetic-dispatch-bot&quot;, &quot;message_type&quot;: 1, &quot;message_state&quot;: 2, &quot;item_list&quot;: [{&quot;type&quot;: 1, &quot;text_item&quot;: {&quot;text&quot;: &quot;\xe8\xaf\xb7\xe5\xae\xa1\xe6\x9f\xa5\xe7\x8b\xac\xe7\xab\x8b\xe8\x99\x9a\xe6\x9e\x84\xe5\x90\x88\xe5\x90\x8c&quot;}}]}], &quot;get_updates_buf&quot;: &quot;synthetic-hypothetical-next&quot;}]" time="0.852"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:141: in test_invalid_or_mixed_peer_poll_is_wholly_rejected_without_a_partial_preview
+    with pytest.raises(ServiceError):preview(h,data)
+                                     ^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_preview" name="test_old_source_reply_and_media_secrets_do_not_become_redirected_durable_messages" time="0.849"><failure message="AssertionError: D2g5a needs current generation offline preview&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')&#10; +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_preview.py:150: in test_old_source_reply_and_media_secrets_do_not_become_redirected_durable_messages
+    before=snapshot(h['database']);value=preview(h,raw(item,file))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_preview.py:37: in preview
+    return api().preview_generation_response(h['actor'],h['mapping'].id,expected or head(h),data,database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_preview.py:24: in api
+    assert importlib.util.find_spec(name) is not None, 'D2g5a needs current generation offline preview'
+E   AssertionError: D2g5a needs current generation offline preview
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x0000019100A7D8A0&gt;('cn_contract.weixin_inbox.generation_preview')
+E    +    where &lt;function find_spec at 0x0000019100A7D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase></testsuite></testsuites>

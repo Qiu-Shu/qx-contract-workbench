@@ -1,0 +1,33 @@
+{
+  "evidence_only_no_historical_test_rerun": true,
+  "D2g3": {
+    "python_tests": 298,
+    "modules": 14,
+    "scope": "head57 + generation service100 + HTTP64 + authorization77"
+  },
+  "D2g4": {
+    "python_tests": 229,
+    "modules": 12,
+    "scope": "frontend/pages31 + head57 + HTTP64 + authorization77"
+  },
+  "shared_python": 198,
+  "D2g3_only": 100,
+  "D2g4_only": 31,
+  "explanation": "298 - omitted service group100 + UI/frontend group31 =229; each stage reports its actual selected scope, not a cumulative full-repository count",
+  "node": {
+    "D2g3": 192,
+    "D2g4": 233,
+    "new_leaf": 41,
+    "explanation": "192+41=233; repeated Python bridges and independent reruns are not added"
+  },
+  "inputs": [
+    "docs/testing/weixin-generation-head/20261025/root-new.xml",
+    "docs/testing/weixin-generation-head/20261025/root-generations.xml",
+    "docs/testing/weixin-generation-head/20261025/root-http.xml",
+    "docs/testing/weixin-generation-head/20261025/root-authorization.xml",
+    "docs/testing/weixin-generation-ui/20261025/root-frontend.xml",
+    "docs/testing/weixin-generation-ui/20261025/root-head.xml",
+    "docs/testing/weixin-generation-ui/20261025/root-http.xml",
+    "docs/testing/weixin-generation-ui/20261025/root-authorization.xml"
+  ]
+}

@@ -1,0 +1,331 @@
+{
+  "baseline": "074738034bdfb0f5231f003c9d12522793ee5928",
+  "scope": "D2g5a persistent-generation synthetic preview only; legacy account intake/dispatch stay paused",
+  "schema": "weixin-generations-v1 (17) unchanged",
+  "python": {
+    "tests": 361,
+    "modules": 14,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "groups": [
+      {
+        "label": "root-new",
+        "command": [
+          "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+          "-B",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/unit/test_weixin_generation_preview_view.py",
+          "tests/integration/test_weixin_generation_preview.py",
+          "tests/integration/test_weixin_generation_preview_atomic.py",
+          "-q",
+          "--tb=short",
+          "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-generation-preview-20261025\\root-new-tmp",
+          "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-generation-preview-20261025\\root-new.xml"
+        ],
+        "exit_code": 0,
+        "seconds": 31.953,
+        "tests": 50,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "source_sha256": {
+          "src/cn_contract/domain.py": "16540538fe08a600d441e38991f4cb6d89913ddd0bad4ff755a13f9c8c0ac8e1",
+          "src/cn_contract/weixin_inbox/generation_preview.py": "369eff7d04fd3a39f992d1feab5983ea06575389f0c695110fb682180c820381",
+          "tests/unit/test_weixin_generation_preview_view.py": "2001200a963dff130267e9f1dec042ba4006c34cec333ad29fb736d72c7e1038",
+          "tests/integration/test_weixin_generation_preview.py": "d611c5bd924b27af2c36c76e8946bcfd99ae753b5b8adc2e2996557a192ecc05",
+          "tests/integration/test_weixin_generation_preview_atomic.py": "639711730a295f316aaa3bc2293e729decdc81718e595edbe4af68716b54f61c",
+          "src/cn_contract/weixin_offline.py": "d76e22e9f0780284134a441d9dc79f8794269632855ac76b217f25f41527022a",
+          "src/cn_contract/weixin_inbox/accounts.py": "a2c493fbf799694d5eeda35f26577b6102916e628d2dc6092ec57c6e152b2bc5",
+          "src/cn_contract/weixin_inbox/generations.py": "4d7e82d8b8dd1b7cca030545e506c937407870c802efe927234e2cf18bf70004",
+          "src/cn_contract/weixin_inbox/generation_integrity.py": "1d3ed148462ab1587a403b2c991f8f8452215931bbbd918d44212b4ab38e8fa2",
+          "src/cn_contract/weixin_inbox/ingress.py": "b94faa85fdf9145d8d86a60272543176efc597ac5cc41776410160bbcf116f06",
+          "src/cn_contract/weixin_inbox/dispatch.py": "e991919b6d20de81f6bb9fbfbd1cfb171e30f15760b4d80bde144d15978a907f",
+          "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6"
+        }
+      },
+      {
+        "label": "root-protocol",
+        "command": [
+          "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+          "-B",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/unit/test_weixin_offline_protocol.py",
+          "tests/integration/test_weixin_offline.py",
+          "-q",
+          "--tb=short",
+          "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-generation-preview-20261025\\root-protocol-tmp",
+          "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-generation-preview-20261025\\root-protocol.xml"
+        ],
+        "exit_code": 0,
+        "seconds": 10.063,
+        "tests": 135,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "source_sha256": {
+          "src/cn_contract/domain.py": "16540538fe08a600d441e38991f4cb6d89913ddd0bad4ff755a13f9c8c0ac8e1",
+          "src/cn_contract/weixin_inbox/generation_preview.py": "369eff7d04fd3a39f992d1feab5983ea06575389f0c695110fb682180c820381",
+          "tests/unit/test_weixin_generation_preview_view.py": "2001200a963dff130267e9f1dec042ba4006c34cec333ad29fb736d72c7e1038",
+          "tests/integration/test_weixin_generation_preview.py": "d611c5bd924b27af2c36c76e8946bcfd99ae753b5b8adc2e2996557a192ecc05",
+          "tests/integration/test_weixin_generation_preview_atomic.py": "639711730a295f316aaa3bc2293e729decdc81718e595edbe4af68716b54f61c",
+          "src/cn_contract/weixin_offline.py": "d76e22e9f0780284134a441d9dc79f8794269632855ac76b217f25f41527022a",
+          "src/cn_contract/weixin_inbox/accounts.py": "a2c493fbf799694d5eeda35f26577b6102916e628d2dc6092ec57c6e152b2bc5",
+          "src/cn_contract/weixin_inbox/generations.py": "4d7e82d8b8dd1b7cca030545e506c937407870c802efe927234e2cf18bf70004",
+          "src/cn_contract/weixin_inbox/generation_integrity.py": "1d3ed148462ab1587a403b2c991f8f8452215931bbbd918d44212b4ab38e8fa2",
+          "src/cn_contract/weixin_inbox/ingress.py": "b94faa85fdf9145d8d86a60272543176efc597ac5cc41776410160bbcf116f06",
+          "src/cn_contract/weixin_inbox/dispatch.py": "e991919b6d20de81f6bb9fbfbd1cfb171e30f15760b4d80bde144d15978a907f",
+          "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6"
+        }
+      },
+      {
+        "label": "root-generation-service",
+        "command": [
+          "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+          "-B",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/unit/test_weixin_generation_input.py",
+          "tests/integration/test_weixin_generation_service.py",
+          "tests/integration/test_weixin_generation_service_atomic.py",
+          "tests/integration/test_weixin_generation_service_backup.py",
+          "-q",
+          "--tb=short",
+          "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-generation-preview-20261025\\root-generation-service-tmp",
+          "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-generation-preview-20261025\\root-generation-service.xml"
+        ],
+        "exit_code": 0,
+        "seconds": 62.422,
+        "tests": 100,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "source_sha256": {
+          "src/cn_contract/domain.py": "16540538fe08a600d441e38991f4cb6d89913ddd0bad4ff755a13f9c8c0ac8e1",
+          "src/cn_contract/weixin_inbox/generation_preview.py": "369eff7d04fd3a39f992d1feab5983ea06575389f0c695110fb682180c820381",
+          "tests/unit/test_weixin_generation_preview_view.py": "2001200a963dff130267e9f1dec042ba4006c34cec333ad29fb736d72c7e1038",
+          "tests/integration/test_weixin_generation_preview.py": "d611c5bd924b27af2c36c76e8946bcfd99ae753b5b8adc2e2996557a192ecc05",
+          "tests/integration/test_weixin_generation_preview_atomic.py": "639711730a295f316aaa3bc2293e729decdc81718e595edbe4af68716b54f61c",
+          "src/cn_contract/weixin_offline.py": "d76e22e9f0780284134a441d9dc79f8794269632855ac76b217f25f41527022a",
+          "src/cn_contract/weixin_inbox/accounts.py": "a2c493fbf799694d5eeda35f26577b6102916e628d2dc6092ec57c6e152b2bc5",
+          "src/cn_contract/weixin_inbox/generations.py": "4d7e82d8b8dd1b7cca030545e506c937407870c802efe927234e2cf18bf70004",
+          "src/cn_contract/weixin_inbox/generation_integrity.py": "1d3ed148462ab1587a403b2c991f8f8452215931bbbd918d44212b4ab38e8fa2",
+          "src/cn_contract/weixin_inbox/ingress.py": "b94faa85fdf9145d8d86a60272543176efc597ac5cc41776410160bbcf116f06",
+          "src/cn_contract/weixin_inbox/dispatch.py": "e991919b6d20de81f6bb9fbfbd1cfb171e30f15760b4d80bde144d15978a907f",
+          "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6"
+        }
+      },
+      {
+        "label": "root-head-guards",
+        "command": [
+          "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+          "-B",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/unit/test_weixin_generation_head_view.py",
+          "tests/integration/test_weixin_generation_head.py",
+          "tests/integration/test_weixin_generation_head_routes.py",
+          "tests/integration/test_weixin_generation_head_atomic.py",
+          "tests/integration/test_weixin_generation_guards.py",
+          "-q",
+          "--tb=short",
+          "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-generation-preview-20261025\\root-head-guards-tmp",
+          "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-generation-preview-20261025\\root-head-guards.xml"
+        ],
+        "exit_code": 0,
+        "seconds": 40.906,
+        "tests": 76,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "source_sha256": {
+          "src/cn_contract/domain.py": "16540538fe08a600d441e38991f4cb6d89913ddd0bad4ff755a13f9c8c0ac8e1",
+          "src/cn_contract/weixin_inbox/generation_preview.py": "369eff7d04fd3a39f992d1feab5983ea06575389f0c695110fb682180c820381",
+          "tests/unit/test_weixin_generation_preview_view.py": "2001200a963dff130267e9f1dec042ba4006c34cec333ad29fb736d72c7e1038",
+          "tests/integration/test_weixin_generation_preview.py": "d611c5bd924b27af2c36c76e8946bcfd99ae753b5b8adc2e2996557a192ecc05",
+          "tests/integration/test_weixin_generation_preview_atomic.py": "639711730a295f316aaa3bc2293e729decdc81718e595edbe4af68716b54f61c",
+          "src/cn_contract/weixin_offline.py": "d76e22e9f0780284134a441d9dc79f8794269632855ac76b217f25f41527022a",
+          "src/cn_contract/weixin_inbox/accounts.py": "a2c493fbf799694d5eeda35f26577b6102916e628d2dc6092ec57c6e152b2bc5",
+          "src/cn_contract/weixin_inbox/generations.py": "4d7e82d8b8dd1b7cca030545e506c937407870c802efe927234e2cf18bf70004",
+          "src/cn_contract/weixin_inbox/generation_integrity.py": "1d3ed148462ab1587a403b2c991f8f8452215931bbbd918d44212b4ab38e8fa2",
+          "src/cn_contract/weixin_inbox/ingress.py": "b94faa85fdf9145d8d86a60272543176efc597ac5cc41776410160bbcf116f06",
+          "src/cn_contract/weixin_inbox/dispatch.py": "e991919b6d20de81f6bb9fbfbd1cfb171e30f15760b4d80bde144d15978a907f",
+          "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6"
+        }
+      }
+    ],
+    "counting": "50 new + protocol/offline135 + generation service100 + head/guards76; independent7 included, no cumulative count"
+  },
+  "node": {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "--test",
+      "--test-reporter=tap",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_citations.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_context_selection.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_generation_entry.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_generation_render.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_generation_state.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_material_dom.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_material_state.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_profile_generation.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_profile_panel.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_research_state.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_state.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_tasks.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_transport_input.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_weixin.mjs",
+      "D:\\Documents\\ChatGPT\\律所项目\\scripts\\test_assistant_weixin_generations.mjs"
+    ],
+    "exit_code": 0,
+    "tests": 233,
+    "passed": 233,
+    "failed": 0,
+    "skipped": 0,
+    "scripts": 15,
+    "note": "existing scripts rerun; no new UI or Node cases"
+  },
+  "gates": [
+    {
+      "label": "schema",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "cn_contract.cli",
+        "schema",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.547
+    },
+    {
+      "label": "defaults",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_defaults.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.469
+    },
+    {
+      "label": "sources",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0,
+      "seconds": 2.719
+    },
+    {
+      "label": "dependencies",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0,
+      "seconds": 0.453
+    }
+  ],
+  "review": {
+    "reviewer": "/root/d2g3_head_atomic",
+    "axes": "Spec and Standards by same independent reviewer",
+    "confirmed_remaining_findings": 0,
+    "independent_tests": 7
+  },
+  "failures": {
+    "root_initial": {
+      "failures": 40,
+      "fixture_error": 1,
+      "valid_missing_interface": 39
+    },
+    "root_final_red": {
+      "failures": 40,
+      "fixture_errors": 0,
+      "cause": "missing DTO or preview module"
+    },
+    "independent_interface_red": {
+      "failures": 6,
+      "errors": 0
+    },
+    "independent_contract_red": {
+      "failures": 1,
+      "cause": "overbroad plan zero-audit promise contradicted existing security denial audit; corrected plan/test, no product change"
+    },
+    "restored_first": {
+      "failures": 1,
+      "cause": "test used revoked pre-restore session and expected BLOCKED_LIVE; actual AUTHORIZATION_REQUIRED correct; added explicit re-login then verifies BLOCKED_LIVE"
+    },
+    "restored_final": {
+      "passed": 1,
+      "cases": "old session401; fresh restored session409; no business changes"
+    }
+  },
+  "source_sha256": {
+    "src/cn_contract/domain.py": "16540538fe08a600d441e38991f4cb6d89913ddd0bad4ff755a13f9c8c0ac8e1",
+    "src/cn_contract/weixin_inbox/generation_preview.py": "369eff7d04fd3a39f992d1feab5983ea06575389f0c695110fb682180c820381",
+    "tests/unit/test_weixin_generation_preview_view.py": "2001200a963dff130267e9f1dec042ba4006c34cec333ad29fb736d72c7e1038",
+    "tests/integration/test_weixin_generation_preview.py": "d611c5bd924b27af2c36c76e8946bcfd99ae753b5b8adc2e2996557a192ecc05",
+    "tests/integration/test_weixin_generation_preview_atomic.py": "639711730a295f316aaa3bc2293e729decdc81718e595edbe4af68716b54f61c",
+    "src/cn_contract/weixin_offline.py": "d76e22e9f0780284134a441d9dc79f8794269632855ac76b217f25f41527022a",
+    "src/cn_contract/weixin_inbox/accounts.py": "a2c493fbf799694d5eeda35f26577b6102916e628d2dc6092ec57c6e152b2bc5",
+    "src/cn_contract/weixin_inbox/generations.py": "4d7e82d8b8dd1b7cca030545e506c937407870c802efe927234e2cf18bf70004",
+    "src/cn_contract/weixin_inbox/generation_integrity.py": "1d3ed148462ab1587a403b2c991f8f8452215931bbbd918d44212b4ab38e8fa2",
+    "src/cn_contract/weixin_inbox/ingress.py": "b94faa85fdf9145d8d86a60272543176efc597ac5cc41776410160bbcf116f06",
+    "src/cn_contract/weixin_inbox/dispatch.py": "e991919b6d20de81f6bb9fbfbd1cfb171e30f15760b4d80bde144d15978a907f",
+    "src/cn_contract/ops/workspace_backup.py": "96e7c2e9cc4f30745eb4d73da0f6c93bb40825b6144b3c753f8e4213912d9fd6"
+  },
+  "user_agents_sha256": "e0fcf27d3a2b5aca6c09d5372c869a312dfc6dba558dcb67581ef9f5ffbe755f",
+  "safety": {
+    "success": "zero business and audit writes",
+    "denied": "no business writes; existing security.deny audit retained",
+    "network": "socket.connect/create_connection forbidden in preview tests",
+    "runtime_pause": "existing ingress/dispatch/account guards unchanged; actual poll still STATE_CONFLICT",
+    "preview_limit": "no remote authentication, freshness, durable dedup, retargeting of historical source/reply, cursor commit or delivery permission"
+  },
+  "workbuddy": "NOT_RUN this turn; no retry of earlier denied task",
+  "not_run": [
+    "full repository single-process suite",
+    "browser UI (no UI change)",
+    "installed Electron",
+    "real WeChat",
+    "real product model",
+    "real contract",
+    "paid call",
+    "legal signing",
+    "external messaging",
+    "new installer"
+  ],
+  "open": [
+    "WIN-PATH-02",
+    "native long-process access violation",
+    "persistent generation source versioning and intake/dispatch",
+    "trusted WeChat identity/qualification",
+    "E limited model authorization"
+  ]
+}
