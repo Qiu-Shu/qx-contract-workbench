@@ -1,0 +1,39 @@
+{
+  "branch": "codex/contract-review-v2",
+  "commit": "2a4cca8ab2d7e5e514ce99f63b38d1c6e6f36d3c",
+  "remote_sha": "2a4cca8ab2d7e5e514ce99f63b38d1c6e6f36d3c",
+  "fetched_sha": "2a4cca8ab2d7e5e514ce99f63b38d1c6e6f36d3c",
+  "tracking_sha": "2a4cca8ab2d7e5e514ce99f63b38d1c6e6f36d3c",
+  "local_tree": "45a1bf29287f93e340c1287cf7c4458a4edab11d",
+  "remote_tree": "45a1bf29287f93e340c1287cf7c4458a4edab11d",
+  "recursive_entries": 5630,
+  "recursive_tree_sha256": "0e0933ca0c77005207a4b91a9bccf749b9ae849082b8d2417861e8c44e48e722",
+  "equal": true,
+  "ahead": 0,
+  "behind": 0,
+  "verified_at": "2026-10-25T12:19:03.813963+00:00",
+  "remaining_changes": [
+    "AGENTS.md (user, unstaged)"
+  ],
+  "prepublish_scan": {
+    "count": 123,
+    "bytes": 1490744,
+    "relative_links": 471,
+    "known_secret_matches": 0,
+    "forbidden_paths": 0,
+    "broken_links": 0,
+    "compile_python_files": 38,
+    "user_agents_unchanged": true,
+    "source_inputs_verified": 564,
+    "staged_bytes_equal": true
+  },
+  "test_scope": {
+    "distinct_python_pass": 1329,
+    "new_included": 100,
+    "short_groups": 13,
+    "development_gates_pass": 4,
+    "extra_v18_upgrade_probe_pass": 1,
+    "extra_probe_included_in_main_count": false
+  },
+  "source_snapshot_note": "All product inputs identical across final groups. Two old test function bodies changed; full affected groups reran. See verification-summary and test-only-correction-proof."
+}

@@ -54,6 +54,6 @@ WorkBuddy由宿主native ACP核实kimi-k3-2；只读辅助任务请求Bash被bri
 
 真实微信可信身份、账号资格/数据政策、transport/下载解密/外发及E有限期模型许可仍待；无新HTTP/UI或自动收件分发开关。真实微信/合同/产品模型/付费调用、全仓长单进程、Node、浏览器/Electron/安装版0.4.1均NOT_RUN，0.4.1未更新。WIN-PATH-02/原生长进程AV保持OPEN。
 
-GitHub按后续实际回执核对，用户AGENTS保持未暂存。HumanLayer旧摘要因Windows argv限长仍待同步；Obsidian/本轮HumanLayer结果按收尾实际回执，TencentDB沿正常Stop，不预报保存成功。
+产品`2a4cca8`已正常推送，远端SHA/tree及5,630条目一致，[实际同步回执](github-sync.md)；用户AGENTS保持未暂存。HumanLayer旧摘要因Windows argv限长仍待同步；Obsidian/本轮HumanLayer结果按收尾实际回执，TencentDB沿正常Stop，不预报保存成功。
 
 最终[证据独审](final-evidence-review.md)重新核算计数、来源SHA、两处test-body例外及发布字节，0确认问题；不含后续Git同步回执修改，也未重跑测试。
