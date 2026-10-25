@@ -10,7 +10,7 @@ from ..weixin_inbox import conversation
 from .request_context import actor_in, body_input, same_origin
 
 _UUID = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
-_READ_PATH = re.compile(rf'/api/assistant/conversations/{_UUID}/weixin-authorization(?:/(?:refreshes|generations)/by-request/{_UUID}|/generations/head)?')
+_READ_PATH = re.compile(rf'/api/assistant/conversations/{_UUID}/weixin-authorization(?:/(?:refreshes|generations)/by-request/{_UUID}|/generations/head|/dispatches/by-descriptor/{_UUID})?')
 
 
 def is_weixin_authorization_read_path(path):
@@ -60,3 +60,14 @@ def register_routes(app, database):
     @app.get(base+'/generations/head')
     def generation_head(cid:UUID, request:Request):
         return conversation.read_generation_head(authorize(request, cid), cid, database=database)
+
+    @app.post(base+'/dispatches')
+    async def dispatch_descriptor(cid:UUID, request:Request):
+        authorize(request, cid, write=True, generation=True)
+        value = await body_input(request, d.WeixinGenerationDispatchInput)
+        actor = authorize(request, cid, write=True, generation=True)
+        return await run_in_threadpool(conversation.dispatch_descriptor, actor, cid, value, database=database)
+
+    @app.get(base+'/dispatches/by-descriptor/{descriptor_id}')
+    def find_dispatch(cid:UUID, descriptor_id:UUID, request:Request):
+        return conversation.find_dispatch(authorize(request, cid), cid, descriptor_id, database=database)

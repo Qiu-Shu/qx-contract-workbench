@@ -1,0 +1,29 @@
+.....................F....................................FF....         [100%]
+================================== FAILURES ===================================
+_______ test_cid_cannot_choose_another_peer_or_account_descriptor[peer] _______
+tests\integration\test_weixin_generation_dispatch_routes.py:117: in test_cid_cannot_choose_another_peer_or_account_descriptor
+    d.WeixinAccountCreateInput(bot_account_id='synthetic-http-other-bot'), database=h['database'])
+src\cn_contract\weixin_inbox\accounts.py:199: in bind_synthetic_peer
+    account, current = _account(actor, account_id, db)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\weixin_inbox\accounts.py:42: in _account
+    raise ServiceError('STATE_CONFLICT', 409)
+E   cn_contract.security.ServiceError: request blocked
+_ test_get_uses_current_root_and_fixed_target_ownership_without_latest_substitution[fixed_target] _
+tests\integration\test_weixin_generation_dispatch_routes.py:238: in test_get_uses_current_root_and_fixed_target_ownership_without_latest_substitution
+    assert state(h['database']) == before
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: {"code":"VERSION_CONFLICT","message":"request blocked","correlation_id":"75546b60-7975-4974-896e-a32bd93cb29e","retryable":false}
+E   assert 409 == 403
+E    +  where 409 = <Response [409 Conflict]>.status_code
+_ test_get_uses_current_root_and_fixed_target_ownership_without_latest_substitution[later_target] _
+tests\integration\test_weixin_generation_dispatch_routes.py:236: in test_get_uses_current_root_and_fixed_target_ownership_without_latest_substitution
+    else:
+        ^^
+E   assert (409 == 200)
+E    +  where 409 = <Response [409 Conflict]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_dispatch_routes.py::test_cid_cannot_choose_another_peer_or_account_descriptor[peer]
+FAILED tests/integration/test_weixin_generation_dispatch_routes.py::test_get_uses_current_root_and_fixed_target_ownership_without_latest_substitution[fixed_target]
+FAILED tests/integration/test_weixin_generation_dispatch_routes.py::test_get_uses_current_root_and_fixed_target_ownership_without_latest_substitution[later_target]
+3 failed, 61 passed in 61.09s (0:01:01)

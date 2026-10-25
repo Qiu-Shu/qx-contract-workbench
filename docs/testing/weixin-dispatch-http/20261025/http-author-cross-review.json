@@ -1,0 +1,98 @@
+{
+  "reviewed_at": "2026-10-25T12:32:32.123712+00:00",
+  "reviewer": "/root/dispatch_http",
+  "review_kind": "cross-author static code review",
+  "scope": [
+    "src/cn_contract/domain.py",
+    "src/cn_contract/weixin_inbox/conversation.py",
+    "src/cn_contract/weixin_inbox/generation_dispatch.py"
+  ],
+  "excluded_authored": [
+    "src/cn_contract/web/weixin_authorization.py",
+    "tests/integration/test_weixin_generation_dispatch_routes.py"
+  ],
+  "dependencies": [
+    "src/cn_contract/weixin_inbox/accounts.py",
+    "src/cn_contract/weixin_inbox/dispatch.py",
+    "src/cn_contract/persistence.py",
+    "src/cn_contract/assistant/service.py",
+    "tests/integration/test_weixin_generation_dispatch_conversation.py"
+  ],
+  "source_sha256": {
+    "src/cn_contract/domain.py": "f8f64176edbc9866887ade894680492769ae46b8ddd4bc3c6bc107632b89fe2e",
+    "src/cn_contract/weixin_inbox/conversation.py": "025fe5960dcfb967fdcf871d3589f068e10094717b6ac54ea09a11f538ca1c14",
+    "src/cn_contract/weixin_inbox/generation_dispatch.py": "a1f22dc3c7813f9a28a050acb46f3880ad9316ad3b98e83bb260e04a8f9df361",
+    "src/cn_contract/weixin_inbox/accounts.py": "0ab2584d848a7af293970594d157743a5028b63a040481596d0f0dac51d85f13",
+    "src/cn_contract/weixin_inbox/dispatch.py": "a0d4dc1f99a6414e5696b69d6d07fc9e897038a6717586c10d6b85932619e2db",
+    "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8",
+    "src/cn_contract/assistant/service.py": "b6e9c2c9825ede962be21c2385d0109b7712130405edbeed58a2b869d2c6baa0",
+    "tests/integration/test_weixin_generation_dispatch_conversation.py": "9fe190da0090a230a1f67388c9a8bb27c7abc468d390c66a010693cf0f87028c"
+  },
+  "checks": [
+    {
+      "topic": "Final transaction binds CID to exact descriptor root",
+      "locations": [
+        "conversation.py:158-166",
+        "conversation.py:169-178",
+        "generation_dispatch.py:81-86",
+        "generation_dispatch.py:102-105",
+        "accounts.py:19-24",
+        "persistence.py:183-184"
+      ],
+      "result": "PASS_STATIC",
+      "reason": "The CID current principal, owner, workspace, scope/ACL, and write revocation/fence are resolved within accounts._transaction. Private _dispatch/_find compare descriptor mapping.id to that resolved mapping.id before receipt publication. The transaction already holds BEGIN IMMEDIATE; no second public service transaction or cross-target reverse resolution is introduced."
+    },
+    {
+      "topic": "Projection stays within rollback boundary",
+      "locations": [
+        "conversation.py:148-166",
+        "conversation.py:176-178",
+        "persistence.py:199-207"
+      ],
+      "result": "PASS_STATIC",
+      "reason": "The exact fixed binding resolves conversation_id and validates the nine-field frozen view before leaving accounts._transaction. Any SELECT/model construction failure rolls back task event, cursor and receipt; commit occurs only after projection succeeds."
+    },
+    {
+      "topic": "Read historical target under current ACL, never latest",
+      "locations": [
+        "generation_dispatch.py:31-66",
+        "generation_dispatch.py:102-111",
+        "accounts.py:82-124",
+        "conversation.py:169-178"
+      ],
+      "result": "PASS_STATIC",
+      "reason": "_source active=False preserves actual principal/owner/workspace and root/fixed target current ACL using the immutable descriptor sidecar; it does not call latest/head resolution. Root unbound returns null. Unknown descriptor or foreign mapping is denied. Revocation/fence/archive block writes but need not erase readable existing acknowledgements."
+    },
+    {
+      "topic": "Public Python API compatibility and original authority checks",
+      "locations": [
+        "generation_dispatch.py:81-125"
+      ],
+      "result": "PASS_STATIC",
+      "reason": "Existing public signatures stay unchanged and retain one accounts._transaction. The extracted body retains _source, saved-receipt verification, exact saved target scope for new writes, per-(mapping,binding) earliest prefix, shared delivery, and post-write complete validation. The extra root_mapping_id argument is private, optional and only supplied by CID services; omitted public calls retain prior semantics."
+    },
+    {
+      "topic": "DTO authority and privacy boundary",
+      "locations": [
+        "domain.py:77-78",
+        "domain.py:4869-4890",
+        "conversation.py:148-155"
+      ],
+      "result": "PASS_STATIC",
+      "reason": "The input has only descriptor_id; inherited extra=forbid/frozen disallows caller authority fields. The output contains only mode/state/descriptor_id/conversation_id/task_event_id/cursors/UTC time/opaque full receipt digest. Unit cursor progression is validated. No account/bot/peer/session/source_event/payload/reason is projected."
+    },
+    {
+      "topic": "No new execution or transport capability",
+      "locations": [
+        "generation_dispatch.py:81-99",
+        "dispatch.py:80-104"
+      ],
+      "result": "PASS_STATIC",
+      "reason": "The change still invokes TaskInbox receive_batch and the existing durable receipt. It does not freeze a draft, create an execution/model attempt, download/decrypt media, contact WeChat, or send a message. No DDL/migration change is part of the three reviewed files."
+    }
+  ],
+  "findings": [],
+  "unresolved_findings": 0,
+  "tests_executed_for_review": "NOT_RUN; root owns final combined runner",
+  "review_source_stable": true
+}

@@ -1,0 +1,46 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+_______ test_http_preserves_per_target_prefix_and_unknown_query_is_pure _______
+
+chat = (<starlette.testclient.TestClient object at 0x000001FE80C8ECF0>, <cn_contract.persistence.Database object at 0x000001F...Documents/ChatGPT/律所项目/.local/weixin-dispatch-http-20261025/red-temp/test_http_preserves_per_target0/workspaces/main'))
+
+    def test_http_preserves_per_target_prefix_and_unknown_query_is_pure(chat):
+        h = setup(chat); descriptors = receive(h).descriptors
+        before = state(h['database'])
+>       assert write(h, descriptors[1].id).status_code == 409
+E       AssertionError: assert 404 == 409
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = write({'account': WeixinAccountSnapshot(id=UUID('30576998-9872-4a0a-a8fd-9a9bd6748216'), workspace_id=UUID('62f3015b-4c8d-4c...ation_id': '9dd73cff-5886-4267-b730-22414ca20902', 'created_at': '2026-10-25T12:29:11.211740Z', 'cursor': 0, ...}, ...}, UUID('b0c98be5-c9eb-4a70-bfb3-116847a11e5b'))
+E        +      where UUID('b0c98be5-c9eb-4a70-bfb3-116847a11e5b') = WeixinInboxDescriptor(id=UUID('b0c98be5-c9eb-4a70-bfb3-116847a11e5b'), poll_id=UUID('13d715b8-75c0-49eb-83f6-ebafd4def...8c3a7a639bdf74843e7d651e499200b7b', text='请审查独立虚构合同', task_id=None, reply_to_event_id=None, start_new=False, media=())).id
+
+tests\integration\test_weixin_generation_dispatch_routes.py:91: AssertionError
+____ test_unauthenticated_dispatch_and_query_precede_unknown_root_and_body ____
+
+chat = (<starlette.testclient.TestClient object at 0x000001FE824A7830>, <cn_contract.persistence.Database object at 0x000001F...Documents/ChatGPT/律所项目/.local/weixin-dispatch-http-20261025/red-temp/test_unauthenticated_dispatch_0/workspaces/main'))
+
+    def test_unauthenticated_dispatch_and_query_precede_unknown_root_and_body(chat):
+        client, _, _ = chat; base = endpoint(uuid4())
+>       assert client.post(base+'/dispatches', content='not-json').status_code == 401
+E       AssertionError: assert 404 == 401
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = post(('/api/assistant/conversations/de855707-55d0-4efd-ad5e-2956eb0adb48/weixin-authorization' + '/dispatches'), content='not-json')
+E        +      where post = <starlette.testclient.TestClient object at 0x000001FE824A7830>.post
+
+tests\integration\test_weixin_generation_dispatch_routes.py:134: AssertionError
+________ test_get_same_origin_and_exact_lower_uuid_recovery_predicate _________
+
+chat = (<starlette.testclient.TestClient object at 0x000001FE82564CE0>, <cn_contract.persistence.Database object at 0x000001F...Documents/ChatGPT/律所项目/.local/weixin-dispatch-http-20261025/red-temp/test_get_same_origin_and_exact0/workspaces/main'))
+
+    def test_get_same_origin_and_exact_lower_uuid_recovery_predicate(chat):
+        h = setup(chat); path = h['base']+'/dispatches/by-descriptor/'+str(uuid4())
+        predicate = module().is_weixin_authorization_read_path
+>       assert predicate(path)
+E       AssertionError: assert False
+E        +  where False = <function is_weixin_authorization_read_path at 0x000001FE822A5DA0>('/api/assistant/conversations/ea42ffe2-4184-4dc0-b530-4ed36d913e3a/weixin-authorization/dispatches/by-descriptor/f6a33648-2b2f-4659-8f72-04ee3d1e5b4d')
+
+tests\integration\test_weixin_generation_dispatch_routes.py:240: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_dispatch_routes.py::test_http_preserves_per_target_prefix_and_unknown_query_is_pure
+FAILED tests/integration/test_weixin_generation_dispatch_routes.py::test_unauthenticated_dispatch_and_query_precede_unknown_root_and_body
+FAILED tests/integration/test_weixin_generation_dispatch_routes.py::test_get_same_origin_and_exact_lower_uuid_recovery_predicate
+3 failed, 39 deselected in 4.30s

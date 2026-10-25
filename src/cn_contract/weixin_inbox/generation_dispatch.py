@@ -78,34 +78,48 @@ def _earliest(mapping_id,binding_id,db):
         {'mapping':str(mapping_id),'binding':str(binding_id)})
 
 
+def _dispatch(actor,descriptor_id,db,*,root_mapping_id=None):
+    current,account,descriptor,mapping,binding_id,scope,poll,target=_source(actor,descriptor_id,db,active=True)
+    if root_mapping_id is not None and (mapping is None or mapping.id!=root_mapping_id):
+        raise ServiceError('CROSS_MATTER_DENIED',403)
+    if mapping is None:
+        raise ServiceError('STATE_CONFLICT',409)
+    receipt=dispatch._stored(descriptor.id,db)
+    if receipt is not None:
+        dispatch._verified(receipt,account,descriptor,mapping,db,binding_id=binding_id)
+    else:
+        accounts._require_mapping(accounts._scope_reason(current,account,binding_id,scope,db,active=True))
+        if _earliest(mapping.id,binding_id,db)!=str(descriptor.id):
+            dispatch._conflict()
+        floor=(poll.created_at.isoformat(),)
+        if target is not None:
+            floor+=(target.created_at.isoformat(),)
+        receipt=dispatch._deliver(current,account,descriptor,mapping,db,binding_id=binding_id,after=True,floor=floor)
+    _validate(db)
+    return receipt
+
+
+def _find(actor,descriptor_id,db,*,root_mapping_id=None):
+    _,account,descriptor,mapping,binding_id,_,_,_=_source(actor,descriptor_id,db,active=False)
+    if root_mapping_id is not None and (mapping is None or mapping.id!=root_mapping_id):
+        raise ServiceError('CROSS_MATTER_DENIED',403)
+    receipt=dispatch._stored(descriptor.id,db)
+    if receipt is not None:
+        if mapping is None:
+            dispatch._conflict()
+        dispatch._verified(receipt,account,descriptor,mapping,db,binding_id=binding_id)
+    return receipt
+
+
 def dispatch_generation_descriptor(actor,descriptor_id,*,database):
     """Receive only the immutable historical target, never the account's latest target."""
     with accounts._transaction(database) as db:
-        current,account,descriptor,mapping,binding_id,scope,poll,target=_source(actor,descriptor_id,db,active=True)
-        if mapping is None:
-            raise ServiceError('STATE_CONFLICT',409)
-        receipt=dispatch._stored(descriptor.id,db)
-        if receipt is not None:
-            dispatch._verified(receipt,account,descriptor,mapping,db,binding_id=binding_id)
-        else:
-            accounts._require_mapping(accounts._scope_reason(current,account,binding_id,scope,db,active=True))
-            if _earliest(mapping.id,binding_id,db)!=str(descriptor.id):
-                dispatch._conflict()
-            floor=(poll.created_at.isoformat(),)
-            if target is not None:
-                floor+=(target.created_at.isoformat(),)
-            receipt=dispatch._deliver(current,account,descriptor,mapping,db,binding_id=binding_id,after=True,floor=floor)
-        _validate(db)
+        receipt=_dispatch(actor,descriptor_id,db)
     return receipt
 
 
 def find_generation_dispatch_receipt(actor,descriptor_id,*,database):
     """Query the fixed acknowledgement after restore/revocation under current object ACL."""
     with accounts._transaction(database) as db:
-        _,account,descriptor,mapping,binding_id,_,_,_=_source(actor,descriptor_id,db,active=False)
-        receipt=dispatch._stored(descriptor.id,db)
-        if receipt is not None:
-            if mapping is None:
-                dispatch._conflict()
-            dispatch._verified(receipt,account,descriptor,mapping,db,binding_id=binding_id)
+        receipt=_find(actor,descriptor_id,db)
     return receipt

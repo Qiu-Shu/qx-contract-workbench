@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="7" time="2.147" timestamp="2026-10-25T20:30:10.704444+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_generation_dispatch_conversation" name="test_fixed_receipt_projection_and_public_python_service_share_one_acknowledgement" time="0.922"><failure message="AssertionError: D2g5e needs a CID-owned final transaction&#10;assert False&#10; +  where False = hasattr(conversation, 'dispatch_descriptor')">tests\integration\test_weixin_generation_dispatch_conversation.py:51: in test_fixed_receipt_projection_and_public_python_service_share_one_acknowledgement
+    assert find(h, cid, descriptors[0].id) is None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_dispatch_conversation.py:43: in find
+    return api().find_dispatch(h['actor'], cid, descriptor_id, database=h['database'])
+           ^^^^^
+tests\integration\test_weixin_generation_dispatch_conversation.py:24: in api
+    assert hasattr(conversation, 'dispatch_descriptor'), 'D2g5e needs a CID-owned final transaction'
+E   AssertionError: D2g5e needs a CID-owned final transaction
+E   assert False
+E    +  where False = hasattr(conversation, 'dispatch_descriptor')</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_conversation" name="test_dispatch_input_cannot_supply_server_authority[account_id]" time="0.000"><failure message="AssertionError: D2g5e needs a CID-owned final transaction&#10;assert False&#10; +  where False = hasattr(conversation, 'dispatch_descriptor')">tests\integration\test_weixin_generation_dispatch_conversation.py:137: in test_dispatch_input_cannot_supply_server_authority
+    api()
+tests\integration\test_weixin_generation_dispatch_conversation.py:24: in api
+    assert hasattr(conversation, 'dispatch_descriptor'), 'D2g5e needs a CID-owned final transaction'
+E   AssertionError: D2g5e needs a CID-owned final transaction
+E   assert False
+E    +  where False = hasattr(conversation, 'dispatch_descriptor')</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_conversation" name="test_dispatch_input_cannot_supply_server_authority[root_mapping_id]" time="0.000"><failure message="AssertionError: D2g5e needs a CID-owned final transaction&#10;assert False&#10; +  where False = hasattr(conversation, 'dispatch_descriptor')">tests\integration\test_weixin_generation_dispatch_conversation.py:137: in test_dispatch_input_cannot_supply_server_authority
+    api()
+tests\integration\test_weixin_generation_dispatch_conversation.py:24: in api
+    assert hasattr(conversation, 'dispatch_descriptor'), 'D2g5e needs a CID-owned final transaction'
+E   AssertionError: D2g5e needs a CID-owned final transaction
+E   assert False
+E    +  where False = hasattr(conversation, 'dispatch_descriptor')</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_conversation" name="test_dispatch_input_cannot_supply_server_authority[task_binding_id]" time="0.000"><failure message="AssertionError: D2g5e needs a CID-owned final transaction&#10;assert False&#10; +  where False = hasattr(conversation, 'dispatch_descriptor')">tests\integration\test_weixin_generation_dispatch_conversation.py:137: in test_dispatch_input_cannot_supply_server_authority
+    api()
+tests\integration\test_weixin_generation_dispatch_conversation.py:24: in api
+    assert hasattr(conversation, 'dispatch_descriptor'), 'D2g5e needs a CID-owned final transaction'
+E   AssertionError: D2g5e needs a CID-owned final transaction
+E   assert False
+E    +  where False = hasattr(conversation, 'dispatch_descriptor')</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_conversation" name="test_dispatch_input_cannot_supply_server_authority[actor_id]" time="0.000"><failure message="AssertionError: D2g5e needs a CID-owned final transaction&#10;assert False&#10; +  where False = hasattr(conversation, 'dispatch_descriptor')">tests\integration\test_weixin_generation_dispatch_conversation.py:137: in test_dispatch_input_cannot_supply_server_authority
+    api()
+tests\integration\test_weixin_generation_dispatch_conversation.py:24: in api
+    assert hasattr(conversation, 'dispatch_descriptor'), 'D2g5e needs a CID-owned final transaction'
+E   AssertionError: D2g5e needs a CID-owned final transaction
+E   assert False
+E    +  where False = hasattr(conversation, 'dispatch_descriptor')</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_conversation" name="test_dispatch_input_cannot_supply_server_authority[mode]" time="0.000"><failure message="AssertionError: D2g5e needs a CID-owned final transaction&#10;assert False&#10; +  where False = hasattr(conversation, 'dispatch_descriptor')">tests\integration\test_weixin_generation_dispatch_conversation.py:137: in test_dispatch_input_cannot_supply_server_authority
+    api()
+tests\integration\test_weixin_generation_dispatch_conversation.py:24: in api
+    assert hasattr(conversation, 'dispatch_descriptor'), 'D2g5e needs a CID-owned final transaction'
+E   AssertionError: D2g5e needs a CID-owned final transaction
+E   assert False
+E    +  where False = hasattr(conversation, 'dispatch_descriptor')</failure></testcase><testcase classname="tests.integration.test_weixin_generation_dispatch_conversation" name="test_dispatch_input_cannot_supply_server_authority[scope]" time="0.000"><failure message="AssertionError: D2g5e needs a CID-owned final transaction&#10;assert False&#10; +  where False = hasattr(conversation, 'dispatch_descriptor')">tests\integration\test_weixin_generation_dispatch_conversation.py:137: in test_dispatch_input_cannot_supply_server_authority
+    api()
+tests\integration\test_weixin_generation_dispatch_conversation.py:24: in api
+    assert hasattr(conversation, 'dispatch_descriptor'), 'D2g5e needs a CID-owned final transaction'
+E   AssertionError: D2g5e needs a CID-owned final transaction
+E   assert False
+E    +  where False = hasattr(conversation, 'dispatch_descriptor')</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,634 @@
+{
+  "reviewer": "/root/next_slice_review",
+  "reviewer_count": 1,
+  "reviewed_at": "2026-10-25T12:56:40.390538+00:00",
+  "confirmed_findings": 0,
+  "scope": "Public evidence51files at capture, root three current status paragraphs, four current product files. Git receipt and later additions excluded. No tests rerun.",
+  "distinct_python_pass": 701,
+  "new_included": 64,
+  "new_module_counts": {
+    "tests.integration.test_weixin_generation_dispatch_conversation": 18,
+    "tests.integration.test_weixin_generation_dispatch_routes": 46
+  },
+  "group_count": 7,
+  "module_count": 23,
+  "independent_probe_excluded": 5,
+  "targeted_repeat_excluded": 3,
+  "groups": [
+    {
+      "label": "final-services-complete",
+      "passed": 64,
+      "exit_code": 0,
+      "stable": true,
+      "unused_new_http_delta": {}
+    },
+    {
+      "label": "final-dispatch",
+      "passed": 75,
+      "exit_code": 0,
+      "stable": true,
+      "unused_new_http_delta": {
+        "tests/integration/test_weixin_generation_dispatch_routes.py": {
+          "captured": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+          "current": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+        }
+      }
+    },
+    {
+      "label": "final-http",
+      "passed": 87,
+      "exit_code": 0,
+      "stable": true,
+      "unused_new_http_delta": {
+        "tests/integration/test_weixin_generation_dispatch_routes.py": {
+          "captured": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+          "current": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+        }
+      }
+    },
+    {
+      "label": "final-history",
+      "passed": 129,
+      "exit_code": 0,
+      "stable": true,
+      "unused_new_http_delta": {
+        "tests/integration/test_weixin_generation_dispatch_routes.py": {
+          "captured": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+          "current": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+        }
+      }
+    },
+    {
+      "label": "final-backup",
+      "passed": 14,
+      "exit_code": 0,
+      "stable": true,
+      "unused_new_http_delta": {
+        "tests/integration/test_weixin_generation_dispatch_routes.py": {
+          "captured": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+          "current": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+        }
+      }
+    },
+    {
+      "label": "final-integrity",
+      "passed": 169,
+      "exit_code": 0,
+      "stable": true,
+      "unused_new_http_delta": {
+        "tests/integration/test_weixin_generation_dispatch_routes.py": {
+          "captured": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+          "current": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+        }
+      }
+    },
+    {
+      "label": "final-schema",
+      "passed": 163,
+      "exit_code": 0,
+      "stable": true,
+      "unused_new_http_delta": {
+        "tests/integration/test_weixin_generation_dispatch_routes.py": {
+          "captured": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+          "current": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+        }
+      }
+    }
+  ],
+  "gates": [
+    {
+      "label": "gate-schema",
+      "exit_code": 0,
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "cn_contract.cli",
+        "schema",
+        "--check"
+      ],
+      "unused_http_delta": {
+        "tests/integration/test_weixin_generation_dispatch_routes.py": {
+          "captured": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+          "current": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+        }
+      }
+    },
+    {
+      "label": "gate-defaults",
+      "exit_code": 0,
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_defaults.py"
+      ],
+      "unused_http_delta": {
+        "tests/integration/test_weixin_generation_dispatch_routes.py": {
+          "captured": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+          "current": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+        }
+      }
+    },
+    {
+      "label": "gate-sources",
+      "exit_code": 0,
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "unused_http_delta": {
+        "tests/integration/test_weixin_generation_dispatch_routes.py": {
+          "captured": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+          "current": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+        }
+      }
+    },
+    {
+      "label": "gate-dependencies",
+      "exit_code": 0,
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "unused_http_delta": {
+        "tests/integration/test_weixin_generation_dispatch_routes.py": {
+          "captured": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+          "current": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+        }
+      }
+    }
+  ],
+  "source_input_count": 566,
+  "all_current_source_sha_match": true,
+  "product_sha256": {
+    "src/cn_contract/domain.py": "f8f64176edbc9866887ade894680492769ae46b8ddd4bc3c6bc107632b89fe2e",
+    "src/cn_contract/weixin_inbox/conversation.py": "025fe5960dcfb967fdcf871d3589f068e10094717b6ac54ea09a11f538ca1c14",
+    "src/cn_contract/weixin_inbox/generation_dispatch.py": "a1f22dc3c7813f9a28a050acb46f3880ad9316ad3b98e83bb260e04a8f9df361",
+    "src/cn_contract/web/weixin_authorization.py": "0f5b0756a1f3ba85d2776e681db3ef0da3d2e66088b4ee034623c99358a4d45f"
+  },
+  "snapshot_exception": {
+    "file": "tests/integration/test_weixin_generation_dispatch_routes.py",
+    "changed_functions": [
+      "setup",
+      "test_cid_cannot_choose_another_peer_or_account_descriptor",
+      "test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution"
+    ],
+    "stdlib_import_additions": [
+      "hashlib",
+      "json"
+    ],
+    "external_references": [],
+    "other_top_level_ast_unchanged": true
+  },
+  "failure_history": [
+    {
+      "label": "final-services",
+      "passed": 61,
+      "failed": 3,
+      "stable": false,
+      "exit_code": 1
+    },
+    {
+      "label": "final-services-fixed",
+      "passed": 63,
+      "failed": 1,
+      "stable": true,
+      "exit_code": 1
+    },
+    {
+      "label": "final-services-verified",
+      "passed": 61,
+      "failed": 3,
+      "stable": true,
+      "exit_code": 1
+    }
+  ],
+  "captured_published_pairs_verified": 48,
+  "normalization": "UTF-8-sig decode; splitlines; strip trailing whitespace; join LF; final newline.",
+  "pairs": [
+    {
+      "captured": "final-services-complete.log",
+      "published": "final-services-complete.log",
+      "captured_sha256": "cce1ab515aefe5328005dfe7ebb437fe49a6206df7ca53c6c0abb30028301556",
+      "published_sha256": "baa41e9da41560cf2d475845130d75e51461a777ec144beec478ae96980e06e6",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-services-complete.xml",
+      "published": "final-services-complete.xml",
+      "captured_sha256": "71cc6a7d06c2319df25818407081fe12fc85c8c5d885e20c5841155deff61b13",
+      "published_sha256": "ebdecaf873696d5506bd18df41ad162ccef3c3a9a83216649605c8647e53e8bf",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-dispatch.log",
+      "published": "final-dispatch.log",
+      "captured_sha256": "3bf4ae9add1184376d9488ad6b4be0b9f0950c84132ef783774e59f62215afdc",
+      "published_sha256": "340ae7ffb85264393f3ff04d7a9cbca7d2e7e291a8115ec065076f0c626c46fe",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-dispatch.xml",
+      "published": "final-dispatch.xml",
+      "captured_sha256": "208008edbec643afc4e812c50fc13ccbe8e0cd5df308024d4d9fb13fa3cb5cdb",
+      "published_sha256": "a2d8f32bd523908272a9e6d3d87d96368e9ea340955b5defa70efe420cb4697c",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-http.log",
+      "published": "final-http.log",
+      "captured_sha256": "6d65e10a4ac80ed72f954380b973597a815e0e47125a780dc8d272326dac19e4",
+      "published_sha256": "a4f219cc50dc6028387fdd75ef81fa8f3fbca945f0477f7f1c995c77ffaaf77b",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-http.xml",
+      "published": "final-http.xml",
+      "captured_sha256": "15ab3ab69cf47d4c468da8f358746e92b0192c10f6471c618dac34f2128fb8be",
+      "published_sha256": "12e5fd12b65cfcd094df99d664aef4d8744700d89fe2a7af888a5ce10b0a0417",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-history.log",
+      "published": "final-history.log",
+      "captured_sha256": "ac229fe61f58395e1692c77c63ba73965a17d50a9cacc7cf027d54dae7711fd4",
+      "published_sha256": "70f4d6a740d114eb2e5cdcbe847ade68ab4c772cd73e22c0e3a98f0378e125c2",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-history.xml",
+      "published": "final-history.xml",
+      "captured_sha256": "11599b5de2f083d90c327115aa382b04c23276780c4a28f0b9ca079f5eb6f0c2",
+      "published_sha256": "950c60671b499e94d6020a92bd24f809bbe8069c7d1164b02e833b344945191f",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-backup.log",
+      "published": "final-backup.log",
+      "captured_sha256": "b2ce0927a08d58c6ac7c0c8fbca9f774982a800c2a550a18ae2ad56f77e0cd5c",
+      "published_sha256": "6614fc9b16fff21563cef600eedd13d97b42d98d7cfa4b158cb3e8e5c44be590",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-backup.xml",
+      "published": "final-backup.xml",
+      "captured_sha256": "a451723ed6eba6557b63ba615acc9018eb2df32b2e85a59deb6f2ddae862cf11",
+      "published_sha256": "1ef0c2aa220a4ef63287b62cf3adbdd44fcd5e1103fce5b887753b5560a0d27b",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-integrity.log",
+      "published": "final-integrity.log",
+      "captured_sha256": "66a5c0a92e1e17eed32aaeea100e2a7dc1e8aabd72e3ecdf51e15109b07b902a",
+      "published_sha256": "95778f31ea07fcdc1b84f0b774ba5f6be8b7d330702bc0f16ce2b9714a855349",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-integrity.xml",
+      "published": "final-integrity.xml",
+      "captured_sha256": "c0a78f73218fbb008a6f84bc28056d3854f078258ad083cd4e616e510d988fe5",
+      "published_sha256": "1bed8021befaaa8061b6d5cf4dc2a4d2a0384eb6c242027cccca33e400670e84",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-schema.log",
+      "published": "final-schema.log",
+      "captured_sha256": "0b84b2a2adf578a40fbb29a1cdfa63e04c2a6835016eb3e8fc6e38d723634894",
+      "published_sha256": "57075d39310c4db4f5a8d5d7426527453e2683debc97a92af006bfa74992d44e",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-schema.xml",
+      "published": "final-schema.xml",
+      "captured_sha256": "6972a8d00f343059051bc693bbb0186fc8aba90c712947196bdc96cc0d6692b0",
+      "published_sha256": "513b807848e2290b2da231d9f46f373b8d01fe73b7bb83665f3156426ad7d19e",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "red-services.log",
+      "published": "red-services.log",
+      "captured_sha256": "b2cec491f8c1c6dd68164e121a6acbe321d681ebf57ee22f60c9d4f602093bf7",
+      "published_sha256": "b49fb04e38225a81dc6c74829391c08cf2914a7e9f6e88602cebc32c5bab1ceb",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "red-services.xml",
+      "published": "red-services.xml",
+      "captured_sha256": "896bc89ed0d1dd4d2a4172dc1952ff27ced9f01db4b5f5ed4e376c47f31c4618",
+      "published_sha256": "fe7da765efe593a8ad715cc0b802fc9e93065d4be2c461c0a64e3e5c0025ccc8",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "http-red.log",
+      "published": "http-red.log",
+      "captured_sha256": "c6df69b9f8e6c549a8cf0e03e0a3e98ed6325695c6f703c1ead1f9b2ac220367",
+      "published_sha256": "21fdafdae0b7fec7e452c0f65ef543ba4f14812d1de94b4035c67e5319ae6854",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "http-red.xml",
+      "published": "http-red.xml",
+      "captured_sha256": "878f7d4cb9c0c80afdf0a9f657023e56a3db42aceddb12f77d08f4ab683a5244",
+      "published_sha256": "269c639c812f297534ab10554ad6d4af91216fc381c8795745d04b092c83483c",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "http-guards.log",
+      "published": "http-guards.log",
+      "captured_sha256": "02775d3d8ab20d12d4275e18dd66bcf0e021d9a0f2caf1eea19a9a60568a0295",
+      "published_sha256": "8482846252832ed4a8f23c3a80db07a158cf61b7bf75b82906d619c865a837a5",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "http-guards.xml",
+      "published": "http-guards.xml",
+      "captured_sha256": "4a0a4b88a0637b5d2aee5ce204c91392abd5a46f3fe2c9d04e183054a41a40d9",
+      "published_sha256": "0667906a8f49fb8a4237ccc822c71964dd7c3155b80611fd6c152f5a677224f3",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-services.log",
+      "published": "services-first-unstable.log",
+      "captured_sha256": "cad61d71ef2d891ee692d572562a1eeb9876751db680d094856ad8df655cafea",
+      "published_sha256": "7d477bd0d7b3d92f82113da03499ef58ac12f8d5af5a53aefdee116a3d0083a2",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-services.xml",
+      "published": "services-first-unstable.xml",
+      "captured_sha256": "b635d17d60cd323c2fb6c49c5fd05268f08a00474e27ef5c696c98ab7490fa83",
+      "published_sha256": "cb954b37f735c8304e3deb0d6dc9292d065990f5021411dde49dbd7c3b3ba3db",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-services-fixed.log",
+      "published": "services-audit-oracle-failure.log",
+      "captured_sha256": "13bdc42e56847f32cc03889255a015f672f64772d6f78d5f51d57174a3772bce",
+      "published_sha256": "b9254cf2f5bb75553895715ae6f03be2288a62a13e12a981f284aa416ed96208",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-services-fixed.xml",
+      "published": "services-audit-oracle-failure.xml",
+      "captured_sha256": "f7b9d7049a20206d5e88f3a68faab32cc9345efee759b24915e8836a15a1224c",
+      "published_sha256": "5805732b78f695fd5de4188cb2fb14fe2d15e8816c30832d76849af2d5e1d7c3",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-services-verified.log",
+      "published": "services-test-shadow-failure.log",
+      "captured_sha256": "9774e79f1ed90d45b4106fd6c41debb4130a528bf00d85621b2ffa5efca225de",
+      "published_sha256": "148d0dbefd77d4ea7fccb1bc37fda073da48edacb508161b0700c05af4e56aec",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "final-services-verified.xml",
+      "published": "services-test-shadow-failure.xml",
+      "captured_sha256": "e7831ce4e0598a250e095fe94da846e2f97d7ab2c0e12e1d3124b237d279d830",
+      "published_sha256": "1f8f2aba0f85d894ce748cb4e2aab4b3e4c7c404dc8aced98642dd812fe27242",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "audit-oracle-check.log",
+      "published": "audit-oracle-check.log",
+      "captured_sha256": "2161e74b3548ad5c63782ad295586a62d037d35fbdf638e97e368147ccf8afcd",
+      "published_sha256": "3a6b702cd1a661af09c2335fc86f92dcd070144c4dd6a391cf936332d642e291",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "audit-oracle-check.xml",
+      "published": "audit-oracle-check.xml",
+      "captured_sha256": "31bd9ae5aaf861cd0d7fe3ed9aea1bf42df45ee93274b7560d9e131da656b59e",
+      "published_sha256": "01f38e55295bfd2b33b88f449593f148c1cf2f0da39a1dccf4a9b7b505cdc10b",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "gate-schema.log",
+      "published": "gate-schema.log",
+      "captured_sha256": "b3494934d75e6ca7988134d1390fadcf95566b3ce3ce05563d5615da874c3303",
+      "published_sha256": "a18b3b9c8ca028ea291784790f88c5133f212fe296939c73c592988ed43efa50",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "gate-defaults.log",
+      "published": "gate-defaults.log",
+      "captured_sha256": "1327e54ae343c27bb7f378bb915d826995396db5b801813b2e139b57d7aefeb6",
+      "published_sha256": "d9eb18fcefa75a1cc61e13f806bcffc5472ebaed389987c6cd0a2daf807f4f25",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "gate-sources.log",
+      "published": "gate-sources.log",
+      "captured_sha256": "dd6536e31ce1c1887cf8fd66091ebe0265b3d4c5f38d27f7766cdbcd30c6963b",
+      "published_sha256": "40ae4d5b45180f7ae597f641118dd73482ae820ec4f9f292e10b848d9376638e",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "gate-dependencies.log",
+      "published": "gate-dependencies.log",
+      "captured_sha256": "32ddd58b8e25f73d17f1156ff1803b833eb5abe0e289a9f7db5f77d92203cc3a",
+      "published_sha256": "14d4433e3fca84895513bf496a7273e4c07686da65294c0187cbf69222a02e17",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "independent-review.md",
+      "published": "independent-review.md",
+      "captured_sha256": "300911b926d928b605613eb5c2781af306c2d58c9676964898702487673aa25d",
+      "published_sha256": "300911b926d928b605613eb5c2781af306c2d58c9676964898702487673aa25d",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "independent-review.json",
+      "published": "independent-review.json",
+      "captured_sha256": "b7d956bd732a3fe226a579310216d023332ed11631f3c8ea8b5016fa6bfd7ddb",
+      "published_sha256": "c1760b7cd1a665b9c7a5ed4f53700bd20c87e23e0f8ad4d61bde4c34b41fba46",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "http-author-cross-review.md",
+      "published": "http-author-cross-review.md",
+      "captured_sha256": "5a6f4138346a2894d349f2d047d4434a08bed054e1402f6f50c3eb341f2d941e",
+      "published_sha256": "366812f4938cd12d78cc0afb532369a1994c14d5368c6932a36c9ad9b9be30df",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "http-author-cross-review.json",
+      "published": "http-author-cross-review.json",
+      "captured_sha256": "8c1d2f8f2f4790291dcfb7e1d728a739007d4cd7a3d83737b59d6fa08cb13db1",
+      "published_sha256": "bbfad30202e55ae49794227fbfd91af30183a65959f1d6c49c18d45acc398861",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "independent-probe.py",
+      "published": "independent-probe.py",
+      "captured_sha256": "a7224168ba08afad5c1a1fc0f4b0194840ae9fa9e7b5f775e42a0fcbb66b3e99",
+      "published_sha256": "a7224168ba08afad5c1a1fc0f4b0194840ae9fa9e7b5f775e42a0fcbb66b3e99",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "independent-probe.json",
+      "published": "independent-probe.json",
+      "captured_sha256": "88f70e280f5a61c1048b0cebc297ffa7c64adca99ad17d5e1fb55faa296b0926",
+      "published_sha256": "870cfb8f2f98c759b15da208f66328d5f0d255d5df0f8ec29d28b1331f50ab35",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "independent-probe.log",
+      "published": "independent-probe.log",
+      "captured_sha256": "7a5ba8a581434f9418065767e615285f2885c954f13045446de4911f3eab62eb",
+      "published_sha256": "f4592b65a3e944215b42402ff17e6309d7af7e312b4005b86cfb1cd63b0fa025",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "independent-probe.xml",
+      "published": "independent-probe.xml",
+      "captured_sha256": "ff95f831d129306006172e56d6eb582b296c51868596675ebd6b7c8977457ba0",
+      "published_sha256": "7aa8fdb135ec1ade072f5cf00ec7aac5fa268be887a7e8669f70dc7fc737ab8d",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "run-independent.py",
+      "published": "run-independent.py",
+      "captured_sha256": "0d85ebe28e07e52d4e347ddfa168101aef1fe101ce9ecb3c409ece17e80f5533",
+      "published_sha256": "0d85ebe28e07e52d4e347ddfa168101aef1fe101ce9ecb3c409ece17e80f5533",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "peer-fixture-review.md",
+      "published": "peer-fixture-review.md",
+      "captured_sha256": "6289dc712cdb744e61e125c087ec19121908b1e716a49b72706014a3daaab6b9",
+      "published_sha256": "1efab0aabbfcac99f5f9b38de1bff5aca3ff93cb31f0ad7cd5acf46a6e564ac2",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "http-test-before-peer-fixture.py",
+      "published": "http-test-before-peer-fixture.py",
+      "captured_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+      "published_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "http-test-before-audit-oracle.py",
+      "published": "http-test-before-audit-oracle.py",
+      "captured_sha256": "d8e09461b24d37ad531fde82373098522783994b152307e34bc77a30285a6d78",
+      "published_sha256": "d8e09461b24d37ad531fde82373098522783994b152307e34bc77a30285a6d78",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "http-test-before-shadow-fix.py",
+      "published": "http-test-before-shadow-fix.py",
+      "captured_sha256": "0337d1cbbc0a8d0c811e855c5b70c1be6f60e2b8ea56520350a4d931185effe7",
+      "published_sha256": "0337d1cbbc0a8d0c811e855c5b70c1be6f60e2b8ea56520350a4d931185effe7",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "test-correction-review.md",
+      "published": "test-correction-review.md",
+      "captured_sha256": "f630819016ee4ab3df4ab1cb129174faa987763b29e60e37b4d8e60a0cbb163c",
+      "published_sha256": "a1491ac913b8f2aa30bbba9bbca428cb9a7cf39befe3ac5ea4f1b14c789f4d32",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "test-correction-review.json",
+      "published": "test-correction-review.json",
+      "captured_sha256": "5b6815ecf480e3b4a7127507d7667ed2c1b2f412a98b2319320885e06b39153d",
+      "published_sha256": "187616455a4374ed7a43b31bcf42a85ef088b92a9a96a68b30960edea96d8225",
+      "normalized_bytes_verified": true
+    },
+    {
+      "captured": "run.py",
+      "published": "run-validation.py",
+      "captured_sha256": "a527c2828afaf44662c7278cb760e79cd9ceeab07f6f986a25ac62e5acb93e97",
+      "published_sha256": "a527c2828afaf44662c7278cb760e79cd9ceeab07f6f986a25ac62e5acb93e97",
+      "normalized_bytes_verified": true
+    }
+  ],
+  "public_file_sha256": {
+    "audit-oracle-check.log": "3a6b702cd1a661af09c2335fc86f92dcd070144c4dd6a391cf936332d642e291",
+    "audit-oracle-check.xml": "01f38e55295bfd2b33b88f449593f148c1cf2f0da39a1dccf4a9b7b505cdc10b",
+    "final-backup.log": "6614fc9b16fff21563cef600eedd13d97b42d98d7cfa4b158cb3e8e5c44be590",
+    "final-backup.xml": "1ef0c2aa220a4ef63287b62cf3adbdd44fcd5e1103fce5b887753b5560a0d27b",
+    "final-dispatch.log": "340ae7ffb85264393f3ff04d7a9cbca7d2e7e291a8115ec065076f0c626c46fe",
+    "final-dispatch.xml": "a2d8f32bd523908272a9e6d3d87d96368e9ea340955b5defa70efe420cb4697c",
+    "final-history.log": "70f4d6a740d114eb2e5cdcbe847ade68ab4c772cd73e22c0e3a98f0378e125c2",
+    "final-history.xml": "950c60671b499e94d6020a92bd24f809bbe8069c7d1164b02e833b344945191f",
+    "final-http.log": "a4f219cc50dc6028387fdd75ef81fa8f3fbca945f0477f7f1c995c77ffaaf77b",
+    "final-http.xml": "12e5fd12b65cfcd094df99d664aef4d8744700d89fe2a7af888a5ce10b0a0417",
+    "final-integrity.log": "95778f31ea07fcdc1b84f0b774ba5f6be8b7d330702bc0f16ce2b9714a855349",
+    "final-integrity.xml": "1bed8021befaaa8061b6d5cf4dc2a4d2a0384eb6c242027cccca33e400670e84",
+    "final-schema.log": "57075d39310c4db4f5a8d5d7426527453e2683debc97a92af006bfa74992d44e",
+    "final-schema.xml": "513b807848e2290b2da231d9f46f373b8d01fe73b7bb83665f3156426ad7d19e",
+    "final-services-complete.log": "baa41e9da41560cf2d475845130d75e51461a777ec144beec478ae96980e06e6",
+    "final-services-complete.xml": "ebdecaf873696d5506bd18df41ad162ccef3c3a9a83216649605c8647e53e8bf",
+    "gate-defaults.log": "d9eb18fcefa75a1cc61e13f806bcffc5472ebaed389987c6cd0a2daf807f4f25",
+    "gate-dependencies.log": "14d4433e3fca84895513bf496a7273e4c07686da65294c0187cbf69222a02e17",
+    "gate-schema.log": "a18b3b9c8ca028ea291784790f88c5133f212fe296939c73c592988ed43efa50",
+    "gate-sources.log": "40ae4d5b45180f7ae597f641118dd73482ae820ec4f9f292e10b848d9376638e",
+    "http-author-cross-review.json": "bbfad30202e55ae49794227fbfd91af30183a65959f1d6c49c18d45acc398861",
+    "http-author-cross-review.md": "366812f4938cd12d78cc0afb532369a1994c14d5368c6932a36c9ad9b9be30df",
+    "http-guards.log": "8482846252832ed4a8f23c3a80db07a158cf61b7bf75b82906d619c865a837a5",
+    "http-guards.xml": "0667906a8f49fb8a4237ccc822c71964dd7c3155b80611fd6c152f5a677224f3",
+    "http-red.log": "21fdafdae0b7fec7e452c0f65ef543ba4f14812d1de94b4035c67e5319ae6854",
+    "http-red.xml": "269c639c812f297534ab10554ad6d4af91216fc381c8795745d04b092c83483c",
+    "http-test-before-audit-oracle.py": "d8e09461b24d37ad531fde82373098522783994b152307e34bc77a30285a6d78",
+    "http-test-before-peer-fixture.py": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+    "http-test-before-shadow-fix.py": "0337d1cbbc0a8d0c811e855c5b70c1be6f60e2b8ea56520350a4d931185effe7",
+    "independent-probe.json": "870cfb8f2f98c759b15da208f66328d5f0d255d5df0f8ec29d28b1331f50ab35",
+    "independent-probe.log": "f4592b65a3e944215b42402ff17e6309d7af7e312b4005b86cfb1cd63b0fa025",
+    "independent-probe.py": "a7224168ba08afad5c1a1fc0f4b0194840ae9fa9e7b5f775e42a0fcbb66b3e99",
+    "independent-probe.xml": "7aa8fdb135ec1ade072f5cf00ec7aac5fa268be887a7e8669f70dc7fc737ab8d",
+    "independent-review.json": "c1760b7cd1a665b9c7a5ed4f53700bd20c87e23e0f8ad4d61bde4c34b41fba46",
+    "independent-review.md": "300911b926d928b605613eb5c2781af306c2d58c9676964898702487673aa25d",
+    "peer-fixture-review.md": "1efab0aabbfcac99f5f9b38de1bff5aca3ff93cb31f0ad7cd5acf46a6e564ac2",
+    "README.md": "c2f72cea16eb1c5e08deaf79f507050fc3622b0d2333e1adb4fbf930e6c8ebdb",
+    "red-services.log": "b49fb04e38225a81dc6c74829391c08cf2914a7e9f6e88602cebc32c5bab1ceb",
+    "red-services.xml": "fe7da765efe593a8ad715cc0b802fc9e93065d4be2c461c0a64e3e5c0025ccc8",
+    "run-independent.py": "0d85ebe28e07e52d4e347ddfa168101aef1fe101ce9ecb3c409ece17e80f5533",
+    "run-validation.py": "a527c2828afaf44662c7278cb760e79cd9ceeab07f6f986a25ac62e5acb93e97",
+    "services-audit-oracle-failure.log": "b9254cf2f5bb75553895715ae6f03be2288a62a13e12a981f284aa416ed96208",
+    "services-audit-oracle-failure.xml": "5805732b78f695fd5de4188cb2fb14fe2d15e8816c30832d76849af2d5e1d7c3",
+    "services-first-unstable.log": "7d477bd0d7b3d92f82113da03499ef58ac12f8d5af5a53aefdee116a3d0083a2",
+    "services-first-unstable.xml": "cb954b37f735c8304e3deb0d6dc9292d065990f5021411dde49dbd7c3b3ba3db",
+    "services-test-shadow-failure.log": "148d0dbefd77d4ea7fccb1bc37fda073da48edacb508161b0700c05af4e56aec",
+    "services-test-shadow-failure.xml": "1f8f2aba0f85d894ce748cb4e2aab4b3e4c7c404dc8aced98642dd812fe27242",
+    "test-correction-review.json": "187616455a4374ed7a43b31bcf42a85ef088b92a9a96a68b30960edea96d8225",
+    "test-correction-review.md": "a1491ac913b8f2aa30bbba9bbca428cb9a7cf39befe3ac5ea4f1b14c789f4d32",
+    "test-fixture-snapshot-proof.json": "26c3ba7afb7b186e3c02a6f337afe80add351fa0d3a476f05e95c220b4b83e46",
+    "verification-summary.json": "4d089349f589a73af062994b594b30bb52735750d6a53f6204c4922b2180c773"
+  },
+  "status_sha256": {
+    "README.md": "bd349f38679211a26be0f09bc5da937ecaae503889de7ac3d60b06ead593e4e1",
+    "TODO.md": "69d82a617418e50a0a822ea90bcefca82949227d31581864551a7c27d46f25e3",
+    "docs/TASK_STATUS.md": "6db9239fa7cda8c484b4dfb2597bff91aecb9ce8949adac2bf3028daeb41108f"
+  },
+  "scope_boundaries_match": true,
+  "product_changed_during_review": false,
+  "public_files_changed_during_review": false,
+  "not_run": [
+    "full long-process repository suite",
+    "Node/frontend",
+    "browser/Electron/installed 0.4.1",
+    "real WeChat/contracts/product model/paid calls",
+    "WorkBuddy this turn"
+  ],
+  "open": [
+    "WIN-PATH-02 rename WinError5",
+    "native long-process AV"
+  ],
+  "installed_version_unchanged": "0.4.1",
+  "git_synchronization": "Excluded: no Git command or remote verification by this review."
+}

@@ -143,3 +143,36 @@ def read_generation_head(actor, cid, *, database):
             return None
         mapping_id = mapping.id
     return generations.read_peer_generation_head(current, mapping_id, database=database)
+
+
+def _dispatch_receipt(value, db):
+    cid = db.scalar(text('SELECT conversation_id FROM task_channel_bindings WHERE id=:id'),
+        {'id':str(value.task_binding_id)})
+    if cid is None:
+        raise ServiceError('VERSION_CONFLICT', 409)
+    fields = set(d.WeixinGenerationDispatchReceiptView.model_fields) - {'mode', 'state', 'conversation_id'}
+    return d.WeixinGenerationDispatchReceiptView(conversation_id=cid,
+        **value.model_dump(mode='python', include=fields))
+
+
+def dispatch_descriptor(actor, cid, request, *, database):
+    """Resolve the root CID and fixed source in the same final delivery transaction."""
+    from . import generation_dispatch
+    request = d.WeixinGenerationDispatchInput.model_validate(request.model_dump(mode='python'))
+    with accounts._transaction(database) as db:
+        current, mapping_id = _generation_context(actor, cid, db)
+        value = generation_dispatch._dispatch(current, request.descriptor_id, db, root_mapping_id=mapping_id)
+        result = _dispatch_receipt(value, db)
+    return result
+
+
+def find_dispatch(actor, cid, descriptor_id, *, database):
+    """Query one fixed acknowledgement; a target CID cannot reverse-resolve its root."""
+    from . import generation_dispatch
+    with accounts._transaction(database) as db:
+        current, _, mapping, _, _ = _context(actor, cid, db)
+        if mapping is None:
+            return None
+        value = generation_dispatch._find(current, descriptor_id, db, root_mapping_id=mapping.id)
+        result = _dispatch_receipt(value, db) if value is not None else None
+    return result

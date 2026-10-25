@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-25 D2g5e已接根CID固定descriptor明确分发/精确找回HTTP：最终事务核root归属，固定目标当前ACL、9字段脱敏回执、精确恢复GET与丢ACK只查；旧guard/schema19保留。7短组23模块701不同Python（含64新）/四门通过，整体独审0确认及5独立HTTP探针通过；[实际证据](testing/weixin-dispatch-http/20261025/README.md)保留首次不稳定61/3、夹具修正及64整组重跑、未用HTTP测试模块的摘要差异。无新UI/列表/真实微信；可信绑定、下载解密、pending附件选择/E许可仍待。0.4.1未更新，全仓/Node/浏览器/安装版等NOT_RUN，WIN-PATH-02/原生AV仍OPEN。GitHub待实际同步回执。
+
 2026-10-25 D2g5d已实施v19固定历史代际合成分发：复用receipt/TaskInbox/TaskDraft、逐固定binding顺序/当前ACL及完整父链，旧pending不阻新代，恢复只查。13关联短组1329不同Python（含100新）/四门通过，交叉独审0遗留，额外精确v18拒绝升级探针PASS；[实际证据](testing/weixin-generation-dispatch/20261025/README.md)明确5项旧fixture/oracle失败及受影响组完整重跑、两文件test-body快照例外。36前驱指纹不变，真实可信微信/下载解密/外发/E许可待；0.4.1未更新，全仓/Node/浏览器/安装版等NOT_RUN，WIN-PATH-02/原生AV开放。产品`2a4cca8`已正常推送，远端SHA/tree及5,630条目一致，[同步回执](testing/weixin-generation-dispatch/20261025/github-sync.md)。
 
 2026-10-25 已补齐原生升级前历史语义校验：只读复用现有完整来源校验，在升级写入前和DDL写锁内按原版本核验，pending恢复同时核旧备份与current；真实v17→v18非法poll洗白反例已RED→GREEN。15模块427不同Python（含9新）/四开发门通过，两名独立审查0遗留及2独立快照/释放探针通过，[实际证据](testing/upgrade-preflight/20261025/README.md)。schema18/旧guard保留，v19代际分发为下一片；真实微信/模型关闭，0.4.1未更新，全仓/Node/浏览器/安装版等NOT_RUN，WIN-PATH-02/原生AV开放。产品`619c898`已正常推送，SHA/tree及5,538条目一致，[同步回执](testing/upgrade-preflight/20261025/github-sync.md)。

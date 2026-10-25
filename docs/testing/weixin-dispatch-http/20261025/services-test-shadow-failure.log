@@ -1,0 +1,22 @@
+.........................................................FFF....         [100%]
+================================== FAILURES ===================================
+_ test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[root] _
+tests\integration\test_weixin_generation_dispatch_routes.py:235: in test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution
+    request = payload(h['mapping'], dest2, binding2, h['generation'])
+              ^^^^^^^
+E   UnboundLocalError: cannot access local variable 'payload' where it is not associated with a value
+_ test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[fixed_target] _
+tests\integration\test_weixin_generation_dispatch_routes.py:235: in test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution
+    request = payload(h['mapping'], dest2, binding2, h['generation'])
+              ^^^^^^^
+E   UnboundLocalError: cannot access local variable 'payload' where it is not associated with a value
+_ test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[later_target] _
+tests\integration\test_weixin_generation_dispatch_routes.py:235: in test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution
+    request = payload(h['mapping'], dest2, binding2, h['generation'])
+              ^^^^^^^
+E   UnboundLocalError: cannot access local variable 'payload' where it is not associated with a value
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_dispatch_routes.py::test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[root]
+FAILED tests/integration/test_weixin_generation_dispatch_routes.py::test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[fixed_target]
+FAILED tests/integration/test_weixin_generation_dispatch_routes.py::test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[later_target]
+3 failed, 61 passed in 59.60s

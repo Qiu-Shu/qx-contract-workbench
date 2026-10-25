@@ -1,0 +1,17 @@
+{
+  "file": "tests/integration/test_weixin_generation_dispatch_routes.py",
+  "before_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+  "current_sha256": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f",
+  "changed_functions": [
+    "setup",
+    "test_cid_cannot_choose_another_peer_or_account_descriptor",
+    "test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution"
+  ],
+  "all_other_nonimport_top_level_ast_equal": true,
+  "stdlib_import_additions": [
+    "hashlib",
+    "json"
+  ],
+  "external_name_references": [],
+  "correction": "Create same-account peer before first generation; root ACL denial must append exactly one validated immutable audit while all business tables remain unchanged. Only this new HTTP module uses these helpers/tests."
+}

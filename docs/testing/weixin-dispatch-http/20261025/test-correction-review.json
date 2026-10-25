@@ -1,0 +1,455 @@
+{
+  "reviewer": "/root/next_slice_review",
+  "reviewer_count": 1,
+  "author_independence": "Did not author product or the corrected HTTP tests; static review only, no test rerun.",
+  "reviewed_at": "2026-10-25T12:54:39.277254+00:00",
+  "test_findings": [
+    {
+      "id": "TEST-SHADOW-01",
+      "status": "closed_by_four_line_rename",
+      "proof": "final-services-verified actual61PASS3FAIL UnboundLocalError before ACL assertions; current payload helper no longer shadowed",
+      "product_bug": false
+    }
+  ],
+  "unresolved_product_findings": 0,
+  "unresolved_test_findings": 0,
+  "product_sha256": {
+    "src/cn_contract/domain.py": "f8f64176edbc9866887ade894680492769ae46b8ddd4bc3c6bc107632b89fe2e",
+    "src/cn_contract/weixin_inbox/conversation.py": "025fe5960dcfb967fdcf871d3589f068e10094717b6ac54ea09a11f538ca1c14",
+    "src/cn_contract/weixin_inbox/generation_dispatch.py": "a1f22dc3c7813f9a28a050acb46f3880ad9316ad3b98e83bb260e04a8f9df361",
+    "src/cn_contract/web/weixin_authorization.py": "0f5b0756a1f3ba85d2776e681db3ef0da3d2e66088b4ee034623c99358a4d45f"
+  },
+  "test_snapshots_sha256": {
+    ".local\\weixin-dispatch-http-20261025\\http-test-before-peer-fixture.py": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+    ".local\\weixin-dispatch-http-20261025\\http-test-before-audit-oracle.py": "d8e09461b24d37ad531fde82373098522783994b152307e34bc77a30285a6d78",
+    ".local\\weixin-dispatch-http-20261025\\http-test-before-shadow-fix.py": "0337d1cbbc0a8d0c811e855c5b70c1be6f60e2b8ea56520350a4d931185effe7",
+    "tests\\integration\\test_weixin_generation_dispatch_routes.py": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+  },
+  "steps": [
+    {
+      "before": ".local\\weixin-dispatch-http-20261025\\http-test-before-peer-fixture.py",
+      "after": ".local\\weixin-dispatch-http-20261025\\http-test-before-audit-oracle.py",
+      "changed_functions": [
+        "setup",
+        "test_cid_cannot_choose_another_peer_or_account_descriptor"
+      ],
+      "diff": "--- \n+++ \n@@ -17,15 +17,21 @@\n from test_weixin_dispatch import message\n \n \n-def setup(chat):\n+def setup(chat, *, other_peer=False):\n     client, database, root, headers, view, actor, account, mapping = bind(chat)\n+    other_mapping = None\n+    if other_peer:\n+        peer_view, peer_binding = target(client, headers)\n+        other_mapping = accounts.bind_synthetic_peer(actor, account.id, d.WeixinPeerBindInput(\n+            sender_peer_id='synthetic-http-other-peer', task_binding_id=peer_binding['id'],\n+            expected_scope=d.ScopeSnapshot(**peer_view['scope'])), database=database)\n     destination, binding = target(client, headers)\n     value = payload(mapping, destination, binding)\n     response = client.post(endpoint(view['scope']['conversation_id'])+'/generations', headers=headers, json=value)\n     assert response.status_code == 200, response.text\n     return dict(client=client, database=database, root=root, headers=headers, view=view,\n         actor=actor, account=account, mapping=mapping, destination=destination, binding=binding,\n-        generation=response.json(), base=endpoint(view['scope']['conversation_id']))\n+        generation=response.json(), base=endpoint(view['scope']['conversation_id']), other_mapping=other_mapping)\n \n \n def receive(h, identifiers=(91,92), *, mapping=None, account=None):\n@@ -111,14 +117,15 @@\n \n @pytest.mark.parametrize('foreign', ['peer','account'])\n def test_cid_cannot_choose_another_peer_or_account_descriptor(chat, foreign):\n-    h = setup(chat)\n-    view, binding = target(h['client'], h['headers'])\n-    account = h['account'] if foreign == 'peer' else accounts.create_synthetic_account(h['actor'],\n-        d.WeixinAccountCreateInput(bot_account_id='synthetic-http-other-bot'), database=h['database'])\n-    mapping = accounts.bind_synthetic_peer(h['actor'], account.id, d.WeixinPeerBindInput(\n-        sender_peer_id='synthetic-http-other-peer', task_binding_id=binding['id'],\n-        expected_scope=d.ScopeSnapshot(**view['scope'])), database=h['database'])\n+    h = setup(chat, other_peer=foreign == 'peer')\n+    account, mapping = h['account'], h['other_mapping']\n     if foreign == 'account':\n+        view, binding = target(h['client'], h['headers'])\n+        account = accounts.create_synthetic_account(h['actor'],\n+            d.WeixinAccountCreateInput(bot_account_id='synthetic-http-other-bot'), database=h['database'])\n+        mapping = accounts.bind_synthetic_peer(h['actor'], account.id, d.WeixinPeerBindInput(\n+            sender_peer_id='synthetic-http-other-peer', task_binding_id=binding['id'],\n+            expected_scope=d.ScopeSnapshot(**view['scope'])), database=h['database'])\n         dest, destination_binding = target(h['client'], h['headers'])\n         response = h['client'].post(endpoint(view['scope']['conversation_id'])+'/generations',\n             headers=h['headers'], json=payload(mapping, dest, destination_binding))\n"
+    },
+    {
+      "before": ".local\\weixin-dispatch-http-20261025\\http-test-before-audit-oracle.py",
+      "after": ".local\\weixin-dispatch-http-20261025\\http-test-before-shadow-fix.py",
+      "changed_functions": [
+        "test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution"
+      ],
+      "diff": "--- \n+++ \n@@ -1,4 +1,6 @@\n \"\"\"Real CID HTTP dispatch exposes only the fixed acknowledgement, never transport data.\"\"\"\n+import hashlib\n+import json\n from uuid import uuid4\n \n from fastapi.testclient import TestClient\n@@ -242,7 +244,31 @@\n         assert found.status_code == 200 and found.json() == value\n     else:\n         assert found.status_code == 403, found.text\n-    assert state(h['database']) == before\n+    after = state(h['database'])\n+    if position == 'root':\n+        assert set(after) == set(before)\n+        for table, rows in before.items():\n+            if table != 'audit_events':\n+                assert after[table] == rows, table\n+        old, recorded = before['audit_events'], after['audit_events']\n+        assert len(recorded) == len(old)+1 and recorded[:-1] == old\n+        payload = json.loads(recorded[-1][-1])\n+        assert payload.pop('reason_sha256') == hashlib.sha256(b'CROSS_MATTER_DENIED').hexdigest()\n+        assert 'reason' not in payload\n+        audit = d.AuditEvent.model_validate({**payload,'reason':'CROSS_MATTER_DENIED'})\n+        assert audit.action == 'authorization_denied' and audit.reason == 'CROSS_MATTER_DENIED'\n+        assert audit.actor_id == h['actor'].user_id\n+        assert str(audit.correlation_id) == found.json()['correlation_id']\n+        assert audit.before_hash is None and audit.after_hash is None\n+        assert audit.entity_type == 'matter' and audit.entity_id == audit.matter_id\n+        assert recorded[-1][:4] == (str(audit.id),str(audit.matter_id),str(audit.actor_id),audit.action)\n+        with h['database'].session() as db:\n+            denied_matter = db.scalar(text('''SELECT intake.matter_id FROM intake_cases intake\n+                JOIN assistant_conversations conversation ON conversation.projection_intake_id=intake.id\n+                WHERE conversation.id=:id'''),{'id':cid})\n+        assert str(audit.matter_id) == denied_matter\n+    else:\n+        assert after == before\n \n \n def test_revocation_preserves_fixed_read_but_blocks_replay(chat):\n"
+    },
+    {
+      "before": ".local\\weixin-dispatch-http-20261025\\http-test-before-shadow-fix.py",
+      "after": "tests\\integration\\test_weixin_generation_dispatch_routes.py",
+      "changed_functions": [
+        "test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution"
+      ],
+      "diff": "--- \n+++ \n@@ -252,10 +252,10 @@\n                 assert after[table] == rows, table\n         old, recorded = before['audit_events'], after['audit_events']\n         assert len(recorded) == len(old)+1 and recorded[:-1] == old\n-        payload = json.loads(recorded[-1][-1])\n-        assert payload.pop('reason_sha256') == hashlib.sha256(b'CROSS_MATTER_DENIED').hexdigest()\n-        assert 'reason' not in payload\n-        audit = d.AuditEvent.model_validate({**payload,'reason':'CROSS_MATTER_DENIED'})\n+        audit_payload = json.loads(recorded[-1][-1])\n+        assert audit_payload.pop('reason_sha256') == hashlib.sha256(b'CROSS_MATTER_DENIED').hexdigest()\n+        assert 'reason' not in audit_payload\n+        audit = d.AuditEvent.model_validate({**audit_payload,'reason':'CROSS_MATTER_DENIED'})\n         assert audit.action == 'authorization_denied' and audit.reason == 'CROSS_MATTER_DENIED'\n         assert audit.actor_id == h['actor'].user_id\n         assert str(audit.correlation_id) == found.json()['correlation_id']\n"
+    }
+  ],
+  "runs": [
+    {
+      "label": "final-services",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_dispatch_conversation.py",
+        "tests/integration/test_weixin_generation_dispatch_routes.py",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-final-servicesxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\final-services.xml"
+      ],
+      "exit_code": 1,
+      "tests": 64,
+      "failures": [
+        {
+          "classname": "tests.integration.test_weixin_generation_dispatch_routes",
+          "name": "test_cid_cannot_choose_another_peer_or_account_descriptor[peer]",
+          "time": "0.751"
+        },
+        {
+          "classname": "tests.integration.test_weixin_generation_dispatch_routes",
+          "name": "test_get_uses_current_root_and_fixed_target_ownership_without_latest_substitution[fixed_target]",
+          "time": "1.367"
+        },
+        {
+          "classname": "tests.integration.test_weixin_generation_dispatch_routes",
+          "name": "test_get_uses_current_root_and_fixed_target_ownership_without_latest_substitution[later_target]",
+          "time": "1.132"
+        }
+      ],
+      "source_stable": false,
+      "changed_during": [
+        "tests/integration/test_weixin_generation_dispatch_routes.py"
+      ],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_generation_dispatch_conversation",
+        "tests.integration.test_weixin_generation_dispatch_routes"
+      ],
+      "unused_new_http_before_sha256": "9552ff6dbcb03634bb8c421519f4130e4e4b42de845544cd46978965068637e9",
+      "unused_new_http_after_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7"
+    },
+    {
+      "label": "final-services-fixed",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_dispatch_conversation.py",
+        "tests/integration/test_weixin_generation_dispatch_routes.py",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-final-services-fixedxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\final-services-fixed.xml"
+      ],
+      "exit_code": 1,
+      "tests": 64,
+      "failures": [
+        {
+          "classname": "tests.integration.test_weixin_generation_dispatch_routes",
+          "name": "test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[root]",
+          "time": "1.237"
+        }
+      ],
+      "source_stable": true,
+      "changed_during": [],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_generation_dispatch_conversation",
+        "tests.integration.test_weixin_generation_dispatch_routes"
+      ],
+      "unused_new_http_before_sha256": "d8e09461b24d37ad531fde82373098522783994b152307e34bc77a30285a6d78",
+      "unused_new_http_after_sha256": "d8e09461b24d37ad531fde82373098522783994b152307e34bc77a30285a6d78"
+    },
+    {
+      "label": "final-services-verified",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_dispatch_conversation.py",
+        "tests/integration/test_weixin_generation_dispatch_routes.py",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-final-services-verifiedxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\final-services-verified.xml"
+      ],
+      "exit_code": 1,
+      "tests": 64,
+      "failures": [
+        {
+          "classname": "tests.integration.test_weixin_generation_dispatch_routes",
+          "name": "test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[root]",
+          "time": "1.506"
+        },
+        {
+          "classname": "tests.integration.test_weixin_generation_dispatch_routes",
+          "name": "test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[fixed_target]",
+          "time": "0.978"
+        },
+        {
+          "classname": "tests.integration.test_weixin_generation_dispatch_routes",
+          "name": "test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[later_target]",
+          "time": "0.928"
+        }
+      ],
+      "source_stable": true,
+      "changed_during": [],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_generation_dispatch_conversation",
+        "tests.integration.test_weixin_generation_dispatch_routes"
+      ],
+      "unused_new_http_before_sha256": "0337d1cbbc0a8d0c811e855c5b70c1be6f60e2b8ea56520350a4d931185effe7",
+      "unused_new_http_after_sha256": "0337d1cbbc0a8d0c811e855c5b70c1be6f60e2b8ea56520350a4d931185effe7"
+    },
+    {
+      "label": "audit-oracle-check",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_dispatch_routes.py",
+        "-k",
+        "current_root_and_fixed_target_acl",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-audit-oracle-checkxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\audit-oracle-check.xml"
+      ],
+      "exit_code": 0,
+      "tests": 3,
+      "failures": [],
+      "source_stable": true,
+      "changed_during": [],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_generation_dispatch_routes"
+      ],
+      "unused_new_http_before_sha256": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f",
+      "unused_new_http_after_sha256": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+    },
+    {
+      "label": "final-schema",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_dispatch_schema.py",
+        "tests/unit/test_domain.py",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-final-schemaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\final-schema.xml"
+      ],
+      "exit_code": 0,
+      "tests": 163,
+      "failures": [],
+      "source_stable": true,
+      "changed_during": [],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_generation_dispatch_schema",
+        "tests.unit.test_domain"
+      ],
+      "unused_new_http_before_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+      "unused_new_http_after_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7"
+    },
+    {
+      "label": "final-integrity",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_dispatch_integrity.py",
+        "tests/integration/test_weixin_generation_integrity.py",
+        "tests/integration/test_workspace_upgrade_semantic_preflight.py",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-final-integrityxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\final-integrity.xml"
+      ],
+      "exit_code": 0,
+      "tests": 169,
+      "failures": [],
+      "source_stable": true,
+      "changed_during": [],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_dispatch_integrity",
+        "tests.integration.test_weixin_generation_integrity",
+        "tests.integration.test_workspace_upgrade_semantic_preflight"
+      ],
+      "unused_new_http_before_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+      "unused_new_http_after_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7"
+    },
+    {
+      "label": "final-history",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_service.py",
+        "tests/integration/test_weixin_generation_service_atomic.py",
+        "tests/integration/test_weixin_generation_ingress.py",
+        "tests/integration/test_weixin_generation_ingress_atomic.py",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-final-historyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\final-history.xml"
+      ],
+      "exit_code": 0,
+      "tests": 129,
+      "failures": [],
+      "source_stable": true,
+      "changed_during": [],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_generation_ingress",
+        "tests.integration.test_weixin_generation_ingress_atomic",
+        "tests.integration.test_weixin_generation_service",
+        "tests.integration.test_weixin_generation_service_atomic"
+      ],
+      "unused_new_http_before_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+      "unused_new_http_after_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7"
+    },
+    {
+      "label": "final-dispatch",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_dispatch.py",
+        "tests/integration/test_weixin_generation_dispatch_atomic.py",
+        "tests/integration/test_weixin_generation_dispatch_integrity.py",
+        "tests/integration/test_weixin_dispatch.py",
+        "tests/integration/test_weixin_dispatch_atomic.py",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-final-dispatchxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\final-dispatch.xml"
+      ],
+      "exit_code": 0,
+      "tests": 75,
+      "failures": [],
+      "source_stable": true,
+      "changed_during": [],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_dispatch",
+        "tests.integration.test_weixin_dispatch_atomic",
+        "tests.integration.test_weixin_generation_dispatch",
+        "tests.integration.test_weixin_generation_dispatch_atomic",
+        "tests.integration.test_weixin_generation_dispatch_integrity"
+      ],
+      "unused_new_http_before_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+      "unused_new_http_after_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7"
+    },
+    {
+      "label": "final-http",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_authorization_routes.py",
+        "tests/integration/test_weixin_generation_routes.py",
+        "tests/integration/test_weixin_generation_routes_recovery.py",
+        "tests/integration/test_weixin_generation_head_routes.py",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-final-httpxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\final-http.xml"
+      ],
+      "exit_code": 0,
+      "tests": 87,
+      "failures": [],
+      "source_stable": true,
+      "changed_during": [],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_authorization_routes",
+        "tests.integration.test_weixin_generation_head_routes",
+        "tests.integration.test_weixin_generation_routes",
+        "tests.integration.test_weixin_generation_routes_recovery"
+      ],
+      "unused_new_http_before_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+      "unused_new_http_after_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7"
+    },
+    {
+      "label": "final-backup",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_backup.py",
+        "tests/integration/test_weixin_generation_service_backup.py",
+        "tests/integration/test_weixin_provenance_backup.py",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-final-backupxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\final-backup.xml"
+      ],
+      "exit_code": 0,
+      "tests": 14,
+      "failures": [],
+      "source_stable": true,
+      "changed_during": [],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_generation_backup",
+        "tests.integration.test_weixin_generation_service_backup",
+        "tests.integration.test_weixin_provenance_backup"
+      ],
+      "unused_new_http_before_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7",
+      "unused_new_http_after_sha256": "0b4f53f5422f4cc52c680c8f45cafa838495ea39991b70c2b63a5d7106b664d7"
+    },
+    {
+      "label": "final-services-complete",
+      "argv": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_dispatch_conversation.py",
+        "tests/integration/test_weixin_generation_dispatch_routes.py",
+        "-q",
+        "--tb=short",
+        "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\dh-final-services-completexxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-dispatch-http-20261025\\final-services-complete.xml"
+      ],
+      "exit_code": 0,
+      "tests": 64,
+      "failures": [],
+      "source_stable": true,
+      "changed_during": [],
+      "product_sha_match_before_after": true,
+      "modules": [
+        "tests.integration.test_weixin_generation_dispatch_conversation",
+        "tests.integration.test_weixin_generation_dispatch_routes"
+      ],
+      "new_http_sha256": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f"
+    }
+  ],
+  "old_regression_distinct_count": 637,
+  "other_source_references_to_new_http_module": [],
+  "current_full_services_acceptance": "Read existing final-services-complete receipt:64PASS/exit0/stable inputs, current7b15fd34 test SHA; reviewer did not rerun tests.",
+  "artifact_sha256": {
+    "test-correction-review.md": "f630819016ee4ab3df4ab1cb129174faa987763b29e60e37b4d8e60a0cbb163c",
+    "peer-fixture-review.md": "6289dc712cdb744e61e125c087ec19121908b1e716a49b72706014a3daaab6b9"
+  },
+  "source_contract_sha256": {
+    "src/cn_contract/security.py": "d6457c56fc6a6889e0ac2848dc77b037b9806e125b2d3532a52275697662b7f2",
+    "src/cn_contract/audit.py": "c4b844ef8008984bdba3308be8451bd1bdc35f83b8953f20b09765fbb156e05e"
+  },
+  "executed_tests_in_this_static_review": false,
+  "preliminary_root_acceptance_recount": {
+    "different_ids": 701,
+    "duplicate_ids": 0,
+    "modules": 23,
+    "new_services": 64,
+    "old_regression": 637,
+    "independent_probe_excluded": 5,
+    "targeted_repeat_excluded": 3,
+    "public_evidence_audit_pending": true
+  }
+}

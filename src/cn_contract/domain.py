@@ -4864,3 +4864,26 @@ class WeixinDescriptorGeneration(DomainModel):
         if hashlib.sha256(raw).hexdigest()!=self.provenance_sha256:
             raise ValueError('descriptor generation provenance hash mismatch')
         return self
+
+
+class WeixinGenerationDispatchInput(DomainModel):
+    descriptor_id: UUID
+
+
+class WeixinGenerationDispatchReceiptView(DomainModel):
+    """Redacted acknowledgement; the full-record digest is an opaque receipt."""
+    mode: Literal['synthetic'] = 'synthetic'
+    state: Literal['recorded'] = 'recorded'
+    descriptor_id: UUID
+    conversation_id: UUID
+    task_event_id: UUID
+    expected_task_cursor: NonNegativeInt
+    next_task_cursor: PositiveInt
+    created_at: UTCDatetime
+    receipt_sha256: SHA256
+
+    @model_validator(mode='after')
+    def complete_dispatch_projection(self):
+        if self.next_task_cursor != self.expected_task_cursor + 1:
+            raise ValueError('dispatch projection advances the task cursor exactly once')
+        return self

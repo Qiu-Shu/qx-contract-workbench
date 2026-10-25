@@ -1,0 +1,14 @@
+.........................................................F......         [100%]
+================================== FAILURES ===================================
+_ test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[root] _
+tests\integration\test_weixin_generation_dispatch_routes.py:245: in test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution
+    assert state(h['database']) == before
+E   assert {'approvals':...', ...)], ...} == {'approvals':...', ...)], ...}
+E
+E     Omitting 76 identical items, use -vv to show
+E     Differing items:
+E     {'audit_events': [('1b7052f9-5bc2-4c25-9623-ae4306636de6', '2e366df9-d27c-4bf2-b075-7ca5966d75ef', 'c49cd7ee-2599-457d...:"403e36daedbeb6c853fba95a6a0baa2ecae4484f59b36d3a82a3d2e289b2ba7b","timestamp":"2026-10-25T12:41:21.393044Z"}'), ...]} != {'audit_events': [('1b7052f9-5bc2-4c25-9623-ae4306636de6', '2e366df9-d27c-4bf2-b075-7ca5966d75ef', 'c49cd7ee-2599-457d...:"403e36daedbeb6c853fba95a6a0baa2ecae4484f59b36d3a82a3d2e289b2ba7b","timestamp":"2026-10-25T12:41:21.393044Z"}'), ...]}
+E     Use -v to get more diff
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_dispatch_routes.py::test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[root]
+1 failed, 63 passed in 60.66s (0:01:00)
