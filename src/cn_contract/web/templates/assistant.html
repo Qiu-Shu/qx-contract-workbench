@@ -37,6 +37,8 @@
       <button id="nav-toggle" class="quiet-button" type="button" aria-expanded="false" aria-controls="sidebar">菜单</button>
       <p class="availability">{% if readonly %}恢复副本 · 只读{% else %}本机工作草稿 · 受控生成{% endif %}</p>
       <button id="show-profile" class="text-button" type="button" aria-expanded="false" aria-controls="profile-preview" disabled>档案草稿</button>
+      <button id="show-outputs" class="text-button" type="button" aria-expanded="false" aria-controls="output-panel" disabled>成果与导出</button>
+      <button id="show-worksheet" class="text-button" type="button" aria-controls="worksheet-panel" disabled>接待底稿</button>
       <label class="reading-control" for="body-size">阅读字号<select id="body-size"><option value="16">标准 16</option><option value="18">较大 18</option><option value="20">大号 20</option></select></label>
     </header>
 
@@ -65,6 +67,34 @@
         <pre id="server-draft" class="reading-text" tabindex="0"></pre>
         <div class="conflict-actions"><button id="keep-local" type="button">保留当前文字并保存</button><button id="use-server" class="quiet-button" type="button">使用已保存文字</button></div>
       </section>
+
+      <details id="worksheet-panel" class="task-draft-panel reception-worksheet">
+        <summary>接待追问与事项底稿<span class="muted">从原始陈述整理诉求、待核与下一步，保存在本机</span></summary>
+        <div class="task-draft-body">
+          <p id="worksheet-version" class="muted"></p>
+          <p class="muted">本片先用于文字接待。录入、模板和模型整理均不自动认定事实；人工修改和明确清空会受保护。</p>
+          <label for="worksheet-source">接待原始陈述</label>
+          <textarea id="worksheet-source" rows="4" maxlength="20000" disabled placeholder="客户说了什么、目前想处理什么……"></textarea>
+          <button id="worksheet-from-composer" class="text-button" type="button" disabled>追加输入框文字到原始陈述</button>
+          <label for="worksheet-notes">事项底稿 · 诉求、立场、已知与待核、下一步</label>
+          <textarea id="worksheet-notes" rows="7" maxlength="20000" disabled placeholder="保留原内部备注；可插入五项提纲后逐项填写。"></textarea>
+          <button id="worksheet-outline" class="text-button" type="button" disabled>保留原备注并插入底稿提纲</button>
+          <label for="worksheet-questions">当前追问 · 每行一项，可写明理由</label>
+          <textarea id="worksheet-questions" rows="4" maxlength="12000" disabled></textarea>
+          <label for="worksheet-materials">材料要求 · 每行一项</label>
+          <textarea id="worksheet-materials" rows="3" maxlength="12000" disabled></textarea>
+          <p class="muted">新增名称登记为待补；同名已登记材料保留原状态。填写名称不证明材料已收到或内容正确。</p>
+          <label for="worksheet-client-reply">客户回复 · 单独保存，可在“成果与导出”选择客户版</label>
+          <textarea id="worksheet-client-reply" rows="4" maxlength="20000" disabled></textarea>
+          <div class="task-actions"><button id="worksheet-save" type="button" disabled>保存底稿</button><button id="worksheet-refresh" class="text-button" type="button">重新读取底稿</button><button id="worksheet-discard" class="text-button" type="button" disabled>放弃未保存编辑</button><button id="worksheet-lookup" class="quiet-button" type="button" hidden>查询本次保存回执</button></div>
+          <div id="worksheet-conflict" hidden><p>保存版本已变化，你的编辑仍在上方。未编辑字段会采用最新保存值。</p><div class="task-actions"><button id="worksheet-keep-local" class="quiet-button" type="button">保留编辑并核对最新版本</button><button id="worksheet-use-server" class="text-button" type="button">放弃编辑，采用已保存版本</button></div></div>
+          <p id="worksheet-notice" role="status" aria-live="polite"></p>
+          <div class="task-actions"><button id="worksheet-suggest" class="quiet-button" type="button" disabled>查看本地模板追问</button><button id="worksheet-prepare" class="quiet-button" type="button" disabled>准备AI追问 · 待核对发送</button></div>
+          <p class="muted">模板未调用模型；准备AI任务只整理文字到输入框，仍需核对后发送。发送结果和费用以原对话记录为准。</p>
+          <div id="worksheet-suggestions"></div>
+          <div id="worksheet-candidates"></div>
+        </div>
+      </details>
 
       <details id="task-draft-panel" class="task-draft-panel">
         <summary>模拟合同任务<span class="muted">逐次收集指令与材料，保存在本机</span></summary>
@@ -179,6 +209,25 @@
     <button id="profile-refresh" class="text-button" type="button">重新读取最新版本</button>
     <p id="profile-notice" role="status" aria-live="polite"></p>
     <div id="profile-content" class="reading-text"></div>
+  </aside>
+  <aside id="output-panel" class="material-preview output-panel" aria-labelledby="output-title" hidden>
+    <header><h2 id="output-title">成果与导出</h2><button id="close-outputs" class="text-button" type="button">关闭成果</button></header>
+    <p class="muted">选定已保存成果，按受众核对正文后再复制或导出。文件仍是待律师核对的工作稿。</p>
+    <button id="output-refresh" class="text-button" type="button">重新读取成果</button>
+    <label for="output-source">已保存成果</label>
+    <select id="output-source" disabled><option value="">请先读取成果</option></select>
+    <button id="output-more" class="text-button" type="button" hidden>加载更早成果</button>
+    <label for="output-audience">接收对象</label>
+    <select id="output-audience" disabled><option value="">请先选择成果</option></select>
+    <button id="output-preview" class="quiet-button" type="button" disabled>预览所选版本</button>
+    <p id="output-notice" role="status" aria-live="polite"></p>
+    <section id="output-result" aria-label="所选成果预览" hidden>
+      <h3 id="output-meta"></h3>
+      <p id="output-notes" class="muted"></p>
+      <div id="output-text" class="reading-text" tabindex="0" aria-label="成果正文，可手动选择复制"></div>
+      <p id="output-citations" class="muted"></p>
+    </section>
+    <div class="output-actions"><button id="output-copy" type="button" disabled>复制所选版本</button><button id="output-download" type="button" class="quiet-button" disabled>导出 Word</button></div>
   </aside>
 </body>
 </html>

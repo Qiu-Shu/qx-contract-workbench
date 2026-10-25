@@ -1,0 +1,326 @@
+FFFFFFFFFFFFF                                                            [100%]
+=================================== FAILURES ===================================
+____ test_empty_and_manual_worksheet_reopen_uses_existing_protected_profile ____
+
+chat = (<starlette.testclient.TestClient object at 0x10cf9a900>, <cn_contract.persistence.Database object at 0x10cf5fec0>, PosixPath('/private/tmp/qx-worksheet-red/test_empty_and_manual_workshee0/workspaces/main'))
+
+    def test_empty_and_manual_worksheet_reopen_uses_existing_protected_profile(chat):
+        client,database,_ = chat
+        headers = sign_in(client);url = start(client,headers)
+        view = client.get(url).json()
+>       assert view['profile_revision'] == 0 and view['fields'] == [] and view['writable'] is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'profile_revision'
+
+tests/integration/test_reception_worksheet.py:38: KeyError
+_______ test_template_questions_are_source_bound_and_do_not_run_a_model ________
+
+chat = (<starlette.testclient.TestClient object at 0x10d629f70>, <cn_contract.persistence.Database object at 0x10d9ddee0>, PosixPath('/private/tmp/qx-worksheet-red/test_template_questions_are_so0/workspaces/main'))
+
+    def test_template_questions_are_source_bound_and_do_not_run_a_model(chat):
+        client,database,_ = chat
+        headers = sign_in(client);url = start(client,headers)
+>       save(client,headers,url,consultation=STATEMENT,internal_notes=NOTES)
+
+tests/integration/test_reception_worksheet.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10d629f70>
+headers = {'X-CSRF-Token': 'uhx-YksTqEPMPQ7x6sClHCkjewBUiCHuQ0h1cU99Asg'}
+url = '/api/assistant/conversations/b1b46c83-9a0a-4fe4-8cf4-810b7dd34771/reception-worksheet'
+edits = {'consultation': '甲称借出10万元，乙称部分已还，目前没有完整还款凭证。', 'internal_notes': '客户诉求：先核对款项\n我方立场：尚未确认代理哪一方\n已知陈述（待核）：有人称部分已还\n待核问题：还款金额与凭证\n下一步：补充材料\n原备注：保留内部讨论。'}
+view = {'code': 'NOT_SUPPORTED', 'correlation_id': '7461fad0-47fc-4cb1-918e-b8ff32a602ea', 'message': 'request blocked', 'retryable': False}
+
+    def save(client, headers, url, **edits):
+        view = client.get(url).json()
+>       body = {'request_id':str(uuid4()),'patch':{'scope':view['scope'],
+                                                           ^^^^^^^^^^^^^
+            'base_profile_revision':view['profile_revision'],'changes':[]},
+            'expected_intake_id':view['expected_intake_id'],'expected_intake_revision':view['expected_intake_revision'],
+            'manual_edits':[{'field':name,'value':{'kind':'text','value':value}} for name,value in edits.items()],
+            'project_intake':False}
+E       KeyError: 'scope'
+
+tests/integration/test_reception_worksheet.py:24: KeyError
+_ test_prepare_preserves_saved_additional_text_without_sending_or_changing_draft _
+
+chat = (<starlette.testclient.TestClient object at 0x10db19ee0>, <cn_contract.persistence.Database object at 0x10db59bb0>, PosixPath('/private/tmp/qx-worksheet-red/test_prepare_preserves_saved_a0/workspaces/main'))
+
+    def test_prepare_preserves_saved_additional_text_without_sending_or_changing_draft(chat):
+        client,database,_ = chat
+        headers = sign_in(client);url = start(client,headers)
+>       save(client,headers,url,consultation=STATEMENT,internal_notes=NOTES)
+
+tests/integration/test_reception_worksheet.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10db19ee0>
+headers = {'X-CSRF-Token': 'jxDNzST6OJWR429teOI2HAe_p6TNf4lC8bcSZwVAq5w'}
+url = '/api/assistant/conversations/2c2f9573-8235-4b4b-81f8-ca3378530894/reception-worksheet'
+edits = {'consultation': '甲称借出10万元，乙称部分已还，目前没有完整还款凭证。', 'internal_notes': '客户诉求：先核对款项\n我方立场：尚未确认代理哪一方\n已知陈述（待核）：有人称部分已还\n待核问题：还款金额与凭证\n下一步：补充材料\n原备注：保留内部讨论。'}
+view = {'code': 'NOT_SUPPORTED', 'correlation_id': 'c8f23d5a-8ed1-4edd-999d-d5ab7a7e89d3', 'message': 'request blocked', 'retryable': False}
+
+    def save(client, headers, url, **edits):
+        view = client.get(url).json()
+>       body = {'request_id':str(uuid4()),'patch':{'scope':view['scope'],
+                                                           ^^^^^^^^^^^^^
+            'base_profile_revision':view['profile_revision'],'changes':[]},
+            'expected_intake_id':view['expected_intake_id'],'expected_intake_revision':view['expected_intake_revision'],
+            'manual_edits':[{'field':name,'value':{'kind':'text','value':value}} for name,value in edits.items()],
+            'project_intake':False}
+E       KeyError: 'scope'
+
+tests/integration/test_reception_worksheet.py:24: KeyError
+_____ test_stale_profile_or_scope_does_not_prepare_old_source[suggestions] _____
+
+chat = (<starlette.testclient.TestClient object at 0x10e4873e0>, <cn_contract.persistence.Database object at 0x10e487530>, PosixPath('/private/tmp/qx-worksheet-red/test_stale_profile_or_scope_do0/workspaces/main'))
+action = 'suggestions'
+
+    @pytest.mark.parametrize('action',['suggestions','prepare'])
+    def test_stale_profile_or_scope_does_not_prepare_old_source(chat,action):
+        client,_,_ = chat
+        headers = sign_in(client);url = start(client,headers)
+>       save(client,headers,url,consultation=STATEMENT)
+
+tests/integration/test_reception_worksheet.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10e4873e0>
+headers = {'X-CSRF-Token': 'aR4p6YVc4l9khmh7BdeQlyl9qDDYXoU9SelZw8qn5L8'}
+url = '/api/assistant/conversations/36e27472-3a17-481f-91fe-8f91b7c6d4b8/reception-worksheet'
+edits = {'consultation': '甲称借出10万元，乙称部分已还，目前没有完整还款凭证。'}
+view = {'code': 'NOT_SUPPORTED', 'correlation_id': '114ac944-4cfd-4dbf-befa-072a4bbfcbc8', 'message': 'request blocked', 'retryable': False}
+
+    def save(client, headers, url, **edits):
+        view = client.get(url).json()
+>       body = {'request_id':str(uuid4()),'patch':{'scope':view['scope'],
+                                                           ^^^^^^^^^^^^^
+            'base_profile_revision':view['profile_revision'],'changes':[]},
+            'expected_intake_id':view['expected_intake_id'],'expected_intake_revision':view['expected_intake_revision'],
+            'manual_edits':[{'field':name,'value':{'kind':'text','value':value}} for name,value in edits.items()],
+            'project_intake':False}
+E       KeyError: 'scope'
+
+tests/integration/test_reception_worksheet.py:24: KeyError
+_______ test_stale_profile_or_scope_does_not_prepare_old_source[prepare] _______
+
+chat = (<starlette.testclient.TestClient object at 0x10e5dd9d0>, <cn_contract.persistence.Database object at 0x10e649ee0>, PosixPath('/private/tmp/qx-worksheet-red/test_stale_profile_or_scope_do1/workspaces/main'))
+action = 'prepare'
+
+    @pytest.mark.parametrize('action',['suggestions','prepare'])
+    def test_stale_profile_or_scope_does_not_prepare_old_source(chat,action):
+        client,_,_ = chat
+        headers = sign_in(client);url = start(client,headers)
+>       save(client,headers,url,consultation=STATEMENT)
+
+tests/integration/test_reception_worksheet.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10e5dd9d0>
+headers = {'X-CSRF-Token': 'gZ0RCeaznGxPrN0LUgheTeVT5cHTukhzbt-LRpDBzrs'}
+url = '/api/assistant/conversations/1cf9788f-41ce-4bca-8e34-01ad4b6b238d/reception-worksheet'
+edits = {'consultation': '甲称借出10万元，乙称部分已还，目前没有完整还款凭证。'}
+view = {'code': 'NOT_SUPPORTED', 'correlation_id': 'b401a737-c0bc-4bbe-be16-18fd6f06b7ac', 'message': 'request blocked', 'retryable': False}
+
+    def save(client, headers, url, **edits):
+        view = client.get(url).json()
+>       body = {'request_id':str(uuid4()),'patch':{'scope':view['scope'],
+                                                           ^^^^^^^^^^^^^
+            'base_profile_revision':view['profile_revision'],'changes':[]},
+            'expected_intake_id':view['expected_intake_id'],'expected_intake_revision':view['expected_intake_revision'],
+            'manual_edits':[{'field':name,'value':{'kind':'text','value':value}} for name,value in edits.items()],
+            'project_intake':False}
+E       KeyError: 'scope'
+
+tests/integration/test_reception_worksheet.py:24: KeyError
+_______ test_worksheet_saves_only_its_explicit_manual_fields[mutation0] ________
+
+chat = (<starlette.testclient.TestClient object at 0x10e765ac0>, <cn_contract.persistence.Database object at 0x10e7066c0>, PosixPath('/private/tmp/qx-worksheet-red/test_worksheet_saves_only_its_0/workspaces/main'))
+mutation = {'project_intake': True}
+
+    @pytest.mark.parametrize('mutation',[{'project_intake':True},{'manual_edits':[]},
+        {'manual_edits':[{'field':'contact','value':{'kind':'text','value':'不可从此入口改联系方式'}}]}])
+    def test_worksheet_saves_only_its_explicit_manual_fields(chat,mutation):
+        client,_,_ = chat
+        headers = sign_in(client);url = start(client,headers)
+>       _,body = save(client,headers,url,consultation=STATEMENT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_reception_worksheet.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10e765ac0>
+headers = {'X-CSRF-Token': '0g9hIvlJRHEHDT6GLDQ0XkxzHp9lhLdOm89NlrjziQU'}
+url = '/api/assistant/conversations/beca01c0-cbd1-4c1d-8a48-7b130fc762ac/reception-worksheet'
+edits = {'consultation': '甲称借出10万元，乙称部分已还，目前没有完整还款凭证。'}
+view = {'code': 'NOT_SUPPORTED', 'correlation_id': '341b5667-f553-4351-b34b-7bc610294af8', 'message': 'request blocked', 'retryable': False}
+
+    def save(client, headers, url, **edits):
+        view = client.get(url).json()
+>       body = {'request_id':str(uuid4()),'patch':{'scope':view['scope'],
+                                                           ^^^^^^^^^^^^^
+            'base_profile_revision':view['profile_revision'],'changes':[]},
+            'expected_intake_id':view['expected_intake_id'],'expected_intake_revision':view['expected_intake_revision'],
+            'manual_edits':[{'field':name,'value':{'kind':'text','value':value}} for name,value in edits.items()],
+            'project_intake':False}
+E       KeyError: 'scope'
+
+tests/integration/test_reception_worksheet.py:24: KeyError
+_______ test_worksheet_saves_only_its_explicit_manual_fields[mutation1] ________
+
+chat = (<starlette.testclient.TestClient object at 0x10e89e3f0>, <cn_contract.persistence.Database object at 0x10e910c50>, PosixPath('/private/tmp/qx-worksheet-red/test_worksheet_saves_only_its_1/workspaces/main'))
+mutation = {'manual_edits': []}
+
+    @pytest.mark.parametrize('mutation',[{'project_intake':True},{'manual_edits':[]},
+        {'manual_edits':[{'field':'contact','value':{'kind':'text','value':'不可从此入口改联系方式'}}]}])
+    def test_worksheet_saves_only_its_explicit_manual_fields(chat,mutation):
+        client,_,_ = chat
+        headers = sign_in(client);url = start(client,headers)
+>       _,body = save(client,headers,url,consultation=STATEMENT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_reception_worksheet.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10e89e3f0>
+headers = {'X-CSRF-Token': 'qTU7Yf9PruPf7NF63tgMdaxS13xFVBaX6li8b7EGhBw'}
+url = '/api/assistant/conversations/96ead8a2-8025-44aa-9261-6b68627260ec/reception-worksheet'
+edits = {'consultation': '甲称借出10万元，乙称部分已还，目前没有完整还款凭证。'}
+view = {'code': 'NOT_SUPPORTED', 'correlation_id': '6230efcd-2ff6-431e-90e8-eff943250664', 'message': 'request blocked', 'retryable': False}
+
+    def save(client, headers, url, **edits):
+        view = client.get(url).json()
+>       body = {'request_id':str(uuid4()),'patch':{'scope':view['scope'],
+                                                           ^^^^^^^^^^^^^
+            'base_profile_revision':view['profile_revision'],'changes':[]},
+            'expected_intake_id':view['expected_intake_id'],'expected_intake_revision':view['expected_intake_revision'],
+            'manual_edits':[{'field':name,'value':{'kind':'text','value':value}} for name,value in edits.items()],
+            'project_intake':False}
+E       KeyError: 'scope'
+
+tests/integration/test_reception_worksheet.py:24: KeyError
+_______ test_worksheet_saves_only_its_explicit_manual_fields[mutation2] ________
+
+chat = (<starlette.testclient.TestClient object at 0x10e9ff0b0>, <cn_contract.persistence.Database object at 0x10e9ff050>, PosixPath('/private/tmp/qx-worksheet-red/test_worksheet_saves_only_its_2/workspaces/main'))
+mutation = {'manual_edits': [{'field': 'contact', 'value': {'kind': 'text', 'value': '不可从此入口改联系方式'}}]}
+
+    @pytest.mark.parametrize('mutation',[{'project_intake':True},{'manual_edits':[]},
+        {'manual_edits':[{'field':'contact','value':{'kind':'text','value':'不可从此入口改联系方式'}}]}])
+    def test_worksheet_saves_only_its_explicit_manual_fields(chat,mutation):
+        client,_,_ = chat
+        headers = sign_in(client);url = start(client,headers)
+>       _,body = save(client,headers,url,consultation=STATEMENT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_reception_worksheet.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10e9ff0b0>
+headers = {'X-CSRF-Token': 'IHMIQw5koeDYYF8fYz9wDo2Pqrag0NnAvk4yGmQ7Bc4'}
+url = '/api/assistant/conversations/49c391a2-60ce-4c8c-916a-7e49e665dd18/reception-worksheet'
+edits = {'consultation': '甲称借出10万元，乙称部分已还，目前没有完整还款凭证。'}
+view = {'code': 'NOT_SUPPORTED', 'correlation_id': '111207c9-3802-421f-b3b6-799ba5d02a9a', 'message': 'request blocked', 'retryable': False}
+
+    def save(client, headers, url, **edits):
+        view = client.get(url).json()
+>       body = {'request_id':str(uuid4()),'patch':{'scope':view['scope'],
+                                                           ^^^^^^^^^^^^^
+            'base_profile_revision':view['profile_revision'],'changes':[]},
+            'expected_intake_id':view['expected_intake_id'],'expected_intake_revision':view['expected_intake_revision'],
+            'manual_edits':[{'field':name,'value':{'kind':'text','value':value}} for name,value in edits.items()],
+            'project_intake':False}
+E       KeyError: 'scope'
+
+tests/integration/test_reception_worksheet.py:24: KeyError
+___________ test_owner_and_csrf_are_checked_before_body[suggestions] ___________
+
+chat = (<starlette.testclient.TestClient object at 0x10eabe000>, <cn_contract.persistence.Database object at 0x10eba06e0>, PosixPath('/private/tmp/qx-worksheet-red/test_owner_and_csrf_are_checke0/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ecdf260>
+action = 'suggestions'
+
+    @pytest.mark.parametrize('action',['suggestions','prepare','commits'])
+    def test_owner_and_csrf_are_checked_before_body(chat,monkeypatch,action):
+>       from cn_contract.web import reception_worksheet
+E       ImportError: cannot import name 'reception_worksheet' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_reception_worksheet.py:118: ImportError
+_____________ test_owner_and_csrf_are_checked_before_body[prepare] _____________
+
+chat = (<starlette.testclient.TestClient object at 0x10ecb1dc0>, <cn_contract.persistence.Database object at 0x10ecdd610>, PosixPath('/private/tmp/qx-worksheet-red/test_owner_and_csrf_are_checke1/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ee2d880>
+action = 'prepare'
+
+    @pytest.mark.parametrize('action',['suggestions','prepare','commits'])
+    def test_owner_and_csrf_are_checked_before_body(chat,monkeypatch,action):
+>       from cn_contract.web import reception_worksheet
+E       ImportError: cannot import name 'reception_worksheet' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_reception_worksheet.py:118: ImportError
+_____________ test_owner_and_csrf_are_checked_before_body[commits] _____________
+
+chat = (<starlette.testclient.TestClient object at 0x10ee0eed0>, <cn_contract.persistence.Database object at 0x10ee46e40>, PosixPath('/private/tmp/qx-worksheet-red/test_owner_and_csrf_are_checke2/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ef61b50>
+action = 'commits'
+
+    @pytest.mark.parametrize('action',['suggestions','prepare','commits'])
+    def test_owner_and_csrf_are_checked_before_body(chat,monkeypatch,action):
+>       from cn_contract.web import reception_worksheet
+E       ImportError: cannot import name 'reception_worksheet' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_reception_worksheet.py:118: ImportError
+____________________ test_body_time_revocation_is_rechecked ____________________
+
+chat = (<starlette.testclient.TestClient object at 0x10ee46ed0>, <cn_contract.persistence.Database object at 0x10ee0ef60>, PosixPath('/private/tmp/qx-worksheet-red/test_body_time_revocation_is_r0/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10f076cf0>
+
+    def test_body_time_revocation_is_rechecked(chat,monkeypatch):
+>       from cn_contract.web import reception_worksheet
+E       ImportError: cannot import name 'reception_worksheet' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_reception_worksheet.py:132: ImportError
+__________ test_archived_and_fenced_worksheet_cannot_write_or_prepare __________
+
+chat = (<starlette.testclient.TestClient object at 0x10f063e90>, <cn_contract.persistence.Database object at 0x10f077f20>, PosixPath('/private/tmp/qx-worksheet-red/test_archived_and_fenced_works0/workspaces/main'))
+
+    def test_archived_and_fenced_worksheet_cannot_write_or_prepare(chat):
+        from cn_contract.ops.storage import RestoreFenceRow
+        client,database,_ = chat
+        headers = sign_in(client);url = start(client,headers)
+>       _,body = save(client,headers,url,consultation=STATEMENT)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_reception_worksheet.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10f063e90>
+headers = {'X-CSRF-Token': 'YSvb7qsfJPpfXKSJfkoZcgAHYnDBXRgFb54znW46SlI'}
+url = '/api/assistant/conversations/37b28cc9-f0b3-4588-93f6-7ed6406e0187/reception-worksheet'
+edits = {'consultation': '甲称借出10万元，乙称部分已还，目前没有完整还款凭证。'}
+view = {'code': 'NOT_SUPPORTED', 'correlation_id': 'c1dc7141-248c-4ee4-a6ed-7a2cdf15a25f', 'message': 'request blocked', 'retryable': False}
+
+    def save(client, headers, url, **edits):
+        view = client.get(url).json()
+>       body = {'request_id':str(uuid4()),'patch':{'scope':view['scope'],
+                                                           ^^^^^^^^^^^^^
+            'base_profile_revision':view['profile_revision'],'changes':[]},
+            'expected_intake_id':view['expected_intake_id'],'expected_intake_revision':view['expected_intake_revision'],
+            'manual_edits':[{'field':name,'value':{'kind':'text','value':value}} for name,value in edits.items()],
+            'project_intake':False}
+E       KeyError: 'scope'
+
+tests/integration/test_reception_worksheet.py:24: KeyError
+=========================== short test summary info ============================
+FAILED tests/integration/test_reception_worksheet.py::test_empty_and_manual_worksheet_reopen_uses_existing_protected_profile
+FAILED tests/integration/test_reception_worksheet.py::test_template_questions_are_source_bound_and_do_not_run_a_model
+FAILED tests/integration/test_reception_worksheet.py::test_prepare_preserves_saved_additional_text_without_sending_or_changing_draft
+FAILED tests/integration/test_reception_worksheet.py::test_stale_profile_or_scope_does_not_prepare_old_source[suggestions]
+FAILED tests/integration/test_reception_worksheet.py::test_stale_profile_or_scope_does_not_prepare_old_source[prepare]
+FAILED tests/integration/test_reception_worksheet.py::test_worksheet_saves_only_its_explicit_manual_fields[mutation0]
+FAILED tests/integration/test_reception_worksheet.py::test_worksheet_saves_only_its_explicit_manual_fields[mutation1]
+FAILED tests/integration/test_reception_worksheet.py::test_worksheet_saves_only_its_explicit_manual_fields[mutation2]
+FAILED tests/integration/test_reception_worksheet.py::test_owner_and_csrf_are_checked_before_body[suggestions]
+FAILED tests/integration/test_reception_worksheet.py::test_owner_and_csrf_are_checked_before_body[prepare]
+FAILED tests/integration/test_reception_worksheet.py::test_owner_and_csrf_are_checked_before_body[commits]
+FAILED tests/integration/test_reception_worksheet.py::test_body_time_revocation_is_rechecked
+FAILED tests/integration/test_reception_worksheet.py::test_archived_and_fenced_worksheet_cannot_write_or_prepare
+13 failed in 3.35s

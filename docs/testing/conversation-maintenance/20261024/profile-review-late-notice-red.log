@@ -1,0 +1,29 @@
+✖ late profile reread after successful save cannot put its receipt notice on another conversation (3.296875ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44.541916
+
+✖ failing tests:
+
+test at scripts/test_assistant_profile_panel.mjs:312:1
+✖ late profile reread after successful save cannot put its receipt notice on another conversation (3.296875ms)
+  AssertionError [ERR_ASSERTION]: old save confirmation must not label the new conversation
+  + actual - expected
+  
+  + '已收到保存回执；手工更正受保护，事实仍待核验。'
+  - '已保存版本 9 · 来源输入版本 7、材料版本 3。事实仍待核验；最新整理结果请重新读取。'
+  
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_profile_panel.mjs:325:10)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '已收到保存回执；手工更正受保护，事实仍待核验。',
+    expected: '已保存版本 9 · 来源输入版本 7、材料版本 3。事实仍待核验；最新整理结果请重新读取。',
+    operator: 'strictEqual'
+  }

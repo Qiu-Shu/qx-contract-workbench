@@ -1,0 +1,230 @@
+FFFFFFFFFFFF                                                             [100%]
+=================================== FAILURES ===================================
+____ test_client_preview_copy_and_entire_word_package_exclude_internal_data ____
+
+chat = (<starlette.testclient.TestClient object at 0x10bb12840>, <cn_contract.persistence.Database object at 0x108d51f40>, PosixPath('/private/tmp/qx-ch08-red/test_client_preview_copy_and_e0/workspaces/main'))
+
+    def test_client_preview_copy_and_entire_word_package_exclude_internal_data(chat):
+        client, database, _ = chat
+        headers = sign_in(client)
+        base = seed(client, headers)
+        listing = client.get(base).json()
+>       assert listing['items'][0]['audiences'] == ['client','internal']
+               ^^^^^^^^^^^^^^^^
+E       KeyError: 'items'
+
+tests/integration/test_assistant_outputs.py:43: KeyError
+____________ test_digest_and_audience_mismatch_cannot_export[copy] _____________
+
+chat = (<starlette.testclient.TestClient object at 0x10cd8d370>, <cn_contract.persistence.Database object at 0x10ce22630>, PosixPath('/private/tmp/qx-ch08-red/test_digest_and_audience_misma0/workspaces/main'))
+action = 'copy'
+
+    @pytest.mark.parametrize('action', ['copy','docx'])
+    def test_digest_and_audience_mismatch_cannot_export(chat, action):
+        client, _, _ = chat
+        headers = sign_in(client)
+        base = seed(client, headers)
+>       internal = preview(client, headers, base, selection('internal'))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_assistant_outputs.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10cd8d370>
+headers = {'X-CSRF-Token': 'qlaK9NBteIqZeWkqtEfdHW3QDHr8mjwhhRmSriLpkAI'}
+base = '/api/assistant/conversations/ce81f394-3f4b-47ce-a69a-1065b357b540/outputs'
+selected = {'audience': 'internal', 'source': {'kind': 'profile', 'profile_revision': 1}}
+
+    def preview(client, headers, base, selected=None):
+        result = client.post(base+'/preview', headers=headers, json=selected or selection())
+>       assert result.status_code == 200, result.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"5de31f34-3199-47ee-ac27-19b4243e5ea7","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/integration/test_assistant_outputs.py:34: AssertionError
+____________ test_digest_and_audience_mismatch_cannot_export[docx] _____________
+
+chat = (<starlette.testclient.TestClient object at 0x10cf87290>, <cn_contract.persistence.Database object at 0x10cf73770>, PosixPath('/private/tmp/qx-ch08-red/test_digest_and_audience_misma1/workspaces/main'))
+action = 'docx'
+
+    @pytest.mark.parametrize('action', ['copy','docx'])
+    def test_digest_and_audience_mismatch_cannot_export(chat, action):
+        client, _, _ = chat
+        headers = sign_in(client)
+        base = seed(client, headers)
+>       internal = preview(client, headers, base, selection('internal'))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_assistant_outputs.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10cf87290>
+headers = {'X-CSRF-Token': 'UsOfipUBOaenrDDU89RKs7_sQs2UmeHGeEZNppdcQwU'}
+base = '/api/assistant/conversations/24f0523f-d5f2-457e-9484-db5f9cadcf90/outputs'
+selected = {'audience': 'internal', 'source': {'kind': 'profile', 'profile_revision': 1}}
+
+    def preview(client, headers, base, selected=None):
+        result = client.post(base+'/preview', headers=headers, json=selected or selection())
+>       assert result.status_code == 200, result.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"17bf501d-456f-461e-a6c5-14c2f3db8607","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/integration/test_assistant_outputs.py:34: AssertionError
+_____ test_exact_old_revision_survives_new_manual_edit_and_explicit_clear ______
+
+chat = (<starlette.testclient.TestClient object at 0x10d01ee40>, <cn_contract.persistence.Database object at 0x10d1789e0>, PosixPath('/private/tmp/qx-ch08-red/test_exact_old_revision_surviv0/workspaces/main'))
+
+    def test_exact_old_revision_survives_new_manual_edit_and_explicit_clear(chat):
+        client, _, _ = chat
+        headers = sign_in(client)
+        base = seed(client, headers)
+>       old = preview(client, headers, base)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_assistant_outputs.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10d01ee40>
+headers = {'X-CSRF-Token': '519HQdDNJKV8HymDxirU66nqsMIxvmvDiDl3P3w6Gc0'}
+base = '/api/assistant/conversations/af621065-205f-4cef-9f89-6fab3ea2805c/outputs'
+selected = None
+
+    def preview(client, headers, base, selected=None):
+        result = client.post(base+'/preview', headers=headers, json=selected or selection())
+>       assert result.status_code == 200, result.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"024c050a-1fc6-4f35-98f6-f509aa8abec3","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/integration/test_assistant_outputs.py:34: AssertionError
+_________ test_unknown_source_foreign_output_and_forged_body_rejected __________
+
+chat = (<starlette.testclient.TestClient object at 0x10da6df10>, <cn_contract.persistence.Database object at 0x10bec3b30>, PosixPath('/private/tmp/qx-ch08-red/test_unknown_source_foreign_ou0/workspaces/main'))
+
+    def test_unknown_source_foreign_output_and_forged_body_rejected(chat):
+        client, _, _ = chat
+        headers = sign_in(client)
+        base = seed(client, headers)
+>       assert client.post(base+'/preview',headers=headers,json=selection(revision=99)).status_code == 409
+E       AssertionError: assert 404 == 409
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = post(('/api/assistant/conversations/89520dbf-0011-4c4a-9cd9-97034863e5a4/outputs' + '/preview'), headers={'X-CSRF-Token': 'IlN736wdtVpVaeiL6Je1eNrP_dHOKgJrYq6LsK8uoRo'}, json={'audience': 'client', 'source': {'kind': 'profile', 'profile_revision': 99}})
+E        +      where post = <starlette.testclient.TestClient object at 0x10da6df10>.post
+E        +      and   {'audience': 'client', 'source': {'kind': 'profile', 'profile_revision': 99}} = selection(revision=99)
+
+tests/integration/test_assistant_outputs.py:98: AssertionError
+_________ test_owner_csrf_origin_and_auth_checked_before_body[preview] _________
+
+chat = (<starlette.testclient.TestClient object at 0x10cf51700>, <cn_contract.persistence.Database object at 0x10dc07f80>, PosixPath('/private/tmp/qx-ch08-red/test_owner_csrf_origin_and_aut0/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dd3d6a0>
+action = 'preview'
+
+    @pytest.mark.parametrize('action', ['preview','copy','docx'])
+    def test_owner_csrf_origin_and_auth_checked_before_body(chat, monkeypatch, action):
+>       from cn_contract.web import assistant_outputs
+E       ImportError: cannot import name 'assistant_outputs' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_assistant_outputs.py:106: ImportError
+__________ test_owner_csrf_origin_and_auth_checked_before_body[copy] ___________
+
+chat = (<starlette.testclient.TestClient object at 0x10ddcccb0>, <cn_contract.persistence.Database object at 0x10dc87e30>, PosixPath('/private/tmp/qx-ch08-red/test_owner_csrf_origin_and_aut1/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10de9bef0>
+action = 'copy'
+
+    @pytest.mark.parametrize('action', ['preview','copy','docx'])
+    def test_owner_csrf_origin_and_auth_checked_before_body(chat, monkeypatch, action):
+>       from cn_contract.web import assistant_outputs
+E       ImportError: cannot import name 'assistant_outputs' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_assistant_outputs.py:106: ImportError
+__________ test_owner_csrf_origin_and_auth_checked_before_body[docx] ___________
+
+chat = (<starlette.testclient.TestClient object at 0x10de99fa0>, <cn_contract.persistence.Database object at 0x10cee4bf0>, PosixPath('/private/tmp/qx-ch08-red/test_owner_csrf_origin_and_aut2/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dfd2fc0>
+action = 'docx'
+
+    @pytest.mark.parametrize('action', ['preview','copy','docx'])
+    def test_owner_csrf_origin_and_auth_checked_before_body(chat, monkeypatch, action):
+>       from cn_contract.web import assistant_outputs
+E       ImportError: cannot import name 'assistant_outputs' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_assistant_outputs.py:106: ImportError
+_________ test_revocation_after_body_read_returns_no_content[preview] __________
+
+chat = (<starlette.testclient.TestClient object at 0x10dfd1d60>, <cn_contract.persistence.Database object at 0x10dc06210>, PosixPath('/private/tmp/qx-ch08-red/test_revocation_after_body_rea0/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e107fe0>
+action = 'preview'
+
+    @pytest.mark.parametrize('action', ['preview','copy','docx'])
+    def test_revocation_after_body_read_returns_no_content(chat, monkeypatch, action):
+>       from cn_contract.web import assistant_outputs
+E       ImportError: cannot import name 'assistant_outputs' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_assistant_outputs.py:124: ImportError
+___________ test_revocation_after_body_read_returns_no_content[copy] ___________
+
+chat = (<starlette.testclient.TestClient object at 0x10e0f27b0>, <cn_contract.persistence.Database object at 0x10e0d8ce0>, PosixPath('/private/tmp/qx-ch08-red/test_revocation_after_body_rea1/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e249b20>
+action = 'copy'
+
+    @pytest.mark.parametrize('action', ['preview','copy','docx'])
+    def test_revocation_after_body_read_returns_no_content(chat, monkeypatch, action):
+>       from cn_contract.web import assistant_outputs
+E       ImportError: cannot import name 'assistant_outputs' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_assistant_outputs.py:124: ImportError
+___________ test_revocation_after_body_read_returns_no_content[docx] ___________
+
+chat = (<starlette.testclient.TestClient object at 0x10e2810a0>, <cn_contract.persistence.Database object at 0x10e26a510>, PosixPath('/private/tmp/qx-ch08-red/test_revocation_after_body_rea2/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e38bda0>
+action = 'docx'
+
+    @pytest.mark.parametrize('action', ['preview','copy','docx'])
+    def test_revocation_after_body_read_returns_no_content(chat, monkeypatch, action):
+>       from cn_contract.web import assistant_outputs
+E       ImportError: cannot import name 'assistant_outputs' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_assistant_outputs.py:124: ImportError
+____________________ test_readonly_fence_denies_new_exports ____________________
+
+chat = (<starlette.testclient.TestClient object at 0x10e3896a0>, <cn_contract.persistence.Database object at 0x10e38a0f0>, PosixPath('/private/tmp/qx-ch08-red/test_readonly_fence_denies_new0/workspaces/main'))
+
+    def test_readonly_fence_denies_new_exports(chat):
+        client, database, _ = chat
+        headers = sign_in(client)
+        base = seed(client, headers)
+>       value = preview(client, headers, base)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_assistant_outputs.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10e3896a0>
+headers = {'X-CSRF-Token': 'Ia2voL5mzGcpU4uUdHDcQrpjvcaeGdbbn7cKavttFM0'}
+base = '/api/assistant/conversations/3e84f5b2-4917-47fc-bc34-d7083e62af0e/outputs'
+selected = None
+
+    def preview(client, headers, base, selected=None):
+        result = client.post(base+'/preview', headers=headers, json=selected or selection())
+>       assert result.status_code == 200, result.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"0fca041c-d878-4b45-9e32-60fb13f6b719","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/integration/test_assistant_outputs.py:34: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_assistant_outputs.py::test_client_preview_copy_and_entire_word_package_exclude_internal_data
+FAILED tests/integration/test_assistant_outputs.py::test_digest_and_audience_mismatch_cannot_export[copy]
+FAILED tests/integration/test_assistant_outputs.py::test_digest_and_audience_mismatch_cannot_export[docx]
+FAILED tests/integration/test_assistant_outputs.py::test_exact_old_revision_survives_new_manual_edit_and_explicit_clear
+FAILED tests/integration/test_assistant_outputs.py::test_unknown_source_foreign_output_and_forged_body_rejected
+FAILED tests/integration/test_assistant_outputs.py::test_owner_csrf_origin_and_auth_checked_before_body[preview]
+FAILED tests/integration/test_assistant_outputs.py::test_owner_csrf_origin_and_auth_checked_before_body[copy]
+FAILED tests/integration/test_assistant_outputs.py::test_owner_csrf_origin_and_auth_checked_before_body[docx]
+FAILED tests/integration/test_assistant_outputs.py::test_revocation_after_body_read_returns_no_content[preview]
+FAILED tests/integration/test_assistant_outputs.py::test_revocation_after_body_read_returns_no_content[copy]
+FAILED tests/integration/test_assistant_outputs.py::test_revocation_after_body_read_returns_no_content[docx]
+FAILED tests/integration/test_assistant_outputs.py::test_readonly_fence_denies_new_exports
+12 failed in 3.21s

@@ -1,0 +1,93 @@
+✔ manual notes retain old text, are protected in one save and reopen without sending (1.781292ms)
+✔ template suggestions are explicitly adopted into editable fields, never auto saved (0.3395ms)
+✔ unknown save queries its original receipt without repeating the POST (0.3165ms)
+✔ a version conflict retains local edits until explicit resolution (0.173083ms)
+✔ preparation keeps additional input visible and never invokes a send (0.277875ms)
+✔ new typing while preparation waits is never overwritten (2.270833ms)
+✔ late read and suggestions cannot populate another conversation (0.15575ms)
+✔ conflicting candidates are shown, not silently selected or cleared on unrelated saves (0.197959ms)
+✖ readonly, archived and revoked contexts disable saves and preparation (0.605667ms)
+✔ preparation preserves a new skill choice made while waiting (1.417167ms)
+✖ preparation preserves a new context choice made while waiting (0.406583ms)
+✖ preparation preserves a new materials choice made while waiting (0.350416ms)
+✖ preparation preserves a new scope choice made while waiting (0.3685ms)
+✔ explicitly adopting an unchanged displayed candidate still saves a protected manual value (0.2615ms)
+✔ keeping local edits after conflict does not overwrite another field changed on the server (0.156958ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 11
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41.913875
+
+✖ failing tests:
+
+test at scripts/test_reception_worksheet.mjs:114:1
+✖ readonly, archived and revoked contexts disable saves and preparation (0.605667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'read'
+  - ]
+  
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:116:10)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'read' ],
+    operator: 'deepStrictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:122:63
+✖ preparation preserves a new context choice made while waiting (0.406583ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:130:10)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:122:63
+✖ preparation preserves a new materials choice made while waiting (0.350416ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:130:10)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:122:63
+✖ preparation preserves a new scope choice made while waiting (0.3685ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:130:10)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual'
+  }

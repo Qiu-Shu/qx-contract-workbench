@@ -1,5 +1,9 @@
 # 任务实际状态
 
+2026-10-26 “接待追问与事项底稿”首片在 `dhb_law` 实现：对话页“接待底稿”保存原始陈述、五项内部提纲、追问/材料和独立客户回复；本地候选带理由/原话，准备AI任务沿原发送入口且不自动调用。连续保存人工值保留、完整意图晚结果隔离、断ACK查回执及恢复只读已验。专项17/关联235 Python、专项15/关联336前端、369桌面通过；实际Chromium、客户Word包/渲染、真实qxbak及独立复核通过。运行依赖门仍因清单缺失退出1，未提交/推送/更新服务器或0.4.1，真实外部模型、Windows及法律验收未覆盖。[本轮实测](testing/reception-worksheet/20261026/README.md)。
+
+2026-10-25 CH-08 首片在 `dhb_law` 实现：顶部“成果与导出”可选保存回答/历史档案版本，核对客户或内部投影后复制/下载 Word；客户仅白名单客户回复，固定版本/摘要及当前权限重核。后端22、关联121（备份另1）、前端321、桌面真实临时目录369通过；实际 Chromium/Word渲染和包检查、qxbak往返及独立复核通过。运行依赖门因清单文件缺失仍退出1；未提交/推送/更新服务器或0.4.1，Windows与法律验收仍开放。[本片实测](testing/chat-output-export/20261025/README.md)。
+
 2026-10-25 D2g5f已接待收件附件明确选择本对话已上传DOCX/PDF，沿原resolution保存、原收件不覆盖，丢ACK只GET；材料旧通知回退缺陷经独立RED→GREEN修复。根4短组237不同Python：236PASS/1既有WIN-PATH-02 FAIL（含22新），293Node（60新）/四门/真实本机合成浏览器通过，交叉独审0遗留，[实际证据](testing/weixin-media-selection/20261025/README.md)。可信微信/下载解密/pending列表/E许可待，0.4.1未更新，全仓长进程/安装版/真实账号模型等NOT_RUN，WIN-PATH-02和原生AV仍OPEN。产品`958b8e6`已正常推送，远端SHA/tree及5,761条目一致，[同步回执](testing/weixin-media-selection/20261025/github-sync.md)。
 
 2026-10-25 D2g5e已接根CID固定descriptor明确分发/精确找回HTTP：最终事务核root归属，固定目标当前ACL、9字段脱敏回执、精确恢复GET与丢ACK只查；旧guard/schema19保留。7短组23模块701不同Python（含64新）/四门通过，整体独审0确认及5独立HTTP探针通过；[实际证据](testing/weixin-dispatch-http/20261025/README.md)保留首次不稳定61/3、夹具修正及64整组重跑、未用HTTP测试模块的摘要差异。无新UI/列表/真实微信；可信绑定、下载解密、pending附件选择/E许可仍待。0.4.1未更新，全仓/Node/浏览器/安装版等NOT_RUN，WIN-PATH-02/原生AV仍OPEN。产品`dd46b6a`已正常推送，远端SHA/tree及5,688条目一致，[同步回执](testing/weixin-dispatch-http/20261025/github-sync.md)。
@@ -77,6 +81,10 @@ C 产品提交 `4b62f06` 已同步 GitHub，本地/远端 SHA、tree 及 5,002 �
 2026-10-24 持久合同任务 A＋B 已实施：多条消息/附件先收集后冻结，超量/歧义消息不丢弃，明确材料版本后复用案件、事实确认与 Mock 结果；新增 task-drafts-v1 与备份恢复来源校验。正常 assisted 桌面通过持久合成任务准入完成 Mock，不改变全局模式；普通审查和真实材料仍受原保护。WorkBuddy 已核实 Kimi-K3 并参与独立复核。实际验证和未验项见 [本片证据](testing/task-drafts/20261024/README.md)。C 合成 PDF 桥接现已完成：PDF 只接受 original、完整可读才冻结，沿用现有案件/事实/Mock，不放宽普通合同上传政策；130 项关联 Python、170 项 Node、PDF 两种顺序及 DOCX 浏览器回归、已完成 PDF 的 qxbak 恢复与四开发门均通过。[C 实测](testing/task-pdf/20261024/README.md)。安装版 0.4.1、D—E 及 WIN-PATH-02 未标完成。 功能关联382项以独立模块/短组方式通过；单进程原生访问冲突仍待专项复现，未更新安装版。
 
 A＋B 产品提交 `0178859b19457ff67543af66bb20c1863148b404` 已同步 GitHub，远端 SHA 与 tree 一致，递归 4,992 个受控条目相同；59 文件扫描禁止路径及已知密钥模式均 0，33 产品摘要匹配验证快照。[同步回执](testing/task-drafts/20261024/github-sync.md)。匹配 Windows 事件/转储确认 `python312.dll+0x8c2c0` 读访问冲突；两种各 200 次解析探针均退出 0，未定位根因或关闭长进程问题，转储未复制上传。[诊断记录](testing/task-drafts/20261024/native-crash.md)。
+
+2026-10-24：连续文字对话与档案人工维护已完成本次源码范围。默认桌面profile发送最多带入当前绑定最近8轮/32KiB已完成文字问答，原生确认展示实际历史；档案12字段可编辑、明确清空并保护人工值，保留旧版本与只读限制。932项关联Python、10项前端HTTP/包装、桌面369项、前端165项通过；真实DeepSeek一次独立虚构请求成功（548 tokens，配置单价估算USD 0.0001797），临时密钥已删除。旧/新对话备份恢复及独立篡改、竞争测试通过。开发检查3项通过；运行依赖检查因本机缺少历史.audit-local证据阻断。Windows WIN-PATH-02仍开放；未更新服务器或安装版0.4.1。 [本次结果与边界](testing/conversation-maintenance/20261024/README.md)。
+
+2026-10-22 RECEPTION-01：按用户确认的法律服务接待方向，已将 plugin.zip 的9份Word原件去重为8份私有可检索资料，并在接待页接入来源核对、三种模板工作稿、显式追加及绑定接待的对话草稿。105项相关回归通过；浏览器实际保存和重开核对。当前为SSH私有服务器试运行，模板未调用模型，真实模型仍未配置；安装版0.4.1未变。[证据](testing/reception-plugin/20261022/README.md)。
 
 CH-07C3a源码与合成证据 `1a03d89` 已同步GitHub，远端SHA及4,949项文件树一致；[同步回执](testing/GITHUB-PROFILE-UI-20261023.md)。
 

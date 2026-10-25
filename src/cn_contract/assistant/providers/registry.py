@@ -223,7 +223,8 @@ class _RuntimeLease:
         try:
             rebuilt = profile_preparation.build_basis(request, config,
                 base_profile_revision=basis.base_profile_revision, expected_intake_id=basis.expected_intake_id,
-                expected_intake_revision=basis.expected_intake_revision, project_intake=basis.project_intake)
+                expected_intake_revision=basis.expected_intake_revision, project_intake=basis.project_intake,
+                conversation_history=basis.conversation_history)
             if rebuilt != basis:
                 raise ValueError
         except (ValueError, TypeError):

@@ -1,5 +1,5 @@
 // Same-origin transport. A failed write may already have reached the server.
-export async function request(path, {method='GET', body, form}={}) {
+export async function request(path, {method='GET', body, form, binary=false}={}) {
   const headers = {};
   if (method !== 'GET') {
     const cookie = document.cookie.split('; ').find(value=>value.startsWith('qx_csrf='));
@@ -15,6 +15,10 @@ export async function request(path, {method='GET', body, form}={}) {
       body:form || (body === undefined ? undefined : JSON.stringify(body))});
     } catch {
       throw Object.assign(new Error('network'), {code:'NETWORK_UNKNOWN', status:0});
+    }
+    if(binary && response.ok) {
+      try {return await response.blob();}
+      catch {throw Object.assign(new Error('response'),{code:'NETWORK_UNKNOWN',status:response.status});}
     }
     let data;
     try { data = await response.json(); }
@@ -63,3 +67,18 @@ export const findParseRequest=(id,file,key)=>request(attachment(id,file)+'/parse
 export const getParse=(id,file,revision)=>request(attachment(id,file)+'/parses/'+encodeURIComponent(revision));
 export const selectMaterials=(id,body)=>request(conversation(id)+'/materials',{method:'PUT',body});
 export const originalUrl=(id,file)=>attachment(id,file)+'/original';
+
+export const submitProfileCommit=(id,body)=>request(conversation(id)+'/profile/commits',{method:'POST',body});
+export const findProfileReceipt=(id,key)=>request(conversation(id)+'/profile/receipts/'+encodeURIComponent(key));
+export const getIntake=id=>request('/api/intakes/'+encodeURIComponent(id));
+
+export const listOutputs=(id,before)=>request(conversation(id)+'/outputs'+(before?'?before='+encodeURIComponent(JSON.stringify(before)):''));
+export const previewOutput=(id,body)=>request(conversation(id)+'/outputs/preview',{method:'POST',body});
+export const copyOutput=(id,body)=>request(conversation(id)+'/outputs/copy',{method:'POST',body});
+export const downloadOutput=(id,body)=>request(conversation(id)+'/outputs/docx',{method:'POST',body,binary:true});
+
+export const getWorksheet=id=>request(conversation(id)+'/reception-worksheet');
+export const commitWorksheet=(id,body)=>request(conversation(id)+'/reception-worksheet/commits',{method:'POST',body});
+export const findWorksheetReceipt=(id,key)=>request(conversation(id)+'/reception-worksheet/receipts/'+encodeURIComponent(key));
+export const suggestWorksheet=(id,body)=>request(conversation(id)+'/reception-worksheet/suggestions',{method:'POST',body});
+export const prepareWorksheet=(id,body)=>request(conversation(id)+'/reception-worksheet/prepare',{method:'POST',body});

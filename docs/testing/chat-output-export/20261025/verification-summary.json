@@ -1,0 +1,162 @@
+{
+  "date": "2026-10-25",
+  "branch": "dhb_law",
+  "head": "43257111f0d6ad03b1b8ef1f4bc86151ee58937a",
+  "committed": false,
+  "pushed": false,
+  "deployed": false,
+  "code_sha256": {
+    "src/cn_contract/assistant/outputs.py": "8589fb3674dd977c66ea11370017d882bddfc05ab6bae09f5899caa2b378d14d",
+    "src/cn_contract/exports/assistant_docx.py": "0109c630199cc4410b858b6bd5e25859b94af3cea11e946f75e0347807bae0e9",
+    "src/cn_contract/web/assistant_outputs.py": "849ce522404be03cee05d0fa4fc6c88156cbfb5050d63e691a37874f62435126",
+    "src/cn_contract/web/static/assistant-outputs.mjs": "ed3869071a6de9b57c7d2be1f49f07988843c4b239830b78210d012b9173b5ba",
+    "src/cn_contract/domain.py": "7fbf549bb252f2e2bf734a2660b23dbc418be379870f368419dfe6f9e675a282",
+    "src/cn_contract/web/app.py": "7fa34cbb68b759fda9f16e233001af7ffa33244cd0466c398f02b77f4724a9c3",
+    "src/cn_contract/web/static/assistant-api.mjs": "474b16721289804a3e34773d1af9a58cacce1442f046b74a5f9e4a39e7806b84",
+    "src/cn_contract/web/static/assistant.mjs": "fd08c742a7e8f0ba0c1f03f628d2e31caca0244cb4b07288d510f4166da7208b",
+    "src/cn_contract/web/static/assistant.css": "269b16689310fe64265a24cb0fc00379e1cb170c9543b1241b8957a0250d3339",
+    "src/cn_contract/web/templates/assistant.html": "5ad45b09304e168e053fddb25f9f28fe8e45ab74635dd421a4c0c152c81aaa71",
+    "tests/integration/test_assistant_outputs.py": "b217d45bde400f92eb5e22d8a29b3dbeafad023f6540c3c4971076a68d756636",
+    "tests/integration/test_assistant_output_models.py": "dd0a2025d1810593ced8ef342f6e833867c03b1651b5a608688a540da43fa5ab",
+    "scripts/test_assistant_outputs.mjs": "156191f519d26cd5245e04cdb6a9839180ff6b10bd42d9bb992ed3a00e1681d3"
+  },
+  "verification": {
+    "backend_slice": {
+      "passed": 22,
+      "failed": 0
+    },
+    "related_python": {
+      "passed": 121,
+      "failed": 0,
+      "new_backup_test_separate": 1
+    },
+    "frontend_scripts": {
+      "passed": 321,
+      "failed": 0
+    },
+    "desktop_node": {
+      "passed": 369,
+      "failed": 0,
+      "TMPDIR": "/private/tmp"
+    },
+    "independent_probes": {
+      "passed": 6,
+      "overlap_not_summed": true
+    },
+    "browser": {
+      "ok": true,
+      "viewport": [
+        1280,
+        390
+      ],
+      "clipboard_public_only": true,
+      "synchronous_copy": true,
+      "historical_profile_version": true,
+      "downloaded": [
+        "client.docx",
+        "internal.docx"
+      ],
+      "switch_audience_invalidates_preview": true,
+      "closed_clears_preview": true,
+      "empty_conversation": true,
+      "page_errors": [],
+      "external_requests": [],
+      "output_requests": [
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/158fbf63-2210-47ef-9c51-b37f3d421aec/outputs"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/158fbf63-2210-47ef-9c51-b37f3d421aec/outputs/preview"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/158fbf63-2210-47ef-9c51-b37f3d421aec/outputs/copy"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/158fbf63-2210-47ef-9c51-b37f3d421aec/outputs/docx"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/158fbf63-2210-47ef-9c51-b37f3d421aec/outputs/preview"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/158fbf63-2210-47ef-9c51-b37f3d421aec/outputs/docx"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/158fbf63-2210-47ef-9c51-b37f3d421aec/outputs"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/158fbf63-2210-47ef-9c51-b37f3d421aec/outputs/preview"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/158fbf63-2210-47ef-9c51-b37f3d421aec/outputs"
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/158fbf63-2210-47ef-9c51-b37f3d421aec/outputs/preview"
+        },
+        {
+          "method": "GET",
+          "url": "http://127.0.0.1:18769/api/assistant/conversations/b49f9335-1f57-4799-a1fa-d6df2ba07b9f/outputs"
+        }
+      ],
+      "model_requests": []
+    },
+    "artifacts": {
+      "client": {
+        "sha256": "92fccb40e8b97ad5d24d12c303d3bc4d6ebd7db1366297afa59d41d6569dbd7b",
+        "bytes": 38525,
+        "whole_package_audience_check": true
+      },
+      "internal": {
+        "sha256": "76c70a759156e80033deb30d561546c50b2b3bd408c83af048512a23273b93ac",
+        "bytes": 38642,
+        "whole_package_audience_check": true
+      }
+    },
+    "gates": [
+      {
+        "command": [
+          "/tmp/qx-audit-20261024-venv/bin/python",
+          "-m",
+          "cn_contract.cli",
+          "schema",
+          "--check"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/tmp/qx-audit-20261024-venv/bin/python",
+          "scripts/verify_defaults.py"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/tmp/qx-audit-20261024-venv/bin/python",
+          "scripts/verify_sources.py",
+          "--mode",
+          "development"
+        ],
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "/tmp/qx-audit-20261024-venv/bin/python",
+          "scripts/verify_runtime_dependencies.py",
+          "--mode",
+          "development"
+        ],
+        "exit_code": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_prepared_reception_task_sends_once_saves_candidates_and_keeps_manual_notes _
+
+world = (<cn_contract.persistence.Database object at 0x10c369460>, Actor(user_id=UUID('95a26c54-01a3-4beb-9e87-99b5667d0af4'),...uested_skill=None, attachment_ids=()), <cn_contract.assistant.providers.policy.MainModelRuntime object at 0x10c534b60>)
+
+    def test_prepared_reception_task_sends_once_saves_candidates_and_keeps_manual_notes(world):
+        database,actor,conversation,_,_ = world
+        cid = conversation.scope.conversation_id
+        source = '甲称借出10万元，乙称部分已还，目前没有完整还款凭证。'
+        notes = '客户诉求：核清款项\n我方立场：未定\n已知陈述（待核）：部分已还\n待核问题：还款金额\n下一步：补凭证'
+        profile_store.save_profile(actor,d.ProfileCommitInput(request_id=uuid4(),patch=d.ProfilePatch(
+            scope=conversation.scope,base_profile_revision=0,changes=()),manual_edits=(
+            d.ProfileEdit(field='consultation',value={'kind':'text','value':source}),
+            d.ProfileEdit(field='internal_notes',value={'kind':'text','value':notes}))),database=database)
+        with database.session() as db:
+            prepared = worksheet.prepare(actor,cid,d.ReceptionWorksheetPrepareInput(expected_scope=conversation.scope,
+                base_profile_revision=1,expected_composer_revision=0),db)
+            current = service.save_draft(actor,cid,d.AssistantDraftInput(expected_scope=conversation.scope,
+                expected_composer_revision=0,content=prepared.content),db)
+        request = d.AssistantMessageInput(request_id=uuid4(),expected_scope=current.scope,
+            expected_composer_revision=current.composer_revision,content=prepared.content)
+        start = prepared.content.index(source)
+        quote = {'start':start,'end':start+len(source),'quote':source}
+        candidate = {'text':'请核对还款时间、金额、方式和凭证，尚欠金额待核。','citations':[],
+            'profile_changes':[
+                {'field':'questions','value':{'kind':'list','value':['请核对还款金额和凭证（余额仍待核）。']},'origin':'model_inference','quotes':[quote]},
+                {'field':'client_reply','value':{'kind':'text','value':'您好，请补充完整还款记录。'},'origin':'model_inference','quotes':[quote]},
+                {'field':'internal_notes','value':{'kind':'text','value':'模型候选不能覆盖律师底稿'},'origin':'model_inference','quotes':[quote]}]}
+        raw = response(fixture()[1],candidate)
+        with server(raw) as (url,received,_):
+            async def scenario():
+                provider = DeepSeekProvider.for_synthetic_loopback(config(),lambda:KEY,url)
+                _,runtime,_,_ = authorize((database,actor,current,request),provider)
+                with database.session() as db:first = attempts.enqueue_profile(actor,cid,request,db,runtime)
+                result = await execute_attempt(actor,first.id,database,runtime)
+                assert result.state == 'received' and result.output is not None
+                assert await execute_attempt(actor,first.id,database,runtime) == result
+                return result
+            result = asyncio.run(scenario())
+        assert len(received) == 1
+        wire = json.loads(received[0]['body'])
+>       assert source in wire['messages'][-1]['content'] and notes in wire['messages'][-1]['content']
+E       assert ('甲称借出10万元，乙称部分已还，目前没有完整还款凭证。' in '{"content":"【接待追问任务：借贷咨询】\\n请辅助律师继续接待：先整理客户诉求、我方立场、已知陈述、待核问题和下一步；未说明的立场不得猜测。给出针对当前线索的追问，每项说明追问理由、已有原话依据和需要的材料。已明确回答的问...陈述待核）】\\n甲称借出10万元，乙称部分已还，目前没有完整还款凭证。\\n\\n【已保存内部底稿（仍待核）】\\n客户诉求：核清款项\\n我方立场：未定\\n已知陈述（待核）：部分已还\\n待核问题：还款金额\\n下一步：补凭证"}' and '客户诉求：核清款项\n我方立场：未定\n已知陈述（待核）：部分已还\n待核问题：还款金额\n下一步：补凭证' in '{"content":"【接待追问任务：借贷咨询】\\n请辅助律师继续接待：先整理客户诉求、我方立场、已知陈述、待核问题和下一步；未说明的立场不得猜测。给出针对当前线索的追问，每项说明追问理由、已有原话依据和需要的材料。已明确回答的问...陈述待核）】\\n甲称借出10万元，乙称部分已还，目前没有完整还款凭证。\\n\\n【已保存内部底稿（仍待核）】\\n客户诉求：核清款项\\n我方立场：未定\\n已知陈述（待核）：部分已还\\n待核问题：还款金额\\n下一步：补凭证"}')
+
+tests/integration/test_reception_worksheet_model.py:53: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_reception_worksheet_model.py::test_prepared_reception_task_sends_once_saves_candidates_and_keeps_manual_notes
+1 failed in 0.79s

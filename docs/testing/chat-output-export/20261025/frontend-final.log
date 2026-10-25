@@ -1,0 +1,400 @@
+✔ source snapshots display only literal text with provenance and pending review (1.010375ms)
+✔ closing invalidates a pending response and restores a connected trigger or composer (0.573208ms)
+✔ scope rebinding, switching, loading and revocation clear panel and reject late data (0.798333ms)
+✔ saved UUID and conversation identity must match; ordinary draft revision does not erase snapshot (3.177208ms)
+✔ lookup authorization error clears and cannot render raw diagnostics (0.341083ms)
+✔ result statuses distinguish unavailable, incomplete and zero hits (0.473542ms)
+✔ card click passes only saved UUID and malformed IDs are never links (0.306459ms)
+✔ shared renderer uses local send rules while ordinary native approval remains distinct (0.574125ms)
+✔ saved citations enumerate from own search receipts in order and dedupe (3.304792ms)
+✔ selection keeps click order, toggles off, and refuses a ninth citation (0.57325ms)
+✔ preview carries the fixed request and validates the deterministic response (4.095625ms)
+✔ editing the question or the selection invalidates the preview and remints the request (0.801625ms)
+✔ broken preview responses are rejected as invalid and never enable sending (2.862334ms)
+✔ send confirms natively once, submits the same request and hands off to tracking (2.70375ms)
+✔ native cancellation never submits and returns to idle (3.07975ms)
+✔ unknown submit outcome is recovered by the original lookup without resending (0.859917ms)
+✔ without the desktop bridge preview works but sending stays closed (0.436708ms)
+✔ skill selection, materials, readonly or empty draft block selection and send (0.343875ms)
+✔ revocation discards selection state and pending context work immediately (2.566333ms)
+✔ entry rechecks readiness after input changes and returns to the saved text (13.309584ms)
+✔ entry rechecks readiness after a skill selection is immediately cancelled (2.184208ms)
+✔ unknown network outcome repeated send and refresh use original lookup without resubmission (2.646083ms)
+✔ late capability success cannot authorize another conversation (2.659875ms)
+✔ history response for a former binding is rejected and cannot be displayed (1.796708ms)
+✔ a delayed history authorization error after revocation cannot restore old state (2.090625ms)
+✔ a failed capability read is attempted once and does not create an automatic retry loop (1.532917ms)
+✔ shipped entry injects only the dedicated native authorization bridge when present (0.224875ms)
+✔ entry does not enqueue capability reads while a native confirmation is outstanding (1.096ms)
+✔ send follows the generation gate and existing draft/readonly guards (5.053291ms)
+✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.274625ms)
+✔ capability states give distinct truthful explanations (0.347208ms)
+✔ results stay with their matching input in chronological history and have source anchors (0.579792ms)
+✔ model text remains literal with whitespace and source links only target loaded messages (0.468167ms)
+✔ unrelated items and prior conversation content are cleared on switching or revocation (0.32125ms)
+✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.206ms)
+✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (1.591417ms)
+✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.242625ms)
+✔ native send offers confirmation of the full text recipient and fee ceiling before submission (0.248459ms)
+✔ native failures distinguish confirmation from unknown POST without exposing diagnostics (0.142916ms)
+✔ failed capability reads can be retried before any task exists (0.166833ms)
+✔ initial template keeps send disabled, recovery hidden and describes controlled generation (0.761041ms)
+✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.392916ms)
+✔ model switch button follows the desktop bridge state and guards (0.516167ms)
+✔ model switch button sits left of save-draft in the template (0.500833ms)
+✔ profile result distinguishes saved, unchanged and blocked using server receipt (0.632334ms)
+✔ foreign or absent profile receipts never claim a saved draft (0.318125ms)
+PASS default, read-only, selected skill and local materials never dispatch
+PASS one click snapshots input, saves first and double click dispatches one fixed request
+PASS editing while initial save waits aborts send instead of sending the newer text
+PASS editing while capability waits invalidates ready and requires a fresh click
+PASS acknowledgement preserves new input and queued saves use the accepted composer revision
+PASS lost registration reply is recovered by original request only and preserves later edits
+PASS unknown not found stays unknown across send and refresh without replacing its key
+PASS unknown draft and material writes cannot be crossed by sending
+PASS registration conflict retains local and remote drafts for explicit resolution
+PASS old ready scope cannot authorize current text
+PASS old ready revision cannot authorize current text
+PASS old ready digest cannot authorize current text
+PASS old ready basis cannot authorize current text
+PASS edit invalidates a previously ready capability synchronously
+PASS ordinary BLOCKED_LIVE 403 retains draft and current identity
+PASS ordinary BUDGET_EXCEEDED 403 retains draft and current identity
+PASS ordinary CALL_LIMIT_EXCEEDED 403 retains draft and current identity
+PASS revocation discards delayed registration and clears current results
+PASS switch and close discard late history success and late authorization failure
+PASS history batches visible messages, retains older attempts and has no provider action on reopen
+PASS cancelling reads receipt and candidates without a second generation POST
+PASS historical scope change clears results and rejects late capability
+PASS known registration survives readback failure and newer draft can be saved after reconciliation
+PASS known registration and independent remote edit leave a resolvable composer conflict
+PASS completed older messages and attempts survive pagination and a later send
+PASS same text retyped during submission is preserved as new input
+PASS send during a background capability read waits then registers exactly the clicked input
+PASS native confirmation uses one fixed saved-draft request even when capability is already ready
+PASS native cancellation preserves input and refreshes never open a confirmation
+PASS native failures stay fixed and require another explicit confirmation without posting
+PASS confirmation stays busy across capability refresh and repeated send clicks
+PASS editing or retyping identical text during native confirmation invalidates the approval
+PASS scope composer materials and skill changes invalidate native approval before POST
+PASS switch close and revocation discard late native approval without touching the next page
+PASS native-approved unknown POST is recovered only by the same request without a new approval
+PASS native bridge cannot override missing configuration readonly skill or attachment guards
+36 generation state groups passed
+✔ scripts/test_assistant_generation_state.mjs (142.900292ms)
+✔ late parse completion cannot reopen a preview explicitly closed by the lawyer (9.884625ms)
+✔ late parse completion cannot replace a newer attachment preview (2.954375ms)
+✔ switching conversations suppresses the prior parse callback while the target is loading (2.552333ms)
+✔ new conversation clears prior material rows, preview and unsubmitted picker selection (1.340708ms)
+✔ revocation clears materials immediately and a delayed source response stays discarded (2.626834ms)
+✔ successful unknown-upload reconciliation disarms the picker instead of creating another receipt (0.868083ms)
+✔ multi-select builds a removable queue and uploads each file in order with its own receipt (0.73775ms)
+✔ a failed batch keeps the remaining queue and reports the partial count (0.40625ms)
+✔ dropping files on the page queues them and rejects unsupported types by name (0.832ms)
+✔ non-readable formats preview without a parse control (3.317667ms)
+✔ PDF preview offers local reading, protected originals and page anchored excerpts without a revision chooser (4.35925ms)
+✔ PDF never shows DOCX revision choices even when a malformed read status asks for a baseline (1.375125ms)
+✔ desktop material purpose remains explicit: local default (0.308542ms)
+✔ desktop material purpose remains explicit: synthetic (0.19825ms)
+PASS attachment-only action creates one conversation and never clears text typed during upload
+PASS unknown upload checks receipt before retry, retains chosen file and never duplicates
+PASS revocation clears pending attachment and late response cannot repopulate another view
+PASS material scope conflict preserves text and file until explicit resolution
+4 attachment state groups passed
+✔ scripts/test_assistant_material_state.mjs (101.971042ms)
+✔ explicit source and audience preview, copy and Word use only the server projection (6.375292ms)
+✔ audience/source changes invalidate preview and copy cannot use stale text (0.225875ms)
+✔ switching conversations drops a late preview and clears saved content (0.1375ms)
+✔ closing before copy validation returns prevents clipboard and notices (0.131292ms)
+✔ copy rechecks permissions and revocation clears the panel (0.1885ms)
+✔ a different returned audience or digest is not copied (0.161791ms)
+✔ clipboard refusal leaves the exact visible preview for manual copying (0.140292ms)
+✔ synchronous browser copy rechecks activity inside the copy event and removes its listener (0.1315ms)
+✔ readonly never lists or exports and a late download cannot save a file (1.030541ms)
+✔ desktop ordinary text previews the saved source and submits one flat profile DTO (13.0955ms)
+✔ older client keeps plain send: {"bridge":false} (1.262208ms)
+✔ older client keeps plain send: {"apis":false} (1.240708ms)
+✔ refresh reads capability and history without previewing or opening native approval (1.261083ms)
+✔ invalid profile preview request_id rejects without native approval or plain fallback (1.174292ms)
+✔ invalid profile preview expected_scope rejects without native approval or plain fallback (1.192916ms)
+✔ invalid profile preview expected_composer_revision rejects without native approval or plain fallback (0.761417ms)
+✔ invalid profile preview content_sha256 rejects without native approval or plain fallback (0.710375ms)
+✔ invalid profile preview project_intake rejects without native approval or plain fallback (2.132834ms)
+✔ invalid profile preview purpose rejects without native approval or plain fallback (2.077959ms)
+✔ invalid profile preview input_format rejects without native approval or plain fallback (2.446333ms)
+✔ invalid profile preview handler_id rejects without native approval or plain fallback (2.05225ms)
+✔ invalid profile preview base_profile_revision rejects without native approval or plain fallback (1.935583ms)
+✔ invalid profile preview expected_intake_revision rejects without native approval or plain fallback (1.57875ms)
+✔ invalid profile preview wire_bytes rejects without native approval or plain fallback (0.488542ms)
+✔ invalid profile preview wire_sha256 rejects without native approval or plain fallback (0.488167ms)
+✔ native profile acknowledgement is strict: {"ok":true} (0.422917ms)
+✔ native profile acknowledgement is strict: {"ok":true,"status":"ready"} (0.670833ms)
+✔ native profile acknowledgement is strict: {"ok":"true","status":"authorized"} (0.737209ms)
+✔ native profile acknowledgement is strict: {"ok":true,"status":"authorized","extra":"untrusted"} (0.4125ms)
+✔ native profile acknowledgement is strict: {"ok":true,"status":"authorized","canceled":true} (0.561ms)
+✔ native profile acknowledgement is strict: {"ok":false,"status":"authorized"} (0.222125ms)
+✔ cancelled profile approval preserves text without registration (0.2055ms)
+✔ pending profile approval is invalidated by edit (0.300125ms)
+✔ pending profile approval is invalidated by retype (0.348625ms)
+✔ pending profile approval is invalidated by skill (0.161041ms)
+✔ pending profile approval is invalidated by skill-reset (1.157209ms)
+✔ pending profile approval is invalidated by scope (0.528958ms)
+✔ pending profile approval is invalidated by composer (0.486333ms)
+✔ pending profile approval is invalidated by materials (0.732542ms)
+✔ pending profile approval is invalidated by attachments (0.820958ms)
+✔ pending profile approval is invalidated by context (0.87775ms)
+✔ pending profile approval is invalidated by context-reset (0.618917ms)
+✔ late profile approval after switch is ignored (0.796959ms)
+✔ late profile approval after close is ignored (0.558542ms)
+✔ late profile approval after revoke is ignored (0.92775ms)
+✔ profile send cannot bypass readonly (0.866125ms)
+✔ profile send cannot bypass unconfigured (0.68875ms)
+✔ profile send cannot bypass busy (0.498333ms)
+✔ profile send cannot bypass restored_read_only (1.953041ms)
+✔ profile send cannot bypass skill (0.397041ms)
+✔ profile send cannot bypass materials (0.429208ms)
+✔ profile send cannot bypass attachments (0.4025ms)
+✔ profile send cannot bypass awaiting_input (0.537541ms)
+✔ existing native acknowledgement only reads the original request, including when not yet found (0.433917ms)
+✔ profile transport loss reconciles by request without repost or new approval and preserves later edits (0.457208ms)
+✔ existing native acknowledgement recovers a profile attempt without submitting again (0.748042ms)
+✔ plain attempt under a profile request is not accepted as a profile registration (0.551834ms)
+✔ profile preview transport failure never opens native confirmation or falls back to plain (0.90075ms)
+✔ definite profile rejection permits only a fresh explicit profile approval (0.706333ms)
+✔ starts hidden, reads only on open, and closes with keyboard focus restored (4.533875ms)
+✔ renders literal candidates, protected explicit null, exact money and unresolved states (1.351708ms)
+✔ source details preserve complete message and document anchor provenance (0.447208ms)
+✔ empty revision zero explains missing draft without claiming generation or saving (0.211ms)
+✔ current profile null is an honest empty state while absent historical versions remain errors (0.650292ms)
+✔ history accepts bounded integer versions, gets exact endpoint argument, and can reread latest (1.769459ms)
+✔ huge revision counts use one numeric input rather than enumerating all versions (0.503ms)
+✔ wrong historical revision is never presented as the selected version (4.596041ms)
+✔ workspace conversation binding and scope boundaries reject mismatched snapshots (4.167958ms)
+✔ historical input and material revisions are allowed but future or malformed ones are refused (0.475583ms)
+✔ switching loading or revocation clears old data and discards late responses (0.430292ms)
+✔ pagehide clears records and prevents subsequent or late reads (0.102583ms)
+✔ newer reads win and close prevents pending data or notices from returning (0.177166ms)
+✔ network failure clears old success and raw diagnostics, then permits explicit reread (1.248375ms)
+✔ authorization errors erase all profile values without retaining diagnostics (0.261416ms)
+✔ a growing current input snapshot does not erase a still valid historical profile (0.180125ms)
+✔ a rollback below the displayed source snapshot clears now-incompatible content (0.184875ms)
+✔ no conversation, unresolved scope, loading, and revoked state cannot issue reads (0.335166ms)
+✔ quote offsets use Unicode code points and reject broken source ranges (0.872333ms)
+✔ invalid values, claimed verification and model contact proposals never render (1.953583ms)
+✔ list material and date values preserve original text and honest material status (0.201375ms)
+✔ manual text/contact commit uses current scope, profile and intake baselines without model proposals (1.531125ms)
+✔ manual form supports explicit protected clear, lists, money and timezone-aware dates (4.492166ms)
+✔ materials keep individual states including lawyer checked status (0.748833ms)
+✔ history readonly and archived views never expose editors (0.448041ms)
+✔ unknown POST performs receipt lookup only and cannot submit a duplicate (0.564833ms)
+✔ VERSION_CONFLICT refreshes latest profile and invalidates edits (0.795167ms)
+✔ input change, scope switch and closing during baseline read cannot apply stale edits (0.869333ms)
+✔ empty profile can be manually started and blank title is rejected without POST (0.192792ms)
+✔ explicit revision routes including latest remain read-only until current is reread (0.326875ms)
+✔ unchanged receipt is accurately reported and malformed receipt stays unknown (0.871334ms)
+✔ reopening an unknown save retains receipt-only recovery (1.283417ms)
+✔ late intake baseline read after panel close does not restore editor or submit (0.219083ms)
+✔ duplicate submit during save creates one request and no premature receipt lookup (0.214667ms)
+✔ definite rejected save after close clears pending without reopening the old panel (0.2195ms)
+✔ definite rejected save after same-scope refresh clears pending without stale notices (0.278791ms)
+✔ late profile reread after successful save cannot put its receipt notice on another conversation (0.23775ms)
+✔ late conflict refresh at controller cannot read or label another conversation (0.280458ms)
+✔ late conflict refresh at profile cannot read or label another conversation (0.185125ms)
+✔ explicit local research saves keywords and dispatches once without model configuration (1.953708ms)
+✔ skill click alone preserves text and never dispatches (2.490542ms)
+✔ readonly, attachments, empty or overlong keyword never dispatch (12.097042ms)
+✔ edit or skill change during save aborts the clicked search (2.145708ms)
+✔ unknown registration uses original lookup even after skill changes and never resends (1.554542ms)
+✔ unknown not-found stays unresolved and prevents competing model or material work (0.240542ms)
+✔ registration proof followed by read failure unlocks newer draft without resubmitting (0.938917ms)
+✔ switch and revocation discard late research history immediately (3.608417ms)
+✔ history rejects unrelated messages and receipt scopes but allows authorized older revisions (0.603791ms)
+✔ authorization error clears entire active view and history (0.3855ms)
+PASS blank and skill selection do not create records; read-only never writes
+PASS single save channel preserves input typed during an older acknowledgement
+PASS unknown creation requires explicit retry and preserves its original request identity
+PASS unknown write is reconciled by exact scope, revision and content before newer input saves
+PASS unknown write not committed can replay only after unchanged baseline is read
+PASS unknown write scope mismatch retains both drafts until explicit choice
+PASS unknown write revision mismatch retains both drafts until explicit choice
+PASS unknown write content mismatch retains both drafts until explicit choice
+PASS version conflict allows explicitly keeping local text against the new server version
+PASS refresh never overwrites unsaved input and detects independent remote edits
+PASS switch waits for save and rejects switching after failed persistence
+PASS late page reads and revocation cannot contaminate a newer conversation
+PASS current permission revocation clears text, history, skill and identity immediately
+PASS older pages deduplicate in chronological order and preserve pending input
+PASS empty page with a cursor can keep paging; refresh retains already loaded history
+PASS cancel reads the persisted result and preserves unsaved text
+PASS close discards delayed replies and removes in-memory content
+PASS unknown write stays dirty even when the user edits back to the saved baseline
+PASS create replay cannot silently overwrite a draft edited in another window
+PASS a late refresh cannot roll back a completed newer save
+PASS disjoint refreshed history starts its own cursor instead of hiding unread messages
+PASS an older read finishing does not release the busy guard on a newer read
+PASS a failed page read leaves no old identity available for accidental draft saves
+PASS late create response after close cannot change identity or notify the page
+PASS replayed PUT racing the original can recognize the original successful write
+PASS external 401 revocation clears unknown writes and rejects delayed reconciliation
+PASS external 403 revocation clears unknown writes and rejects delayed reconciliation
+PASS external non-authorization errors cannot clear conversation data
+28 assistant state checks passed
+✔ scripts/test_assistant_state.mjs (69.440583ms)
+✔ pending wire material has labelled same-conversation DOCX/PDF choices with no automatic name match (21.057583ms)
+✔ empty materials keep the explicit selector empty and explain upload and reading (1.10875ms)
+✔ an unconfirmed choice is pending, clears notices, and survives an unrelated render (6.458ms)
+✔ explicit association preserves wire IDs and uses exact current original and parse: application/vnd.openxmlformats-officedocument.wordprocessingml.document (3.500666ms)
+✔ explicit association preserves wire IDs and uses exact current original and parse: application/pdf (1.311167ms)
+✔ association refuses incomplete or mismatched reading: pending no parse (1.4455ms)
+✔ association refuses incomplete or mismatched reading: partial DOCX (3.316083ms)
+✔ association refuses incomplete or mismatched reading: needs baseline (2.929ms)
+✔ association refuses incomplete or mismatched reading: failed DOCX (3.288375ms)
+✔ association refuses incomplete or mismatched reading: foreign DOCX parser (0.816167ms)
+✔ association refuses incomplete or mismatched reading: wrong DOCX baseline (1.180583ms)
+✔ association refuses incomplete or mismatched reading: partial PDF (0.370417ms)
+✔ association refuses incomplete or mismatched reading: failed PDF (0.382875ms)
+✔ association refuses incomplete or mismatched reading: accepted PDF (1.04525ms)
+✔ association refuses incomplete or mismatched reading: rejected PDF (1.481417ms)
+✔ association refuses incomplete or mismatched reading: foreign PDF parser (0.635583ms)
+✔ DOCX complete supported view can associate: accepted_view (0.486334ms)
+✔ DOCX complete supported view can associate: rejected_view (0.925917ms)
+✔ existing replacement attachment drives update reading and explicit reselection remains available (0.578709ms)
+✔ association cannot write while readonly (0.593875ms)
+✔ association cannot write while frozen (0.29475ms)
+✔ loading disables an already chosen selector and association (0.4745ms)
+✔ same-conversation material update invalidates a choice and explains why (0.945625ms)
+✔ late materials is discarded after cid (0.931667ms)
+✔ late materials is discarded after draft-revision (2.234125ms)
+✔ late materials is discarded after selection (0.748541ms)
+✔ late materials is discarded after materials (0.722917ms)
+✔ late materials is discarded after dispose (1.66475ms)
+✔ late materials is discarded after loading (0.418292ms)
+✔ late materials is discarded after revoke (0.498208ms)
+✔ late parse is discarded after cid (1.248084ms)
+✔ late parse is discarded after draft-revision (0.529667ms)
+✔ late parse is discarded after selection (0.445458ms)
+✔ late parse is discarded after materials (0.876708ms)
+✔ late parse is discarded after dispose (0.366375ms)
+✔ late parse is discarded after loading (1.487417ms)
+✔ late parse is discarded after revoke (0.322167ms)
+✔ a newer GET material version cannot silently validate the previously chosen file (0.369666ms)
+✔ new GET material frame and choice survive a stale host binding_revision (0.379542ms)
+✔ new GET material frame and choice survive a stale host input_revision (0.319ms)
+✔ new GET material frame and choice survive a stale host materials_revision (0.237375ms)
+✔ equal and newer material scope notifications still accept real changes and invalidate choices (0.271208ms)
+✔ late materials cannot act on a different selected draft (0.899167ms)
+✔ late parse cannot act on a different selected draft (0.346208ms)
+✔ double activation makes a single PATCH and disables select during the read (0.470625ms)
+✔ unknown association queries the precise result without repeating PATCH: true (0.505875ms)
+✔ unknown association queries the precise result without repeating PATCH: false (0.528ms)
+✔ unknown query does not infer success from a different saved resolution: revision (0.391459ms)
+✔ unknown query does not infer success from a different saved resolution: event_id (0.255166ms)
+✔ unknown query does not infer success from a different saved resolution: media_id (0.360875ms)
+✔ unknown query does not infer success from a different saved resolution: action (0.229542ms)
+✔ unknown query does not infer success from a different saved resolution: attachment_id (0.285958ms)
+✔ unknown query does not infer success from a different saved resolution: sha256 (0.213916ms)
+✔ unknown query does not infer success from a different saved resolution: parse_revision (0.212875ms)
+✔ unknown query does not infer success from a different saved resolution: name (0.377583ms)
+✔ unknown query does not infer success from a different saved resolution: mime (0.586ms)
+✔ unknown query does not infer success from a different saved resolution: status (0.323ms)
+✔ confirmed association remains saved when subsequent list refresh loses its connection (0.449167ms)
+✔ revoke clears choices and private original names (0.183209ms)
+✔ material and wire names remain text nodes, never HTML (0.243292ms)
+✔ unreadable and pending media are both included, never silently dropped (5.214083ms)
+✔ PDF collection requires an exact complete original parse: native original (0.554083ms)
+✔ PDF collection requires an exact complete original parse: partial scan (1.604584ms)
+✔ PDF collection requires an exact complete original parse: failed encrypted (0.513834ms)
+✔ PDF collection requires an exact complete original parse: foreign parser (0.616208ms)
+✔ PDF collection requires an exact complete original parse: revision baseline (0.596209ms)
+✔ ready PDF appears as a main contract and its later complete parse can resolve the inbound record (0.884583ms)
+✔ partial PDF stays blocked and offers an explicit exclusion without resolving it as ready (0.640375ms)
+✔ an uncertain collection retries the identical batch and preserves text (0.872708ms)
+✔ late task reads cannot cross a changed conversation (0.565042ms)
+✔ readonly task card never submits a write (0.7445ms)
+✔ switching conversations disables collection until the destination finishes loading (0.247125ms)
+✔ readonly users can still refresh saved task records (0.861375ms)
+✔ shipped contract review button opens simulation without editing the chat skill (0.456958ms)
+✔ simulation reads the current facts and submits only the frozen document hashes (0.729375ms)
+✔ a current task authorization failure clears already displayed private data (0.36075ms)
+✔ saved review source is labelled from the run rather than the workspace mode (0.982541ms)
+✔ a ready attachment can be updated to resolve a parser revision conflict (1.697209ms)
+✔ an excluded attachment can be explicitly restored (1.014792ms)
+✔ completed result navigation respects recovery mode: false (1.863958ms)
+✔ completed result navigation respects recovery mode: true (0.199959ms)
+✔ same-origin transport carries CSRF only on writes and preserves original request identity (0.494ms)
+✔ network and invalid responses are unknown, not proof a write failed (2.479125ms)
+✔ generation transport keeps registration explicit and history bounded to requested identities (0.719333ms)
+✔ transport abandons a stalled connection with an unknown outcome (0.163291ms)
+✔ Enter, Shift+Enter, held keys and composition boundaries keep native input intact (0.725292ms)
+✔ manual profile transport uses existing local commit receipt and intake read endpoints (0.276209ms)
+✔ projection reads only and explicit update submits the displayed exact scope (5.003584ms)
+✔ state never offers automatic or inappropriate authorization: unbound (0.284625ms)
+✔ state never offers automatic or inappropriate authorization: current (0.429959ms)
+✔ state never offers automatic or inappropriate authorization: target_changed (0.478208ms)
+✔ state never offers automatic or inappropriate authorization: revoked (1.989917ms)
+✔ state never offers automatic or inappropriate authorization: archived (1.293375ms)
+✔ state never offers automatic or inappropriate authorization: restored_blocked (0.32325ms)
+✔ local action prevents changing authorization while the working snapshot is unstable {"dirty":true} (1.159417ms)
+✔ local action prevents changing authorization while the working snapshot is unstable {"loading":true} (1.460833ms)
+✔ local action prevents changing authorization while the working snapshot is unstable {"materialAction":{}} (0.624417ms)
+✔ local action prevents changing authorization while the working snapshot is unstable {"conflict":{}} (0.318875ms)
+✔ local action prevents changing authorization while the working snapshot is unstable {"status":"saving"} (0.381208ms)
+✔ readonly current projection cannot authorize (0.712541ms)
+✔ unknown write keeps one request and only queries its result (0.531417ms)
+✔ late projection never paints a different conversation (0.628625ms)
+✔ disposed module ignores pending projection (0.627625ms)
+✔ a newer read wins within the same conversation (0.496834ms)
+✔ double click cannot submit a second authorization (0.754333ms)
+✔ projection for a different CID is discarded before any action (0.414958ms)
+✔ a current-permission denial clears the projection and pending action (0.606333ms)
+✔ conflict never retries a POST and refreshes the actual projection (2.364417ms)
+✔ an unrelated or incomplete JSON response never claims authorization was saved (0.688959ms)
+✔ closed panel never reads or writes merely because a conversation became current (5.865958ms)
+✔ explicit reading filters root latest archived targets and paginates without a write (3.264833ms)
+✔ prepare reads current target and task binding and never creates a missing binding (0.749041ms)
+✔ explicit save with a known binding submits the frozen complete eight field CAS (1.513916ms)
+✔ explicit save creates an absent synthetic target binding before generation and sends no binding body (0.771167ms)
+✔ readonly users may read historical head and targets but cannot prepare or save writes (0.436917ms)
+✔ unbound null head cannot invent generation zero checkpoint or a writable preview (0.138167ms)
+✔ unbound revoked archived restored and absent authorization projections forbid writes (2.561917ms)
+✔ a locally unstable dirty snapshot cannot save a prepared generation (0.603791ms)
+✔ a locally unstable loading snapshot cannot save a prepared generation (0.462042ms)
+✔ a locally unstable materials snapshot cannot save a prepared generation (0.558ms)
+✔ a locally unstable conflict snapshot cannot save a prepared generation (0.199458ms)
+✔ a locally unstable saving snapshot cannot save a prepared generation (0.186334ms)
+✔ another module pending action blocks preparation and save (0.186625ms)
+✔ changing target discards the frozen preview until another explicit prepare (0.204917ms)
+✔ changing reason discards the frozen preview until another explicit prepare (0.264459ms)
+✔ unsaved selection reason and preparing activity protect against navigation and known form may clear (1.178875ms)
+✔ unknown binding creation only queries task drafts and requires another explicit save after finding binding (1.140792ms)
+✔ missing or mismatched binding lookup keeps unknown operation and cannot clear or repeat create (0.60975ms)
+✔ unknown generation POST keeps exact request and lookup alone resolves null then fixed receipt (0.807208ms)
+✔ unrelated request receipt remains unknown and never claims a saved generation (0.620625ms)
+✔ unrelated generation receipt remains unknown and never claims a saved generation (0.780875ms)
+✔ unrelated mode or state receipt remains unknown and never claims a saved generation (1.180291ms)
+✔ unrelated checkpoint or predecessor receipt remains unknown and never claims a saved generation (2.608791ms)
+✔ unrelated scope or digest receipt remains unknown and never claims a saved generation (1.098375ms)
+✔ unrelated missing or invalid UTC creation time receipt remains unknown and never claims a saved generation (1.2645ms)
+✔ 409 never retries a write and requires a fresh head and explicit preview (0.740584ms)
+✔ current permission denial 401 revokes pending display and never retries (0.266667ms)
+✔ current permission denial 403 revokes pending display and never retries (0.82925ms)
+✔ double click cannot submit two generation writes while the first receipt is outstanding (0.812541ms)
+✔ a late root head cannot paint or prepare after current conversation changes (0.229042ms)
+✔ disposed module ignores pending head and disables all write controls (0.191042ms)
+✔ target change while current target is loading cannot produce a stale writable preview (0.187708ms)
+✔ root scope revision change invalidates a prepared head without silently preserving write authority (0.181417ms)
+✔ a newer explicit read wins when the older head returns last (0.160042ms)
+✔ controller revocation ignores late target or binding responses and prevents the next write (0.348375ms)
+✔ refresh invalidates an already loading prepare so its late target cannot resurrect the preview (0.239292ms)
+✔ an old prepare finishing cannot unlock controls while a newer head refresh is still pending (0.911541ms)
+✔ a valid stored receipt is not relabelled unknown merely because the authorization refresh fails (0.40625ms)
+✔ scope growth during an unknown binding operation preserves lookup but invalidates later write authority (0.257042ms)
+✔ a stable UI that becomes dirty during binding creation cannot proceed with the generation POST (0.227042ms)
+ℹ tests 321
+ℹ suites 0
+ℹ pass 321
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 259.150125

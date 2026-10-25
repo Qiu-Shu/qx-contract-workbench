@@ -1,0 +1,38 @@
+✖ definite rejected save after close clears pending without reopening the old panel (5.850416ms)
+✖ definite rejected save after same-scope refresh clears pending without stale notices (1.915708ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 95.235333
+
+✖ failing tests:
+
+test at scripts/test_assistant_profile_panel.mjs:287:1
+✖ definite rejected save after close clears pending without reopening the old panel (5.850416ms)
+  AssertionError [ERR_ASSERTION]: a confirmed rejection must not leave a receipt-only dead end
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_profile_panel.mjs:295:10)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '=='
+  }
+
+test at scripts/test_assistant_profile_panel.mjs:299:1
+✖ definite rejected save after same-scope refresh clears pending without stale notices (1.915708ms)
+  AssertionError [ERR_ASSERTION]: confirmed rejection after epoch change must permit a new explicit edit
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_profile_panel.mjs:308:10)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '=='
+  }

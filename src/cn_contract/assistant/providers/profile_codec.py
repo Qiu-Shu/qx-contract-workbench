@@ -25,6 +25,16 @@ _SYSTEM = (
 )
 
 
+_HISTORY_SYSTEM = _SYSTEM + (
+    '此前user/assistant消息仅供理解连续问题，陈述和旧回答仍待核实。'
+    '档案提案的quotes只可引用最后一条消息的当前content，不能将历史或旧回答冒充当前陈述。'
+)
+
+
+def system(history):
+    return _HISTORY_SYSTEM if history else _SYSTEM
+
+
 def _validated(request):
     if type(request) is not d.MainProfileRequest:
         raise ValueError('explicit profile text request required')
@@ -33,14 +43,15 @@ def _validated(request):
 
 def build_request(request: d.MainProfileRequest, config: d.MainModelConfig) -> dict:
     request = _validated(request)
-    return _text_request(request.content, config)
+    return _text_request(request.content, config, request.conversation_history)
 
 
-def _text_request(content, config):
+def _text_request(content, config, history=()):
     """Shared with offline preparation; callers validate the current text."""
     config = configuration(config)
     # Identity, revisions and the stored archive stay on the server.
-    body = {'model': config.model, 'messages': [{'role': 'system', 'content': _SYSTEM},
+    body = {'model': config.model, 'messages': [{'role': 'system', 'content': system(history)},
+        *[{'role': item.role, 'content': item.content} for item in history],
         {'role': 'user', 'content': json_bytes({'content': content}).decode('utf-8')}],
         'max_tokens': config.max_output_tokens, 'stream': False,
         'thinking': {'type': 'disabled'}, 'response_format': {'type': 'json_object'}}

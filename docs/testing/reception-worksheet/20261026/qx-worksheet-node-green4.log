@@ -1,0 +1,23 @@
+✔ manual notes retain old text, are protected in one save and reopen without sending (5.882583ms)
+✔ template suggestions are explicitly adopted into editable fields, never auto saved (0.601166ms)
+✔ unknown save queries its original receipt without repeating the POST (0.68425ms)
+✔ a version conflict retains local edits until explicit resolution (0.249208ms)
+✔ preparation keeps additional input visible and never invokes a send (0.874125ms)
+✔ new typing while preparation waits is never overwritten (9.813917ms)
+✔ late read and suggestions cannot populate another conversation (1.177959ms)
+✔ conflicting candidates are shown, not silently selected or cleared on unrelated saves (0.662667ms)
+✔ readonly, archived and revoked contexts disable saves and preparation (0.447292ms)
+✔ preparation preserves a new skill choice made while waiting (1.645292ms)
+✔ preparation preserves a new context choice made while waiting (0.586833ms)
+✔ preparation preserves a new materials choice made while waiting (0.35975ms)
+✔ preparation preserves a new scope choice made while waiting (0.347834ms)
+✔ explicitly adopting an unchanged displayed candidate still saves a protected manual value (1.370166ms)
+✔ keeping local edits after conflict does not overwrite another field changed on the server (0.534875ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 91.006958

@@ -1,0 +1,68 @@
+F.FF                                                                     [100%]
+=================================== FAILURES ===================================
+_________ test_v2_sends_prior_messages_in_order_and_current_text_last __________
+
+    def test_v2_sends_prior_messages_in_order_and_current_text_last():
+        _, request=fixture('约定月底还款，继续分析。')
+        request=d.MainProfileRequest.model_validate(request.model_dump() | {
+>           'template_version':'profile-text-system-v2', 'conversation_history':history()})
+                                                                                ^^^^^^^^^
+
+tests/unit/test_assistant_conversation_history.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def history():
+>       return (d.ConversationHistoryMessage(message_id=UUID(int=90),role='user',source_revision=0,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            content='虚构甲借款35000元。'),
+            d.ConversationHistoryMessage(message_id=UUID(int=91),role='assistant',source_revision=0,
+            content='请补充还款日期。'))
+E       AttributeError: module 'cn_contract.domain' has no attribute 'ConversationHistoryMessage'
+
+tests/unit/test_assistant_conversation_history.py:13: AttributeError
+________________ test_version_and_history_cannot_be_mismatched _________________
+
+    def test_version_and_history_cannot_be_mismatched():
+        _,request=fixture()
+        with pytest.raises(ValueError):
+>           d.MainProfileRequest.model_validate(request.model_dump() | {'conversation_history':history()})
+                                                                                               ^^^^^^^^^
+
+tests/unit/test_assistant_conversation_history.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def history():
+>       return (d.ConversationHistoryMessage(message_id=UUID(int=90),role='user',source_revision=0,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            content='虚构甲借款35000元。'),
+            d.ConversationHistoryMessage(message_id=UUID(int=91),role='assistant',source_revision=0,
+            content='请补充还款日期。'))
+E       AttributeError: module 'cn_contract.domain' has no attribute 'ConversationHistoryMessage'
+
+tests/unit/test_assistant_conversation_history.py:13: AttributeError
+____ test_plain_request_never_accepts_history_without_history_authorization ____
+
+    def test_plain_request_never_accepts_history_without_history_authorization():
+        _,request=fixture()
+        with pytest.raises(ValueError):
+            d.MainRequest.model_validate({key:getattr(request,key) for key in d.MainRequest.model_fields} |
+>                                       {'conversation_history':history()})
+                                                                ^^^^^^^^^
+
+tests/unit/test_assistant_conversation_history.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def history():
+>       return (d.ConversationHistoryMessage(message_id=UUID(int=90),role='user',source_revision=0,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            content='虚构甲借款35000元。'),
+            d.ConversationHistoryMessage(message_id=UUID(int=91),role='assistant',source_revision=0,
+            content='请补充还款日期。'))
+E       AttributeError: module 'cn_contract.domain' has no attribute 'ConversationHistoryMessage'
+
+tests/unit/test_assistant_conversation_history.py:13: AttributeError
+=========================== short test summary info ============================
+FAILED tests/unit/test_assistant_conversation_history.py::test_v2_sends_prior_messages_in_order_and_current_text_last
+FAILED tests/unit/test_assistant_conversation_history.py::test_version_and_history_cannot_be_mismatched
+FAILED tests/unit/test_assistant_conversation_history.py::test_plain_request_never_accepts_history_without_history_authorization
+3 failed, 1 passed in 0.25s

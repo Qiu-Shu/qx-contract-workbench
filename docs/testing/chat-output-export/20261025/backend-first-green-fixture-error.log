@@ -1,0 +1,18 @@
+...........F                                                             [100%]
+=================================== FAILURES ===================================
+____________________ test_readonly_fence_denies_new_exports ____________________
+
+chat = (<starlette.testclient.TestClient object at 0x110f23ef0>, <cn_contract.persistence.Database object at 0x110f1a5d0>, PosixPath('/private/tmp/qx-ch08-green1/test_readonly_fence_denies_new0/workspaces/main'))
+
+    def test_readonly_fence_denies_new_exports(chat):
+        client, database, _ = chat
+        headers = sign_in(client)
+        base = seed(client, headers)
+        value = preview(client, headers, base)
+>       from cn_contract.ops.storage import fence
+E       ImportError: cannot import name 'fence' from 'cn_contract.ops.storage' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/ops/storage.py)
+
+tests/integration/test_assistant_outputs.py:147: ImportError
+=========================== short test summary info ============================
+FAILED tests/integration/test_assistant_outputs.py::test_readonly_fence_denies_new_exports
+1 failed, 11 passed in 3.98s

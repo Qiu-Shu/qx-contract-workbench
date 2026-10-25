@@ -5,7 +5,7 @@ from sqlalchemy import text
 
 from .. import domain as d
 from ..record_codec import sha as record_sha
-from . import model_integrity as ledger, profile_integrity
+from . import model_integrity as ledger, profile_integrity, conversation_history
 from .providers import profile_codec, profile_preparation
 from .providers.deepseek_protocol import json_bytes
 from .providers.policy import encoded, sha
@@ -109,7 +109,9 @@ def validate_input(db, row, prepared, config, policy, run, conversation):
         'conversation_id':conversation['id'], 'request':submission.model_dump(mode='json')})
     rebuilt = profile_preparation.build_basis(submission, config, base_profile_revision=basis.base_profile_revision,
         expected_intake_id=basis.expected_intake_id, expected_intake_revision=basis.expected_intake_revision,
-        project_intake=basis.project_intake)
+        project_intake=basis.project_intake,
+        conversation_history=(conversation_history.for_message(db, basis.expected_scope, request.content,
+            config, before_at=ledger._at(row['created_at'])) if basis.conversation_history else ()))
     if (run['request_id'] != str(basis.request_id) or run['request_sha256'] != digest
             or run['requested_skill'] is not None or policy.max_calls != 1
             or policy.allowed_content_sha256s != (profile_preparation.basis_digest(basis),)

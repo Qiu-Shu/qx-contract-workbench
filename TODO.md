@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+2026-10-26 “接待追问与事项底稿”首片在 `dhb_law` 实现：对话页“接待底稿”保存原始陈述、五项内部提纲、追问/材料和独立客户回复；本地候选带理由/原话，准备AI任务沿原发送入口且不自动调用。连续保存人工值保留、完整意图晚结果隔离、断ACK查回执及恢复只读已验。专项17/关联235 Python、专项15/关联336前端、369桌面通过；实际Chromium、客户Word包/渲染、真实qxbak及独立复核通过。运行依赖门仍因清单缺失退出1，未提交/推送/更新服务器或0.4.1，真实外部模型、Windows及法律验收未覆盖。[本轮实测](docs/testing/reception-worksheet/20261026/README.md)。
+
 2026-10-25 D2g5f已接待收件附件明确选择本对话已上传DOCX/PDF，沿原resolution保存、原收件不覆盖，丢ACK只GET；材料旧通知回退缺陷经独立RED→GREEN修复。根4短组237不同Python：236PASS/1既有WIN-PATH-02 FAIL（含22新），293Node（60新）/四门/真实本机合成浏览器通过，交叉独审0遗留，[实际证据](docs/testing/weixin-media-selection/20261025/README.md)。可信微信/下载解密/pending列表/E许可待，0.4.1未更新，全仓长进程/安装版/真实账号模型等NOT_RUN，WIN-PATH-02和原生AV仍OPEN。产品`958b8e6`已正常推送，远端SHA/tree及5,761条目一致，[同步回执](docs/testing/weixin-media-selection/20261025/github-sync.md)。
 
 2026-10-25 D2g5e已接根CID固定descriptor明确分发/精确找回HTTP：最终事务核root归属，固定目标当前ACL、9字段脱敏回执、精确恢复GET与丢ACK只查；旧guard/schema19保留。7短组23模块701不同Python（含64新）/四门通过，整体独审0确认及5独立HTTP探针通过；[实际证据](docs/testing/weixin-dispatch-http/20261025/README.md)保留首次不稳定61/3、夹具修正及64整组重跑、未用HTTP测试模块的摘要差异。无新UI/列表/真实微信；可信绑定、下载解密、pending附件选择/E许可仍待。0.4.1未更新，全仓/Node/浏览器/安装版等NOT_RUN，WIN-PATH-02/原生AV仍OPEN。产品`dd46b6a`已正常推送，远端SHA/tree及5,688条目一致，[同步回执](docs/testing/weixin-dispatch-http/20261025/github-sync.md)。
@@ -78,6 +80,10 @@ C 产品提交 `4b62f06` 已同步 GitHub，本地/远端 SHA、tree 及 5,002 �
 
 A＋B 产品提交 `0178859` 已同步 GitHub，远端 SHA、tree 及递归 4,992 个受控条目与本地一致；[同步回执](docs/testing/task-drafts/20261024/github-sync.md)。长进程崩溃已有匹配 Windows 事件及本机转储元数据，两个紧密合成探针未复现，后续优先符号化分析；[诊断记录](docs/testing/task-drafts/20261024/native-crash.md)。
 
+2026-10-24：默认桌面连续文字上下文及CH-07C3b人工维护已接通，含一次真实虚构内容模型验证；安装版与Windows恢复开放项保持独立。[本次验证](docs/testing/conversation-maintenance/20261024/README.md)。
+
+2026-10-22：RECEPTION-01 私有资料与法律服务接待融合已完成源码及服务器试运行验证；真实模型与完整专项模块仍按原排期。[证据](docs/testing/reception-plugin/20261022/README.md)。
+
 CH-07C3a源码与合成证据 `1a03d89` 已同步GitHub，远端SHA及4,949项文件树一致；[同步回执](docs/testing/GITHUB-PROFILE-UI-20261023.md)。
 
 2026-10-23 CH-07C3a已贯通桌面普通文字的统一发送、同次待核档案/接待保存及只读档案侧栏；既有请求和丢失回执只查询找回，不重复调用。保存状态依据真实回执，来源、版本、冲突及律师保护值可回查。相关Python去重265、桌面366、前端141及四门通过；Windows合成6组通过，恰好一次回环调用、档案与接待各保存一次，627份输入稳定。人工修改/联系方式、附件自动建档与导出仍待，安装版0.4.1和WIN-PATH-02状态未变。 [本片实测](docs/testing/profile-ui/20261023/README.md)。GitHub产品同步已核验，见上方回执。
@@ -147,9 +153,9 @@ CH-07C2c源码与合成证据 `63f48c6` 已同步，远端SHA及4,758文件树�
 | CH-07C2c | 已完成后端应用入口 | Codex | 4,393全套Python/四门/独立9及10通过；私有许可、预览与同队列HTTP接线，实际子进程恰好一次回环；未接桌面UI | [合同](docs/plans/2026-10-23-profile-application.md) · [证据](docs/testing/profile-application/20261023/README.md) |
 | CH-07C2d | 已完成源码与实机入口 | Codex | 366桌面/68前端/19相关Python、四门、独审与原生5组通过；0模型/0业务写入，未接统一自动归档页面 | [合同](docs/plans/2026-10-23-profile-desktop.md) · [证据](docs/testing/profile-desktop/20261023/README.md) |
 | CH-07C3a | 已完成文字页面闭合 | Codex | 265相关Python/366桌面/141前端、四门、独审及Windows6组通过；同次待核草稿保存与只读侧栏，未知请求GET找回 | [合同](docs/plans/2026-10-23-profile-ui.md) · [证据](docs/testing/profile-ui/20261023/README.md) |
-| CH-07C3b | P1 · 后续档案维护 | 待认领 | 人工修改/保护/清空与本地联系方式入口；延续后端并发、来源及权限校验，不额外调用模型 | CH-07C3a |
+| CH-07C3b | 已完成本次源码/浏览器范围 | Codex | 12字段人工编辑、联系方式、材料状态、精确金额、UTC跟进时间及受保护清空；旧版本/恢复副本/归档只读，未知提交仅找回；后续自动提案保留人工值。安装交付待CH-10 | [本次实测](docs/testing/conversation-maintenance/20261024/README.md) |
 | CH-07C3c | P1 · 后续材料范围 | 待认领 | 附件/技能范围的受控建档及原文跳转联动；不由普通文字许可扩权，Jev需独立许可 | CH-07C3b |
-| CH-08 | P1 · 待贯通 | 待认领 | 对话产物的客户/内部范围、复制和 Word 导出；复用既有导出，不从整页 DOM 复制内部信息 | CH-07 及原文引用 |
+| CH-08 | P1 · 首片在 dhb_law 验证 | dhb_law | 已保存回答/档案版本的分受众预览、复制与 Word 下载贯通；客户仅 client_reply，内部回答不能换标；技能/附件成果及安装版待后续 | [源码与实际验证](docs/testing/chat-output-export/20261025/README.md) |
 | CH-09-续 | P1 · 随新增表同步 | 对应模块作者 | 现有对话/附件/调用账本恢复已覆盖；新增档案/成果仍需完整备份、旧版本兼容、只读拒写和不重发 | 与 CH-07/08 同片实施 |
 | CH-10 | P1 · 待整体验收 | 待认领 | 新安装候选贯通聊天→收件→生成→档案→引用→导出；断网/Jev缺席、中文路径/输入/缩放、升级与资源实测；不覆盖本机真实资料 | 核心链具备可测范围 |
 | CH-11 | P1 · 待统一接入 | 待认领 | 持衡固定四动作、材料映射、角色/阶段隔离和同请求幂等；两仓独立环境、失败可恢复 | 公共材料与权限接口 |

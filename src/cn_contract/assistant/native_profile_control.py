@@ -7,7 +7,7 @@ from sqlalchemy import text
 from .. import domain as d
 from ..config import canonical_json
 from ..security import ServiceError, authenticate
-from . import profile_preparation_service, profile_store, service
+from . import profile_preparation_service, profile_store, service, conversation_history
 from .providers import attempts, profile_preparation
 from .providers.policy import encoded, reservation, sha, validated
 
@@ -29,6 +29,9 @@ def _existing(actor, conversation, run, basis, config, db):
         FROM assistant_messages WHERE id=:id AND conversation_id=:cid'''),
         {'id': run['message_id'], 'cid': conversation['id']}).mappings().first()
     if message is None or type(prepared) is not d.MainProfilePreparedInput or prepared.basis != basis:
+        raise ServiceError('VERSION_CONFLICT', 409)
+    if basis.conversation_history and conversation_history.for_message(db, basis.expected_scope,
+            message['content'], config, before_at=d.AssistantMessageView(**message).created_at) != basis.conversation_history:
         raise ServiceError('VERSION_CONFLICT', 409)
     original = d.AssistantMessageInput(request_id=basis.request_id, expected_scope=basis.expected_scope,
         expected_composer_revision=basis.expected_composer_revision, content=message['content'])

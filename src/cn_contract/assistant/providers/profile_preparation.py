@@ -30,17 +30,19 @@ def basis_digest(basis: d.MainProfileSendBasis) -> str:
 
 def build_basis(message: d.AssistantMessageInput, config: d.MainModelConfig, *,
                 base_profile_revision: int, expected_intake_id=None,
-                expected_intake_revision=None, project_intake=False) -> d.MainProfileSendBasis:
+                expected_intake_revision=None, project_intake=False, conversation_history=()) -> d.MainProfileSendBasis:
     message = _validated(d.AssistantMessageInput, message)
     config = configuration(config)
     if message.requested_skill is not None or message.attachment_ids:
         raise ValueError('profile-text-v1 supports only current text')
-    wire = json_bytes(profile_codec._text_request(message.content, config))
-    return d.MainProfileSendBasis(request_id=message.request_id, expected_scope=message.expected_scope,
+    wire = json_bytes(profile_codec._text_request(message.content, config, conversation_history))
+    return d.MainProfileSendBasis(
+        template_version='profile-text-system-v2' if conversation_history else 'profile-text-system-v1',
+        conversation_history=conversation_history, request_id=message.request_id, expected_scope=message.expected_scope,
         expected_composer_revision=message.expected_composer_revision, content_sha256=_sha(message.content.encode('utf-8')),
         base_profile_revision=base_profile_revision, expected_intake_id=expected_intake_id,
         expected_intake_revision=expected_intake_revision, project_intake=project_intake,
-        system_sha256=_sha(profile_codec._SYSTEM.encode('utf-8')),
+        system_sha256=_sha(profile_codec.system(conversation_history).encode('utf-8')),
         config_sha256=_sha(json_bytes(config.model_dump(mode='json'))),
         wire_sha256=_sha(wire), wire_bytes=len(wire))
 
@@ -54,10 +56,11 @@ def prepare(run: d.AssistantRunView, message: d.AssistantMessageView, basis: d.M
     config = configuration(config)
     if (run.request_id != basis.request_id or run.message_id != message.id or message.role != 'user'
             or run.requested_skill is not None
-            or basis.system_sha256 != _sha(profile_codec._SYSTEM.encode('utf-8'))
+            or basis.system_sha256 != _sha(profile_codec.system(basis.conversation_history).encode('utf-8'))
             or basis.config_sha256 != _sha(json_bytes(config.model_dump(mode='json')))):
         raise ValueError('PROFILE_INPUT_INVALID')
     request = d.MainProfileRequest(run_id=run.id, message_id=message.id, scope=run.scope,
+        template_version=basis.template_version, conversation_history=basis.conversation_history,
         content=message.content, source_sha256=_sha(message.content.encode('utf-8')),
         source_revision=message.source_revision, base_profile_revision=basis.base_profile_revision)
     return d.MainProfilePreparedInput(request=request, basis=basis, composer_revision=composer_revision,

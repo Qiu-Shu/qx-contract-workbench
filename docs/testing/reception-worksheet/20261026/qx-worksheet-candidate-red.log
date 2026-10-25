@@ -1,0 +1,37 @@
+✔ manual notes retain old text, are protected in one save and reopen without sending (1.767583ms)
+✔ template suggestions are explicitly adopted into editable fields, never auto saved (0.348ms)
+✔ unknown save queries its original receipt without repeating the POST (0.283167ms)
+✔ a version conflict retains local edits until explicit resolution (0.168375ms)
+✔ preparation keeps additional input visible and never invokes a send (0.24175ms)
+✔ new typing while preparation waits is never overwritten (2.338125ms)
+✔ late read and suggestions cannot populate another conversation (0.147958ms)
+✔ conflicting candidates are shown, not silently selected or cleared on unrelated saves (0.203834ms)
+✔ readonly, archived and revoked contexts disable saves and preparation (0.291084ms)
+✖ explicitly adopting an unchanged displayed candidate still saves a protected manual value (0.557416ms)
+✔ keeping local edits after conflict does not overwrite another field changed on the server (0.214208ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 38.930083
+
+✖ failing tests:
+
+test at scripts/test_reception_worksheet.mjs:120:1
+✖ explicitly adopting an unchanged displayed candidate still saves a protected manual value (0.557416ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:126:10)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual'
+  }

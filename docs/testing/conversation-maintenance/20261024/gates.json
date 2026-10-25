@@ -1,0 +1,37 @@
+[
+  {
+    "command": [
+      "python",
+      "-m",
+      "cn_contract.cli",
+      "schema",
+      "--check"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "python",
+      "scripts/verify_defaults.py"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "python",
+      "scripts/verify_sources.py",
+      "--mode",
+      "development"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "python",
+      "scripts/verify_runtime_dependencies.py",
+      "--mode",
+      "development"
+    ],
+    "exit_code": 1
+  }
+]

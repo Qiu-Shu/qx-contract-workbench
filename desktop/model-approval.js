@@ -42,7 +42,9 @@
         basis.expected_intake_id?`尝试同步至已关联接待 · 当前版本 ${basis.expected_intake_revision} · 标识 ${basis.expected_intake_id}`:
           '有可用于接待的字段并形成有效变更时，尝试创建接待草稿；没有变更时不新建。';
       at('approval-profile').hidden=false;
-      at('approval-intro').textContent='只发送下列本次文字，用于回复与整理待核档案草稿。下方保存目标的历史正文、本机附件与法库资料不会随本次请求发送。';
+      at('approval-intro').textContent=basis.conversation_history?.length?
+        '本次发送包含下列同会话历史与当前文字，最多最近8轮、32KiB历史。只包含确认窗列出的内容；档案提案仍只引用当前文字，本机附件与法库资料不随此请求发送。':
+        '只发送下列本次文字；本次未包含历史问答。历史过长或没有可用的同会话完整问答时不自动带入。本机附件与法库资料不会随本次请求发送。';
     } else if(value?.kind==='library_context'){
       if(Object.keys(value).length!==6||
           !['kind','content','sources','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
@@ -80,7 +82,8 @@
         `程序将预留 USD ${judge.max_total_usd} 预算；这不是供应商收费上限，实际费用尚未核对。`:
         'Jev 辅助判断尚未启用，本次不会发送给 TypeSafe；你仍可确认主模型发送。';
     }
-    at('approval-content').textContent=value.content;
+    at('approval-content').textContent=value.kind==='profile_draft'&&value.basis.conversation_history?.length?
+      value.basis.conversation_history.map(item=>`${item.role==='user'?'历史提问':'历史回答（待核）'} · 输入版本 ${item.source_revision}\n${item.content}`).join('\n\n')+'\n\n本次文字\n'+value.content:value.content;
     at('approval-recipient').textContent=value.recipient;
     at('approval-model').textContent=`${models[value.model]}（${value.model}）`;
     at('approval-budget').textContent=`USD ${value.max_total_usd}（本次一次调用）`;

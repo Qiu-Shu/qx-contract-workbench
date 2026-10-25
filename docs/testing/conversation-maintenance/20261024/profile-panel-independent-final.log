@@ -1,0 +1,47 @@
+✔ starts hidden, reads only on open, and closes with keyboard focus restored (2.356792ms)
+✔ renders literal candidates, protected explicit null, exact money and unresolved states (1.017583ms)
+✔ source details preserve complete message and document anchor provenance (0.404667ms)
+✔ empty revision zero explains missing draft without claiming generation or saving (0.19475ms)
+✔ current profile null is an honest empty state while absent historical versions remain errors (0.417583ms)
+✔ history accepts bounded integer versions, gets exact endpoint argument, and can reread latest (0.532292ms)
+✔ huge revision counts use one numeric input rather than enumerating all versions (0.240084ms)
+✔ wrong historical revision is never presented as the selected version (0.413875ms)
+✔ workspace conversation binding and scope boundaries reject mismatched snapshots (0.606ms)
+✔ historical input and material revisions are allowed but future or malformed ones are refused (0.389917ms)
+✔ switching loading or revocation clears old data and discards late responses (0.384916ms)
+✔ pagehide clears records and prevents subsequent or late reads (0.083875ms)
+✔ newer reads win and close prevents pending data or notices from returning (0.15775ms)
+✔ network failure clears old success and raw diagnostics, then permits explicit reread (0.561833ms)
+✔ authorization errors erase all profile values without retaining diagnostics (0.265166ms)
+✔ a growing current input snapshot does not erase a still valid historical profile (0.17175ms)
+✔ a rollback below the displayed source snapshot clears now-incompatible content (0.182792ms)
+✔ no conversation, unresolved scope, loading, and revoked state cannot issue reads (0.1485ms)
+✔ quote offsets use Unicode code points and reject broken source ranges (0.155583ms)
+✔ invalid values, claimed verification and model contact proposals never render (0.587625ms)
+✔ list material and date values preserve original text and honest material status (0.191792ms)
+✔ manual text/contact commit uses current scope, profile and intake baselines without model proposals (0.67975ms)
+✔ manual form supports explicit protected clear, lists, money and timezone-aware dates (2.030583ms)
+✔ materials keep individual states including lawyer checked status (0.3685ms)
+✔ history readonly and archived views never expose editors (0.435125ms)
+✔ unknown POST performs receipt lookup only and cannot submit a duplicate (0.794625ms)
+✔ VERSION_CONFLICT refreshes latest profile and invalidates edits (0.362833ms)
+✔ input change, scope switch and closing during baseline read cannot apply stale edits (0.6135ms)
+✔ empty profile can be manually started and blank title is rejected without POST (0.188084ms)
+✔ explicit revision routes including latest remain read-only until current is reread (0.30025ms)
+✔ unchanged receipt is accurately reported and malformed receipt stays unknown (0.448667ms)
+✔ reopening an unknown save retains receipt-only recovery (0.704334ms)
+✔ late intake baseline read after panel close does not restore editor or submit (0.305125ms)
+✔ duplicate submit during save creates one request and no premature receipt lookup (0.244ms)
+✔ definite rejected save after close clears pending without reopening the old panel (0.221791ms)
+✔ definite rejected save after same-scope refresh clears pending without stale notices (0.248584ms)
+✔ late profile reread after successful save cannot put its receipt notice on another conversation (0.210583ms)
+✔ late conflict refresh at controller cannot read or label another conversation (0.241542ms)
+✔ late conflict refresh at profile cannot read or label another conversation (0.159ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 61.906625

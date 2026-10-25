@@ -187,7 +187,7 @@ def _worker_lock(root):
 
 
 def build_local_app(directory, *, port=8767, library_root=None, data_parent=None, assistant_model_runtime=None,
-                    assistant_judge_runtime=None):
+                    assistant_judge_runtime=None, reception_knowledge_root=None):
     root = _open_workspace(directory, data_parent=data_parent)
     with _worker_lock(root):
         from .workspace_upgrade import upgrade
@@ -200,6 +200,9 @@ def build_local_app(directory, *, port=8767, library_root=None, data_parent=None
                          assistant_judge_runtime=assistant_judge_runtime)
         from .recovery import attach_recovery
         attach_recovery(app,database)
+        from .reception_assistant import attach_reception
+        attach_reception(app, database, reception_knowledge_root if reception_knowledge_root is not None
+                         else root.parent / 'reception-knowledge')
         if library_root is not None:
             from .library import attach_library
             attach_library(app, database, library_root)

@@ -1,0 +1,391 @@
+✔ assistant model status is only served to an allowed page and validated (0.85625ms)
+✔ assistant model switch toggles the two known models and persists only on success (0.33075ms)
+✔ assistant model switch refuses strangers, the unconfigured and failed configures (0.273292ms)
+✔ startup auto-configure restores only a persisted known choice and never throws (0.129042ms)
+✖ empty, save, restart, replace and remove expose only status and persist only ciphertext (3.548334ms)
+✖ save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext (1.0905ms)
+✖ only Windows and all available asynchronous protection methods permit status and save (1.754542ms)
+✖ status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors (1.451709ms)
+✖ status validates actual decrypted data and reports rotation without rewriting stored bytes (1.052833ms)
+✖ remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable (1.174042ms)
+✔ invalid parent paths return a fixed result rather than throwing or creating files (1.2455ms)
+✔ a junction ancestor is rejected for every operation and the linked directory remains untouched (0.552667ms)
+✔ the credential directory cannot be a junction, dangling junction or ordinary file (1.272709ms)
+✔ credential symbolic links including dangling links are never read, replaced or removed (1.15ms)
+✔ credential hard links and directories are rejected without touching either target (1.790709ms)
+✖ a directory replaced by a junction during asynchronous encryption cannot redirect the write (0.400167ms)
+✖ malformed encryption results and rejected encryption preserve old ciphertext and return a fixed error (0.524334ms)
+✖ flush or atomic replacement failures preserve old ciphertext and remove only the temporary ciphertext (0.558125ms)
+✖ status, save and remove share a serial queue and drain waits for already accepted operations (4.765625ms)
+✖ a failed operation does not poison the queue or prevent a later safe removal
+✖ status checks current file identity again after decrypting
+✖ oversized ciphertext is rejected before reading or decrypting it
+✖ filesystem failures are fixed results and never expose file paths or raw exception messages
+✖ only fixed provider identities can construct a store without consulting storage or creating paths
+✖ TypeSafe has its own protected envelope, survives recreation and never returns callback data
+✖ TypeSafe preserves accepted key boundaries and escapes without accepting an oversized or multiline key
+✖ legacy DeepSeek ciphertext remains readable only through its default or explicit store
+✖ copying a TypeSafe ciphertext into DeepSeek cannot expose an envelope as a main-model key
+✖ TypeSafe rejects foreign, malformed, duplicate and extra envelope fields without consuming or rewriting them
+✖ TypeSafe save, replace and remove preserve DeepSeek and the reverse operations preserve TypeSafe
+✖ TypeSafe refuses unavailable system protection and rotation without consuming a key or touching DeepSeek
+✖ TypeSafe replacement failure preserves both providers and leaves no temporary ciphertext
+✖ TypeSafe rejects a linked credential file without reading, replacing or removing its DeepSeek target
+✔ credential writes revoke current runtime before touching the protected store (1.060666ms)
+✔ trusted model selection configures only the fixed catalog and never grants sending (2.109916ms)
+✔ second model uses bounded trusted configuration and projections omit private metadata (0.522958ms)
+✔ arbitrary configuration is refused without consuming credentials and clears prior configuration (0.326417ms)
+✔ credential read failure cannot preserve a prior configured model (0.253167ms)
+✔ consumer completion does not turn a rejected configuration ACK into success (0.151375ms)
+✔ malformed success ACK closes the captured backend and never exposes its extra fields (0.317084ms)
+✔ health failure arriving with a valid ACK prevents configuration adoption (0.344625ms)
+✔ backend replacement while reading the credential prevents its handoff (3.707417ms)
+✔ late configuration ACK stops only the old backend after process replacement (0.726375ms)
+✔ an obsolete document cannot adopt an ACK or invoke page failure handling (0.308584ms)
+✔ runtime operations refuse overlapping mutations instead of queuing them (0.327291ms)
+✔ failed revocation waits for backend stop and forbids the credential write (0.465834ms)
+✔ a failed backend stop latches unsafe state even after the backend reference is cleared (0.108666ms)
+✔ credential and runtime IPC share a busy lock while the captured document guard remains valid (0.764ms)
+✔ document epoch is rechecked after revocation before any credential write (0.166542ms)
+✔ navigation before IPC work starts prevents all runtime and credential work (0.092042ms)
+✔ runtime status neither consumes credentials nor preserves metadata across backend replacement (0.190125ms)
+✖ native menu enters a distinct settings mode and only returns protected credential status (10.788333ms)
+✖ each credential IPC rejects other windows, subframes, backend pages and the wrong mode (1.0555ms)
+✖ a pending status read also locks mutation and rechecks permission on the next call (0.991916ms)
+✖ pending status/save operations reject duplicate IPC and quit waits for the operation (0.8405ms)
+✖ store failures and unexpected fields never escape through IPC (0.955667ms)
+✔ preload exposes only explicit credential operations and package includes their modules (0.972292ms)
+✔ credential form saves once, clears input immediately and labels stored credentials without enabling model use (5.535583ms)
+✔ credential errors clear inputs, hide raw errors and leaving discards delayed responses (1.130125ms)
+✔ credential remove and return clear an unsubmitted replacement (0.860792ms)
+✔ unavailable settings can be checked again and reopening the same mode refreshes status (1.134375ms)
+✔ a late old settings reply cannot erase text entered after reopening settings (1.227875ms)
+✔ model page checks storage before runtime and distinguishes stored credentials from configuration (0.900375ms)
+✔ model page configures only a fixed selected ID, serializes actions and can switch or disable (0.955167ms)
+✔ model page hides stale runtime configuration while replacing credentials and reads back serially (0.91325ms)
+✔ model page runtime failure is separate from stored credentials and a recheck can recover (0.74225ms)
+✔ model page discards delayed configuration after leaving without clearing the new page input (0.717625ms)
+✔ model page allows credential maintenance when runtime is unavailable and restart stays unconfigured (0.6425ms)
+✔ model page rejects unknown model projection and never renders raw runtime errors (0.844375ms)
+ℹ tests 69
+ℹ suites 0
+ℹ pass 40
+ℹ fail 14
+ℹ cancelled 15
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.278916
+
+✖ failing tests:
+
+test at desktop/tests/model-credentials.test.cjs:42:1
+✖ empty, save, restart, replace and remove expose only status and persist only ciphertext (3.548334ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'CREDENTIAL_PATH_UNSAFE',
+  +   status: 'invalid'
+  -   status: 'empty'
+    }
+  
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-credentials.test.cjs:44:10)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' },
+    expected: { status: 'empty' },
+    operator: 'deepStrictEqual'
+  }
+
+test at desktop/tests/model-credentials.test.cjs:63:1
+✖ save accepts bounded printable ASCII without a required prefix and rejects malformed input without changing old ciphertext (1.0905ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'CREDENTIAL_PATH_UNSAFE',
+  +   status: 'invalid'
+  -   status: 'saved'
+    }
+  
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-credentials.test.cjs:66:12)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' },
+    expected: { status: 'saved' },
+    operator: 'deepStrictEqual'
+  }
+
+test at desktop/tests/model-credentials.test.cjs:76:1
+✖ only Windows and all available asynchronous protection methods permit status and save (1.754542ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'CREDENTIAL_PATH_UNSAFE',
+  +   status: 'invalid'
+  -   code: 'CREDENTIAL_STORAGE_UNAVAILABLE',
+  -   status: 'unavailable'
+    }
+  
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-credentials.test.cjs:85:12)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' },
+    expected: { status: 'unavailable', code: 'CREDENTIAL_STORAGE_UNAVAILABLE' },
+    operator: 'deepStrictEqual'
+  }
+
+test at desktop/tests/model-credentials.test.cjs:92:1
+✖ status distinguishes corrupt ciphertext from empty and temporary system unavailability without leaking errors (1.451709ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'CREDENTIAL_PATH_UNSAFE',
+  -   code: 'CREDENTIAL_CORRUPT',
+      status: 'invalid'
+    }
+  
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-credentials.test.cjs:97:12)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' },
+    expected: { status: 'invalid', code: 'CREDENTIAL_CORRUPT' },
+    operator: 'deepStrictEqual'
+  }
+
+test at desktop/tests/model-credentials.test.cjs:108:1
+✖ status validates actual decrypted data and reports rotation without rewriting stored bytes (1.052833ms)
+  Error: ENOENT: no such file or directory, open '/var/folders/fr/3pvp9x3533x2hwm2gprfn7qr0000gn/T/qx-model-credentials-YUOjjJ/desktop-data/model-credentials/deepseek.bin'
+      at Object.openSync (node:fs:563:18)
+      at Object.readFileSync (node:fs:447:35)
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-credentials.test.cjs:111:21)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/var/folders/fr/3pvp9x3533x2hwm2gprfn7qr0000gn/T/qx-model-credentials-YUOjjJ/desktop-data/model-credentials/deepseek.bin'
+  }
+
+test at desktop/tests/model-credentials.test.cjs:121:1
+✖ remove can safely clear corrupt or oversized ciphertext even when system protection is unavailable (1.174042ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   code: 'CREDENTIAL_PATH_UNSAFE',
+  +   status: 'invalid'
+  -   status: 'empty'
+    }
+  
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-credentials.test.cjs:127:12)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'invalid', code: 'CREDENTIAL_PATH_UNSAFE' },
+    expected: { status: 'empty' },
+    operator: 'deepStrictEqual'
+  }
+
+test at desktop/tests/model-credentials.test.cjs:205:1
+✖ a directory replaced by a junction during asynchronous encryption cannot redirect the write (0.400167ms)
+  Error: ENOENT: no such file or directory, open '/var/folders/fr/3pvp9x3533x2hwm2gprfn7qr0000gn/T/qx-model-credentials-6d34pq/desktop-data/model-credentials/deepseek.bin'
+      at Object.openSync (node:fs:563:18)
+      at Object.readFileSync (node:fs:447:35)
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-credentials.test.cjs:208:21)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/var/folders/fr/3pvp9x3533x2hwm2gprfn7qr0000gn/T/qx-model-credentials-6d34pq/desktop-data/model-credentials/deepseek.bin'
+  }
+
+test at desktop/tests/model-credentials.test.cjs:223:1
+✖ malformed encryption results and rejected encryption preserve old ciphertext and return a fixed error (0.524334ms)
+  Error: ENOENT: no such file or directory, open '/var/folders/fr/3pvp9x3533x2hwm2gprfn7qr0000gn/T/qx-model-credentials-z4OYrT/desktop-data/model-credentials/deepseek.bin'
+      at Object.openSync (node:fs:563:18)
+      at Object.readFileSync (node:fs:447:35)
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-credentials.test.cjs:226:21)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/var/folders/fr/3pvp9x3533x2hwm2gprfn7qr0000gn/T/qx-model-credentials-z4OYrT/desktop-data/model-credentials/deepseek.bin'
+  }
+
+test at desktop/tests/model-credentials.test.cjs:241:1
+✖ flush or atomic replacement failures preserve old ciphertext and remove only the temporary ciphertext (0.558125ms)
+  Error: ENOENT: no such file or directory, open '/var/folders/fr/3pvp9x3533x2hwm2gprfn7qr0000gn/T/qx-model-credentials-GD6G2y/desktop-data/model-credentials/deepseek.bin'
+      at Object.openSync (node:fs:563:18)
+      at Object.readFileSync (node:fs:447:35)
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-credentials.test.cjs:244:21)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/var/folders/fr/3pvp9x3533x2hwm2gprfn7qr0000gn/T/qx-model-credentials-GD6G2y/desktop-data/model-credentials/deepseek.bin'
+  }
+
+test at desktop/tests/model-credentials.test.cjs:258:1
+✖ status, save and remove share a serial queue and drain waits for already accepted operations (4.765625ms)
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:287:1
+✖ a failed operation does not poison the queue or prevent a later safe removal
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:300:1
+✖ status checks current file identity again after decrypting
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:312:1
+✖ oversized ciphertext is rejected before reading or decrypting it
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:322:1
+✖ filesystem failures are fixed results and never expose file paths or raw exception messages
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:334:1
+✖ only fixed provider identities can construct a store without consulting storage or creating paths
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:342:1
+✖ TypeSafe has its own protected envelope, survives recreation and never returns callback data
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:360:1
+✖ TypeSafe preserves accepted key boundaries and escapes without accepting an oversized or multiline key
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:377:1
+✖ legacy DeepSeek ciphertext remains readable only through its default or explicit store
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:395:1
+✖ copying a TypeSafe ciphertext into DeepSeek cannot expose an envelope as a main-model key
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:408:1
+✖ TypeSafe rejects foreign, malformed, duplicate and extra envelope fields without consuming or rewriting them
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:437:1
+✖ TypeSafe save, replace and remove preserve DeepSeek and the reverse operations preserve TypeSafe
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:457:1
+✖ TypeSafe refuses unavailable system protection and rotation without consuming a key or touching DeepSeek
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:477:1
+✖ TypeSafe replacement failure preserves both providers and leaves no temporary ciphertext
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-credentials.test.cjs:494:1
+✖ TypeSafe rejects a linked credential file without reading, replacing or removing its DeepSeek target
+  'Promise resolution is still pending but the event loop has already resolved'
+
+test at desktop/tests/model-settings.test.cjs:40:1
+✖ native menu enters a distinct settings mode and only returns protected credential status (10.788333ms)
+  /Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:26
+      quit:()=>quit++,exit:()=>{throw Error('unexpected exit');},isPackaged:false};
+                                ^
+  
+  Error: unexpected exit
+      at Object.exit (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:26:37)
+      at evalmachine.<anonymous>:21:77
+      at Script.runInContext (node:vm:149:12)
+      at Script.runInNewContext (node:vm:154:17)
+      at Object.runInNewContext (node:vm:310:38)
+      at native (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:32:6)
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:41:17)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+
+test at desktop/tests/model-settings.test.cjs:50:1
+✖ each credential IPC rejects other windows, subframes, backend pages and the wrong mode (1.0555ms)
+  /Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:26
+      quit:()=>quit++,exit:()=>{throw Error('unexpected exit');},isPackaged:false};
+                                ^
+  
+  Error: unexpected exit
+      at Object.exit (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:26:37)
+      at evalmachine.<anonymous>:21:77
+      at Script.runInContext (node:vm:149:12)
+      at Script.runInNewContext (node:vm:154:17)
+      at Object.runInNewContext (node:vm:310:38)
+      at native (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:32:6)
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:51:17)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+
+test at desktop/tests/model-settings.test.cjs:72:1
+✖ a pending status read also locks mutation and rechecks permission on the next call (0.991916ms)
+  /Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:26
+      quit:()=>quit++,exit:()=>{throw Error('unexpected exit');},isPackaged:false};
+                                ^
+  
+  Error: unexpected exit
+      at Object.exit (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:26:37)
+      at evalmachine.<anonymous>:21:77
+      at Script.runInContext (node:vm:149:12)
+      at Script.runInNewContext (node:vm:154:17)
+      at Object.runInNewContext (node:vm:310:38)
+      at native (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:32:6)
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:73:17)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+
+test at desktop/tests/model-settings.test.cjs:82:1
+✖ pending status/save operations reject duplicate IPC and quit waits for the operation (0.8405ms)
+  /Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:26
+      quit:()=>quit++,exit:()=>{throw Error('unexpected exit');},isPackaged:false};
+                                ^
+  
+  Error: unexpected exit
+      at Object.exit (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:26:37)
+      at evalmachine.<anonymous>:21:77
+      at Script.runInContext (node:vm:149:12)
+      at Script.runInNewContext (node:vm:154:17)
+      at Object.runInNewContext (node:vm:310:38)
+      at native (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:32:6)
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:83:17)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+
+test at desktop/tests/model-settings.test.cjs:98:1
+✖ store failures and unexpected fields never escape through IPC (0.955667ms)
+  /Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:26
+      quit:()=>quit++,exit:()=>{throw Error('unexpected exit');},isPackaged:false};
+                                ^
+  
+  Error: unexpected exit
+      at Object.exit (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:26:37)
+      at evalmachine.<anonymous>:21:77
+      at Script.runInContext (node:vm:149:12)
+      at Script.runInNewContext (node:vm:154:17)
+      at Object.runInNewContext (node:vm:310:38)
+      at native (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:32:6)
+      at TestContext.<anonymous> (/Users/molin/Project/qx-contract-workbench/desktop/tests/model-settings.test.cjs:99:17)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)

@@ -1,0 +1,26 @@
+<section id="reception-assistant" class="reception-assistant" aria-labelledby="reception-heading">
+  <header><p class="reception-eyebrow">宋萌律师 · 客户接待与跟进</p><h2 id="reception-heading">法律服务接待助手</h2></header>
+  <p>从已保存的咨询出发，整理下一次沟通。资料须核对，建议稿不会自动发送给客户。</p>
+  <details><summary>查阅律师与律所资料</summary>
+    <p id="reception-knowledge-state" class="muted" role="status">正在读取资料目录…</p>
+    <div id="reception-sources" class="reception-source-list"></div>
+    <form id="reception-search"><label for="reception-query">查找资料中的原话</label><div class="reception-search-row"><input id="reception-query" maxlength="200" required placeholder="例如：服务、沟通、材料"><button type="submit" class="secondary">检索资料</button></div></form>
+    <div id="reception-passages" class="reception-passages"></div>
+    <button id="reception-more" class="secondary" type="button" hidden>继续读取这份资料</button>
+  </details>
+  <p id="reception-selection" class="muted" aria-live="polite">本次未选参考片段；最多选择4条。</p>
+  <div id="reception-selected"></div>
+  <label for="reception-mode">本次要整理什么？<select id="reception-mode"><option value="first_reply">首次回复与追问</option><option value="materials">补充材料沟通</option><option value="follow_up">后续跟进沟通</option></select></label>
+  <p class="muted">先保存接待记录，再整理工作稿。当前提供模板整理；需要 AI 分析时，可将任务放入对话，按对话中的生成条件继续。</p>
+  <button id="reception-preview" type="button" class="secondary" disabled>整理接待工作稿</button>
+  <p id="reception-status" role="status" aria-live="polite"></p>
+  <div id="reception-preview-box" hidden>
+    <p class="notice">模板工作稿 · 未调用模型 · 等待律师核对</p>
+    <h3>客户回复建议</h3><div id="reception-client" class="reading-text"></div>
+    <details><summary>律师内部核对与资料来源</summary><div id="reception-internal" class="reading-text"></div></details>
+    <button id="reception-apply" type="button">追加到接待表单</button>
+    <p class="muted">保留原有回复和内部意见，追加后仍需点击“保存这一版”。</p>
+  </div>
+  <button id="reception-conversation" type="button" class="secondary" disabled>将任务保存为对话草稿</button>
+  <a id="reception-open-chat" hidden>打开已保存的对话草稿</a>
+</section>

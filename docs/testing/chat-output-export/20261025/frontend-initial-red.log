@@ -1,0 +1,200 @@
+✖ explicit source and audience preview, copy and Word use only the server projection (0.818584ms)
+✖ audience/source changes invalidate preview and copy cannot use stale text (0.137333ms)
+✖ switching conversations drops a late preview and clears saved content (0.371125ms)
+✖ closing before copy validation returns prevents clipboard and notices (0.072709ms)
+✖ copy rechecks permissions and revocation clears the panel (0.110125ms)
+✖ a different returned audience or digest is not copied (0.101708ms)
+✖ clipboard refusal leaves the exact visible preview for manual copying (0.091916ms)
+✖ readonly never lists or exports and a late download cannot save a file (0.070084ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 0
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42.522417
+
+✖ failing tests:
+
+test at scripts/test_assistant_outputs.mjs:46:1
+✖ explicit source and audience preview, copy and Word use only the server projection (0.818584ms)
+  AssertionError [ERR_ASSERTION]: saved output panel binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:20:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:47:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:297:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_outputs.mjs:56:1
+✖ audience/source changes invalidate preview and copy cannot use stale text (0.137333ms)
+  AssertionError [ERR_ASSERTION]: saved output panel binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:20:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:57:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_outputs.mjs:64:1
+✖ switching conversations drops a late preview and clears saved content (0.371125ms)
+  AssertionError [ERR_ASSERTION]: saved output panel binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:20:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:65:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_outputs.mjs:75:1
+✖ closing before copy validation returns prevents clipboard and notices (0.072709ms)
+  AssertionError [ERR_ASSERTION]: saved output panel binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:20:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:76:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_outputs.mjs:81:1
+✖ copy rechecks permissions and revocation clears the panel (0.110125ms)
+  AssertionError [ERR_ASSERTION]: saved output panel binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:20:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:82:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_outputs.mjs:86:1
+✖ a different returned audience or digest is not copied (0.101708ms)
+  AssertionError [ERR_ASSERTION]: saved output panel binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:20:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:87:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_outputs.mjs:92:1
+✖ clipboard refusal leaves the exact visible preview for manual copying (0.091916ms)
+  AssertionError [ERR_ASSERTION]: saved output panel binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:20:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:93:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_outputs.mjs:105:1
+✖ readonly never lists or exports and a late download cannot save a file (0.070084ms)
+  AssertionError [ERR_ASSERTION]: saved output panel binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:20:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_outputs.mjs:106:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }

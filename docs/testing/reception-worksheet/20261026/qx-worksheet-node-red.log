@@ -1,0 +1,224 @@
+✖ manual notes retain old text, are protected in one save and reopen without sending (0.896541ms)
+✖ template suggestions are explicitly adopted into editable fields, never auto saved (0.095542ms)
+✖ unknown save queries its original receipt without repeating the POST (0.088584ms)
+✖ a version conflict retains local edits until explicit resolution (0.066417ms)
+✖ preparation keeps additional input visible and never invokes a send (0.063833ms)
+✖ new typing while preparation waits is never overwritten (0.0675ms)
+✖ late read and suggestions cannot populate another conversation (0.100625ms)
+✖ conflicting candidates are shown, not silently selected or cleared on unrelated saves (0.120291ms)
+✖ readonly, archived and revoked contexts disable saves and preparation (0.336958ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 0
+ℹ fail 9
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44.194625
+
+✖ failing tests:
+
+test at scripts/test_reception_worksheet.mjs:46:1
+✖ manual notes retain old text, are protected in one save and reopen without sending (0.896541ms)
+  AssertionError [ERR_ASSERTION]: worksheet binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:18:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:47:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:297:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:55:1
+✖ template suggestions are explicitly adopted into editable fields, never auto saved (0.095542ms)
+  AssertionError [ERR_ASSERTION]: worksheet binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:18:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:56:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:65:1
+✖ unknown save queries its original receipt without repeating the POST (0.088584ms)
+  AssertionError [ERR_ASSERTION]: worksheet binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:18:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:66:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:74:1
+✖ a version conflict retains local edits until explicit resolution (0.066417ms)
+  AssertionError [ERR_ASSERTION]: worksheet binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:18:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:75:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:82:1
+✖ preparation keeps additional input visible and never invokes a send (0.063833ms)
+  AssertionError [ERR_ASSERTION]: worksheet binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:18:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:83:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:89:1
+✖ new typing while preparation waits is never overwritten (0.0675ms)
+  AssertionError [ERR_ASSERTION]: worksheet binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:18:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:90:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:98:1
+✖ late read and suggestions cannot populate another conversation (0.100625ms)
+  AssertionError [ERR_ASSERTION]: worksheet binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:18:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:99:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:105:1
+✖ conflicting candidates are shown, not silently selected or cleared on unrelated saves (0.120291ms)
+  AssertionError [ERR_ASSERTION]: worksheet binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:18:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:106:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_reception_worksheet.mjs:114:1
+✖ readonly, archived and revoked contexts disable saves and preparation (0.336958ms)
+  AssertionError [ERR_ASSERTION]: worksheet binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:18:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_reception_worksheet.mjs:115:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }

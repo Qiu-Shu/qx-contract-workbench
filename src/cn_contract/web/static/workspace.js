@@ -37,6 +37,7 @@
     byId('convert-fields').disabled=!editable||dirty;
     for(const id of ['copy-client','copy-internal','export-client','export-internal'])byId(id).disabled=!saved||dirty||busy;
     byId('export-client').disabled ||= !byId('client-checked').checked;
+    document.dispatchEvent(new CustomEvent('qx:intake-state',{detail:{record:saved,dirty,busy}}));
     byId('save-state').textContent=busy?'正在保存或处理，请稍候…':!saved?'尚未载入':dirty?'有未保存修改，导出和转案暂不可用':'第 '+saved.revision+' 版已保存';
   }
   function markDirty() {dirty=true;byId('client-checked').checked=false;controls();}
@@ -124,6 +125,18 @@
     value.follow_up_at=f.get('follow_up_at')?new Date(f.get('follow_up_at')).toISOString():null;
     return value;
   }
+  document.addEventListener('qx:reception-apply',event=>{
+    const packet=event.detail;
+    if(!saved||dirty||busy||saved.matter_id||packet.revision!==saved.revision){tell('请先保存并核对当前接待版本，再追加助手工作稿。',true);return;}
+    const values={};
+    for(const field of ['client_reply','internal_notes']) {
+      const current=form.elements[field].value;
+      values[field]=current?current+'\n\n'+packet[field]:packet[field];
+      if(values[field].length>12000){tell('追加后超过此栏12000字上限，请先整理现有文字。',true);return;}
+    }
+    for(const field of Object.keys(values))form.elements[field].value=values[field];
+    markDirty();tell('助手工作稿已追加到客户回复和内部意见；请核对后保存这一版。');
+  });
   form.addEventListener('input',markDirty);form.addEventListener('change',markDirty);
   on('add-material','click',()=>{materialRow();markDirty();});
   on('intake-form','submit',async()=>{const value=draft();await transaction(async()=>{const record=await request(base,'PUT',{expected_revision:saved.revision,draft:value});populate(record);tell('这一版已保存，历史来源和旧版记录保留。');});});

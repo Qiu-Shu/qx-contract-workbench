@@ -1,0 +1,66 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_two_turn_wire_contains_only_own_completed_context_and_archive_rebuilds __
+
+profile_world = (<cn_contract.persistence.Database object at 0x10e7c8c80>, Actor(user_id=UUID('8a4ec0b9-6cb6-4d4d-a832-c706129355f3'),...ntent='甲称借款35000元。', request_id=UUID('b9ddb96a-0fb5-4ef4-a1ed-cba568a58bdd'), requested_skill=None, attachment_ids=()))
+
+    def test_two_turn_wire_contains_only_own_completed_context_and_archive_rebuilds(profile_world):
+        raw=response(fixture()[1],{'text':'请补充还款日期。','citations':[],'profile_changes':[]})
+        database,actor,_,_=profile_world
+        with server(raw) as (url,received,_):
+            async def scenario():
+                provider=DeepSeekProvider.for_synthetic_loopback(config(),lambda:KEY,url)
+                _,runtime,_,_=authorize(profile_world,provider)
+                first=enqueue(profile_world,runtime)
+                await execute_attempt(actor,first.id,database,runtime)
+                state=next_turn(profile_world,'约定月底，继续刚才的问题。')
+                _,runtime,basis,_=authorize(state,provider)
+                assert basis.template_version=='profile-text-system-v2'
+                assert [m.role for m in basis.conversation_history]==['user','assistant']
+                second=enqueue(state,runtime)
+                result=await execute_attempt(actor,second.id,database,runtime)
+                assert result.output is not None
+                assert await execute_attempt(actor,second.id,database,runtime)==result
+                from cn_contract.assistant.model_integrity import validate_model_storage
+                with database.session() as db:
+                    validate_model_storage(db)
+                wire=json.loads(received[-1]['body'])
+                assert len(received)==2
+                assert [m['role'] for m in wire['messages']]==['system','user','assistant','user']
+                assert '35000' in wire['messages'][1]['content']
+                assert '还款日期' in wire['messages'][2]['content']
+                assert '月底' in wire['messages'][-1]['content']
+>           asyncio.run(scenario())
+
+tests/integration/test_assistant_conversation_history.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def scenario():
+        provider=DeepSeekProvider.for_synthetic_loopback(config(),lambda:KEY,url)
+        _,runtime,_,_=authorize(profile_world,provider)
+        first=enqueue(profile_world,runtime)
+        await execute_attempt(actor,first.id,database,runtime)
+        state=next_turn(profile_world,'约定月底，继续刚才的问题。')
+        _,runtime,basis,_=authorize(state,provider)
+>       assert basis.template_version=='profile-text-system-v2'
+E       AssertionError: assert 'profile-text-system-v1' == 'profile-text-system-v2'
+E         
+E         - profile-text-system-v2
+E         ?                      ^
+E         + profile-text-system-v1
+E         ?                      ^
+
+tests/integration/test_assistant_conversation_history.py:40: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_assistant_conversation_history.py::test_two_turn_wire_contains_only_own_completed_context_and_archive_rebuilds
+1 failed in 0.89s

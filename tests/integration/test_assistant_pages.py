@@ -1,5 +1,6 @@
 """Synthetic native chat shell, current authorization and recovery entry tests."""
 from uuid import uuid4
+import re
 
 from fastapi.testclient import TestClient
 import pytest
@@ -162,6 +163,21 @@ def test_assistant_static_allowlist_is_exact(chat):
         assert response.headers['content-type'].startswith('text/css' if name.endswith('.css') else 'text/javascript')
     for name in ('assistant.html', 'assistant.py', 'assistant-extra.mjs', 'assistant.mjs/extra'):
         assert client.get('/static/'+name).status_code == 404
+
+
+def test_assistant_entry_serves_every_imported_module(chat):
+    client, _, _ = chat
+    pending = ['assistant.mjs']
+    visited = set()
+    while pending:
+        name = pending.pop()
+        if name in visited:
+            continue
+        visited.add(name)
+        response = client.get('/static/'+name)
+        assert response.status_code == 200, name
+        assert response.headers['content-type'].startswith('text/javascript'), name
+        pending.extend(re.findall(r"from\s+['\"]\./([^'\"]+\.mjs)['\"]", response.text))
 
 
 def test_recovery_default_entry_and_exact_readonly_pages(native):

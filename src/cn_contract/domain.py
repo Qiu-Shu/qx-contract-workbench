@@ -1583,6 +1583,74 @@ class IntakeRecord(IntakeDraft):
     source_profile_revision: NonNegativeInt | None = None
 
 
+class ReceptionSource(DomainModel):
+    id: SHA256
+    title: IntakeLabel
+    aliases: tuple[IntakeLabel, ...]
+    text_sha256: SHA256
+    paragraph_count: NonNegativeInt
+    limitations: tuple[IntakeLabel, ...]
+    verification_status: Literal['user_supplied_unverified'] = 'user_supplied_unverified'
+
+
+class ReceptionReference(DomainModel):
+    source_id: SHA256
+    paragraph: PositiveInt
+    quote_sha256: SHA256
+
+
+class ReceptionPassage(ReceptionReference):
+    title: IntakeLabel
+    text: Annotated[IntakeText, Field(max_length=1200)]
+    source_sha256: SHA256
+
+
+class ReceptionKnowledgeCatalog(DomainModel):
+    state: Literal['ready', 'not_configured']
+    archive_sha256: SHA256 | None = None
+    original_documents: NonNegativeInt = 0
+    sources: tuple[ReceptionSource, ...] = ()
+
+
+class ReceptionSearchResult(DomainModel):
+    items: tuple[ReceptionPassage, ...] = ()
+
+
+class ReceptionSourcePage(DomainModel):
+    source: ReceptionSource
+    items: tuple[ReceptionPassage, ...]
+    next_start: NonNegativeInt | None = None
+
+
+class ReceptionAssistantInput(DomainModel):
+    expected_revision: PositiveInt
+    mode: Literal['first_reply', 'materials', 'follow_up'] = 'first_reply'
+    references: Annotated[tuple[ReceptionReference, ...], Field(max_length=4)] = ()
+
+    @model_validator(mode='after')
+    def distinct_references(self):
+        keys = [(r.source_id, r.paragraph) for r in self.references]
+        if len(keys) != len(set(keys)):
+            raise ValueError('references cannot repeat')
+        return self
+
+
+class ReceptionConversationInput(ReceptionAssistantInput):
+    request_id: UUID
+
+
+class ReceptionAssistantPreview(DomainModel):
+    intake_id: UUID
+    revision: PositiveInt
+    mode: Literal['first_reply', 'materials', 'follow_up']
+    client_reply: IntakeText
+    internal_notes: IntakeText
+    prompt: Annotated[str, StringConstraints(max_length=20000)]
+    references: tuple[ReceptionPassage, ...] = ()
+    kind: Literal['template_draft'] = 'template_draft'
+    model_calls: Literal[0] = 0
+
+
 class PositionInput(DomainModel):
     position: Position
     objectives: Annotated[tuple[NonEmpty, ...], Field(min_length=1, max_length=10)]
@@ -4034,10 +4102,37 @@ class ProfileCommitReceipt(DomainModel):
         return self
 
 
+class ConversationHistoryMessage(DomainModel):
+    message_id: UUID
+    role: Literal['user', 'assistant']
+    source_revision: PositiveInt
+    content: AssistantText
+
+
+ConversationHistory = Annotated[tuple[ConversationHistoryMessage, ...], Field(max_length=16)]
+
+
+def _conversation_history(history, revision):
+    if len(history) % 2 or len({item.message_id for item in history}) != len(history):
+        raise ValueError('history requires unique completed question/answer pairs')
+    previous = 0
+    for question, answer in zip(history[::2], history[1::2]):
+        if (question.role != 'user' or answer.role != 'assistant'
+                or question.source_revision != answer.source_revision
+                or not previous < question.source_revision <= revision
+                or not question.content.strip() or not answer.content.strip()):
+            raise ValueError('history order or revision invalid')
+        previous = question.source_revision
+    if len(json.dumps([item.model_dump(mode='json') for item in history],
+                      ensure_ascii=False, separators=(',', ':')).encode('utf-8')) > 32768:
+        raise ValueError('history exceeds its local byte budget')
+
+
 class MainProfileRequest(MainRequest):
-    """Trusted current saved text only; never grants authority to archive it."""
+    """Saved current text, with explicitly bound prior context for template v2."""
     input_format: Literal['profile-text-v1'] = 'profile-text-v1'
-    template_version: Literal['profile-text-system-v1'] = 'profile-text-system-v1'
+    template_version: Literal['profile-text-system-v1', 'profile-text-system-v2'] = 'profile-text-system-v1'
+    conversation_history: ConversationHistory = Field(default=(), exclude_if=lambda value: not value)
     source_revision: PositiveInt
     base_profile_revision: NonNegativeInt
 
@@ -4045,6 +4140,9 @@ class MainProfileRequest(MainRequest):
     def current_message_revision(self):
         if self.source_revision != self.scope.input_revision:
             raise ValueError('profile text must be the current saved user message')
+        _conversation_history(self.conversation_history, self.source_revision - 1)
+        if bool(self.conversation_history) != (self.template_version == 'profile-text-system-v2'):
+            raise ValueError('history requires the v2 template')
         return self
 
 
@@ -4121,10 +4219,103 @@ MainGenerationHistoryItem.model_rebuild()
 MainGenerationHistoryView.model_rebuild()
 
 
+class AssistantOutputSource(DomainModel):
+    kind: Literal['model', 'profile']
+    output_id: UUID | None = None
+    profile_revision: Annotated[int, Field(strict=True,ge=1,le=2**63-1)] | None = None
+
+    @model_validator(mode='after')
+    def exact_saved_source(self):
+        if self.kind == 'model':
+            if self.output_id is None or self.profile_revision is not None:
+                raise ValueError('model source requires only output_id')
+        elif self.profile_revision is None or self.output_id is not None:
+            raise ValueError('profile source requires only profile_revision')
+        return self
+
+
+class AssistantOutputSelection(DomainModel):
+    source: AssistantOutputSource
+    audience: Literal['client', 'internal']
+
+
+class AssistantOutputExportInput(AssistantOutputSelection):
+    expected_content_sha256: SHA256
+
+
+class AssistantOutputOption(DomainModel):
+    source: AssistantOutputSource
+    label: NonEmpty
+    audiences: tuple[Literal['client', 'internal'], ...]
+
+
+class AssistantOutputList(DomainModel):
+    conversation_id: UUID
+    items: Annotated[tuple[AssistantOutputOption, ...], Field(max_length=20)]
+    next_before: AssistantOutputSource | None = None
+
+
+class AssistantOutputPreview(DomainModel):
+    id: UUID
+    conversation_id: UUID
+    selection: AssistantOutputSelection
+    title: NonEmpty
+    source_label: NonEmpty
+    text: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=262144)]
+    notes: tuple[str, ...]
+    citations: tuple[str, ...]
+    review_status: Literal['unverified'] = 'unverified'
+    content_sha256: SHA256
+
+
+class ReceptionWorksheetBasis(DomainModel):
+    expected_scope: ScopeSnapshot
+    base_profile_revision: Annotated[int, Field(strict=True,ge=0,le=2**63-1)]
+
+
+class ReceptionWorksheetPrepareInput(ReceptionWorksheetBasis):
+    expected_composer_revision: Annotated[int, Field(strict=True,ge=0,le=2**63-1)]
+
+
+class ReceptionWorksheetView(DomainModel):
+    scope: ScopeSnapshot
+    composer_revision: NonNegativeInt
+    profile_revision: NonNegativeInt
+    expected_intake_id: UUID | None
+    expected_intake_revision: PositiveInt | None
+    writable: StrictBool
+    fields: Annotated[tuple[ProfileFieldState, ...], Field(max_length=5)]
+
+
+class ReceptionQuestionSuggestion(DomainModel):
+    question: Annotated[str, StringConstraints(strict=True,min_length=1,max_length=300)]
+    reason: Annotated[str, StringConstraints(strict=True,min_length=1,max_length=300)]
+    source_field: Literal['consultation'] = 'consultation'
+    quote: Annotated[str, StringConstraints(strict=True,min_length=1,max_length=300)]
+    materials: Annotated[tuple[IntakeLabel, ...], Field(max_length=5)] = ()
+
+
+class ReceptionQuestionSuggestions(DomainModel):
+    scope: ScopeSnapshot
+    profile_revision: NonNegativeInt
+    origin: Literal['template'] = 'template'
+    model_called: Literal[False] = False
+    items: Annotated[tuple[ReceptionQuestionSuggestion, ...], Field(max_length=10)]
+
+
+class ReceptionPreparedTask(DomainModel):
+    scope: ScopeSnapshot
+    composer_revision: NonNegativeInt
+    profile_revision: NonNegativeInt
+    content: AssistantText
+    model_called: Literal[False] = False
+
+
 class MainProfileSendBasis(DomainModel):
     """Description of outbound bytes and local save intent, never permission."""
     input_format: Literal['profile-text-v1'] = 'profile-text-v1'
-    template_version: Literal['profile-text-system-v1'] = 'profile-text-system-v1'
+    template_version: Literal['profile-text-system-v1', 'profile-text-system-v2'] = 'profile-text-system-v1'
+    conversation_history: ConversationHistory = Field(default=(), exclude_if=lambda value: not value)
     purpose: Literal['reply_and_profile_draft'] = 'reply_and_profile_draft'
     handler_id: Literal['profile.save'] = 'profile.save'
     handler_version: Literal['1'] = '1'
@@ -4143,6 +4334,9 @@ class MainProfileSendBasis(DomainModel):
 
     @model_validator(mode='after')
     def paired_intake_baseline(self):
+        _conversation_history(self.conversation_history, self.expected_scope.input_revision)
+        if bool(self.conversation_history) != (self.template_version == 'profile-text-system-v2'):
+            raise ValueError('history requires the v2 template')
         if (self.expected_intake_id is None) != (self.expected_intake_revision is None):
             raise ValueError('profile save target requires identity and revision')
         if (self.expected_scope.scope_kind == 'intake'
@@ -4185,7 +4379,8 @@ class MainProfilePreparedInput(DomainModel):
                 or request.source_revision != expected.input_revision
                 or request.source_sha256 != basis.content_sha256
                 or request.base_profile_revision != basis.base_profile_revision
-                or request.input_format != basis.input_format or request.template_version != basis.template_version):
+                or request.input_format != basis.input_format or request.template_version != basis.template_version
+                or request.conversation_history != basis.conversation_history):
             raise ValueError('profile input differs from its submission basis')
         wire = self.wire_payload_json.encode('utf-8')
         if len(wire) != basis.wire_bytes or hashlib.sha256(wire).hexdigest() != basis.wire_sha256:

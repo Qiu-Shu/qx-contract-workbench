@@ -453,3 +453,20 @@ test('profile page refuses invalid target display and leaves ordinary chat uncha
   const f=page();await tick();assert.equal(f.at('approval-profile').hidden,true);
   assert.equal(f.at('approval-confirm').disabled,false);
 });
+
+test('profile history approval shows the exact prior pair and current text as plain text',async()=>{
+  const basis=profileBasis();basis.template_version='profile-text-system-v2';basis.expected_scope.input_revision=1;
+  basis.conversation_history=[{message_id:'11111111-2222-4333-8444-555555555555',role:'user',source_revision:1,content:'虚构借款100元。<img src=x>'},
+    {message_id:'11111111-2222-4333-8444-666666666666',role:'assistant',source_revision:1,content:'请核对期限。'}];
+  const details={kind:'profile_draft',content:'继续刚才的问题。',basis,model:'deepseek-flash',max_total_usd:'0.01',recipient:'DeepSeek（api.deepseek.com）'};
+  const f=page(async()=>details);await tick();
+  assert.equal(f.at('approval-confirm').disabled,false);
+  assert.match(f.at('approval-content').textContent,/历史提问.*输入版本 1\n虚构借款100元。<img src=x>/);
+  assert.match(f.at('approval-content').textContent,/历史回答（待核）.*\n请核对期限。/);
+  assert.match(f.at('approval-content').textContent,/本次文字\n继续刚才的问题。/);
+  assert.match(f.at('approval-intro').textContent,/最多最近8轮/);
+  const native=fixture(),pending=native.api.confirm({parent:native.parent,details,guard:()=>true});await tick();
+  const win=native.windows[0];assert(win);
+  assert.deepEqual(plain(await native.handlers.get('desktop:approval-state')(native.event(win))),details);
+  native.handlers.get('desktop:approval-decision')(native.event(win),false);assert.equal(await pending,false);
+});

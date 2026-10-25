@@ -97,3 +97,17 @@ test('Enter, Shift+Enter, held keys and composition boundaries keep native input
     bound.dispose();key();input.dispatchEvent(new Event('input'));assert.equal(sends,2);assert.equal(edits.length,1);
   } finally {globalThis.performance=original;bound.dispose();}
 });
+
+test('manual profile transport uses existing local commit receipt and intake read endpoints',async()=>{
+  const oldFetch=globalThis.fetch,oldDocument=globalThis.document,seen=[];
+  globalThis.document={cookie:'qx_csrf=synthetic'};
+  globalThis.fetch=async(path,options)=>{seen.push({path,options});return {ok:true,json:async()=>({})};};
+  const body={request_id:'fixed',patch:{scope:{},base_profile_revision:3,changes:[]},
+    manual_edits:[{field:'contact',value:{kind:'null',value:null}}],project_intake:false};
+  try{
+    await api.submitProfileCommit('conversation',body);await api.findProfileReceipt('conversation','fixed');await api.getIntake('intake');
+    assert.deepEqual(seen.map(item=>item.path),['/api/assistant/conversations/conversation/profile/commits',
+      '/api/assistant/conversations/conversation/profile/receipts/fixed','/api/intakes/intake']);
+    assert.deepEqual(seen.map(item=>item.options.method),['POST','GET','GET']);assert.deepEqual(JSON.parse(seen[0].options.body),body);
+  }finally{globalThis.fetch=oldFetch;globalThis.document=oldDocument;}
+});

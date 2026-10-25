@@ -315,3 +315,21 @@ body.has-history.source-open .compose-section { position: static; }
 .weixin-generation-panel label { display: block; margin: .75rem 0 .375rem; }
 .weixin-generation-panel select, .weixin-generation-panel textarea { width: 100%; max-width: 100%; }
 .weixin-generation-preview { white-space: pre-wrap; font-variant-numeric: tabular-nums; }
+
+.profile-editor { display: grid; gap: .9rem; margin: 1rem 0; }
+.profile-editor label { display: grid; gap: .35rem; }
+.profile-editor input, .profile-editor select, .profile-editor textarea { box-sizing: border-box; max-width: 100%; width: 100%; padding: .6rem; border: 1px solid var(--line); border-radius: .4rem; font: inherit; }
+.profile-editor input[type=checkbox] { width: auto; justify-self: start; }
+.profile-editor textarea { min-height: 6rem; resize: vertical; }
+.profile-material-row { display: grid; gap: .5rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+
+.output-panel label { display: block; margin: 1rem 0 .4rem; }
+.output-panel select { box-sizing: border-box; width: 100%; max-width: 100%; padding: .6rem; font: inherit; }
+.output-panel #output-preview { margin-top: 1rem; }
+.output-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+#output-text, #output-notes, #output-citations { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.reception-worksheet #worksheet-suggestions section { border-top: 1px solid var(--line); padding: .8rem 0; }
+.reception-worksheet #worksheet-candidates details { border-top: 1px solid var(--line); padding: .8rem 0; }
+.reception-worksheet #worksheet-candidates p { white-space: pre-wrap; }
+.reception-worksheet #worksheet-conflict { padding: .8rem; border: 1px solid var(--line); border-radius: .4rem; }

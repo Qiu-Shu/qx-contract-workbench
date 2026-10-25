@@ -50,18 +50,21 @@ const field=(name,candidates=[],protected_value=null,verification='unverified')=
 const saved=()=>({scope:{...scope,input_revision:5,materials_revision:2},revision:3,fields:[
   field('consultation',[proposal('consultation',{kind:'text',value:'<img src=x onerror=alert(1)> 合成陈述'},[messageRef(),documentRef()])]),
   field('principal_amount',[proposal('principal_amount',{kind:'money',value:'9999999999999999.12345678',unit:'CNY'})]),
-  field('title',[proposal('title',{kind:'text',value:'候选甲'}),proposal('title',{kind:'text',value:'候选乙'})],{kind:'null'},'conflicted'),
+  field('title',[proposal('title',{kind:'text',value:'候选甲'}),proposal('title',{kind:'text',value:'候选乙'})],{kind:'null',value:null},'conflicted'),
   field('contact',[],{kind:'text',value:'合成本机联系人'}),
   field('questions',[],null,'unknown'),
 ]});
-function fixture() {
-  assert.equal(typeof module.bindProfile,'function','profile panel must export its read-only binder');
-  const document=dom(); let panel,read=async()=>saved(),opens=0;const calls=[];
-  const controller={state:{id:scope.conversation_id,view:{scope:{...scope}},status:'saved',loading:false},revoke(error){
+function fixture({writable=false,readonly=false}={}) {
+  assert.equal(typeof module.bindProfile,'function','profile panel must export its binder');
+  const document=dom(); let panel,read=async()=>saved(),opens=0;const calls=[],writes=[],lookups=[];let submit=async(_id,body)=>({...receipt(),profile_revision:body.patch.base_profile_revision+1,intake_id:body.expected_intake_id,intake_revision:body.expected_intake_revision,intake_sha256:body.expected_intake_id?'a'.repeat(64):null}),lookup=async()=>null;
+  const controller={state:{id:scope.conversation_id,view:{scope:{...scope},projection_intake_id:null,archived_at:null},status:'saved',loading:false},revoke(error){
     if(error.status===401||error.status===403){this.state.status='revoked';panel.state(this.state);return true;}return false;
   }};
-  panel=module.bindProfile({controller,document,onOpen:()=>opens++,api:{getProfile:async(...args)=>{calls.push(args);return read(...args);}}});
-  return {document,controller,panel,calls,at:key=>document.getElementById(key),set read(fn){read=fn;},get opens(){return opens;}};
+  const api={getProfile:async(...args)=>{calls.push(args);return read(...args);}};
+  if(writable)Object.assign(api,{getConversation:async()=>structuredClone(controller.state.view),getIntake:async id=>({id,revision:4,matter_id:null}),
+    submitProfileCommit:async(id,body)=>{writes.push([id,body]);return submit(id,body);},findProfileReceipt:async(id,key)=>{lookups.push([id,key]);return lookup(id,key);}});
+  panel=module.bindProfile({controller,readonly,uuid:()=> '66666666-6666-4666-8666-666666666666',document,onOpen:()=>opens++,api});
+  return {document,controller,panel,api,calls,writes,lookups,set submit(fn){submit=fn;},set lookup(fn){lookup=fn;},at:key=>document.getElementById(key),set read(fn){read=fn;},get opens(){return opens;}};
 }
 test('starts hidden, reads only on open, and closes with keyboard focus restored',async()=>{
   const f=fixture(),trigger=f.document.createElement('button');assert.equal(f.at('profile-preview').hidden,true);assert.equal(f.calls.length,0);
@@ -191,4 +194,154 @@ test('list material and date values preserve original text and honest material s
   ]});await f.panel.open();const text=f.at('profile-content').textContent;
   for(const expected of ['合成追问甲','合成追问乙','合成流水','合成凭证','2026-10-24T08:00:00Z'])assert.ok(text.includes(expected));
   assert.match(text,/已收|已收到/);assert.match(text,/待补|需要/);assert.doesNotMatch(text,/已核验/);
+});
+
+const receipt=()=>({conversation_id:scope.conversation_id,request_id:'66666666-6666-4666-8666-666666666666',
+  sequence:1,profile_revision:4,profile_changed:true,projection_changed:false,intake_id:null,intake_revision:null,
+  intake_sha256:null,event_type:'profile.saved',audience:'internal',consultation_origin:'user',created_at:'2026-10-24T00:00:00Z'});
+async function edit(f,name,value){await f.at('profile-edit').fire('click');f.at('profile-edit-field').value=name;
+  await f.at('profile-edit-field').fire('change');if(value!==undefined)f.at('profile-edit-value').value=value;}
+const submitEdit=f=>f.at('profile-edit-form').fire('submit');
+test('manual text/contact commit uses current scope, profile and intake baselines without model proposals',async()=>{
+  const f=fixture({writable:true});f.controller.state.view.projection_intake_id='77777777-7777-4777-8777-777777777777';
+  await f.panel.open();await edit(f,'contact','合成联系人');await submitEdit(f);
+  assert.equal(f.writes.length,1);const body=f.writes[0][1];assert.deepEqual(body.patch.scope,scope);
+  assert.equal(body.patch.base_profile_revision,3);assert.deepEqual(body.patch.changes,[]);
+  assert.deepEqual(body.manual_edits,[{field:'contact',value:{kind:'text',value:'合成联系人'}}]);
+  assert.equal(body.expected_intake_id,f.controller.state.view.projection_intake_id);assert.equal(body.expected_intake_revision,4);
+  assert.equal(body.project_intake,false);assert.match(f.at('profile-notice').textContent,/保存|回执/);
+});
+test('manual form supports explicit protected clear, lists, money and timezone-aware dates',async()=>{
+  for(const [name,text,expected] of [['questions','追问甲\n追问乙',{kind:'list',value:['追问甲','追问乙']}],
+    ['principal_amount','9999999999999999.12345678',{kind:'money',value:'9999999999999999.12345678',unit:'CNY'}],
+    ['follow_up_at','2026-10-24T08:30',{kind:'datetime',value:new Date('2026-10-24T08:30').toISOString()}]]){
+    const f=fixture({writable:true});await f.panel.open();await edit(f,name,text);await submitEdit(f);
+    assert.deepEqual(f.writes[0][1].manual_edits[0].value,expected);
+  }
+  const f=fixture({writable:true});await f.panel.open();await edit(f,'title');f.at('profile-edit-clear').checked=true;
+  await f.at('profile-edit-clear').fire('change');await submitEdit(f);assert.deepEqual(f.writes[0][1].manual_edits,[{field:'title',value:{kind:'null',value:null}}]);
+});
+test('materials keep individual states including lawyer checked status',async()=>{
+  const f=fixture({writable:true});await f.panel.open();await edit(f,'materials');await f.at('profile-material-add').fire('click');
+  f.at('profile-material-name-0').value='合成证据';f.at('profile-material-state-0').value='checked';await submitEdit(f);
+  assert.deepEqual(f.writes[0][1].manual_edits[0].value,{kind:'materials',value:[{name:'合成证据',state:'checked'}]});
+});
+test('history readonly and archived views never expose editors',async()=>{
+  const readonly=fixture({writable:true,readonly:true});await readonly.panel.open();assert.equal(readonly.at('profile-edit'),null);
+  const archived=fixture({writable:true});archived.controller.state.view.archived_at='2026-10-24T00:00:00Z';await archived.panel.open();assert.equal(archived.at('profile-edit'),null);
+  const f=fixture({writable:true});await f.panel.open();f.read=async(_id,revision)=>({...saved(),revision:revision??3});
+  const history=walk(f.at('profile-content')).find(n=>n.tagName==='form');walk(history).find(n=>n.tagName==='input').value='1';await history.fire('submit');
+  assert.equal(f.at('profile-edit'),null);
+});
+test('unknown POST performs receipt lookup only and cannot submit a duplicate',async()=>{
+  const f=fixture({writable:true});f.submit=async()=>{throw {code:'NETWORK_UNKNOWN',status:0};};await f.panel.open();await edit(f,'contact','待核');
+  await submitEdit(f);assert.equal(f.writes.length,1);assert.equal(f.lookups.length,1);assert.match(f.at('profile-notice').textContent,/尚未确认|未知/);
+  await f.at('profile-check-receipt').fire('click');assert.equal(f.writes.length,1);assert.equal(f.lookups.length,2);
+  f.lookup=async()=>receipt();await f.at('profile-check-receipt').fire('click');assert.equal(f.writes.length,1);assert.match(f.at('profile-notice').textContent,/保存|回执/);
+});
+test('VERSION_CONFLICT refreshes latest profile and invalidates edits',async()=>{
+  const f=fixture({writable:true});await f.panel.open();await edit(f,'contact','过期内容');f.submit=async()=>{throw {code:'VERSION_CONFLICT',status:409};};
+  f.read=async()=>({...saved(),revision:5});await submitEdit(f);assert.equal(f.writes.length,1);assert.ok(f.calls.length>=2);
+  assert.equal(f.at('profile-edit-form'),null);assert.match(f.at('profile-notice').textContent,/版本.*变化|版本.*更新/);
+});
+test('input change, scope switch and closing during baseline read cannot apply stale edits',async()=>{
+  const f=fixture({writable:true});await f.panel.open();await edit(f,'contact','过期');f.controller.state.view.scope.input_revision++;f.panel.state(f.controller.state);
+  assert.equal(f.at('profile-edit-form'),null);assert.equal(f.writes.length,0);
+  const g=fixture({writable:true});await g.panel.open();await edit(g,'contact','待核');const gate=deferred();g.submit=()=>gate.promise;
+  const saving=submitEdit(g);g.controller.state.id='other';g.panel.state(g.controller.state);gate.resolve(receipt());await saving;
+  assert.equal(g.at('profile-content').textContent,'');assert.equal(g.at('profile-notice').textContent,'');
+});
+test('empty profile can be manually started and blank title is rejected without POST',async()=>{
+  const f=fixture({writable:true});f.read=async()=>null;await f.panel.open();await edit(f,'title','');await submitEdit(f);
+  assert.equal(f.writes.length,0);f.at('profile-edit-value').value='合成事项';await submitEdit(f);assert.equal(f.writes[0][1].patch.base_profile_revision,0);
+});
+
+test('explicit revision routes including latest remain read-only until current is reread',async()=>{
+  const f=fixture({writable:true});await f.panel.open();const history=walk(f.at('profile-content')).find(n=>n.tagName==='form');
+  walk(history).find(n=>n.tagName==='input').value='3';await history.fire('submit');assert.equal(f.at('profile-edit'),null);
+  await f.at('profile-refresh').fire('click');assert.ok(f.at('profile-edit'));
+});
+test('unchanged receipt is accurately reported and malformed receipt stays unknown',async()=>{
+  const f=fixture({writable:true});f.submit=async()=>({...receipt(),profile_revision:3,profile_changed:false,event_type:'profile.unchanged'});
+  await f.panel.open();await edit(f,'contact','合成本机联系人');await submitEdit(f);assert.match(f.at('profile-notice').textContent,/未变化/);
+  const g=fixture({writable:true});g.submit=async()=>({...receipt(),conversation_id:'other'});await g.panel.open();await edit(g,'contact','不确认');await submitEdit(g);
+  assert.equal(g.lookups.length,1);assert.match(g.at('profile-notice').textContent,/尚未确认/);assert.equal(g.at('profile-edit'),null);
+});
+test('reopening an unknown save retains receipt-only recovery',async()=>{
+  const f=fixture({writable:true});f.submit=async()=>{throw {code:'NETWORK_UNKNOWN'};};await f.panel.open();await edit(f,'contact','待核');await submitEdit(f);
+  f.panel.close();await f.panel.open();assert.equal(f.at('profile-edit'),null);assert.ok(f.at('profile-check-receipt'));assert.match(f.at('profile-notice').textContent,/尚未确认/);
+});
+
+test('late intake baseline read after panel close does not restore editor or submit',async()=>{
+  const f=fixture({writable:true}),gate=deferred();f.controller.state.view.projection_intake_id='77777777-7777-4777-8777-777777777777';
+  f.api.getIntake=()=>gate.promise;await f.panel.open();const editing=f.at('profile-edit').fire('click');
+  await Promise.resolve();f.panel.close();gate.resolve({id:'77777777-7777-4777-8777-777777777777',revision:4,matter_id:null});await editing;
+  assert.equal(f.at('profile-content').textContent,'');assert.equal(f.writes.length,0);
+});
+test('duplicate submit during save creates one request and no premature receipt lookup',async()=>{
+  const f=fixture({writable:true}),gate=deferred();await f.panel.open();await edit(f,'contact','合成联系');f.submit=()=>gate.promise;
+  const form=f.at('profile-edit-form'),saving=form.fire('submit');await form.fire('submit');assert.equal(f.writes.length,1);assert.equal(f.lookups.length,0);
+  gate.resolve(receipt());await saving;assert.equal(f.writes.length,1);
+});
+
+test('definite rejected save after close clears pending without reopening the old panel',async()=>{
+  const f=fixture({writable:true}),gate=deferred();
+  await f.panel.open();await edit(f,'contact','合成待拒绝更正');
+  f.submit=async()=>{await gate.promise;throw {code:'VERSION_CONFLICT',status:409};};
+  const saving=submitEdit(f);assert.equal(f.writes.length,1);f.panel.close();
+  gate.resolve();await saving;
+  assert.equal(f.at('profile-preview').hidden,true);assert.equal(f.at('profile-content').textContent,'');
+  await f.panel.open();
+  assert.ok(f.at('profile-edit'),'a confirmed rejection must not leave a receipt-only dead end');
+  assert.equal(f.at('profile-check-receipt'),null);assert.equal(f.writes.length,1);assert.equal(f.lookups.length,0);
+});
+
+test('definite rejected save after same-scope refresh clears pending without stale notices',async()=>{
+  const f=fixture({writable:true}),gate=deferred();
+  await f.panel.open();await edit(f,'contact','合成无效更正');
+  f.submit=async()=>{await gate.promise;throw {code:'VALIDATION_ERROR',status:422};};
+  const saving=submitEdit(f);assert.equal(f.writes.length,1);
+  await f.at('profile-refresh').fire('click');const latestNotice=f.at('profile-notice').textContent;
+  gate.resolve();await saving;
+  assert.equal(f.at('profile-notice').textContent,latestNotice,'an old callback must not replace the refreshed view notice');
+  await f.at('profile-refresh').fire('click');
+  assert.ok(f.at('profile-edit'),'confirmed rejection after epoch change must permit a new explicit edit');
+  assert.equal(f.at('profile-check-receipt'),null);assert.equal(f.writes.length,1);assert.equal(f.lookups.length,0);
+});
+
+test('late profile reread after successful save cannot put its receipt notice on another conversation',async()=>{
+  const f=fixture({writable:true}),gate=deferred();
+  await f.panel.open();await edit(f,'contact','合成原对话更正');
+  f.read=()=>gate.promise;
+  const saving=submitEdit(f);
+  for(let tick=0;tick<10&&f.calls.length<2;tick++)await Promise.resolve();
+  assert.equal(f.calls.length,2,'successful save must have started its follow-up profile read');
+  const next='88888888-8888-4888-8888-888888888888';
+  f.controller.state.id=next;f.controller.state.view.scope={...scope,conversation_id:next};f.panel.state(f.controller.state);
+  f.read=async()=>({scope:{...scope,conversation_id:next},revision:9,fields:[]});
+  await f.panel.open();const latestNotice=f.at('profile-notice').textContent;
+  assert.match(latestNotice,/9/);
+  gate.resolve(saved());await saving;
+  assert.equal(f.at('profile-notice').textContent,latestNotice,'old save confirmation must not label the new conversation');
+  assert.equal(f.writes.length,1);
+});
+
+for(const delayedStage of ['controller','profile'])test(`late conflict refresh at ${delayedStage} cannot read or label another conversation`,async()=>{
+  const f=fixture({writable:true}),gate=deferred();let refreshing=false;
+  await f.panel.open();await edit(f,'contact','合成过期更正');
+  f.submit=async()=>{throw {code:'VERSION_CONFLICT',status:409};};
+  f.controller.refresh=async()=>{refreshing=true;if(delayedStage==='controller')await gate.promise;return true;};
+  if(delayedStage==='profile')f.read=()=>gate.promise;
+  const saving=submitEdit(f);
+  for(let tick=0;tick<10&&(!refreshing||(delayedStage==='profile'&&f.calls.length<2));tick++)await Promise.resolve();
+  assert.equal(refreshing,true);
+  if(delayedStage==='profile')assert.equal(f.calls.length,2);
+  const next='99999999-9999-4999-8999-999999999999';
+  f.controller.state.id=next;f.controller.state.view.scope={...scope,conversation_id:next};f.panel.state(f.controller.state);
+  f.read=async()=>({scope:{...scope,conversation_id:next},revision:10,fields:[]});
+  await f.panel.open();const latestNotice=f.at('profile-notice').textContent,reads=f.calls.length;
+  gate.resolve(delayedStage==='profile'?saved():true);await saving;
+  assert.equal(f.calls.length,reads,'old conflict refresh must not fetch the new conversation');
+  assert.equal(f.at('profile-notice').textContent,latestNotice,'old conflict must not label the new conversation');
+  assert.equal(f.writes.length,1);
 });

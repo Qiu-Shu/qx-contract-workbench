@@ -22,7 +22,8 @@ def register_routes(app,database):
             record=service.read(identifier,actor,db) if identifier else None
         return HTMLResponse(app.state.template_environment.get_template('intake.html' if identifier else 'workspace.html').render(
             record=record,library_enabled=hasattr(app.state,'library_root'),
-            local_materials_enabled=getattr(database,'_local_materials_enabled',False)))
+            local_materials_enabled=getattr(database,'_local_materials_enabled',False),
+            reception_enabled=hasattr(app.state,'reception_knowledge')))
 
     @app.get('/workspace',response_class=HTMLResponse)
     def workspace(request:Request):return page(request)

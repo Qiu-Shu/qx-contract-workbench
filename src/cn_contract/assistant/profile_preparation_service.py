@@ -10,7 +10,7 @@ from sqlalchemy import text
 from .. import domain as d
 from ..intake import service as intake
 from ..security import ServiceError
-from . import attachment_records as records, profile_store, service
+from . import attachment_records as records, profile_store, service, conversation_history
 from .providers import profile_preparation
 
 
@@ -64,6 +64,7 @@ def build_profile_basis(actor, cid, message, db, *, config, project_intake=False
             raise ServiceError('NOT_SUPPORTED', 422)
         _text_only(conversation, db)
         return profile_preparation.build_basis(message, config, project_intake=project_intake,
+                                               conversation_history=conversation_history.for_message(db, message.expected_scope, message.content, config),
                                                **_baseline(actor, conversation, db))
     except (ValueError, TypeError, KeyError):
         raise ServiceError('VERSION_CONFLICT', 409) from None
@@ -103,7 +104,9 @@ def prepare_profile(actor, run_id, basis, db, *, config) -> d.MainProfilePrepare
         if row['request_sha256'] != digest:
             raise ServiceError('VERSION_CONFLICT', 409)
         rebuilt = profile_preparation.build_basis(submission, config, project_intake=basis.project_intake,
-                                                  **_baseline(actor, conversation, db))
+            conversation_history=(conversation_history.for_message(db, basis.expected_scope, message.content,
+                config, before_at=message.created_at) if basis.conversation_history else ()),
+            **_baseline(actor, conversation, db))
         if rebuilt != basis:
             raise ServiceError('VERSION_CONFLICT', 409)
         return profile_preparation.prepare(service.get_run(actor, run_id, db), message, basis, config,

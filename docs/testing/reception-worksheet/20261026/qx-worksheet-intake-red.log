@@ -1,0 +1,28 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___ test_bound_intake_repeated_save_preserves_all_existing_protected_values ____
+
+chat = (<starlette.testclient.TestClient object at 0x10e73f980>, <cn_contract.persistence.Database object at 0x10e8c82f0>, PosixPath('/private/tmp/qx-worksheet-intake-red/test_bound_intake_repeated_sav0/workspaces/main'))
+
+    def test_bound_intake_repeated_save_preserves_all_existing_protected_values(chat):
+        from cn_contract.assistant.profile_integrity import validate_profile_records
+        client,database,_ = chat;headers = sign_in(client)
+        intake = client.post('/api/intakes',headers=headers,json={'request_id':str(uuid4()),
+            'draft':{'title':'合成接待','consultation':'原接待陈述','internal_notes':'原接待备注'}})
+        assert intake.status_code == 201,intake.text
+        first = create(client,headers,scope_kind='intake',scope_ref=intake.json()['id'])
+        url = '/api/assistant/conversations/'+first['scope']['conversation_id']+'/reception-worksheet'
+        save(client,headers,url,consultation='律师人工更正陈述')
+        receipt,body = save(client,headers,url,internal_notes='只改底稿，不修改陈述')
+        assert client.post(url+'/commits',headers=headers,json=body).json() == receipt
+        fields = {f['field']:f for f in client.get(url).json()['fields']}
+>       assert fields['consultation']['protected_value']['value'] == '律师人工更正陈述'
+E       AssertionError: assert '原接待陈述' == '律师人工更正陈述'
+E         
+E         - 律师人工更正陈述
+E         + 原接待陈述
+
+tests/integration/test_reception_worksheet.py:170: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_reception_worksheet.py::test_bound_intake_repeated_save_preserves_all_existing_protected_values
+1 failed in 0.89s

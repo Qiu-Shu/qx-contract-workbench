@@ -1,0 +1,30 @@
+✔ assistant model status is only served to an allowed page and validated (0.771167ms)
+✔ assistant model switch toggles the two known models and persists only on success (0.213583ms)
+✔ assistant model switch refuses strangers, the unconfigured and failed configures (0.208333ms)
+✔ startup auto-configure restores only a persisted known choice and never throws (0.102791ms)
+✔ credential writes revoke current runtime before touching the protected store (0.876333ms)
+✔ trusted model selection configures only the fixed catalog and never grants sending (3.503167ms)
+✔ second model uses bounded trusted configuration and projections omit private metadata (0.273625ms)
+✔ arbitrary configuration is refused without consuming credentials and clears prior configuration (0.125792ms)
+✔ credential read failure cannot preserve a prior configured model (0.150292ms)
+✔ consumer completion does not turn a rejected configuration ACK into success (0.119458ms)
+✔ malformed success ACK closes the captured backend and never exposes its extra fields (0.153583ms)
+✔ health failure arriving with a valid ACK prevents configuration adoption (0.316541ms)
+✔ backend replacement while reading the credential prevents its handoff (3.693125ms)
+✔ late configuration ACK stops only the old backend after process replacement (0.611959ms)
+✔ an obsolete document cannot adopt an ACK or invoke page failure handling (0.250958ms)
+✔ runtime operations refuse overlapping mutations instead of queuing them (0.213375ms)
+✔ failed revocation waits for backend stop and forbids the credential write (0.3565ms)
+✔ a failed backend stop latches unsafe state even after the backend reference is cleared (0.109541ms)
+✔ credential and runtime IPC share a busy lock while the captured document guard remains valid (0.625875ms)
+✔ document epoch is rechecked after revocation before any credential write (0.185667ms)
+✔ navigation before IPC work starts prevents all runtime and credential work (0.057958ms)
+✔ runtime status neither consumes credentials nor preserves metadata across backend replacement (0.062417ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.978375

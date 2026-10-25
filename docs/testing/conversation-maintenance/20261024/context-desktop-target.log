@@ -1,0 +1,40 @@
+✔ approval creates one isolated modal and only its exact main frame can read or explicitly decide (12.880875ms)
+✔ approval cancellation releases lifecycle handlers and a following window cannot borrow the previous decision (1.923417ms)
+✔ approval stale guard, parent close, Escape and bounded timeout cancel without a decision (5.800291ms)
+✔ approval default cancel focus preserves the initial top viewport (2.524792ms)
+✔ approval page renders full untrusted text as text and defaults focus to cancel (1.1365ms)
+✔ approval page never confirms while loading and explicit confirm is sent only once (0.99325ms)
+✔ approval preload exposes only two dedicated calls and refuses truthy decision values (1.012625ms)
+✔ approval still settles cancellation if optional session cleanup fails (1.243333ms)
+✔ approval validates the display boundary and admits the full 65536-byte text without truncation (2.591125ms)
+✔ approval blocks navigation, all external requests and cancels a crashed renderer (1.627958ms)
+✔ approval page loading failure and page departure never enable or dispatch confirmation (2.519042ms)
+✔ approval presents optional Judge separately and accepts only the displayed exact selection (2.259792ms)
+✔ unavailable Judge cannot be forged as selected and cancellation remains independent (2.395875ms)
+✔ Judge display schema rejects missing fields, misleading budgets and surplus configuration (2.234458ms)
+✔ legacy display cannot accept a new Judge selection and successive windows keep independent choices (1.452708ms)
+✔ Judge page starts unselected, discloses the separate recipient and exact budget, and returns explicit choices (2.474292ms)
+✔ unavailable Judge remains unselected and disabled without blocking main confirmation (0.664208ms)
+✔ malformed or late Judge display never enables confirmation or restores a selection (3.427958ms)
+✔ preload forwards only booleans or exact Main and Judge selections (0.501083ms)
+✔ a displayed Judge choice cannot survive a stale guard, Escape or a later window (2.083708ms)
+✔ missing Judge display keeps legacy choice and a rejected approval cannot resend either service (1.064792ms)
+✔ context approval validates the six-key display, sizes the taller window and keeps a boolean decision (1.363291ms)
+✔ context display schema rejects malformed sources and surplus keys before any window opens (0.735833ms)
+✔ context page lists every saved passage as text, rewrites the copy and confirms with a plain boolean (1.103541ms)
+✔ malformed or late context display never enables confirmation (2.868917ms)
+✔ profile modal snapshots the complete save plan and allows only a presented boolean decision (1.474834ms)
+✔ profile modal rejects invalid save plans and extra authorization fields before opening (0.882833ms)
+✔ profile page explains each save target without promising an intake or verifying facts (2.80275ms)
+✔ profile page refuses invalid target display and leaves ordinary chat unchanged (2.248625ms)
+✔ profile history approval shows the exact prior pair and current text as plain text (2.664167ms)
+✔ profile v2 canonicalizes exactly the visible prior conversation (1.660625ms)
+✔ history rejects unknown fields, wrong role, ordering and version mismatch (0.407041ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 124.960292

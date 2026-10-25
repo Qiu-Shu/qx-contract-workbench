@@ -1,0 +1,319 @@
+EEEEEEEEEEEEEEEEEEEEE                                                    [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_full_local_roundtrip_separate_root_and_old_sessions_revoked _
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_restored_workspace_http_is_read_only_and_has_clear_entry _
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_____ ERROR at setup of test_bad_archive_never_publishes_restore[password] _____
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+______ ERROR at setup of test_bad_archive_never_publishes_restore[header] ______
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+____ ERROR at setup of test_bad_archive_never_publishes_restore[ciphertext] ____
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_______ ERROR at setup of test_bad_archive_never_publishes_restore[tag] ________
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+____ ERROR at setup of test_bad_archive_never_publishes_restore[truncated] _____
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_busy_workspace_and_existing_destination_are_preserved _
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_____ ERROR at setup of test_missing_original_and_unknown_schema_rejected ______
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+__ ERROR at setup of test_weak_passphrase_and_archive_inside_source_rejected ___
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_extra_protected_files_preserved_and_hardlinks_rejected _
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_______________ ERROR at setup of test_committed_wal_is_included _______________
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_______ ERROR at setup of test_failed_encryption_cleans_only_own_staging _______
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+________ ERROR at setup of test_count_limit_rejects_without_publishing _________
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_______ ERROR at setup of test_plaintext_staging_stays_inside_workspace ________
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_backup_rejects_destination_alias_inside_source_before_maintenance[False] _
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_backup_rejects_destination_alias_inside_source_before_maintenance[True] _
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+__ ERROR at setup of test_long_parent_paths_create_restore_and_rebackup[long] __
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+__ ERROR at setup of test_contract_long_path_original_roundtrip_and_rebackup ___
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+______ ERROR at setup of test_contract_long_path_hardlink_is_not_archived ______
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_contract_long_path_boundaries_reject_external_source_and_internal_archive _
+
+self = PosixPath('/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/qx-backup-regression-20261024/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/pathlib.py:1311: FileNotFoundError
+=========================== short test summary info ============================
+ERROR tests/integration/test_workspace_backup.py::test_full_local_roundtrip_separate_root_and_old_sessions_revoked
+ERROR tests/integration/test_workspace_backup.py::test_restored_workspace_http_is_read_only_and_has_clear_entry
+ERROR tests/integration/test_workspace_backup.py::test_bad_archive_never_publishes_restore[password]
+ERROR tests/integration/test_workspace_backup.py::test_bad_archive_never_publishes_restore[header]
+ERROR tests/integration/test_workspace_backup.py::test_bad_archive_never_publishes_restore[ciphertext]
+ERROR tests/integration/test_workspace_backup.py::test_bad_archive_never_publishes_restore[tag]
+ERROR tests/integration/test_workspace_backup.py::test_bad_archive_never_publishes_restore[truncated]
+ERROR tests/integration/test_workspace_backup.py::test_busy_workspace_and_existing_destination_are_preserved
+ERROR tests/integration/test_workspace_backup.py::test_missing_original_and_unknown_schema_rejected
+ERROR tests/integration/test_workspace_backup.py::test_weak_passphrase_and_archive_inside_source_rejected
+ERROR tests/integration/test_workspace_backup.py::test_extra_protected_files_preserved_and_hardlinks_rejected
+ERROR tests/integration/test_workspace_backup.py::test_committed_wal_is_included
+ERROR tests/integration/test_workspace_backup.py::test_failed_encryption_cleans_only_own_staging
+ERROR tests/integration/test_workspace_backup.py::test_count_limit_rejects_without_publishing
+ERROR tests/integration/test_workspace_backup.py::test_plaintext_staging_stays_inside_workspace
+ERROR tests/integration/test_workspace_backup.py::test_backup_rejects_destination_alias_inside_source_before_maintenance[False]
+ERROR tests/integration/test_workspace_backup.py::test_backup_rejects_destination_alias_inside_source_before_maintenance[True]
+ERROR tests/integration/test_assistant_attachment_backup.py::test_long_parent_paths_create_restore_and_rebackup[long]
+ERROR tests/integration/test_contract_long_path_backup.py::test_contract_long_path_original_roundtrip_and_rebackup
+ERROR tests/integration/test_contract_long_path_backup.py::test_contract_long_path_hardlink_is_not_archived
+ERROR tests/integration/test_contract_long_path_backup.py::test_contract_long_path_boundaries_reject_external_source_and_internal_archive
+21 errors in 0.67s
