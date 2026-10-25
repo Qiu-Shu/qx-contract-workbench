@@ -1,0 +1,11 @@
+# Native upgrade preflight — final evidence review
+
+**Confirmed findings: 0.** Read-only reconciliation against baseline `3aa504524dd256dc2130605ee06604eb64432204`; no pytest/probe rerun, source/test/status/public-doc edit or Git operation.
+
+- Reparsed all seven final raw and published XML files: **58/173/27/52/96/12/9 = 427 distinct PASS case IDs, 15 modules, 0 failure/error/skip**. Four captured development-gate exits are 0. Group commands, UTC times, source-manifest hashes and published outcome lists agree with local captures.
+- All **272** source/input hashes agree across before/after captures, summary union and current files. Product `workspace_upgrade.py` retains `65b90d4e0e8b0b125f35ceb40c6b5ff7d68d959da710edf17551c014e5c73549`; the nine-case test retains `e64865d68a33c7d9816940d4b5b442de0b3fa62a99b3f9935f60bd46fc98ac6f`. Both match the reviewed frozen manifests.
+- Independent/root final nine-case XMLs contain the same IDs; initial four-case runs are subsets. **Nine is included in 427; the two standalone probes remain separate.** Historical RED is 3FAIL/1PASS/0ERROR, with uncaptured before/after source hashes explicitly disclosed. Expansion is 8PASS/1FAIL/0ERROR, and its preserved log identifies the Windows worker.lock PermissionError fixture failure.
+- All **32 captured/published artifact pairs** match their respective SHA256 values and differ only by declared UTF-8/LF/trailing-whitespace normalization. All **35 public files** were stable during review. Probe raw log/script hashes, two PASS outcomes and frozen inputs reconcile; publication is not represented as a second execution.
+- README, review, summary and current README/TODO/TASK_STATUS statements agree: schema18/legacy guards unchanged; v19 remains future work; Node/full-repository/browser/installed/real-capability checks are NOT_RUN; WIN-PATH-02/native AV remain OPEN. The paths warning, 13 source-approval warnings and `native_build_verified=false` remain disclosed. No production or GitHub synchronization success is inferred from development gates.
+
+Mechanical details: `.local/upgrade-preflight-20261025/independent-final-evidence-review.json`; read-only checker: `independent-final-evidence-check.py`. Later Git-only receipts are outside this review.

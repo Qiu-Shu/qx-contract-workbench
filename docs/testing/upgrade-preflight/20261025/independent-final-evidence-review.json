@@ -1,0 +1,112 @@
+{
+  "findings": [],
+  "baseline": "3aa504524dd256dc2130605ee06604eb64432204",
+  "groups": [
+    {
+      "label": "legacy",
+      "passed": 58,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "label": "schema",
+      "passed": 173,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "label": "backup",
+      "passed": 27,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "label": "ingress",
+      "passed": 52,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "label": "integrity",
+      "passed": 96,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "label": "paths",
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "label": "new",
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "python_distinct": 427,
+  "python_modules": 15,
+  "input_union_count": 272,
+  "current_inputs_match": true,
+  "development_gates": [
+    "schema-gate",
+    "defaults",
+    "sources",
+    "dependencies"
+  ],
+  "new_cases_included": 9,
+  "standalone_probes_separate": 2,
+  "published_files": 35,
+  "captured_published_pairs_checked": 32,
+  "frozen_review_sha256": {
+    "src/cn_contract/web/workspace_upgrade.py": "65b90d4e0e8b0b125f35ceb40c6b5ff7d68d959da710edf17551c014e5c73549",
+    "tests/integration/test_workspace_upgrade_semantic_preflight.py": "e64865d68a33c7d9816940d4b5b442de0b3fa62a99b3f9935f60bd46fc98ac6f"
+  },
+  "public_files_stable": true,
+  "public_sha256": {
+    "agent-final-nine.log": "9ed0e6af84cda7b0fadf3169df2f48b43164f8500e9db6af27a0041ef9e21490",
+    "agent-final-nine.xml": "40911a51380cc4a456e703f4519241cb54c85ed80f10f6892c7345bdb9626fd5",
+    "backup.log": "10199293fcc4dfa7cb5a362685dbc1e1a36a026c3f6f954aebae7da56ad56e7d",
+    "backup.xml": "f99010dfef402d82754705d22c823c0ecc1a6161c5cc1480422fa328f2a4ef30",
+    "defaults.log": "d9eb18fcefa75a1cc61e13f806bcffc5472ebaed389987c6cd0a2daf807f4f25",
+    "dependencies.log": "14d4433e3fca84895513bf496a7273e4c07686da65294c0187cbf69222a02e17",
+    "expansion-fixture-failure.log": "220bf2dc7847ab6e5c162314c54d5e8a9a8038f7d763918c586253520c38f3df",
+    "expansion-fixture-failure.xml": "1f08015cc42914b21028ee09a839a04cf1e8303cfed7761fbb49639031aee32b",
+    "independent-standards-probe.json": "c212ef0e003c8dbdfc21125d9fcfca1cb1af29e3dd314d62d4565b520095626c",
+    "independent-standards-probe.log": "6ab8b654e0e3abd295964e738de00a8cc95f6031237c902b40a5d2aca8091b43",
+    "independent-standards-probe.py": "a9a8870754a6b22fa9a97b856a1127754c366b49ad45fd5dd588cbbbf60f3495",
+    "independent-standards-run.json": "72cd53edae030ba9a69030e0bbc3497dd30b6f46ba7e9713367b5e78bda6ea64",
+    "ingress.log": "3bf4f8a6e837425d9c12de4e93d29751a6c4b3307bd377d78f1df0f1c6dd5658",
+    "ingress.xml": "2722647d25681a3831da022b622af6ec528f834c3c2a5782820ff3413fe066f9",
+    "initial-green-four.log": "4052203a885930775308d4af9315d2aa28ec2c1d697a8512332369c0bbe079f3",
+    "initial-green-four.xml": "5385efb10646ed9a672f500fc0e11d7e72043ce8e446bbd819b5c0cd811bbd24",
+    "initial-red.log": "d0215cd84fe488f1c2bfcc953f3de7f31cd0f6875e8548eb681e71f2917cc5b1",
+    "initial-red.xml": "e15e35f083da13e1a9e04c6df8b1cb44e28399fdbfd915c5e3ff306c08381c31",
+    "integrity.log": "9674b1b9778137d67a5fec3f4f7e537a827be31a75efdec77d09c59b12745c0e",
+    "integrity.xml": "222c88c4be5d3953df8c5d56f7e6537eeeecc6b22073e3f616a034ea5f8a20dc",
+    "legacy.log": "17f70199d412edb7c79a5e399f775fd8c2ad6edc834b09a66bacca2423310caf",
+    "legacy.xml": "2eab8c5ecc105d34f3aebe3b888af5504691cfd5a705cd8ffebcaeb582ab7a54",
+    "new.log": "147a1d4a62e69eacb030441c3417a54c51115d5a1d9de156feff026907f3b43d",
+    "new.xml": "5f6e7aa9a226f04f2464f612458f1cdd84ac3d8b223b2fdaf7ddc2dd068e6c4d",
+    "paths.log": "5914cc457c87ac703295e62c3cd6e37e5d86a7493ecce96e5e42c6fc137731ee",
+    "paths.xml": "edcf64d8cb1498953dc289af1ce6d54ce47c95c501d279d54e950c856edebffa",
+    "README.md": "a999bcb53e67994bebef6f2e0fe22b622f400b1312a8414f51ef24c8bd221ec2",
+    "review.md": "e4bd2a9c3d6ad9bf1bb62beb40693eb3ec8c37fb2efe431d0981d4b42cec1106",
+    "schema-gate.log": "a18b3b9c8ca028ea291784790f88c5133f212fe296939c73c592988ed43efa50",
+    "schema.log": "4f696c3899719214fae9cdf6a4047e0fe4dac08ca722dc41c48da4680009c284",
+    "schema.xml": "639e0462bbba7ab7beedabc5a8f604fe1b8e13dd9c11e1c64c9869fb05334e11",
+    "sources.log": "40ae4d5b45180f7ae597f641118dd73482ae820ec4f9f292e10b848d9376638e",
+    "spec-review.md": "5899724b2fa292563e2a328023920195f9fc45efaf497fe9228a4c3c2d723ce0",
+    "standards-review.md": "836bc6cf6354acf6709976385f96dc1090dbb1256b48cef9495b5e8135f2813d",
+    "verification-summary.json": "e3e307ac36514e9899426436902e672f8cfa2f2f012c842617310746b98d4022"
+  },
+  "scope": "Read-only evidence audit; no tests/probes rerun, no source/test/public-doc/Git edits"
+}

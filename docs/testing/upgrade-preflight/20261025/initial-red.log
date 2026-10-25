@@ -1,0 +1,22 @@
+FFF.                                                                     [100%]
+================================== FAILURES ===================================
+_ test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes[later_poll] _
+tests\integration\test_workspace_upgrade_semantic_preflight.py:93: in test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes
+    assert caught is not None, 'native upgrade published old history which its own schema validator rejects'
+E   AssertionError: native upgrade published old history which its own schema validator rejects
+E   assert None is not None
+_ test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes[later_dispatch] _
+tests\integration\test_workspace_upgrade_semantic_preflight.py:93: in test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes
+    assert caught is not None, 'native upgrade published old history which its own schema validator rejects'
+E   AssertionError: native upgrade published old history which its own schema validator rejects
+E   assert None is not None
+_ test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes[generation_hash] _
+tests\integration\test_workspace_upgrade_semantic_preflight.py:93: in test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes
+    assert caught is not None, 'native upgrade published old history which its own schema validator rejects'
+E   AssertionError: native upgrade published old history which its own schema validator rejects
+E   assert None is not None
+=========================== short test summary info ===========================
+FAILED tests/integration/test_workspace_upgrade_semantic_preflight.py::test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes[later_poll]
+FAILED tests/integration/test_workspace_upgrade_semantic_preflight.py::test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes[later_dispatch]
+FAILED tests/integration/test_workspace_upgrade_semantic_preflight.py::test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes[generation_hash]
+3 failed, 1 passed in 4.37s

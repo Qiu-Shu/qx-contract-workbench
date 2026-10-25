@@ -1,0 +1,20 @@
+......F..                                                                [100%]
+================================== FAILURES ===================================
+_____ test_business_change_after_upgrade_receipt_is_rechecked_before_ddl ______
+tests\integration\test_workspace_upgrade_semantic_preflight.py:201: in test_business_change_after_upgrade_receipt_is_rechecked_before_ddl
+    workspace_upgrade.upgrade(root)
+src\cn_contract\web\workspace_upgrade.py:142: in upgrade
+    _atomic_json(root/('upgrade-'+target+'.json'),{'format':1,'workspace_id':marker['workspace_id'],
+tests\integration\test_workspace_upgrade_semantic_preflight.py:198: in publish_then_corrupt
+    injected.append(disk_state(root))
+                    ^^^^^^^^^^^^^^^^
+tests\integration\test_workspace_upgrade_semantic_preflight.py:46: in disk_state
+    'files': {path.relative_to(root).as_posix(): path.read_bytes()
+                                                 ^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1020: in read_bytes
+    return f.read()
+           ^^^^^^^^
+E   PermissionError: [Errno 13] Permission denied
+=========================== short test summary info ===========================
+FAILED tests/integration/test_workspace_upgrade_semantic_preflight.py::test_business_change_after_upgrade_receipt_is_rechecked_before_ddl
+1 failed, 8 passed in 16.06s

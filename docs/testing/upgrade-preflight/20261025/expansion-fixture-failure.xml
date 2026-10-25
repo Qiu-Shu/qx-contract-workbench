@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="9" time="16.001" timestamp="2026-10-25T19:08:24.254408+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_workspace_upgrade_semantic_preflight" name="test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes[later_poll]" time="1.405" /><testcase classname="tests.integration.test_workspace_upgrade_semantic_preflight" name="test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes[later_dispatch]" time="1.280" /><testcase classname="tests.integration.test_workspace_upgrade_semantic_preflight" name="test_native_upgrade_rejects_old_semantics_before_db_marker_or_backup_changes[generation_hash]" time="1.612" /><testcase classname="tests.integration.test_workspace_upgrade_semantic_preflight" name="test_valid_old_history_upgrades_once_preserving_rows_identity_and_originals" time="1.481" /><testcase classname="tests.integration.test_workspace_upgrade_semantic_preflight" name="test_pending_current_database_corruption_cannot_finalize_old_marker" time="1.402" /><testcase classname="tests.integration.test_workspace_upgrade_semantic_preflight" name="test_pending_backup_semantics_are_checked_even_after_its_outer_hash_is_recomputed" time="1.622" /><testcase classname="tests.integration.test_workspace_upgrade_semantic_preflight" name="test_business_change_after_upgrade_receipt_is_rechecked_before_ddl" time="1.778"><failure message="PermissionError: [Errno 13] Permission denied">tests\integration\test_workspace_upgrade_semantic_preflight.py:201: in test_business_change_after_upgrade_receipt_is_rechecked_before_ddl
+    workspace_upgrade.upgrade(root)
+src\cn_contract\web\workspace_upgrade.py:142: in upgrade
+    _atomic_json(root/('upgrade-'+target+'.json'),{'format':1,'workspace_id':marker['workspace_id'],
+tests\integration\test_workspace_upgrade_semantic_preflight.py:198: in publish_then_corrupt
+    injected.append(disk_state(root))
+                    ^^^^^^^^^^^^^^^^
+tests\integration\test_workspace_upgrade_semantic_preflight.py:46: in disk_state
+    'files': {path.relative_to(root).as_posix(): path.read_bytes()
+                                                 ^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1020: in read_bytes
+    return f.read()
+           ^^^^^^^^
+E   PermissionError: [Errno 13] Permission denied</failure></testcase><testcase classname="tests.integration.test_workspace_upgrade_semantic_preflight" name="test_preflight_file_reference_reader_cannot_write_the_source_database" time="1.767" /><testcase classname="tests.integration.test_workspace_upgrade_semantic_preflight" name="test_locked_preflight_prevents_an_independent_writer_changing_its_snapshot" time="2.018" /></testsuite></testsuites>

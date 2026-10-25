@@ -1,0 +1,8 @@
+............                                                             [100%]
+============================== warnings summary ===============================
+tests/integration/test_contract_long_path_backup.py::test_contract_long_path_original_roundtrip_and_rebackup
+  tests\integration\test_contract_long_path_backup.py:72: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    def test_contract_long_path_original_roundtrip_and_rebackup(tmp_path, record_property):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+12 passed, 1 warning in 57.19s

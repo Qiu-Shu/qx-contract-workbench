@@ -49,6 +49,26 @@ def _write_marker(root,marker):
     _atomic_json(root/'workspace.json',marker)
 
 
+def _validate_history(path):
+    # No Database constructor: old records must be checked before new semantics.
+    from sqlalchemy import create_engine
+    from sqlalchemy.exc import SQLAlchemyError
+    from sqlalchemy.orm import Session
+    from ..ops.backup import _file_references
+    from ..security import ServiceError
+    engine=create_engine('sqlite://',creator=lambda:sqlite3.connect(sqlite_readonly_uri(path),uri=True))
+    try:
+        with engine.connect() as connection:
+            connection.exec_driver_sql('PRAGMA trusted_schema=OFF')
+            connection.exec_driver_sql('BEGIN')
+            with Session(bind=connection) as records:
+                _file_references(records)
+    except (ValueError,TypeError,KeyError,ArithmeticError,RecursionError,ServiceError,SQLAlchemyError):
+        raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+    finally:
+        engine.dispose()
+
+
 def pending_matches(db,root,marker):
     from .local_server import _safe_file
     try:
@@ -74,10 +94,13 @@ def pending_matches(db,root,marker):
         for path in (backup,backup.parent,backup.parent.parent):_safe_file(path)
         if not backup.is_file() or _file_hash(backup)!=receipt['backup_sha256']:return False
         with closing(sqlite3.connect(sqlite_readonly_uri(backup),uri=True)) as saved:
-            return (_rows(saved)==before
-                and saved.execute('PRAGMA quick_check').fetchall()==[('ok',)]
-                and not saved.execute('PRAGMA foreign_key_check').fetchall()
-                and saved.execute('SELECT id FROM local_workspace_identity').fetchall()==[(marker['workspace_id'],)])
+            if (_rows(saved)!=before
+                    or saved.execute('PRAGMA quick_check').fetchall()!=[('ok',)]
+                    or saved.execute('PRAGMA foreign_key_check').fetchall()
+                    or saved.execute('SELECT id FROM local_workspace_identity').fetchall()!=[(marker['workspace_id'],)]):
+                return False
+        _validate_history(backup)
+        return True
     except (ValueError,TypeError,KeyError,sqlite3.Error,OSError):return False
 
 
@@ -97,6 +120,8 @@ def upgrade(root):
                 or db.execute('PRAGMA foreign_key_check').fetchall()
                 or db.execute('SELECT id FROM local_workspace_identity').fetchall()!=[(marker['workspace_id'],)]):
             raise ValueError('WORKSPACE_DATABASE_MISMATCH')
+        if version!=VERSIONS[-1] or current_hash!=marker['schema_sha256']:
+            _validate_history(root/'workbench.db')
         if current_hash!=marker['schema_sha256']:
             if not pending_matches(db,root,marker):raise ValueError('WORKSPACE_DATABASE_MISMATCH')
             marker={**marker,'schema_sha256':current_hash}
@@ -127,6 +152,8 @@ def upgrade(root):
                 db.execute('BEGIN IMMEDIATE')
                 try:
                     if _rows(db)!=before:raise ValueError('WORKSPACE_DATABASE_MISMATCH')
+                    # The reserved write lock keeps this old-version snapshot stable.
+                    _validate_history(root/'workbench.db')
                     for sql in statements:db.execute(sql)
                     if _rows(db)!=after or db.execute('PRAGMA foreign_key_check').fetchall():
                         raise ValueError('WORKSPACE_DATABASE_MISMATCH')

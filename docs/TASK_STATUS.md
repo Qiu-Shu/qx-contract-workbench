@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-25 已补齐原生升级前历史语义校验：只读复用现有完整来源校验，在升级写入前和DDL写锁内按原版本核验，pending恢复同时核旧备份与current；真实v17→v18非法poll洗白反例已RED→GREEN。15模块427不同Python（含9新）/四开发门通过，两名独立审查0遗留及2独立快照/释放探针通过，[实际证据](testing/upgrade-preflight/20261025/README.md)。schema18/旧guard保留，v19代际分发为下一片；真实微信/模型关闭，0.4.1未更新，全仓/Node/浏览器/安装版等NOT_RUN，WIN-PATH-02/原生AV开放。GitHub待实际同步回执。
+
 D2g5c产品`71802a6`已正常同步GitHub，远端SHA/tree及5,496条目一致；[同步回执](testing/weixin-generation-ingress/20261025/github-sync.md)。
 
 2026-10-25 D2g5c专用schema18合成代际收件已实施：原逐条去重/回执/游标CAS与固定目标sidecar原子提交，正反跨代reply整批回滚，丢ACK按固定目标权限只查；恢复继续只读。34模块886不同关联Python全部PASS（含52新增，非历史累计），233Node/四开发门通过，两名独立代理分别Spec/Standards0遗留，[实际证据](testing/weixin-generation-ingress/20261025/README.md)。旧收件/绑定刷新/实际分发guard保持；下一片按代际分发及版本化来源校验，可信微信/E许可仍待。无新HTTP/UI/真实微信模型；0.4.1未更新，全仓/浏览器/安装版等NOT_RUN，WIN-PATH-02/原生AV开放。
