@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.venv\\Scripts\\python.exe",
+    "-B",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "tests/integration/test_assistant_attachment_backup.py::test_long_parent_paths_create_restore_and_rebackup[long]",
+    "-q",
+    "--tb=short",
+    "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\root-repro.xml"
+  ],
+  "exit_code": 1,
+  "seconds": 5.9539999999979045,
+  "basetemp_length": 87,
+  "baseline": "916d55bf47ffb513508b81c5ebf40a5482372a67"
+}

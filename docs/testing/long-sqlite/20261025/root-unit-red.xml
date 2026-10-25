@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="16" skipped="0" tests="16" time="0.542" timestamp="2026-10-25T17:56:11.221030+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[\u72ec\u7acb \u5408\u6210.db]" time="0.003"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:39: in test_special_filename_reads_exact_source_and_denies_writes
+    uri(tmp_path/name);create(tmp_path/name);read_only(tmp_path/name)
+    ^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[literal%23.db]" time="0.002"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:39: in test_special_filename_reads_exact_source_and_denies_writes
+    uri(tmp_path/name);create(tmp_path/name);read_only(tmp_path/name)
+    ^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[literal#.db]" time="0.001"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:39: in test_special_filename_reads_exact_source_and_denies_writes
+    uri(tmp_path/name);create(tmp_path/name);read_only(tmp_path/name)
+    ^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[scope&amp;mode=rw.db]" time="0.002"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:39: in test_special_filename_reads_exact_source_and_denies_writes
+    uri(tmp_path/name);create(tmp_path/name);read_only(tmp_path/name)
+    ^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[percent%25.db]" time="0.001"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:39: in test_special_filename_reads_exact_source_and_denies_writes
+    uri(tmp_path/name);create(tmp_path/name);read_only(tmp_path/name)
+    ^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[a=b.db]" time="0.001"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:39: in test_special_filename_reads_exact_source_and_denies_writes
+    uri(tmp_path/name);create(tmp_path/name);read_only(tmp_path/name)
+    ^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[\u2696.db]" time="0.001"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:39: in test_special_filename_reads_exact_source_and_denies_writes
+    uri(tmp_path/name);create(tmp_path/name);read_only(tmp_path/name)
+    ^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_percent_escape_cannot_alias_another_existing_database" time="0.001"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:43: in test_percent_escape_cannot_alias_another_existing_database
+    uri(tmp_path/'literal%23.db')
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_long_windows_filename_reads_without_changing_source[False-263]" time="0.002"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:54: in test_long_windows_filename_reads_without_changing_source
+    uri(tmp_path/'probe.db')
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_long_windows_filename_reads_without_changing_source[False-317]" time="0.001"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:54: in test_long_windows_filename_reads_without_changing_source
+    uri(tmp_path/'probe.db')
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_long_windows_filename_reads_without_changing_source[True-263]" time="0.002"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:54: in test_long_windows_filename_reads_without_changing_source
+    uri(tmp_path/'probe.db')
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_long_windows_filename_reads_without_changing_source[True-317]" time="0.002"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:54: in test_long_windows_filename_reads_without_changing_source
+    uri(tmp_path/'probe.db')
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_read_only_missing_database_never_creates_a_file[False]" time="0.002"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:65: in test_read_only_missing_database_never_creates_a_file
+    uri(tmp_path/'probe.db');parent=tmp_path
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_read_only_missing_database_never_creates_a_file[True]" time="0.001"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:65: in test_read_only_missing_database_never_creates_a_file
+    uri(tmp_path/'probe.db');parent=tmp_path
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_relative_filename_is_resolved_before_sqlite_opens_it" time="0.001"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:76: in test_relative_filename_is_resolved_before_sqlite_opens_it
+    uri(tmp_path/'relative.db');create(tmp_path/'relative.db')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_unc_uri_construction_has_no_authority_or_network_io" time="0.000"><failure message="AssertionError: Shared native SQLite read-only URI is required&#10;assert False&#10; +  where False = hasattr(file_paths, 'sqlite_readonly_uri')">tests\unit\test_sqlite_readonly_paths.py:82: in test_unc_uri_construction_has_no_authority_or_network_io
+    value=uri(Path(r'\\independent-invalid-host\synthetic-share\literal%23# sample.db'))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\unit\test_sqlite_readonly_paths.py:15: in uri
+    assert hasattr(file_paths,'sqlite_readonly_uri'),'Shared native SQLite read-only URI is required'
+E   AssertionError: Shared native SQLite read-only URI is required
+E   assert False
+E    +  where False = hasattr(file_paths, 'sqlite_readonly_uri')</failure></testcase></testsuite></testsuites>

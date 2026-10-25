@@ -1,6 +1,7 @@
 """Windows extended paths only at file I/O boundaries; logical refs stay portable."""
 import os
 from pathlib import Path
+from urllib.parse import quote
 
 
 def filesystem_path(value):
@@ -24,3 +25,8 @@ def application_path(value):
         if name.startswith('\\\\?\\'):
             return Path(name[4:])
     return Path(value)
+
+
+def sqlite_readonly_uri(value):
+    """Encode the native filename, retaining the Windows extended namespace."""
+    return 'file:'+quote(str(filesystem_path(value)),safe='/:')+'?mode=ro'

@@ -17,13 +17,13 @@ from zipfile import ZipFile, ZIP_STORED
 
 from cryptography.exceptions import InvalidTag
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from sqlalchemy import select
+from sqlalchemy import event, select
 
 from ..config import load_settings
 from ..domain import WorkspaceBackupManifest
 from ..persistence import Database, SessionRow
 from . import storage
-from .file_paths import filesystem_path, application_path
+from .file_paths import filesystem_path, application_path, sqlite_readonly_uri
 from .backup import (checked_root, digest, encode, strict_json, safe_relative, redirected,
                      _file_references, _mark_storage_flags)
 
@@ -116,7 +116,7 @@ def _validate_database(root):
             or any(marker[k] != v for k,v in expected.items())):
         raise ValueError('WORKSPACE_POLICY_MISMATCH')
     from ..storage_schema import identify_schema
-    with closing(sqlite3.connect((root/'workbench.db').as_uri()+'?mode=ro', uri=True)) as connection:
+    with closing(sqlite3.connect(sqlite_readonly_uri(root/'workbench.db'), uri=True)) as connection:
         connection.execute('PRAGMA trusted_schema=OFF')
         rows = connection.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall()
         try: identify_schema(rows, native=True)
@@ -133,6 +133,10 @@ def _references(root, inventory, *, source=False):
     root = application_path(root)
     files = {i['path']:i for i in inventory}
     database = Database('sqlite:///'+str(root/'workbench.db'), filesystem_path(root/'protected'), load_settings(), initialize_schema=False)
+    # Keep namespace prefixes out of URLs; apply them only at the SQLite I/O boundary.
+    @event.listens_for(database.engine, 'do_connect')
+    def native_filename(dialect, record, arguments, parameters):
+        arguments[0] = str(filesystem_path(root/'workbench.db'))
     try:
         with database.session() as db:
             refs = _file_references(db)
@@ -265,7 +269,7 @@ def create_workspace_backup(directory, destination, passphrase, *, data_parent):
         deadline = time.monotonic()+60
         def progress(*_):
             if time.monotonic()>deadline: raise ValueError('BACKUP_DATABASE_TIMEOUT')
-        with closing(sqlite3.connect((root/'workbench.db').as_uri()+'?mode=ro',uri=True)) as source:
+        with closing(sqlite3.connect(sqlite_readonly_uri(root/'workbench.db'),uri=True)) as source:
             with closing(sqlite3.connect(snapshot/'workbench.db')) as target:
                 source.backup(target,pages=256,progress=progress)
         (snapshot/'workspace.json').write_bytes((root/'workspace.json').read_bytes())

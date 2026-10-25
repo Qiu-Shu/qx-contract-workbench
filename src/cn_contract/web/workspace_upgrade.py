@@ -12,6 +12,7 @@ import sqlite3
 from uuid import uuid4
 
 from ..intake.schema import STATEMENTS
+from ..ops.file_paths import sqlite_readonly_uri
 from ..schema_migrations import requires_foreign_keys_off, statements_for
 from ..storage_schema import VERSIONS, identify_schema, schema_rows
 
@@ -72,7 +73,7 @@ def pending_matches(db,root,marker):
         backup=root/receipt['backup']
         for path in (backup,backup.parent,backup.parent.parent):_safe_file(path)
         if not backup.is_file() or _file_hash(backup)!=receipt['backup_sha256']:return False
-        with closing(sqlite3.connect(backup.as_uri()+'?mode=ro',uri=True)) as saved:
+        with closing(sqlite3.connect(sqlite_readonly_uri(backup),uri=True)) as saved:
             return (_rows(saved)==before
                 and saved.execute('PRAGMA quick_check').fetchall()==[('ok',)]
                 and not saved.execute('PRAGMA foreign_key_check').fetchall()

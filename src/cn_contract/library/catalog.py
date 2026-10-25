@@ -8,6 +8,7 @@ import sqlite3
 import stat
 
 from ..domain import LibraryRecord, LibraryReviewEvent, LibrarySource
+from ..ops.file_paths import sqlite_readonly_uri
 
 FORMAT = {'format': 'qx-legal-library', 'version': 1}
 
@@ -89,7 +90,7 @@ def writer_lock(root: Path):
 def connection(root: Path, *, writable=False):
     root = ensure_root(root, create=writable)
     path = root / 'catalog.sqlite'
-    db = sqlite3.connect(str(path) if writable else path.as_uri() + '?mode=ro', uri=not writable)
+    db = sqlite3.connect(str(path) if writable else sqlite_readonly_uri(path), uri=not writable)
     db.row_factory = sqlite3.Row
     try:
         db.execute('PRAGMA foreign_keys=ON')

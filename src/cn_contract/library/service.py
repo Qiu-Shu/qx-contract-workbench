@@ -10,6 +10,7 @@ from threading import Lock
 import time
 
 from ..domain import LibraryFragment, LibraryHit, LibraryOriginal, LibraryPage, LibraryQuery
+from ..ops.file_paths import sqlite_readonly_uri
 from .catalog import canonical, connection, digest
 from .cleaning import normalize_case
 from .index import current_generation, generation_path
@@ -159,7 +160,7 @@ def search(root: Path, query: LibraryQuery) -> LibraryPage:
             if expression else ' ORDER BY u.unit_id') + ' LIMIT ? OFFSET ?'
     args.extend((candidate_limit, offset))
     database = generation_path(root, generation_id) / 'search.sqlite'
-    db = sqlite3.connect(database.as_uri() + '?mode=ro', uri=True)
+    db = sqlite3.connect(sqlite_readonly_uri(database), uri=True)
     db.row_factory = sqlite3.Row
     if scoped_case:
         def title_score(title, aliases):

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="8" time="3.887" timestamp="2026-10-25T17:57:18.089973+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_raw_database_validation_reads_literal_percent_filename[filename]" time="0.075"><failure message="assert 2 == 1">tests\integration\test_sqlite_readonly_boundaries.py:38: in test_raw_database_validation_reads_literal_percent_filename
+    assert result['sentinel']['count'] == 1
+E   assert 2 == 1</failure></testcase><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_raw_database_validation_reads_literal_percent_filename[parent]" time="0.112"><failure message="assert 2 == 1">tests\integration\test_sqlite_readonly_boundaries.py:38: in test_raw_database_validation_reads_literal_percent_filename
+    assert result['sentinel']['count'] == 1
+E   assert 2 == 1</failure></testcase><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_native_readers_validate_long_exact_workspace[archive_validation]" time="0.735"><failure message="sqlite3.OperationalError: unable to open database file">tests\integration\test_sqlite_readonly_boundaries.py:66: in test_native_readers_validate_long_exact_workspace
+    assert workspace_backup._validate_database(filesystem_path(root)) == marker
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:119: in _validate_database
+    with closing(sqlite3.connect((root/'workbench.db').as_uri()+'?mode=ro', uri=True)) as connection:
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: unable to open database file</failure></testcase><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_native_readers_validate_long_exact_workspace[workspace_identity]" time="0.489"><failure message="ValueError: WORKSPACE_DATABASE_INVALID">tests\integration\test_sqlite_readonly_boundaries.py:68: in test_native_readers_validate_long_exact_workspace
+    assert module._open_workspace(filesystem_path(root),
+src\cn_contract\web\local_server.py:91: in _open_workspace
+    raise ValueError('WORKSPACE_DATABASE_INVALID') from None
+E   ValueError: WORKSPACE_DATABASE_INVALID</failure></testcase><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_library_readers_keep_exact_target_and_readonly[catalog-special]" time="0.335" /><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_library_readers_keep_exact_target_and_readonly[catalog-long]" time="0.346"><failure message="sqlite3.OperationalError: invalid uri authority: %3F">tests\integration\test_sqlite_readonly_boundaries.py:90: in test_library_readers_keep_exact_target_and_readonly
+    with catalog.connection(library_root) as connection:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+src\cn_contract\library\catalog.py:92: in connection
+    db = sqlite3.connect(str(path) if writable else path.as_uri() + '?mode=ro', uri=not writable)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: invalid uri authority: %3F</failure></testcase><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_library_readers_keep_exact_target_and_readonly[search-special]" time="0.357" /><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_library_readers_keep_exact_target_and_readonly[search-long]" time="0.341"><failure message="sqlite3.OperationalError: invalid uri authority: %3F">tests\integration\test_sqlite_readonly_boundaries.py:95: in test_library_readers_keep_exact_target_and_readonly
+    page = library_service.search(library_root, query(text='离婚', kind='case_csv'))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\library\service.py:162: in search
+    db = sqlite3.connect(database.as_uri() + '?mode=ro', uri=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: invalid uri authority: %3F</failure></testcase></testsuite></testsuites>

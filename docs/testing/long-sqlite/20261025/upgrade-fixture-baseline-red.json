@@ -1,0 +1,868 @@
+{
+  "baseline": "916d55bf47ffb513508b81c5ebf40a5482372a67",
+  "pytest_argv": [
+    "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\tests\\integration\\test_workspace_upgrade.py::test_upgrade_keeps_identity_login_case_and_independent_backup",
+    "-q",
+    "--tb=short",
+    "--basetemp=D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline-temp",
+    "--junitxml=D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline-red.xml"
+  ],
+  "exit_code": 1,
+  "seconds": 4.016,
+  "source_py_count": 236,
+  "overridden_modules": {
+    "cn_contract.library.catalog": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\library\\catalog.py",
+    "cn_contract.library.service": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\library\\service.py",
+    "cn_contract.ops.backup": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\ops\\backup.py",
+    "cn_contract.ops.file_paths": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\ops\\file_paths.py",
+    "cn_contract.ops.workspace_backup": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\ops\\workspace_backup.py",
+    "cn_contract.web.local_server": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\web\\local_server.py",
+    "cn_contract.web.workspace_upgrade": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\web\\workspace_upgrade.py"
+  },
+  "actual_loaded_module_count": 167,
+  "all_actual_modules_match_baseline": true,
+  "test_unchanged_from_baseline": true,
+  "actual_test_path": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\tests\\integration\\test_workspace_upgrade.py",
+  "working_test_unchanged_from_baseline": false,
+  "test_sha256": "6ea54f336c6bcb6909e15771a83cc446acaac7879d9ab6d986568578c9e10bad",
+  "test_count": 1,
+  "errors": 1,
+  "failures": 0,
+  "loaded": [
+    {
+      "module": "cn_contract.domain",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\domain.py",
+      "sha256": "f7b60f495e7805a8cc975e35b36595f38b31c1e1084d3856a2fe34261a1bc484"
+    },
+    {
+      "module": "cn_contract",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\__init__.py",
+      "sha256": "e15282ccd713dfe1b59ee491caff69a9395f2cb0dc9a04c331c36685e3f6117b"
+    },
+    {
+      "module": "cn_contract.web",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\__init__.py",
+      "sha256": "c1e755c1c11a3fb8bb965caa2db865ede1e5c1d0c55d0a39493d4925f77a018a"
+    },
+    {
+      "module": "cn_contract.config",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\config.py",
+      "sha256": "77ec3d6265ee99750e5db9e6ea7853ba8b9fab8de2b507e3ca997c1b87e940fe"
+    },
+    {
+      "module": "cn_contract.ops",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\ops\\__init__.py",
+      "sha256": "3ffd7f6c1db4c30ece7dcb95df360f427c4cbe3a1d10edae5fafa54e12238c1c"
+    },
+    {
+      "module": "cn_contract.ops.file_paths",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\ops\\file_paths.py",
+      "sha256": "5b7155dafe59419ba501888ac92d960f490172bcfa7d9405e41d7ab40ec6d5c9"
+    },
+    {
+      "module": "cn_contract.persistence",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\persistence.py",
+      "sha256": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8"
+    },
+    {
+      "module": "cn_contract.security",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\security.py",
+      "sha256": "d6457c56fc6a6889e0ac2848dc77b037b9806e125b2d3532a52275697662b7f2"
+    },
+    {
+      "module": "cn_contract.ops.storage",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\ops\\storage.py",
+      "sha256": "e24f24b955a579961b4cc20561e19f821f762b59230311d7a193c1f6328be4ef"
+    },
+    {
+      "module": "cn_contract.ops.backup",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\ops\\backup.py",
+      "sha256": "5423f15decff085481c7d360cb438b04a3dd645047233530f31fc3ba0e84f79b"
+    },
+    {
+      "module": "cn_contract.storage_bootstrap",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\storage_bootstrap.py",
+      "sha256": "a27f0dc1701bdc00d5077d39f3f310421da7f13f26659c8c3b0dfd80187e6ce6"
+    },
+    {
+      "module": "cn_contract.assistant",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\__init__.py",
+      "sha256": "e8b6b98e06425e06666908e31a382da2fce1ce2c0e8712da99b726ae42f6c71d"
+    },
+    {
+      "module": "cn_contract.assistant.model_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\model_schema.py",
+      "sha256": "0737ee0cc3344ab15e3c42b1f0c25b071f13878ac25159b69529d0bd385458e1"
+    },
+    {
+      "module": "cn_contract.assistant.context_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\context_schema.py",
+      "sha256": "c065742834019ed70865c528a1cd2079396bc48204b4bc590f375c736a7ef42b"
+    },
+    {
+      "module": "cn_contract.assistant.library_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\library_schema.py",
+      "sha256": "36c1a10622a4d69074399705716c221da452c17d629d000e9744a2c77f6c7239"
+    },
+    {
+      "module": "cn_contract.assistant.rounds_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\rounds_schema.py",
+      "sha256": "c5ca42a9f2bd32ce2e67a716be9307cb65f8737091b0b72fa00682474df0bb95"
+    },
+    {
+      "module": "cn_contract.assistant.rounds_v2_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\rounds_v2_schema.py",
+      "sha256": "cd5dc19f1269f1127b693bbc24123d47e394b6473804ccf89ab70f025b129c9c"
+    },
+    {
+      "module": "cn_contract.assistant.profile_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\profile_schema.py",
+      "sha256": "f3643c243f873986a338c1e86f5b31d35275cb0d2f2ec0e3d440412b99233db0"
+    },
+    {
+      "module": "cn_contract.assistant.profile_model_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\profile_model_schema.py",
+      "sha256": "c2bdfc44a410711007be4ad2a00d8062dd31aa0cc50e325572b71335b3ae258b"
+    },
+    {
+      "module": "cn_contract.task_drafts",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\task_drafts\\__init__.py",
+      "sha256": "9284c81e22a9a655270ad4af35b6971a35de9d79d409a84e978f8dee7a0fc51f"
+    },
+    {
+      "module": "cn_contract.task_drafts.schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\task_drafts\\schema.py",
+      "sha256": "434ab70ba8ab548aef6bdf0f2cbb55682e6d69f4214cb4d3f4a0c81b7adf8023"
+    },
+    {
+      "module": "cn_contract.weixin_inbox",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\__init__.py",
+      "sha256": "9ab4894319ed501c3a2292f74b13117a740b19979ad6ba0d5ef47c6a04036c62"
+    },
+    {
+      "module": "cn_contract.weixin_inbox.schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\schema.py",
+      "sha256": "e194dc41c69c1b1e0103f8c17557715dbdc46ef95a4771427e07d1c10fcacdf0"
+    },
+    {
+      "module": "cn_contract.weixin_inbox.dispatch_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\dispatch_schema.py",
+      "sha256": "998edb572830f2e2b421dc531b42af506edec0def2188fc065bf32ef1980aed1"
+    },
+    {
+      "module": "cn_contract.weixin_inbox.grant_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\grant_schema.py",
+      "sha256": "1dde13e8a4fa60846f28353329a48952a010df25109d3aab2d10b8d2217142a5"
+    },
+    {
+      "module": "cn_contract.weixin_inbox.generation_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generation_schema.py",
+      "sha256": "63a84364a5286e6882dadd393162d93a74edae1cadf44acf74443ee337832d37"
+    },
+    {
+      "module": "cn_contract.weixin_inbox.provenance_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\provenance_schema.py",
+      "sha256": "60ef8b979a47408409aa573938266d9b48c053c8cd37956b2ac212704823c341"
+    },
+    {
+      "module": "cn_contract.assistant_judge_schema_baseline",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant_judge_schema_baseline.py",
+      "sha256": "7e058952fb9a9af89936bfc9a2af1aff205e7f8c0f5c481132d7117bbbd900a4"
+    },
+    {
+      "module": "cn_contract.assistant_model_schema_baseline",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant_model_schema_baseline.py",
+      "sha256": "15343cb48bd893986974bb7decddd2a522d9d55293ceb9be7b5aa6d36bdd96ea"
+    },
+    {
+      "module": "cn_contract.assistant_attachment_schema_baseline",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant_attachment_schema_baseline.py",
+      "sha256": "983b972df0847f3726b0863507c570c1a42ebdcaa3665079441dcd94863f4333"
+    },
+    {
+      "module": "cn_contract.assistant_schema_baseline",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant_schema_baseline.py",
+      "sha256": "1843eb0eba5bff9f7ff6123e6a3882d6839cd0aad810dbc9746392ce82deaa49"
+    },
+    {
+      "module": "cn_contract.schema_baseline",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\schema_baseline.py",
+      "sha256": "59aac5bd8be5e2df4f1716e071ac336f65f8c8a83adc71998570923707d48c50"
+    },
+    {
+      "module": "cn_contract.storage_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\storage_schema.py",
+      "sha256": "5078d534021c033ad8f36ee40b25b4056ffe279ae7de6fdfd6574d0f69d0ace1"
+    },
+    {
+      "module": "cn_contract.schema_migrations",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\schema_migrations.py",
+      "sha256": "b6713c93db048d81bf1ec61c525b9950141f7de332a6163cb06cb960a89713e3"
+    },
+    {
+      "module": "cn_contract.facts",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\facts\\__init__.py",
+      "sha256": "6725e264dcee56aea6088c05858ea0d95ce4b24059410888a74cdf3720049a6d"
+    },
+    {
+      "module": "cn_contract.facts.storage",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\facts\\storage.py",
+      "sha256": "4dca908cd617db67ca7a466b77d16bbab65cfe3ea02b52e7a10628d26ddcd52e"
+    },
+    {
+      "module": "cn_contract.facts.confirm",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\facts\\confirm.py",
+      "sha256": "00b9dfca23aede6109df6724763be1976898f7fd64d902cceb8cf4a56aeb3e07"
+    },
+    {
+      "module": "cn_contract.audit",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\audit.py",
+      "sha256": "c4b844ef8008984bdba3308be8451bd1bdc35f83b8953f20b09765fbb156e05e"
+    },
+    {
+      "module": "cn_contract.facts.party",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\facts\\party.py",
+      "sha256": "66707cf14794d319bf6a5c47afb8551f5932d4ce05dcd0daa983f81e4a06ada6"
+    },
+    {
+      "module": "cn_contract.documents.anchors",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\anchors.py",
+      "sha256": "bfa30fa4fde840c00a30364648509e182238ab3bb45bbe17cb88901002a238f3"
+    },
+    {
+      "module": "cn_contract.documents.docx_styles",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\docx_styles.py",
+      "sha256": "c9f19564fa5ea8d33fa65153ae9b52bb1aff4354118d8b6b8800530d0a43cd16"
+    },
+    {
+      "module": "cn_contract.documents.docx_adapter",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\docx_adapter.py",
+      "sha256": "6ceaeac61da42185c090cb5b27cda99e6916caecd8a94d1755748ee34e8b1c6f"
+    },
+    {
+      "module": "cn_contract.documents.ingest",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\ingest.py",
+      "sha256": "b9689e759667b668f6591ba4bb31e5ee050452aa505f38b0215cec14d77681c1"
+    },
+    {
+      "module": "cn_contract.documents",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\__init__.py",
+      "sha256": "d96bcdd171049d71d4e0596d142bd0740fa51e9978d6d66c48c5640c4bace97a"
+    },
+    {
+      "module": "cn_contract.documents.local_materials",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\local_materials.py",
+      "sha256": "b328aebe1b74e1cb7a972eb1db9f15a7870e7565fa654d8edfe9ba881d75e12e"
+    },
+    {
+      "module": "cn_contract.facts.extract",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\facts\\extract.py",
+      "sha256": "e9dad1743a5d0ab55b3e06b04372af817101c2e1530123f753859499af91df19"
+    },
+    {
+      "module": "cn_contract.facts.calculate",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\facts\\calculate.py",
+      "sha256": "7923a94b9b3d8c00c487af11fcb13726d720cd62ea5d9ef843aae185901907fe"
+    },
+    {
+      "module": "cn_contract.rules",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\rules\\__init__.py",
+      "sha256": "bc8ac84b72c69337e3d7d5c51e97371d1b85d938aa3b8e76e4ac84a229a94cf6"
+    },
+    {
+      "module": "cn_contract.authorities",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\authorities\\__init__.py",
+      "sha256": "fc5dadb41a894e467fcca2c01f7d9ff61e77ec6d5516d75681a3d91c49652b15"
+    },
+    {
+      "module": "cn_contract.authorities.storage",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\authorities\\storage.py",
+      "sha256": "96285ee43c615d8eeb6ea5bb5c61c3c6d31f97f931367a966514da08d7eee14e"
+    },
+    {
+      "module": "cn_contract.authorities.registry",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\authorities\\registry.py",
+      "sha256": "8acc0bb83b57bdaa5d22b217d2ae27628bdf2489d7df91e4541e8efda3dd2eb6"
+    },
+    {
+      "module": "cn_contract.rules.storage",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\rules\\storage.py",
+      "sha256": "aac079680195afde47bb3da0ad3f0a2de5091ee95cb30ad5eb9048f648a045c9"
+    },
+    {
+      "module": "cn_contract.rules.loader",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\rules\\loader.py",
+      "sha256": "bf9ba87f94d6c7d5874a74c84be9185b9d4c75a25c473d572b1a46895a9adf74"
+    },
+    {
+      "module": "cn_contract.authorities.applicability",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\authorities\\applicability.py",
+      "sha256": "399feade027467a616aeb50b7afcb29f7c2ea6930c5b815c70dc2248da7ee356"
+    },
+    {
+      "module": "cn_contract.rules.evaluator",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\rules\\evaluator.py",
+      "sha256": "f40d762086fd5ff20f6b995fe012cced35be96de895c065b878b55dba0b7887c"
+    },
+    {
+      "module": "cn_contract.review.model_adapter",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\review\\model_adapter.py",
+      "sha256": "1770fb5b093e86cf2b5dd36f3960c8d09b5b51ecf8ecede08b8fae1d4e88241e"
+    },
+    {
+      "module": "cn_contract.review.storage",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\review\\storage.py",
+      "sha256": "d4e0a6d9a3c4a481a86ef91408e080b672e33052dc674ff14feda4ea43ba24dd"
+    },
+    {
+      "module": "cn_contract.review.workflow",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\review\\workflow.py",
+      "sha256": "7d34a9934269c23d007b1dc4d1ccc2bf415b26a26ba06c4a014be65854689cd0"
+    },
+    {
+      "module": "cn_contract.review.validator",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\review\\validator.py",
+      "sha256": "583e6532e019b601d499f3c39f2388293229f8acafbe4d70d7e655c43cbb9f8d"
+    },
+    {
+      "module": "cn_contract.review",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\review\\__init__.py",
+      "sha256": "210241a05e5417a51fcb1617ffa5699802300e4375a64a2298390ee5bf6b7315"
+    },
+    {
+      "module": "cn_contract.review.synthetic",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\review\\synthetic.py",
+      "sha256": "0b734458557b40264a2fc218e685f6a0841e2abf0bc35163ac784f4abbf90eaa"
+    },
+    {
+      "module": "cn_contract.queries",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\queries\\__init__.py",
+      "sha256": "0ba009c6973a02460e267a491a6981d5856be967f5a8f41dc65a210220b4946a"
+    },
+    {
+      "module": "cn_contract.providers",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\providers\\__init__.py",
+      "sha256": "31a901f69f2270bac1b09bb606e7a1818fef6a6b334bb09b0a2700794d8bbb8b"
+    },
+    {
+      "module": "cn_contract.providers.storage",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\providers\\storage.py",
+      "sha256": "a7f38beebe75f6c817c7e337dec256e1bd7d0de1a4d09ced1abdf2dc424fb7f7"
+    },
+    {
+      "module": "cn_contract.providers.mock_qcc",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\providers\\mock_qcc.py",
+      "sha256": "655f5bb04e85a7061f37027f3f7fdd02ac902d67bd2434eadfe34c9582fe042b"
+    },
+    {
+      "module": "cn_contract.providers.qcc_registry",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\providers\\qcc_registry.py",
+      "sha256": "fbce22a488df6c908e975f31431a2b9896979648935b52686743757ffc606619"
+    },
+    {
+      "module": "cn_contract.queries.storage",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\queries\\storage.py",
+      "sha256": "7c9bbf5f02685a026e7815514a4c5ae849305d36a7e8e8629ff70a2f4f40f862"
+    },
+    {
+      "module": "cn_contract.queries.planner",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\queries\\planner.py",
+      "sha256": "0244ef10118af106d9d0d59ef6959406a9c2c82fb25134bf53d471b49f6c19e1"
+    },
+    {
+      "module": "cn_contract.queries.ledger",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\queries\\ledger.py",
+      "sha256": "9b8880d3536ed4b351697c275fe3835d016e24f6b067c3b3e725756ea53b0c10"
+    },
+    {
+      "module": "cn_contract.providers.qcc_mcp",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\providers\\qcc_mcp.py",
+      "sha256": "928d5a0b6bcfbb8ec10ed4a11dc8cd3439a5977723d38081cafffe8fba2c7ec8"
+    },
+    {
+      "module": "cn_contract.queries.gateway",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\queries\\gateway.py",
+      "sha256": "198494bcdeffc085ec9229936619238b8fe0deccc8f8cfc8c81302f50e5e4c09"
+    },
+    {
+      "module": "cn_contract.exports.storage",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\exports\\storage.py",
+      "sha256": "40c37d248c4578702ea95f4373962f21cf38f48e055a7eb049d373b6048194b7"
+    },
+    {
+      "module": "cn_contract.exports.redline_adapter",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\exports\\redline_adapter.py",
+      "sha256": "b5d08bdf690d2c2fe20a74e0080b3b8aa53640d06e66fb262035a70404389cce"
+    },
+    {
+      "module": "cn_contract.review.decisions",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\review\\decisions.py",
+      "sha256": "a657ef556433051b15a2ceaf83730f2c72e5d003904f15bbbcb5ac8d3ca393f2"
+    },
+    {
+      "module": "cn_contract.exports.audience_filter",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\exports\\audience_filter.py",
+      "sha256": "2b9e11be43fdbaf9c0a873abaea1a1d2ff45dc42e70d982e389b05860d915faf"
+    },
+    {
+      "module": "cn_contract.exports.report_docx",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\exports\\report_docx.py",
+      "sha256": "6292eb5988ad9d445bcadabc4cee7f2c00b5fb6781b68fbc76ed99a6c9d564dd"
+    },
+    {
+      "module": "cn_contract.exports.approvals",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\exports\\approvals.py",
+      "sha256": "5cd82d5edad120f2b2b74a62be2cb5e5f6126f4ad579528a39ac521687e35189"
+    },
+    {
+      "module": "cn_contract.exports",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\exports\\__init__.py",
+      "sha256": "4c1d67e0637494ebaee62f8154cf365329574828d4045c12c70e6578f8eddf9c"
+    },
+    {
+      "module": "cn_contract.matters",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\matters.py",
+      "sha256": "af2ffa027e1551967294f075b4411b6d50ea7bd44c3b156221c1c697020ff0e1"
+    },
+    {
+      "module": "cn_contract.record_codec",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\record_codec.py",
+      "sha256": "842647f5e46da5b7b00892e437b140835e32ee04b2586961fed5976270d05c46"
+    },
+    {
+      "module": "cn_contract.web.storage",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\storage.py",
+      "sha256": "35d3576f7e43a4fd659a22f88759cba67e4d79206e40145e5360de7adb370dd2"
+    },
+    {
+      "module": "cn_contract.assistant.attachment_files",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\attachment_files.py",
+      "sha256": "42e9139450979bbbfa0ad64e6dd6501d9df453ab91cfe50239edf26895cf0a74"
+    },
+    {
+      "module": "cn_contract.assistant.attachment_integrity",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\attachment_integrity.py",
+      "sha256": "c6c7f98405cd89d295ffc8b0d2269f768177ca381b54340b01e0f23b08845efc"
+    },
+    {
+      "module": "cn_contract.assistant.service",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\service.py",
+      "sha256": "b6e9c2c9825ede962be21c2385d0109b7712130405edbeed58a2b869d2c6baa0"
+    },
+    {
+      "module": "cn_contract.assistant.attachment_records",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\attachment_records.py",
+      "sha256": "d6384abc36f639908110494da6b781dfa7a67f510c1a5eee6e2cf8bfdf1c32ca"
+    },
+    {
+      "module": "cn_contract.task_drafts.mock_policy",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\task_drafts\\mock_policy.py",
+      "sha256": "9b80cde425bca600dda5768c3d0b2224a2b4bb1f3ae9065f74fa3aa372f83555"
+    },
+    {
+      "module": "cn_contract.web.services",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\services.py",
+      "sha256": "f9fb1d0114a03866711aa38060a5ba1fd7c09293ec05c786b43faa76d0308dad"
+    },
+    {
+      "module": "cn_contract.web.jobs",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\jobs.py",
+      "sha256": "75e19a6ef2a8a150941072342dfc675ebfc727018c91233789c3301bd0fa1e4c"
+    },
+    {
+      "module": "cn_contract.web.dependencies",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\dependencies.py",
+      "sha256": "29afc72408bd3b085348c42598f6f23b69771b91a976b2ebb908cb2153b8d694"
+    },
+    {
+      "module": "cn_contract.web.request_context",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\request_context.py",
+      "sha256": "f182733c08a3527a649582b56c1300ab37dac6102f50910051f7213d1273281f"
+    },
+    {
+      "module": "cn_contract.web.app",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\app.py",
+      "sha256": "2b6d0a6387cc6b35f7b3ed460688a52306c7572411dc2822086ab431ad0c9d14"
+    },
+    {
+      "module": "cn_contract.web.demo_server",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\demo_server.py",
+      "sha256": "34d00d012b8e0a5d3ee22f1806204f91538f0b56990538ba69b9f91a14c09bd5"
+    },
+    {
+      "module": "cn_contract.acceptance",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\acceptance\\__init__.py",
+      "sha256": "0bfd663398e047e8e27db278b583ca2d3773eb138538d5428a08d2b29948852e"
+    },
+    {
+      "module": "cn_contract.acceptance.assisted_registry",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\acceptance\\assisted_registry.py",
+      "sha256": "07a741ea48cdc638962d6738b11c94e1f7ef649586cb5dc1435edb1f2867cb20"
+    },
+    {
+      "module": "cn_contract.web.assisted_demo_server",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\assisted_demo_server.py",
+      "sha256": "ff19a4e91f2b7824051f5e08bd468203bd5293569658f2999c9e6593cd8811af"
+    },
+    {
+      "module": "cn_contract.web.local_server",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\web\\local_server.py",
+      "sha256": "d1b127e3307e482784ddc879c647b08536eef8b7dea4eee56e8287d3c7da9958"
+    },
+    {
+      "module": "cn_contract.review.proposals",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\review\\proposals.py",
+      "sha256": "7136711bde02c7411a34e12e9ce412c5eaf4f1b2106c9534474c60d8aca4638e"
+    },
+    {
+      "module": "cn_contract.documents.proofreading",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\proofreading.py",
+      "sha256": "04ae7928c3cc90ad42d8f1b51df98b1ce1086386b0d86bf6902c89fa0d4821a8"
+    },
+    {
+      "module": "cn_contract.documents.pdfjs_assets",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\pdfjs_assets.py",
+      "sha256": "b2e48235252c91bebd223bc51487bce2676938efa598ded5adc3cc05777afc6e"
+    },
+    {
+      "module": "cn_contract.documents.ocr_assets",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\ocr_assets.py",
+      "sha256": "96931b53f67bb5729caf54e7e2d8055e306a8c4e8bee6034d9cb0492e89e211d"
+    },
+    {
+      "module": "cn_contract.documents.ocr_workspace",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\ocr_workspace.py",
+      "sha256": "7430bee4a4abe7637c6479e186540b6a12ef674dc837768c5edb2ca0f2a4d5e8"
+    },
+    {
+      "module": "cn_contract.documents.ocr_process",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\ocr_process.py",
+      "sha256": "9e834eb8e1929a15cb0f0ded5b602a70190344fa3ff7fed13b9a5438fb68d20e"
+    },
+    {
+      "module": "cn_contract.documents.ocr_candidates",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\documents\\ocr_candidates.py",
+      "sha256": "4a9ecf53e7775ccfacb966bc6ea67984a52fa3d7935196e9434f0fd0855e483f"
+    },
+    {
+      "module": "cn_contract.intake",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\intake\\__init__.py",
+      "sha256": "2db94938e2b6154cfa9aae2d71eb09e232d398052544d1e889c0dc2a742d6a5b"
+    },
+    {
+      "module": "cn_contract.intake.schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\intake\\schema.py",
+      "sha256": "8ac6a2ed5b5870e35ecb417b0bc0b2cb7d2bf5bb3d797c93c56fa0a52ae1ce32"
+    },
+    {
+      "module": "cn_contract.assistant.schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\schema.py",
+      "sha256": "0979aeba4fce1d1aff0772ebb9e4e57437f14e85ce3e9df3d903f9a08e1ec26e"
+    },
+    {
+      "module": "cn_contract.assistant.attachment_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\attachment_schema.py",
+      "sha256": "bdbb444e4bdad3586c44e9beebcd713353f4536f3ff768165f617805c4894f8c"
+    },
+    {
+      "module": "cn_contract.assistant.judge_schema",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\judge_schema.py",
+      "sha256": "44de9e38b94a6ffb77f12124158cb64fa2a783dac3630548f85903fa9ff288f3"
+    },
+    {
+      "module": "cn_contract.web.workspace_upgrade",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\web\\workspace_upgrade.py",
+      "sha256": "8decd333095685208914aae7e5c128ccc8415af6f99bb454f74537b8b0381b50"
+    },
+    {
+      "module": "cn_contract.exports.draft_confirmation",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\exports\\draft_confirmation.py",
+      "sha256": "25a49c8047b53cbed64d7e3de2648c2fa454de275188cf365ace7baf30399a12"
+    },
+    {
+      "module": "cn_contract.web.draft_confirmation",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\draft_confirmation.py",
+      "sha256": "fde6cdba9e3bb8357234194946459936ec9d5f0cff675cec4914eaeceb5a6aec"
+    },
+    {
+      "module": "cn_contract.exports.effective_text",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\exports\\effective_text.py",
+      "sha256": "a0249ddbfe235012fac199049f3eaffa90189473eabd410b8e5460a09c5f5efb"
+    },
+    {
+      "module": "cn_contract.web.pdf_review",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\pdf_review.py",
+      "sha256": "0371f0b70a1eb1b9671383d627d27bf88c445a04093573539eb5b737bcc39218"
+    },
+    {
+      "module": "cn_contract.intake.service",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\intake\\service.py",
+      "sha256": "ab5fa1b22123abfa9e87ebf4b94552fc68593c7dfcd422f07cb53934f50b252b"
+    },
+    {
+      "module": "cn_contract.web.intake",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\intake.py",
+      "sha256": "f7b19e288e3c94dacdeb0a0d67d7170200b3261f50e6d54ed9fcfca41aa7d3f5"
+    },
+    {
+      "module": "cn_contract.web.assistant",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\assistant.py",
+      "sha256": "0e24e2e92d674541d35258c2d183823d8ef8e6301852c812f67aad4abf0e6a1a"
+    },
+    {
+      "module": "cn_contract.assistant.attachments",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\attachments.py",
+      "sha256": "6e6f30bf8ee510e8d7968696019055a381b473cec0b1a1064a3acfbc3348249f"
+    },
+    {
+      "module": "cn_contract.web.assistant_attachments",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\assistant_attachments.py",
+      "sha256": "1a5c975d9fada0ab4eb78184e57b6a23ebe6c27e617ec4d46f2cfb50119818eb"
+    },
+    {
+      "module": "cn_contract.task_drafts.synthetic",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\task_drafts\\synthetic.py",
+      "sha256": "7c431250500e73449216e69b2451b0fa4e95b3b0aa43b4591598b1108648e3f5"
+    },
+    {
+      "module": "cn_contract.assistant.profile_sources",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\profile_sources.py",
+      "sha256": "be42b628ba213108eb5863403ad19b2daec7a85e5745bde3c2dd99e848718ddb"
+    },
+    {
+      "module": "cn_contract.assistant.profiles",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\profiles.py",
+      "sha256": "dc2fa65bb194d3cd97a80cb77a0f0ca9466ff2f5895cbcf7b10402bbc9c565b4"
+    },
+    {
+      "module": "cn_contract.assistant.profile_store",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\profile_store.py",
+      "sha256": "79f49aab0b2b02d9bfd7dbf25b4db81bd686f5cc87f29eae3cb6f472cf65d22b"
+    },
+    {
+      "module": "cn_contract.web.assistant_profiles",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\assistant_profiles.py",
+      "sha256": "97e32cb30473160e9debaf9f8d85e7912dd764ef6bae6487df17469995903ed3"
+    },
+    {
+      "module": "cn_contract.web.assistant_pages",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\assistant_pages.py",
+      "sha256": "15668b532234b2646bdd10a403ee433aa795a3660e8e4755e845b92727f40d47"
+    },
+    {
+      "module": "cn_contract.task_drafts.service",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\task_drafts\\service.py",
+      "sha256": "377c70eaf877506ef9df72200ae065dbabe73da66c122ec54315b3cb3f5b2c2e"
+    },
+    {
+      "module": "cn_contract.web.task_drafts",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\task_drafts.py",
+      "sha256": "924a87d7e43494d210ccd93dc50edcf1a881d16187493e1ff268fc684907db35"
+    },
+    {
+      "module": "cn_contract.weixin_inbox.accounts",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\accounts.py",
+      "sha256": "a2c493fbf799694d5eeda35f26577b6102916e628d2dc6092ec57c6e152b2bc5"
+    },
+    {
+      "module": "cn_contract.weixin_inbox.conversation",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\conversation.py",
+      "sha256": "de25074489e652d20493850763559ea3fe36ca2ba35381cb0cfdba5ba752e96f"
+    },
+    {
+      "module": "cn_contract.web.weixin_authorization",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\weixin_authorization.py",
+      "sha256": "1a283a94183a38204508f8117ae8343540f2edca2f18049ca3ed50c4b1c2bd36"
+    },
+    {
+      "module": "cn_contract.assistant.providers",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\__init__.py",
+      "sha256": "e62f8cd59c53f2d57cb84fb00819f6f0d14526f2fa49d642411b0ca99dd3bf1f"
+    },
+    {
+      "module": "cn_contract.library",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\library\\__init__.py",
+      "sha256": "0cfe852880ac3558919551b5ba4f8490a97a4c82a469d910a56f8b7efe97a4c6"
+    },
+    {
+      "module": "cn_contract.library.catalog",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\.local\\long-sqlite-20261025\\upgrade-fixture-baseline\\src\\cn_contract\\library\\catalog.py",
+      "sha256": "026b4f8ffb8ba60a13c93cd8816b4717b4d067f25da5849168decced22df49a5"
+    },
+    {
+      "module": "cn_contract.assistant.citation_identity",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\citation_identity.py",
+      "sha256": "f7ccfb420b669696b666c9ceafbd7a4203e9d6bc218c0171112ae7b4ab6d13ae"
+    },
+    {
+      "module": "cn_contract.assistant.library_records",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\library_records.py",
+      "sha256": "36dd6100f50f3daae514b10452f2fabb770d0d7aa6a0130c6bc731c1accf0948"
+    },
+    {
+      "module": "cn_contract.assistant.providers.context_preview",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\context_preview.py",
+      "sha256": "7fb5351d8086e7f03b0a57844db1386435be33e50402285323f0e78c019aa3b6"
+    },
+    {
+      "module": "cn_contract.assistant.providers.context_codec",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\context_codec.py",
+      "sha256": "9f4456054c21305acab2f1262b606ae5fd7458ad1505c30b8dc9211abd98aac5"
+    },
+    {
+      "module": "cn_contract.assistant.providers.rounds_codec",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\rounds_codec.py",
+      "sha256": "e79b22f8deae21aa9d93bd0b80e0f02a7ef89c144052237152a0427532cebbb8"
+    },
+    {
+      "module": "cn_contract.assistant.providers.deepseek_protocol",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\deepseek_protocol.py",
+      "sha256": "135471ca658e30588db446177e6069e4201d6583aba25c36071180158babf3f1"
+    },
+    {
+      "module": "cn_contract.assistant.providers.deepseek_transport",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\deepseek_transport.py",
+      "sha256": "dfddd07a4efc9debaf75c810b66353ccd8063c45f17972f8e95d60cc0116af5c"
+    },
+    {
+      "module": "cn_contract.assistant.providers.main",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\main.py",
+      "sha256": "a673c5a47a9d42304460dec4efd5579467ddae4f4be4c369ec0044c79444d64a"
+    },
+    {
+      "module": "cn_contract.assistant.providers.policy",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\policy.py",
+      "sha256": "2e2b1c78763f05a83060db09d5ca8c809003054a46fb1bf03b610031aa41b857"
+    },
+    {
+      "module": "cn_contract.assistant.providers.attempts",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\attempts.py",
+      "sha256": "2cb5d3aaaa347eb8db7b4e0ab5d945f0b6c84a2906df3f64ada1fd56f05c6092"
+    },
+    {
+      "module": "cn_contract.assistant.providers.history",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\history.py",
+      "sha256": "6f4b08fca1105d6ce74d2fe011e835a94739441514ea5dabb7f0203fc6c187c2"
+    },
+    {
+      "module": "cn_contract.assistant.providers.registry",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\registry.py",
+      "sha256": "aad43283bf4bcfc14db4dbf588c776ea85b6eb18a0e3f3a997ffec03978e1f26"
+    },
+    {
+      "module": "cn_contract.assistant.providers.jev_codec",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\jev_codec.py",
+      "sha256": "bc69e1145e09de8d3a53fd24c8cf0093a0120198d330041ea5e216b38deb1e69"
+    },
+    {
+      "module": "cn_contract.assistant.providers.jev",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\jev.py",
+      "sha256": "0ef430717db2f11c225ba0fddbb1ac23b736b1d033105d4e027e02bede1fa686"
+    },
+    {
+      "module": "cn_contract.assistant.providers.judge_policy",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\judge_policy.py",
+      "sha256": "3e068fed410189352858584a9da6634bea308acf40142cdb0e6b8b0e92016601"
+    },
+    {
+      "module": "cn_contract.web.assistant_generation",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\assistant_generation.py",
+      "sha256": "691c9351746f9e13b1ff26279cfc51cac9309808d5e032991db6593fafbf2df5"
+    },
+    {
+      "module": "cn_contract.assistant.routing",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\routing.py",
+      "sha256": "b6529e27d501fc129851c9c304fa2143e066010eebc7596482c27cfff0fd1cee"
+    },
+    {
+      "module": "cn_contract.assistant.providers.judge_attempts",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\judge_attempts.py",
+      "sha256": "007aacd4c21772be95b4fc5479f46a05d07380afeafe8b34c12f137216e1504c"
+    },
+    {
+      "module": "cn_contract.assistant.providers.judge_execution",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\judge_execution.py",
+      "sha256": "7ad51bb46ba8002a83be414e04247f66d1c78c7293f29303988f27d53cb9951b"
+    },
+    {
+      "module": "cn_contract.assistant.runner",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\runner.py",
+      "sha256": "4f701db4016d7454d8bd42847cf22ec4f5cd88235cd90c895eca108d91744c19"
+    },
+    {
+      "module": "cn_contract.assistant.task_manager",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\task_manager.py",
+      "sha256": "87b88b2b327f3597ce8df6cf87cc7aee6847c0f0ce666601a94638e3e468139c"
+    },
+    {
+      "module": "cn_contract.assistant.tools",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\tools\\__init__.py",
+      "sha256": "6cedc11c9448204eff763d37bafc5659fd1a7d35191369b5d2d3aa0c55cbdd74"
+    },
+    {
+      "module": "cn_contract.assistant.tools.service",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\tools\\service.py",
+      "sha256": "16fcd21a1faa0609df4f5409321b57a2dd862b31e274e008af1bd8a5c8da9e7e"
+    },
+    {
+      "module": "cn_contract.assistant.library_handlers",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\library_handlers.py",
+      "sha256": "5bbd441038f9e1b3688e41c0c91eb140e0de00c9e5d364090e0e18c3fbe6bd5d"
+    },
+    {
+      "module": "cn_contract.assistant.research_records",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\research_records.py",
+      "sha256": "f8623c52c57605f59bb08c42fb722c1dfb37104a4410b79f964aac8bd76d7fad"
+    },
+    {
+      "module": "cn_contract.assistant.research",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\research.py",
+      "sha256": "c309fcfa37fa85d1beb39c11123edb8f58a6acf1da05658753266a3a1530a4f1"
+    },
+    {
+      "module": "cn_contract.web.assistant_research",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\assistant_research.py",
+      "sha256": "7dbac3ca1fd9b1896ba7575248e35edd88e8e0bff20793eb34d782983d57690b"
+    },
+    {
+      "module": "cn_contract.assistant.context_preview",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\context_preview.py",
+      "sha256": "4fcfa400d66622564c8f288502b1bd1cb3ec7c3fa308f5f8dad0df166cc3df82"
+    },
+    {
+      "module": "cn_contract.web.assistant_context",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\assistant_context.py",
+      "sha256": "75b33a20deffbc5f889433ceffa7ee8425f76c1380e78530229f1f91dfa19cf1"
+    },
+    {
+      "module": "cn_contract.assistant.providers.profile_codec",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\profile_codec.py",
+      "sha256": "65a3350d36ac656963949f681fc7a3c4efa8426ed267c75c67826cdf5e1d3b36"
+    },
+    {
+      "module": "cn_contract.assistant.providers.profile_preparation",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\providers\\profile_preparation.py",
+      "sha256": "5e879480dc478dfa3771dc22f202382d127c4632fb36dd3bce282adae7df8498"
+    },
+    {
+      "module": "cn_contract.assistant.profile_preparation_service",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\assistant\\profile_preparation_service.py",
+      "sha256": "a2690e45121d139e9cc9fa430add1558d2ab472460f5d3914d43e80116a0a2da"
+    },
+    {
+      "module": "cn_contract.web.assistant_profile_generation",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\assistant_profile_generation.py",
+      "sha256": "d6cfbb970479b19ea838f7413224a2b58307e0e84cb3c2a22df4148abfadcf56"
+    },
+    {
+      "module": "cn_contract.web.recovery",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\recovery.py",
+      "sha256": "db9361d5a5944bc51474635844b6e65656d2c9c171f824efd6e1d10e8c39230f"
+    },
+    {
+      "module": "cn_contract.web.case_bridge",
+      "path": "D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\web\\case_bridge.py",
+      "sha256": "2dbaed96d67824cd27bd87e601d1284d93f87c47248b8223ca2234da7114ea5f"
+    }
+  ]
+}

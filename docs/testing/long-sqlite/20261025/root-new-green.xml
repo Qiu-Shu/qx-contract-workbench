@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="25" time="5.793" timestamp="2026-10-25T18:01:28.554037+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[\u72ec\u7acb \u5408\u6210.db]" time="0.032" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[literal%23.db]" time="0.022" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[literal#.db]" time="0.022" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[scope&amp;mode=rw.db]" time="0.021" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[percent%25.db]" time="0.021" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[a=b.db]" time="0.021" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_special_filename_reads_exact_source_and_denies_writes[\u2696.db]" time="0.022" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_percent_escape_cannot_alias_another_existing_database" time="0.041" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_long_windows_filename_reads_without_changing_source[False-263]" time="0.024" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_long_windows_filename_reads_without_changing_source[False-317]" time="0.025" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_long_windows_filename_reads_without_changing_source[True-263]" time="0.024" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_long_windows_filename_reads_without_changing_source[True-317]" time="0.026" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_read_only_missing_database_never_creates_a_file[False]" time="0.003" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_read_only_missing_database_never_creates_a_file[True]" time="0.006" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_relative_filename_is_resolved_before_sqlite_opens_it" time="0.021" /><testcase classname="tests.unit.test_sqlite_readonly_paths" name="test_unc_uri_construction_has_no_authority_or_network_io" time="0.001" /><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_raw_database_validation_reads_literal_percent_filename[filename]" time="0.118" /><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_raw_database_validation_reads_literal_percent_filename[parent]" time="0.121" /><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_native_readers_validate_long_exact_workspace[archive_validation]" time="0.603" /><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_native_readers_validate_long_exact_workspace[workspace_identity]" time="0.443" /><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_library_readers_keep_exact_target_and_readonly[catalog-special]" time="0.261" /><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_library_readers_keep_exact_target_and_readonly[catalog-long]" time="0.296" /><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_library_readers_keep_exact_target_and_readonly[search-special]" time="0.299" /><testcase classname="tests.integration.test_sqlite_readonly_boundaries" name="test_library_readers_keep_exact_target_and_readonly[search-long]" time="0.312" /><testcase classname="tests.integration.test_sqlite_native_snapshot" name="test_deep_snapshot_reference_validation_preserves_original_logical_paths" time="0.836"><failure message="sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) unable to open database file&#10;(Background on this error at: https://sqlalche.me/e/20/e3q8)">.venv\Lib\site-packages\sqlalchemy\engine\base.py:144: in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:3319: in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:448: in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:1290: in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:712: in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\impl.py:178: in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:122: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+.venv\Lib\site-packages\sqlalchemy\pool\impl.py:176: in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:389: in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:674: in __init__
+    self.__connect()
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:900: in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:122: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:896: in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\engine\create.py:667: in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:630: in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: unable to open database file
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_sqlite_native_snapshot.py:19: in test_deep_snapshot_reference_validation_preserves_original_logical_paths
+    expected=workspace_backup._references(root,workspace_backup._inventory(root),source=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:138: in _references
+    refs = _file_references(db)
+           ^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\backup.py:176: in _file_references
+    validate_model_records(db, allowed=allow_assistant)
+src\cn_contract\assistant\model_integrity.py:462: in validate_model_records
+    schema = [tuple(row) for row in db.execute(text(
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2373: in execute
+    return self._execute_internal(
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2261: in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:2113: in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;string&gt;:2: in _connection_for_bind
+    ???
+.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:1191: in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:3295: in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:146: in __init__
+    Connection._handle_dbapi_exception_noconnection(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:2450: in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:144: in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:3319: in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:448: in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:1290: in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:712: in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\impl.py:178: in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:122: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+.venv\Lib\site-packages\sqlalchemy\pool\impl.py:176: in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:389: in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:674: in __init__
+    self.__connect()
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:900: in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:122: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+.venv\Lib\site-packages\sqlalchemy\pool\base.py:896: in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\engine\create.py:667: in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:630: in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) unable to open database file
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)</failure></testcase></testsuite></testsuites>

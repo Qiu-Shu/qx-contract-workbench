@@ -16,6 +16,7 @@ from sqlalchemy import select
 from ..config import PROJECT_ROOT, load_settings
 from ..domain import Role
 from ..ops.backup import redirected
+from ..ops.file_paths import sqlite_readonly_uri
 from ..persistence import Database, UserRow
 from ..security import ServiceError, provision_user
 from ..storage_bootstrap import initialize_storage, mark_storage_initialized
@@ -76,7 +77,7 @@ def _open_workspace(directory, *, data_parent=None):
         if str(UUID(payload['workspace_id'])) != payload['workspace_id']:
             raise ValueError('WORKSPACE_ID_INVALID')
         # Read-only validation precedes any create_all/trigger initialization.
-        with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as db:
+        with closing(sqlite3.connect(sqlite_readonly_uri(root / 'workbench.db'), uri=True)) as db:
             from .workspace_upgrade import pending_matches
             try:
                 identify_schema(database_rows(db), native=True)
@@ -99,7 +100,7 @@ def _schema_hash(db):
 
 def _database(root, *, initialize=False):
     if not initialize:
-        with closing(sqlite3.connect((root / 'workbench.db').as_uri() + '?mode=ro', uri=True)) as connection:
+        with closing(sqlite3.connect(sqlite_readonly_uri(root / 'workbench.db'), uri=True)) as connection:
             if identify_schema(database_rows(connection), native=True) != CURRENT_VERSION:
                 raise ValueError('WORKSPACE_DATABASE_MISMATCH')
     database = Database('sqlite:///' + str(root / 'workbench.db'), root / 'protected', load_settings(),

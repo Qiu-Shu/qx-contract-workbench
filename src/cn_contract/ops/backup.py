@@ -26,6 +26,7 @@ from ..domain import BackupConfig, BackupReport, BackupArchiveHeader, BackupMani
 from ..persistence import Database, DocumentRow, ExportRow, SessionRow
 from ..security import ServiceError, _principal
 from . import storage
+from .file_paths import sqlite_readonly_uri
 
 MAGIC = b'CN_SYNTHETIC_BACKUP_V1\n'
 LIMIT = 256*1024*1024
@@ -152,7 +153,7 @@ def validate_raw_database(path, settings, *, expected_schema=None):
     # Must precede Database(), whose normal constructor creates missing objects.
     reference = expected_schema if expected_schema is not None else schema_reference(settings)
     checked_file(Path(path), Path(path).parent, limit=LIMIT)
-    with closing(sqlite3.connect('file:'+Path(path).as_posix()+'?mode=ro', uri=True)) as connection:
+    with closing(sqlite3.connect(sqlite_readonly_uri(path), uri=True)) as connection:
         if connection.execute('PRAGMA integrity_check').fetchall() != [('ok',)] or connection.execute('PRAGMA foreign_key_check').fetchall():
             raise ValueError('DATABASE_INTEGRITY')
         if _schema(connection) != reference: raise ValueError('DATABASE_SCHEMA_MISMATCH')
