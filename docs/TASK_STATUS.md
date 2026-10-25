@@ -1,5 +1,7 @@
 # 任务实际状态
 
+D2g5b 产品 `0738989` 已正常同步GitHub，远端SHA/tree及5,385条目一致；[同步回执](testing/weixin-provenance/20261025/github-sync.md)。
+
 2026-10-25 D2g5b 已完成消息代际来源存档：schema18追加7字段不可变来源，按完整poll前缀和UTC固定历史目标；34前驱冻结、公共完整父链及两代真实qxbak/原件/恢复隔离已验。根33模块1094不同Python：1093PASS/1基线长路径FAIL（142新增全PASS），233 Node和四开发门通过，独审同人双轴本片0遗留、范围外故障OPEN；[实测](testing/weixin-provenance/20261025/README.md)。旧收件/分发guard仍暂停，下一片实际按代际接收/分发及可信微信/E许可；0.4.1未更新，全仓/浏览器/安装版/真实微信模型等NOT_RUN，原生崩溃/WIN-PATH-02保持OPEN。
 
 D2g5a 产品 `6c0b26a` 已正常同步GitHub，远端SHA/tree及5,297条目一致；[同步回执](testing/weixin-generation-preview/20261025/github-sync.md)。

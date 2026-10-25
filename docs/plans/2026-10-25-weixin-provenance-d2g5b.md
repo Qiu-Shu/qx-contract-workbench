@@ -31,7 +31,7 @@
 - [x] 编写集中DTO、正向非零来源/缺失/错配/跨代reply等失败测试；独立schema先RED。
 - [x] 最小schema/版本gate/纯历史来源校验；先GREEN后运行关联旧完整性/升级/备份回归。
 - [x] 独立冻结复核并根复验；正向两代真实qxbak、cnbak拒绝、恢复隔离、旧运行仍拒绝；未跑标NOT_RUN。
-- [ ] 记录命令/退出码/去重数量/散列与失败分类，更新状态，扫描授权文本，fetch后正常commit/push核SHA/tree；不提交用户AGENTS或.local。
+- [x] 记录命令/退出码/去重数量/散列与失败分类，更新状态，扫描授权文本，fetch后正常commit/push核SHA/tree；不提交用户AGENTS或.local。
 - [x] 上轮本聊天HumanLayer pending已于2026-10-25T08:41:13Z回读恢复。本轮推送后按AGENTS三端收尾，具体成功以最终回执为准；超时保留待同步，不唤醒其他聊天/不恢复五分钟任务。
 
 ## Review Focus
@@ -39,3 +39,5 @@
 重算摘要也不能改变目标因果边界；空poll/其他peer消息也参与账号checkpoint前缀；同一UTC刻度不同文本表示不可绕过比较；恢复只读与旧消息归属不可借schema升级绕过；直接单family校验及完整备份都不能漏查新旧来源。测试里的SQL seed仅构造独立存储样本，不能称产品运行入口已可用。
 
 实测见[阶段证据](../testing/weixin-provenance/20261025/README.md)：33模块1094不同Python，1093PASS/1基线长路径FAIL，142新增全PASS；233 Node与四门exit0。本片来源存档验收通过，旧长路径SQLite失败经冻结9c04b4d单例复现，作为独立OPEN保留；既有WinError5/WIN-PATH-02与原生崩溃不关闭。下一片为按代际原子接收/分发，真实账号模型仍关闭。
+
+产品0738989及证据已正常推送，核远端SHA/tree与5,385条目一致；[同步回执](../testing/weixin-provenance/20261025/github-sync.md)。用户AGENTS改动保留未提交。

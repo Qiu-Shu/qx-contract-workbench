@@ -52,3 +52,5 @@
 已有A—C和D2a—D2g5a证据仍在[任务状态](../../../TASK_STATUS.md)；本片结果不能代替生产或法律试点验收。
 
 验证SHA256对应实际Windows工作区；单个JSON fixture经Git既有规则转LF，JSON与34前驱内容相同，其余授权文件暂存字节与工作区相同，见[换行核验](git-normalization.json)。
+
+产品`0738989`已正常推送，远端SHA/tree与5,385条目一致，见[GitHub回执](github-sync.md)。
