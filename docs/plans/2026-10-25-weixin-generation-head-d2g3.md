@@ -25,6 +25,6 @@ GET `/api/assistant/conversations/{cid}/weixin-authorization/generations/head` �
 - [x] 新增集中DTO、service/HTTP合成失败测试；根46/独立11有效RED，首次同名收集错误单列，不算产品RED。
 - [x] 最小实现四产品文件：domain、generations、conversation、web/weixin_authorization；不接UI/按代际运行。
 - [x] HTTP head→POST两代、scope来源/当前ACL/隐私/恢复；实际head/append与head/poll双向SQLite竞争、旧CAS、新Database、坏历史/schema均验。根14模块298不同Python、192 Node与四门通过；独立Spec完成，root Standards核查完成，第二独立Standards因宿主thread limit/WorkBuddy Bash拒绝NOT_RUN，不称双独立。见[实测](../testing/weixin-generation-head/20261025/README.md)。
-- [ ] 更新状态和实测证据，扫描本轮授权文件，fetch后正常提交推送codex/contract-review-v2并核远端SHA/tree；保留用户AGENTS改动。
+- [x] 更新状态和实测证据，52授权文件扫描通过；fetch后正常提交推送d6627de至codex/contract-review-v2，远端SHA/tree及5,197条目一致；保留用户AGENTS改动，[回执](../testing/weixin-generation-head/20261025/github-sync.md)。
 
 按AGENTS在最终答复前完成HumanLayer回读、Obsidian记录；TencentDB使用已加载Stop自动入队，仅有全局状态时不声称本轮保存成功。浏览器UI/安装版/全仓/真实微信与模型合同/付费签发外发均NOT_RUN；原生崩溃和WIN-PATH-02保持OPEN。后续再接明确桌面操作及按代际历史生效边界。

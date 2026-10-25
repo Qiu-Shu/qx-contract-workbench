@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+D2g3 产品 `d6627de` 已正常同步GitHub，远端SHA/tree及5,197条目一致；[同步回执](docs/testing/weixin-generation-head/20261025/github-sync.md)。
+
 最新接续（2026-10-25，D2g3）：七字段history_only head、根CID精确GET和同事务root/latest ACL/历史/checkpoint已接，HTTP head→两代POST、旧CAS、真实锁竞争、坏历史/schema、恢复和零写均实测；298不同Python、192 Node及四门通过，独立Spec复核完成，[证据](docs/testing/weixin-generation-head/20261025/README.md)。下一片明确桌面操作，再接按代际接收分发；当前仍暂停。宿主thread limit和WorkBuddy Bash拒绝使独立Standards未完成，不称双独立审查；可信微信/E许可、0.4.1、原生崩溃/WIN-PATH-02状态不变。
 
 D2g2 产品 `00f17bb` 已正常同步GitHub，远端SHA/tree及5,152条目一致；[同步回执](docs/testing/weixin-generation-http/20261025/github-sync.md)。

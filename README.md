@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+D2g3 产品 `d6627de` 已正常同步GitHub，远端SHA/tree及5,197条目一致；[同步回执](docs/testing/weixin-generation-head/20261025/github-sync.md)。
+
 2026-10-25 D2g3 已补齐最新代际只读head：调用方可仅用HTTP元数据构造下一次明确追加，root/latest权限、历史scope来源与同事务checkpoint已验；14模块298不同Python、192 Node及四开发门通过，独立Spec复核完成，[实测](docs/testing/weixin-generation-head/20261025/README.md)。账号收件仍暂停，页面与按代际运行待接；独立Standards代理未完成，原生崩溃和WIN-PATH-02继续开放。
 
 D2g2 产品 `00f17bb` 已正常同步GitHub，远端SHA/tree及5,152条目一致；[同步回执](docs/testing/weixin-generation-http/20261025/github-sync.md)。
