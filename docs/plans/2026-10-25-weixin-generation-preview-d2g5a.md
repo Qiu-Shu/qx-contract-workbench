@@ -36,6 +36,8 @@
 - [x] 最小实现事务内持久目标解析与现codec预览，跑新增GREEN和相关回归；不扩权限/运行guard。
 - [x] 独立复核当前冻结产品与测试，根复验独立产物，记录实际数量/退出码、源散列和NOT_RUN。
 - [x] 对比D2g3/D2g4计数的不同测试集合，避免共享记忆误认为数量回退；只解释实际范围，不重做已完成工作。
-- [ ] 更新状态/实测证据，扫描授权文本，fetch后正常commit/push并核远端SHA/tree；按当前AGENTS三端收尾。
+- [x] 更新状态/实测证据，扫描授权文本，fetch后正常commit/push并核远端SHA/tree；按当前AGENTS三端收尾。
 
 最终361不同Python、233 Node、四开发门exit0；50新例含独立7且不重复累加，原恢复session预期错误和原审计计划错误均保留。产品自首次实现后未改；[证据](../testing/weixin-generation-preview/20261025/README.md)。
+
+产品6c0b26a及证据已正常推送并核远端SHA/tree/5,297条目一致；[回执](../testing/weixin-generation-preview/20261025/github-sync.md)。用户AGENTS未提交。

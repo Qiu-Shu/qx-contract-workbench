@@ -1,5 +1,7 @@
 # 任务实际状态
 
+D2g5a 产品 `6c0b26a` 已正常同步GitHub，远端SHA/tree及5,297条目一致；[同步回执](testing/weixin-generation-preview/20261025/github-sync.md)。
+
 2026-10-25 D2g5a 已完成按持久代际的合成离线预览：同一事务核当前身份/root/latest权限、完整head/scope及当前两类cursor，预览不推进游标或写业务；安全拒绝保留原审计。根14模块361不同Python（50新＋135协议＋100服务＋76head/guard）、233 Node及四门通过，独立7例含真实锁竞争和权限审计；真实qxbak核旧session401/重新登录409，[实测](testing/weixin-generation-preview/20261025/README.md)。旧收件/分发guard仍暂停；下一片持久消息代际来源/完整性与实际合成接收分发，可信微信/E许可仍待。0.4.1未更新，浏览器/全仓/安装版/真实微信模型等NOT_RUN，原生崩溃/WIN-PATH-02保持OPEN。
 
 D2g4 产品 `b3f204d` 已正常同步GitHub，远端SHA/tree及5,244条目一致；[同步回执](testing/weixin-generation-ui/20261025/github-sync.md)。
