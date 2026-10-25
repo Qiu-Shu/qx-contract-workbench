@@ -16,7 +16,7 @@
 - [x] 新helper16FAIL，独立边界6FAIL/2PASS，新增快照1FAIL；最小共享URI与局部DBAPI修复后新增25不同用例根/独立两次全PASS，不叠加计数。保留中间失败与一项相对引用测试预期更正。
 - [x] 原长路径旧例实际GREEN，中文/百分号/#/长路径只读、禁止写入、缺失不创建、源字节不变、普通/原生两种备份与恢复隔离；关联本机升级/资料库回归。
 - [x] 独立Spec/Standards复核；记录命令、退出码、不同用例与输入SHA；未跑NOT_RUN。
-- [ ] 更新状态与实际证据，扫描授权文件，正常fetch/commit/push核远端SHA/tree。
+- [x] 更新状态与实际证据，69文件扫描/字节核对，正常fetch/commit/push产品7f27f4b，远端SHA/tree与5444条目一致；文档回执另正常提交。
 - [ ] 同一脱敏摘要完成HumanLayer/Obsidian收尾；TencentDB正常Stop待提炼。旧同步文本接近Windowsargv限制，必要时保留pending且准确说明，不能修改别的聊天/恢复五分钟任务。
 
 ## 一手依据
@@ -24,3 +24,5 @@
 SQLite URI的mode=ro、百分号编码和authority规则：https://www.sqlite.org/uri.html 。只凭当前运行时实测确定本机行为；不因官方VFS另有长路径选项而引入额外配置。
 
 实际最终证据：[20模块289不同Python/233Node/四开发门，含夹具RED及单处修正](../testing/long-sqlite/20261025/README.md)。按代际运行与可信微信/E仍待。
+
+HumanLayer/Obsidian为本轮最终答复前的独立收尾，当前Git快照不预报其成功；结果依据本轮本机回执及最终答复。TencentDB沿正常Stop待提炼，不重复手工入队。

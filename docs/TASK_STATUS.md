@@ -1,5 +1,7 @@
 # 任务实际状态
 
+SQLite路径修复产品`7f27f4b`已正常同步GitHub，远端SHA/tree及5,444条目一致；[同步回执](testing/long-sqlite/20261025/github-sync.md)。
+
 2026-10-25 已修复SQLite精确只读路径与长路径恢复后再次备份：共享8处URI入口、局部快照DBAPI文件名，保留原件/引用/权限/结构守卫。新25已含于20模块289不同Python全部PASS，233 Node/四开发门通过；旧升级夹具漏表先基线复现再单处修正，58独立/88根回归通过。同一独立审查者双轴0遗留，[实际证据](testing/long-sqlite/20261025/README.md)。原A—C和D离线底座保留；按代际实际收件分发/可信微信/E许可仍待。0.4.1未更新，全仓/浏览器/安装版/真实微信模型等NOT_RUN，原生崩溃及WIN-PATH-02保持OPEN。GitHub按后附实际回执核对。
 
 D2g5b 产品 `0738989` 已正常同步GitHub，远端SHA/tree及5,385条目一致；[同步回执](testing/weixin-provenance/20261025/github-sync.md)。
