@@ -17,7 +17,7 @@ GET 复用固定查询；恢复、逻辑撤权、会话归档或 scope 增长不
 - [x] 先新增 DTO、实际 HTTP 连续两代/幂等/旧 CAS/严格输入/当前权限/隐私失败测试，根50/独立14 RED均0 setup errors；独立测试恢复、解析期间撤权和丢 ACK。
 - [x] 最小实现集中投影、CID wrapper、两路由及精确只读白名单；不增加 head/UI 或隐式收件切换。
 - [x] 根代理运行新增与关联服务/恢复/旧授权10模块241不同Python、192 Node和四开发门，独立Standards/Spec审阅实际diff；[实测](../testing/weixin-generation-http/20261025/README.md)记录命令、退出码、数量及源码摘要。
-- [ ] 更新 README/TODO/TASK_STATUS 和实际证据，仅暂存本片文件；fetch 后正常提交推送，核远端 SHA/tree；保留用户 AGENTS.md 改动。
+- [x] 更新 README/TODO/TASK_STATUS 和实际证据，仅暂存本片40文件；fetch 后正常提交推送00f17bb，远端 SHA/tree及5,152条目一致；保留用户 AGENTS.md 改动，[同步回执](../testing/weixin-generation-http/20261025/github-sync.md)。
 
 每轮最终答复前另按AGENTS实际检查 HumanLayer 回读与 Obsidian 保存成功回执；TencentDB 使用 Stop 自动入队，不把全局队列冒充本轮成功。记忆成功与否以当轮实际工具回执为准。
 

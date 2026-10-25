@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+D2g2 产品 `00f17bb` 已正常同步GitHub，远端SHA/tree及5,152条目一致；[同步回执](docs/testing/weixin-generation-http/20261025/github-sync.md)。
+
 最新接续（2026-10-25，D2g2）：根CID受保护的代际POST/固定GET及11字段history_only回执已接，解析前后权限/CSRF/同源、二代/幂等/CAS、恢复/历史ACL与丢ACK只查询已验；241不同Python、192 Node、四门及独立双轴审阅通过，[实测](docs/testing/weixin-generation-http/20261025/README.md)。下一片最新CAS head/明确桌面操作与按代际接收分发；当前账号继续暂停，不称运行切换。可信微信身份/资格与E限期许可待办；0.4.1、原生崩溃和WIN-PATH-02保持开放，浏览器UI/真实微信/模型NOT_RUN。
 
 恢复诊断工具提交 `9c2acd2` 已正常同步GitHub，远端SHA/tree与5,117条目一致；[同步回执](docs/testing/restore-publication/20261025/github-sync.md)。

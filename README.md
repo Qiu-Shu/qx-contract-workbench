@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+D2g2 产品 `00f17bb` 已正常同步GitHub，远端SHA/tree及5,152条目一致；[同步回执](docs/testing/weixin-generation-http/20261025/github-sync.md)。
+
 2026-10-25 D2g2 已接通根会话下的代际历史追加与固定回执查询HTTP：当前身份/CSRF/同源、解析前后权限复核、11字段脱敏投影和恢复精确只读入口均已验证。10模块241不同Python、192 Node及四开发门通过，独立双轴审阅完成；[实际证据](docs/testing/weixin-generation-http/20261025/README.md)。尚无代际页面或运行时切换，账号收件仍暂停；真实微信/模型关闭，原生崩溃和WIN-PATH-02保持OPEN。
 
 恢复诊断工具提交 `9c2acd2` 已正常同步GitHub，远端SHA/tree与5,117条目一致；[同步回执](docs/testing/restore-publication/20261025/github-sync.md)。
