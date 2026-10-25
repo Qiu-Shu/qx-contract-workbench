@@ -132,3 +132,14 @@ def find_generation(actor, cid, request_id, *, database):
         mapping_id = mapping.id
     value = generations.find_peer_generation(current, mapping_id, request_id, database=database)
     return _generation_receipt(value) if value is not None else None
+
+
+def read_generation_head(actor, cid, *, database):
+    """Resolve only the root CID; the head transaction rechecks latest target access."""
+    from . import generations
+    with database.session() as db:
+        current, _, mapping, _, _ = _context(actor, cid, db)
+        if mapping is None:
+            return None
+        mapping_id = mapping.id
+    return generations.read_peer_generation_head(current, mapping_id, database=database)

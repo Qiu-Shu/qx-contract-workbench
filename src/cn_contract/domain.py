@@ -4810,3 +4810,24 @@ class WeixinGenerationReceiptView(DomainModel):
         if hashlib.sha256(raw).hexdigest() != self.scope_sha256:
             raise ValueError('receipt scope hash mismatch')
         return self
+
+
+class WeixinGenerationHeadView(DomainModel):
+    """A coherent historical CAS snapshot, without current execution authority."""
+    mode: Literal['synthetic'] = 'synthetic'
+    state: Literal['history_only'] = 'history_only'
+    generation: NonNegativeInt
+    generation_sha256: SHA256 | None
+    scope: ScopeSnapshot
+    scope_sha256: SHA256
+    checkpoint_revision: NonNegativeInt
+
+    @model_validator(mode='after')
+    def complete_historical_head(self):
+        from .config import canonical_json
+        if (self.generation == 0) != (self.generation_sha256 is None):
+            raise ValueError('only generation zero omits its generation hash')
+        raw = canonical_json(self.scope.model_dump(mode='json')).encode('utf-8')
+        if hashlib.sha256(raw).hexdigest() != self.scope_sha256:
+            raise ValueError('head scope hash mismatch')
+        return self

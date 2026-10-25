@@ -1,0 +1,13 @@
+
+=================================== ERRORS ====================================
+______ ERROR collecting tests/integration/test_weixin_generation_head.py ______
+import file mismatch:
+imported module 'test_weixin_generation_head' has this __file__ attribute:
+  D:\Documents\ChatGPT\律所项目\tests\unit\test_weixin_generation_head.py
+which is not the same as the test file we want to collect:
+  D:\Documents\ChatGPT\律所项目\tests\integration\test_weixin_generation_head.py
+HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules
+=========================== short test summary info ===========================
+ERROR tests/integration/test_weixin_generation_head.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.45s

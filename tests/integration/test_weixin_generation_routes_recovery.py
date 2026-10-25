@@ -72,7 +72,7 @@ def test_generation_receipt_reads_have_an_exact_recovery_path_predicate():
     assert predicate(base+'/by-request/'+key)
     for path in (base, base+'/', base+'/by-request', base+'/by-request/bad',
             base+'/by-request/'+key+'/', base+'/by-request/'+key+'/polls',
-            base+'/by-request/'+key.upper(), base+'/head', base+'/polls'):
+            base+'/by-request/'+key.upper(), base+'/head/', base+'/polls'):
         assert not predicate(path), path
 
 
@@ -95,7 +95,7 @@ def test_actual_fenced_app_reads_fixed_generation_and_blocks_writes_and_nearby_p
             unknown = restored.get(h['base']+'/by-request/'+str(uuid4()))
             assert unknown.status_code == 200 and unknown.json() is None, unknown.text
             assert restored.post(h['base'], headers=headers, json=h['request']).status_code == 409
-            for suffix in ('', '/', '/head', '/polls', '/by-request/bad',
+            for suffix in ('', '/', '/head/', '/polls', '/by-request/bad',
                     '/by-request/'+h['request']['request_id']+'/polls'):
                 assert restored.get(h['base']+suffix).status_code == 409
             assert snapshot(app.state.database) == before

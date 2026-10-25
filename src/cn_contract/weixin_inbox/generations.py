@@ -165,3 +165,18 @@ def find_peer_generation(actor, root_mapping_id, request_id, *, database):
         if value is not None:
             _target(current, value.task_binding_id, db, active=False)
     return value
+
+
+def read_peer_generation_head(actor, root_mapping_id, *, database):
+    """Read root, history, latest target and checkpoint under one SQLite lock."""
+    with accounts._transaction(database) as db:
+        current, account, mapping = _root(actor, root_mapping_id, db, active=False)
+        history = _history(mapping, db)
+        latest = history[-1] if history else None
+        if latest is not None:
+            _target(current, latest.task_binding_id, db, active=False)
+        scope = latest.scope if latest else accounts._effective_scope(mapping, db)
+        return d.WeixinGenerationHeadView(generation=len(history),
+            generation_sha256=latest.generation_sha256 if latest else None,
+            scope=scope, scope_sha256=_digest(scope.model_dump(mode='json')),
+            checkpoint_revision=account.checkpoint_revision)

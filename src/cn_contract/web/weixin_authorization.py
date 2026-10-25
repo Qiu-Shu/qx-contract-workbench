@@ -10,7 +10,7 @@ from ..weixin_inbox import conversation
 from .request_context import actor_in, body_input, same_origin
 
 _UUID = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
-_READ_PATH = re.compile(rf'/api/assistant/conversations/{_UUID}/weixin-authorization(?:/(?:refreshes|generations)/by-request/{_UUID})?')
+_READ_PATH = re.compile(rf'/api/assistant/conversations/{_UUID}/weixin-authorization(?:/(?:refreshes|generations)/by-request/{_UUID}|/generations/head)?')
 
 
 def is_weixin_authorization_read_path(path):
@@ -56,3 +56,7 @@ def register_routes(app, database):
     @app.get(base+'/generations/by-request/{request_id}')
     def find_generation(cid:UUID, request_id:UUID, request:Request):
         return conversation.find_generation(authorize(request, cid), cid, request_id, database=database)
+
+    @app.get(base+'/generations/head')
+    def generation_head(cid:UUID, request:Request):
+        return conversation.read_generation_head(authorize(request, cid), cid, database=database)

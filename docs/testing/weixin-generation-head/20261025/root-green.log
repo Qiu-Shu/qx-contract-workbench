@@ -1,0 +1,18 @@
+..........................................FF..                           [100%]
+================================== FAILURES ===================================
+__ test_latest_target_current_acl_is_required_before_head_disclosure[owner] ___
+tests\integration\test_weixin_generation_head_routes.py:115: in test_latest_target_current_acl_is_required_before_head_disclosure
+    assert found.status_code==403,found.text
+E   AssertionError: {"code":"VERSION_CONFLICT","message":"request blocked","correlation_id":"32fcc37c-9f34-4e64-bdac-7842ea3e0c2f","retryable":false}
+E   assert 409 == 403
+E    +  where 409 = <Response [409 Conflict]>.status_code
+_ test_latest_target_current_acl_is_required_before_head_disclosure[workspace] _
+tests\integration\test_weixin_generation_head_routes.py:115: in test_latest_target_current_acl_is_required_before_head_disclosure
+    assert found.status_code==403,found.text
+E   AssertionError: {"code":"VERSION_CONFLICT","message":"request blocked","correlation_id":"eae2dbbc-010c-4f9c-837b-0e40dc705ec6","retryable":false}
+E   assert 409 == 403
+E    +  where 409 = <Response [409 Conflict]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_latest_target_current_acl_is_required_before_head_disclosure[owner]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_latest_target_current_acl_is_required_before_head_disclosure[workspace]
+2 failed, 44 passed in 19.62s

@@ -1,0 +1,452 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                           [100%]
+================================== FAILURES ===================================
+____________ test_head_is_frozen_seven_fields_and_history_only[0] _____________
+tests\unit\test_weixin_generation_head_view.py:24: in test_head_is_frozen_seven_fields_and_history_only
+    value=model()(**values(generation=number,generation_sha256='a'*64 if number else None))
+          ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+____________ test_head_is_frozen_seven_fields_and_history_only[1] _____________
+tests\unit\test_weixin_generation_head_view.py:24: in test_head_is_frozen_seven_fields_and_history_only
+    value=model()(**values(generation=number,generation_sha256='a'*64 if number else None))
+          ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+____________ test_head_is_frozen_seven_fields_and_history_only[3] _____________
+tests\unit\test_weixin_generation_head_view.py:24: in test_head_is_frozen_seven_fields_and_history_only
+    value=model()(**values(generation=number,generation_sha256='a'*64 if number else None))
+          ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change0] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change1] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change2] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change3] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change4] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change5] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change6] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change7] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change8] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change9] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change10] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change11] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change12] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change13] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change14] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change15] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change16] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change17] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change18] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+_ test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change19] _
+tests\unit\test_weixin_generation_head_view.py:40: in test_head_rejects_incomplete_cas_invented_authority_and_private_metadata
+    with pytest.raises(ValidationError): model()(**values(**change))
+                                         ^^^^^^^
+tests\unit\test_weixin_generation_head_view.py:12: in model
+    assert hasattr(d,'WeixinGenerationHeadView'), 'D2g3 needs the seven-field historical head'
+E   AssertionError: D2g3 needs the seven-field historical head
+E   assert False
+E    +  where False = hasattr(d, 'WeixinGenerationHeadView')
+____ test_zero_generation_without_grant_uses_mapping_scope_and_checkpoint _____
+tests\integration\test_weixin_generation_head.py:33: in test_zero_generation_without_grant_uses_mapping_scope_and_checkpoint
+    value=head(h)
+          ^^^^^^^
+tests\integration\test_weixin_generation_head.py:16: in head
+    assert hasattr(api(),'read_peer_generation_head'),'D2g3 needs a coherent current generation head'
+E   AssertionError: D2g3 needs a coherent current generation head
+E   assert False
+E    +  where False = hasattr(<module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'>, 'read_peer_generation_head')
+E    +    where <module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'> = api()
+_____ test_zero_head_uses_last_authorized_grant_not_current_root_snapshot _____
+tests\integration\test_weixin_generation_head.py:43: in test_zero_head_uses_last_authorized_grant_not_current_root_snapshot
+    before=snapshot(h['database']);value=head(h)
+                                         ^^^^^^^
+tests\integration\test_weixin_generation_head.py:16: in head
+    assert hasattr(api(),'read_peer_generation_head'),'D2g3 needs a coherent current generation head'
+E   AssertionError: D2g3 needs a coherent current generation head
+E   assert False
+E    +  where False = hasattr(<module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'>, 'read_peer_generation_head')
+E    +    where <module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'> = api()
+_______ test_two_generations_select_latest_head_and_keep_fixed_history ________
+tests\integration\test_weixin_generation_head.py:52: in test_two_generations_select_latest_head_and_keep_fixed_history
+    before=snapshot(h['database']);value=head(h)
+                                         ^^^^^^^
+tests\integration\test_weixin_generation_head.py:16: in head
+    assert hasattr(api(),'read_peer_generation_head'),'D2g3 needs a coherent current generation head'
+E   AssertionError: D2g3 needs a coherent current generation head
+E   assert False
+E    +  where False = hasattr(<module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'>, 'read_peer_generation_head')
+E    +    where <module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'> = api()
+_ test_head_remains_fixed_historical_metadata_under_read_only_states[root_archive] _
+tests\integration\test_weixin_generation_head.py:74: in test_head_remains_fixed_historical_metadata_under_read_only_states
+    before=snapshot(database);value=head(h)
+                                    ^^^^^^^
+tests\integration\test_weixin_generation_head.py:16: in head
+    assert hasattr(api(),'read_peer_generation_head'),'D2g3 needs a coherent current generation head'
+E   AssertionError: D2g3 needs a coherent current generation head
+E   assert False
+E    +  where False = hasattr(<module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'>, 'read_peer_generation_head')
+E    +    where <module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'> = api()
+_ test_head_remains_fixed_historical_metadata_under_read_only_states[target_archive] _
+tests\integration\test_weixin_generation_head.py:74: in test_head_remains_fixed_historical_metadata_under_read_only_states
+    before=snapshot(database);value=head(h)
+                                    ^^^^^^^
+tests\integration\test_weixin_generation_head.py:16: in head
+    assert hasattr(api(),'read_peer_generation_head'),'D2g3 needs a coherent current generation head'
+E   AssertionError: D2g3 needs a coherent current generation head
+E   assert False
+E    +  where False = hasattr(<module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'>, 'read_peer_generation_head')
+E    +    where <module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'> = api()
+_ test_head_remains_fixed_historical_metadata_under_read_only_states[account_revoke] _
+tests\integration\test_weixin_generation_head.py:74: in test_head_remains_fixed_historical_metadata_under_read_only_states
+    before=snapshot(database);value=head(h)
+                                    ^^^^^^^
+tests\integration\test_weixin_generation_head.py:16: in head
+    assert hasattr(api(),'read_peer_generation_head'),'D2g3 needs a coherent current generation head'
+E   AssertionError: D2g3 needs a coherent current generation head
+E   assert False
+E    +  where False = hasattr(<module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'>, 'read_peer_generation_head')
+E    +    where <module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'> = api()
+_ test_head_remains_fixed_historical_metadata_under_read_only_states[peer_revoke] _
+tests\integration\test_weixin_generation_head.py:74: in test_head_remains_fixed_historical_metadata_under_read_only_states
+    before=snapshot(database);value=head(h)
+                                    ^^^^^^^
+tests\integration\test_weixin_generation_head.py:16: in head
+    assert hasattr(api(),'read_peer_generation_head'),'D2g3 needs a coherent current generation head'
+E   AssertionError: D2g3 needs a coherent current generation head
+E   assert False
+E    +  where False = hasattr(<module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'>, 'read_peer_generation_head')
+E    +    where <module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'> = api()
+__ test_head_remains_fixed_historical_metadata_under_read_only_states[fence] __
+tests\integration\test_weixin_generation_head.py:74: in test_head_remains_fixed_historical_metadata_under_read_only_states
+    before=snapshot(database);value=head(h)
+                                    ^^^^^^^
+tests\integration\test_weixin_generation_head.py:16: in head
+    assert hasattr(api(),'read_peer_generation_head'),'D2g3 needs a coherent current generation head'
+E   AssertionError: D2g3 needs a coherent current generation head
+E   assert False
+E    +  where False = hasattr(<module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'>, 'read_peer_generation_head')
+E    +    where <module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'> = api()
+_ test_head_remains_fixed_historical_metadata_under_read_only_states[target_growth] _
+tests\integration\test_weixin_generation_head.py:74: in test_head_remains_fixed_historical_metadata_under_read_only_states
+    before=snapshot(database);value=head(h)
+                                    ^^^^^^^
+tests\integration\test_weixin_generation_head.py:16: in head
+    assert hasattr(api(),'read_peer_generation_head'),'D2g3 needs a coherent current generation head'
+E   AssertionError: D2g3 needs a coherent current generation head
+E   assert False
+E    +  where False = hasattr(<module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'>, 'read_peer_generation_head')
+E    +    where <module 'cn_contract.weixin_inbox.generations' from 'D:\\Documents\\ChatGPT\\律所项目\\src\\cn_contract\\weixin_inbox\\generations.py'> = api()
+_ test_head_to_two_explicit_posts_uses_only_http_metadata_and_stale_head_conflicts _
+tests\integration\test_weixin_generation_head_routes.py:47: in test_head_to_two_explicit_posts_uses_only_http_metadata_and_stale_head_conflicts
+    before=snapshot(database);zero=read(client,base)
+                                   ^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_head_routes.py:29: in read
+    assert response.status_code==200,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"afcae742-0a92-46f6-a7d9-5071c87d23c7","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+________________ test_unbound_head_is_null_and_creates_nothing ________________
+tests\integration\test_weixin_generation_head_routes.py:71: in test_unbound_head_is_null_and_creates_nothing
+    assert response.status_code==200 and response.json() is None
+E   assert (404 == 200)
+E    +  where 404 = <Response [404 Not Found]>.status_code
+______________ test_head_authentication_and_exact_read_predicate ______________
+tests\integration\test_weixin_generation_head_routes.py:77: in test_head_authentication_and_exact_read_predicate
+    assert client.get(base+'/head').status_code==401
+E   AssertionError: assert 404 == 401
+E    +  where 404 = <Response [404 Not Found]>.status_code
+E    +    where <Response [404 Not Found]> = get(('/api/assistant/conversations/d9c671b5-b6b0-4475-b836-c8698e04f009/weixin-authorization/generations' + '/head'))
+E    +      where get = <starlette.testclient.TestClient object at 0x0000020E617F7D10>.get
+______ test_head_rechecks_same_origin_and_current_root_authority[origin] ______
+tests\integration\test_weixin_generation_head_routes.py:95: in test_head_rechecks_same_origin_and_current_root_authority
+    assert response.status_code==403,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"31792a15-500d-4b2f-b6f5-0b2b98be4b19","retryable":false}
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+____ test_head_rechecks_same_origin_and_current_root_authority[fetch_site] ____
+tests\integration\test_weixin_generation_head_routes.py:95: in test_head_rechecks_same_origin_and_current_root_authority
+    assert response.status_code==403,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"c1416c5b-bb6b-4d95-877f-0376a5750534","retryable":false}
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+______ test_head_rechecks_same_origin_and_current_root_authority[owner] _______
+tests\integration\test_weixin_generation_head_routes.py:95: in test_head_rechecks_same_origin_and_current_root_authority
+    assert response.status_code==403,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"8c666b8f-13ca-46c0-abe3-0b7f8815b83a","retryable":false}
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+_____ test_head_rechecks_same_origin_and_current_root_authority[unknown] ______
+tests\integration\test_weixin_generation_head_routes.py:95: in test_head_rechecks_same_origin_and_current_root_authority
+    assert response.status_code==403,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"c2d19e68-6736-4dfa-b29c-fc4c04d3be7c","retryable":false}
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+____ test_head_rechecks_same_origin_and_current_root_authority[workspace] _____
+tests\integration\test_weixin_generation_head_routes.py:95: in test_head_rechecks_same_origin_and_current_root_authority
+    assert response.status_code==403,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"552bc2a3-3892-4ed1-8ecb-6d84cff80fc0","retryable":false}
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+_ test_latest_target_current_acl_is_required_before_head_disclosure[membership] _
+tests\integration\test_weixin_generation_head_routes.py:102: in test_latest_target_current_acl_is_required_before_head_disclosure
+    base=endpoint(view['scope']['conversation_id'])+'/generations';value=read(client,base)
+                                                                         ^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_head_routes.py:29: in read
+    assert response.status_code==200,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"ae4c8acc-6780-41be-a8ad-e9f4a2837e4b","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+_ test_latest_target_current_acl_is_required_before_head_disclosure[matter_archive] _
+tests\integration\test_weixin_generation_head_routes.py:102: in test_latest_target_current_acl_is_required_before_head_disclosure
+    base=endpoint(view['scope']['conversation_id'])+'/generations';value=read(client,base)
+                                                                         ^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_head_routes.py:29: in read
+    assert response.status_code==200,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"e554a3b0-71b7-492a-adbf-60b807ca8b74","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+__ test_latest_target_current_acl_is_required_before_head_disclosure[owner] ___
+tests\integration\test_weixin_generation_head_routes.py:102: in test_latest_target_current_acl_is_required_before_head_disclosure
+    base=endpoint(view['scope']['conversation_id'])+'/generations';value=read(client,base)
+                                                                         ^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_head_routes.py:29: in read
+    assert response.status_code==200,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"7d0a2973-c7d6-43a9-a48e-0701c916847a","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+_ test_latest_target_current_acl_is_required_before_head_disclosure[workspace] _
+tests\integration\test_weixin_generation_head_routes.py:102: in test_latest_target_current_acl_is_required_before_head_disclosure
+    base=endpoint(view['scope']['conversation_id'])+'/generations';value=read(client,base)
+                                                                         ^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_head_routes.py:29: in read
+    assert response.status_code==200,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"7ca9eddd-30bf-4a6c-a910-43d6528889cd","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+__ test_old_nonlatest_target_acl_does_not_grant_access_or_block_latest_head ___
+tests\integration\test_weixin_generation_head_routes.py:124: in test_old_nonlatest_target_acl_does_not_grant_access_or_block_latest_head
+    assert client.post(base,headers=headers,json=input_from_head(read(client,base),first,binding)).status_code==200
+                                                                 ^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_head_routes.py:29: in read
+    assert response.status_code==200,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"ede57eee-bc39-4a21-82ff-629e60c0a394","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+_ test_fenced_app_allows_exact_head_and_keeps_writes_and_nearby_paths_blocked _
+tests\integration\test_weixin_generation_head_routes.py:138: in test_fenced_app_allows_exact_head_and_keeps_writes_and_nearby_paths_blocked
+    base=endpoint(view['scope']['conversation_id'])+'/generations';value=input_from_head(read(client,base),dest,binding)
+                                                                                         ^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_head_routes.py:29: in read
+    assert response.status_code==200,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"a36487c7-14f8-49ef-9a20-1a24baa5889f","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_is_frozen_seven_fields_and_history_only[0]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_is_frozen_seven_fields_and_history_only[1]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_is_frozen_seven_fields_and_history_only[3]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change0]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change1]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change2]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change3]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change4]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change5]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change6]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change7]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change8]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change9]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change10]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change11]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change12]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change13]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change14]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change15]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change16]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change17]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change18]
+FAILED tests/unit/test_weixin_generation_head_view.py::test_head_rejects_incomplete_cas_invented_authority_and_private_metadata[change19]
+FAILED tests/integration/test_weixin_generation_head.py::test_zero_generation_without_grant_uses_mapping_scope_and_checkpoint
+FAILED tests/integration/test_weixin_generation_head.py::test_zero_head_uses_last_authorized_grant_not_current_root_snapshot
+FAILED tests/integration/test_weixin_generation_head.py::test_two_generations_select_latest_head_and_keep_fixed_history
+FAILED tests/integration/test_weixin_generation_head.py::test_head_remains_fixed_historical_metadata_under_read_only_states[root_archive]
+FAILED tests/integration/test_weixin_generation_head.py::test_head_remains_fixed_historical_metadata_under_read_only_states[target_archive]
+FAILED tests/integration/test_weixin_generation_head.py::test_head_remains_fixed_historical_metadata_under_read_only_states[account_revoke]
+FAILED tests/integration/test_weixin_generation_head.py::test_head_remains_fixed_historical_metadata_under_read_only_states[peer_revoke]
+FAILED tests/integration/test_weixin_generation_head.py::test_head_remains_fixed_historical_metadata_under_read_only_states[fence]
+FAILED tests/integration/test_weixin_generation_head.py::test_head_remains_fixed_historical_metadata_under_read_only_states[target_growth]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_head_to_two_explicit_posts_uses_only_http_metadata_and_stale_head_conflicts
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_unbound_head_is_null_and_creates_nothing
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_head_authentication_and_exact_read_predicate
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_head_rechecks_same_origin_and_current_root_authority[origin]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_head_rechecks_same_origin_and_current_root_authority[fetch_site]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_head_rechecks_same_origin_and_current_root_authority[owner]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_head_rechecks_same_origin_and_current_root_authority[unknown]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_head_rechecks_same_origin_and_current_root_authority[workspace]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_latest_target_current_acl_is_required_before_head_disclosure[membership]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_latest_target_current_acl_is_required_before_head_disclosure[matter_archive]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_latest_target_current_acl_is_required_before_head_disclosure[owner]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_latest_target_current_acl_is_required_before_head_disclosure[workspace]
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_old_nonlatest_target_acl_does_not_grant_access_or_block_latest_head
+FAILED tests/integration/test_weixin_generation_head_routes.py::test_fenced_app_allows_exact_head_and_keeps_writes_and_nearby_paths_blocked
+46 failed in 17.93s

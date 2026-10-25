@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="3.909" timestamp="2026-10-25T15:18:48.250820+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_generation_head_routes" name="test_latest_target_current_acl_is_required_before_head_disclosure[owner]" time="1.416"><failure message="AssertionError: {&quot;code&quot;:&quot;VERSION_CONFLICT&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;05446e62-4f83-4f04-845f-cee9af29ae01&quot;,&quot;retryable&quot;:false}&#10;assert 409 == 403&#10; +  where 409 = &lt;Response [409 Conflict]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x000001D1F5D66C00&gt;, &lt;cn_contract.persistence.Database object at 0x000001D.../律所项目/.local/weixin-generation-head-20261025/independent-review-temp/test_latest_target_current_acl0/workspaces/main'))
+damage = 'owner'
+
+    @pytest.mark.parametrize('damage',['membership','matter_archive','owner','workspace'])
+    def test_latest_target_current_acl_is_required_before_head_disclosure(chat,damage):
+        client,database,headers,view,actor,_,_,_,_=setup(chat)
+        matter=create_case(client,headers);destination,binding=target(client,headers,scope_kind='matter',scope_ref=matter)
+        base=endpoint(view['scope']['conversation_id'])+'/generations';value=read(client,base)
+        response=client.post(base,headers=headers,json=input_from_head(value,destination,binding))
+        assert response.status_code==200,response.text
+        with database.session() as db:
+            if damage=='membership':
+                db.execute(text('DELETE FROM matter_memberships WHERE matter_id=:id AND user_id=:user'),{'id':matter,'user':str(actor.user_id)})
+            elif damage=='matter_archive':db.execute(text("UPDATE matters SET status='archived' WHERE id=:id"),{'id':matter})
+            elif damage=='owner':
+                db.execute(text('''UPDATE assistant_conversations SET owner_id=(SELECT id FROM users
+                    WHERE username='另一合成律师') WHERE id=:id'''),{'id':destination['scope']['conversation_id']})
+            else:
+                db.execute(text('UPDATE assistant_conversations SET workspace_id=:new WHERE id=:id'),{'new':str(uuid4()),'id':destination['scope']['conversation_id']})
+        before=snapshot(database);found=client.get(base+'/head')
+&gt;       assert found.status_code==403,found.text
+E       AssertionError: {"code":"VERSION_CONFLICT","message":"request blocked","correlation_id":"05446e62-4f83-4f04-845f-cee9af29ae01","retryable":false}
+E       assert 409 == 403
+E        +  where 409 = &lt;Response [409 Conflict]&gt;.status_code
+
+tests\integration\test_weixin_generation_head_routes.py:115: AssertionError</failure></testcase><testcase classname="tests.integration.test_weixin_generation_head_routes" name="test_latest_target_current_acl_is_required_before_head_disclosure[workspace]" time="1.238"><failure message="AssertionError: {&quot;code&quot;:&quot;VERSION_CONFLICT&quot;,&quot;message&quot;:&quot;request blocked&quot;,&quot;correlation_id&quot;:&quot;f7096b00-1f70-4ca0-8634-83530dfc917f&quot;,&quot;retryable&quot;:false}&#10;assert 409 == 403&#10; +  where 409 = &lt;Response [409 Conflict]&gt;.status_code">chat = (&lt;starlette.testclient.TestClient object at 0x000001D1FC00D1C0&gt;, &lt;cn_contract.persistence.Database object at 0x000001D.../律所项目/.local/weixin-generation-head-20261025/independent-review-temp/test_latest_target_current_acl1/workspaces/main'))
+damage = 'workspace'
+
+    @pytest.mark.parametrize('damage',['membership','matter_archive','owner','workspace'])
+    def test_latest_target_current_acl_is_required_before_head_disclosure(chat,damage):
+        client,database,headers,view,actor,_,_,_,_=setup(chat)
+        matter=create_case(client,headers);destination,binding=target(client,headers,scope_kind='matter',scope_ref=matter)
+        base=endpoint(view['scope']['conversation_id'])+'/generations';value=read(client,base)
+        response=client.post(base,headers=headers,json=input_from_head(value,destination,binding))
+        assert response.status_code==200,response.text
+        with database.session() as db:
+            if damage=='membership':
+                db.execute(text('DELETE FROM matter_memberships WHERE matter_id=:id AND user_id=:user'),{'id':matter,'user':str(actor.user_id)})
+            elif damage=='matter_archive':db.execute(text("UPDATE matters SET status='archived' WHERE id=:id"),{'id':matter})
+            elif damage=='owner':
+                db.execute(text('''UPDATE assistant_conversations SET owner_id=(SELECT id FROM users
+                    WHERE username='另一合成律师') WHERE id=:id'''),{'id':destination['scope']['conversation_id']})
+            else:
+                db.execute(text('UPDATE assistant_conversations SET workspace_id=:new WHERE id=:id'),{'new':str(uuid4()),'id':destination['scope']['conversation_id']})
+        before=snapshot(database);found=client.get(base+'/head')
+&gt;       assert found.status_code==403,found.text
+E       AssertionError: {"code":"VERSION_CONFLICT","message":"request blocked","correlation_id":"f7096b00-1f70-4ca0-8634-83530dfc917f","retryable":false}
+E       assert 409 == 403
+E        +  where 409 = &lt;Response [409 Conflict]&gt;.status_code
+
+tests\integration\test_weixin_generation_head_routes.py:115: AssertionError</failure></testcase></testsuite></testsuites>
