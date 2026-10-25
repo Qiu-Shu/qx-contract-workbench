@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="24" skipped="0" tests="24" time="11.919" timestamp="2026-10-25T18:32:53.742354+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_two_service_polls_keep_historical_target_and_do_not_dispatch" time="0.486"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:52: in test_two_service_polls_keep_historical_target_and_do_not_dispatch
+    service=api();h=setup_history(world);first=append(h);before=snapshot(h['database'])
+            ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_complete_mixed_batch_preserves_global_dedup_and_zero_peer" time="0.421"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:73: in test_complete_mixed_batch_preserves_global_dedup_and_zero_peer
+    api();h=setup_history(world);first=append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_poll_time_is_strictly_after_generation_even_when_clock_does_not_advance[same]" time="0.426"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:89: in test_poll_time_is_strictly_after_generation_even_when_clock_does_not_advance
+    api();h=setup_history(world);generation=append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_poll_time_is_strictly_after_generation_even_when_clock_does_not_advance[backwards]" time="0.421"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:89: in test_poll_time_is_strictly_after_generation_even_when_clock_does_not_advance
+    api();h=setup_history(world);generation=append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[session]" time="0.418"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:99: in test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes
+    api();h=setup_history(world)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[role]" time="0.482"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:99: in test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes
+    api();h=setup_history(world)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[account]" time="0.424"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:99: in test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes
+    api();h=setup_history(world)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[restore]" time="0.430"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:99: in test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes
+    api();h=setup_history(world)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[schema17]" time="0.422"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:99: in test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes
+    api();h=setup_history(world)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[no_generation]" time="0.487"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:99: in test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes
+    api();h=setup_history(world)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit[target_scope]" time="0.429"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:118: in test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit
+    api();h=setup_history(world);generation=append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit[target_archived]" time="0.424"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:118: in test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit
+    api();h=setup_history(world);generation=append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit[root_archived]" time="0.432"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:118: in test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit
+    api();h=setup_history(world);generation=append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit[peer]" time="0.432"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:118: in test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit
+    api();h=setup_history(world);generation=append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_cross_generation_known_reply_in_either_direction_rolls_back_complete_poll[to_root]" time="0.419"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:135: in test_cross_generation_known_reply_in_either_direction_rolls_back_complete_poll
+    api();h=setup_history(world);first=append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_cross_generation_known_reply_in_either_direction_rolls_back_complete_poll[to_previous]" time="0.428"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:135: in test_cross_generation_known_reply_in_either_direction_rolls_back_complete_poll
+    api();h=setup_history(world);first=append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_cross_generation_known_reply_in_either_direction_rolls_back_complete_poll[from_previous_unknown]" time="0.418"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:135: in test_cross_generation_known_reply_in_either_direction_rolls_back_complete_poll
+    api();h=setup_history(world);first=append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_unknown_future_reply_can_become_known_in_same_generation" time="0.452"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:148: in test_unknown_future_reply_can_become_known_in_same_generation
+    api();h=setup_history(world);append(h)
+    ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[root_archive]" time="0.451"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:155: in test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore
+    service=api();h=setup_history(world);generation=append(h);value=poll_input(h)
+            ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[target_archive]" time="0.450"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:155: in test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore
+    service=api();h=setup_history(world);generation=append(h);value=poll_input(h)
+            ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[scope]" time="0.431"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:155: in test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore
+    service=api();h=setup_history(world);generation=append(h);value=poll_input(h)
+            ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[account]" time="0.639"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:155: in test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore
+    service=api();h=setup_history(world);generation=append(h);value=poll_input(h)
+            ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[peer]" time="0.422"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:155: in test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore
+    service=api();h=setup_history(world);generation=append(h);value=poll_input(h)
+            ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase><testcase classname="tests.integration.test_weixin_generation_ingress" name="test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[restore]" time="0.427"><failure message="AssertionError: D2g5c needs explicit generation-aware poll services&#10;assert None is not None&#10; +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress.py:155: in test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore
+    service=api();h=setup_history(world);generation=append(h);value=poll_input(h)
+            ^^^^^
+tests\integration\test_weixin_generation_ingress.py:26: in api
+    assert importlib.util.find_spec(name) is not None,'D2g5c needs explicit generation-aware poll services'
+E   AssertionError: D2g5c needs explicit generation-aware poll services
+E   assert None is not None
+E    +  where None = &lt;function find_spec at 0x000001EED078D8A0&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000001EED078D8A0&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase></testsuite></testsuites>

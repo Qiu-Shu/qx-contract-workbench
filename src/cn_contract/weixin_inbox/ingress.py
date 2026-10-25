@@ -117,7 +117,7 @@ def _original(account, source, db):
     return _descriptor(row) if row is not None else None
 
 
-def _describe(current, account, message, poll_id, ordinal, originals, db, settings):
+def _describe(current, account, message, poll_id, ordinal, originals, db, settings, *, generation_aware=False):
     source = _source(account, message)
     # Invalid Unicode is still accounted for by a digest, never stored as raw text.
     digest = hashlib.sha256(canonical_json(message).encode('utf-8', errors='surrogatepass')).hexdigest()
@@ -151,14 +151,19 @@ def _describe(current, account, message, poll_id, ordinal, originals, db, settin
             else:
                 mapping = accounts._mapping(row)
                 values['mapping_id'] = mapping.id
-                reason = accounts._mapping_reason(current, account, mapping, db)
+                binding_id, expected_scope = mapping.task_binding_id, None
+                if generation_aware:
+                    from .generation_ingress import _scope
+                    binding_id, expected_scope, reason = _scope(current, account, mapping, db)
+                else:
+                    reason = accounts._mapping_reason(current, account, mapping, db)
                 if reason is not None:
                     values['reason'] = reason
                 else:
                     scope = d.WeixinOfflineScope(bot_account_id=account.bot_account_id,
                         sender_peer_id=mapping.sender_peer_id, owner_id=current.user_id,
-                        session_id=current.session_id, binding_id=mapping.task_binding_id,
-                        expected_scope=accounts._effective_scope(mapping,db), task_cursor=0, upstream_cursor=account.upstream_cursor)
+                        session_id=current.session_id, binding_id=binding_id,
+                        expected_scope=expected_scope if expected_scope is not None else accounts._effective_scope(mapping,db), task_cursor=0, upstream_cursor=account.upstream_cursor)
                     payload = wire._event(message, scope, settings)
                     canonical_json(payload.model_dump(mode='json')).encode('utf-8')
                     values.update(status='accepted_pending_dispatch', reason=None, payload=payload)
@@ -176,47 +181,63 @@ def _insert(table, values, db):
         ','.join(':'+key for key in values)+')'), values)
 
 
+def _record_poll(current, account, request, raw_response, db, database, *, generation_aware=False):
+    """Shared journal/CAS inside the caller's existing BEGIN IMMEDIATE."""
+    if type(raw_response) is not bytes:
+        _fail()
+    if len(raw_response) > MAX_RAW_BYTES:
+        _fail('FILE_LIMIT', 413)
+    request_hash = _digest(request.model_dump(mode='json'))
+    response_hash = hashlib.sha256(raw_response).hexdigest()
+    previous = _receipt(account, request.request_id, db)
+    if previous is not None:
+        if previous.request_sha256 != request_hash or previous.response_sha256 != response_hash:
+            _fail('VERSION_CONFLICT', 409)
+        if generation_aware:
+            from .generation_ingress import _readable as generation_readable
+            receipt = generation_readable(current, account, previous, db)
+        else:
+            receipt = _readable(current, account, previous, db)
+    else:
+        if (request.expected_revision != account.checkpoint_revision
+                or request.expected_cursor != account.upstream_cursor):
+            _fail('VERSION_CONFLICT', 409)
+        cursor, messages = _envelope(raw_response, account.upstream_cursor)
+        identifier, originals = uuid4(), {}
+        descriptors = tuple(_describe(current, account, message, identifier, ordinal, originals,
+            db, database.settings, generation_aware=generation_aware) for ordinal, message in enumerate(messages, 1))
+        values = dict(id=str(identifier), account_id=str(account.id), request_id=str(request.request_id),
+            request_sha256=request_hash, response_sha256=response_hash,
+            expected_revision=request.expected_revision, next_revision=request.expected_revision+1,
+            expected_cursor=request.expected_cursor, next_cursor=cursor,
+            descriptor_count=len(descriptors), created_at=accounts._activity_time(account.id,db,now=_at(),after=generation_aware),
+            descriptors=[item.model_dump(mode='json') for item in descriptors])
+        receipt = d.WeixinPollReceipt(**values, receipt_sha256=_digest(values))
+        _insert('weixin_poll_receipts', receipt.model_dump(mode='json', exclude={'descriptors'}), db)
+        for descriptor in descriptors:
+            row = descriptor.model_dump(mode='json', exclude={'payload'})
+            row['payload_json'] = canonical_json(descriptor.payload.model_dump(mode='json')) if descriptor.payload else None
+            _insert('weixin_inbox_descriptors', row, db)
+        if generation_aware:
+            from .generation_ingress import _store_targets
+            _store_targets(receipt, db)
+        changed = db.execute(text('''UPDATE weixin_accounts
+            SET checkpoint_revision=:next,upstream_cursor=:cursor
+            WHERE id=:id AND checkpoint_revision=:expected AND upstream_cursor=:before'''),
+            {'next':receipt.next_revision, 'cursor':receipt.next_cursor, 'id':str(account.id),
+                'expected':request.expected_revision, 'before':request.expected_cursor}).rowcount
+        if changed != 1:
+            _fail('VERSION_CONFLICT', 409)
+    if generation_aware:
+        from .generation_ingress import _validate
+        _validate(db)
+    return receipt
+
+
 def record_synthetic_poll(actor, account_id, request, raw_response, *, database):
     """Commit the complete synthetic poll and its account checkpoint atomically."""
     request = d.WeixinPollInput.model_validate(request.model_dump(mode='python'))
     with accounts._transaction(database) as db:
         account, current = accounts._account(actor, account_id, db)
-        if type(raw_response) is not bytes:
-            _fail()
-        if len(raw_response) > MAX_RAW_BYTES:
-            _fail('FILE_LIMIT', 413)
-        request_hash = _digest(request.model_dump(mode='json'))
-        response_hash = hashlib.sha256(raw_response).hexdigest()
-        previous = _receipt(account, request.request_id, db)
-        if previous is not None:
-            if previous.request_sha256 != request_hash or previous.response_sha256 != response_hash:
-                _fail('VERSION_CONFLICT', 409)
-            receipt = _readable(current, account, previous, db)
-        else:
-            if (request.expected_revision != account.checkpoint_revision
-                    or request.expected_cursor != account.upstream_cursor):
-                _fail('VERSION_CONFLICT', 409)
-            cursor, messages = _envelope(raw_response, account.upstream_cursor)
-            identifier, originals = uuid4(), {}
-            descriptors = tuple(_describe(current, account, message, identifier, ordinal, originals,
-                db, database.settings) for ordinal, message in enumerate(messages, 1))
-            values = dict(id=str(identifier), account_id=str(account.id), request_id=str(request.request_id),
-                request_sha256=request_hash, response_sha256=response_hash,
-                expected_revision=request.expected_revision, next_revision=request.expected_revision+1,
-                expected_cursor=request.expected_cursor, next_cursor=cursor,
-                descriptor_count=len(descriptors), created_at=accounts._activity_time(account.id,db,now=_at()),
-                descriptors=[item.model_dump(mode='json') for item in descriptors])
-            receipt = d.WeixinPollReceipt(**values, receipt_sha256=_digest(values))
-            _insert('weixin_poll_receipts', receipt.model_dump(mode='json', exclude={'descriptors'}), db)
-            for descriptor in descriptors:
-                row = descriptor.model_dump(mode='json', exclude={'payload'})
-                row['payload_json'] = canonical_json(descriptor.payload.model_dump(mode='json')) if descriptor.payload else None
-                _insert('weixin_inbox_descriptors', row, db)
-            changed = db.execute(text('''UPDATE weixin_accounts
-                SET checkpoint_revision=:next,upstream_cursor=:cursor
-                WHERE id=:id AND checkpoint_revision=:expected AND upstream_cursor=:before'''),
-                {'next':receipt.next_revision, 'cursor':receipt.next_cursor, 'id':str(account.id),
-                    'expected':request.expected_revision, 'before':request.expected_cursor}).rowcount
-            if changed != 1:
-                _fail('VERSION_CONFLICT', 409)
+        receipt = _record_poll(current, account, request, raw_response, db, database)
     return receipt

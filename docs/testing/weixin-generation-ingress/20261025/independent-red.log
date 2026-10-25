@@ -1,0 +1,16 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_unknown_generation_poll_find_preserves_complete_history _________
+tests\integration\test_weixin_generation_ingress_atomic.py:37: in test_unknown_generation_poll_find_preserves_complete_history
+    service = api()
+              ^^^^^
+tests\integration\test_weixin_generation_ingress_atomic.py:17: in api
+    assert importlib.util.find_spec(name), 'D2g5c needs the dedicated atomic generation-poll service'
+E   AssertionError: D2g5c needs the dedicated atomic generation-poll service
+E   assert None
+E    +  where None = <function find_spec at 0x000002DD5CE45800>('cn_contract.weixin_inbox.generation_ingress')
+E    +    where <function find_spec at 0x000002DD5CE45800> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_generation_ingress_atomic.py::test_unknown_generation_poll_find_preserves_complete_history
+1 failed in 1.83s

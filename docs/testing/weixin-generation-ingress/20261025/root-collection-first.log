@@ -1,0 +1,16 @@
+
+=================================== ERRORS ====================================
+____ ERROR collecting tests/integration/test_weixin_generation_ingress.py _____
+ImportError while importing test module 'D:\Documents\ChatGPT\律所项目\tests\integration\test_weixin_generation_ingress.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_weixin_generation_ingress.py:12: in <module>
+    from cn_contract.persistence import RestoreFenceRow,SessionRow,UserRow
+E   ImportError: cannot import name 'RestoreFenceRow' from 'cn_contract.persistence' (D:\Documents\ChatGPT\律所项目\src\cn_contract\persistence.py)
+=========================== short test summary info ===========================
+ERROR tests/integration/test_weixin_generation_ingress.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.83s

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.788" timestamp="2026-10-25T18:32:29.956216+08:00" hostname="PC-20260920HQJZ"><testcase classname="tests.integration.test_weixin_generation_ingress_atomic" name="test_unknown_generation_poll_find_preserves_complete_history" time="0.496"><failure message="AssertionError: D2g5c needs the dedicated atomic generation-poll service&#10;assert None&#10; +  where None = &lt;function find_spec at 0x000002DD5CE45800&gt;('cn_contract.weixin_inbox.generation_ingress')&#10; +    where &lt;function find_spec at 0x000002DD5CE45800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec&#10; +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util">tests\integration\test_weixin_generation_ingress_atomic.py:37: in test_unknown_generation_poll_find_preserves_complete_history
+    service = api()
+              ^^^^^
+tests\integration\test_weixin_generation_ingress_atomic.py:17: in api
+    assert importlib.util.find_spec(name), 'D2g5c needs the dedicated atomic generation-poll service'
+E   AssertionError: D2g5c needs the dedicated atomic generation-poll service
+E   assert None
+E    +  where None = &lt;function find_spec at 0x000002DD5CE45800&gt;('cn_contract.weixin_inbox.generation_ingress')
+E    +    where &lt;function find_spec at 0x000002DD5CE45800&gt; = &lt;module 'importlib.util' (frozen)&gt;.find_spec
+E    +      where &lt;module 'importlib.util' (frozen)&gt; = importlib.util</failure></testcase></testsuite></testsuites>

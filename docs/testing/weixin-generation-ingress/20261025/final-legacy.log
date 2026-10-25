@@ -1,0 +1,10 @@
+........................................................................ [ 65%]
+......................................                                   [100%]
+============================== warnings summary ===============================
+tests/integration/test_weixin_accounts.py::test_service_revalidates_model_copy_inputs_before_any_persistence
+  D:\Documents\ChatGPT\律所项目\.venv\Lib\site-packages\pydantic\main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `str` - serialized value may not be as expected [field_name='bot_account_id', input_value=False, input_type=bool])
+    return self.__pydantic_serializer__.to_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+110 passed, 1 warning in 104.70s (0:01:44)

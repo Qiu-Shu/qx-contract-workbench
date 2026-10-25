@@ -1,0 +1,111 @@
+{
+  "baseline": "421ffa5abf464c8e8c89a49ab02f7afa19246d8c",
+  "axis": "Standards only",
+  "findings": [],
+  "reviewed_source_sha256": {
+    "src/cn_contract/weixin_inbox/accounts.py": "0ab2584d848a7af293970594d157743a5028b63a040481596d0f0dac51d85f13",
+    "src/cn_contract/weixin_inbox/ingress.py": "4faebd87c657dd5d4ab6a26eac77fa3f78af2ef3a0163271aeb5fc6dd736b093",
+    "src/cn_contract/weixin_inbox/generation_ingress.py": "2808b2d4d4e354a500cdfe73b706fb27a59be15c1533c13620c8fb24e9d0b0aa",
+    "tests/integration/test_weixin_generation_ingress.py": "e2e78273177f7fd1738d1d5b4ba4e1db6a4339b164533b7380ce75c6e302d8cd",
+    "tests/integration/test_weixin_generation_ingress_atomic.py": "2fe2d41c33be0955303a54c511ae4c718c8bf179b7507032a2786034c1d77320"
+  },
+  "baseline_source_sha256": {
+    "src/cn_contract/weixin_inbox/accounts.py": "a2c493fbf799694d5eeda35f26577b6102916e628d2dc6092ec57c6e152b2bc5",
+    "src/cn_contract/weixin_inbox/ingress.py": "b94faa85fdf9145d8d86a60272543176efc597ac5cc41776410160bbcf116f06"
+  },
+  "standards_source_sha256": {
+    "AGENTS.md": "e0fcf27d3a2b5aca6c09d5372c869a312dfc6dba558dcb67581ef9f5ffbe755f",
+    "CONTRIBUTING.md": "5248771a8f16f535d9a8db2334ee54eb3e9c33c9f7c6469be5e2d88f49fc341a",
+    "docs/plans/2026-10-25-weixin-generation-ingress-d2g5c.md": "81fc231261e367b10d7664b7aba945d6079fad5b8fb223df878f8c645609ae01"
+  },
+  "evidence_runs": [
+    {
+      "file": "independent-green.xml",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "root-expanded.xml",
+      "tests": 37,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "new_distinct_case_ids": [
+    "tests.integration.test_weixin_generation_ingress_atomic::test_unknown_generation_poll_find_preserves_complete_history",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_sql_and_commit_failure_rolls_back_poll_sidecar_and_checkpoint[sidecar]",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_sql_and_commit_failure_rolls_back_poll_sidecar_and_checkpoint[checkpoint]",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_sql_and_commit_failure_rolls_back_poll_sidecar_and_checkpoint[commit]",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_lost_ack_find_and_exact_replay_use_fixed_target_after_later_acl_change",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_concurrent_generation_polls_serialize_checkpoint_and_exact_request[False]",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_concurrent_generation_polls_serialize_checkpoint_and_exact_request[True]",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_generation_append_racing_poll_has_one_complete_historical_target",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_new_python_process_reads_the_same_committed_generation_receipt",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_real_qxbak_preserves_sources_and_restored_receipt_lookup_only",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_cross_generation_reply_discovery_rejects_entire_poll_and_cursor[False]",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_cross_generation_reply_discovery_rejects_entire_poll_and_cursor[True]",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_wall_clock_repetition_still_orders_each_poll_after_all_generation_activity",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_existing_ingress_refresh_and_dispatch_stay_paused_after_new_poll",
+    "tests.integration.test_weixin_generation_ingress_atomic::test_corrupt_existing_provenance_rejects_new_poll_without_any_partial_write",
+    "tests.integration.test_weixin_generation_ingress::test_two_service_polls_keep_historical_target_and_do_not_dispatch",
+    "tests.integration.test_weixin_generation_ingress::test_complete_mixed_batch_preserves_global_dedup_and_zero_peer",
+    "tests.integration.test_weixin_generation_ingress::test_poll_time_is_strictly_after_generation_even_when_clock_does_not_advance[same]",
+    "tests.integration.test_weixin_generation_ingress::test_poll_time_is_strictly_after_generation_even_when_clock_does_not_advance[backwards]",
+    "tests.integration.test_weixin_generation_ingress::test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[session]",
+    "tests.integration.test_weixin_generation_ingress::test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[role]",
+    "tests.integration.test_weixin_generation_ingress::test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[account]",
+    "tests.integration.test_weixin_generation_ingress::test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[restore]",
+    "tests.integration.test_weixin_generation_ingress::test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[schema17]",
+    "tests.integration.test_weixin_generation_ingress::test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[no_generation]",
+    "tests.integration.test_weixin_generation_ingress::test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit[target_scope]",
+    "tests.integration.test_weixin_generation_ingress::test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit[target_archived]",
+    "tests.integration.test_weixin_generation_ingress::test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit[root_archived]",
+    "tests.integration.test_weixin_generation_ingress::test_per_message_stale_or_revoked_target_is_blocked_without_intermediate_audit[peer]",
+    "tests.integration.test_weixin_generation_ingress::test_cross_generation_known_reply_in_either_direction_rolls_back_complete_poll[to_root]",
+    "tests.integration.test_weixin_generation_ingress::test_cross_generation_known_reply_in_either_direction_rolls_back_complete_poll[to_previous]",
+    "tests.integration.test_weixin_generation_ingress::test_cross_generation_known_reply_in_either_direction_rolls_back_complete_poll[from_previous_unknown]",
+    "tests.integration.test_weixin_generation_ingress::test_unknown_future_reply_can_become_known_in_same_generation",
+    "tests.integration.test_weixin_generation_ingress::test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[root_archive]",
+    "tests.integration.test_weixin_generation_ingress::test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[target_archive]",
+    "tests.integration.test_weixin_generation_ingress::test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[scope]",
+    "tests.integration.test_weixin_generation_ingress::test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[account]",
+    "tests.integration.test_weixin_generation_ingress::test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[peer]",
+    "tests.integration.test_weixin_generation_ingress::test_fixed_query_is_readonly_after_scope_archive_revocation_or_restore[restore]",
+    "tests.integration.test_weixin_generation_ingress::test_current_projected_acl_denial_never_releases_poll_lock_or_exposes_fixed_body[membership-root]",
+    "tests.integration.test_weixin_generation_ingress::test_current_projected_acl_denial_never_releases_poll_lock_or_exposes_fixed_body[membership-fixed_target]",
+    "tests.integration.test_weixin_generation_ingress::test_current_projected_acl_denial_never_releases_poll_lock_or_exposes_fixed_body[matter_archived-root]",
+    "tests.integration.test_weixin_generation_ingress::test_current_projected_acl_denial_never_releases_poll_lock_or_exposes_fixed_body[matter_archived-fixed_target]",
+    "tests.integration.test_weixin_generation_ingress::test_current_projected_acl_denial_never_releases_poll_lock_or_exposes_fixed_body[intake_owner-root]",
+    "tests.integration.test_weixin_generation_ingress::test_current_projected_acl_denial_never_releases_poll_lock_or_exposes_fixed_body[intake_owner-fixed_target]",
+    "tests.integration.test_weixin_generation_ingress::test_new_entry_keeps_bounded_strict_envelope_rejection_atomic[{}]",
+    "tests.integration.test_weixin_generation_ingress::test_new_entry_keeps_bounded_strict_envelope_rejection_atomic[{\"ret\":0,\"ret\":0}]",
+    "tests.integration.test_weixin_generation_ingress::test_new_entry_keeps_bounded_strict_envelope_rejection_atomic[{\"ret\":0,\"msgs\":{}}]",
+    "tests.integration.test_weixin_generation_ingress::test_new_entry_keeps_bounded_strict_envelope_rejection_atomic[\\xff]",
+    "tests.integration.test_weixin_generation_ingress::test_generation_receipt_replay_requires_exact_request_and_response[request_changed]",
+    "tests.integration.test_weixin_generation_ingress::test_generation_receipt_replay_requires_exact_request_and_response[raw_changed]",
+    "tests.integration.test_weixin_generation_ingress::test_generation_receipt_replay_requires_exact_request_and_response[stale_checkpoint]"
+  ],
+  "new_distinct_count": 52,
+  "independent_runtime": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 15
+  },
+  "independent_pytest_seconds": 21.11,
+  "independent_harness_seconds": 21.906,
+  "independent_runtime_exit_code": 0,
+  "product_and_atomic_test_still_match_independent_green": true,
+  "after_review_sha256": {
+    "src/cn_contract/weixin_inbox/accounts.py": "0ab2584d848a7af293970594d157743a5028b63a040481596d0f0dac51d85f13",
+    "src/cn_contract/weixin_inbox/ingress.py": "4faebd87c657dd5d4ab6a26eac77fa3f78af2ef3a0163271aeb5fc6dd736b093",
+    "src/cn_contract/weixin_inbox/generation_ingress.py": "2808b2d4d4e354a500cdfe73b706fb27a59be15c1533c13620c8fb24e9d0b0aa",
+    "tests/integration/test_weixin_generation_ingress.py": "e2e78273177f7fd1738d1d5b4ba4e1db6a4339b164533b7380ce75c6e302d8cd",
+    "tests/integration/test_weixin_generation_ingress_atomic.py": "2fe2d41c33be0955303a54c511ae4c718c8bf179b7507032a2786034c1d77320"
+  },
+  "reviewed_files_stable": true
+}

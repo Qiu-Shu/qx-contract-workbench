@@ -73,8 +73,22 @@ def _mapping_reason(current, account, mapping, db, *, scope=None):
             return 'scope_denied'
         if _has_generations(account.id, db):
             return 'scope_stale'
+        return _scope_reason(current, account, mapping.task_binding_id, scope, db, active=True)
+    except (ServiceError, ValueError, TypeError):
+        return 'scope_denied'
+    return None
+
+
+def _scope_reason(current, account, binding_id, scope, db, *, active):
+    """Check a synthetic target without audit writes or transaction side effects."""
+    try:
+        current = _current(current, db)
+        workspace = _workspace_id(db)
+        if (account.owner_id != current.user_id or account.workspace_id != workspace
+                or scope.workspace_id != workspace):
+            return 'scope_denied'
         binding = db.execute(text('SELECT * FROM task_channel_bindings WHERE id=:id'),
-                             {'id':str(mapping.task_binding_id)}).mappings().first()
+                             {'id':str(binding_id)}).mappings().first()
         if binding is None or binding['channel'] != 'synthetic':
             return 'scope_denied'
         row = db.execute(text('SELECT * FROM assistant_conversations WHERE id=:id'),
@@ -83,7 +97,7 @@ def _mapping_reason(current, account, mapping, db, *, scope=None):
                 or row['workspace_id'] != str(workspace)
                 or row['id'] != str(scope.conversation_id)):
             return 'scope_denied'
-        if row['archived_at'] is not None or _snapshot(row) != scope:
+        if active and (row['archived_at'] is not None or _snapshot(row) != scope):
             return 'scope_stale'
 
         def matter_access(identifier):
@@ -273,7 +287,7 @@ def _grant_table(db):
 
 
 def _has_generations(account_id, db):
-    """Pause this account until a runtime generation resolver is implemented."""
+    """Keep legacy write paths paused after explicit target history."""
     if db.scalar(text("SELECT 1 FROM sqlite_master WHERE type='table' AND name='weixin_peer_generations'")):
         return db.scalar(text('''SELECT 1 FROM weixin_peer_generations generation
             JOIN weixin_peer_bindings mapping ON mapping.id=generation.root_mapping_id
