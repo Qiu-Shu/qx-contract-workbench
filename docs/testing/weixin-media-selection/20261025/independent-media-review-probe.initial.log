@@ -1,0 +1,47 @@
+TAP version 13
+# Subtest: independent: newer explicit GET material frame survives stale host notification
+not ok 1 - independent: newer explicit GET material frame survives stale host notification
+  ---
+  duration_ms: 5.4333
+  type: 'test'
+  location: 'D:\\Documents\\ChatGPT\\律所项目\\.local\\weixin-media-selection-20261025\\independent-media-review-probe.mjs:54:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        '',
+    +   'local'
+    -   'new-file'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: ''
+    1: 'new-file'
+  actual:
+    0: ''
+    1: 'local'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/.local/weixin-media-selection-20261025/independent-media-review-probe.mjs:62:10)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: independent: matched historical resolution reconciles after a later replacement without PATCH
+ok 2 - independent: matched historical resolution reconciles after a later replacement without PATCH
+  ---
+  duration_ms: 2.0909
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 64.2845

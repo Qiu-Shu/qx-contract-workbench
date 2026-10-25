@@ -1,0 +1,16 @@
+...................................................................F.... [ 94%]
+....                                                                     [100%]
+================================== FAILURES ===================================
+_ test_restore_blocks_each_pending_execution_and_all_task_writes[awaiting_facts] _
+tests\integration\test_task_drafts_migration.py:214: in test_restore_blocks_each_pending_execution_and_all_task_writes
+    result = workspace_backup.restore_workspace_backup(archive, tmp_path/'restored', PASSPHRASE)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\cn_contract\ops\workspace_backup.py:380: in restore_workspace_backup
+    published = parent/str(uuid4()); filesystem_path(root).rename(filesystem_path(published))
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1363: in rename
+    os.rename(self, target)
+E   PermissionError: [WinError 5] 拒绝访问。: '\\\\?\\D:\\Documents\\ChatGPT\\律所项目\\.local\\ms-final-recoveryxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\test_restore_blocks_each_pendi2\\restored\\.qx-restore-my77dtqi\\workspace' -> '\\\\?\\D:\\Documents\\ChatGPT\\律所项目\\.local\\ms-final-recoveryxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\test_restore_blocks_each_pendi2\\restored\\6d329238-7adb-498d-997d-0ccd5e85dab7'
+=========================== short test summary info ===========================
+FAILED tests/integration/test_task_drafts_migration.py::test_restore_blocks_each_pending_execution_and_all_task_writes[awaiting_facts]
+1 failed, 75 passed in 107.62s (0:01:47)

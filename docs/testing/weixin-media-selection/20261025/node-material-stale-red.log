@@ -1,0 +1,83 @@
+✔ pending wire material has labelled same-conversation DOCX/PDF choices with no automatic name match (10.8625ms)
+✔ empty materials keep the explicit selector empty and explain upload and reading (0.778ms)
+✔ an unconfirmed choice is pending, clears notices, and survives an unrelated render (0.7591ms)
+✔ explicit association preserves wire IDs and uses exact current original and parse: application/vnd.openxmlformats-officedocument.wordprocessingml.document (1.3914ms)
+✔ explicit association preserves wire IDs and uses exact current original and parse: application/pdf (1.6178ms)
+✔ association refuses incomplete or mismatched reading: pending no parse (0.592ms)
+✔ association refuses incomplete or mismatched reading: partial DOCX (0.6532ms)
+✔ association refuses incomplete or mismatched reading: needs baseline (0.4577ms)
+✔ association refuses incomplete or mismatched reading: failed DOCX (0.4975ms)
+✔ association refuses incomplete or mismatched reading: foreign DOCX parser (0.6277ms)
+✔ association refuses incomplete or mismatched reading: wrong DOCX baseline (0.4566ms)
+✔ association refuses incomplete or mismatched reading: partial PDF (0.4969ms)
+✔ association refuses incomplete or mismatched reading: failed PDF (0.4012ms)
+✔ association refuses incomplete or mismatched reading: accepted PDF (0.8483ms)
+✔ association refuses incomplete or mismatched reading: rejected PDF (0.4396ms)
+✔ association refuses incomplete or mismatched reading: foreign PDF parser (0.3663ms)
+✔ DOCX complete supported view can associate: accepted_view (0.6357ms)
+✔ DOCX complete supported view can associate: rejected_view (0.414ms)
+✔ existing replacement attachment drives update reading and explicit reselection remains available (1.123ms)
+✔ association cannot write while readonly (0.6304ms)
+✔ association cannot write while frozen (0.5011ms)
+✔ loading disables an already chosen selector and association (0.6848ms)
+✔ same-conversation material update invalidates a choice and explains why (1.4747ms)
+✔ late materials is discarded after cid (0.9085ms)
+✔ late materials is discarded after draft-revision (0.6104ms)
+✔ late materials is discarded after selection (0.5181ms)
+✔ late materials is discarded after materials (0.5812ms)
+✔ late materials is discarded after dispose (0.4859ms)
+✔ late materials is discarded after loading (0.6132ms)
+✔ late materials is discarded after revoke (0.5566ms)
+✔ late parse is discarded after cid (0.6554ms)
+✔ late parse is discarded after draft-revision (0.5771ms)
+✔ late parse is discarded after selection (1.2339ms)
+✔ late parse is discarded after materials (0.4339ms)
+✔ late parse is discarded after dispose (0.281ms)
+✔ late parse is discarded after loading (0.335ms)
+✔ late parse is discarded after revoke (0.4693ms)
+✖ a newer GET material version cannot silently validate the previously chosen file (1.5229ms)
+✔ late materials cannot act on a different selected draft (0.9979ms)
+✔ late parse cannot act on a different selected draft (0.356ms)
+✔ double activation makes a single PATCH and disables select during the read (0.582ms)
+✔ unknown association queries the precise result without repeating PATCH: true (0.7659ms)
+✔ unknown association queries the precise result without repeating PATCH: false (1.2681ms)
+✔ unknown query does not infer success from a different saved resolution: revision (0.5853ms)
+✔ unknown query does not infer success from a different saved resolution: event_id (0.4995ms)
+✔ unknown query does not infer success from a different saved resolution: media_id (0.4595ms)
+✔ unknown query does not infer success from a different saved resolution: action (0.4582ms)
+✔ unknown query does not infer success from a different saved resolution: attachment_id (0.6015ms)
+✔ unknown query does not infer success from a different saved resolution: sha256 (0.354ms)
+✔ unknown query does not infer success from a different saved resolution: parse_revision (0.3594ms)
+✔ unknown query does not infer success from a different saved resolution: name (0.6431ms)
+✔ unknown query does not infer success from a different saved resolution: mime (0.5501ms)
+✔ unknown query does not infer success from a different saved resolution: status (0.4639ms)
+✔ confirmed association remains saved when subsequent list refresh loses its connection (0.5874ms)
+✔ revoke clears choices and private original names (0.3363ms)
+✔ material and wire names remain text nodes, never HTML (0.4952ms)
+ℹ tests 56
+ℹ suites 0
+ℹ pass 55
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 129.9936
+
+✖ failing tests:
+
+test at scripts\test_assistant_task_media_selection.mjs:118:1
+✖ a newer GET material version cannot silently validate the previously chosen file (1.5229ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'local' !== ''
+  
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:120:67)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'local',
+    expected: '',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

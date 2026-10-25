@@ -1,0 +1,922 @@
+✖ pending wire material has labelled same-conversation DOCX/PDF choices with no automatic name match (5.8362ms)
+✖ empty materials keep the explicit selector empty and explain upload and reading (0.9831ms)
+✖ an unconfirmed choice is pending, clears notices, and survives an unrelated render (0.6939ms)
+✖ explicit association preserves wire IDs and uses exact current original and parse: application/vnd.openxmlformats-officedocument.wordprocessingml.document (0.6764ms)
+✖ explicit association preserves wire IDs and uses exact current original and parse: application/pdf (1.3347ms)
+✖ association refuses incomplete or mismatched reading: pending no parse (0.5567ms)
+✖ association refuses incomplete or mismatched reading: partial DOCX (0.5153ms)
+✖ association refuses incomplete or mismatched reading: needs baseline (0.4962ms)
+✖ association refuses incomplete or mismatched reading: failed DOCX (0.6601ms)
+✖ association refuses incomplete or mismatched reading: foreign DOCX parser (0.768ms)
+✖ association refuses incomplete or mismatched reading: wrong DOCX baseline (0.5125ms)
+✖ association refuses incomplete or mismatched reading: partial PDF (0.5059ms)
+✖ association refuses incomplete or mismatched reading: failed PDF (0.4821ms)
+✖ association refuses incomplete or mismatched reading: accepted PDF (1.0179ms)
+✖ association refuses incomplete or mismatched reading: rejected PDF (0.3962ms)
+✖ association refuses incomplete or mismatched reading: foreign PDF parser (0.4273ms)
+✖ DOCX complete supported view can associate: accepted_view (0.6001ms)
+✖ DOCX complete supported view can associate: rejected_view (0.4898ms)
+✖ existing replacement attachment drives update reading and explicit reselection remains available (0.5666ms)
+✖ association cannot write while readonly (0.4337ms)
+✖ association cannot write while frozen (0.3417ms)
+✖ loading disables an already chosen selector and association (0.4564ms)
+✖ same-conversation material update invalidates a choice and explains why (0.4274ms)
+✖ late materials is discarded after cid (1.089ms)
+✖ late materials is discarded after draft-revision (0.4309ms)
+✖ late materials is discarded after selection (0.3702ms)
+✖ late materials is discarded after materials (0.3707ms)
+✖ late materials is discarded after dispose (0.3551ms)
+✖ late materials is discarded after loading (0.4857ms)
+✖ late materials is discarded after revoke (0.4941ms)
+✖ late parse is discarded after cid (0.4751ms)
+✖ late parse is discarded after draft-revision (0.3829ms)
+✖ late parse is discarded after selection (0.3814ms)
+✖ late parse is discarded after materials (1.188ms)
+✖ late parse is discarded after dispose (0.3826ms)
+✖ late parse is discarded after loading (0.3351ms)
+✖ late parse is discarded after revoke (0.3345ms)
+✖ a newer GET material version cannot silently validate the previously chosen file (0.4777ms)
+✖ double activation makes a single PATCH and disables select during the read (0.5292ms)
+✖ unknown association queries the precise result without repeating PATCH: true (0.5205ms)
+✖ unknown association queries the precise result without repeating PATCH: false (0.3819ms)
+✖ unknown query does not infer success from a different saved resolution: revision (0.5041ms)
+✖ unknown query does not infer success from a different saved resolution: event_id (0.3751ms)
+✖ unknown query does not infer success from a different saved resolution: media_id (0.4014ms)
+✖ unknown query does not infer success from a different saved resolution: action (0.3465ms)
+✖ unknown query does not infer success from a different saved resolution: attachment_id (0.3491ms)
+✖ unknown query does not infer success from a different saved resolution: sha256 (0.4199ms)
+✖ unknown query does not infer success from a different saved resolution: parse_revision (0.4158ms)
+✖ unknown query does not infer success from a different saved resolution: name (0.4576ms)
+✖ unknown query does not infer success from a different saved resolution: mime (0.3633ms)
+✖ unknown query does not infer success from a different saved resolution: status (0.3893ms)
+✖ confirmed association remains saved when subsequent list refresh loses its connection (0.5601ms)
+✖ revoke clears choices and private original names (0.4418ms)
+✖ material and wire names remain text nodes, never HTML (0.422ms)
+ℹ tests 54
+ℹ suites 0
+ℹ pass 0
+ℹ fail 54
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 100.2715
+
+✖ failing tests:
+
+test at scripts\test_assistant_task_media_selection.mjs:53:1
+✖ pending wire material has labelled same-conversation DOCX/PDF choices with no automatic name match (5.8362ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:55:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:58:1
+✖ empty materials keep the explicit selector empty and explain upload and reading (0.9831ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:59:50)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:62:1
+✖ an unconfirmed choice is pending, clears notices, and survives an unrelated render (0.6939ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:63:82)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:66:30
+✖ explicit association preserves wire IDs and uses exact current original and parse: application/vnd.openxmlformats-officedocument.wordprocessingml.document (0.6764ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:68:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:66:30
+✖ explicit association preserves wire IDs and uses exact current original and parse: application/pdf (1.3347ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:68:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: pending no parse (0.5567ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: partial DOCX (0.5153ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: needs baseline (0.4962ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: failed DOCX (0.6601ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: foreign DOCX parser (0.768ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: wrong DOCX baseline (0.5125ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: partial PDF (0.5059ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: failed PDF (0.4821ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: accepted PDF (1.0179ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: rejected PDF (0.3962ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:79:3
+✖ association refuses incomplete or mismatched reading: foreign PDF parser (0.4273ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:81:34)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:83:62
+✖ DOCX complete supported view can associate: accepted_view (0.6001ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:84:80)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:83:62
+✖ DOCX complete supported view can associate: rejected_view (0.4898ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:84:80)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:86:1
+✖ existing replacement attachment drives update reading and explicit reselection remains available (0.5666ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:88:92)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:92:88
+✖ association cannot write while readonly (0.4337ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:93:47)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:92:88
+✖ association cannot write while frozen (0.3417ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:93:47)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:96:1
+✖ loading disables an already chosen selector and association (0.4564ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:97:27)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:100:1
+✖ same-conversation material update invalidates a choice and explains why (0.4274ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:101:27)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late materials is discarded after cid (1.089ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late materials is discarded after draft-revision (0.4309ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late materials is discarded after selection (0.3702ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late materials is discarded after materials (0.3707ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late materials is discarded after dispose (0.3551ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late materials is discarded after loading (0.4857ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late materials is discarded after revoke (0.4941ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late parse is discarded after cid (0.4751ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late parse is discarded after draft-revision (0.3829ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late parse is discarded after selection (0.3814ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late parse is discarded after materials (1.188ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late parse is discarded after dispose (0.3826ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late parse is discarded after loading (0.3351ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:104:140
+✖ late parse is discarded after revoke (0.3345ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:105:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:118:1
+✖ a newer GET material version cannot silently validate the previously chosen file (0.4777ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:119:27)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:122:1
+✖ double activation makes a single PATCH and disables select during the read (0.5292ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:123:46)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:126:33
+✖ unknown association queries the precise result without repeating PATCH: true (0.5205ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:127:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:126:33
+✖ unknown association queries the precise result without repeating PATCH: false (0.3819ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:127:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:133:132
+✖ unknown query does not infer success from a different saved resolution: revision (0.5041ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:134:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:133:132
+✖ unknown query does not infer success from a different saved resolution: event_id (0.3751ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:134:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:133:132
+✖ unknown query does not infer success from a different saved resolution: media_id (0.4014ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:134:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:133:132
+✖ unknown query does not infer success from a different saved resolution: action (0.3465ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:134:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:133:132
+✖ unknown query does not infer success from a different saved resolution: attachment_id (0.3491ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:134:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:133:132
+✖ unknown query does not infer success from a different saved resolution: sha256 (0.4199ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:134:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:133:132
+✖ unknown query does not infer success from a different saved resolution: parse_revision (0.4158ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:134:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:133:132
+✖ unknown query does not infer success from a different saved resolution: name (0.4576ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:134:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:133:132
+✖ unknown query does not infer success from a different saved resolution: mime (0.3633ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:134:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:133:132
+✖ unknown query does not infer success from a different saved resolution: status (0.3893ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:134:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:139:1
+✖ confirmed association remains saved when subsequent list refresh loses its connection (0.5601ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:140:49)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:144:1
+✖ revoke clears choices and private original names (0.4418ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at choose (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:48:44)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:145:27)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\test_assistant_task_media_selection.mjs:148:1
+✖ material and wire names remain text nodes, never HTML (0.422ms)
+  AssertionError [ERR_ASSERTION]: explicit original-file selector
+      at selection (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:47:112)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_task_media_selection.mjs:149:139)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

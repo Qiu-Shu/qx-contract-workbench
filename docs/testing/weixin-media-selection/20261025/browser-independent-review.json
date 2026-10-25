@@ -1,0 +1,61 @@
+{
+  "scope": "Read-only independent static review of root browser validation script; own HTTP test excluded",
+  "script": "scripts/validate_task_media_selection_browser.py",
+  "initial_script_sha256": "dee43897e525236f1a71991faae02b0093a69fa06f5f0819ee7a4db4b4e2f03c",
+  "reviewer_executed_browser": false,
+  "root_script_revision_observed": "select_fixture('sales') source selection; no product data-policy weakening",
+  "product_findings": [],
+  "validation_findings": [
+    {
+      "id": "BROWSER-EXACT-GET-OBSERVATION",
+      "priority": 2,
+      "status": "RESOLVED",
+      "summary": "lost_ack_query_only currently means ACK injection occurred, not that exact draft GET was directly observed",
+      "existing_valid_assertions": ["route.fetch returned 200 before browser ACK abort", "exactly one PATCH", "ready UI and persisted resolution"],
+      "recommendation": "Record all target-route methods and assert DOCX PATCH only, PDF PATCH then GET; publish actual query trace"
+    }
+  ],
+  "evidence_scope_note": "backup._file_references checks database references, not protected original physical bytes; repository source fixture SHA before/after is actually asserted",
+  "unresolved_product_findings": 0,
+  "unresolved_validation_findings": 0,
+  "final_review": {
+    "script_sha256": "582ae180e9f309bf65fb612a3e251c1877a1959ca7f617b42aba392d17101140",
+    "root_run": "browser-04",
+    "root_exit_code": 0,
+    "root_wall_seconds": 6.532,
+    "source_snapshots_equal": true,
+    "report_sha256": "ff7636564d1e82d131648cfb1cb756e4ff87cfc2d366771d65a6497ca65ce654",
+    "docx_target_methods": ["PATCH"],
+    "pdf_target_methods": ["PATCH", "GET"],
+    "both_originals_http_200_and_exact_bytes_before_after": true,
+    "original_event_rows_preserved": true,
+    "model_and_execution_counts_zero": true,
+    "external_requests": 0,
+    "page_errors": 0,
+    "reviewer_executed_browser": false,
+    "reviewer_independent_visual_inspection": false
+  },
+  "recovery_group_scope": {
+    "tests": 76,
+    "passed": 75,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 1,
+    "failed_test": "test_restore_blocks_each_pending_execution_and_all_task_writes[awaiting_facts]",
+    "failure_location": "src/cn_contract/ops/workspace_backup.py:380",
+    "failure": "WinError 5 at staging workspace directory publication rename",
+    "status": "WIN-PATH-02 OPEN",
+    "baseline": "49e7b55",
+    "changed_product_src_files": ["src/cn_contract/web/static/assistant-tasks.mjs"],
+    "migration_test_and_restore_python_unchanged": true,
+    "failing_python_function_executes_changed_js": false,
+    "specific_os_or_handle_root_cause_established": false,
+    "rerun_or_guard_change_by_reviewer": false,
+    "log_sha256": "a980172da1aa3b4546f742ea86f501a75481e5f46715184a2393ecef33948b90",
+    "xml_sha256": "ebd504ad84f4715d837ebfc77f297c63fd81eb6c1abac0b30b4648488811d336",
+    "snapshot_note": "Recovery group used prior browser script SHA with equal before/after; browser-04 separately used final script SHA. Do not claim all group input hashes globally identical."
+  },
+  "actual_browser_run": "NOT_RUN_BY_REVIEWER",
+  "real_capabilities": "NOT_RUN"
+}

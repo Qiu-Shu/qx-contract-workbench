@@ -1,0 +1,60 @@
+{
+  "scope": "disposable native synthetic services + real loopback FastAPI/Chromium; installed Electron NOT_RUN",
+  "steps": [
+    {
+      "kind": "docx",
+      "explicit_choice": true,
+      "keyboard_confirm": true,
+      "patch_count": 1,
+      "target_methods": [
+        "PATCH"
+      ],
+      "lost_ack_query_only": false,
+      "original_bytes_preserved": true,
+      "original_event_preserved": true
+    },
+    {
+      "kind": "pdf",
+      "explicit_choice": true,
+      "keyboard_confirm": true,
+      "patch_count": 1,
+      "target_methods": [
+        "PATCH",
+        "GET"
+      ],
+      "lost_ack_query_only": true,
+      "original_bytes_preserved": true,
+      "original_event_preserved": true
+    }
+  ],
+  "visual": [
+    {
+      "width": 1280,
+      "scrollWidth": 1280,
+      "focus": "关联所选原件并更新读取状态",
+      "font": "\"Microsoft YaHei UI\", \"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif"
+    },
+    {
+      "width": 360,
+      "scrollWidth": 360,
+      "focus": "关联所选原件并更新读取状态",
+      "font": "\"Microsoft YaHei UI\", \"Microsoft YaHei\", \"PingFang SC\", system-ui, sans-serif"
+    }
+  ],
+  "external_requests": [],
+  "page_errors": [],
+  "source_sha256": {
+    "docx": "227545e4f7804bc9ae5da0afeacfd57df81cff883e803c9d3c8dfc040bc9f9d3",
+    "pdf": "8e5640e6e341f785f4e24166f56658527246004c67450ce672b80b08a7e141cd"
+  },
+  "counts": {
+    "weixin_peer_generations": 2,
+    "weixin_dispatch_receipts": 2,
+    "task_media_resolutions": 2,
+    "task_executions": 0,
+    "assistant_runs": 0,
+    "assistant_model_attempts": 0,
+    "review_runs": 0
+  },
+  "status": "PASS"
+}

@@ -189,3 +189,7 @@ tests/integration/test_assistant_profile_history.py -text whitespace=blank-at-eo
 
 # Fixed PDF sample: preserve bytes and PDF xref padding, never normalize as text.
 tests/fixtures/task-pdf-v1/*.pdf binary -whitespace
+
+# Preserve measured media-selection receipts and intentional CRLF test fixtures.
+docs/testing/weixin-media-selection/20261025/** -text -whitespace
+scripts/test_assistant_task_media_selection.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

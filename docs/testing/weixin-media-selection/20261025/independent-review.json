@@ -1,0 +1,56 @@
+{
+  "scope": "D2g5f frontend product and author Node tests only; own HTTP module excluded",
+  "baseline": "49e7b55",
+  "input_sha256": {
+    "src/cn_contract/web/static/assistant-tasks.mjs": "028e7dea3ba13711b2892d7ab4339d73fa016525af9cd3b8ba5038b0fe815497",
+    "scripts/test_assistant_task_media_selection.mjs": "4d34f0cf7dae7ec53ceac4395bae5ba9afa69a0f7d7cf0d8650144159ab92a56"
+  },
+  "standards_findings": [],
+  "unresolved_standards": 0,
+  "unresolved_spec": 0,
+  "spec_findings": [
+    {
+      "id": "MEDIA-FRAME-ROLLBACK",
+      "priority": 2,
+      "status": "RESOLVED",
+      "file": "src/cn_contract/web/static/assistant-tasks.mjs",
+      "lines": [119, 122, 190, 338],
+      "title": "Newer GET material frame rolls back on stale host notification",
+      "proof": "independent-media-review-probe.mjs",
+      "expected": "materials revision 2 candidates and newly reselected file survive an unrelated revision 1 host notification",
+      "actual": "revision 1 candidates are reinstalled and new selection disappears"
+    }
+  ],
+  "independent_probe": {
+    "tests": 2,
+    "passed": 1,
+    "failed": 1,
+    "node_exit_code": 1,
+    "collector_exit_code": 0,
+    "before_after_inputs_equal": true,
+    "harness_provenance": "fixture-only prefix copied from author test; two behavior assertions independently authored",
+    "metadata": "independent-media-review-probe.json",
+    "raw_log": "independent-media-review-probe.log",
+    "probe_sha256": "623fd3fc84b637f84e9834ed72b46c8c8e25e27c8425ca38f99bf7dd0bd06c12",
+    "raw_log_sha256": "de17615772e9dfd3231bde78f4961f4e801a25725027c2c4f627874d870f0d09"
+  },
+  "initial_probe_excluded": "initial candidate-removal fixture hit a different early guard; preserved in *.initial.* and not used as formal failure proof",
+  "final_review": {
+    "input_sha256": {
+      "src/cn_contract/web/static/assistant-tasks.mjs": "32bdb69c76353e2899f6c3c40bb84742d7e39a651dc1e99ca450aed385bbae50",
+      "scripts/test_assistant_task_media_selection.mjs": "008b556fc31a0b4f20ee2a13a496b92e82d824d23670e832398c37953deca523"
+    },
+    "guard_reviewed": "Same CID safe integer binding/input/material revisions never regress; CID clear drops scope; equal or newer scopes still update frame and invalidate choices",
+    "original_formal_red_probe_bytes_unchanged": true,
+    "probe_tests": 2,
+    "probe_passed": 2,
+    "probe_failed": 0,
+    "node_exit_code": 0,
+    "before_after_inputs_equal": true,
+    "metadata": "independent-media-review-probe-green.json",
+    "raw_log": "independent-media-review-probe-green.log",
+    "raw_log_sha256": "3b57f0c4ac6611ef80c6e038918a86782a7bab38ccea9a7e83b7457cc19d28ae",
+    "authored_full_node_suite_rerun_by_reviewer": false
+  },
+  "not_run": ["full Node suite", "full Python suite", "browser", "installed app", "real WeChat", "real contracts", "model calls"]
+}
