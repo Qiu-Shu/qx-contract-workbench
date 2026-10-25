@@ -1,6 +1,6 @@
 # 任务实际状态
 
-2026-10-25 D2g5f已接待收件附件明确选择本对话已上传DOCX/PDF，沿原resolution保存、原收件不覆盖，丢ACK只GET；材料旧通知回退缺陷经独立RED→GREEN修复。根4短组237不同Python：236PASS/1既有WIN-PATH-02 FAIL（含22新），293Node（60新）/四门/真实本机合成浏览器通过，交叉独审0遗留，[实际证据](testing/weixin-media-selection/20261025/README.md)。可信微信/下载解密/pending列表/E许可待，0.4.1未更新，全仓长进程/安装版/真实账号模型等NOT_RUN，WIN-PATH-02和原生AV仍OPEN。GitHub待实际同步回执。
+2026-10-25 D2g5f已接待收件附件明确选择本对话已上传DOCX/PDF，沿原resolution保存、原收件不覆盖，丢ACK只GET；材料旧通知回退缺陷经独立RED→GREEN修复。根4短组237不同Python：236PASS/1既有WIN-PATH-02 FAIL（含22新），293Node（60新）/四门/真实本机合成浏览器通过，交叉独审0遗留，[实际证据](testing/weixin-media-selection/20261025/README.md)。可信微信/下载解密/pending列表/E许可待，0.4.1未更新，全仓长进程/安装版/真实账号模型等NOT_RUN，WIN-PATH-02和原生AV仍OPEN。产品`958b8e6`已正常推送，远端SHA/tree及5,761条目一致，[同步回执](testing/weixin-media-selection/20261025/github-sync.md)。
 
 2026-10-25 D2g5e已接根CID固定descriptor明确分发/精确找回HTTP：最终事务核root归属，固定目标当前ACL、9字段脱敏回执、精确恢复GET与丢ACK只查；旧guard/schema19保留。7短组23模块701不同Python（含64新）/四门通过，整体独审0确认及5独立HTTP探针通过；[实际证据](testing/weixin-dispatch-http/20261025/README.md)保留首次不稳定61/3、夹具修正及64整组重跑、未用HTTP测试模块的摘要差异。无新UI/列表/真实微信；可信绑定、下载解密、pending附件选择/E许可仍待。0.4.1未更新，全仓/Node/浏览器/安装版等NOT_RUN，WIN-PATH-02/原生AV仍OPEN。产品`dd46b6a`已正常推送，远端SHA/tree及5,688条目一致，[同步回执](testing/weixin-dispatch-http/20261025/github-sync.md)。
 

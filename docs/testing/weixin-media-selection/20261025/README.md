@@ -41,6 +41,6 @@ browser-01在原生凭据格式校验前失败（脚本用户名/口令长度不
 
 真实可信微信身份/账号资格、transport/下载解密、pending descriptor列表UI、E有限期模型许可仍待。无真实账号登录/机器人安装/合同外发/产品真实模型或付费、签发和自动外发。安装版0.4.1未更新；全仓长单进程、安装版Electron、真实微信/合同/模型/付费及WorkBuddy本轮NOT_RUN。开发链通过不等于生产/律师样本/真实试点批准。
 
-GitHub待实际同步回执；用户AGENTS保持未暂存。HumanLayer旧pending限长待同步，收尾按实际回执；Obsidian成功才称已保存，TencentDB沿正常Stop。
+产品`958b8e6`已正常推送，远端SHA/tree及5,761条目一致，[同步回执](github-sync.md)；用户AGENTS保持未暂存。HumanLayer旧pending限长待同步，收尾按实际回执；Obsidian成功才称已保存，TencentDB沿正常Stop。
 
 最终[证据独审](final-evidence-review.md)独立复算237/236/1、293/60、63对拷贝及626输入，0遗留；新增两条精确.gitattributes规则仅保留测量字节和测试有意CRLF，不改产品运行配置。后续Git和记忆回执不在该审阅快照内。

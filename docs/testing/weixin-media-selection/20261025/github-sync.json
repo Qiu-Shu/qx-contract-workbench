@@ -1,0 +1,43 @@
+{
+  "verified_at": "2026-10-25T13:39:11.390438+00:00",
+  "branch": "codex/contract-review-v2",
+  "commit": "958b8e6b561eefd0001c42ed7be419cffc59bc5e",
+  "remote_sha": "958b8e6b561eefd0001c42ed7be419cffc59bc5e",
+  "fetch_head": "958b8e6b561eefd0001c42ed7be419cffc59bc5e",
+  "tracking_sha": "958b8e6b561eefd0001c42ed7be419cffc59bc5e",
+  "local_tree": "0a2465281c33935f156f596a6fc529823993ac4c",
+  "remote_tree": "0a2465281c33935f156f596a6fc529823993ac4c",
+  "recursive_entries": 5761,
+  "recursive_tree_sha256": "ba658a76573784091054ce2a46038699b50ff4325477b49c5285a1bb0eadc315",
+  "ahead_behind": "0\t0",
+  "only_user_agents_unstaged": true,
+  "normal_push": true,
+  "prepublish_scan": {
+    "files": 76,
+    "bytes": 3327284,
+    "relative_links": 480,
+    "known_secret_matches": 0,
+    "forbidden_paths": 0,
+    "broken_links": 0,
+    "compile_python_files": 3,
+    "source_inputs_verified": 626,
+    "user_agents_unchanged": true,
+    "staged_bytes_equal": true
+  },
+  "test_scope": {
+    "python_distinct": 237,
+    "python_passed": 236,
+    "python_failed": 1,
+    "new_http_included": 22,
+    "node_passed": 293,
+    "new_node_included": 60,
+    "independent_probe_passed": 2,
+    "independent_probe_included": false,
+    "browser": "PASS: registered synthetic DOCX/PDF, local FastAPI/Chromium",
+    "development_gates_passed": 4,
+    "open_failures": [
+      "WIN-PATH-02 rename WinError5",
+      "native long process AV"
+    ]
+  }
+}
