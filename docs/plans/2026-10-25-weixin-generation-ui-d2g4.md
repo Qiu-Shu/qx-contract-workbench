@@ -19,6 +19,8 @@ Impeccable context已读实际PRODUCT，现无DESIGN文件；这是现有Operate
 - [x] 独立Node先RED：缺模块只计1个模块失败，不冒充35项行为RED；另有实际5项竞态、加UTC回执后的6项行为RED，根和独立最终41项均通过。
 - [x] 实现新leaf模块、原weixin互锁/主入口导航守卫、模板和少量CSS；所有写只来自明确保存。首轮真实浏览器暴露静态白名单遗漏，原有HTTP导入图测试11过/1败确认后，只增加新文件的精确白名单并接入原Python桥，业务后端未改。
 - [x] 合成真实FastAPI/Chromium验证预览零写、三代/两阶段丢ACK固定GET、真实qxbak只读恢复、1280/360窄窗/键盘/无外网或模型；229不同Python、233 Node、两组浏览器、四门、机械detector[]及同一独立审查者Spec/Standards两轴通过，不称两个独立代理。
-- [ ] 更新状态和实测证据，保留原失败与NOT_RUN，扫描仅本轮授权文件，fetch后正常commit/push并核远端SHA/tree；用户AGENTS不暂存。
+- [x] 更新状态和实测证据，保留原失败与NOT_RUN，扫描仅本轮授权文件，fetch后正常commit/push并核远端SHA/tree；用户AGENTS不暂存。
 
 本轮开始补完D2g3独立Standards：对dee54ea→d6627de四源静态复核0确认违规，未重跑旧测试；旧阶段当时NOT_RUN记录保留，不能倒改成当时已审。真实微信/产品模型/合同/付费/签发外发、安装版及全仓NOT_RUN；原生崩溃、WIN-PATH-02保持OPEN。收尾按AGENTS同步HumanLayer/Obsidian，TencentDB沿Stop。
+
+产品b3f204d已正常推送并核SHA/tree/5,244条目一致，用户AGENTS未暂存；[回执](../testing/weixin-generation-ui/20261025/github-sync.md)。
