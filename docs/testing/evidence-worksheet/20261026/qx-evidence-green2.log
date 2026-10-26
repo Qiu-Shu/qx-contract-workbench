@@ -1,0 +1,105 @@
+........FFF                                                              [100%]
+=================================== FAILURES ===================================
+________________ test_document_tampering_and_cross_conversation ________________
+
+chat = (<starlette.testclient.TestClient object at 0x10df3f110>, <cn_contract.persistence.Database object at 0x10e58b140>, PosixPath('/private/tmp/qx-evidence-green2/test_document_tampering_and_cr0/workspaces/main'))
+
+    def test_document_tampering_and_cross_conversation(chat):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+        assert client.get(url).status_code==200
+        a,p,source=material(client,h,base,database)
+        row={'id':str(uuid4()),'category':'repayment','content':'还款待核','event_date':None,'review_state':'pending','note':'','source':source}
+        for field,val in [('original_sha256','a'*64),('result_sha256','b'*64),('attachment_id',str(uuid4()))]:
+            bad=deepcopy(row);bad['source'][field]=val
+>           assert client.post(url+'/commits',headers=h,json=request(client.get(url).json(),[bad])).status_code in (403,409)
+E           AssertionError: assert 422 in (403, 409)
+E            +  where 422 = <Response [422 Unprocessable Content]>.status_code
+E            +    where <Response [422 Unprocessable Content]> = post(('/api/assistant/conversations/99a7c682-0c07-425d-87d9-ce65e7a6a06a/evidence' + '/commits'), headers={'X-CSRF-Token': 'SnGkeo0iK9Hujbvgn2bml5VFstuSLsinAekKY6gJx14'}, json={'base_revision': 0, 'expected_profile_revision': 0, 'expected_scope': {'binding_revision': 1, 'conversation_id': '99a...a6a06a', 'input_revision': 0, 'materials_revision': 2, ...}, 'request_id': '0a388f3d-df4a-4ed5-b076-33424011fd19', ...})
+E            +      where post = <starlette.testclient.TestClient object at 0x10df3f110>.post
+E            +      and   {'base_revision': 0, 'expected_profile_revision': 0, 'expected_scope': {'binding_revision': 1, 'conversation_id': '99a...a6a06a', 'input_revision': 0, 'materials_revision': 2, ...}, 'request_id': '0a388f3d-df4a-4ed5-b076-33424011fd19', ...} = request({'historical_ids': [], 'materials': [{'attachment': {'byte_size': 36722, 'conversation_id': '99a7c682-0c07-425d-87d9-c......}, 'parse_revision': 1, 'reading_status': 'readable', 'selected': True}], 'profile_revision': 0, 'revision': 0, ...}, [{'category': 'repayment', 'content': '还款待核', 'event_date': None, 'id': '4dcdfdb4-6a61-4aa5-9fa3-da77305200f0', ...}])
+E            +        where {'historical_ids': [], 'materials': [{'attachment': {'byte_size': 36722, 'conversation_id': '99a7c682-0c07-425d-87d9-c......}, 'parse_revision': 1, 'reading_status': 'readable', 'selected': True}], 'profile_revision': 0, 'revision': 0, ...} = json()
+E            +          where json = <Response [200 OK]>.json
+E            +            where <Response [200 OK]> = get('/api/assistant/conversations/99a7c682-0c07-425d-87d9-ce65e7a6a06a/evidence')
+E            +              where get = <starlette.testclient.TestClient object at 0x10df3f110>.get
+
+tests/integration/test_evidence_worksheet.py:110: AssertionError
+__________________ test_owner_csrf_and_after_body_revocation ___________________
+
+chat = (<starlette.testclient.TestClient object at 0x10dcf5e20>, <cn_contract.persistence.Database object at 0x10e7ca930>, PosixPath('/private/tmp/qx-evidence-green2/test_owner_csrf_and_after_body0/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e3c1dc0>
+
+    def test_owner_csrf_and_after_body_revocation(chat,monkeypatch):
+        from starlette.requests import Request
+        from cn_contract.persistence import SessionRow
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+        assert client.get(url).status_code==200
+        row=statement(client,h,base,url);body=request(client.get(url).json(),[row]);original=Request.body
+        async def reject(self):raise AssertionError('must authorize before reading body')
+        monkeypatch.setattr(Request,'body',reject)
+        assert client.post(url+'/commits',json=body).status_code==403
+        sign_in(client,'另一合成律师');assert client.get(url).status_code==403
+        h=sign_in(client)
+        async def revoke(self):
+            raw=await original(self)
+            with database.session() as db:
+                for session in db.query(SessionRow):session.revoked=True
+            return raw
+        monkeypatch.setattr(Request,'body',revoke)
+>       assert client.post(url+'/commits',headers=h,json=body).status_code in (401,403)
+E       AssertionError: assert 200 in (401, 403)
+E        +  where 200 = <Response [200 OK]>.status_code
+E        +    where <Response [200 OK]> = post(('/api/assistant/conversations/703565c9-c512-4514-bd18-755416c4ea23/evidence' + '/commits'), headers={'X-CSRF-Token': 'OEK6Rf9oqM3pj759p9XLzCGkdl8eX8_UVkQqDXHHmMg'}, json={'base_revision': 0, 'expected_profile_revision': 1, 'expected_scope': {'binding_revision': 1, 'conversation_id': '703...c4ea23', 'input_revision': 0, 'materials_revision': 0, ...}, 'request_id': '98f9adc5-cb1f-46cf-82d0-1d0b560c087e', ...})
+E        +      where post = <starlette.testclient.TestClient object at 0x10dcf5e20>.post
+
+tests/integration/test_evidence_worksheet.py:134: AssertionError
+_______ test_actual_backup_restores_facts_receipts_and_original_readonly _______
+
+native = (<fastapi.applications.FastAPI object at 0x10e41f200>, PosixPath('/private/tmp/qx-evidence-green2/test_actual_backup_restores_fa0/workspaces/main'))
+tmp_path = PosixPath('/private/tmp/qx-evidence-green2/test_actual_backup_restores_fa0')
+
+    def test_actual_backup_restores_facts_receipts_and_original_readonly(native,tmp_path):
+        from cn_contract.ops import workspace_backup
+        from cn_contract.web.local_server import build_local_app
+        from tests.helpers.legacy_assistant_backup import PASSPHRASE
+        app,root=native
+        with TestClient(app) as client:
+            h=sign_in(client);base,url=begin(client,h);assert client.get(url).status_code==200
+            a,p,source=material(client,h,base,app.state.database)
+            row={'id':str(uuid4()),'category':'disbursement','content':'合成转账，性质仍待核','event_date':None,'review_state':'reviewed','note':'仅表示律师登记核对','source':source}
+            body=request(client.get(url).json(),[row]);receipt=client.post(url+'/commits',headers=h,json=body).json()
+>       archive=tmp_path/'合成事实底稿.qxbak';workspace_backup.create_workspace_backup(root,archive,PASSPHRASE,data_parent=tmp_path)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_evidence_worksheet.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cn_contract/ops/workspace_backup.py:277: in create_workspace_backup
+    _references(root,inventory,source=True)
+src/cn_contract/ops/workspace_backup.py:142: in _references
+    refs = _file_references(db)
+           ^^^^^^^^^^^^^^^^^^^^
+src/cn_contract/ops/backup.py:176: in _file_references
+    validate_model_records(db, allowed=allow_assistant)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <sqlalchemy.orm.session.Session object at 0x10e3470e0>
+
+    def validate_model_records(db, *, allowed=True):
+        """Validate every model record; skip only positively identified older schemas."""
+        schema = [tuple(row) for row in db.execute(text(
+            'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+        native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
+        version = identify_schema(schema, native=native)
+        if version in ('pre-intake','intake-v1','assistant-v1','assistant-attachments-v1'):
+            return
+        if version not in ('assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
+                           'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2',
+                           'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1'):
+>           raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E           ValueError: DATABASE_SCHEMA_MISMATCH
+
+src/cn_contract/assistant/model_integrity.py:471: ValueError
+=========================== short test summary info ============================
+FAILED tests/integration/test_evidence_worksheet.py::test_document_tampering_and_cross_conversation
+FAILED tests/integration/test_evidence_worksheet.py::test_owner_csrf_and_after_body_revocation
+FAILED tests/integration/test_evidence_worksheet.py::test_actual_backup_restores_facts_receipts_and_original_readonly
+3 failed, 8 passed in 3.44s

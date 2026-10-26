@@ -1,0 +1,20 @@
+✔ a fact uses saved statement and requires explicit save (1.5275ms)
+✔ typed but unadded fact protects navigation (0.207ms)
+✔ unknown result only looks up the fixed request key (0.242417ms)
+✔ a rejected save preserves edits and allows a new explicit attempt (0.223125ms)
+✔ late view cannot fill another conversation (0.098834ms)
+✔ read only view cannot add or save (0.166917ms)
+✔ historical version is read only and current version can be reopened (0.471125ms)
+✔ refreshing current sources keeps local rows if evidence revision did not change (0.256166ms)
+✔ refresh cannot overwrite concurrent fact changes with a stale local snapshot (0.394708ms)
+✔ revocation clears private draft and hides source (0.314459ms)
+✔ concurrent version conflicts also protect a fact still being typed in the form (0.150625ms)
+✔ late source A cannot replace the more recently opened source B (8.700667ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 46.747

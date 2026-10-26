@@ -82,3 +82,8 @@ export const commitWorksheet=(id,body)=>request(conversation(id)+'/reception-wor
 export const findWorksheetReceipt=(id,key)=>request(conversation(id)+'/reception-worksheet/receipts/'+encodeURIComponent(key));
 export const suggestWorksheet=(id,body)=>request(conversation(id)+'/reception-worksheet/suggestions',{method:'POST',body});
 export const prepareWorksheet=(id,body)=>request(conversation(id)+'/reception-worksheet/prepare',{method:'POST',body});
+
+export const getEvidence=id=>request(conversation(id)+'/evidence');
+export const saveEvidence=(id,body)=>request(conversation(id)+'/evidence/commits',{method:'POST',body});
+export const findEvidenceReceipt=(id,key)=>request(conversation(id)+'/evidence/receipts/'+encodeURIComponent(key));
+export const getEvidenceVersion=(id,revision)=>request(conversation(id)+'/evidence/revisions/'+encodeURIComponent(revision));

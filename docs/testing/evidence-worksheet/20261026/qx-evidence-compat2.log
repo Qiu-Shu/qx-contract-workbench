@@ -1,0 +1,279 @@
+.....................................FFFFF..F.....FF.FF................. [ 28%]
+....................................F................................... [ 57%]
+........................................................................ [ 86%]
+..................................                                       [100%]
+=================================== FAILURES ===================================
+__________ test_v19_adds_only_the_useful_unique_binding_cursor_index ___________
+
+    def test_v19_adds_only_the_useful_unique_binding_cursor_index():
+>       assert storage_schema.CURRENT_VERSION == TARGET
+E       AssertionError: assert 'assistant-evidence-v1' == 'weixin-gener...n-dispatch-v1'
+E         
+E         - weixin-generation-dispatch-v1
+E         + assistant-evidence-v1
+
+tests/integration/test_weixin_generation_dispatch_schema.py:54: AssertionError
+_ test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows[False-pre-intake] _
+
+tmp_path = PosixPath('/private/tmp/qx-evidence-compat2/test_full_chain_and_immediate_0')
+version = 'pre-intake', native = False
+
+    @pytest.mark.parametrize('version', ['pre-intake', PREVIOUS])
+    @pytest.mark.parametrize('native', [False, True])
+    def test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows(tmp_path, version, native):
+        extension()
+        with closing(old_db(tmp_path/'before.db', version, native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','original-user','unused','[]',0)")
+            connection.commit()
+>           assert schema_migrations.upgrade_database(connection) == TARGET
+E           AssertionError: assert 'assistant-evidence-v1' == 'weixin-gener...n-dispatch-v1'
+E             
+E             - weixin-generation-dispatch-v1
+E             + assistant-evidence-v1
+
+tests/integration/test_weixin_generation_dispatch_schema.py:72: AssertionError
+_ test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows[False-weixin-target-provenance-v1] _
+
+tmp_path = PosixPath('/private/tmp/qx-evidence-compat2/test_full_chain_and_immediate_1')
+version = 'weixin-target-provenance-v1', native = False
+
+    @pytest.mark.parametrize('version', ['pre-intake', PREVIOUS])
+    @pytest.mark.parametrize('native', [False, True])
+    def test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows(tmp_path, version, native):
+        extension()
+        with closing(old_db(tmp_path/'before.db', version, native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','original-user','unused','[]',0)")
+            connection.commit()
+>           assert schema_migrations.upgrade_database(connection) == TARGET
+E           AssertionError: assert 'assistant-evidence-v1' == 'weixin-gener...n-dispatch-v1'
+E             
+E             - weixin-generation-dispatch-v1
+E             + assistant-evidence-v1
+
+tests/integration/test_weixin_generation_dispatch_schema.py:72: AssertionError
+_ test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows[True-pre-intake] _
+
+tmp_path = PosixPath('/private/tmp/qx-evidence-compat2/test_full_chain_and_immediate_2')
+version = 'pre-intake', native = True
+
+    @pytest.mark.parametrize('version', ['pre-intake', PREVIOUS])
+    @pytest.mark.parametrize('native', [False, True])
+    def test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows(tmp_path, version, native):
+        extension()
+        with closing(old_db(tmp_path/'before.db', version, native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','original-user','unused','[]',0)")
+            connection.commit()
+>           assert schema_migrations.upgrade_database(connection) == TARGET
+E           AssertionError: assert 'assistant-evidence-v1' == 'weixin-gener...n-dispatch-v1'
+E             
+E             - weixin-generation-dispatch-v1
+E             + assistant-evidence-v1
+
+tests/integration/test_weixin_generation_dispatch_schema.py:72: AssertionError
+_ test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows[True-weixin-target-provenance-v1] _
+
+tmp_path = PosixPath('/private/tmp/qx-evidence-compat2/test_full_chain_and_immediate_3')
+version = 'weixin-target-provenance-v1', native = True
+
+    @pytest.mark.parametrize('version', ['pre-intake', PREVIOUS])
+    @pytest.mark.parametrize('native', [False, True])
+    def test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows(tmp_path, version, native):
+        extension()
+        with closing(old_db(tmp_path/'before.db', version, native)) as connection:
+            connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','original-user','unused','[]',0)")
+            connection.commit()
+>           assert schema_migrations.upgrade_database(connection) == TARGET
+E           AssertionError: assert 'assistant-evidence-v1' == 'weixin-gener...n-dispatch-v1'
+E             
+E             - weixin-generation-dispatch-v1
+E             + assistant-evidence-v1
+
+tests/integration/test_weixin_generation_dispatch_schema.py:72: AssertionError
+_ test_fresh_repeated_bootstrap_matches_upgrade_and_complete_native_family_validation _
+
+tmp_path = PosixPath('/private/tmp/qx-evidence-compat2/test_fresh_repeated_bootstrap_0')
+
+    def test_fresh_repeated_bootstrap_matches_upgrade_and_complete_native_family_validation(tmp_path):
+        extension()
+        database = Database('sqlite:///'+str(tmp_path/'fresh.db'), tmp_path/'protected', load_settings())
+        try:
+            initialize_storage(database)
+            initialize_storage(database)
+            with database.session() as records:
+                assert _file_references(records) == []
+            with closing(sqlite3.connect(database.engine.url.database)) as connection:
+                actual = schema_migrations.database_rows(connection)
+>           assert actual == storage_schema.schema_rows(TARGET)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 5 more items, first extra item: ('trigger', 'immutable_weixin_peer_scope_grants_update', 'weixin_peer_scope_grants', "CREATE TRIGGER immutable_weixin_peer_scope_grants_update BEFORE UPDATE ON weixin_peer_scope_grants BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_generation_dispatch_schema.py:107: AssertionError
+_______ test_native_missing_version_index_is_rejected_before_any_repair ________
+
+tmp_path = PosixPath('/private/tmp/qx-evidence-compat2/test_native_missing_version_in0')
+
+    def test_native_missing_version_index_is_rejected_before_any_repair(tmp_path):
+        extension()
+        from cn_contract.web import local_server
+        root = tmp_path/'native'
+        local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
+        marker = (root/'workspace.json').read_bytes()
+        with closing(sqlite3.connect(root/'workbench.db')) as connection:
+            connection.execute('DROP INDEX '+INDEX)
+            connection.commit()
+>           assert schema_migrations.database_rows(connection) == storage_schema.schema_rows(PREVIOUS, native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 5 more items, first extra item: ('trigger', 'immutable_weixin_peer_scope_grants_update', 'weixin_peer_scope_grants', "CREATE TRIGGER immutable_weixin_peer_scope_grants_update BEFORE UPDATE ON weixin_peer_scope_grants BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_generation_dispatch_schema.py:189: AssertionError
+______ test_native_v18_upgrade_saves_old_structure_and_closes_marker_gap _______
+
+tmp_path = PosixPath('/private/tmp/qx-evidence-compat2/test_native_v18_upgrade_saves_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e59cda0>
+
+    def test_native_v18_upgrade_saves_old_structure_and_closes_marker_gap(tmp_path, monkeypatch):
+        extension()
+        from cn_contract.web import local_server, workspace_upgrade
+        root = tmp_path/'native'
+        local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as connection:
+            connection.execute('DROP INDEX '+INDEX)
+            connection.commit()
+            marker = json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256'] = local_server._schema_hash(connection)
+        (root/'workspace.json').write_text(json.dumps(marker), encoding='utf-8')
+        original = workspace_upgrade._write_marker
+        monkeypatch.setattr(workspace_upgrade, '_write_marker', lambda *args:
+            (_ for _ in ()).throw(OSError('independent synthetic marker interruption')))
+        with local_server._worker_lock(root), pytest.raises(OSError, match='marker interruption'):
+>           workspace_upgrade.upgrade(root)
+
+tests/integration/test_weixin_generation_dispatch_schema.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/private/tmp/qx-evidence-compat2/test_native_v18_upgrade_saves_0/native')
+
+    def upgrade(root):
+        """Caller holds workspace worker lock and has validated paths and policy."""
+        from .local_server import _safe_file
+        marker=json.loads((root/'workspace.json').read_text('utf-8'))
+        with closing(sqlite3.connect(root/'workbench.db')) as db:
+            db.execute('PRAGMA foreign_keys=ON')
+            db.execute('PRAGMA trusted_schema=OFF')
+            before=_rows(db);current_hash=_hash(before)
+            try:
+                version=identify_schema(before,native=True)
+            except ValueError:
+>               raise ValueError('WORKSPACE_DATABASE_MISMATCH') from None
+E               ValueError: WORKSPACE_DATABASE_MISMATCH
+
+src/cn_contract/web/workspace_upgrade.py:118: ValueError
+___________ test_frozen_v18_still_rejects_the_same_nonzero_delivery ____________
+
+world = (PosixPath('/private/tmp/qx-evidence-compat2/test_frozen_v18_still_rejects_0/独立虚构原子收件'), <cn_contract.persistence.Data...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 16, 55, 59, 22436, tzinfo=datetime.timezone.utc)))
+
+    def test_frozen_v18_still_rejects_the_same_nonzero_delivery(world):
+>       h=chain(world);deliver(h,h['one'][1],h['first']);freeze_v18(h)
+                                                         ^^^^^^^^^^^^^
+
+tests/integration/test_weixin_generation_dispatch_integrity.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_weixin_generation_dispatch_integrity.py:57: in freeze_v18
+    assert identify_schema(rows, native=True) == 'weixin-target-provenance-v1'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+rows = [('index', 'assistant_active_run', 'assistant_runs', "CREATE UNIQUE INDEX assistant_active_run ON assistant_runs(conve... 'sqlite_autoindex_approvals_1', 'approvals', None), ('index', 'sqlite_autoindex_approvals_2', 'approvals', None), ...]
+
+    def identify_schema(rows, *, native=False):
+        actual = list(rows)
+        for version in VERSIONS:
+            if actual == schema_rows(version, native=native):
+                return version
+>       raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E       ValueError: DATABASE_SCHEMA_MISMATCH
+
+src/cn_contract/storage_schema.py:111: ValueError
+________ test_zero_stream_may_continue_after_generations_only_under_v19 ________
+
+world = (PosixPath('/private/tmp/qx-evidence-compat2/test_zero_stream_may_continue_0/独立虚构原子收件'), <cn_contract.persistence.Data...l='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 16, 55, 59, 356285, tzinfo=datetime.timezone.utc)))
+
+    def test_zero_stream_may_continue_after_generations_only_under_v19(world):
+        h=chain(world);receipt=deliver(h,h['received'].descriptors[1]);validate(h)
+        assert receipt.task_binding_id==h['binding'].id
+>       freeze_v18(h)
+
+tests/integration/test_weixin_generation_dispatch_integrity.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_weixin_generation_dispatch_integrity.py:57: in freeze_v18
+    assert identify_schema(rows, native=True) == 'weixin-target-provenance-v1'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+rows = [('index', 'assistant_active_run', 'assistant_runs', "CREATE UNIQUE INDEX assistant_active_run ON assistant_runs(conve... 'sqlite_autoindex_approvals_1', 'approvals', None), ('index', 'sqlite_autoindex_approvals_2', 'approvals', None), ...]
+
+    def identify_schema(rows, *, native=False):
+        actual = list(rows)
+        for version in VERSIONS:
+            if actual == schema_rows(version, native=native):
+                return version
+>       raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E       ValueError: DATABASE_SCHEMA_MISMATCH
+
+src/cn_contract/storage_schema.py:111: ValueError
+_ test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[schema17] _
+
+world = (PosixPath('/private/tmp/qx-evidence-compat2/test_explicit_entry_checks_aut4/独立虚构原子收件'), <cn_contract.persistence.Data...l='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 25, 16, 56, 23, 879901, tzinfo=datetime.timezone.utc)))
+change = 'schema17'
+
+    @pytest.mark.parametrize('change',['session','role','account','restore','schema17','no_generation'])
+    def test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes(world,change):
+        api();h=setup_history(world)
+        if change!='no_generation':append(h)
+        value=poll_input(h)
+        if change=='account':accounts.revoke_synthetic_account(h['actor'],h['account'].id,d.WeixinRevokeInput(reason='synthetic revoke'),database=h['database'])
+        else:
+            with h['database'].session() as db:
+                if change=='session':db.get(SessionRow,str(h['actor'].session_id)).revoked=True
+                elif change=='role':db.get(UserRow,str(h['actor'].user_id)).roles='["assistant"]'
+                elif change=='restore':db.add(RestoreFenceRow(ref=str(uuid4()),archive_sha256='1'*64,manifest_sha256='2'*64,payload='{}'))
+                elif change=='schema17':
+                    db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
+                    db.execute(text('DROP TABLE weixin_descriptor_generations'))
+                    rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+>                   assert identify_schema(rows,native=True)=='weixin-generations-v1'
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_weixin_generation_ingress.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+rows = [('index', 'assistant_active_run', 'assistant_runs', "CREATE UNIQUE INDEX assistant_active_run ON assistant_runs(conve... 'sqlite_autoindex_approvals_1', 'approvals', None), ('index', 'sqlite_autoindex_approvals_2', 'approvals', None), ...]
+
+    def identify_schema(rows, *, native=False):
+        actual = list(rows)
+        for version in VERSIONS:
+            if actual == schema_rows(version, native=native):
+                return version
+>       raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E       ValueError: DATABASE_SCHEMA_MISMATCH
+
+src/cn_contract/storage_schema.py:111: ValueError
+=========================== short test summary info ============================
+FAILED tests/integration/test_weixin_generation_dispatch_schema.py::test_v19_adds_only_the_useful_unique_binding_cursor_index
+FAILED tests/integration/test_weixin_generation_dispatch_schema.py::test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows[False-pre-intake]
+FAILED tests/integration/test_weixin_generation_dispatch_schema.py::test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows[False-weixin-target-provenance-v1]
+FAILED tests/integration/test_weixin_generation_dispatch_schema.py::test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows[True-pre-intake]
+FAILED tests/integration/test_weixin_generation_dispatch_schema.py::test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows[True-weixin-target-provenance-v1]
+FAILED tests/integration/test_weixin_generation_dispatch_schema.py::test_fresh_repeated_bootstrap_matches_upgrade_and_complete_native_family_validation
+FAILED tests/integration/test_weixin_generation_dispatch_schema.py::test_native_missing_version_index_is_rejected_before_any_repair
+FAILED tests/integration/test_weixin_generation_dispatch_schema.py::test_native_v18_upgrade_saves_old_structure_and_closes_marker_gap
+FAILED tests/integration/test_weixin_generation_dispatch_integrity.py::test_frozen_v18_still_rejects_the_same_nonzero_delivery
+FAILED tests/integration/test_weixin_generation_dispatch_integrity.py::test_zero_stream_may_continue_after_generations_only_under_v19
+FAILED tests/integration/test_weixin_generation_ingress.py::test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes[schema17]
+11 failed, 239 passed in 64.25s (0:01:04)

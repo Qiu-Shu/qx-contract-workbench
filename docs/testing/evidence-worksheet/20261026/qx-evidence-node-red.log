@@ -1,0 +1,248 @@
+✖ a fact uses saved statement and requires explicit save (0.826333ms)
+✖ typed but unadded fact protects navigation (0.093291ms)
+✖ unknown result only looks up the fixed request key (0.092375ms)
+✖ a rejected save preserves edits and allows a new explicit attempt (0.068625ms)
+✖ late view cannot fill another conversation (0.071417ms)
+✖ read only view cannot add or save (0.058ms)
+✖ historical version is read only and current version can be reopened (0.088583ms)
+✖ refreshing current sources keeps local rows if evidence revision did not change (0.105167ms)
+✖ refresh cannot overwrite concurrent fact changes with a stale local snapshot (0.33475ms)
+✖ revocation clears private draft and hides source (0.220542ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 0
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42.323542
+
+✖ failing tests:
+
+test at scripts/test_evidence_worksheet.mjs:22:1
+✖ a fact uses saved statement and requires explicit save (0.826333ms)
+  AssertionError [ERR_ASSERTION]: evidence binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:9:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:22:81)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:297:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_evidence_worksheet.mjs:23:1
+✖ typed but unadded fact protects navigation (0.093291ms)
+  AssertionError [ERR_ASSERTION]: evidence binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:9:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:23:69)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_evidence_worksheet.mjs:24:1
+✖ unknown result only looks up the fixed request key (0.092375ms)
+  AssertionError [ERR_ASSERTION]: evidence binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:9:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:24:77)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_evidence_worksheet.mjs:25:1
+✖ a rejected save preserves edits and allows a new explicit attempt (0.068625ms)
+  AssertionError [ERR_ASSERTION]: evidence binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:9:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:25:92)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_evidence_worksheet.mjs:26:1
+✖ late view cannot fill another conversation (0.071417ms)
+  AssertionError [ERR_ASSERTION]: evidence binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:9:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:26:69)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_evidence_worksheet.mjs:27:1
+✖ read only view cannot add or save (0.058ms)
+  AssertionError [ERR_ASSERTION]: evidence binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:9:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:27:60)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_evidence_worksheet.mjs:28:1
+✖ historical version is read only and current version can be reopened (0.088583ms)
+  AssertionError [ERR_ASSERTION]: evidence binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:9:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:28:94)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_evidence_worksheet.mjs:29:1
+✖ refreshing current sources keeps local rows if evidence revision did not change (0.105167ms)
+  AssertionError [ERR_ASSERTION]: evidence binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:9:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:29:106)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_evidence_worksheet.mjs:30:1
+✖ refresh cannot overwrite concurrent fact changes with a stale local snapshot (0.33475ms)
+  AssertionError [ERR_ASSERTION]: evidence binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:9:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:30:103)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_evidence_worksheet.mjs:31:1
+✖ revocation clears private draft and hides source (0.220542ms)
+  AssertionError [ERR_ASSERTION]: evidence binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:9:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:31:75)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }

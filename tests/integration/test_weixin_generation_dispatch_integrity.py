@@ -52,6 +52,7 @@ def validate(h):
 
 def freeze_v18(h):
     with h['database'].session() as db:
+        db.execute(text('DROP TABLE assistant_evidence_revisions'))
         db.execute(text('DROP INDEX IF EXISTS weixin_dispatch_binding_cursor'))
         rows = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         assert identify_schema(rows, native=True) == 'weixin-target-provenance-v1'

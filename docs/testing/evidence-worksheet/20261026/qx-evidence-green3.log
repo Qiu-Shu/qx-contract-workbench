@@ -1,0 +1,52 @@
+..........F                                                              [100%]
+=================================== FAILURES ===================================
+_______ test_actual_backup_restores_facts_receipts_and_original_readonly _______
+
+native = (<fastapi.applications.FastAPI object at 0x10c109cd0>, PosixPath('/private/tmp/qx-evidence-green3/test_actual_backup_restores_fa0/workspaces/main'))
+tmp_path = PosixPath('/private/tmp/qx-evidence-green3/test_actual_backup_restores_fa0')
+
+    def test_actual_backup_restores_facts_receipts_and_original_readonly(native,tmp_path):
+        from cn_contract.ops import workspace_backup
+        from cn_contract.web.local_server import build_local_app
+        from tests.helpers.legacy_assistant_backup import PASSPHRASE
+        app,root=native
+        with TestClient(app) as client:
+            h=sign_in(client);base,url=begin(client,h);assert client.get(url).status_code==200
+            a,p,source=material(client,h,base,app.state.database)
+            row={'id':str(uuid4()),'category':'disbursement','content':'合成转账，性质仍待核','event_date':None,'review_state':'reviewed','note':'仅表示律师登记核对','source':source}
+            body=request(client.get(url).json(),[row]);receipt=client.post(url+'/commits',headers=h,json=body).json()
+>       archive=tmp_path/'合成事实底稿.qxbak';workspace_backup.create_workspace_backup(root,archive,PASSPHRASE,data_parent=tmp_path)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_evidence_worksheet.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/cn_contract/ops/workspace_backup.py:277: in create_workspace_backup
+    _references(root,inventory,source=True)
+src/cn_contract/ops/workspace_backup.py:142: in _references
+    refs = _file_references(db)
+           ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <sqlalchemy.orm.session.Session object at 0x10c8c9070>
+
+    def _file_references(db, *, allow_assistant=True):
+        from ..exports.storage import ExportRecordRow, sha
+        from ..assistant.attachment_integrity import file_references
+        from ..assistant.model_integrity import validate_model_records
+        from ..assistant.judge_integrity import validate_judge_records
+        from ..assistant.library_integrity import validate_library_records
+        from ..assistant.profile_integrity import validate_profile_records
+        from ..task_drafts.integrity import validate_task_records
+        from ..weixin_inbox.integrity import validate_weixin_records
+        from ..weixin_inbox.dispatch_integrity import validate_dispatch_records
+        from ..weixin_inbox.grant_integrity import validate_peer_scope_grants
+>       from ..weixin_inbox.generation_integrity import validate_peer_generations
+E         File "/Users/molin/Project/qx-contract-workbench/src/cn_contract/weixin_inbox/generation_integrity.py", line 129
+E           allow_target_dispatch=version in ('weixin-generation-dispatch-v1', 'assistant-evidence-v1'), 'assistant-evidence-v1')
+E                                                                                                                               ^
+E       SyntaxError: positional argument follows keyword argument
+
+src/cn_contract/ops/backup.py:174: SyntaxError
+=========================== short test summary info ============================
+FAILED tests/integration/test_evidence_worksheet.py::test_actual_backup_restores_facts_receipts_and_original_readonly
+1 failed, 10 passed in 3.60s

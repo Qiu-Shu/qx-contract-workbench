@@ -9,11 +9,12 @@ import {bindTaskDrafts} from './assistant-tasks.mjs';
 import {bindWeixinAuthorization} from './assistant-weixin.mjs';
 import {bindWeixinGenerations} from './assistant-weixin-generations.mjs';
 import {bindOutputs} from './assistant-outputs.mjs';
+import {bindEvidenceWorksheet} from './evidence-worksheet.mjs';
 import {bindReceptionWorksheet} from './reception-worksheet.mjs';
 
 const byId=id=>document.getElementById(id);
 const readonly=document.body.dataset.readonly==='true';
-let composer, materials, citations, profile, outputs, worksheet, tasks, weixin, weixinHistory, timer, listCursor=null, listEpoch=0, closed=false;
+let composer, materials, citations, profile, outputs, worksheet, evidence, tasks, weixin, weixinHistory, timer, listCursor=null, listEpoch=0, closed=false;
 let generationTimer, pollTimer, generationKey=null;
 let pendingRoute=document.body.dataset.conversationId || null;
 const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing(),onCitation:(id,trigger)=>void citations.open(id,trigger),
@@ -46,7 +47,7 @@ function drawState(state) {
   renderer.state(state,readonly);
   materials?.state(state);citations?.state(state);profile?.state(state);tasks?.state(state);
   outputs?.state(state);
-  worksheet?.state(state);
+  worksheet?.state(state);evidence?.state(state);
   weixin?.state(state);
   weixinHistory?.state(state);
   if(pendingRoute && !state.id && state.status!=='revoked') {
@@ -108,7 +109,7 @@ async function loadList(append=false) {
   finally { if(epoch===listEpoch)byId('more-conversations').disabled=false; }
 }
 async function open(id) {
-  if(worksheet?.hasPending()||tasks?.hasPending()||weixin?.hasPending()||weixinHistory?.hasPending()){notice('请先保存或清空本次内容；结果未知时请先查询，再切换对话。');return;}
+  if(evidence?.hasPending()||worksheet?.hasPending()||tasks?.hasPending()||weixin?.hasPending()||weixinHistory?.hasPending()){notice('请先保存或清空本次内容；结果未知时请先查询，再切换对话。');return;}
   clearTimeout(timer);
   pendingRoute=id;
   const done=await safely(()=>controller.open(id));
@@ -127,6 +128,7 @@ materials=bindMaterials({controller,readonly,onPreview:()=>{citations?.close();p
 citations=bindCitations({controller,onOpen:()=>{materials.close();profile?.close();outputs?.close();}});
 profile=bindProfile({controller,api,readonly,onOpen:()=>{materials.close();citations.close();outputs?.close();}});
 outputs=bindOutputs({controller,api,readonly,onOpen:()=>{materials.close();citations.close();profile.close();}});
+evidence=bindEvidenceWorksheet({controller,api,readonly});
 worksheet=bindReceptionWorksheet({controller,api,readonly,onPrepared:()=>{clearTimeout(timer);byId('composer').focus();}});
 tasks=bindTaskDrafts({controller,api,readonly});
 const updateWeixinControls=()=>{weixin?.updateControls();weixinHistory?.updateControls();};
@@ -152,7 +154,7 @@ byId('clear-skill').addEventListener('click',()=>{controller.selectSkill(null);b
 byId('save-draft').addEventListener('click',()=>{clearTimeout(timer);void safely(()=>
   controller.state.status==='error'?controller.retry():controller.save());});
 byId('new-conversation').addEventListener('click',async()=>{
-  if(worksheet.hasPending()||tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()){notice('请先保存或清空本次内容；结果未知时请先查询，再新建对话。');return;}
+  if(evidence.hasPending()||worksheet.hasPending()||tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()){notice('请先保存或清空本次内容；结果未知时请先查询，再新建对话。');return;}
   clearTimeout(timer);
   if(await safely(()=>controller.newConversation())) {
     pendingRoute=null;drawState(controller.state);closeMenu();byId('composer').focus();
@@ -232,7 +234,7 @@ byId('body-size').addEventListener('change',event=>{
   document.body.classList.toggle('read-largest',event.target.value==='20');
 });
 byId('logout').addEventListener('click',async()=>{
-  if(worksheet.hasPending()||tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()){notice('仍有未保存内容或未查明的结果，请先处理后退出。');return;}
+  if(evidence.hasPending()||worksheet.hasPending()||tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()){notice('仍有未保存内容或未查明的结果，请先处理后退出。');return;}
   clearTimeout(timer);
   if(!await safely(()=>controller.save()) || !controller.canLeave())return;
   if(await safely(()=>api.request('/api/logout',{method:'POST'}))) {
@@ -240,11 +242,11 @@ byId('logout').addEventListener('click',async()=>{
   }
 });
 window.addEventListener('beforeunload',event=>{
-  if(!controller.canLeave() || composer.isComposing() || materials.hasSelection() || worksheet.hasPending() || tasks.hasPending() || weixin.hasPending() || weixinHistory.hasPending()) {event.preventDefault();event.returnValue='';}
+  if(!controller.canLeave() || composer.isComposing() || materials.hasSelection() || evidence.hasPending() || worksheet.hasPending() || tasks.hasPending() || weixin.hasPending() || weixinHistory.hasPending()) {event.preventDefault();event.returnValue='';}
 });
 window.addEventListener('pagehide',()=>{
   closed=true;++listEpoch;clearTimeout(timer);clearTimeout(generationTimer);clearTimeout(pollTimer);
-  composer.dispose();materials.dispose();citations.dispose();profile.close();outputs.dispose();worksheet.dispose();tasks.dispose();weixin.dispose();weixinHistory.dispose();controller.close();
+  composer.dispose();materials.dispose();citations.dispose();profile.close();outputs.dispose();worksheet.dispose();evidence.dispose();tasks.dispose();weixin.dispose();weixinHistory.dispose();controller.close();
 });
 
 drawState(controller.state);

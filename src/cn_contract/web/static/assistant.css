@@ -333,3 +333,10 @@ body.has-history.source-open .compose-section { position: static; }
 .reception-worksheet #worksheet-candidates details { border-top: 1px solid var(--line); padding: .8rem 0; }
 .reception-worksheet #worksheet-candidates p { white-space: pre-wrap; }
 .reception-worksheet #worksheet-conflict { padding: .8rem; border: 1px solid var(--line); border-radius: .4rem; }
+
+.evidence-worksheet label { display: grid; gap: .4rem; margin-top: .8rem; }
+.evidence-worksheet input, .evidence-worksheet select, .evidence-worksheet textarea { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+.evidence-materials > div, .evidence-fact { padding: .9rem; margin: .7rem 0; border: 1px solid var(--line, #d9e0ec); border-radius: .5rem; overflow-wrap: anywhere; }
+.evidence-fact button { margin: .3rem .5rem .3rem 0; }
+.evidence-worksheet pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 18rem; overflow-y: auto; }
+.evidence-history { display: flex; align-items: end; flex-wrap: wrap; gap: .7rem; }

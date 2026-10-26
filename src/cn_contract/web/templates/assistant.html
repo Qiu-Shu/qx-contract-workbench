@@ -39,6 +39,7 @@
       <button id="show-profile" class="text-button" type="button" aria-expanded="false" aria-controls="profile-preview" disabled>档案草稿</button>
       <button id="show-outputs" class="text-button" type="button" aria-expanded="false" aria-controls="output-panel" disabled>成果与导出</button>
       <button id="show-worksheet" class="text-button" type="button" aria-controls="worksheet-panel" disabled>接待底稿</button>
+      <button id="show-evidence" class="text-button" type="button" aria-controls="evidence-panel" disabled>事实与材料</button>
       <label class="reading-control" for="body-size">阅读字号<select id="body-size"><option value="16">标准 16</option><option value="18">较大 18</option><option value="20">大号 20</option></select></label>
     </header>
 
@@ -67,6 +68,36 @@
         <pre id="server-draft" class="reading-text" tabindex="0"></pre>
         <div class="conflict-actions"><button id="keep-local" type="button">保留当前文字并保存</button><button id="use-server" class="quiet-button" type="button">使用已保存文字</button></div>
       </section>
+
+      <details id="evidence-panel" class="task-draft-panel evidence-worksheet">
+        <summary>材料与事实证据底稿<span class="muted">逐条记录事实及依据，保留待核、争议和历史版本</span></summary>
+        <div class="task-draft-body">
+          <p id="evidence-version" class="muted"></p>
+          <p>借款约定、实际交付和还款分别登记。来源与核对状态分开；信息不全时不推定欠款余额。</p>
+          <h2>本次材料目录</h2><div id="evidence-materials" class="evidence-materials"></div>
+          <p class="muted">读取和材料选择沿用下方材料入口。新增、重读或移出材料后，请点击“核对最新来源”；旧事实仍保留原依据。</p>
+          <h2>登记或更正一条事实</h2>
+          <label for="evidence-source">依据来源<select id="evidence-source" disabled><option value="">先读取底稿</option></select></label>
+          <button id="evidence-choose-source" type="button" disabled>核对所选依据</button>
+          <label for="evidence-anchor">解析原文位置<select id="evidence-anchor" disabled><option value="">选择材料后显示</option></select></label>
+          <pre id="evidence-source-text" class="reading-text"></pre>
+          <details><summary>人工摘录原件（图片或不可读材料）</summary>
+            <p class="muted">先选材料的“人工摘录”。人工摘录不会标成系统识别结果，也不自动证明原件内容。</p>
+            <label for="evidence-manual-location">原件位置<input id="evidence-manual-location" maxlength="300" placeholder="例如：第2页、截图右上方" disabled></label>
+            <label for="evidence-manual-quote">逐字摘录<textarea id="evidence-manual-quote" rows="3" maxlength="4000" disabled></textarea></label>
+          </details>
+          <label for="evidence-category">事实类别<select id="evidence-category" disabled><option value="agreement">借款约定/陈述</option><option value="disbursement">实际交付</option><option value="repayment">还款</option><option value="other">其他/相反说法</option></select></label>
+          <label for="evidence-content">事实或一方说法<textarea id="evidence-content" rows="3" maxlength="2000" disabled placeholder="写明谁作出的陈述、材料记载了什么，未知内容保留待核"></textarea></label>
+          <label for="evidence-date">发生日期（不确定可留空）<input id="evidence-date" type="date" disabled></label>
+          <label for="evidence-review">核对状态<select id="evidence-review" disabled><option value="pending">待核</option><option value="reviewed">律师登记已核对</option><option value="disputed">存在争议</option></select></label>
+          <label for="evidence-note">核对备注、相反说法或缺口<textarea id="evidence-note" rows="2" maxlength="1000" disabled></textarea></label>
+          <div class="task-draft-actions"><button id="evidence-add" type="button" disabled>加入事实清单（尚未保存）</button><button id="evidence-cancel-edit" type="button" disabled>取消这条编辑</button></div>
+          <h2>事实与依据 · 按日期查看</h2><div id="evidence-rows"></div>
+          <div class="task-draft-actions"><button id="evidence-save" type="button" disabled>保存事实底稿</button><button id="evidence-refresh" type="button" disabled>核对最新来源，保留编辑</button><button id="evidence-discard" type="button" disabled>放弃本地改动并读取最新</button><button id="evidence-lookup" type="button" hidden>查询本次保存回执</button></div>
+          <div class="evidence-history"><label for="evidence-history-version">回看事实版本<input id="evidence-history-version" type="number" min="1" max="200" step="1" disabled></label><button id="evidence-history" type="button" disabled>查看历史（只读）</button></div>
+          <p id="evidence-notice" role="status" aria-live="polite"></p><div id="evidence-source-detail" class="reading-text"></div>
+        </div>
+      </details>
 
       <details id="worksheet-panel" class="task-draft-panel reception-worksheet">
         <summary>接待追问与事项底稿<span class="muted">从原始陈述整理诉求、待核与下一步，保存在本机</span></summary>

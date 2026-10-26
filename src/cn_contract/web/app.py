@@ -586,7 +586,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
                         'assistant.css','assistant-api.mjs','assistant-state.mjs','assistant-render.mjs',
                         'assistant-composer.mjs','assistant-materials.mjs','assistant-generation.mjs',
                         'assistant-research.mjs','assistant-context.mjs','assistant-citations.mjs','assistant-profile.mjs',
-                        'assistant-tasks.mjs','assistant-weixin.mjs','assistant-weixin-generations.mjs','assistant-outputs.mjs','reception-worksheet.mjs','assistant.mjs',
+                        'assistant-tasks.mjs','assistant-weixin.mjs','assistant-weixin-generations.mjs','assistant-outputs.mjs','reception-worksheet.mjs','evidence-worksheet.mjs','assistant.mjs',
                         'reception-assistant.mjs','reception-assistant.css'}:raise ServiceError('NOT_SUPPORTED',404)
         return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith(('.js','.mjs')) else 'text/css')
     from .draft_confirmation import register_routes
@@ -603,6 +603,8 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     register_assistant_profiles(app,database)
     from .assistant_outputs import register_routes as register_assistant_outputs
     register_assistant_outputs(app,database)
+    from .evidence_worksheet import register_routes as register_evidence_worksheet
+    register_evidence_worksheet(app,database)
     from .reception_worksheet import register_routes as register_reception_worksheet
     register_reception_worksheet(app,database)
     from .assistant_pages import register_routes as register_assistant_pages

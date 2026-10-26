@@ -1,0 +1,200 @@
+FFFFFFFFFFF                                                              [100%]
+=================================== FAILURES ===================================
+________________ test_statement_edit_history_retry_and_no_model ________________
+
+chat = (<starlette.testclient.TestClient object at 0x10e396f30>, <cn_contract.persistence.Database object at 0x10f450710>, PosixPath('/private/tmp/qx-evidence-red/test_statement_edit_history_re0/workspaces/main'))
+
+    def test_statement_edit_history_retry_and_no_model(chat):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       r=client.get(url);assert r.status_code==200,r.text
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"b04b88cc-6331-4623-ad74-9e9580bf982d","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/integration/test_evidence_worksheet.py:55: AssertionError
+________ test_document_source_original_and_manual_excerpt_are_distinct _________
+
+chat = (<starlette.testclient.TestClient object at 0x10f5f2480>, <cn_contract.persistence.Database object at 0x10f8c8b60>, PosixPath('/private/tmp/qx-evidence-red/test_document_source_original_0/workspaces/main'))
+
+    def test_document_source_original_and_manual_excerpt_are_distinct(chat):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       a,p,source=material(client,h,base,database);v=client.get(url).json();assert v['materials'][0]['reading_status']=='readable'
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_evidence_worksheet.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10f5f2480>
+h = {'X-CSRF-Token': 'THIUZESjlVgxdKX4wVmlyQXVF-kcJfyK24CfUOcL1NA'}
+base = '/api/assistant/conversations/065dfcb6-c563-4c25-a555-390734bf5f56'
+database = <cn_contract.persistence.Database object at 0x10f8c8b60>
+
+    def material(client,h,base,database):
+        doc=Document();doc.add_paragraph('独立虚构交付记录：甲向乙转账100000元。');doc.add_paragraph('乙的相反说法：其中部分是其他往来款。')
+        stream=BytesIO();doc.save(stream);raw=stream.getvalue()
+        database._assistant_synthetic_hashes=frozenset({sha256(raw).hexdigest()})
+        v=client.get(base).json();body={'request_id':str(uuid4()),'expected_scope':v['scope'],
+            'original_name':'合成交付.docx','mime':'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'policy':{'local_processing_accepted':True}}
+        r=client.post(base+'/attachments',headers=h,files=[('file',(body['original_name'],raw,body['mime'])),('metadata',(None,json.dumps(body)))])
+        assert r.status_code==201,r.text
+        attachment=r.json()['attachment'];v=client.get(base).json()
+        r=client.post(base+'/attachments/'+attachment['id']+'/parse',headers=h,json={'request_id':str(uuid4()),'expected_scope':v['scope']})
+>       assert r.status_code==200,r.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"3fe61c3a-5d14-4c6e-9251-75bb85491e78","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/integration/test_evidence_worksheet.py:47: AssertionError
+________ test_stale_or_forged_source_is_rejected_without_writing[scope] ________
+
+chat = (<starlette.testclient.TestClient object at 0x11021e390>, <cn_contract.persistence.Database object at 0x10e8c7770>, PosixPath('/private/tmp/qx-evidence-red/test_stale_or_forged_source_is0/workspaces/main'))
+fault = 'scope'
+
+    @pytest.mark.parametrize('fault',['scope','profile','base','quote','cross','duplicate'])
+    def test_stale_or_forged_source_is_rejected_without_writing(chat,fault):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       assert client.get(url).status_code==200
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/04512436-00a4-4230-9560-91b314e7450a/evidence')
+E        +      where get = <starlette.testclient.TestClient object at 0x11021e390>.get
+
+tests/integration/test_evidence_worksheet.py:91: AssertionError
+_______ test_stale_or_forged_source_is_rejected_without_writing[profile] _______
+
+chat = (<starlette.testclient.TestClient object at 0x10f951550>, <cn_contract.persistence.Database object at 0x10f42cf20>, PosixPath('/private/tmp/qx-evidence-red/test_stale_or_forged_source_is1/workspaces/main'))
+fault = 'profile'
+
+    @pytest.mark.parametrize('fault',['scope','profile','base','quote','cross','duplicate'])
+    def test_stale_or_forged_source_is_rejected_without_writing(chat,fault):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       assert client.get(url).status_code==200
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/7f26ee33-8105-4f6b-a1d4-f16bfe13a645/evidence')
+E        +      where get = <starlette.testclient.TestClient object at 0x10f951550>.get
+
+tests/integration/test_evidence_worksheet.py:91: AssertionError
+________ test_stale_or_forged_source_is_rejected_without_writing[base] _________
+
+chat = (<starlette.testclient.TestClient object at 0x11052c6b0>, <cn_contract.persistence.Database object at 0x1105b4470>, PosixPath('/private/tmp/qx-evidence-red/test_stale_or_forged_source_is2/workspaces/main'))
+fault = 'base'
+
+    @pytest.mark.parametrize('fault',['scope','profile','base','quote','cross','duplicate'])
+    def test_stale_or_forged_source_is_rejected_without_writing(chat,fault):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       assert client.get(url).status_code==200
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/475e6128-8933-475a-983f-acb7f5f331f8/evidence')
+E        +      where get = <starlette.testclient.TestClient object at 0x11052c6b0>.get
+
+tests/integration/test_evidence_worksheet.py:91: AssertionError
+________ test_stale_or_forged_source_is_rejected_without_writing[quote] ________
+
+chat = (<starlette.testclient.TestClient object at 0x11036e210>, <cn_contract.persistence.Database object at 0x1109c06b0>, PosixPath('/private/tmp/qx-evidence-red/test_stale_or_forged_source_is3/workspaces/main'))
+fault = 'quote'
+
+    @pytest.mark.parametrize('fault',['scope','profile','base','quote','cross','duplicate'])
+    def test_stale_or_forged_source_is_rejected_without_writing(chat,fault):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       assert client.get(url).status_code==200
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/bd4e0d18-0926-4039-9449-641220462522/evidence')
+E        +      where get = <starlette.testclient.TestClient object at 0x11036e210>.get
+
+tests/integration/test_evidence_worksheet.py:91: AssertionError
+________ test_stale_or_forged_source_is_rejected_without_writing[cross] ________
+
+chat = (<starlette.testclient.TestClient object at 0x1104cc650>, <cn_contract.persistence.Database object at 0x11063b110>, PosixPath('/private/tmp/qx-evidence-red/test_stale_or_forged_source_is4/workspaces/main'))
+fault = 'cross'
+
+    @pytest.mark.parametrize('fault',['scope','profile','base','quote','cross','duplicate'])
+    def test_stale_or_forged_source_is_rejected_without_writing(chat,fault):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       assert client.get(url).status_code==200
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/0c126827-bbc8-479c-8aa1-394725ce4452/evidence')
+E        +      where get = <starlette.testclient.TestClient object at 0x1104cc650>.get
+
+tests/integration/test_evidence_worksheet.py:91: AssertionError
+______ test_stale_or_forged_source_is_rejected_without_writing[duplicate] ______
+
+chat = (<starlette.testclient.TestClient object at 0x110771670>, <cn_contract.persistence.Database object at 0x11078f770>, PosixPath('/private/tmp/qx-evidence-red/test_stale_or_forged_source_is5/workspaces/main'))
+fault = 'duplicate'
+
+    @pytest.mark.parametrize('fault',['scope','profile','base','quote','cross','duplicate'])
+    def test_stale_or_forged_source_is_rejected_without_writing(chat,fault):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       assert client.get(url).status_code==200
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/ca8fb6e7-570b-4ded-a0fc-b1d0208e7551/evidence')
+E        +      where get = <starlette.testclient.TestClient object at 0x110771670>.get
+
+tests/integration/test_evidence_worksheet.py:91: AssertionError
+________________ test_document_tampering_and_cross_conversation ________________
+
+chat = (<starlette.testclient.TestClient object at 0x110bcd6a0>, <cn_contract.persistence.Database object at 0x1108c45f0>, PosixPath('/private/tmp/qx-evidence-red/test_document_tampering_and_cr0/workspaces/main'))
+
+    def test_document_tampering_and_cross_conversation(chat):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       assert client.get(url).status_code==200
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/3f4ab3c4-86d9-4a32-94ee-a9a388c2368b/evidence')
+E        +      where get = <starlette.testclient.TestClient object at 0x110bcd6a0>.get
+
+tests/integration/test_evidence_worksheet.py:105: AssertionError
+__________________ test_owner_csrf_and_after_body_revocation ___________________
+
+chat = (<starlette.testclient.TestClient object at 0x1103c5d90>, <cn_contract.persistence.Database object at 0x110bf1e80>, PosixPath('/private/tmp/qx-evidence-red/test_owner_csrf_and_after_body0/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x110d8eae0>
+
+    def test_owner_csrf_and_after_body_revocation(chat,monkeypatch):
+        from starlette.requests import Request
+        from cn_contract.persistence import SessionRow
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       assert client.get(url).status_code==200
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/9756bd9e-4259-473f-8e9c-aabe4259aa37/evidence')
+E        +      where get = <starlette.testclient.TestClient object at 0x1103c5d90>.get
+
+tests/integration/test_evidence_worksheet.py:121: AssertionError
+_______ test_actual_backup_restores_facts_receipts_and_original_readonly _______
+
+native = (<fastapi.applications.FastAPI object at 0x110dc72f0>, PosixPath('/private/tmp/qx-evidence-red/test_actual_backup_restores_fa0/workspaces/main'))
+tmp_path = PosixPath('/private/tmp/qx-evidence-red/test_actual_backup_restores_fa0')
+
+    def test_actual_backup_restores_facts_receipts_and_original_readonly(native,tmp_path):
+        from cn_contract.ops import workspace_backup
+        from cn_contract.web.local_server import build_local_app
+        from tests.helpers.legacy_assistant_backup import PASSPHRASE
+        app,root=native
+        with TestClient(app) as client:
+>           h=sign_in(client);base,url=begin(client,h);assert client.get(url).status_code==200
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: assert 404 == 200
+E            +  where 404 = <Response [404 Not Found]>.status_code
+E            +    where <Response [404 Not Found]> = get('/api/assistant/conversations/eb811c3a-4684-4d8d-979c-3c308fd64b04/evidence')
+E            +      where get = <starlette.testclient.TestClient object at 0x110e6fd40>.get
+
+tests/integration/test_evidence_worksheet.py:143: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_evidence_worksheet.py::test_statement_edit_history_retry_and_no_model
+FAILED tests/integration/test_evidence_worksheet.py::test_document_source_original_and_manual_excerpt_are_distinct
+FAILED tests/integration/test_evidence_worksheet.py::test_stale_or_forged_source_is_rejected_without_writing[scope]
+FAILED tests/integration/test_evidence_worksheet.py::test_stale_or_forged_source_is_rejected_without_writing[profile]
+FAILED tests/integration/test_evidence_worksheet.py::test_stale_or_forged_source_is_rejected_without_writing[base]
+FAILED tests/integration/test_evidence_worksheet.py::test_stale_or_forged_source_is_rejected_without_writing[quote]
+FAILED tests/integration/test_evidence_worksheet.py::test_stale_or_forged_source_is_rejected_without_writing[cross]
+FAILED tests/integration/test_evidence_worksheet.py::test_stale_or_forged_source_is_rejected_without_writing[duplicate]
+FAILED tests/integration/test_evidence_worksheet.py::test_document_tampering_and_cross_conversation
+FAILED tests/integration/test_evidence_worksheet.py::test_owner_csrf_and_after_body_revocation
+FAILED tests/integration/test_evidence_worksheet.py::test_actual_backup_restores_facts_receipts_and_original_readonly
+11 failed in 2.77s

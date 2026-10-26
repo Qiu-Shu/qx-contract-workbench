@@ -5082,3 +5082,95 @@ class WeixinGenerationDispatchReceiptView(DomainModel):
         if self.next_task_cursor != self.expected_task_cursor + 1:
             raise ValueError('dispatch projection advances the task cursor exactly once')
         return self
+
+
+class EvidenceStatementRef(DomainModel):
+    kind: Literal['statement']
+    profile_revision: PositiveInt
+    start: NonNegativeInt
+    end: NonNegativeInt
+    quote: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=12000)]
+
+    @model_validator(mode='after')
+    def exact_span(self):
+        if self.end - self.start != len(self.quote):
+            raise ValueError('statement offsets must cover the exact quote')
+        return self
+
+
+class EvidenceManualExcerpt(DomainModel):
+    kind: Literal['manual_excerpt']
+    attachment_id: UUID
+    original_sha256: SHA256
+    location: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=300)]
+    quote: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=4000)]
+
+
+EvidenceSource = Annotated[Union[EvidenceStatementRef, ProfileDocumentRef, EvidenceManualExcerpt], Field(discriminator='kind')]
+
+
+class EvidenceFact(DomainModel):
+    id: UUID
+    category: Literal['agreement', 'disbursement', 'repayment', 'other']
+    content: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=2000)]
+    event_date: date | None = None
+    review_state: Literal['pending', 'reviewed', 'disputed'] = 'pending'
+    note: Annotated[str, StringConstraints(strict=True, max_length=1000)] = ''
+    source: EvidenceSource
+
+    @field_validator('content')
+    @classmethod
+    def not_blank(cls, value):
+        if not value.strip():
+            raise ValueError('fact content is required')
+        return value
+
+
+class EvidenceCommitInput(DomainModel):
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    expected_profile_revision: NonNegativeInt
+    base_revision: NonNegativeInt
+    rows: Annotated[tuple[EvidenceFact, ...], Field(max_length=100)]
+
+    @field_validator('rows')
+    @classmethod
+    def distinct_rows(cls, values):
+        if len({r.id for r in values}) != len(values):
+            raise ValueError('fact IDs cannot repeat')
+        return values
+
+
+class EvidenceSnapshot(DomainModel):
+    scope: ScopeSnapshot
+    profile_revision: NonNegativeInt
+    revision: PositiveInt
+    rows: Annotated[tuple[EvidenceFact, ...], Field(max_length=100)]
+    created_at: UTCDatetime
+
+
+class EvidenceReceipt(DomainModel):
+    conversation_id: UUID
+    request_id: UUID
+    revision: PositiveInt
+    snapshot_sha256: SHA256
+    created_at: UTCDatetime
+
+
+class EvidenceMaterial(DomainModel):
+    attachment: AssistantAttachmentView
+    selected: StrictBool
+    parse_revision: PositiveInt | None = None
+    reading_status: Literal['readable', 'partial', 'needs_baseline', 'failed'] | None = None
+
+
+class EvidenceWorksheetView(DomainModel):
+    scope: ScopeSnapshot
+    profile_revision: NonNegativeInt
+    revision: NonNegativeInt
+    rows: Annotated[tuple[EvidenceFact, ...], Field(max_length=100)]
+    saved_scope: ScopeSnapshot | None = None
+    statement: str | None = None
+    writable: StrictBool
+    materials: tuple[EvidenceMaterial, ...]
+    historical_ids: tuple[UUID, ...] = ()

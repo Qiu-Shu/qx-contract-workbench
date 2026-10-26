@@ -1,0 +1,699 @@
+FF......FFF                                                              [100%]
+=================================== FAILURES ===================================
+________________ test_statement_edit_history_retry_and_no_model ________________
+
+self = <sqlalchemy.engine.base.Connection object at 0x10b620a70>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10a2e5040>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10b621100>
+statement = 'BEGIN IMMEDIATE', parameters = [()]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1969: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10a2e5040>
+cursor = <sqlite3.Cursor object at 0x10b5f2fc0>, statement = 'BEGIN IMMEDIATE'
+parameters = ()
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10b621100>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.OperationalError: cannot start a transaction within a transaction
+
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:952: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+chat = (<starlette.testclient.TestClient object at 0x10b485cd0>, <cn_contract.persistence.Database object at 0x10a2e50d0>, PosixPath('/private/tmp/qx-evidence-green1/test_statement_edit_history_re0/workspaces/main'))
+
+    def test_statement_edit_history_retry_and_no_model(chat):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+        r=client.get(url);assert r.status_code==200,r.text
+        assert r.json()['revision']==0 and r.json()['rows']==[]
+        row=statement(client,h,base,url);body=request(client.get(url).json(),[row])
+>       r=client.post(url+'/commits',headers=h,json=body);assert r.status_code==200,r.text
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_evidence_worksheet.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_client.py:1204: in post
+    return self.request(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/testclient.py:518: in request
+    return super().request(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_client.py:797: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_client.py:994: in send
+    raise exc
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_client.py:988: in send
+    response.read()
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_models.py:876: in read
+    self._content = b"".join(self.iter_bytes())
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_models.py:892: in iter_bytes
+    for raw_bytes in self.iter_raw():
+                     ^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_models.py:947: in iter_raw
+    for raw_stream_bytes in self.stream:
+                            ^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_client.py:143: in __iter__
+    yield from self._stream
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/testclient.py:384: in iter_body
+    exit_stack.close()
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/contextlib.py:618: in close
+    self.__exit__(None, None, None)
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/contextlib.py:610: in __exit__
+    raise exc_details[1]
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/contextlib.py:595: in __exit__
+    if cb(*exc_details):
+       ^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/testclient.py:399: in close_app
+    raise exception
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/anyio/from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/testclient.py:366: in run_app
+    await self.app(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/telemetry/_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/base.py:203: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/cn_contract/web/app.py:92: in headers
+    response=await call_next(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/base.py:179: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/routing.py:678: in __call__
+    await self.middleware_stack(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:2786: in app
+    await route.handle(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/routing.py:284: in handle
+    await self.app(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:727: in app
+    raw_response = await run_endpoint_function(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:360: in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/cn_contract/web/evidence_worksheet.py:43: in commit
+    return response(await run_in_threadpool(service.commit,actor,cid,value,database=database))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/anyio/to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+src/cn_contract/assistant/evidence_worksheet.py:83: in commit
+    db.connection().exec_driver_sql('BEGIN IMMEDIATE')
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1781: in exec_driver_sql
+    ret = self._execute_context(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1848: in _execute_context
+    return self._exec_single_context(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10a2e5040>
+cursor = <sqlite3.Cursor object at 0x10b5f2fc0>, statement = 'BEGIN IMMEDIATE'
+parameters = ()
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10b621100>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) cannot start a transaction within a transaction
+E       [SQL: BEGIN IMMEDIATE]
+E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:952: OperationalError
+________ test_document_source_original_and_manual_excerpt_are_distinct _________
+
+chat = (<starlette.testclient.TestClient object at 0x10b443530>, <cn_contract.persistence.Database object at 0x10b59db80>, PosixPath('/private/tmp/qx-evidence-green1/test_document_source_original_0/workspaces/main'))
+
+    def test_document_source_original_and_manual_excerpt_are_distinct(chat):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+>       a,p,source=material(client,h,base,database);v=client.get(url).json();assert v['materials'][0]['reading_status']=='readable'
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_evidence_worksheet.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10b443530>
+h = {'X-CSRF-Token': 'v11NXdWMDpAVpnoiNGBHXTPxJg0mBRTlEVgBoQ_H2rY'}
+base = '/api/assistant/conversations/73878931-1a13-4999-a69d-c4f2ece07d9b'
+database = <cn_contract.persistence.Database object at 0x10b59db80>
+
+    def material(client,h,base,database):
+        doc=Document();doc.add_paragraph('独立虚构交付记录：甲向乙转账100000元。');doc.add_paragraph('乙的相反说法：其中部分是其他往来款。')
+        stream=BytesIO();doc.save(stream);raw=stream.getvalue()
+        database._assistant_synthetic_hashes=frozenset({sha256(raw).hexdigest()})
+        v=client.get(base).json();body={'request_id':str(uuid4()),'expected_scope':v['scope'],
+            'original_name':'合成交付.docx','mime':'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'policy':{'local_processing_accepted':True}}
+        r=client.post(base+'/attachments',headers=h,files=[('file',(body['original_name'],raw,body['mime'])),('metadata',(None,json.dumps(body)))])
+        assert r.status_code==201,r.text
+        attachment=r.json()['attachment'];v=client.get(base).json()
+        r=client.post(base+'/attachments/'+attachment['id']+'/parse',headers=h,json={'request_id':str(uuid4()),'expected_scope':v['scope']})
+>       assert r.status_code==200,r.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"4572f04a-6e12-4a41-8d4e-30b1e8bb68ac","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/integration/test_evidence_worksheet.py:47: AssertionError
+________________ test_document_tampering_and_cross_conversation ________________
+
+chat = (<starlette.testclient.TestClient object at 0x10b6e0f20>, <cn_contract.persistence.Database object at 0x10b6fa2d0>, PosixPath('/private/tmp/qx-evidence-green1/test_document_tampering_and_cr0/workspaces/main'))
+
+    def test_document_tampering_and_cross_conversation(chat):
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+        assert client.get(url).status_code==200
+>       a,p,source=material(client,h,base,database)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_evidence_worksheet.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10b6e0f20>
+h = {'X-CSRF-Token': 'W-sFb9xzw8QP1T1hcKw90sI_CXeIl69cBqCm5CCd1so'}
+base = '/api/assistant/conversations/42c4cd0e-110b-4a85-a09d-b2135eee5202'
+database = <cn_contract.persistence.Database object at 0x10b6fa2d0>
+
+    def material(client,h,base,database):
+        doc=Document();doc.add_paragraph('独立虚构交付记录：甲向乙转账100000元。');doc.add_paragraph('乙的相反说法：其中部分是其他往来款。')
+        stream=BytesIO();doc.save(stream);raw=stream.getvalue()
+        database._assistant_synthetic_hashes=frozenset({sha256(raw).hexdigest()})
+        v=client.get(base).json();body={'request_id':str(uuid4()),'expected_scope':v['scope'],
+            'original_name':'合成交付.docx','mime':'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'policy':{'local_processing_accepted':True}}
+        r=client.post(base+'/attachments',headers=h,files=[('file',(body['original_name'],raw,body['mime'])),('metadata',(None,json.dumps(body)))])
+        assert r.status_code==201,r.text
+        attachment=r.json()['attachment'];v=client.get(base).json()
+        r=client.post(base+'/attachments/'+attachment['id']+'/parse',headers=h,json={'request_id':str(uuid4()),'expected_scope':v['scope']})
+>       assert r.status_code==200,r.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"eb7d83b9-04b2-4c9e-86ad-9c64b12f72c1","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/integration/test_evidence_worksheet.py:47: AssertionError
+__________________ test_owner_csrf_and_after_body_revocation ___________________
+
+self = <sqlalchemy.engine.base.Connection object at 0x10c87a9f0>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10c0ffb30>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10c87b1d0>
+statement = 'BEGIN IMMEDIATE', parameters = [()]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1969: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10c0ffb30>
+cursor = <sqlite3.Cursor object at 0x10c8898c0>, statement = 'BEGIN IMMEDIATE'
+parameters = ()
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10c87b1d0>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.OperationalError: cannot start a transaction within a transaction
+
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:952: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+chat = (<starlette.testclient.TestClient object at 0x10c1956a0>, <cn_contract.persistence.Database object at 0x10cd9e4b0>, PosixPath('/private/tmp/qx-evidence-green1/test_owner_csrf_and_after_body0/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d4428a0>
+
+    def test_owner_csrf_and_after_body_revocation(chat,monkeypatch):
+        from starlette.requests import Request
+        from cn_contract.persistence import SessionRow
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h)
+        assert client.get(url).status_code==200
+        row=statement(client,h,base,url);body=request(client.get(url).json(),[row]);original=Request.body
+        async def reject(self):raise AssertionError('must authorize before reading body')
+        monkeypatch.setattr(Request,'body',reject)
+        assert client.post(url+'/commits',json=body).status_code==403
+        sign_in(client,'另一合成律师');assert client.get(url).status_code==403
+        h=sign_in(client)
+        async def revoke(self):
+            raw=await original(self)
+            with database.session() as db:
+                for session in db.query(SessionRow):session.revoked=True
+            return raw
+        monkeypatch.setattr(Request,'body',revoke)
+>       assert client.post(url+'/commits',headers=h,json=body).status_code in (401,403)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_evidence_worksheet.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_client.py:1204: in post
+    return self.request(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/testclient.py:518: in request
+    return super().request(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_client.py:797: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_client.py:994: in send
+    raise exc
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_client.py:988: in send
+    response.read()
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_models.py:876: in read
+    self._content = b"".join(self.iter_bytes())
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_models.py:892: in iter_bytes
+    for raw_bytes in self.iter_raw():
+                     ^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_models.py:947: in iter_raw
+    for raw_stream_bytes in self.stream:
+                            ^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/httpx2/_client.py:143: in __iter__
+    yield from self._stream
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/testclient.py:384: in iter_body
+    exit_stack.close()
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/contextlib.py:618: in close
+    self.__exit__(None, None, None)
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/contextlib.py:610: in __exit__
+    raise exc_details[1]
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/contextlib.py:595: in __exit__
+    if cb(*exc_details):
+       ^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/testclient.py:399: in close_app
+    raise exception
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/anyio/from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/testclient.py:366: in run_app
+    await self.app(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/telemetry/_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/base.py:203: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/cn_contract/web/app.py:92: in headers
+    response=await call_next(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/base.py:179: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/routing.py:678: in __call__
+    await self.middleware_stack(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:2786: in app
+    await route.handle(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/routing.py:284: in handle
+    await self.app(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:727: in app
+    raw_response = await run_endpoint_function(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/fastapi/routing.py:360: in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/cn_contract/web/evidence_worksheet.py:43: in commit
+    return response(await run_in_threadpool(service.commit,actor,cid,value,database=database))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/starlette/concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/anyio/to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+src/cn_contract/assistant/evidence_worksheet.py:83: in commit
+    db.connection().exec_driver_sql('BEGIN IMMEDIATE')
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1781: in exec_driver_sql
+    ret = self._execute_context(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1848: in _execute_context
+    return self._exec_single_context(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10c0ffb30>
+cursor = <sqlite3.Cursor object at 0x10c8898c0>, statement = 'BEGIN IMMEDIATE'
+parameters = ()
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10c87b1d0>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) cannot start a transaction within a transaction
+E       [SQL: BEGIN IMMEDIATE]
+E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+/tmp/qx-audit-20261024-venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:952: OperationalError
+_______ test_actual_backup_restores_facts_receipts_and_original_readonly _______
+
+native = (<fastapi.applications.FastAPI object at 0x10c8566f0>, PosixPath('/private/tmp/qx-evidence-green1/test_actual_backup_restores_fa0/workspaces/main'))
+tmp_path = PosixPath('/private/tmp/qx-evidence-green1/test_actual_backup_restores_fa0')
+
+    def test_actual_backup_restores_facts_receipts_and_original_readonly(native,tmp_path):
+        from cn_contract.ops import workspace_backup
+        from cn_contract.web.local_server import build_local_app
+        from tests.helpers.legacy_assistant_backup import PASSPHRASE
+        app,root=native
+        with TestClient(app) as client:
+            h=sign_in(client);base,url=begin(client,h);assert client.get(url).status_code==200
+>           a,p,source=material(client,h,base,app.state.database)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_evidence_worksheet.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x10c0ff3e0>
+h = {'X-CSRF-Token': 'vMRn4FbzaKm8H5y9WQ_2ob_JrIV4yzQpzN9HGpSCp3g'}
+base = '/api/assistant/conversations/04e0343e-4968-4fb4-a24e-ba9b50261903'
+database = <cn_contract.persistence.Database object at 0x10c857800>
+
+    def material(client,h,base,database):
+        doc=Document();doc.add_paragraph('独立虚构交付记录：甲向乙转账100000元。');doc.add_paragraph('乙的相反说法：其中部分是其他往来款。')
+        stream=BytesIO();doc.save(stream);raw=stream.getvalue()
+        database._assistant_synthetic_hashes=frozenset({sha256(raw).hexdigest()})
+        v=client.get(base).json();body={'request_id':str(uuid4()),'expected_scope':v['scope'],
+            'original_name':'合成交付.docx','mime':'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'policy':{'local_processing_accepted':True}}
+        r=client.post(base+'/attachments',headers=h,files=[('file',(body['original_name'],raw,body['mime'])),('metadata',(None,json.dumps(body)))])
+        assert r.status_code==201,r.text
+        attachment=r.json()['attachment'];v=client.get(base).json()
+        r=client.post(base+'/attachments/'+attachment['id']+'/parse',headers=h,json={'request_id':str(uuid4()),'expected_scope':v['scope']})
+>       assert r.status_code==200,r.text
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"b8e7e67b-94db-424d-b653-89401b09ce11","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/integration/test_evidence_worksheet.py:47: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_evidence_worksheet.py::test_statement_edit_history_retry_and_no_model
+FAILED tests/integration/test_evidence_worksheet.py::test_document_source_original_and_manual_excerpt_are_distinct
+FAILED tests/integration/test_evidence_worksheet.py::test_document_tampering_and_cross_conversation
+FAILED tests/integration/test_evidence_worksheet.py::test_owner_csrf_and_after_body_revocation
+FAILED tests/integration/test_evidence_worksheet.py::test_actual_backup_restores_facts_receipts_and_original_readonly
+5 failed, 6 passed in 3.50s

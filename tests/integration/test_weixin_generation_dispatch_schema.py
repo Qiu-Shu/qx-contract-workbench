@@ -51,8 +51,9 @@ def test_all_eighteen_predecessors_keep_raw_and_normalized_fingerprints(item):
 
 
 def test_v19_adds_only_the_useful_unique_binding_cursor_index():
-    assert storage_schema.CURRENT_VERSION == TARGET
-    assert storage_schema.VERSIONS[-2:] == (PREVIOUS, TARGET)
+    assert TARGET in storage_schema.VERSIONS
+    index=storage_schema.VERSIONS.index(TARGET)
+    assert storage_schema.VERSIONS[index-1:index+1] == (PREVIOUS, TARGET)
     before = set(storage_schema.schema_rows(PREVIOUS))
     after = set(storage_schema.schema_rows(TARGET))
     assert after-before == {('index', INDEX, 'weixin_dispatch_receipts', SQL)}
@@ -69,12 +70,12 @@ def test_full_chain_and_immediate_predecessor_upgrade_preserve_user_rows(tmp_pat
     with closing(old_db(tmp_path/'before.db', version, native)) as connection:
         connection.execute("INSERT INTO users VALUES ('synthetic-schema-user','original-user','unused','[]',0)")
         connection.commit()
-        assert schema_migrations.upgrade_database(connection) == TARGET
-        assert schema_migrations.database_rows(connection) == storage_schema.schema_rows(TARGET, native=native)
+        assert schema_migrations.upgrade_database(connection) == storage_schema.CURRENT_VERSION
+        assert schema_migrations.database_rows(connection) == storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=native)
         assert connection.execute('SELECT username FROM users').fetchall() == [('original-user',)]
         assert connection.execute('PRAGMA foreign_key_check').fetchall() == []
         assert connection.execute('PRAGMA foreign_keys').fetchone() == (1,)
-        assert schema_migrations.upgrade_database(connection) == TARGET
+        assert schema_migrations.upgrade_database(connection) == storage_schema.CURRENT_VERSION
 
 
 @pytest.mark.parametrize('native', [False, True])
@@ -104,9 +105,9 @@ def test_fresh_repeated_bootstrap_matches_upgrade_and_complete_native_family_val
             assert _file_references(records) == []
         with closing(sqlite3.connect(database.engine.url.database)) as connection:
             actual = schema_migrations.database_rows(connection)
-        assert actual == storage_schema.schema_rows(TARGET)
+        assert actual == storage_schema.schema_rows(storage_schema.CURRENT_VERSION)
         with closing(old_db(tmp_path/'before.db', PREVIOUS, False)) as connection:
-            assert schema_migrations.upgrade_database(connection) == TARGET
+            assert schema_migrations.upgrade_database(connection) == storage_schema.CURRENT_VERSION
             assert schema_migrations.database_rows(connection) == actual
     finally:
         database.engine.dispose()
@@ -184,6 +185,7 @@ def test_native_missing_version_index_is_rejected_before_any_repair(tmp_path):
     local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
     marker = (root/'workspace.json').read_bytes()
     with closing(sqlite3.connect(root/'workbench.db')) as connection:
+        connection.execute('DROP TABLE assistant_evidence_revisions')
         connection.execute('DROP INDEX '+INDEX)
         connection.commit()
         assert schema_migrations.database_rows(connection) == storage_schema.schema_rows(PREVIOUS, native=True)
@@ -200,6 +202,7 @@ def test_native_v18_upgrade_saves_old_structure_and_closes_marker_gap(tmp_path, 
     root = tmp_path/'native'
     local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as connection:
+        connection.execute('DROP TABLE assistant_evidence_revisions')
         connection.execute('DROP INDEX '+INDEX)
         connection.commit()
         marker = json.loads((root/'workspace.json').read_text('utf-8'))
@@ -221,5 +224,5 @@ def test_native_v18_upgrade_saves_old_structure_and_closes_marker_gap(tmp_path, 
         workspace_upgrade.upgrade(root)
     assert receipt_path.read_bytes() == saved_receipt
     with closing(sqlite3.connect(root/'workbench.db')) as connection:
-        assert schema_migrations.database_rows(connection) == storage_schema.schema_rows(TARGET, native=True)
+        assert schema_migrations.database_rows(connection) == storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=True)
         assert local_server._schema_hash(connection) == json.loads((root/'workspace.json').read_text('utf-8'))['schema_sha256']

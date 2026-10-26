@@ -177,6 +177,8 @@ def _file_references(db, *, allow_assistant=True):
     validate_judge_records(db, allowed=allow_assistant)
     validate_library_records(db, allowed=allow_assistant)
     validate_profile_records(db, allowed=allow_assistant)
+    from ..assistant.evidence_records import validate_evidence_records
+    validate_evidence_records(db, allowed=allow_assistant)
     validate_task_records(db, allowed=allow_assistant)
     validate_weixin_records(db, allow_inbox=allow_assistant)
     validate_dispatch_records(db, allow_dispatch=allow_assistant)

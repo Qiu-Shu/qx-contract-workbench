@@ -1,0 +1,37 @@
+✔ a fact uses saved statement and requires explicit save (2.11975ms)
+✔ typed but unadded fact protects navigation (0.224208ms)
+✔ unknown result only looks up the fixed request key (0.243666ms)
+✔ a rejected save preserves edits and allows a new explicit attempt (0.219208ms)
+✔ late view cannot fill another conversation (0.111667ms)
+✔ read only view cannot add or save (0.175584ms)
+✔ historical version is read only and current version can be reopened (0.569375ms)
+✔ refreshing current sources keeps local rows if evidence revision did not change (0.297084ms)
+✔ refresh cannot overwrite concurrent fact changes with a stale local snapshot (0.410667ms)
+✔ revocation clears private draft and hides source (0.284375ms)
+✖ concurrent version conflicts also protect a fact still being typed in the form (0.466166ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41.423584
+
+✖ failing tests:
+
+test at scripts/test_evidence_worksheet.mjs:33:1
+✖ concurrent version conflicts also protect a fact still being typed in the form (0.466166ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_evidence_worksheet.mjs:33:220)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual'
+  }

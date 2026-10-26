@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+___________ ERROR collecting test_qx_evidence_independent_review.py ____________
+ImportError while importing test module '/private/tmp/test_qx_evidence_independent_review.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../.local/share/openworkproof-day0/python-3.12.13/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/tmp/test_qx_evidence_independent_review.py:4: in <module>
+    from test_assistant_routes import native, chat, sign_in
+E   ModuleNotFoundError: No module named 'test_assistant_routes'
+=========================== short test summary info ============================
+ERROR ../../../../private/tmp/test_qx_evidence_independent_review.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.11s

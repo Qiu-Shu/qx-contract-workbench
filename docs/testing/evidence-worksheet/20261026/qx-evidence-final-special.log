@@ -1,0 +1,21 @@
+........................................................F.               [100%]
+=================================== FAILURES ===================================
+____ test_evidence_update_delete_are_immutable_and_failed_cas_keeps_history ____
+
+chat = (<starlette.testclient.TestClient object at 0x10ec8a570>, <cn_contract.persistence.Database object at 0x10e6fbbf0>, PosixPath('/private/tmp/qx-evidence-final-special/test_evidence_update_delete_ar0/workspaces/main'))
+
+    def test_evidence_update_delete_are_immutable_and_failed_cas_keeps_history(chat):
+        from sqlalchemy.exc import IntegrityError
+        client,database,_=chat;h=sign_in(client);base,url=begin(client,h);row=statement(client,h,base,url)
+        body=request(client.get(url).json(),[row]);assert client.post(url+'/commits',headers=h,json=body).status_code==200
+        for sql in ['UPDATE assistant_evidence_revisions SET revision=2','DELETE FROM assistant_evidence_revisions']:
+            with pytest.raises(IntegrityError):
+                with database.session() as db:db.execute(text(sql))
+>       stale=deepcopy(body);stale['request_id']=str(uuid4());stale['rows']=[]
+              ^^^^^^^^
+E       NameError: name 'deepcopy' is not defined
+
+tests/integration/test_evidence_schema.py:95: NameError
+=========================== short test summary info ============================
+FAILED tests/integration/test_evidence_schema.py::test_evidence_update_delete_are_immutable_and_failed_cas_keeps_history
+1 failed, 57 passed in 7.86s

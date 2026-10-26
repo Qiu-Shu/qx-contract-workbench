@@ -17,7 +17,7 @@ def _validate(db):
     try:
         rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native=any(row[0]=='table' and row[1]=='local_workspace_identity' for row in rows)
-        if not native or identify_schema(rows,native=True)!='weixin-generation-dispatch-v1':
+        if not native or identify_schema(rows,native=True) not in ('weixin-generation-dispatch-v1', 'assistant-evidence-v1'):
             raise ValueError('schema19 required')
         # Empty generation history must not bypass the original inbox/dispatch/grant parents.
         validate_weixin_records(db,allow_inbox=True)
