@@ -1,6 +1,18 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),os=require('node:os');
+test('explicit bundle contains every local CommonJS dependency including the application entry',()=>{
+  const root=path.resolve(__dirname,'..');
+  const metadata=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8'));
+  assert.ok(metadata.build.files.includes(metadata.main));
+  for(const name of metadata.build.files.filter(name=>name.endsWith('.cjs'))){
+    const source=fs.readFileSync(path.join(root,name),'utf8');
+    for(const match of source.matchAll(/require\(['"](\.\/[^'"]+)['"]\)/g)){
+      const dependency=path.posix.normalize(path.posix.join(path.posix.dirname(name),match[1]));
+      assert.ok(metadata.build.files.includes(dependency),`${name} requires missing packaged file ${dependency}`);
+    }
+  }
+});
 test('declared desktop bundle includes standalone credential modules without new dependencies',()=>{
   const root=path.resolve(__dirname,'..');
   const metadata=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8'));

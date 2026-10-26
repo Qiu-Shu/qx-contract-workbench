@@ -1,0 +1,32 @@
+{
+  "target_events": 5534,
+  "rename_events": 1,
+  "status": "CALIBRATION_ONLY",
+  "scope_filter_effective": false,
+  "related": [
+    {
+      "fields": {
+        "ExtraInformation": "0x0",
+        "InfoClass": "10"
+      },
+      "time": "2026-10-26T10:39:04.7502458Z",
+      "event": 19
+    },
+    {
+      "fields": {
+        "ExtraInformation": "0x0",
+        "FilePath": "<synthetic-path>",
+        "InfoClass": "10"
+      },
+      "time": "2026-10-26T10:39:04.7502640Z",
+      "event": 27
+    }
+  ],
+  "raw_etl_retained": false,
+  "limitations": [
+    "WPR ProcessExeFilter did not constrain this kernel provider on this host; not suitable for scoped automatic capture.",
+    "This successful restore is calibration only, not a reproduced failure.",
+    "IRP addresses are reused; event 22 is not an operation completion. No failure status is claimed.",
+    "Unrelated processes were excluded from the saved summary; raw ETL deleted after extraction."
+  ]
+}

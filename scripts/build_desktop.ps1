@@ -14,7 +14,8 @@ try {
     $shim = Join-Path $repo '.local/desktop-tools/bin'
     New-Item -ItemType Directory -Path $shim -Force | Out-Null
     # npm's upstream .cmd assumes a Node distribution layout; use a local shim.
-    Set-Content -LiteralPath (Join-Path $shim 'npm.cmd') -Value ('@"' + (Get-Command node).Source + '" "' + $npm + '" %*')
+    # Resolve the Unicode repository path at execution time, outside cmd encoding.
+    Set-Content -LiteralPath (Join-Path $shim 'npm.cmd') -Encoding ASCII -Value '@node "%~dp0..\npm\package\bin\npm-cli.js" %*'
     $env:PATH = $shim + ';' + $env:PATH
     $env:PYTHONPATH = $buildModules
     & $python -m PyInstaller --noconfirm --distpath (Join-Path $repo 'dist') --workpath (Join-Path $repo 'build/desktop-python') (Join-Path $repo 'desktop/backend.spec')

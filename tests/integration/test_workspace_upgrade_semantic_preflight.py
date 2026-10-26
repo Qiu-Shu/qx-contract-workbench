@@ -31,6 +31,8 @@ def old_history(world):
     history['generation'] = append_generation(history)
     root, database = history['root'], history['database']
     with database.session() as db:
+        db.execute(text('DROP TABLE assistant_followup_revisions'))
+        db.execute(text('DROP TABLE assistant_evidence_revisions'))
         db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
         db.execute(text('DROP TABLE weixin_descriptor_generations'))
         assert identify_schema([tuple(row) for row in db.execute(text(

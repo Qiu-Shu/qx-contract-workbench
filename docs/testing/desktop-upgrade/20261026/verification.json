@@ -1,0 +1,55 @@
+{
+  "baseline": "8945e38dc441b9aae2888c6adffb697fa56ad6ee",
+  "version": "0.5.0",
+  "installer_bytes": 146701149,
+  "installer_sha256": "a7f83e8517aaa1a6d0f4e02b371dc3a3de50cb9e57654343ecbb3bcf0df34fb3",
+  "installer_signature": "NotSigned",
+  "build_exit": 0,
+  "install_exit": 0,
+  "desktop_tests": 370,
+  "python_upgrade_tests": 67,
+  "python_initial": {
+    "failed": 9,
+    "errors": 58
+  },
+  "python_final_exit": 0,
+  "inputs": {
+    "desktop/backend.cjs": "40a2f95c359e84df31f6d2e188dd18bcc22743fcc606d535396818e95bda20d0",
+    "desktop/backend.spec": "5a29dcbe79c185dcc6a3121b7cc4b20eea59617723c8b425e3321246ba59c03d",
+    "desktop/main.cjs": "218c80dbc72de31e065f73a394a066073cb87f4e0a2f8688165d07e3cff1f287",
+    "desktop/maintenance.cjs": "cec6936da5fbfc6ace46b800048898590f99d842471a4ae49cee4ddd36ab0e6c",
+    "desktop/model-approval-preload.cjs": "5cc2b68fcea434a57f7d339bd5341a88dee35a6c308d2fda13b4f6d7bc194203",
+    "desktop/model-approval-window.cjs": "9c00dfdc46194e3571121992c8bd84624214b28b1ff8a7f754da3e97be005cdd",
+    "desktop/model-approval.cjs": "695d9f18ef166d976d7859a683169b6b7fb30edede77ff7d5987bd7e6b398403",
+    "desktop/model-approval.css": "63c887d466acdf3fcaa1f2ad80074c0d2674456e2e9646ef3c954a313f56e1b1",
+    "desktop/model-approval.html": "1661b7b0cdc1c650d0e19bb27c778741c9b89ac5713b24653f0c4205cab2d30b",
+    "desktop/model-approval.js": "2113a5d9a4c68817f21a7032cf913e896bedd3c4b54734cb7f6d35d646e4dfd1",
+    "desktop/model-bridge.cjs": "2611089301f63dce83b508af03c101e14ee54ab8f10a46ab2599381a7f537c99",
+    "desktop/model-control.cjs": "7ceb22d4b339f7ad0fd45dbd73766080a2c039e33b92fc90a9256da7d7f6d284",
+    "desktop/model-credentials.cjs": "2e28bb1f234971db00bbd76e75a7895f57e1c5dc84ddaaaa7570ca277852599d",
+    "desktop/model-session.cjs": "a24205fc434a833746a73ea514452589bade84c58f6062b0c62fdf752f11443e",
+    "desktop/model-settings.cjs": "f31d7c7a29efab5be6e552816eec263b685a66c8c100b7e13eaa66066b310e7c",
+    "desktop/package-lock.json": "df489ab930187f7d832d8c947e986556abffe3cb175b4f5207356da6a1f6ba51",
+    "desktop/package.json": "80b7245627fa7bc0a533c126b3de3463909789f19bac0629894089400a751ce7",
+    "desktop/policy.cjs": "60e29da78a86c5fbb9bab69f4e3d82afe146999d9749d1a340881d4824944c2a",
+    "desktop/preload.cjs": "beed4c76f1b5e8ff83c19289ad2f534c5374811ded632c7ffd9ffa35a995ba72",
+    "desktop/profile-approval.cjs": "4a349757382f952fe0d774a7c4a3900bf9f0368bea00d9b31a1c6ae11a5ca3a8",
+    "desktop/profile-basis.cjs": "378854b5da2fc61cbe327ad6f21f34325e99b291fff67ca9c4f91f05fbe4fe68",
+    "desktop/requirements-build.lock": "30237ef92b6e0354f892037985a83feb6eecf91d0ab5c88fa33fc2b6fc990bf3",
+    "desktop/setup-model.js": "a95c98e0c6c34e3097432af93b0cc0b22180fd254a4e62714d83a0b49d9ea3df",
+    "desktop/setup.css": "ad8b84dc3d3f16a87cc05c439184c4748bcbe48b9b1d62fe82e5c95ec2f31c83",
+    "desktop/setup.html": "7a3adb913a87902edfcb262a98191937d2712157d43ba820a5dbcc7a60f6a6ff",
+    "desktop/setup.js": "66bcb5e325451ae4b365323915f769ab5221636358b4febd8ae235e0214be605",
+    "scripts/build_desktop.ps1": "0047d4e79a5031c3407dd428d122df4434cbe72d40399d7ecefaa60e2920c590"
+  },
+  "not_run": [
+    "full repository suite",
+    "real Weixin",
+    "real model calls",
+    "second clean Windows machine"
+  ],
+  "open_issues": [
+    "WIN-PATH-02",
+    "native AV"
+  ]
+}
