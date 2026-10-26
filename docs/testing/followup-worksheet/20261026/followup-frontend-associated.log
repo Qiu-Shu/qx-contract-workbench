@@ -1,0 +1,376 @@
+TAP version 13
+# Subtest: a fact uses saved statement and requires explicit save
+ok 1 - a fact uses saved statement and requires explicit save
+  ---
+  duration_ms: 1.612083
+  type: 'test'
+  ...
+# Subtest: typed but unadded fact protects navigation
+ok 2 - typed but unadded fact protects navigation
+  ---
+  duration_ms: 0.200625
+  type: 'test'
+  ...
+# Subtest: unknown result only looks up the fixed request key
+ok 3 - unknown result only looks up the fixed request key
+  ---
+  duration_ms: 0.246458
+  type: 'test'
+  ...
+# Subtest: a rejected save preserves edits and allows a new explicit attempt
+ok 4 - a rejected save preserves edits and allows a new explicit attempt
+  ---
+  duration_ms: 0.221125
+  type: 'test'
+  ...
+# Subtest: late view cannot fill another conversation
+ok 5 - late view cannot fill another conversation
+  ---
+  duration_ms: 0.116375
+  type: 'test'
+  ...
+# Subtest: read only view cannot add or save
+ok 6 - read only view cannot add or save
+  ---
+  duration_ms: 0.186917
+  type: 'test'
+  ...
+# Subtest: historical version is read only and current version can be reopened
+ok 7 - historical version is read only and current version can be reopened
+  ---
+  duration_ms: 0.640833
+  type: 'test'
+  ...
+# Subtest: refreshing current sources keeps local rows if evidence revision did not change
+ok 8 - refreshing current sources keeps local rows if evidence revision did not change
+  ---
+  duration_ms: 0.265834
+  type: 'test'
+  ...
+# Subtest: refresh cannot overwrite concurrent fact changes with a stale local snapshot
+ok 9 - refresh cannot overwrite concurrent fact changes with a stale local snapshot
+  ---
+  duration_ms: 0.394958
+  type: 'test'
+  ...
+# Subtest: revocation clears private draft and hides source
+ok 10 - revocation clears private draft and hides source
+  ---
+  duration_ms: 0.304084
+  type: 'test'
+  ...
+# Subtest: concurrent version conflicts also protect a fact still being typed in the form
+ok 11 - concurrent version conflicts also protect a fact still being typed in the form
+  ---
+  duration_ms: 0.157042
+  type: 'test'
+  ...
+# Subtest: late source A cannot replace the more recently opened source B
+ok 12 - late source A cannot replace the more recently opened source B
+  ---
+  duration_ms: 18.587958
+  type: 'test'
+  ...
+# Subtest: a new item links selected facts explicitly and saves expected revisions
+ok 13 - a new item links selected facts explicitly and saves expected revisions
+  ---
+  duration_ms: 2.145791
+  type: 'test'
+  ...
+# Subtest: form text protects navigation and cannot be saved without joining the list
+ok 14 - form text protects navigation and cannot be saved without joining the list
+  ---
+  duration_ms: 0.593458
+  type: 'test'
+  ...
+# Subtest: selected source requires explicit association before adding
+ok 15 - selected source requires explicit association before adding
+  ---
+  duration_ms: 0.32
+  type: 'test'
+  ...
+# Subtest: a missing document can be named while linking a known fact
+ok 16 - a missing document can be named while linking a known fact
+  ---
+  duration_ms: 0.294917
+  type: 'test'
+  ...
+# Subtest: a received item can link an existing immutable original
+ok 17 - a received item can link an existing immutable original
+  ---
+  duration_ms: 0.364709
+  type: 'test'
+  ...
+# Subtest: editing an old item preserves its fixed references
+ok 18 - editing an old item preserves its fixed references
+  ---
+  duration_ms: 0.4355
+  type: 'test'
+  ...
+# Subtest: only an explicit association replaces old references with current selections
+ok 19 - only an explicit association replaces old references with current selections
+  ---
+  duration_ms: 0.617916
+  type: 'test'
+  ...
+# Subtest: completed and cancelled items require a recorded result
+ok 20 - completed and cancelled items require a recorded result
+  ---
+  duration_ms: 0.473917
+  type: 'test'
+  ...
+# Subtest: a completed item needing review remains in the todo filter without changing status
+ok 21 - a completed item needing review remains in the todo filter without changing status
+  ---
+  duration_ms: 0.412709
+  type: 'test'
+  ...
+# Subtest: removing an item requires a save and keeps the earlier snapshot available
+ok 22 - removing an item requires a save and keeps the earlier snapshot available
+  ---
+  duration_ms: 0.669583
+  type: 'test'
+  ...
+# Subtest: unknown POST result is recovered only by the fixed request id
+ok 23 - unknown POST result is recovered only by the fixed request id
+  ---
+  duration_ms: 0.30275
+  type: 'test'
+  ...
+# Subtest: valid receipt lookup clears the uncertain request after reading saved state
+ok 24 - valid receipt lookup clears the uncertain request after reading saved state
+  ---
+  duration_ms: 0.232709
+  type: 'test'
+  ...
+# Subtest: malformed receipt retains the pending request rather than permitting another POST
+ok 25 - malformed receipt retains the pending request rather than permitting another POST
+  ---
+  duration_ms: 0.284
+  type: 'test'
+  ...
+# Subtest: a missing receipt creation time is invalid
+ok 26 - a missing receipt creation time is invalid
+  ---
+  duration_ms: 0.181708
+  type: 'test'
+  ...
+# Subtest: a confirmed version rejection preserves the draft and allows an explicit retry
+ok 27 - a confirmed version rejection preserves the draft and allows an explicit retry
+  ---
+  duration_ms: 0.227542
+  type: 'test'
+  ...
+# Subtest: refresh protects unadded form text from a newer follow-up version
+ok 28 - refresh protects unadded form text from a newer follow-up version
+  ---
+  duration_ms: 0.120125
+  type: 'test'
+  ...
+# Subtest: refresh protects joined items from a concurrent follow-up version
+ok 29 - refresh protects joined items from a concurrent follow-up version
+  ---
+  duration_ms: 0.178666
+  type: 'test'
+  ...
+# Subtest: same-version refresh updates metadata and retains fixed old associations
+ok 30 - same-version refresh updates metadata and retains fixed old associations
+  ---
+  duration_ms: 0.233959
+  type: 'test'
+  ...
+# Subtest: refresh with a newer version leaves an edited old reference untouched
+ok 31 - refresh with a newer version leaves an edited old reference untouched
+  ---
+  duration_ms: 0.276708
+  type: 'test'
+  ...
+# Subtest: readonly mode and missing write permission prevent all writes
+ok 32 - readonly mode and missing write permission prevent all writes
+  ---
+  duration_ms: 0.479209
+  type: 'test'
+  ...
+# Subtest: missing writable field is never treated as write permission
+ok 33 - missing writable field is never treated as write permission
+  ---
+  duration_ms: 0.101875
+  type: 'test'
+  ...
+# Subtest: dirty form or item list blocks history and never loses local work
+ok 34 - dirty form or item list blocks history and never loses local work
+  ---
+  duration_ms: 0.153209
+  type: 'test'
+  ...
+# Subtest: history is read only and refresh reopens the latest version
+ok 35 - history is read only and refresh reopens the latest version
+  ---
+  duration_ms: 0.138458
+  type: 'test'
+  ...
+# Subtest: history rejects versions outside 1 through 200
+ok 36 - history rejects versions outside 1 through 200
+  ---
+  duration_ms: 0.081792
+  type: 'test'
+  ...
+# Subtest: late response cannot enter a different conversation
+ok 37 - late response cannot enter a different conversation
+  ---
+  duration_ms: 0.108416
+  type: 'test'
+  ...
+# Subtest: revocation clears local forms and private source details
+ok 38 - revocation clears local forms and private source details
+  ---
+  duration_ms: 0.132333
+  type: 'test'
+  ...
+# Subtest: loading prevents edits and invalidates a late source response
+ok 39 - loading prevents edits and invalidates a late source response
+  ---
+  duration_ms: 0.229916
+  type: 'test'
+  ...
+# Subtest: fixed evidence facts and original links can be reviewed
+ok 40 - fixed evidence facts and original links can be reviewed
+  ---
+  duration_ms: 0.198
+  type: 'test'
+  ...
+# Subtest: a late older source cannot replace the most recently requested source
+ok 41 - a late older source cannot replace the most recently requested source
+  ---
+  duration_ms: 0.162583
+  type: 'test'
+  ...
+# Subtest: a fact lookup with the wrong conversation or version is rejected
+ok 42 - a fact lookup with the wrong conversation or version is rejected
+  ---
+  duration_ms: 0.108
+  type: 'test'
+  ...
+# Subtest: field lengths and date validity are checked before joining
+ok 43 - field lengths and date validity are checked before joining
+  ---
+  duration_ms: 1.193291
+  type: 'test'
+  ...
+# Subtest: list and association limits are enforced before writing
+ok 44 - list and association limits are enforced before writing
+  ---
+  duration_ms: 1.684292
+  type: 'test'
+  ...
+# Subtest: discard is explicit and clears both list and form drafts
+ok 45 - discard is explicit and clears both list and form drafts
+  ---
+  duration_ms: 0.151834
+  type: 'test'
+  ...
+# Subtest: disposed worksheets do not accept new actions
+ok 46 - disposed worksheets do not accept new actions
+  ---
+  duration_ms: 0.199708
+  type: 'test'
+  ...
+# Subtest: manual notes retain old text, are protected in one save and reopen without sending
+ok 47 - manual notes retain old text, are protected in one save and reopen without sending
+  ---
+  duration_ms: 2.060333
+  type: 'test'
+  ...
+# Subtest: template suggestions are explicitly adopted into editable fields, never auto saved
+ok 48 - template suggestions are explicitly adopted into editable fields, never auto saved
+  ---
+  duration_ms: 0.402333
+  type: 'test'
+  ...
+# Subtest: unknown save queries its original receipt without repeating the POST
+ok 49 - unknown save queries its original receipt without repeating the POST
+  ---
+  duration_ms: 0.339209
+  type: 'test'
+  ...
+# Subtest: a version conflict retains local edits until explicit resolution
+ok 50 - a version conflict retains local edits until explicit resolution
+  ---
+  duration_ms: 0.170375
+  type: 'test'
+  ...
+# Subtest: preparation keeps additional input visible and never invokes a send
+ok 51 - preparation keeps additional input visible and never invokes a send
+  ---
+  duration_ms: 0.6485
+  type: 'test'
+  ...
+# Subtest: new typing while preparation waits is never overwritten
+ok 52 - new typing while preparation waits is never overwritten
+  ---
+  duration_ms: 2.408833
+  type: 'test'
+  ...
+# Subtest: late read and suggestions cannot populate another conversation
+ok 53 - late read and suggestions cannot populate another conversation
+  ---
+  duration_ms: 0.173292
+  type: 'test'
+  ...
+# Subtest: conflicting candidates are shown, not silently selected or cleared on unrelated saves
+ok 54 - conflicting candidates are shown, not silently selected or cleared on unrelated saves
+  ---
+  duration_ms: 0.320708
+  type: 'test'
+  ...
+# Subtest: readonly, archived and revoked contexts disable saves and preparation
+ok 55 - readonly, archived and revoked contexts disable saves and preparation
+  ---
+  duration_ms: 0.356
+  type: 'test'
+  ...
+# Subtest: preparation preserves a new skill choice made while waiting
+ok 56 - preparation preserves a new skill choice made while waiting
+  ---
+  duration_ms: 1.060292
+  type: 'test'
+  ...
+# Subtest: preparation preserves a new context choice made while waiting
+ok 57 - preparation preserves a new context choice made while waiting
+  ---
+  duration_ms: 0.388083
+  type: 'test'
+  ...
+# Subtest: preparation preserves a new materials choice made while waiting
+ok 58 - preparation preserves a new materials choice made while waiting
+  ---
+  duration_ms: 0.268042
+  type: 'test'
+  ...
+# Subtest: preparation preserves a new scope choice made while waiting
+ok 59 - preparation preserves a new scope choice made while waiting
+  ---
+  duration_ms: 0.202375
+  type: 'test'
+  ...
+# Subtest: explicitly adopting an unchanged displayed candidate still saves a protected manual value
+ok 60 - explicitly adopting an unchanged displayed candidate still saves a protected manual value
+  ---
+  duration_ms: 0.308375
+  type: 'test'
+  ...
+# Subtest: keeping local edits after conflict does not overwrite another field changed on the server
+ok 61 - keeping local edits after conflict does not overwrite another field changed on the server
+  ---
+  duration_ms: 0.189125
+  type: 'test'
+  ...
+1..61
+# tests 61
+# suites 0
+# pass 61
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 58.482709

@@ -40,6 +40,7 @@
       <button id="show-outputs" class="text-button" type="button" aria-expanded="false" aria-controls="output-panel" disabled>成果与导出</button>
       <button id="show-worksheet" class="text-button" type="button" aria-controls="worksheet-panel" disabled>接待底稿</button>
       <button id="show-evidence" class="text-button" type="button" aria-controls="evidence-panel" disabled>事实与材料</button>
+      <button id="show-followups" class="text-button" type="button" aria-controls="followup-panel" disabled>待补与跟进</button>
       <label class="reading-control" for="body-size">阅读字号<select id="body-size"><option value="16">标准 16</option><option value="18">较大 18</option><option value="20">大号 20</option></select></label>
     </header>
 
@@ -68,6 +69,37 @@
         <pre id="server-draft" class="reading-text" tabindex="0"></pre>
         <div class="conflict-actions"><button id="keep-local" type="button">保留当前文字并保存</button><button id="use-server" class="quiet-button" type="button">使用已保存文字</button></div>
       </section>
+
+      <details id="followup-panel" class="followup-worksheet">
+  <summary>待补材料与跟进清单</summary>
+  <div class="followup-content">
+    <p id="followup-version" class="followup-muted"></p>
+    <p>先关联一条已知事实或一份现有原件，再登记缺口、下一步和期限。未收到的材料可先写在事项标题中，收到后再关联已上传原件。这里的状态由人工登记，不表示系统已核实法律事实，也不会自动催补或发送消息。</p>
+    <p class="followup-muted">事实或材料更新后，请先保存或取消本地编辑，再重新打开清单或点击“核对最新来源”，查看需要重新核对的事项。</p>
+    <h2>选择当前事实和材料</h2>
+    <p class="followup-muted">两个列表都可多选，每类最多10条；点击关联按钮才会固定引用。编辑旧事项时原引用会保留。</p>
+    <label for="followup-facts">已保存事实<select id="followup-facts" multiple size="4" disabled></select></label>
+    <label for="followup-materials">本次现有原件<select id="followup-materials" multiple size="4" disabled></select></label>
+    <button id="followup-link-selected" type="button" disabled>关联所选事实和材料</button>
+    <p id="followup-linked" class="followup-muted"></p>
+    <h2>登记待补与跟进</h2>
+    <label for="followup-title">事项或尚未收到的材料<input id="followup-title" maxlength="300" disabled placeholder="例如：请客户补交暂未收到的转账凭证"></label>
+    <label for="followup-reason">待补原因<textarea id="followup-reason" rows="2" maxlength="1000" disabled></textarea></label>
+    <label for="followup-impact">对核对工作的影响<textarea id="followup-impact" rows="2" maxlength="1000" disabled></textarea></label>
+    <label for="followup-next-action">下一步<textarea id="followup-next-action" rows="2" maxlength="1000" disabled placeholder="写明具体要做什么，例如请客户查找原件"></textarea></label>
+    <label for="followup-due-date">期限（可留空）<input id="followup-due-date" type="date" disabled></label>
+    <label for="followup-status">人工登记状态<select id="followup-status" disabled><option value="open">待补</option><option value="requested">已催补</option><option value="received">收到待核</option><option value="completed">已处理</option><option value="cancelled">不再跟进</option></select></label>
+    <label for="followup-result">处理结果（已处理或不再跟进时必填）<textarea id="followup-result" rows="3" maxlength="2000" disabled></textarea></label>
+    <div class="followup-actions"><button id="followup-add" type="button" disabled>加入跟进清单（尚未保存）</button><button id="followup-cancel-edit" type="button" disabled>取消这条编辑</button></div>
+    <h2>当前跟进清单</h2>
+    <label for="followup-filter">查看范围<select id="followup-filter" disabled><option value="todo">待办（含需重新核对事项）</option><option value="all">全部事项</option><option value="open">待补</option><option value="requested">已催补</option><option value="received">收到待核</option><option value="completed">已处理</option><option value="cancelled">不再跟进</option></select></label>
+    <div id="followup-rows"></div>
+    <div class="followup-actions"><button id="followup-save" type="button" disabled>保存跟进清单</button><button id="followup-refresh" type="button" disabled>核对最新来源，保留编辑</button><button id="followup-discard" type="button" disabled>放弃本地改动并读取最新</button><button id="followup-lookup" type="button" hidden>查询本次保存回执</button></div>
+    <div class="followup-history"><label for="followup-history-version">回看跟进版本<input id="followup-history-version" type="number" min="1" max="200" step="1" disabled></label><button id="followup-history" type="button" disabled>查看历史（只读）</button></div>
+    <p id="followup-notice" role="status" aria-live="polite"></p>
+    <div id="followup-source-detail" class="followup-source-detail"></div>
+  </div>
+</details>
 
       <details id="evidence-panel" class="task-draft-panel evidence-worksheet">
         <summary>材料与事实证据底稿<span class="muted">逐条记录事实及依据，保留待核、争议和历史版本</span></summary>

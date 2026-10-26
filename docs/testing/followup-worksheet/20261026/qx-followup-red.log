@@ -1,0 +1,235 @@
+FFFFFFFFFFFFFFF                                                          [100%]
+=================================== FAILURES ===================================
+____ test_followup_links_status_history_retry_and_no_implicit_fact_changes _____
+
+chat = (<starlette.testclient.TestClient object at 0x10c2b4ad0>, <cn_contract.persistence.Database object at 0x10c30d760>, PosixPath('/private/tmp/qx-followup-red/test_followup_links_status_his0/workspaces/main'))
+
+    def test_followup_links_status_history_retry_and_no_implicit_fact_changes(chat):
+        client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h)
+>       r=client.get(url);assert r.status_code==200,r.text
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"5a721ea6-b97b-4edf-ab11-1a53ae816a7f","retryable":false}
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/integration/test_followup_worksheet.py:41: AssertionError
+_ test_completed_item_needs_recheck_after_linked_fact_changes_and_explicit_relink _
+
+chat = (<starlette.testclient.TestClient object at 0x108a88ce0>, <cn_contract.persistence.Database object at 0x10cd35c10>, PosixPath('/private/tmp/qx-followup-red/test_completed_item_needs_rech0/workspaces/main'))
+
+    def test_completed_item_needs_recheck_after_linked_fact_changes_and_explicit_relink(chat):
+        client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h)
+>       assert client.get(url).status_code==200
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/7836a8c4-3cd6-4c48-a0e2-d0c3800902a6/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x108a88ce0>.get
+
+tests/integration/test_followup_worksheet.py:61: AssertionError
+___ test_unrelated_fact_changes_do_not_reopen_but_removed_link_is_not_hidden ___
+
+chat = (<starlette.testclient.TestClient object at 0x10d7d2fc0>, <cn_contract.persistence.Database object at 0x10d61a000>, PosixPath('/private/tmp/qx-followup-red/test_unrelated_fact_changes_do0/workspaces/main'))
+
+    def test_unrelated_fact_changes_do_not_reopen_but_removed_link_is_not_hidden(chat):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/5aecdb24-8107-4bb6-8bbc-e9878981ab39/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10d7d2fc0>.get
+
+tests/integration/test_followup_worksheet.py:77: AssertionError
+_ test_material_association_received_does_not_auto_complete_and_reparse_warns __
+
+chat = (<starlette.testclient.TestClient object at 0x10d8113a0>, <cn_contract.persistence.Database object at 0x10d825a30>, PosixPath('/private/tmp/qx-followup-red/test_material_association_rece0/workspaces/main'))
+
+    def test_material_association_received_does_not_auto_complete_and_reparse_warns(chat):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/730c9551-2293-426f-9d97-b3fda5d80c6c/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10d8113a0>.get
+
+tests/integration/test_followup_worksheet.py:90: AssertionError
+___ test_invalid_or_stale_link_is_rejected_without_followup_writes[no_link] ____
+
+chat = (<starlette.testclient.TestClient object at 0x10cde7830>, <cn_contract.persistence.Database object at 0x10cc04a70>, PosixPath('/private/tmp/qx-followup-red/test_invalid_or_stale_link_is_0/workspaces/main'))
+damage = 'no_link'
+
+    @pytest.mark.parametrize('damage',['no_link','result','duplicate','scope','evidence','profile','base','fact','cross_material'])
+    def test_invalid_or_stale_link_is_rejected_without_followup_writes(chat,damage):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/a2b021bb-dcb3-414a-8258-5a80949d5732/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10cde7830>.get
+
+tests/integration/test_followup_worksheet.py:104: AssertionError
+____ test_invalid_or_stale_link_is_rejected_without_followup_writes[result] ____
+
+chat = (<starlette.testclient.TestClient object at 0x10dc5afc0>, <cn_contract.persistence.Database object at 0x10db52480>, PosixPath('/private/tmp/qx-followup-red/test_invalid_or_stale_link_is_1/workspaces/main'))
+damage = 'result'
+
+    @pytest.mark.parametrize('damage',['no_link','result','duplicate','scope','evidence','profile','base','fact','cross_material'])
+    def test_invalid_or_stale_link_is_rejected_without_followup_writes(chat,damage):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/594ae8ad-ec12-4fb0-b1e6-9ae5da07b33a/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10dc5afc0>.get
+
+tests/integration/test_followup_worksheet.py:104: AssertionError
+__ test_invalid_or_stale_link_is_rejected_without_followup_writes[duplicate] ___
+
+chat = (<starlette.testclient.TestClient object at 0x10dc834d0>, <cn_contract.persistence.Database object at 0x10dcf7ce0>, PosixPath('/private/tmp/qx-followup-red/test_invalid_or_stale_link_is_2/workspaces/main'))
+damage = 'duplicate'
+
+    @pytest.mark.parametrize('damage',['no_link','result','duplicate','scope','evidence','profile','base','fact','cross_material'])
+    def test_invalid_or_stale_link_is_rejected_without_followup_writes(chat,damage):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/5416f4cf-8d16-49af-94b0-b48951e6e8a6/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10dc834d0>.get
+
+tests/integration/test_followup_worksheet.py:104: AssertionError
+____ test_invalid_or_stale_link_is_rejected_without_followup_writes[scope] _____
+
+chat = (<starlette.testclient.TestClient object at 0x10de44c20>, <cn_contract.persistence.Database object at 0x108acd6a0>, PosixPath('/private/tmp/qx-followup-red/test_invalid_or_stale_link_is_3/workspaces/main'))
+damage = 'scope'
+
+    @pytest.mark.parametrize('damage',['no_link','result','duplicate','scope','evidence','profile','base','fact','cross_material'])
+    def test_invalid_or_stale_link_is_rejected_without_followup_writes(chat,damage):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/10c89924-5380-41d7-b20c-6e4ef02e8216/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10de44c20>.get
+
+tests/integration/test_followup_worksheet.py:104: AssertionError
+___ test_invalid_or_stale_link_is_rejected_without_followup_writes[evidence] ___
+
+chat = (<starlette.testclient.TestClient object at 0x10e115790>, <cn_contract.persistence.Database object at 0x10e0418e0>, PosixPath('/private/tmp/qx-followup-red/test_invalid_or_stale_link_is_4/workspaces/main'))
+damage = 'evidence'
+
+    @pytest.mark.parametrize('damage',['no_link','result','duplicate','scope','evidence','profile','base','fact','cross_material'])
+    def test_invalid_or_stale_link_is_rejected_without_followup_writes(chat,damage):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/c0748a9d-d799-4811-815a-c962e8638e70/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10e115790>.get
+
+tests/integration/test_followup_worksheet.py:104: AssertionError
+___ test_invalid_or_stale_link_is_rejected_without_followup_writes[profile] ____
+
+chat = (<starlette.testclient.TestClient object at 0x10e1fafc0>, <cn_contract.persistence.Database object at 0x10dc9bb90>, PosixPath('/private/tmp/qx-followup-red/test_invalid_or_stale_link_is_5/workspaces/main'))
+damage = 'profile'
+
+    @pytest.mark.parametrize('damage',['no_link','result','duplicate','scope','evidence','profile','base','fact','cross_material'])
+    def test_invalid_or_stale_link_is_rejected_without_followup_writes(chat,damage):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/b2a39e48-6c40-43d9-ba15-0fae5bf05cc1/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10e1fafc0>.get
+
+tests/integration/test_followup_worksheet.py:104: AssertionError
+_____ test_invalid_or_stale_link_is_rejected_without_followup_writes[base] _____
+
+chat = (<starlette.testclient.TestClient object at 0x10e2cf0b0>, <cn_contract.persistence.Database object at 0x10e2cf7a0>, PosixPath('/private/tmp/qx-followup-red/test_invalid_or_stale_link_is_6/workspaces/main'))
+damage = 'base'
+
+    @pytest.mark.parametrize('damage',['no_link','result','duplicate','scope','evidence','profile','base','fact','cross_material'])
+    def test_invalid_or_stale_link_is_rejected_without_followup_writes(chat,damage):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/69b9fe8b-c44f-49d8-93bd-7919d73d155d/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10e2cf0b0>.get
+
+tests/integration/test_followup_worksheet.py:104: AssertionError
+_____ test_invalid_or_stale_link_is_rejected_without_followup_writes[fact] _____
+
+chat = (<starlette.testclient.TestClient object at 0x10e45b500>, <cn_contract.persistence.Database object at 0x10d8edca0>, PosixPath('/private/tmp/qx-followup-red/test_invalid_or_stale_link_is_7/workspaces/main'))
+damage = 'fact'
+
+    @pytest.mark.parametrize('damage',['no_link','result','duplicate','scope','evidence','profile','base','fact','cross_material'])
+    def test_invalid_or_stale_link_is_rejected_without_followup_writes(chat,damage):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/877b7240-800a-4825-add7-d4044d7b389b/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10e45b500>.get
+
+tests/integration/test_followup_worksheet.py:104: AssertionError
+_ test_invalid_or_stale_link_is_rejected_without_followup_writes[cross_material] _
+
+chat = (<starlette.testclient.TestClient object at 0x10e4cf950>, <cn_contract.persistence.Database object at 0x10e0412e0>, PosixPath('/private/tmp/qx-followup-red/test_invalid_or_stale_link_is_8/workspaces/main'))
+damage = 'cross_material'
+
+    @pytest.mark.parametrize('damage',['no_link','result','duplicate','scope','evidence','profile','base','fact','cross_material'])
+    def test_invalid_or_stale_link_is_rejected_without_followup_writes(chat,damage):
+>       client,db,_=chat;h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+E        +    where <Response [404 Not Found]> = get('/api/assistant/conversations/5159e7d1-f597-4601-925c-d0c3daadbcfd/followups')
+E        +      where get = <starlette.testclient.TestClient object at 0x10e4cf950>.get
+
+tests/integration/test_followup_worksheet.py:104: AssertionError
+_________________ test_owner_csrf_archive_and_body_revocation __________________
+
+chat = (<starlette.testclient.TestClient object at 0x10e76f770>, <cn_contract.persistence.Database object at 0x10e6c4530>, PosixPath('/private/tmp/qx-followup-red/test_owner_csrf_archive_and_bo0/workspaces/main'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e918d40>
+
+    def test_owner_csrf_archive_and_body_revocation(chat,monkeypatch):
+>       from cn_contract.web import followup_worksheet
+E       ImportError: cannot import name 'followup_worksheet' from 'cn_contract.web' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/web/__init__.py)
+
+tests/integration/test_followup_worksheet.py:120: ImportError
+____ test_actual_backup_restores_followup_links_and_fixed_receipt_readonly _____
+
+native = (<fastapi.applications.FastAPI object at 0x10e87a750>, PosixPath('/private/tmp/qx-followup-red/test_actual_backup_restores_fo0/workspaces/main'))
+tmp_path = PosixPath('/private/tmp/qx-followup-red/test_actual_backup_restores_fo0')
+
+    def test_actual_backup_restores_followup_links_and_fixed_receipt_readonly(native,tmp_path):
+        from cn_contract.ops import workspace_backup
+        from cn_contract.web.local_server import build_local_app
+        from tests.helpers.legacy_assistant_backup import PASSPHRASE
+        app,root=native
+        with TestClient(app) as client:
+>           h=sign_in(client);base,url,ev,fact=setup(client,h);assert client.get(url).status_code==200
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: assert 404 == 200
+E            +  where 404 = <Response [404 Not Found]>.status_code
+E            +    where <Response [404 Not Found]> = get('/api/assistant/conversations/36d2f1d6-d1e8-485e-87ea-16e1075f3ce9/followups')
+E            +      where get = <starlette.testclient.TestClient object at 0x10e988470>.get
+
+tests/integration/test_followup_worksheet.py:143: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_followup_worksheet.py::test_followup_links_status_history_retry_and_no_implicit_fact_changes
+FAILED tests/integration/test_followup_worksheet.py::test_completed_item_needs_recheck_after_linked_fact_changes_and_explicit_relink
+FAILED tests/integration/test_followup_worksheet.py::test_unrelated_fact_changes_do_not_reopen_but_removed_link_is_not_hidden
+FAILED tests/integration/test_followup_worksheet.py::test_material_association_received_does_not_auto_complete_and_reparse_warns
+FAILED tests/integration/test_followup_worksheet.py::test_invalid_or_stale_link_is_rejected_without_followup_writes[no_link]
+FAILED tests/integration/test_followup_worksheet.py::test_invalid_or_stale_link_is_rejected_without_followup_writes[result]
+FAILED tests/integration/test_followup_worksheet.py::test_invalid_or_stale_link_is_rejected_without_followup_writes[duplicate]
+FAILED tests/integration/test_followup_worksheet.py::test_invalid_or_stale_link_is_rejected_without_followup_writes[scope]
+FAILED tests/integration/test_followup_worksheet.py::test_invalid_or_stale_link_is_rejected_without_followup_writes[evidence]
+FAILED tests/integration/test_followup_worksheet.py::test_invalid_or_stale_link_is_rejected_without_followup_writes[profile]
+FAILED tests/integration/test_followup_worksheet.py::test_invalid_or_stale_link_is_rejected_without_followup_writes[base]
+FAILED tests/integration/test_followup_worksheet.py::test_invalid_or_stale_link_is_rejected_without_followup_writes[fact]
+FAILED tests/integration/test_followup_worksheet.py::test_invalid_or_stale_link_is_rejected_without_followup_writes[cross_material]
+FAILED tests/integration/test_followup_worksheet.py::test_owner_csrf_archive_and_body_revocation
+FAILED tests/integration/test_followup_worksheet.py::test_actual_backup_restores_followup_links_and_fixed_receipt_readonly
+15 failed in 4.07s

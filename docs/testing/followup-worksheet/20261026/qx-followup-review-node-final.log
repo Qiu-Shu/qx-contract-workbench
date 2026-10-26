@@ -1,0 +1,14 @@
+✔ final: empty reason and impact are blocked before joining (1.567542ms)
+✔ final: unjoined form survives rebinding and only explicit discard accepts the new binding (0.472958ms)
+✔ final: joined dirty items survive rebinding and are not silently rebound (0.973709ms)
+✔ final: unknown request keeps its exact key across rebinding and repeated state, with GET-only recovery (0.941625ms)
+✔ final: a receipt GET started before a binding change cannot clear the retained unknown request (0.40675ms)
+✔ final: conversation, workspace and permission changes still clear private drafts (0.457834ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 39.634541

@@ -1,0 +1,26 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_bootstrap_matches_current_catalog_and_is_idempotent ___________
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-red-bootstrap/test_bootstrap_matches_current0')
+
+    def test_bootstrap_matches_current_catalog_and_is_idempotent(tmp_path):
+        from cn_contract.config import load_settings
+        from cn_contract.persistence import Database
+        from cn_contract.storage_bootstrap import initialize_storage
+        database = Database('sqlite:///'+str(tmp_path/'bootstrap.db'), tmp_path/'protected', load_settings())
+        try:
+            initialize_storage(database)
+            initialize_storage(database)
+            with database.engine.connect() as db:
+                rows = [tuple(r) for r in db.exec_driver_sql('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name')]
+>           assert storage_schema.identify_schema(rows) == TARGET
+E           AssertionError: assert 'assistant-evidence-v1' == 'assistant-followups-v1'
+E             
+E             - assistant-followups-v1
+E             + assistant-evidence-v1
+
+tests/integration/test_followup_schema.py:79: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_followup_schema.py::test_bootstrap_matches_current_catalog_and_is_idempotent
+1 failed in 0.69s

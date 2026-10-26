@@ -33,8 +33,9 @@ def initialize_storage(database):
     from .weixin_inbox.provenance_schema import initialize_storage as weixin_provenance
     from .weixin_inbox.generation_dispatch_schema import initialize_storage as weixin_generation_dispatch
     from .assistant.evidence_schema import initialize_storage as evidence
+    from .assistant.followup_schema import initialize_storage as followups
     for init in (authorities, rules, facts, reviews, providers, queries, exports,
-                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds, rounds_v2, profiles, profile_model, task_drafts, weixin_inbox, weixin_dispatch, weixin_grant, weixin_generation, weixin_provenance, weixin_generation_dispatch, evidence):
+                 jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds, rounds_v2, profiles, profile_model, task_drafts, weixin_inbox, weixin_dispatch, weixin_grant, weixin_generation, weixin_provenance, weixin_generation_dispatch, evidence, followups):
         init(database)
 
 

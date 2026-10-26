@@ -37,8 +37,8 @@ def test_exact_v19_additive_upgrade_keeps_old_records(native_mode):
     for kind,name,table,sql in storage_schema.schema_rows('weixin-generation-dispatch-v1',native=native_mode):
         if kind!='table' and sql:db.execute(sql)
     db.commit()
-    assert schema_migrations.upgrade_database(db)=='assistant-evidence-v1'
-    assert storage_schema.identify_schema(schema_migrations.database_rows(db),native=native_mode)=='assistant-evidence-v1'
+    assert schema_migrations.upgrade_database(db)==storage_schema.CURRENT_VERSION
+    assert storage_schema.identify_schema(schema_migrations.database_rows(db),native=native_mode)==storage_schema.CURRENT_VERSION
     assert db.execute('SELECT count(*) FROM assistant_evidence_revisions').fetchone()==(0,)
     assert db.execute('PRAGMA foreign_key_check').fetchall()==[]
 
@@ -53,6 +53,7 @@ def test_native_upgrade_keeps_workspace_identity_and_prior_profile(native):
     db.engine.dispose()
     with sqlite3.connect(root/'workbench.db') as raw:
         for action in ('update','delete'):raw.execute('DROP TRIGGER immutable_assistant_evidence_revisions_'+action)
+        raw.execute('DROP TABLE assistant_followup_revisions')
         raw.execute('DROP TABLE assistant_evidence_revisions')
         rows=raw.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall()
     marker=json.loads((root/'workspace.json').read_text());marker['schema_sha256']=digest(rows)

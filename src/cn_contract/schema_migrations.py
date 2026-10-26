@@ -7,7 +7,9 @@ def database_rows(connection):
 
 
 def statements_for(version):
-    if version == 'assistant-evidence-v1':
+    if version == 'assistant-followups-v1':
+        from .assistant.followup_schema import STATEMENTS
+    elif version == 'assistant-evidence-v1':
         from .assistant.evidence_schema import STATEMENTS
     elif version == 'intake-v1':
         from .intake.schema import STATEMENTS

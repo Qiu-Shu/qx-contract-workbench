@@ -5174,3 +5174,90 @@ class EvidenceWorksheetView(DomainModel):
     writable: StrictBool
     materials: tuple[EvidenceMaterial, ...]
     historical_ids: tuple[UUID, ...] = ()
+
+
+class FollowupFactRef(DomainModel):
+    evidence_revision: PositiveInt
+    fact_id: UUID
+
+
+class FollowupMaterialRef(DomainModel):
+    attachment_id: UUID
+    original_sha256: SHA256
+    parse_revision: PositiveInt | None
+
+
+class FollowupItem(DomainModel):
+    id: UUID
+    title: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=300)]
+    reason: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=1000)]
+    impact: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=1000)]
+    next_action: Annotated[str, StringConstraints(strict=True, max_length=1000)] = ''
+    due_date: date | None = None
+    status: Literal['open', 'requested', 'received', 'completed', 'cancelled'] = 'open'
+    result: Annotated[str, StringConstraints(strict=True, max_length=2000)] = ''
+    facts: Annotated[tuple[FollowupFactRef, ...], Field(max_length=10)] = ()
+    materials: Annotated[tuple[FollowupMaterialRef, ...], Field(max_length=10)] = ()
+
+    @model_validator(mode='after')
+    def grounded_item(self):
+        if any(not x.strip() for x in (self.title,self.reason,self.impact)):
+            raise ValueError('follow-up title, reason and impact are required')
+        if not self.facts and not self.materials:
+            raise ValueError('follow-up requires an existing fact or material')
+        if (len({x.fact_id for x in self.facts})!=len(self.facts)
+                or len({x.attachment_id for x in self.materials})!=len(self.materials)):
+            raise ValueError('follow-up links cannot repeat')
+        if self.status in ('completed','cancelled') and not self.result.strip():
+            raise ValueError('closed follow-up requires its handling result')
+        return self
+
+
+class FollowupCommitInput(DomainModel):
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    expected_profile_revision: NonNegativeInt
+    expected_evidence_revision: NonNegativeInt
+    base_revision: NonNegativeInt
+    items: Annotated[tuple[FollowupItem, ...], Field(max_length=100)]
+
+    @field_validator('items')
+    @classmethod
+    def distinct_items(cls, values):
+        if len({x.id for x in values})!=len(values):
+            raise ValueError('follow-up IDs cannot repeat')
+        return values
+
+
+class FollowupSnapshot(DomainModel):
+    scope: ScopeSnapshot
+    profile_revision: NonNegativeInt
+    evidence_revision: NonNegativeInt
+    revision: PositiveInt
+    items: Annotated[tuple[FollowupItem, ...], Field(max_length=100)]
+    created_at: UTCDatetime
+
+
+class FollowupReceipt(DomainModel):
+    conversation_id: UUID
+    request_id: UUID
+    revision: PositiveInt
+    snapshot_sha256: SHA256
+    created_at: UTCDatetime
+
+
+class FollowupAttention(DomainModel):
+    item_id: UUID
+    reasons: tuple[str, ...]
+
+
+class FollowupWorksheetView(DomainModel):
+    scope: ScopeSnapshot
+    profile_revision: NonNegativeInt
+    evidence_revision: NonNegativeInt
+    revision: NonNegativeInt
+    items: Annotated[tuple[FollowupItem, ...], Field(max_length=100)]
+    writable: StrictBool
+    facts: Annotated[tuple[EvidenceFact, ...], Field(max_length=100)]
+    materials: tuple[EvidenceMaterial, ...]
+    attention: tuple[FollowupAttention, ...] = ()

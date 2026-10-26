@@ -105,7 +105,7 @@ def validate_peer_generations(db, *, allow_generations=False):
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
         version = identify_schema(schema, native=native)
-        if version not in ('weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1'):
+        if version not in ('weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1'):
             return []
         rows = db.execute(text('SELECT * FROM weixin_peer_generations ORDER BY root_mapping_id,generation')).mappings().all()
         if not rows:
@@ -125,8 +125,8 @@ def validate_peer_generations(db, *, allow_generations=False):
         validate_dispatch_records(db, allow_dispatch=True)
         validate_peer_scope_grants(db, allow_grants=True)
         _validate(db, rows, _uuid(identities[0]),
-            allow_target_polls=version in ('weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1'),
-            allow_target_dispatch=version in ('weixin-generation-dispatch-v1', 'assistant-evidence-v1'))
+            allow_target_polls=version in ('weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1'),
+            allow_target_dispatch=version in ('weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1'))
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError, ServiceError):
         raise ValueError('WEIXIN_GENERATION_INTEGRITY') from None
     return []

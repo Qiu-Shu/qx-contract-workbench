@@ -1,0 +1,824 @@
+✖ a new item links selected facts explicitly and saves expected revisions (0.835541ms)
+✖ form text protects navigation and cannot be saved without joining the list (0.0925ms)
+✖ selected source requires explicit association before adding (0.077041ms)
+✖ a missing document can be named while linking a known fact (0.075542ms)
+✖ a received item can link an existing immutable original (0.060375ms)
+✖ editing an old item preserves its fixed references (0.059208ms)
+✖ only an explicit association replaces old references with current selections (0.083708ms)
+✖ completed and cancelled items require a recorded result (0.10275ms)
+✖ a completed item needing review remains in the todo filter without changing status (0.323292ms)
+✖ removing an item requires a save and keeps the earlier snapshot available (0.227291ms)
+✖ unknown POST result is recovered only by the fixed request id (0.3955ms)
+✖ valid receipt lookup clears the uncertain request after reading saved state (0.060208ms)
+✖ malformed receipt retains the pending request rather than permitting another POST (0.053667ms)
+✖ a missing receipt creation time is invalid (0.04725ms)
+✖ a confirmed version rejection preserves the draft and allows an explicit retry (0.046583ms)
+✖ refresh protects unadded form text from a newer follow-up version (0.080083ms)
+✖ refresh protects joined items from a concurrent follow-up version (0.045083ms)
+✖ same-version refresh updates metadata and retains fixed old associations (0.04575ms)
+✖ refresh with a newer version leaves an edited old reference untouched (0.044125ms)
+✖ readonly mode and missing write permission prevent all writes (0.049625ms)
+✖ missing writable field is never treated as write permission (0.038875ms)
+✖ dirty form or item list blocks history and never loses local work (0.043084ms)
+✖ history is read only and refresh reopens the latest version (0.042708ms)
+✖ history rejects versions outside 1 through 200 (0.048458ms)
+✖ late response cannot enter a different conversation (0.046334ms)
+✖ revocation clears local forms and private source details (0.044125ms)
+✖ loading prevents edits and invalidates a late source response (0.048875ms)
+✖ fixed evidence facts and original links can be reviewed (0.053208ms)
+✖ a late older source cannot replace the most recently requested source (0.058042ms)
+✖ a fact lookup with the wrong conversation or version is rejected (0.074375ms)
+✖ field lengths and date validity are checked before joining (0.056625ms)
+✖ list and association limits are enforced before writing (0.045041ms)
+✖ discard is explicit and clears both list and form drafts (0.0355ms)
+✖ disposed worksheets do not accept new actions (0.041625ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 0
+ℹ fail 34
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47.990125
+
+✖ failing tests:
+
+test at scripts/test_followup_worksheet.mjs:34:1
+✖ a new item links selected facts explicitly and saves expected revisions (0.835541ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:34:98)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:297:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:35:1
+✖ form text protects navigation and cannot be saved without joining the list (0.0925ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:35:101)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:36:1
+✖ selected source requires explicit association before adding (0.077041ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:36:86)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:37:1
+✖ a missing document can be named while linking a known fact (0.075542ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:37:85)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:38:1
+✖ a received item can link an existing immutable original (0.060375ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:38:82)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:39:1
+✖ editing an old item preserves its fixed references (0.059208ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:39:77)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:40:1
+✖ only an explicit association replaces old references with current selections (0.083708ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:40:103)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:41:1
+✖ completed and cancelled items require a recorded result (0.10275ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:41:129)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:42:1
+✖ a completed item needing review remains in the todo filter without changing status (0.323292ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:42:109)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:43:1
+✖ removing an item requires a save and keeps the earlier snapshot available (0.227291ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:43:100)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:44:1
+✖ unknown POST result is recovered only by the fixed request id (0.3955ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:44:88)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:45:1
+✖ valid receipt lookup clears the uncertain request after reading saved state (0.060208ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:45:102)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:46:1
+✖ malformed receipt retains the pending request rather than permitting another POST (0.053667ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:46:108)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:47:1
+✖ a missing receipt creation time is invalid (0.04725ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:47:69)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:48:1
+✖ a confirmed version rejection preserves the draft and allows an explicit retry (0.046583ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:48:105)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:49:1
+✖ refresh protects unadded form text from a newer follow-up version (0.080083ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:49:92)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:50:1
+✖ refresh protects joined items from a concurrent follow-up version (0.045083ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:50:92)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:51:1
+✖ same-version refresh updates metadata and retains fixed old associations (0.04575ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:51:99)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:52:1
+✖ refresh with a newer version leaves an edited old reference untouched (0.044125ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:52:96)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:53:1
+✖ readonly mode and missing write permission prevent all writes (0.049625ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:53:128)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:54:1
+✖ missing writable field is never treated as write permission (0.038875ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:54:86)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:55:1
+✖ dirty form or item list blocks history and never loses local work (0.043084ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:55:92)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:56:1
+✖ history is read only and refresh reopens the latest version (0.042708ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:56:86)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:57:1
+✖ history rejects versions outside 1 through 200 (0.048458ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:57:73)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:58:1
+✖ late response cannot enter a different conversation (0.046334ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:58:78)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:59:1
+✖ revocation clears local forms and private source details (0.044125ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:59:83)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:60:1
+✖ loading prevents edits and invalidates a late source response (0.048875ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:60:88)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:61:1
+✖ fixed evidence facts and original links can be reviewed (0.053208ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:61:82)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:62:1
+✖ a late older source cannot replace the most recently requested source (0.058042ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:62:96)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:63:1
+✖ a fact lookup with the wrong conversation or version is rejected (0.074375ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:63:91)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:64:1
+✖ field lengths and date validity are checked before joining (0.056625ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:64:85)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:65:1
+✖ list and association limits are enforced before writing (0.045041ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:65:82)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:66:1
+✖ discard is explicit and clears both list and form drafts (0.0355ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:66:83)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_followup_worksheet.mjs:67:1
+✖ disposed worksheets do not accept new actions (0.041625ms)
+  AssertionError [ERR_ASSERTION]: follow-up binder must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:19:9)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_followup_worksheet.mjs:67:72)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }

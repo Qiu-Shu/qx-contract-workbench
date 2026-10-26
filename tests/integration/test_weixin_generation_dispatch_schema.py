@@ -185,6 +185,7 @@ def test_native_missing_version_index_is_rejected_before_any_repair(tmp_path):
     local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
     marker = (root/'workspace.json').read_bytes()
     with closing(sqlite3.connect(root/'workbench.db')) as connection:
+        connection.execute('DROP TABLE assistant_followup_revisions')
         connection.execute('DROP TABLE assistant_evidence_revisions')
         connection.execute('DROP INDEX '+INDEX)
         connection.commit()
@@ -202,6 +203,7 @@ def test_native_v18_upgrade_saves_old_structure_and_closes_marker_gap(tmp_path, 
     root = tmp_path/'native'
     local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as connection:
+        connection.execute('DROP TABLE assistant_followup_revisions')
         connection.execute('DROP TABLE assistant_evidence_revisions')
         connection.execute('DROP INDEX '+INDEX)
         connection.commit()

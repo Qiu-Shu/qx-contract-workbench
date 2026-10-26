@@ -1,0 +1,653 @@
+........................................FFFFFFFFFFFFFFFFFFFFFFFFFFFFF    [100%]
+=================================== FAILURES ===================================
+____________________ test_exact_v20_additive_upgrade[False] ____________________
+
+native_mode = False
+
+    @pytest.mark.parametrize('native_mode', [False, True])
+    def test_exact_v20_additive_upgrade(native_mode):
+        with closing(sqlite3.connect(':memory:')) as connection:
+            before = storage_schema.schema_rows('assistant-evidence-v1', native=native_mode)
+            for kind in ('table', 'index', 'trigger'):
+                for row in before:
+                    if row[0] == kind and row[3] is not None:
+                        connection.execute(row[3])
+            connection.commit()
+            assert schema_migrations.database_rows(connection) == before
+>           assert schema_migrations.upgrade_database(connection) == TARGET
+E           AssertionError: assert 'assistant-evidence-v1' == 'assistant-followups-v1'
+E             
+E             - assistant-followups-v1
+E             + assistant-evidence-v1
+
+tests/integration/test_followup_schema.py:61: AssertionError
+____________________ test_exact_v20_additive_upgrade[True] _____________________
+
+native_mode = True
+
+    @pytest.mark.parametrize('native_mode', [False, True])
+    def test_exact_v20_additive_upgrade(native_mode):
+        with closing(sqlite3.connect(':memory:')) as connection:
+            before = storage_schema.schema_rows('assistant-evidence-v1', native=native_mode)
+            for kind in ('table', 'index', 'trigger'):
+                for row in before:
+                    if row[0] == kind and row[3] is not None:
+                        connection.execute(row[3])
+            connection.commit()
+            assert schema_migrations.database_rows(connection) == before
+>           assert schema_migrations.upgrade_database(connection) == TARGET
+E           AssertionError: assert 'assistant-evidence-v1' == 'assistant-followups-v1'
+E             
+E             - assistant-followups-v1
+E             + assistant-evidence-v1
+
+tests/integration/test_followup_schema.py:61: AssertionError
+___________ test_bootstrap_matches_current_catalog_and_is_idempotent ___________
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-red/test_bootstrap_matches_current0')
+
+    def test_bootstrap_matches_current_catalog_and_is_idempotent(tmp_path):
+        from cn_contract.config import load_settings
+>       from cn_contract.db import Database
+E       ModuleNotFoundError: No module named 'cn_contract.db'
+
+tests/integration/test_followup_schema.py:71: ModuleNotFoundError
+_____ test_unknown_and_partial_followup_structures_reject_upgrade[unknown] _____
+
+damage = 'unknown'
+
+    @pytest.mark.parametrize('damage', ['unknown', 'missing_trigger', 'partial_table'])
+    def test_unknown_and_partial_followup_structures_reject_upgrade(damage):
+        with closing(sqlite3.connect(':memory:')) as connection:
+            for kind in ('table', 'index', 'trigger'):
+>               for row in storage_schema.schema_rows(TARGET):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+version = 'assistant-followups-v1'
+
+    def schema_rows(version, *, native=False):
+        """Return a fresh exact sqlite_master row list; never initialize an old DB."""
+        if version not in VERSIONS:
+>           raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E           ValueError: DATABASE_SCHEMA_MISMATCH
+
+src/cn_contract/storage_schema.py:52: ValueError
+_ test_unknown_and_partial_followup_structures_reject_upgrade[missing_trigger] _
+
+damage = 'missing_trigger'
+
+    @pytest.mark.parametrize('damage', ['unknown', 'missing_trigger', 'partial_table'])
+    def test_unknown_and_partial_followup_structures_reject_upgrade(damage):
+        with closing(sqlite3.connect(':memory:')) as connection:
+            for kind in ('table', 'index', 'trigger'):
+>               for row in storage_schema.schema_rows(TARGET):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+version = 'assistant-followups-v1'
+
+    def schema_rows(version, *, native=False):
+        """Return a fresh exact sqlite_master row list; never initialize an old DB."""
+        if version not in VERSIONS:
+>           raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E           ValueError: DATABASE_SCHEMA_MISMATCH
+
+src/cn_contract/storage_schema.py:52: ValueError
+__ test_unknown_and_partial_followup_structures_reject_upgrade[partial_table] __
+
+damage = 'partial_table'
+
+    @pytest.mark.parametrize('damage', ['unknown', 'missing_trigger', 'partial_table'])
+    def test_unknown_and_partial_followup_structures_reject_upgrade(damage):
+        with closing(sqlite3.connect(':memory:')) as connection:
+            for kind in ('table', 'index', 'trigger'):
+>               for row in storage_schema.schema_rows(TARGET):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+version = 'assistant-followups-v1'
+
+    def schema_rows(version, *, native=False):
+        """Return a fresh exact sqlite_master row list; never initialize an old DB."""
+        if version not in VERSIONS:
+>           raise ValueError('DATABASE_SCHEMA_MISMATCH')
+E           ValueError: DATABASE_SCHEMA_MISMATCH
+
+src/cn_contract/storage_schema.py:52: ValueError
+________________ test_followup_snapshots_are_immutable[UPDATE] _________________
+
+operation = 'UPDATE'
+
+    @pytest.mark.parametrize('operation', ['UPDATE', 'DELETE'])
+    def test_followup_snapshots_are_immutable(operation):
+>       with closing(current_table()) as connection, pytest.raises(sqlite3.IntegrityError, match='IMMUTABLE_RECORD'):
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+________________ test_followup_snapshots_are_immutable[DELETE] _________________
+
+operation = 'DELETE'
+
+    @pytest.mark.parametrize('operation', ['UPDATE', 'DELETE'])
+    def test_followup_snapshots_are_immutable(operation):
+>       with closing(current_table()) as connection, pytest.raises(sqlite3.IntegrityError, match='IMMUTABLE_RECORD'):
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+____________ test_all_followup_fields_are_required[conversation_id] ____________
+
+field = 'conversation_id'
+
+    @pytest.mark.parametrize('field', COLUMNS)
+    def test_all_followup_fields_are_required(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+_______________ test_all_followup_fields_are_required[revision] ________________
+
+field = 'revision'
+
+    @pytest.mark.parametrize('field', COLUMNS)
+    def test_all_followup_fields_are_required(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+______________ test_all_followup_fields_are_required[request_id] _______________
+
+field = 'request_id'
+
+    @pytest.mark.parametrize('field', COLUMNS)
+    def test_all_followup_fields_are_required(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+_____________ test_all_followup_fields_are_required[request_json] ______________
+
+field = 'request_json'
+
+    @pytest.mark.parametrize('field', COLUMNS)
+    def test_all_followup_fields_are_required(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+____________ test_all_followup_fields_are_required[request_sha256] _____________
+
+field = 'request_sha256'
+
+    @pytest.mark.parametrize('field', COLUMNS)
+    def test_all_followup_fields_are_required(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+_____________ test_all_followup_fields_are_required[snapshot_json] _____________
+
+field = 'snapshot_json'
+
+    @pytest.mark.parametrize('field', COLUMNS)
+    def test_all_followup_fields_are_required(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+____________ test_all_followup_fields_are_required[snapshot_sha256] ____________
+
+field = 'snapshot_sha256'
+
+    @pytest.mark.parametrize('field', COLUMNS)
+    def test_all_followup_fields_are_required(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+_______________ test_all_followup_fields_are_required[actor_id] ________________
+
+field = 'actor_id'
+
+    @pytest.mark.parametrize('field', COLUMNS)
+    def test_all_followup_fields_are_required(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+______________ test_all_followup_fields_are_required[session_id] _______________
+
+field = 'session_id'
+
+    @pytest.mark.parametrize('field', COLUMNS)
+    def test_all_followup_fields_are_required(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+______________ test_all_followup_fields_are_required[created_at] _______________
+
+field = 'created_at'
+
+    @pytest.mark.parametrize('field', COLUMNS)
+    def test_all_followup_fields_are_required(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+_______________ test_followup_json_size_is_bounded[request_json] _______________
+
+field = 'request_json'
+
+    @pytest.mark.parametrize('field', ['request_json', 'snapshot_json'])
+    def test_followup_json_size_is_bounded(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+______________ test_followup_json_size_is_bounded[snapshot_json] _______________
+
+field = 'snapshot_json'
+
+    @pytest.mark.parametrize('field', ['request_json', 'snapshot_json'])
+    def test_followup_json_size_is_bounded(field):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+____________ test_revision_idempotency_and_foreign_keys[revision-0] ____________
+
+field = 'revision', value = 0
+
+    @pytest.mark.parametrize('field,value', [('revision', 0), ('revision', -1), ('revision', 1.5),
+                                             ('revision', 1), ('request_id', VALUES[2]),
+                                             ('conversation_id', 'missing'), ('actor_id', 'missing'), ('session_id', 'missing')])
+    def test_revision_idempotency_and_foreign_keys(field, value):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+___________ test_revision_idempotency_and_foreign_keys[revision--1] ____________
+
+field = 'revision', value = -1
+
+    @pytest.mark.parametrize('field,value', [('revision', 0), ('revision', -1), ('revision', 1.5),
+                                             ('revision', 1), ('request_id', VALUES[2]),
+                                             ('conversation_id', 'missing'), ('actor_id', 'missing'), ('session_id', 'missing')])
+    def test_revision_idempotency_and_foreign_keys(field, value):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+___________ test_revision_idempotency_and_foreign_keys[revision-1.5] ___________
+
+field = 'revision', value = 1.5
+
+    @pytest.mark.parametrize('field,value', [('revision', 0), ('revision', -1), ('revision', 1.5),
+                                             ('revision', 1), ('request_id', VALUES[2]),
+                                             ('conversation_id', 'missing'), ('actor_id', 'missing'), ('session_id', 'missing')])
+    def test_revision_idempotency_and_foreign_keys(field, value):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+____________ test_revision_idempotency_and_foreign_keys[revision-1] ____________
+
+field = 'revision', value = 1
+
+    @pytest.mark.parametrize('field,value', [('revision', 0), ('revision', -1), ('revision', 1.5),
+                                             ('revision', 1), ('request_id', VALUES[2]),
+                                             ('conversation_id', 'missing'), ('actor_id', 'missing'), ('session_id', 'missing')])
+    def test_revision_idempotency_and_foreign_keys(field, value):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+___ test_revision_idempotency_and_foreign_keys[request_id-synthetic-request] ___
+
+field = 'request_id', value = 'synthetic-request'
+
+    @pytest.mark.parametrize('field,value', [('revision', 0), ('revision', -1), ('revision', 1.5),
+                                             ('revision', 1), ('request_id', VALUES[2]),
+                                             ('conversation_id', 'missing'), ('actor_id', 'missing'), ('session_id', 'missing')])
+    def test_revision_idempotency_and_foreign_keys(field, value):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+_____ test_revision_idempotency_and_foreign_keys[conversation_id-missing] ______
+
+field = 'conversation_id', value = 'missing'
+
+    @pytest.mark.parametrize('field,value', [('revision', 0), ('revision', -1), ('revision', 1.5),
+                                             ('revision', 1), ('request_id', VALUES[2]),
+                                             ('conversation_id', 'missing'), ('actor_id', 'missing'), ('session_id', 'missing')])
+    def test_revision_idempotency_and_foreign_keys(field, value):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+_________ test_revision_idempotency_and_foreign_keys[actor_id-missing] _________
+
+field = 'actor_id', value = 'missing'
+
+    @pytest.mark.parametrize('field,value', [('revision', 0), ('revision', -1), ('revision', 1.5),
+                                             ('revision', 1), ('request_id', VALUES[2]),
+                                             ('conversation_id', 'missing'), ('actor_id', 'missing'), ('session_id', 'missing')])
+    def test_revision_idempotency_and_foreign_keys(field, value):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+________ test_revision_idempotency_and_foreign_keys[session_id-missing] ________
+
+field = 'session_id', value = 'missing'
+
+    @pytest.mark.parametrize('field,value', [('revision', 0), ('revision', -1), ('revision', 1.5),
+                                             ('revision', 1), ('request_id', VALUES[2]),
+                                             ('conversation_id', 'missing'), ('actor_id', 'missing'), ('session_id', 'missing')])
+    def test_revision_idempotency_and_foreign_keys(field, value):
+>       with closing(current_table()) as connection:
+                     ^^^^^^^^^^^^^^^
+
+tests/integration/test_followup_schema.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_followup_schema.py:39: in current_table
+    for sql in extension().STATEMENTS:
+               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def extension():
+>       from cn_contract.assistant import followup_schema
+E       ImportError: cannot import name 'followup_schema' from 'cn_contract.assistant' (/Users/molin/Project/qx-contract-workbench/src/cn_contract/assistant/__init__.py)
+
+tests/integration/test_followup_schema.py:28: ImportError
+________ test_native_v20_upgrade_preserves_saved_evidence_and_identity _________
+
+native = (<fastapi.applications.FastAPI object at 0x10eaed190>, PosixPath('/private/tmp/qx-followup-schema-red/test_native_v20_upgrade_preser0/workspaces/main'))
+
+    def test_native_v20_upgrade_preserves_saved_evidence_and_identity(native):
+        from fastapi.testclient import TestClient
+        from cn_contract.web import local_server
+        app, root = native; database = app.state.database
+        with TestClient(app) as client:
+            headers = sign_in(client); base, url = begin(client, headers)
+            fact = statement(client, headers, base, url)
+            response = client.post(url+'/commits', headers=headers, json=request(client.get(url).json(), [fact]))
+            assert response.status_code == 200, response.text
+            receipt = response.json()
+        database.engine.dispose()
+        with closing(sqlite3.connect(root/'workbench.db')) as connection:
+            saved = connection.execute('SELECT * FROM assistant_evidence_revisions').fetchall()
+>           connection.execute('DROP TABLE '+TABLE)
+E           sqlite3.OperationalError: no such table: assistant_followup_revisions
+
+tests/integration/test_followup_schema.py:152: OperationalError
+=========================== short test summary info ============================
+FAILED tests/integration/test_followup_schema.py::test_exact_v20_additive_upgrade[False]
+FAILED tests/integration/test_followup_schema.py::test_exact_v20_additive_upgrade[True]
+FAILED tests/integration/test_followup_schema.py::test_bootstrap_matches_current_catalog_and_is_idempotent
+FAILED tests/integration/test_followup_schema.py::test_unknown_and_partial_followup_structures_reject_upgrade[unknown]
+FAILED tests/integration/test_followup_schema.py::test_unknown_and_partial_followup_structures_reject_upgrade[missing_trigger]
+FAILED tests/integration/test_followup_schema.py::test_unknown_and_partial_followup_structures_reject_upgrade[partial_table]
+FAILED tests/integration/test_followup_schema.py::test_followup_snapshots_are_immutable[UPDATE]
+FAILED tests/integration/test_followup_schema.py::test_followup_snapshots_are_immutable[DELETE]
+FAILED tests/integration/test_followup_schema.py::test_all_followup_fields_are_required[conversation_id]
+FAILED tests/integration/test_followup_schema.py::test_all_followup_fields_are_required[revision]
+FAILED tests/integration/test_followup_schema.py::test_all_followup_fields_are_required[request_id]
+FAILED tests/integration/test_followup_schema.py::test_all_followup_fields_are_required[request_json]
+FAILED tests/integration/test_followup_schema.py::test_all_followup_fields_are_required[request_sha256]
+FAILED tests/integration/test_followup_schema.py::test_all_followup_fields_are_required[snapshot_json]
+FAILED tests/integration/test_followup_schema.py::test_all_followup_fields_are_required[snapshot_sha256]
+FAILED tests/integration/test_followup_schema.py::test_all_followup_fields_are_required[actor_id]
+FAILED tests/integration/test_followup_schema.py::test_all_followup_fields_are_required[session_id]
+FAILED tests/integration/test_followup_schema.py::test_all_followup_fields_are_required[created_at]
+FAILED tests/integration/test_followup_schema.py::test_followup_json_size_is_bounded[request_json]
+FAILED tests/integration/test_followup_schema.py::test_followup_json_size_is_bounded[snapshot_json]
+FAILED tests/integration/test_followup_schema.py::test_revision_idempotency_and_foreign_keys[revision-0]
+FAILED tests/integration/test_followup_schema.py::test_revision_idempotency_and_foreign_keys[revision--1]
+FAILED tests/integration/test_followup_schema.py::test_revision_idempotency_and_foreign_keys[revision-1.5]
+FAILED tests/integration/test_followup_schema.py::test_revision_idempotency_and_foreign_keys[revision-1]
+FAILED tests/integration/test_followup_schema.py::test_revision_idempotency_and_foreign_keys[request_id-synthetic-request]
+FAILED tests/integration/test_followup_schema.py::test_revision_idempotency_and_foreign_keys[conversation_id-missing]
+FAILED tests/integration/test_followup_schema.py::test_revision_idempotency_and_foreign_keys[actor_id-missing]
+FAILED tests/integration/test_followup_schema.py::test_revision_idempotency_and_foreign_keys[session_id-missing]
+FAILED tests/integration/test_followup_schema.py::test_native_v20_upgrade_preserves_saved_evidence_and_identity
+29 failed, 40 passed in 1.38s

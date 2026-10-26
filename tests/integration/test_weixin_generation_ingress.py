@@ -107,6 +107,7 @@ def test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes(
             elif change=='role':db.get(UserRow,str(h['actor'].user_id)).roles='["assistant"]'
             elif change=='restore':db.add(RestoreFenceRow(ref=str(uuid4()),archive_sha256='1'*64,manifest_sha256='2'*64,payload='{}'))
             elif change=='schema17':
+                db.execute(text('DROP TABLE assistant_followup_revisions'))
                 db.execute(text('DROP TABLE assistant_evidence_revisions'))
                 db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
                 db.execute(text('DROP TABLE weixin_descriptor_generations'))

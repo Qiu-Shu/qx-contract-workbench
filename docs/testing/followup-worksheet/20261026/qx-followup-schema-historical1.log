@@ -1,0 +1,440 @@
+...........................................F............................ [ 13%]
+........................................................................ [ 26%]
+........................................................................ [ 40%]
+........................................................................ [ 53%]
+........................................................................ [ 66%]
+........................................................................ [ 80%]
+..EEEEEEF............................................................... [ 93%]
+..............................FFFFFF                                     [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_native_upgrade_records_verified_backup_and_preserves_workspace_identity _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_upgrade_records_ve0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c973380>
+
+    @pytest.fixture
+    def native_grant_workspace(tmp_path, monkeypatch):
+        from cn_contract.web import local_server
+        root = tmp_path/'workspace'
+        local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as db:
+            db.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            db.execute('DROP TABLE IF EXISTS weixin_descriptor_generations')
+            db.execute('DROP TABLE IF EXISTS weixin_peer_generations')
+            db.commit()
+            marker = json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256'] = local_server._schema_hash(db)
+>           assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_inbox_descriptors_update', 'weixin_inbox_descriptors', "CREATE TRIGGER immutable_weixin_inbox_descriptors_update BEFORE UPDATE ON weixin_inbox_descriptors BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_generation_schema.py:211: AssertionError
+_ ERROR at setup of test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[None] _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d58bcb0>
+
+    @pytest.fixture
+    def native_grant_workspace(tmp_path, monkeypatch):
+        from cn_contract.web import local_server
+        root = tmp_path/'workspace'
+        local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as db:
+            db.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            db.execute('DROP TABLE IF EXISTS weixin_descriptor_generations')
+            db.execute('DROP TABLE IF EXISTS weixin_peer_generations')
+            db.commit()
+            marker = json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256'] = local_server._schema_hash(db)
+>           assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_inbox_descriptors_update', 'weixin_inbox_descriptors', "CREATE TRIGGER immutable_weixin_inbox_descriptors_update BEFORE UPDATE ON weixin_inbox_descriptors BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_generation_schema.py:211: AssertionError
+_ ERROR at setup of test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[backup] _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d5f98b0>
+
+    @pytest.fixture
+    def native_grant_workspace(tmp_path, monkeypatch):
+        from cn_contract.web import local_server
+        root = tmp_path/'workspace'
+        local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as db:
+            db.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            db.execute('DROP TABLE IF EXISTS weixin_descriptor_generations')
+            db.execute('DROP TABLE IF EXISTS weixin_peer_generations')
+            db.commit()
+            marker = json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256'] = local_server._schema_hash(db)
+>           assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_inbox_descriptors_update', 'weixin_inbox_descriptors', "CREATE TRIGGER immutable_weixin_inbox_descriptors_update BEFORE UPDATE ON weixin_inbox_descriptors BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_generation_schema.py:211: AssertionError
+_ ERROR at setup of test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[receipt] _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d5fb560>
+
+    @pytest.fixture
+    def native_grant_workspace(tmp_path, monkeypatch):
+        from cn_contract.web import local_server
+        root = tmp_path/'workspace'
+        local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as db:
+            db.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            db.execute('DROP TABLE IF EXISTS weixin_descriptor_generations')
+            db.execute('DROP TABLE IF EXISTS weixin_peer_generations')
+            db.commit()
+            marker = json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256'] = local_server._schema_hash(db)
+>           assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_inbox_descriptors_update', 'weixin_inbox_descriptors', "CREATE TRIGGER immutable_weixin_inbox_descriptors_update BEFORE UPDATE ON weixin_inbox_descriptors BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_generation_schema.py:211: AssertionError
+_ ERROR at setup of test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[trigger] _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d63a420>
+
+    @pytest.fixture
+    def native_grant_workspace(tmp_path, monkeypatch):
+        from cn_contract.web import local_server
+        root = tmp_path/'workspace'
+        local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as db:
+            db.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            db.execute('DROP TABLE IF EXISTS weixin_descriptor_generations')
+            db.execute('DROP TABLE IF EXISTS weixin_peer_generations')
+            db.commit()
+            marker = json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256'] = local_server._schema_hash(db)
+>           assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_inbox_descriptors_update', 'weixin_inbox_descriptors', "CREATE TRIGGER immutable_weixin_inbox_descriptors_update BEFORE UPDATE ON weixin_inbox_descriptors BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_generation_schema.py:211: AssertionError
+_ ERROR at setup of test_native_failed_generation_ddl_preserves_prior_schema_and_marker _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_failed_generation_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d60bfe0>
+
+    @pytest.fixture
+    def native_grant_workspace(tmp_path, monkeypatch):
+        from cn_contract.web import local_server
+        root = tmp_path/'workspace'
+        local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as db:
+            db.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            db.execute('DROP TABLE IF EXISTS weixin_descriptor_generations')
+            db.execute('DROP TABLE IF EXISTS weixin_peer_generations')
+            db.commit()
+            marker = json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256'] = local_server._schema_hash(db)
+>           assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_inbox_descriptors_update', 'weixin_inbox_descriptors', "CREATE TRIGGER immutable_weixin_inbox_descriptors_update BEFORE UPDATE ON weixin_inbox_descriptors BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_generation_schema.py:211: AssertionError
+=================================== FAILURES ===================================
+________ test_library_chain_upgrades_judge_to_current_with_exact_delta _________
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_library_chain_upgrades_ju0')
+
+    def test_library_chain_upgrades_judge_to_current_with_exact_delta(tmp_path):
+        with closing(old_db(tmp_path/'old.db', 'assistant-judge-v1', False)) as db:
+            before = schema_migrations.database_rows(db)
+            assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
+            after = schema_migrations.database_rows(db)
+            # Library tables are additive; the context step replaces the model
+            # family's attempts table and immutable-input trigger in place.
+>           assert {row[2] for row in set(after) - set(before)} == {
+                'assistant_handler_receipts', 'assistant_library_citations',
+                'assistant_model_input_citations', 'assistant_model_attempts',
+                'assistant_profile_revisions', 'assistant_profile_receipts', 'assistant_profile_handlers',
+                'task_channel_bindings', 'task_inbox_events', 'task_drafts',
+                'task_draft_events', 'task_executions', 'task_media_resolutions',
+                'weixin_accounts', 'weixin_peer_bindings', 'weixin_poll_receipts', 'weixin_inbox_descriptors'}
+E           AssertionError: assert {'assistant_e...tations', ...} == {'assistant_h...eceipts', ...}
+E             
+E             Extra items in the left set:
+E             'weixin_peer_generations'
+E             'weixin_descriptor_generations'
+E             'assistant_evidence_revisions'
+E             'assistant_followup_revisions'
+E             'weixin_peer_scope_grants'
+E             'weixin_dispatch_receipts'
+E             Use -v to get more diff
+
+tests/integration/test_assistant_library_schema.py:33: AssertionError
+_ test_native_workspace_advances_all_later_versions_with_distinct_verified_receipts _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_workspace_advances0')
+
+    def test_native_workspace_advances_all_later_versions_with_distinct_verified_receipts(tmp_path):
+        from cn_contract.web import local_server,workspace_upgrade
+        root=tmp_path/'two-step-workspace'
+        local_server.initialize_workspace(root,'synthetic-lawyer','fiction123',data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as db:
+            db.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            db.execute('DROP TABLE weixin_descriptor_generations')
+            db.execute('DROP TABLE weixin_peer_generations');db.commit()
+            marker=json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256']=local_server._schema_hash(db)
+>           assert schema_migrations.database_rows(db)==storage_schema.schema_rows('weixin-reauthorization-v1',native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_inbox_descriptors_update', 'weixin_inbox_descriptors', "CREATE TRIGGER immutable_weixin_inbox_descriptors_update BEFORE UPDATE ON weixin_inbox_descriptors BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_generation_schema.py:296: AssertionError
+_ test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_upgrade_saves_veri0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d59e480>
+
+    def test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity(tmp_path,monkeypatch):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path,monkeypatch)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_weixin_provenance_schema.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_upgrade_saves_veri0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d59e480>
+
+    def native_predecessor(tmp_path,monkeypatch):
+        from cn_contract.web import local_server
+        root=tmp_path/'独立虚构来源升级'
+        local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction123',data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as connection:
+            connection.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            connection.execute('DROP TABLE IF EXISTS '+TABLE);connection.commit()
+            marker=json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256']=local_server._schema_hash(connection)
+>           assert schema_migrations.database_rows(connection)==storage_schema.schema_rows('weixin-generations-v1',native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_peer_binding_identity', 'weixin_peer_bindings', "CREATE TRIGGER immutable_weixin_peer_bi...scope_json,scope_sha256,created_at ON weixin_peer_bindings\n        BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_provenance_schema.py:211: AssertionError
+_ test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[None] _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d5fb980>
+damage = None
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path,monkeypatch);write_marker=workspace_upgrade._write_marker
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_weixin_provenance_schema.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d5fb980>
+
+    def native_predecessor(tmp_path,monkeypatch):
+        from cn_contract.web import local_server
+        root=tmp_path/'独立虚构来源升级'
+        local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction123',data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as connection:
+            connection.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            connection.execute('DROP TABLE IF EXISTS '+TABLE);connection.commit()
+            marker=json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256']=local_server._schema_hash(connection)
+>           assert schema_migrations.database_rows(connection)==storage_schema.schema_rows('weixin-generations-v1',native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_peer_binding_identity', 'weixin_peer_bindings', "CREATE TRIGGER immutable_weixin_peer_bi...scope_json,scope_sha256,created_at ON weixin_peer_bindings\n        BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_provenance_schema.py:211: AssertionError
+_ test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[backup] _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d60af60>
+damage = 'backup'
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path,monkeypatch);write_marker=workspace_upgrade._write_marker
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_weixin_provenance_schema.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d60af60>
+
+    def native_predecessor(tmp_path,monkeypatch):
+        from cn_contract.web import local_server
+        root=tmp_path/'独立虚构来源升级'
+        local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction123',data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as connection:
+            connection.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            connection.execute('DROP TABLE IF EXISTS '+TABLE);connection.commit()
+            marker=json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256']=local_server._schema_hash(connection)
+>           assert schema_migrations.database_rows(connection)==storage_schema.schema_rows('weixin-generations-v1',native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_peer_binding_identity', 'weixin_peer_bindings', "CREATE TRIGGER immutable_weixin_peer_bi...scope_json,scope_sha256,created_at ON weixin_peer_bindings\n        BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_provenance_schema.py:211: AssertionError
+_ test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[receipt] _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d70f410>
+damage = 'receipt'
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path,monkeypatch);write_marker=workspace_upgrade._write_marker
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_weixin_provenance_schema.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d70f410>
+
+    def native_predecessor(tmp_path,monkeypatch):
+        from cn_contract.web import local_server
+        root=tmp_path/'独立虚构来源升级'
+        local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction123',data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as connection:
+            connection.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            connection.execute('DROP TABLE IF EXISTS '+TABLE);connection.commit()
+            marker=json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256']=local_server._schema_hash(connection)
+>           assert schema_migrations.database_rows(connection)==storage_schema.schema_rows('weixin-generations-v1',native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_peer_binding_identity', 'weixin_peer_bindings', "CREATE TRIGGER immutable_weixin_peer_bi...scope_json,scope_sha256,created_at ON weixin_peer_bindings\n        BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_provenance_schema.py:211: AssertionError
+_ test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[trigger] _
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d6091f0>
+damage = 'trigger'
+
+    @pytest.mark.parametrize('damage',[None,'backup','receipt','trigger'])
+    def test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta(tmp_path,monkeypatch,damage):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path,monkeypatch);write_marker=workspace_upgrade._write_marker
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_weixin_provenance_schema.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_committed_ddl_mark7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d6091f0>
+
+    def native_predecessor(tmp_path,monkeypatch):
+        from cn_contract.web import local_server
+        root=tmp_path/'独立虚构来源升级'
+        local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction123',data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as connection:
+            connection.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            connection.execute('DROP TABLE IF EXISTS '+TABLE);connection.commit()
+            marker=json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256']=local_server._schema_hash(connection)
+>           assert schema_migrations.database_rows(connection)==storage_schema.schema_rows('weixin-generations-v1',native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_peer_binding_identity', 'weixin_peer_bindings', "CREATE TRIGGER immutable_weixin_peer_bi...scope_json,scope_sha256,created_at ON weixin_peer_bindings\n        BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_provenance_schema.py:211: AssertionError
+________ test_native_failed_ddl_preserves_predecessor_schema_and_marker ________
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_failed_ddl_preserv0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d5fb470>
+
+    def test_native_failed_ddl_preserves_predecessor_schema_and_marker(tmp_path,monkeypatch):
+        schema()
+        from cn_contract.web import local_server,workspace_upgrade
+>       root,marker=native_predecessor(tmp_path,monkeypatch);original=workspace_upgrade.statements_for
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_weixin_provenance_schema.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/tmp/qx-followup-schema-historical1/test_native_failed_ddl_preserv0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d5fb470>
+
+    def native_predecessor(tmp_path,monkeypatch):
+        from cn_contract.web import local_server
+        root=tmp_path/'独立虚构来源升级'
+        local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction123',data_parent=tmp_path)
+        with closing(sqlite3.connect(root/'workbench.db')) as connection:
+            connection.execute('DROP INDEX weixin_dispatch_binding_cursor')
+            connection.execute('DROP TABLE IF EXISTS '+TABLE);connection.commit()
+            marker=json.loads((root/'workspace.json').read_text('utf-8'))
+            marker['schema_sha256']=local_server._schema_hash(connection)
+>           assert schema_migrations.database_rows(connection)==storage_schema.schema_rows('weixin-generations-v1',native=True)
+E           assert [('index', 'a...', None), ...] == [('index', 'a...', None), ...]
+E             
+E             At index 13 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_assistant_handler_receipts_1', 'assistant_handler_receipts', None)
+E             Left contains 10 more items, first extra item: ('trigger', 'immutable_weixin_peer_binding_identity', 'weixin_peer_bindings', "CREATE TRIGGER immutable_weixin_peer_bi...scope_json,scope_sha256,created_at ON weixin_peer_bindings\n        BEGIN SELECT RAISE(ABORT,'IMMUTABLE_RECORD'); END")
+E             Use -v to get more diff
+
+tests/integration/test_weixin_provenance_schema.py:211: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_assistant_library_schema.py::test_library_chain_upgrades_judge_to_current_with_exact_delta
+FAILED tests/integration/test_weixin_generation_schema.py::test_native_workspace_advances_all_later_versions_with_distinct_verified_receipts
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_upgrade_saves_verified_predecessor_and_preserves_workspace_identity
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[None]
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[backup]
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[receipt]
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_committed_ddl_marker_gap_accepts_only_verified_provenance_delta[trigger]
+FAILED tests/integration/test_weixin_provenance_schema.py::test_native_failed_ddl_preserves_predecessor_schema_and_marker
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_upgrade_records_verified_backup_and_preserves_workspace_identity
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[None]
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[backup]
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[receipt]
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_committed_ddl_marker_gap_accepts_only_intact_receipt[trigger]
+ERROR tests/integration/test_weixin_generation_schema.py::test_native_failed_generation_ddl_preserves_prior_schema_and_marker
+8 failed, 526 passed, 6 errors in 33.50s

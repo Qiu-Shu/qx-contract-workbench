@@ -87,3 +87,8 @@ export const getEvidence=id=>request(conversation(id)+'/evidence');
 export const saveEvidence=(id,body)=>request(conversation(id)+'/evidence/commits',{method:'POST',body});
 export const findEvidenceReceipt=(id,key)=>request(conversation(id)+'/evidence/receipts/'+encodeURIComponent(key));
 export const getEvidenceVersion=(id,revision)=>request(conversation(id)+'/evidence/revisions/'+encodeURIComponent(revision));
+
+export const getFollowups=id=>request(conversation(id)+'/followups');
+export const saveFollowups=(id,body)=>request(conversation(id)+'/followups/commits',{method:'POST',body});
+export const findFollowupReceipt=(id,key)=>request(conversation(id)+'/followups/receipts/'+encodeURIComponent(key));
+export const getFollowupVersion=(id,revision)=>request(conversation(id)+'/followups/revisions/'+encodeURIComponent(revision));
