@@ -1,0 +1,20 @@
+{
+  "source_commit": "042b9d3a38b4b468a590f8412a95f508b7336742",
+  "incoming_commit": "afb6ab64f81d0167efb309e7f28998e31725450d",
+  "method": "fast-forward then restore original uncommitted work",
+  "remote_fetch_sha_matches": true,
+  "tree": "90d15ff1b54736834ae1b2362b24263a0362abf9",
+  "recursive_tree_entries": 6048,
+  "recursive_tree_bytes_match": true,
+  "post_merge_tests": {
+    "total": 57,
+    "passed": 57,
+    "exit_code": 0,
+    "includes_uncommitted_pending_service": true,
+    "overlap_with_candidate_tests": 12
+  },
+  "wip_files_preserved": 6,
+  "wip_staged": false,
+  "incoming_branch_unchanged": true,
+  "push": "normal non-force"
+}
