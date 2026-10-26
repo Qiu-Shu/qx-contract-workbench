@@ -1,0 +1,56 @@
+{
+  "baseline": "1924f01bc2dda0f4b12c311e125a5a0f649ce2f7",
+  "scope": "Incremental review of six-line fixed-target membership guard after Spec P2; unchanged original two independent probes rerun",
+  "argv": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    ".audit-local/weixin-pending-http-20261026/standards-review/test_independent_pending.py",
+    "-q",
+    "--tb=short",
+    "--basetemp=.audit-local/weixin-pending-http-20261026/standards-review/final-temp",
+    "--junitxml=.audit-local/weixin-pending-http-20261026/standards-review/final-results.xml"
+  ],
+  "exit_code": 0,
+  "passed": 2,
+  "failed": 0,
+  "distinct_independent_tests": 2,
+  "remaining_standards_findings": 0,
+  "inputs": [
+    {
+      "Algorithm": "SHA256",
+      "Hash": "712036AB65CFADC2A5149DEFC59EE8DD35FB9960824ACA15192E7D431C449A20",
+      "Path": "src/cn_contract/domain.py"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "EBD692AD1A102174122F8F916C1CE625D6C2CBB75C0FF65631C3ED8DD45ACC98",
+      "Path": "src/cn_contract/web/weixin_authorization.py"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "10AAFBF8232871946BB6BE1282C0463F6F8E9C93990A93E193E2380B1BCBC79E",
+      "Path": "src/cn_contract/weixin_inbox/pending.py"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "1F46FF498C478311DD9217FA1A58F3635BAB8D4388C3DD35817F928E70509C29",
+      "Path": "tests/integration/test_weixin_pending_list.py"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "F34594173161A4C10F1E4F3213CF06135EC9EA57A51D2E781EC74EF52E806687",
+      "Path": "tests/integration/test_weixin_pending_routes.py"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "200F072277C810CC4E8A13E26307235B571B9E77AFBCE4FF9A4E4ADBA1B301AB",
+      "Path": "docs/plans/2026-10-25-weixin-pending-list-d2g5g.md"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "7EF07615328DE8374B80065022D1F3590E2E67E149D94914773D44EBE401DC1D",
+      "Path": ".audit-local/weixin-pending-http-20261026/standards-review/test_independent_pending.py"
+    }
+  ]
+}

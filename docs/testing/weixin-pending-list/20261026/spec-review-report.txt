@@ -1,0 +1,13 @@
+Spec审查：1项已证实P2；未发现额外越界功能。
+计划 docs/plans/2026-10-25-weixin-pending-list-d2g5g.md:16 要求“非所属target/cursor拒绝”。src/cn_contract/weixin_inbox/pending.py:41-46 只核目标当前ACL，58-65将不相关目标作为空页返回。有效root搭配同owner另一peer CID或从未关联CID均未拒绝。应在完整历史验证后核对root binding/历史generation目标归属，同时保留无mapping空页和有历史归属但无descriptor空页。探针为合成资料，未证明泄露或业务写。其余重点经静态核对无明确缺陷；未重复根代理整组测试。
+
+实际命令（workspace D:/Documents/ChatGPT/律所项目）：
+$env:PYTHONDONTWRITEBYTECODE='1'
+.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider .audit-local/weixin-pending-http-20261026/spec-review/test_independent_target_relation.py --basetemp=.audit-local/weixin-pending-http-20261026/spec-review/tmp --junitxml=.audit-local/weixin-pending-http-20261026/spec-review/junit.xml
+退出码1；2 collected，2 failed，0 passed；均为DID NOT RAISE ServiceError，非导入或环境错误。
+代码基线1924f01bc2dda0f4b12c311e125a5a0f649ce2f7；审查暂存增量，commit list为空。未修改产品、测试目录、文档或git index。
+
+修复复验：原P2已关闭，0项遗留；其余0项新增。pending.py:47-52 在完整历史验证之后增加root/历史generation关联校验，无mapping仍可空页，历史generation无需已有descriptor。探针源码SHA256仍为4a4188c30aba9234cdca9485e8d943bddad722de7db5b4acdb015c406ebf24da，未改动测试断言。
+复验命令：
+.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider .audit-local/weixin-pending-http-20261026/spec-review/test_independent_target_relation.py --basetemp=.audit-local/weixin-pending-http-20261026/spec-review/green-tmp --junitxml=.audit-local/weixin-pending-http-20261026/spec-review/green-junit.xml
+实际退出码0，2 passed in 2.70s；原RED证据保留red-junit.xml。独立探针不同ID总计2，不将RED/GREEN累计为4。未重跑完整回归、未执行真实微信或联网服务。

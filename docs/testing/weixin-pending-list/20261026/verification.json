@@ -1,0 +1,999 @@
+{
+  "baseline": "1924f01bc2dda0f4b12c311e125a5a0f649ce2f7",
+  "date": "2026-10-26",
+  "schema_version": 21,
+  "distinct_final_root_tests": 198,
+  "new_service_tests": 48,
+  "new_http_tests": 38,
+  "groups": {
+    "pending": {
+      "name": "pending",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_pending_list.py",
+        "tests/integration/test_weixin_pending_routes.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=.audit-local/weixin-pending-http-20261026/pending.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 110.62,
+      "input_count": 569,
+      "changed_inputs": [],
+      "tests": [
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_public_service_lists_fixed_target_metadata_without_writes",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_rejects_non_strict_or_out_of_bounds_limit[0]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_rejects_non_strict_or_out_of_bounds_limit[21]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_rejects_non_strict_or_out_of_bounds_limit[-1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_rejects_non_strict_or_out_of_bounds_limit[True]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_rejects_non_strict_or_out_of_bounds_limit[2]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_rejects_non_strict_or_out_of_bounds_limit[1.0]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_rejects_non_strict_or_out_of_bounds_limit[None]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_requires_explicit_target_uuid_and_forbids_extra_fields[values0]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_requires_explicit_target_uuid_and_forbids_extra_fields[values1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_requires_explicit_target_uuid_and_forbids_extra_fields[values2]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_query_requires_explicit_target_uuid_and_forbids_extra_fields[values3]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_keyset_continues_after_dispatched_anchor_and_new_poll_without_writes",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_maximum_twenty_has_only_one_lookahead_and_query_bypass_is_revalidated",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_old_root_and_two_generations_and_peer_have_independent_pending_lists",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_cursor_must_be_an_accepted_source_of_exact_root_and_target[unknown]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_cursor_must_be_an_accepted_source_of_exact_root_and_target[root]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_cursor_must_be_an_accepted_source_of_exact_root_and_target[peer]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_cursor_must_be_an_accepted_source_of_exact_root_and_target[other_target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_cursor_must_be_an_accepted_source_of_exact_root_and_target[blocked]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_cursor_must_be_an_accepted_source_of_exact_root_and_target[duplicate]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_no_mapping_empty_page_and_unknown_target_or_cursor_do_not_create_records",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_existing_root_rejects_owned_but_unrelated_target[peer]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_existing_root_rejects_owned_but_unrelated_target[unbound]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_related_generation_without_descriptors_has_empty_page",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_other_account_cursor_is_not_adopted_even_for_same_owner_and_peer",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_bare_unbound_root_is_empty_but_still_validates_unrelated_complete_history",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_readable_history_does_not_restore_write_authority[account]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_readable_history_does_not_restore_write_authority[peer]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_readable_history_does_not_restore_write_authority[root_archive]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_readable_history_does_not_restore_write_authority[target_archive]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_readable_history_does_not_restore_write_authority[scope]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_current_principal_fence_and_object_ownership_are_not_cached[session]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_current_principal_fence_and_object_ownership_are_not_cached[role]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_current_principal_fence_and_object_ownership_are_not_cached[restore]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_current_principal_fence_and_object_ownership_are_not_cached[root_owner]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_current_principal_fence_and_object_ownership_are_not_cached[target_owner]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_current_principal_fence_and_object_ownership_are_not_cached[target_workspace]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_current_case_membership_is_required_even_for_empty_page[root]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_current_case_membership_is_required_even_for_empty_page[target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_other_generations_lost_case_access_does_not_replace_selected_target_acl[old]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_other_generations_lost_case_access_does_not_replace_selected_target_acl[latest]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_full_history_damage_is_rejected_including_empty_filtered_target[schema]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_full_history_damage_is_rejected_including_empty_filtered_target[generation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_full_history_damage_is_rejected_including_empty_filtered_target[sidecar]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_full_history_damage_is_rejected_including_empty_filtered_target[checkpoint]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_full_history_damage_is_rejected_including_empty_filtered_target[legacy_receipt]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_list::test_list_executes_no_dml_and_projects_only_five_metadata_fields",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_http_lists_fixed_pending_metadata_without_any_business_write",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[missing-target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[bad-target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[empty-target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[bad-cursor]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[empty-cursor]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[zero]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[too-large]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[negative]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[decimal]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[boolean]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[exponent]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[space]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[leading-zero]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[sign]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[empty-limit]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[duplicate-limit]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[duplicate-cursor]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[duplicate-target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_query_is_explicit_unique_and_bounded[unknown-key]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_unauthenticated_request_precedes_invalid_query_and_unknown_root",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_current_root_guard_precedes_invalid_query[origin]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_current_root_guard_precedes_invalid_query[fetch_site]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_current_root_guard_precedes_invalid_query[owner]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_current_root_guard_precedes_invalid_query[unknown]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_current_root_guard_precedes_invalid_query[workspace]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_http_keyset_survives_dispatched_anchor_and_observes_new_poll",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_http_checks_explicit_historical_target_acl[root]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_http_checks_explicit_historical_target_acl[fixed_target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_http_checks_explicit_historical_target_acl[later_target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_metadata_read_does_not_grant_dispatch_authority[account]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_metadata_read_does_not_grant_dispatch_authority[mapping]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_metadata_read_does_not_grant_dispatch_authority[archive]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_foreign_peer_cursor_and_target_cannot_resolve_root",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_http_rejects_owned_but_unrelated_target[peer]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_http_rejects_owned_but_unrelated_target[unbound]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_transaction_rechecks_session_after_http_authorization",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_pending_routes::test_recovery_blocks_pending_but_keeps_exact_receipt_get",
+          "status": "PASS"
+        }
+      ],
+      "log_sha256": "692a6ccfe7347916cd3201ad8aea170872d11c37c3572ba870adcaea0104167f",
+      "passed": 86,
+      "junit_sha256": "b6013acb58fa0d19db95165fa966b7c43423f50f39365c06eccb3be6552f8acd"
+    },
+    "dispatch": {
+      "name": "dispatch",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_dispatch.py",
+        "tests/integration/test_weixin_generation_dispatch_conversation.py",
+        "tests/integration/test_weixin_generation_dispatch_routes.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=.audit-local/weixin-pending-http-20261026/dispatch.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 123.85,
+      "input_count": 569,
+      "changed_inputs": [],
+      "tests": [
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_two_message_orders_enter_one_fixed_generation_draft_without_execution[False]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_two_message_orders_enter_one_fixed_generation_draft_without_execution[True]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_generations_and_zero_target_pending_have_independent_prefixes_and_cursors",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_same_target_order_and_nonaccepted_sources_never_create_a_receipt",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_new_delivery_rechecks_authority_but_fixed_find_only_requires_current_acl[session]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_new_delivery_rechecks_authority_but_fixed_find_only_requires_current_acl[role]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_new_delivery_rechecks_authority_but_fixed_find_only_requires_current_acl[account]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_new_delivery_rechecks_authority_but_fixed_find_only_requires_current_acl[peer]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_new_delivery_rechecks_authority_but_fixed_find_only_requires_current_acl[root_archive]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_new_delivery_rechecks_authority_but_fixed_find_only_requires_current_acl[target_archive]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_new_delivery_rechecks_authority_but_fixed_find_only_requires_current_acl[scope]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_new_delivery_rechecks_authority_but_fixed_find_only_requires_current_acl[restore]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_root_and_recorded_target_current_case_acl_are_pure_preconditions[root]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_root_and_recorded_target_current_case_acl_are_pure_preconditions[fixed_target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_later_target_acl_does_not_replace_the_receipts_original_target",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_local_inbox_collision_is_not_adopted_as_generation_delivery",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_sql_and_commit_failure_keeps_task_and_dispatch_atomic[task_cursor]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_sql_and_commit_failure_keeps_task_and_dispatch_atomic[receipt]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_sql_and_commit_failure_keeps_task_and_dispatch_atomic[commit]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_actual_commit_with_lost_ack_is_only_reconciled_as_a_fixed_receipt",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_delivery_time_orders_poll_generation_and_event_without_rewriting_wall_time[same]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_delivery_time_orders_poll_generation_and_event_without_rewriting_wall_time[backwards]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_only_native_v19_generation_accounts_can_use_new_delivery[schema18]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_only_native_v19_generation_accounts_can_use_new_delivery[no_generation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_corrupt_complete_history_is_rejected_before_delivery_or_fixed_lookup[generation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_corrupt_complete_history_is_rejected_before_delivery_or_fixed_lookup[sidecar]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_no_generation_query_keeps_valid_legacy_receipt_readable",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_no_generation_query_still_validates_complete_legacy_parents[receipt_time]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch::test_no_generation_query_still_validates_complete_legacy_parents[checkpoint]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_fixed_receipt_projection_and_public_python_service_share_one_acknowledgement",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_other_owned_peer_cannot_deliver_or_read_the_roots_descriptor[send]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_other_owned_peer_cannot_deliver_or_read_the_roots_descriptor[find]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_target_cid_does_not_reverse_resolve_a_root_and_unknown_id_does_not_leak",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_fixed_query_survives_logical_state_changes_without_enabling_a_write[root_archive]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_fixed_query_survives_logical_state_changes_without_enabling_a_write[target_archive]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_fixed_query_survives_logical_state_changes_without_enabling_a_write[target_revision]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_fixed_query_survives_logical_state_changes_without_enabling_a_write[account]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_fixed_query_survives_logical_state_changes_without_enabling_a_write[peer]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_fixed_query_survives_logical_state_changes_without_enabling_a_write[restore]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_projection_failure_rolls_back_task_event_cursor_and_receipt_together",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_dispatch_input_cannot_supply_server_authority[account_id]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_dispatch_input_cannot_supply_server_authority[root_mapping_id]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_dispatch_input_cannot_supply_server_authority[task_binding_id]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_dispatch_input_cannot_supply_server_authority[actor_id]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_dispatch_input_cannot_supply_server_authority[mode]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_dispatch_input_cannot_supply_server_authority[scope]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_conversation::test_receipt_projection_requires_exact_one_step_cursor_and_immutable_shape",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_http_fixed_historical_generation_survives_later_target_and_replays_once",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_http_preserves_per_target_prefix_and_unknown_query_is_pure",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_target_cid_cannot_reverse_resolve_the_authorizing_root",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_cid_cannot_choose_another_peer_or_account_descriptor[peer]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_cid_cannot_choose_another_peer_or_account_descriptor[account]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_unauthenticated_dispatch_and_query_precede_unknown_root_and_body",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_current_root_guard_precedes_any_dispatch_body_parse[csrf]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_current_root_guard_precedes_any_dispatch_body_parse[origin]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_current_root_guard_precedes_any_dispatch_body_parse[fetch_site]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_current_root_guard_precedes_any_dispatch_body_parse[owner]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_current_root_guard_precedes_any_dispatch_body_parse[unknown]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_current_root_guard_precedes_any_dispatch_body_parse[workspace]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_current_root_guard_precedes_any_dispatch_body_parse[archived]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_current_root_guard_precedes_any_dispatch_body_parse[account_revoked]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_current_root_guard_precedes_any_dispatch_body_parse[mapping_revoked]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_current_root_guard_precedes_any_dispatch_body_parse[restore]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_dispatch_body_is_strict_and_bounded[json]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_dispatch_body_is_strict_and_bounded[duplicate]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_dispatch_body_is_strict_and_bounded[size]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_dispatch_body_is_strict_and_bounded[array]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_dispatch_body_is_strict_and_bounded[integer]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_dispatch_body_is_strict_and_bounded[bad-uuid]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_dispatch_body_is_strict_and_bounded[missing]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[mapping_id]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[account_id]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[actor_id]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[task_binding_id]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[scope]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[generation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[expected_task_cursor]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[mode]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[state]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[receipt_sha256]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_has_no_caller_authority_target_cursor_or_receipt_override[reason]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_read_race_rechecks_current_authority[session]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_read_race_rechecks_current_authority[account]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_read_race_rechecks_current_authority[mapping]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_body_read_race_rechecks_current_authority[archive]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_fixed_receipt_does_not_expose_transport_identity_payload_or_reason",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[root]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[fixed_target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_get_uses_current_root_and_fixed_target_acl_without_latest_substitution[later_target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_revocation_preserves_fixed_read_but_blocks_replay",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_lost_http_ack_is_reconciled_by_get_without_another_delivery",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_get_same_origin_and_exact_lower_uuid_recovery_predicate",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_routes::test_recovery_allows_only_exact_fixed_dispatch_reads_and_never_posts",
+          "status": "PASS"
+        }
+      ],
+      "log_sha256": "8477b36bbb0160223520f9ac50b40df4190c5fcf0bac318b8d1a86006a57a28f",
+      "passed": 93,
+      "junit_sha256": "aa39b91cc684f58e98fca1eb0b9184a85eb3003be53f261ecbe0bdd05d5126be"
+    },
+    "integrity": {
+      "name": "integrity",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "tests/integration/test_weixin_generation_dispatch_integrity.py",
+        "tests/integration/test_weixin_generation_dispatch_atomic.py",
+        "-q",
+        "--tb=short",
+        "--junitxml=.audit-local/weixin-pending-http-20261026/integrity.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 38.17,
+      "input_count": 569,
+      "changed_inputs": [],
+      "tests": [
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_late_generation_one_delivery_keeps_its_target_and_independent_stream_cursor",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_frozen_v18_still_rejects_the_same_nonzero_delivery",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_zero_stream_may_continue_after_generations_only_under_v19",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_public_dispatch_validator_checks_rehashed_generation_parents",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[wrong_target]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[before_generation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[before_poll]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[payload]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[event]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_recomputed_receipt_cannot_move_or_change_fixed_delivery[actor]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_integrity::test_prefix_cannot_skip_an_earlier_descriptor_in_the_same_generation",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_atomic::test_real_sql_or_precommit_failure_rolls_back_all_task_and_receipt_changes[cursor]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_atomic::test_real_sql_or_precommit_failure_rolls_back_all_task_and_receipt_changes[receipt]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_atomic::test_real_sql_or_precommit_failure_rolls_back_all_task_and_receipt_changes[commit]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_atomic::test_two_real_dispatch_threads_serialize_receipts_and_cursor_slots[True]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_atomic::test_two_real_dispatch_threads_serialize_receipts_and_cursor_slots[False]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_atomic::test_real_append_racing_delivery_keeps_generation_one_source_fixed",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_atomic::test_new_python_process_finds_committed_fixed_delivery_without_replay",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_weixin_generation_dispatch_atomic::test_two_real_qxbak_roundtrips_preserve_fixed_receipt_original_and_read_only_fences",
+          "status": "PASS"
+        }
+      ],
+      "log_sha256": "1461f37b08fb5c3fe23ae57d73ba1ccf4a9b09776086f18c71cd4c40db204940",
+      "passed": 19,
+      "junit_sha256": "a4ef87ca34cc5bf288fcca400fcc5c16c9bfd0775db097691e8054f0f4f473fc"
+    },
+    "schema": {
+      "name": "schema",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "cn_contract.cli",
+        "schema",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6,
+      "input_count": 569,
+      "changed_inputs": [],
+      "log_sha256": "b3494934d75e6ca7988134d1390fadcf95566b3ce3ce05563d5615da874c3303"
+    },
+    "defaults": {
+      "name": "defaults",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "scripts/verify_defaults.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.65,
+      "input_count": 569,
+      "changed_inputs": [],
+      "log_sha256": "1327e54ae343c27bb7f378bb915d826995396db5b801813b2e139b57d7aefeb6"
+    },
+    "sources": {
+      "name": "sources",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "scripts/verify_sources.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0,
+      "seconds": 5.41,
+      "input_count": 569,
+      "changed_inputs": [],
+      "log_sha256": "dd6536e31ce1c1887cf8fd66091ebe0265b3d4c5f38d27f7766cdbcd30c6963b"
+    },
+    "runtime": {
+      "name": "runtime",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "scripts/verify_runtime_dependencies.py",
+        "--mode",
+        "development"
+      ],
+      "exit_code": 0,
+      "seconds": 0.58,
+      "input_count": 569,
+      "changed_inputs": [],
+      "log_sha256": "32ddd58b8e25f73d17f1156ff1803b833eb5abe0e289a9f7db5f77d92203cc3a"
+    }
+  },
+  "final_inputs": {
+    "src/cn_contract/domain.py": "712036ab65cfadc2a5149defc59ee8dd35fb9960824aca15192e7d431c449a20",
+    "src/cn_contract/web/weixin_authorization.py": "ebd692ad1a102174122f8f916c1ce625d6c2cbb75c0ff65631c3ed8dd45acc98",
+    "src/cn_contract/weixin_inbox/pending.py": "10aafbf8232871946bb6be1282c0463f6f8e9c93990a93e193e2380b1bcbc79e",
+    "tests/integration/test_weixin_pending_list.py": "1f46ff498c478311dd9217fa1a58f3635bab8d4388c3dd35817f928e70509c29",
+    "tests/integration/test_weixin_pending_routes.py": "f34594173161a4c10f1e4f3213cf06135ec9ea57a51d2e781ec74ef52e806687"
+  },
+  "history": [
+    {
+      "run": "effective-http-red",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 1,
+      "cause": "missing HTTP endpoint returned 404"
+    },
+    {
+      "run": "http-first",
+      "exit_code": 1,
+      "passed": 35,
+      "failed": 1,
+      "cause": "test oracle incorrectly forbade existing target-case refusal audit; test fixed, product unchanged"
+    },
+    {
+      "run": "pre-relation-pending",
+      "exit_code": 0,
+      "passed": 81,
+      "scope": "before independent P2; superseded, not added to final count"
+    },
+    {
+      "run": "relation-red",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 4,
+      "cause": "same-owner unrelated target incorrectly returned empty page"
+    },
+    {
+      "run": "relation-green",
+      "exit_code": 0,
+      "passed": 5,
+      "scope": "four negatives and related empty generation; included in final pending group"
+    }
+  ],
+  "independent_reviews": {
+    "standards": {
+      "remaining": 0,
+      "distinct_probes": 2,
+      "passed": 2,
+      "exit_code": 0
+    },
+    "spec": {
+      "confirmed_initial": 1,
+      "priority": "P2",
+      "remaining": 0,
+      "distinct_probes": 2,
+      "red_exit": 1,
+      "green_exit": 0,
+      "passed": 2
+    }
+  },
+  "not_run": [
+    "whole-repository Python suite",
+    "Node/browser (no UI changes)",
+    "actual qxbak roundtrip for this slice",
+    "installer update",
+    "real Weixin",
+    "real models",
+    "real client contracts"
+  ],
+  "still_open": [
+    "WIN-PATH-02",
+    "native access violation",
+    "trusted Weixin identity and media download/decryption",
+    "E model authorization"
+  ],
+  "local_raw_evidence": ".audit-local/weixin-pending-http-20261026"
+}

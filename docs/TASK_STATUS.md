@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-26 D2g5g待收件列表完成服务与HTTP接线，复用已合并主线schema21：当前权限及历史归属重核、UUID分页/1..20上限、被分发锚点续页、五字段元数据、恢复模式阻断。最终3短组198不同Python（新增服务48+HTTP38）、独立4探针、四开发门通过；Spec发现目标无历史归属仍空页的P2已实际RED→GREEN并原探针复验，Standards/Spec均0遗留。[实际证据](testing/weixin-pending-list/20261026/README.md)。本片无UI、真实qxbak往返/全仓/Node/浏览器/安装与真实微信模型NOT_RUN；WIN-PATH-02和原生AV仍OPEN，0.4.1未更新。远端状态见[同步回执](testing/weixin-pending-list/20261026/github-sync.md)。
+
 `dhb_law`已快进合入`codex/contract-review-v2`并正常推送源码`042b9d3`；Git fetch/ls-remote及递归树一致，原六份WIP恢复且未暂存，主目录57项补验通过。[实际合并回执](testing/dhb-law-integration/20261026/github-sync.md)。未完成的D2g5g HTTP保持待办。
 
 2026-10-26 `dhb_law` 集成验证完成：接收`4325711`之后三提交至`afb6ab6`；四测试文件12+/2-修复13项新增历史升级异常、1项Windows编码失败及1项共同基线旧delta断言，未改变产品守卫。RED258项243通过/9失败/6错误；GREEN258、业务97、兼容217共572不同Python通过，388前端/369桌面逻辑/四门通过，独立Standards与Spec0确认问题。[证据](testing/dhb-law-integration/20261026/README.md)。依赖清单存在，缺的是隔离副本本机缓存，复用原缓存55+1包已验。原待收件WIP保全保持未提交；全仓/浏览器/安装/真实模型微信NOT_RUN，0.4.1、WIN-PATH-02及原生崩溃不变。主分支合并及GitHub同步见随后回执。

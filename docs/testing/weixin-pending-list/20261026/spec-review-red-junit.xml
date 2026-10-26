@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="4.242" timestamp="2026-10-26T17:26:43.593820+08:00" hostname="PC-20260920HQJZ"><testcase classname=".audit-local.weixin-pending-http-20261026.spec-review.test_independent_target_relation" name="test_existing_root_rejects_owned_but_unrelated_target[other_peer]" time="1.001"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.audit-local/weixin-pending-http-20261026/spec-review/tmp/test_existing_root_r...nel='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 26, 9, 26, 46, 32324, tzinfo=datetime.timezone.utc)))
+foreign = 'other_peer'
+
+    @pytest.mark.parametrize('foreign', ['other_peer', 'never_related'])
+    def test_existing_root_rejects_owned_but_unrelated_target(world, foreign):
+        h = setup_history(world)
+        append(h)
+        target = h['peer_view'] if foreign == 'other_peer' else h['targets'][1][0]
+&gt;       with pytest.raises(ServiceError) as caught:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;
+
+.audit-local/weixin-pending-http-20261026/spec-review/test_independent_target_relation.py:14: Failed</failure></testcase><testcase classname=".audit-local.weixin-pending-http-20261026.spec-review.test_independent_target_relation" name="test_existing_root_rejects_owned_but_unrelated_target[never_related]" time="1.322"><failure message="Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;">world = (WindowsPath('D:/Documents/ChatGPT/律所项目/.audit-local/weixin-pending-http-20261026/spec-review/tmp/test_existing_root_r...el='synthetic', cursor=0, created_at=datetime.datetime(2026, 10, 26, 9, 26, 47, 499216, tzinfo=datetime.timezone.utc)))
+foreign = 'never_related'
+
+    @pytest.mark.parametrize('foreign', ['other_peer', 'never_related'])
+    def test_existing_root_rejects_owned_but_unrelated_target(world, foreign):
+        h = setup_history(world)
+        append(h)
+        target = h['peer_view'] if foreign == 'other_peer' else h['targets'][1][0]
+&gt;       with pytest.raises(ServiceError) as caught:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'cn_contract.security.ServiceError'&gt;
+
+.audit-local/weixin-pending-http-20261026/spec-review/test_independent_target_relation.py:14: Failed</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,14 @@
+............................F.......                                     [100%]
+================================== FAILURES ===================================
+________ test_http_checks_explicit_historical_target_acl[fixed_target] ________
+tests\integration\test_weixin_pending_routes.py:118: in test_http_checks_explicit_historical_target_acl
+    assert after == before
+E   assert {'approvals':...', ...)], ...} == {'approvals':...', ...)], ...}
+E
+E     Omitting 78 identical items, use -vv to show
+E     Differing items:
+E     {'audit_events': [('3b2c5d80-7978-4845-ad13-d62a229f0e0c', 'b5f84ff1-c678-429e-bb08-f7d52f57a8e2', '89229738-3ba7-461d...:"403e36daedbeb6c853fba95a6a0baa2ecae4484f59b36d3a82a3d2e289b2ba7b","timestamp":"2026-10-26T09:24:29.671820Z"}'), ...]} != {'audit_events': [('3b2c5d80-7978-4845-ad13-d62a229f0e0c', 'b5f84ff1-c678-429e-bb08-f7d52f57a8e2', '89229738-3ba7-461d...:"403e36daedbeb6c853fba95a6a0baa2ecae4484f59b36d3a82a3d2e289b2ba7b","timestamp":"2026-10-26T09:24:29.671820Z"}'), ...]}
+E     Use -v to get more diff
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_pending_routes.py::test_http_checks_explicit_historical_target_acl[fixed_target]
+1 failed, 35 passed in 34.43s

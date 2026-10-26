@@ -5261,3 +5261,26 @@ class FollowupWorksheetView(DomainModel):
     facts: Annotated[tuple[EvidenceFact, ...], Field(max_length=100)]
     materials: tuple[EvidenceMaterial, ...]
     attention: tuple[FollowupAttention, ...] = ()
+
+
+class WeixinPendingQuery(DomainModel):
+    target_conversation_id: UUID
+    cursor: UUID | None = None
+    limit: Annotated[int, Field(strict=True, ge=1, le=20)] = 20
+
+
+class WeixinPendingDescriptorView(DomainModel):
+    """Fixed-target metadata, without message content or channel identifiers."""
+    descriptor_id: UUID
+    conversation_id: UUID
+    received_at: UTCDatetime
+    has_text: StrictBool
+    media_count: Annotated[int, Field(strict=True, ge=0, le=20)]
+
+
+class WeixinPendingPage(DomainModel):
+    mode: Literal['synthetic'] = 'synthetic'
+    read_only: Literal[True] = True
+    conversation_id: UUID
+    items: Annotated[tuple[WeixinPendingDescriptorView, ...], Field(max_length=20)]
+    next_cursor: UUID | None = None

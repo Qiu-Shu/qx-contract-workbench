@@ -1,0 +1,11 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_http_lists_fixed_pending_metadata_without_any_business_write ______
+tests\integration\test_weixin_pending_routes.py:15: in test_http_lists_fixed_pending_metadata_without_any_business_write
+    assert response.status_code==200,response.text
+E   AssertionError: {"code":"NOT_SUPPORTED","message":"request blocked","correlation_id":"3edd934c-9ef3-4f18-9883-328e254015fa","retryable":false}
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_pending_routes.py::test_http_lists_fixed_pending_metadata_without_any_business_write
+1 failed in 3.26s

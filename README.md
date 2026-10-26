@@ -1,5 +1,7 @@
 # 群兴法律工作台
 
+2026-10-26 D2g5g待收件列表服务与HTTP已完成：明确根/历史目标、严格分页、已分发游标续页、元数据脱敏及恢复阻断；独审发现的目标归属缺口已RED→GREEN修复。198项不同Python、4项独立探针与四开发门通过，双轴0遗留。[实际证据](docs/testing/weixin-pending-list/20261026/README.md)。本片未接UI、未更新0.4.1；WIN-PATH-02/原生AV、可信微信及模型许可仍待。同步状态见[回执](docs/testing/weixin-pending-list/20261026/github-sync.md)。
+
 `dhb_law`已整合至主分支并同步GitHub，源码`042b9d3`提交/树回读一致；原待收件WIP已恢复，主目录57项补验通过。[合并同步回执](docs/testing/dhb-law-integration/20261026/github-sync.md)。
 
 2026-10-26 `dhb_law` 集成验证通过：接待/历史/Word导出、事实证据及待补跟进三提交纳入候选；修复13项历史升级夹具回归、1项Windows编码问题，并补正1项共同基线旧断言。572项不同Python、388前端、369桌面逻辑与四项开发检查通过，双轴独审无确认问题。[本轮证据](docs/testing/dhb-law-integration/20261026/README.md)。原聊天待收件WIP保全并保持未提交；安装版0.4.1、WIN-PATH-02及原生崩溃状态不变，合并与远端同步以后续回执为准。

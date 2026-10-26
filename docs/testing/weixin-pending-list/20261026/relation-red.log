@@ -1,0 +1,34 @@
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+_________ test_existing_root_rejects_owned_but_unrelated_target[peer] _________
+tests\integration\test_weixin_pending_list.py:188: in test_existing_root_rejects_owned_but_unrelated_target
+    rejected(h, target.scope.conversation_id)
+tests\integration\test_weixin_pending_list.py:65: in rejected
+    with pytest.raises(ServiceError) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_______ test_existing_root_rejects_owned_but_unrelated_target[unbound] ________
+tests\integration\test_weixin_pending_list.py:188: in test_existing_root_rejects_owned_but_unrelated_target
+    rejected(h, target.scope.conversation_id)
+tests\integration\test_weixin_pending_list.py:65: in rejected
+    with pytest.raises(ServiceError) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'cn_contract.security.ServiceError'>
+_____________ test_http_rejects_owned_but_unrelated_target[peer] ______________
+tests\integration\test_weixin_pending_routes.py:169: in test_http_rejects_owned_but_unrelated_target
+    assert response.status_code == 403, response.text
+E   AssertionError: {"mode":"synthetic","read_only":true,"conversation_id":"994bec2e-4a1c-4982-ac2e-3bb53346dddc","items":[],"next_cursor":null}
+E   assert 200 == 403
+E    +  where 200 = <Response [200 OK]>.status_code
+____________ test_http_rejects_owned_but_unrelated_target[unbound] ____________
+tests\integration\test_weixin_pending_routes.py:169: in test_http_rejects_owned_but_unrelated_target
+    assert response.status_code == 403, response.text
+E   AssertionError: {"mode":"synthetic","read_only":true,"conversation_id":"eaf9cd32-d5b7-40f5-8d67-666201af5aa0","items":[],"next_cursor":null}
+E   assert 200 == 403
+E    +  where 200 = <Response [200 OK]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/integration/test_weixin_pending_list.py::test_existing_root_rejects_owned_but_unrelated_target[peer]
+FAILED tests/integration/test_weixin_pending_list.py::test_existing_root_rejects_owned_but_unrelated_target[unbound]
+FAILED tests/integration/test_weixin_pending_routes.py::test_http_rejects_owned_but_unrelated_target[peer]
+FAILED tests/integration/test_weixin_pending_routes.py::test_http_rejects_owned_but_unrelated_target[unbound]
+4 failed, 82 deselected in 4.80s

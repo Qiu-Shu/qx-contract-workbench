@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+2026-10-26 D2g5g待收件列表服务与HTTP完成：198项不同Python、4项独立探针及四开发门通过，Spec目标归属P2已修复并复验，双轴0遗留。[实测](docs/testing/weixin-pending-list/20261026/README.md)。原未提交待收件服务/DTO已纳入本片；后续待UI列表入口、可信微信身份与下载解密、E模型有限期许可。WIN-PATH-02/原生AV、安装版0.4.1及真实账号验收状态不变；用户AGENTS改动保留。提交推送以[同步回执](docs/testing/weixin-pending-list/20261026/github-sync.md)为准。
+
 `dhb_law`合并与同步已完成，源码`042b9d3`远端SHA/树一致，原待收件WIP恢复后57项补验通过；[回执](docs/testing/dhb-law-integration/20261026/github-sync.md)。下一步继续D2g5g HTTP接线，不重做本轮合并或已通过的夹具修复。
 
 2026-10-26 `dhb_law` 集成修复已验证：历史升级夹具、精确迁移差集和UTF-8测试修复，572不同Python/388前端/369桌面逻辑及四门通过；[本轮记录](docs/testing/dhb-law-integration/20261026/README.md)。此前“缺依赖清单”为错误归因：清单存在，隔离副本缺本机缓存，复用已核缓存后通过。D2g5g待收件WIP保留未提交且HTTP仍待接线；WIN-PATH-02/原生崩溃、安装及真实微信模型仍待。合并/远端状态以同步回执为准。

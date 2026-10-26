@@ -6,8 +6,9 @@ from fastapi import Request
 from starlette.concurrency import run_in_threadpool
 
 from .. import domain as d
-from ..weixin_inbox import conversation
-from .request_context import actor_in, body_input, same_origin
+from ..security import ServiceError
+from ..weixin_inbox import conversation, pending
+from .request_context import actor_in, body_input, same_origin, unique
 
 _UUID = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 _READ_PATH = re.compile(rf'/api/assistant/conversations/{_UUID}/weixin-authorization(?:/(?:refreshes|generations)/by-request/{_UUID}|/generations/head|/dispatches/by-descriptor/{_UUID})?')
@@ -34,6 +35,20 @@ def register_routes(app, database):
     @app.get(base)
     def current(cid:UUID, request:Request):
         return conversation.read_authorization(authorize(request, cid), cid, database=database)
+
+    @app.get(base+'/pending')
+    def list_pending(cid:UUID, request:Request):
+        actor = authorize(request, cid)
+        try:
+            values = unique(request.query_params.multi_items())
+            if 'limit' in values:
+                if re.fullmatch(r'(?:[1-9]|1[0-9]|20)', values['limit']) is None:
+                    raise ValueError('invalid page limit')
+                values['limit'] = int(values['limit'])
+            query = d.WeixinPendingQuery.model_validate(values)
+        except ValueError:
+            raise ServiceError('STATE_CONFLICT', 422) from None
+        return pending.list_pending_descriptors(actor, cid, query, database=database)
 
     @app.post(base+'/refresh')
     async def refresh(cid:UUID, request:Request):
