@@ -24,6 +24,13 @@ function fixture(options={}){
   return {root,controller,api,tasks,calls};
 }
 const walk=element=>[element,...element.children.flatMap(walk)];
+test('pending Weixin operation locks task writes while preserving read controls',async()=>{
+  let blocked=true;const f=fixture({isBlocked:()=>blocked});await tick();
+  const input=f.root.getElementById('task-instruction'),save=f.root.getElementById('task-collect');
+  input.value='独立合成待补指令';f.tasks.updateControls();
+  assert.equal(save.disabled,true);const before=f.calls.length;await save.fire('click');assert.equal(f.calls.length,before);
+  blocked=false;f.tasks.updateControls();assert.equal(save.disabled,false);f.tasks.dispose();
+});
 const taskButton=(f,label)=>{const found=walk(f.root.getElementById('task-current')).find(el=>el.tagName==='button'&&el.textContent===label);assert.ok(found,label);return found;};
 test('unreadable and pending media are both included, never silently dropped',async()=>{
   const f=fixture();await tick();

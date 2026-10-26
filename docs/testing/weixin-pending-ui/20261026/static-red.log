@@ -1,0 +1,11 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_chat_module_import_graph_is_served_as_javascript ____________
+tests\integration\test_assistant_frontend.py:36: in test_chat_module_import_graph_is_served_as_javascript
+    assert response.status_code == 200, (name, response.status_code)
+E   AssertionError: ('assistant-weixin-pending.mjs', 404)
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/integration/test_assistant_frontend.py::test_chat_module_import_graph_is_served_as_javascript
+1 failed in 2.04s

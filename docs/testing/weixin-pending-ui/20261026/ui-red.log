@@ -1,0 +1,33 @@
+✖ explicit target loads metadata without writing; one click dispatches the fixed descriptor (3.4831ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.888
+
+✖ failing tests:
+
+test at scripts\test_assistant_weixin_pending.mjs:43:1
+✖ explicit target loads metadata without writing; one click dispatches the fixed descriptor (3.4831ms)
+  AssertionError [ERR_ASSERTION]: D2g5h requires a usable pending-list UI binding
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_weixin_pending.mjs:26:10)
+      at TestContext.<anonymous> (file:///D:/Documents/ChatGPT/%E5%BE%8B%E6%89%80%E9%A1%B9%E7%9B%AE/scripts/test_assistant_weixin_pending.mjs:44:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

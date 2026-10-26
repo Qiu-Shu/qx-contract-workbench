@@ -11,7 +11,7 @@ const blockers={instruction_required:'补充审查指令',main_contract_required
 
 // Task text stays separate from the ordinary conversation composer. No model API is used here.
 export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid=()=>crypto.randomUUID(),
-  navigate=url=>window.location.assign(url),hash=globalThis.location?.hash||''}={}) {
+  navigate=url=>window.location.assign(url),hash=globalThis.location?.hash||'',isBlocked=()=>false,onActivityChange=()=>{}}={}) {
   const byId=id=>root.getElementById(id);
   let cid=null,page={items:[],unassigned_events:[],binding:null},selected='',closed=false,revoked=false;
   let epoch=0,reading=0,busy=false,pending=null,creating=false,createKey=null,materialKey='';
@@ -21,7 +21,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   const tell=text=>{byId('task-notice').textContent=text;};
   const current=()=>page.items.find(item=>item.id===selected);
   const active=()=>!closed&&!revoked;
-  const writable=()=>active()&&!readonly&&!busy&&!pending&&!controller.state.loading;
+  const writable=()=>active()&&!readonly&&!busy&&!pending&&!controller.state.loading&&!isBlocked();
   const token=()=>({cid,epoch});
   const valid=key=>active()&&key.cid===cid&&key.epoch===epoch;
   function button(text,action,{disabled=false}={}) {
@@ -38,6 +38,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
     byId('task-retry').textContent=pending?.query?'查询本次关联结果':'重试同一次操作';
     for(const el of checks)el.disabled=locked;
     for(const item of writeControls)item.el.disabled=locked||item.disabled;
+    onActivityChange();
   }
   async function guard(action,{write=true}={}){
     if(write?!writable():!active()||busy)return false;
@@ -329,6 +330,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   });
   byId('task-select').addEventListener('change',()=>{if(selected!==byId('task-select').value)mediaChoices.clear();selected=byId('task-select').value;render();});
   return {
+    updateControls:controls,
     open(){byId('task-draft-panel').open=true;byId('task-draft-panel').scrollIntoView({block:'start'});byId('task-instruction').focus();},
     refresh,
     hasPending:()=>!!pending||busy||mediaChoices.size>0||!!byId('task-instruction').value.trim()||checks.some(el=>el.checked),

@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-26 D2g5h待收件UI完成：明确原目标、元数据20条分页、首批首条分发、严格九字段回执、未知只GET、跨微信/任务及离开保护。85项不同Python、444项Node（前端443+几何脚本1）、7项独立探针、四开发门、本机合成Chromium及1280/360px视觉检查通过；2项P2实际RED→GREEN，双轴独审0遗留。[实测](testing/weixin-pending-ui/20261026/README.md)保留首次浏览器5秒超时，第二轮完整通过。未更新0.4.1，全仓Python/安装包/真实qxbak/真实微信模型NOT_RUN；WIN-PATH-02和原生AV仍OPEN。后续可信身份、下载解密及E许可待；[同步回执](testing/weixin-pending-ui/20261026/github-sync.md)。下方为历史快照。
+
 2026-10-26 D2g5g待收件列表完成服务与HTTP接线，复用已合并主线schema21：当前权限及历史归属重核、UUID分页/1..20上限、被分发锚点续页、五字段元数据、恢复模式阻断。最终3短组198不同Python（新增服务48+HTTP38）、独立4探针、四开发门通过；Spec发现目标无历史归属仍空页的P2已实际RED→GREEN并原探针复验，Standards/Spec均0遗留。[实际证据](testing/weixin-pending-list/20261026/README.md)。本片无UI、真实qxbak往返/全仓/Node/浏览器/安装与真实微信模型NOT_RUN；WIN-PATH-02和原生AV仍OPEN，0.4.1未更新。远端状态见[同步回执](testing/weixin-pending-list/20261026/github-sync.md)。
 
 `dhb_law`已快进合入`codex/contract-review-v2`并正常推送源码`042b9d3`；Git fetch/ls-remote及递归树一致，原六份WIP恢复且未暂存，主目录57项补验通过。[实际合并回执](testing/dhb-law-integration/20261026/github-sync.md)。未完成的D2g5g HTTP保持待办。

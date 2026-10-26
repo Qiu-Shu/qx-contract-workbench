@@ -1,0 +1,17 @@
+{
+  "baseline": "1a84f7507af94434eebccdf64a94b55924422041",
+  "reviewed_followup_diff": "git diff -- src/cn_contract/web/static/assistant-weixin-pending.mjs scripts/test_assistant_weixin_pending.mjs",
+  "source": "src/cn_contract/web/static/assistant-weixin-pending.mjs",
+  "source_sha256": "378c8288395dc90dcc8170019639615c8ce2d7589ebf2cdebe518f0cdfbb6e9e",
+  "probe_sha256": "62fdf0761cee32eff15be430809108c1c80165efcc3332a0c42e73ad74826385",
+  "command": "node --test .audit-local/weixin-pending-ui-20261026/spec-review/probes.mjs",
+  "exit_code": 0,
+  "tests": 3,
+  "passed": 3,
+  "failed": 0,
+  "skipped": 0,
+  "findings_remaining": 0,
+  "closed_findings": ["non-string digest confirmation", "invalid UTC calendar date rollover"],
+  "preserved_red_evidence": ["report.md", "evidence.json"],
+  "scope": "Read-only follow-up code review and unchanged independent synthetic probes. No product modification, network, real service, browser or repeated full suite."
+}

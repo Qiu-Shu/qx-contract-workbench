@@ -1,0 +1,132 @@
+Traceback (most recent call last):
+  File "D:\Documents\ChatGPT\������Ŀ\scripts\weixin_pending_ui_smoke.py", line 153, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "D:\Documents\ChatGPT\������Ŀ\scripts\weixin_pending_ui_smoke.py", line 107, in main
+    expect(page.locator('#weixin-pending-result')).to_contain_text('��ִ��ȷ��')
+  File "D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 22185, in to_contain_text
+    self._sync(
+  File "D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 303, in to_contain_text
+    await self._expect_impl(
+  File "D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 128, in _expect_impl
+    _record_soft_or_raise(
+  File "D:\Documents\ChatGPT\������Ŀ\.venv\Lib\site-packages\playwright\_impl\_assertions.py", line 60, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to contain text '��ִ��ȷ��'
+Actual value:
+Call log:
+  - Expect "to_contain_text" locator("#weixin-pending-result") with timeout 5000ms
+  - waiting for locator("#weixin-pending-result")
+    14 �� locator resolved to <p aria-live="polite" id="weixin-pending-result"></p>
+       - unexpected value ""
+
+Aria snapshot:
+- link "���������":
+  - /url: "#composer"
+- complementary "����̨����":
+  - link "Ⱥ�˷��ɹ���̨���Ի���ҳ":
+    - /url: /assistant
+    - text: Ⱥ�� ���ɹ���̨
+  - button "�¶Ի�"
+  - navigation "��������":
+    - heading "��������" [level=2]
+    - button "�ظ��ͻ�"
+    - button "��������"
+    - button "����ͬ �� ģ��"
+    - button "�����İ�"
+  - region "�����¼":
+    - heading "�����¼" [level=2]
+    - button "�ϳ���ʷĿ��2���˶Բ����븶��"
+    - button "�ϳ���ʷĿ��1���˶Բ����븶��"
+    - button "�����ϳɴ��ռ����"
+  - navigation "���й�����":
+    - link "��������Ӵ�":
+      - /url: /workspace
+    - link "��ͬ����̨":
+      - /url: /
+  - text: synthetic
+  - button "�˳���¼"
+- main:
+  - paragraph: ���������ݸ� �� �ܿ�����
+  - button "�����ݸ�"
+  - button "�ɹ��뵼��"
+  - button "�Ӵ��׸�"
+  - button "��ʵ�����"
+  - button "���������"
+  - text: �Ķ��ֺ�
+  - combobox "�Ķ��ֺ�":
+    - option "��׼ 16" [selected]
+    - option "�ϴ� 18"
+    - option "��� 20"
+  - heading "�����ϳɴ��ռ����" [level=1]
+  - paragraph: ��ǰ��Χ�����ζԻ�
+  - region "�Ի���¼"
+  - group: ��������������嵥
+  - group: ��������ʵ֤�ݵ׸� ������¼��ʵ�����ݣ��������ˡ��������ʷ�汾
+  - group: �Ӵ�׷��������׸� ��ԭʼ�����������󡢴�������һ���������ڱ���
+  - group:
+    - text: ģ���ͬ���� ����ռ�ָ������ϣ������ڱ���
+    - paragraph: �����ںϳɲ��ϵ�ģ�����̡�����дָ����ȴ��������ٶ�β��䣻����������ʵȷ�ϣ�ȷ�����������ģ����顣
+    - region "΢���ռ���Ȩ �� ���߲���":
+      - heading "΢���ռ���Ȩ �� ���߲���" [level=3]
+      - status: ��ȨĿ���汾�Ѹı䣻��ʷ��¼�����Զ������ռ���
+      - paragraph: ������ͬһĿ�������Ͳ��ϰ汾����ʵ΢��δ��ͨ��
+      - button "���¶�ȡ��Ȩ״̬"
+      - status
+      - group:
+        - text: ���ռ�
+        - paragraph: ѡ���ռ�ԭ��ָ����Ŀ��Ի��������Ի����ܽ�����Щ��¼������ֻ���������ϳ��ռ�����������顣
+        - button "ˢ��Ŀ��Ի�" [disabled]
+        - text: ԭ�ռ�Ŀ��
+        - combobox "ԭ�ռ�Ŀ��" [disabled]:
+          - option "��ѡ���ռ�ԭ��ָ����Ŀ��"
+          - option "�����ϳɴ��ռ����"
+          - option "�ϳ���ʷĿ��2���˶Բ����븶��"
+          - option "�ϳ���ʷĿ��1���˶Բ����븶��" [selected]
+        - button "��ȡ�������ռ�" [disabled]
+        - status: ���ڶ�ȡ���ռ���Ϣ��
+        - list "�������ռ�"
+        - status: ���ڷַ������ռ���
+        - paragraph
+      - group: ׷��Ŀ����ʷ��¼
+    - text: ���ڴ���������
+    - combobox "���ڴ���������":
+      - option "�½�ģ������" [selected]
+    - text: ���β�������ָ��
+    - textbox "���β�������ָ��":
+      - /placeholder: ���磺���ص�˶Ը����뽻��Լ����
+    - group "�����ռ������ϴ�����":
+      - text: �����ռ������ϴ�����
+      - paragraph: �������ϴ����������ȱ���ָ��ٴ��·������Ӳ��ϡ��ϴ��ϳ��ļ���
+    - button "���汾�β���"
+    - button "ˢ������״̬"
+    - status
+  - region "���롢���������ɲݸ�":
+    - button "�ظ��ͻ� ����������֯�ظ�":
+      - strong: �ظ��ͻ�
+      - text: ����������֯�ظ�
+    - button "�������� �����������г�ȱ��":
+      - strong: ��������
+      - text: �����������г�ȱ��
+    - button "����ͬ �� ģ�� �ռ����ϣ�ȷ����ʵ��ģ�����":
+      - strong: ����ͬ �� ģ��
+      - text: �ռ����ϣ�ȷ����ʵ��ģ�����
+    - button "�����İ� ����ѡ�⣬�������":
+      - strong: �����İ�
+      - text: ����ѡ�⣬�������
+    - paragraph: �Զ�ѡ������
+    - group: ��������
+    - text: ��ѯ�����빤���ݸ�
+    - textbox "��ѯ�����빤���ݸ�":
+      - /placeholder: ���磺�ͻ�������ʲô���⣬��Ҫ���ǰ�æ����ʲô����
+    - button "���Ӳ���"
+    - button "����ݸ�"
+    - button "����" [disabled]
+    - status: �ݸ��ѱ��浽����
+    - paragraph: Enter ���ͣ�Shift+Enter ���У���ǰ���Ͳ����á�
+    - paragraph: ��ǰ����δ���û�δ����ģ�����ɡ����Լ������汾���ݸ塣
+    - status
+    - group: ��ǰ���÷�Χ��˵��

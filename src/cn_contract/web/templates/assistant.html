@@ -169,6 +169,19 @@
             <p class="muted">仅更新同一目标的输入和材料版本；真实微信未接通。</p>
             <div class="task-actions"><button id="weixin-authorize" type="button" class="quiet-button" hidden disabled>更新本机授权</button><button id="weixin-read" type="button" class="text-button" disabled>重新读取授权状态</button><button id="weixin-find" type="button" class="quiet-button" hidden disabled>查找本次授权结果</button></div>
             <p id="weixin-notice" role="status" aria-live="polite"></p>
+            <details id="weixin-pending-panel" class="weixin-pending-panel">
+              <summary>待收件</summary>
+              <p class="muted">选择收件原先指定的目标对话。其他对话不能接收这些记录；这里只处理本机合成收件，不运行审查。</p>
+              <div class="task-actions"><button id="weixin-pending-targets" type="button" class="text-button">刷新目标对话</button><button id="weixin-pending-targets-more" type="button" class="text-button" hidden>更多已保存对话</button></div>
+              <label for="weixin-pending-target">原收件目标</label>
+              <select id="weixin-pending-target" disabled><option value="">请选择收件原先指定的目标</option></select>
+              <div class="task-actions"><button id="weixin-pending-read" type="button" class="quiet-button" disabled>读取首批待收件</button><button id="weixin-pending-more" type="button" class="text-button" hidden disabled>查看下一批</button></div>
+              <p id="weixin-pending-state" role="status" aria-live="polite"></p>
+              <ol id="weixin-pending-list" class="weixin-pending-list" aria-label="本批待收件"></ol>
+              <button id="weixin-pending-find" type="button" class="quiet-button" hidden disabled>查找本条分发结果</button>
+              <p id="weixin-pending-notice" role="status" aria-live="polite"></p>
+              <p id="weixin-pending-result" aria-live="polite"></p>
+            </details>
             <details id="weixin-generation-panel" class="weixin-generation-panel">
               <summary>追加目标历史记录</summary>
               <p class="muted">仅在本机登记新的目标历史；真实微信未接通，保存后收件仍暂停。</p>

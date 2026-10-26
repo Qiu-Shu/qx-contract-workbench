@@ -1,0 +1,21 @@
+{
+  "baseline": "1a84f7507af94434eebccdf64a94b55924422041",
+  "diff_command": "git diff --cached 1a84f7507af94434eebccdf64a94b55924422041",
+  "commit_list": [],
+  "source": "src/cn_contract/web/static/assistant-weixin-pending.mjs",
+  "source_sha256": "26a890ed24e411ccaaf1b52607f9e5cb8b50b138aa0aeeadffff9e1f9f868810",
+  "index_and_disk_git_blob": "3b37859fdee0b2fe1fbdbdf4505123bc086fb708",
+  "probe_sha256": "62fdf0761cee32eff15be430809108c1c80165efcc3332a0c42e73ad74826385",
+  "command": "node --test .audit-local/weixin-pending-ui-20261026/spec-review/probes.mjs",
+  "exit_code": 1,
+  "tests": 3,
+  "passed": 1,
+  "failed": 2,
+  "skipped": 0,
+  "assertion_failures": [
+    "non-string hash must not confirm dispatch: false !== true",
+    "invalid Feb 30 must not display as March 2: 1 !== 0"
+  ],
+  "passed_probe": "late POST after CID switch never displays receipt or invokes projection callback",
+  "scope": "Read-only spec/source/index review; only audit-local report and synthetic probes written. No network or real service used."
+}

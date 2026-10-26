@@ -1,0 +1,37 @@
+{
+  "steps": [
+    "historical target: 20 + 1 pagination, first-only delivery, no message body",
+    "lost POST ACK: exactly one POST, target/tasks/navigation locked, exact GET reconciles"
+  ],
+  "visual": [
+    {
+      "width": 1280,
+      "scroll": 1280,
+      "client": 1280,
+      "screenshot": "pending-1280.png"
+    },
+    {
+      "width": 360,
+      "scroll": 360,
+      "client": 360,
+      "screenshot": "pending-360.png"
+    }
+  ],
+  "external_requests": [],
+  "page_errors": [],
+  "writes": [
+    "POST /api/assistant/conversations/664938c1-cbb4-46b4-bf6a-24da011b802b/weixin-authorization/dispatches",
+    "POST /api/assistant/conversations/664938c1-cbb4-46b4-bf6a-24da011b802b/weixin-authorization/dispatches"
+  ],
+  "status": "PASS",
+  "counts": {
+    "weixin_dispatch_receipts": 2,
+    "task_inbox_events": 2,
+    "task_executions": 0,
+    "assistant_runs": 0,
+    "assistant_model_attempts": 0,
+    "review_runs": 0
+  },
+  "original_descriptor_count": 22,
+  "original_descriptors_unchanged": true
+}
