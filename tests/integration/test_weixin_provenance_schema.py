@@ -204,6 +204,9 @@ def native_predecessor(tmp_path,monkeypatch):
     root=tmp_path/'独立虚构来源升级'
     local_server.initialize_workspace(root,'synthetic-schema-lawyer','fiction123',data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as connection:
+        # The predecessor excludes both newer worksheet families.
+        connection.execute('DROP TABLE assistant_followup_revisions')
+        connection.execute('DROP TABLE assistant_evidence_revisions')
         connection.execute('DROP INDEX weixin_dispatch_binding_cursor')
         connection.execute('DROP TABLE IF EXISTS '+TABLE);connection.commit()
         marker=json.loads((root/'workspace.json').read_text('utf-8'))

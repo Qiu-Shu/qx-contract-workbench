@@ -49,7 +49,7 @@ def test_import_preserves_raw_originals_and_deduplicates_exact_bytes(knowledge):
     assert len(source.aliases) == 2 and source.verification_status == 'user_supplied_unverified'
     assert hashlib.sha256((root/'originals'/f'{source.id}.docx').read_bytes()).hexdigest() == source.id
     assert hashlib.sha256((root/'plugin-original.zip').read_bytes()).hexdigest() == manifest['archive_sha256']
-    assert 'IGNORE ALL RULES' not in (root/'documents'/f'{source.id}.json').read_text()
+    assert 'IGNORE ALL RULES' not in (root/'documents'/f'{source.id}.json').read_text(encoding='utf-8')
     assert not list(root.rglob('SKILL.md'))
 
 

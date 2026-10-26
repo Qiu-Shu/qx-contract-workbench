@@ -1,0 +1,74 @@
+{
+  "baseline": "43257111f0d6ad03b1b8ef1f4bc86151ee58937a",
+  "incoming": "afb6ab64f81d0167efb309e7f28998e31725450d",
+  "groups": {
+    "red": {
+      "total": 258,
+      "passed": 243,
+      "failures": 9,
+      "errors": 6,
+      "skipped": 0,
+      "exit_code": 1
+    },
+    "green": {
+      "total": 258,
+      "passed": 258,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "features": {
+      "total": 97,
+      "passed": 97,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "compat": {
+      "total": 217,
+      "passed": 217,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  },
+  "unique_passing_python_tests": 572,
+  "frontend": {
+    "tests": 388,
+    "passed": 388,
+    "exit_code": 0
+  },
+  "desktop": {
+    "tests": 369,
+    "passed": 369,
+    "exit_code": 0
+  },
+  "validation_inputs_registered_during_run": 800,
+  "registered_inputs_unchanged_at_completion": true,
+  "modified_tests_sha256": {
+    "tests/integration/test_assistant_library_schema.py": "6d6cf39661e4079e1c00f3cd991975e34fb70e25bce31dd092c3b3938cddf717",
+    "tests/integration/test_weixin_generation_schema.py": "bbf8528efd5ff24e70b909f123b220c93e9535866a867466e3f8aca10d3a18cc",
+    "tests/integration/test_weixin_provenance_schema.py": "7b852660c0ec55d2457783e0e4e794d4a9a913a76d135a2890ac2420fd836a1a",
+    "tests/unit/test_reception_knowledge.py": "f5f37c7f5eb8a0d570b600378985fffa888c55f5a9a24df16c3a6f2ce1e0f18d"
+  },
+  "raw_local_log_sha256": {
+    "red.log": "63088d1a22a6c0a44fe1850c5f9d2c6a7d583e94a66f8cb76611a19e153f06ac",
+    "green.log": "50ef114dd1190d0454546fd73b8f78160e2730791accca97f5321f3f9de6187c",
+    "features.log": "9fa1196b468d4f2135c5f6550b3657a55a93d32af4306942c25f4da0cd6c2862",
+    "compat.log": "3a22c422d64fce0957c52b6473870e3e7123a3eec554b6087219d7c6c6d51e12",
+    "frontend.log": "aea2958f0b3e020adf73ca02216da72461a5cde1b53d4cdfe7e94d2773b97586",
+    "desktop.log": "ce2c133441d0a95355338b8f5ec8e1c953c209b5bedbc8a5fed471d41efa68db"
+  },
+  "public_logs": "Derived from retained local originals; workspace paths redacted where present.",
+  "not_run": [
+    "full_repository_python",
+    "browser_interaction",
+    "native_installer",
+    "real_weixin",
+    "real_model",
+    "production_acceptance"
+  ]
+}
