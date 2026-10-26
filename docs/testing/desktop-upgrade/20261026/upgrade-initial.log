@@ -4,7 +4,7 @@ _ ERROR at setup of test_upgrade_keeps_identity_login_case_and_independent_backu
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -12,7 +12,7 @@ _ ERROR at setup of test_marker_write_failure_recovers_without_rerunning_migrati
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -20,7 +20,7 @@ __________ ERROR at setup of test_unknown_schema_change_not_accepted __________
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -28,7 +28,7 @@ __ ERROR at setup of test_migration_transaction_failure_leaves_legacy_schema __
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -36,7 +36,7 @@ _____ ERROR at setup of test_recovery_refuses_changed_extension_or_backup _____
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -44,7 +44,7 @@ _ ERROR at setup of test_self_consistent_marker_cannot_authorize_unknown_schema[
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -52,7 +52,7 @@ _ ERROR at setup of test_self_consistent_marker_cannot_authorize_unknown_schema[
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -60,7 +60,7 @@ ______ ERROR at setup of test_existing_workspace_does_not_run_create_all ______
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -68,7 +68,7 @@ _ ERROR at setup of test_assistant_marker_failure_recovers_without_repeating_com
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -76,7 +76,7 @@ _ ERROR at setup of test_assistant_marker_failure_recovers_without_repeating_com
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -84,7 +84,7 @@ _ ERROR at setup of test_assistant_marker_failure_recovers_without_repeating_com
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -92,7 +92,7 @@ _ ERROR at setup of test_assistant_marker_failure_recovers_without_repeating_com
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -100,7 +100,7 @@ _ ERROR at setup of test_assistant_marker_failure_recovers_without_repeating_com
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -108,7 +108,7 @@ _ ERROR at setup of test_assistant_marker_failure_recovers_without_repeating_com
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -116,7 +116,7 @@ _ ERROR at setup of test_assistant_marker_failure_recovers_without_repeating_com
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -124,7 +124,7 @@ _ ERROR at setup of test_assistant_marker_failure_recovers_without_repeating_com
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -132,7 +132,7 @@ _ ERROR at setup of test_assistant_marker_failure_recovers_without_repeating_com
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -140,7 +140,7 @@ _ ERROR at setup of test_assistant_marker_failure_recovers_without_repeating_com
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -148,7 +148,7 @@ _ ERROR at setup of test_assistant_ddl_failure_preserves_completed_steps[assista
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -156,7 +156,7 @@ _ ERROR at setup of test_assistant_ddl_failure_preserves_completed_steps[assista
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -164,7 +164,7 @@ _ ERROR at setup of test_assistant_ddl_failure_preserves_completed_steps[assista
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -172,7 +172,7 @@ _ ERROR at setup of test_assistant_ddl_failure_preserves_completed_steps[assista
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -180,7 +180,7 @@ _ ERROR at setup of test_assistant_ddl_failure_preserves_completed_steps[assista
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -188,7 +188,7 @@ _ ERROR at setup of test_assistant_ddl_failure_preserves_completed_steps[assista
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -196,7 +196,7 @@ _ ERROR at setup of test_assistant_ddl_failure_preserves_completed_steps[assista
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -204,7 +204,7 @@ _ ERROR at setup of test_assistant_ddl_failure_preserves_completed_steps[assista
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -212,7 +212,7 @@ _ ERROR at setup of test_assistant_ddl_failure_preserves_completed_steps[assista
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -220,7 +220,7 @@ _ ERROR at setup of test_assistant_ddl_failure_preserves_completed_steps[assista
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -228,7 +228,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[backup-ass
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -236,7 +236,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[backup-ass
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -244,7 +244,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[backup-ass
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -252,7 +252,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[backup-ass
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -260,7 +260,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[backup-ass
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -268,7 +268,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[backup-ass
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -276,7 +276,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[backup-ass
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -284,7 +284,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[backup-ass
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -292,7 +292,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[backup-ass
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -300,7 +300,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[backup-ass
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -308,7 +308,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[receipt-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -316,7 +316,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[receipt-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -324,7 +324,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[receipt-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -332,7 +332,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[receipt-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -340,7 +340,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[receipt-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -348,7 +348,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[receipt-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -356,7 +356,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[receipt-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -364,7 +364,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[receipt-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -372,7 +372,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[receipt-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -380,7 +380,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[receipt-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -388,7 +388,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[trigger-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -396,7 +396,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[trigger-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -404,7 +404,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[trigger-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -412,7 +412,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[trigger-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -420,7 +420,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[trigger-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -428,7 +428,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[trigger-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -436,7 +436,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[trigger-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -444,7 +444,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[trigger-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -452,7 +452,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[trigger-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff
@@ -460,7 +460,7 @@ _ ERROR at setup of test_assistant_pending_recovery_rejects_tampering[trigger-as
 tests\integration\test_workspace_upgrade.py:37: in legacy
     assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
 E   assert [('index', 's...', None), ...] == [('index', 's...', None), ...]
-E     
+E
 E     At index 2 diff: ('index', 'sqlite_autoindex_assistant_evidence_revisions_1', 'assistant_evidence_revisions', None) != ('index', 'sqlite_autoindex_audit_events_1', 'audit_events', None)
 E     Left contains 10 more items, first extra item: ('trigger', 'immutable_source_evidence_delete', 'source_evidence', "CREATE TRIGGER immutable_source_evidence_delete BEFORE DELETE ON source_evidence BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
 E     Use -v to get more diff

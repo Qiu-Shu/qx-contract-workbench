@@ -51,5 +51,19 @@
   "open_issues": [
     "WIN-PATH-02",
     "native AV"
-  ]
+  ],
+  "evidence_normalization": "Public log/XML copies normalize line endings and trailing whitespace only; original local outputs retained.",
+  "original_evidence_sha256": {
+    "desktop-tests.log": "01607e0c2a86e57e3c20194a8534b74cee1547ea38d8b2876c634e408ceb1e73",
+    "gate-defaults.log": "ce5b96bd7cd832ec38b0465cedcec249edf34235fa9dd33a3e46583819b3e5bf",
+    "gate-runtime.log": "33f8fa867d8861358a9fa63616e0b80ae000b61502e644d6b8dcd01ba0c5d0df",
+    "gate-schema.log": "a6c21af5c43bd35740024630691308ff9b02f00498eedd89a5939fc5607e7de7",
+    "gate-sources.log": "6adece20ded6398a42a52245113abc4c2a917aee5c3f5e8fc42c951f04c95ffa",
+    "packaging-green.log": "e648ae1f8c8888ce8542eaae10eb103676edf113f58eb8c744c0cdb3374c673d",
+    "packaging-red.log": "34f7ee4110bedce3d67271e0c73bf9fa342d49d83e6050d6eae7570959870468",
+    "upgrade-final.log": "68d6fe00e4014ca244b21c5c9855203113e15359b14704a791f69c22fbe0889d",
+    "upgrade-final.xml": "c7eb80361ecfdb1e8db26efe0f0a577c56814a16d30d0b24361093b324a572ef",
+    "upgrade-initial.log": "74fe83471c548f9f37a012f1071f67433678f45ccb1f3d81e20a59dbe05962d6",
+    "upgrade-initial.xml": "177fd4b447e751b47fd577baa6cfd9706363127f8921c25ae3ccbb4ad760962e"
+  }
 }
