@@ -33,4 +33,4 @@
 - [x] 后端作者原domain.py、pending.py及服务测试已保全交接；root补web路由/HTTP测试。独审发现P2后root另补服务6行历史归属守卫及回归测试，原作者已完成，不存在并发覆盖。
 - [x] 最终冻结五份源码/测试，3短组198不同Python、四开发门通过；569输入每组前后不变，不叠加作者/中间运行。无新UI，Node/浏览器NOT_RUN。
 - [x] 未参与产品作者分别独立Spec与Standards复核：Spec原P2修复后0遗留，Standards0遗留；原4个独立探针不改断言复跑通过。README/TODO/TASK_STATUS及阶段测试记录已更新。
-- [ ] 仅授权源码/文档/独立合成证据；保留用户AGENTS未暂存，获取远端后正常提交推送并核SHA/tree，非强推；三端收尾按本轮真实回执，HumanLayer限长pending不冒称云端同步。
+- [x] 仅授权源码/文档/独立合成证据；用户AGENTS未暂存且SHA未变，fetch后正常提交推送b5f455b并核SHA/tree、6,071条目一致，非强推。[同步回执](../testing/weixin-pending-list/20261026/github-sync.md)。本聊天不属于HumanLayer强制同步的两个指定聊天；Obsidian按实际回执保存，TencentDB沿Stop自动提炼，不冒称本轮云端已入账。
