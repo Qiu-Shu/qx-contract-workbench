@@ -1,0 +1,4725 @@
+{
+  "runs": [
+    {
+      "status": "PASS",
+      "published": "c4645658-0942-4028-a67d-5f5da0500776",
+      "index": 0,
+      "seconds": 0.735,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 756,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 756,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "b09e6f79-519a-4ada-ad35-3324899101f9",
+      "index": 1,
+      "seconds": 0.485,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 444,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 444,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "a8b8031e-da01-471a-833d-9a522d87fd05",
+      "index": 2,
+      "seconds": 0.453,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 968,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 968,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "15c3524b-3b69-4dc3-8d72-021ceac4c05a",
+      "index": 3,
+      "seconds": 0.484,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 572,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 572,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "0a4dae63-4f9e-4405-ac15-2135f0cc22b9",
+      "index": 4,
+      "seconds": 0.469,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 968,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 968,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "e10b32a2-b89f-4cc9-b0b8-14d11d12c19e",
+      "index": 5,
+      "seconds": 0.438,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1048,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1048,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "5a1feccb-3c64-4ba6-8ad2-4fbecf49340a",
+      "index": 6,
+      "seconds": 0.468,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1092,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1092,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "74f2a3d1-fb03-4a7e-942e-081e2c61f97c",
+      "index": 7,
+      "seconds": 0.453,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 968,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 968,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "50fb76f6-2621-4077-ba7b-446f58321ca2",
+      "index": 8,
+      "seconds": 0.625,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 920,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 920,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "135d6fbf-da6a-41b0-8176-2d9904ac9823",
+      "index": 9,
+      "seconds": 0.672,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 844,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 844,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "a627900a-ce47-44cd-b5e9-b22e497bb91a",
+      "index": 10,
+      "seconds": 0.687,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1156,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1156,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "1558738e-63d6-49b6-8d64-c9d5f3c01b37",
+      "index": 11,
+      "seconds": 0.688,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 704,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 704,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "24c3af62-5070-4548-91d6-a30524c0dd9e",
+      "index": 12,
+      "seconds": 0.609,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1036,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1036,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "bca092af-b792-453c-ace9-24fddefd0141",
+      "index": 13,
+      "seconds": 0.547,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1040,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1040,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "1d99f158-b36d-46cc-9ec0-2669a43dbf7e",
+      "index": 14,
+      "seconds": 0.531,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1168,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1168,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "0f21b641-1669-43c0-a681-4beded1148df",
+      "index": 15,
+      "seconds": 0.515,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1052,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1052,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "dbcd6abe-5ef4-48a1-841f-bfd0d1b47c87",
+      "index": 16,
+      "seconds": 0.516,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1096,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1096,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "40518462-3554-462d-9c90-070bc2cdff00",
+      "index": 17,
+      "seconds": 0.484,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1184,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1184,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "4c5cab61-a23f-43b6-9bb0-4ed6f6f87a8f",
+      "index": 18,
+      "seconds": 0.5,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 984,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 984,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "a058c1fd-6faf-4bd9-87bb-423205360af3",
+      "index": 19,
+      "seconds": 0.516,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 964,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 964,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "a4b007c5-6964-4c41-bffa-7d8e52896222",
+      "index": 20,
+      "seconds": 0.484,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 772,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 772,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "04ae4859-79e0-4ece-8d0c-9ead19c766ae",
+      "index": 21,
+      "seconds": 0.485,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 808,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 808,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "649f2c76-15cf-477d-833f-e6b433411594",
+      "index": 22,
+      "seconds": 0.453,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1180,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1180,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "ef7420f3-0116-4a47-b6e2-379486eb095e",
+      "index": 23,
+      "seconds": 0.454,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1184,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1184,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "2e6d4b1a-94de-48a7-9a53-0560a7e6b055",
+      "index": 24,
+      "seconds": 0.438,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1184,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1184,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "8d950e21-f6d5-41ff-a172-b3c3593e78e8",
+      "index": 25,
+      "seconds": 0.469,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 976,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 976,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "be9cece6-4447-43d1-8812-2c819b10a2fd",
+      "index": 26,
+      "seconds": 0.453,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1180,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1180,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "b384805c-3625-4fb7-b63f-2567815c433b",
+      "index": 27,
+      "seconds": 0.469,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1160,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1160,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "f60c485b-1b8a-426a-bedb-80f15e80cc62",
+      "index": 28,
+      "seconds": 0.468,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1028,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1028,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "f0f04af4-fb5b-46c1-841b-ea66d7701bf0",
+      "index": 29,
+      "seconds": 0.485,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1084,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1084,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "6115b983-3834-4d56-84f5-bcead14e92dd",
+      "index": 30,
+      "seconds": 0.468,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1200,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1200,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "8f0a20ea-4ca4-429d-b5fd-44db5d7b7179",
+      "index": 31,
+      "seconds": 0.485,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1016,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1016,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "8715c9cf-d8f8-4ada-a054-0c4e734d3b06",
+      "index": 32,
+      "seconds": 0.515,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1204,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1204,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "04d1f0ef-b3f8-43b0-8b13-56111faf7139",
+      "index": 33,
+      "seconds": 0.469,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1012,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1012,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "bd01ac53-c272-42c6-84e1-a9990838b70f",
+      "index": 34,
+      "seconds": 0.453,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1008,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1008,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "f6871d97-98d7-47d1-b786-aba8898a4e76",
+      "index": 35,
+      "seconds": 0.469,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 976,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 976,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "ed4aa3c8-86ef-4751-969b-d7a287e45cac",
+      "index": 36,
+      "seconds": 0.468,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1048,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1048,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "e98eba81-5e87-4499-a95c-64d45a7b910c",
+      "index": 37,
+      "seconds": 0.469,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1180,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1180,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "0b364cdc-0482-4de0-8b32-c1a8459d74cc",
+      "index": 38,
+      "seconds": 0.453,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1232,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1232,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "published": "6056f8c2-2c36-4c82-b476-d4e502583f96",
+      "index": 39,
+      "seconds": 0.469,
+      "events": [
+        {
+          "phase": "_unpack:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_references:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_unpack:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:enter",
+          "handles": [
+            {
+              "handle": 1232,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "upgrade:exit",
+          "handles": [
+            {
+              "handle": 1232,
+              "path": "worker.lock",
+              "access": "0x12019f"
+            }
+          ],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_fence:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:enter",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "_validate_database:exit",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:before",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        },
+        {
+          "phase": "publish:success",
+          "handles": [],
+          "scan_status": "OK",
+          "cwd_inside_stage": false,
+          "stage_path_length": 208
+        }
+      ]
+    }
+  ],
+  "archive_unchanged": true
+}

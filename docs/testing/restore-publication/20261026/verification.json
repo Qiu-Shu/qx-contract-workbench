@@ -1,0 +1,1397 @@
+{
+  "baseline": "498c0c978ee58f2856d741a2e62e9025bcbee73f",
+  "pytest": {
+    "repro-01": {
+      "exit_code": 0,
+      "count": 1,
+      "cases": [
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[awaiting_facts]",
+          "status": "PASS"
+        }
+      ]
+    },
+    "migration-01": {
+      "exit_code": 0,
+      "count": 74,
+      "cases": [
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[pre-intake]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[pre-intake-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[intake-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[intake-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-attachments-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-attachments-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-model-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-judge-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-judge-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-library-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-library-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-context-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-context-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-rounds-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-rounds-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-rounds-v2]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-rounds-v2-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-profiles-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-profiles-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-profile-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-profile-model-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_family_is_a_named_additive_successor",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-pre-intake]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-intake-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-attachments-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-judge-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-library-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-context-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-rounds-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-rounds-v2]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-profiles-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-profile-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-pre-intake]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-intake-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-attachments-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-judge-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-library-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-context-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-rounds-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-rounds-v2]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-profiles-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-profile-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_failed_task_migration_leaves_legacy_schema_and_rows_intact",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_fresh_and_upgraded_tasks_have_same_schema",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_partial_task_family_is_rejected_without_repair[DROP TABLE task_executions]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_partial_task_family_is_rejected_without_repair[DROP TRIGGER immutable_task_inbox_update]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_partial_task_family_is_rejected_without_repair[ALTER TABLE task_drafts ADD COLUMN untrusted TEXT]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_partial_task_family_is_rejected_without_repair[CREATE INDEX unexpected_task_index ON task_drafts(created_at)]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[payload_digest]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[manifest_digest]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[payload_cross_conversation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[draft_cross_conversation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[manifest_cross_conversation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[manifest_source_hash]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[missing_event]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[workspace]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[prepared]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[creating_matter]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[awaiting_facts]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[queued]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[running]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_actual_task_service_history_and_late_supplement_pass_archive_checks",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_completed_bridge_provenance_survives_backup_and_rejects_mapping_damage[None]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_completed_bridge_provenance_survives_backup_and_rejects_mapping_damage[review_digest]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_completed_bridge_provenance_survives_backup_and_rejects_mapping_damage[document_map]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_archive_execution_state_cannot_contradict_real_mock_result[completed]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_archive_execution_state_cannot_contradict_real_mock_result[failed]",
+          "status": "PASS"
+        }
+      ]
+    },
+    "order-01": {
+      "exit_code": 0,
+      "count": 76,
+      "cases": [
+        {
+          "id": "tests.integration.test_task_pdf_backup::test_completed_pdf_native_backup_preserves_pages_sources_results_and_fences_replay",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_completed_backup::test_completed_native_task_rebackup_preserves_sources_results_and_never_replays",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[pre-intake]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[pre-intake-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[intake-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[intake-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-attachments-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-attachments-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-model-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-judge-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-judge-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-library-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-library-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-context-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-context-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-rounds-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-rounds-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-rounds-v2]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-rounds-v2-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-profiles-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-profiles-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-profile-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_every_predecessor_keeps_exact_raw_and_backup_fingerprints[assistant-profile-model-v1-native]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_family_is_a_named_additive_successor",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-pre-intake]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-intake-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-attachments-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-judge-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-library-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-context-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-rounds-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-rounds-v2]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-profiles-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[False-assistant-profile-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-pre-intake]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-intake-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-attachments-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-judge-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-library-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-context-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-rounds-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-rounds-v2]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-profiles-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_each_historical_schema_upgrades_to_tasks_without_losing_rows[True-assistant-profile-model-v1]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_failed_task_migration_leaves_legacy_schema_and_rows_intact",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_fresh_and_upgraded_tasks_have_same_schema",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_partial_task_family_is_rejected_without_repair[DROP TABLE task_executions]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_partial_task_family_is_rejected_without_repair[DROP TRIGGER immutable_task_inbox_update]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_partial_task_family_is_rejected_without_repair[ALTER TABLE task_drafts ADD COLUMN untrusted TEXT]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_partial_task_family_is_rejected_without_repair[CREATE INDEX unexpected_task_index ON task_drafts(created_at)]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[payload_digest]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[manifest_digest]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[payload_cross_conversation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[draft_cross_conversation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[manifest_cross_conversation]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[manifest_source_hash]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[missing_event]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_task_source_corruption_rejects_backup_and_authenticated_restore[workspace]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[prepared]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[creating_matter]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[awaiting_facts]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[queued]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_restore_blocks_each_pending_execution_and_all_task_writes[running]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_actual_task_service_history_and_late_supplement_pass_archive_checks",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_completed_bridge_provenance_survives_backup_and_rejects_mapping_damage[None]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_completed_bridge_provenance_survives_backup_and_rejects_mapping_damage[review_digest]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_completed_bridge_provenance_survives_backup_and_rejects_mapping_damage[document_map]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_archive_execution_state_cannot_contradict_real_mock_result[completed]",
+          "status": "PASS"
+        },
+        {
+          "id": "tests.integration.test_task_drafts_migration::test_archive_execution_state_cannot_contradict_real_mock_result[failed]",
+          "status": "PASS"
+        }
+      ]
+    }
+  },
+  "distinct_pytest_count": 76,
+  "diagnostics": {
+    "stress": {
+      "process_exit_code": 0,
+      "attempts": 1,
+      "returned_pass": 0,
+      "returned_fail": 1,
+      "first_publish_failures": 1
+    },
+    "path-matrix": {
+      "process_exit_code": 0,
+      "attempts": 15,
+      "returned_pass": 14,
+      "returned_fail": 1,
+      "first_publish_failures": 1
+    },
+    "observed": {
+      "process_exit_code": 0,
+      "attempts": 40,
+      "returned_pass": 40,
+      "returned_fail": 0,
+      "first_publish_failures": 0
+    },
+    "failure-probe": {
+      "process_exit_code": 0,
+      "attempts": 40,
+      "returned_pass": 39,
+      "returned_fail": 1,
+      "first_publish_failures": 1
+    },
+    "rm-probe": {
+      "process_exit_code": 0,
+      "attempts": 16,
+      "returned_pass": 15,
+      "returned_fail": 1,
+      "first_publish_failures": 1
+    },
+    "native-probe": {
+      "process_exit_code": 0,
+      "attempts": 24,
+      "returned_pass": 23,
+      "returned_fail": 1,
+      "first_publish_failures": 1
+    },
+    "immediate-probe": {
+      "process_exit_code": 0,
+      "attempts": 80,
+      "returned_pass": 80,
+      "returned_fail": 0,
+      "first_publish_failures": 1
+    },
+    "rm-control": {
+      "process_exit_code": 0,
+      "status": "PASS"
+    },
+    "native-control": {
+      "process_exit_code": 0,
+      "status": "PASS"
+    }
+  },
+  "scripts": {
+    "stress.py": {
+      "executed_original_sha256": "35dd006c122705552f9ac9c43d7e3084214a79b94e0dd8062706eca493d9f4de",
+      "packaged_sha256": "ae7eddcee0d91c65f0b2e3e4c50b676fb1961e38a06b651a834c6c983a7ada69",
+      "packaged_validation": "AST parse only; root discovery adapted, experiment not repeated"
+    },
+    "path_matrix.py": {
+      "executed_original_sha256": "a7de9ed39029a3c19b54e3249743b531fa186fc300216293fd9f84d5d15283b7",
+      "packaged_sha256": "051b6977828826112a8c2a664f66084b6fc292e6d8241a5d88e63c88560b4406",
+      "packaged_validation": "AST parse only; root discovery adapted, experiment not repeated"
+    },
+    "observe.py": {
+      "executed_original_sha256": "5a2fafdb4b99e6c6a2d8f3e8f329b60c554e964f5432c6c69826002acd1461f1",
+      "packaged_sha256": "39a62d199b2d9e9ebde33ec724e8ee97e3adca1ede8a7e7cc174d3f284c9306e",
+      "packaged_validation": "AST parse only; root discovery adapted, experiment not repeated"
+    },
+    "failure_probe.py": {
+      "executed_original_sha256": "d473bca4261d0f15c3a082b3fd7e79f8f3f39cc03d24e25e0fb42d8c9eb78cd1",
+      "packaged_sha256": "2928c1d30d5ff6b148354152de08059ecfc084b3c4d0f77646776d7248278987",
+      "packaged_validation": "AST parse only; root discovery adapted, experiment not repeated"
+    },
+    "restart_manager.py": {
+      "executed_original_sha256": "e67a4559cd2ab4903ca838fb6c9ab378ba9b694969a8a768faf98b9cfd3b7821",
+      "packaged_sha256": "e67a4559cd2ab4903ca838fb6c9ab378ba9b694969a8a768faf98b9cfd3b7821",
+      "packaged_validation": "AST parse only; root discovery adapted, experiment not repeated"
+    },
+    "rm_probe.py": {
+      "executed_original_sha256": "03244813b9da7f99237010fa3a731c98d643dc069a106e5234f4a978a3491a32",
+      "packaged_sha256": "5f4dc6448aa0f455383093925e3918fd4ee670989833b0d287cd6b96380c241d",
+      "packaged_validation": "AST parse only; root discovery adapted, experiment not repeated"
+    },
+    "file_processes.py": {
+      "executed_original_sha256": "8b1fdb051d59effb0e717a7bcdbd2b2626df37a0c0dab0326692bac8090e7416",
+      "packaged_sha256": "8b1fdb051d59effb0e717a7bcdbd2b2626df37a0c0dab0326692bac8090e7416",
+      "packaged_validation": "AST parse only; root discovery adapted, experiment not repeated"
+    },
+    "native_probe.py": {
+      "executed_original_sha256": "afc5da02515cbecf5c67b4ffa5cb77c6df9e6627196fe077f90ea71cb0178935",
+      "packaged_sha256": "35573326c61dd157ba0ec0bc3b6cf4876a9b175ecd2518062560f9068893bc7f",
+      "packaged_validation": "AST parse only; root discovery adapted, experiment not repeated"
+    },
+    "immediate_probe.py": {
+      "executed_original_sha256": "a4387ff9b2a86af2efa07675574b7c655d17404d39e62b791ec3cead35b7b592",
+      "packaged_sha256": "3c8d54a1c763e7e3f072246ba3ee030a4274ff0d342d28d14a3861a44ffac91a",
+      "packaged_validation": "AST parse only; root discovery adapted, experiment not repeated"
+    }
+  },
+  "unchanged_inputs": {
+    "pyproject.toml": "2fa02a3657d55debaee9cfd7887b9c997403b9f349ff6968d78efec327003dde",
+    "scripts/desktop_backend_entry.py": "3af362d55cc6a8d621bfec1c913491bd2200e6aec0decdd063ac9e9231714226",
+    "scripts/import_reception_plugin.py": "3a7950aeaf5489fe3c028e4b143ff937992ba3c5ffac60164d26ab2af70fac43",
+    "scripts/ocr_synthetic_acceptance.py": "7bdbc5b4ead228d3cc07d6e39bfcb1ad88e927c944794a3d9baf7d4c525a8255",
+    "scripts/prepare_desktop.py": "0301c7ba64028de4e9105b00b6fcae73dbdfd92b2ab3159111ef5a102814a8f0",
+    "scripts/prepare_ocr_assets.py": "94353ef6201d2371a39276d3167c76ca6c59d7b4575cd32f6a9c8376c4e38599",
+    "scripts/prepare_pdfjs_assets.py": "2fa9d46db84c7ff051d1f7bb04f1ba36fed9bfe2b511a324c3e4ff213c926fd4",
+    "scripts/restore_handles.py": "f6a146712c948eff729280daaf852271ea27b8155cd64de74177aea161e3b755",
+    "scripts/restore_publish_diagnostics.py": "4c62d3dc2eb48cb3f353972ccb483a91239e768bc395b0eb344686d65ed3d937",
+    "scripts/scrapling_smoke.py": "4ec0faafd1137b27276682ebaa82691b41135902a2cba46f4c08a671f9b3092a",
+    "scripts/test_assistant_citations.mjs": "39b8d25bf987573e99e6f7bae3f2a1b5aab7b600a917e02381285eb7a6ff4bc3",
+    "scripts/test_assistant_context_selection.mjs": "43471386caf2711f64e56b78fc8bec77d9ad17a5c050be96d0e905d304c19e60",
+    "scripts/test_assistant_generation_entry.mjs": "33e435d5726686c5ec190acbe9fe6c934a163a30fac9b577a0e29d096a3118f6",
+    "scripts/test_assistant_generation_render.mjs": "827399efc853b421e853a8217f2e61251174dc02400678aa95b13371e5855d23",
+    "scripts/test_assistant_generation_state.mjs": "0cd37c5cd5ab0041f36393604463b83548ecb71c855e432437118e94679e30e8",
+    "scripts/test_assistant_material_dom.mjs": "61591f9cc89e2c8acff31cd72f7b172ed0834e4c3cb0ab46d42363882d1eae9a",
+    "scripts/test_assistant_material_state.mjs": "baed0843d0d3b70ded80ec68c6be49c378c81b802231d26c33216116a8b25b04",
+    "scripts/test_assistant_outputs.mjs": "156191f519d26cd5245e04cdb6a9839180ff6b10bd42d9bb992ed3a00e1681d3",
+    "scripts/test_assistant_profile_generation.mjs": "ba2d88a7b54bd05da2b92c11dcc58fd41b8808f577d1699a177841cfc8dac7b3",
+    "scripts/test_assistant_profile_panel.mjs": "04696e08958f4417e21f8bf150520bcdb4f3994aef3fcac7645a90d60599d97d",
+    "scripts/test_assistant_research_state.mjs": "664530f498b74b2075fc30264e235f3ff0a1d6b43e1b716387177d4f4ceb974e",
+    "scripts/test_assistant_state.mjs": "d22b8e34f82e502694acec9d31c32b20d6777b95a77662d409b712e70bc7c501",
+    "scripts/test_assistant_task_media_selection.mjs": "008b556fc31a0b4f20ee2a13a496b92e82d824d23670e832398c37953deca523",
+    "scripts/test_assistant_tasks.mjs": "7dcab7426a8260aa24e60380f39f7a4603190c9abb61a57f9e23545108053ab8",
+    "scripts/test_assistant_transport_input.mjs": "b88da776bdf4f6f6a7066962ee8bd1c4a4e55bf69e5f897b67785681ea347efa",
+    "scripts/test_assistant_weixin.mjs": "a11ba00f6b3c7659f4061175abe33d7105a79bf18da3c9e1d0703c469054c686",
+    "scripts/test_assistant_weixin_generations.mjs": "f816fece130349fed4d3dfe7bb7e4a4d598388d49965f35c478de134479f70fc",
+    "scripts/test_assistant_weixin_pending.mjs": "d156a8ef40acf1a1fd4044e68826d6356d2fd00801f293c8f4d81095a822fd23",
+    "scripts/test_evidence_worksheet.mjs": "edb7b3bf1e2fb7bb0e65a7f92895e79d4876a1bb19d71c64f563e4b60947e565",
+    "scripts/test_followup_worksheet.mjs": "f2b0ca6ae51618e00fe64ace4ee9990bd63a0e9c612c5892139cd24abbb458a7",
+    "scripts/test_pdf_ocr_geometry.mjs": "2177152fe6f8f47fef19fc19c6661296c649984d8be3770aa92d8ffe962a2b81",
+    "scripts/test_reception_worksheet.mjs": "97faf70ebc011da10ec93aa56b9e02c8401db2289bde04779955c83562112250",
+    "scripts/validate_task_drafts_browser.py": "efce068066f744fe532f4eed2acb80c79d755b29a8ac0b45a83ef4aa17d4304c",
+    "scripts/validate_task_media_selection_browser.py": "582ae180e9f309bf65fb612a3e251c1877a1959ca7f617b42aba392d17101140",
+    "scripts/validate_weixin_authorization_browser.py": "4df207f4c649abfeafcf1cc4a9bcffafc9e8f1cc7a7675407edbd8ca9ca2348c",
+    "scripts/validate_weixin_generation_browser.py": "2c4c3a9b30b6f65063a684e2613ea2f7fb2ff7e7fa169ad0b3b0ec5d4b9cc735",
+    "scripts/verify_defaults.py": "1fe8a588d6d24129baa12f0df61ac4a40c83199dda89e54e56e4e1796f48a4e8",
+    "scripts/verify_runtime_dependencies.py": "247d1051a0db4f2b1dc812f8865f5f78489874f03b497e3c97f945029358415e",
+    "scripts/verify_sources.py": "f3ab38ae2beb87eed02d87c43112bf96a52594b1c218d4ee15bea99d4dbe2b0c",
+    "scripts/weixin_pending_ui_smoke.py": "9db248b28e1d82d316291d2f05409c48c4ea3afe5737c8b58b14d9e8c1b75466",
+    "sources/upstream.lock.json": "160501c50f23a7589a81fd55d4396b9f8ce0b209721f40bee348c292240d08a8",
+    "src/cn_contract/__init__.py": "e15282ccd713dfe1b59ee491caff69a9395f2cb0dc9a04c331c36685e3f6117b",
+    "src/cn_contract/acceptance/__init__.py": "0bfd663398e047e8e27db278b583ca2d3773eb138538d5428a08d2b29948852e",
+    "src/cn_contract/acceptance/assisted_registry.py": "07a741ea48cdc638962d6738b11c94e1f7ef649586cb5dc1435edb1f2867cb20",
+    "src/cn_contract/acceptance/definitions.py": "094e5a775332ba66839e6341ecf32e331e29ed05611634fa15d92fb8e8c660eb",
+    "src/cn_contract/acceptance/ocr_scoring.py": "c564cb9055b9ececa11187c6c84e4011e9ed2a2d531f37bd2a6c6376fa191b62",
+    "src/cn_contract/acceptance/pytest_evidence.py": "89295cdb7fca198e806071bc5c0d2efb14a31431779de03f6d2851ea52e05bca",
+    "src/cn_contract/acceptance/registry.py": "2160f9cbc10dfdd4d504d110b469f0977f5d10671e45f52ef989af175d66f32f",
+    "src/cn_contract/acceptance/runner.py": "feb6b08e706f0656957436d41615b6a5d2ac1d16df10aafd9203cd5977224b0f",
+    "src/cn_contract/acceptance/sample_runner.py": "e6c4a02d67652634a113e7f9538f730cd197b33d309104fded55b479d079ce92",
+    "src/cn_contract/assistant/__init__.py": "e8b6b98e06425e06666908e31a382da2fce1ce2c0e8712da99b726ae42f6c71d",
+    "src/cn_contract/assistant/attachment_files.py": "42e9139450979bbbfa0ad64e6dd6501d9df453ab91cfe50239edf26895cf0a74",
+    "src/cn_contract/assistant/attachment_integrity.py": "c16f2f8a85d26f8ec335b21ee00e09e302ade542fa3d7463dd03afe7b4fbbbef",
+    "src/cn_contract/assistant/attachment_records.py": "d6384abc36f639908110494da6b781dfa7a67f510c1a5eee6e2cf8bfdf1c32ca",
+    "src/cn_contract/assistant/attachment_schema.py": "bdbb444e4bdad3586c44e9beebcd713353f4536f3ff768165f617805c4894f8c",
+    "src/cn_contract/assistant/attachments.py": "6e6f30bf8ee510e8d7968696019055a381b473cec0b1a1064a3acfbc3348249f",
+    "src/cn_contract/assistant/citation_identity.py": "f7ccfb420b669696b666c9ceafbd7a4203e9d6bc218c0171112ae7b4ab6d13ae",
+    "src/cn_contract/assistant/context_integrity.py": "37caadadabb30e4f0a45ca6f0d17ee2fa7b6468a6816465d9d4b7693eaf3dd8b",
+    "src/cn_contract/assistant/context_preview.py": "4fcfa400d66622564c8f288502b1bd1cb3ec7c3fa308f5f8dad0df166cc3df82",
+    "src/cn_contract/assistant/context_schema.py": "c065742834019ed70865c528a1cd2079396bc48204b4bc590f375c736a7ef42b",
+    "src/cn_contract/assistant/conversation_history.py": "1eea72539d371790dad6028a297de473339ce384dc6275a057062c9786102a6f",
+    "src/cn_contract/assistant/evidence_records.py": "d0711b21011cb32d6563f2ed3c65ee4c08c86ac27212d65a4342bb692847f847",
+    "src/cn_contract/assistant/evidence_schema.py": "66683d1ffe1b5cd14bcaa323319ed9d99a01704247de3a7017dcb181f3c38d8b",
+    "src/cn_contract/assistant/evidence_worksheet.py": "a8e60c012bdaa71ed300217a3977eab39a863d36030e9365c8669def3474602c",
+    "src/cn_contract/assistant/followup_records.py": "2909871b27fff4d85353880c2dff720e5fd4c9a960e41d016d5d66e18a3b2079",
+    "src/cn_contract/assistant/followup_schema.py": "610e7d19dd1bdd377830ce9904734c115eb4d61268ee0777f43ad068d3ceed7d",
+    "src/cn_contract/assistant/followup_worksheet.py": "c0de362e3d4f7b78fdff87ba4e08e8897aaa58dbdce414cd2d46727600b5321d",
+    "src/cn_contract/assistant/judge_integrity.py": "c9c56b0a35a297c8665189220ecda533a5ae46504f9c09f0468dd9cf3c95e90b",
+    "src/cn_contract/assistant/judge_schema.py": "44de9e38b94a6ffb77f12124158cb64fa2a783dac3630548f85903fa9ff288f3",
+    "src/cn_contract/assistant/library_handlers.py": "5bbd441038f9e1b3688e41c0c91eb140e0de00c9e5d364090e0e18c3fbe6bd5d",
+    "src/cn_contract/assistant/library_integrity.py": "e0257833b16549fa1a3851d6eef8ecd9c3d159d06f3b3a97c6c57285f6983daf",
+    "src/cn_contract/assistant/library_records.py": "36dd6100f50f3daae514b10452f2fabb770d0d7aa6a0130c6bc731c1accf0948",
+    "src/cn_contract/assistant/library_schema.py": "36c1a10622a4d69074399705716c221da452c17d629d000e9744a2c77f6c7239",
+    "src/cn_contract/assistant/model_integrity.py": "ae8c6bd26dfc939fc25de8f3daa9c402bc5f329852e4e1f5c507a00b63dd0ac6",
+    "src/cn_contract/assistant/model_schema.py": "0737ee0cc3344ab15e3c42b1f0c25b071f13878ac25159b69529d0bd385458e1",
+    "src/cn_contract/assistant/native_judge_control.py": "c1bf0a6ada4a2c97dd27d6800082e37f77b7c68f9347f5ea2b6243065ae6a003",
+    "src/cn_contract/assistant/native_model_control.py": "156c7842247a872ab22aa32e2157204d9a24a6f013f89775e477c43a73fc96b3",
+    "src/cn_contract/assistant/native_profile_control.py": "460665d1078650a40cbbe4c708e41165128bb9cc02e7a203dbedd02d989c3b76",
+    "src/cn_contract/assistant/outputs.py": "8589fb3674dd977c66ea11370017d882bddfc05ab6bae09f5899caa2b378d14d",
+    "src/cn_contract/assistant/profile_integrity.py": "a07e959d55ad77659eda28c528f7ccb11a1f123df63a9e0795ccb7755d4eed49",
+    "src/cn_contract/assistant/profile_model_integrity.py": "782dd0652d2729d7450c17b1d689c05644c9b4150e9fa1e466e1464a334bbec0",
+    "src/cn_contract/assistant/profile_model_schema.py": "c2bdfc44a410711007be4ad2a00d8062dd31aa0cc50e325572b71335b3ae258b",
+    "src/cn_contract/assistant/profile_preparation_service.py": "e42287bb1c221dca61365fa5b53871a38eab0a4af507b0631b4a910f6e84d250",
+    "src/cn_contract/assistant/profile_schema.py": "f3643c243f873986a338c1e86f5b31d35275cb0d2f2ec0e3d440412b99233db0",
+    "src/cn_contract/assistant/profile_sources.py": "be42b628ba213108eb5863403ad19b2daec7a85e5745bde3c2dd99e848718ddb",
+    "src/cn_contract/assistant/profile_store.py": "79f49aab0b2b02d9bfd7dbf25b4db81bd686f5cc87f29eae3cb6f472cf65d22b",
+    "src/cn_contract/assistant/profiles.py": "dc2fa65bb194d3cd97a80cb77a0f0ca9466ff2f5895cbcf7b10402bbc9c565b4",
+    "src/cn_contract/assistant/providers/__init__.py": "e62f8cd59c53f2d57cb84fb00819f6f0d14526f2fa49d642411b0ca99dd3bf1f",
+    "src/cn_contract/assistant/providers/attempts.py": "2cb5d3aaaa347eb8db7b4e0ab5d945f0b6c84a2906df3f64ada1fd56f05c6092",
+    "src/cn_contract/assistant/providers/context.py": "10a369c20f0f40a9f652c52ae74f51ac2206882a6c46c95a8bc43fed7bf3c4db",
+    "src/cn_contract/assistant/providers/context_codec.py": "9f4456054c21305acab2f1262b606ae5fd7458ad1505c30b8dc9211abd98aac5",
+    "src/cn_contract/assistant/providers/context_preview.py": "7fb5351d8086e7f03b0a57844db1386435be33e50402285323f0e78c019aa3b6",
+    "src/cn_contract/assistant/providers/deepseek_protocol.py": "135471ca658e30588db446177e6069e4201d6583aba25c36071180158babf3f1",
+    "src/cn_contract/assistant/providers/deepseek_transport.py": "dfddd07a4efc9debaf75c810b66353ccd8063c45f17972f8e95d60cc0116af5c",
+    "src/cn_contract/assistant/providers/history.py": "6f4b08fca1105d6ce74d2fe011e835a94739441514ea5dabb7f0203fc6c187c2",
+    "src/cn_contract/assistant/providers/jev.py": "0ef430717db2f11c225ba0fddbb1ac23b736b1d033105d4e027e02bede1fa686",
+    "src/cn_contract/assistant/providers/jev_codec.py": "bc69e1145e09de8d3a53fd24c8cf0093a0120198d330041ea5e216b38deb1e69",
+    "src/cn_contract/assistant/providers/judge_attempts.py": "007aacd4c21772be95b4fc5479f46a05d07380afeafe8b34c12f137216e1504c",
+    "src/cn_contract/assistant/providers/judge_execution.py": "7ad51bb46ba8002a83be414e04247f66d1c78c7293f29303988f27d53cb9951b",
+    "src/cn_contract/assistant/providers/judge_policy.py": "3e068fed410189352858584a9da6634bea308acf40142cdb0e6b8b0e92016601",
+    "src/cn_contract/assistant/providers/main.py": "a673c5a47a9d42304460dec4efd5579467ddae4f4be4c369ec0044c79444d64a",
+    "src/cn_contract/assistant/providers/policy.py": "2e2b1c78763f05a83060db09d5ca8c809003054a46fb1bf03b610031aa41b857",
+    "src/cn_contract/assistant/providers/profile_attempts.py": "e28e6c4f58277af8535365d809943807285116d492af365a3efdd7602cfc69d6",
+    "src/cn_contract/assistant/providers/profile_codec.py": "1d15e16f90e2690063771e8c913c6e070ab77a47558e390aaaa8a2b8c687c59c",
+    "src/cn_contract/assistant/providers/profile_history.py": "e7f5576f80af0a5763c731bc0be92292614681e3865c02c76b83695128b26904",
+    "src/cn_contract/assistant/providers/profile_preparation.py": "d6aafe475d33544da075eaa5281347fa3d905804f38b77a36a9ddbb56b8b261c",
+    "src/cn_contract/assistant/providers/registry.py": "bee66f00b9033cd18e242fd2553e83b6fba9dea9c333480c157e06317a6f8788",
+    "src/cn_contract/assistant/providers/rounds_codec.py": "e79b22f8deae21aa9d93bd0b80e0f02a7ef89c144052237152a0427532cebbb8",
+    "src/cn_contract/assistant/reception_worksheet.py": "b860a77c59f15344be51d890a47243111ccbac5f2d6321ca5c7fef975b6dce13",
+    "src/cn_contract/assistant/research.py": "c309fcfa37fa85d1beb39c11123edb8f58a6acf1da05658753266a3a1530a4f1",
+    "src/cn_contract/assistant/research_records.py": "f8623c52c57605f59bb08c42fb722c1dfb37104a4410b79f964aac8bd76d7fad",
+    "src/cn_contract/assistant/rounds_runner.py": "d038c54147cd03aa02326d7b6f0195a147a2691fac9a358f4d71f86d3500299a",
+    "src/cn_contract/assistant/rounds_schema.py": "c5ca42a9f2bd32ce2e67a716be9307cb65f8737091b0b72fa00682474df0bb95",
+    "src/cn_contract/assistant/rounds_v2_schema.py": "cd5dc19f1269f1127b693bbc24123d47e394b6473804ccf89ab70f025b129c9c",
+    "src/cn_contract/assistant/routing.py": "b6529e27d501fc129851c9c304fa2143e066010eebc7596482c27cfff0fd1cee",
+    "src/cn_contract/assistant/runner.py": "4f701db4016d7454d8bd42847cf22ec4f5cd88235cd90c895eca108d91744c19",
+    "src/cn_contract/assistant/schema.py": "0979aeba4fce1d1aff0772ebb9e4e57437f14e85ce3e9df3d903f9a08e1ec26e",
+    "src/cn_contract/assistant/service.py": "b6e9c2c9825ede962be21c2385d0109b7712130405edbeed58a2b869d2c6baa0",
+    "src/cn_contract/assistant/task_manager.py": "87b88b2b327f3597ce8df6cf87cc7aee6847c0f0ce666601a94638e3e468139c",
+    "src/cn_contract/assistant/tools/__init__.py": "6cedc11c9448204eff763d37bafc5659fd1a7d35191369b5d2d3aa0c55cbdd74",
+    "src/cn_contract/assistant/tools/library.py": "b4693ad65ff2adefd16e28bc03958904964cae0baceeb5d338717165cba45570",
+    "src/cn_contract/assistant/tools/service.py": "16fcd21a1faa0609df4f5409321b57a2dd862b31e274e008af1bd8a5c8da9e7e",
+    "src/cn_contract/assistant_attachment_schema_baseline.py": "983b972df0847f3726b0863507c570c1a42ebdcaa3665079441dcd94863f4333",
+    "src/cn_contract/assistant_judge_schema_baseline.py": "7e058952fb9a9af89936bfc9a2af1aff205e7f8c0f5c481132d7117bbbd900a4",
+    "src/cn_contract/assistant_model_schema_baseline.py": "15343cb48bd893986974bb7decddd2a522d9d55293ceb9be7b5aa6d36bdd96ea",
+    "src/cn_contract/assistant_schema_baseline.py": "1843eb0eba5bff9f7ff6123e6a3882d6839cd0aad810dbc9746392ce82deaa49",
+    "src/cn_contract/audit.py": "c4b844ef8008984bdba3308be8451bd1bdc35f83b8953f20b09765fbb156e05e",
+    "src/cn_contract/authorities/__init__.py": "fc5dadb41a894e467fcca2c01f7d9ff61e77ec6d5516d75681a3d91c49652b15",
+    "src/cn_contract/authorities/applicability.py": "399feade027467a616aeb50b7afcb29f7c2ea6930c5b815c70dc2248da7ee356",
+    "src/cn_contract/authorities/registry.py": "8acc0bb83b57bdaa5d22b217d2ae27628bdf2489d7df91e4541e8efda3dd2eb6",
+    "src/cn_contract/authorities/storage.py": "96285ee43c615d8eeb6ea5bb5c61c3c6d31f97f931367a966514da08d7eee14e",
+    "src/cn_contract/cli.py": "0ceffec8cd0ce794f04225fcf5d0ed1c337e9c8ff8bfdba801e5bdc048ff0650",
+    "src/cn_contract/config.py": "77ec3d6265ee99750e5db9e6ea7853ba8b9fab8de2b507e3ca997c1b87e940fe",
+    "src/cn_contract/desktop_control.py": "2362f8949696095ebfe94ae9159e0b7b70a3bd93f1c3a580e5c9395be4a63366",
+    "src/cn_contract/desktop_entry.py": "bb5f21014427156e2b8d3f3d9b693cec97a7b1761206aa0775f02cd6eecf1291",
+    "src/cn_contract/documents/__init__.py": "d96bcdd171049d71d4e0596d142bd0740fa51e9978d6d66c48c5640c4bace97a",
+    "src/cn_contract/documents/_windows_ocr.py": "42217009e919157b82092e5672c4cd61dc8414af1b72a4eb96862dc84e183a2b",
+    "src/cn_contract/documents/anchors.py": "bfa30fa4fde840c00a30364648509e182238ab3bb45bbe17cb88901002a238f3",
+    "src/cn_contract/documents/docx_adapter.py": "6ceaeac61da42185c090cb5b27cda99e6916caecd8a94d1755748ee34e8b1c6f",
+    "src/cn_contract/documents/docx_styles.py": "c9f19564fa5ea8d33fa65153ae9b52bb1aff4354118d8b6b8800530d0a43cd16",
+    "src/cn_contract/documents/ingest.py": "b9689e759667b668f6591ba4bb31e5ee050452aa505f38b0215cec14d77681c1",
+    "src/cn_contract/documents/local_materials.py": "b328aebe1b74e1cb7a972eb1db9f15a7870e7565fa654d8edfe9ba881d75e12e",
+    "src/cn_contract/documents/ocr_adapter.py": "0c33b8618ac48a49f259b5a56b12b9e828f65be2c3819692eac846d6535897de",
+    "src/cn_contract/documents/ocr_assets.py": "96931b53f67bb5729caf54e7e2d8055e306a8c4e8bee6034d9cb0492e89e211d",
+    "src/cn_contract/documents/ocr_candidates.py": "4a9ecf53e7775ccfacb966bc6ea67984a52fa3d7935196e9434f0fd0855e483f",
+    "src/cn_contract/documents/ocr_process.py": "9e834eb8e1929a15cb0f0ded5b602a70190344fa3ff7fed13b9a5438fb68d20e",
+    "src/cn_contract/documents/ocr_worker.py": "a2294afa2220e59ffedf9ee5b863988416ea55aa21a27a6491bf9e4fbaf428a2",
+    "src/cn_contract/documents/ocr_workspace.py": "7430bee4a4abe7637c6479e186540b6a12ef674dc837768c5edb2ca0f2a4d5e8",
+    "src/cn_contract/documents/pdf_adapter.py": "c2bdcf26644810d57684eb02229938ae8cbb521135826f9b508931615d797e8a",
+    "src/cn_contract/documents/pdf_visibility.py": "e5bef1ef2d70b8c580ab767cb6e0d9027a15a0ca3720c41cb9dd6f444474aadd",
+    "src/cn_contract/documents/pdfjs_assets.py": "b2e48235252c91bebd223bc51487bce2676938efa598ded5adc3cc05777afc6e",
+    "src/cn_contract/documents/proofreading.py": "04ae7928c3cc90ad42d8f1b51df98b1ce1086386b0d86bf6902c89fa0d4821a8",
+    "src/cn_contract/domain.py": "712036ab65cfadc2a5149defc59ee8dd35fb9960824aca15192e7d431c449a20",
+    "src/cn_contract/exports/__init__.py": "4c1d67e0637494ebaee62f8154cf365329574828d4045c12c70e6578f8eddf9c",
+    "src/cn_contract/exports/approvals.py": "5cd82d5edad120f2b2b74a62be2cb5e5f6126f4ad579528a39ac521687e35189",
+    "src/cn_contract/exports/assistant_docx.py": "0109c630199cc4410b858b6bd5e25859b94af3cea11e946f75e0347807bae0e9",
+    "src/cn_contract/exports/audience_filter.py": "2b9e11be43fdbaf9c0a873abaea1a1d2ff45dc42e70d982e389b05860d915faf",
+    "src/cn_contract/exports/draft_confirmation.py": "25a49c8047b53cbed64d7e3de2648c2fa454de275188cf365ace7baf30399a12",
+    "src/cn_contract/exports/effective_text.py": "a0249ddbfe235012fac199049f3eaffa90189473eabd410b8e5460a09c5f5efb",
+    "src/cn_contract/exports/redline_adapter.py": "b5d08bdf690d2c2fe20a74e0080b3b8aa53640d06e66fb262035a70404389cce",
+    "src/cn_contract/exports/report_docx.py": "6292eb5988ad9d445bcadabc4cee7f2c00b5fb6781b68fbc76ed99a6c9d564dd",
+    "src/cn_contract/exports/storage.py": "40c37d248c4578702ea95f4373962f21cf38f48e055a7eb049d373b6048194b7",
+    "src/cn_contract/facts/__init__.py": "6725e264dcee56aea6088c05858ea0d95ce4b24059410888a74cdf3720049a6d",
+    "src/cn_contract/facts/calculate.py": "7923a94b9b3d8c00c487af11fcb13726d720cd62ea5d9ef843aae185901907fe",
+    "src/cn_contract/facts/confirm.py": "00b9dfca23aede6109df6724763be1976898f7fd64d902cceb8cf4a56aeb3e07",
+    "src/cn_contract/facts/extract.py": "e9dad1743a5d0ab55b3e06b04372af817101c2e1530123f753859499af91df19",
+    "src/cn_contract/facts/party.py": "66707cf14794d319bf6a5c47afb8551f5932d4ce05dcd0daa983f81e4a06ada6",
+    "src/cn_contract/facts/storage.py": "4dca908cd617db67ca7a466b77d16bbab65cfe3ea02b52e7a10628d26ddcd52e",
+    "src/cn_contract/intake/__init__.py": "2db94938e2b6154cfa9aae2d71eb09e232d398052544d1e889c0dc2a742d6a5b",
+    "src/cn_contract/intake/schema.py": "8ac6a2ed5b5870e35ecb417b0bc0b2cb7d2bf5bb3d797c93c56fa0a52ae1ce32",
+    "src/cn_contract/intake/service.py": "ab5fa1b22123abfa9e87ebf4b94552fc68593c7dfcd422f07cb53934f50b252b",
+    "src/cn_contract/library/__init__.py": "0cfe852880ac3558919551b5ba4f8490a97a4c82a469d910a56f8b7efe97a4c6",
+    "src/cn_contract/library/__main__.py": "0c0a98fd4f67542e016c68d282b0690a56e47341aaee7234be054a5a9b58cdc0",
+    "src/cn_contract/library/assets.py": "a34f94be4da72fb803fe0acef22280465c5e064f8c8c35abfb94e9f01d40b672",
+    "src/cn_contract/library/budget.py": "b5e7634d04ed913984b099d5e30aaf73e920efeeab49d3c3c75925f5c05ffa51",
+    "src/cn_contract/library/catalog.py": "9d460b0f8dcfbdbbab8ed797296fae74ed2bc1a03796eaee9208b454c0c8bbb9",
+    "src/cn_contract/library/cleaning.py": "7d665427e3cda6a2c907257ec07349d8749abf14efa9e38b2484092979577bad",
+    "src/cn_contract/library/csv_source.py": "56e227f9bc68dcb2ddef78f3eda885e052e83e1f326ffbaedefc244377a83d8b",
+    "src/cn_contract/library/index.py": "870f6ac750e113f282d5de36cec71de079574b33f48248bf4391fd0fdb95aecf",
+    "src/cn_contract/library/law_sections.py": "770c25e66322872a746261ba5fc0ec5da669e2bd2f0852513c46fec7abebd1ec",
+    "src/cn_contract/library/originals.py": "d4d62a2224874a2df888cf036e4c196f850d48d79e40a6a4fdf91543eea58b1c",
+    "src/cn_contract/library/pilot.py": "ac66be24ba0c64c4c8598d9f38d2e53efc69633e281280439d2a035290e89870",
+    "src/cn_contract/library/pilot_adapter.py": "662cf569b91f088b60ce05029d115b89754a18ca08d040916e4c0f3cf726de2c",
+    "src/cn_contract/library/portability.py": "4e149fd4f1cbf18792daa98e01552951d7e6bab4b4b37a9ddaa0dfd6bae52c16",
+    "src/cn_contract/library/service.py": "3d09ea0d3cd30307c88fece13eef0a2aa5a5d3e88d535d5003d46f271a5cd82b",
+    "src/cn_contract/library/text.py": "4f8c61a72b93fcb549604a711afc511a2de3e42d3a63c4e5ee0591b6e0a5a854",
+    "src/cn_contract/live/__init__.py": "c412f1fd1ad75a94578457fd231371c7643d457091c9bfd95d6e802cc337bcdf",
+    "src/cn_contract/live/guards.py": "e2d6e4c57304f734f633094f238081492d85587f67a7311503a11c6ca60250de",
+    "src/cn_contract/live/readiness.py": "d2d6164772e18cee79e8538f14e5208cbc0d92840713132205206bda06a2dfb6",
+    "src/cn_contract/matters.py": "af2ffa027e1551967294f075b4411b6d50ea7bd44c3b156221c1c697020ff0e1",
+    "src/cn_contract/mcp/__init__.py": "230f6ed32f7ea2112c354bff47cdae1376ed1aa2a2d261b6f88ebac64276a1f1",
+    "src/cn_contract/mcp/bound_entry.py": "ff4f8c17ea5ceeaedd7e5abe7d948e96083802dcdb66456eeccff00a987f950b",
+    "src/cn_contract/mcp/case_client.py": "d802e7950372b0e314078e077b9e3072ba6282d0644b2934b8fdbaa84d0c211a",
+    "src/cn_contract/mcp/offline_server.py": "78eca3b86296e89799c841b598d7224754b95ba71f14405bcfbe5ebb054d5c54",
+    "src/cn_contract/ops/__init__.py": "3ffd7f6c1db4c30ece7dcb95df360f427c4cbe3a1d10edae5fafa54e12238c1c",
+    "src/cn_contract/ops/backup.py": "f2d63b12026e7c9e5d2f43f6e43b8520d15cb99d98dee9d4e058f0648553a021",
+    "src/cn_contract/ops/egress.py": "01f784e8a4eca4f92ed32a58faa121b0137501c5b63ead56ea9732ba903ef40c",
+    "src/cn_contract/ops/file_paths.py": "d529bade41b7d0957fca2ea9ffdc5f96ecfbfbc827677108fcfb2d1261230a48",
+    "src/cn_contract/ops/release.py": "0fd7330c43d125d03a3bbd597dc6fb9623bfb36db364c4fb162ff4bc7c1af820",
+    "src/cn_contract/ops/secrets.py": "0a0aed21bb7a310398960c0dbd6b6a627569d5dfd19baa9d18af285cb9046e99",
+    "src/cn_contract/ops/storage.py": "e24f24b955a579961b4cc20561e19f821f762b59230311d7a193c1f6328be4ef",
+    "src/cn_contract/ops/workspace_backup.py": "0cebe362b20104388e4ec1c084d5fdae82bbcbd18a42dd23efc0160c82afc1ad",
+    "src/cn_contract/persistence.py": "484ed202bd64e20f60d8223275d77d1db905d9b053e2f157db925988386c41b8",
+    "src/cn_contract/providers/__init__.py": "31a901f69f2270bac1b09bb606e7a1818fef6a6b334bb09b0a2700794d8bbb8b",
+    "src/cn_contract/providers/mcp_client.py": "3d371354b5cf31b93a277bd6b8a90dbe581ffede5b0cf17d828c2d78cc06c859",
+    "src/cn_contract/providers/mock_qcc.py": "655f5bb04e85a7061f37027f3f7fdd02ac902d67bd2434eadfe34c9582fe042b",
+    "src/cn_contract/providers/qcc_mcp.py": "928d5a0b6bcfbb8ec10ed4a11dc8cd3439a5977723d38081cafffe8fba2c7ec8",
+    "src/cn_contract/providers/qcc_registry.py": "fbce22a488df6c908e975f31431a2b9896979648935b52686743757ffc606619",
+    "src/cn_contract/providers/storage.py": "a7f38beebe75f6c817c7e337dec256e1bd7d0de1a4d09ced1abdf2dc424fb7f7",
+    "src/cn_contract/queries/__init__.py": "0ba009c6973a02460e267a491a6981d5856be967f5a8f41dc65a210220b4946a",
+    "src/cn_contract/queries/gateway.py": "198494bcdeffc085ec9229936619238b8fe0deccc8f8cfc8c81302f50e5e4c09",
+    "src/cn_contract/queries/ledger.py": "9b8880d3536ed4b351697c275fe3835d016e24f6b067c3b3e725756ea53b0c10",
+    "src/cn_contract/queries/planner.py": "0244ef10118af106d9d0d59ef6959406a9c2c82fb25134bf53d471b49f6c19e1",
+    "src/cn_contract/queries/storage.py": "7c9bbf5f02685a026e7815514a4c5ae849305d36a7e8e8629ff70a2f4f40f862",
+    "src/cn_contract/reception/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/cn_contract/reception/assistant.py": "19a250017fddd04895687ecd423858c9847a9c8e1cf612f67771a79bc65c33af",
+    "src/cn_contract/reception/knowledge.py": "cad3e4423ec4ff6767f7555d8972afb8b05ba395177eb258c2a077f6890f0b6d",
+    "src/cn_contract/record_codec.py": "842647f5e46da5b7b00892e437b140835e32ee04b2586961fed5976270d05c46",
+    "src/cn_contract/review/__init__.py": "210241a05e5417a51fcb1617ffa5699802300e4375a64a2298390ee5bf6b7315",
+    "src/cn_contract/review/basis.py": "30b84c0d012749f4796583e94834d8bf0a0653560fab112995ebad94afd31b68",
+    "src/cn_contract/review/decisions.py": "a657ef556433051b15a2ceaf83730f2c72e5d003904f15bbbcb5ac8d3ca393f2",
+    "src/cn_contract/review/deepseek_codec.py": "1691a927aac4c4b0676536f19e2887538278a4d9a32e29d27e823084438ef362",
+    "src/cn_contract/review/demo.py": "a4954070d1dfcc3cddac5b2753bbdc9be2f99b216738437e467233c342d97842",
+    "src/cn_contract/review/model_adapter.py": "1770fb5b093e86cf2b5dd36f3960c8d09b5b51ecf8ecede08b8fae1d4e88241e",
+    "src/cn_contract/review/proposals.py": "7136711bde02c7411a34e12e9ce412c5eaf4f1b2106c9534474c60d8aca4638e",
+    "src/cn_contract/review/storage.py": "d4e0a6d9a3c4a481a86ef91408e080b672e33052dc674ff14feda4ea43ba24dd",
+    "src/cn_contract/review/synthetic.py": "0b734458557b40264a2fc218e685f6a0841e2abf0bc35163ac784f4abbf90eaa",
+    "src/cn_contract/review/validator.py": "583e6532e019b601d499f3c39f2388293229f8acafbe4d70d7e655c43cbb9f8d",
+    "src/cn_contract/review/workflow.py": "7d34a9934269c23d007b1dc4d1ccc2bf415b26a26ba06c4a014be65854689cd0",
+    "src/cn_contract/rules/__init__.py": "bc8ac84b72c69337e3d7d5c51e97371d1b85d938aa3b8e76e4ac84a229a94cf6",
+    "src/cn_contract/rules/evaluator.py": "f40d762086fd5ff20f6b995fe012cced35be96de895c065b878b55dba0b7887c",
+    "src/cn_contract/rules/loader.py": "bf9ba87f94d6c7d5874a74c84be9185b9d4c75a25c473d572b1a46895a9adf74",
+    "src/cn_contract/rules/storage.py": "aac079680195afde47bb3da0ad3f0a2de5091ee95cb30ad5eb9048f648a045c9",
+    "src/cn_contract/schema_baseline.py": "59aac5bd8be5e2df4f1716e071ac336f65f8c8a83adc71998570923707d48c50",
+    "src/cn_contract/schema_migrations.py": "5d270b187cd67c3041fd77018574c664c001faa2440b9ba93bb3ac70a2f7e786",
+    "src/cn_contract/security.py": "d6457c56fc6a6889e0ac2848dc77b037b9806e125b2d3532a52275697662b7f2",
+    "src/cn_contract/storage_bootstrap.py": "1ce1e38fc2839b177491729ef63dc99d853a58c89cb0335e539fa97379de88f6",
+    "src/cn_contract/storage_schema.py": "599f2f077414a4aa1706258e9c0a90f9bac97aa02e2e791bad5ba1b6d0446979",
+    "src/cn_contract/task_drafts/__init__.py": "9284c81e22a9a655270ad4af35b6971a35de9d79d409a84e978f8dee7a0fc51f",
+    "src/cn_contract/task_drafts/bridge.py": "2dde45c280bd199105d4c4213d9e423f927086d0d55a132469de24657a86b092",
+    "src/cn_contract/task_drafts/integrity.py": "33407f189e3aa7a789eea6a4a585f0090091ad4b72d1247d7297f033a9ce2342",
+    "src/cn_contract/task_drafts/mock_policy.py": "9b80cde425bca600dda5768c3d0b2224a2b4bb1f3ae9065f74fa3aa372f83555",
+    "src/cn_contract/task_drafts/schema.py": "434ab70ba8ab548aef6bdf0f2cbb55682e6d69f4214cb4d3f4a0c81b7adf8023",
+    "src/cn_contract/task_drafts/service.py": "377c70eaf877506ef9df72200ae065dbabe73da66c122ec54315b3cb3f5b2c2e",
+    "src/cn_contract/task_drafts/synthetic.py": "7c431250500e73449216e69b2451b0fa4e95b3b0aa43b4591598b1108648e3f5",
+    "src/cn_contract/web/__init__.py": "c1e755c1c11a3fb8bb965caa2db865ede1e5c1d0c55d0a39493d4925f77a018a",
+    "src/cn_contract/web/app.py": "e23f644a10857cfb6a54f49c7f3f5f75499f76a4d8319fedf2ce5a47de5e1946",
+    "src/cn_contract/web/assistant.py": "0e24e2e92d674541d35258c2d183823d8ef8e6301852c812f67aad4abf0e6a1a",
+    "src/cn_contract/web/assistant_attachments.py": "1a5c975d9fada0ab4eb78184e57b6a23ebe6c27e617ec4d46f2cfb50119818eb",
+    "src/cn_contract/web/assistant_context.py": "75b33a20deffbc5f889433ceffa7ee8425f76c1380e78530229f1f91dfa19cf1",
+    "src/cn_contract/web/assistant_generation.py": "691c9351746f9e13b1ff26279cfc51cac9309808d5e032991db6593fafbf2df5",
+    "src/cn_contract/web/assistant_outputs.py": "849ce522404be03cee05d0fa4fc6c88156cbfb5050d63e691a37874f62435126",
+    "src/cn_contract/web/assistant_pages.py": "15668b532234b2646bdd10a403ee433aa795a3660e8e4755e845b92727f40d47",
+    "src/cn_contract/web/assistant_profile_generation.py": "d6cfbb970479b19ea838f7413224a2b58307e0e84cb3c2a22df4148abfadcf56",
+    "src/cn_contract/web/assistant_profiles.py": "97e32cb30473160e9debaf9f8d85e7912dd764ef6bae6487df17469995903ed3",
+    "src/cn_contract/web/assistant_research.py": "7dbac3ca1fd9b1896ba7575248e35edd88e8e0bff20793eb34d782983d57690b",
+    "src/cn_contract/web/assisted_demo_server.py": "ff19a4e91f2b7824051f5e08bd468203bd5293569658f2999c9e6593cd8811af",
+    "src/cn_contract/web/case_bridge.py": "2dbaed96d67824cd27bd87e601d1284d93f87c47248b8223ca2234da7114ea5f",
+    "src/cn_contract/web/demo_server.py": "34d00d012b8e0a5d3ee22f1806204f91538f0b56990538ba69b9f91a14c09bd5",
+    "src/cn_contract/web/dependencies.py": "29afc72408bd3b085348c42598f6f23b69771b91a976b2ebb908cb2153b8d694",
+    "src/cn_contract/web/draft_confirmation.py": "fde6cdba9e3bb8357234194946459936ec9d5f0cff675cec4914eaeceb5a6aec",
+    "src/cn_contract/web/evidence_worksheet.py": "269ef1302cfcd7b5a85229f183871cd28efb4100798035286de876b8494a175e",
+    "src/cn_contract/web/followup_worksheet.py": "3770ad1099f4340c0ad095c1d6de6f056ba899ac28b196b939f3f3f645dd157e",
+    "src/cn_contract/web/intake.py": "b969e3ff47f900cd709b03ee4ee529c88720f40cf297658001aae251f8d95ea5",
+    "src/cn_contract/web/jobs.py": "75e19a6ef2a8a150941072342dfc675ebfc727018c91233789c3301bd0fa1e4c",
+    "src/cn_contract/web/library.py": "18a443be956cf6f84de5b9a50b3fbc3c95bfa1ffb6bb22c7e04afd6bcad9030b",
+    "src/cn_contract/web/local_server.py": "43ce5fdf05303eb3aa9800d041911bdaa80c4df4e4a55ff673d601ef69fed2e7",
+    "src/cn_contract/web/pdf_review.py": "0371f0b70a1eb1b9671383d627d27bf88c445a04093573539eb5b737bcc39218",
+    "src/cn_contract/web/reception_assistant.py": "666bcf3635d77cddb5f405b4a53943d53d226e2b61a58cc547d3d896d1513eef",
+    "src/cn_contract/web/reception_worksheet.py": "ebdc984735d3aa8a6b4703136de43b883c4c193fda20c74c2b852b0e9f134e2d",
+    "src/cn_contract/web/recovery.py": "ba34dee15b9bff652a01295024b017595872975cace9582a28bd795863e16064",
+    "src/cn_contract/web/request_context.py": "f182733c08a3527a649582b56c1300ab37dac6102f50910051f7213d1273281f",
+    "src/cn_contract/web/services.py": "f9fb1d0114a03866711aa38060a5ba1fd7c09293ec05c786b43faa76d0308dad",
+    "src/cn_contract/web/static/assistant-api.mjs": "caca40281b0bbc59615309dc317d2cfbe2c1c46db7306ef496ff5a7d11312703",
+    "src/cn_contract/web/static/assistant-citations.mjs": "5ab80e559c7739c1cea71c057e257608a9f723eb01f6a529f115e4dd0083bce8",
+    "src/cn_contract/web/static/assistant-composer.mjs": "cdffd8b6ebead4a76005fd08e95bf8a180d0862ff8e88f34beb98d7ae90a5226",
+    "src/cn_contract/web/static/assistant-context.mjs": "8261babd1c8511a7546f0ade2dd53281c46364c1d160bc6c6890b8401ff621d5",
+    "src/cn_contract/web/static/assistant-generation.mjs": "a93e63b5f92cc70bdd43065cde510b24b56708f2054132aa4db8db057e2e6522",
+    "src/cn_contract/web/static/assistant-materials.mjs": "c32422ef77b08ec6af6498cc92284dfc64763d682aafd77f558dc10b2f306b6e",
+    "src/cn_contract/web/static/assistant-outputs.mjs": "ed3869071a6de9b57c7d2be1f49f07988843c4b239830b78210d012b9173b5ba",
+    "src/cn_contract/web/static/assistant-profile.mjs": "24cdbfce94791f8f3c0b68a09fc52c62a3e6a193eebee978d860dda25cb7cd9c",
+    "src/cn_contract/web/static/assistant-render.mjs": "c5707ea05468cc3f806733bc291485fa96f21b8bac504bb29074ce7117826990",
+    "src/cn_contract/web/static/assistant-research.mjs": "70290311bad0bfef49c03acd05e09cc34adbd53e4cbf877b0d0ddd5246b1cce8",
+    "src/cn_contract/web/static/assistant-state.mjs": "6d42f8f79039df1c542fd09bbc33901e3f5b269f2ee24a2809330c4f1e17b83e",
+    "src/cn_contract/web/static/assistant-tasks.mjs": "8def6f6fb026a4a92293d498fe3605dfb78bf547b63ad5f63ccebbe469fd0fdc",
+    "src/cn_contract/web/static/assistant-weixin-generations.mjs": "ffbec4f241a3aaaadb13ed553c9a68dc60d956b3e69bcb466c652fbc2e0bdf75",
+    "src/cn_contract/web/static/assistant-weixin-pending.mjs": "378c8288395dc90dcc8170019639615c8ce2d7589ebf2cdebe518f0cdfbb6e9e",
+    "src/cn_contract/web/static/assistant-weixin.mjs": "cd85ade8d9d5875a7e9a9e3373b89aace9668ff79de2121dc3e95eddd9dd7fa0",
+    "src/cn_contract/web/static/assistant.css": "220abc3fe946c878dfee375be6dc3899b0106bc482b308eab68aff9c96063228",
+    "src/cn_contract/web/static/assistant.mjs": "02602c0a4c2e5b902c57e7815cf8f60e1fd2af17e1108292e922ecd5746e6a4e",
+    "src/cn_contract/web/static/evidence-worksheet.mjs": "6909b9f27cc8c6fcf63915a055978910891e34277b7954febee16ad330f74a90",
+    "src/cn_contract/web/static/followup-worksheet.mjs": "6ee0d7a439fe6289faec1e7ccb19190233b378284ee64fdf37afd6510a467da8",
+    "src/cn_contract/web/static/library.css": "523732a1bdc367f67893f4b2df74c26cd201246cde5bf76919f82583f6d7cb76",
+    "src/cn_contract/web/static/pdf-review.mjs": "9894b6100de765f7151af43c1e78f734aece4309aa17ea1152079e14b2b9f6b1",
+    "src/cn_contract/web/static/reception-assistant.css": "0c0b8be1098a61d4865b60504af515267c7371db165227c11ddcab7cc44f8d50",
+    "src/cn_contract/web/static/reception-assistant.mjs": "46df33eb12bbbc058f8398748c99fea6879beca496dbd8ed4a45e6eecb904005",
+    "src/cn_contract/web/static/reception-worksheet.mjs": "20775f809616cb6b4725e4ad94ae2b0a5d17921a72d38544118817534553049c",
+    "src/cn_contract/web/static/workbench.css": "ef3db345f1435b596a08eef43613a858531f9fda3347057c743cf994214c56db",
+    "src/cn_contract/web/static/workspace.css": "4376e2ce7c11dfb8df014cbf2cc1a6ede60df80e42990ecc15cbff23da8a082e",
+    "src/cn_contract/web/storage.py": "35d3576f7e43a4fd659a22f88759cba67e4d79206e40145e5360de7adb370dd2",
+    "src/cn_contract/web/task_drafts.py": "924a87d7e43494d210ccd93dc50edcf1a881d16187493e1ff268fc684907db35",
+    "src/cn_contract/web/templates/assistant.html": "acfdc39856342a31b6ac2c67b9af61cc1517323222d2c120248d2602be1f4880",
+    "src/cn_contract/web/templates/intake.html": "eafc435d8db8d1c0fc01b94f67e8a60dddfd1ed444b498211d7e632e5dd14b26",
+    "src/cn_contract/web/templates/library.html": "6e9aaccf5b210e38494ee0ccf2f24b148f02118928d522b9bf82af15549505e1",
+    "src/cn_contract/web/templates/login.html": "c470c419a4d5478f67a6f5fd646d7adc6e0b73723c0f9aa2d584de320dc9563e",
+    "src/cn_contract/web/templates/reception_assistant.html": "44b29ce2cf6aed9a7716ee270dcb346d03c9fcdbfc47ac52aaede1887df2ed77",
+    "src/cn_contract/web/templates/recovery.html": "37825950dfab1013290b767c16ff04bd489683dd5784efc9676b1887dc08648b",
+    "src/cn_contract/web/templates/recovery_task.html": "6c1ff2b423ebda6b36f1a9f09c51d4d92519ec312dfc928983563b6a9bcd4bf9",
+    "src/cn_contract/web/templates/workbench.html": "3795c2be545d118d46a30efbde7b092011b9ee6ad16b78e2f7fb13d32692879b",
+    "src/cn_contract/web/templates/workspace.html": "ec6d16ce0f3cf38b79f175c75fef696837a967b08fe4c4437a5e69dfe9a94d16",
+    "src/cn_contract/web/templates/workspace_nav.html": "f75f42fd9a93af0c1a8aa394434349983713e2f046cf074ef92f1fd5b942c228",
+    "src/cn_contract/web/weixin_authorization.py": "ebd692ad1a102174122f8f916c1ce625d6c2cbb75c0ff65631c3ed8dd45acc98",
+    "src/cn_contract/web/workspace_upgrade.py": "65b90d4e0e8b0b125f35ceb40c6b5ff7d68d959da710edf17551c014e5c73549",
+    "src/cn_contract/weixin_inbox/__init__.py": "9ab4894319ed501c3a2292f74b13117a740b19979ad6ba0d5ef47c6a04036c62",
+    "src/cn_contract/weixin_inbox/accounts.py": "0ab2584d848a7af293970594d157743a5028b63a040481596d0f0dac51d85f13",
+    "src/cn_contract/weixin_inbox/conversation.py": "025fe5960dcfb967fdcf871d3589f068e10094717b6ac54ea09a11f538ca1c14",
+    "src/cn_contract/weixin_inbox/dispatch.py": "a0d4dc1f99a6414e5696b69d6d07fc9e897038a6717586c10d6b85932619e2db",
+    "src/cn_contract/weixin_inbox/dispatch_integrity.py": "dca91ae8599f3faa49f6436ba12f181b06d5af250a6a5a0bd684548f75b02a34",
+    "src/cn_contract/weixin_inbox/dispatch_schema.py": "1d0597fbe8fc780768c27b2052032ddb74eb8a0cfa3b331ba299676f61edbb09",
+    "src/cn_contract/weixin_inbox/generation_dispatch.py": "acb635f16e5d7dd8097813195372c7ab36b6946ac8f66e43014233ad694a7223",
+    "src/cn_contract/weixin_inbox/generation_dispatch_schema.py": "b1517e165dd158fe20f09de4518b906cf5c23552694ab372dab0f79976d72604",
+    "src/cn_contract/weixin_inbox/generation_ingress.py": "2ab87209ed2794fe0e0db0fd22fdc6466499647c43d40d6c891ab5f82e8910b7",
+    "src/cn_contract/weixin_inbox/generation_integrity.py": "9581b97324dc2663265242ccfac01be87e5d7e35f2eab43ff05c7d6bff67501d",
+    "src/cn_contract/weixin_inbox/generation_preview.py": "369eff7d04fd3a39f992d1feab5983ea06575389f0c695110fb682180c820381",
+    "src/cn_contract/weixin_inbox/generation_schema.py": "63a84364a5286e6882dadd393162d93a74edae1cadf44acf74443ee337832d37",
+    "src/cn_contract/weixin_inbox/generations.py": "77e2fa196d2136320c4ebc755fba1b2561f15d94f4c09d97530828a80fe0c0d1",
+    "src/cn_contract/weixin_inbox/grant_integrity.py": "d8e2ccab9d5ba9876c95e9550c9c639fc5d1bb35e7caf20bf15cb888049011de",
+    "src/cn_contract/weixin_inbox/grant_schema.py": "1dde13e8a4fa60846f28353329a48952a010df25109d3aab2d10b8d2217142a5",
+    "src/cn_contract/weixin_inbox/ingress.py": "4faebd87c657dd5d4ab6a26eac77fa3f78af2ef3a0163271aeb5fc6dd736b093",
+    "src/cn_contract/weixin_inbox/integrity.py": "06612044ee2dba40e66d8ff99cdc91614d3dd234daf601f87847854eb5883153",
+    "src/cn_contract/weixin_inbox/pending.py": "10aafbf8232871946bb6be1282c0463f6f8e9c93990a93e193e2380b1bcbc79e",
+    "src/cn_contract/weixin_inbox/provenance_integrity.py": "372eea2f45ae8bf8ba4404fbbbb63b2adb41a6ac15a5e2b83520a18d690a2cad",
+    "src/cn_contract/weixin_inbox/provenance_schema.py": "60ef8b979a47408409aa573938266d9b48c053c8cd37956b2ac212704823c341",
+    "src/cn_contract/weixin_inbox/schema.py": "e194dc41c69c1b1e0103f8c17557715dbdc46ef95a4771427e07d1c10fcacdf0",
+    "src/cn_contract/weixin_offline.py": "d76e22e9f0780284134a441d9dc79f8794269632855ac76b217f25f41527022a",
+    "tests/acceptance/runner.py": "74e6077cd9ba026c96b1ff7e5b8e3e9b2e84e2dff77fce5b7d95cbade6266518",
+    "tests/acceptance/test_gates.py": "e161ddad692b0aead84a274771a7af4b9c43f5bdbbb6dacb95fd7d1f4d9f95c4",
+    "tests/acceptance/test_live_guards.py": "c81c7ecdd4b65508a8201b217fac2aa49ee63cb3ed3bc80b402c4b4ce50dd045",
+    "tests/acceptance/test_ui_journey.py": "260a98a4068fb1373eef91e85b51eef91bfabaf13bd1ab29be336b412b5c83ca",
+    "tests/fixtures/acceptance/executor/fault_probe.py": "47941e60fb493986f2da6497876ab6cd88a755921b11907240ff19719afaf1f6",
+    "tests/fixtures/task-pdf-v1/generate.py": "774756d96a54f3357d2b8695e4f0c2a87baa9f7693439911e49a281c883e1b0b",
+    "tests/helpers/inspect_native_control_records.py": "dadb74839cba59638eed9206a80dbee938471abcb234e32b15a14e397f45b613",
+    "tests/helpers/legacy_assistant_backup.py": "2be9056af2f96cf904d5164142cacc0ad31887d15687363827ca91ff6b0e09ab",
+    "tests/helpers/offline_mcp_child.py": "edb8506f32f1e5ce89e387401eeb27390c2d25ff1c3eb13c67b8c9c5253f0a5a",
+    "tests/helpers/synthetic_documents.py": "0072fce05285f230b5620c18ac715ab4e024769f5ad3aa7e718b978eef253a73",
+    "tests/helpers/synthetic_exports.py": "58171b3aebdd2860e48d9a2c76b67b10ad96aa8801aabb3c13c3b61d8f39c95f",
+    "tests/helpers/synthetic_jev_entry.py": "ee96aca9476ba5d9896bcc5b19463e3b372ecf157123c5824142c03cbf2e8469",
+    "tests/helpers/synthetic_native_approval_entry.py": "8565aea94b19440ae5dc56ba05fceef423fc264114747649b596386b193d905e",
+    "tests/helpers/synthetic_native_control_entry.py": "2e0a0bc8fddb3c55d3ce449e4420c6891f8d9bc191a6ca1f3af77426bbc61cc6",
+    "tests/helpers/synthetic_native_settings_entry.py": "37ee9bbc9296043189624d9db50d597b6806c4e4a3d6ea724936575062b94b24",
+    "tests/helpers/synthetic_operations.py": "53931778551ad8e2a157a8570486c873bcdc9d011a81b0c12919be34805a6902",
+    "tests/helpers/synthetic_qcc.py": "58bb35854beb4310be4696714c873b5e11d59e14159e54ae4ffece7b6195c6a5",
+    "tests/helpers/synthetic_queries.py": "f3ce17bd1d4ada474a084a7cd26dfef54b704f5c9d080ead67e5778911afa94b",
+    "tests/helpers/synthetic_review.py": "1e128d64dd78c77461c5dab48ebe8a9f7f094ffe8e2f29649264c1cf56e7eca7",
+    "tests/helpers/synthetic_weixin_generation_service.py": "ab09a0bc0e93c1e69ef160ae4bb8d3b32e15d50e976f0c3c632dd41c9e8cf436",
+    "tests/helpers/synthetic_weixin_generations.py": "2f620e50ead2a69d044186c57a9abe7402a90ef51a958f1314d02c952dbd0a5e",
+    "tests/helpers/synthetic_weixin_inbox.py": "b82da1cb1121eed30c54544192647e7f3c547237fb801c1fd6c5bcf2c61da524",
+    "tests/helpers/synthetic_weixin_provenance.py": "4be2ceeab5c9bb394c321d5d2e5c2c595eca74bdbd34b41585e996740fc53743",
+    "tests/integration/test_api.py": "846c42b2e7ffa8c83bf3514bf5b079926e603b2b1534999cdb8084e85545ea53",
+    "tests/integration/test_api_controls.py": "bd2410b4eebfe3f8c363d75c9644f46cbb7f4c39ae6345e37d4d8bc0074bdfb8",
+    "tests/integration/test_api_job_outcomes.py": "51a1b19d4120758382b634b4ca728dcb53e48635d912fcdfb705d3d0048a7160",
+    "tests/integration/test_api_query_jobs.py": "d8515f02463555986f681a1618d5981d8f3da3ffaf803d237f28030d2b980568",
+    "tests/integration/test_api_replay_current.py": "5be1c291694ab0a4f87eba48f7a8175e6b24499385f7995d27f8d29c91f962a0",
+    "tests/integration/test_assistant_attachment_backup.py": "2c127c3be0ed4691b1a71796de7bcd5dceedb8c19c9d86ffc978550984d94fe3",
+    "tests/integration/test_assistant_attachment_formats.py": "30beaaaa1c0f826685623a7cd42b069b0c6b6e5fc95977455c702082c4221c02",
+    "tests/integration/test_assistant_attachment_routes.py": "b4f05ed0c262ead208021ddc2411ba0235ff5d3030c20d29df432f0859031d5a",
+    "tests/integration/test_assistant_attachment_schema.py": "c7fb73b1984747bf270b0f8b287e2aba9029b1d986340b8aeb084fe3c40f830b",
+    "tests/integration/test_assistant_attachments.py": "50e00fb347e9612796914a8533b67b2b46c28db51cc5058fe3c43ac8def06c04",
+    "tests/integration/test_assistant_backup.py": "e9362ec80e5d81d79b44f8954666b97c4299bee1df81bdef866b1549f70296db",
+    "tests/integration/test_assistant_context_backup.py": "df57cd41d169bcdad14a62359169cfe8ed7eced3b2d67a9f15c5403dc74fded7",
+    "tests/integration/test_assistant_context_preview_routes.py": "d54a42eb799c3a8591d36a61d0b47cdfcfd1d8b8475216550d6260c1ef883480",
+    "tests/integration/test_assistant_context_preview_service.py": "639b4a44e03a6f05b6977fbc8a9e6c919876aa5910b77c21601351719e2cfe28",
+    "tests/integration/test_assistant_context_provider.py": "e7571fa1185e65b592ac1d07bb2edfb41df3741ae28c7553e8625637a43931da",
+    "tests/integration/test_assistant_context_routes.py": "b9fa7ca571f3ec73682a8e68987ea922f9aa4a4c5939f1a06cc1dd27c680bdd0",
+    "tests/integration/test_assistant_context_schema.py": "5464f069a331af041ec73b10ec1c862dc536f6faf64f045f8121f780b65008ed",
+    "tests/integration/test_assistant_context_selection_e2e.py": "c3533a6c8e30a1094fdd9585175a8e5e2e2960fd2d63ff9712565752ad385af5",
+    "tests/integration/test_assistant_context_send.py": "999b612eb481d28f731ae4948f4fd425737124da38bd16fd6a1fd08943c71e27",
+    "tests/integration/test_assistant_context_send_basis.py": "7a62c4ea7eb03aef79492015b0d69a4ad54016a8fe7ea1235ab018daac7ba3a3",
+    "tests/integration/test_assistant_control.py": "f0e55f27a264ca35d05e716d9aa0d9c2d51700294a0afdd23e0c06fe018e8564",
+    "tests/integration/test_assistant_conversation_history_flow.py": "02e86184568a78fb32a7c14437807f1475e381f4ec393985f22767c6b2572574",
+    "tests/integration/test_assistant_frontend.py": "3f7f93918f5833c1de009c25dfac8c4a783e03a9760ac1a34414ee97e6434b36",
+    "tests/integration/test_assistant_generation.py": "308df0dce471d60fdb1553d44acdeb1a3cbfc78b680d42d4e8b57442c33cb4a8",
+    "tests/integration/test_assistant_generation_history.py": "3f7137ce672759832ac3df4e951dc125220408b665fd78680348c964cdef41db",
+    "tests/integration/test_assistant_generation_routes.py": "5e165690c8d740d8f8db7d6d2f237ca720f8634384121cd6a3ac60e3042864c0",
+    "tests/integration/test_assistant_history.py": "c67bfc122dd1b73fb409b3900ea7b7d2353fba718db74ae6e4fade19349b6299",
+    "tests/integration/test_assistant_history_routes.py": "7e5c3059908607d914c0827c729205ab07281deac4a10f510bd0be7e1e1fbd3d",
+    "tests/integration/test_assistant_judge_schema.py": "6e0a786e0ddc55ad0c916c444945705cbb425299193e41b8d35a71cba9b43a7b",
+    "tests/integration/test_assistant_judge_stage.py": "977d0510021e9bd9dc89381f3215d0ec28ceff1d943aa105bf8d1216375d3681",
+    "tests/integration/test_assistant_judge_upgrade_backup.py": "170334dcdd2132940ba3b4bcf11e3e5639fd99bd888db916a6c682d0efd56f05",
+    "tests/integration/test_assistant_library_adapter.py": "a0640b00533359330047d098bafdc04c194e24f10eb80d21aed5c085cf0d8573",
+    "tests/integration/test_assistant_library_backup.py": "0e258e8c6e3b91ae5d3ccd3b8744d5a5409c7942c5a69f9ded670c42004eb362",
+    "tests/integration/test_assistant_library_handlers.py": "616ed7387923ee534dd87dc1531d8b1dca3ffd21952ed9bad2ae275496688d36",
+    "tests/integration/test_assistant_library_schema.py": "6d6cf39661e4079e1c00f3cd991975e34fb70e25bce31dd092c3b3938cddf717",
+    "tests/integration/test_assistant_library_tools.py": "cd836ea46382000dc5e955de3c1ce56a7b27928707f09dd8107a5cdd472662ed",
+    "tests/integration/test_assistant_library_upgrade_backup.py": "0b3f1ff1942a3a5743cc3fb57aa1e9eaa0b6cd6fc1ccd1868e31619bc5c0d5a4",
+    "tests/integration/test_assistant_main_provider.py": "253cf4a06774ab4d22a66bb84293c74181e1d65feae198694f18800d010da3ab",
+    "tests/integration/test_assistant_material_snapshot_decode.py": "878f98ea31200ced34fa29fa8b47a48d3d9fce41ca06f69bcbe47add2a96cb48",
+    "tests/integration/test_assistant_model_backup.py": "87d0fbaa46efa6f89b8bb84e613149f146e308a2d90a3c689a8fd71655aac74a",
+    "tests/integration/test_assistant_model_denial_fence.py": "13ef9185d9d8d7ba1300c2816cc57c69404c242d0b819eb15dc9dd470948ba78",
+    "tests/integration/test_assistant_model_schema.py": "d47767b92ad82d54f3ba132b41f49833e3835670e74a0f707a40ff5342282fce",
+    "tests/integration/test_assistant_model_startup.py": "9f6c15e21b8dbbf80dac8331d5fb6be027982ba1e91acf8cbdc47029be912231",
+    "tests/integration/test_assistant_model_upgrade_backup.py": "49c358743598802016ffddad6fd90e682fc51c8dad4c277cb54553df3bdfb840",
+    "tests/integration/test_assistant_output_models.py": "dd0a2025d1810593ced8ef342f6e833867c03b1651b5a608688a540da43fa5ab",
+    "tests/integration/test_assistant_outputs.py": "b217d45bde400f92eb5e22d8a29b3dbeafad023f6540c3c4971076a68d756636",
+    "tests/integration/test_assistant_pages.py": "e23e5acc14ad5e7faa1adc5422b250517365dff818c4b27e295c573a8de3497e",
+    "tests/integration/test_assistant_profile_application.py": "07e762777c6501b6ca5aef9fbf2d76b7e3c31db40f6f1bdf8ae1e159248b7b5c",
+    "tests/integration/test_assistant_profile_authorization.py": "d165f83cf67000295962088240783bc0975726ea1e279bf46e2783ebf7d83a2e",
+    "tests/integration/test_assistant_profile_execution.py": "83dbb425f62aa6b66bf2ece83f226e01296e76f185af6a0512d9d844b78df30d",
+    "tests/integration/test_assistant_profile_execution_backup.py": "c0774416aa488381a75df9d1d188c5865c48309a014cefdaa45f6c64c404d842",
+    "tests/integration/test_assistant_profile_execution_limits.py": "73c91204f95f676784cab691918b2b79714fa70b0ae4589074b3e86760c395a1",
+    "tests/integration/test_assistant_profile_history.py": "d9fe48d1852bcd80ae5901824442e63a8ff901f806391ca6abcf1ac980b5c4c2",
+    "tests/integration/test_assistant_profile_integrity.py": "97b924447fb61cad084bf7b4a18aac5c0b707ce61ef4f8ad3c24f4d9da2ee8eb",
+    "tests/integration/test_assistant_profile_model_integrity.py": "7d85aa05abce5e6732cccd45920f3aee6d49cfe292473ea965ddd24424e59517",
+    "tests/integration/test_assistant_profile_model_schema.py": "5440cb0269f514339a2a9d673d0cd0725ca21bbda2f10fbe3825424f4aa3e83a",
+    "tests/integration/test_assistant_profile_provider.py": "3a3f36ff73ad0ce41746f397d58237c216fc98924ed6cc6089cfd6bfd86db3c3",
+    "tests/integration/test_assistant_profile_routes.py": "f3d8b39de85b75a079beeb7ca358257e65573f5298fc44fae1f16890d65c78ce",
+    "tests/integration/test_assistant_profile_saved_preparation.py": "7910acde201ec544d928ce9632b2ce63a17c47ac85393f5fa8219d271bb2323e",
+    "tests/integration/test_assistant_profile_schema.py": "eee9eaa55984677c6b4fb3c9eb6f111675141a5350f9cc1198b16d7f98102487",
+    "tests/integration/test_assistant_profile_sources.py": "d55f5f24486c6882624a708ffed41f4eea5dbda30f870b1c2f79588ce74fb23b",
+    "tests/integration/test_assistant_profile_store.py": "8ce59cd0301cd1c7020ad83df517ac993bf8d0f7fb4ee302c6bcfacf3fe4cb78",
+    "tests/integration/test_assistant_profile_trusted_preparation.py": "0992ae8a708710e175054557ac3286fc956e989e138687caf98a9ab03e611948",
+    "tests/integration/test_assistant_research_backup.py": "53c23d5f4c6183bbf3cd3e8f6182e0929ac367a35790677661710841cea8a415",
+    "tests/integration/test_assistant_research_manager.py": "7d492ed76e77b7bfc747edd179498758a2fdd88ec28d63c6503850e0a120705f",
+    "tests/integration/test_assistant_research_routes.py": "47b55706af16b9e5d8d91e86536304ef4e188e8e0dfdb917e7a556381cf7ad99",
+    "tests/integration/test_assistant_research_service.py": "6a8a06050deb03ef350be9f864fb03b793d4df9057a0f7efb1386810f76f15a2",
+    "tests/integration/test_assistant_rounds_runner.py": "353f41b5a9d8221482fcfb8c8fdf8a60199bfa218359d7f7f974c0f92c252995",
+    "tests/integration/test_assistant_rounds_schema.py": "49e15e878668b7d0846702ea64add26bed0f24417dd91afab2cc3d8d784d7c52",
+    "tests/integration/test_assistant_routes.py": "f5dd91aea43a868e804cad1d83c58052452ca1e7cdb849671ac4a1f41a78e260",
+    "tests/integration/test_assistant_storage.py": "7bfa0e9f257a49b203122acc88d3319281fcecdf831e1b7b6b234b85ea0fe3a1",
+    "tests/integration/test_assistant_task_manager.py": "f8a936425f54b86005a1ffbc063d5dfa52cc63c0905f6b021b1b48de68ce6c85",
+    "tests/integration/test_assisted_backup.py": "4877872cac425c3b296378b2eaceb95e4142fcb47875f3bb8a30cd56ab6f8206",
+    "tests/integration/test_assisted_confirmation.py": "3b0ee353ef2788e828f07f289cac3cb3e59dd37a8d4a340e529f4084028ae59b",
+    "tests/integration/test_assisted_review.py": "89816c2953425e56d1c83652bf6dfe44b8545462f7de1454c33034696052bc21",
+    "tests/integration/test_backup_restore.py": "2dd47e90e5d9b22eff722530d5d8c981f26f8b0b4b96ca43b698b881f8a909f7",
+    "tests/integration/test_bridge_revocation_race.py": "dcb1d5971fc5d74d98752959a8bf96de7ca4f3c9779005563546cc53566f4d7e",
+    "tests/integration/test_budget_concurrency.py": "28c61b60f7d4ce1f770ba4606e968813ce7b0393b5914595738109fdc7d770d0",
+    "tests/integration/test_case_bridge.py": "0c45b1aa3604f39c91a74d16e0b4ca680e241fa7e7706384eab24da6ef7e25ec",
+    "tests/integration/test_client_scope.py": "36d9c0ed05ac9cd817bd9d200e481958bee8740bc8a26db59187d0aca189c677",
+    "tests/integration/test_context_configuration.py": "47c7d423e893a19e5f94b1b7f6a533588a46ec18cce6315041328d639f79ee9d",
+    "tests/integration/test_contract_long_path_backup.py": "d6930a2746d80ccd7aa445eae045eef570caf3dbc647a9a0f3044da378efcbf4",
+    "tests/integration/test_conversation_history_review.py": "15833f601b8e513cae359af5dd00cb3aae972757eb2c38990ea6a31e73039bc5",
+    "tests/integration/test_coverage_taxonomy_ui.py": "2ca688f98309b497175e08adf2b18e3636f7c34a070f95def928439805afbb1e",
+    "tests/integration/test_decision_exports.py": "f4cdf1a6f1fb0d6b498911988060e7ac405d18f5c12f4b0f7bd92a86567ff7a6",
+    "tests/integration/test_deepseek_transport_refactor.py": "c08bd6eae14243c9225681f230f815fc2984adb650214c5ebd2ccb0da2546712",
+    "tests/integration/test_desktop_runtime.py": "f9f2ff78497d5fbc4f87d5e54448b102bfca9844e1616b801760c3e0b58bb563",
+    "tests/integration/test_document_lazy_loading.py": "76d28deb78dcb1d15758ca8d76657bf0b3041b045b748e2de4e154c753b4c045",
+    "tests/integration/test_document_reparse.py": "35d2e8af708b86e232aeef7f78c427054e3f1e3b07f4c5f7a8142096f06d8802",
+    "tests/integration/test_docx_office_parts.py": "ae7354c1b980095d03e1078583021381d0289b9f3e53bc725ae076c544f01f1a",
+    "tests/integration/test_docx_text_fill.py": "c9b2628624f06afc6d1788a1e7bf98407757d16109ca55a6af47c1d52742baed",
+    "tests/integration/test_docx_visibility.py": "1a118e8aca7bf7ca93461de5a3fa88fd1e6d3ca86153616deb9cff2d9c9fd351",
+    "tests/integration/test_effective_text_review.py": "b0b33e949acbf2436f60de69d65fb7074e3a29e3fe9ce70ca28ba5d0fbb96b7c",
+    "tests/integration/test_evidence_schema.py": "b4265d419e817bf644a3476aae786307ee6dc26e590742f2cb3cc1da762b0731",
+    "tests/integration/test_evidence_worksheet.py": "4aeda445f62ae67b54d4e330d808b1063d2bd4e59193cf98d9fa2bc986b1e21e",
+    "tests/integration/test_exports.py": "bed6648f4fd770904a38cfbe1f7e1187b07e9aa951da9de71678e2b3b314c71e",
+    "tests/integration/test_finding_basis_review.py": "a4583c68e77f93bebc7b20a061daed1268900576e066fcc9eb1d4e9147d3e82d",
+    "tests/integration/test_followup_schema.py": "78283d85894ee1c4d16e7cc4017b44e49de6eb5d3867c5699716bff4a3a9229b",
+    "tests/integration/test_followup_worksheet.py": "7b61c849ab52791f0036b4e9d7c7bce6dc704d095bdf93a1278f9b4cdc23e7af",
+    "tests/integration/test_intake.py": "8a6a767292d0d3d93e7151f07409453d71a9be6aeb81d6b1a98e95b9b498a20b",
+    "tests/integration/test_jev_provider.py": "60c3f6ab6ea325a6612790d989712d544127519da59869d3e11b02677951cbb2",
+    "tests/integration/test_judge_attempts.py": "73cc0c55e9fdf2b166d1215603208cdaf5b98ed91943c8237886e0357fb2f2c1",
+    "tests/integration/test_judge_backup.py": "4f84c49301578b4e6282d11f1cc4b0c162444df8c2ba495246d8cbf4c666fcc7",
+    "tests/integration/test_library_api.py": "ed19b2d501f79d2e9bbb70ea91828de5b56db530754a2b45d3bbb891d178ac21",
+    "tests/integration/test_library_generation.py": "ac5733115f5b9a03fd650e1c15e804e7815c88d3b25bd4176c0cb23458b2aa05",
+    "tests/integration/test_library_pilot.py": "b1d6f120c2c8996532428195c93ca00e2b7cad4b82ae015c586a444d37f0dcb2",
+    "tests/integration/test_library_portability.py": "e3fb03d5bac622d3c75049303cf08ded381916839c0b4ecf9c675ef456510bcb",
+    "tests/integration/test_library_resume.py": "1adc07cb16f4b85c87c758c84bd2487026dc10bfdc4c22015ede798e560d3644",
+    "tests/integration/test_local_material_boundaries.py": "8585535b6975027fe4de2dd4b2ec1302a8578b71244d415d754cb7746085c73d",
+    "tests/integration/test_local_materials.py": "d4178ba1ce2ca28a63d80c6f087500fda0be0266c5bf0fec6fa21e92a4d1948f",
+    "tests/integration/test_local_workbench.py": "126b0478a175a008d91109da37f62fb96b07ad232ed31ea846a82d4ca74acbde",
+    "tests/integration/test_local_worker_contention.py": "25a4aeaeef9bf3bb83ba2d4de0bd868f9568b098034d4377c17678c09c7c03a7",
+    "tests/integration/test_mcp_chat_envelope.py": "51bcd87591a5ac4465138154f607f5172d50a9958827bdf859eff155cfaee46e",
+    "tests/integration/test_mcp_host_metadata.py": "961ce19f1874612e530abf4ebca4f58dcc1a47cfa17e9f42d6bbde7dd67f5a21",
+    "tests/integration/test_mcp_offline_stdio.py": "d018e2ea64fb5fc1785b3700a3d6df5108863222b3c2c8ca2cf998b7fa0dab72",
+    "tests/integration/test_mcp_progress_tokens.py": "402a78288d244bf8224b126b753e53c207a07bf7f191123dffa69002f73393bb",
+    "tests/integration/test_mcp_transport.py": "12dcddb650a3467977012882da60c89a44259f8f4e2b0538ea812a0e1cde04dc",
+    "tests/integration/test_model_registry.py": "4495677d59547e6b8ef9f35a671def316040a7258ad61bbf3afeeb4527525862",
+    "tests/integration/test_native_context_control.py": "b8b5ddc03129172f76e1af84927eb1a32abd7ed54bf2c4bd9a24af2c764583e8",
+    "tests/integration/test_native_control_process.py": "b7accf10a17078e1c509d0a3b76a4cb498a7f363e2b11eac9d42e71bb25b8216",
+    "tests/integration/test_native_credential_backup.py": "b9fc55b39ff9e5d0fc3ee46bb6a5cb742ab2ff0a2944723bb32d155c6ec4cce6",
+    "tests/integration/test_native_judge_authorization.py": "9f763b171d02bc5310abc289ef73abcc43f3c0b7c53f46e56b273f62804c40c6",
+    "tests/integration/test_native_model_control.py": "67b3354b5dcf3bc57e79d76056d99c92826d8d78793416966c6afc7658417d00",
+    "tests/integration/test_native_model_lifetime.py": "4d35457c548b7c09d39d80fa9f6f5c2f9db152139054aff6e62e5cdd58c221e7",
+    "tests/integration/test_native_profile_control.py": "1cc85496c6abccda816dc8edfb5f6854c239cd9c0a04a06766453a69c633b368",
+    "tests/integration/test_ocr_admission.py": "8543b1520b0e633088503736d369fc4047a6714516d80f130a9940f8b331a72f",
+    "tests/integration/test_ocr_worker.py": "4dd8f57f64ce1a5e972ba22cfbdd8f0b826c202767418068bdd35f27a8207b39",
+    "tests/integration/test_ocr_workspace.py": "9648fdd3c052937125a1676bef4accb02447e05b994b3f62f25a4ddba67a46a5",
+    "tests/integration/test_parsing.py": "d2dea9b44042f14ef9da9e8be60e121a8e635df4f9050279df5e5a4d9609c9c6",
+    "tests/integration/test_pdf_original_viewer.py": "19b107e6cb0af87b3f0b394d064ca86e5e577dc18f61b276cc659bd6ef089d07",
+    "tests/integration/test_pdf_proofreading.py": "e10d02b829b1729512b088c22f42abbb0065596662334262385815bf219a9a5b",
+    "tests/integration/test_pdf_visual_trust.py": "79a429bbb8f9e2baf51e6afa7112e8d87294c6368e8eaee6cfd64ddbbed42bf2",
+    "tests/integration/test_plugin_candidates.py": "88fb4bc0d0f28d69c283394fd3f6d1b5900cdb39c3ea941e83df345ee4475a92",
+    "tests/integration/test_profile_native_http_process.py": "d25cf2dbfc0070ae3121aac604af766d82a5c1046035fcdfd5e51995343f573d",
+    "tests/integration/test_query_recovery.py": "333f79033bb7aa3b7680c4deea744098202b73e8f845e3daf4a576be0b482055",
+    "tests/integration/test_reception_assistant.py": "7e4fd00335873aba62e9e2b1220653dcd110097920e7ccde8509135863b84b77",
+    "tests/integration/test_reception_worksheet.py": "4b42cfcd50c55fd8c643ed52b2d94cc91822fadb8b3a3fa372a7cf2cda5526b6",
+    "tests/integration/test_reception_worksheet_model.py": "4bc4ccfbec7fc04de96e789d39023d9a4ac09b6f630cb88ff0269f0e3e436481",
+    "tests/integration/test_request_context.py": "d1583bf153787a7c19205fa1d506863bdd6d6e0fcce8017facd88280bc62e5f4",
+    "tests/integration/test_review_flow.py": "2cabb5fa3985302add38414e9a5a4b29687a3f90a6ed8933dc2e51dfab999e27",
+    "tests/integration/test_session_model_runtime.py": "8eff1b244ed2a8b0d872b1cba319a5ebf0776a64c898c871c49ccb0fd13028bf",
+    "tests/integration/test_sqlite_native_snapshot.py": "0a7e35174b734ad7c14a19dfe34454d4a461063aa7e5b6003789f119480264b3",
+    "tests/integration/test_sqlite_readonly_boundaries.py": "b9c350d0c5d1ff6557b804ab17d60685534ae9e7bb84d15194b54146792eb8a9",
+    "tests/integration/test_storage_bootstrap.py": "902e69c125d35a6485670552a1eb811f5441d6384915fb97895f86a4b7792478",
+    "tests/integration/test_storage_schema_versions.py": "f9a4068f9b44080806ad3959a0d643929896cbb8f7e11b7341eb9c25ea1b4939",
+    "tests/integration/test_submission_outcome.py": "0790d4af8fb000ebb41cba8348fa5f8451e38f7ddaff0e19f7d5c8c3a2728bc4",
+    "tests/integration/test_task_draft_routes.py": "d16156f6b4d53a2d8f11015289cd16cb3986ca314dcf3b50b05646a396ebb5bf",
+    "tests/integration/test_task_drafts.py": "f0e1ca2a1ac331dfb17d17628e853d1b445a894892a2c0bd97775e4c463d3215",
+    "tests/integration/test_task_drafts_bridge.py": "d6cc6bb025b2ac76822800d350126f72aa1be2070cd861e095bdf514bcdb88cc",
+    "tests/integration/test_task_drafts_bridge_review.py": "f7a895a3069133c8277c7ce033c507810b217fa956079fce3e660ad3d5600561",
+    "tests/integration/test_task_drafts_completed_backup.py": "34039b5b966f3333203894392536f87b00baee9a3b5ae177328a8a066049cc4f",
+    "tests/integration/test_task_drafts_migration.py": "651ab86a8ada3a68ae5ad4d58dec3a6d322980e43659a27d3b740f900bf2ddf4",
+    "tests/integration/test_task_drafts_pdf.py": "9b668ad4ec6c237ec57105af4047a9ce94d33107b31947df95b504f08d5802b5",
+    "tests/integration/test_task_media_selection_routes.py": "e5e411d459e6ba734c118cc65b1fb2ef63fecc87d3be75fd1c8eab998a69f39f",
+    "tests/integration/test_task_pdf_backup.py": "2f1dd003f61e5e09a269070b4677606500085279320604f12a884eac9dac8cbc",
+    "tests/integration/test_task_pdf_registry.py": "c757f76eb4de1746d241afe42ce860415e4d80b70904135be343fb90414d190e",
+    "tests/integration/test_weixin_accounts.py": "57efd24811315da163200566b18038a2d5c1bcdd5fc25ae8b47db57c7448bddc",
+    "tests/integration/test_weixin_authorization_routes.py": "da43335aeea47d626e509a669119a03f3f89a5488aa5bdd6332609968a34f0bb",
+    "tests/integration/test_weixin_dispatch.py": "7de9a477d7d22cba3beaeb626e3d36b76e84c83dc1698d62bfd191452f9d7333",
+    "tests/integration/test_weixin_dispatch_atomic.py": "508d96463e4d712555d34625e223403a58aef44fd2908564dd1637b59a4c4f04",
+    "tests/integration/test_weixin_dispatch_integrity.py": "db595b5bb3a3f1bddcd85d23b5cf1d7d6130b7429832ab1eb7411555f43e8d4e",
+    "tests/integration/test_weixin_dispatch_schema.py": "23831dacd67ea32950a952e705bcd3ff82ca7dbe7d46d9ed5d37a3e61bd635ea",
+    "tests/integration/test_weixin_generation_backup.py": "749da024fa2779a8c5b271978f54d23b68d3cde13e9937a58bc9ce0278c1ae1a",
+    "tests/integration/test_weixin_generation_dispatch.py": "2874efdd2c1277477ca5e4b69a9aace9278089da2989dbabad34aacf26531472",
+    "tests/integration/test_weixin_generation_dispatch_atomic.py": "9300224e85d6d6b95231674ec82908e1ff9d068b3c7ec36b5a4cfa382d5f79c5",
+    "tests/integration/test_weixin_generation_dispatch_conversation.py": "9fe190da0090a230a1f67388c9a8bb27c7abc468d390c66a010693cf0f87028c",
+    "tests/integration/test_weixin_generation_dispatch_integrity.py": "c9843b453eaa72d2587b8e1fa073d1f7b424b64851d06d415d9d991453a9b8ef",
+    "tests/integration/test_weixin_generation_dispatch_routes.py": "7b15fd34d8530f4282c320372d9116f9de1d817d42682b1f4e78205735dda05f",
+    "tests/integration/test_weixin_generation_dispatch_schema.py": "b2ec3d6e19f4eaa33a433636d7bd57c609bf052513bd24e675a7c268a3b8d35b",
+    "tests/integration/test_weixin_generation_guards.py": "0c8e07b8c342737a8658a8900baee1214f07b0400c6814f5009cf7142cf8bdeb",
+    "tests/integration/test_weixin_generation_head.py": "7460c8a56cd3d7149678af6b272af32f69fbcf8c8d019c99cb83cb6ca0d59c0d",
+    "tests/integration/test_weixin_generation_head_atomic.py": "60c63adeed2d726946ef4dfe81790a043def58fb302c264fe5596306a5d239e1",
+    "tests/integration/test_weixin_generation_head_routes.py": "c859f1da2054b49648aa925c77518a3cde4cf0e941e6abb760391dbe04f6756a",
+    "tests/integration/test_weixin_generation_ingress.py": "dbab75d0ee193cb8ef7a4364358566f93fb4d9ff945fcc3590dced5aa1ab61d3",
+    "tests/integration/test_weixin_generation_ingress_atomic.py": "2fe2d41c33be0955303a54c511ae4c718c8bf179b7507032a2786034c1d77320",
+    "tests/integration/test_weixin_generation_integrity.py": "45c08b5b8d63887f2dda357d762477c6ef08e3a07eef770f5ea25630d479393c",
+    "tests/integration/test_weixin_generation_preview.py": "d611c5bd924b27af2c36c76e8946bcfd99ae753b5b8adc2e2996557a192ecc05",
+    "tests/integration/test_weixin_generation_preview_atomic.py": "639711730a295f316aaa3bc2293e729decdc81718e595edbe4af68716b54f61c",
+    "tests/integration/test_weixin_generation_routes.py": "830dfe9b33be016d46c52db96939b84f915a23e47de5b96986df7a81ed4dee9a",
+    "tests/integration/test_weixin_generation_routes_recovery.py": "21b1ec9da24f3bfb4781aba3df509fca480702cd9923d2a4091cb1ddd4356865",
+    "tests/integration/test_weixin_generation_schema.py": "bbf8528efd5ff24e70b909f123b220c93e9535866a867466e3f8aca10d3a18cc",
+    "tests/integration/test_weixin_generation_service.py": "985a7c530854dbdbbdd94f8a6c8cda1c6cecc37495744150bad32eb91deb84f8",
+    "tests/integration/test_weixin_generation_service_atomic.py": "b92fe248a8b0ed305869f206e0c6f89918b3f614e7a4d6e896d2710bbe0897d7",
+    "tests/integration/test_weixin_generation_service_backup.py": "1f3b0d62a2b17ff836b3743f72ab1168726d0ae8b44574a57083ce49ea0bf9b7",
+    "tests/integration/test_weixin_inbox_backup.py": "6ae37c3bc8c2d4a7ed75c5377c5bbad9e5a633c9bbc873e4fea24659d6c639a4",
+    "tests/integration/test_weixin_inbox_ingress.py": "e3b1358f33d95c908b91af4898c75dc5e2a036ddba8e4479bcd855a3d1f36b70",
+    "tests/integration/test_weixin_inbox_integrity.py": "8796fd0ea5e855ec177972c95366f9367008cb495e4cdc215a6cd3cdf94b8413",
+    "tests/integration/test_weixin_inbox_schema.py": "79e01d9e1045781e54de43046f438abcef71273b4ed00c911560f0077f608427",
+    "tests/integration/test_weixin_ingress_atomic.py": "911f63e6846aedf262d8088fb8160d51b5fab464bd98a8c227c4a2488f8735fd",
+    "tests/integration/test_weixin_offline.py": "26a5db1219470be1789b60d69bfbe37593e3869dd9ba6e7e2f5ff286cb717878",
+    "tests/integration/test_weixin_pending_list.py": "1f46ff498c478311dd9217fa1a58f3635bab8d4388c3dd35817f928e70509c29",
+    "tests/integration/test_weixin_pending_routes.py": "f34594173161a4c10f1e4f3213cf06135ec9ea57a51d2e781ec74ef52e806687",
+    "tests/integration/test_weixin_provenance.py": "839f918986414f94db4dee9b891550688e79e7ea7ef4cf086c8361ca0cac7b80",
+    "tests/integration/test_weixin_provenance_backup.py": "5d0a09341fc90dfa0bd3f0b2400ae24a1d27849e3319e47e1a0aa5056cfd6761",
+    "tests/integration/test_weixin_provenance_independent.py": "2a2ade95e44bdcdef67cbdfc53f013342c8cce7736f651ed6cb14d576d01dce8",
+    "tests/integration/test_weixin_provenance_schema.py": "7b852660c0ec55d2457783e0e4e794d4a9a913a76d135a2890ac2420fd836a1a",
+    "tests/integration/test_weixin_reauthorization.py": "2c326fe1b75f93ac0244c5a7ba2481ad01e718aae6c21803603b7efa75c13603",
+    "tests/integration/test_weixin_reauthorization_atomic.py": "2fb7668d8dc09b9e5ccdf814504d9b3aa9ed8284563dda1d4f8cb0fcec9dc96d",
+    "tests/integration/test_weixin_reauthorization_integrity.py": "8b6911e4bf8dfae9137d636bd691b6a464b59dc4b4d0cb0425da05e5151ff98a",
+    "tests/integration/test_weixin_reauthorization_schema.py": "3a80431bb09089ddec7e91bcbdcf641c8f0cd15722577bb57f3fcdfeb72e5a09",
+    "tests/integration/test_workspace_backup.py": "da95816c6c9abd1ad86f4c8f6e12bbf6530a1d41b2d5370257912bf019d8ee41",
+    "tests/integration/test_workspace_upgrade.py": "363522cae0c2e7120614c0953bfb424b294a9ba0d5fc194595b7fd882035d187",
+    "tests/integration/test_workspace_upgrade_semantic_preflight.py": "8501d0a411d05842589d9f06217477c859285f525d48b974e990e0633d353995",
+    "tests/security/test_approval.py": "dcea01726c08a9390b6570d0b9d64c9c0ab58d08bbb4305786f08dd6d4b201af",
+    "tests/security/test_auth.py": "da23db1518c614610202cfc21566e52832ea96125a5ad2771627f42c84c36692",
+    "tests/security/test_egress.py": "e6fa185960d3456287c7427e82b07cdfe975b51c8a5d80acecc3fb961b7734b2",
+    "tests/security/test_matter_access.py": "16cb9f5a54470fc224dfda3f4ad34219126b64d27ecfb7ca07980e3345dba2b1",
+    "tests/security/test_prompt_injection.py": "14b22c01222b54afa9ff6157e8a777760bfb12d8aee0ab95ccde6f1d7e20711f",
+    "tests/security/test_secrets.py": "33763fdc692fa166adb1bad44e10887e2226f1a88dc844103b8aa9d7521743fa",
+    "tests/security/test_upload.py": "311b9b0890635f1b62162d7d6e559d3711146dfe224c04d692607d84eabbf943",
+    "tests/unit/test_acceptance_evidence.py": "bc32d04c190e07f9ab81d140c69c011b5d6affe41ea4626b408c2c2ff10141cf",
+    "tests/unit/test_assistant_context_codec.py": "f06c2f444c18c5ef52602ab9ad8dc4ef3b31b7831c7ef23faf3e3433186ff254",
+    "tests/unit/test_assistant_context_preview.py": "ab998cd957aa1e165e06d6169dbd3859dfb524f9997bb5e8291bcfbb8241c4a8",
+    "tests/unit/test_assistant_conversation_history.py": "b0ce46b84a1124c5a79f830a8a18dcd890d3ec9c719a649dcecc8b3f18e5fafb",
+    "tests/unit/test_assistant_model_contract.py": "560fedbf880547cbbdc87c66102fb13d653b38778fe67d8d68c34591a2f73fc8",
+    "tests/unit/test_assistant_profile_application_contract.py": "9931f54014695eaf61610198b3ca095fee367b160e926bd160c22d4d2103595a",
+    "tests/unit/test_assistant_profile_codec.py": "c04556714d9c5d50f794cc4f8cfa14d056deb2389906aafd7f9526407cd7f9db",
+    "tests/unit/test_assistant_profile_execution_contract.py": "ab70a0ec9e81120e934e98e7d828d92de085e099ed445a05b4150cb604f66213",
+    "tests/unit/test_assistant_profile_preparation.py": "accd3abdfe95f0c7e25b6d14d5c112fc4787b85ee3911e984c41516745bdde43",
+    "tests/unit/test_assistant_profiles.py": "b9021c14ec50035f2a59b93dcec1569a50348099fd8d26cb3c73398436781c6b",
+    "tests/unit/test_authorities.py": "154f2a0612abf468617103ca87aba286a42fb9917891d71477ac7213f3a01ada",
+    "tests/unit/test_calculate.py": "c47cc9065894fdd42bc4d259be12d943a1a7caead0021e660fee69b749997a56",
+    "tests/unit/test_case_bridge_client.py": "a48317ee1396598b5049a49541ea8710798047b9f50f410a547f5da05640f3ce",
+    "tests/unit/test_case_registry.py": "ff6fd21bf78639105c0deb3c4c80ee5365d14d0cdfe44bb294d9e043ed837916",
+    "tests/unit/test_cli.py": "f617fb2607f6967d355b1fe02e6537c1e2d1ff8ff0499a366ee25c4574ecdc53",
+    "tests/unit/test_contract_long_paths.py": "be4d765122ecd774226aedb29d594ae5f8f92b74b8c32d16ac8ced43d0874504",
+    "tests/unit/test_deepseek_codec.py": "406b7eb3d3c4017788d021dd74796245fd58723ea426b78e5564b1c9df512f55",
+    "tests/unit/test_defaults.py": "c6435408ecdeb0d73a04310179c92fd81b110eff5841871b25b4a8e0639ef7a7",
+    "tests/unit/test_desktop_control_protocol.py": "0ce40b9fd3ee5965fa91c423f964fd33ef312f28930417888edb20d99ce6edc5",
+    "tests/unit/test_document_parts.py": "8a0869c89937c1618cc418422337611dadb2047a5bdfb3a3da8035d19c2c102c",
+    "tests/unit/test_domain.py": "7e978aca09207253a606b78aa7a107b733c0daa29d1e85fbd437fe7efd46880c",
+    "tests/unit/test_duplicate_test_definitions.py": "f8d075a3fd69c17d5e9585a732ae78dad49996b36ac3dcb46483a6792b8b96c3",
+    "tests/unit/test_evaluation_cli.py": "662ad9f47dde302b6e2b1262e96d34807efa65765d2f3ff5e6880ba0989e6fb5",
+    "tests/unit/test_facts.py": "94ac316111e17902d91b685e0baf9368b8e5261675f78fa2a9b58760c2a843ab",
+    "tests/unit/test_intake_import_boundary.py": "f224178e03e88f4b536495298eb6424c38bdfd12a86da40e9f1fa16ab5e02503",
+    "tests/unit/test_jev_codec.py": "bee08c378dc8ec797dc80a4aa2ef260760aa555c8a410a8c6857c397f847d07c",
+    "tests/unit/test_jev_contract_routing.py": "46823f95d023148d1d44566bff04f2066e288cdfcaa87f88355cd6f0bc0c67cf",
+    "tests/unit/test_judge_authorization_protocol.py": "aed08ab0cedab93d8da615dcae291233228d508360c0c6f368338da857065da6",
+    "tests/unit/test_judge_policy.py": "5e3d34ad093165e24baa7bffe051675c08d825566f9f896af6e6b0170c1e4b9c",
+    "tests/unit/test_library_cases.py": "7072b10344fa99a0f912c4884edf28d2bfc26aecc85d4912e9017d1068b98906",
+    "tests/unit/test_library_laws.py": "7554696701e58f38521e71b961487a0057d0f464a58da568fcf4495318429e16",
+    "tests/unit/test_library_rank_cache.py": "5c0818e4d6b9e9dc3773e33e7f4ec9754334b19fcb00520bb9d194c4251af8e7",
+    "tests/unit/test_library_records.py": "28140bc8a587b6c8208777335cb3336237a279db73e00efa9add1ea87d378851",
+    "tests/unit/test_library_search.py": "b1a637daf63d3b2b6c8d03656bd65ba02a85e57f3d185f592797e34df9aaecec",
+    "tests/unit/test_library_sources.py": "43308b021a15ec9e258834bd0799225dc35aedc97107d7e79429f642e2a2e10e",
+    "tests/unit/test_library_span.py": "a153082de7dff238f064c32e82dc122ffad7e3f44062cb60c9701e1cd8be8934",
+    "tests/unit/test_library_text.py": "eb81f76ae2848cb144f99e7f7a960d253775769eaf045428bab9e844c116f582",
+    "tests/unit/test_mcp_bound_entry.py": "cb73b71e7b453ff3c9e40edd4e9786d810003671ff17a803e585a4618394a422",
+    "tests/unit/test_mcp_chat_metadata.py": "d522ed70d9032fa46df0105190ab47f6545e4102df5f7a4e9485e78a3b64dc62",
+    "tests/unit/test_mcp_offline.py": "97c5d13924c7de1daf10fbd357a1329baa3d4f326f705936da07837d20c7d9af",
+    "tests/unit/test_mcp_progress_unicode.py": "391507bcac6b18a2456db7d143e387efb8ca2545cf5a018ec0f64f56b878f724",
+    "tests/unit/test_model_schema.py": "2bc6a23efab12b33511fe3be081237f9ff888b016fb959fb5fdf374f9922a551",
+    "tests/unit/test_native_judge_control.py": "99c1d3c3d3fd43fd114399e9fec2d56a3fc1f653a118279238977a14c63e91d7",
+    "tests/unit/test_ocr_acceptance_scoring.py": "15ce2a60d546bc0278da95bcdd234b4dd414e1e17ca92fc0844f34e11c895744",
+    "tests/unit/test_ocr_assets.py": "acb7adba5b6d75d404a03ffc8f68a96c40455fa1130c5047f7a7cc68d60f013b",
+    "tests/unit/test_ocr_page_rendering.py": "ccf8bbfe00b382a6e57469de1622628383afa47b6bf2fb2d55418f3a77c69eb5",
+    "tests/unit/test_ocr_scoring_v2.py": "6e0339e0ab71fe3ccac059e0a1480f3f0b8eaba004e9e13523c3563a2260b037",
+    "tests/unit/test_party.py": "997e4bc267953c6519e98cd275d90dce51bfa1456533bb653e26417c5a7ffeda",
+    "tests/unit/test_patch_preconditions.py": "4affcbbc8179c225e955c6fdf45cfa5e054e2172dc496224cd9a389eceaf5b29",
+    "tests/unit/test_pdfjs_assets.py": "1401aa32961b767761e8e2379e16f4313c242b6c5a36057df110e2e9c9aca236",
+    "tests/unit/test_plugin_candidate_tool.py": "6944743052168f41a0822efc83f025bfe25837e6cc9ffac96b7f9ad476d8d9c9",
+    "tests/unit/test_qcc_binding.py": "4cc52011e8b85867676cf7747f9d5f168370b5ee3d1ac4ed56a5500d3c17b774",
+    "tests/unit/test_query_plan.py": "6d3b1b42d8a1033cd818fb3dbe416a2c6861ddc6a4c561725ecc9c54ffd38f9f",
+    "tests/unit/test_reception_knowledge.py": "f5f37c7f5eb8a0d570b600378985fffa888c55f5a9a24df16c3a6f2ce1e0f18d",
+    "tests/unit/test_release_manifest.py": "a1177762292c59bf82d39e11b3f618331d9c7d1f1194debfb73f81a9a63d3abd",
+    "tests/unit/test_restore_publish_diagnostics.py": "b485da23184d18f77f62d68652e273abd0d6fe1e7ff2635e54a09a431735d80a",
+    "tests/unit/test_rule_scope.py": "45d91e3a9561851cb94208e638907844581f873a0a9ef7ac466755f269cef462",
+    "tests/unit/test_runtime_dependencies.py": "0bd877cf951709bb6765b8e6fee1fea80ee9f0c0de08478ad07d400c5e1e6b00",
+    "tests/unit/test_sources.py": "3c10bf558a9ae543f7189f7d5f8a194f9801724b62009f04364cb57fe592248e",
+    "tests/unit/test_sqlite_readonly_paths.py": "77764b604774d3daed5f765ddc5c17c2a146e27bce92e36c5128c62e62227e65",
+    "tests/unit/test_state.py": "bac189755711dca4f4918ea6128e13eee944d5129217418fab9a428f0e320f92",
+    "tests/unit/test_versions.py": "725573a597fa23b3d222df33d6e7aaccfa651804d1e129485cbc4b72df9c83dc",
+    "tests/unit/test_weixin_authorization_view.py": "7fc59f91ad683f1cf319c42002715e338c0092f8ab3fa9b42e236e1bac8faa21",
+    "tests/unit/test_weixin_causal_time.py": "109f69611577cc2cc2286dc1f8423a9d4c42ca2b6e90edb71379fc8ff7f96970",
+    "tests/unit/test_weixin_descriptor_generation.py": "339dc667132e3c94d704a82af39cab91c63c623adbbf90844e9743a5f3411212",
+    "tests/unit/test_weixin_dispatch_dto.py": "545761ac25471424cbaf785749a8983edd9255f97e65807f6f570794e03c9d18",
+    "tests/unit/test_weixin_generation_head_view.py": "9c9f7bd461d65a49a3a279391f16df85bdb8c8c6e76f160be725d6eb87455959",
+    "tests/unit/test_weixin_generation_input.py": "4046ab33ccc5ccd97d6f761fce68294a9129561f0edf646fa465f9b5b3664226",
+    "tests/unit/test_weixin_generation_preview_view.py": "2001200a963dff130267e9f1dec042ba4006c34cec333ad29fb736d72c7e1038",
+    "tests/unit/test_weixin_generation_receipt.py": "5a6cec167cf43bd545a30a42bfcce32ebeddecaafb2a7396c3387e55c0361997",
+    "tests/unit/test_weixin_generations.py": "90e0f841a45f0b2b4c0ebe97fd9db7864506f63995673235aa4278ef4bcbd550",
+    "tests/unit/test_weixin_inbox_dto.py": "0a16d06729ab0a13e21cb69a52a9cd6746f6c2785a632394d715a6ba216b3d88",
+    "tests/unit/test_weixin_ingress_inputs.py": "06228dbb848bdd85c4b98cb77260e398dbf376ca38e400e56b14080a814aa2bf",
+    "tests/unit/test_weixin_offline_protocol.py": "9c22c398b216aa424cafdb77c96fe468696320a83de34004f6d77d6e4302e87e",
+    "tests/unit/test_weixin_reauthorization_dto.py": "8dcfa8a70af3f7b58d1f781d3e96738fab0efa16a76c8b75293b115cc4c34eed",
+    "tests/unit/test_windows_ocr_cleanup.py": "ca5cfb258cf79d07ee485759eed5086763733747a6bfbe7c3264b37ad12d65b2"
+  },
+  "product_changed": false,
+  "installation_updated": false,
+  "WIN_PATH_02": "OPEN",
+  "native_AV": "OPEN",
+  "not_run": [
+    "full repository suite",
+    "Node",
+    "four development gates",
+    "installer",
+    "real Weixin",
+    "real models"
+  ],
+  "startup_failures": [
+    "stress initial missing tests import, exit1; sys.path corrected before experiments",
+    "Restart Manager control initially compared venv launcher PID; corrected to actual child PID, exit1 then exit0",
+    "scratch copy command quoting SyntaxError, no product mutation; replaced by direct copy and patch"
+  ]
+}

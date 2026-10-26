@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-10-26 WIN-PATH-02诊断推进：固定498c0c9，复用合成归档捕获6次首次发布rename自然WinError5，其中5次原样失败、1次仅在隔离实验立即再次调用成功。失败后自身句柄/RM/文件PID未捕获占用者，不等于无占用或已定位根因。76不同pytest通过不关闭间歇故障；产品644输入SHA未变，未加重试/GC/放宽权限。WIN-PATH-02及原生AV仍OPEN，0.4.1未更新；[新证据与低扰动反例](testing/restore-publication/20261026/README.md)。下一步捕获实际拒绝时间窗的I/O事件来源。
+
 2026-10-26 D2g5h待收件UI完成：明确原目标、元数据20条分页、首批首条分发、严格九字段回执、未知只GET、跨微信/任务及离开保护。85项不同Python、444项Node（前端443+几何脚本1）、7项独立探针、四开发门、本机合成Chromium及1280/360px视觉检查通过；2项P2实际RED→GREEN，双轴独审0遗留。[实测](testing/weixin-pending-ui/20261026/README.md)保留首次浏览器5秒超时，第二轮完整通过。未更新0.4.1，全仓Python/安装包/真实qxbak/真实微信模型NOT_RUN；WIN-PATH-02和原生AV仍OPEN。后续可信身份、下载解密及E许可待；[同步回执](testing/weixin-pending-ui/20261026/github-sync.md)。下方为历史快照。
 
 2026-10-26 D2g5g待收件列表完成服务与HTTP接线，复用已合并主线schema21：当前权限及历史归属重核、UUID分页/1..20上限、被分发锚点续页、五字段元数据、恢复模式阻断。最终3短组198不同Python（新增服务48+HTTP38）、独立4探针、四开发门通过；Spec发现目标无历史归属仍空页的P2已实际RED→GREEN并原探针复验，Standards/Spec均0遗留。[实际证据](testing/weixin-pending-list/20261026/README.md)。本片无UI、真实qxbak往返/全仓/Node/浏览器/安装与真实微信模型NOT_RUN；WIN-PATH-02和原生AV仍OPEN，0.4.1未更新。远端状态见[同步回执](testing/weixin-pending-list/20261026/github-sync.md)。

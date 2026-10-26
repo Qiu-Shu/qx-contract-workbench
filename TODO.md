@@ -1,5 +1,7 @@
 # TODO — 群兴法律工作台协作清单
 
+2026-10-26 恢复故障诊断取得6次首次rename自然WinError5；当前只能确认暂态拒绝线索，不能归因或称修复。5次原样失败、1次仅实验中立即再次调用成功；76不同pytest通过与故障共存。产品未改；[证据/复现](docs/testing/restore-publication/20261026/README.md)。下一步用低扰动反例捕获实际I/O拒绝来源，保留WIN-PATH-02/原生AV OPEN，不猜测增加重试。
+
 2026-10-26 D2g5h待收件UI已落地，D2g5g服务/HTTP和本轮列表入口均完成。85项不同Python、444项Node（前端443+几何脚本1）、7独立探针、四开发门及本机合成浏览器通过，双轴独审0遗留；[证据](docs/testing/weixin-pending-ui/20261026/README.md)。后续为可信微信身份/资格与下载解密、E模型有限期许可、WIN-PATH-02及原生AV，不能当作已接通真实服务。安装版仍0.4.1；原AGENTS改动保留。同步见[回执](docs/testing/weixin-pending-ui/20261026/github-sync.md)。下方是历史阶段快照，不重复实施已完成项。
 
 2026-10-26 D2g5g待收件列表服务与HTTP完成：198项不同Python、4项独立探针及四开发门通过，Spec目标归属P2已修复并复验，双轴0遗留。[实测](docs/testing/weixin-pending-list/20261026/README.md)。原未提交待收件服务/DTO已纳入本片；后续待UI列表入口、可信微信身份与下载解密、E模型有限期许可。WIN-PATH-02/原生AV、安装版0.4.1及真实账号验收状态不变；用户AGENTS改动保留。提交推送以[同步回执](docs/testing/weixin-pending-list/20261026/github-sync.md)为准。

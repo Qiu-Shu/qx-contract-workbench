@@ -1,0 +1,196 @@
+{
+  "runs": [
+    {
+      "status": "PASS",
+      "published": "074843ba-118c-457c-b709-c0762a2c7874",
+      "index": 0,
+      "seconds": 0.765
+    },
+    {
+      "status": "PASS",
+      "published": "16952526-0173-4262-92d9-dcbc45ae48f9",
+      "index": 1,
+      "seconds": 0.547
+    },
+    {
+      "status": "PASS",
+      "published": "95fec1c4-c6fc-4235-b19a-30b1079f7fb8",
+      "index": 2,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "3aef9d83-adfc-4afa-8486-5a81a8247265",
+      "index": 3,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "5e7f6092-6319-4c8c-91d9-8f6fbfd6eefc",
+      "index": 4,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "43311427-d4b6-488b-8cb0-9b061b3360a6",
+      "index": 5,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "0459f799-5a55-4387-bf16-48895611b065",
+      "index": 6,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "0c9d7a40-d3f9-448e-aaff-dbd27cc149ef",
+      "index": 7,
+      "seconds": 0.469
+    },
+    {
+      "status": "PASS",
+      "published": "d1edcb43-50cd-45ae-ba4c-282a96eb569a",
+      "index": 8,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "77f707a4-9563-4038-b126-1779d4e8cbf4",
+      "index": 9,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "8092a5d1-952e-4d26-8fd2-5a16fe7bda3c",
+      "index": 10,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "69d2c8cd-d70a-4cc9-927c-304bbbd370b5",
+      "index": 11,
+      "seconds": 0.454
+    },
+    {
+      "status": "PASS",
+      "published": "333405a1-6459-4996-988b-544943aecf54",
+      "index": 12,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "21048861-6fc4-49a0-8634-f82ab5e51c37",
+      "index": 13,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "06571f37-13b9-409a-87f6-ba5bb67def4e",
+      "index": 14,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "de785678-9e33-4931-8217-dd63afaccb5a",
+      "index": 15,
+      "seconds": 0.484
+    },
+    {
+      "status": "PASS",
+      "published": "8ea3a75b-e981-4653-aea2-331f29e3383e",
+      "index": 16,
+      "seconds": 0.453
+    },
+    {
+      "status": "PASS",
+      "published": "ae2eb3d9-ad64-43be-a2ff-6df6cb971681",
+      "index": 17,
+      "seconds": 0.454
+    },
+    {
+      "status": "PASS",
+      "published": "7f6d9d25-b17a-4564-99c1-678c337ed1d7",
+      "index": 18,
+      "seconds": 0.578
+    },
+    {
+      "status": "PASS",
+      "published": "a78a5885-b078-480c-b5f2-0daf98ac4f01",
+      "index": 19,
+      "seconds": 0.672
+    },
+    {
+      "status": "PASS",
+      "published": "4ac54fe1-1b88-4d53-9873-89cec876681a",
+      "index": 20,
+      "seconds": 0.687
+    },
+    {
+      "status": "PASS",
+      "published": "387609c4-ebfe-40a1-9588-3548f578eb5b",
+      "index": 21,
+      "seconds": 0.688
+    },
+    {
+      "status": "PASS",
+      "published": "417aea63-96f5-4202-a85a-6cedffca19fb",
+      "index": 22,
+      "seconds": 0.593
+    },
+    {
+      "status": "FAIL",
+      "error_type": "PermissionError",
+      "winerror": 5,
+      "error": "[WinError 5] 拒绝访问。: '\\\\\\\\?\\\\D:\\\\Documents\\\\ChatGPT\\\\律所项目\\\\.local\\\\wp2-native01\\\\xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\\\.qx-restore-7umtssul\\\\workspace' -> '\\\\\\\\?\\\\D:\\\\Documents\\\\ChatGPT\\\\律所项目\\\\.local\\\\wp2-native01\\\\xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\\\8691cdcf-41ac-42d3-a75b-3d72e6b9c2dd'",
+      "index": 23,
+      "seconds": 0.75
+    }
+  ],
+  "observations": [
+    {
+      "winerror": 5,
+      "path_length": 207,
+      "handles": [],
+      "sqlite_cursors": [],
+      "file_processes": {
+        ".": {
+          "status": "OK",
+          "pids": [],
+          "own_pid": 37456
+        },
+        "protected": {
+          "status": "OK",
+          "pids": [],
+          "own_pid": 37456
+        },
+        "workbench.db": {
+          "status": "OK",
+          "pids": [],
+          "own_pid": 37456
+        },
+        "worker.lock": {
+          "status": "OK",
+          "pids": [],
+          "own_pid": 37456
+        },
+        "workspace.json": {
+          "status": "OK",
+          "pids": [],
+          "own_pid": 37456
+        },
+        "protected\\assistant": {
+          "status": "OK",
+          "pids": [],
+          "own_pid": 37456
+        },
+        "protected\\assistant\\5be3d62c-92a1-4153-a7df-99e54141f9d9": {
+          "status": "OK",
+          "pids": [],
+          "own_pid": 37456
+        }
+      }
+    }
+  ],
+  "archive_unchanged": true
+}
