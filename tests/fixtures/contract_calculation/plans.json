@@ -1,0 +1,956 @@
+{
+  "n12": {
+    "case_sha256": "24eda0806279df9799ac4af7ebee31ebd7fc6babd677ef4c72990b4c50858d3c",
+    "checks": [
+      {
+        "id": "q2",
+        "claim_quote": "依约计算的整班最终结算金额为二万三千二百五十六元，预付款为四千六百五十一元二角。",
+        "comparisons": [
+          {
+            "formula": {
+              "ast": {
+                "kind": "binary",
+                "operator": "multiply",
+                "left": {
+                  "kind": "binary",
+                  "operator": "multiply",
+                  "left": {
+                    "kind": "variable",
+                    "name": "seats"
+                  },
+                  "right": {
+                    "kind": "variable",
+                    "name": "price"
+                  }
+                },
+                "right": {
+                  "kind": "binary",
+                  "operator": "divide",
+                  "left": {
+                    "kind": "variable",
+                    "name": "settlement_percent"
+                  },
+                  "right": {
+                    "kind": "literal",
+                    "value": "100"
+                  }
+                }
+              },
+              "unit": "CNY"
+            },
+            "inputs": [
+              {
+                "name": "seats",
+                "value": "36",
+                "unit": "ratio",
+                "fact_ids": []
+              },
+              {
+                "name": "price",
+                "value": "680",
+                "unit": "CNY",
+                "fact_ids": []
+              },
+              {
+                "name": "settlement_percent",
+                "value": "95",
+                "unit": "percent",
+                "fact_ids": []
+              }
+            ],
+            "rounding": {
+              "mode": "ROUND_HALF_UP",
+              "quantum": "0.01"
+            },
+            "assumptions": [
+              "席位数按 ratio 表示无量纲计数；price 的 CNY 表示每席金额，席位数乘每席金额得到整班金额。",
+              "百分比输入先显式除以 100；按含教材耗材的标价总额折算，不另加场地费；只在最终结果按 0.01 元舍入。",
+              "数字、单位、公式与业务含义由工程人员依据独立虚构原文人工整理；片段匹配不是自动语义验证，亦非已确认案件事实或法律结论。"
+            ],
+            "bindings": {
+              "seats": [
+                {
+                  "id": "a2",
+                  "text": "三十六个席位"
+                }
+              ],
+              "price": [
+                {
+                  "id": "a2",
+                  "text": "每席标价人民币六百八十元"
+                }
+              ],
+              "settlement_percent": [
+                {
+                  "id": "a3",
+                  "text": "百分之九十五"
+                }
+              ]
+            },
+            "relation": "eq",
+            "target": {
+              "value": "23256",
+              "unit": "CNY",
+              "location": "claim",
+              "text": "二万三千二百五十六元"
+            }
+          },
+          {
+            "formula": {
+              "ast": {
+                "kind": "binary",
+                "operator": "multiply",
+                "left": {
+                  "kind": "binary",
+                  "operator": "multiply",
+                  "left": {
+                    "kind": "binary",
+                    "operator": "multiply",
+                    "left": {
+                      "kind": "variable",
+                      "name": "seats"
+                    },
+                    "right": {
+                      "kind": "variable",
+                      "name": "price"
+                    }
+                  },
+                  "right": {
+                    "kind": "binary",
+                    "operator": "divide",
+                    "left": {
+                      "kind": "variable",
+                      "name": "settlement_percent"
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": "100"
+                    }
+                  }
+                },
+                "right": {
+                  "kind": "binary",
+                  "operator": "divide",
+                  "left": {
+                    "kind": "variable",
+                    "name": "advance_percent"
+                  },
+                  "right": {
+                    "kind": "literal",
+                    "value": "100"
+                  }
+                }
+              },
+              "unit": "CNY"
+            },
+            "inputs": [
+              {
+                "name": "seats",
+                "value": "36",
+                "unit": "ratio",
+                "fact_ids": []
+              },
+              {
+                "name": "price",
+                "value": "680",
+                "unit": "CNY",
+                "fact_ids": []
+              },
+              {
+                "name": "settlement_percent",
+                "value": "95",
+                "unit": "percent",
+                "fact_ids": []
+              },
+              {
+                "name": "advance_percent",
+                "value": "20",
+                "unit": "percent",
+                "fact_ids": []
+              }
+            ],
+            "rounding": {
+              "mode": "ROUND_HALF_UP",
+              "quantum": "0.01"
+            },
+            "assumptions": [
+              "席位数按 ratio 表示无量纲计数；price 的 CNY 表示每席金额，席位数乘每席金额得到整班金额。",
+              "百分比输入先显式除以 100；按含教材耗材的标价总额折算，不另加场地费；只在最终结果按 0.01 元舍入。",
+              "预付款以折后最终结算金额为基数。",
+              "数字、单位、公式与业务含义由工程人员依据独立虚构原文人工整理；片段匹配不是自动语义验证，亦非已确认案件事实或法律结论。"
+            ],
+            "bindings": {
+              "seats": [
+                {
+                  "id": "a2",
+                  "text": "三十六个席位"
+                }
+              ],
+              "price": [
+                {
+                  "id": "a2",
+                  "text": "每席标价人民币六百八十元"
+                }
+              ],
+              "settlement_percent": [
+                {
+                  "id": "a3",
+                  "text": "百分之九十五"
+                }
+              ],
+              "advance_percent": [
+                {
+                  "id": "a4",
+                  "text": "百分之二十"
+                }
+              ]
+            },
+            "relation": "eq",
+            "target": {
+              "value": "4651.20",
+              "unit": "CNY",
+              "location": "claim",
+              "text": "四千六百五十一元二角"
+            }
+          }
+        ],
+        "evidence_options": [
+          [
+            "a2",
+            "a3",
+            "a4"
+          ]
+        ]
+      }
+    ]
+  },
+  "n17": {
+    "case_sha256": "a3cc6d1a9f498dd7e6fe420ce15f6e734453951b058371f90fe78851c70f4aef",
+    "checks": [
+      {
+        "id": "q1",
+        "claim_quote": "依约计算，本批最终清洗价为2,772.00元。",
+        "comparisons": [
+          {
+            "formula": {
+              "ast": {
+                "kind": "binary",
+                "operator": "multiply",
+                "left": {
+                  "kind": "binary",
+                  "operator": "multiply",
+                  "left": {
+                    "kind": "variable",
+                    "name": "cloths"
+                  },
+                  "right": {
+                    "kind": "variable",
+                    "name": "price"
+                  }
+                },
+                "right": {
+                  "kind": "binary",
+                  "operator": "divide",
+                  "left": {
+                    "kind": "variable",
+                    "name": "settlement_percent"
+                  },
+                  "right": {
+                    "kind": "literal",
+                    "value": "100"
+                  }
+                }
+              },
+              "unit": "CNY"
+            },
+            "inputs": [
+              {
+                "name": "cloths",
+                "value": "84",
+                "unit": "ratio",
+                "fact_ids": []
+              },
+              {
+                "name": "price",
+                "value": "37.50",
+                "unit": "CNY",
+                "fact_ids": []
+              },
+              {
+                "name": "settlement_percent",
+                "value": "88",
+                "unit": "percent",
+                "fact_ids": []
+              }
+            ],
+            "rounding": {
+              "mode": "ROUND_HALF_UP",
+              "quantum": "0.01"
+            },
+            "assumptions": [
+              "隔音布块数按 ratio 表示无量纲计数；price 的 CNY 表示每块金额，块数乘每块金额得到基础总价。",
+              "百分比输入先显式除以 100；单价已含市内接送费用；最终结果按 0.01 元舍入。",
+              "数字、单位、公式与业务含义由工程人员依据独立虚构原文人工整理；片段匹配不是自动语义验证，亦非已确认案件事实或法律结论。"
+            ],
+            "bindings": {
+              "cloths": [
+                {
+                  "id": "a2",
+                  "text": "八十四块隔音布"
+                }
+              ],
+              "price": [
+                {
+                  "id": "a2",
+                  "text": "每块基础单价为人民币三十七元五角"
+                }
+              ],
+              "settlement_percent": [
+                {
+                  "id": "a3",
+                  "text": "百分之八十八"
+                }
+              ]
+            },
+            "relation": "eq",
+            "target": {
+              "value": "2772.00",
+              "unit": "CNY",
+              "location": "claim",
+              "text": "2,772.00元"
+            }
+          }
+        ],
+        "evidence_options": [
+          [
+            "a2",
+            "a3"
+          ]
+        ]
+      },
+      {
+        "id": "q2",
+        "claim_quote": "按订单中的比例计算，预付款应为人民币九百四十五元整。",
+        "comparisons": [
+          {
+            "formula": {
+              "ast": {
+                "kind": "binary",
+                "operator": "multiply",
+                "left": {
+                  "kind": "binary",
+                  "operator": "multiply",
+                  "left": {
+                    "kind": "binary",
+                    "operator": "multiply",
+                    "left": {
+                      "kind": "variable",
+                      "name": "cloths"
+                    },
+                    "right": {
+                      "kind": "variable",
+                      "name": "price"
+                    }
+                  },
+                  "right": {
+                    "kind": "binary",
+                    "operator": "divide",
+                    "left": {
+                      "kind": "variable",
+                      "name": "settlement_percent"
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": "100"
+                    }
+                  }
+                },
+                "right": {
+                  "kind": "binary",
+                  "operator": "divide",
+                  "left": {
+                    "kind": "variable",
+                    "name": "advance_percent"
+                  },
+                  "right": {
+                    "kind": "literal",
+                    "value": "100"
+                  }
+                }
+              },
+              "unit": "CNY"
+            },
+            "inputs": [
+              {
+                "name": "cloths",
+                "value": "84",
+                "unit": "ratio",
+                "fact_ids": []
+              },
+              {
+                "name": "price",
+                "value": "37.50",
+                "unit": "CNY",
+                "fact_ids": []
+              },
+              {
+                "name": "settlement_percent",
+                "value": "88",
+                "unit": "percent",
+                "fact_ids": []
+              },
+              {
+                "name": "advance_percent",
+                "value": "35",
+                "unit": "percent",
+                "fact_ids": []
+              }
+            ],
+            "rounding": {
+              "mode": "ROUND_HALF_UP",
+              "quantum": "0.01"
+            },
+            "assumptions": [
+              "隔音布块数按 ratio 表示无量纲计数；price 的 CNY 表示每块金额，块数乘每块金额得到基础总价。",
+              "百分比输入先显式除以 100；单价已含市内接送费用；最终结果按 0.01 元舍入。",
+              "预付款以折后最终清洗价为基数；计算应付比例，不证明已经收款。",
+              "数字、单位、公式与业务含义由工程人员依据独立虚构原文人工整理；片段匹配不是自动语义验证，亦非已确认案件事实或法律结论。"
+            ],
+            "bindings": {
+              "cloths": [
+                {
+                  "id": "a2",
+                  "text": "八十四块隔音布"
+                }
+              ],
+              "price": [
+                {
+                  "id": "a2",
+                  "text": "每块基础单价为人民币三十七元五角"
+                }
+              ],
+              "settlement_percent": [
+                {
+                  "id": "a3",
+                  "text": "百分之八十八"
+                }
+              ],
+              "advance_percent": [
+                {
+                  "id": "a4",
+                  "text": "百分之三十五"
+                }
+              ]
+            },
+            "relation": "eq",
+            "target": {
+              "value": "945",
+              "unit": "CNY",
+              "location": "claim",
+              "text": "九百四十五元整"
+            }
+          }
+        ],
+        "evidence_options": [
+          [
+            "a2",
+            "a3",
+            "a4"
+          ]
+        ]
+      },
+      {
+        "id": "q3",
+        "claim_quote": "验收余款占最终清洗价的比例为65%。",
+        "comparisons": [
+          {
+            "formula": {
+              "ast": {
+                "kind": "binary",
+                "operator": "multiply",
+                "left": {
+                  "kind": "binary",
+                  "operator": "subtract",
+                  "left": {
+                    "kind": "literal",
+                    "value": "1"
+                  },
+                  "right": {
+                    "kind": "binary",
+                    "operator": "divide",
+                    "left": {
+                      "kind": "variable",
+                      "name": "advance_percent"
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": "100"
+                    }
+                  }
+                },
+                "right": {
+                  "kind": "literal",
+                  "value": "100"
+                }
+              },
+              "unit": "percent"
+            },
+            "inputs": [
+              {
+                "name": "advance_percent",
+                "value": "35",
+                "unit": "percent",
+                "fact_ids": []
+              }
+            ],
+            "rounding": {
+              "mode": "ROUND_HALF_UP",
+              "quantum": "0.01"
+            },
+            "assumptions": [
+              "验收余款为最终清洗价扣除预付款后的其余部分，份额为 1 减去预付比例。",
+              "35% 输入显式除以 100 得到 ratio，根节点乘 100 转为 percent；数量单位与金额单位不参与本项。",
+              "数字、单位、公式与业务含义由工程人员依据独立虚构原文人工整理；片段匹配不是自动语义验证，亦非已确认案件事实或法律结论。"
+            ],
+            "bindings": {
+              "advance_percent": [
+                {
+                  "id": "a4",
+                  "text": "百分之三十五"
+                }
+              ]
+            },
+            "relation": "eq",
+            "target": {
+              "value": "65",
+              "unit": "percent",
+              "location": "claim",
+              "text": "65%"
+            }
+          }
+        ],
+        "evidence_options": [
+          [
+            "a4"
+          ]
+        ]
+      }
+    ]
+  },
+  "n18": {
+    "case_sha256": "949f0d8650cb495a619f8bfc15ad4f9535292912fa88a1a6eea9c35e909742c8",
+    "checks": [
+      {
+        "id": "q1",
+        "claim_quote": "按合同检验口径与交接数量计算，本批不合格率为4%。",
+        "comparisons": [
+          {
+            "formula": {
+              "ast": {
+                "kind": "binary",
+                "operator": "multiply",
+                "left": {
+                  "kind": "binary",
+                  "operator": "divide",
+                  "left": {
+                    "kind": "variable",
+                    "name": "cracked"
+                  },
+                  "right": {
+                    "kind": "variable",
+                    "name": "total"
+                  }
+                },
+                "right": {
+                  "kind": "literal",
+                  "value": "100"
+                }
+              },
+              "unit": "percent"
+            },
+            "inputs": [
+              {
+                "name": "cracked",
+                "value": "5",
+                "unit": "ratio",
+                "fact_ids": []
+              },
+              {
+                "name": "total",
+                "value": "125",
+                "unit": "ratio",
+                "fact_ids": []
+              }
+            ],
+            "rounding": {
+              "mode": "ROUND_HALF_UP",
+              "quantum": "0.01"
+            },
+            "assumptions": [
+              "件数按 ratio 表示无量纲计数；以全部 125 件为分母，只计有结构裂纹的 5 件，排除仅有表面擦痕的 3 件。",
+              "裂纹分类来自 a3，交接数量来自 a4，全检口径来自 a2；根节点乘 100 转为 percent，最终保留 0.01 个百分点。",
+              "数字、单位、公式与业务含义由工程人员依据独立虚构原文人工整理；片段匹配不是自动语义验证，亦非已确认案件事实或法律结论。"
+            ],
+            "bindings": {
+              "cracked": [
+                {
+                  "id": "a4",
+                  "text": "五件存在结构裂纹"
+                }
+              ],
+              "total": [
+                {
+                  "id": "a2",
+                  "text": "一百二十五件全部检验"
+                },
+                {
+                  "id": "a1",
+                  "text": "一百二十五件"
+                }
+              ]
+            },
+            "relation": "eq",
+            "target": {
+              "value": "4",
+              "unit": "percent",
+              "location": "claim",
+              "text": "4%"
+            }
+          }
+        ],
+        "evidence_options": [
+          [
+            "a2",
+            "a3",
+            "a4"
+          ]
+        ]
+      },
+      {
+        "id": "q4",
+        "claim_quote": "仅凭交接记录中的五件结构裂纹，买方就已满足按第五段比例规则拒收整批的条件。",
+        "comparisons": [
+          {
+            "formula": {
+              "ast": {
+                "kind": "binary",
+                "operator": "multiply",
+                "left": {
+                  "kind": "binary",
+                  "operator": "divide",
+                  "left": {
+                    "kind": "variable",
+                    "name": "cracked"
+                  },
+                  "right": {
+                    "kind": "variable",
+                    "name": "total"
+                  }
+                },
+                "right": {
+                  "kind": "literal",
+                  "value": "100"
+                }
+              },
+              "unit": "percent"
+            },
+            "inputs": [
+              {
+                "name": "cracked",
+                "value": "5",
+                "unit": "ratio",
+                "fact_ids": []
+              },
+              {
+                "name": "total",
+                "value": "125",
+                "unit": "ratio",
+                "fact_ids": []
+              }
+            ],
+            "rounding": {
+              "mode": "ROUND_HALF_UP",
+              "quantum": "0.01"
+            },
+            "assumptions": [
+              "件数按 ratio 表示无量纲计数；以全部 125 件为分母，只计有结构裂纹的 5 件，排除仅有表面擦痕的 3 件。",
+              "裂纹分类来自 a3，交接数量来自 a4，全检口径来自 a2；根节点乘 100 转为 percent，最终保留 0.01 个百分点。",
+              "第五段明确要求严格高于百分之四，等于不满足门槛；因此整条断言使用 gt 比较而不是 ge。",
+              "数字、单位、公式与业务含义由工程人员依据独立虚构原文人工整理；片段匹配不是自动语义验证，亦非已确认案件事实或法律结论。"
+            ],
+            "bindings": {
+              "cracked": [
+                {
+                  "id": "a4",
+                  "text": "五件存在结构裂纹"
+                }
+              ],
+              "total": [
+                {
+                  "id": "a2",
+                  "text": "一百二十五件全部检验"
+                },
+                {
+                  "id": "a1",
+                  "text": "一百二十五件"
+                }
+              ]
+            },
+            "relation": "gt",
+            "target": {
+              "value": "4",
+              "unit": "percent",
+              "location": "a5",
+              "text": "百分之四"
+            }
+          }
+        ],
+        "evidence_options": [
+          [
+            "a2",
+            "a3",
+            "a4",
+            "a5"
+          ]
+        ]
+      }
+    ]
+  },
+  "n20": {
+    "case_sha256": "a3dd294ffb4ba88c8431e68fff376cf6a674b6a8cf64beef776b04e155f4ecea",
+    "checks": [
+      {
+        "id": "q1",
+        "claim_quote": "依约计算，本次最终场租为人民币二千三百一十元。",
+        "comparisons": [
+          {
+            "formula": {
+              "ast": {
+                "kind": "binary",
+                "operator": "subtract",
+                "left": {
+                  "kind": "binary",
+                  "operator": "multiply",
+                  "left": {
+                    "kind": "variable",
+                    "name": "slots"
+                  },
+                  "right": {
+                    "kind": "variable",
+                    "name": "slot_price"
+                  }
+                },
+                "right": {
+                  "kind": "variable",
+                  "name": "discount"
+                }
+              },
+              "unit": "CNY"
+            },
+            "inputs": [
+              {
+                "name": "slots",
+                "value": "9",
+                "unit": "ratio",
+                "fact_ids": []
+              },
+              {
+                "name": "slot_price",
+                "value": "275",
+                "unit": "CNY",
+                "fact_ids": []
+              },
+              {
+                "name": "discount",
+                "value": "165",
+                "unit": "CNY",
+                "fact_ids": []
+              }
+            ],
+            "rounding": {
+              "mode": "ROUND_HALF_UP",
+              "quantum": "0.01"
+            },
+            "assumptions": [
+              "时段数按 ratio 表示无量纲计数；slot_price 的 CNY 表示每时段金额；按时段计价，不再乘每时段两小时。",
+              "先按九个时段计算总价，再减免 165 元；仅对最终计算结果按 0.01 元舍入。",
+              "数字、单位、公式与业务含义由工程人员依据独立虚构原文人工整理；片段匹配不是自动语义验证，亦非已确认案件事实或法律结论。"
+            ],
+            "bindings": {
+              "slots": [
+                {
+                  "id": "a2",
+                  "text": "九个时段"
+                },
+                {
+                  "id": "a3",
+                  "text": "九个时段"
+                }
+              ],
+              "slot_price": [
+                {
+                  "id": "a2",
+                  "text": "每时段单价为人民币二百七十五元"
+                }
+              ],
+              "discount": [
+                {
+                  "id": "a3",
+                  "text": "减免人民币一百六十五元"
+                }
+              ]
+            },
+            "relation": "eq",
+            "target": {
+              "value": "2310",
+              "unit": "CNY",
+              "location": "claim",
+              "text": "二千三百一十元"
+            }
+          }
+        ],
+        "evidence_options": [
+          [
+            "a2",
+            "a3"
+          ]
+        ]
+      },
+      {
+        "id": "q2",
+        "claim_quote": "根据预付比例计算，剩余场租为1,270.50元。",
+        "comparisons": [
+          {
+            "formula": {
+              "ast": {
+                "kind": "binary",
+                "operator": "multiply",
+                "left": {
+                  "kind": "binary",
+                  "operator": "subtract",
+                  "left": {
+                    "kind": "binary",
+                    "operator": "multiply",
+                    "left": {
+                      "kind": "variable",
+                      "name": "slots"
+                    },
+                    "right": {
+                      "kind": "variable",
+                      "name": "slot_price"
+                    }
+                  },
+                  "right": {
+                    "kind": "variable",
+                    "name": "discount"
+                  }
+                },
+                "right": {
+                  "kind": "binary",
+                  "operator": "subtract",
+                  "left": {
+                    "kind": "literal",
+                    "value": "1"
+                  },
+                  "right": {
+                    "kind": "binary",
+                    "operator": "divide",
+                    "left": {
+                      "kind": "variable",
+                      "name": "advance_percent"
+                    },
+                    "right": {
+                      "kind": "literal",
+                      "value": "100"
+                    }
+                  }
+                }
+              },
+              "unit": "CNY"
+            },
+            "inputs": [
+              {
+                "name": "slots",
+                "value": "9",
+                "unit": "ratio",
+                "fact_ids": []
+              },
+              {
+                "name": "slot_price",
+                "value": "275",
+                "unit": "CNY",
+                "fact_ids": []
+              },
+              {
+                "name": "discount",
+                "value": "165",
+                "unit": "CNY",
+                "fact_ids": []
+              },
+              {
+                "name": "advance_percent",
+                "value": "45",
+                "unit": "percent",
+                "fact_ids": []
+              }
+            ],
+            "rounding": {
+              "mode": "ROUND_HALF_UP",
+              "quantum": "0.01"
+            },
+            "assumptions": [
+              "时段数按 ratio 表示无量纲计数；slot_price 的 CNY 表示每时段金额；按时段计价，不再乘每时段两小时。",
+              "先按九个时段计算总价，再减免 165 元；仅对最终计算结果按 0.01 元舍入。",
+              "剩余场租为最终场租乘以 1 减去预付比例；45% 显式除以 100，不证明付款已经履行。",
+              "数字、单位、公式与业务含义由工程人员依据独立虚构原文人工整理；片段匹配不是自动语义验证，亦非已确认案件事实或法律结论。"
+            ],
+            "bindings": {
+              "slots": [
+                {
+                  "id": "a2",
+                  "text": "九个时段"
+                },
+                {
+                  "id": "a3",
+                  "text": "九个时段"
+                }
+              ],
+              "slot_price": [
+                {
+                  "id": "a2",
+                  "text": "每时段单价为人民币二百七十五元"
+                }
+              ],
+              "discount": [
+                {
+                  "id": "a3",
+                  "text": "减免人民币一百六十五元"
+                }
+              ],
+              "advance_percent": [
+                {
+                  "id": "a4",
+                  "text": "百分之四十五"
+                }
+              ]
+            },
+            "relation": "eq",
+            "target": {
+              "value": "1270.50",
+              "unit": "CNY",
+              "location": "claim",
+              "text": "1,270.50元"
+            }
+          }
+        ],
+        "evidence_options": [
+          [
+            "a2",
+            "a3",
+            "a4"
+          ]
+        ]
+      }
+    ]
+  }
+}

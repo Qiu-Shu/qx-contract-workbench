@@ -1,0 +1,563 @@
+{
+  "n01": {
+    "q1": {
+      "verdict": "supported",
+      "required": [
+        "a3"
+      ],
+      "optional": [
+        "a2",
+        "a5"
+      ],
+      "rationale": "a3明确以受理编号生成之次日起算三个工作日；不能把收件邮件替代受理编号。"
+    },
+    "q2": {
+      "verdict": "refuted",
+      "required": [
+        "a4"
+      ],
+      "optional": [
+        "a2"
+      ],
+      "alternatives": [
+        [
+          "a2"
+        ]
+      ],
+      "rationale": "a4明确电话不替代工单提交，直接排除仅电话即完成形式。"
+    },
+    "q3": {
+      "verdict": "not_stated",
+      "required": [
+        "a6"
+      ],
+      "optional": [
+        "a8"
+      ],
+      "rationale": "紧急故障仅另定处理顺序，未给二十四小时修复期限；未附时限表不意味着已约定该数字。"
+    }
+  },
+  "n02": {
+    "q1": {
+      "verdict": "refuted",
+      "required": [
+        "a2",
+        "a3"
+      ],
+      "optional": [],
+      "alternatives": [
+        [
+          "a3"
+        ]
+      ],
+      "rationale": "书面豁免只及名单，a3明确操作培训不在豁免范围。"
+    },
+    "q2": {
+      "verdict": "not_stated",
+      "required": [
+        "a7"
+      ],
+      "optional": [],
+      "rationale": "a7使用正常耗损概念但不提供亮度下降百分之一的量化定义。"
+    },
+    "q3": {
+      "verdict": "supported",
+      "required": [
+        "a2",
+        "a3",
+        "a8"
+      ],
+      "optional": [],
+      "alternatives": [
+        [
+          "a3",
+          "a8"
+        ]
+      ],
+      "rationale": "a3保留培训并允许豁免名单；a8确定合格书面同意为出借方盖章纸质文件。"
+    }
+  },
+  "n03": {
+    "q1": {
+      "verdict": "not_stated",
+      "required": [
+        "a6"
+      ],
+      "optional": [
+        "a7"
+      ],
+      "rationale": "a6有返还义务而无三日时限；a7十日是确认交接清单，不能移作退款期限。"
+    },
+    "q2": {
+      "verdict": "supported",
+      "required": [
+        "a3",
+        "a4"
+      ],
+      "optional": [],
+      "rationale": "a4给甲方终止未履行部分的书面通知权并要求阶段费，a3提供该费一万二千元金额。"
+    },
+    "q3": {
+      "verdict": "refuted",
+      "required": [
+        "a5"
+      ],
+      "optional": [
+        "a3",
+        "a8"
+      ],
+      "alternatives": [
+        [
+          "a8"
+        ]
+      ],
+      "rationale": "a5用仅在限定乙方解除的欠款加催告条件，放弃费用不是所列退出条件；a8亦排除阶段费作为通用退出对价。"
+    }
+  },
+  "n04": {
+    "q1": {
+      "verdict": "supported",
+      "required": [
+        "a2",
+        "a3"
+      ],
+      "optional": [
+        "a4"
+      ],
+      "rationale": "2400×12.50=30000.00元，30000.00×30%=9000.00元；这是算术推导而不是逐字引述。"
+    },
+    "q2": {
+      "verdict": "refuted",
+      "required": [
+        "a3"
+      ],
+      "optional": [],
+      "rationale": "a3明文定金比例为百分之三十，和断言的百分之四十直接冲突；定金金额可以另行推导，但不得改写原文比例。"
+    },
+    "q3": {
+      "verdict": "not_stated",
+      "required": [
+        "a8"
+      ],
+      "optional": [
+        "a4"
+      ],
+      "rationale": "a8仅指定结算币种和账户，a4是运费，与银行手续费负担不同；全文未分配银行手续费。"
+    }
+  },
+  "n05": {
+    "q1": {
+      "verdict": "refuted",
+      "required": [
+        "a3",
+        "a4"
+      ],
+      "optional": [
+        "a2",
+        "a5"
+      ],
+      "alternatives": [
+        [
+          "a3"
+        ]
+      ],
+      "rationale": "a3要求向外部主体披露前书面同意，a4特指外部统计顾问即使参与评估也属于外部主体；目的合规不免除同意。"
+    },
+    "q2": {
+      "verdict": "not_stated",
+      "required": [
+        "a7"
+      ],
+      "optional": [],
+      "rationale": "有删除并出具说明的义务，但未指定固定模板。"
+    },
+    "q3": {
+      "verdict": "supported",
+      "required": [
+        "a6"
+      ],
+      "optional": [
+        "a2"
+      ],
+      "rationale": "a6明确即使获书面同意向顾问提供，也仍仅用于本次评估。"
+    }
+  },
+  "n06": {
+    "q1": {
+      "verdict": "not_stated",
+      "required": [
+        "a5"
+      ],
+      "optional": [
+        "a4"
+      ],
+      "rationale": "宽限期满只要求停止销售，未明示销毁实物库存。"
+    },
+    "q2": {
+      "verdict": "supported",
+      "required": [
+        "a4"
+      ],
+      "optional": [],
+      "rationale": "a4将擅自转授造成的终止排除于六十日库存宽限之外。"
+    },
+    "q3": {
+      "verdict": "refuted",
+      "required": [
+        "a5"
+      ],
+      "optional": [
+        "a3",
+        "a4"
+      ],
+      "alternatives": [
+        [
+          "a3"
+        ]
+      ],
+      "rationale": "a5明确宽限期不得补印；a3另明确终止后新批次制作许可停止。"
+    }
+  },
+  "n07": {
+    "q1": {
+      "verdict": "supported",
+      "required": [
+        "a3"
+      ],
+      "optional": [
+        "a2"
+      ],
+      "rationale": "已给附件一正文，2+4+1=7个且全部单层。"
+    },
+    "q2": {
+      "verdict": "refuted",
+      "required": [
+        "a8"
+      ],
+      "optional": [
+        "a4",
+        "a5"
+      ],
+      "rationale": "末条明确未附附件二并待提交确认，引用附件和约定应提交均不等于已经提供。"
+    },
+    "q3": {
+      "verdict": "not_stated",
+      "required": [
+        "a4",
+        "a8"
+      ],
+      "optional": [
+        "a5"
+      ],
+      "rationale": "正文将具体性能交给未附附件二，现有材料没有B1级数值；不能从缺失推成肯定或否定具体等级。"
+    }
+  },
+  "n08": {
+    "q1": {
+      "verdict": "not_stated",
+      "required": [
+        "a9"
+      ],
+      "optional": [],
+      "rationale": "a9指定纸质色样为准，却未写ΔE 2容差。"
+    },
+    "q2": {
+      "verdict": "supported",
+      "required": [
+        "a4",
+        "a5",
+        "a8"
+      ],
+      "optional": [],
+      "rationale": "量产段a4给确认形式，量产段a5给交付期间，末尾a8将其定为自然日；样稿重复句a3不能替代量产所在位置。"
+    },
+    "q3": {
+      "verdict": "refuted",
+      "required": [
+        "a4"
+      ],
+      "optional": [
+        "a2"
+      ],
+      "rationale": "a4直接排除联系人邮件构成量产确认；a2的邮件只适用于样稿。"
+    }
+  },
+  "n09": {
+    "q1": {
+      "verdict": "not_stated",
+      "required": [
+        "a4",
+        "a8"
+      ],
+      "optional": [
+        "a3"
+      ],
+      "rationale": "六小时要求提供临时转仓安排，末尾明确未约定车辆到场时限；不能把安排义务转换成车辆到场义务。"
+    },
+    "q2": {
+      "verdict": "supported",
+      "required": [
+        "a3",
+        "a4",
+        "a8"
+      ],
+      "optional": [
+        "a2"
+      ],
+      "rationale": "a3定义邮箱服务器进入时视为送达，a4以送达起算六小时，a8明确连续计算含非工作时间。"
+    },
+    "q3": {
+      "verdict": "refuted",
+      "required": [
+        "a3"
+      ],
+      "optional": [
+        "a4"
+      ],
+      "rationale": "a3明确实际阅读不影响送达；未读并不能阻止送达及随后起算。"
+    }
+  },
+  "n10": {
+    "q1": {
+      "verdict": "refuted",
+      "required": [
+        "a2",
+        "a3",
+        "a4"
+      ],
+      "optional": [],
+      "rationale": "a2需同时批准和保密承诺，a3豁免仅给列明的自有实验室，a4将堇川列作外部协作而非自有，因此仍需批准。"
+    },
+    "q2": {
+      "verdict": "supported",
+      "required": [
+        "a3",
+        "a4"
+      ],
+      "optional": [
+        "a2"
+      ],
+      "rationale": "a4证实东站为列明自有实验室，a3允许该地点免批准但明示不免保密承诺。"
+    },
+    "q3": {
+      "verdict": "not_stated",
+      "required": [
+        "a6"
+      ],
+      "optional": [],
+      "rationale": "封存后按双方书面确认的方式处理，未提供该确认，也未指定立即自行销毁。"
+    }
+  },
+  "n11": {
+    "q1": {
+      "verdict": "not_stated",
+      "required": [
+        "a3",
+        "a4",
+        "a6"
+      ],
+      "optional": [],
+      "rationale": "三处退款条款均无到账时限；七日是取消的提前通知期，不能用作退款期，也没有三个工作日数字。"
+    },
+    "q2": {
+      "verdict": "refuted",
+      "required": [
+        "a5"
+      ],
+      "optional": [
+        "a6"
+      ],
+      "alternatives": [
+        [
+          "a6"
+        ]
+      ],
+      "rationale": "a5直接否认收退一千元赋予保管社任意取消权；a6另给唯一具体取消条件。"
+    },
+    "q3": {
+      "verdict": "supported",
+      "required": [
+        "a2",
+        "a4"
+      ],
+      "optional": [
+        "a3"
+      ],
+      "rationale": "a2给预约金6000元，a4允许在未按时取消且未入库时扣1000元并退余额，6000-1000=5000元。"
+    }
+  },
+  "n12": {
+    "q1": {
+      "verdict": "refuted",
+      "required": [
+        "a2"
+      ],
+      "optional": [
+        "a3"
+      ],
+      "rationale": "第二项标价为680元；646元是每席标价乘95%后的派生金额，不是第二项写明的标价。"
+    },
+    "q2": {
+      "verdict": "supported",
+      "required": [
+        "a2",
+        "a3",
+        "a4"
+      ],
+      "optional": [],
+      "rationale": "36×680=24480；24480×0.95=23256；23256×0.20=4651.20元。"
+    },
+    "q3": {
+      "verdict": "not_stated",
+      "required": [
+        "a7"
+      ],
+      "optional": [
+        "a3",
+        "a4"
+      ],
+      "rationale": "开票以最终结算金额为准，但没有四舍五入到元的规则。"
+    }
+  },
+  "n13": {
+    "q1": {
+      "verdict": "supported",
+      "required": [
+        "a4",
+        "a5"
+      ],
+      "optional": [
+        "a2",
+        "a3"
+      ],
+      "rationale": "a4给去除两类字段且用途限定的免逐次许可例外，a5将薄荷维修站列为唯一允许主体。"
+    },
+    "q2": {
+      "verdict": "refuted",
+      "required": [
+        "a3",
+        "a5"
+      ],
+      "optional": [
+        "a4"
+      ],
+      "rationale": "a3对外提供原则须逐次书面许可，a5明确潜在投资者不属于例外主体；去标识并不放宽主体。"
+    },
+    "q3": {
+      "verdict": "not_stated",
+      "required": [
+        "a7"
+      ],
+      "optional": [],
+      "rationale": "仅约定共同确认留存清单，没有九十日保存上限。"
+    }
+  },
+  "n14": {
+    "q1": {
+      "verdict": "refuted",
+      "required": [
+        "a4"
+      ],
+      "optional": [
+        "a3"
+      ],
+      "rationale": "a4规定特定违约解除不延续归档权限且应删除，直接推翻任何解除均可永久保留。"
+    },
+    "q2": {
+      "verdict": "not_stated",
+      "required": [
+        "a4"
+      ],
+      "optional": [],
+      "rationale": "a4有删除义务，但没有公证删除证明的要求。"
+    },
+    "q3": {
+      "verdict": "supported",
+      "required": [
+        "a3",
+        "a7"
+      ],
+      "optional": [
+        "a4"
+      ],
+      "alternatives": [
+        [
+          "a3"
+        ]
+      ],
+      "rationale": "a3将继续保留的副本用途限定为内部审计，a7明确排除向新客户宣传展示；断言已排除a4的失权情形。"
+    }
+  },
+  "n15": {
+    "q1": {
+      "verdict": "not_stated",
+      "required": [
+        "a4",
+        "a6"
+      ],
+      "optional": [
+        "a5"
+      ],
+      "rationale": "记录时长交由附页乙规定，但签收清单明确未收到，不能补出七十二小时指标。"
+    },
+    "q2": {
+      "verdict": "supported",
+      "required": [
+        "a3",
+        "a6"
+      ],
+      "optional": [
+        "a2"
+      ],
+      "alternatives": [
+        [
+          "a3"
+        ]
+      ],
+      "rationale": "a3提供附页甲内容及双方盖章确认，a6证实本轮实际签收该附页，数量分别为12台和24节。"
+    },
+    "q3": {
+      "verdict": "refuted",
+      "required": [
+        "a6"
+      ],
+      "optional": [
+        "a5",
+        "a8"
+      ],
+      "rationale": "a6直接记载附页乙未收到，a5的应随附义务不代表履行完成。"
+    }
+  },
+  "n16": {
+    "q1": {
+      "verdict": "supported",
+      "required": [
+        "a7"
+      ],
+      "optional": [
+        "a4",
+        "a5"
+      ],
+      "rationale": "末页a7明确音频通过后译音不一致仍免费纠正，该明示例外足以支持断言。"
+    },
+    "q2": {
+      "verdict": "not_stated",
+      "required": [
+        "a7",
+        "a9"
+      ],
+      "optional": [],
+      "rationale": "a7有免费纠正义务但未给期限，a9明确未另列完成时限；不能补出两个工作日。"
+    },
+    "q3": {
+      "verdict": "refuted",
+      "required": [
+        "a4"
+      ],
+      "optional": [
+        "a2"
+      ],
+      "rationale": "a4明示音频必须负责人签验收书，排除协作表勾选；a2的勾选通过只对应甲部分文字稿。"
+    }
+  }
+}

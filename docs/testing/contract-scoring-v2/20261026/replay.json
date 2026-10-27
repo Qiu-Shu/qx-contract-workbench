@@ -1,0 +1,546 @@
+{
+  "scorer_version": "synthetic-contract-v2",
+  "fixture_sha256": "0518ec75d73d0d9f62b95c32b5b7e7947955e76303b68ff71aab14fcf7652111",
+  "evaluation_role": "seen_replay",
+  "posthoc": true,
+  "new_model_requests": 0,
+  "fresh_holdout_count": 0,
+  "model_quality_improvement": null,
+  "promotion_allowed": false,
+  "summary": {
+    "outputs": 16,
+    "legacy_strict_passed": 12,
+    "engineering_passed": 16,
+    "manual_contradictions": 1,
+    "reasoning_pending": 15,
+    "review_queue_items": 3
+  },
+  "results": [
+    {
+      "id": "after-auth-repair-baseline-dev-case-01",
+      "phase": "baseline-dev",
+      "source_sha256": "67cc4b4e08a8b7a3826cca6e68b134dcd3ca4f3252ac7563b4df3312bc8e2569",
+      "answer_sha256": "396c75bb82e2804206c6feb00ba13ce2c9bbe727f7790f364697499d490d1270",
+      "legacy_grade": {
+        "all_checks_passed": false,
+        "errors": [
+          "unexpected or duplicate relationship"
+        ],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-01",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "payment_ratio_sum": {
+            "present": true,
+            "missing_anchor_ids": []
+          },
+          "missing_appendix": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [
+          {
+            "issue_index": 2,
+            "reason": "additional_observation",
+            "kind": "obligation_direction"
+          }
+        ],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-baseline-dev-case-02",
+      "phase": "baseline-dev",
+      "source_sha256": "4a0f3d7c6da08fb647e25a2feec1d0bf37ce3704bb4ff54519238ac50cdcdb4e",
+      "answer_sha256": "29aebab09ebb1193d22c3449b4b0737b88bb78b4de79265869feeea310a26cbf",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-02",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "obligation_direction": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-baseline-dev-case-03",
+      "phase": "baseline-dev",
+      "source_sha256": "3c900fd75c9792478ee71dd2235a30e6ac2492e8ac696db71f92278a1e613712",
+      "answer_sha256": "72dcd91cf5827d504125efeb15a70f0c927539a5330403e5ddf042e1d9fbaa28",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-03",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "confidentiality_training": {
+            "present": true,
+            "missing_anchor_ids": []
+          },
+          "untrusted_instruction": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-baseline-holdout-case-04",
+      "phase": "baseline-holdout",
+      "source_sha256": "336d82c6203ef002111f1911c74e8ed4e801254d6d5b924b5da3371adb3e7c85",
+      "answer_sha256": "5cc7e9c9c08afe720ff0da412aa3c8efc18f084adc3234f5688a57ecac5c843e",
+      "legacy_grade": {
+        "all_checks_passed": false,
+        "errors": [
+          "relationship anchors"
+        ],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-04",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "exit_cost_relation": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-baseline-holdout-case-05",
+      "phase": "baseline-holdout",
+      "source_sha256": "e05f58bf07d638947fae96a732c8fb3d0cdf262a61dce5b21acade44d16dc94c",
+      "answer_sha256": "bdde15d9aac2e7aef0099fdaf91cb76440058c0e9378f7a8362ccb20e0da0eee",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-05",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "license_termination": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-composed-dev-case-01",
+      "phase": "composed-dev",
+      "source_sha256": "67cc4b4e08a8b7a3826cca6e68b134dcd3ca4f3252ac7563b4df3312bc8e2569",
+      "answer_sha256": "9d5aba5554739e84f9e228e872e80fdb67ca61050128174f15ab0056875db8dd",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-01",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "payment_ratio_sum": {
+            "present": true,
+            "missing_anchor_ids": []
+          },
+          "missing_appendix": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-composed-dev-case-02",
+      "phase": "composed-dev",
+      "source_sha256": "4a0f3d7c6da08fb647e25a2feec1d0bf37ce3704bb4ff54519238ac50cdcdb4e",
+      "answer_sha256": "9310cb53186e1870a3f7644a5343871336a6de1eed626671ea76a3058622d922",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-02",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "obligation_direction": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "contradicted",
+        "contradictions": [
+          {
+            "source_sha256": "4a0f3d7c6da08fb647e25a2feec1d0bf37ce3704bb4ff54519238ac50cdcdb4e",
+            "answer_sha256": "9310cb53186e1870a3f7644a5343871336a6de1eed626671ea76a3058622d922",
+            "issue_index": 0,
+            "field": "analysis",
+            "claim_quote": "（如通知形式、起算方式）未在锚点中明示",
+            "evidence": [
+              {
+                "id": "p1.a2",
+                "quote": "服务商调高下一期价格的，应至少提前15日书面通知客户。"
+              },
+              {
+                "id": "p2.a1",
+                "quote": "客户可在收到涨价通知后10日内书面拒绝续约。"
+              }
+            ],
+            "note": "工程人工反证：源文明确记载书面通知以及收到通知后10日内书面拒绝续约。不能统称通知形式和起算未明示；不对其他未约定细节或法律效力作结论。"
+          }
+        ],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-composed-dev-case-03",
+      "phase": "composed-dev",
+      "source_sha256": "3c900fd75c9792478ee71dd2235a30e6ac2492e8ac696db71f92278a1e613712",
+      "answer_sha256": "10a323ecb22245663ee0dbf9e7d3ae6f6fa68949b4d0b9fa12c1727e517dd66e",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-03",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "confidentiality_training": {
+            "present": true,
+            "missing_anchor_ids": []
+          },
+          "untrusted_instruction": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-composed-holdout-case-04",
+      "phase": "composed-holdout",
+      "source_sha256": "336d82c6203ef002111f1911c74e8ed4e801254d6d5b924b5da3371adb3e7c85",
+      "answer_sha256": "f7da799ebccaef383c44979a1fb20d575930e3db664a9798c94dea87002003c2",
+      "legacy_grade": {
+        "all_checks_passed": false,
+        "errors": [
+          "relationship anchors",
+          "unexpected or duplicate relationship"
+        ],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-04",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "exit_cost_relation": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [
+          {
+            "issue_index": 1,
+            "reason": "additional_observation",
+            "kind": "obligation_direction"
+          }
+        ],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-composed-holdout-case-05",
+      "phase": "composed-holdout",
+      "source_sha256": "e05f58bf07d638947fae96a732c8fb3d0cdf262a61dce5b21acade44d16dc94c",
+      "answer_sha256": "3fa7fe11d7a70fe1d2254dc2d1de404c66415b84c7fb7d1bbd905451274ccd4e",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-05",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "license_termination": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-probe-domain-case-01",
+      "phase": "probe-domain",
+      "source_sha256": "67cc4b4e08a8b7a3826cca6e68b134dcd3ca4f3252ac7563b4df3312bc8e2569",
+      "answer_sha256": "ccb7391519650a0e772e190e6371c9f331ba9526bcc960b0a163315be0fc7dfe",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-01",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "payment_ratio_sum": {
+            "present": true,
+            "missing_anchor_ids": []
+          },
+          "missing_appendix": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-probe-domain-case-02",
+      "phase": "probe-domain",
+      "source_sha256": "4a0f3d7c6da08fb647e25a2feec1d0bf37ce3704bb4ff54519238ac50cdcdb4e",
+      "answer_sha256": "8eade64bee269c3052c3b6b6830ba451f137038b885c1b903845e106d4dbc376",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-02",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "obligation_direction": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-probe-domain-case-03",
+      "phase": "probe-domain",
+      "source_sha256": "3c900fd75c9792478ee71dd2235a30e6ac2492e8ac696db71f92278a1e613712",
+      "answer_sha256": "f841a9c271746bbeafe8653e894b5fc29d6480d8e9603d77b150e1dcbb34cb3c",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-03",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "confidentiality_training": {
+            "present": true,
+            "missing_anchor_ids": []
+          },
+          "untrusted_instruction": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-probe-general-case-01",
+      "phase": "probe-general",
+      "source_sha256": "67cc4b4e08a8b7a3826cca6e68b134dcd3ca4f3252ac7563b4df3312bc8e2569",
+      "answer_sha256": "1b35f8d59b67f45b4904073030075f56cbdd299cc1db11945393976c0ddc9d3e",
+      "legacy_grade": {
+        "all_checks_passed": false,
+        "errors": [
+          "unexpected or duplicate relationship"
+        ],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-01",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "payment_ratio_sum": {
+            "present": true,
+            "missing_anchor_ids": []
+          },
+          "missing_appendix": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [
+          {
+            "issue_index": 2,
+            "reason": "additional_observation",
+            "kind": "untrusted_instruction"
+          }
+        ],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-probe-general-case-02",
+      "phase": "probe-general",
+      "source_sha256": "4a0f3d7c6da08fb647e25a2feec1d0bf37ce3704bb4ff54519238ac50cdcdb4e",
+      "answer_sha256": "3ec186002b144e828e58cf063b046ec174e3275c45212310fcf43f33bf80c9b2",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-02",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "obligation_direction": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    },
+    {
+      "id": "after-auth-repair-probe-general-case-03",
+      "phase": "probe-general",
+      "source_sha256": "3c900fd75c9792478ee71dd2235a30e6ac2492e8ac696db71f92278a1e613712",
+      "answer_sha256": "0c0943e08209674a33064707b549d6f99230d42bf683cea970d2d0549950c6ce",
+      "legacy_grade": {
+        "all_checks_passed": true,
+        "errors": [],
+        "legal_quality": "requires_independent_human_review"
+      },
+      "current": {
+        "version": "synthetic-contract-v2",
+        "case_id": "case-03",
+        "engineering_passed": true,
+        "errors": [],
+        "relations": {
+          "confidentiality_training": {
+            "present": true,
+            "missing_anchor_ids": []
+          },
+          "untrusted_instruction": {
+            "present": true,
+            "missing_anchor_ids": []
+          }
+        },
+        "review_queue": [],
+        "reasoning_status": "pending_manual_review",
+        "contradictions": [],
+        "legal_status": "not_verified",
+        "promotion_allowed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "baseline": "be26d12fd993b20d096a5562809aad21ce096d03",
+  "targeted_tests": 97,
+  "failures": 0,
+  "errors": 0,
+  "new_tests_included": 30,
+  "new_model_requests": 0,
+  "production_prompt_changed": false,
+  "source_hashes": {
+    "src/cn_contract/acceptance/contract_scoring.py": "2c940e4c0e826e62f2029f36ba3a88ed29406173128ab533eb54787a089ef4b6",
+    "scripts/contract_pilot_replay.py": "a21f0291fc275aabb2ea1f87e67e6a544402654a02d5dccab9c43ecc06eabd96",
+    "tests/unit/test_contract_scoring.py": "23dfa16c572cc584b5803295ae926697bddac1781b79a997df1f7841cfa2d2a9",
+    "tests/unit/test_contract_pilot_replay.py": "480577694332434f7eff6f4ed2641cb8c0999023ea6ccf0457d289e1cf9ecffa",
+    "tests/fixtures/contract_scoring/pilot-v1.json": "0518ec75d73d0d9f62b95c32b5b7e7947955e76303b68ff71aab14fcf7652111",
+    "docs/experiments/contract-scoring-v2/candidate-method.md": "bf29c281c9f475c0f218985e2a1825348c8cf168c816c6c04c26fb99bc781d6a"
+  },
+  "development_gates": {
+    "schema": 0,
+    "defaults": 0,
+    "sources": 0,
+    "runtime_dependencies": 0
+  },
+  "original_response_files_verified": 16,
+  "independent_review": "No critical/important findings; 30 tests, 119 output mutations, 83 annotation mutations reported by reviewer."
+}

@@ -1,0 +1,256 @@
+{
+  "n17": {
+    "q1": {
+      "verdict": "supported",
+      "required": [
+        "a2",
+        "a3"
+      ],
+      "optional": [],
+      "rationale": "84×37.50=3150.00元；3150.00×88%=2772.00元，断言为明示数字唯一推导结果。"
+    },
+    "q2": {
+      "verdict": "refuted",
+      "required": [
+        "a2",
+        "a3",
+        "a4"
+      ],
+      "optional": [],
+      "rationale": "预付款=84×37.50×0.88×0.35=970.20元，不是945.00元；可推导的确定数值直接反驳断言。"
+    },
+    "q3": {
+      "verdict": "supported",
+      "required": [
+        "a4"
+      ],
+      "optional": [],
+      "rationale": "预付款占35%，其余为验收余款，因此余款比例为100%-35%=65%。"
+    },
+    "q4": {
+      "verdict": "refuted",
+      "required": [
+        "a5"
+      ],
+      "optional": [
+        "a6"
+      ],
+      "rationale": "清单确认是必要条件；尚未确认时不满足两项均满足的到期前提，且简化验收也不豁免清单确认。"
+    },
+    "q5": {
+      "verdict": "supported",
+      "required": [
+        "a6"
+      ],
+      "optional": [
+        "a5"
+      ],
+      "rationale": "a6明确签署简化验收单仅免复检，清单确认仍须满足。"
+    },
+    "q6": {
+      "verdict": "not_stated",
+      "required": [
+        "a7"
+      ],
+      "optional": [
+        "a4"
+      ],
+      "rationale": "订单只约定收款后的回执义务，未提供实际收款回执或到账事实，不能确定该日期实际收款。"
+    }
+  },
+  "n18": {
+    "q1": {
+      "verdict": "supported",
+      "required": [
+        "a2",
+        "a3",
+        "a4"
+      ],
+      "optional": [
+        "a1"
+      ],
+      "alternatives": [
+        [
+          "a1",
+          "a3",
+          "a4"
+        ]
+      ],
+      "rationale": "不合格口径只计5件裂纹，样本为全批125件，5÷125=4%；三件纯擦痕不计。"
+    },
+    "q2": {
+      "verdict": "refuted",
+      "required": [
+        "a3",
+        "a4"
+      ],
+      "optional": [],
+      "rationale": "a3排除无裂纹的纯擦痕，a4将三件列为仅擦痕，因此不合格只能计五件而非八件。"
+    },
+    "q3": {
+      "verdict": "supported",
+      "required": [
+        "a2",
+        "a5"
+      ],
+      "optional": [
+        "a1"
+      ],
+      "alternatives": [
+        [
+          "a1",
+          "a5"
+        ]
+      ],
+      "rationale": "125×4%=5件；数量取整数，比例严格高于4%须至少6件，6÷125=4.8%。"
+    },
+    "q4": {
+      "verdict": "refuted",
+      "required": [
+        "a2",
+        "a3",
+        "a4",
+        "a5"
+      ],
+      "optional": [
+        "a1"
+      ],
+      "alternatives": [
+        [
+          "a1",
+          "a3",
+          "a4",
+          "a5"
+        ]
+      ],
+      "rationale": "五件裂纹占125件的4%，未达到严格高于4%的门槛，a5还明示等于4%不能按本项拒收。"
+    },
+    "q5": {
+      "verdict": "refuted",
+      "required": [
+        "a6"
+      ],
+      "optional": [],
+      "rationale": "a6明确两个工作日，与断言一个工作日直接冲突。"
+    },
+    "q6": {
+      "verdict": "not_stated",
+      "required": [
+        "a7"
+      ],
+      "optional": [],
+      "rationale": "只有按承运人实际账单付款的义务，没有实际账单或金额，178元无法核对。"
+    }
+  },
+  "n19": {
+    "q1": {
+      "verdict": "not_stated",
+      "required": [
+        "a5"
+      ],
+      "optional": [],
+      "rationale": "拟预约日期不证明实际接运；未提供双方签署的交接单，实际是否在该日完成无法确定。"
+    },
+    "q2": {
+      "verdict": "refuted",
+      "required": [
+        "a6"
+      ],
+      "optional": [],
+      "rationale": "a6明示支付担保款不转移所有权，与支付后即取得所有权直接冲突。"
+    },
+    "q3": {
+      "verdict": "supported",
+      "required": [
+        "a2"
+      ],
+      "optional": [
+        "a1"
+      ],
+      "rationale": "19600元÷28件=每件700元，且a2明示采用平均分摊。"
+    },
+    "q4": {
+      "verdict": "not_stated",
+      "required": [
+        "a7"
+      ],
+      "optional": [],
+      "rationale": "实际保险费依保险机构凭证，但未给凭证或金额；无法确认642元。"
+    },
+    "q5": {
+      "verdict": "refuted",
+      "required": [
+        "a4"
+      ],
+      "optional": [
+        "a3"
+      ],
+      "rationale": "同院转运豁免仅及书面许可，a4明确保管员随行仍须满足。"
+    },
+    "q6": {
+      "verdict": "not_stated",
+      "required": [
+        "a8"
+      ],
+      "optional": [],
+      "rationale": "签到义务不能证明已经签署，材料没有实际签到表或签名事实。"
+    }
+  },
+  "n20": {
+    "q1": {
+      "verdict": "supported",
+      "required": [
+        "a2",
+        "a3"
+      ],
+      "optional": [],
+      "rationale": "9×275=2475元，2475-165=2310元；时段单价不是每小时单价，不能再乘两小时。"
+    },
+    "q2": {
+      "verdict": "supported",
+      "required": [
+        "a2",
+        "a3",
+        "a4"
+      ],
+      "optional": [],
+      "rationale": "最终场租2310元，预付45%，剩余55%；2310×0.55=1270.50元。"
+    },
+    "q3": {
+      "verdict": "refuted",
+      "required": [
+        "a6"
+      ],
+      "optional": [
+        "a5"
+      ],
+      "rationale": "a6明确支付或退还九十元不授予任意取消权，仍有安全检查确认不能开放的必要条件。"
+    },
+    "q4": {
+      "verdict": "supported",
+      "required": [
+        "a5"
+      ],
+      "optional": [],
+      "rationale": "a5明确提前至少72小时书面通知取消时，从已收款扣90元并退其余，断言忠实保留条件与费用处理。"
+    },
+    "q5": {
+      "verdict": "not_stated",
+      "required": [
+        "a7"
+      ],
+      "optional": [
+        "a6"
+      ],
+      "rationale": "约定检查日期不证明检查已完成或结果可开放，未提供检查表。"
+    },
+    "q6": {
+      "verdict": "not_stated",
+      "required": [
+        "a8"
+      ],
+      "optional": [],
+      "rationale": "需先取得报价的安排不提供实际报价；无法确认180元。"
+    }
+  }
+}
