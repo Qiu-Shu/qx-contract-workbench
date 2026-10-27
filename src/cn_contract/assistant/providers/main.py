@@ -47,6 +47,11 @@ def _decode(raw, request, config, secret):
 
 
 class DeepSeekProvider(DeepSeekTransport):
+    async def generate_material(self, request, *, expected_config=None, preflight=None):
+        from ..material_codec import build_request, decode
+        return await self._generate(request, expected_config=expected_config, builder=build_request,
+            decoder=decode, reply_type=d.MainMaterialReply, preflight=preflight or (lambda:False))
+
     async def generate_profile(self, request: d.MainProfileRequest, *,
                                expected_config: d.MainModelConfig | None = None,
                                preflight=None) -> d.MainProfileReply:

@@ -583,10 +583,10 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     @app.get('/static/{name}')
     def static_file(name:str):
         if name not in {'workbench.js','workbench.css','pdf-review.mjs','library.js','library.css','workspace.js','workspace.css',
-                        'assistant.css','assistant-api.mjs','assistant-state.mjs','assistant-render.mjs',
-                        'assistant-composer.mjs','assistant-materials.mjs','assistant-generation.mjs',
+                        'assistant.css','assistant-api.mjs','assistant-state.mjs','assistant-render.mjs','assistant-business.mjs',
+                        'assistant-composer.mjs','assistant-materials.mjs','assistant-generation.mjs','assistant-material-generation.mjs',
                         'assistant-research.mjs','assistant-context.mjs','assistant-citations.mjs','assistant-profile.mjs',
-                        'assistant-tasks.mjs','assistant-weixin.mjs','assistant-weixin-generations.mjs','assistant-weixin-pending.mjs','assistant-outputs.mjs','reception-worksheet.mjs','evidence-worksheet.mjs','followup-worksheet.mjs','assistant.mjs',
+                        'assistant-tasks.mjs','assistant-task-context.mjs','assistant-weixin.mjs','assistant-weixin-generations.mjs','assistant-weixin-pending.mjs','assistant-outputs.mjs','reception-worksheet.mjs','evidence-worksheet.mjs','followup-worksheet.mjs','assistant.mjs',
                         'reception-assistant.mjs','reception-assistant.css'}:raise ServiceError('NOT_SUPPORTED',404)
         return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith(('.js','.mjs')) else 'text/css')
     from .draft_confirmation import register_routes
@@ -597,6 +597,8 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     register_intake_routes(app,database)
     from .assistant import register_routes as register_assistant_routes
     register_assistant_routes(app,database)
+    from .assistant_business import register_routes as register_assistant_business
+    register_assistant_business(app,database)
     from .assistant_attachments import register_routes as register_assistant_attachments
     register_assistant_attachments(app,database)
     from .assistant_profiles import register_routes as register_assistant_profiles

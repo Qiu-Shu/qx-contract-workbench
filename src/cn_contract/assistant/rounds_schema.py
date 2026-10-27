@@ -101,6 +101,9 @@ def initialize_storage(database):
         found = _found(raw)
         if not found:
             return
+        from .material_model_schema import expected_context_objects as material_objects
+        if found == material_objects():
+            return
         if found == expected_objects():
             return
         # The positively identified rounds-v2 successor is accepted as-is.

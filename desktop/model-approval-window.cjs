@@ -1,3 +1,4 @@
+const {validMaterialBasis}=require('./material-basis.cjs');
 const path=require('node:path');
 const {pathToFileURL}=require('node:url');
 const {randomUUID}=require('node:crypto');
@@ -6,6 +7,12 @@ const {canonicalProfileBasis}=require('./profile-basis.cjs');
 function approvalDetails(value) {
   const budget=value=>typeof value==='string'&&/^(0|[1-9]\d{0,6})(\.\d{1,12})?$/.test(value)&&
     /[1-9]/.test(value)&&(Number(value.split('.')[0])<1000000||/^1000000(?:\.0{1,12})?$/.test(value));
+  if(value?.kind==='material_business'){
+    if(Object.keys(value).length!==6 || !validMaterialBasis(value.basis) || value.content!==value.basis.manifest.question ||
+        !['deepseek-flash','deepseek-v4-pro'].includes(value.model) || value.recipient!=='DeepSeek（api.deepseek.com）' ||
+        !budget(value.max_total_usd))return null;
+    return structuredClone(value);
+  }
   if(value?.kind==='profile_draft'){
     if(Object.keys(value).length!==6||
         !['kind','content','basis','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||

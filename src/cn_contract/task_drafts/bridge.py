@@ -12,8 +12,8 @@ from .. import domain as d
 from ..assistant.service import _digest
 from ..documents.ingest import ingest
 from ..ops.storage import require_active
-from ..persistence import DocumentRow, read_matter, read_version
-from ..review.storage import read_run
+from ..persistence import DocumentRow, read_matter, read_version, get_fact_snapshot, get_parse_result
+from ..review.storage import read_run, _row as review_row
 from ..security import ServiceError, authorize
 from ..web import services
 from . import service
@@ -79,6 +79,48 @@ def prepare_execution(actor, execution_id, value, *, db):
         return service.advance_execution(actor, execution.id, 'awaiting_facts', db,
             expected_state='creating_matter', matter_id=value.matter_id,
             document_versions=versions, source_versions=links, prepare_request_id=value.request_id)
+
+
+def create_and_prepare(actor, execution_id, value, *, db):
+    value = d.TaskExecutionCreateInput.model_validate_json(value.model_dump_json())
+    execution = service.read_execution(actor, execution_id, db)
+    require_active(db)
+    if value.matter.material_mode != 'synthetic' or value.matter.reviewer_username:
+        raise ServiceError('STATE_CONFLICT', 409)
+    if execution.matter_id:
+        matter = _case(execution, execution.matter_id, actor, db)
+        if (execution.prepare_request_id != value.request_id or any(
+                getattr(matter, key) != getattr(value.matter, key)
+                for key in ('title', 'contract_type', 'review_mode', 'position', 'objectives'))):
+            raise ServiceError('VERSION_CONFLICT', 409)
+        _check_versions(execution, actor, db)
+        return execution
+    if execution.state != 'prepared':
+        raise ServiceError('STATE_CONFLICT', 409)
+    _sources(execution, actor, db)
+    with db.begin_nested():
+        matter = services.create_matter(value.matter, actor, db)
+        return prepare_execution(actor, execution_id,
+            d.TaskExecutionPrepareInput(request_id=value.request_id, matter_id=matter.id), db=db)
+
+
+def read_context(actor, execution_id, *, db):
+    execution = service.read_execution(actor, execution_id, db)
+    if execution.matter_id is None:
+        return d.TaskExecutionContext(execution=execution)
+    matter = read_matter(execution.matter_id, actor, db)
+    facts = get_fact_snapshot(matter.id, matter.active_fact_version, actor, db) if matter.active_fact_version else None
+    parses = tuple(parsed for version_id in execution.document_versions
+                   if (parsed := get_parse_result(matter.id, version_id, actor, db)) is not None)
+    review = read_run(matter.id, execution.review_run_id, actor, db=db, current=False) if execution.review_run_id else None
+    if review:
+        saved = d.ReviewContext.model_validate_json(review_row(matter.id, review.id, actor, db).context_json)
+        facts = saved.fact_snapshot
+        if facts.sha256 != review.manifest.fact_snapshot_sha256:
+            raise ServiceError('VERSION_CONFLICT', 409)
+    elif execution.state == 'awaiting_facts':
+        _check_versions(execution, actor, db)
+    return d.TaskExecutionContext(execution=execution, facts=facts, parses=parses, review=review)
 
 
 def review_execution(actor, execution_id, value, *, db):

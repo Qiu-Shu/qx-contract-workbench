@@ -54,6 +54,9 @@ def initialize_storage(database):
             "SELECT type,name,tbl_name,sql FROM sqlite_master WHERE tbl_name IN "
             "('assistant_model_attempts','assistant_model_receipts','assistant_model_outputs',"
             "'assistant_model_input_citations') ORDER BY type,name")]
+        from .material_model_schema import expected_context_objects as material_objects
+        if found == material_objects():
+            return
         if found == expected_objects():
             return
         # The positively identified rounds-v1 and rounds-v2 successors are

@@ -175,11 +175,15 @@ def native_inbox_workspace(tmp_path):
     root = tmp_path/'workspace'
     local_server.initialize_workspace(root,'synthetic-lawyer','fiction123',data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as db:
+        db.execute('DROP TABLE assistant_followup_revisions')
+        db.execute('DROP TABLE assistant_evidence_revisions')
         db.execute('DROP TABLE weixin_descriptor_generations')
         db.execute('DROP TABLE weixin_peer_generations')
         db.execute('DROP TABLE weixin_peer_scope_grants')
         db.execute('DROP TABLE weixin_dispatch_receipts')
         db.commit()
+        from tests.helpers.legacy_material_model import downgrade_material_model
+        downgrade_material_model(db)
         marker = json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256'] = local_server._schema_hash(db)
         assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-inbox-v1',native=True)

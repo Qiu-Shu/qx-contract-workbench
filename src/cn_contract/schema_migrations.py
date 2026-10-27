@@ -7,7 +7,9 @@ def database_rows(connection):
 
 
 def statements_for(version):
-    if version == 'assistant-followups-v1':
+    if version == 'assistant-material-model-v1':
+        from .assistant.material_model_schema import STATEMENTS
+    elif version == 'assistant-followups-v1':
         from .assistant.followup_schema import STATEMENTS
     elif version == 'assistant-evidence-v1':
         from .assistant.evidence_schema import STATEMENTS
@@ -53,6 +55,9 @@ def statements_for(version):
 
 
 def _module(version):
+    if version == 'assistant-material-model-v1':
+        from .assistant import material_model_schema
+        return material_model_schema
     if version == 'assistant-rounds-v1':
         from .assistant import rounds_schema
         return rounds_schema

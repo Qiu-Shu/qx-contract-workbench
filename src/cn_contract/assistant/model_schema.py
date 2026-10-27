@@ -50,6 +50,9 @@ def initialize_storage(database):
         found = [tuple(row) for row in connection.exec_driver_sql(
             "SELECT type,name,tbl_name,sql FROM sqlite_master WHERE tbl_name IN "
             "('assistant_model_attempts','assistant_model_receipts','assistant_model_outputs') ORDER BY type,name")]
+        from .material_model_schema import expected_model_objects as material_objects
+        if found == material_objects():
+            return
         if found:
             # The positively identified context-v1, rounds-v1 and rounds-v2
             # successors are also accepted; partial migrations and unknown

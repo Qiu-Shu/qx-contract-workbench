@@ -24,7 +24,21 @@
   });
   Promise.resolve().then(()=>api.state()).then(value=>{
     if(gone)return;
-    if(value?.kind==='profile_draft'){
+    if(value?.kind==='material_business'){
+      const manifest=value.basis?.manifest;
+      if(!manifest||value.basis.input_format!=='material-business-v1'||!Array.isArray(manifest.materials)||
+          !Array.isArray(manifest.sources)||!Object.hasOwn(models,value.model)||!budget(value.max_total_usd))throw Error();
+      at('approval-intro').textContent=manifest.materials.length===0?'本次仅咨询文字，发送给下列模型后生成待核接待草稿。取消不会发送。':'本次将发送下列选中材料的可读原文、读取范围和问题，生成有出处的律师待核草稿。取消不会调用模型。';
+      at('approval-text-title').textContent='本次问题与全部发送片段';
+      const list=at('approval-sources-list');
+      for(const file of manifest.materials){
+        const item=document.createElement('li');
+        item.textContent=`${file.name} · 解析版本 ${file.parse_revision} · ${file.reading_status==='partial'?'部分可读':'可读'} · 未读部分：${file.unread_parts.join('、')||'无已登记未读部分'} · 原件 ${file.original_sha256}`;
+        list.append(item);
+      }
+      at('approval-sources').hidden=false;
+      at('approval-sources-title').textContent=`本次选中的材料（${manifest.materials.length} 份）`;
+    } else if(value?.kind==='profile_draft'){
       // The isolated window receives a fully validated basis from the main process.
       // Recheck the fields used for display before enabling a decision.
       const basis=value.basis,uuid=v=>typeof v==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(v);
@@ -82,7 +96,7 @@
         `程序将预留 USD ${judge.max_total_usd} 预算；这不是供应商收费上限，实际费用尚未核对。`:
         'Jev 辅助判断尚未启用，本次不会发送给 TypeSafe；你仍可确认主模型发送。';
     }
-    at('approval-content').textContent=value.kind==='profile_draft'&&value.basis.conversation_history?.length?
+    at('approval-content').textContent=value.kind==='material_business'?value.content+'\n\n'+value.basis.manifest.sources.map(s=>'['+s.source_id+']\n'+(s.reference.anchor?.quote??s.reference.quote)).join('\n\n'):value.kind==='profile_draft'&&value.basis.conversation_history?.length?
       value.basis.conversation_history.map(item=>`${item.role==='user'?'历史提问':'历史回答（待核）'} · 输入版本 ${item.source_revision}\n${item.content}`).join('\n\n')+'\n\n本次文字\n'+value.content:value.content;
     at('approval-recipient').textContent=value.recipient;
     at('approval-model').textContent=`${models[value.model]}（${value.model}）`;

@@ -21,14 +21,17 @@ let generationTimer, pollTimer, generationKey=null;
 let pendingRoute=document.body.dataset.conversationId || null;
 const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing(),onCitation:(id,trigger)=>void citations.open(id,trigger),
   onToggleCitation:id=>controller.toggleContextCitation(id),
+  onGenerateMaterial:id=>void safely(()=>controller.generateMaterial(id)),
   onPreviewContext:()=>void safely(()=>controller.previewContext())});
-const controller=createDraftController(api,{readonly,
+const controller=createDraftController(api,{readonly,autoReadMaterials:true,
   nativeAuthorization:typeof window.desktopAssistant?.authorizeGeneration==='function'
     ?value=>window.desktopAssistant.authorizeGeneration(value):null,
   nativeContextAuthorization:typeof window.desktopAssistant?.authorizeContext==='function'
     ?value=>window.desktopAssistant.authorizeContext(value):null,
   nativeProfileAuthorization:typeof window.desktopAssistant?.authorizeProfile==='function'
     ?value=>window.desktopAssistant.authorizeProfile(value):null,
+  nativeMaterialAuthorization:typeof window.desktopAssistant?.authorizeMaterial==='function'
+    ?value=>window.desktopAssistant.authorizeMaterial(value):null,
   onChange:state=>{
     drawState(state);
     renderer.selected(state.id);
@@ -47,6 +50,16 @@ const controller=createDraftController(api,{readonly,
 
 function drawState(state) {
   renderer.state(state,readonly);
+  const choice=byId('business-task-select'),items=new Map((state.business?.items||[]).filter(item=>item.task_id).map(item=>[item.task_id,item]));
+  byId('business-task-choice').hidden=items.size<2&&!state.business?.selectedTask;
+  choice.replaceChildren(new Option('自动判断',''));
+  const names={sales:'客户接待',case:'案件整理',contract:'合同审查',court:'庭审准备'};
+  for(const [id,item] of items){
+    const message=state.view?.messages?.find(message=>message.id===item.message_id);
+    choice.add(new Option((names[item.workflow]||'任务')+' · '+(message?.content.slice(0,45)||id.slice(0,8)),id));
+  }
+  choice.value=state.business?.selectedTask||'';
+  choice.disabled=readonly||state.loading||['submitting','unknown'].includes(state.business?.phase);
   materials?.state(state);citations?.state(state);profile?.state(state);tasks?.state(state);
   outputs?.state(state);
   worksheet?.state(state);evidence?.state(state);followups?.state(state);
@@ -147,10 +160,10 @@ for(const event of ['input','change'])byId('task-draft-panel').addEventListener(
 const examples={client_reply:'这是客户的咨询，帮我理清诉求并起草回复：',
   material_organize:'请帮我整理这次咨询的事实线索和待补材料：',
   contract_review:'请帮我核对这份合同需要重点审查的问题：',
+  mock_trial:'站在对方律师和法官角度模拟本案的庭审准备：',
   content_draft:'请围绕这个法律主题起草一段文案：',
   legal_research:''};
 document.querySelectorAll('[data-skill]').forEach(button=>button.addEventListener('click',()=>{
-  if(button.dataset.skill==='contract_review'){closeMenu();tasks.open();return;}
   controller.selectSkill(button.dataset.skill);
   if(examples[button.dataset.skill] && !controller.state.text && !composer.isComposing()) {
     controller.edit(examples[button.dataset.skill]);
@@ -159,6 +172,7 @@ document.querySelectorAll('[data-skill]').forEach(button=>button.addEventListene
   closeMenu();byId('composer').focus();
 }));
 byId('clear-skill').addEventListener('click',()=>{controller.selectSkill(null);byId('composer').focus();});
+byId('business-task-select').addEventListener('change',()=>{controller.selectBusinessTask(byId('business-task-select').value);byId('composer').focus();});
 byId('save-draft').addEventListener('click',()=>{clearTimeout(timer);void safely(()=>
   controller.state.status==='error'?controller.retry():controller.save());});
 byId('new-conversation').addEventListener('click',async()=>{

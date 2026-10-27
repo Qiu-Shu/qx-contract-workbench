@@ -5,8 +5,8 @@ import {bindTaskDrafts} from '../src/cn_contract/web/static/assistant-tasks.mjs'
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 class Element {
   constructor(tag='div'){this.tagName=tag;this.children=[];this.listeners=new Map();this.value='';this.textContent='';this.disabled=false;this.hidden=false;this.checked=false;this.dataset={};}
-  append(...nodes){this.children.push(...nodes);}
-  replaceChildren(...nodes){this.children=nodes;}
+  append(...nodes){for(const node of nodes)node.parentNode=this;this.children.push(...nodes);}
+  replaceChildren(...nodes){for(const node of this.children)node.parentNode=null;this.children=[];this.append(...nodes);}
   addEventListener(name,fn){this.listeners.set(name,fn);}
   setAttribute(name,value){this[name]=value;}
   focus(){this.focused=true;}
@@ -142,7 +142,7 @@ test('readonly users can still refresh saved task records',async()=>{
   assert.equal(f.calls.length,before+1);assert.equal(f.calls.at(-1)[0],'/api/assistant/conversations/one/task-drafts');f.tasks.dispose();
 });
 
-test('shipped contract review button opens simulation without editing the chat skill',()=>{
+test('contract capability stays on the shared chat composer',()=>{
   const source=readFileSync(new URL('../src/cn_contract/web/static/assistant.mjs',import.meta.url),'utf8');
   const start=source.indexOf("document.querySelectorAll('[data-skill]').forEach",source.indexOf('const examples='));
   const end=source.indexOf("byId('clear-skill')",start);
@@ -154,8 +154,8 @@ test('shipped contract review button opens simulation without editing the chat s
   register({querySelectorAll:()=>buttons},{selectSkill:value=>selected.push(value),state:{text:'普通聊天保留'}},
     {open:()=>opened.push('simulation')},()=>{},()=>new Element(),{}, {isComposing:()=>false},()=>{},()=>{},()=>{});
   buttons[0].fire('click');
-  assert.deepEqual(opened,['simulation']);assert.deepEqual(selected,[]);
-  buttons[1].fire('click');assert.deepEqual(selected,['client_reply']);
+  assert.deepEqual(opened,[]);assert.deepEqual(selected,['contract_review']);
+  buttons[1].fire('click');assert.deepEqual(selected,['contract_review','client_reply']);
 });
 
 test('simulation reads the current facts and submits only the frozen document hashes',async()=>{
@@ -165,10 +165,11 @@ test('simulation reads the current facts and submits only the frozen document ha
   f.api.request=async(path,options={})=>{
     f.calls.push([path,options]);
     if(path.endsWith('/task-drafts'))return {items:[draft],unassigned_events:[]};
-    if(path.endsWith('/facts'))return {version:7};
+    if(path.endsWith('/context'))return {parses:[],facts:{version:7,facts:[{id:'f',field:'price',typed_value:{kind:'text',value:'虚构'},confirmation_status:'confirmed',anchor_ids:[]}]}};
     return {};
   };
   await f.tasks.refresh();f.root.getElementById('task-select').value='draft';f.root.getElementById('task-select').fire('change');
+  await tick();
   await taskButton(f,'运行模拟审查').fire('click');
   const writes=f.calls.filter(([,o])=>o.method==='POST');
   assert.equal(writes.length,1);assert.equal(writes[0][0],'/api/task-executions/execution/review');
@@ -213,14 +214,15 @@ for(const excluded of [false,true])test(excluded?'an excluded attachment can be 
   assert.equal(resolution.replacement.media_id,'inbound');f.tasks.dispose();
 });
 
-for(const readonly of [false,true])test('completed result navigation respects recovery mode: '+readonly,async()=>{
+for(const readonly of [false,true])test('completed result stays inline in active and recovery mode: '+readonly,async()=>{
   const f=fixture({readonly});await tick();
-  f.api.request=async()=>({items:[{id:'draft',state:'frozen',revision:3,instruction:'合成',events:[],blockers:[],
-    execution:{id:'execution',state:'completed',matter_id:'matter',review_run_id:'run'}}],unassigned_events:[]});
+  f.api.request=async path=>path.endsWith('/context')?{parses:[],review:{status:'completed',findings:[{issue_type:'合成风险',analysis:'待核对分析',anchor_ids:[]}],limitations:[]}}:
+    {items:[{id:'draft',state:'frozen',revision:3,instruction:'合成',events:[],blockers:[],
+    execution:{id:'execution',state:'completed',matter_id:'matter',review_run_id:'run'}}],unassigned_events:[]};
   await f.tasks.refresh();f.root.getElementById('task-select').value='draft';f.root.getElementById('task-select').fire('change');
-  const links=walk(f.root.getElementById('task-current')).filter(el=>el.tagName==='a');
-  const result=links.find(el=>el.textContent.includes('模拟'));
-  assert.equal(result.href,readonly?'/recovery/task-executions/execution':'/matters/matter/review');
-  if(readonly)assert.equal(links.some(el=>el.href.startsWith('/matters/')),false);
+  await tick();
+  const nodes=walk(f.root.getElementById('task-current'));
+  assert.ok(nodes.some(el=>el.textContent==='合成风险'));
+  assert.equal(nodes.some(el=>el.tagName==='a'),false);
   f.tasks.dispose();
 });

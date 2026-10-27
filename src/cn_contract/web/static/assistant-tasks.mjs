@@ -1,4 +1,5 @@
 import {errorText} from './assistant-render.mjs';
+import {renderTaskContext,renderNewMatter} from './assistant-task-context.mjs';
 
 const DOCX='application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 const PDF='application/pdf';
@@ -15,7 +16,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   const byId=id=>root.getElementById(id);
   let cid=null,page={items:[],unassigned_events:[],binding:null},selected='',closed=false,revoked=false;
   let epoch=0,reading=0,busy=false,pending=null,creating=false,createKey=null,materialKey='';
-  let checks=[],writeControls=[],materialsView=null,materialScope=null;
+  let checks=[],writeControls=[],materialsView=null,materialScope=null,businessRun=null;
   const mediaChoices=new Map();
   const node=(tag,text)=>{const el=root.createElement(tag);if(text!==undefined)el.textContent=text;return el;};
   const tell=text=>{byId('task-notice').textContent=text;};
@@ -96,7 +97,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   }
   function clear(){
     ++epoch;++reading;page={items:[],unassigned_events:[],binding:null};selected='';pending=null;
-    mediaChoices.clear();materialsView=null;materialScope=null;
+    mediaChoices.clear();materialsView=null;materialScope=null;businessRun=null;
     byId('task-current').replaceChildren();byId('task-unassigned').replaceChildren();
     byId('task-attachments').replaceChildren();byId('task-select').replaceChildren();
     byId('task-instruction').value='';checks=[];writeControls=[];materialKey='';controls();
@@ -260,21 +261,14 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
       host.append(button('准备材料并确认事实',()=>{
         if(!select.value){tell('请选择已有空案件；可从合同工作台新建后刷新本页。');return;}
         return submit('/api/task-executions/'+execution.id+'/prepare','POST',{matter_id:select.value,request_id:uuid()},
-          result=>navigate('/matters/'+result.matter_id+'/facts'));
+          ()=>tell('材料已准备，可在本对话逐项核对事实。'));
       }));
+      renderNewMatter({execution,host,node,button,submit,tell});
     }
     if(execution.matter_id){
-      host.append(readonly?link('查看恢复案件与原件','/recovery/matters/'+execution.matter_id):
-        link('打开事实确认页','/matters/'+execution.matter_id+'/facts'));
-      if(execution.state==='awaiting_facts')host.append(button('运行模拟审查',async()=>{
-        const key=token(),facts=await api.request('/api/matters/'+execution.matter_id+'/facts');
-        if(!valid(key))return;
-        if(!facts?.version){tell('请先打开事实确认页并完成确认。');return;}
-        await submit('/api/task-executions/'+execution.id+'/review','POST',{
-          request_id:uuid(),review:{fact_version:facts.version,document_hashes:execution.document_versions}});
-      }));
-      if(execution.review_run_id)host.append(readonly?link('查看历史模拟结果','/recovery/task-executions/'+execution.id):
-        link('查看模拟审查结果','/matters/'+execution.matter_id+'/review'));
+      const key=token(),container=node('section');host.append(container);
+      renderTaskContext({execution,host:container,api,node,button,submit,tell,readonly,
+        valid:()=>valid(key)&&container.parentNode===host}).catch(error=>{if(valid(key))tell(errorText(error));});
     }
     if(['prepared','creating_matter','awaiting_facts','queued'].includes(execution.state))host.append(button('停止执行此任务',()=>
       submit('/api/task-executions/'+execution.id+'/cancel','POST',undefined)));
@@ -343,6 +337,11 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
         if(cid)void refresh().catch(error=>{if(active())tell(errorText(error));});
       }
       renderMaterials(state.materials);
+      const latest=state.business?.items?.filter(item=>item.contract_draft_id).at(-1);
+      if(latest&&latest.run_id!==businessRun&&!busy&&!pending){
+        businessRun=latest.run_id;selected=latest.contract_draft_id;byId('task-draft-panel').open=true;
+        void refresh().catch(error=>{if(active())tell(errorText(error));});
+      }
       controls();
     },
     dispose(){closed=true;++epoch;++reading;mediaChoices.clear();pending=null;},

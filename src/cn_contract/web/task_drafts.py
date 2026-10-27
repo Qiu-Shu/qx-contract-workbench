@@ -11,7 +11,7 @@ from ..task_drafts import service
 from .request_context import actor_in, body_input
 
 _UUID=r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
-_READ_PATH=re.compile(rf'/api/(?:assistant/conversations/{_UUID}/task-drafts|task-drafts/{_UUID}|task-executions/{_UUID})')
+_READ_PATH=re.compile(rf'/api/(?:assistant/conversations/{_UUID}/task-drafts|task-drafts/{_UUID}|task-executions/{_UUID}(?:/context)?)')
 
 
 def is_task_read_path(path):
@@ -88,3 +88,14 @@ def register_routes(app, database):
         from ..task_drafts.bridge import review_execution
         return await write(request, identifier, d.TaskExecutionReviewInput,
                            service.read_execution, review_execution)
+
+    @app.post('/api/task-executions/{identifier}/create-and-prepare')
+    async def create_and_prepare(identifier: UUID, request: Request):
+        from ..task_drafts.bridge import create_and_prepare as operation
+        return await write(request, identifier, d.TaskExecutionCreateInput, service.read_execution, operation)
+
+    @app.get('/api/task-executions/{identifier}/context')
+    def context(identifier: UUID, request: Request):
+        from ..task_drafts.bridge import read_context
+        with database.session() as db:
+            return read_context(actor_in(request, db), identifier, db=db)

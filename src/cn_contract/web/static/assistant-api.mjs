@@ -34,6 +34,9 @@ export const createConversation = body=>request('/api/assistant/conversations',{
 export const saveDraft = (id,body)=>request(conversation(id)+'/draft',{method:'PUT',body});
 export const listConversations = cursor=>request('/api/assistant/conversations'+(cursor?'?cursor='+encodeURIComponent(cursor):''));
 export const skills = ()=>request('/api/assistant/skills');
+export const submitBusiness=(id,body)=>request(conversation(id)+'/business',{method:'POST',body});
+export const findBusiness=(id,key)=>request(conversation(id)+'/business/by-request/'+encodeURIComponent(key));
+export const getBusinessHistory=id=>request(conversation(id)+'/business');
 export const session = ()=>request('/api/session');
 export const cancelRun = (id,body)=>request('/api/assistant/runs/'+encodeURIComponent(id)+'/cancel',{method:'POST',body});
 export const getGenerationCapability=id=>request(conversation(id)+'/generation-capability');
@@ -92,3 +95,5 @@ export const getFollowups=id=>request(conversation(id)+'/followups');
 export const saveFollowups=(id,body)=>request(conversation(id)+'/followups/commits',{method:'POST',body});
 export const findFollowupReceipt=(id,key)=>request(conversation(id)+'/followups/receipts/'+encodeURIComponent(key));
 export const getFollowupVersion=(id,revision)=>request(conversation(id)+'/followups/revisions/'+encodeURIComponent(revision));
+
+export const submitMaterialGeneration=(id,body)=>request(conversation(id)+'/material-generations',{method:'POST',body});

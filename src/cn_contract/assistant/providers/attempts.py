@@ -34,6 +34,8 @@ def _input(row):
         return _model(d.MainContextPreparedInput, row['input_json'])
     if fmt == 'library-context-v2':
         return _model(d.MainContextRoundsPreparedInput, row['input_json'])
+    if fmt == 'material-business-v1':
+        return _model(d.MainMaterialPreparedInput, row['input_json'])
     if fmt == 'profile-text-v1':
         return _model(d.MainProfilePreparedInput, row['input_json'])
     raise ValueError('ASSISTANT_MODEL_INTEGRITY')
@@ -41,6 +43,9 @@ def _input(row):
 
 def _wire(prepared, config):
     """Deterministic rebuild for the decoded format."""
+    if isinstance(prepared, d.MainMaterialPreparedInput):
+        from ..material_codec import prepare as material_prepare
+        return material_prepare(prepared.request, config).wire_payload_json
     if isinstance(prepared, d.MainProfilePreparedInput):
         from .deepseek_protocol import json_bytes
         from .profile_codec import build_request
@@ -96,6 +101,8 @@ def read_attempt(actor, identifier, db):
     values = dict(id=row['id'], run_id=row['run_id'], scope=prepared.request.scope,
         state=row['state'], reserved_usd=row['reserved_usd'],
         receipt=_model(d.MainReceipt, usage) if usage else None)
+    if isinstance(prepared, d.MainMaterialPreparedInput):
+        return validated(d.MainMaterialAttemptView, dict(values, output=_model(d.MainMaterialOutputView, output) if output else None))
     if isinstance(prepared, d.MainProfilePreparedInput):
         from .profile_history import read_save
         view = _model(d.MainProfileOutputView, output) if output else None
@@ -287,6 +294,9 @@ def enqueue_context(actor, conversation_id, request, db, runtime):
 
 
 def _current(actor, row, db, runtime):
+    if row['input_format'] == 'material-business-v1':
+        from .. import material_attempts
+        return material_attempts.current(actor, row, db, runtime)
     if row['input_format'] == 'profile-text-v1':
         from . import profile_attempts
         return profile_attempts.current(actor, row, db, runtime)
@@ -377,6 +387,9 @@ def claim(actor, identifier, db, runtime):
 def settle(actor, identifier, token, reply, db, runtime):
     require_active(db)
     row = _row(identifier, db)
+    if row['input_format'] == 'material-business-v1':
+        from .. import material_attempts
+        return material_attempts.settle(actor, identifier, token, reply, db, runtime)
     if row['input_format'] == 'profile-text-v1':
         from . import profile_attempts
         return profile_attempts.settle(actor, identifier, token, reply, db, runtime)

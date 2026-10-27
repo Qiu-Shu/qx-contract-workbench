@@ -50,7 +50,7 @@ def test_all_40_predecessor_structures_are_unchanged(item):
 
 def test_followups_append_only_the_snapshot_family_to_v20():
     assert len(FROZEN) == 40
-    assert storage_schema.VERSIONS[-2:] == ('assistant-evidence-v1', TARGET)
+    assert storage_schema.VERSIONS[-3:-1] == ('assistant-evidence-v1', TARGET)
     before = set(storage_schema.schema_rows('assistant-evidence-v1'))
     after = set(storage_schema.schema_rows(TARGET))
     assert before < after
@@ -67,12 +67,12 @@ def test_exact_v20_additive_upgrade(native_mode):
                     connection.execute(row[3])
         connection.commit()
         assert schema_migrations.database_rows(connection) == before
-        assert schema_migrations.upgrade_database(connection) == TARGET
-        assert storage_schema.identify_schema(schema_migrations.database_rows(connection), native=native_mode) == TARGET
+        assert schema_migrations.upgrade_database(connection) == storage_schema.CURRENT_VERSION
+        assert storage_schema.identify_schema(schema_migrations.database_rows(connection), native=native_mode) == storage_schema.CURRENT_VERSION
         assert connection.execute('SELECT count(*) FROM '+TABLE).fetchone() == (0,)
         assert connection.execute('PRAGMA foreign_key_check').fetchall() == []
         schema_migrations.upgrade_database(connection)
-        assert schema_migrations.database_rows(connection) == storage_schema.schema_rows(TARGET, native=native_mode)
+        assert schema_migrations.database_rows(connection) == storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=native_mode)
 
 
 def test_bootstrap_matches_current_catalog_and_is_idempotent(tmp_path):
@@ -85,7 +85,7 @@ def test_bootstrap_matches_current_catalog_and_is_idempotent(tmp_path):
         initialize_storage(database)
         with database.engine.connect() as db:
             rows = [tuple(r) for r in db.exec_driver_sql('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name')]
-        assert storage_schema.identify_schema(rows) == TARGET
+        assert storage_schema.identify_schema(rows) == storage_schema.CURRENT_VERSION
     finally:
         database.engine.dispose()
 
@@ -160,6 +160,8 @@ def test_native_v20_upgrade_preserves_saved_evidence_and_identity(native):
         saved = connection.execute('SELECT * FROM assistant_evidence_revisions').fetchall()
         connection.execute('DROP TABLE '+TABLE)
         connection.commit()
+        from tests.helpers.legacy_material_model import downgrade_material_model
+        downgrade_material_model(connection)
         rows = schema_migrations.database_rows(connection)
         assert storage_schema.identify_schema(rows, native=True) == 'assistant-evidence-v1'
     marker = json.loads((root/'workspace.json').read_text())
@@ -171,7 +173,7 @@ def test_native_v20_upgrade_preserves_saved_evidence_and_identity(native):
         assert json.loads((root/'workspace.json').read_text())['workspace_id'] == marker['workspace_id']
         with closing(sqlite3.connect(root/'workbench.db')) as connection:
             assert connection.execute('SELECT * FROM assistant_evidence_revisions').fetchall() == saved
-            assert storage_schema.identify_schema(schema_migrations.database_rows(connection), native=True) == TARGET
+            assert storage_schema.identify_schema(schema_migrations.database_rows(connection), native=True) == storage_schema.CURRENT_VERSION
         with TestClient(recovered) as client:
             sign_in(client)
             assert client.get(url).json()['rows'] == [fact]

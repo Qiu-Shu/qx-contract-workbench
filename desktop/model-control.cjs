@@ -1,4 +1,5 @@
 const {TextDecoder} = require('node:util');
+const {validMaterialBasis}=require('./material-basis.cjs');
 const {validProfileBasis} = require('./profile-basis.cjs');
 
 const PROTOCOL = 'qx-model-control-v1';
@@ -11,7 +12,7 @@ const CODES = new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT',
 const STATUSES = {configure:['configured'],disable:['disabled'],
   authorize:['authorized','existing'],revoke:['revoked'],configure_judge:['configured'],disable_judge:['disabled'],
   authorize_judge:['authorized','existing'],revoke_judge:['revoked'],authorize_context:['authorized','existing'],
-  authorize_profile:['authorized','existing']};
+  authorize_profile:['authorized','existing'],authorize_material:['authorized','existing']};
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const keys = (value, expected) => object(value) && Object.keys(value).length === expected.length &&
   expected.every(key => Object.hasOwn(value,key));
@@ -47,10 +48,10 @@ function validPayload(operation, payload) {
     payload.secret.trim().length >= 16 && payload.secret.trim().length <= 512;
   const token = value => typeof value === 'string' && /^[\x21-\x7e]{1,256}$/.test(value);
   if (operation === 'revoke' || operation === 'revoke_judge') return keys(payload,['session_token']) && token(payload.session_token);
-  if (operation === 'authorize_profile')
+  if (operation === 'authorize_profile' || operation === 'authorize_material')
     return keys(payload,['session_token','expected_config_version','basis','max_total_usd','valid_for_seconds']) &&
       token(payload.session_token) && typeof payload.expected_config_version === 'string' &&
-      UUID.test(payload.expected_config_version) && validProfileBasis(payload.basis) &&
+      UUID.test(payload.expected_config_version) && (operation==='authorize_material'?validMaterialBasis(payload.basis):validProfileBasis(payload.basis)) &&
       typeof payload.max_total_usd === 'string' && payload.max_total_usd.length <= 64 &&
       Number.isSafeInteger(payload.valid_for_seconds) && payload.valid_for_seconds >= 1 && payload.valid_for_seconds <= 900;
   if (operation === 'authorize_context')
@@ -174,7 +175,7 @@ class ModelControl {
     try {
       if (!Number.isSafeInteger(sequence) || !validPayload(operation,payload)) return Promise.resolve(blocked());
       line=JSON.stringify({event:'model-control',protocol:PROTOCOL,nonce:this.nonce,sequence,operation,payload})+'\n';
-      if (Buffer.byteLength(line,'utf8') > 32768) return Promise.resolve(blocked());
+      if (Buffer.byteLength(line,'utf8') > (operation==='authorize_material'?524288:32768)) return Promise.resolve(blocked());
     } catch { return Promise.resolve(blocked()); }
     this.sequence=sequence;
     return new Promise((resolve,reject) => {

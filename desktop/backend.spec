@@ -9,6 +9,8 @@ assets = []
 for source, target in [
     ('config/defaults.json', 'config'),
     ('tests/fixtures/assisted-v1', 'tests/fixtures/assisted-v1'),
+    ('tests/fixtures/acceptance', 'tests/fixtures/acceptance'),
+    ('tests/acceptance/cases.json', 'tests/acceptance'),
     ('tests/fixtures/synthetic', 'tests/fixtures/synthetic'),
     ('rules/default-draft-cards.json', 'rules'),
     ('prompts', 'prompts'),

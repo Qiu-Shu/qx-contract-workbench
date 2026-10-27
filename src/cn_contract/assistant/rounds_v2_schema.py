@@ -99,6 +99,9 @@ def initialize_storage(database):
         found = _found(raw)
         if not found:
             return
+        from .material_model_schema import expected_context_objects as material_objects
+        if found == material_objects():
+            return
         if found == expected_objects():
             return
         from .profile_model_schema import expected_context_objects as profile_model_objects

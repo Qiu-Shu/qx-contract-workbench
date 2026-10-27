@@ -20,6 +20,7 @@ from .evidence_worksheet import is_evidence_read_path
 from .followup_worksheet import is_followup_read_path
 from .reception_worksheet import is_worksheet_read_path
 from .task_drafts import is_task_read_path
+from .assistant_business import is_business_read_path
 from .weixin_authorization import is_weixin_authorization_read_path
 
 
@@ -43,6 +44,7 @@ def attach_recovery(app, database):
         safe_api = safe_api or is_evidence_read_path(path)
         safe_api = safe_api or is_followup_read_path(path)
         safe_api = safe_api or is_task_read_path(path)
+        safe_api = safe_api or is_business_read_path(path)
         safe_api = safe_api or is_weixin_authorization_read_path(path)
         if ((request.method not in ('GET','HEAD','OPTIONS') and path not in ('/api/login','/api/logout'))
                 or path.startswith('/api/') and not safe_api):

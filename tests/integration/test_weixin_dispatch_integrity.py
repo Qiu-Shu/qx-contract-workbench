@@ -270,7 +270,11 @@ def test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance(histor
         elif damage == 'overlap':
             # v19 SQL forbids this slot collision; retain the exact v18 archive rejection.
             from cn_contract.storage_schema import identify_schema
+            db.execute(text('DROP TABLE assistant_followup_revisions'))
+            db.execute(text('DROP TABLE assistant_evidence_revisions'))
             db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
+            from tests.helpers.legacy_material_model import downgrade_material_model_session
+            downgrade_material_model_session(db)
             rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
             assert identify_schema(rows,native=True)=='weixin-target-provenance-v1'
             corrupt(db, 'UPDATE weixin_dispatch_receipts SET expected_task_cursor=0,next_task_cursor=1 WHERE id=:id', {'id':receipts[1]['id']})

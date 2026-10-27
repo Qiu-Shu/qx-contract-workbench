@@ -1,6 +1,8 @@
+import {createMaterialGenerationController} from './assistant-material-generation.mjs';
 import {createGenerationController,isAuthorizationError} from './assistant-generation.mjs';
 import {createResearchController} from './assistant-research.mjs';
 import {createContextController} from './assistant-context.mjs';
+import {createBusinessController} from './assistant-business.mjs';
 
 // This controller stores only the current page in memory; the server owns revisions.
 const scopeKeys = ['workspace_id', 'conversation_id', 'scope_kind', 'scope_ref',
@@ -13,26 +15,27 @@ const activeRuns = new Set(['queued', 'preparing', 'routing', 'retrieving', 'gen
 
 export function createDraftController(api, {
   onChange = () => {}, onConversation = () => {}, uuid = () => crypto.randomUUID(), readonly = false,
-  nativeAuthorization = null, nativeContextAuthorization = null, nativeProfileAuthorization = null,
+  nativeAuthorization = null, nativeContextAuthorization = null, nativeProfileAuthorization = null, nativeMaterialAuthorization = null,
+  autoReadMaterials = false,
 } = {}) {
   const state = {id: null, view: null, text: '', savedText: '', skill: null,
     status: readonly ? 'readonly' : 'idle', error: null, conflict: null, dirty: false, loading: false,
     materials: null, materialAction: null, desktopModel: null};
   let epoch = 0, closed = false, channel = null, creating = null, pending = null, materialPending = null;
-  let reading = false, paging = false, cancelling = false, generation = null, research = null, context = null;
+  let reading = false, paging = false, cancelling = false, generation = null, research = null, context = null, business = null, materialGeneration = null;
 
   function notify() {
     state.materialAction = materialPending?.kind || null;
     state.dirty = Boolean(creating || pending || materialPending || state.conflict ||
       (state.id ? state.text !== state.savedText : state.text.trim()));
-    generation?.sync(); research?.sync(); context?.sync(); onChange(state);
+    generation?.sync(); research?.sync(); context?.sync(); business?.sync(); onChange(state);
   }
   const current = token => !closed && token === epoch;
   function identity(id) {
     if (state.id !== id) { state.id = id; onConversation(id); }
   }
   function reset() {
-    generation?.reset();research?.reset();context?.reset();
+    generation?.reset();research?.reset();context?.reset();business?.reset();materialGeneration?.reset();
     creating = pending = materialPending = null;
     reading = paging = cancelling = false;
     state.view = null; state.text = state.savedText = ''; state.skill = null;
@@ -145,7 +148,14 @@ export function createDraftController(api, {
       if (view.composer_revision !== state.view.composer_revision || view.draft_input !== state.savedText) {
         return conflict(view);
       }
-      baseline(view); return true;
+      baseline(view);
+      const uploaded=action.kind==='upload'?action.done?.attachment:null;
+      if(autoReadMaterials&&uploaded&&api.parseAttachment&&['application/pdf',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(uploaded.mime)){
+        materialPending={kind:'parse',input:{baseline_view:null},attachment:uploaded.id,body:null,unknown:false,done:null};
+        notify();return writeMaterial(token);
+      }
+      return true;
     } catch(error) {
       if (!current(token)) return false;
       if (error.status === 409 && error.code === 'VERSION_CONFLICT') {
@@ -193,7 +203,7 @@ export function createDraftController(api, {
   function save(explicit = false, fromGeneration = false) {
     if (closed || state.loading || state.status === 'revoked' || state.conflict) return Promise.resolve(false);
     if (readonly) return Promise.resolve(!state.dirty);
-    const active=generation?.blocked()?generation:research?.blocked()?research:context?.blocked()?context:null;
+    const active=materialGeneration?.blocked()?materialGeneration:business?.blocked()?business:generation?.blocked()?generation:research?.blocked()?research:context?.blocked()?context:null;
     if(!fromGeneration && active) {
       if(!active.busy())return Promise.resolve(false);
       const token=epoch;
@@ -211,7 +221,7 @@ export function createDraftController(api, {
     notify(); return channel;
   }
   function material(kind,input,{file,attachment}={}) {
-    if (closed || readonly || state.loading || state.status === 'revoked' || materialPending || state.conflict || channel || generation?.blocked() || research?.blocked()) {
+    if (closed || readonly || state.loading || state.status === 'revoked' || materialPending || state.conflict || channel || generation?.blocked() || research?.blocked() || (business?.blocked() || materialGeneration?.blocked())) {
       return Promise.resolve(false);
     }
     // Pending text writes share this drain; a file never sends an old draft back.
@@ -220,6 +230,7 @@ export function createDraftController(api, {
   }
   async function open(id) {
     if (closed) return false;
+    if((business?.blocked() || materialGeneration?.blocked()))return false;
     if (id === state.id && state.view) return refresh();
     if (!state.loading && (state.dirty || channel) && !await save()) return false;
     const token = ++epoch;
@@ -237,7 +248,7 @@ export function createDraftController(api, {
   }
   async function refresh(fromGeneration = false) {
     if (closed || !state.id || state.loading || channel || pending || creating || reading ||
-        (!fromGeneration && (generation?.unknown() || research?.unknown()))) return false;
+        (!fromGeneration && (generation?.unknown() || research?.unknown() || business?.unknown() || context?.unknown() || materialGeneration?.unknown()))) return false;
     const token = epoch, id = state.id, baselineAtStart = state.view, marker = {};
     reading = marker;
     try {
@@ -281,7 +292,7 @@ export function createDraftController(api, {
     } catch (error) { return fail(error, token); }
     finally { if (cancelling === marker) cancelling = false; }
   }
-  const workflowHost={state,readonly,uuid,notify,nativeAuthorization,nativeContextAuthorization,nativeProfileAuthorization,
+  const workflowHost={state,readonly,uuid,notify,nativeAuthorization,nativeContextAuthorization,nativeProfileAuthorization,nativeMaterialAuthorization,
     token:()=>epoch,current,fail,
     blocked:()=>Boolean((pending || creating) && !channel || materialPending || state.status==='error'),
     busy:()=>Boolean(channel || pending || creating || materialPending || reading),
@@ -301,12 +312,19 @@ export function createDraftController(api, {
     },
   };
   generation=createGenerationController(api,{...workflowHost,
-    blocked:()=>workflowHost.blocked() || research?.blocked() || context?.blocked()});
+    blocked:()=>workflowHost.blocked() || research?.blocked() || context?.blocked() || (business?.blocked() || materialGeneration?.blocked())});
   research=createResearchController(api,{...workflowHost,
-    blocked:()=>workflowHost.blocked() || generation?.blocked() || context?.blocked()});
+    blocked:()=>workflowHost.blocked() || generation?.blocked() || context?.blocked() || (business?.blocked() || materialGeneration?.blocked())});
   context=createContextController(api,{...workflowHost,
-    blocked:()=>workflowHost.blocked() || generation?.blocked() || research?.blocked()});
+    blocked:()=>workflowHost.blocked() || generation?.blocked() || research?.blocked() || (business?.blocked() || materialGeneration?.blocked())});
+  business=createBusinessController(api,{...workflowHost,
+    blocked:()=>workflowHost.blocked() || generation?.blocked() || research?.blocked() || context?.blocked()});
+  materialGeneration=createMaterialGenerationController(api,{...workflowHost,
+    blocked:()=>workflowHost.blocked() || generation?.blocked() || research?.blocked() || context?.blocked() || business?.blocked(),
+    refreshHistory:()=>generation.refresh()});
   function refreshWorkflows(){
+    if(materialGeneration.unknown())return materialGeneration.refresh();
+    if(business.unknown())return business.refresh();
     // An unacknowledged write must be resolved before any competing history read.
     if(research.blocked())return research.refresh();
     if(context.blocked())return context.refresh();
@@ -316,6 +334,7 @@ export function createDraftController(api, {
       if(!current(token))return false;
       const researched=await research.refresh();
       if(current(token) && state.context?.phase==='tracking')await context.refresh();
+      if(current(token))await business.refresh();
       return researched && (generated || !api.getGenerationCapability);
     });
   }
@@ -330,14 +349,25 @@ export function createDraftController(api, {
     },
     selectSkill(skill) {
       if (closed || readonly || state.loading || state.status === 'revoked') return;
+      if(skill!==state.skill){
+        const last=state.business?.items?.at(-1);
+        if(!state.text.trim()&&last&&!last.task_id){
+          const message=state.view?.messages?.find(message=>message.id===last.message_id);
+          if(message)state.text=message.content;
+        }
+        state.business.selectedTask=null;
+      }
       state.skill = skill; generation.changed();research.changed();context.changed(); notify();
     },
     open, save: () => save(), retry: () => save(true), refresh, loadEarlier, cancel,
-    send:()=>research.unknown()?research.send():generation.unknown()?generation.send():
+    send:()=>business.unknown()?business.send():research.unknown()?research.send():generation.unknown()?generation.send():
       context.unknown()?context.send():
+      business.handles()?business.send():
       state.skill==='legal_research'?research.send():
       !state.skill && state.context?.selected.length?context.send():generation.send(),
+    generateMaterial:id=>materialGeneration.send(id),
     previewContext:()=>context.preview(),
+    selectBusinessTask:id=>business.select(id),
     toggleContextCitation(id){
       const selected=state.context.selected.join(',');context.toggle(id);
       if(selected!==state.context.selected.join(',')){generation.changed();notify();}
@@ -350,6 +380,7 @@ export function createDraftController(api, {
       return isAuthorizationError(error) ? fail(error, epoch) : false;
     },
     async newConversation() {
+      if(business.blocked() || materialGeneration.blocked())return false;
       if (closed || (!state.loading && (state.dirty || channel) && !await save())) return false;
       epoch += 1; reset(); identity(null); notify(); return true;
     },
@@ -359,7 +390,7 @@ export function createDraftController(api, {
       state.conflict = null; state.status = 'idle'; state.error = null; notify();
       return choice === 'local' || materialPending ? save(true) : true;
     },
-    canLeave: () => closed || (!state.dirty && !state.loading && !channel && !reading && !paging && !cancelling && !generation.blocked() && !research.blocked() && !context.blocked()),
+    canLeave: () => closed || (!state.dirty && !state.loading && !channel && !reading && !paging && !cancelling && !generation.blocked() && !research.blocked() && !context.blocked() && !business.blocked() && !materialGeneration.blocked()),
     close() { closed = true; epoch += 1; reset(); state.id = null; notify(); },
   };
 }

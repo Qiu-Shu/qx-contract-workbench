@@ -209,6 +209,8 @@ def native_predecessor(tmp_path,monkeypatch):
         connection.execute('DROP TABLE assistant_evidence_revisions')
         connection.execute('DROP INDEX weixin_dispatch_binding_cursor')
         connection.execute('DROP TABLE IF EXISTS '+TABLE);connection.commit()
+        from tests.helpers.legacy_material_model import downgrade_material_model
+        downgrade_material_model(connection)
         marker=json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256']=local_server._schema_hash(connection)
         assert schema_migrations.database_rows(connection)==storage_schema.schema_rows('weixin-generations-v1',native=True)

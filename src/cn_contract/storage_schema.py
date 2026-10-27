@@ -1,5 +1,6 @@
 """Fixed supported SQLite structures, independent of application initialization."""
 from .assistant.evidence_schema import expected_objects as evidence_objects
+from .assistant.material_model_schema import expected_objects as material_model_objects
 from .assistant.followup_schema import expected_objects as followup_objects
 from .assistant.context_schema import FAMILY_TABLES as _CONTEXT_FAMILY_TABLES
 from .assistant.context_schema import expected_objects as context_objects
@@ -22,8 +23,8 @@ from .assistant_schema_baseline import ASSISTANT_V1_ROWS
 from .schema_baseline import INTAKE_V1_ROWS
 
 
-CURRENT_VERSION = 'assistant-followups-v1'
-VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', CURRENT_VERSION)
+CURRENT_VERSION = 'assistant-material-model-v1'
+VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', CURRENT_VERSION)
 SUPPORTED_VERSIONS = VERSIONS
 _INTAKE_TABLES = frozenset(('intake_cases', 'intake_revisions'))
 _LIBRARY_ROWS = tuple(library_objects())
@@ -71,6 +72,7 @@ def schema_rows(version, *, native=False):
         result = [row for row in result if row[2] not in _CONTEXT_FAMILY_TABLES]
         result.extend(_CONTEXT_ROWS if version == 'assistant-context-v1'
                       else _ROUNDS_ROWS if version == 'assistant-rounds-v1'
+                      else tuple(material_model_objects()) if version in VERSIONS[21:]
                       else _PROFILE_MODEL_ROWS if version in VERSIONS[11:]
                       else _ROUNDS_V2_ROWS)
     if version == 'assistant-profiles-v1':

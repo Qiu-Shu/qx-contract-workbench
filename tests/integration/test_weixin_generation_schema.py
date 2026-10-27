@@ -209,6 +209,8 @@ def native_grant_workspace(tmp_path, monkeypatch):
         db.execute('DROP TABLE IF EXISTS weixin_descriptor_generations')
         db.execute('DROP TABLE IF EXISTS weixin_peer_generations')
         db.commit()
+        from tests.helpers.legacy_material_model import downgrade_material_model
+        downgrade_material_model(db)
         marker = json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256'] = local_server._schema_hash(db)
         assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
@@ -296,6 +298,8 @@ def test_native_workspace_advances_all_later_versions_with_distinct_verified_rec
         db.execute('DROP INDEX weixin_dispatch_binding_cursor')
         db.execute('DROP TABLE weixin_descriptor_generations')
         db.execute('DROP TABLE weixin_peer_generations');db.commit()
+        from tests.helpers.legacy_material_model import downgrade_material_model
+        downgrade_material_model(db)
         marker=json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256']=local_server._schema_hash(db)
         assert schema_migrations.database_rows(db)==storage_schema.schema_rows('weixin-reauthorization-v1',native=True)

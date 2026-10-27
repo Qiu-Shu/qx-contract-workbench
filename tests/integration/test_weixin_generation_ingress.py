@@ -111,6 +111,8 @@ def test_explicit_entry_checks_authority_storage_and_exact_schema_before_writes(
                 db.execute(text('DROP TABLE assistant_evidence_revisions'))
                 db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
                 db.execute(text('DROP TABLE weixin_descriptor_generations'))
+                from tests.helpers.legacy_material_model import downgrade_material_model_session
+                downgrade_material_model_session(db)
                 rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
                 assert identify_schema(rows,native=True)=='weixin-generations-v1'
     before=snapshot(h['database']) if change!='schema17' else None

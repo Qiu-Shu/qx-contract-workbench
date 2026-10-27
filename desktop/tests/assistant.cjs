@@ -33,8 +33,8 @@ async function capture(name){const win=await app.browserWindow(page);const png=a
   assert.equal(await page.evaluate(()=>typeof require),'undefined');
   assert.equal(await page.evaluate(()=>window.desktopSetup.state()),null);
   assert.equal(await page.locator('#send').isDisabled(),true);
-  assert.equal(await page.locator('#add-material').isDisabled(),true);
-  report.checks.push('native-default-home-isolated-no-node-and-truthful-disabled-actions');
+  assert.equal(await page.locator('#add-material').isDisabled(),false);
+  report.checks.push('native-default-home-isolated-no-node-empty-composer-and-material-entry');
   await capture('assistant-empty.png');
   const text='独立合成咨询：甲称已支付35000元；尚未核实。\n请保留原话与待核状态。';
   await page.locator('#composer').fill(text);await saved();
@@ -43,10 +43,8 @@ async function capture(name){const win=await app.browserWindow(page);const png=a
   assert.equal(await page.locator('#composer').inputValue(),text);
   await page.locator('#composer').press('Shift+Enter');await saved();
   const persisted=await page.locator('#composer').inputValue();assert.equal(persisted,text+'\n');
-  await page.locator('#composer').press('Enter');
   assert.equal(await page.locator('#composer').inputValue(),persisted);
-  assert.match(await page.locator('#notice').innerText(),/尚未接入/);
-  report.checks.push('autosave-skill-preserves-text-shift-enter-no-fake-submission');
+  report.checks.push('autosave-skill-preserves-text-and-shift-enter-newline');
   const win=await app.browserWindow(page);
   for(const factor of [1,1.25,1.5]){
     await win.evaluate((w,f)=>{w.setSize(760,760);w.webContents.setZoomFactor(f);},factor);

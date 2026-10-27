@@ -13,6 +13,11 @@ test('explicit bundle contains every local CommonJS dependency including the app
     }
   }
 });
+test('frozen backend carries the fixed acceptance registry used by synthetic material policy',()=>{
+  const spec=fs.readFileSync(path.resolve(__dirname,'../backend.spec'),'utf8');
+  assert.match(spec,/tests\/fixtures\/acceptance'\s*,\s*'tests\/fixtures\/acceptance/);
+  assert.match(spec,/tests\/acceptance\/cases\.json'\s*,\s*'tests\/acceptance/);
+});
 test('declared desktop bundle includes standalone credential modules without new dependencies',()=>{
   const root=path.resolve(__dirname,'..');
   const metadata=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8'));

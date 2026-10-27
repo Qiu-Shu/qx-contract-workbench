@@ -192,7 +192,7 @@ test('preload exposes only the six fixed Jev operations with isolated channels',
   api.judgeStatus();api.judgeSave('synthetic-typesafe');api.judgeRemove();api.judgeRuntimeStatus();api.judgeConfigure('jev-1.13.0');api.judgeDisable();
   assert.deepEqual(seen,[['desktop:judge-status'],['desktop:judge-save','synthetic-typesafe'],['desktop:judge-remove'],
     ['desktop:judge-runtime-status'],['desktop:judge-configure','jev-1.13.0'],['desktop:judge-disable']]);
-  assert.equal(Object.isFrozen(api),true);assert.deepEqual(Object.keys(exposed.desktopAssistant).sort(),['authorizeContext','authorizeGeneration','authorizeProfile','modelStatus','modelSwitch']);
+  assert.equal(Object.isFrozen(api),true);assert.deepEqual(Object.keys(exposed.desktopAssistant).sort(),['authorizeContext','authorizeGeneration','authorizeMaterial','authorizeProfile','modelStatus','modelSwitch']);
 });
 
 test('Jev copy and initial controls describe optional configuration without claiming permission or a network test',()=>{

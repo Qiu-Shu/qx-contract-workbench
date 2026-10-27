@@ -35,8 +35,12 @@ def old_history(world):
         db.execute(text('DROP TABLE assistant_evidence_revisions'))
         db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
         db.execute(text('DROP TABLE weixin_descriptor_generations'))
-        assert identify_schema([tuple(row) for row in db.execute(text(
-            'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))], native=True) == PREVIOUS
+    with closing(sqlite3.connect(root/'workbench.db')) as db:
+        from tests.helpers.legacy_material_model import downgrade_material_model
+        downgrade_material_model(db)
+        assert identify_schema(db.execute(
+            'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall(), native=True) == PREVIOUS
+    with database.session() as db:
         assert validate_peer_generations(db, allow_generations=True) == []
     with closing(sqlite3.connect(root/'workbench.db')) as db:
         marker = json.loads((root/'workspace.json').read_text('utf-8'))

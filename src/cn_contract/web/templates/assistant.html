@@ -14,10 +14,10 @@
     <button id="new-conversation" class="new-conversation" type="button" aria-label="新对话"{% if readonly %} disabled{% endif %}><span class="compact-label" aria-hidden="true">新建</span><span class="expanded-label">新对话</span></button>
     <nav class="sidebar-section common-skills" aria-labelledby="common-heading">
       <h2 id="common-heading">常用能力</h2>
-      <button type="button" data-skill="client_reply" aria-pressed="false">回复客户</button>
-      <button type="button" data-skill="material_organize" aria-pressed="false">整理资料</button>
+      <button type="button" data-skill="client_reply" aria-pressed="false">销售接待</button>
+      <button type="button" data-skill="material_organize" aria-pressed="false">案件整理</button>
       <button type="button" data-skill="contract_review" aria-pressed="false">审查合同 · 模拟</button>
-      <button type="button" data-skill="content_draft" aria-pressed="false">创作文案</button>
+      <button type="button" data-skill="mock_trial" aria-pressed="false">庭审准备</button>
     </nav>
     <section class="sidebar-section recent-section" aria-labelledby="recent-heading">
       <h2 id="recent-heading">最近记录</h2>
@@ -26,7 +26,6 @@
     </section>
     <nav class="workspace-links" aria-label="已有工作区">
       <a href="/workspace" aria-label="工作区与接待"><span class="compact-label" aria-hidden="true">接待</span><span class="expanded-label">工作区与接待</span></a>
-      <a href="/" aria-label="合同工作台"><span class="compact-label" aria-hidden="true">合同</span><span class="expanded-label">合同工作台</span></a>
       {% if library_enabled %}<a href="/library" aria-label="法律资料库"><span class="compact-label" aria-hidden="true">法库</span><span class="expanded-label">法律资料库</span></a>{% endif %}
     </nav>
     <div class="account-area"><span id="account-name" class="muted"></span><button id="logout" class="text-button" type="button">退出登录</button></div>
@@ -163,6 +162,7 @@
         <summary>模拟合同任务<span class="muted">逐次收集指令与材料，保存在本机</span></summary>
         <div class="task-draft-body">
           <p class="muted">仅用于合成材料的模拟流程。可先写指令或先传附件，再多次补充；冻结后进入事实确认，确认完成再运行模拟审查。</p>
+          <details><summary>微信收件与离线验证</summary>
           <section id="weixin-authorization" class="weixin-authorization" aria-labelledby="weixin-heading">
             <h3 id="weixin-heading">微信收件授权 · 离线测试</h3>
             <p id="weixin-state" role="status" aria-live="polite">正在核对本机收件授权…</p>
@@ -198,13 +198,18 @@
               <p id="weixin-generation-notice" role="status" aria-live="polite"></p>
             </details>
           </section>
+          </details>
           <label for="task-select">正在处理的任务</label>
           <select id="task-select"><option value="">新建模拟任务</option></select>
           <div id="task-current" class="task-current"></div>
+          <details><summary>手动补充收件记录</summary>
+          <p class="muted">日常指令和附件使用下方统一输入框；这里保留收件记录的人工补录。</p>
           <label for="task-instruction">本次补充的审查指令</label>
           <textarea id="task-instruction" rows="3" maxlength="20000" placeholder="例如：请重点核对付款与交付约定。"{% if readonly %} disabled{% endif %}></textarea>
           <fieldset class="task-attachment-field"><legend>本次收集的已上传附件</legend><div id="task-attachments" class="task-attachments"></div></fieldset>
-          <div class="task-actions"><button id="task-collect" type="button"{% if readonly %} disabled{% endif %}>保存本次补充</button><button id="task-refresh" type="button" class="text-button">刷新任务状态</button><button id="task-retry" type="button" class="quiet-button" hidden>重试同一次操作</button></div>
+          <div class="task-actions"><button id="task-collect" type="button"{% if readonly %} disabled{% endif %}>保存本次补充</button></div>
+          </details>
+          <div class="task-actions"><button id="task-refresh" type="button" class="text-button">刷新任务状态</button><button id="task-retry" type="button" class="quiet-button" hidden>重试同一次操作</button></div>
           <p id="task-notice" role="status" aria-live="polite"></p>
           <div id="task-unassigned"></div>
         </div>
@@ -216,13 +221,14 @@
           <div id="material-list"></div>
         </section>
         <div id="skill-cards" class="skill-cards" aria-label="选择本次能力">
-          <button type="button" data-skill="client_reply" aria-pressed="false"><strong>回复客户</strong><span>理清诉求，组织回复</span></button>
-          <button type="button" data-skill="material_organize" aria-pressed="false"><strong>整理资料</strong><span>梳理经过，列出缺口</span></button>
+          <button type="button" data-skill="client_reply" aria-pressed="false"><strong>销售接待</strong><span>保存诉求与待补事项</span></button>
+          <button type="button" data-skill="material_organize" aria-pressed="false"><strong>案件整理</strong><span>归集材料与日期线索</span></button>
           <button type="button" data-skill="contract_review" aria-pressed="false"><strong>审查合同 · 模拟</strong><span>收集材料，确认事实后模拟审查</span></button>
-          <button type="button" data-skill="content_draft" aria-pressed="false"><strong>创作文案</strong><span>整理选题，起草内容</span></button>
+          <button type="button" data-skill="mock_trial" aria-pressed="false"><strong>庭审准备</strong><span>依据材料准备通用追问</span></button>
         </div>
         <div class="skill-options">
           <p><span id="selected-skill">自动选择能力</span><button id="clear-skill" class="text-button" type="button" hidden>取消选择</button></p>
+          <div id="business-task-choice" hidden><label for="business-task-select">这条消息的任务归属</label><select id="business-task-select"><option value="">自动判断</option></select></div>
           <details id="more-skills"><summary>更多能力</summary><div class="more-skills-content"><button type="button" data-skill="legal_research" aria-pressed="false">检索法律资料</button><p class="muted">关键词检索仅使用本机资料库；选择后按发送执行。</p></div></details>
         </div>
         <form id="composer-form" class="composer-form">

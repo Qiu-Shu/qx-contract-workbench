@@ -1,3 +1,4 @@
+const {validMaterialBasis}=require('./material-basis.cjs');
 const {canonicalProfileBasis}=require('./profile-basis.cjs');
 const MODELS=new Map([
   ['deepseek-flash',['0.3','1.2']],
@@ -159,6 +160,31 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
           if(ack.status==='authorized')grantedToken=value.session_token;
           if(!valid()){await revoke();return rejected('STATE_CONFLICT');}
           return okay();
+        })();
+        return flight;
+      },
+      authorizeMaterial(value){
+        if(judge || used || !valid() || typeof backend.authorizeMaterialModel!=='function')
+          return Promise.resolve(rejected(judge?'BLOCKED_LIVE':'STATE_CONFLICT'));
+        used=true;
+        try{value=structuredClone(value);}catch{return Promise.resolve(rejected());}
+        const basis=validMaterialBasis(value?.basis)?structuredClone(value.basis):null;
+        if(!exact(value,['session_token','basis']) || typeof value.session_token!=='string' ||
+            !/^[\x21-\x7e]{1,256}$/.test(value.session_token) || basis===null)return Promise.resolve(rejected());
+        flight=(async()=>{
+          let ack;
+          try{
+            ack=await backend.authorizeMaterialModel({session_token:value.session_token,
+              expected_config_version:captured.config_version,basis,max_total_usd:budget,valid_for_seconds:120});
+          }catch{return terminate(backend,guard);}
+          if(!healthy(backend))return terminate(backend,guard);
+          if(exact(ack,['ok','code']) && ack.ok===false && CONTROL_CODES.has(ack.code))return rejected(ack.code);
+          if(!exact(ack,['ok','status']) || ack.ok!==true || !['authorized','existing'].includes(ack.status))
+            return terminate(backend,guard);
+          authorized=true;profileStatus=ack.status;
+          if(profileStatus==='authorized')grantedToken=value.session_token;
+          if(!valid()){await revoke();return rejected('STATE_CONFLICT');}
+          return {ok:true,status:profileStatus};
         })();
         return flight;
       },

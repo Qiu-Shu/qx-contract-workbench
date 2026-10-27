@@ -3851,7 +3851,7 @@ class NativeContextAuthorization(DomainModel):
 
 class MainGenerationHistoryItem(DomainModel):
     message_id: UUID
-    attempt: MainAttemptView | MainContextAttemptView | MainProfileAttemptView
+    attempt: MainAttemptView | MainContextAttemptView | MainProfileAttemptView | MainMaterialAttemptView
 
 
 class MainGenerationHistoryView(DomainModel):
@@ -4215,8 +4215,7 @@ class MainProfileAttemptView(MainAttemptView):
     profile_save: MainProfileSaveView | None = None
 
 
-MainGenerationHistoryItem.model_rebuild()
-MainGenerationHistoryView.model_rebuild()
+
 
 
 class AssistantOutputSource(DomainModel):
@@ -4599,6 +4598,18 @@ class TaskFreezeInput(DomainModel):
 class TaskExecutionPrepareInput(DomainModel):
     matter_id: UUID
     request_id: UUID
+
+
+class TaskExecutionCreateInput(DomainModel):
+    request_id: UUID
+    matter: MatterCreateInput
+
+
+class TaskExecutionContext(DomainModel):
+    execution: TaskExecutionView
+    facts: FactSnapshot | None = None
+    parses: tuple[ParseResult, ...] = ()
+    review: ReviewRun | None = None
 
 
 class TaskExecutionReviewInput(DomainModel):
@@ -5284,3 +5295,188 @@ class WeixinPendingPage(DomainModel):
     conversation_id: UUID
     items: Annotated[tuple[WeixinPendingDescriptorView, ...], Field(max_length=20)]
     next_cursor: UUID | None = None
+
+
+BusinessWorkflow = Literal['sales', 'case', 'contract', 'court']
+
+
+class BusinessInput(AssistantDraftInput):
+    request_id: UUID
+    workflow: BusinessWorkflow | None = None
+    task_id: UUID | None = None
+    new_task: StrictBool = False
+
+    @model_validator(mode='after')
+    def usable_business_input(self):
+        if not self.content.strip() or self.new_task and self.task_id is not None:
+            raise ValueError('business input requires text and one task selection')
+        return self
+
+
+class BusinessEvidenceRef(DomainModel):
+    revision: PositiveInt
+    snapshot_sha256: SHA256
+    fact_ids: Annotated[tuple[UUID, ...], Field(max_length=100)]
+    historical_ids: Annotated[tuple[UUID, ...], Field(max_length=100)] = ()
+
+
+class BusinessResult(DomainModel):
+    schema_version: Literal['business-local-v1'] = 'business-local-v1'
+    mode: Literal['local_preparation'] = 'local_preparation'
+    review_status: Literal['unverified'] = 'unverified'
+    run_id: UUID
+    message_id: UUID
+    request_id: UUID
+    task_id: UUID | None
+    workflow: BusinessWorkflow | None
+    scope: ScopeSnapshot
+    state: Literal['completed', 'awaiting_input', 'blocked']
+    text: AssistantText
+    intake_id: UUID | None = None
+    contract_draft_id: UUID | None = None
+    source_refs: Annotated[tuple[ProfileDocumentRef, ...], Field(max_length=100)] = ()
+    evidence: BusinessEvidenceRef | None = None
+    created_at: UTCDatetime
+
+
+class BusinessAccepted(DomainModel):
+    request: BusinessInput
+    scope: ScopeSnapshot
+    workflow: BusinessWorkflow | None
+    task_id: UUID | None
+
+
+class BusinessResultRecord(DomainModel):
+    result: BusinessResult
+    result_sha256: SHA256
+
+
+class MainMaterialSource(DomainModel):
+    source_id: SHA256
+    reference: ProfileDocumentRef | ProfileMessageRef
+
+    @model_validator(mode='after')
+    def source_identity(self):
+        raw = json.dumps(self.reference.model_dump(mode='json'), ensure_ascii=False, sort_keys=True, separators=(',', ':'))
+        if hashlib.sha256(raw.encode('utf-8')).hexdigest() != self.source_id:
+            raise ValueError('MATERIAL_SOURCE_INVALID')
+        return self
+
+
+class MainMaterialFile(DomainModel):
+    attachment_id: UUID
+    name: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=300)]
+    original_sha256: SHA256
+    parse_revision: PositiveInt
+    result_sha256: SHA256
+    reading_status: Literal['readable', 'partial']
+    pages: tuple[PositiveInt, ...]
+    parts: tuple[NonEmpty, ...]
+    unread_parts: tuple[NonEmpty, ...]
+    quality_issues: tuple[NonEmpty, ...]
+
+
+class MainMaterialManifest(DomainModel):
+    input_format: Literal['material-business-v1'] = 'material-business-v1'
+    workflow: BusinessWorkflow
+    stable_task_id: UUID
+    parent_business_run_id: UUID
+    question: AssistantText
+    materials: Annotated[tuple[MainMaterialFile, ...], Field(max_length=20)]
+    sources: Annotated[tuple[MainMaterialSource, ...], Field(min_length=1, max_length=2000)]
+
+    @model_validator(mode='after')
+    def exact_material_selection(self):
+        files = {item.attachment_id:item for item in self.materials}
+        if not self.question.strip() or len(files) != len(self.materials) or len({x.source_id for x in self.sources}) != len(self.sources):
+            raise ValueError('MATERIAL_MANIFEST_INVALID')
+        if not self.materials and self.workflow != 'sales':
+            raise ValueError('MATERIAL_MANIFEST_INVALID')
+        for item in self.sources:
+            ref = item.reference
+            if isinstance(ref, ProfileMessageRef):
+                if ref.quote != self.question or ref.start != 0:
+                    raise ValueError('MATERIAL_MANIFEST_INVALID')
+                continue
+            material = files.get(ref.attachment_id)
+            if material is None or (ref.original_sha256, ref.parse_revision, ref.result_sha256) != (
+                    material.original_sha256, material.parse_revision, material.result_sha256):
+                raise ValueError('MATERIAL_MANIFEST_INVALID')
+        return self
+
+
+class MainMaterialSelection(DomainModel):
+    request_id: UUID
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+    parent_business_run_id: UUID
+
+
+class MainMaterialSendBasis(MainMaterialSelection):
+    input_format: Literal['material-business-v1'] = 'material-business-v1'
+    manifest: MainMaterialManifest
+    manifest_sha256: SHA256
+    system_sha256: SHA256
+    config_sha256: SHA256
+    wire_sha256: SHA256
+    wire_bytes: Annotated[int, Field(strict=True, ge=1, le=262144)]
+
+
+class MainMaterialRequest(DomainModel):
+    run_id: UUID
+    message_id: UUID
+    scope: ScopeSnapshot
+    basis: MainMaterialSendBasis
+
+
+class MainMaterialPreparedInput(DomainModel):
+    request: MainMaterialRequest
+    wire_payload_json: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=262144)]
+
+    @model_validator(mode='after')
+    def exact_material_input(self):
+        basis = self.request.basis
+        expected = basis.expected_scope.model_copy(update={'input_revision':basis.expected_scope.input_revision + 1})
+        raw = self.wire_payload_json.encode('utf-8')
+        if self.request.scope != expected or len(raw) != basis.wire_bytes or hashlib.sha256(raw).hexdigest() != basis.wire_sha256:
+            raise ValueError('MATERIAL_INPUT_INVALID')
+        return self
+
+
+class MainMaterialCandidate(DomainModel):
+    text: AssistantText
+    citations: Annotated[tuple[SHA256, ...], Field(min_length=1, max_length=100)]
+
+    @model_validator(mode='after')
+    def unique_citations(self):
+        if not self.text.strip() or len(set(self.citations)) != len(self.citations):
+            raise ValueError('MATERIAL_OUTPUT_INVALID')
+        return self
+
+
+class MainMaterialReply(MainReply):
+    output: MainMaterialCandidate | None = None
+
+
+class MainMaterialOutputView(MainOutputView):
+    candidate: MainMaterialCandidate
+    manifest: MainMaterialManifest
+
+
+class MainMaterialAttemptView(MainAttemptView):
+    input_format: Literal['material-business-v1'] = 'material-business-v1'
+    output: MainMaterialOutputView | None
+
+
+class NativeMaterialAuthorization(DomainModel):
+    session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
+    expected_config_version: UUID
+    basis: MainMaterialSendBasis
+    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
+    valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
+
+
+
+
+MainGenerationHistoryItem.model_rebuild()
+MainGenerationHistoryView.model_rebuild()

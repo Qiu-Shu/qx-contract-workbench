@@ -279,6 +279,8 @@ def test_both_generation_services_reject_prior_or_unknown_schema_without_upgrade
     service = api(); database = history['database']; actor = history['actor']; mapping = history['mapping']
     with database.session() as db:
         if changed in ('previous_schema','pre_inbox_schema'):
+            db.execute(text('DROP TABLE assistant_followup_revisions'))
+            db.execute(text('DROP TABLE assistant_evidence_revisions'))
             db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
             db.execute(text('DROP TABLE weixin_descriptor_generations'))
         if changed == 'pre_inbox_schema':
@@ -287,6 +289,9 @@ def test_both_generation_services_reject_prior_or_unknown_schema_without_upgrade
                 db.execute(text('DROP TABLE '+name))
         else:
             db.execute(text('DROP TABLE weixin_peer_generations' if changed == 'previous_schema' else 'CREATE TABLE future_schema(id TEXT)'))
+        if changed in ('previous_schema','pre_inbox_schema'):
+            from tests.helpers.legacy_material_model import downgrade_material_model_session
+            downgrade_material_model_session(db)
     with database.session() as db:
         before = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         if changed == 'pre_inbox_schema':
@@ -364,8 +369,12 @@ def test_service_revalidates_model_copy_before_any_generation_append(history):
 def test_schema17_public_generation_append_and_lookup_remain_supported(history):
     service=api();database=history['database'];actor=history['actor'];mapping=history['mapping']
     with database.session() as db:
+        db.execute(text('DROP TABLE assistant_followup_revisions'))
+        db.execute(text('DROP TABLE assistant_evidence_revisions'))
         db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
         db.execute(text('DROP TABLE weixin_descriptor_generations'))
+        from tests.helpers.legacy_material_model import downgrade_material_model_session
+        downgrade_material_model_session(db)
         rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         assert identify_schema(rows,native=True)=='weixin-generations-v1'
     value=request(history)

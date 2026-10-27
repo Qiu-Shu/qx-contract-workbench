@@ -4,7 +4,7 @@ import {createDraftController} from '../src/cn_contract/web/static/assistant-sta
 const copy=value=>structuredClone(value);
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 const failure=(status=0,code='NETWORK_UNKNOWN')=>Object.assign(new Error(code),{status,code});
-function fixture() {
+function fixture(options={}) {
   let remote={scope:{workspace_id:'w',conversation_id:'one',scope_kind:'conversation',scope_ref:null,
     binding_revision:1,input_revision:0,materials_revision:0},composer_revision:0,draft_input:'',messages:[]};
   let material={scope:remote.scope,items:[],attachments:[]},sequence=0;
@@ -17,13 +17,13 @@ function fixture() {
       assert.deepEqual(body.expected_scope,remote.scope);assert.equal(body.expected_composer_revision,remote.composer_revision);
       remote={...remote,composer_revision:remote.composer_revision+1,draft_input:body.content};return copy(remote);},
     async uploadAttachment(id,body,file){calls.push(['upload',copy(body),file]);
-      const attachment={id:'attachment',conversation_id:id,request_id:body.request_id,original_name:file.name};
+      const attachment={id:'attachment',conversation_id:id,request_id:body.request_id,original_name:file.name,mime:file.type};
       remote.scope={...remote.scope,materials_revision:remote.scope.materials_revision+1};
       material={scope:remote.scope,items:[{attachment_id:'attachment',parse_revision:null}],attachments:[attachment]};
       const result={attachment,materials_revision:remote.scope.materials_revision};receipts.set(body.request_id,result);return copy(result);},
     async findAttachmentRequest(id,key){calls.push(['lookup',key]);return copy(receipts.get(key)||null);},
   };
-  const controller=createDraftController(api,{uuid:()=>`request-${++sequence}`});
+  const controller=createDraftController(api,{uuid:()=>`request-${++sequence}`,...options});
   return {controller,api,calls,get remote(){return remote;},set remote(value){remote=value;}};
 }
 const file={name:'合成资料.docx',type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',size:50};
@@ -69,5 +69,25 @@ await check('material scope conflict preserves text and file until explicit reso
   assert.equal(await c.upload(file,policy),false);assert.equal(c.state.text,'本机原话');assert.ok(c.state.conflict);
   assert.equal(await c.resolveConflict('local'),true);assert.equal(c.state.materials.attachments[0].original_name,file.name);
   assert.equal(c.state.savedText,'本机原话');
+});
+await check('shared composer automatically parses supported upload against its saved scope',async()=>{
+  const f=fixture({autoReadMaterials:true});
+  f.api.parseAttachment=async(id,attachment,body)=>{
+    f.calls.push(['parse',attachment,body]);assert.equal(body.expected_scope.materials_revision,1);
+    assert.equal(body.baseline_view,null);return {parse:{revision:1}};
+  };
+  assert.equal(await f.controller.upload(file,policy),true);
+  assert.equal(f.calls.filter(call=>call[0]==='parse').length,1);
+  assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
+});
+await check('unknown automatic parse recovers its receipt without reuploading',async()=>{
+  const f=fixture({autoReadMaterials:true});let parses=0,reads=0;
+  f.api.parseAttachment=async()=>{parses++;throw failure();};
+  f.api.findParseRequest=async()=>{reads++;return {parse:{revision:1}};};
+  assert.equal(await f.controller.upload(file,policy),false);
+  assert.equal(f.controller.state.materialAction,'parse');
+  assert.equal(await f.controller.retry(),true);
+  assert.equal(parses,1);assert.equal(reads,1);
+  assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
 });
 console.log(`${passed} attachment state groups passed`);

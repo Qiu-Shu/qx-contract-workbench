@@ -139,6 +139,12 @@ class NativeModelControl:
         return {'status': 'authorized'}
 
     @_fixed_errors
+    def authorize_material(self, payload):
+        from .native_material_control import authorize
+        self._check_loop()
+        return authorize(self, _payload(d.NativeMaterialAuthorization, payload))
+
+    @_fixed_errors
     def authorize_profile(self, payload):
         from .native_profile_control import authorize
         self._check_loop()

@@ -85,6 +85,9 @@ def initialize_storage(database):
     try:
         found = _found(raw)
         expected = expected_objects()
+        from .material_model_schema import expected_objects as material_objects
+        if found == material_objects():
+            return
         if found == expected:
             return
         previous = sorted(rounds_v2_schema.expected_objects() + profile_schema.expected_objects(),

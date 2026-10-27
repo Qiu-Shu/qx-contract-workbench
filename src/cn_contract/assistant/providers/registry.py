@@ -83,14 +83,21 @@ class MainModelRegistry:
         session_id = _session_id(session_id)
         policy = _copy(d.MainModelPolicy, policy)
         if basis is not None:
-            basis = (_copy(d.MainProfileSendBasis, basis) if isinstance(basis, d.MainProfileSendBasis)
+            basis = (_copy(d.MainMaterialSendBasis, basis) if isinstance(basis, d.MainMaterialSendBasis)
+                     else _copy(d.MainProfileSendBasis, basis) if isinstance(basis, d.MainProfileSendBasis)
                      else _copy(d.MainContextSendBasis, basis) if isinstance(basis, d.MainContextSendBasis)
                      else _copy(d.MainSendApproval, basis))
         config = self._current_config()
         if (not config.enabled or policy.config_sha256 != sha(encoded(config))
                 or policy.expires_at <= datetime.now(timezone.utc)):
             raise ServiceError('BLOCKED_LIVE', 403)
-        if isinstance(basis, d.MainProfileSendBasis):
+        if isinstance(basis, d.MainMaterialSendBasis):
+            if (basis.expected_scope.workspace_id != policy.workspace_id or policy.max_calls != 1
+                    or policy.allowed_content_sha256s != (basis.manifest_sha256,)
+                    or basis.config_sha256 != sha(encoded(config))
+                    or not callable(getattr(self._provider, 'generate_material', None))):
+                raise ServiceError('BLOCKED_LIVE', 403)
+        elif isinstance(basis, d.MainProfileSendBasis):
             from .profile_preparation import basis_digest
             if (basis.expected_scope.workspace_id != policy.workspace_id
                     or policy.allowed_content_sha256s != (basis_digest(basis),)
@@ -182,7 +189,7 @@ class _RuntimeLease:
         if self._basis is None:
             return
         basis = self._basis
-        if isinstance(basis, (d.MainContextSendBasis, d.MainProfileSendBasis)):
+        if isinstance(basis, (d.MainContextSendBasis, d.MainProfileSendBasis, d.MainMaterialSendBasis)):
             # A specialized grant never authorizes plain-text drafts.
             raise ServiceError('BLOCKED_LIVE', 403)
         if (scope != basis.expected_scope or composer_revision != basis.expected_composer_revision
@@ -195,6 +202,13 @@ class _RuntimeLease:
         if self._basis is not None and (request.request_id != self._basis.request_id
                 or request.requested_skill is not None or request.attachment_ids):
             raise ServiceError('BLOCKED_LIVE', 403)
+
+    def check_material_submission(self, actor, basis):
+        basis = _copy(d.MainMaterialSendBasis, basis)
+        config, policy = self.snapshot_for(actor, basis.expected_scope)
+        if type(self._basis) is not d.MainMaterialSendBasis or basis != self._basis:
+            raise ServiceError('BLOCKED_LIVE', 403)
+        require_policy(config, policy, actor, basis.expected_scope, basis.manifest_sha256)
 
     def check_context_submission(self, actor, request, basis):
         """A granted context basis must equal the server's trusted rebuild exactly."""
@@ -254,7 +268,7 @@ class _RuntimeLease:
         if self._basis is None:
             return
         basis = self._basis
-        if isinstance(basis, (d.MainContextSendBasis, d.MainProfileSendBasis)):
+        if isinstance(basis, (d.MainContextSendBasis, d.MainProfileSendBasis, d.MainMaterialSendBasis)):
             raise ServiceError('BLOCKED_LIVE', 403)
         expected = basis.expected_scope.model_copy(update={
             'input_revision': basis.expected_scope.input_revision+1})
@@ -279,6 +293,14 @@ class _RuntimeLease:
         except Exception:
             return False
 
+    def _material_preflight(self, prepared):
+        """Repeat current policy/configuration and exact material checks at transport boundaries."""
+        try:
+            self.check_material_submission(self._actor, prepared.request.basis)
+            return True
+        except Exception:
+            return False
+
     def _preflight(self):
         """Boolean revalidation for the transport; exceptions are denial, never leases."""
         try:
@@ -298,6 +320,20 @@ class _LeaseProvider:
     @property
     def config(self):
         return self._lease.snapshot()[0]
+
+    async def generate_material(self, prepared, *, expected_config=None, source_preflight=None):
+        lease = self._lease
+        config, _ = lease.snapshot()
+        prepared = _copy(d.MainMaterialPreparedInput, prepared)
+        lease.check_material_submission(lease._actor, prepared.request.basis)
+        if expected_config is not None and config != expected_config:
+            raise ServiceError('BLOCKED_LIVE', 403)
+        preflight = lambda: (lease._material_preflight(prepared)
+            and (source_preflight is None or source_preflight()))
+        reply = await lease._fixed_provider.generate_material(prepared.request, expected_config=config, preflight=preflight)
+        if reply.output is not None and not preflight():
+            return d.MainMaterialReply(state='received', usage=reply.usage, provider_request_id=reply.provider_request_id, error_code='BLOCKED_LIVE')
+        return reply
 
     async def generate_profile(self, prepared, *, expected_config=None):
         lease = self._lease
@@ -346,7 +382,7 @@ class _LeaseProvider:
                 raise ServiceError('BLOCKED_LIVE', 403)
             return await generate_context(request, expected_config=config, preflight=lease._preflight)
         request = _copy(d.MainRequest, request)
-        if isinstance(lease._basis, (d.MainContextSendBasis, d.MainProfileSendBasis)):
+        if isinstance(lease._basis, (d.MainContextSendBasis, d.MainProfileSendBasis, d.MainMaterialSendBasis)):
             raise ServiceError('BLOCKED_LIVE', 403)
         require_policy(config, policy, lease._actor, request.scope, request.source_sha256)
         if lease._basis is not None:

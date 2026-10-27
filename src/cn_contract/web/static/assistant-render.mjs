@@ -7,6 +7,8 @@ export const errorText = error=>({
   CROSS_MATTER_DENIED:'当前无权访问此记录，已清除页面内容。',
   BLOCKED_LIVE:'当前副本仅供核对，不能保存或运行任务。',
   STATE_CONFLICT:'保存未完成，请核对输入长度或重新读取记录。',
+  MATERIAL_INPUT_TOO_LARGE:'选中的完整材料超出本次模型输入上限。请减少选中的材料后重试，不会自动截断发送。',
+  MATERIAL_NOT_READABLE:'有材料尚未读取，请先解析并核对读取范围。',
   FILE_LIMIT:'材料超过本机接收上限。请缩小文件或分开处理。',
   FILE_UNSUPPORTED:'暂时无法读取这份文件，请选择完整的 DOCX。',
   DATA_POLICY_UNAPPROVED:'此材料尚未获准在当前环境处理，请核对本机处理选项。',
@@ -20,7 +22,7 @@ const runText = {
   awaiting_input:'等待补充信息', blocked:'已阻断，不能自动续跑',
 };
 const skillText = {client_reply:'回复客户',material_organize:'整理资料',contract_review:'审查合同',
-  content_draft:'创作文案',legal_research:'检索法律资料'};
+  content_draft:'创作文案',legal_research:'检索法律资料',mock_trial:'庭审准备'};
 const generationCapabilityText = {
   unconfigured:'当前环境未配置或未启用模型生成。可以继续保存本机草稿。',
   unapproved:'这份已保存的文字尚未取得有效的生成授权。请核对授权范围与有效期。',
@@ -75,13 +77,24 @@ function renderAttempt(attempt,visible,onCitation) {
   section.dataset.attemptId=attempt.id;section.setAttribute('aria-label','生成结果与费用');
   const output=attempt.state==='received' && attempt.output?.audience==='internal' &&
     attempt.output.review_status==='unverified' ? attempt.output : null;
+  const materialBound=attempt.input_format==='material-business-v1';
   const sourceBound=attempt.input_format==='library-context-v1' || attempt.input_format==='library-context-v2';
-  section.append(node('p',output?(sourceBound?'资料辅助回答 · 内部草稿 · 待核对':'模型生成 · 内部草稿 · 待核对'):'模型生成 · 状态记录','generation-meta'));
+  section.append(node('p',output?(materialBound?'材料分析 · 有出处的律师待核草稿':sourceBound?'资料辅助回答 · 内部草稿 · 待核对':'模型生成 · 内部草稿 · 待核对'):'模型生成 · 状态记录','generation-meta'));
   if(output) {
     section.append(node('p','未经律师审核，不是正式法律意见。','generation-note'),
       node('p',output.candidate.text,'generation-text'));
     const links=node('div',undefined,'generation-sources');
     for(const citation of output.candidate.citations || []) {
+      if(materialBound){
+        const source=output.manifest?.sources?.find(s=>s.source_id===citation);
+        if(!source)continue;
+        if(source.reference.kind==='message'){
+          const detail=node('details');detail.append(node('summary','本次咨询文字 · 原始输入出处'),node('p',source.reference.quote,'generation-text'));links.append(detail);continue;
+        }
+        const file=output.manifest.materials.find(f=>f.attachment_id===source.reference.attachment_id);
+        const detail=node('details'),summary=node('summary',`${file?.name||'材料'} · 解析版本 ${source.reference.parse_revision} · 原文出处`);
+        detail.append(summary,node('p',source.reference.anchor.quote,'generation-text'),node('small',`出处 ${citation}`));links.append(detail);continue;
+      }
       if(citation.saved_citation_id) {
         const button=node('button','核对已保存片段','citation-link');button.type='button';
         button.setAttribute('aria-label','核对本次回答引用的已保存片段');
@@ -120,7 +133,7 @@ function renderAttempt(attempt,visible,onCitation) {
 }
 
 export function createRenderer(root=document,{isComposing=()=>false,onCitation=()=>{},
-    onToggleCitation=()=>{},onPreviewContext=()=>{}}={}) {
+    onToggleCitation=()=>{},onPreviewContext=()=>{},onGenerateMaterial=()=>{}}={}) {
   const byId=id=>root.getElementById(id);
   const renderedAttempts=new WeakMap();
   let previousId=null;
@@ -200,12 +213,28 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
         }
         const attempts=message.role==='user'?attemptsByMessage.get(message.id) || []:[];
         const searches=(research?.items||[]).filter(item=>item.message_id===message.id).map(item=>item.research);
-        const signature=JSON.stringify([visibleKey,attempts,searches]);
+        const business=(state.business?.items||[]).find(result=>result.message_id===message.id);
+        const signature=JSON.stringify([visibleKey,attempts,searches,business,state.materialGeneration,state.view?.scope]);
         if(renderedAttempts.get(item)!==signature) {
           item.querySelectorAll('.generation-result').forEach(element=>element.remove());
           item.querySelectorAll('.research-result').forEach(element=>element.remove());
+          item.querySelectorAll('.material-generation-action').forEach(element=>element.remove());
           for(const attempt of attempts)item.append(renderAttempt(attempt,visible,onCitation));
           for(const result of searches)item.append(renderResearch(root,result,onCitation));
+          if(business?.task_id&&business.workflow&&(state.materials?.items?.length||business.workflow==='sales')){
+            const action=node('div',undefined,'material-generation-action'),button=node('button',business.workflow==='sales'&&!state.materials?.items?.length?'用咨询文字生成 AI 接待草稿':'用当前材料生成 AI 草稿','text-button');button.type='button';
+            const phase=state.materialGeneration?.phase;
+            button.disabled=readonly||!state.materialGeneration?.available||['confirming','submitting','unknown'].includes(phase)||
+              business.scope.materials_revision!==state.view.scope.materials_revision;
+            button.addEventListener('click',()=>onGenerateMaterial(business.run_id));action.append(button);
+            if(phase==='unknown'){
+              const retry=node('button','查找本次 AI 发送结果','text-button');retry.type='button';retry.addEventListener('click',()=>onGenerateMaterial(business.run_id));action.append(retry);
+            }
+            if(phase==='confirming')action.append(node('p','请在原生窗口核对材料、接收模型与费用；取消不会发送。','generation-note'));
+            if(!state.materialGeneration?.available)action.append(node('p','请在桌面应用配置模型后，逐次确认材料发送。','generation-note'));
+            if(state.materialGeneration?.error)action.append(node('p',errorText(state.materialGeneration.error),'generation-note'));
+            item.append(action);
+          }
           renderedAttempts.set(item,signature);
         }
         if(item!==position)history.insertBefore(item,position);
@@ -244,14 +273,15 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       const showingResearch=local || ['unknown','error','tracking'].includes(research?.phase);
       const contextMode=!local && !state.skill && (state.context?.selected.length>0 ||
         ['confirming','submitting','unknown','tracking'].includes(state.context?.phase));
-      const workflow=showingResearch?research:contextMode?state.context:generation;
+      const businessMode=state.business?.active===true;
+      const workflow=businessMode?state.business:showingResearch?research:contextMode?state.context:generation;
       const phase=workflow?.phase || 'idle';
-      const nativeConfirmation=!showingResearch && (generation?.nativeConfirmation===true || contextMode);
-      byId('send').textContent=local?'本机检索':contextMode?'确认并发送资料回答':nativeConfirmation?'确认并发送':'发送';
-      byId('send').disabled=workflow?.canSend!==true || readonly || state.loading || Boolean(state.skill && !local) ||
+      const nativeConfirmation=!businessMode && !showingResearch && (generation?.nativeConfirmation===true || contextMode);
+      byId('send').textContent=businessMode?'发送':local?'本机检索':contextMode?'确认并发送资料回答':nativeConfirmation?'确认并发送':'发送';
+      byId('send').disabled=workflow?.canSend!==true || readonly || state.loading || Boolean(state.skill && !local && !businessMode) ||
         ['saving','conflict','readonly','revoked'].includes(state.status) || ['checking','confirming','submitting','unknown','tracking'].includes(phase);
       byId('generation-note').textContent=revoked?'访问已结束。':readonly || state.status==='readonly'
-        ?generationCapabilityText.restored_read_only:local
+        ?generationCapabilityText.restored_read_only:businessMode?'在本对话整理任务与材料，结果保存在本机；当前为本地准备，未启用材料模型分析。':local
           ?state.materials?.items?.length?'本机关键词检索暂不接受附件，请先将材料移出本次。': [...state.text].length>200
             ?'关键词超过 200 字。请缩短后检索；原有文字仍保留。':'输入不超过 200 字的关键词，仅查询本机资料库；不会发送给模型。'
           :contextMode
@@ -265,7 +295,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
         unknown:'发送结果尚不确定。请查找发送结果，避免重复发送。',tracking:'生成已登记，正在核对结果…'};
       byId('generation-status').textContent=revoked?'':showingResearch?researchStatusText(research):
         contextMode?(contextPhaseText[phase] || (phase==='error'?contextErrorText(state.context?.error):'')):
-        phaseText[phase] || (phase==='error'?generationErrorText(generation?.error):'');
+        phaseText[phase] || (phase==='error'?generationErrorText(workflow?.error):'');
       byId('generation-status').dataset.kind=['unknown','error'].includes(phase)?'error':'';
       byId('recover-generation').hidden=revoked || phase!=='unknown';
       byId('recover-generation').disabled=state.loading || revoked;

@@ -253,7 +253,7 @@ def _validate_rounds_replay(db, run_id, ordered, prepareds, plan_map):
 
 
 def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rounds=False,
-              profile_schema=False):
+              profile_schema=False, material_schema=False):
     from . import context_integrity
     run_attempts = {}
     prepareds = {}
@@ -287,11 +287,16 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
             allowed = allowed + ('library-context-v2',)
         if profile_schema:
             allowed = allowed + ('profile-text-v1',)
+        if material_schema:
+            allowed = allowed + ('material-business-v1',)
+        material = fmt == 'material-business-v1'
         if fmt not in allowed:
             _fail()
         context = fmt in ('library-context-v1', 'library-context-v2')
         profile = fmt == 'profile-text-v1'
-        if fmt == 'library-context-v2':
+        if material:
+            prepared = _model(d.MainMaterialPreparedInput, row['input_json'])
+        elif fmt == 'library-context-v2':
             prepared = _model(d.MainContextRoundsPreparedInput, row['input_json'])
             if prepared.round_no != row['round_no']:
                 _fail()
@@ -305,12 +310,12 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
             _fail()
         prepareds[identifier] = prepared
         request, scope = prepared.request, prepared.request.scope
-        source_sha = request.basis.manifest_sha256 if context else request.source_sha256
+        source_sha = request.basis.manifest_sha256 if context or material else request.source_sha256
         if profile:
             from . import profile_model_integrity
             from .providers.profile_preparation import basis_digest
             source_sha = basis_digest(prepared.basis)
-        question = request.manifest.question if context else request.content
+        question = request.basis.manifest.question if material else request.manifest.question if context else request.content
         conversation, run = conversations.get(cid), runs.get(run_id)
         message = messages.get(str(request.message_id))
         if conversation is None or run is None or message is None:
@@ -338,7 +343,7 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
             if target is None or scope.scope_kind == 'intake' and target['owner_id'] != actor:
                 _fail()
         # Current attachments may have changed after this historical input.
-        if scope.materials_revision:
+        if scope.materials_revision and not material:
             snapshot = db.scalar(text('''SELECT items_json FROM assistant_material_snapshots
                 WHERE conversation_id=:cid AND revision=:revision'''), {'cid':cid,'revision':scope.materials_revision})
             if snapshot != '[]':
@@ -357,7 +362,10 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
             context_integrity.validate_context_selection(db, row, prepared)
             relations += len(request.manifest.sources)
         else:
-            if profile:
+            if material:
+                from . import material_integrity
+                material_integrity.validate_input(db, row, prepared, config, policy, run)
+            elif profile:
                 profile_model_integrity.validate_input(db, row, prepared, config, policy, run, conversation)
             elif (sha(prepared.wire_payload_json) != row['request_sha256']
                     or prepare(request, config).wire_payload_json != prepared.wire_payload_json):
@@ -377,14 +385,16 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
         if rounds != 'v2':
             _events(db, row, run, value, output)
         if output is not None:
-            view = _model(d.MainContextOutputView if context else d.MainProfileOutputView if profile else d.MainOutputView,
+            view = _model(d.MainMaterialOutputView if material else d.MainContextOutputView if context else d.MainProfileOutputView if profile else d.MainOutputView,
                           output['output_json'], 262144)
             if (_uuid(output['id']) != str(view.id) or output['conversation_id'] != cid
                     or output['run_id'] != run_id or view.run_id != request.run_id
                     or _model(d.ScopeSnapshot, output['scope_json']) != scope or view.scope != scope
                     or _at(output['created_at']) != view.created_at or view.created_at != updated):
                 _fail()
-            if context:
+            if material:
+                material_integrity.validate_output(view, prepared)
+            elif context:
                 context_integrity.validate_context_output(view, prepared)
             elif profile:
                 profile_model_integrity.validate_output(db, row, prepared, view, run)
@@ -467,12 +477,12 @@ def validate_model_records(db, *, allowed=True):
         return
     if version not in ('assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1',
                        'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2',
-                       'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1'):
+                       'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'):
         raise ValueError('DATABASE_SCHEMA_MISMATCH')
     attempts = db.execute(text('SELECT * FROM assistant_model_attempts ORDER BY created_at,id')).mappings().all()
     receipts = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_receipts')).mappings()}
     outputs = {r['attempt_id']:r for r in db.execute(text('SELECT * FROM assistant_model_outputs')).mappings()}
-    if version in ('assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1'):
+    if version in ('assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'):
         from .profile_model_integrity import validate_relations
         try:
             validate_relations(db, attempts, outputs)
@@ -498,11 +508,12 @@ def validate_model_records(db, *, allowed=True):
             _validate(db, attempts, receipts, outputs, _uuid(identities[0]),
                       context_schema=version in ('assistant-context-v1', 'assistant-rounds-v1',
                                                  'assistant-rounds-v2', 'assistant-profiles-v1',
-                                                 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1'),
+                                                 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'),
                       rounds=('v2' if version in ('assistant-rounds-v2', 'assistant-profiles-v1',
-                                                 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1')
+                                                 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1')
                               else 'v1' if version == 'assistant-rounds-v1' else False),
-                      profile_schema=version in ('assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1'))
+                      material_schema=version == 'assistant-material-model-v1',
+                      profile_schema=version in ('assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'))
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError):
         # Archive errors must not interpolate source text or model bodies.
         raise ValueError('ASSISTANT_MODEL_INTEGRITY') from None

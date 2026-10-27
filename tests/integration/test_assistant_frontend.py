@@ -10,6 +10,7 @@ from tests.integration.test_api import api
 @pytest.mark.parametrize('script', ['test_assistant_state.mjs', 'test_assistant_transport_input.mjs',
                                    'test_assistant_material_state.mjs', 'test_assistant_material_dom.mjs',
                                    'test_assistant_generation_state.mjs', 'test_assistant_generation_render.mjs',
+                                   'test_assistant_material_generation.mjs',
                                    'test_assistant_generation_entry.mjs', 'test_assistant_profile_generation.mjs',
                                    'test_assistant_profile_panel.mjs', 'test_assistant_tasks.mjs',
                                    'test_assistant_weixin.mjs', 'test_assistant_weixin_generations.mjs',

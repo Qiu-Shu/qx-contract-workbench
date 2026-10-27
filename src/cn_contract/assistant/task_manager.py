@@ -1,6 +1,7 @@
 """One application lifecycle owns newly committed model and local research work."""
 import asyncio
 from functools import partial
+from uuid import UUID
 
 from sqlalchemy import text
 
@@ -87,6 +88,28 @@ class GenerationTasks:
             return view
         # No task receives authority before the new durable attempt commits.
         self._dispatch(view.id, view.run_id, self._execute(actor, view.id, runtime, auxiliary))
+        return view
+
+    def submit_material(self, actor, conversation_id, request):
+        from . import material_preparation as inputs, material_attempts
+        request = d.MainMaterialSelection.model_validate(request.model_dump(mode='python'))
+        with self.database.session() as db:
+            conversation = service._owned(actor, conversation_id, db)
+            runtime = resolve_runtime(self.runtime, actor, service._snapshot(conversation))
+            if runtime is None:
+                raise ServiceError('BLOCKED_LIVE', 403)
+            config, _ = runtime.snapshot_for(actor, request.expected_scope)
+            previous = attempts._previous(conversation_id, request.request_id, db)
+            if previous:
+                saved = attempts._input(attempts._row(previous['attempt_id'], db))
+                if type(saved) is not d.MainMaterialPreparedInput or inputs.selection_for(saved.request.basis) != request:
+                    raise ServiceError('VERSION_CONFLICT', 409)
+                return attempts.read_attempt(actor, UUID(previous['attempt_id']), db)
+            self._admit()
+        basis = inputs.preview(actor, request, self.database, config)
+        with self.database.session() as db:
+            view = material_attempts.enqueue(actor, request, basis, db, runtime)
+        self._dispatch(view.id, view.run_id, self._execute(actor, view.id, runtime, None))
         return view
 
     def submit_profile(self, actor, conversation_id, request):

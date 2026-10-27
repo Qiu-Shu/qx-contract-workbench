@@ -55,6 +55,9 @@ def test_native_upgrade_keeps_workspace_identity_and_prior_profile(native):
         for action in ('update','delete'):raw.execute('DROP TRIGGER immutable_assistant_evidence_revisions_'+action)
         raw.execute('DROP TABLE assistant_followup_revisions')
         raw.execute('DROP TABLE assistant_evidence_revisions')
+        raw.commit()
+        from tests.helpers.legacy_material_model import downgrade_material_model
+        downgrade_material_model(raw)
         rows=raw.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall()
     marker=json.loads((root/'workspace.json').read_text());marker['schema_sha256']=digest(rows)
     (root/'workspace.json').write_text(json.dumps(marker))

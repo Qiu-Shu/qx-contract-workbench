@@ -11,10 +11,12 @@ from uuid import UUID
 PROTOCOL = 'qx-model-control-v1'
 JUDGE_PROTOCOL = 'qx-judge-control-v1'
 JUDGE_AUTH_PROTOCOL = 'qx-judge-authorization-v1'
-MAX_BYTES = 32768
+MAX_BYTES = 524288
+LEGACY_MAX_BYTES = 32768
+_MATERIAL_OPERATION = re.compile(rb'"operation"\s*:\s*"authorize_material"')
 MAX_SEQUENCE = 9007199254740991
 _OPERATIONS = {'configure', 'disable', 'authorize', 'revoke', 'configure_judge', 'disable_judge',
-               'authorize_judge', 'revoke_judge', 'authorize_context', 'authorize_profile'}
+               'authorize_judge', 'revoke_judge', 'authorize_context', 'authorize_profile', 'authorize_material'}
 _CODES = {'BLOCKED_LIVE', 'VERSION_CONFLICT', 'STATE_CONFLICT', 'BUDGET_EXCEEDED', 'CROSS_MATTER_DENIED'}
 
 
@@ -25,8 +27,15 @@ class NativeControlHandler:
         self.authorize, self.revoke = main.authorize, main.revoke
         self.authorize_context = main.authorize_context
         self.authorize_profile = main.authorize_profile
+        # Older trusted Main assemblies predate material disclosure grants.
+        self.authorize_material = getattr(main, 'authorize_material', self._unsupported_material)
         self.configure_judge, self.disable_judge = judge.configure, judge.disable
         self._judge = judge
+
+    @staticmethod
+    def _unsupported_material(payload):
+        from .security import ServiceError
+        raise ServiceError('BLOCKED_LIVE', 403)
 
     def authorize_judge(self, payload):
         return self._judge.authorize(payload)
@@ -71,6 +80,8 @@ def parse_control_line(line, nonce, sequence):
                 or not 1 <= value['sequence'] <= MAX_SEQUENCE or value['sequence'] != sequence
                 or type(value['operation']) is not str or value['operation'] not in _OPERATIONS
                 or type(value['payload']) is not dict):
+            raise ValueError
+        if value['operation'] != 'authorize_material' and len(line.encode('utf-8')) > LEGACY_MAX_BYTES:
             raise ValueError
         pending = [(value['payload'], 0)]
         while pending:
@@ -149,7 +160,8 @@ class ParentControlChannel:
                     'configure_judge':{'configured'}, 'disable_judge':{'disabled'},
                     'authorize_judge':{'authorized','existing'}, 'revoke_judge':{'revoked'},
                     'authorize_context':{'authorized','existing'},
-                    'authorize_profile':{'authorized','existing'}}[operation]
+                    'authorize_profile':{'authorized','existing'},
+                    'authorize_material':{'authorized','existing'}}[operation]
         if type(result) is not dict or result.get('status') not in expected:
             raise ValueError('CONTROL_REJECTED')
         configuring = operation in ('configure', 'configure_judge')
@@ -168,7 +180,10 @@ class ParentControlChannel:
         while not self._closed.is_set():
             future = None
             try:
-                line = self._stream.readline(MAX_BYTES+1)
+                line = self._stream.readline(LEGACY_MAX_BYTES+1)
+                if (len(line) > LEGACY_MAX_BYTES and not line.endswith(b'\n')
+                        and _MATERIAL_OPERATION.search(line)):
+                    line += self._stream.readline(MAX_BYTES-len(line)+1)
                 if line == b'':
                     self._request_close()
                     self._on_eof()

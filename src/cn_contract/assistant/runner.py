@@ -6,6 +6,23 @@ from .providers import attempts
 
 
 async def execute_attempt(actor, identifier, database, runtime):
+    # Recheck stored originals outside the write transaction immediately before claim.
+    with database.session() as db:
+        row = attempts._row(identifier, db)
+        material = row['input_format'] == 'material-business-v1' and row['state'] == 'reserved'
+        if material:
+            from . import material_preparation as inputs
+            prepared = attempts._input(row)
+            _, files = inputs.assemble(actor, inputs.selection_for(prepared.request.basis), db, historical=True)
+    if material:
+        from .attachment_files import read_checked
+        try:
+            for file in files:
+                read_checked(file, database)
+        except Exception:
+            with database.session() as db:
+                attempts._abandon_unsent(attempts._row(identifier, db), db)
+                return attempts.read_attempt(actor, identifier, db)
     with database.session() as db:
         claimed = attempts.claim(actor, identifier, db, runtime)
     if claimed is None:
@@ -13,12 +30,30 @@ async def execute_attempt(actor, identifier, database, runtime):
             return attempts.read_attempt(actor, identifier, db)
     token, prepared, config = claimed
     request = prepared.request
-    reply_type = (d.MainProfileReply if type(prepared) is d.MainProfilePreparedInput
+    source_preflight = None
+    if type(prepared) is d.MainMaterialPreparedInput:
+        from . import material_attempts, material_preparation as inputs
+        from .attachment_files import read_checked
+        def source_preflight():
+            try:
+                with database.session() as db:
+                    row = attempts._row(identifier, db)
+                    material_attempts.current(actor, row, db, runtime)
+                    _, files = inputs.assemble(actor, inputs.selection_for(prepared.request.basis), db, historical=True)
+                for file in files:
+                    read_checked(file, database)
+                return True
+            except Exception:
+                return False
+    reply_type = (d.MainMaterialReply if type(prepared) is d.MainMaterialPreparedInput else d.MainProfileReply if type(prepared) is d.MainProfilePreparedInput
                   else d.MainContextReply if type(request) is d.MainContextRequest else d.MainReply)
     cancelled = False
     try:
         async with asyncio.timeout(config.timeout_seconds):
-            if type(prepared) is d.MainProfilePreparedInput:
+            if type(prepared) is d.MainMaterialPreparedInput:
+                reply = await runtime.provider.generate_material(prepared, expected_config=config,
+                    source_preflight=source_preflight)
+            elif type(prepared) is d.MainProfilePreparedInput:
                 generate_profile = getattr(runtime.provider, 'generate_profile', None)
                 if not callable(generate_profile):
                     raise ValueError('profile provider required')
