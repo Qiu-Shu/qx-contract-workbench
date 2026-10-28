@@ -50,7 +50,8 @@ def test_all_40_predecessor_structures_are_unchanged(item):
 
 def test_followups_append_only_the_snapshot_family_to_v20():
     assert len(FROZEN) == 40
-    assert storage_schema.VERSIONS[-3:-1] == ('assistant-evidence-v1', TARGET)
+    target_index = storage_schema.VERSIONS.index(TARGET)
+    assert storage_schema.VERSIONS[target_index-1:target_index+1] == ('assistant-evidence-v1', TARGET)
     before = set(storage_schema.schema_rows('assistant-evidence-v1'))
     after = set(storage_schema.schema_rows(TARGET))
     assert before < after

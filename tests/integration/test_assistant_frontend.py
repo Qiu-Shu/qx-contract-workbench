@@ -23,6 +23,14 @@ def test_browser_module_behaviour(script):
     assert result.returncode == 0, result.stdout + result.stderr
 
 
+def test_personal_weixin_stylesheet_is_served(api):
+    """The new panel must not fall back to an unstyled production page."""
+    client, _, _, _ = api
+    response = client.get('/static/assistant-weixin-personal.css')
+    assert response.status_code == 200
+    assert response.headers['content-type'].startswith('text/css')
+
+
 def test_chat_module_import_graph_is_served_as_javascript(api):
     """Node import tests do not exercise the HTTP static-file allowlist."""
     import re

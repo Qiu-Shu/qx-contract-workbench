@@ -586,7 +586,7 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
                         'assistant.css','assistant-api.mjs','assistant-state.mjs','assistant-render.mjs','assistant-business.mjs',
                         'assistant-composer.mjs','assistant-materials.mjs','assistant-generation.mjs','assistant-material-generation.mjs',
                         'assistant-research.mjs','assistant-context.mjs','assistant-citations.mjs','assistant-profile.mjs',
-                        'assistant-tasks.mjs','assistant-task-context.mjs','assistant-weixin.mjs','assistant-weixin-generations.mjs','assistant-weixin-pending.mjs','assistant-outputs.mjs','reception-worksheet.mjs','evidence-worksheet.mjs','followup-worksheet.mjs','assistant.mjs',
+                        'assistant-tasks.mjs','assistant-task-context.mjs','assistant-weixin.mjs','assistant-weixin-personal.mjs','assistant-weixin-personal.css','assistant-weixin-generations.mjs','assistant-weixin-pending.mjs','assistant-outputs.mjs','reception-worksheet.mjs','evidence-worksheet.mjs','followup-worksheet.mjs','assistant.mjs',
                         'reception-assistant.mjs','reception-assistant.css'}:raise ServiceError('NOT_SUPPORTED',404)
         return Response((STATIC/name).read_bytes(),media_type='text/javascript' if name.endswith(('.js','.mjs')) else 'text/css')
     from .draft_confirmation import register_routes

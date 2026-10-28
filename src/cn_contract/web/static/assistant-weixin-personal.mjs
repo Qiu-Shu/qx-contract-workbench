@@ -5,7 +5,7 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
   isBlocked=()=>false,onIncoming=()=>{},setTimer=setTimeout,clearTimer=clearTimeout}){
   const at=id=>document.getElementById('personal-weixin-'+id);
   const available=Boolean(bridge&&['Start','Disable','Verify','Status'].every(key=>typeof bridge['personalWeixin'+key]==='function'));
-  let cid=null,epoch=0,connection=null,known=false,busy=false,reading=false,closed=false,timer=null;
+  let cid=null,epoch=0,connection=null,known=false,busy=false,reading=false,closed=false,timer=null,qrFailed=false;
   const active=()=>!closed&&controller.state.status!=='revoked';
   const stable=()=>active()&&!controller.state.loading&&!controller.state.conflict&&!controller.state.materialAction&&
     !['saving','error'].includes(controller.state.status);
@@ -33,7 +33,7 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
     at('verify-form').hidden=!verify;at('code').disabled=!verify||busy;
     at('verify').disabled=!verify||busy;
     if(!verify)at('code').value='';
-    const qr=known&&here&&state==='waiting_scan'&&connection.qr_ready;
+    const qr=known&&here&&state==='waiting_scan'&&connection.qr_ready&&!qrFailed;
     at('qr-frame').hidden=!qr;
     if(qr){const src='/api/assistant/conversations/'+cid+'/personal-weixin/qr.svg';
       if(at('qr').getAttribute('src')!==src)at('qr').setAttribute('src',src);
@@ -43,7 +43,7 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
     clearTimer(timer);timer=null;
     if(active()&&available&&!readonly)timer=setTimer(()=>{timer=null;void refresh();},2500);
   }
-  async function refresh(){
+  async function refresh(retryQr=false){
     if(!active()||!available||readonly||busy||reading){schedule();return false;}
     const version=epoch,id=cid;reading=true;render();
     try{
@@ -51,6 +51,8 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
       if(!valid(version,id))return false;
       const next=result?.connection;
       if(result?.ok!==true||next&&(!UUID.test(next.conversation_id)||!Object.hasOwn(labels,next.state)))throw new Error();
+      // Only an explicit read retries a failed image; background polling must not create a retry loop.
+      if(retryQr||next?.state!=='waiting_scan')qrFailed=false;
       connection=next;known=true;render();
       // Reads reuse the controller's conflict handling and never submit a model request.
       if(connection?.conversation_id===cid&&stable()&&!isBlocked())await onIncoming();
@@ -77,14 +79,14 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
   }
   at('start').addEventListener('click',()=>perform('Start'));
   at('disable').addEventListener('click',()=>perform('Disable'));
-  at('refresh').addEventListener('click',()=>refresh());
+  at('refresh').addEventListener('click',()=>refresh(true));
   at('verify-form').addEventListener('submit',event=>{event.preventDefault();void perform('Verify');});
   at('panel').addEventListener('toggle',()=>{if(!at('panel').open)at('code').value='';});
-  at('qr').addEventListener('error',()=>{at('qr-frame').hidden=true;tell('二维码暂未显示。请重新读取状态；过期后断开并重新连接。');});
+  at('qr').addEventListener('error',()=>{qrFailed=true;at('qr').removeAttribute('src');at('qr-frame').hidden=true;tell('二维码暂未显示。请重新读取状态；过期后断开并重新连接。');});
   return {refresh,hasPending:()=>busy,
     state(state){
       if(closed)return;
-      if(state.id!==cid){cid=state.id;++epoch;known=false;at('code').value='';schedule();}
+      if(state.id!==cid){cid=state.id;++epoch;known=false;qrFailed=false;at('code').value='';schedule();}
       if(state.status==='revoked'){++epoch;connection=null;known=false;clearTimer(timer);at('code').value='';}
       render();
     },

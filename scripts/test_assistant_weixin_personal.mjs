@@ -1,13 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {bindPersonalWeixin} from '../src/cn_contract/web/static/assistant-weixin-personal.mjs';
 import {createDraftController} from '../src/cn_contract/web/static/assistant-state.mjs';
 const cid='11111111-2222-4333-8444-555555555555',other='22222222-2222-4333-8444-555555555555';
 const defer=()=>{let resolve;return {promise:new Promise(r=>resolve=r),resolve:v=>resolve(v)};};
 const tick=()=>new Promise(setImmediate);
 class Element{
-  constructor(){this.value='';this.textContent='';this.hidden=false;this.disabled=false;this.attrs=new Map();this.listeners=new Map();}
-  setAttribute(k,v){this.attrs.set(k,v);}getAttribute(k){return this.attrs.get(k);}removeAttribute(k){this.attrs.delete(k);}
+  constructor(){this.value='';this.textContent='';this.hidden=false;this.disabled=false;this.attrs=new Map();this.listeners=new Map();this.writes=[];}
+  setAttribute(k,v){this.writes.push([k,v]);this.attrs.set(k,v);}getAttribute(k){return this.attrs.get(k);}removeAttribute(k){this.attrs.delete(k);}
   addEventListener(k,fn){this.listeners.set(k,fn);}fire(k){return this.listeners.get(k)?.({preventDefault(){}});}focus(){this.focused=true;}
 }
 function fixture(options={}){
@@ -42,6 +43,19 @@ test('late status cannot replace the new page state',async()=>{
   const f=fixture(),hold=defer();f.bridge.personalWeixinStatus=()=>hold.promise;const pending=f.ui.refresh();
   f.controller.state.id=other;f.ui.state(f.controller.state);hold.resolve({ok:true,connection:{conversation_id:cid,state:'waiting_scan',qr_ready:true}});await pending;
   assert.equal(f.at('qr').getAttribute('src'),undefined);assert.match(f.at('summary').textContent,/核对/);f.ui.dispose();
+});
+test('explicit refresh retries a failed local QR without starting another connection',async()=>{
+  const f=fixture();f.status({state:'waiting_scan',qr_ready:true});await f.ui.refresh();
+  const src=f.at('qr').getAttribute('src'),writes=f.at('qr').writes.length;
+  f.at('qr').fire('error');assert.equal(f.at('qr-frame').hidden,true);
+  await f.ui.refresh();assert.equal(f.at('qr').writes.length,writes);assert.equal(f.at('qr-frame').hidden,true);
+  await f.at('refresh').fire('click');await tick();
+  assert.equal(f.at('qr').getAttribute('src'),src);assert.ok(f.at('qr').writes.length>writes);
+  assert.equal(f.at('qr-frame').hidden,false);assert.deepEqual(f.calls,[]);f.ui.dispose();
+});
+test('verification copy does not claim the code stays only on this computer',()=>{
+  const html=readFileSync(new URL('../src/cn_contract/web/templates/assistant.html',import.meta.url),'utf8');
+  assert.match(html,/验证码用于本次微信连接，不会显示在聊天中/);assert.doesNotMatch(html,/验证码仅在本机提交/);
 });
 test('dirty composer is kept while read-only incoming refresh runs',async()=>{
   const f=fixture();f.controller.state.text='未发送文字';f.controller.state.dirty=true;f.status({});await f.ui.refresh();

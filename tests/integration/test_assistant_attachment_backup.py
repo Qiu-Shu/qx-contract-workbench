@@ -132,7 +132,7 @@ def test_long_parent_paths_create_restore_and_rebackup(source, tmp_path):
     assert attachments.read_original(actor, cid, receipt.attachment.id, database=database) == raw
     archive = tmp_path/'long.qxbak'
     workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
-    target_parent = tmp_path/('恢复目录'+'资料'*30)
+    target_parent = tmp_path/('恢复目录'+'资料'*45)
     first = workspace_backup.restore_workspace_backup(archive, target_parent, PASSPHRASE)
     restored_root = Path(first['restored_root'])
     restored_original = restored_root/'protected'/'assistant'/str(cid)/str(receipt.attachment.id)/'original.bin'

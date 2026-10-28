@@ -175,7 +175,7 @@ def test_actual_canonical_source_and_runtime_gates_reread():
     import hashlib
     from cn_contract.config import PROJECT_ROOT
     result = service('readiness', 'assess_go_live')(evidence())
-    assert result.server_gate_counts == {'source': 9, 'runtime': 59, 'total': 77}
+    assert result.server_gate_counts == {'source': 9, 'runtime': 60, 'total': 78}
     assert result.evidence_hashes['server/source_lock'] == hashlib.sha256((PROJECT_ROOT/'sources/upstream.lock.json').read_bytes()).hexdigest()
     assert result.evidence_hashes['server/config'] == hashlib.sha256((PROJECT_ROOT/'config/defaults.json').read_bytes()).hexdigest()
     assert result.decision == 'BLOCKED'

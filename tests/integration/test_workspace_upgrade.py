@@ -22,6 +22,7 @@ def legacy(tmp_path,monkeypatch):
     # Remove versioned extensions, recreating the fixed pre-intake schema.
     with closing(sqlite3.connect(root/'workbench.db')) as db:
         for table in ('assistant_followup_revisions', 'assistant_evidence_revisions',
+                      'weixin_personal_outbox', 'weixin_personal_runs',
                       'weixin_descriptor_generations', 'weixin_peer_generations', 'weixin_peer_scope_grants', 'weixin_dispatch_receipts', 'weixin_inbox_descriptors', 'weixin_poll_receipts', 'weixin_peer_bindings', 'weixin_accounts',
                       'task_media_resolutions', 'task_executions', 'task_draft_events',
                       'task_drafts', 'task_inbox_events', 'task_channel_bindings',

@@ -21,3 +21,16 @@ def downgrade_statements(execute):
             raise ValueError('synthetic-only historical fixture required')
         statements+=_statements(table,schema)
     return statements
+
+
+def downgrade_runtime_statements(execute):
+    """Remove later personal-runtime objects from synthetic pre-material fixtures."""
+    statements=()
+    for name in ('weixin_personal_runs_no_update','weixin_personal_runs_no_delete',
+                 'weixin_personal_outbox_no_delete','weixin_personal_outbox_update'):
+        if execute("SELECT 1 FROM sqlite_master WHERE type='trigger' AND name='"+name+"'").fetchone():
+            statements+=('DROP TRIGGER '+name,)
+    for name in ('weixin_personal_outbox','weixin_personal_runs'):
+        if execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='"+name+"'").fetchone():
+            statements+=('DROP TABLE '+name,)
+    return statements

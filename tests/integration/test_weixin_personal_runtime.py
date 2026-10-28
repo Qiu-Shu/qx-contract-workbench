@@ -52,11 +52,16 @@ def command(number=2, content='请审查合同'):
 
 
 def file_message(wire, number=1, name='独立虚构合同.docx'):
-    doc=Document();doc.add_paragraph('独立虚构合同：甲乙双方约定2026年1月3日交货，价款30000元。')
-    stream=BytesIO();doc.save(stream);data=stream.getvalue()
-    pad=padding.PKCS7(128).padder();padded=pad.update(data)+pad.finalize()
-    encrypt=Cipher(algorithms.AES(KEY),modes.ECB()).encryptor()
-    wire.download=encrypt.update(padded)+encrypt.finalize()
+    # Wire serves one fictional body; reuse its bytes so every declared digest stays coherent.
+    fixture=getattr(wire,'fixture_file',None)
+    if fixture is None:
+        doc=Document();doc.add_paragraph('独立虚构合同：甲乙双方约定2026年1月3日交货，价款30000元。')
+        stream=BytesIO();doc.save(stream);data=stream.getvalue()
+        pad=padding.PKCS7(128).padder();padded=pad.update(data)+pad.finalize()
+        encrypt=Cipher(algorithms.AES(KEY),modes.ECB()).encryptor()
+        fixture=(data,encrypt.update(padded)+encrypt.finalize())
+        wire.fixture_file=fixture
+    data,wire.download=fixture
     return incoming(message_id=number,item_list=[{'type':4,'file_item':{'file_name':name,
         'len':str(len(data)),'md5':hashlib.md5(data).hexdigest(),
         'media':{'aes_key':base64.b64encode(KEY).decode(),'encrypt_query_param':'fictional-query'}}}])
