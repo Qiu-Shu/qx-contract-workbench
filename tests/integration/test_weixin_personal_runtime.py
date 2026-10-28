@@ -605,3 +605,117 @@ def test_reconnection_replays_existing_outcome_without_unknown_resend(world):
             assert tuple(db.execute(text('SELECT * FROM weixin_personal_outbox')).one())==claim
         await close(second,manager2)
     asyncio.run(scenario())
+
+
+@pytest.mark.parametrize('reply_state',['submitted','unknown'])
+def test_cancelled_replied_history_allows_empty_polls_reconnect_and_new_task(world,reply_state):
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup_runtime(world)
+        epoch=runtime._epoch;database=world[0];cid=world[2].scope.conversation_id
+        if reply_state=='unknown':wire.send={}
+        raw=packet(file_message(wire),command())
+        await runtime.ingest(epoch,raw);await runtime.advance(epoch)
+        with database.session() as db:
+            link=db.execute(text('SELECT * FROM weixin_personal_runs')).mappings().one()
+            original_claim=tuple(db.execute(text('SELECT * FROM weixin_personal_outbox')).one())
+            assert db.scalar(text('SELECT status FROM weixin_personal_outbox'))==reply_state
+            service.cancel_run(actor,link['business_run_id'],d.AssistantCancelInput(request_id=uuid4()),db)
+        sends=len([r for r in wire.requests if r.url.path.endswith('/sendmessage')])
+        for index in range(3):
+            await runtime.ingest(epoch,packet(cursor='idle-'+str(index)))
+            await runtime.advance(epoch)
+            assert runtime.status(actor,cid).state=='connected'
+        assert len(provider.calls)==1
+        assert len([r for r in wire.requests if r.url.path.endswith('/sendmessage')])==sends
+        await close(runtime,manager)
+        runtime,wire,manager,provider,actor=await setup_runtime(world)
+        epoch=runtime._epoch
+        await runtime.ingest(epoch,raw)
+        for _ in range(3):await runtime.advance(epoch)
+        assert runtime.status(actor,cid).state=='connected' and not provider.calls
+        assert not [r for r in wire.requests if r.url.path.endswith('/sendmessage')]
+        await runtime.ingest(epoch,packet(command(3,'新建任务，请整理案件'),cursor='new-task'))
+        await runtime.advance(epoch)
+        assert len(provider.calls)==1
+        assert len([r for r in wire.requests if r.url.path.endswith('/sendmessage')])==1
+        with database.session() as db:
+            assert tuple(db.execute(text('SELECT * FROM weixin_personal_outbox WHERE client_id=:id'),
+                {'id':original_claim[0]}).one())==original_claim
+            from cn_contract.ops.backup import _file_references
+            _file_references(db)
+        await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize('parent_state',['cancelled','blocked'])
+def test_cancelled_business_before_attempt_never_calls_model_or_sends(world,monkeypatch,parent_state):
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup_runtime(world)
+        epoch=runtime._epoch;database=world[0]
+        await runtime.ingest(epoch,packet(file_message(wire),command()))
+        execute=runtime._execute
+        async def interrupted(*args):raise RuntimeError('fictional crash after durable business receipt')
+        monkeypatch.setattr(runtime,'_execute',interrupted)
+        with pytest.raises(RuntimeError):await runtime.advance(epoch)
+        monkeypatch.setattr(runtime,'_execute',execute)
+        with database.session() as db:
+            parent=db.scalar(text('SELECT business_run_id FROM weixin_personal_runs'))
+            if parent_state=='cancelled':
+                service.cancel_run(actor,parent,d.AssistantCancelInput(request_id=uuid4()),db)
+            else:
+                db.execute(text("UPDATE assistant_runs SET state='blocked' WHERE id=:id"),{'id':parent})
+        for _ in range(3):
+            if parent_state=='cancelled':await runtime.advance(epoch)
+            else:
+                with pytest.raises(ServiceError) as caught:await runtime.advance(epoch)
+                assert caught.value.code=='VERSION_CONFLICT'
+        assert not provider.calls and count(database,'assistant_model_attempts')==0
+        assert count(database,'weixin_personal_outbox')==0
+        assert runtime.status(actor,world[2].scope.conversation_id).state=='connected'
+        await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize('cancel_target',['business','model'])
+def test_single_cancel_during_model_stops_output_and_reply_without_disconnect(world,cancel_target):
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup_runtime(world)
+        epoch=runtime._epoch;database=world[0]
+        await runtime.ingest(epoch,packet(file_message(wire),command()))
+        provider.hold=asyncio.Event()
+        running=asyncio.create_task(runtime.advance(epoch))
+        async with asyncio.timeout(5):
+            while not provider.calls:await asyncio.sleep(.01)
+        with database.session() as db:
+            identifier=(db.scalar(text('SELECT business_run_id FROM weixin_personal_runs'))
+                if cancel_target=='business' else runtime._active_run)
+            service.cancel_run(actor,identifier,d.AssistantCancelInput(request_id=uuid4()),db)
+        provider.hold.set()
+        await running
+        async with asyncio.timeout(5):
+            while manager.active_count:await asyncio.sleep(.01)
+        for _ in range(3):await runtime.advance(epoch)
+        assert len(provider.calls)==1 and count(database,'assistant_model_outputs')==0
+        assert count(database,'weixin_personal_outbox')==0
+        assert runtime._active_run is None
+        assert runtime.status(actor,world[2].scope.conversation_id).state=='connected'
+        await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize('failure',[ServiceError('CROSS_MATTER_DENIED',403),ValueError('fictional corrupt attempt')])
+def test_replied_history_does_not_swallow_permission_or_integrity_errors(world,monkeypatch,failure):
+    from cn_contract.assistant.providers import attempts
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup_runtime(world)
+        epoch=runtime._epoch
+        await runtime.ingest(epoch,packet(file_message(wire),command()))
+        await runtime.advance(epoch)
+        before=len(wire.requests)
+        def invalid_attempt(*args):raise failure
+        monkeypatch.setattr(attempts,'read_attempt',invalid_attempt)
+        with pytest.raises(type(failure)) as caught:await runtime.advance(epoch)
+        assert caught.value is failure
+        assert len(wire.requests)==before and len(provider.calls)==1
+        await close(runtime,manager)
+    asyncio.run(scenario())

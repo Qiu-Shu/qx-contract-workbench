@@ -429,6 +429,19 @@ class PersonalWeixinRuntime:
             return bool(db.scalar(text('''SELECT 1 FROM assistant_runs WHERE conversation_id=:id
                 AND state IN ('queued','preparing','routing','retrieving','generating','persisting')'''), {'id':str(cid)}))
 
+    def _execution_parent(self, actor, link, db, attempt=None):
+        parent = service._owned_run(actor, link.business_run_id, db)
+        run = service._owned_run(actor, attempt.run_id, db) if attempt else None
+        cancelled = parent['cancel_requested'] or parent['state'] == 'cancelled'
+        if not cancelled:
+            material_preparation.require_parent_active(parent)
+        # Only explicit per-run cancellation is local; other authority errors propagate.
+        if cancelled or (run and (run['cancel_requested'] or run['state'] == 'cancelled')):
+            if attempt and attempt.state in {'reserved','sending'}:
+                service.cancel_run(actor, attempt.run_id, d.AssistantCancelInput(request_id=uuid4()), db)
+            return None
+        return parent
+
     async def _execute(self, epoch, link):
         actor, scope, composer, dirty = self._guard(epoch)
         if dirty or self._value.automatic_policy is None:
@@ -438,11 +451,16 @@ class PersonalWeixinRuntime:
                 WHERE r.request_id=:id'''),{'id':str(link.model_request_id)}).first()
             if stored:
                 attempt = attempts.read_attempt(actor,UUID(stored[0]),db)
-            else:
-                parent = service._owned_run(actor,link.business_run_id,db)
-                if d.ScopeSnapshot.model_validate_json(parent['scope_snapshot']) != scope:
+                # A durable claim (including unknown) permanently ends this reply's replay.
+                if attempt.state not in {'reserved','sending'} and db.scalar(text(
+                        'SELECT 1 FROM weixin_personal_outbox WHERE client_id=:id'),
+                        {'id':str(records.stable('reply',self._mapping.id,'model:' + str(attempt.id)))}):
                     return
+            else:
                 attempt = None
+            parent = self._execution_parent(actor,link,db,attempt)
+            if parent is None or attempt is None and d.ScopeSnapshot.model_validate_json(parent['scope_snapshot']) != scope:
+                return
         if attempt is None:
             selection = d.MainMaterialSelection(request_id=link.model_request_id,expected_scope=scope,
                 expected_composer_revision=composer,parent_business_run_id=link.business_run_id)
@@ -459,10 +477,14 @@ class PersonalWeixinRuntime:
             self._guard(epoch)
             with self.database.session() as db:
                 attempt = attempts.read_attempt(actor,attempt.id,db)
+                if self._execution_parent(actor,link,db,attempt) is None:
+                    self._active_run = None
+                    return
         self._active_run = None
         self._refresh(epoch)
         with self.database.session() as db:
-            material_preparation.require_parent_active(service._owned_run(actor,link.business_run_id,db))
+            if self._execution_parent(actor,link,db,attempt) is None:
+                return
         body = records.model_reply(attempt)
         await self._reply(epoch,'model:' + str(attempt.id),body,link.source_event_id)
 
