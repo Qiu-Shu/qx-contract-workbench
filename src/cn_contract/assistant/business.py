@@ -259,7 +259,7 @@ def sha_text(value):
     return sha256(value.encode('utf-8')).hexdigest()
 
 
-def submit(actor, cid, value, db):
+def submit(actor, cid, value, db, *, personal_draft_id=None):
     request = d.BusinessInput.model_validate(value.model_dump(mode='python'))
     service._owned(actor, cid, db)
     require_active(db)
@@ -298,7 +298,8 @@ def submit(actor, cid, value, db):
         elif workflow in {'case', 'court', 'contract'}:
             refs, files, directory = preparation.sources(actor, cid, db)
             if workflow == 'contract':
-                output, contract_id = preparation.contract(actor, run, request, selected, files, db)
+                output, contract_id = preparation.contract(actor, run, request, selected, files, db,
+                    personal_draft_id=personal_draft_id)
                 state = 'awaiting_input'
             elif workflow == 'case':
                 output, evidence = preparation.case_text(actor, cid, refs, directory, db)

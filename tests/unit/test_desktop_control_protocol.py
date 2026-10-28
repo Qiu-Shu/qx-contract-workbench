@@ -23,7 +23,8 @@ def test_valid_frame_and_exact_sequence():
     assert parse_control_line(line(), NONCE, 1) == ('disable', {})
 
 
-@pytest.mark.parametrize('operation', ['configure_judge', 'disable_judge', 'authorize_context'])
+@pytest.mark.parametrize('operation', ['configure_judge', 'disable_judge', 'authorize_context',
+    'start_personal_weixin', 'disable_personal_weixin', 'verify_personal_weixin'])
 def test_fixed_operations_share_the_existing_frame(operation):
     assert parse_control_line(line(operation=operation), NONCE, 1) == (operation, {})
 

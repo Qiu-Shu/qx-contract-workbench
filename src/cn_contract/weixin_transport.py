@@ -9,6 +9,7 @@ import hashlib
 import re
 import secrets
 import time
+from threading import RLock
 from urllib.parse import urlencode, urlsplit
 
 import httpx
@@ -112,6 +113,7 @@ def _file_metadata(value, *, max_bytes, documents_only=True):
 class _ProtocolSession:
     def __init__(self, *, client):
         self._client = client
+        self._state_lock = RLock()
         self._base = API_BASE
         self._token = self._bot = self._peer = self._qr = ''
         self.login_state = 'not_started'
@@ -255,7 +257,10 @@ class _ProtocolSession:
                 raise ValueError()
         except ValueError:
             raise ProbeError('UNSUPPORTED_QR_DISPLAY') from None
-        self._qr, self.login_state = qr, 'wait'
+        with self._state_lock:
+            if self.login_state == 'closed':
+                raise ProbeError('CLOSED')
+            self._qr, self.login_state = qr, 'wait'
         return display
 
     def poll_login(self, verify_code=None):
@@ -268,25 +273,28 @@ class _ProtocolSession:
                 raise ProbeError('INVALID_PAIRING_CODE')
             params['verify_code'] = verify_code
         value = self._json('GET', '/ilink/bot/get_qrcode_status?' + urlencode(params), timeout=40)
-        _success(value)
-        state = value.get('status')
-        if type(state) is not str or state not in _LOGIN_STATES:
-            raise ProbeError('INVALID_LOGIN_STATE')
-        if state == 'scaned_but_redirect':
-            self._base = _url('https://' + _string(value.get('redirect_host')))
-        if state == 'confirmed':
-            token = _string(value.get('bot_token'))
-            if not re.fullmatch(r'[!-~]+', token):
-                raise ProbeError('INVALID_RESPONSE')
-            bot = _string(value.get('ilink_bot_id'))
-            peer = _string(value.get('ilink_user_id'))
-            base = _url(value.get('baseurl', self._base))
-            self._token, self._bot, self._peer, self._base = token, bot, peer, base
-            self._qr = ''
-        self.login_state = state
-        if state in _TERMINAL:
-            self._qr = ''
-        return state
+        with self._state_lock:
+            if self.login_state == 'closed':
+                raise ProbeError('CLOSED')
+            _success(value)
+            state = value.get('status')
+            if type(state) is not str or state not in _LOGIN_STATES:
+                raise ProbeError('INVALID_LOGIN_STATE')
+            if state == 'scaned_but_redirect':
+                self._base = _url('https://' + _string(value.get('redirect_host')))
+            if state == 'confirmed':
+                token = _string(value.get('bot_token'))
+                if not re.fullmatch(r'[!-~]+', token):
+                    raise ProbeError('INVALID_RESPONSE')
+                bot = _string(value.get('ilink_bot_id'))
+                peer = _string(value.get('ilink_user_id'))
+                base = _url(value.get('baseurl', self._base))
+                self._token, self._bot, self._peer, self._base = token, bot, peer, base
+                self._qr = ''
+            self.login_state = state
+            if state in _TERMINAL:
+                self._qr = ''
+            return state
 
     def _message(self, value):
         self._connected()
@@ -315,8 +323,9 @@ class _ProtocolSession:
 
     def close(self):
         """Clear this session; the caller remains responsible for closing its client."""
-        self._token = self._bot = self._peer = self._qr = ''
-        self.login_state = 'closed'
+        with self._state_lock:
+            self._token = self._bot = self._peer = self._qr = ''
+            self.login_state = 'closed'
 
 
 class PersonalWeixinTransport(_ProtocolSession):

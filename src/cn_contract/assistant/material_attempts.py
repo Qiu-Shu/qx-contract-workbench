@@ -60,6 +60,8 @@ def current(actor, row, db, runtime):
     require_active(db)
     prepared = attempts._input(row)
     request, basis = prepared.request, prepared.request.basis
+    from ..weixin_inbox.runtime_records import require_model_source
+    require_model_source(actor, basis, db)
     run = service._owned_run(actor, request.run_id, db)
     inputs.require_parent_active(service._owned_run(actor, basis.parent_business_run_id, db))
     conversation = service._owned(actor, request.scope.conversation_id, db)

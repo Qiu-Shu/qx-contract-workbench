@@ -7,7 +7,9 @@ def database_rows(connection):
 
 
 def statements_for(version):
-    if version == 'weixin-personal-v1':
+    if version == 'weixin-personal-runtime-v1':
+        from .weixin_inbox.runtime_schema import STATEMENTS
+    elif version == 'weixin-personal-v1':
         from .weixin_inbox.personal_schema import STATEMENTS
     elif version == 'assistant-material-model-v1':
         from .assistant.material_model_schema import STATEMENTS

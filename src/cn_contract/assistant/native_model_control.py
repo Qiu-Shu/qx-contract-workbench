@@ -45,6 +45,7 @@ class NativeModelControl:
         self._config = None
         self._config_version = None
         self._intents = {}
+        self.on_policy_change = lambda session_id=None: None
 
     def _check_loop(self):
         loop = asyncio.get_running_loop()
@@ -61,6 +62,7 @@ class NativeModelControl:
         actual = _payload(d.MainModelConfig, provider.config)
         if actual != value.config:
             raise ServiceError('BLOCKED_LIVE', 403)
+        self.on_policy_change()
         self._registry.configure(provider)
         self._config, self._config_version = value.config, uuid4()
         return {'status': 'configured', 'config_sha256': sha(encoded(value.config)),
@@ -69,6 +71,7 @@ class NativeModelControl:
     @_fixed_errors
     def disable(self):
         self._check_loop()
+        self.on_policy_change()
         self._registry.configure(None)
         self._config, self._config_version = None, None
         return {'status': 'disabled'}
@@ -79,7 +82,8 @@ class NativeModelControl:
         value = _payload(d.NativeModelRevoke, payload)
         with self._database.session() as db:
             actor = authenticate(value.session_token, db)
-            self._registry.revoke(actor.session_id)
+        self.on_policy_change(actor.session_id)
+        self._registry.revoke(actor.session_id)
         return {'status': 'revoked'}
 
     @_fixed_errors

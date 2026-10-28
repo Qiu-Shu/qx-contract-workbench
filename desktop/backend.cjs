@@ -60,6 +60,9 @@ class Backend extends EventEmitter {
   authorizeContextModel(payload) { return this._model('authorize_context',payload); }
   authorizeMaterialModel(payload) { return this._model('authorize_material',payload); }
   authorizeProfileModel(payload) { return this._model('authorize_profile',payload); }
+  startPersonalWeixin(payload) { return this._model('start_personal_weixin',payload); }
+  disablePersonalWeixin() { return this._model('disable_personal_weixin',{}); }
+  verifyPersonalWeixin(payload) { return this._model('verify_personal_weixin',payload); }
   _model(operation,payload) {
     return this.control ? this.control.request(operation,payload) : Promise.resolve({ok:false,code:'BLOCKED_LIVE'});
   }

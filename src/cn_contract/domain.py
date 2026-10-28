@@ -4485,7 +4485,47 @@ class TaskDraftManifest(DomainModel):
     main_attachment_id: UUID | None
     events: tuple[TaskManifestEvent, ...]
     review_status: Literal['unverified'] = 'unverified'
-    synthetic: Literal[True] = True
+    synthetic: StrictBool = True
+
+
+class PersonalWeixinAutomaticPolicy(DomainModel):
+    expected_config_version: UUID
+    max_total_usd: Annotated[ExactDecimal, Field(gt=0, le=100)]
+
+
+class NativePersonalWeixinStart(DomainModel):
+    session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
+    expected_scope: ScopeSnapshot
+    automatic_policy: PersonalWeixinAutomaticPolicy | None = None
+
+
+class PersonalWeixinStatus(DomainModel):
+    state: Literal['disconnected', 'starting', 'waiting_scan', 'need_verifycode', 'connected', 'paused']
+    conversation_id: UUID | None = None
+    automatic: StrictBool = False
+    notice: str = ''
+    qr_url: str | None = None
+
+
+class PersonalWeixinRunLink(DomainModel):
+    id: UUID
+    mapping_id: UUID
+    draft_id: UUID
+    draft_revision: PositiveInt
+    source_event_id: UUID
+    business_run_id: UUID
+    model_request_id: UUID
+    created_at: UTCDatetime
+
+
+class PersonalWeixinSendClaim(DomainModel):
+    client_id: UUID
+    mapping_id: UUID
+    source_event_id: UUID
+    result_key: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)]
+    payload_sha256: SHA256
+    status: Literal['unknown', 'submitted', 'rejected']
+    created_at: UTCDatetime
 
 
 class TaskMediaResolutionInput(DomainModel):
@@ -4679,7 +4719,7 @@ def _weixin_revocation(value):
 
 
 class WeixinAccountSnapshot(DomainModel):
-    """Credential-free synthetic identity and committed account cursor, without authentication."""
+    """Credential-free source identity and committed account cursor, without authentication."""
     id: UUID
     workspace_id: UUID
     owner_id: UUID

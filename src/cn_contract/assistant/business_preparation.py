@@ -73,15 +73,22 @@ def sources(actor, cid, db):
     return tuple(refs), tuple(files), directory
 
 
-def contract(actor, run, request, previous, media, db):
-    binding = tasks.create_binding(actor, run.scope.conversation_id, db)
-    target = previous.contract_draft_id if previous else None
-    receipt = tasks.receive_batch(actor, binding.id, d.TaskInboxBatchInput(expected_cursor=binding.cursor,
-        next_cursor=binding.cursor + 1, events=(d.TaskInboxEventInput(event_id=str(request.request_id),
-            text=request.content, task_id=target, start_new=target is None, media=media),)), db)
-    if not receipt.drafts:
-        return '存在多个可能的合同任务，请先在当前聊天的任务记录中选择归属。', None
-    draft = receipt.drafts[0]
+def contract(actor, run, request, previous, media, db, *, personal_draft_id=None):
+    if personal_draft_id is not None:
+        from ..security import ServiceError
+        draft = tasks.read_draft(actor, personal_draft_id, db)
+        manifest, _ = tasks._manifest(actor, tasks._draft(actor, personal_draft_id, db), db)
+        if draft.conversation_id != run.scope.conversation_id or manifest.synthetic or draft.state != 'collecting':
+            raise ServiceError('CROSS_MATTER_DENIED', 403)
+    else:
+        binding = tasks.create_binding(actor, run.scope.conversation_id, db)
+        target = previous.contract_draft_id if previous else None
+        receipt = tasks.receive_batch(actor, binding.id, d.TaskInboxBatchInput(expected_cursor=binding.cursor,
+            next_cursor=binding.cursor + 1, events=(d.TaskInboxEventInput(event_id=str(request.request_id),
+                text=request.content, task_id=target, start_new=target is None, media=media),)), db)
+        if not receipt.drafts:
+            return '存在多个可能的合同任务，请先在当前聊天的任务记录中选择归属。', None
+        draft = receipt.drafts[0]
     notes = {'main_contract_required':'请上传主合同，可随后继续补附件。',
         'main_contract_selection_required':'有多份材料，请明确哪一份是主合同。',
         'instruction_required':'请补充审查要求。', 'media_pending':'材料已关联，请在本对话读取原文。',

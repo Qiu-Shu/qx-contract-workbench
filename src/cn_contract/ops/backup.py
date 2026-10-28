@@ -189,6 +189,8 @@ def _file_references(db, *, allow_assistant=True):
     validate_peer_scope_grants(db, allow_grants=allow_assistant)
     validate_peer_generations(db, allow_generations=allow_assistant)
     validate_descriptor_generations(db, allow_provenance=allow_assistant)
+    from ..weixin_inbox.runtime_records import validate_records
+    validate_records(db, allowed=allow_assistant)
     items = file_references(db, allowed=allow_assistant)
     for row in db.scalars(select(DocumentRow)):
         value = strict_json(row.payload.encode())

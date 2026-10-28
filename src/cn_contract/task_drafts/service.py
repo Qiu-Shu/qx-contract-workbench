@@ -1,4 +1,4 @@
-"""Collect synthetic batches without model calls; freeze immutable review inputs."""
+"""Collect source batches without model calls; freeze immutable review inputs."""
 import json
 from uuid import UUID, uuid4
 
@@ -153,7 +153,9 @@ def _manifest(actor, row, db, *, check_files=False):
         blockers.append('instruction_required')
     manifest = d.TaskDraftManifest(draft_id=row['id'],conversation_id=row['conversation_id'],
         scope=_snapshot(conversation),revision=row['revision'],instruction=row['instruction'],
-        main_attachment_id=main,events=tuple(events))
+        main_attachment_id=main,events=tuple(events),synthetic=not db.scalar(text('''SELECT 1 FROM task_draft_events de
+            JOIN task_inbox_events e ON e.id=de.event_id JOIN task_channel_bindings b ON b.id=e.binding_id
+            WHERE de.draft_id=:id AND b.channel='weixin_personal' LIMIT 1'''),{'id':row['id']}))
     return manifest,tuple(dict.fromkeys(blockers))
 
 
@@ -295,6 +297,34 @@ def _follow_target(actor, cid, identifier, control, db):
 def _target(actor, cid, event, db):
     request = _payload(event)
     control = CONTROLS.get(request.text.strip()) if not request.media else None
+    if (db.scalar(text('SELECT channel FROM task_channel_bindings WHERE id=:id'),
+            {'id':event['binding_id']}) == 'weixin_personal'
+            and request.task_id is None and request.reply_to_event_id is None
+            and db.scalar(text("SELECT 1 FROM sqlite_master WHERE name='weixin_personal_runs'"))):
+        # Source text is interpreted here; the immutable wire payload/hash stays intact.
+        candidates = db.execute(text('''SELECT DISTINCT draft.* FROM task_drafts draft
+            JOIN task_draft_events de ON de.draft_id=draft.id JOIN task_inbox_events e ON e.id=de.event_id
+            WHERE draft.conversation_id=:cid AND draft.state='collecting' '''),
+            {'cid':str(cid)}).mappings().all()
+        unused = [row for row in candidates if not db.scalar(text(
+            'SELECT 1 FROM weixin_personal_runs WHERE draft_id=:id'), {'id':row['id']})]
+        explicit = any(word in request.text for word in ('重新审查', '新建任务', '开始新任务'))
+        if len(unused) == 1 and not explicit:
+            return unused[0]['id']
+        # A single leaf identifies the previous task without guessing by timestamp.
+        leaves = [row for row in candidates if not db.scalar(text(
+            'SELECT 1 FROM task_drafts WHERE parent_draft_id=:id'), {'id':row['id']})]
+        parent = dict(leaves[0]) if len(leaves) == 1 else None
+        if parent is not None and parent['main_attachment_id'] is None:
+            main = read_draft(actor,parent['id'],db).main_attachment_id
+            parent['main_attachment_id'] = str(main) if main else None
+        if explicit:
+            return _new_draft(cid, db, parent=parent)
+        if not unused and len(leaves) == 1 and not control:
+            return _new_draft(cid, db, parent=parent)
+        if not candidates and not control:
+            return _new_draft(cid, db)
+        return None
     if request.task_id is not None:
         return _follow_target(actor,cid,request.task_id,control,db)
     if request.reply_to_event_id is not None:

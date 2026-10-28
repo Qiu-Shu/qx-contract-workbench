@@ -11,18 +11,20 @@ from uuid import UUID
 PROTOCOL = 'qx-model-control-v1'
 JUDGE_PROTOCOL = 'qx-judge-control-v1'
 JUDGE_AUTH_PROTOCOL = 'qx-judge-authorization-v1'
+PERSONAL_WEIXIN_PROTOCOL = 'qx-personal-weixin-v1'
 MAX_BYTES = 524288
 LEGACY_MAX_BYTES = 32768
 _MATERIAL_OPERATION = re.compile(rb'"operation"\s*:\s*"authorize_material"')
 MAX_SEQUENCE = 9007199254740991
 _OPERATIONS = {'configure', 'disable', 'authorize', 'revoke', 'configure_judge', 'disable_judge',
-               'authorize_judge', 'revoke_judge', 'authorize_context', 'authorize_profile', 'authorize_material'}
+               'authorize_judge', 'revoke_judge', 'authorize_context', 'authorize_profile', 'authorize_material',
+               'start_personal_weixin', 'disable_personal_weixin', 'verify_personal_weixin'}
 _CODES = {'BLOCKED_LIVE', 'VERSION_CONFLICT', 'STATE_CONFLICT', 'BUDGET_EXCEEDED', 'CROSS_MATTER_DENIED'}
 
 
 class NativeControlHandler:
-    """Fixed composition of the two native configuration lifecycles."""
-    def __init__(self, main, judge):
+    """Fixed composition of native model and personal-channel lifecycles."""
+    def __init__(self, main, judge, personal=None):
         self.configure, self.disable = main.configure, main.disable
         self.authorize, self.revoke = main.authorize, main.revoke
         self.authorize_context = main.authorize_context
@@ -31,6 +33,16 @@ class NativeControlHandler:
         self.authorize_material = getattr(main, 'authorize_material', self._unsupported_material)
         self.configure_judge, self.disable_judge = judge.configure, judge.disable
         self._judge = judge
+        self._personal = personal
+
+    def start_personal_weixin(self, payload):
+        return self._personal.start(payload) if self._personal else self._unsupported_material(payload)
+
+    def disable_personal_weixin(self):
+        return self._personal.disable() if self._personal else {'status':'disabled'}
+
+    def verify_personal_weixin(self, payload):
+        return self._personal.verify(payload) if self._personal else self._unsupported_material(payload)
 
     @staticmethod
     def _unsupported_material(payload):
@@ -44,6 +56,8 @@ class NativeControlHandler:
         return self._judge.revoke(payload)
 
     def disable_all(self):
+        if self._personal is not None:
+            self._personal.disable()
         try:
             self.disable()
         finally:
@@ -144,7 +158,7 @@ class ParentControlChannel:
                 or operation not in _OPERATIONS):
             raise ValueError('CONTROL_REJECTED')
         try:
-            if operation in ('disable', 'disable_judge'):
+            if operation in ('disable', 'disable_judge', 'disable_personal_weixin'):
                 if payload:
                     raise ServiceError('BLOCKED_LIVE', 403)
                 result = getattr(self._handler, operation)()
@@ -161,7 +175,9 @@ class ParentControlChannel:
                     'authorize_judge':{'authorized','existing'}, 'revoke_judge':{'revoked'},
                     'authorize_context':{'authorized','existing'},
                     'authorize_profile':{'authorized','existing'},
-                    'authorize_material':{'authorized','existing'}}[operation]
+                    'authorize_material':{'authorized','existing'},
+                    'start_personal_weixin':{'started'}, 'disable_personal_weixin':{'disabled'},
+                    'verify_personal_weixin':{'accepted'}}[operation]
         if type(result) is not dict or result.get('status') not in expected:
             raise ValueError('CONTROL_REJECTED')
         configuring = operation in ('configure', 'configure_judge')

@@ -74,11 +74,11 @@ def test_schema_expands_only_two_checks_and_preserves_historical_objects(tmp_pat
         with pytest.raises(sqlite3.IntegrityError,match='CHECK constraint failed'):
             db.execute("INSERT INTO weixin_accounts VALUES ('account','workspace','fiction','bot','weixin_personal','start',0,'start','at',NULL,NULL,NULL)")
         db.commit()
-        assert schema_migrations.upgrade_database(db)=='weixin-personal-v1'
+        assert schema_migrations.upgrade_database(db)==storage_schema.CURRENT_VERSION
         after=schema_migrations.database_rows(db)
-        assert storage_schema.identify_schema(after,native=native)=='weixin-personal-v1'
+        assert storage_schema.identify_schema(after,native=native)==storage_schema.CURRENT_VERSION
         assert [row for row in before if row[0]!='table' or row[1] not in ('task_channel_bindings','weixin_accounts')]==[
-            row for row in after if row[0]!='table' or row[1] not in ('task_channel_bindings','weixin_accounts')]
+            row for row in after if row[2] not in ('weixin_personal_runs','weixin_personal_outbox') and (row[0]!='table' or row[1] not in ('task_channel_bindings','weixin_accounts'))]
         assert db.execute('SELECT username FROM users').fetchall()==[('fiction',)]
         assert db.execute('PRAGMA foreign_key_check').fetchall()==[]
     finally:
@@ -341,7 +341,7 @@ def test_personal_migration_preserves_complete_legacy_synthetic_journals(tmp_pat
         with database.session() as db:
             before={name:db.execute(text('SELECT * FROM '+name+' ORDER BY rowid')).all() for name in names}
         connection=sqlite3.connect(path)
-        try:assert schema_migrations.upgrade_database(connection)=='weixin-personal-v1'
+        try:assert schema_migrations.upgrade_database(connection)==storage_schema.CURRENT_VERSION
         finally:connection.close()
         with database.session() as db:
             assert {name:db.execute(text('SELECT * FROM '+name+' ORDER BY rowid')).all() for name in names}==before

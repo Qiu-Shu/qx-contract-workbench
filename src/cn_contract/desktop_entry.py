@@ -107,8 +107,13 @@ def main():
             judge = JudgeRuntime()
             app = build_local_app(root, data_parent=parent, port=port, library_root=config.get('library_root'),
                                   assistant_model_runtime=registry, assistant_judge_runtime=judge)
+            from .weixin_inbox.personal_runtime import PersonalWeixinRuntime, attach_runtime
+            from .desktop_control import PERSONAL_WEIXIN_PROTOCOL
+            main_control = NativeModelControl(app.state.database, registry)
+            personal = PersonalWeixinRuntime(app.state.database, main_control, app.state.assistant_generation_tasks)
+            attach_runtime(app, personal)
             attach_control(app, channel, NativeControlHandler(
-                NativeModelControl(app.state.database, registry), NativeJudgeControl(judge, database=app.state.database)))
+                main_control, NativeJudgeControl(judge, database=app.state.database), personal))
             server = uvicorn.Server(uvicorn.Config(app, host='127.0.0.1', port=port,
                 workers=1, access_log=False, log_config=None, log_level='critical'))
             server_holder.append(server)
@@ -118,7 +123,8 @@ def main():
                 while not finished.wait(.05):
                     if server.started:
                         emit('ready', port=port, nonce=config['nonce'], control_protocol=PROTOCOL,
-                             judge_control_protocol=JUDGE_PROTOCOL, judge_authorization_protocol=JUDGE_AUTH_PROTOCOL)
+                             judge_control_protocol=JUDGE_PROTOCOL, judge_authorization_protocol=JUDGE_AUTH_PROTOCOL,
+                             personal_weixin_protocol=PERSONAL_WEIXIN_PROTOCOL)
                         return
 
             Thread(target=announce_ready, daemon=True).start()

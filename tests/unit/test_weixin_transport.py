@@ -73,6 +73,27 @@ class Wire:
         raise AssertionError('unexpected fixture URL')
 
 
+@pytest.mark.parametrize('operation',['qr','login'])
+def test_close_during_inflight_login_cannot_restore_credentials(operation):
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+    entered, release = Event(), Event()
+    wire=Wire()
+    def handle(request):
+        if request.url.path.endswith('/get_qrcode_status') or operation=='qr':
+            entered.set();assert release.wait(3)
+        return wire.handle(request)
+    with httpx.Client(transport=httpx.MockTransport(handle)) as client, ThreadPoolExecutor(1) as executor:
+        transport=PersonalWeixinTransport(client=client)
+        if operation=='login':transport.start_qr()
+        future=executor.submit(transport.start_qr if operation=='qr' else transport.poll_login)
+        assert entered.wait(3)
+        transport.close();release.set()
+        with pytest.raises(ProbeError):future.result(timeout=3)
+        assert transport.login_state=='closed'
+        assert transport._token==transport._bot==transport._peer==transport._qr==''
+
+
 @pytest.fixture
 def connected():
     wire = Wire()

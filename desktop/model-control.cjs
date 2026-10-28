@@ -5,6 +5,7 @@ const {validProfileBasis} = require('./profile-basis.cjs');
 const PROTOCOL = 'qx-model-control-v1';
 const JUDGE_PROTOCOL = 'qx-judge-control-v1';
 const JUDGE_AUTH_PROTOCOL = 'qx-judge-authorization-v1';
+const PERSONAL_WEIXIN_PROTOCOL = 'qx-personal-weixin-v1';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const SHA256 = /^[0-9a-f]{64}$/;
 const CODES = new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT',
@@ -12,7 +13,8 @@ const CODES = new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT',
 const STATUSES = {configure:['configured'],disable:['disabled'],
   authorize:['authorized','existing'],revoke:['revoked'],configure_judge:['configured'],disable_judge:['disabled'],
   authorize_judge:['authorized','existing'],revoke_judge:['revoked'],authorize_context:['authorized','existing'],
-  authorize_profile:['authorized','existing'],authorize_material:['authorized','existing']};
+  authorize_profile:['authorized','existing'],authorize_material:['authorized','existing'],
+  start_personal_weixin:['started'],disable_personal_weixin:['disabled'],verify_personal_weixin:['accepted']};
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const keys = (value, expected) => object(value) && Object.keys(value).length === expected.length &&
   expected.every(key => Object.hasOwn(value,key));
@@ -42,11 +44,25 @@ function validContextBasis(basis) {
 }
 
 function validPayload(operation, payload) {
-  if (operation === 'disable' || operation === 'disable_judge') return keys(payload,[]);
+  if (operation === 'disable' || operation === 'disable_judge' || operation === 'disable_personal_weixin') return keys(payload,[]);
   if (operation === 'configure' || operation === 'configure_judge') return keys(payload,['config','secret']) && object(payload.config) &&
     typeof payload.secret === 'string' && /^[\x20-\x7e]{16,1024}$/.test(payload.secret) &&
     payload.secret.trim().length >= 16 && payload.secret.trim().length <= 512;
   const token = value => typeof value === 'string' && /^[\x21-\x7e]{1,256}$/.test(value);
+  if (operation === 'verify_personal_weixin') return keys(payload,['code']) && typeof payload.code==='string' && /^[0-9]{4,12}$/.test(payload.code);
+  if (operation === 'start_personal_weixin') {
+    if (!keys(payload,['session_token','expected_scope','automatic_policy']) || !token(payload.session_token)) return false;
+    const scope=payload.expected_scope, policy=payload.automatic_policy;
+    if (!keys(scope,['workspace_id','conversation_id','scope_kind','scope_ref','binding_revision','input_revision','materials_revision']) ||
+        !UUID.test(scope.workspace_id) || !UUID.test(scope.conversation_id) ||
+        !['conversation','matter','intake'].includes(scope.scope_kind) ||
+        (scope.scope_ref!==null && !UUID.test(scope.scope_ref)) ||
+        !['binding_revision','input_revision','materials_revision'].every(k=>Number.isSafeInteger(scope[k])&&scope[k]>=0)) return false;
+    return policy===null || (keys(policy,['expected_config_version','max_total_usd']) &&
+      UUID.test(policy.expected_config_version) && typeof policy.max_total_usd==='string' &&
+      policy.max_total_usd.length<=64 && /^\d+(?:\.\d+)?$/.test(policy.max_total_usd) &&
+      Number(policy.max_total_usd)>0 && Number(policy.max_total_usd)<=100);
+  }
   if (operation === 'revoke' || operation === 'revoke_judge') return keys(payload,['session_token']) && token(payload.session_token);
   if (operation === 'authorize_profile' || operation === 'authorize_material')
     return keys(payload,['session_token','expected_config_version','basis','max_total_usd','valid_for_seconds']) &&
@@ -82,7 +98,7 @@ class ModelControl {
   constructor({nonce,write,onReady,onFatal,timeoutMs=10000}) {
     this.nonce=nonce; this.write=write; this.onReady=onReady; this.onFatal=onFatal;
     this.timeoutMs=timeoutMs; this.sequence=0; this.buffer=Buffer.alloc(0);
-    this.ready=false; this.enabled=false; this.judgeEnabled=false; this.judgeAuthorizationEnabled=false;
+    this.ready=false; this.enabled=false; this.judgeEnabled=false; this.judgeAuthorizationEnabled=false; this.personalWeixinEnabled=false;
     this.closed=false; this.failed=false; this.pending=null;
   }
   _finish(error, result) {
@@ -131,16 +147,20 @@ class ModelControl {
         const fields=['event','port','nonce'];
         const hasMain=Object.hasOwn(value,'control_protocol'),hasJudge=Object.hasOwn(value,'judge_control_protocol');
         const hasJudgeAuthorization=Object.hasOwn(value,'judge_authorization_protocol');
+        const hasPersonal=Object.hasOwn(value,'personal_weixin_protocol');
         if (hasMain) fields.push('control_protocol');
         if (hasJudge) fields.push('judge_control_protocol');
         if (hasJudgeAuthorization) fields.push('judge_authorization_protocol');
+        if (hasPersonal) fields.push('personal_weixin_protocol');
         if (!keys(value,fields) || value.event !== 'ready' || value.nonce !== this.nonce ||
             !Number.isSafeInteger(value.port) || value.port < 1 || value.port > 65535 ||
             (hasMain && value.control_protocol !== PROTOCOL) ||
             (hasJudge && (!hasMain || value.judge_control_protocol !== JUDGE_PROTOCOL)) ||
-            (hasJudgeAuthorization && (!hasJudge || value.judge_authorization_protocol !== JUDGE_AUTH_PROTOCOL))) throw new Error();
+            (hasJudgeAuthorization && (!hasJudge || value.judge_authorization_protocol !== JUDGE_AUTH_PROTOCOL)) ||
+            (hasPersonal && (!hasMain || value.personal_weixin_protocol !== PERSONAL_WEIXIN_PROTOCOL))) throw new Error();
         this.ready=true; this.enabled=hasMain; this.judgeEnabled=hasJudge;
         this.judgeAuthorizationEnabled=hasJudgeAuthorization;
+        this.personalWeixinEnabled=hasPersonal;
         this.onReady(value); return;
       }
       if (!this.pending || value.event !== 'model-control-result' || value.protocol !== PROTOCOL ||
@@ -169,6 +189,7 @@ class ModelControl {
     if (this.closed || this.failed || !this.ready || !this.enabled) return Promise.resolve(blocked());
     if ((operation === 'configure_judge' || operation === 'disable_judge') && !this.judgeEnabled) return Promise.resolve(blocked());
     if ((operation === 'authorize_judge' || operation === 'revoke_judge') && !this.judgeAuthorizationEnabled) return Promise.resolve(blocked());
+    if (operation.endsWith('_personal_weixin') && !this.personalWeixinEnabled) return Promise.resolve(blocked());
     if (this.pending) return Promise.resolve({ok:false,code:'STATE_CONFLICT'});
     let line;
     const sequence=this.sequence+1;

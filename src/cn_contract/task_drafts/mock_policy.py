@@ -1,7 +1,7 @@
 """Server-side permission for a frozen task's local, registered-fiction review."""
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 from .. import domain as d
 from ..assistant import attachment_files, attachment_records
@@ -27,6 +27,10 @@ def require_mock_case(matter_id, actor, db):
 
 def sources(execution, actor, db):
     """Read trusted bytes and the exact frozen parser revision, never a path input."""
+    if not execution.manifest.synthetic or db.scalar(text('''SELECT 1 FROM task_draft_events de
+            JOIN task_inbox_events e ON e.id=de.event_id JOIN task_channel_bindings b ON b.id=e.binding_id
+            WHERE de.draft_id=:id AND b.channel='weixin_personal' LIMIT 1'''), {'id':str(execution.draft_id)}):
+        raise ServiceError('DATA_POLICY_UNAPPROVED', 409)
     database = configured_database(db)
     registered = backup._registered_hashes() | set(getattr(database, '_assistant_synthetic_hashes', ()))
     result = {}

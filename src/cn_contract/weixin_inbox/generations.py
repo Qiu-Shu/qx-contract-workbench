@@ -35,7 +35,7 @@ def _schema(db):
         schema = [tuple(row) for row in db.execute(text(
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
-        if identify_schema(schema, native=native) not in ('weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1'):
+        if identify_schema(schema, native=native) not in ('weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1', 'weixin-personal-runtime-v1'):
             _conflict()
     except ValueError:
         _conflict()

@@ -90,7 +90,9 @@ def _execution(db, row, draft, conversation, events, resolutions, workspace):
             media.append(item)
         expected.append(d.TaskManifestEvent(id=saved['id'], event_id=payload.event_id,
             payload_sha256=saved['payload_sha256'], text=payload.text, media=tuple(media)))
-    if manifest.events != tuple(expected):
+    personal = any(db.scalar(text("SELECT channel FROM task_channel_bindings WHERE id=:id"),
+        {'id':saved['binding_id']}) == 'weixin_personal' for saved, _ in events)
+    if manifest.events != tuple(expected) or manifest.synthetic == personal:
         _fail()
     included = {item.attachment_id:item for event in manifest.events for item in event.media if not item.excluded}
     main = UUID(draft['main_attachment_id']) if draft['main_attachment_id'] else next(iter(included)) if len(included) == 1 else None
@@ -205,7 +207,7 @@ def validate_task_records(db, *, allowed=True):
     """Old schemas stay readable; task history always requires a native archive."""
     schema = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
     native = any(row[1] == 'local_workspace_identity' for row in schema)
-    if identify_schema(schema, native=native) not in ('task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1'):
+    if identify_schema(schema, native=native) not in ('task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1', 'weixin-personal-runtime-v1'):
         return
     tables = ('task_channel_bindings','task_inbox_events','task_drafts','task_draft_events',
               'task_executions','task_media_resolutions')
