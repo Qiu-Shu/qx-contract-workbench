@@ -17,7 +17,7 @@ async function fixture(t,{recovered=false,model,automatic=false,policyChange}={}
     scope:'selected-task-materials',max_calls:1,max_total_usd:'0.024576'};
   if(policyChange)Object.assign(initial.model_auto_analysis,policyChange);
   if(Object.keys(initial).length)fs.writeFileSync(path.join(root,'desktop-settings.json'),JSON.stringify(initial));
-  const handlers=new Map(),states=[],backends=[];let ready,win,menu,approvalOptions;
+  const handlers=new Map(),states=[],backends=[];let ready,win,menu,approvalOptions,personalOptions;
   const store={writes:0,async save(){this.writes++;return {status:'saved'};},
     async status(){return {status:'saved'};},async withSecret(fn){await fn('synthetic-settings-secret');return {status:'saved'};},async drain(){}};
   class Backend extends EventEmitter {
@@ -42,14 +42,32 @@ async function fixture(t,{recovered=false,model,automatic=false,policyChange}={}
     session:{fromPartition:()=>({setPermissionRequestHandler(){},setPermissionCheckHandler(){},on(){}})}};
   const requireModule=name=>name==='electron'?electron:name==='./backend.cjs'?{Backend}:name==='./model-credentials.cjs'?{createModelCredentialStore:()=>store}
     :name==='./model-approval.cjs'?{registerModelApproval:options=>{approvalOptions=options;return require('../model-approval.cjs').registerModelApproval(options);}}
+    :name==='./personal-weixin.cjs'?{registerPersonalWeixin:options=>{personalOptions=options;return require('../personal-weixin.cjs').registerPersonalWeixin(options);}}
     :name.startsWith('./')?require(path.join(desktop,name)):require(name);
   vm.runInNewContext(fs.readFileSync(path.join(desktop,'main.cjs'),'utf8'),{require:requireModule,__dirname:desktop,URL,
     process:{env:{QX_DESKTOP_DATA_PARENT:root},platform:'win32'}});
   await ready;
-  return {win,states,backends,root,handlers,store,approvalOptions,
+  return {win,states,backends,root,handlers,store,approvalOptions,personalOptions,
     event:()=>({sender:win.webContents,senderFrame:win.webContents.mainFrame}),
     menu:async label=>{const item=menu[0].submenu.find(x=>x.label===label);assert.ok(item);await item.click();}};
 }
+
+test('personal Weixin captures only the actual main-frame CID and fences history navigation and restore',async t=>{
+  const f=await fixture(t),capture=f.personalOptions.captureContext;
+  assert.equal(capture(f.event()),null);
+  const url='http://127.0.0.1:18001/assistant/00000000-0000-4000-8000-000000000003';
+  await f.win.loadURL(url);const context=capture(f.event());
+  assert.equal(context.backend,f.backends[0]);assert.equal(context.workspace,'main');assert.equal(context.guard(),true);
+  assert.equal(capture({sender:{},senderFrame:f.win.webContents.mainFrame}),null);
+  assert.equal(capture({sender:f.win.webContents,senderFrame:{url}}),null);
+  f.win.events['did-start-navigation']({},url,true,true);assert.equal(context.guard(),false);
+  const inPlace=capture(f.event());f.win.events['did-navigate-in-page']({},url,true);assert.equal(inPlace.guard(),false);
+  await f.win.loadURL(url+'?cid=forged');assert.equal(capture(f.event()),null);
+  await f.win.loadURL('http://127.0.0.1:18001/assistant');assert.equal(capture(f.event()).conversation_id,null);
+  const before=capture(f.event());await f.menu('重新打开工作台');assert.equal(before.guard(),false);
+  const recovered=await fixture(t,{recovered:true});await recovered.win.loadURL(url);
+  assert.equal(recovered.personalOptions.captureContext(recovered.event()),null);
+});
 
 test('native model settings preserve the running backend and return to the prior trusted conversation',async t=>{
   const f=await fixture(t),original=f.backends[0];

@@ -248,6 +248,13 @@ function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()
     }finally{open=false;active=false;}
   }
   return Object.freeze({
+    personalWeixinPolicy(backend,guard=()=>true){
+      const captured=metadata,workspace=getWorkspace();
+      const valid=()=>!judge&&!active&&metadata===captured&&workspace===getWorkspace()&&matches(backend,guard);
+      if(!valid())return null;
+      return {automatic_policy:captured?.automatic===true
+        ?{expected_config_version:captured.config_version,max_total_usd:reservation(captured.model)}:null,guard:valid};
+    },
     status:()=>({ok:true,runtime:active ? {state:'unavailable',model:null} : view()}),
     configure:(model,guard=()=>true,automaticAnalysis=false)=>run(async()=>{
       if(!check(guard))return rejected('STATE_CONFLICT');

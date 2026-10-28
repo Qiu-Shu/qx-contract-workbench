@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>群兴 · 对话</title>
   <link rel="stylesheet" href="/static/assistant.css">
+  <link rel="stylesheet" href="/static/assistant-weixin-personal.css">
   <script type="module" src="/static/assistant.mjs"></script>
 </head>
 <body data-conversation-id="{{ conversation_id }}" data-readonly="{{ 'true' if readonly else 'false' }}" data-local-materials="{{ 'true' if local_materials_enabled else 'false' }}" data-library-enabled="{{ 'true' if library_enabled else 'false' }}">
@@ -50,6 +51,31 @@
       </header>
       <noscript><p class="notice error">页面脚本未能运行，暂时无法读取或保存草稿。请重新打开应用，或进入已有工作区。</p></noscript>
       <p id="notice" class="notice" role="status" aria-live="polite"></p>
+
+      <details id="personal-weixin-panel" class="personal-weixin">
+        <summary>本人微信<span id="personal-weixin-summary" class="personal-weixin-summary muted">正在核对连接…</span></summary>
+        <div class="personal-weixin-body">
+          <p id="personal-weixin-state" role="status" aria-live="polite"></p>
+          <p id="personal-weixin-scope" class="muted"></p>
+          <a id="personal-weixin-origin" hidden>返回连接所在聊天</a>
+          <div class="personal-weixin-actions">
+            <button id="personal-weixin-start" type="button" class="quiet-button" disabled>连接本人微信</button>
+            <button id="personal-weixin-disable" type="button" class="quiet-button" hidden disabled>暂停并断开</button>
+            <button id="personal-weixin-refresh" type="button" class="text-button" disabled>重新读取状态</button>
+          </div>
+          <figure id="personal-weixin-qr-frame" class="personal-weixin-qr" hidden>
+            <img id="personal-weixin-qr" width="208" height="208" alt="请用本人微信扫描的本机连接二维码">
+            <figcaption>用本人微信扫码。验证码仅在本机提交，不会显示在聊天中。</figcaption>
+          </figure>
+          <form id="personal-weixin-verify-form" class="personal-weixin-code" hidden>
+            <label for="personal-weixin-code">微信验证码</label>
+            <input id="personal-weixin-code" type="text" inputmode="numeric" pattern="[0-9]{4,12}" minlength="4" maxlength="12" autocomplete="one-time-code" disabled>
+            <button id="personal-weixin-verify" type="submit" class="quiet-button" disabled>提交验证码</button>
+          </form>
+          <p id="personal-weixin-notice" role="status" aria-live="polite"></p>
+          <p class="muted">回传状态为“已提交”时，仍需在微信核对是否收到；结果未知时不会自动重发。</p>
+        </div>
+      </details>
 
       <section class="history-section" aria-label="对话记录">
         <button id="older-messages" class="text-button older-messages" type="button" hidden>加载更早消息</button>
@@ -159,14 +185,14 @@
       </details>
 
       <details id="task-draft-panel" class="task-draft-panel">
-        <summary>模拟合同任务<span class="muted">逐次收集指令与材料，保存在本机</span></summary>
+        <summary>收件任务<span class="muted">本人微信与合成演练分别标记，分析成果见聊天记录</span></summary>
         <div class="task-draft-body">
-          <p class="muted">仅用于合成材料的模拟流程。可先写指令或先传附件，再多次补充；冻结后进入事实确认，确认完成再运行模拟审查。</p>
+          <p class="muted">可在列表查看本人微信任务。下方手动新建、补充与冻结工具仅用于合成演练。</p>
           <details><summary>微信收件与离线验证</summary>
           <section id="weixin-authorization" class="weixin-authorization" aria-labelledby="weixin-heading">
             <h3 id="weixin-heading">微信收件授权 · 离线测试</h3>
             <p id="weixin-state" role="status" aria-live="polite">正在核对本机收件授权…</p>
-            <p class="muted">仅更新同一目标的输入和材料版本；真实微信未接通。</p>
+            <p class="muted">此处仅更新合成收件的输入和材料版本；本人微信连接请使用上方“本人微信”。</p>
             <div class="task-actions"><button id="weixin-authorize" type="button" class="quiet-button" hidden disabled>更新本机授权</button><button id="weixin-read" type="button" class="text-button" disabled>重新读取授权状态</button><button id="weixin-find" type="button" class="quiet-button" hidden disabled>查找本次授权结果</button></div>
             <p id="weixin-notice" role="status" aria-live="polite"></p>
             <details id="weixin-pending-panel" class="weixin-pending-panel">
@@ -184,7 +210,7 @@
             </details>
             <details id="weixin-generation-panel" class="weixin-generation-panel">
               <summary>追加目标历史记录</summary>
-              <p class="muted">仅在本机登记新的目标历史；真实微信未接通，保存后收件仍暂停。</p>
+              <p class="muted">仅在本机登记合成收件的目标历史，保存后合成收件仍暂停。</p>
               <p id="weixin-generation-state" role="status" aria-live="polite">打开后可核对目标历史。</p>
               <button id="weixin-generation-read" type="button" class="text-button">重新读取历史与目标</button>
               <label for="weixin-generation-target">选择新的目标对话</label>

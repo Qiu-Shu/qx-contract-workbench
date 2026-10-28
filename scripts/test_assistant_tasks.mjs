@@ -24,6 +24,18 @@ function fixture(options={}){
   return {root,controller,api,tasks,calls};
 }
 const walk=element=>[element,...element.children.flatMap(walk)];
+test('personal task is labeled honestly and cannot enter synthetic collection or mock execution',async()=>{
+  const f=fixture();await tick();
+  const draft={id:'personal',synthetic:false,state:'frozen',revision:1,instruction:'虚构微信审查',blockers:[],events:[{channel:'weixin_personal',text:'审查',media:[]}],
+    execution:{id:'execution',state:'prepared',manifest:{synthetic:false}}};
+  f.api.request=async()=>({items:[draft],unassigned_events:[],binding:{channel:'weixin_personal'}});
+  await f.tasks.refresh();f.root.getElementById('task-select').value='personal';f.root.getElementById('task-select').fire('change');
+  const content=walk(f.root.getElementById('task-current')).map(el=>el.textContent).join(' ');
+  assert.match(content,/本人微信/);assert.doesNotMatch(content,/模拟/);
+  assert.equal(f.root.getElementById('task-collect').disabled,true);
+  assert.equal(walk(f.root.getElementById('task-current')).some(el=>el.tagName==='button'),false);
+  f.tasks.dispose();
+});
 test('pending Weixin operation locks task writes while preserving read controls',async()=>{
   let blocked=true;const f=fixture({isBlocked:()=>blocked});await tick();
   const input=f.root.getElementById('task-instruction'),save=f.root.getElementById('task-collect');

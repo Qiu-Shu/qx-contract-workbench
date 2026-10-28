@@ -21,6 +21,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   const node=(tag,text)=>{const el=root.createElement(tag);if(text!==undefined)el.textContent=text;return el;};
   const tell=text=>{byId('task-notice').textContent=text;};
   const current=()=>page.items.find(item=>item.id===selected);
+  const personal=draft=>draft?.synthetic===false||draft?.events?.some(event=>event.channel==='weixin_personal');
   const active=()=>!closed&&!revoked;
   const writable=()=>active()&&!readonly&&!busy&&!pending&&!controller.state.loading&&!isBlocked();
   const token=()=>({cid,epoch});
@@ -32,8 +33,8 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   function link(text,url){const el=node('a',text);el.href=url;return el;}
   function controls(){
     const locked=!writable();
-    byId('task-instruction').disabled=locked;byId('task-select').disabled=locked;
-    byId('task-collect').disabled=locked||['paused','cancelled'].includes(current()?.state);
+    byId('task-instruction').disabled=locked||personal(current());byId('task-select').disabled=locked;
+    byId('task-collect').disabled=locked||personal(current())||['paused','cancelled'].includes(current()?.state);
     byId('task-refresh').disabled=busy||!active();
     byId('task-retry').hidden=!pending;byId('task-retry').disabled=busy||readonly||!active();
     byId('task-retry').textContent=pending?.query?'查询本次关联结果':'重试同一次操作';
@@ -164,6 +165,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
     }finally{creating=false;}
   }
   async function collect(){
+    if(personal(current()))return;
     const text=byId('task-instruction').value.trim();
     const chosen=checks.filter(el=>el.checked).map(el=>el.value);
     if(!text&&!chosen.length){tell('请输入指令或勾选已上传附件。');return;}
@@ -175,7 +177,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
       return media(file,materials);
     }));
     if(!valid(key))return;
-    const binding=page.binding||await api.request('/api/assistant/conversations/'+encodeURIComponent(cid)+'/task-bindings',{method:'POST'});
+    const binding=(page.binding?.channel!=='weixin_personal'&&page.binding)||await api.request('/api/assistant/conversations/'+encodeURIComponent(cid)+'/task-bindings',{method:'POST'});
     if(!valid(key))return;
     const event={event_id:uuid(),text,media:files,...(selected?{task_id:selected}:{start_new:true})};
     await submit('/api/task-bindings/'+binding.id+'/batches','POST',
@@ -277,18 +279,22 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   function render(){
     writeControls=[];const select=byId('task-select');select.replaceChildren();
     const fresh=node('option','新建模拟任务');fresh.value='';select.append(fresh);
-    for(const item of page.items){const option=node('option',(labels[item.state]||item.state)+' · '+(item.instruction.slice(0,45)||'待补指令'));option.value=item.id;select.append(option);}
+    for(const item of page.items){const option=node('option',(personal(item)?'本人微信 · ':'合成演练 · ')+(labels[item.state]||item.state)+' · '+(item.instruction.slice(0,45)||'待补指令'));option.value=item.id;select.append(option);}
     select.value=selected;
     const host=byId('task-current');host.replaceChildren();const draft=current();
     if(draft){
       host.id='task-current';
-      host.append(node('p','第 '+draft.revision+' 版 · '+labels[draft.state]));
+      host.append(node('p',(personal(draft)?'本人微信收件 · ':'合成演练 · ')+'第 '+draft.revision+' 版 · '+labels[draft.state]));
+      if(personal(draft))host.append(node('p','此任务使用本人微信通道。分析状态和成果见当前聊天；补充材料或口令可在微信中发送。'));
       const text=node('p',draft.instruction||'还没有审查指令。');text.className='task-saved-instruction';host.append(text);
       const events=node('details'),summary=node('summary','已收集 '+draft.events.length+' 条记录');events.append(summary);
-      for(const event of draft.events){const row=node('div');row.className='task-event';if(event.text)row.append(node('p',event.text));for(const item of event.media)renderMedia(draft,event,item,row);events.append(row);}
+      for(const event of draft.events){const row=node('div');row.className='task-event';if(event.text)row.append(node('p',event.text));for(const item of event.media){
+        if(personal(draft))row.append(node('p',item.name+' · '+(item.status==='ready'?'读取就绪':'等待读取')));
+        else renderMedia(draft,event,item,row);
+      }events.append(row);}
       host.append(events);
       if(draft.blockers.length)host.append(node('p','尚需处理：'+draft.blockers.map(code=>blockers[code]||'核对材料与版本').join('；')));
-      if(draft.state==='collecting'){
+      if(!personal(draft)&&draft.state==='collecting'){
         const available=new Map();
         for(const event of draft.events)for(const original of event.media){
           const resolved=[...(draft.media_resolutions||[])].reverse().find(item=>item.event_id===event.id&&item.media_id===original.media_id);
@@ -304,14 +310,14 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
         }
         host.append(button('暂停收集',()=>update(draft,{action:'pause'})),button('取消任务',()=>update(draft,{action:'cancel'})),
           button('冻结材料',()=>submit('/api/task-drafts/'+draft.id+'/freeze','POST',{expected_revision:draft.revision,manifest_sha256:draft.manifest_sha256}),{disabled:draft.blockers.length>0}));
-      }else if(['paused','cancelled'].includes(draft.state))host.append(button('恢复收集',()=>update(draft,{action:'resume'})));
-      if(draft.execution)renderExecution(draft.execution,host);
+      }else if(!personal(draft)&&['paused','cancelled'].includes(draft.state))host.append(button('恢复收集',()=>update(draft,{action:'resume'})));
+      if(draft.execution&&!personal(draft))renderExecution(draft.execution,host);
     }
     const unassigned=byId('task-unassigned');unassigned.replaceChildren();
     if(page.unassigned_events.length){
       unassigned.append(node('p','有 '+page.unassigned_events.length+' 条记录尚未分配任务。请选择收集中的任务后归入。'));
       for(const event of page.unassigned_events){const row=node('div',event.text||event.media.map(item=>item.name).join('、'));
-        if(draft?.state==='collecting')row.append(button('归入当前任务',()=>update(draft,{action:'assign',event_ids:[event.id]})));unassigned.append(row);}
+        if(!personal(draft)&&event.channel!=='weixin_personal'&&draft?.state==='collecting')row.append(button('归入当前任务',()=>update(draft,{action:'assign',event_ids:[event.id]})));unassigned.append(row);}
     }
     controls();
   }

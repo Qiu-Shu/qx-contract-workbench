@@ -9,6 +9,7 @@ const { createModelCredentialStore } = require('./model-credentials.cjs');
 const { registerModelSettings } = require('./model-settings.cjs');
 const { createModelSession, automaticAnalysisPolicy, validAutomaticAnalysis } = require('./model-session.cjs');
 const { registerModelApproval } = require('./model-approval.cjs');
+const { registerPersonalWeixin } = require('./personal-weixin.cjs');
 const { createModelApprovalWindow } = require('./model-approval-window.cjs');
 const { registerAssistantModelBridge, autoConfigureModel } = require('./model-bridge.cjs');
 const { navigationAllowed, setupSenderAllowed, validLibraryRoot, clipboardWriteAllowed } = require('./policy.cjs');
@@ -25,7 +26,7 @@ app.setPath('userData', dataParent);
 const setupURL = pathToFileURL(path.join(__dirname, 'setup.html')).href;
 const settingsPath = path.join(dataParent, 'desktop-settings.json');
 let win, backend, maintenance, modelSettings, modelApproval, approvalWindow, origin = '', stopping = false, busy = false;
-let mainModelSession = null;
+let mainModelSession = null, personalWeixin = null;
 let settings = {}, state = {mode:'loading', message:'正在打开工作台…'};
 let documentEpoch=0, settingsReturn=null, activeBackend=null;
 function workspacePath(){return path.join(dataParent,'workspaces',settings.workspace||'main');}
@@ -224,7 +225,11 @@ else {
     win = new BrowserWindow({width:1240,height:850,minWidth:640,minHeight:540,backgroundColor:'#f2f5f8',show:false,
       webPreferences:{preload:path.join(__dirname,'preload.cjs'),session:isolated,nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
     win.webContents.setWindowOpenHandler(()=>({action:'deny'}));
-    win.webContents.on('did-start-navigation',(_event,_url,inPlace,isMainFrame)=>{if(isMainFrame&&!inPlace)documentEpoch++;});
+    win.webContents.on('did-start-navigation',(_event,_url,_inPlace,isMainFrame)=>{if(isMainFrame)documentEpoch++;});
+    win.webContents.on('did-navigate-in-page',(_event,_url,isMainFrame)=>{if(isMainFrame)documentEpoch++;});
+    win.webContents.on('did-navigate',(_event,url)=>{
+      if(origin&&url===origin+'/login')void personalWeixin?.invalidate();
+    });
     win.webContents.on('will-navigate',(event,url)=>{if(!navigationAllowed(url,origin,setupURL)) event.preventDefault();});
     win.webContents.on('will-redirect',(event,url)=>{if(!navigationAllowed(url,origin,setupURL)) event.preventDefault();});
     win.webContents.on('will-attach-webview',event=>event.preventDefault());
@@ -294,19 +299,23 @@ else {
     registerAssistantModelBridge({ipcMain,runtime:modelSession,isAllowed:isAssistantPage,persist:persistModel});
     modelSettings={wait:()=>Promise.allSettled(handlers.map(handler=>handler.wait()))};
     approvalWindow=createModelApprovalWindow({BrowserWindow,ipcMain,session});
-    modelApproval=registerModelApproval({ipcMain,runtime:modelSession,judgeRuntime:judgeSession,
-      isBusy:()=>busy||stopping,setBusy:value=>{busy=value;},confirm:approvalWindow.confirm,
-      captureContext:event=>{
+    const captureContext=(event,{allowHome=false}={})=>{
         const owned=activeBackend,epoch=documentEpoch,url=win?.webContents.getURL();
         const valid=()=>Boolean(win&&!win.isDestroyed()&&!stopping&&state.mode==='ready'&&
           owned&&activeBackend===owned&&owned.instance===backend&&!backend.closing&&origin===owned.origin&&
           !owned.workspace.startsWith('recovered/')&&epoch===documentEpoch&&win.webContents.getURL()===url&&
           event.sender===win.webContents&&event.senderFrame===win.webContents.mainFrame&&event.senderFrame.url===url);
-        if(!valid()||!url.startsWith(origin+'/assistant/'))return null;
+        if(!valid())return null;
+        if(allowHome&&url===origin+'/assistant')return {origin,session:isolated,parent:win,backend:owned.instance,
+          workspace:owned.workspace,conversation_id:null,guard:valid};
+        if(!url.startsWith(origin+'/assistant/'))return null;
         const suffix=url.slice((origin+'/assistant/').length);
         if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(suffix))return null;
-        return {origin,session:isolated,parent:win,backend:owned.instance,conversation_id:suffix,guard:valid};
-      }});
+        return {origin,session:isolated,parent:win,backend:owned.instance,workspace:owned.workspace,conversation_id:suffix,guard:valid};
+      };
+    modelApproval=registerModelApproval({ipcMain,runtime:modelSession,judgeRuntime:judgeSession,
+      isBusy:()=>busy||stopping,setBusy:value=>{busy=value;},confirm:approvalWindow.confirm,captureContext});
+    personalWeixin=registerPersonalWeixin({ipcMain,runtime:modelSession,captureContext:event=>captureContext(event,{allowHome:true})});
     ipcMain.handle('desktop:resume',resume);
     ipcMain.handle('desktop:start',(event,values)=>{
       if (!isSetup(event) || busy) return {ok:false};
@@ -327,5 +336,5 @@ app.on('before-quit',event=>{
   event.preventDefault(); stopping = true;
   approvalWindow?.close();
   if (win && !win.isDestroyed()) win.hide();
-  Promise.allSettled([backend?.stop(),maintenance?.stop(),modelSettings?.wait(),modelApproval?.wait()]).finally(()=>app.quit());
+  Promise.allSettled([personalWeixin?.close(),backend?.stop(),maintenance?.stop(),modelSettings?.wait(),modelApproval?.wait()]).finally(()=>app.quit());
 });

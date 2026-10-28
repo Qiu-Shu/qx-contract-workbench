@@ -5,6 +5,10 @@ contextBridge.exposeInMainWorld('desktopAssistant',Object.freeze({
   authorizeMaterial:value=>ipcRenderer.invoke('desktop:approve-material',value),
   authorizeProfile:value=>ipcRenderer.invoke('desktop:approve-profile',value),
   modelStatus:()=>ipcRenderer.invoke('desktop:assistant-model-status'),
+  personalWeixinStart:()=>ipcRenderer.invoke('desktop:personal-weixin-start',{}),
+  personalWeixinDisable:()=>ipcRenderer.invoke('desktop:personal-weixin-disable',{}),
+  personalWeixinVerify:code=>ipcRenderer.invoke('desktop:personal-weixin-verify',{code}),
+  personalWeixinStatus:()=>ipcRenderer.invoke('desktop:personal-weixin-status',{}),
   modelSwitch:()=>ipcRenderer.invoke('desktop:assistant-model-switch')
 }));
 contextBridge.exposeInMainWorld('desktopSetup',Object.freeze({

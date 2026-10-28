@@ -32,7 +32,8 @@
       "mcp",
       "python-docx",
       "jinja2",
-      "httpx2"
+      "httpx2",
+      "qrcode"
     ],
     "test": [
       "pytest",
@@ -17463,6 +17464,86 @@
       ],
       "installed_metadata_status": "T10_actual_installed_metadata_byte_verified",
       "installed_version": "3.0.4"
+    },
+    {
+      "name": "qrcode",
+      "version": "8.2",
+      "artifact_filename": "qrcode-8.2-py3-none-any.whl",
+      "artifact_url": "https://files.pythonhosted.org/packages/dd/b8/d2d6d731733f51684bbf76bf34dab3b70a9148e8f2cef2bb544fccec681a/qrcode-8.2-py3-none-any.whl",
+      "artifact_sha256": "16e64e0716c14960108e85d853062c9e8bba5ca8252c0b4d0231b9df4060ff4f",
+      "artifact_bytes": 45986,
+      "artifact_hash_evidence": "M6_cached_official_wheel_rehashed",
+      "artifact_tags": [
+        "py3-none-any"
+      ],
+      "registry_url": "https://pypi.org/pypi/qrcode/8.2/json",
+      "registry_sha256": "2761ab5af63a844c325eb61712dc37b169d8a169ad23b9be2c1af18696fc097d",
+      "registry_cache": ".audit-local/m6-weixin-qr/registry/qrcode-8.2.json",
+      "wheel_cache": ".audit-local/m6-weixin-qr/wheelhouse/qrcode-8.2-py3-none-any.whl",
+      "metadata_sha256": "3a8f1be6da9428b97806292d05e3148264b9053c22e79894918b670e930afc36",
+      "metadata_cache": ".audit-local/m6-weixin-qr/metadata/qrcode-8.2.METADATA",
+      "requires_python": ">=3.9,<4.0",
+      "license_expression": "BSD-3-Clause AND MIT",
+      "license_expression_source": "wheel_license_text",
+      "declared_license": "BSD",
+      "declared_license_classifiers": [
+        "License :: OSI Approved :: BSD License",
+        "License :: Other/Proprietary License"
+      ],
+      "license_evidence": [
+        {
+          "path": "qrcode-8.2.dist-info/LICENSE",
+          "local_target": "sources/third-party-notices/runtime/qrcode-8.2/LICENSE",
+          "sha256": "40dfb903c94ee3f789500131311186548ecba5cefd3557623d7700e2522ab994",
+          "bytes": 2143,
+          "artifact_url": "https://files.pythonhosted.org/packages/dd/b8/d2d6d731733f51684bbf76bf34dab3b70a9148e8f2cef2bb544fccec681a/qrcode-8.2-py3-none-any.whl"
+        }
+      ],
+      "license_review": "fixed_BSD_text_read_development_only_production_not_approved",
+      "origin_project_urls": {
+        "Homepage": "https://github.com/lincolnloop/python-qrcode"
+      },
+      "registry_vulnerabilities": [],
+      "vendored_distributions": [],
+      "bundled_code_license_declarations": [
+        {
+          "component": "original pyqrnative / QRCode for Javascript",
+          "declared_license": "MIT",
+          "declaration_source": "qrcode-8.2.dist-info/LICENSE",
+          "note": "Original fork notice is retained in the exact packaged license file; not an upstream Git verification."
+        }
+      ],
+      "upstream_commit": null,
+      "transitive_requires": [
+        "colorama ; sys_platform == \"win32\"",
+        "pillow (>=9.1.0) ; extra == \"pil\" or extra == \"all\"",
+        "pypng ; extra == \"png\" or extra == \"all\""
+      ],
+      "review_status": "read_verified",
+      "scope": "development",
+      "approved_by": null,
+      "approved_at": null,
+      "approved_scope": [],
+      "enabled_extras": [],
+      "groups": [
+        "base"
+      ],
+      "known_limits": [
+        "no_production_approval",
+        "no_live_weixin_scan_or_native_build_in_this_task"
+      ],
+      "resolved_dependencies": [
+        {
+          "name": "colorama",
+          "version": "0.4.6",
+          "requirement": "colorama ; sys_platform == \"win32\"",
+          "extras": []
+        }
+      ],
+      "excluded_requirements": [
+        "pillow (>=9.1.0) ; extra == \"pil\" or extra == \"all\"",
+        "pypng ; extra == \"png\" or extra == \"all\""
+      ]
     }
   ],
   "build_packages": [
@@ -18322,7 +18403,8 @@
       "mcp==2.2.0",
       "python-docx==1.2.0",
       "jinja2==3.1.6",
-      "httpx2==2.13.1"
+      "httpx2==2.13.1",
+      "qrcode==8.2"
     ],
     "test": [
       "pytest==9.0.3",
@@ -18588,6 +18670,13 @@
     "actual_new_packages": 2,
     "normal_site_bootstrap_enabled": true,
     "manual_postinstall": false,
+    "production_approval": null
+  },
+  "M6_local_QR_component": {
+    "package": "qrcode==8.2",
+    "rendering": "local_SvgPathImage",
+    "source": "fixed_official_wheel",
+    "scope": "development",
     "production_approval": null
   }
 }

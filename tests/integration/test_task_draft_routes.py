@@ -68,7 +68,7 @@ def test_simulated_task_card_is_separate_from_chat_and_shipped(chat):
     page = client.get('/assistant/' + conversation['scope']['conversation_id'])
     assert page.status_code == 200
     assert 'id="task-draft-panel"' in page.text
-    assert '模拟合同任务' in page.text
+    assert '收件任务' in page.text and '本人微信与合成演练分别标记' in page.text
     assert 'id="composer-form"' in page.text
     script = client.get('/static/assistant-tasks.mjs')
     assert script.status_code == 200

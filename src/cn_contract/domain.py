@@ -4450,6 +4450,7 @@ class TaskChannelBindingView(DomainModel):
 
 class TaskInboxEventView(DomainModel):
     id: UUID
+    channel: Literal['synthetic', 'weixin_personal'] = Field(default='synthetic', exclude_if=lambda value:value == 'synthetic')
     binding_id: UUID
     event_id: NonEmpty
     text: str
@@ -4578,6 +4579,7 @@ class TaskExecutionView(DomainModel):
 
 class TaskDraftView(DomainModel):
     id: UUID
+    synthetic: StrictBool = Field(default=True, exclude_if=lambda value:value is True)
     conversation_id: UUID
     parent_draft_id: UUID | None
     revision: PositiveInt

@@ -419,7 +419,7 @@ def test_status_same_session_and_chat_and_no_http_start(world):
         assert runtime.status(actor,other.scope.conversation_id).qr_url is None
         app=FastAPI();attach_runtime(app,runtime)
         routes=[r for r in app.routes if 'personal-weixin' in r.path]
-        assert len(routes)==1 and routes[0].methods=={'GET'}
+        assert len(routes)==2 and all(route.methods=={'GET'} for route in routes)
         async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app),base_url='http://test',
                 cookies={'qx_session':runtime._value.session_token}) as client:
             result=await client.get(f'/api/assistant/conversations/{cid}/personal-weixin/status')

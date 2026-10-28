@@ -490,7 +490,8 @@ class PersonalWeixinRuntime:
 
 
 def attach_runtime(app, runtime):
-    from fastapi import Request
+    from fastapi import Request, HTTPException
+    from fastapi.responses import Response, JSONResponse
     from ..web.request_context import actor_in
     previous = app.router.lifespan_context
     app.state.personal_weixin_runtime = runtime
@@ -499,7 +500,24 @@ def attach_runtime(app, runtime):
     async def status(identifier: UUID, request: Request):
         with runtime.database.session() as db:
             actor = actor_in(request,db)
-        return runtime.status(actor,identifier)
+        return JSONResponse(runtime.status(actor,identifier).model_dump(mode='json'),headers={'Cache-Control':'no-store'})
+
+    @app.get('/api/assistant/conversations/{identifier}/personal-weixin/qr.svg')
+    async def qr(identifier: UUID, request: Request):
+        with runtime.database.session() as db:
+            actor = actor_in(request,db)
+        value = runtime.status(actor,identifier)
+        if request.query_params:
+            raise HTTPException(400)
+        if value.state != 'waiting_scan' or not value.qr_url:
+            raise HTTPException(404)
+        import qrcode
+        from qrcode.image.svg import SvgPathImage
+        # Only the runtime's validated, ephemeral QR content enters this local encoder.
+        image = qrcode.make(value.qr_url, image_factory=SvgPathImage)
+        return Response(image.to_string(),media_type='image/svg+xml',headers={
+            'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
+            'Content-Security-Policy':"default-src 'none'; style-src 'none'; sandbox"})
 
     @asynccontextmanager
     async def lifespan(application):

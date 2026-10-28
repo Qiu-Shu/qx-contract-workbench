@@ -29,7 +29,7 @@ python_license = Path(sys.base_prefix)/'LICENSE.txt'
 if python_license.is_file(): assets.append((str(python_license), 'third-party-licenses/python'))
 analysis = Analysis([str(root / 'scripts/desktop_backend_entry.py')],
     pathex=[str(root/'src')], binaries=[], datas=assets,
-    hiddenimports=collect_submodules('uvicorn') + ['sqlalchemy.dialects.sqlite', 'pwdlib.hashers.argon2'],
+    hiddenimports=collect_submodules('uvicorn') + ['sqlalchemy.dialects.sqlite', 'pwdlib.hashers.argon2', 'qrcode.image.svg'],
     excludes=['pytest','scrapling','playwright','tkinter'], noarchive=False)
 pyz = PYZ(analysis.pure)
 exe = EXE(pyz, analysis.scripts, [], exclude_binaries=True, name='qx-backend',

@@ -78,7 +78,8 @@ def _event(row, db, *, task_id=None):
             WHERE event_id=:id ORDER BY rowid LIMIT 1'''),{'id':row['id']})
     data = value.model_dump(mode='python')
     data['task_id'] = task_id
-    return d.TaskInboxEventView(**data,id=row['id'],binding_id=row['binding_id'],
+    channel = db.scalar(text('SELECT channel FROM task_channel_bindings WHERE id=:id'),{'id':row['binding_id']})
+    return d.TaskInboxEventView(**data,id=row['id'],binding_id=row['binding_id'],channel=channel,
         association='assigned' if task_id else 'unassigned',created_at=row['created_at'])
 
 
@@ -195,7 +196,7 @@ def read_draft(actor, identifier, db):
         manifest,blockers = _manifest(actor,row,db)
     return d.TaskDraftView(**row,events=tuple(_event(event,db,task_id=identifier) for event in _events(identifier,db)),
         media_resolutions=_resolutions(identifier,db),manifest_sha256=_digest(manifest.model_dump(mode='json')),
-        blockers=blockers,execution=execution).model_copy(update={'main_attachment_id':manifest.main_attachment_id})
+        blockers=blockers,execution=execution,synthetic=manifest.synthetic).model_copy(update={'main_attachment_id':manifest.main_attachment_id})
 
 
 def list_drafts(actor, cid, db):

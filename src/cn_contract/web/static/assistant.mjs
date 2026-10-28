@@ -9,6 +9,7 @@ import {bindTaskDrafts} from './assistant-tasks.mjs';
 import {bindWeixinAuthorization} from './assistant-weixin.mjs';
 import {bindWeixinGenerations} from './assistant-weixin-generations.mjs';
 import {bindWeixinPending} from './assistant-weixin-pending.mjs';
+import {bindPersonalWeixin} from './assistant-weixin-personal.mjs';
 import {bindOutputs} from './assistant-outputs.mjs';
 import {bindFollowupWorksheet} from './followup-worksheet.mjs';
 import {bindEvidenceWorksheet} from './evidence-worksheet.mjs';
@@ -17,7 +18,7 @@ import {bindReceptionWorksheet} from './reception-worksheet.mjs';
 const byId=id=>document.getElementById(id);
 const readonly=document.body.dataset.readonly==='true';
 let composer, materials, citations, profile, outputs, worksheet, evidence, followups, tasks, weixin, weixinHistory, weixinPending, timer, listCursor=null, listEpoch=0, closed=false;
-let generationTimer, pollTimer, generationKey=null;
+let generationTimer, pollTimer, generationKey=null, personalWeixin;
 let pendingRoute=document.body.dataset.conversationId || null;
 const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing(),onCitation:(id,trigger)=>void citations.open(id,trigger),
   onToggleCitation:id=>controller.toggleContextCitation(id),
@@ -66,6 +67,7 @@ function drawState(state) {
   weixin?.state(state);
   weixinHistory?.state(state);
   weixinPending?.state(state);
+  personalWeixin?.state(state);
   if(pendingRoute && !state.id && state.status!=='revoked') {
     byId('composer').disabled=true;byId('save-draft').disabled=true;byId('send').disabled=true;
     byId('add-material').disabled=true;
@@ -156,6 +158,18 @@ weixinPending=bindWeixinPending({controller,api,readonly,getAuthorization:()=>we
   isBlocked:()=>weixin.hasPending()||weixinHistory.hasPending()||tasks.hasPending(),onActivityChange:updateWeixinControls,
   onDispatched:value=>value.conversation_id===controller.state.id?tasks.refresh():Promise.resolve()});
 for(const event of ['input','change'])byId('task-draft-panel').addEventListener(event,updateWeixinControls);
+const localPending=()=>materials.hasSelection()||followups.hasPending()||evidence.hasPending()||worksheet.hasPending()||
+  tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()||weixinPending.hasPending()||
+  ['generation','research','context','business','materialGeneration'].some(key=>
+    ['checking','confirming','submitting','unknown'].includes(controller.state[key]?.phase));
+personalWeixin=bindPersonalWeixin({controller,bridge:window.desktopAssistant,readonly,isBlocked:localPending,
+  onIncoming:async()=>{
+    const id=controller.state.id;
+    if(!await controller.refresh(false,()=>!localPending())||id!==controller.state.id||localPending())return;
+    if(!controller.state.dirty&&!controller.state.conflict)await controller.refreshGeneration();
+    if(id===controller.state.id&&!localPending())await tasks.refresh();
+  }});
+personalWeixin.state(controller.state);void personalWeixin.refresh();
 
 const examples={client_reply:'这是客户的咨询，帮我理清诉求并起草回复：',
   material_organize:'请帮我整理这次咨询的事实线索和待补材料：',
@@ -259,16 +273,20 @@ byId('logout').addEventListener('click',async()=>{
   if(followups.hasPending()||evidence.hasPending()||worksheet.hasPending()||tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()||weixinPending?.hasPending()){notice('仍有未保存内容或未查明的结果，请先处理后退出。');return;}
   clearTimeout(timer);
   if(!await safely(()=>controller.save()) || !controller.canLeave())return;
+  if(typeof window.desktopAssistant?.personalWeixinDisable==='function'&&!readonly){
+    const result=await safely(()=>window.desktopAssistant.personalWeixinDisable());
+    if(result?.ok!==true){notice('尚未确认微信已断开，请重新读取连接状态后退出。');return;}
+  }
   if(await safely(()=>api.request('/api/logout',{method:'POST'}))) {
-    closed=true;weixin.dispose();weixinHistory.dispose();weixinPending.dispose();controller.close();window.location.assign('/login');
+    closed=true;personalWeixin.dispose();weixin.dispose();weixinHistory.dispose();weixinPending.dispose();controller.close();window.location.assign('/login');
   }
 });
 window.addEventListener('beforeunload',event=>{
-  if(!controller.canLeave() || composer.isComposing() || materials.hasSelection() || followups.hasPending() || evidence.hasPending() || worksheet.hasPending() || tasks.hasPending() || weixin.hasPending() || weixinHistory.hasPending()||weixinPending?.hasPending()) {event.preventDefault();event.returnValue='';}
+  if(!controller.canLeave() || composer.isComposing() || materials.hasSelection() || followups.hasPending() || evidence.hasPending() || worksheet.hasPending() || tasks.hasPending() || weixin.hasPending() || weixinHistory.hasPending()||weixinPending?.hasPending()||personalWeixin?.hasPending()) {event.preventDefault();event.returnValue='';}
 });
 window.addEventListener('pagehide',()=>{
   closed=true;++listEpoch;clearTimeout(timer);clearTimeout(generationTimer);clearTimeout(pollTimer);
-  composer.dispose();materials.dispose();citations.dispose();profile.close();outputs.dispose();worksheet.dispose();evidence.dispose();followups.dispose();tasks.dispose();weixin.dispose();weixinHistory.dispose();weixinPending.dispose();controller.close();
+  composer.dispose();materials.dispose();citations.dispose();profile.close();outputs.dispose();worksheet.dispose();evidence.dispose();followups.dispose();tasks.dispose();personalWeixin.dispose();weixin.dispose();weixinHistory.dispose();weixinPending.dispose();controller.close();
 });
 
 drawState(controller.state);

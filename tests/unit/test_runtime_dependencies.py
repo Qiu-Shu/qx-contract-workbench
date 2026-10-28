@@ -18,11 +18,12 @@ def gate():
 def test_runtime_gate_checks_fixed_bytes_and_new_template_release_blockers():
     module=gate();path=ROOT/'sources/runtime-dependencies.lock.json'
     dev=module.verify_manifest(path,'development',project_root=ROOT)
-    assert dev['ok'] and dev['checked_packages']==55 and dev['checked_build_packages']==1
+    assert dev['ok'] and dev['checked_packages']==56 and dev['checked_build_packages']==1
     release=module.verify_manifest(path,'release',project_root=ROOT)
     assert not release['ok']
     assert 'DEPENDENCY_PRODUCTION_APPROVAL_MISSING:jinja2' in release['errors']
     assert 'DEPENDENCY_PRODUCTION_APPROVAL_MISSING:markupsafe' in release['errors']
+    assert 'DEPENDENCY_PRODUCTION_APPROVAL_MISSING:qrcode' in release['errors']
     assert 'BUILD_PRODUCTION_APPROVAL_MISSING:setuptools' in release['errors']
     assert 'TEMPLATE_COMPONENT_PRODUCTION_APPROVAL_MISSING' in release['errors']
 
@@ -53,7 +54,9 @@ def test_gate_does_not_accept_inconsistent_or_ambiguous_evidence(tmp_path,defect
     elif defect=='python':target['requires_python']='<0'
     elif defect=='requires':target['transitive_requires']=['fake-runtime==0']
     elif defect=='extras':target['enabled_extras']=['fake']
-    elif defect=='native_sha':target['native_member_evidence']['native_members'][0]['sha256']='0'*64
+    elif defect=='native_sha':
+        target=next(p for p in payload['packages'] if p.get('native_member_evidence',{}).get('native_members'))
+        target['native_member_evidence']['native_members'][0]['sha256']='0'*64
     elif defect=='native_scalar':target['native_member_evidence']=False
     elif defect in {'scope_string','nonutc'}:
         mode='release'

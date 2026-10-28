@@ -7,7 +7,7 @@ name = "qx-contract-workbench"
 version = "0.1.0"
 description = "群兴律所内部合同审查工程 受限开发版本"
 requires-python = ">=3.12,<3.13"
-dependencies = ["pydantic==2.13.5", "SQLAlchemy==2.0.54", "fastapi==0.142.2", "pwdlib[argon2]==0.3.1", "pdfplumber==0.11.10", "defusedxml==0.7.1", "mcp==2.2.0", "python-docx==1.2.0", "Jinja2==3.1.6", "httpx2==2.13.1"]
+dependencies = ["pydantic==2.13.5", "SQLAlchemy==2.0.54", "fastapi==0.142.2", "pwdlib[argon2]==0.3.1", "pdfplumber==0.11.10", "defusedxml==0.7.1", "mcp==2.2.0", "python-docx==1.2.0", "Jinja2==3.1.6", "httpx2==2.13.1", "qrcode==8.2"]
 
 [project.optional-dependencies]
 test = ["pytest==9.0.3", "httpx==0.28.1"]

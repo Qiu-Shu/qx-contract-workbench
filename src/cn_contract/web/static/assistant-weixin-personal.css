@@ -1,0 +1,11 @@
+.personal-weixin { margin-block: 1rem; }
+.personal-weixin > summary { cursor: pointer; padding: .65rem 0; font-weight: 600; }
+.personal-weixin-summary { margin-inline-start: .75rem; font-size: .875rem; font-weight: 400; }
+.personal-weixin-body { padding-block: .25rem 1rem; overflow-wrap: anywhere; }
+.personal-weixin-body p { margin-block: .5rem; }
+.personal-weixin-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .75rem; }
+.personal-weixin-qr { margin: 1rem 0; }
+.personal-weixin-qr img { width: 208px; max-width: 100%; height: auto; background: #fff; }
+.personal-weixin-qr figcaption { margin-top: .5rem; }
+.personal-weixin-code { max-width: 24rem; }
+.personal-weixin-code input { width: 100%; min-height: 2.75rem; margin-block: .5rem; font: inherit; }

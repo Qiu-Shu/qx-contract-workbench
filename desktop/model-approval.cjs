@@ -317,4 +317,4 @@ function registerModelApproval({ipcMain,runtime,judgeRuntime,captureContext,isBu
   ipcMain.handle('desktop:approve-profile',(event,value)=>approveSelection(event,value,true));
   return {wait:()=>Promise.allSettled([pending])};
 }
-module.exports={registerModelApproval};
+module.exports={registerModelApproval,readJSON,cookie,tokenFor};

@@ -250,7 +250,7 @@ export function createDraftController(api, {
       return fail(error, token);
     }
   }
-  async function refresh(fromGeneration = false) {
+  async function refresh(fromGeneration = false, canApply = () => true) {
     if (closed || !state.id || state.loading || channel || pending || creating || reading ||
         (!fromGeneration && (generation?.unknown() || research?.unknown() || business?.unknown() || context?.unknown() || materialGeneration?.unknown()))) return false;
     const token = epoch, id = state.id, baselineAtStart = state.view, marker = {};
@@ -259,7 +259,7 @@ export function createDraftController(api, {
       const view = checked(await api.getConversation(id), id);
       const materials = await materialsFor(view);
       if (!current(token)) return false;
-      if (channel || pending || state.view !== baselineAtStart) return false;
+      if (channel || pending || state.view !== baselineAtStart || !canApply()) return false;
       const previous = state.view;
       if (state.conflict || (state.dirty && (!sameScope(view.scope, previous.scope) ||
           view.composer_revision !== previous.composer_revision || view.draft_input !== state.savedText))) {
