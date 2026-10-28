@@ -17,7 +17,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   let cid=null,page={items:[],unassigned_events:[],binding:null},selected='',closed=false,revoked=false;
   let epoch=0,reading=0,busy=false,pending=null,creating=false,createKey=null,materialKey='';
   let checks=[],writeControls=[],materialsView=null,materialScope=null,businessRun=null;
-  const mediaChoices=new Map();
+  const mediaChoices=new Map(),mainChoices=new Map();
   const node=(tag,text)=>{const el=root.createElement(tag);if(text!==undefined)el.textContent=text;return el;};
   const tell=text=>{byId('task-notice').textContent=text;};
   const current=()=>page.items.find(item=>item.id===selected);
@@ -26,6 +26,8 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   const writable=()=>active()&&!readonly&&!busy&&!pending&&!controller.state.loading&&!isBlocked();
   const token=()=>({cid,epoch});
   const valid=key=>active()&&key.cid===cid&&key.epoch===epoch;
+  const edits=()=>JSON.stringify([selected,byId('task-instruction').value,checks.filter(el=>el.checked).map(el=>el.value),
+    [...mainChoices],[...mediaChoices].map(([key,value])=>[key,value.attachmentId])]);
   function button(text,action,{disabled=false}={}) {
     const el=node('button',text);el.type='button';el.className='quiet-button';el.disabled=!writable()||disabled;
     writeControls.push({el,disabled});el.addEventListener('click',()=>guard(action));return el;
@@ -98,22 +100,23 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   }
   function clear(){
     ++epoch;++reading;page={items:[],unassigned_events:[],binding:null};selected='';pending=null;
-    mediaChoices.clear();materialsView=null;materialScope=null;businessRun=null;
+    mediaChoices.clear();mainChoices.clear();materialsView=null;materialScope=null;businessRun=null;
     byId('task-current').replaceChildren();byId('task-unassigned').replaceChildren();
     byId('task-attachments').replaceChildren();byId('task-select').replaceChildren();
     byId('task-instruction').value='';checks=[];writeControls=[];materialKey='';controls();
   }
   async function refresh(){
     if(!cid||!active())return;
-    const key=token(),read=++reading;
+    const key=token(),read=++reading,local=edits(),write=pending,wasBusy=busy;
     let result;
     try{result=await api.request('/api/assistant/conversations/'+encodeURIComponent(cid)+'/task-drafts');}
     catch(error){
       if(valid(key)&&[401,403].includes(error.status)){controller.revoke(error);revoked=true;clear();}
       throw error;
     }
-    if(!valid(key)||read!==reading)return;
+    if(!valid(key)||read!==reading||local!==edits()||write!==pending||wasBusy!==busy)return;
     const previous=current();page=result;
+    for(const [id,value] of mainChoices)if(page.items.some(item=>item.id===id&&item.main_attachment_id===value))mainChoices.delete(id);
     if(previous&&current()?.revision!==previous.revision)mediaChoices.clear();
     if(!selected&&hash.startsWith('#task-')){selected=hash.slice(6);hash='';byId('task-draft-panel').open=true;}
     if(selected&&!page.items.some(item=>item.id===selected))selected='';
@@ -305,7 +308,14 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
           const label=node('label','主合同'),main=node('select');main.disabled=!writable();label.append(main);host.append(label);
           const empty=node('option','选择主合同');empty.value='';main.append(empty);
           for(const file of available.values()){const option=node('option',file.name);option.value=file.attachment_id;main.append(option);}
-          main.value=draft.main_attachment_id||(available.size===1?[...available.keys()][0]:'');
+          const saved=draft.main_attachment_id||(available.size===1?[...available.keys()][0]:'');
+          main.value=mainChoices.has(draft.id)?mainChoices.get(draft.id):saved;
+          writeControls.push({el:main,disabled:false});
+          main.addEventListener('change',()=>{
+            if(!writable())return;
+            if(main.value===saved)mainChoices.delete(draft.id);else mainChoices.set(draft.id,main.value);
+            controls();
+          });
           host.append(button('保存主合同选择',()=>main.value?update(draft,{main_attachment_id:main.value}):tell('请选择主合同。')));
         }
         host.append(button('暂停收集',()=>update(draft,{action:'pause'})),button('取消任务',()=>update(draft,{action:'cancel'})),
@@ -333,7 +343,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
     updateControls:controls,
     open(){byId('task-draft-panel').open=true;byId('task-draft-panel').scrollIntoView({block:'start'});byId('task-instruction').focus();},
     refresh,
-    hasPending:()=>!!pending||busy||mediaChoices.size>0||!!byId('task-instruction').value.trim()||checks.some(el=>el.checked),
+    hasPending:()=>!!pending||busy||mediaChoices.size>0||mainChoices.size>0||!!byId('task-instruction').value.trim()||checks.some(el=>el.checked),
     state(state){
       if(closed)return;
       if(state.status==='revoked'){revoked=true;cid=null;clear();return;}
@@ -350,6 +360,6 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
       }
       controls();
     },
-    dispose(){closed=true;++epoch;++reading;mediaChoices.clear();pending=null;},
+    dispose(){closed=true;++epoch;++reading;mediaChoices.clear();mainChoices.clear();pending=null;},
   };
 }

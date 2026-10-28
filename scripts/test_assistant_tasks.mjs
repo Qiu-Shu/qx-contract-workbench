@@ -44,6 +44,47 @@ test('pending Weixin operation locks task writes while preserving read controls'
   blocked=false;f.tasks.updateControls();assert.equal(save.disabled,false);f.tasks.dispose();
 });
 const taskButton=(f,label)=>{const found=walk(f.root.getElementById('task-current')).find(el=>el.tagName==='button'&&el.textContent===label);assert.ok(found,label);return found;};
+const mainSelector=f=>walk(f.root.getElementById('task-current')).find(el=>el.tagName==='select');
+async function mainContractFixture(){
+  const f=fixture();await tick();
+  const draft={id:'draft',state:'collecting',revision:1,instruction:'合成审查',main_attachment_id:'a',blockers:[],
+    events:[{id:'event',media:['a','b'].map(id=>({media_id:id,attachment_id:id,name:id+'.docx',
+      mime:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',status:'ready'}))}]};
+  f.api.request=async(path,options={})=>{f.calls.push([path,options]);return path.endsWith('task-drafts')?
+    {items:[structuredClone(draft)],unassigned_events:[]}:draft;};
+  await f.tasks.refresh();f.root.getElementById('task-select').value=draft.id;f.root.getElementById('task-select').fire('change');
+  return {...f,draft};
+}
+test('unsaved main contract choice is pending and survives task refresh',async()=>{
+  const f=await mainContractFixture();mainSelector(f).value='b';mainSelector(f).fire('change');
+  assert.equal(f.tasks.hasPending(),true);
+  await f.tasks.refresh();assert.equal(mainSelector(f).value,'b');assert.equal(f.tasks.hasPending(),true);
+  mainSelector(f).value='a';mainSelector(f).fire('change');assert.equal(f.tasks.hasPending(),false);f.tasks.dispose();
+});
+test('a delayed task GET cannot apply after a main contract edit starts',async()=>{
+  const f=await mainContractFixture();let finish;
+  f.api.request=async()=>new Promise(resolve=>{finish=resolve;});
+  const refresh=f.tasks.refresh();mainSelector(f).value='b';mainSelector(f).fire('change');
+  finish({items:[{...f.draft,revision:2,instruction:'较新服务端指令'}],unassigned_events:[]});await refresh;
+  assert.equal(mainSelector(f).value,'b');assert.equal(f.tasks.hasPending(),true);
+  assert.equal(walk(f.root.getElementById('task-current')).some(el=>el.textContent==='较新服务端指令'),false);
+  f.tasks.dispose();
+});
+test('saving the selected main contract retires its local pending state only after reread',async()=>{
+  const f=await mainContractFixture(),original=f.api.request;
+  f.api.request=async(path,options={})=>{
+    if(options.method==='PATCH'){
+      f.calls.push([path,options]);f.draft.main_attachment_id=options.body.main_attachment_id;++f.draft.revision;
+      return structuredClone(f.draft);
+    }
+    return original(path,options);
+  };
+  mainSelector(f).value='b';mainSelector(f).fire('change');assert.equal(f.tasks.hasPending(),true);
+  await taskButton(f,'保存主合同选择').fire('click');
+  const patch=f.calls.find(([,options])=>options.method==='PATCH');
+  assert.deepEqual(patch[1].body,{expected_revision:1,main_attachment_id:'b'});
+  assert.equal(mainSelector(f).value,'b');assert.equal(f.tasks.hasPending(),false);f.tasks.dispose();
+});
 test('unreadable and pending media are both included, never silently dropped',async()=>{
   const f=fixture();await tick();
   f.controller.state.materials={items:[{attachment_id:'doc',parse_revision:null},{attachment_id:'pdf',parse_revision:null}],attachments:[
