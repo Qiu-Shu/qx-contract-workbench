@@ -28,9 +28,9 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
   const valid=key=>active()&&key.cid===cid&&key.epoch===epoch;
   const edits=()=>JSON.stringify([selected,byId('task-instruction').value,checks.filter(el=>el.checked).map(el=>el.value),
     [...mainChoices],[...mediaChoices].map(([key,value])=>[key,value.attachmentId])]);
-  function button(text,action,{disabled=false}={}) {
+  function button(text,action,{disabled=false,mainDraft=null}={}) {
     const el=node('button',text);el.type='button';el.className='quiet-button';el.disabled=!writable()||disabled;
-    writeControls.push({el,disabled});el.addEventListener('click',()=>guard(action));return el;
+    writeControls.push({el,disabled,mainDraft});el.addEventListener('click',()=>guard(action));return el;
   }
   function link(text,url){const el=node('a',text);el.href=url;return el;}
   function controls(){
@@ -41,7 +41,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
     byId('task-retry').hidden=!pending;byId('task-retry').disabled=busy||readonly||!active();
     byId('task-retry').textContent=pending?.query?'查询本次关联结果':'重试同一次操作';
     for(const el of checks)el.disabled=locked;
-    for(const item of writeControls)item.el.disabled=locked||item.disabled;
+    for(const item of writeControls)item.el.disabled=locked||item.disabled||!!(item.mainDraft&&mainChoices.has(item.mainDraft));
     onActivityChange();
   }
   async function guard(action,{write=true}={}){
@@ -285,6 +285,12 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
     for(const item of page.items){const option=node('option',(personal(item)?'本人微信 · ':'合成演练 · ')+(labels[item.state]||item.state)+' · '+(item.instruction.slice(0,45)||'待补指令'));option.value=item.id;select.append(option);}
     select.value=selected;
     const host=byId('task-current');host.replaceChildren();const draft=current();
+    for(const [id,value] of mainChoices){
+      const saved=page.items.find(item=>item.id===id),file=saved?.events.flatMap(event=>event.media).find(item=>item.attachment_id===value);
+      host.append(node('p','未保存的主合同选择：'+(file?.name||value||'尚未选择')+'。'+
+        (saved?.state==='collecting'&&!personal(saved)?'请保存或明确放弃此选择。':'任务当前不可编辑，请明确放弃本地选择后继续。')),
+        button('放弃本地主合同选择',()=>{mainChoices.delete(id);tell('已放弃本地主合同选择，使用已保存的任务版本。');}));
+    }
     if(draft){
       host.id='task-current';
       host.append(node('p',(personal(draft)?'本人微信收件 · ':'合成演练 · ')+'第 '+draft.revision+' 版 · '+labels[draft.state]));
@@ -319,7 +325,9 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
           host.append(button('保存主合同选择',()=>main.value?update(draft,{main_attachment_id:main.value}):tell('请选择主合同。')));
         }
         host.append(button('暂停收集',()=>update(draft,{action:'pause'})),button('取消任务',()=>update(draft,{action:'cancel'})),
-          button('冻结材料',()=>submit('/api/task-drafts/'+draft.id+'/freeze','POST',{expected_revision:draft.revision,manifest_sha256:draft.manifest_sha256}),{disabled:draft.blockers.length>0}));
+          button('冻结材料',()=>mainChoices.has(draft.id)?tell('请先保存或放弃本地主合同选择，再冻结材料。'):
+            submit('/api/task-drafts/'+draft.id+'/freeze','POST',{expected_revision:draft.revision,manifest_sha256:draft.manifest_sha256}),
+          {disabled:draft.blockers.length>0,mainDraft:draft.id}));
       }else if(!personal(draft)&&['paused','cancelled'].includes(draft.state))host.append(button('恢复收集',()=>update(draft,{action:'resume'})));
       if(draft.execution&&!personal(draft))renderExecution(draft.execution,host);
     }

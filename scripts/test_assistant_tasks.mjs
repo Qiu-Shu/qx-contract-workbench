@@ -85,6 +85,24 @@ test('saving the selected main contract retires its local pending state only aft
   assert.deepEqual(patch[1].body,{expected_revision:1,main_attachment_id:'b'});
   assert.equal(mainSelector(f).value,'b');assert.equal(f.tasks.hasPending(),false);f.tasks.dispose();
 });
+test('unsaved main contract blocks local freeze until saved or explicitly reverted',async()=>{
+  const f=await mainContractFixture();mainSelector(f).value='b';mainSelector(f).fire('change');
+  assert.equal(taskButton(f,'冻结材料').disabled,true);
+  await taskButton(f,'冻结材料').fire('click');
+  assert.equal(f.calls.some(([path])=>path.endsWith('/freeze')),false);assert.equal(f.tasks.hasPending(),true);
+  mainSelector(f).value='a';mainSelector(f).fire('change');assert.equal(taskButton(f,'冻结材料').disabled,false);f.tasks.dispose();
+});
+for(const state of ['frozen','paused','cancelled','missing'])test('remote '+state+' retains choice with usable explicit local discard',async()=>{
+  const f=await mainContractFixture();mainSelector(f).value='b';mainSelector(f).fire('change');
+  f.draft.state=state;
+  if(state==='missing')f.api.request=async()=>({items:[],unassigned_events:[]});
+  await f.tasks.refresh();assert.equal(f.tasks.hasPending(),true);
+  const discard=taskButton(f,'放弃本地主合同选择');assert.equal(discard.disabled,false);
+  const text=walk(f.root.getElementById('task-current')).map(el=>el.textContent).join(' ');
+  assert.match(text,/未保存的主合同选择/);assert.match(text,/b/);
+  await discard.fire('click');assert.equal(f.tasks.hasPending(),false);
+  assert.equal(f.calls.some(([,options])=>options.method&&options.method!=='GET'),false);f.tasks.dispose();
+});
 test('unreadable and pending media are both included, never silently dropped',async()=>{
   const f=fixture();await tick();
   f.controller.state.materials={items:[{attachment_id:'doc',parse_revision:null},{attachment_id:'pdf',parse_revision:null}],attachments:[
