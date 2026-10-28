@@ -66,7 +66,7 @@ def validate_descriptor_generations(db,*,allow_provenance=False):
     try:
         rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native=any(row[0]=='table' and row[1]=='local_workspace_identity' for row in rows)
-        if identify_schema(rows,native=native) not in ('weixin-target-provenance-v1','weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'):return []
+        if identify_schema(rows,native=native) not in ('weixin-target-provenance-v1','weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1'):return []
         present=db.scalar(text('SELECT 1 FROM weixin_descriptor_generations LIMIT 1')) is not None
     except (ValueError,TypeError,KeyError,ArithmeticError,RecursionError,ServiceError):_fail()
     if present and not allow_provenance:raise ServiceError('DATA_POLICY_UNAPPROVED',409)

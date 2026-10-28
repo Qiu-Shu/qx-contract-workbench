@@ -83,7 +83,7 @@ def validate_evidence_records(db, *, allowed=True):
     schema=[tuple(r) for r in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
     native=any(r[1]=='local_workspace_identity' for r in schema)
     version=identify_schema(schema,native=native)
-    if version not in ('assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'):return
+    if version not in ('assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1'):return
     ids=db.execute(text('SELECT DISTINCT conversation_id FROM assistant_evidence_revisions')).scalars().all()
     if ids and not allowed:raise ValueError('EVIDENCE_NOT_ALLOWED')
     for cid in ids:history(db,UUID(cid))

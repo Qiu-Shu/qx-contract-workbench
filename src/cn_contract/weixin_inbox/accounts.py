@@ -25,7 +25,7 @@ def _transaction(database):
         raise ServiceError('VERSION_CONFLICT', 409) from None
 
 
-def _account(actor, identifier, db, *, active=True):
+def _account(actor, identifier, db, *, active=True, mode='synthetic'):
     current = _current(actor, db)
     if active:
         require_active(db)
@@ -39,6 +39,8 @@ def _account(actor, identifier, db, *, active=True):
     except (ValueError, TypeError):
         raise ServiceError('VERSION_CONFLICT', 409) from None
     if active and (value.revoked_at is not None or _has_generations(value.id, db)):
+        raise ServiceError('STATE_CONFLICT', 409)
+    if active and value.mode != mode:
         raise ServiceError('STATE_CONFLICT', 409)
     return value, current
 
@@ -89,7 +91,7 @@ def _scope_reason(current, account, binding_id, scope, db, *, active):
             return 'scope_denied'
         binding = db.execute(text('SELECT * FROM task_channel_bindings WHERE id=:id'),
                              {'id':str(binding_id)}).mappings().first()
-        if binding is None or binding['channel'] != 'synthetic':
+        if binding is None or binding['channel'] != account.mode:
             return 'scope_denied'
         row = db.execute(text('SELECT * FROM assistant_conversations WHERE id=:id'),
                          {'id':binding['conversation_id']}).mappings().first()
@@ -194,34 +196,42 @@ def read_synthetic_account(actor, account_id, *, database):
 
 
 def bind_synthetic_peer(actor, account_id, request, *, database):
+    return _bind_peer(actor,account_id,request,database=database,mode='synthetic')
+
+
+def _bind_peer(actor, account_id, request, *, database, mode):
     request = d.WeixinPeerBindInput.model_validate(request.model_dump(mode='python'))
     with _transaction(database) as db:
-        account, current = _account(actor, account_id, db)
-        value = d.WeixinPeerBindingSnapshot(id=uuid4(), account_id=account.id,
-            sender_peer_id=request.sender_peer_id, task_binding_id=request.task_binding_id,
-            scope=request.expected_scope, scope_sha256=_digest(request.expected_scope.model_dump(mode='json')),
-            created_at=_activity_time(account.id,db,now=_at(),floor=(db.scalar(text(
-                'SELECT created_at FROM task_channel_bindings WHERE id=:id'),
-                {'id':str(request.task_binding_id)}),)))
-        _require_mapping(_mapping_reason(current, account, value, db))
-        previous = db.execute(text('''SELECT * FROM weixin_peer_bindings
-            WHERE (account_id=:account AND sender_peer_id=:peer) OR task_binding_id=:binding'''),
-            {'account':str(account.id), 'peer':request.sender_peer_id,
-             'binding':str(request.task_binding_id)}).mappings().all()
-        if previous:
-            if len(previous) != 1:
-                raise ServiceError('VERSION_CONFLICT', 409)
-            existing = _mapping(previous[0])
-            if (existing.account_id != account.id or existing.sender_peer_id != value.sender_peer_id
-                    or existing.task_binding_id != value.task_binding_id or existing.scope != value.scope):
-                raise ServiceError('VERSION_CONFLICT', 409)
-            _require_mapping(_mapping_reason(current, account, existing, db))
-            return existing
-        values = value.model_dump(mode='json', exclude={'scope'})
-        values['scope_json'] = canonical_json(value.scope.model_dump(mode='json'))
-        db.execute(text('INSERT INTO weixin_peer_bindings ('+','.join(values)+') VALUES ('+
-                        ','.join(':'+key for key in values)+')'), values)
-        return value
+        account, current = _account(actor, account_id, db, mode=mode)
+        return _bind_in_transaction(current,account,request,db)
+
+
+def _bind_in_transaction(current,account,request,db):
+    value = d.WeixinPeerBindingSnapshot(id=uuid4(), account_id=account.id,
+        sender_peer_id=request.sender_peer_id, task_binding_id=request.task_binding_id,
+        scope=request.expected_scope, scope_sha256=_digest(request.expected_scope.model_dump(mode='json')),
+        created_at=_activity_time(account.id,db,now=_at(),floor=(db.scalar(text(
+            'SELECT created_at FROM task_channel_bindings WHERE id=:id'),
+            {'id':str(request.task_binding_id)}),)))
+    _require_mapping(_mapping_reason(current, account, value, db))
+    previous = db.execute(text('''SELECT * FROM weixin_peer_bindings
+        WHERE (account_id=:account AND sender_peer_id=:peer) OR task_binding_id=:binding'''),
+        {'account':str(account.id), 'peer':request.sender_peer_id,
+         'binding':str(request.task_binding_id)}).mappings().all()
+    if previous:
+        if len(previous) != 1:
+            raise ServiceError('VERSION_CONFLICT', 409)
+        existing = _mapping(previous[0])
+        if (existing.account_id != account.id or existing.sender_peer_id != value.sender_peer_id
+                or existing.task_binding_id != value.task_binding_id or existing.scope != value.scope):
+            raise ServiceError('VERSION_CONFLICT', 409)
+        _require_mapping(_mapping_reason(current, account, existing, db))
+        return existing
+    values = value.model_dump(mode='json', exclude={'scope'})
+    values['scope_json'] = canonical_json(value.scope.model_dump(mode='json'))
+    db.execute(text('INSERT INTO weixin_peer_bindings ('+','.join(values)+') VALUES ('+
+                    ','.join(':'+key for key in values)+')'), values)
+    return value
 
 
 def read_synthetic_peer(actor, mapping_id, *, database):
@@ -232,16 +242,19 @@ def read_synthetic_peer(actor, mapping_id, *, database):
         return _mapping(row)
 
 
-def _revoke(actor, identifier, request, database, *, peer):
+def _revoke(actor, identifier, request, database, *, peer, mode='synthetic'):
     request = d.WeixinRevokeInput.model_validate(request.model_dump(mode='python'))
     with _transaction(database) as db:
         current = _current(actor, db)
         if peer:
             row = _mapping_row(identifier, db)
-            _, current = _account(current, row['account_id'], db, active=False)
+            account, current = _account(current, row['account_id'], db, active=False)
             value = _mapping(row)
         else:
             value, current = _account(current, identifier, db, active=False)
+            account = value
+        if account.mode != mode:
+            raise ServiceError('STATE_CONFLICT',409)
         require_active(db)
         if value.revoked_at is not None:
             if value.revoke_reason != request.reason:
@@ -341,12 +354,18 @@ def _effective_scope(mapping, db, *, at=None):
 
 
 def refresh_synthetic_peer(actor, mapping_id, request, *, database):
+    return _refresh_peer(actor,mapping_id,request,database=database,mode='synthetic')
+
+
+def _refresh_peer(actor, mapping_id, request, *, database, mode, validator=None):
     """Explicitly authorize newer input/material versions; never change the target."""
     request=d.WeixinPeerRefreshInput.model_validate(request.model_dump(mode='python'))
     with _transaction(database) as db:
         current=_current(actor,db)
+        if validator is not None:
+            validator(db)
         row=_mapping_row(mapping_id,db)
-        account,current=_account(current,row['account_id'],db)
+        account,current=_account(current,row['account_id'],db,mode=mode)
         mapping=_mapping(row)
         history=_grant_history(mapping,db)
         existing=next((value for value in history if value.request_id==request.request_id),None)
@@ -376,6 +395,8 @@ def refresh_synthetic_peer(actor, mapping_id, request, *, database):
         stored['scope_json']=canonical_json(grant.scope.model_dump(mode='json'))
         db.execute(text('INSERT INTO weixin_peer_scope_grants ('+','.join(stored)+') VALUES ('+
             ','.join(':'+key for key in stored)+')'),stored)
+        if validator is not None:
+            validator(db)
     return grant
 
 

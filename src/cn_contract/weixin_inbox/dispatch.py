@@ -17,7 +17,7 @@ def _conflict():
     raise ServiceError('VERSION_CONFLICT',409)
 
 
-def _source(actor, identifier, db, *, active):
+def _source(actor, identifier, db, *, active, mode='synthetic'):
     current=_current(actor,db)
     if active:
         require_active(db)
@@ -26,7 +26,7 @@ def _source(actor, identifier, db, *, active):
         WHERE descriptor.id=:id'''),{'id':str(identifier)}).mappings().first()
     if row is None:
         raise ServiceError('CROSS_MATTER_DENIED',403)
-    account,current=accounts._account(current,row['account_id'],db,active=active)
+    account,current=accounts._account(current,row['account_id'],db,active=active,mode=mode)
     poll=ingress._receipt(account,row['request_id'],db)
     descriptor=next((value for value in poll.descriptors if str(value.id)==row['id']),None)
     if descriptor is None:
@@ -86,8 +86,9 @@ def _deliver(current, account, descriptor, mapping, db, *, binding_id=None, afte
     if collision is not None:
         _conflict()
     binding=tasks.read_binding(current,binding_id,db)
-    received=tasks.receive_batch(current,binding.id,d.TaskInboxBatchInput(expected_cursor=binding.cursor,
-        next_cursor=binding.cursor+1,events=(descriptor.payload,)),db)
+    batch=d.TaskInboxBatchInput(expected_cursor=binding.cursor,next_cursor=binding.cursor+1,events=(descriptor.payload,))
+    received=(tasks._receive_batch(current,binding.id,batch,db,channel='weixin_personal')
+        if account.mode=='weixin_personal' else tasks.receive_batch(current,binding.id,batch,db))
     if len(received.events)!=1 or received.binding.cursor!=binding.cursor+1:
         _conflict()
     event_at=db.scalar(text('SELECT created_at FROM task_inbox_events WHERE id=:id'),
@@ -116,9 +117,17 @@ def find_dispatch_receipt(actor, descriptor_id, *, database):
 
 
 def dispatch_synthetic_descriptor(actor, descriptor_id, *, database):
+    return _dispatch_descriptor(actor,descriptor_id,database=database,mode='synthetic')
+
+
+def _dispatch_descriptor(actor, descriptor_id, *, database, mode, account_id=None, validator=None):
     """Receive one accepted source and its fixed acknowledgement in one transaction."""
     with accounts._transaction(database) as db:
-        current,account,descriptor,mapping=_source(actor,descriptor_id,db,active=True)
+        if validator is not None:
+            validator(db)
+        current,account,descriptor,mapping=_source(actor,descriptor_id,db,active=True,mode=mode)
+        if account_id is not None and str(account.id)!=str(account_id):
+            raise ServiceError('CROSS_MATTER_DENIED',403)
         if mapping is None:
             raise ServiceError('STATE_CONFLICT',409)
         receipt=_stored(descriptor.id,db)
@@ -134,4 +143,6 @@ def dispatch_synthetic_descriptor(actor, descriptor_id, *, database):
             if earliest!=str(descriptor.id):
                 _conflict()
             receipt=_deliver(current,account,descriptor,mapping,db)
+        if validator is not None:
+            validator(db)
     return receipt

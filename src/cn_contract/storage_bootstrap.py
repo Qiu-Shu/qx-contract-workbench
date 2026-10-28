@@ -2,6 +2,17 @@
 
 
 def initialize_storage(database):
+    from sqlalchemy import text
+    from .storage_schema import identify_schema
+    with database.session() as db:
+        rows = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
+    try:
+        version = identify_schema(rows,native=any(row[1]=='local_workspace_identity' for row in rows))
+    except ValueError:
+        version = None
+    if version == 'weixin-personal-v1':
+        mark_storage_initialized(database)
+        return
     # Existing families keep their order; versioned extensions are additive.
     from .authorities.storage import initialize_storage as authorities
     from .rules.storage import initialize_storage as rules
@@ -35,9 +46,11 @@ def initialize_storage(database):
     from .assistant.evidence_schema import initialize_storage as evidence
     from .assistant.followup_schema import initialize_storage as followups
     from .assistant.material_model_schema import initialize_storage as material_model
+    from .weixin_inbox.personal_schema import initialize_storage as personal
     for init in (authorities, rules, facts, reviews, providers, queries, exports,
                  jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds, rounds_v2, profiles, profile_model, task_drafts, weixin_inbox, weixin_dispatch, weixin_grant, weixin_generation, weixin_provenance, weixin_generation_dispatch, evidence, followups, material_model):
         init(database)
+    personal(database)
 
 
 def mark_storage_initialized(database):

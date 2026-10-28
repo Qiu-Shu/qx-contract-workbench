@@ -87,6 +87,8 @@ def event_id(bot_account_id, sender_peer_id, message_id):
 def create_offline_scope(actor, binding_id, *, bot_account_id, sender_peer_id, upstream_cursor, db):
     current = assistant._current(actor, db)
     binding = tasks.read_binding(current, binding_id, db)
+    if binding.channel != 'synthetic':
+        _fail('STATE_CONFLICT',409)
     conversation = tasks._write(current, binding.conversation_id, db)
     try:
         return d.WeixinOfflineScope(bot_account_id=bot_account_id, sender_peer_id=sender_peer_id,

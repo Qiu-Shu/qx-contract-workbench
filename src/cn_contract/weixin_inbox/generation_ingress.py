@@ -14,7 +14,7 @@ def _validate(db):
     try:
         rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native=any(row[0]=='table' and row[1]=='local_workspace_identity' for row in rows)
-        if not native or identify_schema(rows,native=True) not in ('weixin-target-provenance-v1','weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'):
+        if not native or identify_schema(rows,native=True) not in ('weixin-target-provenance-v1','weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1'):
             raise ValueError('schema18 or schema19 required')
         validate_descriptor_generations(db,allow_provenance=True)
     except (ValueError,TypeError,KeyError,ArithmeticError,RecursionError,ServiceError):
@@ -83,7 +83,7 @@ def record_generation_poll(actor,account_id,request,raw_response,*,database):
     with accounts._transaction(database) as db:
         account,current=accounts._account(actor,account_id,db,active=False)
         require_active(db)
-        if account.revoked_at is not None:
+        if account.mode != 'synthetic' or account.revoked_at is not None:
             raise ServiceError('STATE_CONFLICT',409)
         _validate(db)
         if not accounts._has_generations(account.id,db):

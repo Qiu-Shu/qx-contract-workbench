@@ -36,14 +36,18 @@ def _row(table, identifier, db):
 
 
 def create_binding(actor, cid, db):
+    return _create_binding(actor, cid, db, channel='synthetic')
+
+
+def _create_binding(actor, cid, db, *, channel):
     _write(actor,cid,db)
-    row = db.execute(text('SELECT * FROM task_channel_bindings WHERE conversation_id=:cid'),
-        {'cid':str(cid)}).mappings().first()
+    row = db.execute(text('SELECT * FROM task_channel_bindings WHERE conversation_id=:cid AND channel=:channel'),
+        {'cid':str(cid),'channel':channel}).mappings().first()
     if row is None:
         identifier = uuid4()
         db.execute(text('''INSERT INTO task_channel_bindings
-            (id,conversation_id,channel,cursor,created_at) VALUES (:id,:cid,'synthetic',0,:at)'''),
-            {'id':str(identifier),'cid':str(cid),'at':_at()})
+            (id,conversation_id,channel,cursor,created_at) VALUES (:id,:cid,:channel,0,:at)'''),
+            {'id':str(identifier),'cid':str(cid),'channel':channel,'at':_at()})
         row = _row('task_channel_bindings',identifier,db)
     return d.TaskChannelBindingView(**row)
 
@@ -196,13 +200,14 @@ def list_drafts(actor, cid, db):
     _owned(actor,cid,db)
     identifiers = db.scalars(text('SELECT id FROM task_drafts WHERE conversation_id=:cid ORDER BY rowid'),
         {'cid':str(cid)}).all()
-    binding = db.execute(text('SELECT * FROM task_channel_bindings WHERE conversation_id=:cid'),
+    binding = db.execute(text("SELECT * FROM task_channel_bindings WHERE conversation_id=:cid ORDER BY CASE channel WHEN 'synthetic' THEN 0 ELSE 1 END,id"),
         {'cid':str(cid)}).mappings().first()
     unassigned = ()
     if binding:
-        rows = db.execute(text('''SELECT e.* FROM task_inbox_events e WHERE binding_id=:binding
+        rows = db.execute(text('''SELECT e.* FROM task_inbox_events e
+            JOIN task_channel_bindings b ON b.id=e.binding_id WHERE b.conversation_id=:cid
             AND NOT EXISTS(SELECT 1 FROM task_draft_events de WHERE de.event_id=e.id) ORDER BY e.rowid'''),
-            {'binding':binding['id']}).mappings().all()
+            {'cid':str(cid)}).mappings().all()
         unassigned = tuple(_event(row,db) for row in rows)
     items = []
     for identifier in identifiers:
@@ -317,8 +322,14 @@ def _target(actor, cid, event, db):
 
 
 def receive_batch(actor, binding_id, value, db):
+    return _receive_batch(actor,binding_id,value,db,channel='synthetic')
+
+
+def _receive_batch(actor, binding_id, value, db, *, channel):
     value = _validate(d.TaskInboxBatchInput,value)
     binding = read_binding(actor,binding_id,db)
+    if binding.channel != channel:
+        raise ServiceError('STATE_CONFLICT',409)
     _write(actor,binding.conversation_id,db)
     rows,new = [],[]
     with db.begin_nested():

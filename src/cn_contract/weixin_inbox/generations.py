@@ -35,7 +35,7 @@ def _schema(db):
         schema = [tuple(row) for row in db.execute(text(
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
-        if identify_schema(schema, native=native) not in ('weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'):
+        if identify_schema(schema, native=native) not in ('weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1'):
             _conflict()
     except ValueError:
         _conflict()
@@ -86,7 +86,7 @@ def _root(actor, identifier, db, *, active):
     if (binding.conversation_id != mapping.scope.conversation_id
             or mapping.scope.workspace_id != account.workspace_id):
         _conflict()
-    if active and (account.revoked_at is not None or mapping.revoked_at is not None):
+    if active and (account.mode != 'synthetic' or account.revoked_at is not None or mapping.revoked_at is not None):
         raise ServiceError('STATE_CONFLICT', 409)
     return current, account, mapping
 

@@ -2,6 +2,7 @@
 import sqlite3
 
 from cn_contract.assistant import profile_model_schema, rounds_v2_schema
+from .legacy_personal import downgrade_statements
 
 _STATEMENTS = profile_model_schema.STATEMENTS[:7] + rounds_v2_schema.STATEMENTS[7:]
 
@@ -14,7 +15,7 @@ def downgrade_material_model(connection):
     try:
         connection.execute('BEGIN IMMEDIATE')
         try:
-            for statement in _STATEMENTS:
+            for statement in (*downgrade_statements(connection.execute),*_STATEMENTS):
                 connection.execute(statement)
             if connection.execute('PRAGMA foreign_key_check').fetchall():
                 raise ValueError('invalid synthetic legacy fixture')
@@ -29,7 +30,8 @@ def downgrade_material_model(connection):
 def downgrade_material_model_session(session):
     """Same fixture rebuild inside an existing SQLAlchemy session without model rows."""
     from sqlalchemy import text
-    for statement in _STATEMENTS:
+    session.execute(text('PRAGMA defer_foreign_keys=ON'))
+    for statement in (*downgrade_statements(lambda sql:session.execute(text(sql))),*_STATEMENTS):
         session.execute(text(statement))
     if session.execute(text('PRAGMA foreign_key_check')).fetchall():
         raise ValueError('invalid synthetic legacy fixture')

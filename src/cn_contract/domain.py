@@ -4443,7 +4443,7 @@ class TaskInboxBatchInput(DomainModel):
 class TaskChannelBindingView(DomainModel):
     id: UUID
     conversation_id: UUID
-    channel: Literal['synthetic'] = 'synthetic'
+    channel: Literal['synthetic', 'weixin_personal'] = 'synthetic'
     cursor: NonNegativeInt
     created_at: UTCDatetime
 
@@ -4684,7 +4684,7 @@ class WeixinAccountSnapshot(DomainModel):
     workspace_id: UUID
     owner_id: UUID
     bot_account_id: WeixinIdentity
-    mode: Literal['synthetic'] = 'synthetic'
+    mode: Literal['synthetic', 'weixin_personal'] = 'synthetic'
     initial_cursor: WeixinCursor
     checkpoint_revision: NonNegativeInt
     upstream_cursor: WeixinCursor

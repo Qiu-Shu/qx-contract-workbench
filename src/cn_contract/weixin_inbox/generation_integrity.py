@@ -72,7 +72,8 @@ def _validate(db, rows, workspace, *, allow_target_polls=False, allow_target_dis
         previous_scope = previous.scope if previous else _scope_at(root, grants.get(str(root.id), ()), value.created_at)
         previous_scope_hash = hashlib.sha256(canonical_json(previous_scope.model_dump(mode='json')).encode('utf-8')).hexdigest()
         checkpoint = max((revision for revision,at in polls.get(str(account.id), ()) if at < value.created_at), default=0)
-        if (value.actor_id != account.owner_id or str(value.actor_id) not in users
+        if (account.mode != 'synthetic' or binding.channel != 'synthetic'
+                or value.actor_id != account.owner_id or str(value.actor_id) not in users
                 or str(account.workspace_id) != workspace or conversation['workspace_id'] != workspace
                 or conversation['owner_id'] != str(account.owner_id) or scope.conversation_id != binding.conversation_id
                 or str(scope.workspace_id) != workspace or binding_row['id'] in occupied
@@ -105,7 +106,7 @@ def validate_peer_generations(db, *, allow_generations=False):
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
         native = any(row[0] == 'table' and row[1] == 'local_workspace_identity' for row in schema)
         version = identify_schema(schema, native=native)
-        if version not in ('weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'):
+        if version not in ('weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1'):
             return []
         rows = db.execute(text('SELECT * FROM weixin_peer_generations ORDER BY root_mapping_id,generation')).mappings().all()
         if not rows:
@@ -125,8 +126,8 @@ def validate_peer_generations(db, *, allow_generations=False):
         validate_dispatch_records(db, allow_dispatch=True)
         validate_peer_scope_grants(db, allow_grants=True)
         _validate(db, rows, _uuid(identities[0]),
-            allow_target_polls=version in ('weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'),
-            allow_target_dispatch=version in ('weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1'))
+            allow_target_polls=version in ('weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1'),
+            allow_target_dispatch=version in ('weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1'))
     except (ValueError, TypeError, KeyError, ArithmeticError, RecursionError, ServiceError):
         raise ValueError('WEIXIN_GENERATION_INTEGRITY') from None
     return []
