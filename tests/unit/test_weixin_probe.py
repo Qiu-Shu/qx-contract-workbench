@@ -100,6 +100,71 @@ def verify_file(value, wire):
     value.poll_messages()
 
 
+@pytest.mark.parametrize('has_message', [False, True])
+def test_getupdates_accepts_omitted_success_ret_with_valid_envelope(probe, has_message):
+    value, wire = probe
+    connect(value)
+    wire.messages = [message()] if has_message else []
+    original = value._client
+
+    def handler(request):
+        response = wire.handle(request)
+        if request.url.path.endswith('/getupdates'):
+            envelope = response.json()
+            del envelope['ret']
+            return httpx.Response(200, json=envelope)
+        return response
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        value._client = client
+        reports = value.poll_messages()
+    value._client = original
+    assert reports == ([{'kind': 'text', 'characters': len('ordinary fictional text')}] if has_message else [])
+    assert value._cursor == 'secret-cursor'
+    assert not wire.calls('/sendmessage')
+
+
+def test_omitted_ret_does_not_allow_other_sender(probe):
+    value, wire = probe
+    connect(value)
+    original = value._client
+    wire.messages = [message(from_user_id='someone-else')]
+
+    def handler(request):
+        response = wire.handle(request)
+        if request.url.path.endswith('/getupdates'):
+            envelope = response.json()
+            del envelope['ret']
+            return httpx.Response(200, json=envelope)
+        return response
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        value._client = client
+        with pytest.raises(ProbeError, match='PRIVATE_SCOPE_MISMATCH'):
+            value.poll_messages()
+    value._client = original
+    assert value._cursor == '' and value.send_state == 'not_sent'
+    assert len(wire.calls('/getupdates')) == 1
+    assert not wire.calls('/sendmessage') and not wire.calls('/download')
+
+
+@pytest.mark.parametrize('envelope', [
+    {'errcode': -14, 'msgs': [], 'get_updates_buf': 'untrusted-cursor'},
+    {'ret': 1, 'msgs': [], 'get_updates_buf': 'untrusted-cursor'},
+    {},
+])
+def test_getupdates_optional_success_still_rejects_error_or_missing_envelope(probe, envelope):
+    value, wire = probe
+    connect(value)
+    original = value._client
+    with httpx.Client(transport=httpx.MockTransport(lambda request: httpx.Response(200, json=envelope))) as client:
+        value._client = client
+        with pytest.raises(ProbeError):
+            value.poll_messages()
+    value._client = original
+    assert value._cursor == '' and value.send_state == 'not_sent'
+
+
 def test_qr_is_post_bot_type3_and_contains_no_old_token(probe):
     value, wire = probe
     assert value.start_qr() == 'https://ilinkai.weixin.qq.com/qr/display'
@@ -242,6 +307,23 @@ def test_bounded_file_decrypt_hash_and_full_url_precedence(probe, hex_key):
     assert 'X-WECHAT-UIN' not in request.headers
 
 
+@pytest.mark.parametrize('flag', ['omitted', 0, 1])
+def test_file_media_accepts_official_default_encryption_flag(probe, flag):
+    # Pinned official downloadAndDecryptBuffer uses the AES key for both modes.
+    value, wire = probe
+    connect(value)
+    incoming = file_message(hex_key=True)
+    media = incoming['item_list'][0]['file_item']['media']
+    if flag == 'omitted':
+        del media['encrypt_type']
+    else:
+        media['encrypt_type'] = flag
+    wire.messages = [incoming]
+    assert value.poll_messages() == [{'kind': 'file_verified', 'size': len(PLAIN), 'sha256': EXPECTED['sha256']}]
+    assert len(wire.calls('/download')) == 1
+    assert not wire.calls('/sendmessage')
+
+
 def test_cdn_query_fallback_is_url_encoded(probe):
     value, wire = probe
     connect(value)
@@ -255,6 +337,7 @@ def test_cdn_query_fallback_is_url_encoded(probe):
     {'media': {'full_url': 'http://127.0.0.1/download'}},
     {'media': {'full_url': 'https://novac2c.cdn.weixin.qq.com@outside.invalid/download'}},
     {'media': {'aes_key': base64.b64encode(b'bad-key').decode()}},
+    *[{'media': {'encrypt_type': flag}} for flag in (None, 2, -1, True, '0')],
 ])
 def test_file_metadata_key_and_url_rejected_before_download(probe, changes):
     value, wire = probe

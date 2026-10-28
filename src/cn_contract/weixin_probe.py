@@ -221,7 +221,11 @@ class ConnectionProbe:
         if value.get('file_name') != self._expected['name'] or value.get('len') != str(self._expected['size']):
             raise ProbeError('UNEXPECTED_FILE')
         media = value.get('media')
-        if type(media) is not dict or type(media.get('encrypt_type')) is not int or media['encrypt_type'] != 1:
+        if type(media) is not dict:
+            raise ProbeError('INVALID_MEDIA')
+        # CDNMedia defaults to 0; both official modes still use the supplied AES key.
+        encryption = media.get('encrypt_type', 0)
+        if type(encryption) is not int or encryption not in (0, 1):
             raise ProbeError('INVALID_MEDIA')
         key = _key(media.get('aes_key'))
         url = media.get('full_url')
@@ -270,7 +274,8 @@ class ConnectionProbe:
             raise ProbeError('NOT_CONNECTED')
         value = self._json('POST', '/ilink/bot/getupdates', authenticated=True,
                            payload={'get_updates_buf': self._cursor}, timeout=40)
-        _success(value, required=True)
+        # Official GetUpdatesResp omits the zero-valued ret on normal responses.
+        _success(value)
         messages = value.get('msgs')
         cursor = value.get('get_updates_buf', self._cursor)
         if type(messages) is not list or len(messages) > 100 or type(cursor) is not str or len(cursor) > 16384:
