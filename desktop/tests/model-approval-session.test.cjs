@@ -42,6 +42,29 @@ test('the pro model uses an exact eight-place reservation without floating-point
   assert.equal(f.authorized.max_total_usd,'0.10272768');
 });
 
+test('the longer Pro timeout still uses one lease and cancellation revokes without a second call',async()=>{
+  const f=await fixture('deepseek-v4-pro');let retained;
+  const result=await f.runtime.withAuthorization(f.backend,()=>true,async lease=>{
+    retained=lease;
+    assert.equal((await lease.authorize({session_token:TOKEN,basis})).ok,true);
+    assert.equal((await lease.authorize({session_token:TOKEN,basis})).ok,false);
+    return {ok:false,canceled:true};
+  });
+  assert.deepEqual(result,{ok:false,code:'APPROVAL_CANCELED',canceled:true});
+  assert.equal(f.authorized.valid_for_seconds,120);
+  assert.deepEqual(f.calls,['authorize','revoke']);
+  assert.equal((await retained.authorize({session_token:TOKEN,basis})).ok,false);
+  assert.deepEqual(f.calls,['authorize','revoke']);
+});
+
+test('the longer Pro timeout never retries an unknown authorization acknowledgement',async()=>{
+  const f=await fixture('deepseek-v4-pro');
+  f.backend.authorizeModel=async()=>{f.calls.push('authorize');return {ok:true,status:'unknown'};};
+  assert.equal((await f.runtime.withAuthorization(f.backend,()=>true,
+    lease=>lease.authorize({session_token:TOKEN,basis}))).ok,false);
+  assert.deepEqual(f.calls,['authorize','stop']);
+});
+
 test('confirmation holds the config lock and a retained lease cannot authorize later',async()=>{
   const f=await fixture(),gate=deferred();let lease;
   const pending=f.runtime.withAuthorization(f.backend,()=>true,async value=>{lease=value;await gate.promise;return {ok:false,canceled:true};});

@@ -63,11 +63,56 @@ def test_contract_uses_c4_method_in_bound_wire():
 
 
 @pytest.mark.parametrize('workflow', ['sales', 'case', 'court'])
-def test_other_workflows_keep_exact_previous_wire(workflow):
+def test_other_workflows_rebuild_exact_previous_wire(workflow):
     manifest, selection, config = sample(workflow)
     old, wire = legacy_basis(manifest, selection, config)
-    assert codec.build_basis(selection, manifest, config) == old
+    assert codec.rebuild_basis(old, config) == old
     assert codec.build_request(request(old), config) == wire
+
+
+def task_output_v1_basis(manifest, selection, config):
+    # Freeze the previously released non-contract prompt independently of system_for.
+    _, body = legacy_basis(manifest, selection, config)
+    system = codec.SYSTEM + codec.WORKFLOW_OUTPUT_V1
+    body['messages'][0]['content'] = system
+    wire = json_bytes(body)
+    basis = d.MainMaterialSendBasis(**selection.model_dump(mode='python'), manifest=manifest,
+        manifest_sha256=sha(encoded(manifest)), system_sha256=sha(system), config_sha256=sha(encoded(config)),
+        wire_sha256=sha(wire.decode('utf-8')), wire_bytes=len(wire))
+    return basis, body
+
+
+@pytest.mark.parametrize('workflow', ['sales', 'case'])
+def test_court_update_preserves_current_other_workflow_bytes(workflow):
+    manifest, selection, config = sample(workflow)
+    previous, wire = task_output_v1_basis(manifest, selection, config)
+    assert codec.build_basis(selection, manifest, config) == previous
+    assert codec.build_request(request(previous), config) == wire
+
+
+def test_court_update_preserves_exact_contract_c4_prompt():
+    assert codec.system_for('contract') == codec.SYSTEM + codec.METHOD
+
+
+def test_court_request_has_versioned_output_limit_with_unchanged_token_budget():
+    manifest, selection, config = sample('court')
+    old, _ = task_output_v1_basis(manifest, selection, config)
+    basis = codec.build_basis(selection, manifest, config)
+    wire = codec.build_request(request(basis), config)
+    system = wire['messages'][0]['content']
+    assert system == codec.SYSTEM + codec.WORKFLOW_OUTPUT_V1 + codec.COURT_OUTPUT_V2
+    for requirement in ('court-output-v2', '最多3个争点', '各一次', '1200', '最多5个', '不重复材料全文'):
+        assert requirement in codec.COURT_OUTPUT_V2
+    assert wire['max_tokens'] == config.max_output_tokens
+    assert basis.system_sha256 != old.system_sha256
+
+
+def test_court_task_output_v1_basis_remains_exactly_replayable():
+    manifest, selection, config = sample('court')
+    old, wire = task_output_v1_basis(manifest, selection, config)
+    assert codec.rebuild_basis(old, config) == old
+    assert codec.build_request(request(old), config) == wire
+    assert codec.prepare(request(old), config).wire_payload_json == json_bytes(wire).decode('utf-8')
 
 
 def test_legacy_contract_basis_rebuilds_exactly_for_history():

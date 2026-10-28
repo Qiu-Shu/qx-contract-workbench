@@ -89,8 +89,8 @@ def contract(actor, run, request, previous, media, db):
         'media_unsupported':'包含暂不支持解析的材料，请补充可读版本。'}
     reasons = [notes.get(code, '请核对材料版本与读取状态。') for code in draft.blockers]
     return ('合同任务已关联本次指令和材料。\n' + '\n'.join(dict.fromkeys(reasons)) +
-        '\n\n现有审查桥接仅支持已登记的虚构材料与模拟审查。真实材料保持本机保存；'
-        '事实、交易角色和审查结果须分别核对。'), draft.id
+        '\n\n这是材料归集记录。模型分析将按当前设置使用选定材料，结果保存在本对话。'
+        '材料陈述仍为待核信息；原件和已有执行结果保留。'), draft.id
 
 
 def case_text(actor, cid, refs, directory, db):

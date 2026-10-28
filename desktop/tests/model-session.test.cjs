@@ -57,8 +57,30 @@ test('trusted model selection configures only the fixed catalog and never grants
   assert.deepEqual(f.calls,['disable','consume','configure']);
   assert.equal(f.payload.secret===SECRET,true);
   assert.equal(f.payload.config.model,'deepseek-flash');
+  assert.equal(f.payload.config.timeout_seconds,30);
   assert.equal(f.payload.config.input_usd_per_million,'0.3');
   assert.equal(f.payload.config.output_usd_per_million,'1.2');
+});
+
+test('automatic material policy requires explicit configuration and rejects widened persisted scope',async()=>{
+  const {automaticAnalysisPolicy,validAutomaticAnalysis}=require('../model-session.cjs');
+  const policy=automaticAnalysisPolicy('deepseek-flash','synthetic-workspace');
+  assert.deepEqual(policy,{model:'deepseek-flash',workspace:'synthetic-workspace',scope:'selected-task-materials',
+    max_calls:1,max_total_usd:'0.024576'});
+  assert.equal(validAutomaticAnalysis(policy,'deepseek-flash','synthetic-workspace'),true);
+  for(const change of [{max_calls:2},{max_total_usd:'999'},{scope:'all-history'},{workspace:'another'},{model:'deepseek-v4-pro'},{extra:true}])
+    assert.equal(validAutomaticAnalysis({...policy,...change},'deepseek-flash','synthetic-workspace'),false);
+});
+
+test('native settings forwards only explicit boolean automatic analysis and projects its status',async()=>{
+  const calls=[];
+  const f=brokerFixture({async configure(model,guard,automatic){calls.push({model,automatic});
+    assert.equal(guard(),true);return {ok:true,runtime:{state:'configured',model,automatic_analysis:automatic}};}});
+  const result=await f.call('configure','deepseek-flash',true);
+  assert.deepEqual(calls,[{model:'deepseek-flash',automatic:true}]);
+  assert.equal(result.runtime.automatic_analysis,true);
+  assert.equal((await f.call('configure','deepseek-flash',{scope:'all'})).ok,false);
+  assert.equal(calls.length,1);
 });
 
 test('second model uses bounded trusted configuration and projections omit private metadata',async()=>{
@@ -67,7 +89,7 @@ test('second model uses bounded trusted configuration and projections omit priva
   assert.deepEqual(result,{ok:true,runtime:{state:'configured',model:'deepseek-v4-pro'}});
   assert.deepEqual(f.payload.config,{enabled:true,protocol_version:'deepseek-chat-json-v1',
     provider:'deepseek',model:'deepseek-v4-pro',max_input_bytes:65536,max_output_tokens:4096,
-    max_response_bytes:1048576,timeout_seconds:30,input_usd_per_million:'1.32',
+    max_response_bytes:1048576,timeout_seconds:90,input_usd_per_million:'1.32',
     output_usd_per_million:'3.96',
     price_reference:'https://api-docs.deepseek.com/quick_start/pricing/ (2026-10-19; peak/cache-miss; USD)'});
   assert.deepEqual(f.session.status(),result);

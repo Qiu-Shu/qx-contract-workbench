@@ -14,6 +14,7 @@ from ..security import ServiceError, authorize
 from .request_context import actor_in
 from .assistant_attachments import is_attachment_read_path
 from .assistant_generation import is_generation_read_path
+from .assistant_material_generation import is_material_generation_read_path
 from .assistant_research import is_research_read_path
 from .assistant_profiles import is_profile_read_path
 from .evidence_worksheet import is_evidence_read_path
@@ -38,6 +39,7 @@ def attach_recovery(app, database):
             r'/api/assistant/(?:conversations/[0-9a-f-]{36}(?:/runs/by-request/[0-9a-f-]{36})?|runs/[0-9a-f-]{36}(?:/events)?)',path)
         safe_api = safe_api or is_attachment_read_path(path)
         safe_api = safe_api or is_generation_read_path(path)
+        safe_api = safe_api or is_material_generation_read_path(path)
         safe_api = safe_api or is_research_read_path(path)
         safe_api = safe_api or is_profile_read_path(path)
         safe_api = safe_api or is_worksheet_read_path(path)

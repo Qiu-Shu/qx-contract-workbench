@@ -18,7 +18,8 @@ const rejected=(code='BLOCKED_LIVE')=>({ok:false,code});
 function configuration(model) {
   const [input,output]=MODELS.get(model);
   return {enabled:true,protocol_version:'deepseek-chat-json-v1',provider:'deepseek',model,
-    max_input_bytes:65536,max_output_tokens:4096,max_response_bytes:1048576,timeout_seconds:30,
+    max_input_bytes:65536,max_output_tokens:4096,max_response_bytes:1048576,
+    timeout_seconds:model==='deepseek-v4-pro'?90:30,
     input_usd_per_million:input,output_usd_per_million:output,
     price_reference:'https://api-docs.deepseek.com/quick_start/pricing/ (2026-10-19; peak/cache-miss; USD)'};
 }
@@ -31,7 +32,17 @@ function reservation(model) {
   return digits.slice(0,-8)+'.'+digits.slice(-8).replace(/0+$/,'');
 }
 
-function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judgeBudget=null}) {
+function automaticAnalysisPolicy(model,workspace) {
+  if(!MODELS.has(model) || typeof workspace!=='string' || !workspace)return null;
+  return {model,workspace,scope:'selected-task-materials',max_calls:1,max_total_usd:reservation(model)};
+}
+function validAutomaticAnalysis(value,model,workspace) {
+  const expected=automaticAnalysisPolicy(model,workspace);
+  return Boolean(expected && exact(value,Object.keys(expected)) &&
+    Object.keys(expected).every(key=>value[key]===expected[key]));
+}
+
+function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()=>{},kind='main',judgeBudget=null}) {
   if(!['main','judge'].includes(kind))throw new TypeError('MODEL_KIND_INVALID');
   const judge=kind==='judge',configureMethod=judge?'configureJudge':'configureModel',disableMethod=judge?'disableJudge':'disableModel';
   if(judgeBudget!==null && (!judge || typeof judgeBudget!=='string' || judgeBudget==='0' ||
@@ -51,9 +62,10 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
       !backend.control.closed && !backend.control.failed)));
   function view() {
     const backend=current();
-    if(metadata && metadata.backend!==backend)metadata=null;
+    if(metadata && (metadata.backend!==backend || metadata.workspace!==getWorkspace()))metadata=null;
     if(unsafe || !healthy(backend) || retired.has(backend))return {state:'unavailable',model:null};
-    return metadata ? {state:'configured',model:metadata.model} : {state:'unconfigured',model:null};
+    return metadata ? {state:'configured',model:metadata.model,...(metadata.automatic?{automatic_analysis:true}:{})}
+      : {state:'unconfigured',model:null};
   }
   const matches=(backend,guard)=>!unsafe && !retired.has(backend) && healthy(backend) &&
     current()===backend && check(guard);
@@ -96,7 +108,7 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
   async function withAuthorization(backend,guard,callback) {
     const captured=metadata;
     const supportsAuthorization=()=>!judge || (judgeBudget!==null && backend?.control?.judgeAuthorizationEnabled===true);
-    if(active || !captured || captured.backend!==backend || !matches(backend,guard) ||
+    if(active || !captured || captured.backend!==backend || captured.workspace!==getWorkspace() || !matches(backend,guard) ||
         !supportsAuthorization() || typeof backend[authorizeMethod]!=='function' || typeof backend[revokeMethod]!=='function'){
       if(!judge)return rejected(active?'STATE_CONFLICT':'BLOCKED_LIVE');
       try{return await callback(null);}catch{return rejected();}
@@ -104,7 +116,7 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
     active=true;
     let open=true,used=false,authorized=false,grantedToken=null,flight=null,profileStatus=null;
     const budget=judge?judgeBudget:reservation(captured.model);
-    const valid=()=>open && metadata===captured && matches(backend,guard) && supportsAuthorization();
+    const valid=()=>open && metadata===captured && captured.workspace===getWorkspace() && matches(backend,guard) && supportsAuthorization();
     async function revoke() {
       if(!grantedToken)return okay();
       const token=grantedToken;grantedToken=null;
@@ -115,6 +127,7 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
       return terminate(backend,guard);
     }
     const lease=Object.freeze({model:captured.model,max_total_usd:budget,
+      automatic_material_analysis:!judge && captured.automatic===true,
       authorize(value){
         if(used || !valid())return Promise.resolve(rejected('STATE_CONFLICT'));
         used=true;
@@ -236,14 +249,15 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
   }
   return Object.freeze({
     status:()=>({ok:true,runtime:active ? {state:'unavailable',model:null} : view()}),
-    configure:(model,guard=()=>true)=>run(async()=>{
+    configure:(model,guard=()=>true,automaticAnalysis=false)=>run(async()=>{
       if(!check(guard))return rejected('STATE_CONFLICT');
-      const backend=current();
+      const backend=current(),workspace=getWorkspace();
       if(unsafe || !healthy(backend) || retired.has(backend))return rejected();
       // Clear known old authority even if reading the replacement credential fails.
       const cleared=await clear(backend,guard);
       if(!cleared.ok)return cleared;
-      if(!allowedModel(model))return rejected();
+      if(!allowedModel(model) || typeof automaticAnalysis!=='boolean' ||
+          (automaticAnalysis && (judge || !automaticAnalysisPolicy(model,workspace))))return rejected();
       let attempted=false,ack,credential,stale=false;
       try{
         credential=await store.withSecret(async secret=>{
@@ -258,7 +272,7 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
       if(stale)return rejected('STATE_CONFLICT');
       if(!attempted)return rejected(CREDENTIAL_CODES.has(credential?.code) ? credential.code : 'BLOCKED_LIVE');
       if(!exact(credential,['status']) || credential.status!=='saved')return terminate(backend,guard);
-      if(!matches(backend,guard)){
+      if(!matches(backend,guard) || workspace!==getWorkspace()){
         await terminate(backend,guard);return rejected('STATE_CONFLICT');
       }
       if(exact(ack,['ok','code']) && ack.ok===false)
@@ -267,7 +281,8 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
           ack.status!=='configured' || typeof ack.config_sha256!=='string' ||
           !/^[0-9a-f]{64}$/.test(ack.config_sha256) || typeof ack.config_version!=='string' ||
           !UUID.test(ack.config_version))return terminate(backend,guard);
-      metadata={backend,model,config_sha256:ack.config_sha256,config_version:ack.config_version};
+      metadata={backend,model,workspace,automatic:automaticAnalysis,
+        config_sha256:ack.config_sha256,config_version:ack.config_version};
       return okay();
     }),
     disable,
@@ -276,4 +291,4 @@ function createModelSession({store,getBackend,onFailure=()=>{},kind='main',judge
   });
 }
 
-module.exports={createModelSession};
+module.exports={createModelSession,automaticAnalysisPolicy,validAutomaticAnalysis};

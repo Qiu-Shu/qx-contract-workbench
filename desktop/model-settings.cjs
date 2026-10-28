@@ -11,14 +11,16 @@ function runtimeResult(result,kind) {
   const state=result?.runtime?.state,model=result?.runtime?.model;
   if(typeof result?.ok!=='boolean' || !['unavailable','unconfigured','configured'].includes(state) ||
       (state==='configured' ? !(kind==='judge'?['jev-1.13.0']:['deepseek-flash','deepseek-v4-pro']).includes(model) : model!==null))return runtimeDenied();
-  return {ok:result.ok,runtime:{state,model},...(runtimeCodes.has(result.code)?{code:result.code}:{})};
+  return {ok:result.ok,runtime:{state,model,
+    ...(kind==='main' && state==='configured' && result.ok && result.runtime.automatic_analysis===true?{automatic_analysis:true}:{})},
+    ...(runtimeCodes.has(result.code)?{code:result.code}:{})};
 }
 
 function registerModelSettings({ipcMain,store,runtime,isAllowed,isCurrent,captureGuard,setBusy,kind='main'}) {
   if(!['main','judge'].includes(kind))throw new TypeError('MODEL_KIND_INVALID');
   const prefix=kind==='judge'?'judge':'model';
   let pending=null;
-  async function run(event,operation,value,modelOperation=false) {
+  async function run(event,operation,value,modelOperation=false,automaticAnalysis=false) {
     const deny=()=>modelOperation ? runtimeDenied('ACCESS_DENIED') : denied();
     if(pending || !check(()=>isAllowed(event)))return deny();
     let guard;
@@ -30,7 +32,8 @@ function registerModelSettings({ipcMain,store,runtime,isAllowed,isCurrent,captur
       if(!check(guard))return deny();
       if(modelOperation){
         if(!runtime)return runtimeDenied();
-        const result=await (operation==='configure' ? runtime.configure(value,guard) : runtime[operation](guard));
+        if(typeof automaticAnalysis!=='boolean' || (kind==='judge'&&automaticAnalysis))return runtimeDenied();
+        const result=await (operation==='configure' ? runtime.configure(value,guard,automaticAnalysis) : runtime[operation](guard));
         return check(guard) ? runtimeResult(result,kind) : deny();
       }
       if(operation!=='status' && runtime){
@@ -53,7 +56,7 @@ function registerModelSettings({ipcMain,store,runtime,isAllowed,isCurrent,captur
   ipcMain.handle(`desktop:${prefix}-save`,(event,secret)=>run(event,'save',secret));
   ipcMain.handle(`desktop:${prefix}-remove`,event=>run(event,'remove'));
   ipcMain.handle(`desktop:${prefix}-runtime-status`,event=>run(event,'status',undefined,true));
-  ipcMain.handle(`desktop:${prefix}-configure`,(event,model)=>run(event,'configure',model,true));
+  ipcMain.handle(`desktop:${prefix}-configure`,(event,model,automaticAnalysis=false)=>run(event,'configure',model,true,automaticAnalysis));
   ipcMain.handle(`desktop:${prefix}-disable`,event=>run(event,'disable',undefined,true));
   return {wait:()=>Promise.allSettled([pending,store.drain?.()])};
 }

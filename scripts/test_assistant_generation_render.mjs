@@ -231,3 +231,24 @@ test('foreign or absent profile receipts never claim a saved draft',t=>{
     assert.doesNotMatch(f.at('history').textContent,/档案草稿已更新/);
   }
 });
+
+test('completed material analysis stays under the original prompt with readable sources and Word download',t=>{
+  const f=fixture(t),s=state(),source='a'.repeat(64),prompt='审查这份虚构合同';
+  const local={id:'local',role:'assistant',content:'材料已归集',source_revision:1};
+  s.view.messages=[{id:mid,role:'user',content:prompt},local,{id:mid2,role:'user',content:prompt}];
+  s.business={items:[{run_id:'parent',message_id:mid,task_id:'task',workflow:'contract',text:local.content,
+    scope:{input_revision:1,materials_revision:1}}]};
+  const attempt=item(mid2).attempt;attempt.input_format='material-business-v1';
+  attempt.output.candidate={text:'付款建议 ['+source+']',citations:[source]};
+  attempt.output.manifest={parent_business_run_id:'parent',question:prompt,materials:[],
+    sources:[{source_id:source,reference:{kind:'message',quote:prompt}}]};
+  s.generation.items=[{message_id:mid2,attempt}];
+  f.render.state(s);
+  assert.deepEqual(f.at('history').children.map(child=>child.dataset.messageId),[mid]);
+  assert.match(f.at('history').textContent,/付款建议 【来源 1】/);
+  const download=walk(f.at('history')).find(element=>element.textContent==='下载可编辑草稿（DOCX）');
+  assert.equal(download.href,`/api/assistant/conversations/${cid}/material-generations/${attempt.id}/document`);
+  assert.doesNotMatch(f.at('history').textContent,/用当前材料生成 AI 草稿/);
+  attempt.output.manifest.parent_business_run_id='unrelated';f.render.state(s);
+  assert.deepEqual(f.at('history').children.map(child=>child.dataset.messageId),[mid,'local',mid2]);
+});

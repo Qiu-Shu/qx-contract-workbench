@@ -14,6 +14,20 @@ def submit(client, headers, view, content, **extra):
     return client.post(url, headers=headers, json=body), url, body
 
 
+@pytest.mark.parametrize('content, workflow', [
+    ('我是甲方，帮我审查并给出最小修改建议', 'contract'),
+    ('整理这个案件并起草起诉状', 'case'),
+    ('根据现有材料模拟开庭', 'court'),
+])
+def test_mvp_natural_commands_select_existing_workflow(chat, content, workflow):
+    client, _, _ = chat
+    headers = sign_in(client)
+    result, _, _ = submit(client, headers, create(client, headers), content)
+    assert result.status_code == 200
+    assert result.json()['workflow'] == workflow
+    assert result.json()['task_id']
+
+
 def test_reception_is_saved_in_chat_with_one_receipt_and_source(chat):
     client, _, _ = chat
     headers = sign_in(client)

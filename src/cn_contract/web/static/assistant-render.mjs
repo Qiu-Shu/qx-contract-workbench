@@ -81,19 +81,26 @@ function renderAttempt(attempt,visible,onCitation) {
   const sourceBound=attempt.input_format==='library-context-v1' || attempt.input_format==='library-context-v2';
   section.append(node('p',output?(materialBound?'材料分析 · 有出处的律师待核草稿':sourceBound?'资料辅助回答 · 内部草稿 · 待核对':'模型生成 · 内部草稿 · 待核对'):'模型生成 · 状态记录','generation-meta'));
   if(output) {
+    let readableText=output.candidate.text;
+    const displayedCitations=materialBound?[...new Set([...(output.candidate.citations||[]),
+      ...(output.manifest?.sources||[]).filter(source=>readableText.includes('['+source.source_id+']')).map(source=>source.source_id)])]
+      :output.candidate.citations||[];
+    if(materialBound)for(const [index,id] of displayedCitations.entries())
+      readableText=readableText.split('['+id+']').join('【来源 '+(index+1)+'】');
     section.append(node('p','未经律师审核，不是正式法律意见。','generation-note'),
-      node('p',output.candidate.text,'generation-text'));
+      node('p',readableText,'generation-text'));
     const links=node('div',undefined,'generation-sources');
-    for(const citation of output.candidate.citations || []) {
+    for(const citation of displayedCitations) {
       if(materialBound){
         const source=output.manifest?.sources?.find(s=>s.source_id===citation);
         if(!source)continue;
         if(source.reference.kind==='message'){
-          const detail=node('details');detail.append(node('summary','本次咨询文字 · 原始输入出处'),node('p',source.reference.quote,'generation-text'));links.append(detail);continue;
+          const detail=node('details');detail.append(node('summary',`来源 ${displayedCitations.indexOf(citation)+1} · 聊天原始陈述`),node('p',source.reference.quote,'generation-text'));links.append(detail);continue;
         }
         const file=output.manifest.materials.find(f=>f.attachment_id===source.reference.attachment_id);
-        const detail=node('details'),summary=node('summary',`${file?.name||'材料'} · 解析版本 ${source.reference.parse_revision} · 原文出处`);
-        detail.append(summary,node('p',source.reference.anchor.quote,'generation-text'),node('small',`出处 ${citation}`));links.append(detail);continue;
+        const number=displayedCitations.indexOf(citation)+1;
+        const detail=node('details'),summary=node('summary',`来源 ${number} · ${file?.name||'材料'} · 原文出处`);
+        detail.append(summary,node('p',source.reference.anchor.quote,'generation-text'),node('small',`解析版本 ${source.reference.parse_revision}`));links.append(detail);continue;
       }
       if(citation.saved_citation_id) {
         const button=node('button','核对已保存片段','citation-link');button.type='button';
@@ -107,6 +114,12 @@ function renderAttempt(attempt,visible,onCitation) {
     }
     if(links.children.length)section.append(links);
     else section.append(node('p','未提供可定位到当前记录的原文引用。','generation-note'));
+    if(materialBound){
+      const download=node('a','下载可编辑草稿（DOCX）','text-button');
+      download.href='/api/assistant/conversations/'+encodeURIComponent(attempt.scope.conversation_id)+
+        '/material-generations/'+encodeURIComponent(attempt.id)+'/document';
+      download.download='材料分析草稿.docx';section.append(download);
+    }
   } else section.append(node('p',attemptText[attempt.state] || '生成状态待核对。','generation-note'));
   if(attempt.input_format==='profile-text-v1' && output) {
     const saved=attempt.profile_save,receipt=saved?.receipt;
@@ -185,9 +198,23 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       if((state.status==='revoked' || !isComposing()) && input.value!==state.text)input.value=state.text;
       input.disabled=readonly || state.loading || state.status==='revoked';
       const revoked=state.status==='revoked';
-      const messages=revoked || (state.view?.scope?.conversation_id && state.view.scope.conversation_id!==state.id)
+      const sourceMessages=revoked || (state.view?.scope?.conversation_id && state.view.scope.conversation_id!==state.id)
         ?[]:state.view?.messages || [];
       const generation=state.generation,research=state.research;
+      const materialParents=new Map(),completedBusiness=new Set(),hiddenMessages=new Set();
+      for(const item of generation?.items||[]){
+        const attempt=item.attempt,manifest=attempt.output?.manifest;
+        if(attempt.input_format!=='material-business-v1'||attempt.state!=='received'||attempt.scope?.conversation_id!==state.id||!manifest)continue;
+        const parent=state.business?.items?.find(value=>value.run_id===manifest.parent_business_run_id);
+        const original=sourceMessages.find(value=>value.id===parent?.message_id&&value.role==='user');
+        const duplicate=sourceMessages.find(value=>value.id===item.message_id&&value.role==='user');
+        if(!parent||!original||!duplicate||original.content!==manifest.question||duplicate.content!==manifest.question)continue;
+        materialParents.set(item.message_id,original.id);completedBusiness.add(parent.run_id);
+        if(duplicate.id!==original.id)hiddenMessages.add(duplicate.id);
+        for(const value of sourceMessages)if(value.role==='assistant'&&value.source_revision===parent.scope.input_revision&&value.content===parent.text)
+          hiddenMessages.add(value.id);
+      }
+      const messages=sourceMessages.filter(value=>!hiddenMessages.has(value.id));
       const local=state.skill==='legal_research';
       const history=byId('history');
       if(previousId!==state.id)history.replaceChildren();
@@ -196,9 +223,10 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       const visibleKey=Array.from(visible).join(',');
       const attemptsByMessage=new Map();
       for(const item of generation?.items || []) {
-        if(!visible.has(item.message_id) || item.attempt.scope?.conversation_id!==state.id)continue;
-        if(!attemptsByMessage.has(item.message_id))attemptsByMessage.set(item.message_id,[]);
-        attemptsByMessage.get(item.message_id).push(item.attempt);
+        const messageId=materialParents.get(item.message_id)||item.message_id;
+        if(!visible.has(messageId) || item.attempt.scope?.conversation_id!==state.id)continue;
+        if(!attemptsByMessage.has(messageId))attemptsByMessage.set(messageId,[]);
+        attemptsByMessage.get(messageId).push(item.attempt);
       }
       Array.from(history.children).forEach(item=>{if(!visible.has(item.dataset.messageId))item.remove();});
       const existing=new Map(Array.from(history.children).map(item=>[item.dataset.messageId,item]));
@@ -221,7 +249,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
           item.querySelectorAll('.material-generation-action').forEach(element=>element.remove());
           for(const attempt of attempts)item.append(renderAttempt(attempt,visible,onCitation));
           for(const result of searches)item.append(renderResearch(root,result,onCitation));
-          if(business?.task_id&&business.workflow&&(state.materials?.items?.length||business.workflow==='sales')){
+          if(business?.task_id&&business.workflow&&!completedBusiness.has(business.run_id)&&(state.materials?.items?.length||business.workflow==='sales')){
             const action=node('div',undefined,'material-generation-action'),button=node('button',business.workflow==='sales'&&!state.materials?.items?.length?'用咨询文字生成 AI 接待草稿':'用当前材料生成 AI 草稿','text-button');button.type='button';
             const phase=state.materialGeneration?.phase;
             button.disabled=readonly||!state.materialGeneration?.available||['confirming','submitting','unknown'].includes(phase)||
@@ -230,9 +258,9 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
             if(phase==='unknown'){
               const retry=node('button','查找本次 AI 发送结果','text-button');retry.type='button';retry.addEventListener('click',()=>onGenerateMaterial(business.run_id));action.append(retry);
             }
-            if(phase==='confirming')action.append(node('p','请在原生窗口核对材料、接收模型与费用；取消不会发送。','generation-note'));
-            if(!state.materialGeneration?.available)action.append(node('p','请在桌面应用配置模型后，逐次确认材料发送。','generation-note'));
-            if(state.materialGeneration?.error)action.append(node('p',errorText(state.materialGeneration.error),'generation-note'));
+            if(phase==='confirming')action.append(node('p','正在核对模型设置与本次材料范围…','generation-note'));
+            if(!state.materialGeneration?.available)action.append(node('p','请在桌面应用配置模型和材料分析范围。','generation-note'));
+            if(state.materialGeneration?.error)action.append(node('p',generationErrorText(state.materialGeneration.error),'generation-note'));
             item.append(action);
           }
           renderedAttempts.set(item,signature);
@@ -281,7 +309,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       byId('send').disabled=workflow?.canSend!==true || readonly || state.loading || Boolean(state.skill && !local && !businessMode) ||
         ['saving','conflict','readonly','revoked'].includes(state.status) || ['checking','confirming','submitting','unknown','tracking'].includes(phase);
       byId('generation-note').textContent=revoked?'访问已结束。':readonly || state.status==='readonly'
-        ?generationCapabilityText.restored_read_only:businessMode?'在本对话整理任务与材料，结果保存在本机；当前为本地准备，未启用材料模型分析。':local
+        ?generationCapabilityText.restored_read_only:businessMode?'自动关联任务和材料，按模型设置分析；结果与来源保存在本对话。':local
           ?state.materials?.items?.length?'本机关键词检索暂不接受附件，请先将材料移出本次。': [...state.text].length>200
             ?'关键词超过 200 字。请缩短后检索；原有文字仍保留。':'输入不超过 200 字的关键词，仅查询本机资料库；不会发送给模型。'
           :contextMode

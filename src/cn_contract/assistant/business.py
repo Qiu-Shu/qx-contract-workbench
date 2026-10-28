@@ -21,11 +21,13 @@ def classify(content):
     choices = []
     if any(word in content for word in ('客户咨询', '接待客户', '客户的咨询', '客户诉求', '销售接待')):
         choices.append('sales')
-    if any(word in content for word in ('整理案件', '整理这个案件', '整理材料', '整理证据', '时间线', '事实线索')):
+    if any(word in content for word in ('整理案件', '整理这个案件', '整理材料', '整理证据', '时间线', '事实线索', '起草起诉状', '起草答辩状')):
         choices.append('case')
-    if any(word in content for word in ('审查合同', '审查这个合同', '审阅合同', '审查这份合同', '合同审查', '重新审查')):
+    if (any(word in content for word in ('审查合同', '审查这个合同', '审阅合同', '审查这份合同', '合同审查', '重新审查'))
+            or any(word in content for word in ('我是甲方', '我是乙方', '代表甲方', '代表乙方'))
+            and any(word in content for word in ('审查', '审阅', '修改'))):
         choices.append('contract')
-    if any(word in content for word in ('模拟法庭', '模拟对方律师', '法官角度', '对方律师和法官', '庭审准备')):
+    if any(word in content for word in ('模拟法庭', '模拟开庭', '模拟对方律师', '法官角度', '对方律师和法官', '庭审准备')):
         choices.append('court')
     return choices[0] if len(choices) == 1 else 'ambiguous' if choices else None
 
@@ -155,16 +157,84 @@ def find(actor, cid, request_id, db):
 
 
 def _reception(actor, run, request, db):
+    import re
+
+    # Only whole-message presentation requests are excluded; mixed facts remain sourced.
+    output_only = re.fullmatch(
+        r'(?:请|麻烦)?(?:(?:把|将)?(?:刚才的|上面的|这段)?(?:发?给客户的)?(?:回复|答复|回答)(?:再)?'
+        r'(?:(?:缩短|精简|压缩)(?:到|为|成)?(?:[一二三四五六七八九十两0-9]+句(?:话)?|一点|一些)?'
+        r'|(?:改得|改为|改成|写得|调整为)(?:更)?(?:委婉|礼貌|简短|简洁|正式|口语化|温和|通俗)(?:的语气)?(?:一点|一些)?)'
+        r'|用[一二三四五六七八九十两0-9]+句话(?:回复|答复|回答)'
+        r'|(?:润色|精简|缩短)(?:一下)?(?:刚才的|上面的|这段)?(?:回复|答复|回答))',
+        request.content.strip().rstrip('。！!？?')) is not None
     current = profile_store._profile(run.scope.conversation_id, db)
+    view = reception_worksheet.view(actor, run.scope.conversation_id, db)
     quote = d.ProfileMessageRef(kind='message', conversation_id=run.scope.conversation_id,
         message_id=run.message_id, source_revision=run.scope.input_revision,
         start=0, end=len(request.content), quote=request.content, quote_sha256=sha_text(request.content))
-    changes = [d.ProfileProposal(field='consultation', value=d.TextFactValue(kind='text', value=request.content[:12000]),
-        origin='user_statement', source_refs=(quote,))]
-    if current is None:
+    excerpt = request.content if len(request.content) <= 12000 else '【原话节选；全文见来源消息】\n' + request.content[:11970]
+    changes = [] if output_only else [d.ProfileProposal(field='consultation',
+        value=d.TextFactValue(kind='text', value=excerpt), origin='user_statement', source_refs=(quote,))]
+    if current is None and not output_only:
         changes.append(d.ProfileProposal(field='title', value=d.TextFactValue(kind='text', value=request.content[:60]),
             origin='user_statement', source_refs=(quote,)))
-    view = reception_worksheet.view(actor, run.scope.conversation_id, db)
+    edits, notice = (), ''
+    project = view.writable and not output_only
+    if not output_only:
+        field = next((item for item in current.fields if item.field == 'consultation'), None) if current else None
+        managed = field is None and view.expected_intake_id is None
+        previous = ''
+        if field is not None:
+            # A value match alone never makes a human edit automatic. Prove the
+            # receipt belongs to a completed sales run in this same conversation.
+            auto = {}
+            for row in db.execute(text('''SELECT r.* FROM assistant_runs r WHERE r.conversation_id=:cid
+                    AND EXISTS(SELECT 1 FROM assistant_run_events e
+                    WHERE e.run_id=r.id AND e.event_type='business.result')'''),
+                    {'cid':str(run.scope.conversation_id)}).mappings():
+                accepted, result = _record(row, db)
+                if result.workflow == 'sales':
+                    auto[str(uuid5(NAMESPACE_URL, 'qx-business-profile:' + row['id']))] = accepted
+            for row in db.execute(text('''SELECT * FROM assistant_profile_receipts
+                    WHERE conversation_id=:cid ORDER BY sequence DESC'''),
+                    {'cid':str(run.scope.conversation_id)}).mappings():
+                saved = d.ProfileCommitInput.model_validate_json(row['request_json'])
+                edit = next((item for item in saved.manual_edits if item.field == 'consultation'), None)
+                proposal = next((item for item in saved.patch.changes if item.field == 'consultation'), None)
+                if edit is None and (field.protected_value is not None or proposal is None):
+                    continue
+                profile_store._receipt(row, actor, db)
+                origin = auto.get(row['request_id'])
+                expected = edit.value if edit else proposal.value
+                selected = field.protected_value
+                if selected is None and len(field.candidates) == 1:
+                    selected = field.candidates[0].value
+                managed = (origin is not None and origin.scope == saved.patch.scope
+                    and proposal is not None and selected == expected
+                    and row['intake_id'] == (str(view.expected_intake_id) if view.expected_intake_id else None)
+                    and row['intake_revision'] == view.expected_intake_revision
+                    and any(ref.kind == 'message' and ref.quote == origin.request.content
+                        and ref.conversation_id == run.scope.conversation_id
+                        and ref.source_revision == origin.scope.input_revision for ref in proposal.source_refs))
+                if managed and selected.kind == 'text':
+                    previous = selected.value
+                else:
+                    managed = False
+                break
+        if managed:
+            label = '明确更正' if request.content.lstrip().startswith(('更正', '纠正', '修正')) else '补充陈述'
+            combined = (previous + '\n\n【' + label + '（待核）】\n' if previous
+                        else '【原始陈述（待核）】\n') + request.content
+            if len(combined) <= 12000:
+                edits = (d.ProfileEdit(field='consultation', value=d.TextFactValue(kind='text', value=combined)),)
+            else:
+                project = False
+                notice = '\n\n咨询档案汇总超限，本次原话未并入；既有档案保持，完整补充及其来源保留在本对话和档案历史中。'
+        elif field is None or field.protected_value is None:
+            # Leave an unproven/conflicted existing projection intact for review.
+            project = False
+        else:
+            notice = '\n\n人工保留的咨询档案保持不变；本次补充作为待核原话保存，可回查来源。'
     patch = d.ProfilePatch(scope=run.scope, base_profile_revision=current.revision if current else 0,
                           changes=tuple(changes))
     source = d.AssistantMessageView(id=run.message_id, role='user', content=request.content,
@@ -172,9 +242,11 @@ def _reception(actor, run, request, db):
     receipt = profile_store._commit(actor, d.ProfileCommitInput(
         request_id=uuid5(NAMESPACE_URL, 'qx-business-profile:' + str(run.id)), patch=patch,
         expected_intake_id=view.expected_intake_id, expected_intake_revision=view.expected_intake_revision,
-        project_intake=view.writable), d.ProfileSourceSnapshot(scope=run.scope, messages=(source,)), db)
+        manual_edits=edits, project_intake=project), d.ProfileSourceSnapshot(scope=run.scope, messages=(source,)), db)
+    if output_only:
+        return '已保留本次回复调整要求；咨询档案与事实候选未改动。', receipt.intake_id
     reply = ('客户诉求与原始陈述（待核）\n' + request.content[:12000] +
-        ('\n（长文完整内容保留在上方原始消息中。）' if len(request.content)>12000 else '') + '\n\n待补信息\n'
+        ('\n（长文完整内容保留在上方原始消息中。）' if len(request.content)>12000 else '') + notice + '\n\n待补信息\n'
         '• 希望优先解决的问题及当前进展。\n• 关键日期、双方身份与完整原始材料。\n'
         '• 已有约定、实际履行及相反说法分别核对。\n\n后续跟进\n'
         '先核对以上信息；补充内容可继续发在本对话。明确日期前不自动安排期限。\n\n'

@@ -20,7 +20,7 @@
 <p id="backup-validation" role="alert" hidden></p><button id="maintenance-submit" type="submit">选择位置并备份</button></form>
 <section id="maintenance-result" hidden><p id="result-detail"></p><p id="result-path"></p></section>
 <form id="model-settings" hidden><h2>主模型设置</h2>
-<p>保存密钥不会配置本次运行；配置不会授权发送资料，也不会产生调用费用。</p>
+<p>保存密钥不会配置模型，也不会授权发送资料；配置操作本身不会产生调用费用。需要自动分析时，请在下方明确开启。</p>
 <section class="model-section" aria-labelledby="model-credential-title"><h3 id="model-credential-title">本机密钥</h3>
 <p id="model-status" class="credential-status" role="status" aria-live="polite">正在检查本机保存状态…</p>
 <label for="model-secret">DeepSeek API 密钥</label><input id="model-secret" type="password" required minlength="16" maxlength="512" autocomplete="off" spellcheck="false" aria-describedby="model-help">
@@ -31,7 +31,10 @@
 <section class="model-section" aria-labelledby="model-runtime-title"><h3 id="model-runtime-title">本次运行</h3>
 <p id="model-runtime-status" class="credential-status" role="status" aria-live="polite">正在检查本次运行配置…</p>
 <label for="model-id">使用模型</label><select id="model-id" aria-describedby="model-runtime-help" disabled><option value="deepseek-flash">DeepSeek Flash</option><option value="deepseek-v4-pro">DeepSeek V4 Pro</option></select>
-<p id="model-runtime-help" class="hint">接收方：DeepSeek。配置仅在本次运行有效；重启后需要重新配置。发送前仍需单独授权。</p>
+<p id="model-runtime-help" class="hint">接收方：DeepSeek（api.deepseek.com）。已保存的模型选择会在重启后恢复；换模型、换密钥或切换工作区后需重新开启自动分析。</p>
+<label><input id="model-automatic-analysis" type="checkbox" aria-describedby="model-automatic-scope model-automatic-limit" disabled> 开启当前任务材料自动分析</label>
+<p id="model-automatic-scope" class="hint">允许将当前聊天本任务的选定材料、本次问题及必要历史问答（最多 8 对、32 KiB）发送给上述模型，生成内部分析和草稿。不包含其他任务、案件、聊天或整个资料库；超出此范围时仍会单独确认。</p>
+<p id="model-automatic-limit" class="hint">每次分析最多调用 1 次，费用上限 0.024576 USD。</p>
 <p id="model-runtime-validation" role="alert" hidden></p>
 <div class="model-actions"><button id="model-configure" type="button" disabled>配置本次运行</button><button id="model-disable" class="secondary" type="button" disabled>停用本次运行</button></div>
 <details class="model-pricing"><summary>模型价格与输入输出上限</summary><p>估算采用 DeepSeek 官方价格页 2026-10-19 的繁忙时段、缓存未命中价格，单位为美元／百万 token：</p><ul><li>Flash：输入 0.3，输出 1.2。</li><li>V4 Pro：输入 1.32，输出 3.96。</li></ul><p>输入上限 65,536 字节，输出上限 4,096 tokens。实际账单与账号可用模型以供应商为准；配置操作不会验证联网可用性。</p></details>
@@ -57,5 +60,5 @@
 <button id="judge-recheck" class="secondary" type="button" disabled>重新检查保存与运行状态</button>
 </form>
 <button id="resume" class="secondary" hidden>打开工作台</button>
-<footer><p>本机验证版 · 主模型发送需单独授权，企查查关闭，工作稿需由律师核验。</p><details><summary>资料保存位置</summary><p id="data-path"></p><p>案件资料独立保存；重新安装程序不会主动清空资料。</p></details></footer>
+<footer><p>本机验证版 · 模型按已设置范围处理资料，企查查关闭，工作稿需由律师核验。</p><details><summary>资料保存位置</summary><p id="data-path"></p><p>案件资料独立保存；重新安装程序不会主动清空资料。</p></details></footer>
 </main></body></html>

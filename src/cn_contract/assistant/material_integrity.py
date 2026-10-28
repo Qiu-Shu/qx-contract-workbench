@@ -6,7 +6,7 @@ from .providers.policy import sha, encoded
 from .material_preparation import consultation_source
 
 
-def validate_input(db, row, prepared, config, policy, run):
+def validate_input(db, row, prepared, config, policy, run, *, history_queue=None):
     basis, manifest = prepared.request.basis, prepared.request.basis.manifest
     if (row['round_no'] != 1 or policy.max_calls != 1 or run['request_id'] != str(basis.request_id)
             or run['requested_skill'] is not None or manifest.parent_business_run_id != basis.parent_business_run_id
@@ -43,8 +43,21 @@ def validate_input(db, row, prepared, config, policy, run):
                     original_sha256=material.original_sha256, parse_revision=material.parse_revision,
                     result_sha256=material.result_sha256, anchor=anchor)
                 expected_sources.append(d.MainMaterialSource(source_id=sha(encoded(ref)), reference=ref))
+    context = tuple(source for source in manifest.sources if isinstance(source.reference, d.ProfileMessageRef)
+                    and source.reference.message_id != record[1].message_id)
+    if context:
+        from .material_history import statement_sources
+        if context != statement_sources(db, record[1], selected):
+            raise ValueError('MATERIAL_INPUT_INVALID')
+        expected_sources.extend(context)
     if tuple(expected_sources) != manifest.sources or codec.rebuild_basis(basis, config) != basis:
         raise ValueError('MATERIAL_INPUT_INVALID')
+    if manifest.conversation_history:
+        from .material_history import select_history, history_budget
+        history = select_history(db, record[1].scope, manifest.stable_task_id,
+            before_at=record[1].created_at, validation_queue=history_queue, budget=history_budget(context))
+        if history != manifest.conversation_history:
+            raise ValueError('MATERIAL_INPUT_INVALID')
     from .material_attempts import message
     if run['request_sha256'] != service._digest({'actor_id':run['actor_id'], 'workspace_id':str(basis.expected_scope.workspace_id),
             'conversation_id':row['conversation_id'], 'request':message(basis).model_dump(mode='json')}):

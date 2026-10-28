@@ -5384,9 +5384,21 @@ class MainMaterialManifest(DomainModel):
     question: AssistantText
     materials: Annotated[tuple[MainMaterialFile, ...], Field(max_length=20)]
     sources: Annotated[tuple[MainMaterialSource, ...], Field(min_length=1, max_length=2000)]
+    conversation_history: ConversationHistory = Field(default=(), exclude_if=lambda value: not value)
 
     @model_validator(mode='after')
     def exact_material_selection(self):
+        messages = [item for item in self.sources if isinstance(item.reference, ProfileMessageRef)]
+        current = messages[0].reference if messages else None
+        _conversation_history(self.conversation_history, current.source_revision - 1 if current else 0)
+        context = messages[1:]
+        if context:
+            if (self.workflow != 'court' or len(context) > 8
+                    or len({item.reference.message_id for item in messages}) != len(messages)
+                    or any(item.reference.source_revision >= current.source_revision for item in context)
+                    or len(json.dumps([item.model_dump(mode='json') for item in context], ensure_ascii=False, separators=(',', ':')).encode('utf-8'))
+                        + len(json.dumps([item.model_dump(mode='json') for item in self.conversation_history], ensure_ascii=False, separators=(',', ':')).encode('utf-8')) > 32768):
+                raise ValueError('MATERIAL_MANIFEST_INVALID')
         files = {item.attachment_id:item for item in self.materials}
         if not self.question.strip() or len(files) != len(self.materials) or len({x.source_id for x in self.sources}) != len(self.sources):
             raise ValueError('MATERIAL_MANIFEST_INVALID')
@@ -5395,7 +5407,7 @@ class MainMaterialManifest(DomainModel):
         for item in self.sources:
             ref = item.reference
             if isinstance(ref, ProfileMessageRef):
-                if ref.quote != self.question or ref.start != 0:
+                if ref.start != 0 or ref is current and ref.quote != self.question:
                     raise ValueError('MATERIAL_MANIFEST_INVALID')
                 continue
             material = files.get(ref.attachment_id)

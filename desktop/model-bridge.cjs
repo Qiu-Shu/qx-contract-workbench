@@ -1,7 +1,7 @@
 // Assistant-page model bridge: status read, in-place switch, startup auto-configure.
-// The credential stays in the OS-protected store; every send still needs the
-// native confirmation window. Auto-configure only restores the process-local
-// runtime from the owner's persisted choice.
+// The credential stays in the OS-protected store. Automatic material analysis
+// uses the owner's initial scope; other sends keep native confirmation.
+// Auto-configure restores the process-local runtime from the persisted choice.
 const MODELS = ['deepseek-flash', 'deepseek-v4-pro'];
 
 const denied = code => ({ ok: false, ...(code ? { code } : {}) });

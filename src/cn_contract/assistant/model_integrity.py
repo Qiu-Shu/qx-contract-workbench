@@ -253,8 +253,10 @@ def _validate_rounds_replay(db, run_id, ordered, prepareds, plan_map):
 
 
 def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rounds=False,
-              profile_schema=False, material_schema=False):
+              profile_schema=False, material_schema=False, selected_only=False, material_history_queue=None):
     from . import context_integrity
+    if material_history_queue is None:
+        material_history_queue = []  # Full archive validation visits every attempt itself.
     run_attempts = {}
     prepareds = {}
     plan_map, stop_map = _plan_stop_events(db) if rounds else ({}, {})
@@ -364,7 +366,8 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
         else:
             if material:
                 from . import material_integrity
-                material_integrity.validate_input(db, row, prepared, config, policy, run)
+                material_integrity.validate_input(db, row, prepared, config, policy, run,
+                    history_queue=material_history_queue)
             elif profile:
                 profile_model_integrity.validate_input(db, row, prepared, config, policy, run, conversation)
             elif (sha(prepared.wire_payload_json) != row['request_sha256']
@@ -411,7 +414,7 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
         if calls > policy.max_calls:
             _fail()
         policies[row['policy_id']] = old_policy, calls
-    if context_schema:
+    if context_schema and not selected_only:
         # No orphaned or extra relation rows beyond the validated manifests.
         total = db.scalar(text('SELECT COUNT(*) FROM assistant_model_input_citations'))
         if total != relations:

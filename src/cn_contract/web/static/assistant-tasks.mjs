@@ -339,7 +339,7 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
       renderMaterials(state.materials);
       const latest=state.business?.items?.filter(item=>item.contract_draft_id).at(-1);
       if(latest&&latest.run_id!==businessRun&&!busy&&!pending){
-        businessRun=latest.run_id;selected=latest.contract_draft_id;byId('task-draft-panel').open=true;
+        businessRun=latest.run_id;selected=latest.contract_draft_id;
         void refresh().catch(error=>{if(active())tell(errorText(error));});
       }
       controls();

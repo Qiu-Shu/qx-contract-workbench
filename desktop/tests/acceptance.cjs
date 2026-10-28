@@ -35,6 +35,13 @@ async function login() {
   await page.locator('[name=password]').fill('fiction123');
   await page.getByRole('button',{name:'登录',exact:true}).click();
   await page.waitForURL(/127\.0\.0\.1:\d+\/(workspace|assistant)$/);
+  if(new URL(page.url()).pathname==='/assistant') {
+    await page.locator('#composer').waitFor({state:'visible'});
+    if(!report.checks.includes('unified-chat-home'))report.checks.push('unified-chat-home');
+    // Retain the legacy case/export regression through its current navigation.
+    await page.getByRole('link',{name:'工作区与接待',exact:true}).click();
+    await page.waitForURL(/\/workspace$/);
+  }
   await page.getByRole('link',{name:/^(合同审查|合同工作台)$/}).click();
 }
 (async()=>{

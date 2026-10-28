@@ -470,3 +470,19 @@ test('profile history approval shows the exact prior pair and current text as pl
   assert.deepEqual(plain(await native.handlers.get('desktop:approval-state')(native.event(win))),details);
   native.handlers.get('desktop:approval-decision')(native.event(win),false);assert.equal(await pending,false);
 });
+
+test('material fallback discloses same-task history, question and sources as plain text',async()=>{
+  const value={...details,kind:'material_business',content:'本次问题：继续核对付款日期。',basis:{input_format:'material-business-v1',manifest:{
+    materials:[{name:'独立虚构合同.docx',parse_revision:1,reading_status:'readable',unread_parts:[],original_sha256:'a'.repeat(64)}],
+    sources:[{source_id:'b'.repeat(64),reference:{anchor:{quote:'合同摘录：双方另行确认。'}}}],
+    conversation_history:[{message_id:'11111111-2222-4333-8444-555555555555',role:'user',source_revision:1,content:'上次问题 <img src=x>'},
+      {message_id:'11111111-2222-4333-8444-666666666666',role:'assistant',source_revision:1,content:'上次待核回答。'}]}}};
+  const f=page(async()=>value);await tick();
+  assert.equal(f.at('approval-confirm').disabled,false);
+  assert.match(f.at('approval-content').textContent,/历史提问.*输入版本 1\n上次问题 <img src=x>/);
+  assert.match(f.at('approval-content').textContent,/历史回答（待核）.*输入版本 1\n上次待核回答。/);
+  assert.match(f.at('approval-content').textContent,/本次问题：继续核对付款日期。/);
+  assert.match(f.at('approval-content').textContent,/合同摘录：双方另行确认。/);
+  assert.match(f.at('approval-intro').textContent,/同任务历史问答/);
+  f.events.get('pagehide')();assert.equal(f.at('approval-content').textContent,'');
+});

@@ -22,6 +22,8 @@
   window.createModelSettingsUI=({api,document,window})=>{
     const at=id=>document.querySelector('#'+id);
     let active=false,epoch=0,busy=false;
+    const automatic=at('model-automatic-analysis'),limits={'deepseek-flash':'0.024576','deepseek-v4-pro':'0.10272768'};
+    automatic.checked=false;
     const sections=variants.map(variant=>{
       const section={...variant,at:name=>at(variant.prefix+'-'+name),credential:'loading',runtime:{state:'unavailable',model:null}};
       section.at('id').value=variant.initial;
@@ -37,7 +39,8 @@
         section.at('save').textContent=credential==='saved'?'替换已保存密钥':'保存密钥';
         section.at('remove').disabled=locked||['loading','empty'].includes(credential);
         choice.disabled=locked||runtime.state==='unavailable';
-        const sameModel=runtime.state==='configured'&&runtime.model===choice.value;
+        const sameModel=runtime.state==='configured'&&runtime.model===choice.value&&
+          (section.prefix!=='model'||Boolean(runtime.automatic_analysis)===automatic.checked);
         section.at('configure').disabled=locked||credential!=='saved'||runtime.state==='unavailable'||
           !Object.hasOwn(models,choice.value)||sameModel;
         section.at('configure').textContent=sameModel?'本次运行已配置':runtime.state==='configured'?'应用所选模型':'配置本次运行';
@@ -45,6 +48,8 @@
         section.at('recheck').disabled=locked;
         section.at('settings').setAttribute('aria-busy',String(busy));
       }
+      automatic.disabled=locked||sections[0].credential!=='saved'||sections[0].runtime.state==='unavailable';
+      at('model-automatic-limit').textContent=`每次分析最多调用 1 次，费用上限 ${limits[sections[0].at('id').value]||'—'} USD。`;
       at('resume').disabled=active&&busy;
     }
     function error(node,code,messages) {
@@ -62,19 +67,22 @@
       const value=result?.runtime;
       const runtime=value&&['unavailable','unconfigured','configured'].includes(value.state)&&
         (value.state==='configured'?result.ok===true&&typeof value.model==='string'&&Object.hasOwn(section.models,value.model):value.model===null)
-        ?{state:value.state,model:value.model}:{state:'unavailable',model:null};
+        ?{state:value.state,model:value.model,...(section.prefix==='model'&&value.automatic_analysis===true?{automatic_analysis:true}:{})}
+          :{state:'unavailable',model:null};
       section.runtime=runtime;
       section.at('runtime-status').textContent=runtime.state==='configured'
-        ?`本次运行已配置 ${section.models[runtime.model]}，${section.prefix==='judge'?'尚未批准发送':'尚未授权发送'}。`
+        ?`本次运行已配置 ${section.models[runtime.model]}，${section.prefix==='judge'?'尚未批准发送':runtime.automatic_analysis?'已开启当前任务材料自动分析':'尚未授权发送'}。`
         :runtime.state==='unconfigured'?(section.prefix==='judge'?'本次运行未配置 Jev，尚未批准发送。':'本次运行未配置模型。')
           :'当前无法配置本次运行，请返回工作台或重新检查。';
       if(runtime.state==='configured')section.at('id').value=runtime.model;
+      if(section.prefix==='model')automatic.checked=runtime.automatic_analysis===true;
       error(section.at('runtime-validation'),result?.ok===true?null:(result?.code||'MODEL_RUNTIME_FAILED'),runtimeErrors);
     }
     async function action(section,operation,value) {
       if(!active||busy)return;
       if(['save','remove','configure','disable'].includes(operation)&&section.at(operation).disabled)return;
       if(operation==='configure'&&!Object.hasOwn(section.models,value))return;
+      const automaticAnalysis=section?.prefix==='model'&&automatic.checked;
       const ticket=++epoch;busy=true;clearSecrets();
       const targets=section?[section]:sections;
       for(const target of targets) {
@@ -87,7 +95,7 @@
       try {
         let result;
         if(operation==='configure'||operation==='disable') {
-          try {result=await (operation==='configure'?api[section.prefix+'Configure'](value):api[section.prefix+'Disable']());}
+          try {result=await (operation==='configure'?api[section.prefix+'Configure'](value,automaticAnalysis):api[section.prefix+'Disable']());}
           catch {result={ok:false,runtime:{state:'unavailable',model:null},code:'MODEL_RUNTIME_FAILED'};}
           if(ticket!==epoch||!active)return;
           showRuntime(section,result);return;
@@ -112,7 +120,7 @@
         if(ticket===epoch){clearSecrets();busy=false;controls();}
       }
     }
-    function reset() {epoch++;active=false;busy=false;clearSecrets();controls();}
+    function reset() {epoch++;active=false;busy=false;automatic.checked=false;clearSecrets();controls();}
     for(const section of sections) {
       section.at('settings').addEventListener('submit',event=>{
         event.preventDefault();const value=section.at('secret').value;section.at('secret').value='';return action(section,'save',value);
@@ -121,8 +129,9 @@
       section.at('recheck').addEventListener('click',()=>action(section,'status'));
       section.at('configure').addEventListener('click',()=>action(section,'configure',section.at('id').value));
       section.at('disable').addEventListener('click',()=>action(section,'disable'));
-      section.at('id').addEventListener('change',controls);
+      section.at('id').addEventListener('change',()=>{if(section.prefix==='model')automatic.checked=false;controls();});
     }
+    automatic.addEventListener('change',controls);
     for(const name of ['beforeunload','pagehide'])window.addEventListener(name,reset);
     return {
       render(state) {

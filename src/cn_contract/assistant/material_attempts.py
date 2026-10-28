@@ -61,6 +61,7 @@ def current(actor, row, db, runtime):
     prepared = attempts._input(row)
     request, basis = prepared.request, prepared.request.basis
     run = service._owned_run(actor, request.run_id, db)
+    inputs.require_parent_active(service._owned_run(actor, basis.parent_business_run_id, db))
     conversation = service._owned(actor, request.scope.conversation_id, db)
     config, policy = runtime.snapshot_for(actor, request.scope)
     runtime.check_material_submission(actor, basis)

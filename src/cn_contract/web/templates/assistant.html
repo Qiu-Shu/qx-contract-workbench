@@ -16,7 +16,7 @@
       <h2 id="common-heading">常用能力</h2>
       <button type="button" data-skill="client_reply" aria-pressed="false">销售接待</button>
       <button type="button" data-skill="material_organize" aria-pressed="false">案件整理</button>
-      <button type="button" data-skill="contract_review" aria-pressed="false">审查合同 · 模拟</button>
+      <button type="button" data-skill="contract_review" aria-pressed="false">审查合同</button>
       <button type="button" data-skill="mock_trial" aria-pressed="false">庭审准备</button>
     </nav>
     <section class="sidebar-section recent-section" aria-labelledby="recent-heading">
@@ -223,7 +223,7 @@
         <div id="skill-cards" class="skill-cards" aria-label="选择本次能力">
           <button type="button" data-skill="client_reply" aria-pressed="false"><strong>销售接待</strong><span>保存诉求与待补事项</span></button>
           <button type="button" data-skill="material_organize" aria-pressed="false"><strong>案件整理</strong><span>归集材料与日期线索</span></button>
-          <button type="button" data-skill="contract_review" aria-pressed="false"><strong>审查合同 · 模拟</strong><span>收集材料，确认事实后模拟审查</span></button>
+          <button type="button" data-skill="contract_review" aria-pressed="false"><strong>审查合同</strong><span>分析风险、定位原文、提出修改建议</span></button>
           <button type="button" data-skill="mock_trial" aria-pressed="false"><strong>庭审准备</strong><span>依据材料准备通用追问</span></button>
         </div>
         <div class="skill-options">
@@ -243,7 +243,7 @@
           <label for="material-file">选择文件（Word、PDF、表格、图片），可多选，也可直接拖入本页面</label>
           <input id="material-file" type="file" multiple accept=".docx,.doc,.pdf,.png,.jpg,.jpeg,.xlsx,.csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/png,image/jpeg,text/csv">
           <div id="material-queue" class="material-queue" aria-live="polite"></div>
-          <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取这些原件；内容待核实，不外发。</label>
+          <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取这些原件；内容待核实，模型分析遵循模型设置的材料范围。</label>
           {% if local_materials_enabled %}<label for="material-purpose">本次材料用途</label><select id="material-purpose"{% if readonly %} disabled{% endif %}><option value="local">本机材料 · 人工工作稿</option><option value="synthetic">已登记合成演示材料 · 可用于模拟任务</option></select><p class="muted">合成用途只接收系统已登记的演示文件；选择此项不会把真实材料认定为合成材料。</p>{% endif %}
           {% if not local_materials_enabled %}<p class="muted">当前环境仅接收已登记的独立合成材料。</p>{% endif %}
           <p id="material-notice" role="status" aria-live="polite"></p>

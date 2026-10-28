@@ -7,6 +7,7 @@ from ..ops.storage import require_active
 from . import service, attachment_records as records, attachment_files, business
 from .material_codec import build_basis
 from .providers.policy import encoded, sha
+from . import material_history
 
 
 def consultation_source(parent, question):
@@ -17,6 +18,11 @@ def consultation_source(parent, question):
     return d.MainMaterialSource(source_id=sha(encoded(ref)), reference=ref)
 
 
+def require_parent_active(parent):
+    if parent['cancel_requested'] or parent['state'] in ('cancelled', 'blocked'):
+        raise ServiceError('VERSION_CONFLICT', 409)
+
+
 def assemble(actor, selection, db, *, historical=False):
     cid = selection.expected_scope.conversation_id
     conversation = service._owned(actor, cid, db)
@@ -24,6 +30,8 @@ def assemble(actor, selection, db, *, historical=False):
         require_active(db)
         service._expected(conversation, selection)
     parent = service._owned_run(actor, selection.parent_business_run_id, db)
+    if not historical:
+        require_parent_active(parent)
     record = business._record(parent, db)
     if record is None:
         raise ServiceError('VERSION_CONFLICT', 409)
@@ -62,9 +70,13 @@ def assemble(actor, selection, db, *, historical=False):
                 result_sha256=parsed.result_sha256, anchor=anchor)
             sources.append(d.MainMaterialSource(source_id=sha(encoded(ref)), reference=ref))
     # Bounds reject the complete selection; no implicit prefix truncation.
+    context = material_history.statement_sources(db, result, items)
+    sources.extend(context)
     manifest = d.MainMaterialManifest(workflow=result.workflow, stable_task_id=result.task_id,
         parent_business_run_id=result.run_id, question=record[0].request.content,
-        materials=tuple(files), sources=tuple(sources))
+        materials=tuple(files), sources=tuple(sources), conversation_history=material_history.select_history(
+            db, result.scope, result.task_id, before_at=result.created_at, attachment_rows=rows,
+            budget=material_history.history_budget(context)))
     return manifest, rows
 
 

@@ -285,7 +285,7 @@ function registerModelApproval({ipcMain,runtime,judgeRuntime,captureContext,isBu
       if(typeof lease?.[authorize]!=='function')return denied();
       const before=await takeSnapshot(context,input,base,guard);
       if(!check(guard))return denied('STATE_CONFLICT');
-      const accepted=await confirm({parent:context.parent,guard,
+      const accepted=material && lease.automatic_material_analysis===true ? true : await confirm({parent:context.parent,guard,
         details:{kind:material?'material_business':profile?'profile_draft':'library_context',content:before.content,
           ...(profile||material?{basis:structuredClone(before.basis)}:{sources:before.sources}),
           model:lease.model,max_total_usd:lease.max_total_usd,recipient:'DeepSeek（api.deepseek.com）'}});

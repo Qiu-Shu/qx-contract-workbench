@@ -29,6 +29,8 @@
       if(!manifest||value.basis.input_format!=='material-business-v1'||!Array.isArray(manifest.materials)||
           !Array.isArray(manifest.sources)||!Object.hasOwn(models,value.model)||!budget(value.max_total_usd))throw Error();
       at('approval-intro').textContent=manifest.materials.length===0?'本次仅咨询文字，发送给下列模型后生成待核接待草稿。取消不会发送。':'本次将发送下列选中材料的可读原文、读取范围和问题，生成有出处的律师待核草稿。取消不会调用模型。';
+      if(manifest.conversation_history?.length)
+        at('approval-intro').textContent+='同时包含下列同任务历史问答（最多最近8轮、32KiB），历史回答仍待核对。';
       at('approval-text-title').textContent='本次问题与全部发送片段';
       const list=at('approval-sources-list');
       for(const file of manifest.materials){
@@ -96,8 +98,11 @@
         `程序将预留 USD ${judge.max_total_usd} 预算；这不是供应商收费上限，实际费用尚未核对。`:
         'Jev 辅助判断尚未启用，本次不会发送给 TypeSafe；你仍可确认主模型发送。';
     }
-    at('approval-content').textContent=value.kind==='material_business'?value.content+'\n\n'+value.basis.manifest.sources.map(s=>'['+s.source_id+']\n'+(s.reference.anchor?.quote??s.reference.quote)).join('\n\n'):value.kind==='profile_draft'&&value.basis.conversation_history?.length?
-      value.basis.conversation_history.map(item=>`${item.role==='user'?'历史提问':'历史回答（待核）'} · 输入版本 ${item.source_revision}\n${item.content}`).join('\n\n')+'\n\n本次文字\n'+value.content:value.content;
+    const history=value.kind==='material_business'?value.basis.manifest.conversation_history:
+      value.kind==='profile_draft'?value.basis.conversation_history:null;
+    const previous=history?.length?history.map(item=>`${item.role==='user'?'历史提问':'历史回答（待核）'} · 输入版本 ${item.source_revision}\n${item.content}`).join('\n\n')+'\n\n本次文字\n':'';
+    at('approval-content').textContent=previous+value.content+(value.kind==='material_business'?'\n\n'+
+      value.basis.manifest.sources.map(s=>'['+s.source_id+']\n'+(s.reference.anchor?.quote??s.reference.quote)).join('\n\n'):'');
     at('approval-recipient').textContent=value.recipient;
     at('approval-model').textContent=`${models[value.model]}（${value.model}）`;
     at('approval-budget').textContent=`USD ${value.max_total_usd}（本次一次调用）`;

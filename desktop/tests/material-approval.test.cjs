@@ -28,10 +28,10 @@ function basisFor(input){
     wire_sha256:'0'.repeat(64),wire_bytes:512};
 }
 
-async function fixture(t){
+async function fixture(t,automatic=false){
   const input={conversation_id:ID,request_id:REQUEST,expected_scope:{...scope},expected_composer_revision:3,parent_business_run_id:PARENT};
   const draft={scope:{...scope},composer_revision:3,archived_at:null};
-  const state={confirm:true,current:true,onConfirm:null,mutatePreview:null};
+  const state={confirm:true,current:true,onConfirm:null,mutatePreview:null,workspace:'synthetic-workspace'};
   const requests=[],calls=[];let details,payload;
   const backend={control:{ready:true,enabled:true,failed:false,closed:false},closing:false,
     async configureModel(){return {ok:true,status:'configured',config_sha256:'f'.repeat(64),config_version:ID};},
@@ -40,8 +40,9 @@ async function fixture(t){
     async authorizeMaterialModel(value){calls.push('authorize');payload=value;return {ok:true,status:'authorized'};},
     async revokeModel(){calls.push('revoke');return {ok:true,status:'revoked'};},
     async stop(){this.closing=true;}};
-  const runtime=createModelSession({store:{async withSecret(fn){await fn('synthetic_key');return {status:'saved'};}},getBackend:()=>backend});
-  await runtime.configure('deepseek-flash');
+  const runtime=createModelSession({store:{async withSecret(fn){await fn('synthetic_key');return {status:'saved'};}},
+    getBackend:()=>backend,getWorkspace:()=>state.workspace});
+  await runtime.configure('deepseek-flash',()=>true,automatic);
   const server=http.createServer((req,res)=>{
     const item={method:req.method,path:req.url,cookie:req.headers.cookie,csrf:req.headers['x-csrf-token']};requests.push(item);
     res.setHeader('Content-Type','application/json');
@@ -63,8 +64,60 @@ async function fixture(t){
     captureContext:value=>value===event?context:null,isBusy:()=>false,setBusy:()=>{},
     async confirm(value){details=value.details;calls.push('confirm');return state.onConfirm?state.onConfirm(value):state.confirm;}});
   const invoke=(value=input)=>handlers.get('desktop:approve-material')(event,value);
-  return {input,state,requests,calls,details:()=>details,payload:()=>payload,invoke};
+  return {input,state,requests,calls,runtime,backend,details:()=>details,payload:()=>payload,invoke};
 }
+
+test('explicit automatic material analysis skips confirmation but keeps both snapshots and bounded lease',async t=>{
+  const f=await fixture(t,true);f.state.confirm=false;
+  assert.deepEqual(await f.invoke(),{ok:true});
+  assert.deepEqual(f.calls,['authorize']);
+  assert.equal(f.requests.filter(value=>value.method==='POST').length,2);
+  assert.equal(f.payload().max_total_usd,'0.024576');
+  assert.equal(f.payload().expected_config_version,ID);
+});
+
+const history=()=>[
+  {message_id:'cccccccc-2222-4333-8444-555555555555',role:'user',source_revision:1,content:'前次问题：虚构合同约定哪一天付款？'},
+  {message_id:'dddddddd-2222-4333-8444-555555555555',role:'assistant',source_revision:1,content:'前次待核回答：请核对附件日期。'}
+];
+test('automatic material analysis authorizes the exact same-task history from both snapshots',async t=>{
+  const f=await fixture(t,true);
+  f.state.mutatePreview=basis=>({...basis,manifest:{...basis.manifest,conversation_history:history()}});
+  assert.deepEqual(await f.invoke(),{ok:true});
+  assert.deepEqual(f.calls,['authorize']);
+  assert.deepEqual(f.payload().basis.manifest.conversation_history,history());
+  assert.equal(f.requests.filter(value=>value.method==='POST').length,2);
+});
+
+test('automatic material analysis refuses a changed prior answer between snapshots',async t=>{
+  const f=await fixture(t,true);
+  f.state.mutatePreview=(basis,count)=>{
+    const previous=history();if(count>1)previous[1].content='被替换的历史回答';
+    return {...basis,manifest:{...basis.manifest,conversation_history:previous}};
+  };
+  assert.equal((await f.invoke()).ok,false);
+  assert.deepEqual(f.calls,[]);assert.equal(f.payload(),undefined);
+});
+
+test('automatic analysis still blocks changed basis, cancellation and unknown acknowledgements',async t=>{
+  const changed=await fixture(t,true);
+  changed.state.mutatePreview=(basis,count)=>count===1?basis:{...basis,wire_sha256:'1'.repeat(64)};
+  assert.equal((await changed.invoke()).ok,false);assert.deepEqual(changed.calls,[]);
+  const canceled=await fixture(t,true);canceled.state.current=false;
+  assert.equal((await canceled.invoke()).ok,false);assert.deepEqual(canceled.calls,[]);
+  const unknown=await fixture(t,true);unknown.backend.authorizeMaterialModel=async()=>({ok:true,status:'unknown'});
+  assert.equal((await unknown.invoke()).ok,false);assert.equal(unknown.backend.closing,true);
+});
+
+test('model, credential, workspace and disable changes invalidate automatic material analysis',async t=>{
+  const changed=await fixture(t,true);await changed.runtime.configure('deepseek-v4-pro');
+  assert.equal((await changed.invoke()).ok,true);assert.deepEqual(changed.calls,['confirm','authorize']);
+  for(const action of ['beforeCredentialChange','disable','workspace']){
+    const f=await fixture(t,true);
+    if(action==='workspace')f.state.workspace='another-workspace';else await f.runtime[action]();
+    assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,[]);
+  }
+});
 
 test('material confirmation presents exact sources and authorizes the same server basis once',async t=>{
   const f=await fixture(t);

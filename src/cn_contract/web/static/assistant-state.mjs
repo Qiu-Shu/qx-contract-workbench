@@ -23,6 +23,9 @@ export function createDraftController(api, {
     materials: null, materialAction: null, desktopModel: null};
   let epoch = 0, closed = false, channel = null, creating = null, pending = null, materialPending = null;
   let reading = false, paging = false, cancelling = false, generation = null, research = null, context = null, business = null, materialGeneration = null;
+  const stoppedRuns=new Set();
+  const isRunStopped=id=>stoppedRuns.has(id)||(state.view?.latest_run?.id===id&&
+    (state.view.latest_run.cancel_requested||state.view.latest_run.state==='cancelled'));
 
   function notify() {
     state.materialAction = materialPending?.kind || null;
@@ -38,6 +41,7 @@ export function createDraftController(api, {
     generation?.reset();research?.reset();context?.reset();business?.reset();materialGeneration?.reset();
     creating = pending = materialPending = null;
     reading = paging = cancelling = false;
+    stoppedRuns.clear();
     state.view = null; state.text = state.savedText = ''; state.skill = null;
     state.conflict = state.error = null; state.loading = false;
     state.materials = null; state.materialAction = null;
@@ -284,6 +288,8 @@ export function createDraftController(api, {
         !activeRuns.has(run.state) || run.cancel_requested) return false;
     const token = epoch, marker = {};
     cancelling = marker;
+    // The user's stop intent takes effect before an in-flight authorization resolves.
+    stoppedRuns.add(run.id);
     try {
       await api.cancelRun(run.id, {request_id: uuid()});
       if (!current(token)) return false;
@@ -293,7 +299,7 @@ export function createDraftController(api, {
     finally { if (cancelling === marker) cancelling = false; }
   }
   const workflowHost={state,readonly,uuid,notify,nativeAuthorization,nativeContextAuthorization,nativeProfileAuthorization,nativeMaterialAuthorization,
-    token:()=>epoch,current,fail,
+    token:()=>epoch,current,fail,isRunStopped,
     blocked:()=>Boolean((pending || creating) && !channel || materialPending || state.status==='error'),
     busy:()=>Boolean(channel || pending || creating || materialPending || reading),
     saveDraft:()=>save(false,true),refreshDraft:()=>refresh(true),
@@ -322,6 +328,17 @@ export function createDraftController(api, {
   materialGeneration=createMaterialGenerationController(api,{...workflowHost,
     blocked:()=>workflowHost.blocked() || generation?.blocked() || research?.blocked() || context?.blocked() || business?.blocked(),
     refreshHistory:()=>generation.refresh()});
+  async function sendBusiness(){
+    const token=epoch;
+    if(!await business.send()||!current(token))return false;
+    const receipt=business.lastAccepted();
+    // Only an acknowledged user send may start analysis. History reads never send.
+    // New typing and explicit collection instructions stay in the user's control.
+    if(!receipt?.task_id||!receipt.workflow||isRunStopped(receipt.run_id)||!state.materialGeneration.available||state.text.trim()||
+        /稍等|等我|先别|先不要|暂不|上传完再|发完再/.test(business.lastAcceptedContent()))return true;
+    if(receipt.workflow!=='sales'&&!state.materials?.items?.length)return true;
+    return materialGeneration.send(receipt.run_id);
+  }
   function refreshWorkflows(){
     if(materialGeneration.unknown())return materialGeneration.refresh();
     if(business.unknown())return business.refresh();
@@ -360,9 +377,9 @@ export function createDraftController(api, {
       state.skill = skill; generation.changed();research.changed();context.changed(); notify();
     },
     open, save: () => save(), retry: () => save(true), refresh, loadEarlier, cancel,
-    send:()=>business.unknown()?business.send():research.unknown()?research.send():generation.unknown()?generation.send():
+    send:()=>materialGeneration.unknown()?materialGeneration.refresh():business.unknown()?sendBusiness():research.unknown()?research.send():generation.unknown()?generation.send():
       context.unknown()?context.send():
-      business.handles()?business.send():
+      business.handles()?sendBusiness():
       state.skill==='legal_research'?research.send():
       !state.skill && state.context?.selected.length?context.send():generation.send(),
     generateMaterial:id=>materialGeneration.send(id),
