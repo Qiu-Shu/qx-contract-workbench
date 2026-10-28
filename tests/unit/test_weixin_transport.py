@@ -316,17 +316,53 @@ def test_declared_plaintext_length_is_checked_after_decryption(connected):
         value.download_file(document(len=str(len(PLAIN) + 1)), item_index=0, max_bytes=100)
 
 
-def test_poll_validates_entire_batch_and_preserves_uint64_bytes(connected):
+def test_poll_preserves_uint64_bytes(connected):
     value, wire = connected
     wire.updates = json.dumps({'msgs': [incoming()], 'get_updates_buf': 'next'}, indent=2).encode()
     assert value.poll_updates('last-durable') == wire.updates
     assert value.validate_message(incoming()) == '18446744073709551615'
     assert value.validate_message(incoming(message_id='18446744073709551615')) == '18446744073709551615'
-    wire.updates = json.dumps({'msgs': [incoming(), incoming(from_user_id='another-peer')],
-                               'get_updates_buf': 'untrusted-next'}).encode()
-    with pytest.raises(ProbeError, match='SCOPE'):
-        value.poll_updates('last-durable')
-    assert len(wire.requests) == 4
+
+
+BLOCKED_MESSAGES = [incoming(from_user_id='another-peer'), incoming(group_id='fictional-group'),
+    incoming(item_list=[{'type': 2, 'image_item': {'text': 'fictional-photo'}}]),
+    incoming(message_type=2), None, {'message_id': 'invalid'}]
+BLOCKED_IDS = ['other-peer', 'group', 'photo', 'echo', 'non-message', 'malformed']
+
+
+@pytest.mark.parametrize('blocked', BLOCKED_MESSAGES, ids=BLOCKED_IDS)
+def test_product_poll_returns_mixed_batch_for_individual_durable_disposition(connected, blocked):
+    value, wire = connected
+    first, last = incoming(message_id=1), incoming(message_id=2)
+    wire.updates = json.dumps({'msgs': [first, blocked, last],
+                               'get_updates_buf': 'next-durable'}, indent=2).encode()
+    assert value.poll_updates('last-durable') == wire.updates
+    assert value.validate_message(first) == '1'
+    assert value.validate_message(last) == '2'
+    with pytest.raises(ProbeError):
+        value.validate_message(blocked)
+    assert json.loads(wire.requests[-1].content)['get_updates_buf'] == 'last-durable'
+    assert len(wire.requests) == 3
+
+
+@pytest.mark.parametrize('blocked', BLOCKED_MESSAGES, ids=BLOCKED_IDS)
+def test_probe_keeps_whole_mixed_batch_validation_before_file_or_reply(connected, blocked):
+    value, wire = connected
+    wire.statuses.append({'status': 'confirmed', 'bot_token': 'private-token',
+                         'ilink_bot_id': 'fictional-bot', 'ilink_user_id': 'fictional-peer'})
+    probe = ConnectionProbe(client=value._client, expected_file={'name': 'fictional.pdf',
+        'size': len(PLAIN), 'sha256': hashlib.sha256(PLAIN).hexdigest()})
+    probe.start_qr()
+    probe.poll_login()
+    wire.updates = json.dumps({'msgs': [document(), blocked,
+        incoming(item_list=[{'type': 1, 'text_item': {'text': probe.test_instruction}}])],
+        'get_updates_buf': 'untrusted-next'}).encode()
+    with pytest.raises(ProbeError):
+        probe.poll_messages()
+    assert len(wire.requests) == 5  # Login pair for each instance and one poll only.
+    assert probe.summary()['file_verified'] is False
+    assert probe.summary()['reply'] == 'not_sent'
+    probe.close()
 
 
 @pytest.mark.parametrize('raw', [b'{}', b'[]', b'{"msgs":[],"msgs":[]}',

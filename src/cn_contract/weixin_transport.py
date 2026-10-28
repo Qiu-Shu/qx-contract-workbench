@@ -221,6 +221,7 @@ class _ProtocolSession:
         return 'submitted'
 
     def _updates(self, cursor):
+        """Validate the envelope; durable ingress records each message's disposition."""
         self._connected()
         if type(cursor) is not str or len(cursor) > 16384:
             raise ProbeError('INVALID_UPDATES')
@@ -234,8 +235,6 @@ class _ProtocolSession:
         if (type(messages) is not list or len(messages) > 100
                 or type(next_cursor) is not str or len(next_cursor) > 16384):
             raise ProbeError('INVALID_UPDATES')
-        for message in messages:
-            self._message(message)
         return raw, value
 
     def start_qr(self):
@@ -362,5 +361,9 @@ class PersonalWeixinTransport(_ProtocolSession):
         return self._send_text(text=text, client_id=client_id, context=context)
 
     def poll_updates(self, cursor):
-        """Return unchanged raw JSON; caller commits a cursor only after durable ingress."""
+        """Return unchanged bounded envelope, including individually blocked messages.
+
+        Caller journals every disposition before committing its durable cursor,
+        and validates each message's scope before business processing or downloads.
+        """
         return self._updates(cursor)[0]
