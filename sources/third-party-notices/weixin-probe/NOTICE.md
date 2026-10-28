@@ -18,6 +18,14 @@ The file length check follows `src/api/types.ts` (`FileItem.len?: string`) and
 These client definitions do not guarantee every server response shape; unsupported
 length representations stop the probe before any download.
 
+The shared internal `src/cn_contract/weixin_transport.py` now holds the same
+bounded HTTP, QR/login, update validation, AES/CDN, and fixed-peer text-send
+protocol primitives. Its caller owns persistence, cursor commits, previously
+claimed client IDs, and business authorization. No upstream SDK or retry loop is
+included. The standalone probe retains its expected fictional-file name, size,
+SHA256, fresh per-process challenge, fixed reply and once-only send gates; it
+does not expose the transport's internal product send/document methods.
+
 License source: https://github.com/Tencent/openclaw-weixin/blob/874637a0dbc24050f72d1385add4fc6170a2d726/LICENSE
 
 ## Original license
