@@ -1,0 +1,70 @@
+{
+  "checks": [
+    "first-screen input and no page overflow at five window sizes",
+    "worksheet edits block navigation, save and survive reload; original demo notes restored",
+    "fact editor receives focus and cancel preserves the saved row",
+    "follow-up edit/save focuses final action, persists status and keeps history read-only",
+    "client projection excludes internal notes and downloads an actual Word; closing restores workspace",
+    "larger reading sizes remain available without page overflow"
+  ],
+  "geometry": [
+    {
+      "width": 1224,
+      "height": 785,
+      "composer": {
+        "x": 264,
+        "y": 395.484375,
+        "width": 920,
+        "height": 182
+      },
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "composer": {
+        "x": 336,
+        "y": 395.484375,
+        "width": 992,
+        "height": 182
+      },
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "height": 900,
+      "composer": {
+        "x": 88,
+        "y": 518.125,
+        "width": 656,
+        "height": 182
+      },
+      "overflow": false
+    },
+    {
+      "width": 640,
+      "height": 800,
+      "composer": {
+        "x": 16,
+        "y": 455.609375,
+        "width": 608,
+        "height": 182
+      },
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "composer": {
+        "x": 16,
+        "y": 495.609375,
+        "width": 358,
+        "height": 182
+      },
+      "overflow": false
+    }
+  ],
+  "page_errors": [],
+  "external_requests": [],
+  "pass": true
+}

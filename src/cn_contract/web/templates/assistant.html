@@ -7,47 +7,79 @@
   <link rel="stylesheet" href="/static/assistant.css">
   <script type="module" src="/static/assistant.mjs"></script>
 </head>
-<body data-conversation-id="{{ conversation_id }}" data-readonly="{{ 'true' if readonly else 'false' }}" data-local-materials="{{ 'true' if local_materials_enabled else 'false' }}" data-library-enabled="{{ 'true' if library_enabled else 'false' }}">
+<body data-view-mode="workbench" data-conversation-id="{{ conversation_id }}" data-readonly="{{ 'true' if readonly else 'false' }}" data-local-materials="{{ 'true' if local_materials_enabled else 'false' }}" data-library-enabled="{{ 'true' if library_enabled else 'false' }}">
+  <svg class="icon-sprite" aria-hidden="true" focusable="false"><defs>
+    <symbol id="ui-chat" viewBox="0 0 24 24"><path d="M6 18 3 21V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6Z"/><path d="M7 8h10M7 12h7"/></symbol>
+    <symbol id="ui-folder" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/><path d="M3 9h18"/></symbol>
+    <symbol id="ui-document" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+    <symbol id="ui-scales" viewBox="0 0 24 24"><path d="M12 3v18M6 21h12M4 7h16M6 7l-4 8h8L6 7Zm12 0-4 8h8l-4-8Z"/></symbol>
+    <symbol id="ui-chevron" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></symbol>
+    <symbol id="ui-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="ui-attach" viewBox="0 0 24 24"><path d="m9 13 6-6a3 3 0 0 1 4 4l-8 8a5 5 0 0 1-7-7l9-9"/></symbol>
+  </defs></svg>
   <a class="skip-link" href="#composer">跳到输入框</a>
   <aside id="sidebar" class="sidebar" aria-label="工作台导航">
-    <a class="brand" href="/assistant" aria-label="群兴法律工作台，对话首页"><span class="brand-short">群兴</span><span class="brand-long">法律工作台</span></a>
-    <button id="new-conversation" class="new-conversation" type="button" aria-label="新对话"{% if readonly %} disabled{% endif %}><span class="compact-label" aria-hidden="true">新建</span><span class="expanded-label">新对话</span></button>
-    <nav class="sidebar-section common-skills" aria-labelledby="common-heading">
-      <h2 id="common-heading">常用能力</h2>
-      <button type="button" data-skill="client_reply" aria-pressed="false">销售接待</button>
-      <button type="button" data-skill="material_organize" aria-pressed="false">案件整理</button>
-      <button type="button" data-skill="contract_review" aria-pressed="false">审查合同</button>
-      <button type="button" data-skill="mock_trial" aria-pressed="false">庭审准备</button>
-    </nav>
-    <section class="sidebar-section recent-section" aria-labelledby="recent-heading">
-      <h2 id="recent-heading">最近记录</h2>
-      <div id="conversation-list" class="conversation-list" aria-live="polite"><p class="muted">正在读取记录…</p></div>
-      <button id="more-conversations" class="text-button" type="button" hidden>加载更多记录</button>
-    </section>
+    <a class="brand" href="/assistant" aria-label="群兴法律工作台，对话首页"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 7h9v19H6zM18 4h8v19h-8z"/><path d="M9 11h3m-3 4h3m9-7h2m-2 4h2M4 28h24"/></svg></span><span class="brand-copy"><span class="brand-short">群兴</span><span class="brand-long">法律工作台</span></span></a>
+    <button id="new-conversation" class="new-conversation" type="button" aria-label="新对话"{% if readonly %} disabled{% endif %}><svg class="ui-icon" aria-hidden="true"><use href="#ui-plus"/></svg><span class="compact-label" aria-hidden="true">新建</span><span class="expanded-label">新对话</span></button>
     <nav class="workspace-links" aria-label="已有工作区">
       <a href="/workspace" aria-label="工作区与接待"><span class="compact-label" aria-hidden="true">接待</span><span class="expanded-label">工作区与接待</span></a>
       {% if library_enabled %}<a href="/library" aria-label="法律资料库"><span class="compact-label" aria-hidden="true">法库</span><span class="expanded-label">法律资料库</span></a>{% endif %}
     </nav>
-    <div class="account-area"><span id="account-name" class="muted"></span><button id="logout" class="text-button" type="button">退出登录</button></div>
+    <section class="sidebar-section recent-section" aria-labelledby="recent-heading">
+      <h2 id="recent-heading">事项记录</h2>
+      <div id="conversation-list" class="conversation-list" aria-live="polite"><p class="muted">正在读取记录…</p></div>
+      <button id="more-conversations" class="text-button" type="button" hidden>加载更多记录</button>
+    </section>
+    <details class="sidebar-capabilities"><summary><svg class="ui-icon" aria-hidden="true"><use href="#ui-scales"/></svg>业务能力</summary>
+    <nav class="common-skills" aria-labelledby="common-heading">
+      <h2 id="common-heading" class="sr-only">常用能力</h2>
+      <button type="button" data-skill="client_reply" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#ui-chat"/></svg>客户接待</button>
+      <button type="button" data-skill="material_organize" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#ui-folder"/></svg>案件整理</button>
+      <button type="button" data-skill="contract_review" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#ui-document"/></svg>审查合同</button>
+      <button type="button" data-skill="mock_trial" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#ui-scales"/></svg>庭审准备</button>
+    </nav>
+    </details>
+    <div class="account-area"><span class="account-avatar" aria-hidden="true">律</span><span id="account-name" class="muted"></span><button id="logout" class="text-button" type="button">退出登录</button></div>
   </aside>
 
   <main id="main" class="assistant-main">
+    <img class="workspace-atmosphere" src="/static/workbench-warm-desk.png" alt="" aria-hidden="true" width="2172" height="724">
     <header class="page-toolbar">
       <button id="nav-toggle" class="quiet-button" type="button" aria-expanded="false" aria-controls="sidebar">菜单</button>
-      <p class="availability">{% if readonly %}恢复副本 · 只读{% else %}本机工作草稿 · 受控生成{% endif %}</p>
-      <button id="show-profile" class="text-button" type="button" aria-expanded="false" aria-controls="profile-preview" disabled>档案草稿</button>
-      <button id="show-outputs" class="text-button" type="button" aria-expanded="false" aria-controls="output-panel" disabled>成果与导出</button>
-      <button id="show-worksheet" class="text-button" type="button" aria-controls="worksheet-panel" disabled>接待底稿</button>
-      <button id="show-evidence" class="text-button" type="button" aria-controls="evidence-panel" disabled>事实与材料</button>
-      <button id="show-followups" class="text-button" type="button" aria-controls="followup-panel" disabled>待补与跟进</button>
-      <label class="reading-control" for="body-size">阅读字号<select id="body-size"><option value="16">标准 16</option><option value="18">较大 18</option><option value="20">大号 20</option></select></label>
+      <div class="toolbar-context"><span class="toolbar-title">事项工作台</span><p class="availability">{% if readonly %}恢复副本 · 只读{% else %}本机草稿 · 受控生成{% endif %}</p></div>
+      <div class="header-actions">
+        <div id="chat-tools-host" class="chat-tools-host"></div>
+        <div id="view-mode-switch" class="view-mode-switch" role="group" aria-label="视图模式">
+          <button id="view-mode-workbench" type="button" aria-pressed="true">工作台</button>
+          <button id="view-mode-chat" type="button" aria-pressed="false">对话</button>
+        </div>
+        <label class="reading-control" for="body-size"><span>阅读字号</span><select id="body-size"><option value="16">标准 16</option><option value="18">较大 18</option><option value="20">大号 20</option></select></label>
+      </div>
     </header>
 
     <div class="conversation-surface">
+      <div id="conversation-thread" class="conversation-thread">
       <header class="conversation-heading">
-        <h1 id="home-title">今天需要处理什么？</h1>
-        <p id="scope-label" class="muted">先记下咨询内容，草稿保存在本机。</p>
+        <div class="heading-copy">
+          <p class="workspace-eyebrow"><span></span>群兴 · 法律工作台</p>
+          <h1 id="home-title">把事情，一件件理清。</h1>
+          <p class="home-description">先记下眼前的情况，重要的线索可以逐步补齐。</p>
+          <p id="scope-label" class="muted">先记下咨询内容，草稿保存在本机。</p>
+        </div>
       </header>
+      <div id="workspace-tools-host" class="workspace-tools-host">
+        <details id="conversation-tools" class="conversation-tools" open>
+          <summary id="conversation-tools-summary"><svg class="ui-icon" aria-hidden="true"><use href="#ui-folder"/></svg>事项工具<svg class="tool-chevron" aria-hidden="true"><use href="#ui-chevron"/></svg></summary>
+      <nav class="workspace-tabs" aria-label="事项工具"><span class="tools-caption">事项工具</span>
+      <button id="show-profile" class="text-button" type="button" aria-expanded="false" aria-controls="profile-preview" disabled><svg class="ui-icon" aria-hidden="true"><use href="#ui-folder"/></svg>档案草稿<svg class="tool-chevron" aria-hidden="true"><use href="#ui-chevron"/></svg></button>
+      <button id="show-outputs" class="text-button" type="button" aria-expanded="false" aria-controls="output-panel" disabled><svg class="ui-icon" aria-hidden="true"><use href="#ui-document"/></svg>成果与导出<svg class="tool-chevron" aria-hidden="true"><use href="#ui-chevron"/></svg></button>
+      <button id="show-worksheet" class="text-button" type="button" aria-expanded="false" aria-controls="worksheet-panel" disabled><svg class="ui-icon" aria-hidden="true"><use href="#ui-chat"/></svg>接待底稿<svg class="tool-chevron" aria-hidden="true"><use href="#ui-chevron"/></svg></button>
+      <button id="show-evidence" class="text-button" type="button" aria-expanded="false" aria-controls="evidence-panel" disabled><svg class="ui-icon" aria-hidden="true"><use href="#ui-folder"/></svg>事实与材料<svg class="tool-chevron" aria-hidden="true"><use href="#ui-chevron"/></svg></button>
+      <button id="show-followups" class="text-button" type="button" aria-expanded="false" aria-controls="followup-panel" disabled><svg class="ui-icon" aria-hidden="true"><use href="#ui-scales"/></svg>待补与跟进<svg class="tool-chevron" aria-hidden="true"><use href="#ui-chevron"/></svg></button>
+      <button id="show-workbench-tasks" class="chat-only text-button" type="button">更多工作流程 · 工作台</button>
+      </nav>
+        </details>
+      </div>
       <noscript><p class="notice error">页面脚本未能运行，暂时无法读取或保存草稿。请重新打开应用，或进入已有工作区。</p></noscript>
       <p id="notice" class="notice" role="status" aria-live="polite"></p>
 
@@ -69,12 +101,89 @@
         <div class="conflict-actions"><button id="keep-local" type="button">保留当前文字并保存</button><button id="use-server" class="quiet-button" type="button">使用已保存文字</button></div>
       </section>
 
+      </div>
+
+      <section class="compose-section" aria-label="输入、保存与生成草稿">
+        <section id="material-section" class="material-section" aria-labelledby="material-heading" hidden>
+          <h2 id="material-heading">本次材料</h2>
+          <div id="material-list"></div>
+        </section>
+        <div class="skill-options">
+          <p><span id="selected-skill">自动选择能力</span><button id="clear-skill" class="text-button" type="button" hidden>取消选择</button></p>
+          <div id="business-task-choice" hidden><label for="business-task-select">这条消息的任务归属</label><select id="business-task-select"><option value="">自动判断</option></select></div>
+          <details id="more-skills"><summary>更多能力</summary><div class="more-skills-content"><button type="button" data-skill="legal_research" aria-pressed="false">检索法律资料</button><p class="muted">关键词检索仅使用本机资料库；选择后按发送执行。</p></div></details>
+        </div>
+        <form id="composer-form" class="composer-form">
+          <div class="composer-topline"><label for="composer"><svg class="ui-icon" aria-hidden="true"><use href="#ui-document"/></svg>咨询内容与工作指令</label><span>工作草稿</span></div>
+          <textarea id="composer" name="content" rows="4" maxlength="20000" placeholder="先记下客户的情况、你想核对的问题，或希望完成的工作…" aria-describedby="input-help save-status"{% if readonly %} readonly{% endif %}></textarea>
+          <div class="composer-actions">
+            <button id="add-material" class="quiet-button" type="button" aria-expanded="false" aria-controls="material-picker"{% if readonly %} disabled{% endif %}><svg class="ui-icon" aria-hidden="true"><use href="#ui-attach"/></svg>添加材料</button>
+            <div class="save-actions"><button id="switch-model" type="button" hidden>切换模型</button><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="generation-note generation-status">发送<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></div>
+          </div>
+        </form>
+        <section id="material-picker" class="material-picker" aria-label="添加本机文件" hidden>
+          <label for="material-file">选择文件（Word、PDF、表格、图片），可多选，也可直接拖入本页面</label>
+          <input id="material-file" type="file" multiple accept=".docx,.doc,.pdf,.png,.jpg,.jpeg,.xlsx,.csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/png,image/jpeg,text/csv">
+          <div id="material-queue" class="material-queue" aria-live="polite"></div>
+          <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取这些原件；内容待核实，模型分析遵循模型设置的材料范围。</label>
+          {% if local_materials_enabled %}<label for="material-purpose">本次材料用途</label><select id="material-purpose"{% if readonly %} disabled{% endif %}><option value="local">本机材料 · 人工工作稿</option><option value="synthetic">已登记合成演示材料 · 可用于模拟任务</option></select><p class="muted">合成用途只接收系统已登记的演示文件；选择此项不会把真实材料认定为合成材料。</p>{% endif %}
+          {% if not local_materials_enabled %}<p class="muted">当前环境仅接收已登记的独立合成材料。</p>{% endif %}
+          <p id="material-notice" role="status" aria-live="polite"></p>
+          <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="clear-material-queue" class="text-button" type="button" hidden>清空待传</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>
+        </section>
+        <div id="drop-overlay" class="drop-overlay" hidden><p><strong>松开鼠标，把文件加入本次对话</strong></p><p class="muted">支持 Word、PDF、表格（XLSX/CSV）、图片（PNG/JPG），可一次多个</p></div>
+        <section id="context-panel" class="context-panel" aria-labelledby="context-heading" hidden>
+          <h2 id="context-heading">资料辅助回答</h2>
+          <p class="muted">从本次对话已保存的引用中选择一至八条；问题为当前已保存草稿。发送前可核对将发送的完整内容，发送经桌面原生窗口再次确认。</p>
+          <div id="context-citations" class="context-citations"></div>
+          <p id="context-count" class="muted" aria-live="polite"></p>
+          <div class="context-actions"><button id="preview-context" class="quiet-button" type="button" disabled>核对将发送的内容</button></div>
+          <div id="context-preview-box" class="context-preview" hidden></div>
+          <p id="context-status" role="status" aria-live="polite"></p>
+        </section>
+        <div class="composer-footnote"><p id="save-status" role="status" aria-live="polite">{% if readonly %}此副本只读，不能保存修改。{% else %}输入后自动保存，也可手动保存。{% endif %}</p><p id="input-help">Enter 发送，Shift+Enter 换行；当前发送不可用。</p></div>
+        <div class="generation-panel" aria-label="生成条件与状态">
+          <p id="generation-note">{% if readonly %}恢复副本只读，可核对已有结果，不能发送或继续历史任务。{% else %}输入并保存文字后，将核对当前生成条件。{% endif %}</p>
+          <p id="generation-status" role="status" aria-live="polite"></p>
+          <button id="recover-generation" class="text-button" type="button" hidden>查找发送结果</button>
+        </div>
+        <details class="capability-details">
+          <summary id="capability-summary">当前可用范围与说明</summary>
+          <div class="capability-content">
+            <p id="capability-details">可整理客户接待、案件材料、合同审查和庭审准备草稿；实际生成范围以当前模型设置和材料读取状态为准。“检索法律资料”使用已连接的本机资料库。</p>
+            {% if readonly %}<p>当前打开的是恢复副本，可查看已保存的记录，不能编辑、发送、添加材料或继续历史任务。</p>{% else %}<p>生成仅用于已获准的文字，结果是内部待核对草稿，未经律师审核，不能作为正式法律意见。支持档案确认的桌面中，普通文字回复同时整理本机档案草稿；保存结果以回执为准。选择能力不会自动发送，也不会将回复发送给客户。</p>{% endif %}
+            <p>DOCX 与文字型 PDF 可读取原文并核对出处；扫描页、图片、表格及旧版 Word 的原件可保存下载，未读范围需另行核对。保存或读取材料不表示事实已核实；材料分析遵循模型设置中的范围。</p>
+            <p>继续办理可进入<a href="/workspace">工作区与接待</a>或<a href="/">合同工作台</a>。{% if library_enabled %}已连接的资料可在<a href="/library">法律资料库</a>检索。{% endif %}</p>
+          </div>
+        </details>
+      </section>
+
+        <section class="skill-shelf" aria-labelledby="skill-shelf-heading"><div class="shelf-heading"><h2 id="skill-shelf-heading">工作方式</h2><span>选择本次要做的工作</span></div>
+        <div id="skill-cards" class="skill-cards" aria-label="选择本次能力">
+          <button type="button" data-skill="client_reply" aria-pressed="false"><svg class="skill-icon" aria-hidden="true"><use href="#ui-chat"/></svg><strong>客户接待</strong><span>理清诉求，准备下一步</span><svg class="skill-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
+          <button type="button" data-skill="material_organize" aria-pressed="false"><svg class="skill-icon" aria-hidden="true"><use href="#ui-folder"/></svg><strong>案件整理</strong><span>梳理事实与材料线索</span><svg class="skill-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
+          <button type="button" data-skill="contract_review" aria-pressed="false"><svg class="skill-icon" aria-hidden="true"><use href="#ui-document"/></svg><strong>审查合同</strong><span>核对原文，准备修改建议</span><svg class="skill-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
+          <button type="button" data-skill="mock_trial" aria-pressed="false"><svg class="skill-icon" aria-hidden="true"><use href="#ui-scales"/></svg><strong>庭审准备</strong><span>从不同视角准备追问</span><svg class="skill-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
+        </div>
+        </section>
+
+      <aside id="chat-workarea" class="chat-workarea" aria-label="事项底稿">
+        <header class="chat-workarea-header"><h2 id="chat-workarea-title">事项工具</h2><button id="close-chat-workarea" class="text-button" type="button">返回对话</button></header>
       <details id="followup-panel" class="followup-worksheet">
   <summary>待补材料与跟进清单</summary>
   <div class="followup-content">
     <p id="followup-version" class="followup-muted"></p>
-    <p>先关联一条已知事实或一份现有原件，再登记缺口、下一步和期限。未收到的材料可先写在事项标题中，收到后再关联已上传原件。这里的状态由人工登记，不表示系统已核实法律事实，也不会自动催补或发送消息。</p>
-    <p class="followup-muted">事实或材料更新后，请先保存或取消本地编辑，再重新打开清单或点击“核对最新来源”，查看需要重新核对的事项。</p>
+    <details class="sheet-guidance"><summary>登记与来源说明</summary>
+    <p>每项跟进关联已保存的事实或材料，记录缺口、下一步和期限。状态由你登记，系统不会自动核实事实、催补或发送消息。</p>
+    <p class="followup-muted">事实或材料有更新时，请先保存或取消当前编辑，再点击“核对最新来源”重新检查。</p>
+    </details>
+    <h2>当前跟进清单</h2>
+    <label class="sheet-filter" for="followup-filter">查看范围<select id="followup-filter" disabled><option value="todo">待办（含需重新核对事项）</option><option value="all">全部事项</option><option value="open">待补</option><option value="requested">已催补</option><option value="received">收到待核</option><option value="completed">已处理</option><option value="cancelled">不再跟进</option></select></label>
+    <div id="followup-rows"></div>
+    <div class="followup-actions"><button id="followup-save" type="button" disabled>保存跟进清单</button><button id="followup-refresh" type="button" disabled>核对最新来源，保留编辑</button><button id="followup-discard" type="button" disabled>放弃本地改动并读取最新</button><button id="followup-lookup" type="button" hidden>查询本次保存回执</button></div>
+    <div class="followup-history"><label for="followup-history-version">回看跟进版本<input id="followup-history-version" type="number" min="1" max="200" step="1" disabled></label><button id="followup-history" type="button" disabled>查看历史（只读）</button></div>
+    <p id="followup-notice" role="status" aria-live="polite"></p>
+    <section class="sheet-editor" aria-label="新增或编辑跟进事项">
     <h2>选择当前事实和材料</h2>
     <p class="followup-muted">两个列表都可多选，每类最多10条；点击关联按钮才会固定引用。编辑旧事项时原引用会保留。</p>
     <label for="followup-facts">已保存事实<select id="followup-facts" multiple size="4" disabled></select></label>
@@ -90,12 +199,7 @@
     <label for="followup-status">人工登记状态<select id="followup-status" disabled><option value="open">待补</option><option value="requested">已催补</option><option value="received">收到待核</option><option value="completed">已处理</option><option value="cancelled">不再跟进</option></select></label>
     <label for="followup-result">处理结果（已处理或不再跟进时必填）<textarea id="followup-result" rows="3" maxlength="2000" disabled></textarea></label>
     <div class="followup-actions"><button id="followup-add" type="button" disabled>加入跟进清单（尚未保存）</button><button id="followup-cancel-edit" type="button" disabled>取消这条编辑</button></div>
-    <h2>当前跟进清单</h2>
-    <label for="followup-filter">查看范围<select id="followup-filter" disabled><option value="todo">待办（含需重新核对事项）</option><option value="all">全部事项</option><option value="open">待补</option><option value="requested">已催补</option><option value="received">收到待核</option><option value="completed">已处理</option><option value="cancelled">不再跟进</option></select></label>
-    <div id="followup-rows"></div>
-    <div class="followup-actions"><button id="followup-save" type="button" disabled>保存跟进清单</button><button id="followup-refresh" type="button" disabled>核对最新来源，保留编辑</button><button id="followup-discard" type="button" disabled>放弃本地改动并读取最新</button><button id="followup-lookup" type="button" hidden>查询本次保存回执</button></div>
-    <div class="followup-history"><label for="followup-history-version">回看跟进版本<input id="followup-history-version" type="number" min="1" max="200" step="1" disabled></label><button id="followup-history" type="button" disabled>查看历史（只读）</button></div>
-    <p id="followup-notice" role="status" aria-live="polite"></p>
+    </section>
     <div id="followup-source-detail" class="followup-source-detail"></div>
   </div>
 </details>
@@ -104,9 +208,15 @@
         <summary>材料与事实证据底稿<span class="muted">逐条记录事实及依据，保留待核、争议和历史版本</span></summary>
         <div class="task-draft-body">
           <p id="evidence-version" class="muted"></p>
+          <details class="sheet-guidance"><summary>记录与来源说明</summary>
           <p>借款约定、实际交付和还款分别登记。来源与核对状态分开；信息不全时不推定欠款余额。</p>
+          <p class="muted">读取和材料选择沿用输入区的材料入口。新增、重读或移出材料后，请点击“核对最新来源”；旧事实仍保留原依据。</p>
+          </details>
           <h2>本次材料目录</h2><div id="evidence-materials" class="evidence-materials"></div>
-          <p class="muted">读取和材料选择沿用下方材料入口。新增、重读或移出材料后，请点击“核对最新来源”；旧事实仍保留原依据。</p>
+          <h2>事实与依据 · 按日期查看</h2><div id="evidence-rows"></div>
+          <div class="task-draft-actions"><button id="evidence-save" type="button" disabled>保存事实底稿</button><button id="evidence-refresh" type="button" disabled>核对最新来源，保留编辑</button><button id="evidence-discard" type="button" disabled>放弃本地改动并读取最新</button><button id="evidence-lookup" type="button" hidden>查询本次保存回执</button></div>
+          <div class="evidence-history"><label for="evidence-history-version">回看事实版本<input id="evidence-history-version" type="number" min="1" max="200" step="1" disabled></label><button id="evidence-history" type="button" disabled>查看历史（只读）</button></div>
+          <section class="sheet-editor" aria-label="登记或更正事实">
           <h2>登记或更正一条事实</h2>
           <label for="evidence-source">依据来源<select id="evidence-source" disabled><option value="">先读取底稿</option></select></label>
           <button id="evidence-choose-source" type="button" disabled>核对所选依据</button>
@@ -123,9 +233,7 @@
           <label for="evidence-review">核对状态<select id="evidence-review" disabled><option value="pending">待核</option><option value="reviewed">律师登记已核对</option><option value="disputed">存在争议</option></select></label>
           <label for="evidence-note">核对备注、相反说法或缺口<textarea id="evidence-note" rows="2" maxlength="1000" disabled></textarea></label>
           <div class="task-draft-actions"><button id="evidence-add" type="button" disabled>加入事实清单（尚未保存）</button><button id="evidence-cancel-edit" type="button" disabled>取消这条编辑</button></div>
-          <h2>事实与依据 · 按日期查看</h2><div id="evidence-rows"></div>
-          <div class="task-draft-actions"><button id="evidence-save" type="button" disabled>保存事实底稿</button><button id="evidence-refresh" type="button" disabled>核对最新来源，保留编辑</button><button id="evidence-discard" type="button" disabled>放弃本地改动并读取最新</button><button id="evidence-lookup" type="button" hidden>查询本次保存回执</button></div>
-          <div class="evidence-history"><label for="evidence-history-version">回看事实版本<input id="evidence-history-version" type="number" min="1" max="200" step="1" disabled></label><button id="evidence-history" type="button" disabled>查看历史（只读）</button></div>
+          </section>
           <p id="evidence-notice" role="status" aria-live="polite"></p><div id="evidence-source-detail" class="reading-text"></div>
         </div>
       </details>
@@ -134,20 +242,32 @@
         <summary>接待追问与事项底稿<span class="muted">从原始陈述整理诉求、待核与下一步，保存在本机</span></summary>
         <div class="task-draft-body">
           <p id="worksheet-version" class="muted"></p>
-          <p class="muted">本片先用于文字接待。录入、模板和模型整理均不自动认定事实；人工修改和明确清空会受保护。</p>
-          <label for="worksheet-source">接待原始陈述</label>
-          <textarea id="worksheet-source" rows="4" maxlength="20000" disabled placeholder="客户说了什么、目前想处理什么……"></textarea>
-          <button id="worksheet-from-composer" class="text-button" type="button" disabled>追加输入框文字到原始陈述</button>
-          <label for="worksheet-notes">事项底稿 · 诉求、立场、已知与待核、下一步</label>
-          <textarea id="worksheet-notes" rows="7" maxlength="20000" disabled placeholder="保留原内部备注；可插入五项提纲后逐项填写。"></textarea>
-          <button id="worksheet-outline" class="text-button" type="button" disabled>保留原备注并插入底稿提纲</button>
-          <label for="worksheet-questions">当前追问 · 每行一项，可写明理由</label>
-          <textarea id="worksheet-questions" rows="4" maxlength="12000" disabled></textarea>
-          <label for="worksheet-materials">材料要求 · 每行一项</label>
-          <textarea id="worksheet-materials" rows="3" maxlength="12000" disabled></textarea>
-          <p class="muted">新增名称登记为待补；同名已登记材料保留原状态。填写名称不证明材料已收到或内容正确。</p>
-          <label for="worksheet-client-reply">客户回复 · 单独保存，可在“成果与导出”选择客户版</label>
-          <textarea id="worksheet-client-reply" rows="4" maxlength="20000" disabled></textarea>
+          <p class="muted">在这里保留客户原话和工作记录。整理内容仍待核验，手工修改和明确清空会保留。</p>
+          <div class="worksheet-fields">
+            <section class="worksheet-field worksheet-field--source">
+              <label for="worksheet-source">接待原始陈述</label>
+              <textarea id="worksheet-source" rows="4" maxlength="20000" disabled placeholder="客户说了什么、目前想处理什么……"></textarea>
+              <button id="worksheet-from-composer" class="text-button" type="button" disabled>追加输入框文字到原始陈述</button>
+            </section>
+            <section class="worksheet-field worksheet-field--notes">
+              <label for="worksheet-notes">事项底稿 · 诉求、立场、已知与待核、下一步</label>
+              <textarea id="worksheet-notes" rows="7" maxlength="20000" disabled placeholder="保留原内部备注；可插入五项提纲后逐项填写。"></textarea>
+              <button id="worksheet-outline" class="text-button" type="button" disabled>保留原备注并插入底稿提纲</button>
+            </section>
+            <section class="worksheet-field worksheet-field--questions">
+              <label for="worksheet-questions">当前追问 · 每行一项，可写明理由</label>
+              <textarea id="worksheet-questions" rows="4" maxlength="12000" disabled></textarea>
+            </section>
+            <section class="worksheet-field worksheet-field--materials">
+              <label for="worksheet-materials">材料要求 · 每行一项</label>
+              <textarea id="worksheet-materials" rows="3" maxlength="12000" disabled></textarea>
+              <p class="muted">新增名称登记为待补；同名已登记材料保留原状态。填写名称不证明材料已收到或内容正确。</p>
+            </section>
+            <section class="worksheet-field worksheet-field--reply">
+              <label for="worksheet-client-reply">客户回复 · 单独保存，可在“成果与导出”选择客户版</label>
+              <textarea id="worksheet-client-reply" rows="4" maxlength="20000" disabled></textarea>
+            </section>
+          </div>
           <div class="task-actions"><button id="worksheet-save" type="button" disabled>保存底稿</button><button id="worksheet-refresh" class="text-button" type="button">重新读取底稿</button><button id="worksheet-discard" class="text-button" type="button" disabled>放弃未保存编辑</button><button id="worksheet-lookup" class="quiet-button" type="button" hidden>查询本次保存回执</button></div>
           <div id="worksheet-conflict" hidden><p>保存版本已变化，你的编辑仍在上方。未编辑字段会采用最新保存值。</p><div class="task-actions"><button id="worksheet-keep-local" class="quiet-button" type="button">保留编辑并核对最新版本</button><button id="worksheet-use-server" class="text-button" type="button">放弃编辑，采用已保存版本</button></div></div>
           <p id="worksheet-notice" role="status" aria-live="polite"></p>
@@ -157,6 +277,8 @@
           <div id="worksheet-candidates"></div>
         </div>
       </details>
+
+      </aside>
 
       <details id="task-draft-panel" class="task-draft-panel">
         <summary>模拟合同任务<span class="muted">逐次收集指令与材料，保存在本机</span></summary>
@@ -215,66 +337,6 @@
         </div>
       </details>
 
-      <section class="compose-section" aria-label="输入、保存与生成草稿">
-        <section id="material-section" class="material-section" aria-labelledby="material-heading" hidden>
-          <h2 id="material-heading">本次材料</h2>
-          <div id="material-list"></div>
-        </section>
-        <div id="skill-cards" class="skill-cards" aria-label="选择本次能力">
-          <button type="button" data-skill="client_reply" aria-pressed="false"><strong>销售接待</strong><span>保存诉求与待补事项</span></button>
-          <button type="button" data-skill="material_organize" aria-pressed="false"><strong>案件整理</strong><span>归集材料与日期线索</span></button>
-          <button type="button" data-skill="contract_review" aria-pressed="false"><strong>审查合同</strong><span>分析风险、定位原文、提出修改建议</span></button>
-          <button type="button" data-skill="mock_trial" aria-pressed="false"><strong>庭审准备</strong><span>依据材料准备通用追问</span></button>
-        </div>
-        <div class="skill-options">
-          <p><span id="selected-skill">自动选择能力</span><button id="clear-skill" class="text-button" type="button" hidden>取消选择</button></p>
-          <div id="business-task-choice" hidden><label for="business-task-select">这条消息的任务归属</label><select id="business-task-select"><option value="">自动判断</option></select></div>
-          <details id="more-skills"><summary>更多能力</summary><div class="more-skills-content"><button type="button" data-skill="legal_research" aria-pressed="false">检索法律资料</button><p class="muted">关键词检索仅使用本机资料库；选择后按发送执行。</p></div></details>
-        </div>
-        <form id="composer-form" class="composer-form">
-          <label class="sr-only" for="composer">咨询内容与工作草稿</label>
-          <textarea id="composer" name="content" rows="4" maxlength="20000" placeholder="例如：客户遇到了什么问题，需要我们帮忙处理什么……" aria-describedby="input-help save-status"{% if readonly %} readonly{% endif %}></textarea>
-          <div class="composer-actions">
-            <button id="add-material" class="quiet-button" type="button" aria-expanded="false" aria-controls="material-picker"{% if readonly %} disabled{% endif %}>添加材料</button>
-            <div class="save-actions"><button id="switch-model" type="button" hidden>切换模型</button><button id="save-draft" type="button"{% if readonly %} disabled{% endif %}>保存草稿</button><button id="send" class="quiet-button" type="submit" disabled aria-describedby="generation-note generation-status">发送</button></div>
-          </div>
-        </form>
-        <section id="material-picker" class="material-picker" aria-label="添加本机文件" hidden>
-          <label for="material-file">选择文件（Word、PDF、表格、图片），可多选，也可直接拖入本页面</label>
-          <input id="material-file" type="file" multiple accept=".docx,.doc,.pdf,.png,.jpg,.jpeg,.xlsx,.csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/png,image/jpeg,text/csv">
-          <div id="material-queue" class="material-queue" aria-live="polite"></div>
-          <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取这些原件；内容待核实，模型分析遵循模型设置的材料范围。</label>
-          {% if local_materials_enabled %}<label for="material-purpose">本次材料用途</label><select id="material-purpose"{% if readonly %} disabled{% endif %}><option value="local">本机材料 · 人工工作稿</option><option value="synthetic">已登记合成演示材料 · 可用于模拟任务</option></select><p class="muted">合成用途只接收系统已登记的演示文件；选择此项不会把真实材料认定为合成材料。</p>{% endif %}
-          {% if not local_materials_enabled %}<p class="muted">当前环境仅接收已登记的独立合成材料。</p>{% endif %}
-          <p id="material-notice" role="status" aria-live="polite"></p>
-          <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="clear-material-queue" class="text-button" type="button" hidden>清空待传</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>
-        </section>
-        <div id="drop-overlay" class="drop-overlay" hidden><p><strong>松开鼠标，把文件加入本次对话</strong></p><p class="muted">支持 Word、PDF、表格（XLSX/CSV）、图片（PNG/JPG），可一次多个</p></div>
-        <section id="context-panel" class="context-panel" aria-labelledby="context-heading" hidden>
-          <h2 id="context-heading">资料辅助回答</h2>
-          <p class="muted">从本次对话已保存的引用中选择一至八条；问题为当前已保存草稿。发送前可核对将发送的完整内容，发送经桌面原生窗口再次确认。</p>
-          <div id="context-citations" class="context-citations"></div>
-          <p id="context-count" class="muted" aria-live="polite"></p>
-          <div class="context-actions"><button id="preview-context" class="quiet-button" type="button" disabled>核对将发送的内容</button></div>
-          <div id="context-preview-box" class="context-preview" hidden></div>
-          <p id="context-status" role="status" aria-live="polite"></p>
-        </section>
-        <div class="composer-footnote"><p id="save-status" role="status" aria-live="polite">{% if readonly %}此副本只读，不能保存修改。{% else %}输入后自动保存，也可手动保存。{% endif %}</p><p id="input-help">Enter 发送，Shift+Enter 换行；当前发送不可用。</p></div>
-        <div class="generation-panel" aria-label="生成条件与状态">
-          <p id="generation-note">{% if readonly %}恢复副本只读，可核对已有结果，不能发送或继续历史任务。{% else %}输入并保存文字后，将核对当前生成条件。{% endif %}</p>
-          <p id="generation-status" role="status" aria-live="polite"></p>
-          <button id="recover-generation" class="text-button" type="button" hidden>查找发送结果</button>
-        </div>
-        <details class="capability-details">
-          <summary id="capability-summary">当前可用范围与说明</summary>
-          <div class="capability-content">
-            <p id="capability-details">“检索法律资料”支持本机关键词查询，其他所选能力尚未接入执行。普通文字生成以当前对话的条件为准。</p>
-            {% if readonly %}<p>当前打开的是恢复副本，可查看已保存的记录，不能编辑、发送、添加材料或继续历史任务。</p>{% else %}<p>生成仅用于已获准的文字，结果是内部待核对草稿，未经律师审核，不能作为正式法律意见。支持档案确认的桌面中，普通文字回复同时整理本机档案草稿；保存结果以回执为准。选择能力不会自动发送，也不会将回复发送给客户。</p>{% endif %}
-            <p>DOCX 材料保存在本次对话，可以读取原文、核对读取范围及下载原件；PDF、表格与图片保存原件供核对下载，暂不支持读取原文。含材料的对话暂不参与模型生成；保存和读取不会自动认定事实，也不会建立合同案件。</p>
-            <p>继续办理可进入<a href="/workspace">工作区与接待</a>或<a href="/">合同工作台</a>。{% if library_enabled %}已连接的资料可在<a href="/library">法律资料库</a>检索。{% endif %}</p>
-          </div>
-        </details>
-      </section>
     </div>
   </main>
   <aside id="material-preview" class="material-preview" aria-labelledby="material-preview-title" hidden>
@@ -294,14 +356,17 @@
   </aside>
   <aside id="output-panel" class="material-preview output-panel" aria-labelledby="output-title" hidden>
     <header><h2 id="output-title">成果与导出</h2><button id="close-outputs" class="text-button" type="button">关闭成果</button></header>
-    <p class="muted">选定已保存成果，按受众核对正文后再复制或导出。文件仍是待律师核对的工作稿。</p>
+    <div class="output-body">
+    <p class="muted">先选一份已保存的成果，核对正文和接收对象后，再复制或导出。这仍是一份待律师核对的工作草稿。</p>
     <button id="output-refresh" class="text-button" type="button">重新读取成果</button>
+    <div class="output-controls">
     <label for="output-source">已保存成果</label>
     <select id="output-source" disabled><option value="">请先读取成果</option></select>
     <button id="output-more" class="text-button" type="button" hidden>加载更早成果</button>
     <label for="output-audience">接收对象</label>
     <select id="output-audience" disabled><option value="">请先选择成果</option></select>
     <button id="output-preview" class="quiet-button" type="button" disabled>预览所选版本</button>
+    </div>
     <p id="output-notice" role="status" aria-live="polite"></p>
     <section id="output-result" aria-label="所选成果预览" hidden>
       <h3 id="output-meta"></h3>
@@ -309,6 +374,7 @@
       <div id="output-text" class="reading-text" tabindex="0" aria-label="成果正文，可手动选择复制"></div>
       <p id="output-citations" class="muted"></p>
     </section>
+    </div>
     <div class="output-actions"><button id="output-copy" type="button" disabled>复制所选版本</button><button id="output-download" type="button" class="quiet-button" disabled>导出 Word</button></div>
   </aside>
 </body>

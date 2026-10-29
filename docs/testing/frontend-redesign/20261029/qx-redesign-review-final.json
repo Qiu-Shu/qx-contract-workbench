@@ -1,0 +1,415 @@
+{
+  "harness_notes": [
+    "Read-only local-browser review. Both global toolbar and sticky workspace tools are included in title occlusion checks; await the native toggle/RAF focus state before measuring, with a 2-second bound. Drawer close is checked after scrolling its header into view. No source or business-data edits."
+  ],
+  "panels": [
+    {
+      "width": 1224,
+      "panel": "worksheet-panel",
+      "summary_top": 149.390625,
+      "toolbar_bottom": 64,
+      "tools_bottom": 118,
+      "occlusion_bottom": 118,
+      "clear": true,
+      "focus": "worksheet-panel",
+      "expanded": "true",
+      "overflow": false,
+      "settle_ms": 125,
+      "focus_after_close": "show-worksheet"
+    },
+    {
+      "width": 1224,
+      "panel": "evidence-panel",
+      "summary_top": 149.390625,
+      "toolbar_bottom": 64,
+      "tools_bottom": 118,
+      "occlusion_bottom": 118,
+      "clear": true,
+      "focus": "evidence-panel",
+      "expanded": "true",
+      "overflow": false,
+      "settle_ms": 120,
+      "focus_after_close": "show-evidence"
+    },
+    {
+      "width": 1224,
+      "panel": "followup-panel",
+      "summary_top": 149.390625,
+      "toolbar_bottom": 64,
+      "tools_bottom": 118,
+      "occlusion_bottom": 118,
+      "clear": true,
+      "focus": "followup-panel",
+      "expanded": "true",
+      "overflow": false,
+      "settle_ms": 116,
+      "focus_after_close": "show-followups"
+    },
+    {
+      "width": 768,
+      "panel": "worksheet-panel",
+      "summary_top": 148.984375,
+      "toolbar_bottom": 64,
+      "tools_bottom": 118,
+      "occlusion_bottom": 118,
+      "clear": true,
+      "focus": "worksheet-panel",
+      "expanded": "true",
+      "overflow": false,
+      "settle_ms": 106,
+      "focus_after_close": "show-worksheet"
+    },
+    {
+      "width": 768,
+      "panel": "evidence-panel",
+      "summary_top": 148.984375,
+      "toolbar_bottom": 64,
+      "tools_bottom": 118,
+      "occlusion_bottom": 118,
+      "clear": true,
+      "focus": "evidence-panel",
+      "expanded": "true",
+      "overflow": false,
+      "settle_ms": 119,
+      "focus_after_close": "show-evidence"
+    },
+    {
+      "width": 768,
+      "panel": "followup-panel",
+      "summary_top": 148.984375,
+      "toolbar_bottom": 64,
+      "tools_bottom": 118,
+      "occlusion_bottom": 118,
+      "clear": true,
+      "focus": "followup-panel",
+      "expanded": "true",
+      "overflow": false,
+      "settle_ms": 118,
+      "focus_after_close": "show-followups"
+    },
+    {
+      "width": 390,
+      "panel": "worksheet-panel",
+      "summary_top": 148.640625,
+      "toolbar_bottom": 60,
+      "tools_bottom": 110,
+      "occlusion_bottom": 110,
+      "clear": true,
+      "focus": "worksheet-panel",
+      "expanded": "true",
+      "overflow": false,
+      "settle_ms": 119,
+      "focus_after_close": "show-worksheet"
+    },
+    {
+      "width": 390,
+      "panel": "evidence-panel",
+      "summary_top": 148.640625,
+      "toolbar_bottom": 60,
+      "tools_bottom": 110,
+      "occlusion_bottom": 110,
+      "clear": true,
+      "focus": "evidence-panel",
+      "expanded": "true",
+      "overflow": false,
+      "settle_ms": 118,
+      "focus_after_close": "show-evidence"
+    },
+    {
+      "width": 390,
+      "panel": "followup-panel",
+      "summary_top": 148.640625,
+      "toolbar_bottom": 60,
+      "tools_bottom": 110,
+      "occlusion_bottom": 110,
+      "clear": true,
+      "focus": "followup-panel",
+      "expanded": "true",
+      "overflow": false,
+      "settle_ms": 116,
+      "focus_after_close": "show-followups"
+    }
+  ],
+  "drawers": [
+    {
+      "width": 1224,
+      "panel": "profile-preview",
+      "left": 680,
+      "right": 1224,
+      "close_hit": true,
+      "overflow": false,
+      "closed": true,
+      "focus_after_close": "show-profile",
+      "source_cleared": true
+    },
+    {
+      "width": 1224,
+      "panel": "output-actions-first-screen",
+      "buttons": [
+        {
+          "id": "output-copy",
+          "visible": true,
+          "hit": true,
+          "disabled": false
+        },
+        {
+          "id": "output-download",
+          "visible": true,
+          "hit": true,
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "width": 1224,
+      "panel": "output-last-sentence",
+      "last_text": "不完整，我们会先核对材料，再与您确认下一步安排。",
+      "last_top": 507.34375,
+      "last_bottom": 529.34375,
+      "actions_top": 712,
+      "visible": true,
+      "hit": true
+    },
+    {
+      "width": 1224,
+      "panel": "output-panel",
+      "left": 680,
+      "right": 1224,
+      "close_hit": true,
+      "overflow": false,
+      "closed": true,
+      "focus_after_close": "show-outputs",
+      "source_cleared": true
+    },
+    {
+      "width": 1224,
+      "panel": "material-preview",
+      "close_hit": true,
+      "overflow": false,
+      "closed": true,
+      "source_cleared": true,
+      "focus_after_close": "add-material"
+    },
+    {
+      "width": 768,
+      "panel": "profile-preview",
+      "left": 224,
+      "right": 768,
+      "close_hit": true,
+      "overflow": false,
+      "closed": true,
+      "focus_after_close": "show-profile",
+      "source_cleared": true
+    },
+    {
+      "width": 768,
+      "panel": "output-actions-first-screen",
+      "buttons": [
+        {
+          "id": "output-copy",
+          "visible": true,
+          "hit": true,
+          "disabled": false
+        },
+        {
+          "id": "output-download",
+          "visible": true,
+          "hit": true,
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "panel": "output-last-sentence",
+      "last_text": "不完整，我们会先核对材料，再与您确认下一步安排。",
+      "last_top": 507.34375,
+      "last_bottom": 529.34375,
+      "actions_top": 712,
+      "visible": true,
+      "hit": true
+    },
+    {
+      "width": 768,
+      "panel": "output-panel",
+      "left": 224,
+      "right": 768,
+      "close_hit": true,
+      "overflow": false,
+      "closed": true,
+      "focus_after_close": "show-outputs",
+      "source_cleared": true
+    },
+    {
+      "width": 768,
+      "panel": "material-preview",
+      "close_hit": true,
+      "overflow": false,
+      "closed": true,
+      "source_cleared": true,
+      "focus_after_close": "add-material"
+    },
+    {
+      "width": 390,
+      "panel": "profile-preview",
+      "left": 0,
+      "right": 390,
+      "close_hit": true,
+      "overflow": false,
+      "closed": true,
+      "focus_after_close": "show-profile",
+      "source_cleared": true
+    },
+    {
+      "width": 390,
+      "panel": "output-actions-first-screen",
+      "buttons": [
+        {
+          "id": "output-copy",
+          "visible": true,
+          "hit": true,
+          "disabled": false
+        },
+        {
+          "id": "output-download",
+          "visible": true,
+          "hit": true,
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "panel": "output-last-sentence",
+      "last_text": "不完整，我们会先核对材料，再与您确认下一步安排。",
+      "last_top": 568.921875,
+      "last_bottom": 621.3125,
+      "actions_top": 720,
+      "visible": true,
+      "hit": true
+    },
+    {
+      "width": 390,
+      "panel": "output-panel",
+      "left": 0,
+      "right": 390,
+      "close_hit": true,
+      "overflow": false,
+      "closed": true,
+      "focus_after_close": "show-outputs",
+      "source_cleared": true
+    },
+    {
+      "width": 390,
+      "panel": "material-preview",
+      "close_hit": true,
+      "overflow": false,
+      "closed": true,
+      "source_cleared": true,
+      "focus_after_close": "add-material"
+    }
+  ],
+  "skills": [
+    {
+      "width": 1224,
+      "skill": "client_reply",
+      "selected": "true",
+      "label": "回复客户",
+      "focus": "composer"
+    },
+    {
+      "width": 1224,
+      "skill": "material_organize",
+      "selected": "true",
+      "label": "整理资料",
+      "focus": "composer"
+    },
+    {
+      "width": 1224,
+      "skill": "contract_review",
+      "selected": "true",
+      "label": "审查合同",
+      "focus": "composer"
+    },
+    {
+      "width": 1224,
+      "skill": "mock_trial",
+      "selected": "true",
+      "label": "庭审准备",
+      "focus": "composer"
+    },
+    {
+      "width": 768,
+      "skill": "client_reply",
+      "selected": "true",
+      "label": "回复客户",
+      "focus": "composer"
+    },
+    {
+      "width": 768,
+      "skill": "material_organize",
+      "selected": "true",
+      "label": "整理资料",
+      "focus": "composer"
+    },
+    {
+      "width": 768,
+      "skill": "contract_review",
+      "selected": "true",
+      "label": "审查合同",
+      "focus": "composer"
+    },
+    {
+      "width": 768,
+      "skill": "mock_trial",
+      "selected": "true",
+      "label": "庭审准备",
+      "focus": "composer"
+    },
+    {
+      "width": 390,
+      "skill": "client_reply",
+      "selected": "true",
+      "label": "回复客户",
+      "focus": "composer"
+    },
+    {
+      "width": 390,
+      "skill": "material_organize",
+      "selected": "true",
+      "label": "整理资料",
+      "focus": "composer"
+    },
+    {
+      "width": 390,
+      "skill": "contract_review",
+      "selected": "true",
+      "label": "审查合同",
+      "focus": "composer"
+    },
+    {
+      "width": 390,
+      "skill": "mock_trial",
+      "selected": "true",
+      "label": "庭审准备",
+      "focus": "composer"
+    }
+  ],
+  "menu": [
+    {
+      "kind": "open",
+      "expanded": "true",
+      "focus_inside": true
+    },
+    {
+      "kind": "escape",
+      "expanded": "false",
+      "focus": "nav-toggle",
+      "closed": true
+    }
+  ],
+  "page_errors": [],
+  "external_requests": [],
+  "prevented_writes": [],
+  "pass": true
+}

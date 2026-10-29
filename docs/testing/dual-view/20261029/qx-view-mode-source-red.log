@@ -1,0 +1,83 @@
+✔ default workbench keeps original tools and exposes an explicit pressed state (0.964292ms)
+✔ round-trip mode switches preserve draft, selection, history and every business node (0.54525ms)
+✔ invalid and repeated mode choices do not reset an open tools menu or touch the draft (0.452292ms)
+✔ entering chat preserves open native sheets and selects the last focused one (0.362541ms)
+✔ sheet selection and return preserve fields, open state and a pre-existing inert value (0.175459ms)
+✔ a delayed native toggle cannot reopen a layer the user already dismissed (0.229666ms)
+✔ entering chat is not overridden by delayed toggles from other already-open sheets (0.134041ms)
+✔ native sheet closure clears the chat overlay and restores tools focus (0.079ms)
+✔ Escape closes the menu first, then the sheet, without business actions (0.756167ms)
+✔ outside pointer closes the menu and keeps the original summary available (0.303334ms)
+✔ source closure restores chat tools focus after the legacy close handler (0.186417ms)
+✖ native event checkpoints cannot lose focus after closing profile or outputs (0.630375ms)
+✖ native Escape waits for existing handlers and closes an unhandled source exactly once (0.225917ms)
+✖ material close and Escape retain the visible add-material return target (0.124541ms)
+✔ Escape gives a visible source drawer priority and does not close the sheet behind it (0.079083ms)
+✔ Escape does not invent a close action for source drawers that keep their own close behavior (0.06625ms)
+✔ more workflows returns to the original workbench panel with its draft preserved (0.109792ms)
+✔ reading positions are independent and first chat entry starts at the history tail (0.07575ms)
+✔ new content follows the tail only while the reader was already near the bottom (0.120208ms)
+✔ manual scroll-up cancels a queued tail follow before its animation frame runs (0.063208ms)
+✔ dispose removes UI listeners, cancels pending scrolling and restores prior inert state (0.470834ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 18
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45.924458
+
+✖ failing tests:
+
+test at scripts/test_assistant_view_mode.mjs:152:1
+✖ native event checkpoints cannot lose focus after closing profile or outputs (0.630375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'close-profile-preview'
+  - 'conversation-tools-summary'
+
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:156:50)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'close-profile-preview',
+    expected: 'conversation-tools-summary',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:159:1
+✖ native Escape waits for existing handlers and closes an unhandled source exactly once (0.225917ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'close-profile-preview'
+  - 'conversation-tools-summary'
+
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:162:10)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'close-profile-preview',
+    expected: 'conversation-tools-summary',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:166:1
+✖ material close and Escape retain the visible add-material return target (0.124541ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  false !== true
+
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:169:75)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual'
+  }

@@ -1,0 +1,35 @@
+✔ source snapshots display only literal text with provenance and pending review (0.919875ms)
+✔ closing invalidates a pending response and restores a connected trigger or composer (0.221541ms)
+✔ scope rebinding, switching, loading and revocation clear panel and reject late data (0.56475ms)
+✔ saved UUID and conversation identity must match; ordinary draft revision does not erase snapshot (0.149583ms)
+✔ lookup authorization error clears and cannot render raw diagnostics (0.1025ms)
+✔ result statuses distinguish unavailable, incomplete and zero hits (0.163666ms)
+✔ card click passes only saved UUID and malformed IDs are never links (0.152625ms)
+✔ shared renderer uses local send rules while ordinary native approval remains distinct (0.506791ms)
+✔ send follows the generation gate and existing draft/readonly guards (1.877958ms)
+✔ generation uncertainty has its own status and lookup action, without relabeling a saved draft (0.21ms)
+✔ capability states give distinct truthful explanations (0.26975ms)
+✔ results stay with their matching input in chronological history and have source anchors (0.511917ms)
+✔ model text remains literal with whitespace and source links only target loaded messages (0.462416ms)
+✔ unrelated items and prior conversation content are cleared on switching or revocation (0.385583ms)
+✔ an updated attempt replaces its former state, and draft edits retain unchanged history nodes (0.76525ms)
+✔ unknown, estimated and proven unsent cost remain distinct without rounding decimal values (0.298709ms)
+✔ generation errors expose a fixed recovery explanation rather than raw diagnostics (0.273375ms)
+✔ native send offers confirmation of the full text recipient and fee ceiling before submission (0.243ms)
+✔ native failures distinguish confirmation from unknown POST without exposing diagnostics (0.098333ms)
+✔ failed capability reads can be retried before any task exists (0.059208ms)
+✔ initial template keeps send disabled, recovery hidden and describes controlled generation (1.225583ms)
+✔ generated paragraphs keep wrapping and preserve whitespace in the stylesheet (0.778459ms)
+✔ model switch button follows the desktop bridge state and guards (0.185291ms)
+✔ model switch button sits left of save-draft in the template (0.217458ms)
+✔ profile result distinguishes saved, unchanged and blocked using server receipt (0.254667ms)
+✔ foreign or absent profile receipts never claim a saved draft (0.112958ms)
+✔ completed material analysis stays under the original prompt with readable sources and Word download (0.539291ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.730708

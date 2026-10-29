@@ -1,0 +1,48 @@
+✔ default workbench keeps original tools and exposes an explicit pressed state (0.996708ms)
+✔ round-trip mode switches preserve draft, selection, history and every business node (0.535833ms)
+✔ invalid and repeated mode choices do not reset an open tools menu or touch the draft (0.155708ms)
+✔ entering chat preserves open native sheets and selects the last focused one (0.666125ms)
+✔ sheet selection and return preserve fields, open state and a pre-existing inert value (0.182958ms)
+✔ a delayed native toggle cannot reopen a layer the user already dismissed (0.232709ms)
+✖ entering chat is not overridden by delayed toggles from other already-open sheets (0.426959ms)
+✔ native sheet closure clears the chat overlay and restores tools focus (0.082375ms)
+✔ Escape closes the menu first, then the sheet, without business actions (0.68975ms)
+✔ outside pointer closes the menu and keeps the original summary available (0.284375ms)
+✔ source closure restores chat tools focus after the legacy close handler (0.166833ms)
+✔ Escape gives a visible source drawer priority and does not close the sheet behind it (0.085ms)
+✔ Escape does not invent a close action for source drawers that keep their own close behavior (0.07525ms)
+✔ more workflows returns to the original workbench panel with its draft preserved (0.110584ms)
+✔ reading positions are independent and first chat entry starts at the history tail (0.103458ms)
+✔ new content follows the tail only while the reader was already near the bottom (0.148ms)
+✔ manual scroll-up cancels a queued tail follow before its animation frame runs (0.069917ms)
+✔ dispose removes UI listeners, cancels pending scrolling and restores prior inert state (0.128042ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 17
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 49.310709
+
+✖ failing tests:
+
+test at scripts/test_assistant_view_mode.mjs:125:1
+✖ entering chat is not overridden by delayed toggles from other already-open sheets (0.426959ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  'false' !== 'true'
+
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:128:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'false',
+    expected: 'true',
+    operator: 'strictEqual'
+  }
