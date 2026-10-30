@@ -1,4 +1,5 @@
 """Material-purpose adapter for the existing single-claim model ledger."""
+import logging
 from uuid import UUID, uuid4
 from sqlalchemy import text
 from .. import domain as d
@@ -8,6 +9,8 @@ from ..ops.storage import require_active
 from . import service, material_codec as codec, material_preparation as inputs
 from .providers import attempts
 from .providers.policy import encoded, sha, require_policy, reservation, add_costs, receipt
+
+_logger = logging.getLogger(__name__)
 
 
 def message(basis):
@@ -92,12 +95,14 @@ def settle(actor, identifier, token, reply, db, runtime):
             if reply.usage and (reply.usage.prompt_tokens > config.max_input_bytes or reply.usage.completion_tokens > config.max_output_tokens):
                 raise ValueError
         except ValueError:
+            _logger.warning('model_response_rejected stage=material_settle_candidate')
             reply = d.MainMaterialReply(state='received', usage=reply.usage,
                 provider_request_id=reply.provider_request_id, error_code='MODEL_OUTPUT_INVALID')
             candidate = None
     try:
         current(actor, row, db, runtime)
     except (ServiceError, ValueError):
+        _logger.warning('model_response_rejected stage=material_settle_current')
         candidate = None
     require_active(db)
     checked = attempts._row(identifier, db)

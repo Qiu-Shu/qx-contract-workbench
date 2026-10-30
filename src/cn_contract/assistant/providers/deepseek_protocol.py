@@ -1,10 +1,14 @@
 """Shared DeepSeek envelope; callers validate their own candidate sources."""
 from decimal import Context, localcontext
 import json
+import logging
 import math
 
 from ... import domain as d
 from ...config import canonical_json
+
+
+_logger = logging.getLogger(__name__)
 
 
 def json_bytes(value):
@@ -77,25 +81,32 @@ def decode_response(raw, config, secret, *, parse_candidate, reply_type):
     except PrivateReflection:
         return reply_type(state='received',error_code='PROVIDER_ERROR')
     except (ValueError,KeyError,TypeError,RecursionError):
+        _logger.warning('model_response_rejected stage=envelope')
         return reply_type(state='received',error_code='MODEL_OUTPUT_INVALID')
+    stage='usage'
     try:
         usage=_usage(value.get('usage'))
         if usage is not None and (usage.prompt_tokens>config.max_input_bytes
                 or usage.completion_tokens>config.max_output_tokens):
             raise ValueError('reported usage exceeds request caps')
+        stage='choice'
         choices=value['choices']
         if type(choices) is not list or len(choices)!=1:raise ValueError('single choice required')
         choice=choices[0]
         if (type(choice) is not dict or type(choice['index']) is not int or choice['index']!=0
                 or choice['finish_reason']!='stop' or choice.get('logprobs') is not None):
             raise ValueError('incomplete or unsupported response')
+        stage='message'
         message=choice['message']
         if (type(message) is not dict or message['role']!='assistant'
                 or type(message['content']) is not str or not message['content'].strip()
                 or message.get('tool_calls') not in (None,[])
                 or message.get('reasoning_content') not in (None,'')):
             raise ValueError('unsupported message')
-        candidate=parse_candidate(strict_json(message['content'],secret))
+        stage='content_json'
+        content=strict_json(message['content'],secret)
+        stage='candidate'
+        candidate=parse_candidate(content)
         if isinstance(candidate, d.MainContextToolPlan):
             return reply_type(state='received',provider_request_id=identifier,usage=usage,
                               tool_plan=candidate)
@@ -103,5 +114,7 @@ def decode_response(raw, config, secret, *, parse_candidate, reply_type):
     except PrivateReflection:
         return reply_type(state='received',error_code='PROVIDER_ERROR')
     except (ValueError,KeyError,TypeError,RecursionError):
+        # Fixed stages only: exception details and response text can contain private data.
+        _logger.warning('model_response_rejected stage=%s',stage)
         return reply_type(state='received',provider_request_id=identifier,usage=usage,
                            error_code='MODEL_OUTPUT_INVALID')
