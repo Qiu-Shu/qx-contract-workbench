@@ -1,15 +1,20 @@
 // Keep the native textarea and its selection; composition Enter is never send.
-export function bindComposer({input, form, onEdit, onSend, beforeSend=()=>true}) {
-  let composing = false, suppressUntil = 0, sending=false;
+export function bindComposer({input, form, onEdit, onSend, beforeSend=()=>true, onChanged=()=>{}}) {
+  let composing = false, suppressUntil = 0, sending=false, edits=0;
   const send=async()=>{
     if(sending)return false;
+    const text=input.value,revision=edits;
     sending=true;
-    try{if(await beforeSend())return await onSend();return false;}
+    try{
+      if(!await beforeSend())return false;
+      if(composing||revision!==edits||input.value!==text){onChanged();return false;}
+      return text.trim()?await onSend(text):true;
+    }
     finally{sending=false;}
   };
-  const start = ()=>{ composing = true; };
-  const end = ()=>{ composing = false; suppressUntil = performance.now()+150; onEdit(input.value); };
-  const edit = ()=>{ if (!composing) onEdit(input.value); };
+  const start = ()=>{ composing = true; edits++; };
+  const end = ()=>{ edits++; composing = false; suppressUntil = performance.now()+150; onEdit(input.value); };
+  const edit = ()=>{ edits++; if (!composing) onEdit(input.value); };
   const keydown = event=>{
     if (event.key !== 'Enter') return;
     if (composing || event.isComposing || event.keyCode === 229) return;

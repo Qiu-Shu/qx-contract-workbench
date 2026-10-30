@@ -144,7 +144,8 @@ composer=bindComposer({input:byId('composer'),form:byId('composer-form'),
     if(!readonly)timer=setTimeout(()=>void safely(()=>controller.save()),650);
   },
   beforeSend:()=>{clearTimeout(timer);return safely(()=>materials.uploadSelected());},
-  onSend:()=>controller.state.text.trim()?safely(()=>controller.send()):true,
+  onSend:text=>controller.state.text===text?safely(()=>controller.send()):false,
+  onChanged:()=>notice('等待期间输入已有更改，内容已保留；请再次发送。'),
 });
 materials=bindMaterials({controller,readonly,onQueueChange:()=>drawState(controller.state),onPreview:()=>{citations?.close();profile?.close();outputs?.close();}});
 citations=bindCitations({controller,onOpen:()=>{materials.close();profile?.close();outputs?.close();}});

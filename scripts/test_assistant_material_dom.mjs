@@ -285,28 +285,28 @@ function composerFor(f){
   const input=f.root.getElementById('composer'),form=f.root.getElementById('composer-form');
   const binding=bindComposer({input,form,onEdit:text=>f.controller.edit(text),beforeSend:()=>f.materials.uploadSelected(),
     onSend:()=>{if(f.controller.state.text.trim()){sends++;assert.equal(f.materials.hasSelection(),false);}}});
-  return {input,form,binding,sends:()=>sends,key:(extra={})=>input.fire('keydown',{key:'Enter',preventDefault(){},...extra})};
+  return {input,form,binding,sends:()=>sends,edit(text){input.value=text;input.fire('input');},key:(extra={})=>input.fire('keydown',{key:'Enter',preventDefault(){},...extra})};
 }
 test('fresh files-only Enter creates one chat and uploads a batch with no model dispatch',async t=>{
   const f=fixture(t,{withMaterials:false});let creates=0;
   f.api.createConversation=async()=>{creates++;return copy(f.views.one);};
   const c=composerFor(f);
   await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('一.docx',mime),fileStub('二.docx',mime)]}});
-  assert.equal(await c.key(),undefined);assert.equal(creates,1);assert.equal(f.controller.state.id,'one');
+  assert.equal(await c.key(),true);assert.equal(creates,1);assert.equal(f.controller.state.id,'one');
   assert.equal(f.calls.filter(call=>call[0]==='upload').length,2);assert.equal(c.sends(),0);c.binding.dispose();
 });
 test('Enter uploads before sending current text and serializes rapid Enter and button submit',async t=>{
   const f=fixture(t,{withMaterials:false});await f.controller.open('one');const c=composerFor(f),gate=deferred();
   const normal=f.api.uploadAttachment;f.api.uploadAttachment=async(...args)=>{await gate.promise;return normal(...args);};
-  f.controller.edit('独立虚构问题');await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
+  c.edit('独立虚构问题');await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
   const first=c.key();await tick();c.key();c.form.fire('submit',{preventDefault(){}});assert.equal(c.sends(),0);
-  f.controller.edit('上传过程中补充后的问题');gate.resolve();await first;
-  assert.equal(c.sends(),1);assert.equal(f.controller.state.text,'上传过程中补充后的问题');
+  gate.resolve();await first;
+  assert.equal(c.sends(),1);assert.equal(f.controller.state.text,'独立虚构问题');
   assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);c.binding.dispose();
 });
 test('failed or unknown upload never sends text and reconciles one receipt before retry',async t=>{
   const f=fixture(t,{withMaterials:false});await f.controller.open('one');const c=composerFor(f),normal=f.api.uploadAttachment;
-  f.controller.edit('仍保留的问题');f.api.uploadAttachment=async(...args)=>{await normal(...args);throw Object.assign(Error('unknown'),{status:0,code:'NETWORK_UNKNOWN'});};
+  c.edit('仍保留的问题');f.api.uploadAttachment=async(...args)=>{await normal(...args);throw Object.assign(Error('unknown'),{status:0,code:'NETWORK_UNKNOWN'});};
   await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
   assert.equal(await c.key(),false);assert.equal(c.sends(),0);assert.equal(f.materials.hasSelection(),true);
   assert.equal(await c.key(),false);assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
@@ -331,8 +331,33 @@ test('Enter waits for an existing autosave before uploading selected files',asyn
   const f=fixture(t,{withMaterials:false});await f.controller.open('one');const c=composerFor(f),gate=deferred();
   await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
   const normal=f.api.saveDraft;f.api.saveDraft=async(...args)=>{await gate.promise;return normal(...args);};
-  f.controller.edit('虚构问题');const saving=f.controller.save();await tick();assert.equal(f.controller.state.status,'saving');
+  c.edit('虚构问题');const saving=f.controller.save();await tick();assert.equal(f.controller.state.status,'saving');
   const sent=c.key();await tick();assert.equal(c.sends(),0);assert.equal(f.calls.filter(call=>call[0]==='upload').length,0);
   gate.resolve();await saving;await sent;assert.equal(c.sends(),1);assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
   c.binding.dispose();
+});
+
+for(const initial of ['', '原始虚构问题'])test('upload preserves original send intent when edited: '+(initial?'text+file':'file only'),async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');const c=composerFor(f),gate=deferred();
+  const normal=f.api.uploadAttachment;f.api.uploadAttachment=async(...args)=>{await gate.promise;return normal(...args);};
+  c.edit(initial);await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
+  const pending=c.key();await tick();c.edit('等待期间输入的下一段');gate.resolve();await pending;
+  assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
+  assert.equal(c.sends(),0,'typing during upload is not another send action');
+  assert.equal(f.controller.state.text,'等待期间输入的下一段');assert.equal(c.input.disabled,false);
+  await c.key();assert.equal(c.sends(),1,'a second explicit Enter sends the retained text');c.binding.dispose();
+});
+test('edit then undo while upload waits still requires a new explicit send',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');const c=composerFor(f),gate=deferred();
+  const normal=f.api.uploadAttachment;f.api.uploadAttachment=async(...args)=>{await gate.promise;return normal(...args);};
+  c.edit('原始虚构问题');await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
+  const pending=c.key();await tick();c.edit('修改');c.edit('原始虚构问题');gate.resolve();await pending;
+  assert.equal(c.sends(),0);assert.equal(f.controller.state.text,'原始虚构问题');await c.key();assert.equal(c.sends(),1);c.binding.dispose();
+});
+test('starting composition during upload cancels the text send without locking input',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');const c=composerFor(f),gate=deferred();
+  const normal=f.api.uploadAttachment;f.api.uploadAttachment=async(...args)=>{await gate.promise;return normal(...args);};
+  c.edit('原始虚构问题');await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
+  const pending=c.key();await tick();c.input.fire('compositionstart');gate.resolve();await pending;
+  assert.equal(c.sends(),0);assert.equal(c.input.disabled,false);c.input.fire('compositionend');c.binding.dispose();
 });
