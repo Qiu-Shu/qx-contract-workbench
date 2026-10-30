@@ -169,6 +169,7 @@ def test_recovery_allows_exact_assistant_reads_and_rejects_all_writes(native):
         assert recovered.get('/api/assistant/runs/'+run['id']+'/events').status_code==200
         assert recovered.post(url+'/messages',headers=h,json={}).status_code==409
         assert recovered.post('/api/assistant/runs/'+run['id']+'/cancel',headers=h,json={}).status_code==409
+        assert recovered.request('DELETE',url,headers=h,json={}).status_code==409
         assert recovered.get('/api/assistant/unreviewed').status_code==409
 
 

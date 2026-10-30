@@ -98,6 +98,34 @@ async def close(runtime,manager):
     if client:client.close()
 
 
+def test_archive_requires_disconnect_and_fences_late_io_and_restart(world):
+    async def scenario():
+        runtime, wire, manager, _, actor = await setup_runtime(world,automatic=False)
+        database = world[0];cid = runtime._value.expected_scope.conversation_id
+        token = runtime._value.session_token;epoch = runtime._epoch;client = runtime._transport._client
+        try:
+            with database.session() as db:
+                view = service.read_conversation(actor,cid,db)
+                archive = d.AssistantArchiveInput(expected_scope=view.scope,expected_composer_revision=view.composer_revision)
+                with pytest.raises(ServiceError) as error:
+                    service.archive_conversation(actor,cid,archive,db,require_disconnected=runtime.require_disconnected)
+                assert error.value.code == 'PERSONAL_WEIXIN_CONNECTED'
+            runtime.disable()
+            with database.session() as db:
+                assert service.archive_conversation(actor,cid,archive,db,
+                    require_disconnected=runtime.require_disconnected).archived_at
+            called = []
+            with pytest.raises(ServiceError):
+                await runtime._io(epoch,lambda:called.append(True))
+            assert called == []
+            with pytest.raises(ServiceError):
+                runtime.start({'session_token':token,'expected_scope':view.scope.model_dump(mode='json'),
+                    'automatic_policy':None})
+        finally:
+            await close(runtime,manager);client.close()
+    asyncio.run(scenario())
+
+
 def count(database,table):
     with database.session() as db:
         return db.scalar(text('SELECT COUNT(*) FROM '+table))

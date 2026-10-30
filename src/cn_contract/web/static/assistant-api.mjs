@@ -32,6 +32,7 @@ const conversation = id=>'/api/assistant/conversations/'+encodeURIComponent(id);
 export const getConversation = (id,before)=>request(conversation(id)+(before?'?before='+encodeURIComponent(before):''));
 export const createConversation = body=>request('/api/assistant/conversations',{method:'POST',body});
 export const saveDraft = (id,body)=>request(conversation(id)+'/draft',{method:'PUT',body});
+export const deleteConversation = (id,body)=>request(conversation(id),{method:'DELETE',body});
 export const listConversations = cursor=>request('/api/assistant/conversations'+(cursor?'?cursor='+encodeURIComponent(cursor):''));
 export const skills = ()=>request('/api/assistant/skills');
 export const submitBusiness=(id,body)=>request(conversation(id)+'/business',{method:'POST',body});

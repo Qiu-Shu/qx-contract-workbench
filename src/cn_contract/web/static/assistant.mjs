@@ -52,6 +52,7 @@ const controller=createDraftController(api,{readonly,autoReadMaterials:true,
 
 function drawState(state) {
   renderer.state(state,readonly);
+  renderer.archiveControls(state,readonly);
   const choice=byId('business-task-select'),items=new Map((state.business?.items||[]).filter(item=>item.task_id).map(item=>[item.task_id,item]));
   byId('business-task-choice').hidden=items.size<2&&!state.business?.selectedTask;
   choice.replaceChildren(new Option('自动判断',''));
@@ -125,7 +126,9 @@ async function loadList(append=false) {
     const page=await api.listConversations(append?listCursor:null);
     if(epoch!==listEpoch || closed || controller.state.status==='revoked')return;
     listCursor=page.next_cursor;
-    renderer.conversations(page,{append,selected:controller.state.id,onSelect:id=>void open(id)});
+    renderer.conversations(page,{append,selected:controller.state.id,onSelect:id=>void open(id),
+      onDelete:item=>void deleteConversation(item),readonly});
+    renderer.archiveControls(controller.state,readonly);
   } catch(error) { if(epoch===listEpoch)failure(error); }
   finally { if(epoch===listEpoch)byId('more-conversations').disabled=false; }
 }
@@ -137,6 +140,27 @@ async function open(id) {
   if(done || controller.state.id)pendingRoute=null;
   drawState(controller.state);
   if(done)closeMenu();
+}
+async function deleteConversation(item) {
+  if(readonly)return;
+  if(composer.isComposing() || localPending() || personalWeixin?.hasPending()) {
+    notice('请先保存或清空待传内容；操作进行中请先停止，结果未知时请先查询，再删除对话。');return;
+  }
+  if(!controller.state.archivePending && !controller.canLeave()) {
+    notice('请先保存当前输入或处理冲突；任务进行中请先停止，结果未知时请先查询，再删除对话。');return;
+  }
+  if(!controller.state.archivePending && ['queued','preparing','routing','retrieving','generating','persisting'].includes(controller.state.view?.latest_run?.state)) {
+    notice('当前对话有正在处理的任务，请先停止任务并刷新状态，再删除对话。');return;
+  }
+  clearTimeout(timer);++listEpoch;
+  const done=await safely(()=>controller.archiveConversation(item));
+  if(done) {
+    pendingRoute=null;await loadList();drawState(controller.state);closeMenu();
+    notice('已从事项记录移除对话；相关任务、材料原件和历史成果仍保留。');
+    byId('composer').focus();
+  } else if(controller.state.error?.code==='VERSION_CONFLICT') {
+    await loadList();notice('该对话已更新，请刷新记录并核对最新内容，再删除对话。');
+  }
 }
 composer=bindComposer({input:byId('composer'),form:byId('composer-form'),
   onEdit:text=>{

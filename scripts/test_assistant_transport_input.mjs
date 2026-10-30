@@ -12,11 +12,14 @@ test('same-origin transport carries CSRF only on writes and preserves original r
   try {
     await request('/api/assistant/skills');
     await request('/api/assistant/conversations',{method:'POST',body:{request_id:'same-synthetic-id'}});
+    await api.deleteConversation('fictional',{expected_scope:{conversation_id:'fictional'},expected_composer_revision:7});
     assert.equal(seen[0].options.headers['X-CSRF-Token'],undefined);
     assert.equal(seen[1].options.headers['X-CSRF-Token'],'synthetic token');
     assert.equal(JSON.parse(seen[1].options.body).request_id,'same-synthetic-id');
     assert.equal(seen[1].options.credentials,'same-origin');
     assert.equal(seen[1].options.cache,'no-store');
+    assert.equal(seen[2].options.method,'DELETE');assert.equal(seen[2].options.headers['X-CSRF-Token'],'synthetic token');
+    assert.deepEqual(JSON.parse(seen[2].options.body),{expected_scope:{conversation_id:'fictional'},expected_composer_revision:7});
   } finally {globalThis.fetch=oldFetch;globalThis.document=oldDocument;}
 });
 

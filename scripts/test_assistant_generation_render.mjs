@@ -25,6 +25,17 @@ class Element {
   querySelectorAll(selector){return walk(this).slice(1).filter(element=>selector==='p'?element.tagName==='p':element.className?.split(' ').includes(selector.slice(1)));}
 }
 const walk=element=>[element,...element.children.flatMap(walk)];
+test('conversation removal is a separate accessible sibling button',t=>{
+  const f=fixture(t);
+  f.render.conversations({items:[{scope:{conversation_id:'one'},display_title:'虚构事项'}],next_cursor:null},
+    {onSelect(){},onDelete(){}});
+  const row=f.at('conversation-list').children[0];
+  assert.equal(row.children.length,2);
+  const [open,remove]=row.children;
+  assert.equal(open.tagName,'button');assert.equal(remove.tagName,'button');
+  assert.equal(open.dataset.conversationId,'one');assert.equal(remove.dataset.conversationId,undefined);
+  assert.equal(remove.dataset.deleteConversationId,'one');assert.match(remove.attributes['aria-label'],/删除.*虚构事项/);
+});
 const cid='11111111-1111-4111-8111-111111111111';
 const mid='22222222-2222-4222-8222-222222222222';
 const mid2='33333333-3333-4333-8333-333333333333';

@@ -20,7 +20,7 @@ export function createDraftController(api, {
 } = {}) {
   const state = {id: null, view: null, text: '', savedText: '', skill: null,
     status: readonly ? 'readonly' : 'idle', error: null, conflict: null, dirty: false, loading: false,
-    materials: null, materialAction: null, desktopModel: null};
+    materials: null, materialAction: null, desktopModel: null, archiving: null, archivePending: null};
   let epoch = 0, closed = false, channel = null, creating = null, pending = null, materialPending = null;
   let reading = false, paging = false, cancelling = false, generation = null, research = null, context = null, business = null, materialGeneration = null;
   const stoppedRuns=new Set();
@@ -45,6 +45,7 @@ export function createDraftController(api, {
     state.view = null; state.text = state.savedText = ''; state.skill = null;
     state.conflict = state.error = null; state.loading = false;
     state.materials = null; state.materialAction = null;
+    state.archiving = state.archivePending = null;
     state.status = readonly ? 'readonly' : 'idle';
   }
   function fail(error, token) {
@@ -233,7 +234,7 @@ export function createDraftController(api, {
     notify(); return save(true);
   }
   async function open(id) {
-    if (closed) return false;
+    if (closed || state.archiving || state.archivePending) return false;
     if((business?.blocked() || materialGeneration?.blocked()))return false;
     if (id === state.id && state.view) return refresh();
     if (!state.loading && (state.dirty || channel) && !await save()) return false;
@@ -355,6 +356,38 @@ export function createDraftController(api, {
       return researched && (generated || !api.getGenerationCapability);
     });
   }
+  function canLeave() {
+    return closed || (!state.dirty && !state.loading && !channel && !reading && !paging && !cancelling &&
+      !generation.blocked() && !research.blocked() && !context.blocked() && !business.blocked() && !materialGeneration.blocked());
+  }
+  async function archiveConversation(view) {
+    const id=view?.scope?.conversation_id;
+    if(closed || readonly || !id || state.status==='revoked' || state.archiving ||
+        (state.archivePending ? state.archivePending.id!==id : !canLeave()))return false;
+    if(!state.archivePending && (['generation','research','context','business','materialGeneration'].some(key=>
+        ['checking','confirming','submitting','unknown'].includes(state[key]?.phase)) ||
+        ['queued','preparing','routing','retrieving','generating','persisting'].includes(state.view?.latest_run?.state)))return false;
+    const target=id===state.id?state.view:view;
+    const body=state.archivePending?.body || {expected_scope:{...target.scope},
+      expected_composer_revision:target.composer_revision};
+    const token=epoch;
+    state.archiving=id;state.loading=true;state.error=null;notify();
+    try {
+      const removed=checked(await api.deleteConversation(id,body),id);
+      if(!current(token))return false;
+      if(!removed.archived_at)throw Object.assign(new Error('archive'),{code:'NETWORK_UNKNOWN',status:0});
+      state.archivePending=null;state.archiving=null;state.loading=false;
+      if(id===state.id){epoch+=1;reset();identity(null);}
+      notify();return true;
+    } catch(error) {
+      if(!current(token))return false;
+      state.archiving=null;
+      if(!error.status || error.code==='NETWORK_UNKNOWN') {
+        state.archivePending={id,body};state.error={code:'ARCHIVE_UNKNOWN',status:0};notify();return false;
+      }
+      state.archivePending=null;state.loading=false;return fail(error,token);
+    }
+  }
   return {
     state,
     edit(text) {
@@ -376,7 +409,7 @@ export function createDraftController(api, {
       }
       state.skill = skill; generation.changed();research.changed();context.changed(); notify();
     },
-    open, async ensureConversation() {
+    open, archiveConversation, async ensureConversation() {
       if(closed || readonly || state.loading || state.conflict || state.status==='revoked' || state.status==='error')return false;
       if(!state.id){creating ||= {request_id:uuid()};notify();}
       return await save() && Boolean(state.id);
@@ -401,6 +434,7 @@ export function createDraftController(api, {
       return isAuthorizationError(error) ? fail(error, epoch) : false;
     },
     async newConversation() {
+      if(state.archiving || state.archivePending)return false;
       if(business.blocked() || materialGeneration.blocked())return false;
       if (closed || (!state.loading && (state.dirty || channel) && !await save())) return false;
       epoch += 1; reset(); identity(null); notify(); return true;
@@ -411,7 +445,7 @@ export function createDraftController(api, {
       state.conflict = null; state.status = 'idle'; state.error = null; notify();
       return choice === 'local' || materialPending ? save(true) : true;
     },
-    canLeave: () => closed || (!state.dirty && !state.loading && !channel && !reading && !paging && !cancelling && !generation.blocked() && !research.blocked() && !context.blocked() && !business.blocked() && !materialGeneration.blocked()),
+    canLeave,
     close() { closed = true; epoch += 1; reset(); state.id = null; notify(); },
   };
 }

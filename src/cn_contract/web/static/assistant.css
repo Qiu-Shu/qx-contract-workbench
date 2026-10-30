@@ -129,6 +129,9 @@ p { line-height: 1.7; }
 .sidebar-section h2 { padding: 0 12px; margin-bottom: 10px; color: #6f6876; font-size: 12px; font-weight: 400; letter-spacing: .08em; }
 .recent-section { flex: 1; min-height: 112px; }
 .conversation-list { display: grid; gap: 4px; }
+.conversation-row { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.conversation-row .conversation-item { flex: 1; min-width: 0; }
+.conversation-row .conversation-delete { width: auto; flex: none; padding: 8px; font-size: 12px; }
 .common-skills { display: grid; gap: 2px; padding: 4px 0 10px; }
 .common-skills button, .conversation-list button, .conversation-item { width: 100%; padding: 10px 12px; border: 1px solid transparent; border-radius: 6px; color: #575360; background: transparent; text-align: left; font-size: 13px; font-weight: 400; line-height: 1.6; overflow-wrap: anywhere; }
 .conversation-list button { text-wrap: balance; }

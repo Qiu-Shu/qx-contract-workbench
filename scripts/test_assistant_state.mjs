@@ -43,6 +43,42 @@ async function check(name, run) {
   await run(); passed += 1; console.log(`PASS ${name}`);
 }
 
+await check('archive current returns to fresh chat and retains another chat', async()=>{
+  const f=fixture(),c=f.controller;
+  f.api.deleteConversation=async(id,body)=>{f.calls.push(['archive',id,copy(body)]);return {...copy(f.remote),archived_at:'2026-10-30T00:00:00Z'};};
+  await c.open('one');assert.equal(await c.archiveConversation(c.state.view),true);
+  assert.equal(c.state.id,null);assert.equal(c.state.text,'');assert.equal(c.canLeave(),true);
+  await c.open('one');const before=c.state.view;
+  f.api.deleteConversation=async(id)=>({...snapshot(id),archived_at:'2026-10-30T00:00:00Z'});
+  assert.equal(await c.archiveConversation(snapshot('two')),true);
+  assert.equal(c.state.id,'one');assert.equal(c.state.view,before);
+});
+await check('archive blocks dirty text and unfinished work without clearing it',async()=>{
+  const f=fixture(),c=f.controller;let calls=0;f.api.deleteConversation=async()=>{calls++;};
+  await c.open('one');c.edit('未保存');assert.equal(await c.archiveConversation(c.state.view),false);
+  assert.equal(c.state.text,'未保存');assert.equal(calls,0);
+  await c.save();c.state.generation.phase='unknown';assert.equal(await c.archiveConversation(c.state.view),false);
+  assert.equal(calls,0);
+});
+await check('archive acknowledgement cannot discard typing or navigation started while pending',async()=>{
+  const f=fixture(),c=f.controller,gate=deferred();await c.open('one');
+  f.api.deleteConversation=()=>gate.promise;const deleting=c.archiveConversation(c.state.view);await tick();
+  assert.equal(c.state.loading,true);c.edit('不能写入将被归档的会话');
+  assert.equal(await c.open('two'),false);assert.equal(await c.newConversation(),false);
+  assert.equal(c.state.text,'');gate.resolve({...snapshot(),archived_at:'2026-10-30T00:00:00Z'});
+  assert.equal(await deleting,true);assert.equal(c.state.id,null);
+});
+await check('unknown archive keeps exact body and blocks work until idempotent reconciliation',async()=>{
+  const f=fixture(),c=f.controller;await c.open('one');const bodies=[];
+  f.api.deleteConversation=async(id,body)=>{bodies.push(copy(body));if(bodies.length===1)throw failure(0,'NETWORK_UNKNOWN');
+    return {...snapshot(id),archived_at:'2026-10-30T00:00:00Z'};};
+  const view=c.state.view;assert.equal(await c.archiveConversation(view),false);
+  assert.equal(c.state.archivePending.id,'one');assert.equal(c.canLeave(),false);
+  c.edit('不能改写未知结果');assert.equal(c.state.text,'');assert.equal(await c.newConversation(),false);
+  assert.equal(await c.archiveConversation(view),true);assert.deepEqual(bodies[0],bodies[1]);
+  assert.equal(c.state.id,null);assert.equal(c.state.archivePending,null);
+});
+
 await check('blank and skill selection do not create records; read-only never writes', async () => {
   const f = fixture(), c = f.controller;
   c.edit('  \n'); c.selectSkill('contract_review');

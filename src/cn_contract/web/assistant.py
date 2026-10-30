@@ -105,6 +105,14 @@ def register_routes(app, database):
         with database.session() as db:
             return service.read_conversation_page(actor_in(request,db),identifier,db,before=before,limit=limit)
 
+    @app.delete('/api/assistant/conversations/{identifier}')
+    async def archive(identifier:UUID,request:Request):
+        runtime = getattr(app.state, 'personal_weixin_runtime', None)
+        return await write(request,d.AssistantArchiveInput,
+            lambda a,v,db:service.archive_conversation(a,identifier,v,db,
+                require_disconnected=runtime.require_disconnected if runtime is not None else None),
+            conversation=identifier)
+
     @app.get('/api/assistant/conversations/{identifier}/runs/by-request/{request_id}')
     def find_run(identifier:UUID,request_id:UUID,request:Request):
         with database.session() as db:

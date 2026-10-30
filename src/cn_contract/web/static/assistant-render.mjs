@@ -7,6 +7,9 @@ export const errorText = error=>({
   CROSS_MATTER_DENIED:'当前无权访问此记录，已清除页面内容。',
   BLOCKED_LIVE:'当前副本仅供核对，不能保存或运行任务。',
   STATE_CONFLICT:'保存未完成，请核对输入长度或重新读取记录。',
+  ARCHIVE_UNKNOWN:'删除结果尚未确认。请点该记录的“查询删除结果”，确认前保留当前页面。',
+  PERSONAL_WEIXIN_CONNECTED:'该对话仍连接本人微信。请返回该聊天，先断开连接，再删除对话。',
+  ASSISTANT_BUSY:'该对话有正在处理的任务。请先停止任务并刷新状态，再删除对话。',
   MATERIAL_INPUT_TOO_LARGE:'选中的完整材料超出本次模型输入上限。请减少选中的材料后重试，不会自动截断发送。',
   MATERIAL_NOT_READABLE:'有材料尚未读取，请先解析并核对读取范围。',
   FILE_LIMIT:'材料超过本机接收上限。请缩小文件或分开处理。',
@@ -342,7 +345,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       }
       drawContextPanel(state,readonly);
     },
-    conversations(page,{append=false,selected=null,onSelect}={}) {
+    conversations(page,{append=false,selected=null,onSelect,onDelete,readonly=false}={}) {
       const host=byId('conversation-list');
       if(!append)host.replaceChildren();
       else host.querySelectorAll('p').forEach(element=>element.remove());
@@ -350,7 +353,11 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
         const button=node('button',item.display_title,'conversation-item'); button.type='button';
         button.dataset.conversationId=item.scope.conversation_id;
         if(item.scope.conversation_id===selected)button.setAttribute('aria-current','page');
-        button.addEventListener('click',()=>onSelect(item.scope.conversation_id)); host.append(button);
+        button.addEventListener('click',()=>onSelect(item.scope.conversation_id));
+        const row=node('div','','conversation-row'),remove=node('button','删除','conversation-delete');
+        remove.type='button';remove.dataset.deleteConversationId=item.scope.conversation_id;
+        remove.setAttribute('aria-label','删除对话：'+item.display_title);remove.disabled=readonly;
+        remove.addEventListener('click',()=>onDelete?.(item));row.append(button,remove);host.append(row);
       }
       if(!host.children.length)host.append(node('p','这里会保留你的事项记录，方便下次接着处理。','muted'));
       byId('more-conversations').hidden=!page.next_cursor;
@@ -359,6 +366,13 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       root.querySelectorAll('[data-conversation-id].conversation-item').forEach(button=>{
         if(button.dataset.conversationId===id)button.setAttribute('aria-current','page');
         else button.removeAttribute('aria-current');
+      });
+    },
+    archiveControls(state,readonly) {
+      root.querySelectorAll('[data-delete-conversation-id]').forEach(button=>{
+        const pending=state.archivePending?.id===button.dataset.deleteConversationId;
+        button.textContent=pending?'查询删除结果':state.archiving===button.dataset.deleteConversationId?'正在删除…':'删除';
+        button.disabled=readonly || state.status==='revoked' || Boolean(state.archiving) || state.loading&&!pending;
       });
     },
     capability(catalog) {

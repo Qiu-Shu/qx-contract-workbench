@@ -105,15 +105,17 @@ def test_listing_cursor_rejects_other_owner_unknown_and_workspace_identity(works
             actors['lawyer'], db, cursor=first.scope.conversation_id))
 
 
-def test_listing_includes_archived_summary_without_mutating_it(workspace):
+def test_listing_hides_archived_without_mutating_history(workspace):
     database, actors, _, service = workspace
     first = conversation(workspace)
     archived_at = datetime.now(timezone.utc)
     with database.session() as db:
         db.execute(text('UPDATE assistant_conversations SET archived_at=:at'), {'at':archived_at.isoformat()})
         page = service.list_conversations(actors['lawyer'], db)
-        assert page.items[0].archived_at == archived_at
-        assert page.items[0].scope == first.scope
+        assert page.items == ()
+        saved = service.read_conversation(actors['lawyer'], first.scope.conversation_id, db)
+        assert saved.archived_at == archived_at
+        assert saved.scope == first.scope
 
 
 def test_cancel_queued_records_single_event_and_allows_following_input(workspace):

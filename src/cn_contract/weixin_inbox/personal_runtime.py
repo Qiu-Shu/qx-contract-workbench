@@ -85,6 +85,12 @@ class PersonalWeixinRuntime:
         self._status_actor = None
         return {'status':'disabled'}
 
+    def require_disconnected(self, cid):
+        # Archive has already checked the owner/version. Session-hidden status is not a target guard.
+        if ((self._value is not None and self._value.expected_scope.conversation_id == cid)
+                or (self._status.conversation_id == cid and self._status.state != 'disconnected')):
+            raise ServiceError('PERSONAL_WEIXIN_CONNECTED', 409)
+
     def status(self, actor, cid):
         with self.database.session() as db:
             service._owned(actor, cid, db)

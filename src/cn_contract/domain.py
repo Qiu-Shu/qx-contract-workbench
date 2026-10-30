@@ -2597,6 +2597,11 @@ class AssistantConversationCreateInput(AssistantScope):
     display_title: IntakeLabel = '新对话'
 
 
+class AssistantArchiveInput(DomainModel):
+    expected_scope: ScopeSnapshot
+    expected_composer_revision: NonNegativeInt
+
+
 class AssistantDraftInput(DomainModel):
     expected_scope: ScopeSnapshot
     expected_composer_revision: NonNegativeInt

@@ -192,7 +192,7 @@ def list_conversations(actor, db, *, cursor=None, limit=20):
         boundary = ' AND (created_at<:at OR (created_at=:at AND id<:id))'
         parameters.update(at=anchor['created_at'], id=anchor['id'])
     rows = db.execute(text('''SELECT id FROM assistant_conversations
-        WHERE owner_id=:owner AND workspace_id=:workspace''' + boundary +
+        WHERE owner_id=:owner AND workspace_id=:workspace AND archived_at IS NULL''' + boundary +
         ' ORDER BY created_at DESC,id DESC LIMIT :limit'), parameters).all()
     items = []
     for identifier, in rows:
@@ -206,6 +206,32 @@ def list_conversations(actor, db, *, cursor=None, limit=20):
             composer_revision=row['composer_revision'], created_at=row['created_at'], archived_at=row['archived_at']))
     return d.AssistantConversationPage(items=tuple(items),
         next_cursor=rows[-1][0] if len(rows) == query.limit else None)
+
+
+def archive_conversation(actor, identifier, request, db, *, require_disconnected=None):
+    request = d.AssistantArchiveInput.model_validate(request.model_dump(mode='python'))
+    row = _owned(actor, identifier, db)
+    require_active(db)
+    if (request.expected_scope != _snapshot(row)
+            or request.expected_composer_revision != row['composer_revision']):
+        raise ServiceError('VERSION_CONFLICT', 409)
+    if row['archived_at'] is not None:
+        return read_conversation(actor, identifier, db)
+    if db.scalar(text('''SELECT 1 FROM assistant_runs WHERE conversation_id=:id
+            AND state IN ('queued','preparing','routing','retrieving','generating','persisting')'''),
+            {'id':str(identifier)}):
+        raise ServiceError('ASSISTANT_BUSY', 409)
+    if inspect(db.connection()).has_table('task_executions') and db.scalar(text('''
+            SELECT 1 FROM task_executions e JOIN task_drafts t ON t.id=e.draft_id
+            WHERE t.conversation_id=:id AND e.state IN ('creating_matter','queued','running')'''),
+            {'id':str(identifier)}):
+        raise ServiceError('ASSISTANT_BUSY', 409)
+    # No await between the target runtime guard and this transaction's archive write.
+    if require_disconnected is not None:
+        require_disconnected(identifier)
+    db.execute(text('UPDATE assistant_conversations SET archived_at=:at WHERE id=:id'),
+        {'id':str(identifier), 'at':_at()})
+    return read_conversation(actor, identifier, db)
 
 
 def save_draft(actor, identifier, request: d.AssistantDraftInput, db, *, page_size=None):
@@ -308,6 +334,8 @@ def cancel_run(actor, identifier, request: d.AssistantCancelInput, db):
     active = {'queued', 'preparing', 'routing', 'retrieving', 'generating', 'persisting', 'awaiting_input'}
     if row['state'] not in active or row['cancel_requested']:
         return get_run(actor, identifier, db)
+    if _owned(actor, UUID(row['conversation_id']), db)['archived_at'] is not None:
+        raise ServiceError('VERSION_CONFLICT', 409)
     state = 'cancelled' if row['state'] in {'queued', 'awaiting_input'} else row['state']
     event_type = 'run.cancelled' if state == 'cancelled' else 'run.cancel_requested'
     with db.begin_nested():
