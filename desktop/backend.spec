@@ -17,7 +17,14 @@ for source, target in [
     ('src/cn_contract/web/templates', 'cn_contract/web/templates'),
     ('src/cn_contract/web/static', 'cn_contract/web/static'),
 ]:
-    assets.append((str(root / source), target))
+    source_root = root / source
+    if source_root.is_dir():
+        # Fixture imports can leave caches; only source assets belong in the bundle.
+        for file in source_root.rglob('*'):
+            if file.is_file() and '__pycache__' not in file.parts and file.suffix not in {'.pyc', '.pyo'}:
+                assets.append((str(file), str(Path(target) / file.relative_to(source_root).parent)))
+    else:
+        assets.append((str(source_root), target))
 assets += collect_data_files('docx')
 # Carry dependency license texts with the private executable, not just a list.
 for distribution in importlib.metadata.distributions():

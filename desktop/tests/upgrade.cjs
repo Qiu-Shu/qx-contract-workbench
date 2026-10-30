@@ -27,7 +27,7 @@ async function login(){
 }
 async function get(url){return page.evaluate(async url=>{const r=await fetch(url);if(!r.ok)throw Error('HTTP '+r.status);return r.json();},url);}
 (async()=>{try{
-  app=await launch();await login();report.version=await app.evaluate(({app})=>app.getVersion());assert.equal(report.version,'0.5.0');
+  app=await launch();await login();report.version=await app.evaluate(({app})=>app.getVersion());assert.equal(report.version,'0.5.2');
   assert.equal(await page.evaluate(()=>typeof require),'undefined');
   const matters=await get('/api/matters');assert.equal(matters.length,1);
   const matter=await get('/api/matters/'+matters[0].id);assert.ok(matter.documents.length>0);
@@ -48,7 +48,7 @@ async function get(url){return page.evaluate(async url=>{const r=await fetch(url
   assert.equal(await page.locator('#worksheet-client-reply').inputValue(),'请补充付款凭证供核对。');
   report.checks.push('merged-reception-worksheet-save-and-reload');
   for(const id of ['show-evidence','show-followups','show-outputs'])assert.equal(await page.locator('#'+id).isEnabled(),true);
-  await page.locator('#task-draft-panel > summary').click();await page.locator('#weixin-pending-panel > summary').click();
+  await page.locator('#task-draft-panel > summary').click();await page.getByText('微信收件与离线验证',{exact:true}).click();await page.locator('#weixin-pending-panel > summary').click();
   await page.locator('#weixin-pending-targets').click();
   await page.waitForFunction(()=>document.querySelectorAll('#weixin-pending-target option').length>1);
   assert.match(await page.locator('#weixin-state').textContent(),/未绑定|未配置|未授权|不可用|尚未/);

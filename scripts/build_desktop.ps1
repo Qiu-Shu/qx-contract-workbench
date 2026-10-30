@@ -21,6 +21,16 @@ try {
     & $python -m PyInstaller --noconfirm --distpath (Join-Path $repo 'dist') --workpath (Join-Path $repo 'build/desktop-python') (Join-Path $repo 'desktop/backend.spec')
     if ($LASTEXITCODE -ne 0) { throw 'Python bundle failed.' }
     if (!$BackendOnly) {
+        # Build from a clean Electron copy so the packager never needs bulk deletion
+        # merely to remove unwanted locales. The fixed npm distribution stays intact.
+        $electronSource = Join-Path $repo 'desktop/node_modules/electron/dist'
+        $electronDist = Join-Path $repo 'build/electron-44.8.0-ui'
+        New-Item -ItemType Directory -Path (Join-Path $electronDist 'locales') -Force | Out-Null
+        robocopy $electronSource $electronDist /E /XD (Join-Path $electronSource 'locales') /NFL /NDL /NP | Out-Null
+        if ($LASTEXITCODE -ge 8) { throw 'Electron runtime copy failed.' }
+        foreach ($locale in @('zh-CN.pak', 'zh-TW.pak', 'en-US.pak')) {
+            Copy-Item -LiteralPath (Join-Path $electronSource "locales/$locale") -Destination (Join-Path $electronDist "locales/$locale") -Force
+        }
         Push-Location (Join-Path $repo 'desktop')
         try {
             & node $npm run pack
