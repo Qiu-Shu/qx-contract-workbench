@@ -1,0 +1,109 @@
+{
+  "version": "0.5.5",
+  "product_commits": [
+    "88bb75e",
+    "aed6d57",
+    "c739c7b",
+    "cc1b1f5",
+    "829a329"
+  ],
+  "build": {
+    "started": "2026-10-30T10:55:53.7577945Z",
+    "finished": "2026-10-30T10:56:53.0113721Z",
+    "exit": 0
+  },
+  "installer": {
+    "bytes": 148635650,
+    "sha256": "db1eeb7a1d082c9887531c871f87d807fa6e7b9cb84c53829f6e692e0f4a3c26",
+    "signature": "NotSigned"
+  },
+  "package": {
+    "status": "PASS",
+    "unchanged_source_inputs": 487,
+    "source_assets_matched": 123,
+    "ssl_policy_sha256": "c916ce1b14ed8ca69e9b5c9fab22799a900dd610d6d4ec9b1347f4fd48e53718",
+    "required_embedded_modules": [
+      "cn_contract.assistant.material_codec",
+      "cn_contract.assistant.service",
+      "cn_contract.web.assistant",
+      "cn_contract.weixin_inbox.personal_runtime",
+      "qrcode.image.svg"
+    ],
+    "banned_paths": []
+  },
+  "first_acceptance": {
+    "status": "FAIL",
+    "checks": [
+      "fresh-isolated-fictional-workspace",
+      "main-configured-automatic-analysis-OFF",
+      "typing-during-file-only-upload-stays-unsent",
+      "file-only-Enter-uploads-and-reads-current-chat-no-extra-controls-no-model",
+      "one-new-real-contract-response-saved-in-chat-auto-OFF-no-send-popup",
+      "saved-contract-Word-export"
+    ],
+    "new_fictional_model_posts": 1,
+    "uploads": 1,
+    "dialogs": 0,
+    "page_errors": [],
+    "error": "page.waitForFunction: Timeout 35000ms exceeded.",
+    "temporary_credential_removed": true
+  },
+  "saved_contract": {
+    "state": "received",
+    "has_output": true,
+    "workflow": "contract",
+    "text_length": 1738,
+    "citations": 8,
+    "usage": {
+      "prompt_tokens": 4268,
+      "completion_tokens": 1409,
+      "total_tokens": 5677,
+      "prompt_cache_hit_tokens": 512,
+      "prompt_cache_miss_tokens": 3756
+    },
+    "estimated_cost_usd": "0.0029712"
+  },
+  "continuation": {
+    "status": "PASS",
+    "checks": [
+      "delete-other-history-row-preserves-current-chat",
+      "delete-current-returns-blank-historical-result-retained",
+      "blank-chat-connect-fetches-real-QR-no-phone-login",
+      "explicit-disconnect"
+    ],
+    "new_model_posts": 0,
+    "delete_http_statuses": [
+      200,
+      200
+    ],
+    "page_errors": []
+  },
+  "install": {
+    "exit": 0,
+    "completed": "2026-10-30T10:59:47.6077708Z"
+  },
+  "installed": {
+    "started": "2026-10-30T10:59:48.843Z",
+    "status": "PASS",
+    "matched_files": 656,
+    "checks": [
+      "all-packaged-files-identical",
+      "default-user-workspace-opens-to-login",
+      "actual-version-0.5.5"
+    ],
+    "version": "0.5.5",
+    "finished": "2026-10-30T10:59:51.320Z"
+  },
+  "preservation": {
+    "backup_files": 90,
+    "unchanged_files_before_start": 90,
+    "status": "PASS",
+    "preserved_important_files": 5,
+    "old_tables_checked": 81,
+    "old_rows_preserved": 159,
+    "integrity": "ok"
+  },
+  "actual_phone_login_this_release": false,
+  "old_contract_response_root_cause": "unproven",
+  "old_unknown_attempts_retried": false
+}

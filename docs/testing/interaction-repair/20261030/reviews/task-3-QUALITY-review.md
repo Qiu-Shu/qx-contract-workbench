@@ -1,0 +1,29 @@
+# Task 3 independent QUALITY review
+
+**PASS — no actionable QUALITY finding in the fixed range.** Reviewed `cc1b1f5295630609a12eefb81a0e051e19123b57..829a3292d09c4f6e80b1b8cf2084fee8700ca914`, the 16-file diff, task brief/report, and targeted caller/transaction boundaries. Task 1/2 findings were not reopened. No product edits, subagents, external network/model/account use, default-profile operations, package or push. This approval covers the scoped archive implementation, not production or actual desktop acceptance.
+
+## Authoritative boundaries
+
+- `web/assistant.py` reuses the existing write boundary: authenticate/CSRF/origin and target ownership precede body parsing; actor and authorization are checked again in the transaction performing the mutation. `AssistantArchiveInput` is defined in `domain.py` and revalidated by the service. `_owned` checks current session/role, owner, workspace, scope membership and projected intake membership; maintenance/restore restrictions remain authoritative.
+- `assistant/service.py:211` compares the complete scope and composer revision before idempotent return, active-work checks or runtime access. An unauthorized or stale delete therefore cannot disturb a connection. The archive write and assistant/task activity queries run within the existing SQLite `BEGIN IMMEDIATE` transaction; a competing draft/message/task write either wins before the checks or encounters the archive guard afterward. The new two-thread draft/delete test checks both acceptable outcomes without accepting lost draft data.
+- The six executing assistant run states and task execution states `creating_matter`, `queued`, `running` block archive. Awaiting user input is intentionally removable. The new cancel guard closes fresh mutation of an archived awaiting-input run while retaining terminal/already-cancelled reconciliation. Existing task `_write` and assistant `_expected` checks reject fresh post-archive work.
+- `PersonalWeixinRuntime.require_disconnected` inspects the actual target in `_value` and status, including paused/starting connections hidden from another login session. It does not disconnect anything. Target identity is checked after authorization/version/active-work validation, with no await before archive. Unrelated conversation deletion cannot stop another connection. The existing runtime IO epoch/archived checks and start rejection remain intact; the new offline runtime test exercises disconnect, archive, rejected late callback and rejected restart.
+
+## Persistence and frontend consistency
+
+- Listing filters `archived_at IS NULL` in SQL before `LIMIT`. The owner/workspace cursor anchor lookup still accepts an archived record, so deletion of an earlier page anchor does not invalidate later paging. Only `archived_at` is updated; no messages, originals, task rows, attempts, outputs or receipts are deleted. Historical reads still use `_owned` rather than the fresh-write guard. Tests verify original bytes, exact upload/message replay, historical execution reads and denied new mutation.
+- The delete control is a separate sibling button with a distinct selector and Chinese accessible name; it does not reuse the open-row click target. Current success resets to fresh chat; noncurrent success preserves current view and inputs. Readonly/revoked controls and IME/queue/worksheet/task/native-operation checks remain enforced.
+- `archiveConversation` snapshots the exact body, sets loading before awaiting the response and uses the existing epoch check. Editing, navigation and new-chat actions are blocked during the request. A network-unknown result retains the original body in `archivePending`; the same row becomes the explicit result-query action while competing work remains blocked. Successful reconciliation clears only the intended current target. The list epoch rejects earlier list responses. Personal-Weixin incoming refresh checks loading/current identity and local pending work before applying readbacks.
+- The added controller tests cover current/noncurrent deletion, dirty text, unknown workflow state, delayed acknowledgement, blocked intervening edit/navigation and identical-body reconciliation. Backend tests use actual fictional storage/service/HTTP paths for authorization, membership revocation, active execution, pagination, retention and races; the cross-session target fixture is complemented by the real offline runtime test. No test-only production bypass was added.
+
+## Evidence checked and limits
+
+Independently read raw summaries in this directory:
+
+- `task-3-node.log`: **77 passed**, zero failures/skips/cancellations. The reported 32 internal state assertions are part of this gate, not additional Node test cases.
+- `task-3-python.log`: **143 passed in 246.92s**. This is the completed shared regression, not an interrupted run.
+- `task-3-archive-verified.log`: **19 passed in 12.95s**, the final expanded archive file after its expected-error fixture correction. These overlap the shared regression and must not be added to 143. The report explicitly identifies that the earlier shared run had already collected its earlier test source.
+
+Those test executions and their exit codes are attributed to the implementer's retained report/logs; this reviewer did not rerun the suites without a concrete failure hypothesis. Independently executed `git diff cc1b1f5 829a329 --check`: **exit 0**. HEAD was the exact reviewed commit and there were no uncommitted product/test changes at the final source check. Preliminary read-only search commands with PowerShell wildcard/path syntax errors produced no test results and are not verification failures or PASS evidence.
+
+No additional probe was needed to substantiate a finding. Real packaged Electron interactions, original user-data preservation/install, native connection and actual provider end-to-end checks remain root-owned release gates. This review does not claim those have passed.
