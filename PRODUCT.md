@@ -16,7 +16,7 @@ web
 现有 FastAPI、Jinja 与静态页面及登录、权限、同源控制继续保留。原件、版本和审核状态必须可追溯，检索命中不代表法律结论正确或法规仍有效。先本地建设，阿里云统一接口部署另行实施；不增加收费订阅。
 
 ## Brand Commitments
-DeepSeek Harness 作为工作区交互参考，Impeccable 主导操作界面，Taste 辅助视觉。用户已指定浅色工作面、中文可读、克制强调色及原文核对区域。
+用户于2026-10-30明确指定采用同伴 `dhb_law` 前端：保留合入的温情工作台、工作台/对话双视图及共用输入、材料和底稿节点。后续功能沿用该界面，不恢复已搁置的本机旧样式。Impeccable 主导操作可用性，Taste 辅助视觉；保持中文可读、键盘操作、克制强调色及原文核对区域。合并与实测见 docs/testing/frontend-integration/20261030/README.md。
 
 ## Evidence on Hand
 已确认设计见 docs/superpowers/specs/2026-10-14-local-legal-library-design.md；实测盘点见 docs/testing/LOCAL-LIBRARY-PREFLIGHT-20261014.md。来源完整性、法律效力和正式交付是不同验收状态。
