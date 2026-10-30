@@ -27,7 +27,7 @@ async function login(){
 }
 async function get(url){return page.evaluate(async url=>{const r=await fetch(url);if(!r.ok)throw Error('HTTP '+r.status);return r.json();},url);}
 (async()=>{try{
-  app=await launch();await login();report.version=await app.evaluate(({app})=>app.getVersion());assert.equal(report.version,'0.5.2');
+  app=await launch();await login();report.version=await app.evaluate(({app})=>app.getVersion());assert.equal(report.version,'0.5.3');
   assert.equal(await page.evaluate(()=>typeof require),'undefined');
   const matters=await get('/api/matters');assert.equal(matters.length,1);
   const matter=await get('/api/matters/'+matters[0].id);assert.ok(matter.documents.length>0);
