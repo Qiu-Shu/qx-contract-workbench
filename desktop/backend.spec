@@ -1,6 +1,7 @@
 # Explicit source assets only. Never collect a workspace or repository tree.
 from pathlib import Path
 import importlib.metadata
+import ssl
 import sys
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
@@ -26,6 +27,9 @@ for source, target in [
     else:
         assets.append((str(source_root), target))
 assets += collect_data_files('docx')
+# Codex Python loads its rejected-root policy beside ssl.py, including when frozen.
+ssl_policy = Path(ssl.__file__).with_name('codex-rejected-cas.pem')
+if ssl_policy.is_file(): assets.append((str(ssl_policy), '.'))
 # Carry dependency license texts with the private executable, not just a list.
 for distribution in importlib.metadata.distributions():
     for file in distribution.files or ():
