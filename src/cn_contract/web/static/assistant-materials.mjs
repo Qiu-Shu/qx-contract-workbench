@@ -38,7 +38,7 @@ function kindOf(attachment) {
 export function bindMaterials({controller,readonly=false,root=document,onQueueChange=()=>{},onPreview=()=>{}}) {
   const byId=id=>root.getElementById(id);
   const node=(tag,text)=>{const item=root.createElement(tag);item.textContent=text;return item;};
-  let identity=null,revision=null,previewEpoch=0,queue=[],inflight=null,previousAction=null,uploading=false;
+  let identity=null,revision=null,previewEpoch=0,queue=[],inflight=null,previousAction=null,uploading=false,pickerEpoch=null,selectionEpoch=0;
   const feedback=text=>{byId('material-notice').textContent=text;};
   const action=(title,run)=>{const button=node('button',title);button.type='button';button.className='text-button';
     button.addEventListener('click',()=>void run());return button;};
@@ -69,7 +69,10 @@ export function bindMaterials({controller,readonly=false,root=document,onQueueCh
       for(const child of chip.children)if(child.tagName==='button')child.disabled=held;
   }
   function enqueue(files,source){
-    if(uploading||busy())return;
+    if(uploading||readonly||controller.state.loading||controller.state.materialAction||
+        ['conflict','revoked'].includes(controller.state.status)){
+      feedback('当前操作尚未完成或不能接收附件，请处理后重新选择文件。');return;
+    }
     const incoming=[...files||[]];if(!incoming.length)return;
     const rejected=incoming.filter(file=>!accepted(file));
     const kept=incoming.filter(file=>accepted(file)&&!queue.some(item=>item.name===file.name&&item.size===file.size));
@@ -152,7 +155,14 @@ export function bindMaterials({controller,readonly=false,root=document,onQueueCh
   byId('close-material-picker').addEventListener('click',()=>{picker(false);byId('add-material').focus();});
   byId('close-material-preview').addEventListener('click',()=>{closePreview();byId('add-material').focus();});
   byId('clear-material-queue').addEventListener('click',()=>{if(uploading||busy())return;clearQueue();onQueueChange();});
-  byId('material-file').addEventListener('change',event=>{enqueue(event.target.files);event.target.value='';if(queue.length)byId('composer')?.focus();});
+  byId('material-file').addEventListener('click',()=>{pickerEpoch=selectionEpoch;});
+  byId('material-file').addEventListener('change',event=>{
+    const origin=pickerEpoch;pickerEpoch=null;
+    if(origin!==null&&origin!==selectionEpoch){
+      event.target.value='';feedback('对话或访问状态已变化，请在当前对话重新选择文件。');return;
+    }
+    enqueue(event.target.files);event.target.value='';if(queue.length)byId('composer')?.focus();
+  });
   async function uploadSelected(){
     if(uploading)return false;
     if(!queue.length)return true;
@@ -206,6 +216,8 @@ export function bindMaterials({controller,readonly=false,root=document,onQueueCh
   }
   return {
     state(state){
+      // A draft's own autosave/create keeps its picker; navigation and revocation invalidate it.
+      if(state.loading||state.status==='revoked'||identity&&state.id!==identity)selectionEpoch++;
       if(previousAction && !state.materialAction && state.status!=='error'){
         // A reconciled unknown upload retires its queued file as well.
         if(inflight)queue=queue.filter(item=>item!==inflight),inflight=null,drawQueue();

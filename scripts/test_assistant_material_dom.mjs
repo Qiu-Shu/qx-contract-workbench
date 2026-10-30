@@ -46,7 +46,7 @@ function button(root,id,label) {
   const found=walk(root.getElementById(id)).find(element=>element.tagName==='button' && element.textContent===label);
   assert.ok(found,`missing button: ${label}`);return found;
 }
-function fixture(t,{withMaterials=true}={}) {
+function fixture(t,{withMaterials=true,readonly=false}={}) {
   const root=dom(),calls=[],receipts=new Map();let sequence=0;
   const view=id=>({scope:{workspace_id:'workspace',conversation_id:id,scope_kind:'conversation',scope_ref:null,
     binding_revision:1,input_revision:0,materials_revision:id==='one'&&withMaterials?1:0},
@@ -75,8 +75,8 @@ function fixture(t,{withMaterials=true}={}) {
   const oldFetch=globalThis.fetch;
   globalThis.fetch=async path=>{calls.push(['preview',path]);return {ok:true,json:async()=>({reading_status:'readable',result:null})};};
   let materials;
-  const controller=createDraftController(api,{uuid:()=>`synthetic-${++sequence}`,onChange:state=>materials?.state(state)});
-  materials=bindMaterials({controller,root});
+  const controller=createDraftController(api,{readonly,uuid:()=>`synthetic-${++sequence}`,onChange:state=>materials?.state(state)});
+  materials=bindMaterials({controller,root,readonly});
   t.after(()=>{materials.dispose();controller.close();globalThis.fetch=oldFetch;});
   return {root,api,controller,materials,calls,views,records};
 }
@@ -360,4 +360,41 @@ test('starting composition during upload cancels the text send without locking i
   c.edit('原始虚构问题');await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
   const pending=c.key();await tick();c.input.fire('compositionstart');gate.resolve();await pending;
   assert.equal(c.sends(),0);assert.equal(c.input.disabled,false);c.input.fire('compositionend');c.binding.dispose();
+});
+
+test('an already opened picker preserves its choice when autosave starts before change',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');const gate=deferred(),normal=f.api.saveDraft;
+  const input=f.root.getElementById('material-file');input.fire('click');
+  f.api.saveDraft=async(...args)=>{await gate.promise;return normal(...args);};
+  f.controller.edit('等待自动保存的虚构草稿');const saving=f.controller.save();await tick();
+  assert.equal(f.controller.state.status,'saving');input.value='fictional-choice.docx';
+  input.fire('change',{target:{files:[fileStub('已选择合同.docx',mime)],value:input.value}});
+  assert.equal(f.materials.hasSelection(),true,'the completed selection must remain queued');
+  gate.resolve();await saving;assert.equal(f.materials.hasSelection(),true);assert.equal(f.calls.length,0);
+});
+test('empty-chat picker ownership survives creation by its own autosave',async t=>{
+  const f=fixture(t,{withMaterials:false}),gate=deferred();
+  f.api.createConversation=async()=>{await gate.promise;return copy(f.views.one);};
+  const input=f.root.getElementById('material-file');input.fire('click');f.controller.edit('新聊天虚构草稿');
+  const saving=f.controller.save();await tick();input.fire('change',{target:{files:[fileStub('新聊天合同.docx',mime)],value:'fictional.docx'}});
+  assert.equal(f.materials.hasSelection(),true);gate.resolve();await saving;
+  assert.equal(f.controller.state.id,'one');assert.equal(f.materials.hasSelection(),true);
+});
+test('delayed picker choice cannot be adopted by another conversation',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');const input=f.root.getElementById('material-file');input.fire('click');
+  await f.controller.open('two');input.fire('change',{target:{files:[fileStub('原聊天合同.docx',mime)],value:'fictional.docx'}});
+  assert.equal(f.materials.hasSelection(),false);assert.match(f.root.getElementById('material-notice').textContent,/重新选择/);
+});
+for(const boundary of ['readonly','revoked','upload'])test('delayed picker choice respects '+boundary+' boundary',async t=>{
+  const f=fixture(t,{withMaterials:false,readonly:boundary==='readonly'});await f.controller.open('one');const input=f.root.getElementById('material-file');input.fire('click');
+  if(boundary==='revoked')f.controller.revoke({status:403,code:'CROSS_MATTER_DENIED'});
+  let uploading,gate;
+  if(boundary==='upload'){
+    input.fire('change',{target:{files:[fileStub('已提交合同.docx',mime)],value:''}});input.fire('click');
+    gate=deferred();const normal=f.api.uploadAttachment;f.api.uploadAttachment=async(...args)=>{await gate.promise;return normal(...args);};
+    uploading=f.materials.uploadSelected();await tick();
+  }
+  input.fire('change',{target:{files:[fileStub('延迟返回合同.docx',mime)],value:'fictional.docx'}});
+  assert.equal(chipNames(f).some(text=>text.includes('延迟返回合同')),false);
+  if(gate){gate.resolve();await uploading;}
 });
