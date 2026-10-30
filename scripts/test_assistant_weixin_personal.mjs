@@ -14,8 +14,8 @@ class Element{
 function fixture(options={}){
   const els=new Map(),calls=[];let blocked=false,read={ok:true,connection:null};
   const document={getElementById(id){if(!els.has(id))els.set(id,new Element());return els.get(id);}};
-  const controller={state:{id:cid,status:'saved',loading:false,view:{},text:''}};
-  const bridge={};for(const key of ['Start','Disable','Verify'])bridge['personalWeixin'+key]=async(...args)=>{calls.push([key,...args]);return {ok:true};};
+  const controller={state:{id:cid,status:'saved',loading:false,view:{},text:''},save:async()=>true};
+  const bridge={};for(const key of ['Start','Disable','Verify'])bridge['personalWeixin'+key]=async(...args)=>{calls.push([key,...args]);if(key==='Disable')read={ok:true,connection:null};return {ok:true};};
   bridge.personalWeixinStatus=async()=>structuredClone(read);
   const incoming=[];const ui=bindPersonalWeixin({controller,bridge,document,isBlocked:()=>blocked,
     onIncoming:async()=>incoming.push(controller.state.text),setTimer:()=>1,clearTimer:()=>{},...options});
@@ -28,7 +28,7 @@ test('plain browser and restored copy cannot connect',async()=>{
 });
 test('native intent contains no renderer identity or policy and duplicate click is blocked',async()=>{
   const f=fixture();await f.ui.refresh();const hold=defer();f.bridge.personalWeixinStart=(...args)=>{f.calls.push(['Start',...args]);return hold.promise;};
-  const pending=f.at('start').fire('click');await f.at('start').fire('click');assert.deepEqual(f.calls,[['Start']]);
+  const pending=f.at('start').fire('click');await f.at('start').fire('click');await tick();assert.deepEqual(f.calls,[['Start']]);
   hold.resolve({ok:true});await pending;await tick();f.ui.dispose();
 });
 test('connection keeps original CID while browsing; QR never crosses into other chat',async()=>{
@@ -89,4 +89,44 @@ test('background controller refresh retains text and conflict; pending guard pre
   assert.equal(await pending,false);assert.equal(controller.state.view.composer_revision,0);assert.equal(controller.state.text,'本地草稿');
   hold=null;localPending=false;assert.equal(await controller.refresh(false,()=>!localPending),false);
   assert.equal(controller.state.text,'本地草稿');assert.equal(controller.state.conflict.server,'新服务端草稿');controller.close();
+});
+
+test('fresh empty chat can connect after safely creating its conversation',async()=>{
+  const f=fixture();f.controller.state.id=null;f.controller.state.status='idle';f.ui.state(f.controller.state);
+  f.controller.ensureConversation=async()=>{f.calls.push(['create']);f.controller.state.id=cid;f.controller.state.status='saved';f.ui.state(f.controller.state);return true;};
+  await f.ui.refresh();assert.equal(f.at('start').disabled,false);
+  await f.at('start').fire('click');assert.deepEqual(f.calls,[['create'],['Start']]);f.ui.dispose();
+});
+test('paused connection reconnects in its original chat only',async()=>{
+  const f=fixture();f.status({state:'paused'});await f.ui.refresh();
+  assert.equal(f.at('start').disabled,false);assert.match(f.at('start').textContent,/重新连接/);
+  await f.at('start').fire('click');assert.deepEqual(f.calls,[['Disable'],['Start']]);
+  f.status({state:'paused'});f.controller.state.id=other;f.ui.state(f.controller.state);await f.ui.refresh();
+  assert.equal(f.at('start').disabled,true);f.ui.dispose();
+});
+
+test('click during a known-status poll waits and starts exactly once',async()=>{
+  const f=fixture();await f.ui.refresh();const gate=defer();let reads=0;
+  f.bridge.personalWeixinStatus=async()=>++reads===1?gate.promise:{ok:true,connection:null};
+  const poll=f.ui.refresh();assert.equal(f.at('start').disabled,false);
+  const clicked=f.at('start').fire('click');f.at('start').fire('click');
+  assert.equal(f.calls.length,0);gate.resolve({ok:true,connection:null});await poll;await clicked;
+  assert.deepEqual(f.calls,[['Start']]);f.ui.dispose();
+});
+test('failed in-flight status poll prevents a queued connection start',async()=>{
+  const f=fixture();await f.ui.refresh();const gate=defer();f.bridge.personalWeixinStatus=()=>gate.promise;
+  const poll=f.ui.refresh(),clicked=f.at('start').fire('click');gate.resolve({ok:false});await poll;await clicked;
+  assert.deepEqual(f.calls,[]);assert.equal(f.at('start').disabled,true);f.ui.dispose();
+});
+test('unknown empty conversation save does not start a native connection or retry creation',async()=>{
+  const f=fixture();f.controller.state.id=null;f.controller.state.status='idle';f.ui.state(f.controller.state);
+  let creates=0;f.controller.ensureConversation=async()=>{creates++;f.controller.state.status='error';return false;};
+  await f.ui.refresh();await f.at('start').fire('click');await tick();
+  assert.equal(creates,1);assert.deepEqual(f.calls,[]);assert.equal(f.at('start').disabled,true);
+  assert.match(f.at('start').title,/保存草稿|错误/);f.ui.dispose();
+});
+test('reconnect cannot restart if disable has not actually cleared the old connection',async()=>{
+  const f=fixture();f.status({state:'paused'});await f.ui.refresh();
+  f.bridge.personalWeixinDisable=async()=>{f.calls.push(['Disable']);return {ok:true};};
+  await f.at('start').fire('click');assert.deepEqual(f.calls,[['Disable']]);f.ui.dispose();
 });

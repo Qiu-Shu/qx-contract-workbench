@@ -35,10 +35,10 @@ function kindOf(attachment) {
   return 'docx';
 }
 
-export function bindMaterials({controller,readonly=false,root=document,onPreview=()=>{}}) {
+export function bindMaterials({controller,readonly=false,root=document,onQueueChange=()=>{},onPreview=()=>{}}) {
   const byId=id=>root.getElementById(id);
   const node=(tag,text)=>{const item=root.createElement(tag);item.textContent=text;return item;};
-  let identity=null,revision=null,previewEpoch=0,queue=[],inflight=null,previousAction=null;
+  let identity=null,revision=null,previewEpoch=0,queue=[],inflight=null,previousAction=null,uploading=false;
   const feedback=text=>{byId('material-notice').textContent=text;};
   const action=(title,run)=>{const button=node('button',title);button.type='button';button.className='text-button';
     button.addEventListener('click',()=>void run());return button;};
@@ -54,29 +54,29 @@ export function bindMaterials({controller,readonly=false,root=document,onPreview
       chip.append(node('span',`${file.name}（${(file.size/1024).toFixed(1)} KiB）`));
       const remove=node('button','×');remove.type='button';remove.className='queue-remove';
       remove.setAttribute('aria-label',`移除待传文件 ${file.name}`);
-      remove.addEventListener('click',()=>{queue=queue.filter(item=>item!==file);feedback('');drawQueue();enableUpload();});
+      remove.addEventListener('click',()=>{queue=queue.filter(item=>item!==file);feedback('');drawQueue();enableUpload();onQueueChange();});
       chip.append(remove);host.append(chip);
     }
     byId('clear-material-queue').hidden=!queue.length;
   }
   function enableUpload(){
-    const held=busy();
+    const held=busy()||uploading;
     const upload=byId('upload-material');
-    upload.disabled=held || !queue.length || !byId('material-consent').checked;
+    upload.disabled=held || !queue.length;
     upload.textContent=queue.length>1?`保存 ${queue.length} 个文件在本机`:'保存在本机';
-    byId('material-file').disabled=byId('material-consent').disabled=held;
-    if(byId('material-purpose'))byId('material-purpose').disabled=held;
+    byId('material-file').disabled=held;byId('clear-material-queue').disabled=held;
     for(const chip of byId('material-queue').children)
       for(const child of chip.children)if(child.tagName==='button')child.disabled=held;
   }
   function enqueue(files,source){
+    if(uploading||busy())return;
     const incoming=[...files||[]];if(!incoming.length)return;
     const rejected=incoming.filter(file=>!accepted(file));
     const kept=incoming.filter(file=>accepted(file)&&!queue.some(item=>item.name===file.name&&item.size===file.size));
     queue.push(...kept);
     if(rejected.length)feedback(`不支持 ${rejected.map(file=>file.name).join('、')}；可传 Word、PDF、表格或图片。`);
-    else if(kept.length)feedback(source==='drop'?'已加入待传列表，确认后可保存。':'');
-    drawQueue();enableUpload();
+    else if(kept.length)feedback(source==='drop'?'已加入待传列表，按回车或发送即可保存。':'');
+    drawQueue();enableUpload();onQueueChange();
   }
   function failure(error){if(!controller.revoke(error))feedback(errorText(error));}
   async function write(operation){
@@ -146,35 +146,47 @@ export function bindMaterials({controller,readonly=false,root=document,onPreview
       }
     }catch(error){if(current()){if(!controller.revoke(error))host.replaceChildren(node('p',errorText(error)));}}
   }
-  function clearQueue(){queue=[];inflight=null;byId('material-file').value='';byId('material-consent').checked=false;
+  function clearQueue(){queue=[];inflight=null;byId('material-file').value='';
     feedback('');drawQueue();enableUpload();}
   byId('add-material').addEventListener('click',()=>{picker(byId('material-picker').hidden);byId('material-file').focus();});
   byId('close-material-picker').addEventListener('click',()=>{picker(false);byId('add-material').focus();});
   byId('close-material-preview').addEventListener('click',()=>{closePreview();byId('add-material').focus();});
-  byId('clear-material-queue').addEventListener('click',clearQueue);
-  byId('material-file').addEventListener('change',event=>{enqueue(event.target.files);event.target.value='';});
-  byId('material-consent').addEventListener('change',enableUpload);
-  byId('upload-material').addEventListener('click',async()=>{
-    if(!queue.length || !byId('material-consent').checked)return;
-    const mode=root.body.dataset.localMaterials==='true'&&byId('material-purpose')?.value!=='synthetic'?'local':'synthetic';
+  byId('clear-material-queue').addEventListener('click',()=>{if(uploading||busy())return;clearQueue();onQueueChange();});
+  byId('material-file').addEventListener('change',event=>{enqueue(event.target.files);event.target.value='';if(queue.length)byId('composer')?.focus();});
+  async function uploadSelected(){
+    if(uploading)return false;
+    if(!queue.length)return true;
+    if(readonly||controller.state.loading||controller.state.conflict||controller.state.materialAction||controller.state.status==='revoked')return false;
+    uploading=true;enableUpload();
+    const mode=root.body.dataset.localMaterials==='true'?'local':'synthetic';
     const policy={policy_id:'assistant-local-files-v2',material_mode:mode,
       local_processing_accepted:true,external_processing:false};
     const batch=[...queue];let saved=0;
-    for(const file of batch){
-      feedback(batch.length>1?`正在保存 ${saved+1}/${batch.length}：${file.name}`:'正在保存原件…');
-      inflight=file;
-      const done=await write(()=>controller.upload(file,policy));
-      if(done){inflight=null;saved++;queue=queue.filter(item=>item!==file);drawQueue();}
-      else break;
-    }
-    if(saved===batch.length){
-      clearQueue();picker(false);
-      feedback(batch.length>1?`${batch.length} 个原件已保存到本次对话，点击材料可核对。`:'原件已保存到本次对话，点击材料可读取和核对。');
-    }else{
-      feedback(`已保存 ${saved}/${batch.length} 个文件；剩余待传文件保留在列表中，请查看提示后重试。`);
-      enableUpload();
-    }
-  });
+    try{
+      if(controller.state.status==='saving'&&!await controller.save())return false;
+      if(busy())return false;
+      if(!controller.state.id&&!await controller.ensureConversation())return false;
+      const owner=controller.state.id;
+      for(const file of batch){
+        if(controller.state.id!==owner)break;
+        feedback(batch.length>1?`正在保存 ${saved+1}/${batch.length}：${file.name}`:'正在保存原件…');
+        inflight=file;
+        const done=await write(()=>controller.upload(file,policy));
+        if(controller.state.id!==owner)return false;
+        if(done){inflight=null;saved++;queue=queue.filter(item=>item!==file);drawQueue();}
+        else break;
+      }
+      if(saved===batch.length){
+        clearQueue();picker(false);
+        feedback(batch.length>1?`${batch.length} 个原件已保存到本次对话，点击材料可核对。`:'原件已保存到本次对话，点击材料可读取和核对。');
+      }else{
+        feedback(`已保存 ${saved}/${batch.length} 个文件；剩余待传文件保留在列表中，请查看提示后重试。`);
+        enableUpload();
+      }
+      return saved===batch.length;
+    }finally{uploading=false;enableUpload();onQueueChange();}
+  }
+  byId('upload-material').addEventListener('click',uploadSelected);
   if(!readonly){
     let depth=0;
     const overlay=byId('drop-overlay');
@@ -189,20 +201,21 @@ export function bindMaterials({controller,readonly=false,root=document,onPreview
       if(!containsFiles(event))return;
       event.preventDefault();depth=0;overlay.hidden=true;
       if(busy())return;
-      enqueue(event.dataTransfer?.files,'drop');picker(true);
+      enqueue(event.dataTransfer?.files,'drop');picker(true);if(queue.length)byId('composer')?.focus();
     });
   }
   return {
     state(state){
-      if(previousAction==='upload' && !state.materialAction && state.status!=='error'){
+      if(previousAction && !state.materialAction && state.status!=='error'){
         // A reconciled unknown upload retires its queued file as well.
         if(inflight)queue=queue.filter(item=>item!==inflight),inflight=null,drawQueue();
-        if(!queue.length){byId('material-file').value='';byId('material-consent').checked=false;picker(false);}
+        if(!queue.length){byId('material-file').value='';picker(false);}
       }
       previousAction=state.materialAction;
       if(state.id!==identity || state.status==='revoked'){
-        closePreview();identity=state.id;revision=undefined;
-        if(state.status==='revoked' || !state.id)clearQueue(),picker(false);
+        closePreview();const prior=identity;identity=state.id;revision=undefined;
+        if(prior && state.id!==prior)clearQueue(),picker(false);
+        if(state.status==='revoked' || !state.id&&!uploading&&!state.materialAction)clearQueue(),picker(false);
       }
       enableUpload();
       root.querySelectorAll('[data-material-write]').forEach(button=>{
@@ -230,7 +243,7 @@ export function bindMaterials({controller,readonly=false,root=document,onPreview
         row.append(info,buttons);host.append(row);
       }
     },
-    close:closePreview,hasSelection:()=>Boolean(queue.length),
+    uploadSelected,close:closePreview,hasSelection:()=>Boolean(queue.length),
     dispose(){closePreview();queue=[];},
   };
 }

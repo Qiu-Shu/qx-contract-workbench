@@ -167,7 +167,7 @@ test('automatic analysis starts unchecked, discloses bounds and sends explicit o
   assert.equal(f.at('model-configure').disabled,false);
   await f.at('model-configure').listeners.click();
   assert.deepEqual(f.calls.at(-1),['deepseek-flash',false]);
-  assert.match(f.at('model-runtime-status').textContent,/尚未授权发送/);
+  assert.match(f.at('model-runtime-status').textContent,/可手动发送.*自动分析关闭/);
   f.at('model-id').value='deepseek-v4-pro';f.at('model-id').listeners.change();
   assert.equal(automatic.checked,false);
   assert.match(f.at('model-automatic-limit').textContent,/0\.10272768.*USD/);
@@ -240,7 +240,7 @@ test('model page configures only a fixed selected ID, serializes actions and can
   await f.at('model-recheck').listeners.click();await f.at('resume').listeners.click();
   assert.deepEqual(f.calls,[['configure','deepseek-flash']]);
   gate.resolve();await configuring;
-  assert.match(f.at('model-runtime-status').textContent,/本次运行已配置.*尚未授权发送/);
+  assert.match(f.at('model-runtime-status').textContent,/本次运行已配置.*可手动发送.*自动分析关闭/);
   assert.equal(f.at('model-configure').disabled,true,'same model needs no repeated configuration');
   f.at('model-id').value='deepseek-v4-pro';f.at('model-id').listeners.change();
   assert.equal(f.at('model-configure').disabled,false);

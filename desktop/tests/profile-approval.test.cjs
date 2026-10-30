@@ -38,7 +38,7 @@ async function fixture(t,options={}) {
   const materials={scope:{...scope},items:[],attachments:[]};
   const requests=[],calls=[],cookieReads=[];
   let payload,details;
-  const state={current:true,confirmResult:true,onConfirm:null,onAuthorize:null,mutatePreview:null,respond:null};
+  const state={current:true,confirmResult:true,betweenSnapshots:null,onAuthorize:null,mutatePreview:null,respond:null};
   const backend={control:{ready:true,enabled:true,failed:false,closed:false},closing:false,
     async configureModel(){return {ok:true,status:'configured',config_sha256:'b'.repeat(64),config_version:ID};},
     async disableModel(){return {ok:true,status:'disabled'};},
@@ -77,12 +77,16 @@ async function fixture(t,options={}) {
   const registration=registerModelApproval({ipcMain:{handle:(name,fn)=>handlers.set(name,fn)},runtime,
     judgeRuntime:options.judgeRuntime,
     captureContext:value=>value===event?{...context}:null,isBusy:()=>busy,setBusy:value=>{busy=value;},
-    async confirm(value){details=value.details;calls.push('confirm');
-      return state.onConfirm?state.onConfirm(value):state.confirmResult;}});
-  const invoke=(value=input,sender=event)=>{
-    assert.equal(typeof handlers.get('desktop:approve-profile'),'function','profile approval IPC is registered');
-    return handlers.get('desktop:approve-profile')(sender,value);
-  };
+    async confirm(){throw new Error('ordinary sends must not open a confirmation window');}});
+  const invoke=async (value=input,sender=event)=>{
+      const previous=session.cookies.get,baseline=requests.length;let crossed=false;
+      session.cookies.get=async(...args)=>{
+        if(!crossed&&requests.length>=baseline+3){crossed=true;calls.push('boundary');if(state.betweenSnapshots)await state.betweenSnapshots();}
+        return previous(...args);
+      };
+      try{return await handlers.get('desktop:approve-profile')(sender,value);}
+      finally{session.cookies.get=previous;}
+    };
   return {scope,input,draft,materials,requests,calls,cookieReads,cookies,state,backend,session,runtime,context,registration,
     invoke,invokeChannel:(name,value=input)=>handlers.get(name)(event,value),
     get payload(){return payload;},get details(){return details;},get busy(){return busy;}};
@@ -91,9 +95,7 @@ async function fixture(t,options={}) {
 test('profile IPC uses trusted saved text, direct basis, fixed cost and native authorized status',async t=>{
   const f=await fixture(t,{judgeRuntime:{withAuthorization(){throw new Error('profile must not authorize Jev');}}});
   assert.deepEqual(await f.invoke(),{ok:true,status:'authorized'});
-  assert.deepEqual(f.details,{kind:'profile_draft',content:CONTENT,model:'deepseek-flash',max_total_usd:'0.024576',
-    recipient:'DeepSeek（api.deepseek.com）',basis:basisFor(f.input)});
-  assert.deepEqual(f.calls,['confirm','authorize-profile']);
+  assert.deepEqual(f.calls,['boundary','authorize-profile']);
   assert.deepEqual(f.payload,{session_token:TOKEN,expected_config_version:ID,basis:basisFor(f.input),
     max_total_usd:'0.024576',valid_for_seconds:120});
   assert.equal(f.requests.length,6);
@@ -108,13 +110,13 @@ test('profile IPC uses trusted saved text, direct basis, fixed cost and native a
 test('existing receipt remains distinguishable and never creates a second grant',async t=>{
   const f=await fixture(t);f.state.onAuthorize=()=>({ok:true,status:'existing'});
   assert.deepEqual(await f.invoke(),{ok:true,status:'existing'});
-  assert.deepEqual(f.calls,['confirm','authorize-profile']);
+  assert.deepEqual(f.calls,['boundary','authorize-profile']);
 });
 
-for(const selected of [false,{main:true,judge:false},null])test('profile requires literal native acceptance '+JSON.stringify(selected),async t=>{
-  const f=await fixture(t);f.state.confirmResult=selected;
-  assert.deepEqual(await f.invoke(),{ok:false,code:'APPROVAL_CANCELED',canceled:true});
-  assert.deepEqual(f.calls,['confirm']);assert.equal(f.requests.length,3);assert.equal(f.busy,false);
+test('profile send uses configured scope without a per-send dialog',async t=>{
+  const f=await fixture(t);f.state.confirmResult=false;
+  assert.deepEqual(await f.invoke(),{ok:true,status:'authorized'});
+  assert.deepEqual(f.calls,['boundary','authorize-profile']);
 });
 
 test('strict five selection fields reject renderer bytes, budgets, skills, attachments and malformed scope',async t=>{
@@ -172,9 +174,9 @@ for(const [key,value] of Object.entries({input_format:'plain-text-v1',template_v
   handler_id:'other.save',handler_version:'2',request_id:INTAKE,expected_composer_revision:2,
   content_sha256:'e'.repeat(64),base_profile_revision:1,expected_intake_id:INTAKE,expected_intake_revision:1,
   project_intake:true,system_sha256:'d'.repeat(64),config_sha256:'d'.repeat(64),wire_sha256:'d'.repeat(64),wire_bytes:513})){
-  test('changing profile basis '+key+' after confirmation prevents authorization',async t=>{
+  test('changing profile basis '+key+' between snapshots prevents authorization',async t=>{
     const f=await fixture(t);f.state.mutatePreview=(basis,count)=>count===1?basis:{...basis,[key]:value};
-    assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm']);
+    assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['boundary']);
   });
 }
 
@@ -182,7 +184,6 @@ test('a reordered but identical complete basis remains valid and does not mutate
   const f=await fixture(t);f.state.mutatePreview=(basis,count)=>count===1?basis:
     Object.fromEntries(Object.entries({...basis,expected_scope:Object.fromEntries(Object.entries(basis.expected_scope).reverse())}).reverse());
   assert.deepEqual(await f.invoke(),{ok:true,status:'authorized'});
-  assert.deepEqual(f.details.basis,f.payload.basis);
 });
 
 test('direct preview rejects legacy wrappers, missing and additional basis fields',async t=>{
@@ -194,36 +195,35 @@ test('direct preview rejects legacy wrappers, missing and additional basis field
   assert.deepEqual(f.calls,[]);
 });
 
-test('existing intake target and its revision are shown exactly',async t=>{
+test('existing intake target and its revision are authorized exactly',async t=>{
   const f=await fixture(t);f.input.project_intake=true;
   f.state.mutatePreview=basis=>({...basis,base_profile_revision:4,expected_intake_id:INTAKE,expected_intake_revision:7});
   assert.deepEqual(await f.invoke(),{ok:true,status:'authorized'});
-  assert.equal(f.details.basis.project_intake,true);assert.equal(f.details.basis.expected_intake_id,INTAKE);
-  assert.equal(f.details.basis.expected_intake_revision,7);assert.equal(f.details.basis.base_profile_revision,4);
+  assert.equal(f.payload.basis.project_intake,true);assert.equal(f.payload.basis.expected_intake_id,INTAKE);
+  assert.equal(f.payload.basis.expected_intake_revision,7);assert.equal(f.payload.basis.base_profile_revision,4);
 });
 
-test('saved text or materials changed after confirmation cannot be authorized',async t=>{
+test('saved text or materials changed between snapshots cannot be authorized',async t=>{
   const f=await fixture(t);
   for(const change of [()=>{f.draft.draft_input+='新字';},()=>{f.materials.attachments.push({id:INTAKE});},
     ()=>{f.draft.latest_run={state:'generating'};}]){
-    f.state.onConfirm=async()=>{change();return true;};assert.equal((await f.invoke()).ok,false);
+    f.state.betweenSnapshots=async()=>{change();return true;};assert.equal((await f.invoke()).ok,false);
     f.draft.draft_input=CONTENT;f.materials.attachments=[];f.draft.latest_run=null;
   }
   assert.equal(f.calls.includes('authorize-profile'),false);
 });
 
-test('a valid changed intake identity and revision after confirmation also prevent authorization',async t=>{
+test('a valid changed intake identity and revision between snapshots also prevent authorization',async t=>{
   const f=await fixture(t);f.input.project_intake=true;
   f.state.mutatePreview=(basis,count)=>({...basis,expected_intake_id:count===1?INTAKE:WORKSPACE,
     expected_intake_revision:count===1?2:3});
   assert.deepEqual(await f.invoke(),{ok:false,code:'STATE_CONFLICT'});
-  assert.deepEqual(f.calls,['confirm']);
+  assert.deepEqual(f.calls,['boundary']);
 });
 
 test('renderer or confirmation-detail mutation cannot change the captured profile selection',async t=>{
-  const f=await fixture(t);f.state.onConfirm=({details})=>{
+  const f=await fixture(t);f.state.betweenSnapshots=()=>{
     f.input.project_intake=true;f.input.expected_scope.input_revision=5;
-    details.basis.base_profile_revision=8;details.basis.expected_scope.input_revision=8;
     return true;
   };
   assert.deepEqual(await f.invoke(),{ok:true,status:'authorized'});
@@ -248,38 +248,38 @@ test('missing or ambiguous CSRF and endpoint-specific session cookies fail close
   assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,[]);assert.deepEqual(f.requests,[]);
 });
 
-test('cookie replacement while confirmation is open is denied before native authorization',async t=>{
-  const f=await fixture(t);f.state.onConfirm=()=>{f.cookies[0].value='replacement';return true;};
-  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm']);
+test('cookie replacement between snapshots is denied before native authorization',async t=>{
+  const f=await fixture(t);f.state.betweenSnapshots=()=>{f.cookies[0].value='replacement';return true;};
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['boundary']);
 });
 
 for(const status of ['authorized','existing'])test('late cookie replacement cleans up only a new '+status+' grant',async t=>{
   const f=await fixture(t);f.state.onAuthorize=()=>{f.cookies[0].value='replacement';return {ok:true,status};};
   assert.equal((await f.invoke()).ok,false);
-  assert.deepEqual(f.calls,['confirm','authorize-profile',...(status==='authorized'?['revoke']:[])]);
+  assert.deepEqual(f.calls,['boundary','authorize-profile',...(status==='authorized'?['revoke']:[])]);
   if(status==='authorized')assert.deepEqual(f.state.revoked,{session_token:TOKEN});
 });
 
 test('profile shares pending, busy, wait and runtime lock with both older IPC channels',async t=>{
-  const f=await fixture(t),gate=deferred();f.state.onConfirm=()=>gate.promise;
-  const pending=f.invoke();while(!f.calls.includes('confirm'))await tick();
+  const f=await fixture(t),gate=deferred();f.state.betweenSnapshots=()=>gate.promise;
+  const pending=f.invoke();while(!f.calls.includes('boundary'))await tick();
   assert.deepEqual(await f.invoke(),{ok:false,code:'STATE_CONFLICT'});
   for(const channel of ['desktop:approve-generation','desktop:approve-context'])
     assert.deepEqual(await f.invokeChannel(channel),{ok:false,code:'STATE_CONFLICT'});
   assert.equal((await f.runtime.configure('deepseek-v4-pro')).code,'STATE_CONFLICT');
   let settled=false;const wait=f.registration.wait().then(()=>{settled=true;});await tick();
   assert.equal(settled,false);assert.equal(f.busy,true);
-  gate.resolve(false);assert.equal((await pending).canceled,true);await wait;assert.equal(f.busy,false);
+  gate.resolve();assert.equal((await pending).ok,true);await wait;assert.equal(f.busy,false);
 });
 
 for(const key of ['parent','session','backend','origin','conversation_id'])test('replaced '+key+' identity invalidates profile consent',async t=>{
-  const f=await fixture(t);f.state.onConfirm=()=>{f.context[key]={};return true;};
-  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm']);
+  const f=await fixture(t);f.state.betweenSnapshots=()=>{f.context[key]={};return true;};
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['boundary']);
 });
 
 test('invalidated document guard prevents profile consent',async t=>{
-  const f=await fixture(t);f.state.onConfirm=()=>{f.state.current=false;return true;};
-  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm']);
+  const f=await fixture(t);f.state.betweenSnapshots=()=>{f.state.current=false;return true;};
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['boundary']);
 });
 
 test('unknown or malformed native ACK never becomes a successful profile status',async t=>{

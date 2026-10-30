@@ -71,7 +71,7 @@
           :{state:'unavailable',model:null};
       section.runtime=runtime;
       section.at('runtime-status').textContent=runtime.state==='configured'
-        ?`本次运行已配置 ${section.models[runtime.model]}，${section.prefix==='judge'?'尚未批准发送':runtime.automatic_analysis?'已开启当前任务材料自动分析':'尚未授权发送'}。`
+        ?`本次运行已配置 ${section.models[runtime.model]}，${section.prefix==='judge'?'尚未批准发送':runtime.automatic_analysis?'已开启当前任务材料自动分析':'可手动发送，当前任务材料自动分析关闭'}。`
         :runtime.state==='unconfigured'?(section.prefix==='judge'?'本次运行未配置 Jev，尚未批准发送。':'本次运行未配置模型。')
           :'当前无法配置本次运行，请返回工作台或重新检查。';
       if(runtime.state==='configured')section.at('id').value=runtime.model;

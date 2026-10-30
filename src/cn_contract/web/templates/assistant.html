@@ -151,8 +151,6 @@
           <label for="material-file">选择文件（Word、PDF、表格、图片），可多选，也可直接拖入本页面</label>
           <input id="material-file" type="file" multiple accept=".docx,.doc,.pdf,.png,.jpg,.jpeg,.xlsx,.csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/png,image/jpeg,text/csv">
           <div id="material-queue" class="material-queue" aria-live="polite"></div>
-          <label class="material-consent"><input id="material-consent" type="checkbox">同意在本机保存并读取这些原件；内容待核实，模型分析遵循模型设置的材料范围。</label>
-          {% if local_materials_enabled %}<label for="material-purpose">本次材料用途</label><select id="material-purpose"{% if readonly %} disabled{% endif %}><option value="local">本机材料 · 人工工作稿</option><option value="synthetic">已登记合成演示材料 · 可用于模拟任务</option></select><p class="muted">合成用途只接收系统已登记的演示文件；选择此项不会把真实材料认定为合成材料。</p>{% endif %}
           {% if not local_materials_enabled %}<p class="muted">当前环境仅接收已登记的独立合成材料。</p>{% endif %}
           <p id="material-notice" role="status" aria-live="polite"></p>
           <div class="material-actions"><button id="upload-material" type="button" disabled>保存在本机</button><button id="clear-material-queue" class="text-button" type="button" hidden>清空待传</button><button id="close-material-picker" class="text-button" type="button">收起</button></div>
@@ -160,7 +158,7 @@
         <div id="drop-overlay" class="drop-overlay" hidden><p><strong>松开鼠标，把文件加入本次对话</strong></p><p class="muted">支持 Word、PDF、表格（XLSX/CSV）、图片（PNG/JPG），可一次多个</p></div>
         <section id="context-panel" class="context-panel" aria-labelledby="context-heading" hidden>
           <h2 id="context-heading">资料辅助回答</h2>
-          <p class="muted">从本次对话已保存的引用中选择一至八条；问题为当前已保存草稿。发送前可核对将发送的完整内容，发送经桌面原生窗口再次确认。</p>
+          <p class="muted">从本次对话已保存的引用中选择一至八条；问题为当前已保存草稿。发送前可核对将发送的完整内容，发送时按主模型设置核对材料范围与版本。</p>
           <div id="context-citations" class="context-citations"></div>
           <p id="context-count" class="muted" aria-live="polite"></p>
           <div class="context-actions"><button id="preview-context" class="quiet-button" type="button" disabled>核对将发送的内容</button></div>

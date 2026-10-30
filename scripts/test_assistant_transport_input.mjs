@@ -73,7 +73,7 @@ test('transport abandons a stalled connection with an unknown outcome',async()=>
   finally {globalThis.fetch=oldFetch;globalThis.setTimeout=oldSet;globalThis.clearTimeout=oldClear;}
 });
 
-test('Enter, Shift+Enter, held keys and composition boundaries keep native input intact',()=>{
+test('Enter, Shift+Enter, held keys and composition boundaries keep native input intact',async()=>{
   const original=globalThis.performance;
   let now=1000,sends=0;const edits=[];
   globalThis.performance={now:()=>now};
@@ -85,14 +85,14 @@ test('Enter, Shift+Enter, held keys and composition boundaries keep native input
     input.dispatchEvent(event);return event;
   }
   try {
-    assert.equal(key().defaultPrevented,true);assert.equal(sends,1);
+    assert.equal(key().defaultPrevented,true);await new Promise(setImmediate);assert.equal(sends,1);
     assert.equal(key({shiftKey:true}).defaultPrevented,false);assert.equal(sends,1);
     key({repeat:true});assert.equal(sends,1);
     key({isComposing:true});key({keyCode:229});assert.equal(sends,1);
     input.dispatchEvent(new Event('compositionstart'));
     key();input.dispatchEvent(new Event('input'));assert.equal(sends,1);assert.deepEqual(edits,[]);
     input.dispatchEvent(new Event('compositionend'));key();assert.equal(sends,1);assert.deepEqual(edits,['中文草稿']);
-    now+=200;key();assert.equal(sends,2);
+    now+=200;key();await new Promise(setImmediate);assert.equal(sends,2);
     assert.equal(input.value,'中文草稿');
     bound.dispose();key();input.dispatchEvent(new Event('input'));assert.equal(sends,2);assert.equal(edits.length,1);
   } finally {globalThis.performance=original;bound.dispose();}

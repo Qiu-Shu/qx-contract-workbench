@@ -376,7 +376,11 @@ export function createDraftController(api, {
       }
       state.skill = skill; generation.changed();research.changed();context.changed(); notify();
     },
-    open, save: () => save(), retry: () => save(true), refresh, loadEarlier, cancel,
+    open, async ensureConversation() {
+      if(closed || readonly || state.loading || state.conflict || state.status==='revoked' || state.status==='error')return false;
+      if(!state.id){creating ||= {request_id:uuid()};notify();}
+      return await save() && Boolean(state.id);
+    }, save: () => save(), retry: () => save(true), refresh, loadEarlier, cancel,
     send:()=>materialGeneration.unknown()?materialGeneration.refresh():business.unknown()?sendBusiness():research.unknown()?research.send():generation.unknown()?generation.send():
       context.unknown()?context.send():
       business.handles()?sendBusiness():

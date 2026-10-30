@@ -135,18 +135,18 @@ test('generation errors expose a fixed recovery explanation rather than raw diag
   assert.doesNotMatch(f.at('generation-status').textContent,/PRIVATE/);
 });
 
-test('native send offers confirmation of the full text recipient and fee ceiling before submission',t=>{
+test('native send uses the configured model scope without announcing a popup',t=>{
   const f=fixture(t),s=state();s.generation.nativeConfirmation=true;
   for(const capability of ['unapproved','ready','budget_exhausted']) {
     s.generation.capability={state:capability};f.render.state(s);
-    assert.equal(f.at('send').textContent,'确认并发送');assert.equal(f.at('send').disabled,false);
-    assert.match(f.at('generation-note').textContent,/确认窗口/);
-    assert.match(f.at('generation-note').textContent,/完整文字、接收方与费用上限/);
+    assert.equal(f.at('send').textContent,'发送');assert.equal(f.at('send').disabled,false);
+    assert.match(f.at('generation-note').textContent,/模型设置/);
+    assert.match(f.at('generation-note').textContent,/文字与费用上限/);
     assert.doesNotMatch(f.at('generation-note').textContent,/请核对授权范围与有效期/);
   }
   s.generation.phase='confirming';s.generation.canSend=false;f.render.state(s);
-  assert.equal(f.at('send').disabled,true);assert.match(f.at('generation-status').textContent,/确认窗口/);
-  assert.match(f.at('generation-status').textContent,/尚未发送/);assert.equal(f.at('recover-generation').hidden,true);
+  assert.equal(f.at('send').disabled,true);assert.match(f.at('generation-status').textContent,/正在核对/);
+  assert.match(f.at('generation-status').textContent,/模型设置/);assert.equal(f.at('recover-generation').hidden,true);
 });
 
 test('native failures distinguish confirmation from unknown POST without exposing diagnostics',t=>{

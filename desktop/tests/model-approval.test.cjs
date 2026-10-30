@@ -42,7 +42,7 @@ async function fixture(t,options={}) {
       store:{async withSecret(fn){await fn('synthetic_judge_key');return {status:'saved'};}}});
     await judgeRuntime.configure('jev-1.13.0');
   }
-  const state={current:true,confirmResult:true,onConfirm:null,respond:null};
+  const state={current:true,confirmResult:true,betweenSnapshots:null,respond:null};
   const server=http.createServer((req,res)=>{
     requests.push({path:req.url,method:req.method,cookie:req.headers.cookie});
     if(state.respond && state.respond(req,res))return;
@@ -61,19 +61,24 @@ async function fixture(t,options={}) {
   }}:judgeRuntime;
   const registration=registerModelApproval({ipcMain:{handle:(name,fn)=>handlers.set(name,fn)},runtime,judgeRuntime:optional,
     captureContext:value=>value===event?{...context}:null,isBusy:()=>busy,setBusy:value=>{busy=value;},
-    async confirm(value){details=value.details;calls.push('confirm');
-      if(state.onConfirm)return state.onConfirm(value);return state.confirmResult;}});
+    async confirm(){throw new Error('ordinary sends must not open a confirmation window');}});
   return {scope,input,draft,capability,materials,requests,calls,cookies,backend,runtime,judgeRuntime,session,state,context,
     get judgePayload(){return judgePayload;},
     registration,get payload(){return payload;},get details(){return details;},get busy(){return busy;},
-    invoke:(value=input,sender=event)=>handlers.get('desktop:approve-generation')(sender,value)};
+    invoke:async (value=input,sender=event)=>{
+      const previous=session.cookies.get,baseline=requests.length;let crossed=false;
+      session.cookies.get=async(...args)=>{
+        if(!crossed&&requests.length>=baseline+3){crossed=true;calls.push('boundary');if(state.betweenSnapshots)await state.betweenSnapshots();}
+        return previous(...args);
+      };
+      try{return await handlers.get('desktop:approve-generation')(sender,value);}
+      finally{session.cookies.get=previous;}
+    }};
 }
 test('only trusted saved content and fixed model cost reach confirmation and one authorization',async t=>{
   const f=await fixture(t);
   assert.deepEqual(await f.invoke(),{ok:true});
-  assert.deepEqual(f.details,{content:CONTENT,model:'deepseek-flash',max_total_usd:'0.024576',
-    recipient:'DeepSeek（api.deepseek.com）'});
-  assert.deepEqual(f.calls,['confirm','authorize']);
+  assert.deepEqual(f.calls,['boundary','authorize']);
   assert.equal(f.payload.session_token===TOKEN,true);
   assert.deepEqual(f.payload.basis,{request_id:REQUEST,expected_scope:f.scope,
     expected_composer_revision:1,content_sha256:digest(CONTENT)});
@@ -81,10 +86,9 @@ test('only trusted saved content and fixed model cost reach confirmation and one
   assert.equal(f.requests.every(item=>item.cookie==='qx_session='+TOKEN && item.method==='GET'),true);
 });
 
-test('cancel leaves no authorization and no second HTTP snapshot',async t=>{
+test('obsolete confirmation callback cannot cancel the user-requested main send',async t=>{
   const f=await fixture(t);f.state.confirmResult=false;
-  assert.deepEqual(await f.invoke(),{ok:false,code:'APPROVAL_CANCELED',canceled:true});
-  assert.deepEqual(f.calls,['confirm']);assert.equal(f.requests.length,3);
+  assert.deepEqual(await f.invoke(),{ok:true});assert.deepEqual(f.calls,['boundary','authorize']);
 });
 
 test('renderer-selected budget, malformed scope and other displayed conversations are refused before reads',async t=>{
@@ -132,11 +136,11 @@ test('materials and capability scope mismatches cannot reach confirmation',async
   assert.deepEqual(f.calls,[]);
 });
 
-test('changed saved content, composer or materials after confirmation never authorizes',async t=>{
+test('changed saved content, composer or materials between snapshots never authorizes',async t=>{
   const f=await fixture(t);
   for(const change of [()=>{f.draft.draft_input+='变更';},()=>{f.draft.composer_revision++;},
     ()=>{f.materials.items.push({attachment_id:REQUEST});}]){
-    f.state.onConfirm=async()=>{change();return true;};
+    f.state.betweenSnapshots=async()=>{change();return true;};
     assert.equal((await f.invoke()).ok,false);
     f.draft.draft_input=CONTENT;f.draft.composer_revision=1;f.materials.items=[];
   }
@@ -151,11 +155,11 @@ test('ambiguous or target-specific cookies are rejected without authorization',a
   assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,[]);assert.deepEqual(f.requests,[]);
 });
 
-test('a replaced session cookie after confirmation fails before authorization',async t=>{
+test('a replaced session cookie between snapshots fails before authorization',async t=>{
   const f=await fixture(t);let token=TOKEN;
   f.session.cookies.get=async()=>[{name:'qx_session',value:token}];
-  f.state.onConfirm=async()=>{token='replacement_token';return true;};
-  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm']);
+  f.state.betweenSnapshots=async()=>{token='replacement_token';return true;};
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['boundary']);
 });
 
 test('a cookie change after authorized ACK revokes the captured session',async t=>{
@@ -163,23 +167,23 @@ test('a cookie change after authorized ACK revokes the captured session',async t
   f.session.cookies.get=async()=>[{name:'qx_session',value:token}];
   f.backend.authorizeModel=async()=>{f.calls.push('authorize');token='replacement_token';return {ok:true,status:'authorized'};};
   f.backend.revokeModel=async value=>{f.calls.push('revoke');revoked=value;return {ok:true,status:'revoked'};};
-  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm','authorize','revoke']);
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['boundary','authorize','revoke']);
   assert.equal(revoked.session_token===TOKEN,true);
 });
 
 test('shared busy refuses duplicate clicks and wait includes the pending confirmation',async t=>{
-  const f=await fixture(t),gate=deferred();f.state.onConfirm=()=>gate.promise;
-  const pending=f.invoke();while(!f.calls.includes('confirm'))await tick();
+  const f=await fixture(t),gate=deferred();f.state.betweenSnapshots=()=>gate.promise;
+  const pending=f.invoke();while(!f.calls.includes('boundary'))await tick();
   assert.equal((await f.invoke()).code,'STATE_CONFLICT');
   assert.equal((await f.runtime.configure('deepseek-v4-pro')).code,'STATE_CONFLICT');
   let waited=false;const wait=f.registration.wait().then(()=>{waited=true;});await tick();
   assert.equal(waited,false);assert.equal(f.busy,true);
-  gate.resolve(false);assert.equal((await pending).canceled,true);await wait;assert.equal(f.busy,false);
+  gate.resolve();assert.equal((await pending).ok,true);await wait;assert.equal(f.busy,false);
 });
 
-test('document change during confirmation cannot authorize even if the window returns true',async t=>{
-  const f=await fixture(t);f.state.onConfirm=async()=>{f.state.current=false;return true;};
-  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm']);
+test('document change between snapshots cannot authorize even if the window returns true',async t=>{
+  const f=await fixture(t);f.state.betweenSnapshots=async()=>{f.state.current=false;return true;};
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['boundary']);
 });
 
 test('redirects, oversized bodies and malformed UTF8 are rejected as fixed errors',async t=>{
@@ -205,7 +209,7 @@ test('repeated confirmation keeps the same request and budget and accepts an exi
 test('exhausted previous approval permits a new explicit one-call confirmation',async t=>{
   const f=await fixture(t);f.capability.state='budget_exhausted';
   assert.deepEqual(await f.invoke(),{ok:true});
-  assert.deepEqual(f.calls,['confirm','authorize']);
+  assert.deepEqual(f.calls,['boundary','authorize']);
   assert.equal(f.payload.max_total_usd,'0.024576');assert.equal(f.payload.valid_for_seconds,120);
 });
 
@@ -236,90 +240,27 @@ test('missing cookie and a cookie with header delimiters are refused before any 
 test('a changed context identity cannot reuse the same guard function to approve',async t=>{
   const f=await fixture(t);const original=f.context.parent;
   // A fresh context with a new parent is what captureContext must report on replacement.
-  f.state.onConfirm=async()=>{f.context.parent={};return true;};
+  f.state.betweenSnapshots=async()=>{f.context.parent={};return true;};
   assert.equal((await f.invoke()).ok,false);
-  assert.notEqual(f.context.parent,original);assert.deepEqual(f.calls,['confirm']);
+  assert.notEqual(f.context.parent,original);assert.deepEqual(f.calls,['boundary']);
 });
 
-test('judge without trusted budget is displayed unavailable and does not prevent main-only consent',async t=>{
-  const f=await fixture(t,{judge:true});f.state.confirmResult={main:true,judge:false};
-  assert.deepEqual(await f.invoke(),{ok:true});
-  assert.deepEqual(f.details.judge,{available:false,max_total_usd:null});
-  assert.deepEqual(f.calls,['confirm','authorize']);
+for(const budget of [null,'0.02'])test('configured Judge is not implicitly opted in by a main send '+budget,async t=>{
+  const f=await fixture(t,{judge:true,budget});
+  assert.deepEqual(await f.invoke(),{ok:true});assert.deepEqual(f.calls,['boundary','authorize']);
+  assert.equal(f.judgePayload,undefined);
 });
-
-test('separately selected judge uses the same complete draft and request with its own version and budget',async t=>{
-  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:true};
-  assert.deepEqual(await f.invoke(),{ok:true});
-  assert.deepEqual(f.details.judge,{available:true,max_total_usd:'0.02'});
-  assert.equal(f.details.content,CONTENT);assert.equal(f.judgePayload.session_token,TOKEN);
-  assert.deepEqual(f.judgePayload.basis,{...f.payload.basis,purpose:'primary_intent'});
-  assert.equal(f.judgePayload.expected_config_version,WORKSPACE);
-  assert.equal(f.judgePayload.max_total_usd,'0.02');
-  assert.deepEqual(f.calls,['confirm','authorize','judge-authorize']);
-});
-
-test('declining available optional judge grants only the main model',async t=>{
-  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:false};
-  assert.deepEqual(await f.invoke(),{ok:true});assert.deepEqual(f.calls,['confirm','authorize']);
-});
-
-test('forged auxiliary consent, boolean expansion and extra choice fields never authorize',async t=>{
-  for(const [budget,decision] of [[null,{main:true,judge:true}],['0.02',true],['0.02',{main:true,judge:true,extra:1}],
-      ['0.02',{main:false,judge:true}],['0.02',{main:true,judge:'true'}]]){
-    const f=await fixture(t,{judge:true,budget});f.state.confirmResult=decision;
-    assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm']);
-  }
-});
-
-test('known auxiliary refusal preserves the separately authorized main flow',async t=>{
-  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:true};
-  f.backend.authorizeJudge=async()=>{f.calls.push('judge-authorize');return {ok:false,code:'STATE_CONFLICT'};};
-  assert.deepEqual(await f.invoke(),{ok:true});assert.deepEqual(f.calls,['confirm','authorize','judge-authorize']);
-});
-
-test('unknown auxiliary ACK stops its captured backend and does not claim a successful main send',async t=>{
-  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:true};
-  f.backend.authorizeJudge=async()=>{f.calls.push('judge-authorize');throw Error('synthetic private failure');};
-  assert.equal((await f.invoke()).ok,false);assert.equal(f.backend.closing,true);
-  assert.equal(f.calls.filter(x=>x==='judge-authorize').length,1);
-});
-
-test('cookie changed after auxiliary grant withdraws both captured grants',async t=>{
-  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:true};let token=TOKEN;
-  f.session.cookies.get=async()=>[{name:'qx_session',value:token}];
-  f.backend.authorizeJudge=async()=>{f.calls.push('judge-authorize');token='changed_session';return {ok:true,status:'authorized'};};
-  assert.equal((await f.invoke()).ok,false);
-  assert(f.calls.includes('judge-revoke'));assert(f.calls.includes('revoke'));
-});
-
-test('main denial never grants the auxiliary and changed draft never grants either',async t=>{
-  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult={main:true,judge:true};
+test('main refusal never grants an optional Judge',async t=>{
+  const f=await fixture(t,{judge:true,budget:'0.02'});
   f.backend.authorizeModel=async()=>{f.calls.push('authorize');return {ok:false,code:'VERSION_CONFLICT'};};
-  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm','authorize']);
-  f.calls.length=0;f.state.onConfirm=async()=>{f.draft.composer_revision++;return {main:true,judge:true};};
-  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['confirm']);
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,['boundary','authorize']);
 });
 
-test('failure after the inner lease closes stops only the captured backend and waits for cleanup',async t=>{
-  let newStopped=false;
-  const replacement={stop:async()=>{newStopped=true;}};
-  const f=await fixture(t,{judge:true,budget:'0.02',afterJudge({state,context}){
-    state.current=false;context.backend=replacement;
-  }});
-  f.state.confirmResult={main:true,judge:true};
-  const gate=deferred();let finished=false;
-  f.backend.stop=async()=>{f.calls.push('stop');await gate.promise;f.backend.closing=true;};
-  const pending=f.invoke().then(result=>{finished=true;return result;});
-  while(!f.calls.includes('stop'))await tick();
-  assert.equal(finished,false);assert.equal(newStopped,false);gate.resolve();
-  assert.equal((await pending).ok,false);assert.equal(newStopped,false);
-  assert(f.calls.includes('revoke'));assert.equal(f.backend.closing,true);
-});
-
-test('cancelling the combined window neither grants nor leaves optional approval locked',async t=>{
-  const f=await fixture(t,{judge:true,budget:'0.02'});f.state.confirmResult=false;
-  assert.equal((await f.invoke()).canceled,true);assert.deepEqual(f.calls,['confirm']);
-  f.state.confirmResult={main:true,judge:false};assert.deepEqual(await f.invoke(),{ok:true});
-  assert.deepEqual(f.calls,['confirm','confirm','authorize']);
+test('unconfigured revoked and archived main sends cannot acquire a lease',async t=>{
+  const f=await fixture(t);f.draft.archived_at='2026-10-30T00:00:00Z';
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,[]);
+  f.draft.archived_at=null;f.state.current=false;
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,[]);
+  f.state.current=true;await f.runtime.disable();const before=f.requests.length;
+  assert.equal((await f.invoke()).ok,false);assert.equal(f.requests.length,before);assert.deepEqual(f.calls,[]);
 });

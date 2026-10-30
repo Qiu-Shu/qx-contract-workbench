@@ -190,7 +190,7 @@ async function contextSnapshot(context,input,base,guard,expectedToken) {
   await tokenFor(context,paths,guard,token);
   return {token,content:draft.draft_input,sources,basis,basisKey:JSON.stringify(basis)};
 }
-function registerModelApproval({ipcMain,runtime,judgeRuntime,captureContext,isBusy,setBusy,confirm}) {
+function registerModelApproval({ipcMain,runtime,captureContext,isBusy,setBusy}) {
   let pending=null;
   const materialSnapshot=createMaterialSnapshot({tokenFor,csrfCookie,readJSON,postJSON,check,fail});
   const profileSnapshot=createProfileSnapshot({tokenFor,csrfCookie,readJSON,postJSON,check,fail});
@@ -212,53 +212,26 @@ function registerModelApproval({ipcMain,runtime,judgeRuntime,captureContext,isBu
     const base='/api/assistant/conversations/'+input.conversation_id;
     const paths=[base+'?limit=1',base+'/generation-capability',base+'/materials'];
     setBusy(true);
-    let closedJudgeGrant=false;
+    // A user send uses the configured main-model scope. Judge needs a separate explicit opt-in.
     const task=Promise.resolve().then(()=>runtime.withAuthorization(context.backend,guard,async lease=>{
-      let judgeGranted=false;
-      const approveSelected=async judgeLease=>{
-        const before=await snapshot(context,input,paths,guard);
-        if(!check(guard))return denied('STATE_CONFLICT');
-        const accepted=await confirm({parent:context.parent,guard,
-          details:{content:before.content,model:lease.model,max_total_usd:lease.max_total_usd,
-            recipient:'DeepSeek（api.deepseek.com）',...(judgeRuntime?{judge:{available:Boolean(judgeLease),
-              max_total_usd:judgeLease?.max_total_usd??null}}:{})}});
-        const selected=judgeRuntime && exact(accepted,['main','judge']) && accepted.main===true &&
-          typeof accepted.judge==='boolean' && (!accepted.judge||Boolean(judgeLease));
-        if(judgeRuntime?!selected:accepted!==true)return {ok:false,code:'APPROVAL_CANCELED',canceled:true};
-        if(!check(guard))return denied('STATE_CONFLICT');
-        const after=await snapshot(context,input,paths,guard,before.token);
-        if(after.content!==before.content || !check(guard))return denied('STATE_CONFLICT');
-        const payload={session_token:after.token,basis:{request_id:input.request_id,
-          expected_scope:input.expected_scope,expected_composer_revision:input.expected_composer_revision,
-          content_sha256:input.content_sha256}};
-        const result=await lease.authorize(payload);
-        if(!result.ok)return result;
-        await tokenFor(context,paths,guard,after.token);
-        if(selected&&accepted.judge){
-          const auxiliary=await judgeLease.authorize({...payload,basis:{...payload.basis,purpose:'primary_intent'}});
-          judgeGranted=auxiliary.ok===true;
-          // Both leases remain open through this last asynchronous identity check.
-          await tokenFor(context,paths,guard,after.token);
-        }
-        return result;
-      };
-      if(!judgeRuntime)return approveSelected(null);
-      const result=await judgeRuntime.withAuthorization(context.backend,guard,approveSelected);
-      closedJudgeGrant=result?.ok===true&&judgeGranted;
+      const before=await snapshot(context,input,paths,guard);
+      if(!check(guard))return denied('STATE_CONFLICT');
+      const after=await snapshot(context,input,paths,guard,before.token);
+      if(after.content!==before.content || !check(guard))return denied('STATE_CONFLICT');
+      const result=await lease.authorize({session_token:after.token,basis:{request_id:input.request_id,
+        expected_scope:input.expected_scope,expected_composer_revision:input.expected_composer_revision,
+        content_sha256:input.content_sha256}});
+      if(!result.ok)return result;
+      await tokenFor(context,paths,guard,after.token);
       return result;
     }));
     pending=task;
     try{
       const result=await task;
       if(result?.ok===true)return {ok:true};
-      // A final outer-lease failure cannot leave a completed inner grant alive.
-      if(closedJudgeGrant)await context.backend.stop();
       return {ok:false,code:CODES.has(result?.code)?result.code:'BLOCKED_LIVE',
         ...(result?.canceled===true?{canceled:true}:{})};
-    }catch{
-      if(closedJudgeGrant)try{await context.backend.stop();}catch{}
-      return denied();
-    }
+    }catch{return denied();}
     finally{pending=null;setBusy(false);}
   }
   ipcMain.handle('desktop:approve-generation',approve);
@@ -284,12 +257,6 @@ function registerModelApproval({ipcMain,runtime,judgeRuntime,captureContext,isBu
     const task=Promise.resolve().then(()=>runtime.withAuthorization(context.backend,guard,async lease=>{
       if(typeof lease?.[authorize]!=='function')return denied();
       const before=await takeSnapshot(context,input,base,guard);
-      if(!check(guard))return denied('STATE_CONFLICT');
-      const accepted=material && lease.automatic_material_analysis===true ? true : await confirm({parent:context.parent,guard,
-        details:{kind:material?'material_business':profile?'profile_draft':'library_context',content:before.content,
-          ...(profile||material?{basis:structuredClone(before.basis)}:{sources:before.sources}),
-          model:lease.model,max_total_usd:lease.max_total_usd,recipient:'DeepSeek（api.deepseek.com）'}});
-      if(accepted!==true)return {ok:false,code:'APPROVAL_CANCELED',canceled:true};
       if(!check(guard))return denied('STATE_CONFLICT');
       const after=await takeSnapshot(context,input,base,guard,before.token);
       if(after.content!==before.content || after.basisKey!==before.basisKey || !check(guard))

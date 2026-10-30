@@ -84,12 +84,7 @@ async function fixture(t,options={}) {
 test('approval shows the exact rebuilt selection and authorizes the server-built basis once',async t=>{
   const f=await fixture(t);
   assert.deepEqual(await f.invoke(),{ok:true});
-  assert.equal(f.details.kind,'library_context');
-  assert.equal(f.details.content,CONTENT);
-  assert.equal(f.details.sources.length,2);
-  assert.equal(f.details.sources[0].title,'合成法规片段');
-  assert.equal(f.details.recipient,'DeepSeek（api.deepseek.com）');
-  assert.deepEqual(f.calls,['confirm','authorize-context']);
+  assert.deepEqual(f.calls,['authorize-context']);
   assert.equal(f.payload.session_token,TOKEN);
   assert.equal(f.payload.max_rounds,1);
   assert.equal(f.payload.basis.request_id,REQUEST);
@@ -99,10 +94,10 @@ test('approval shows the exact rebuilt selection and authorizes the server-built
   for(const post of posts)assert.equal(post.csrf,CSRF);
 });
 
-test('cancellation never authorizes and reports the fixed shape',async t=>{
+test('context send bypasses the old modal with both native previews intact',async t=>{
   const f=await fixture(t);f.state.confirmResult=false;
-  assert.deepEqual(await f.invoke(),{ok:false,code:'APPROVAL_CANCELED',canceled:true});
-  assert.deepEqual(f.calls,['confirm']);
+  assert.deepEqual(await f.invoke(),{ok:true});assert.deepEqual(f.calls,['authorize-context']);
+  assert.equal(f.requests.filter(item=>item.method==='POST').length,2);
 });
 
 test('a preview that is not ready or carries a tampered basis is denied before any window',async t=>{

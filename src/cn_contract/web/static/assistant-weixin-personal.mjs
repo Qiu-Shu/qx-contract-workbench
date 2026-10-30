@@ -5,7 +5,7 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
   isBlocked=()=>false,onIncoming=()=>{},setTimer=setTimeout,clearTimer=clearTimeout}){
   const at=id=>document.getElementById('personal-weixin-'+id);
   const available=Boolean(bridge&&['Start','Disable','Verify','Status'].every(key=>typeof bridge['personalWeixin'+key]==='function'));
-  let cid=null,epoch=0,connection=null,known=false,busy=false,reading=false,closed=false,timer=null,qrFailed=false;
+  let cid=null,epoch=0,connection=null,known=false,busy=false,reading=false,closed=false,timer=null,qrFailed=false,statusRead=null;
   const active=()=>!closed&&controller.state.status!=='revoked';
   const stable=()=>active()&&!controller.state.loading&&!controller.state.conflict&&!controller.state.materialAction&&
     !['saving','error'].includes(controller.state.status);
@@ -24,8 +24,15 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
     at('scope').textContent=connection?(here?'微信消息固定接收到当前聊天。':'微信仍连接到原聊天，当前聊天不会接收该连接的消息。')+
       (connection.automatic?' 已启用设置中的当前任务材料自动分析；每次请求仍受预算保护。':' 自动分析未开启；收件后请在桌面确认。'):
       '连接后，微信收件和成果保存在本次聊天。关闭程序或退出登录后需重新扫码。';
-    at('start').disabled=!available||readonly||busy||reading||!known||Boolean(connection)||!cid||!stable()||isBlocked();
-    at('start').textContent=busy?'正在处理…':'连接本人微信';
+    const reconnect=here&&state==='paused';
+    const reason=!available?'请在桌面工作台连接。':readonly?'恢复副本只读。':busy?'正在处理连接操作，请稍候。':
+      !known?'连接状态尚未确认，请重新读取。':connection&&!reconnect?
+        (here?'已有连接；需要重新扫码时请先断开。':'请返回原聊天处理连接，或先断开原连接。'):
+      !stable()?'请先保存草稿或处理当前错误、冲突。':isBlocked()?'请先保存或清空待传材料及未完成操作。':'';
+    at('start').disabled=Boolean(reason);
+    at('start').title=reason;
+    at('start').textContent=busy?'正在处理…':reconnect?'重新连接本人微信':'连接本人微信';
+    if(reason&&!busy&&known)at('state').textContent=(connection?.notice||labels[state])+' · '+reason;
     at('disable').hidden=!connection;
     at('disable').disabled=!available||readonly||busy||reading;
     at('refresh').disabled=!available||readonly||busy||reading;
@@ -47,7 +54,7 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
     if(!active()||!available||readonly||busy||reading){schedule();return false;}
     const version=epoch,id=cid;reading=true;render();
     try{
-      const result=await bridge.personalWeixinStatus();
+      const result=await (statusRead=bridge.personalWeixinStatus());
       if(!valid(version,id))return false;
       const next=result?.connection;
       if(result?.ok!==true||next&&(!UUID.test(next.conversation_id)||!Object.hasOwn(labels,next.state)))throw new Error();
@@ -58,23 +65,50 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
       if(connection?.conversation_id===cid&&stable()&&!isBlocked())await onIncoming();
       return true;
     }catch{if(valid(version,id)){known=false;render();tell('暂未确认连接状态。请重新读取；不要重复连接。');}return false;}
-    finally{reading=false;if(active()){render();schedule();}}
+    finally{statusRead=null;reading=false;if(active()){render();schedule();}}
   }
   async function perform(operation){
-    if(!active()||busy||reading||readonly||!available)return false;
-    if(operation==='Start'&&(!known||connection||!cid||!stable()||isBlocked()))return false;
+    if(!active()||busy||readonly||!available)return false;
+    if(operation!=='Start'&&reading)return false;
+    if(operation==='Start'&&(!known||connection&&!(connection.conversation_id===cid&&connection.state==='paused')||!stable()||isBlocked()))return false;
     if(operation==='Verify'&&(connection?.conversation_id!==cid||connection?.state!=='need_verifycode'))return false;
     const code=at('code').value;
     if(operation==='Verify'&&!/^[0-9]{4,12}$/.test(code)){tell('请输入 4 至 12 位数字验证码。');at('code').focus();return false;}
-    const version=epoch,id=cid;busy=true;clearTimer(timer);render();tell('正在处理本次操作…');
+    let version=epoch,id=cid;busy=true;clearTimer(timer);render();tell('正在处理本次操作…');
     try{
+      // A click during a poll waits for that read; it never starts from unknown status.
+      if(statusRead)await statusRead;
+      if(!valid(version,id))return false;
+      if(operation==='Start'){
+        if(!known||!stable()||isBlocked())return false;
+        if(!cid){
+          if(!await controller.ensureConversation())throw new Error();
+          if(!active()||!controller.state.id||controller.state.id!==cid||id!==null)throw new Error();
+          version=epoch;id=cid;
+        }else if(!await controller.save())throw new Error();
+        if(!valid(version,id)||!stable()||isBlocked())return false;
+        const read=await bridge.personalWeixinStatus();
+        if(!valid(version,id))return false;
+        const next=read?.connection;
+        if(read?.ok!==true||next&&(!UUID.test(next.conversation_id)||!Object.hasOwn(labels,next.state)))throw new Error();
+        connection=next;known=true;
+        if(next){
+          if(next.conversation_id!==id||next.state!=='paused')return false;
+          const disabled=await bridge.personalWeixinDisable();
+          if(!valid(version,id)||disabled?.ok!==true)throw new Error();
+          const cleared=await bridge.personalWeixinStatus();
+          if(!valid(version,id)||cleared?.ok!==true||cleared.connection)throw new Error();
+          connection=null;
+        }
+      }
+      if(!valid(version,id))return false;
       const result=await bridge['personalWeixin'+operation](...(operation==='Verify'?[code]:[]));
       if(!valid(version,id))return false;
       if(result?.ok!==true)throw new Error();
       at('code').value='';tell(operation==='Disable'?'已断开连接，聊天与材料记录保留。':'已提交，正在读取状态…');
       if(operation==='Start')at('panel').open=true;
       return true;
-    }catch{if(valid(version,id))tell('本次操作未确认。请重新读取连接状态后处理。');return false;}
+    }catch{if(valid(version,id)){known=false;tell('本次操作未确认。请重新读取连接状态后处理。');}return false;}
     finally{busy=false;if(active()){render();void refresh();}}
   }
   at('start').addEventListener('click',()=>perform('Start'));

@@ -111,7 +111,7 @@ test('automatic analysis still blocks changed basis, cancellation and unknown ac
 
 test('model, credential, workspace and disable changes invalidate automatic material analysis',async t=>{
   const changed=await fixture(t,true);await changed.runtime.configure('deepseek-v4-pro');
-  assert.equal((await changed.invoke()).ok,true);assert.deepEqual(changed.calls,['confirm','authorize']);
+  assert.equal((await changed.invoke()).ok,true);assert.deepEqual(changed.calls,['authorize']);
   for(const action of ['beforeCredentialChange','disable','workspace']){
     const f=await fixture(t,true);
     if(action==='workspace')f.state.workspace='another-workspace';else await f.runtime[action]();
@@ -123,12 +123,7 @@ test('material confirmation presents exact sources and authorizes the same serve
   const f=await fixture(t);
   assert.equal(require('../material-basis.cjs').validMaterialBasis(basisFor(f.input)),true);
   assert.deepEqual(await f.invoke(),{ok:true});
-  assert.deepEqual(f.calls,['confirm','authorize']);
-  assert.equal(f.details().kind,'material_business');
-  assert.equal(f.details().content,'审查这份独立虚构合同');
-  assert.equal(f.details().model,'deepseek-flash');
-  assert.equal(f.details().recipient,'DeepSeek（api.deepseek.com）');
-  assert.deepEqual(f.details().basis,basisFor(f.input));
+  assert.deepEqual(f.calls,['authorize']);
   assert.deepEqual(f.payload().basis,basisFor(f.input));
   assert.equal(f.payload().session_token,TOKEN);assert.equal(f.payload().valid_for_seconds,120);
   const posts=f.requests.filter(x=>x.method==='POST');assert.equal(posts.length,2);
@@ -138,14 +133,12 @@ test('material confirmation presents exact sources and authorizes the same serve
   }
 });
 
-test('cancellation or changed material basis never authorizes a send',async t=>{
+test('ordinary material send has no popup and changed material basis still prevents authorization',async t=>{
   const f=await fixture(t);f.state.confirm=false;
-  assert.deepEqual(await f.invoke(),{ok:false,code:'APPROVAL_CANCELED',canceled:true});
-  assert.equal(f.payload(),undefined);
+  assert.deepEqual(await f.invoke(),{ok:true});assert.deepEqual(f.calls,['authorize']);
   const g=await fixture(t);g.state.mutatePreview=(basis,count)=>count===1?basis:
-    {...basis,manifest:{...basis.manifest,question:'确认后被替换的问题'}};
-  assert.equal((await g.invoke()).ok,false);assert.equal(g.payload(),undefined);
-  assert.deepEqual(g.calls,['confirm']);
+    {...basis,manifest:{...basis.manifest,question:'快照期间被替换的问题'}};
+  assert.equal((await g.invoke()).ok,false);assert.equal(g.payload(),undefined);assert.deepEqual(g.calls,[]);
 });
 
 test('renderer-supplied credentials, budgets, attachments and extra fields are rejected before cookies',async t=>{

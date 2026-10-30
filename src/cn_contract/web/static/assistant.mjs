@@ -62,7 +62,9 @@ function drawState(state) {
   }
   choice.value=state.business?.selectedTask||'';
   choice.disabled=readonly||state.loading||['submitting','unknown'].includes(state.business?.phase);
-  materials?.state(state);citations?.state(state);profile?.state(state);tasks?.state(state);
+  materials?.state(state);
+  if(materials?.hasSelection()&&!readonly&&!state.loading&&!state.materialAction&&!state.conflict&&!['saving','error','revoked'].includes(state.status))byId('send').disabled=false;
+  citations?.state(state);profile?.state(state);tasks?.state(state);
   outputs?.state(state);
   worksheet?.state(state);evidence?.state(state);followups?.state(state);
   weixin?.state(state);
@@ -128,7 +130,7 @@ async function loadList(append=false) {
   finally { if(epoch===listEpoch)byId('more-conversations').disabled=false; }
 }
 async function open(id) {
-  if(followups?.hasPending()||evidence?.hasPending()||worksheet?.hasPending()||tasks?.hasPending()||weixin?.hasPending()||weixinHistory?.hasPending()||weixinPending?.hasPending()){notice('请先保存或清空本次内容；结果未知时请先查询，再切换对话。');return;}
+  if(materials?.hasSelection()||personalWeixin?.hasPending()||followups?.hasPending()||evidence?.hasPending()||worksheet?.hasPending()||tasks?.hasPending()||weixin?.hasPending()||weixinHistory?.hasPending()||weixinPending?.hasPending()){notice('请先保存或清空本次内容；结果未知时请先查询，再切换对话。');return;}
   clearTimeout(timer);
   pendingRoute=id;
   const done=await safely(()=>controller.open(id));
@@ -141,9 +143,10 @@ composer=bindComposer({input:byId('composer'),form:byId('composer-form'),
     controller.edit(text); clearTimeout(timer);
     if(!readonly)timer=setTimeout(()=>void safely(()=>controller.save()),650);
   },
-  onSend:()=>{clearTimeout(timer);void safely(()=>controller.send());},
+  beforeSend:()=>{clearTimeout(timer);return safely(()=>materials.uploadSelected());},
+  onSend:()=>controller.state.text.trim()?safely(()=>controller.send()):true,
 });
-materials=bindMaterials({controller,readonly,onPreview:()=>{citations?.close();profile?.close();outputs?.close();}});
+materials=bindMaterials({controller,readonly,onQueueChange:()=>drawState(controller.state),onPreview:()=>{citations?.close();profile?.close();outputs?.close();}});
 citations=bindCitations({controller,onOpen:()=>{materials.close();profile?.close();outputs?.close();}});
 profile=bindProfile({controller,api,readonly,onOpen:()=>{materials.close();citations.close();outputs?.close();}});
 outputs=bindOutputs({controller,api,readonly,onOpen:()=>{materials.close();citations.close();profile.close();}});
@@ -205,7 +208,7 @@ byId('business-task-select').addEventListener('change',()=>{controller.selectBus
 byId('save-draft').addEventListener('click',()=>{clearTimeout(timer);void safely(()=>
   controller.state.status==='error'?controller.retry():controller.save());});
 byId('new-conversation').addEventListener('click',async()=>{
-  if(followups.hasPending()||evidence.hasPending()||worksheet.hasPending()||tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()||weixinPending?.hasPending()){notice('请先保存或清空本次内容；结果未知时请先查询，再新建对话。');return;}
+  if(materials.hasSelection()||personalWeixin?.hasPending()||followups.hasPending()||evidence.hasPending()||worksheet.hasPending()||tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()||weixinPending?.hasPending()){notice('请先保存或清空本次内容；结果未知时请先查询，再新建对话。');return;}
   clearTimeout(timer);
   if(await safely(()=>controller.newConversation())) {
     pendingRoute=null;drawState(controller.state);closeMenu();byId('composer').focus();
@@ -285,7 +288,7 @@ byId('body-size').addEventListener('change',event=>{
   document.body.classList.toggle('read-largest',event.target.value==='20');
 });
 byId('logout').addEventListener('click',async()=>{
-  if(followups.hasPending()||evidence.hasPending()||worksheet.hasPending()||tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()||weixinPending?.hasPending()){notice('仍有未保存内容或未查明的结果，请先处理后退出。');return;}
+  if(materials.hasSelection()||personalWeixin?.hasPending()||followups.hasPending()||evidence.hasPending()||worksheet.hasPending()||tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()||weixinPending?.hasPending()){notice('仍有未保存内容或未查明的结果，请先处理后退出。');return;}
   clearTimeout(timer);
   if(!await safely(()=>controller.save()) || !controller.canLeave())return;
   if(typeof window.desktopAssistant?.personalWeixinDisable==='function'&&!readonly){

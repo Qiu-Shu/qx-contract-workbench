@@ -11,7 +11,7 @@ export const errorText = error=>({
   MATERIAL_NOT_READABLE:'有材料尚未读取，请先解析并核对读取范围。',
   FILE_LIMIT:'材料超过本机接收上限。请缩小文件或分开处理。',
   FILE_UNSUPPORTED:'暂时无法读取这份文件，请选择完整的 DOCX。',
-  DATA_POLICY_UNAPPROVED:'此材料尚未获准在当前环境处理，请核对本机处理选项。',
+  DATA_POLICY_UNAPPROVED:'此材料尚未获准在当前环境处理，请核对当前环境的材料处理范围。',
   REQUEST_FAILED:'请求未完成，请重试或返回工作区。',
 }[error?.code] || '请求未完成，输入仍在此处，请重试或返回工作区。');
 
@@ -53,7 +53,7 @@ const attemptText = {
 };
 const contextPhaseText = {
   checking:'正在核对将发送的内容…',
-  confirming:'请在原生确认窗口核对问题全文、片段清单、接收方与费用上限；尚未发送。',
+  confirming:'正在核对本次问题、资料范围与模型设置…',
   submitting:'正在提交资料辅助回答…',
   unknown:'发送结果尚不确定。请查找发送结果，避免重复发送。',
   tracking:'资料辅助回答已登记，正在核对结果…',
@@ -182,7 +182,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
     box.replaceChildren();
     if(preview) {
       box.hidden=false;
-      const text={ready:`将发送：当前问题与所选 ${selected.length} 条片段；线上内容共 ${preview.wire_bytes} 字节（上限 ${preview.max_input_bytes} 字节）。确认后由桌面原生窗口再核对一次。`,
+      const text={ready:`将发送：当前问题与所选 ${selected.length} 条片段；线上内容共 ${preview.wire_bytes} 字节（上限 ${preview.max_input_bytes} 字节）。发送时按模型设置核对当前资料版本。`,
         input_too_large:'所选内容与问题合并后超过当前模型的输入上限。请减少选片或缩短问题。',
         not_configured:'尚未配置模型。可核对内容，但当前环境不能发送。'}[preview.state] || '预览状态待核对。';
       box.append(node('p',text,'generation-note'));
@@ -305,7 +305,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       const workflow=businessMode?state.business:showingResearch?research:contextMode?state.context:generation;
       const phase=workflow?.phase || 'idle';
       const nativeConfirmation=!businessMode && !showingResearch && (generation?.nativeConfirmation===true || contextMode);
-      byId('send').textContent=businessMode?'发送':local?'本机检索':contextMode?'确认并发送资料回答':nativeConfirmation?'确认并发送':'发送';
+      byId('send').textContent=businessMode?'发送':local?'本机检索':contextMode?'发送资料回答':'发送';
       byId('send').disabled=workflow?.canSend!==true || readonly || state.loading || Boolean(state.skill && !local && !businessMode) ||
         ['saving','conflict','readonly','revoked'].includes(state.status) || ['checking','confirming','submitting','unknown','tracking'].includes(phase);
       byId('generation-note').textContent=revoked?'访问已结束。':readonly || state.status==='readonly'
@@ -313,13 +313,13 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
           ?state.materials?.items?.length?'本机关键词检索暂不接受附件，请先将材料移出本次。': [...state.text].length>200
             ?'关键词超过 200 字。请缩短后检索；原有文字仍保留。':'输入不超过 200 字的关键词，仅查询本机资料库；不会发送给模型。'
           :contextMode
-            ?`已选 ${state.context.selected.length} 条已保存片段。先点“核对将发送的内容”，确认无误后再发送；发送经桌面原生窗口核对问题全文与片段清单，结果仍需律师核对。`
+            ?`已选 ${state.context.selected.length} 条已保存片段。可先点“核对将发送的内容”；发送时按模型设置核对问题与片段版本，结果仍需律师核对。`
           :state.skill?'该能力尚未接入执行。取消选择后可核对普通文字的生成条件。'
           :nativeConfirmation && ['unapproved','ready','budget_exhausted'].includes(generation?.capability?.state)
-            ?generation.profileMode?'确认后生成回复，并整理本机待核档案草稿。请在原生窗口核对完整文字、接收方、费用与保存目标；实际保存以结果回执为准。'
-              :'点击“确认并发送”后，在原生确认窗口核对完整文字、接收方与费用上限；确认后才发送，结果仍需律师核对。'
+            ?generation.profileMode?'发送后按模型设置生成回复，并整理本机待核档案草稿；实际保存以结果回执为准。'
+              :'发送时按主模型设置核对本次文字与费用上限；结果仍需律师核对。'
             :generationCapabilityText[generation?.capability?.state] || '输入并保存文字后，将核对当前生成条件。';
-      const phaseText={checking:'正在核对生成条件…',confirming:'请在原生确认窗口核对本次文字、接收方与费用上限；尚未发送。',submitting:'正在提交生成请求…',
+      const phaseText={checking:'正在核对生成条件…',confirming:'正在核对本次文字、模型设置与费用上限…',submitting:'正在提交生成请求…',
         unknown:'发送结果尚不确定。请查找发送结果，避免重复发送。',tracking:'生成已登记，正在核对结果…'};
       byId('generation-status').textContent=revoked?'':showingResearch?researchStatusText(research):
         contextMode?(contextPhaseText[phase] || (phase==='error'?contextErrorText(state.context?.error):'')):
@@ -327,7 +327,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       byId('generation-status').dataset.kind=['unknown','error'].includes(phase)?'error':'';
       byId('recover-generation').hidden=revoked || phase!=='unknown';
       byId('recover-generation').disabled=state.loading || revoked;
-      byId('input-help').textContent=(nativeConfirmation?'Enter 打开发送确认，':'Enter 发送，')+'Shift+Enter 换行；'+
+      byId('input-help').textContent='Enter 发送，'+'Shift+Enter 换行；'+
         (byId('send').disabled?'当前发送不可用。':local?'发送后查询本机资料。':'发送后生成内部待核草稿。');
       input.placeholder=local?'输入关键词，例如：合成买卖纠纷':'先记下客户的情况、你想核对的问题，或希望完成的工作…';
       byId('add-material').disabled=readonly || state.loading || ['saving','conflict','revoked'].includes(state.status);

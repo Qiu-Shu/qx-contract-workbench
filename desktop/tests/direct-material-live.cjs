@@ -39,7 +39,8 @@ async function login(){
 }
 async function upload(file){
   await page.locator('#add-material').click();await page.locator('#material-file').setInputFiles(file);
-  await page.locator('#material-consent').check();await page.locator('#upload-material').click();
+  assert.equal(await page.locator('#material-consent,#material-purpose').count(),0);
+  await page.locator('#composer').press('Enter');
   await page.waitForFunction(name=>document.querySelector('#material-list').textContent.includes(name),path.basename(file));
   // Use explicit awaited reads; do not treat a Promise in a DOM predicate as a completed parse.
   for(let n=0;n<30;n++){
@@ -103,8 +104,9 @@ async function showConversation(id){
   await page.waitForFunction(()=>!document.querySelector('#model-id').disabled);
   assert.equal(await page.locator('#model-automatic-analysis').isChecked(),false);
   await page.locator('#model-id').selectOption(model);
-  await page.locator('#model-automatic-analysis').check();await page.locator('#model-configure').click();
-  await page.waitForFunction(()=>document.querySelector('#model-runtime-status').textContent.includes('自动分析'));
+  await page.locator('#model-configure').click();
+  await page.waitForFunction(()=>document.querySelector('#model-runtime-status').textContent.includes('已配置'));
+  assert.equal(await page.locator('#model-automatic-analysis').isChecked(),false);
   await page.locator('#resume').click();await page.waitForURL(/\/assistant$/);report.checks.push('initial-native-range-configured');
   await upload(fixture);
   }

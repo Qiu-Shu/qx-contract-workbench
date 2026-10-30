@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {createDraftController} from '../src/cn_contract/web/static/assistant-state.mjs';
+import {bindComposer} from '../src/cn_contract/web/static/assistant-composer.mjs';
 import {bindMaterials} from '../src/cn_contract/web/static/assistant-materials.mjs';
 
 const copy=value=>structuredClone(value);
@@ -17,8 +18,9 @@ class Element {
     this.classList={add:value=>classes.add(value),remove:value=>classes.delete(value),contains:value=>classes.has(value)};
   }
   addEventListener(name,listener){this.listeners.set(name,listener);}
+  removeEventListener(name){this.listeners.delete(name);}
   setAttribute(name,value){this[name]=String(value);}
-  focus(){}
+  focus(){this.focused=true;}
   append(...children){this.children.push(...children);}
   replaceChildren(...children){this.children=children;}
   insertBefore(child,before){this.children.splice(this.children.indexOf(before),0,child);}
@@ -127,14 +129,12 @@ test('switching conversations suppresses the prior parse callback while the targ
 test('new conversation clears prior material rows, preview and unsubmitted picker selection',async t=>{
   const f=fixture(t);await f.controller.open('one');await preview(f);
   await f.root.getElementById('material-file').fire('change',{target:{files:[{name:'未上传.docx',type:mime}]}});
-  f.root.getElementById('material-consent').checked=true;
   assert.equal(f.materials.hasSelection(),true);
   assert.equal(await f.controller.newConversation(),true);
   assert.equal(f.root.getElementById('material-list').children.length,0);
   assert.equal(f.root.getElementById('material-section').hidden,true);
   assert.equal(f.root.getElementById('material-preview').hidden,true);
   assert.equal(f.materials.hasSelection(),false);
-  assert.equal(f.root.getElementById('material-consent').checked,false);
 });
 
 test('revocation clears materials immediately and a delayed source response stays discarded',async t=>{
@@ -154,14 +154,11 @@ test('successful unknown-upload reconciliation disarms the picker instead of cre
   const f=fixture(t,{withMaterials:false});await f.controller.open('one');const normal=f.api.uploadAttachment;
   f.api.uploadAttachment=async(...args)=>{await normal(...args);throw Object.assign(Error('unknown'),{status:0,code:'NETWORK_UNKNOWN'});};
   await f.root.getElementById('material-file').fire('change',{target:{files:[{name:'待核对上传.docx',type:mime,size:2048}]}});
-  f.root.getElementById('material-consent').checked=true;
-  await f.root.getElementById('material-consent').fire('change');
   await f.root.getElementById('upload-material').fire('click');
   assert.equal(f.controller.state.status,'error');assert.equal(f.materials.hasSelection(),true);
   assert.equal(await f.controller.retry(),true);
   assert.equal(f.materials.hasSelection(),false);
   assert.equal(f.root.getElementById('upload-material').disabled,true);
-  assert.equal(f.root.getElementById('material-consent').checked,false);
   await f.root.getElementById('upload-material').fire('click');
   assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
   assert.equal(f.calls.filter(call=>call[0]==='lookup').length,1);
@@ -181,9 +178,7 @@ test('multi-select builds a removable queue and uploads each file in order with 
   assert.equal(removeButtons.length,3);
   await removeButtons[1].fire('click');
   assert.deepEqual(chipNames(f).map(text=>text.split('（')[0]),['合同扫描.pdf','清单.xlsx']);
-  assert.equal(f.root.getElementById('upload-material').disabled,true,'consent still required');
-  f.root.getElementById('material-consent').checked=true;
-  await f.root.getElementById('material-consent').fire('change');
+  assert.equal(f.root.getElementById('upload-material').disabled,false,'selection is the explicit upload action');
   await f.root.getElementById('upload-material').fire('click');
   assert.equal(f.calls.filter(call=>call[0]==='upload').length,2);
   assert.equal(f.materials.hasSelection(),false);
@@ -197,8 +192,6 @@ test('a failed batch keeps the remaining queue and reports the partial count',as
     fileStub('一.docx',mime),fileStub('二.docx',mime),fileStub('三.docx',mime)]}});
   const normal=f.api.uploadAttachment;let attempts=0;
   f.api.uploadAttachment=async(...args)=>{attempts++;if(attempts===2)throw Object.assign(Error('conflict'),{status:409,code:'STATE_CONFLICT'});return normal(...args);};
-  f.root.getElementById('material-consent').checked=true;
-  await f.root.getElementById('material-consent').fire('change');
   await f.root.getElementById('upload-material').fire('click');
   assert.equal(attempts,2,'stops at the first failure');
   assert.deepEqual(chipNames(f).map(text=>text.split('（')[0]),['二.docx','三.docx']);
@@ -223,8 +216,6 @@ test('dropping files on the page queues them and rejects unsupported types by na
 test('non-readable formats preview without a parse control',async t=>{
   const f=fixture(t,{withMaterials:false});await f.controller.open('one');
   await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('清单.csv','text/csv')]}});
-  f.root.getElementById('material-consent').checked=true;
-  await f.root.getElementById('material-consent').fire('change');
   await f.root.getElementById('upload-material').fire('click');
   assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
   const row=f.root.getElementById('material-list').children[0];
@@ -269,14 +260,79 @@ test('PDF never shows DOCX revision choices even when a malformed read status as
   button(f.root,'material-preview-content','重新读取，保留历史版本');
 });
 
-for(const choice of ['', 'synthetic'])test('desktop material purpose remains explicit: '+(choice||'local default'),async t=>{
-  const f=fixture(t,{withMaterials:false});await f.controller.open('one');
+for(const local of [true,false])test('upload uses the server-provided local material policy '+local,async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');f.root.body.dataset.localMaterials=String(local);
   const policies=[],normal=f.api.uploadAttachment;
   f.api.uploadAttachment=async(id,body,file)=>{policies.push(body.policy);return normal(id,body,file);};
-  f.root.getElementById('material-purpose').value=choice;
-  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('登记合成.docx',mime)]}});
-  f.root.getElementById('material-consent').checked=true;
-  await f.root.getElementById('material-consent').fire('change');
+  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('独立虚构.docx',mime)]}});
   await f.root.getElementById('upload-material').fire('click');
-  assert.equal(policies.length,1);assert.equal(policies[0].material_mode,choice||'local');
+  assert.equal(policies.length,1);assert.equal(policies[0].material_mode,local?'local':'synthetic');
+});
+
+test('selected local files upload directly without consent controls',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');let policy;
+  const normal=f.api.uploadAttachment;f.api.uploadAttachment=async(id,body,file)=>{policy=body.policy;return normal(id,body,file);};
+  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('独立虚构合同.docx',mime)]}});
+  assert.equal(f.root.getElementById('upload-material').disabled,false);
+  assert.equal(f.root.getElementById('composer').focused,true,'selection returns focus to Enter-to-send input');
+  assert.equal(await f.materials.uploadSelected(),true);
+  assert.equal(policy.material_mode,'local');assert.equal(policy.local_processing_accepted,true);
+  assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
+});
+
+function composerFor(f){
+  let sends=0;
+  const input=f.root.getElementById('composer'),form=f.root.getElementById('composer-form');
+  const binding=bindComposer({input,form,onEdit:text=>f.controller.edit(text),beforeSend:()=>f.materials.uploadSelected(),
+    onSend:()=>{if(f.controller.state.text.trim()){sends++;assert.equal(f.materials.hasSelection(),false);}}});
+  return {input,form,binding,sends:()=>sends,key:(extra={})=>input.fire('keydown',{key:'Enter',preventDefault(){},...extra})};
+}
+test('fresh files-only Enter creates one chat and uploads a batch with no model dispatch',async t=>{
+  const f=fixture(t,{withMaterials:false});let creates=0;
+  f.api.createConversation=async()=>{creates++;return copy(f.views.one);};
+  const c=composerFor(f);
+  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('一.docx',mime),fileStub('二.docx',mime)]}});
+  assert.equal(await c.key(),undefined);assert.equal(creates,1);assert.equal(f.controller.state.id,'one');
+  assert.equal(f.calls.filter(call=>call[0]==='upload').length,2);assert.equal(c.sends(),0);c.binding.dispose();
+});
+test('Enter uploads before sending current text and serializes rapid Enter and button submit',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');const c=composerFor(f),gate=deferred();
+  const normal=f.api.uploadAttachment;f.api.uploadAttachment=async(...args)=>{await gate.promise;return normal(...args);};
+  f.controller.edit('独立虚构问题');await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
+  const first=c.key();await tick();c.key();c.form.fire('submit',{preventDefault(){}});assert.equal(c.sends(),0);
+  f.controller.edit('上传过程中补充后的问题');gate.resolve();await first;
+  assert.equal(c.sends(),1);assert.equal(f.controller.state.text,'上传过程中补充后的问题');
+  assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);c.binding.dispose();
+});
+test('failed or unknown upload never sends text and reconciles one receipt before retry',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');const c=composerFor(f),normal=f.api.uploadAttachment;
+  f.controller.edit('仍保留的问题');f.api.uploadAttachment=async(...args)=>{await normal(...args);throw Object.assign(Error('unknown'),{status:0,code:'NETWORK_UNKNOWN'});};
+  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
+  assert.equal(await c.key(),false);assert.equal(c.sends(),0);assert.equal(f.materials.hasSelection(),true);
+  assert.equal(await c.key(),false);assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
+  assert.equal(await f.controller.retry(),true);await c.key();assert.equal(c.sends(),1);
+  assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);c.binding.dispose();
+});
+test('IME Enter Shift Enter and held Enter do not upload queued files',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');const c=composerFor(f);
+  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
+  c.input.fire('compositionstart');c.key();c.input.fire('compositionend');
+  c.key({shiftKey:true});c.key({repeat:true});c.key({isComposing:true});await tick();
+  assert.equal(f.calls.length,0);assert.equal(f.materials.hasSelection(),true);c.binding.dispose();
+});
+test('queued files from an existing conversation never move to another chat',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');
+  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
+  await f.controller.open('two');assert.equal(f.materials.hasSelection(),false);
+  await f.materials.uploadSelected();assert.equal(f.calls.filter(call=>call[0]==='upload').length,0);
+});
+
+test('Enter waits for an existing autosave before uploading selected files',async t=>{
+  const f=fixture(t,{withMaterials:false});await f.controller.open('one');const c=composerFor(f),gate=deferred();
+  await f.root.getElementById('material-file').fire('change',{target:{files:[fileStub('合同.docx',mime)]}});
+  const normal=f.api.saveDraft;f.api.saveDraft=async(...args)=>{await gate.promise;return normal(...args);};
+  f.controller.edit('虚构问题');const saving=f.controller.save();await tick();assert.equal(f.controller.state.status,'saving');
+  const sent=c.key();await tick();assert.equal(c.sends(),0);assert.equal(f.calls.filter(call=>call[0]==='upload').length,0);
+  gate.resolve();await saving;await sent;assert.equal(c.sends(),1);assert.equal(f.calls.filter(call=>call[0]==='upload').length,1);
+  c.binding.dispose();
 });
