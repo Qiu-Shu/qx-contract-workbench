@@ -20,6 +20,7 @@ from cn_contract.assistant.task_manager import GenerationTasks
 from cn_contract.security import login, authenticate, ServiceError
 from cn_contract.weixin_inbox.personal_runtime import PersonalWeixinRuntime
 from cn_contract.weixin_transport import PersonalWeixinTransport
+from cn_contract.task_drafts import service as drafts
 from tests.integration.test_assistant_generation import world
 from tests.unit.test_weixin_transport import Wire, incoming, KEY
 
@@ -100,6 +101,199 @@ async def close(runtime,manager):
 def count(database,table):
     with database.session() as db:
         return db.scalar(text('SELECT COUNT(*) FROM '+table))
+
+
+@pytest.mark.parametrize('action',['update','assign'])
+def test_synthetic_paused_edits_still_require_explicit_resume(world,action):
+    database,actor,conversation,_,_=world
+    with database.session() as db:
+        binding=drafts.create_binding(actor,conversation.scope.conversation_id,db)
+        receipt=drafts.receive_batch(actor,binding.id,d.TaskInboxBatchInput(expected_cursor=0,next_cursor=1,events=(
+            d.TaskInboxEventInput(event_id='first',text='虚构任务一',start_new=True),
+            d.TaskInboxEventInput(event_id='second',text='虚构任务二',start_new=True),
+            d.TaskInboxEventInput(event_id='unassigned',text='归属待定的虚构补充'))),db)
+        draft=receipt.drafts[0]
+        draft=drafts.update_draft(actor,draft.id,d.TaskDraftUpdateInput(expected_revision=draft.revision,action='pause'),db)
+        value=d.TaskDraftUpdateInput(expected_revision=draft.revision,action=action,
+            **({'instruction':'尝试修改'} if action=='update' else {'event_ids':(receipt.events[-1].id,)}))
+        with pytest.raises(ServiceError) as error:
+            drafts.update_draft(actor,draft.id,value,db)
+        assert error.value.code=='STATE_CONFLICT'
+        assert drafts.read_draft(actor,draft.id,db)==draft
+        assert len(drafts.list_drafts(actor,conversation.scope.conversation_id,db).unassigned_events)==1
+
+
+@pytest.mark.parametrize('hold',['还有附件，稍等',' 还有附件 , 请稍等！ ','附件还没发完，请等一下','暂停','先别审'])
+def test_explicit_hold_retains_later_material_and_requires_resume_after_reconnect(world,hold):
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup_runtime(world)
+        database=world[0];cid=world[2].scope.conversation_id;epoch=runtime._epoch
+        first=packet(file_message(wire),command(),command(3,hold),cursor='first')
+        await runtime.ingest(epoch,first);await runtime.advance(epoch)
+        assert not provider.calls
+        with database.session() as db:
+            draft=drafts.list_drafts(actor,cid,db).items[0]
+            assert draft.state=='paused'
+            identifier=draft.id
+        later=packet(file_message(wire,4,'虚构附件.docx'),cursor='later')
+        await runtime.ingest(epoch,later);await runtime.advance(epoch)
+        with database.session() as db:
+            view=drafts.list_drafts(actor,cid,db)
+            assert len(view.items)==1 and not view.unassigned_events
+            draft=view.items[0]
+            assert draft.id==identifier and draft.state=='paused'
+            assert len(draft.media_resolutions)==2
+        assert not provider.calls
+        await close(runtime,manager)
+        runtime,wire,manager,provider,actor=await setup_runtime(world)
+        epoch=runtime._epoch
+        await runtime.ingest(epoch,later);await runtime.advance(epoch)
+        assert not provider.calls
+        with database.session() as db:
+            draft=drafts.read_draft(actor,identifier,db)
+            main=draft.media_resolutions[0].replacement.attachment_id
+            draft=drafts.update_draft(actor,identifier,d.TaskDraftUpdateInput(
+                expected_revision=draft.revision,main_attachment_id=main),db)
+            assert draft.state=='paused'
+        await runtime.advance(epoch)
+        assert not provider.calls
+        resumed=packet(command(5,' 继续！ '),cursor='resume')
+        await runtime.ingest(epoch,resumed);await runtime.advance(epoch)
+        assert len(provider.calls)==1
+        assert len(provider.calls[0].basis.manifest.materials)==2
+        assert count(database,'task_drafts')==1
+        await runtime.ingest(epoch,resumed);await runtime.advance(epoch)
+        assert len(provider.calls)==1
+        await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+def test_personal_desktop_main_selection_completes_in_same_chat_without_mock(world):
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup_runtime(world)
+        database=world[0];cid=world[2].scope.conversation_id;epoch=runtime._epoch
+        await runtime.ingest(epoch,packet(file_message(wire),file_message(wire,2,'虚构附件.docx'),command(3)))
+        await runtime.advance(epoch)
+        assert not provider.calls
+        with database.session() as db:
+            draft=drafts.list_drafts(actor,cid,db).items[0]
+            assert 'main_contract_selection_required' in draft.blockers
+            main=draft.media_resolutions[0].replacement.attachment_id
+            draft=drafts.update_draft(actor,draft.id,d.TaskDraftUpdateInput(
+                expected_revision=draft.revision,main_attachment_id=main),db)
+            assert not draft.synthetic
+        await runtime.advance(epoch)
+        assert len(provider.calls)==1 and count(database,'task_executions')==0
+        with database.session() as db:
+            history=business.history(actor,cid,db)
+            assert history[0].contract_draft_id==draft.id
+            assert db.scalar(text('SELECT COUNT(*) FROM assistant_model_outputs'))==1
+        assert any('虚构材料已分析' in request.content.decode() for request in wire.requests
+            if request.url.path.endswith('/sendmessage'))
+        await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize('other_state',['paused','collecting'])
+def test_ambiguous_paused_resume_requires_desktop_assignment_and_keeps_sources(world,other_state):
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup_runtime(world)
+        database=world[0];cid=world[2].scope.conversation_id;epoch=runtime._epoch
+        await runtime.ingest(epoch,packet(file_message(wire),command(),command(3,'暂停'),cursor='first'))
+        with database.session() as db:
+            first=drafts.list_drafts(actor,cid,db).items[0]
+            other=drafts._new_draft(cid,db,parent=drafts._draft(actor,first.id,db))
+            other=drafts.read_draft(actor,other,db)
+            if other_state=='paused':
+                drafts.update_draft(actor,other.id,d.TaskDraftUpdateInput(expected_revision=other.revision,action='pause'),db)
+            original=tuple(db.execute(text('SELECT id,payload_json,payload_sha256 FROM task_inbox_events')))
+        await runtime.ingest(epoch,packet(command(4,'继续'),file_message(wire,5,'归属待定附件.docx'),cursor='resume'))
+        await runtime.advance(epoch);await runtime.advance(epoch)
+        assert not provider.calls
+        assert len([r for r in wire.requests if r.url.path.endswith('/sendmessage')])==1
+        with database.session() as db:
+            view=drafts.list_drafts(actor,cid,db)
+            assert len(view.unassigned_events)==2
+            assert drafts.read_draft(actor,first.id,db).state=='paused'
+            assert drafts.read_draft(actor,other.id,db).state==other_state
+            first=drafts.read_draft(actor,first.id,db)
+            assigned=drafts.update_draft(actor,first.id,d.TaskDraftUpdateInput(expected_revision=first.revision,
+                action='assign',event_ids=tuple(event.id for event in view.unassigned_events)),db)
+            assert assigned.state=='collecting' and not assigned.synthetic
+            drafts.update_draft(actor,first.id,d.TaskDraftUpdateInput(expected_revision=assigned.revision,
+                main_attachment_id=first.main_attachment_id),db)
+            assert tuple(db.execute(text('SELECT id,payload_json,payload_sha256 FROM task_inbox_events LIMIT 3')))==original
+            if other_state=='collecting':
+                # Explicitly pause the other task; assigning one event does not select between two runnable tasks.
+                drafts.update_draft(actor,other.id,d.TaskDraftUpdateInput(expected_revision=other.revision,action='pause'),db)
+        await runtime.advance(epoch)
+        assert len(provider.calls)==1 and count(database,'task_drafts')==2
+        assert len(provider.calls[0].basis.manifest.materials)==2
+        await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize('fence',['logout','expiry','peer-revoke','restore','binding','config','epoch'])
+def test_queued_reply_rechecks_authority_before_worker_send(world,fence):
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+    from cn_contract.weixin_transport import ProbeError
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup_runtime(world)
+        database=world[0];epoch=runtime._epoch;transport=runtime._transport
+        await runtime.ingest(epoch,packet(command(1,'销售接待：客户咨询虚构交货纠纷')))
+        loop=asyncio.get_running_loop();loop.set_default_executor(ThreadPoolExecutor(max_workers=1))
+        started,release=Event(),Event()
+        def occupy():
+            started.set();assert release.wait(10)
+        occupied=loop.run_in_executor(None,occupy)
+        while not started.is_set():await asyncio.sleep(.01)
+        reply=asyncio.create_task(runtime._reply(epoch,'queued-fixture','独立虚构回复'))
+        replacement=None
+        try:
+            async with asyncio.timeout(5):
+                while count(database,'weixin_personal_outbox')!=1:await asyncio.sleep(.01)
+            if fence=='peer-revoke':
+                from cn_contract.weixin_inbox.personal import revoke_personal_peer
+                revoke_personal_peer(actor,runtime._mapping.id,d.WeixinRevokeInput(reason='虚构撤销'),database=database)
+            elif fence=='config':
+                runtime.native_model._config_version=uuid4()
+            elif fence=='epoch':
+                runtime._epoch+=1
+                replacement=PersonalWeixinTransport(client=httpx.Client(transport=httpx.MockTransport(Wire().handle)))
+                replacement.start_qr();replacement.poll_login()
+                runtime._transport=replacement
+            else:
+                with database.session() as db:
+                    if fence=='logout':
+                        from cn_contract.security import revoke_session
+                        revoke_session(actor.session_id,db)
+                    elif fence=='expiry':
+                        db.execute(text("UPDATE sessions SET expires_at='2000-01-01 00:00:00.000000' WHERE id=:id"),{'id':str(actor.session_id)})
+                    elif fence=='restore':
+                        db.execute(text("INSERT INTO ops_restore_fences(ref,archive_sha256,manifest_sha256,payload) VALUES('fiction','a','b','{}')"))
+                    else:
+                        db.execute(text('UPDATE assistant_conversations SET binding_revision=binding_revision+1 WHERE id=:id'),
+                            {'id':str(world[2].scope.conversation_id)})
+        finally:
+            release.set();await occupied
+        with pytest.raises(ServiceError):await reply
+        assert not [r for r in wire.requests if r.url.path.endswith('/sendmessage')]
+        assert not provider.calls
+        with pytest.raises(ProbeError):transport.identity()
+        if replacement:assert replacement.identity()
+        with database.session() as db:
+            assert db.scalar(text('SELECT status FROM weixin_personal_outbox'))=='unknown'
+        await close(runtime,manager)
+        if replacement:transport._client.close()
+        if fence=='logout':
+            runtime,wire,manager,provider,actor=await setup_runtime(world)
+            await runtime.ingest(runtime._epoch,packet(command(1,'销售接待：客户咨询虚构交货纠纷')))
+            await runtime._reply(runtime._epoch,'queued-fixture','独立虚构回复')
+            assert not [r for r in wire.requests if r.url.path.endswith('/sendmessage')]
+            assert count(database,'weixin_personal_outbox')==1
+            await close(runtime,manager)
+    asyncio.run(scenario())
 
 
 def test_runtime_has_exact_successor_schema():

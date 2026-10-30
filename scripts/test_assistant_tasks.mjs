@@ -45,6 +45,48 @@ test('pending Weixin operation locks task writes while preserving read controls'
 });
 const taskButton=(f,label)=>{const found=walk(f.root.getElementById('task-current')).find(el=>el.tagName==='button'&&el.textContent===label);assert.ok(found,label);return found;};
 const mainSelector=f=>walk(f.root.getElementById('task-current')).find(el=>el.tagName==='select');
+for(const state of ['collecting','paused'])test('personal '+state+' task offers safe main selection and assignment without mock execution',async()=>{
+  const f=fixture();await tick();
+  const mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  const draft={id:'personal',synthetic:false,state,revision:3,instruction:'虚构审查',blockers:['main_contract_selection_required'],
+    events:[{id:'source',binding_id:'fixed',channel:'weixin_personal',media:[{media_id:'one',name:'原件.docx',mime,status:'pending'}]}],
+    media_resolutions:[{event_id:'source',media_id:'one',action:'resolve',replacement:{attachment_id:'main',name:'原件.docx',mime,status:'ready'}}]};
+  let unassigned=[{id:'unassigned',binding_id:'fixed',channel:'weixin_personal',text:'继续',media:[]}];
+  f.api.request=async(path,options={})=>{
+    f.calls.push([path,options]);
+    if(options.method==='PATCH'){
+      if(options.body.main_attachment_id)draft.main_attachment_id=options.body.main_attachment_id;
+      if(options.body.action==='assign'){unassigned=[];draft.state='collecting';}
+      ++draft.revision;
+    }
+    return path.endsWith('/task-drafts')?{items:[structuredClone(draft)],unassigned_events:unassigned}:draft;
+  };
+  await f.tasks.refresh();f.root.getElementById('task-select').value=draft.id;f.root.getElementById('task-select').fire('change');
+  assert.ok(mainSelector(f),'personal main selection must be reachable');
+  assert.ok(walk(f.root.getElementById('task-current')).some(el=>el.textContent==='原件.docx · 读取就绪'));
+  mainSelector(f).value='main';await taskButton(f,'保存主合同选择').fire('click');
+  assert.deepEqual(f.calls.find(([,o])=>o.method==='PATCH')[1].body,{expected_revision:3,main_attachment_id:'main'});
+  assert.equal(draft.state,state,'main selection must not release a hold');
+  const assign=walk(f.root.getElementById('task-unassigned')).find(el=>el.tagName==='button');assert.ok(assign);
+  await assign.fire('click');
+  assert.deepEqual(f.calls.filter(([,o])=>o.method==='PATCH')[1][1].body,{expected_revision:4,action:'assign',event_ids:['unassigned']});
+  assert.equal(walk(f.root.getElementById('task-current')).some(el=>el.textContent==='冻结材料'),false);
+  assert.equal(f.root.getElementById('task-collect').disabled,true);
+  assert.equal(f.calls.some(([p])=>p.includes('/freeze')||p.includes('/review')||p.includes('/batches')),false);
+  f.tasks.dispose();
+});
+test('personal paused task has explicit resume and cannot assign another personal binding',async()=>{
+  const f=fixture();await tick();
+  const draft={id:'personal',synthetic:false,state:'paused',revision:8,instruction:'等待附件',blockers:[],
+    events:[{id:'event',binding_id:'fixed',channel:'weixin_personal',media:[]}]};
+  f.api.request=async(path,options={})=>{f.calls.push([path,options]);return {items:[draft],unassigned_events:[
+    {id:'other',binding_id:'different',channel:'weixin_personal',text:'继续',media:[]}]};};
+  await f.tasks.refresh();f.root.getElementById('task-select').value=draft.id;f.root.getElementById('task-select').fire('change');
+  assert.equal(walk(f.root.getElementById('task-unassigned')).some(el=>el.tagName==='button'),false);
+  await taskButton(f,'恢复收集').fire('click');
+  assert.deepEqual(f.calls.find(([,o])=>o.method==='PATCH')[1].body,{expected_revision:8,action:'resume'});
+  f.tasks.dispose();
+});
 async function mainContractFixture(){
   const f=fixture();await tick();
   const draft={id:'draft',state:'collecting',revision:1,instruction:'合成审查',main_attachment_id:'a',blockers:[],

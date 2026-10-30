@@ -1,5 +1,6 @@
 """Collect source batches without model calls; freeze immutable review inputs."""
 import json
+import re
 from uuid import UUID, uuid4
 
 from sqlalchemy import text
@@ -13,6 +14,18 @@ from ..persistence import configured_database, read_version
 from ..security import ServiceError, authorize
 
 CONTROLS = {'暂停':'paused','先别审':'paused','取消':'cancelled','继续':'collecting'}
+
+
+def _control(request):
+    if request.media:
+        return None
+    value = re.sub(r'[\s，,。.!！?？；;、]', '', request.text)
+    if re.fullmatch(r'(?:我?还有(?:附件|材料)(?:要发|没发完)?|(?:附件|材料)(?:还没|没有)发完)'
+                    r'(?:请?(?:稍等(?:一下)?|等一下|等等))?', value):
+        return 'paused'
+    if value in {'请继续','继续审查','请继续审查','继续处理','请继续处理'}:
+        return 'collecting'
+    return CONTROLS.get(value)
 
 
 def _validate(model, value):
@@ -250,7 +263,7 @@ def _attach(identifier, event, db):
     db.execute(text('INSERT INTO task_draft_events(draft_id,event_id,ordinal) VALUES (:draft,:event,:ordinal)'),
         {'draft':str(identifier),'event':event['id'],'ordinal':ordinal})
     request = _payload(event)
-    control = CONTROLS.get(request.text.strip()) if not request.media else None
+    control = _control(request)
     content = '' if control else request.text
     instruction = '\n'.join(value for value in (draft['instruction'],content) if value.strip())
     if len(instruction) > 20000:
@@ -274,7 +287,7 @@ def _fits(identifier, event, db):
         return False
     draft = _row('task_drafts',identifier,db)
     request = _payload(event)
-    content = '' if not request.media and request.text.strip() in CONTROLS else request.text
+    content = '' if _control(request) else request.text
     return len('\n'.join(value for value in (draft['instruction'],content) if value.strip())) <= 20000
 
 
@@ -297,7 +310,7 @@ def _follow_target(actor, cid, identifier, control, db):
 
 def _target(actor, cid, event, db):
     request = _payload(event)
-    control = CONTROLS.get(request.text.strip()) if not request.media else None
+    control = _control(request)
     if (db.scalar(text('SELECT channel FROM task_channel_bindings WHERE id=:id'),
             {'id':event['binding_id']}) == 'weixin_personal'
             and request.task_id is None and request.reply_to_event_id is None
@@ -305,10 +318,12 @@ def _target(actor, cid, event, db):
         # Source text is interpreted here; the immutable wire payload/hash stays intact.
         candidates = db.execute(text('''SELECT DISTINCT draft.* FROM task_drafts draft
             JOIN task_draft_events de ON de.draft_id=draft.id JOIN task_inbox_events e ON e.id=de.event_id
-            WHERE draft.conversation_id=:cid AND draft.state='collecting' '''),
+            WHERE draft.conversation_id=:cid AND draft.state IN ('collecting','paused') '''),
             {'cid':str(cid)}).mappings().all()
         unused = [row for row in candidates if not db.scalar(text(
             'SELECT 1 FROM weixin_personal_runs WHERE draft_id=:id'), {'id':row['id']})]
+        if control:
+            return unused[0]['id'] if len(unused) == 1 else None
         explicit = any(word in request.text for word in ('重新审查', '新建任务', '开始新任务'))
         if len(unused) == 1 and not explicit:
             return unused[0]['id']
@@ -423,7 +438,8 @@ def update_draft(actor, identifier, value, db):
         raise ServiceError('VERSION_CONFLICT',409)
     with db.begin_nested():
         if value.action in {'update','assign'} and row['state'] != 'collecting':
-            raise ServiceError('STATE_CONFLICT',409)
+            if row['state'] != 'paused' or read_draft(actor,identifier,db).synthetic:
+                raise ServiceError('STATE_CONFLICT',409)
         state = {'pause':'paused','cancel':'cancelled','resume':'collecting'}.get(value.action,row['state'])
         if value.action == 'assign':
             for event_id in value.event_ids:

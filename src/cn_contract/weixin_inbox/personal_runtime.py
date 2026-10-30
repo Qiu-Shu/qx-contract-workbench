@@ -134,7 +134,19 @@ class PersonalWeixinRuntime:
 
     async def _io(self, epoch, callback, *args, **kwargs):
         self._guard(epoch)
-        worker = asyncio.create_task(asyncio.to_thread(callback, *args, **kwargs))
+        transport = self._transport
+        def invoke():
+            # Executor queueing can outlive the authority checked on the event loop.
+            try:
+                self._guard(epoch)
+                if self._transport is not transport:
+                    raise ServiceError('BLOCKED_LIVE', 403)
+            except Exception:
+                if transport is not None:
+                    transport.close()
+                raise
+            return callback(*args, **kwargs)
+        worker = asyncio.create_task(asyncio.to_thread(invoke))
         try:
             while not worker.done():
                 await asyncio.wait((worker,), timeout=.2)
@@ -144,6 +156,8 @@ class PersonalWeixinRuntime:
             # Cancelling the await does not stop its thread. Discard late results.
             if not worker.done():
                 worker.add_done_callback(lambda task: None if task.cancelled() else task.exception())
+            elif not worker.cancelled():
+                worker.exception()
 
     async def _run(self, epoch):
         client = None
@@ -296,7 +310,7 @@ class PersonalWeixinRuntime:
         with self.database.session() as db:
             drafts = tasks.list_drafts(actor, scope.conversation_id, db).items
         for draft in drafts:
-            if draft.state != 'collecting':
+            if draft.state not in {'collecting','paused'}:
                 continue
             resolved = {(x.event_id,x.media_id) for x in draft.media_resolutions}
             changes = []
@@ -350,6 +364,8 @@ class PersonalWeixinRuntime:
             return
         if self._busy(scope.conversation_id):
             return
+        # Desktop assignment can attach already-downloaded events between polls.
+        self._resolve(epoch)
         with self.database.session() as db:
             view = tasks.list_drafts(actor, scope.conversation_id, db)
             known = records.links(db, self._mapping.id)

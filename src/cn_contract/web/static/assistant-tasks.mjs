@@ -288,22 +288,25 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
     for(const [id,value] of mainChoices){
       const saved=page.items.find(item=>item.id===id),file=saved?.events.flatMap(event=>event.media).find(item=>item.attachment_id===value);
       host.append(node('p','未保存的主合同选择：'+(file?.name||value||'尚未选择')+'。'+
-        (saved?.state==='collecting'&&!personal(saved)?'请保存或明确放弃此选择。':'任务当前不可编辑，请明确放弃本地选择后继续。')),
+        (saved?.state==='collecting'||personal(saved)&&saved?.state==='paused'?'请保存或明确放弃此选择。':'任务当前不可编辑，请明确放弃本地选择后继续。')),
         button('放弃本地主合同选择',()=>{mainChoices.delete(id);tell('已放弃本地主合同选择，使用已保存的任务版本。');}));
     }
     if(draft){
       host.id='task-current';
       host.append(node('p',(personal(draft)?'本人微信收件 · ':'合成演练 · ')+'第 '+draft.revision+' 版 · '+labels[draft.state]));
-      if(personal(draft))host.append(node('p','此任务使用本人微信通道。分析状态和成果见当前聊天；补充材料或口令可在微信中发送。'));
+      if(personal(draft))host.append(node('p','此任务使用本人微信通道。分析状态和成果见当前聊天；可在此选择主合同或明确收件归属，补充材料可在微信中发送。'+
+        (draft.state==='paused'?'正在等待后续材料；明确恢复收集后才继续处理。':'')));
       const text=node('p',draft.instruction||'还没有审查指令。');text.className='task-saved-instruction';host.append(text);
       const events=node('details'),summary=node('summary','已收集 '+draft.events.length+' 条记录');events.append(summary);
       for(const event of draft.events){const row=node('div');row.className='task-event';if(event.text)row.append(node('p',event.text));for(const item of event.media){
-        if(personal(draft))row.append(node('p',item.name+' · '+(item.status==='ready'?'读取就绪':'等待读取')));
-        else renderMedia(draft,event,item,row);
+        if(personal(draft)){
+          const resolved=[...(draft.media_resolutions||[])].reverse().find(value=>value.event_id===event.id&&value.media_id===item.media_id);
+          row.append(node('p',item.name+' · '+(resolved?.action==='exclude'?'已排除':(resolved?.replacement||item).status==='ready'?'读取就绪':'等待读取')));
+        }else renderMedia(draft,event,item,row);
       }events.append(row);}
       host.append(events);
       if(draft.blockers.length)host.append(node('p','尚需处理：'+draft.blockers.map(code=>blockers[code]||'核对材料与版本').join('；')));
-      if(!personal(draft)&&draft.state==='collecting'){
+      if(draft.state==='collecting'||personal(draft)&&draft.state==='paused'){
         const available=new Map();
         for(const event of draft.events)for(const original of event.media){
           const resolved=[...(draft.media_resolutions||[])].reverse().find(item=>item.event_id===event.id&&item.media_id===original.media_id);
@@ -324,18 +327,20 @@ export function bindTaskDrafts({controller,api,root=document,readonly=false,uuid
           });
           host.append(button('保存主合同选择',()=>main.value?update(draft,{main_attachment_id:main.value}):tell('请选择主合同。')));
         }
-        host.append(button('暂停收集',()=>update(draft,{action:'pause'})),button('取消任务',()=>update(draft,{action:'cancel'})),
-          button('冻结材料',()=>mainChoices.has(draft.id)?tell('请先保存或放弃本地主合同选择，再冻结材料。'):
+        if(draft.state==='collecting')host.append(button('暂停收集',()=>update(draft,{action:'pause'})),button('取消任务',()=>update(draft,{action:'cancel'})));
+        if(!personal(draft))host.append(button('冻结材料',()=>mainChoices.has(draft.id)?tell('请先保存或放弃本地主合同选择，再冻结材料。'):
             submit('/api/task-drafts/'+draft.id+'/freeze','POST',{expected_revision:draft.revision,manifest_sha256:draft.manifest_sha256}),
           {disabled:draft.blockers.length>0,mainDraft:draft.id}));
-      }else if(!personal(draft)&&['paused','cancelled'].includes(draft.state))host.append(button('恢复收集',()=>update(draft,{action:'resume'})));
+      }
+      if(['paused','cancelled'].includes(draft.state))host.append(button('恢复收集',()=>update(draft,{action:'resume'}),{mainDraft:draft.id}));
       if(draft.execution&&!personal(draft))renderExecution(draft.execution,host);
     }
     const unassigned=byId('task-unassigned');unassigned.replaceChildren();
     if(page.unassigned_events.length){
-      unassigned.append(node('p','有 '+page.unassigned_events.length+' 条记录尚未分配任务。请选择收集中的任务后归入。'));
+      unassigned.append(node('p','有 '+page.unassigned_events.length+' 条记录尚未分配任务。请选择收集中或已暂停的任务后归入。'));
       for(const event of page.unassigned_events){const row=node('div',event.text||event.media.map(item=>item.name).join('、'));
-        if(!personal(draft)&&event.channel!=='weixin_personal'&&draft?.state==='collecting')row.append(button('归入当前任务',()=>update(draft,{action:'assign',event_ids:[event.id]})));unassigned.append(row);}
+        const sameSource=personal(draft)?event.channel==='weixin_personal'&&draft.events.some(item=>item.binding_id===event.binding_id):event.channel!=='weixin_personal';
+        if(sameSource&&(draft?.state==='collecting'||personal(draft)&&draft?.state==='paused'))row.append(button('归入当前任务',()=>update(draft,{action:'assign',event_ids:[event.id]}),{mainDraft:draft.id}));unassigned.append(row);}
     }
     controls();
   }
