@@ -18,9 +18,10 @@ _RESPONSE = {'ret', 'errcode', 'errmsg', 'msgs', 'get_updates_buf',
              'longpolling_timeout_ms', 'sync_buf'}
 _MESSAGE = {'message_id', 'from_user_id', 'to_user_id', 'client_id', 'session_id',
             'group_id', 'seq', 'create_time_ms', 'update_time_ms', 'delete_time_ms',
-            'message_type', 'message_state', 'item_list', 'context_token', 'run_id'}
+            'message_type', 'message_state', 'item_list', 'context_token', 'run_id',
+            'root_id', 'parent_id'}
 _ITEM = {'type', 'create_time_ms', 'update_time_ms', 'is_completed', 'msg_id',
-         'text_item', 'file_item', 'ref_msg'}
+         'text_item', 'file_item', 'ref_msg', 'button_item_list', 'at_bot_username_list'}
 _MIME = {'.pdf':'application/pdf',
          '.docx':'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}
 
@@ -34,6 +35,17 @@ def _keys(value, allowed, required=()):
         _fail()
     if value.keys() - allowed:
         _fail('NOT_SUPPORTED', 409)
+    return value
+
+
+def _item(value, required=()):
+    value = _keys(value, _ITEM, required)
+    for key in ('button_item_list', 'at_bot_username_list'):
+        if key in value:
+            if type(value[key]) is not list:
+                _fail()
+            if value[key]:
+                _fail('NOT_SUPPORTED', 409)
     return value
 
 
@@ -108,7 +120,7 @@ def _reference(item, scope):
         if key in reference:
             _string(reference[key])
     if 'message_item' in reference:
-        quoted = _keys(reference['message_item'], _ITEM)
+        quoted = _item(reference['message_item'])
         if 'msg_id' in quoted and _message_id(quoted['msg_id']) != identifier:
             _fail()
     return event_id(scope.bot_account_id, scope.sender_peer_id, identifier)
@@ -152,6 +164,9 @@ def _event(message, scope, settings):
         _fail('NOT_SUPPORTED', 409)
     _metadata(message, numbers=('seq', 'create_time_ms', 'update_time_ms', 'delete_time_ms'),
         strings=('client_id', 'session_id', 'context_token', 'run_id'))
+    for key in ('root_id', 'parent_id'):
+        if key in message:
+            _message_id(_integer(message[key]))
     if 'group_id' in message and _string(message['group_id']):
         _fail('NOT_SUPPORTED', 409)
     if 'delete_time_ms' in message and _integer(message['delete_time_ms']) != 0:
@@ -163,7 +178,7 @@ def _event(message, scope, settings):
         _fail('FILE_LIMIT', 413)
     texts, media, references = [], [], set()
     for ordinal, item in enumerate(items):
-        item = _keys(item, _ITEM, {'type'})
+        item = _item(item, {'type'})
         kind = _integer(item['type'])
         if kind not in (1, 4):
             _fail('NOT_SUPPORTED', 409)

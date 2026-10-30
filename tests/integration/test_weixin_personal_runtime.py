@@ -423,6 +423,78 @@ def test_mixed_poll_records_blocked_neighbors_and_context_is_not_stored(world):
     asyncio.run(scenario())
 
 
+@pytest.mark.parametrize('automatic',[False,True])
+def test_ordinary_message_shape_reaches_same_chat_once_without_reviving_blocked_history(world,monkeypatch,automatic):
+    from cn_contract import weixin_offline as decoder
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup_runtime(world,automatic=automatic)
+        epoch=runtime._epoch;database=world[0];cid=world[2].scope.conversation_id
+        def ordinary(number):
+            message=command(number,'销售接待：客户咨询独立虚构交货纠纷')
+            message.update(seq=number,client_id='fictional-client',session_id='fictional-session',
+                create_time_ms=0,update_time_ms=1,delete_time_ms=0,group_id='',
+                root_id=0,parent_id=18446744073709551615)
+            message['item_list'][0].update(create_time_ms=0,update_time_ms=1,is_completed=True,
+                msg_id=str(number),button_item_list=[],at_bot_username_list=[])
+            return message
+        old=ordinary(101);fresh=ordinary(102)
+        try:
+            # Recreate the old strict allowlist solely to seed an immutable historical refusal.
+            with monkeypatch.context() as historical:
+                historical.setattr(decoder,'_MESSAGE',decoder._MESSAGE-{'root_id','parent_id'})
+                assert not await runtime.ingest(epoch,packet(old,cursor='historical'))
+            with database.session() as db:
+                historical_poll=tuple(db.execute(text('SELECT * FROM weixin_poll_receipts')))
+                historical_descriptor=tuple(db.execute(text('SELECT * FROM weixin_inbox_descriptors')))
+                assert db.scalar(text('SELECT reason FROM weixin_inbox_descriptors'))=='message_unsupported'
+                old_id=db.scalar(text('SELECT id FROM weixin_inbox_descriptors'))
+            assert count(database,'task_inbox_events')==0
+            assert await runtime.ingest(epoch,packet(old,fresh,fresh,cursor='current'))
+            with database.session() as db:
+                rows=db.execute(text('''SELECT status,reason,prior_descriptor_id,payload_json
+                    FROM weixin_inbox_descriptors ORDER BY rowid''')).all()
+                assert [(row.status,row.reason) for row in rows]==[
+                    ('blocked','message_unsupported'),('blocked','previously_blocked'),
+                    ('accepted_pending_dispatch',None),('duplicate','replayed')]
+                assert rows[1].prior_descriptor_id==old_id and rows[1].payload_json is None
+                payload=d.TaskInboxEventInput.model_validate_json(rows[2].payload_json)
+                assert payload.text=='销售接待：客户咨询独立虚构交货纠纷'
+                assert payload.reply_to_event_id is None and payload.task_id is None
+                assert payload.start_new is False
+                draft=drafts.list_drafts(actor,cid,db).items[0]
+                assert not draft.synthetic and len(draft.events)==1
+                assert draft.events[0].event_id==payload.event_id
+            await runtime.advance(epoch)
+            assert len(provider.calls)==int(automatic)
+            if automatic:
+                assert provider.calls[0].basis.manifest.workflow=='sales'
+            assert not await runtime.ingest(epoch,packet(old,fresh,cursor='replayed'))
+            await runtime.advance(epoch)
+            assert len(provider.calls)==int(automatic)
+            assert count(database,'task_inbox_events')==count(database,'task_drafts')==1
+            assert count(database,'weixin_dispatch_receipts')==1
+            assert count(database,'assistant_model_outputs')==count(database,'weixin_personal_runs')==int(automatic)
+            with database.session() as db:
+                assert tuple(db.execute(text('SELECT * FROM weixin_poll_receipts ORDER BY rowid LIMIT 1')))==historical_poll
+                assert tuple(db.execute(text('SELECT * FROM weixin_inbox_descriptors ORDER BY rowid LIMIT 1')))==historical_descriptor
+                history=business.history(actor,cid,db)
+                assert len(history)==int(automatic)
+                if automatic:
+                    assert history[0].scope.conversation_id==cid
+                    assert db.scalar(text('SELECT business_run_id FROM weixin_personal_runs WHERE draft_id=:id'),
+                        {'id':str(draft.id)})==str(history[0].run_id)
+                from cn_contract.ops.backup import _file_references
+                _file_references(db)
+            assert not [r for r in wire.requests if r.url.path.endswith('/download')]
+            assert len([r for r in wire.requests if r.url.path.endswith('/sendmessage')])==1
+            if not automatic:
+                assert '材料和指令已收集' in next(r.content.decode() for r in wire.requests
+                    if r.url.path.endswith('/sendmessage'))
+        finally:
+            await close(runtime,manager)
+    asyncio.run(scenario())
+
+
 def test_late_material_waits_until_running_snapshot_finishes(world):
     async def scenario():
         runtime,wire,manager,provider,actor=await setup_runtime(world)

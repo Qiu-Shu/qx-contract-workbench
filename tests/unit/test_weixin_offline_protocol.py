@@ -140,6 +140,93 @@ def test_official_boolean_completed_item_and_typed_metadata_are_accepted(scope):
     assert result.batch.events[0].text == '已完成'
 
 
+def ordinary_message(identifier=18446744073709551615):
+    """Fictional values matching only the observed ordinary-message field shape."""
+    return message(identifier, seq=1, client_id='fictional-client', session_id='fictional-session',
+        create_time_ms=0, update_time_ms=1, delete_time_ms=0, group_id='',
+        context_token='FICTIONAL_CONTEXT', root_id=0, parent_id=18446744073709551615,
+        item_list=[{'type':1, 'text_item':{'text':'独立虚构普通消息'},
+            'create_time_ms':0, 'update_time_ms':1, 'is_completed':True, 'msg_id':str(identifier),
+            'button_item_list':[], 'at_bot_username_list':[]}])
+
+
+@pytest.mark.parametrize('reference', [None, '7'])
+def test_ordinary_message_metadata_keeps_explicit_reference_and_scope_authoritative(scope, reference):
+    adapter = adapter_module()
+    scope = d.WeixinOfflineScope(**scope)
+    value = ordinary_message()
+    if reference is not None:
+        value['item_list'][0]['ref_msg'] = {'svr_id':reference,
+            'message_item':{'type':1, 'msg_id':reference, 'text_item':{'text':'虚构引用'},
+                'button_item_list':[], 'at_bot_username_list':[]}}
+    event = plan(adapter, scope, [value]).batch.events[0]
+    assert event.event_id == adapter.event_id('bot-A', 'peer-A', value['message_id'])
+    assert event.text == '独立虚构普通消息'
+    assert event.reply_to_event_id == (adapter.event_id('bot-A', 'peer-A', reference)
+        if reference is not None else None)
+    assert event.task_id is None and event.start_new is False and event.media == ()
+
+
+@pytest.mark.parametrize('field', ['root_id', 'parent_id'])
+@pytest.mark.parametrize('value', [0, 9007199254740993, 18446744073709551615])
+def test_ordinary_message_uint64_metadata_is_lossless_but_not_task_data(scope, field, value):
+    adapter = adapter_module()
+    scope = d.WeixinOfflineScope(**scope)
+    original = ordinary_message()
+    changed = deepcopy(original)
+    changed[field] = value
+    result = plan(adapter, scope, [changed])
+    assert result.batch == plan(adapter, scope, [original]).batch
+    expected = hashlib.sha256(json.dumps(changed, ensure_ascii=False, sort_keys=True,
+        separators=(',', ':')).encode('utf-8')).hexdigest()
+    assert result.event_payload_hashes[result.batch.events[0].event_id] == expected
+
+
+@pytest.mark.parametrize('field', ['root_id', 'parent_id'])
+@pytest.mark.parametrize('value', [True, False, 0.0, 1.5, {}, [], None, '', '0', -1, 2**64])
+def test_ordinary_message_root_and_parent_require_exact_nonnegative_uint64_integers(scope, field, value):
+    adapter = adapter_module()
+    scope = d.WeixinOfflineScope(**scope)
+    incoming = ordinary_message()
+    incoming[field] = value
+    rejected(adapter, scope, wire([incoming]))
+
+
+@pytest.mark.parametrize('quoted', [False, True])
+@pytest.mark.parametrize('field', ['button_item_list', 'at_bot_username_list'])
+@pytest.mark.parametrize('value,code,status', [
+    (None, 'STATE_CONFLICT', 422), (False, 'STATE_CONFLICT', 422),
+    (0, 'STATE_CONFLICT', 422), ('', 'STATE_CONFLICT', 422), ({}, 'STATE_CONFLICT', 422),
+    (['fictional-control'], 'NOT_SUPPORTED', 409), ([{}], 'NOT_SUPPORTED', 409)])
+def test_ordinary_message_and_quoted_controls_remain_empty_only(scope, quoted, field, value, code, status):
+    adapter = adapter_module()
+    scope = d.WeixinOfflineScope(**scope)
+    incoming = ordinary_message()
+    item = incoming['item_list'][0]
+    if quoted:
+        item['ref_msg'] = {'svr_id':'7', 'message_item':{'type':1,
+            'text_item':{'text':'虚构引用'}, 'button_item_list':[], 'at_bot_username_list':[]}}
+        item = item['ref_msg']['message_item']
+    item[field] = value
+    rejected(adapter, scope, wire([incoming]), code, status)
+
+
+@pytest.mark.parametrize('location', ['message', 'item', 'quoted'])
+def test_ordinary_message_compatibility_keeps_other_unknown_keys_closed(scope, location):
+    adapter = adapter_module()
+    scope = d.WeixinOfflineScope(**scope)
+    incoming = ordinary_message()
+    target = incoming
+    if location != 'message':
+        target = incoming['item_list'][0]
+    if location == 'quoted':
+        target['ref_msg'] = {'svr_id':'7', 'message_item':{'type':1,
+            'text_item':{'text':'虚构引用'}, 'button_item_list':[], 'at_bot_username_list':[]}}
+        target = target['ref_msg']['message_item']
+    target['future_field'] = []
+    rejected(adapter, scope, wire([incoming]), 'NOT_SUPPORTED', 409)
+
+
 @pytest.mark.parametrize('completed,code,status', [(False,'NOT_SUPPORTED',409),
     (1,'STATE_CONFLICT',422), (0,'STATE_CONFLICT',422), ('true','STATE_CONFLICT',422)])
 def test_incomplete_or_nonboolean_item_completion_is_rejected(scope, completed, code, status):
