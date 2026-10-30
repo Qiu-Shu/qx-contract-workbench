@@ -2,6 +2,7 @@ import * as api from './assistant-api.mjs';
 import {createDraftController} from './assistant-state.mjs';
 import {createRenderer,errorText} from './assistant-render.mjs';
 import {bindComposer} from './assistant-composer.mjs';
+import {bindViewMode} from './assistant-view-mode.mjs';
 import {bindMaterials} from './assistant-materials.mjs';
 import {bindCitations} from './assistant-citations.mjs';
 import {bindProfile} from './assistant-profile.mjs';
@@ -149,6 +150,20 @@ outputs=bindOutputs({controller,api,readonly,onOpen:()=>{materials.close();citat
 followups=bindFollowupWorksheet({controller,api,readonly});
 evidence=bindEvidenceWorksheet({controller,api,readonly});
 worksheet=bindReceptionWorksheet({controller,api,readonly,onPrepared:()=>{clearTimeout(timer);byId('composer').focus();}});
+// Keep the toolbar and the native, stateful worksheet sections in sync.
+for(const [buttonId,panelId] of [['show-worksheet','worksheet-panel'],['show-evidence','evidence-panel'],['show-followups','followup-panel']]) {
+  const button=byId(buttonId),panel=byId(panelId);
+  panel.tabIndex=-1;
+  panel.addEventListener('toggle',()=>{
+    button.setAttribute('aria-expanded',String(panel.open));
+    if(panel.open)requestAnimationFrame(()=>{
+      if(!panel.open)return;
+      panel.scrollIntoView({block:'start',behavior:'instant'});
+      panel.focus({preventScroll:true});
+    });
+    else if(panel.contains(document.activeElement))button.focus();
+  });
+}
 tasks=bindTaskDrafts({controller,api,readonly,isBlocked:()=>weixinPending?.hasPending(),onActivityChange:()=>weixinPending?.updateControls()});
 const updateWeixinControls=()=>{weixin?.updateControls();weixinHistory?.updateControls();weixinPending?.updateControls();tasks?.updateControls();};
 weixin=bindWeixinAuthorization({controller,api,readonly,isBlocked:()=>weixinHistory?.hasPending()||weixinPending?.hasPending(),onActivityChange:updateWeixinControls});
@@ -286,9 +301,10 @@ window.addEventListener('beforeunload',event=>{
 });
 window.addEventListener('pagehide',()=>{
   closed=true;++listEpoch;clearTimeout(timer);clearTimeout(generationTimer);clearTimeout(pollTimer);
-  composer.dispose();materials.dispose();citations.dispose();profile.close();outputs.dispose();worksheet.dispose();evidence.dispose();followups.dispose();tasks.dispose();personalWeixin.dispose();weixin.dispose();weixinHistory.dispose();weixinPending.dispose();controller.close();
+  viewMode.dispose();composer.dispose();materials.dispose();citations.dispose();profile.close();outputs.dispose();worksheet.dispose();evidence.dispose();followups.dispose();tasks.dispose();personalWeixin.dispose();weixin.dispose();weixinHistory.dispose();weixinPending.dispose();controller.close();
 });
 
+const viewMode=bindViewMode({document,window});
 drawState(controller.state);
 await safely(async()=>{
   const identifier=document.body.dataset.conversationId;

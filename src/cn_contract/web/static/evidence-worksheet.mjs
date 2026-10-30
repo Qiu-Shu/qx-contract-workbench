@@ -5,7 +5,7 @@ const fixed=s=>JSON.stringify([s.id,s.view?.scope?.workspace_id,s.view?.scope?.s
 const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 export function bindEvidenceWorksheet({controller,api,document=globalThis.document,readonly=false,uuid=()=>crypto.randomUUID()}){
  const at=id=>document.getElementById(id),panel=at('evidence-panel');
- const node=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
+ const node=(tag,text,className)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(className)e.className=className;return e;};
  let identity='',epoch=0,sourceEpoch=0,detailEpoch=0,snapshot=null,rows=[],baseline='[]',busy=false,pending=null,history=false,editing=null,selectedSource=null,anchors=[],disposed=false;
  const note=text=>{at('evidence-notice').textContent=text;};
  const available=()=>!disposed&&controller.state.id&&controller.state.view&&controller.state.status!=='revoked';
@@ -49,17 +49,20 @@ export function bindEvidenceWorksheet({controller,api,document=globalThis.docume
   }
   if(!snapshot.materials.length)host.append(node('p','尚无材料。可先在下方“添加材料”保存原件，再读取DOCX或文字PDF；图片可人工摘录。'));
  }
- function button(text,action){const e=node('button',text);e.type='button';e.disabled=!writable();e.addEventListener('click',action);return e;}
+ function button(text,action,className){const e=node('button',text,'sheet-card-action '+className);e.type='button';e.disabled=!writable();e.addEventListener('click',action);return e;}
  function draw(){
   const host=at('evidence-rows');host.replaceChildren();
   const ordered=[...rows].sort((a,b)=>(a.event_date||'9999').localeCompare(b.event_date||'9999'));
   for(const row of ordered){const e=node('article');e.className='evidence-fact';
-   e.append(node('h3',`${categories[row.category]} · ${row.event_date||'日期待核'} · ${states[row.review_state]}`),node('p',row.content));
+   const heading=node('header',undefined,'sheet-card-heading');
+   heading.append(node('h3',categories[row.category],'sheet-card-title'),node('span',states[row.review_state],'sheet-status sheet-status--'+row.review_state));
+   const meta=node('div',undefined,'sheet-card-meta'),date=node('time',row.event_date||'日期待核','sheet-card-date');if(row.event_date)date.dateTime=row.event_date;meta.append(date);
+   e.append(heading,meta,node('p',row.content,'sheet-card-body'));
    const kind=row.source.kind==='statement'?'客户陈述':row.source.kind==='document'?'材料解析记载':'人工摘录（未自动识别）';
-   e.append(node('p',kind+(snapshot?.historical_ids?.includes(row.id)?' · 来源已移出或变更，请重新核对':'')));
-   if(row.note)e.append(node('p','核对备注/相反说法：'+row.note));
-   const source=node('button','回查这条依据');source.type='button';source.addEventListener('click',()=>void openSource(row));e.append(source);
-   if(!history){e.append(button('编辑这条',()=>edit(row)),button('移出当前版，保留历史',()=>{if(!writable())return;rows=rows.filter(x=>x.id!==row.id);if(editing===row.id)resetForm();draw();controls();}));}
+   e.append(node('p',kind+(snapshot?.historical_ids?.includes(row.id)?' · 来源已移出或变更，请重新核对':''),'sheet-card-source'));
+   if(row.note)e.append(node('p','核对备注/相反说法：'+row.note,'sheet-card-note'));
+   const source=node('button','回查这条依据','sheet-card-action sheet-card-action--source');source.type='button';source.addEventListener('click',()=>void openSource(row));e.append(source);
+   if(!history){e.append(button('编辑这条',()=>edit(row),'sheet-card-action--edit'),button('移出当前版，保留历史',()=>{if(!writable())return;rows=rows.filter(x=>x.id!==row.id);if(editing===row.id)resetForm();draw();controls();},'sheet-card-action--remove'));}
    host.append(e);
   }
   if(!rows.length)host.append(node('p','还没有登记事实。可先选择依据，再录入一条待核事实。'));
@@ -98,12 +101,14 @@ export function bindEvidenceWorksheet({controller,api,document=globalThis.docume
   if(!source||source.kind==='document'&&!source.anchor||source.kind==='manual_excerpt'&&(!source.location.trim()||!source.quote.trim())||!at('evidence-content').value.trim()){note('请先选定依据，并填写事实；人工摘录需要位置和原话。');return false;}
   const row={id:editing||uuid(),category:at('evidence-category').value||'agreement',content:at('evidence-content').value,event_date:at('evidence-date').value||null,review_state:at('evidence-review').value||'pending',note:at('evidence-note').value,source};
   if(!editing&&rows.length>=100){note('本片最多登记100条事实。');return false;}
-  rows=editing?rows.map(r=>r.id===editing?row:r):[...rows,row];resetForm();draw();controls();note('已加入当前编辑清单，点击保存事实底稿后才会写入本机。');return true;
+  rows=editing?rows.map(r=>r.id===editing?row:r):[...rows,row];resetForm();draw();controls();note('已加入当前编辑清单，点击保存事实底稿后才会写入本机。');
+  at('evidence-save').scrollIntoView?.({block:'center',behavior:'instant'});at('evidence-save').focus?.({preventScroll:true});return true;
  }
  function edit(row){if(!writable()||formDirty()){note('请先加入或取消正在编辑的事实。');return;}
   editing=row.id;selectedSource=structuredClone(row.source);at('evidence-source').value='retained';
   for(const [id,value]of Object.entries({content:row.content,date:row.event_date||'',review:row.review_state,category:row.category,note:row.note,'manual-location':row.source.location||'','manual-quote':row.source.kind==='manual_excerpt'?row.source.quote:''}))at('evidence-'+id).value=value;
   at('evidence-source-text').textContent=row.source.quote||row.source.anchor?.quote||'';at('evidence-add').textContent='更新这条事实（尚未保存）';controls();
+  at('evidence-content').scrollIntoView?.({block:'center',behavior:'instant'});at('evidence-content').focus?.({preventScroll:true});
  }
  async function openSource(row){if(!available())return false;const cid=controller.state.id,token=epoch,detail=++detailEpoch,host=at('evidence-source-detail'),ref=row.source;host.replaceChildren(node('p','正在核对依据…'));
   try{if(ref.kind==='document'){const p=await api.getParse(cid,ref.attachment_id,ref.parse_revision);if((!active(token,cid)||detail!==detailEpoch))return false;

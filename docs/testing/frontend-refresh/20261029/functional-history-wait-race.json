@@ -1,0 +1,68 @@
+{
+  "checks": [
+    "first-screen input and no page overflow at five window sizes",
+    "worksheet edits block navigation, save and survive reload; original demo notes restored",
+    "fact editor receives focus and cancel preserves the saved row"
+  ],
+  "geometry": [
+    {
+      "width": 1224,
+      "height": 785,
+      "composer": {
+        "x": 264,
+        "y": 395.484375,
+        "width": 920,
+        "height": 182
+      },
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "composer": {
+        "x": 336,
+        "y": 395.484375,
+        "width": 992,
+        "height": 182
+      },
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "height": 900,
+      "composer": {
+        "x": 88,
+        "y": 518.125,
+        "width": 656,
+        "height": 182
+      },
+      "overflow": false
+    },
+    {
+      "width": 640,
+      "height": 800,
+      "composer": {
+        "x": 16,
+        "y": 455.609375,
+        "width": 608,
+        "height": 182
+      },
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "composer": {
+        "x": 16,
+        "y": 495.609375,
+        "width": 358,
+        "height": 182
+      },
+      "overflow": false
+    }
+  ],
+  "page_errors": [],
+  "external_requests": [],
+  "pass": false,
+  "error": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /已催补/. Input:\n\n'收到待核 · 补充逐笔还款明细与对应凭证\\n' +\n  '\\n' +\n  '待补原因：客户仅称部分已还，缺少逐笔记录\\n' +\n  '\\n' +\n  '影响：影响还款事实与余额核对\\n' +\n  '\\n' +\n  '下一步：请客户按日期整理，并提交对应原始凭证\\n' +\n  '\\n' +\n  '期限：2026-11-02\\n' +\n  '\\n' +\n  '处理结果：已收到初步还款明细，等待核对对应原件。\\n' +\n  '\\n' +\n  '固定依据：1 条事实、0 份原件\\n' +\n  '\\n' +\n  '回查关联事实与原件编辑这条移出当前版，保留历史\\n' +\n  '待补 · 核对借条原件和形成经过\\n' +\n  '\\n' +\n  '待补原因：目前仅有客户陈述，需要核对原件\\n' +\n  '\\n' +\n  '影响：影响借款约定及当事人关系的判断\\n' +\n  '\\n' +\n  '下一步：收取原件，核对签名与形成时间\\n' +\n  '\\n' +\n  '期限：2026-11-02\\n' +\n  '\\n' +\n  '固定依据：1 条事实、0 份原件\\n' +\n  '\\n' +\n  '回查关联事实与原件编辑这条移出当前版，保留历史'\n"
+}

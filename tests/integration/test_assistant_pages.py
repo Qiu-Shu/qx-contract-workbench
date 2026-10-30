@@ -156,13 +156,27 @@ def test_library_availability_is_shell_metadata(native):
 def test_assistant_static_allowlist_is_exact(chat):
     client, _, _ = chat
     for name in ('assistant.css', 'assistant-api.mjs', 'assistant-state.mjs',
-                 'assistant-render.mjs', 'assistant-composer.mjs', 'assistant-generation.mjs', 'assistant.mjs'):
+                 'assistant-render.mjs', 'assistant-composer.mjs', 'assistant-generation.mjs',
+                 'assistant-view-mode.mjs', 'assistant.mjs'):
         response = client.get('/static/'+name)
         assert response.status_code == 200, name
         assert response.content, name
         assert response.headers['content-type'].startswith('text/css' if name.endswith('.css') else 'text/javascript')
     for name in ('assistant.html', 'assistant.py', 'assistant-extra.mjs', 'assistant.mjs/extra'):
         assert client.get('/static/'+name).status_code == 404
+
+
+def test_warm_workbench_image_is_served_as_exact_png_asset(chat):
+    client, _, _ = chat
+    name = 'workbench-warm-desk.png'
+    response = client.get('/static/'+name)
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'image/png'
+    assert response.content.startswith(b'\x89PNG\r\n\x1a\n')
+    assert response.content == (web.STATIC / name).read_bytes()
+    for unknown in ('workbench-warm-desk-extra.png', 'workbench-warm-desk.jpg',
+                    'workbench-warm-desk.png/extra'):
+        assert client.get('/static/'+unknown).status_code == 404
 
 
 def test_assistant_entry_serves_every_imported_module(chat):

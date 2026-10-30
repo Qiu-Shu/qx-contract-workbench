@@ -1,7 +1,7 @@
 import {renderResearch,researchStatusText} from './assistant-citations.mjs';
 import {savedCitations} from './assistant-context.mjs';
 export const errorText = error=>({
-  NETWORK_UNKNOWN:'连接中断，保存结果尚不确定。输入仍在此处，请点击“重试保存”核对。',
+  NETWORK_UNKNOWN:'连接中断，本次保存尚未确认。输入仍保留在当前页面，请点“重试保存”核对结果。',
   VERSION_CONFLICT:'资料已在另一处更新。请核对两份文字后选择要保留的版本。',
   AUTHORIZATION_REQUIRED:'登录已失效。请重新登录后读取已保存的记录。',
   CROSS_MATTER_DENIED:'当前无权访问此记录，已清除页面内容。',
@@ -234,7 +234,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       for(const message of messages) {
         let item=existing.get(message.id);
         if(!item) {
-          item=node('article',undefined,'message'); item.dataset.messageId=message.id;item.id='message-'+message.id;
+          item=node('article',undefined,'message'); item.dataset.messageId=message.id;item.dataset.role=message.role;item.id='message-'+message.id;
           item.setAttribute('tabindex','-1');
           item.append(node('p',message.role==='user'?'律师输入':'已保存的回复 · 需核对','message-meta'),
             node('p',message.content,'message-text'));
@@ -270,7 +270,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       }
       if(!messages.length)history.replaceChildren();
       document.body.classList.toggle('has-history',messages.length>0);
-      byId('home-title').textContent=state.view?.display_title || '今天需要处理什么？';
+      byId('home-title').textContent=state.view?.display_title || '把事情，一件件理清。';
       const kind=state.view?.scope.scope_kind;
       byId('scope-label').textContent=readonly?'恢复副本 · 只读核对':
         kind==='matter'?'当前范围：关联案件':kind==='intake'?'当前范围：本次接待':'当前范围：本次对话';
@@ -280,7 +280,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
         button.setAttribute('aria-pressed',String(button.dataset.skill===state.skill));
         button.disabled=readonly || state.loading || state.status==='revoked';
       });
-      const labels={idle:'尚未输入',loading:'正在读取记录…',saving:'正在保存…',saved:'草稿已保存到本机',
+      const labels={idle:'尚未输入 · 可以从一段咨询开始。',loading:'正在读取记录…',saving:'正在保存…',saved:'草稿已保存到本机',
         error:'尚未确认保存',conflict:'有两份文字需要核对',readonly:'恢复副本仅供核对',revoked:'访问已结束'};
       byId('save-status').textContent=state.dirty && state.status!=='error' && state.status!=='conflict' && state.status!=='saving'
         ?'有尚未保存的输入':labels[state.status] || '';
@@ -329,7 +329,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       byId('recover-generation').disabled=state.loading || revoked;
       byId('input-help').textContent=(nativeConfirmation?'Enter 打开发送确认，':'Enter 发送，')+'Shift+Enter 换行；'+
         (byId('send').disabled?'当前发送不可用。':local?'发送后查询本机资料。':'发送后生成内部待核草稿。');
-      input.placeholder=local?'输入关键词，例如：合成买卖纠纷':'例如：客户遇到了什么问题，需要我们帮忙处理什么……';
+      input.placeholder=local?'输入关键词，例如：合成买卖纠纷':'先记下客户的情况、你想核对的问题，或希望完成的工作…';
       byId('add-material').disabled=readonly || state.loading || ['saving','conflict','revoked'].includes(state.status);
       const switcher=byId('switch-model'),desktopModel=state.desktopModel;
       switcher.hidden=!desktopModel?.available;
@@ -352,7 +352,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
         if(item.scope.conversation_id===selected)button.setAttribute('aria-current','page');
         button.addEventListener('click',()=>onSelect(item.scope.conversation_id)); host.append(button);
       }
-      if(!host.children.length)host.append(node('p','输入后，这里会保留最近记录。','muted'));
+      if(!host.children.length)host.append(node('p','这里会保留你的事项记录，方便下次接着处理。','muted'));
       byId('more-conversations').hidden=!page.next_cursor;
     },
     selected(id) {
@@ -362,7 +362,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
       });
     },
     capability(catalog) {
-      byId('capability-details').textContent='“检索法律资料”支持本机关键词查询，结果保留来源与待核对状态。其他所选能力尚未接入执行；普通文字生成以当前对话的条件为准。';
+      byId('capability-details').textContent='可整理客户接待、案件材料、合同审查和庭审准备草稿；实际生成范围以当前模型设置和材料读取状态为准。“检索法律资料”使用已连接的本机资料库，结果保留来源与待核对状态。';
     },
   };
 }

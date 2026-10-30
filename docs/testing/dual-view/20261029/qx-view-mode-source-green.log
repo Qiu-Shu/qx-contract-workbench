@@ -1,0 +1,29 @@
+✔ default workbench keeps original tools and exposes an explicit pressed state (1.2315ms)
+✔ round-trip mode switches preserve draft, selection, history and every business node (0.629416ms)
+✔ invalid and repeated mode choices do not reset an open tools menu or touch the draft (0.530666ms)
+✔ entering chat preserves open native sheets and selects the last focused one (0.410084ms)
+✔ sheet selection and return preserve fields, open state and a pre-existing inert value (0.202083ms)
+✔ a delayed native toggle cannot reopen a layer the user already dismissed (0.250875ms)
+✔ entering chat is not overridden by delayed toggles from other already-open sheets (0.145875ms)
+✔ native sheet closure clears the chat overlay and restores tools focus (0.086916ms)
+✔ Escape closes the menu first, then the sheet, without business actions (0.589208ms)
+✔ outside pointer closes the menu and keeps the original summary available (0.259459ms)
+✔ source closure restores chat tools focus after the legacy close handler (0.170083ms)
+✔ native event checkpoints cannot lose focus after closing profile or outputs (0.13425ms)
+✔ native Escape waits for existing handlers and closes an unhandled source exactly once (0.150917ms)
+✔ material close and Escape retain the visible add-material return target (0.093625ms)
+✔ Escape gives a visible source drawer priority and does not close the sheet behind it (0.108625ms)
+✔ Escape lets source handlers run first and uses the original close button as fallback (0.117834ms)
+✔ more workflows returns to the original workbench panel with its draft preserved (0.101166ms)
+✔ reading positions are independent and first chat entry starts at the history tail (0.086333ms)
+✔ new content follows the tail only while the reader was already near the bottom (0.128125ms)
+✔ manual scroll-up cancels a queued tail follow before its animation frame runs (0.065375ms)
+✔ dispose removes UI listeners, cancels pending scrolling and restores prior inert state (0.499334ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47.558

@@ -19,7 +19,7 @@ const validItems=items=>Array.isArray(items)&&items.length<=100&&items.every(val
 
 export function bindFollowupWorksheet({controller,api,document=globalThis.document,readonly=false,uuid=()=>crypto.randomUUID()}){
  const at=id=>document.getElementById(id),el=name=>at('followup-'+name),panel=el('panel');
- const node=(tag,text)=>{const result=document.createElement(tag);if(text!==undefined)result.textContent=text;return result;};
+ const node=(tag,text,className)=>{const result=document.createElement(tag);if(text!==undefined)result.textContent=text;if(className)result.className=className;return result;};
  const option=(value,text)=>{const result=node('option',text);result.value=value;return result;};
  let identity='',contextIdentity='',epoch=0,detailEpoch=0,snapshot=null,items=[],baseline='[]',busy=false,pending=null,history=0,historicalItems=[],editing=null,linkedFacts=[],linkedMaterials=[],disposed=false,blocked=false,bindingConflict=false;
  const listeners=[];
@@ -75,7 +75,7 @@ export function bindFollowupWorksheet({controller,api,document=globalThis.docume
   for(const child of el('materials').children)child.selected=previousMaterials.includes(child.value);
  }
  function linkedLabel(){el('linked').textContent=`已固定关联 ${linkedFacts.length} 条事实${linkedFacts.length?'（版本 '+[...new Set(linkedFacts.map(ref=>ref.evidence_revision))].join('、')+'）':''}、${linkedMaterials.length} 份原件。${editing?'保留原引用；只有明确点击关联按钮才会替换。':'加入清单后才进入本次编辑。'}`;}
- function button(text,action,{write=true}={}){const result=node('button',text);result.type='button';result.disabled=write?!writable():!available();result.addEventListener('click',action);return result;}
+ function button(text,action,{write=true,className=''}={}){const result=node('button',text,'sheet-card-action '+className);result.type='button';result.disabled=write?!writable():!available();result.addEventListener('click',action);return result;}
  function draw(){
   const host=el('rows');host.replaceChildren();
   const attention=new Map((snapshot?.attention||[]).map(entry=>[entry.item_id,entry.reasons]));
@@ -83,12 +83,16 @@ export function bindFollowupWorksheet({controller,api,document=globalThis.docume
   const filter=el('filter').value||'todo';
   const visible=displayed.filter(item=>filter==='all'||filter==='todo'&&(!['completed','cancelled'].includes(item.status)||item.status==='completed'&&!history&&attention.has(item.id))||filter===item.status);
   for(const item of visible){
-   const entry=node('article');entry.className='followup-item';entry.append(node('h3',`${statuses[item.status]} · ${item.title}`));
-   for(const [label,value]of [['待补原因',item.reason],['影响',item.impact],['下一步',item.next_action],['期限',item.due_date||'待定'],['处理结果',item.result]])if(value)entry.append(node('p',label+'：'+value));
-   entry.append(node('p',`固定依据：${item.facts.length} 条事实、${item.materials.length} 份原件`));
-   if(!history&&attention.has(item.id))entry.append(node('p','需人工重新核对：'+attention.get(item.id).join('；')));
-   entry.append(button('回查关联事实与原件',()=>void openSources(item.id),{write:false}));
-   if(!history)entry.append(button('编辑这条',()=>editItem(item.id)),button('移出当前版，保留历史',()=>removeItem(item.id)));
+   const entry=node('article');entry.className='followup-item';
+   const heading=node('header',undefined,'sheet-card-heading');
+   heading.append(node('h3',item.title,'sheet-card-title'),node('span',statuses[item.status],'sheet-status sheet-status--'+item.status));
+   const meta=node('div',undefined,'sheet-card-meta'),date=node('time','期限：'+(item.due_date||'待定'),'sheet-card-date');if(item.due_date)date.dateTime=item.due_date;meta.append(date);
+   const body=node('div',undefined,'sheet-card-body sheet-card-fields');
+   for(const [label,value]of [['待补原因',item.reason],['影响',item.impact],['下一步',item.next_action],['处理结果',item.result]])if(value){const field=node('p',undefined,'sheet-card-field');field.append(node('span',label+'：','sheet-field-label'),node('span',value,'sheet-field-value'));body.append(field);}
+   entry.append(heading,meta,body,node('p',`固定依据：${item.facts.length} 条事实、${item.materials.length} 份原件`,'sheet-card-source'));
+   if(!history&&attention.has(item.id))entry.append(node('p','需人工重新核对：'+attention.get(item.id).join('；'),'sheet-card-note'));
+   entry.append(button('回查关联事实与原件',()=>void openSources(item.id),{write:false,className:'sheet-card-action--source'}));
+   if(!history)entry.append(button('编辑这条',()=>editItem(item.id),{className:'sheet-card-action--edit'}),button('移出当前版，保留历史',()=>removeItem(item.id),{className:'sheet-card-action--remove'}));
    host.append(entry);
   }
   if(!visible.length)host.append(node('p',displayed.length?'当前筛选没有事项。':'还没有登记跟进事项。可先关联已知事实，再写明尚未收到的材料和下一步。'));
@@ -122,7 +126,8 @@ export function bindFollowupWorksheet({controller,api,document=globalThis.docume
   const item={id:editing||uuid(),title:el('title').value,reason:el('reason').value,impact:el('impact').value,next_action:el('next-action').value,due_date:el('due-date').value||null,status:el('status').value,result:el('result').value,facts:clone(linkedFacts),materials:clone(linkedMaterials)};
   if(!validItem(item)){note('请填写标题、待补原因和影响，明确关联事实或原件，并检查文字长度和日期；已处理或不再跟进必须填写处理结果。');return false;}
   if(!editing&&items.length>=100){note('当前版最多登记100项。');return false;}
-  items=editing?items.map(current=>current.id===editing?item:current):[...items,item];resetForm();draw();controls();note('已加入当前编辑清单；点击保存跟进清单后才写入本机。');return true;
+  items=editing?items.map(current=>current.id===editing?item:current):[...items,item];resetForm();draw();controls();note('已加入当前编辑清单；点击保存跟进清单后才写入本机。');
+  el('save').scrollIntoView?.({block:'center',behavior:'instant'});el('save').focus?.({preventScroll:true});return true;
  }
  function editItem(id){
   if(!writable()||formDirty()){if(writable())note('请先加入或取消正在编辑的事项。');return false;}
@@ -131,7 +136,8 @@ export function bindFollowupWorksheet({controller,api,document=globalThis.docume
   for(const name of Object.keys(fields))el(name).value=item[name==='next-action'?'next_action':name];
   el('due-date').value=item.due_date||'';el('status').value=item.status;linkedLabel();
   el('link-selected').textContent='关联当前所选事实和材料（替换原引用）';
-  el('add').textContent='更新这条事项（尚未保存）';controls();return true;
+  el('add').textContent='更新这条事项（尚未保存）';controls();
+  el('title').scrollIntoView?.({block:'center',behavior:'instant'});el('title').focus?.({preventScroll:true});return true;
  }
  function removeItem(id){if(!writable())return false;const found=items.some(item=>item.id===id);if(!found)return false;items=items.filter(item=>item.id!==id);if(editing===id)resetForm();draw();controls();note('已移出本地当前版，保存后生效；先前保存版本仍可回看。');return true;}
  function cancelEdit(){if(!writable())return false;resetForm();return true;}

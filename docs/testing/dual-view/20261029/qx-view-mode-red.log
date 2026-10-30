@@ -1,0 +1,320 @@
+✖ default workbench keeps original tools and exposes an explicit pressed state (1.239708ms)
+✖ round-trip mode switches preserve draft, selection, history and every business node (0.121ms)
+✖ invalid and repeated mode choices do not reset an open tools menu or touch the draft (0.073791ms)
+✖ entering chat preserves open native sheets and selects the last focused one (0.114542ms)
+✖ sheet selection and return preserve fields, open state and a pre-existing inert value (0.067375ms)
+✖ native sheet closure clears the chat overlay and restores tools focus (0.117125ms)
+✖ Escape closes the menu first, then the sheet, without business actions (0.054084ms)
+✖ outside pointer closes the menu and keeps the original summary available (0.088667ms)
+✖ source closure restores chat tools focus after the legacy close handler (0.368166ms)
+✖ Escape gives a visible source drawer priority and does not close the sheet behind it (0.245292ms)
+✖ reading positions are independent and first chat entry starts at the history tail (0.12275ms)
+✖ new content follows the tail only while the reader was already near the bottom (0.058792ms)
+✖ dispose removes UI listeners, cancels pending scrolling and restores prior inert state (0.051208ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 0
+ℹ fail 13
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43.529084
+
+✖ failing tests:
+
+test at scripts/test_assistant_view_mode.mjs:81:1
+✖ default workbench keeps original tools and exposes an explicit pressed state (1.239708ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:82:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:297:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:86:1
+✖ round-trip mode switches preserve draft, selection, history and every business node (0.121ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:87:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:95:1
+✖ invalid and repeated mode choices do not reset an open tools menu or touch the draft (0.073791ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:96:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:99:1
+✖ entering chat preserves open native sheets and selects the last focused one (0.114542ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:100:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:107:1
+✖ sheet selection and return preserve fields, open state and a pre-existing inert value (0.067375ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:108:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:114:1
+✖ native sheet closure clears the chat overlay and restores tools focus (0.117125ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:115:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:118:1
+✖ Escape closes the menu first, then the sheet, without business actions (0.054084ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:119:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:123:1
+✖ outside pointer closes the menu and keeps the original summary available (0.088667ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:124:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:127:1
+✖ source closure restores chat tools focus after the legacy close handler (0.368166ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:128:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:131:1
+✖ Escape gives a visible source drawer priority and does not close the sheet behind it (0.245292ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:132:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:135:1
+✖ reading positions are independent and first chat entry starts at the history tail (0.12275ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:136:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:141:1
+✖ new content follows the tail only while the reader was already near the bottom (0.058792ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:142:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }
+
+test at scripts/test_assistant_view_mode.mjs:146:1
+✖ dispose removes UI listeners, cancels pending scrolling and restores prior inert state (0.051208ms)
+  AssertionError [ERR_ASSERTION]: view-mode binder must exist
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at fixture (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:48:10)
+      at TestContext.<anonymous> (file:///Users/molin/Project/qx-contract-workbench/scripts/test_assistant_view_mode.mjs:147:11)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual'
+  }

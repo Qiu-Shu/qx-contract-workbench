@@ -1,0 +1,26 @@
+✔ default workbench keeps original tools and exposes an explicit pressed state (1.036584ms)
+✔ round-trip mode switches preserve draft, selection, history and every business node (0.580291ms)
+✔ invalid and repeated mode choices do not reset an open tools menu or touch the draft (0.163375ms)
+✔ entering chat preserves open native sheets and selects the last focused one (0.764709ms)
+✔ sheet selection and return preserve fields, open state and a pre-existing inert value (0.184542ms)
+✔ a delayed native toggle cannot reopen a layer the user already dismissed (0.236584ms)
+✔ entering chat is not overridden by delayed toggles from other already-open sheets (0.134167ms)
+✔ native sheet closure clears the chat overlay and restores tools focus (0.077625ms)
+✔ Escape closes the menu first, then the sheet, without business actions (0.873ms)
+✔ outside pointer closes the menu and keeps the original summary available (0.287333ms)
+✔ source closure restores chat tools focus after the legacy close handler (0.177917ms)
+✔ Escape gives a visible source drawer priority and does not close the sheet behind it (0.094ms)
+✔ Escape does not invent a close action for source drawers that keep their own close behavior (0.089917ms)
+✔ more workflows returns to the original workbench panel with its draft preserved (0.1825ms)
+✔ reading positions are independent and first chat entry starts at the history tail (0.258875ms)
+✔ new content follows the tail only while the reader was already near the bottom (0.402125ms)
+✔ manual scroll-up cancels a queued tail follow before its animation frame runs (0.111167ms)
+✔ dispose removes UI listeners, cancels pending scrolling and restores prior inert state (0.15775ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 45.814625
