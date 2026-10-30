@@ -1,0 +1,59 @@
+{
+  "frozen": true,
+  "ssl_resource_present": true,
+  "checks": [
+    {
+      "check": "installed_weixin_httpx_initialize",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "installed_model_httpx2_initialize",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "real_weixin_run_reaches_qr_boundary",
+      "ok": true,
+      "state": "waiting_scan"
+    },
+    {
+      "check": "real_model_transport_reaches_loopback",
+      "ok": true,
+      "state": "received",
+      "requests": 1
+    },
+    {
+      "check": "frozen_decoder_accepts_observed_text_shape",
+      "ok": false,
+      "exception": "ServiceError",
+      "frames": [
+        {
+          "file": "probe_entry.py",
+          "line": 10,
+          "function": "capture"
+        },
+        {
+          "file": "probe_entry.py",
+          "line": 63,
+          "function": "live_shape_decode"
+        },
+        {
+          "file": "cn_contract\\weixin_offline.py",
+          "line": 145,
+          "function": "_event"
+        },
+        {
+          "file": "cn_contract\\weixin_offline.py",
+          "line": 36,
+          "function": "_keys"
+        },
+        {
+          "file": "cn_contract\\weixin_offline.py",
+          "line": 29,
+          "function": "_fail"
+        }
+      ]
+    }
+  ]
+}

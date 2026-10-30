@@ -1,0 +1,39 @@
+{
+  "synthetic_only": true,
+  "one_new_request": true,
+  "mode": "packaged-0.5.3-real-deepseek-profile",
+  "status": "FAIL",
+  "started": "2026-10-30T05:49:57.020Z",
+  "posts": 1,
+  "state": "received",
+  "receipt": {
+    "state": "received",
+    "provider_request_id": "8e94c5fe-fea7-47f9-a319-2bd584569c82",
+    "usage": {
+      "prompt_tokens": 465,
+      "completion_tokens": 45,
+      "total_tokens": 510,
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 465
+    },
+    "cost_status": "estimated",
+    "estimated_cost_usd": "0.0001935",
+    "unit": "USD",
+    "error_code": null
+  },
+  "has_output": true,
+  "input_format": "profile-text-v1",
+  "ui_has_response": false,
+  "error_type": "AssertionError",
+  "error_message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+  "temporary_credential_removed": true,
+  "finished": "2026-10-30T05:50:11.885Z",
+  "initial_ui_check_note": "Initial assertion read the pending UI before refresh; later replay initially selected the body data attribute, then corrected to conversation-item and passed without any resend.",
+  "replay": {
+    "status": "PASS",
+    "mode": "saved-result-only-no-resend",
+    "posts": 0,
+    "ui_has_response": true,
+    "version": "0.5.3"
+  }
+}

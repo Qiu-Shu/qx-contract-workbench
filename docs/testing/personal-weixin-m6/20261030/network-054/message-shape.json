@@ -1,0 +1,80 @@
+{
+  "challenge_matches": true,
+  "shape": {
+    "seq": {
+      "type": "int"
+    },
+    "message_id": {
+      "type": "int"
+    },
+    "from_user_id": {
+      "type": "str"
+    },
+    "to_user_id": {
+      "type": "str"
+    },
+    "client_id": {
+      "type": "str"
+    },
+    "create_time_ms": {
+      "type": "int"
+    },
+    "update_time_ms": {
+      "type": "int"
+    },
+    "delete_time_ms": {
+      "type": "int"
+    },
+    "session_id": {
+      "type": "str"
+    },
+    "group_id": {
+      "type": "str"
+    },
+    "message_type": {
+      "type": "int"
+    },
+    "message_state": {
+      "type": "int"
+    },
+    "item_list": [
+      {
+        "type": {
+          "type": "int"
+        },
+        "create_time_ms": {
+          "type": "int"
+        },
+        "update_time_ms": {
+          "type": "int"
+        },
+        "is_completed": {
+          "type": "bool"
+        },
+        "msg_id": {
+          "type": "str"
+        },
+        "button_item_list": [],
+        "at_bot_username_list": [],
+        "text_item": {
+          "text": {
+            "type": "str"
+          }
+        }
+      }
+    ],
+    "context_token": {
+      "type": "str"
+    },
+    "root_id": {
+      "type": "int"
+    },
+    "parent_id": {
+      "type": "int"
+    }
+  },
+  "message_type": 1,
+  "message_state": 2,
+  "transport": "PASS",
+  "translation": "NOT_SUPPORTED"
+}
