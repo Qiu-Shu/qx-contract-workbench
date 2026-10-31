@@ -40,6 +40,18 @@ test('assistant model switch toggles the two known models and persists only on s
   assert.deepEqual(f.persisted, ['deepseek-v4-pro', 'deepseek-flash']);
 });
 
+test('assistant model switch forwards an explicit off and stops the runtime if saving fails',async()=>{
+  const handlers=new Map(),calls=[];
+  const runtime={status:()=>({ok:true,runtime:{state:'configured',model:'deepseek-flash'}}),
+    async configure(model,guard,automatic){calls.push([model,automatic]);
+      return {ok:true,runtime:{state:'configured',model}};},
+    async disable(){calls.push('disable');return {ok:true};}};
+  registerAssistantModelBridge({ipcMain:{handle:(name,fn)=>handlers.set(name,fn)},runtime,
+    isAllowed:()=>true,persist:(model,automatic)=>{calls.push(['save',model,automatic]);return false;}});
+  assert.deepEqual(await handlers.get('desktop:assistant-model-switch')({}),{ok:false,code:'BLOCKED_LIVE'});
+  assert.deepEqual(calls,[['deepseek-v4-pro',false],['save','deepseek-v4-pro',false],'disable']);
+});
+
 test('assistant model switch refuses strangers, the unconfigured and failed configures', async () => {
   const f = fixture();
   assert.deepEqual(await f.handlers.get('desktop:assistant-model-switch')('denied'), { ok: false });

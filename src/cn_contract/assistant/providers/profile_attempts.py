@@ -13,7 +13,7 @@ from ...ops.storage import require_active
 from ...security import ServiceError
 from .. import profile_preparation_service as inputs, profile_store, service
 from . import attempts, profile_preparation
-from .policy import add_costs, encoded, receipt, require_policy, reservation, sha
+from .policy import add_costs, encoded, receipt, require_policy, reservation, sha, budget_exceeded
 
 
 def _check(runtime, name, *args):
@@ -55,7 +55,7 @@ def enqueue(actor, cid, request, db, runtime, *, project_intake=False):
     require_policy(config, policy, actor, basis.expected_scope, profile_preparation.basis_digest(basis))
     used, calls = attempts._budget(policy, db)
     reserved = reservation(config)
-    if add_costs((used, reserved)) > policy.max_total_usd:
+    if budget_exceeded(add_costs((used, reserved)), policy.max_total_usd):
         raise ServiceError('BUDGET_EXCEEDED', 403)
     if calls >= policy.max_calls:
         raise ServiceError('CALL_LIMIT_EXCEEDED', 403)

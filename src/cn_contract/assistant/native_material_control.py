@@ -6,7 +6,7 @@ from .. import domain as d
 from ..security import authenticate, ServiceError
 from ..ops.storage import require_active
 from . import service, material_preparation as inputs
-from .providers.policy import sha, encoded, reservation
+from .providers.policy import sha, encoded, reservation, budget_exceeded
 
 
 def authorize(control, value):
@@ -32,7 +32,7 @@ def authorize(control, value):
                 raise ServiceError('VERSION_CONFLICT', 409)
             return {'status':'existing'}
     computed = inputs.preview(actor, inputs.selection_for(basis), control._database, control._config)
-    if computed != basis or not control._config.enabled or value.max_total_usd < reservation(control._config):
+    if computed != basis or not control._config.enabled or budget_exceeded(reservation(control._config), value.max_total_usd):
         raise ServiceError('BLOCKED_LIVE', 403)
     with control._database.session() as db:
         # Authenticate and rebuild again after all filesystem reads.

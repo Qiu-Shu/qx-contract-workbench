@@ -28,11 +28,12 @@ function channel(t) {
 
 test('a valid authorize_context command is framed and answered with the fixed statuses', async t => {
   const {control,writes,fatal}=channel(t);
-  const pending=control.request('authorize_context',payload());
+  const pending=control.request('authorize_context',{...payload(),max_total_usd:null});
   assert.equal(writes.length,1);
   const frame=JSON.parse(writes[0]);
   assert.equal(frame.operation,'authorize_context');
   assert.equal(frame.payload.max_rounds,1);
+  assert.equal(frame.payload.max_total_usd,null);
   control.feed(Buffer.from(JSON.stringify({event:'model-control-result',protocol,nonce,sequence:1,
     ok:true,status:'authorized'})+'\n'));
   assert.deepEqual(await pending,{ok:true,status:'authorized'});

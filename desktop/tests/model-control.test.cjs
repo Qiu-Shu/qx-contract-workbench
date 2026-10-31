@@ -26,6 +26,19 @@ function channel(t, options={}) {
   return {control,writes,fatal,announcements};
 }
 
+test('main null budget passes the native bridge while missing budget remains rejected',async t=>{
+  const f=channel(t);f.control.feed(frame(ready));
+  const payload={...authorization,max_total_usd:null};
+  const pending=f.control.request('authorize',payload);
+  assert.equal(f.writes.length,1);
+  assert.equal(JSON.parse(f.writes[0]).payload.max_total_usd,null);
+  f.control.feed(frame(answer({status:'authorized'})));
+  assert.equal((await pending).ok,true);
+  delete payload.max_total_usd;
+  assert.equal((await f.control.request('authorize',payload)).ok,false);
+  assert.equal(f.writes.length,1);
+});
+
 test('trusted backend configures and disables through one owned child without exposing protocol credentials', async t => {
   const backend = new Backend(process.execPath,[fixture]);
   t.after(() => backend.stop());

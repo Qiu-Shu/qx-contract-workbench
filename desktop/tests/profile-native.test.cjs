@@ -50,7 +50,7 @@ const authorize=lease=>{
 };
 
 test('private profile request uses its explicit five-field operation and trusted ACK',async t=>{
-  const f=channel(t),value=payload(),pending=f.control.request('authorize_profile',value);
+  const f=channel(t),value={...payload(),max_total_usd:null},pending=f.control.request('authorize_profile',value);
   assert.equal(f.writes.length,1,'valid profile authorization must reach the existing private pipe');
   assert.equal(f.writes[0].operation,'authorize_profile');
   assert.deepEqual(f.writes[0].payload,value);
@@ -123,7 +123,7 @@ test('profile lease retains the trusted status through callback and outer author
       return {ok:true,status:inner.status};
     });
     assert.deepEqual(result,{ok:true,status});
-    assert.deepEqual(f.sent,[payload()]);assert.deepEqual(f.calls,['profile']);
+    assert.deepEqual(f.sent,[{...payload(),max_total_usd:null}]);assert.deepEqual(f.calls,['profile']);
   }
 });
 
@@ -168,7 +168,7 @@ test('profile lease is single use, holds the configuration lock, and snapshots c
     assert.equal((await lease.authorize(value)).ok,false);return call;
   });
   await tick();assert.equal((await f.runtime.configure('deepseek-flash')).code,'STATE_CONFLICT');
-  assert.deepEqual(f.sent,[payload()]);gate.resolve({ok:true,status:'authorized'});
+  assert.deepEqual(f.sent,[{...payload(),max_total_usd:null}]);gate.resolve({ok:true,status:'authorized'});
   assert.deepEqual(await pending,{ok:true,status:'authorized'});
   assert.equal((await lease.authorizeProfile(value)).ok,false);assert.deepEqual(f.calls,['profile']);
 });

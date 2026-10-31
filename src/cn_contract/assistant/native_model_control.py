@@ -17,7 +17,7 @@ from .providers.attempts import _input as _stored_input
 from .providers.context_codec import build_basis
 from .providers.rounds_codec import build_basis_rounds
 from .providers.main import DeepSeekProvider
-from .providers.policy import encoded, prepare, reservation, sha, validated
+from .providers.policy import encoded, prepare, reservation, sha, validated, budget_exceeded
 
 
 def _fixed_errors(method):
@@ -128,7 +128,7 @@ class NativeModelControl:
                 self._registry.validate_authorization(actor, basis.expected_scope, previous[1])
                 return {'status': 'authorized'}
             config = self._config
-            if not config.enabled or value.max_total_usd < reservation(config):
+            if not config.enabled or budget_exceeded(reservation(config), value.max_total_usd):
                 raise ServiceError('BLOCKED_LIVE', 403)
             prepare(d.MainRequest(run_id=UUID(int=0), message_id=UUID(int=0), scope=basis.expected_scope,
                 content=conversation['draft_input'], source_sha256=basis.content_sha256), config)
@@ -212,7 +212,7 @@ class NativeModelControl:
                 self._registry.validate_authorization(actor, basis.expected_scope, previous[1])
                 return {'status': 'authorized'}
             config = self._config
-            if not config.enabled or value.max_total_usd < reservation(config):
+            if not config.enabled or budget_exceeded(reservation(config), value.max_total_usd):
                 raise ServiceError('BLOCKED_LIVE', 403)
             # The exact approved bytes are rebuilt from persisted citations and the
             # current draft; a client-presented basis only names what to rebuild.

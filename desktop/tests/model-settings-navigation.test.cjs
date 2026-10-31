@@ -7,7 +7,7 @@ const vm=require('node:vm');
 const {EventEmitter}=require('node:events');
 const desktop=path.resolve(__dirname,'..');
 
-async function fixture(t,{recovered=false,model,automatic=false,policyChange}={}) {
+async function fixture(t,{recovered=false,model,automatic,policyChange}={}) {
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'qx-model-navigation-'));
   t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
   const workspace=recovered?'recovered/00000000-0000-4000-8000-000000000001':'main';
@@ -15,6 +15,7 @@ async function fixture(t,{recovered=false,model,automatic=false,policyChange}={}
   const initial={...(recovered?{workspace}:{}),...(model?{model}:{})};
   if(automatic)initial.model_auto_analysis={model,workspace:path.join(root,'workspaces',workspace),
     scope:'selected-task-materials',max_calls:1,max_total_usd:'0.024576'};
+  if(automatic===false)initial.model_auto_analysis=false;
   if(policyChange)Object.assign(initial.model_auto_analysis,policyChange);
   if(Object.keys(initial).length)fs.writeFileSync(path.join(root,'desktop-settings.json'),JSON.stringify(initial));
   const handlers=new Map(),states=[],backends=[];let ready,win,menu,approvalOptions,personalOptions;
@@ -51,6 +52,26 @@ async function fixture(t,{recovered=false,model,automatic=false,policyChange}={}
     event:()=>({sender:win.webContents,senderFrame:win.webContents.mainFrame}),
     menu:async label=>{const item=menu[0].submenu.find(x=>x.label===label);assert.ok(item);await item.click();}};
 }
+
+test('automatic analysis defaults on and explicit false survives restart and model switches',async t=>{
+  const f=await fixture(t,{model:'deepseek-flash'});
+  await f.menu('主模型设置…');
+  assert.equal((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.automatic_analysis,true);
+  const disabled=await f.handlers.get('desktop:model-configure')(f.event(),'deepseek-flash',false);
+  assert.notEqual(disabled.runtime.automatic_analysis,true);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')).model_auto_analysis,false);
+  await f.menu('重新打开工作台');await f.menu('主模型设置…');
+  assert.notEqual((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.automatic_analysis,true);
+  await f.handlers.get('desktop:resume')(f.event());
+  await f.win.loadURL(f.win.url.replace('/login','/assistant/00000000-0000-4000-8000-000000000003'));
+  const switched=await f.handlers.get('desktop:assistant-model-switch')(f.event());
+  assert.notEqual(switched.runtime.automatic_analysis,true);
+  await f.menu('重新打开工作台');await f.menu('主模型设置…');
+  assert.notEqual((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.automatic_analysis,true);
+  const restored=await fixture(t,{model:'deepseek-flash',automatic:false});
+  await restored.menu('主模型设置…');
+  assert.notEqual((await restored.handlers.get('desktop:model-runtime-status')(restored.event())).runtime.automatic_analysis,true);
+});
 
 test('personal Weixin captures only the actual main-frame CID and fences history navigation and restore',async t=>{
   const f=await fixture(t),capture=f.personalOptions.captureContext;
@@ -89,21 +110,21 @@ test('explicit automatic scope persists and restores only for the selected nativ
   assert.equal(result.runtime.automatic_analysis,true);
   const saved=JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8'));
   assert.deepEqual(saved.model_auto_analysis,{model:'deepseek-flash',workspace:path.join(f.root,'workspaces','main'),
-    scope:'selected-task-materials',max_calls:1,max_total_usd:'0.024576'});
+    scope:'selected-task-materials',max_calls:1,max_total_usd:null});
   await f.menu('重新打开工作台');await f.menu('主模型设置…');
   assert.equal((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.automatic_analysis,true);
   assert.equal(Object.hasOwn(f.backends.at(-1).startParams,'model_auto_analysis'),false);
 });
 
-test('credential changes and disable remove persisted automatic consent before restarting',async t=>{
+test('credential changes preserve automatic preference and disable records a persistent false',async t=>{
   for(const action of ['save','disable']){
     const f=await fixture(t,{model:'deepseek-flash',automatic:true});await f.menu('主模型设置…');
     assert.equal((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.automatic_analysis,true);
     await f.handlers.get('desktop:model-'+action)(f.event(),'synthetic-replacement-secret');
     const saved=JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8'));
-    assert.equal(Object.hasOwn(saved,'model_auto_analysis'),false);
+    assert.equal(action==='save'?saved.model_auto_analysis.max_total_usd:saved.model_auto_analysis,action==='save'?null:false);
     await f.menu('重新打开工作台');await f.menu('主模型设置…');
-    assert.notEqual((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.automatic_analysis,true);
+    assert.equal((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.automatic_analysis===true,action==='save');
   }
 });
 
@@ -117,12 +138,12 @@ test('startup rejects altered automatic scope without losing the saved model cho
   }
 });
 
-test('assistant model switch discards automatic scope and credential write stops on settings failure',async t=>{
+test('assistant model switch preserves automatic preference and credential write stops on settings failure',async t=>{
   const f=await fixture(t,{model:'deepseek-flash',automatic:true});
   await f.win.loadURL('http://127.0.0.1:18001/assistant/00000000-0000-4000-8000-000000000003');
   const switched=await f.handlers.get('desktop:assistant-model-switch')(f.event());
-  assert.equal(switched.runtime.model,'deepseek-v4-pro');assert.notEqual(switched.runtime.automatic_analysis,true);
-  assert.equal(Object.hasOwn(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')),'model_auto_analysis'),false);
+  assert.equal(switched.runtime.model,'deepseek-v4-pro');assert.equal(switched.runtime.automatic_analysis,true);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')).model_auto_analysis.max_total_usd,null);
   await f.menu('主模型设置…');
   fs.mkdirSync(path.join(f.root,'desktop-settings.json.tmp'));
   const failed=await f.handlers.get('desktop:model-save')(f.event(),'synthetic-replacement-secret');
@@ -249,7 +270,7 @@ test('assistant page reads and switches the configured model while other pages a
   const url='http://127.0.0.1:18001/assistant/00000000-0000-4000-8000-000000000003';
   await f.win.loadURL(url);
   assert.deepEqual(await f.handlers.get('desktop:assistant-model-status')(f.event()),
-    {ok:true,runtime:{state:'configured',model:'deepseek-flash'}});
+    {ok:true,runtime:{state:'configured',model:'deepseek-flash',automatic_analysis:true}});
   const switched=await f.handlers.get('desktop:assistant-model-switch')(f.event());
   assert.equal(switched.ok,true);assert.equal(switched.runtime.model,'deepseek-v4-pro');
   assert.equal(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')).model,'deepseek-v4-pro');

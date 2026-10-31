@@ -60,13 +60,13 @@ def selection_for(w, workflow='case'):
         expected_composer_revision=view.composer_revision, parent_business_run_id=parent.run_id)
 
 
-def grant(w, selection, provider):
+def grant(w, selection, provider, budget='1'):
     database, actor, _, _ = w
     basis = material_preparation.preview(actor, selection, database, provider.config)
     registry = MainModelRegistry(); registry.configure(provider)
     policy = d.MainModelPolicy(policy_id=uuid4(), workspace_id=selection.expected_scope.workspace_id,
         actor_id=actor.user_id, config_sha256=sha(encoded(provider.config)), allowed_content_sha256s=(basis.manifest_sha256,),
-        max_total_usd='1', max_calls=1, expires_at=datetime.now(timezone.utc)+timedelta(minutes=5))
+        max_total_usd=budget, max_calls=1, expires_at=datetime.now(timezone.utc)+timedelta(minutes=5))
     registry.grant(policy, actor.session_id, basis=basis)
     return registry, registry.resolve(actor, selection.expected_scope), basis
 
@@ -78,15 +78,16 @@ def response(basis, citations=None):
         'usage':{'prompt_tokens':30,'completion_tokens':12,'total_tokens':42}})
 
 
+@pytest.mark.parametrize('budget', ['1', None])
 @pytest.mark.parametrize('workflow',['sales','case','contract','court'])
-def test_all_four_workflows_send_exact_selected_materials_once_and_validate_archive(material_world, workflow):
+def test_all_four_workflows_send_exact_selected_materials_once_and_validate_archive(material_world, workflow, budget):
     w = material_world; database, actor, cid, _ = w
     selection = selection_for(w, workflow)
     basis = material_preparation.preview(actor, selection, database, config())
     assert len(basis.manifest.sources) == 3
     with server(response(basis)) as (url, received, _):
         async def scenario():
-            registry, lease, approved = grant(w, selection, DeepSeekProvider.for_synthetic_loopback(config(), lambda:KEY, url))
+            registry, lease, approved = grant(w, selection, DeepSeekProvider.for_synthetic_loopback(config(), lambda:KEY, url), budget)
             with database.session() as db:
                 first = material_attempts.enqueue(actor, selection, approved, db, lease)
             result = await execute_attempt(actor, first.id, database, lease)
@@ -126,12 +127,13 @@ def test_concurrent_material_execution_claims_and_sends_only_once(material_world
         assert len(received)==1
 
 
-def test_material_output_qxbak_roundtrip_is_read_only_and_never_resends(material_world, tmp_path):
+@pytest.mark.parametrize('budget', ['1', None])
+def test_material_output_qxbak_roundtrip_is_read_only_and_never_resends(material_world, tmp_path, budget):
     w=material_world; database,actor,_,_=w; selection=selection_for(w)
     basis=material_preparation.preview(actor,selection,database,config())
     with server(response(basis)) as (url,received,_):
         async def scenario():
-            _,lease,approved=grant(w,selection,DeepSeekProvider.for_synthetic_loopback(config(),lambda:KEY,url))
+            _,lease,approved=grant(w,selection,DeepSeekProvider.for_synthetic_loopback(config(),lambda:KEY,url),budget)
             with database.session() as db:
                 first=material_attempts.enqueue(actor,selection,approved,db,lease)
             return await execute_attempt(actor,first.id,database,lease)
@@ -175,7 +177,8 @@ def test_preview_is_readonly_and_overlimit_does_not_truncate(material_world):
         assert db.scalar(text('SELECT COUNT(*) FROM assistant_model_attempts')) == 0
 
 
-def test_native_material_consent_is_independent_from_local_policy_and_bound_to_current_selection(material_world):
+@pytest.mark.parametrize('budget', ['1', None])
+def test_native_material_consent_is_independent_from_local_policy_and_bound_to_current_selection(material_world, budget):
     w=material_world; database, actor, cid, token=w; selection=selection_for(w)
     async def scenario():
         registry=MainModelRegistry()
@@ -183,7 +186,7 @@ def test_native_material_consent_is_independent_from_local_policy_and_bound_to_c
         configured=control.configure(d.NativeModelConfigure(config=config(),secret=KEY))
         basis=material_preparation.preview(actor, selection, database, config())
         payload=d.NativeMaterialAuthorization(session_token=token,expected_config_version=configured['config_version'],
-            basis=basis,max_total_usd='1',valid_for_seconds=120)
+            basis=basis,max_total_usd=budget,valid_for_seconds=120)
         assert control.authorize_material(payload)=={'status':'authorized'}
         with database.session() as db:
             policy=db.scalar(text('SELECT policy_json FROM assistant_attachments LIMIT 1'))

@@ -2912,7 +2912,7 @@ class NativeModelAuthorization(DomainModel):
     session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
     expected_config_version: UUID
     basis: MainSendApproval
-    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
+    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)] | None
     valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
 
 
@@ -2999,7 +2999,7 @@ class MainModelPolicy(DomainModel):
     actor_id: UUID
     config_sha256: SHA256
     allowed_content_sha256s: Annotated[tuple[SHA256, ...], Field(min_length=1, max_length=256)]
-    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
+    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)] | None
     max_calls: Annotated[int, Field(strict=True, ge=1, le=1000)]
     expires_at: UTCDatetime
 
@@ -3848,7 +3848,7 @@ class NativeContextAuthorization(DomainModel):
     session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
     expected_config_version: UUID
     basis: MainContextSendBasis
-    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
+    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)] | None
     valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
     # Explicit bounded-rounds grant shape; the default keeps single-round bytes.
     max_rounds: Annotated[int, Field(strict=True, ge=1, le=4)] = 1
@@ -4364,7 +4364,7 @@ class NativeProfileAuthorization(DomainModel):
     session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
     expected_config_version: UUID
     basis: MainProfileSendBasis
-    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
+    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)] | None
     valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
 
 
@@ -4496,7 +4496,7 @@ class TaskDraftManifest(DomainModel):
 
 class PersonalWeixinAutomaticPolicy(DomainModel):
     expected_config_version: UUID
-    max_total_usd: Annotated[ExactDecimal, Field(gt=0, le=100)]
+    max_total_usd: Annotated[ExactDecimal, Field(gt=0, le=100)] | None
 
 
 class NativePersonalWeixinStart(DomainModel):
@@ -5531,7 +5531,7 @@ class NativeMaterialAuthorization(DomainModel):
     session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
     expected_config_version: UUID
     basis: MainMaterialSendBasis
-    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)]
+    max_total_usd: Annotated[MainUSD, Field(gt=0, le=1000000)] | None
     valid_for_seconds: Annotated[int, Field(strict=True, ge=1, le=900)]
 
 

@@ -63,11 +63,11 @@ test('trusted model selection configures only the fixed catalog and never grants
   assert.equal(f.payload.config.max_input_bytes,262144);
 });
 
-test('automatic material policy requires explicit configuration and rejects widened persisted scope',async()=>{
+test('automatic material policy has unlimited cost and rejects widened persisted scope',async()=>{
   const {automaticAnalysisPolicy,validAutomaticAnalysis}=require('../model-session.cjs');
   const policy=automaticAnalysisPolicy('deepseek-flash','synthetic-workspace');
   assert.deepEqual(policy,{model:'deepseek-flash',workspace:'synthetic-workspace',scope:'selected-task-materials',
-    max_calls:1,max_total_usd:'0.0835584'});
+    max_calls:1,max_total_usd:null});
   assert.equal(validAutomaticAnalysis(policy,'deepseek-flash','synthetic-workspace'),true);
   for(const change of [{max_calls:2},{max_total_usd:'999'},{scope:'all-history'},{workspace:'another'},{model:'deepseek-v4-pro'},{extra:true}])
     assert.equal(validAutomaticAnalysis({...policy,...change},'deepseek-flash','synthetic-workspace'),false);

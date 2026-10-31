@@ -56,7 +56,7 @@ function registerModelSettings({ipcMain,store,runtime,isAllowed,isCurrent,captur
   ipcMain.handle(`desktop:${prefix}-save`,(event,secret)=>run(event,'save',secret));
   ipcMain.handle(`desktop:${prefix}-remove`,event=>run(event,'remove'));
   ipcMain.handle(`desktop:${prefix}-runtime-status`,event=>run(event,'status',undefined,true));
-  ipcMain.handle(`desktop:${prefix}-configure`,(event,model,automaticAnalysis=false)=>run(event,'configure',model,true,automaticAnalysis));
+  ipcMain.handle(`desktop:${prefix}-configure`,(event,model,automaticAnalysis=kind==='main')=>run(event,'configure',model,true,automaticAnalysis));
   ipcMain.handle(`desktop:${prefix}-disable`,event=>run(event,'disable',undefined,true));
   return {wait:()=>Promise.allSettled([pending,store.drain?.()])};
 }

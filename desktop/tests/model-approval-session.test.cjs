@@ -21,25 +21,25 @@ async function fixture(model='deepseek-flash') {
   await runtime.configure(model);calls.length=0;
   return {runtime,backend,calls,get authorized(){return authorized;},replace(value){current=value;}};
 }
-test('trusted authorization binds the private config version and exact bounded cost',async()=>{
+test('trusted authorization binds the private config version and explicit unlimited cost',async()=>{
   const f=await fixture();let details;
   const result=await f.runtime.withAuthorization(f.backend,()=>true,async lease=>{
     details={model:lease.model,max_total_usd:lease.max_total_usd};
     return lease.authorize({session_token:TOKEN,basis});
   });
   assert.deepEqual(result,{ok:true});
-  assert.deepEqual(details,{model:'deepseek-flash',max_total_usd:'0.0835584'});
+  assert.deepEqual(details,{model:'deepseek-flash',max_total_usd:null});
   assert.equal(f.authorized.expected_config_version,VERSION);
   assert.equal(f.authorized.valid_for_seconds,120);
-  assert.equal(f.authorized.max_total_usd,'0.0835584');
+  assert.equal(f.authorized.max_total_usd,null);
   assert.equal(f.authorized.session_token===TOKEN,true);
   assert.deepEqual(f.calls,['authorize']);
 });
 
-test('the pro model uses an exact eight-place reservation without floating-point rounding',async()=>{
+test('the pro model also uses explicit unlimited authorization',async()=>{
   const f=await fixture('deepseek-v4-pro');
   await f.runtime.withAuthorization(f.backend,()=>true,lease=>lease.authorize({session_token:TOKEN,basis}));
-  assert.equal(f.authorized.max_total_usd,'0.36225024');
+  assert.equal(f.authorized.max_total_usd,null);
 });
 
 test('the longer Pro timeout still uses one lease and cancellation revokes without a second call',async()=>{

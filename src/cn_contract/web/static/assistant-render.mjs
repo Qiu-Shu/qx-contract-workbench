@@ -342,7 +342,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
           ['saving','conflict','revoked'].includes(state.status);
         switcher.textContent=desktopModel.busy===true?'正在切换模型…':
           desktopModel.model==='deepseek-v4-pro'?'模型：DeepSeek V4 Pro':
-          desktopModel.model==='deepseek-flash'?'模型：DeepSeek Flash':'切换模型';
+          desktopModel.model==='deepseek-flash'?'模型：DeepSeek V4.1 Flash':'切换模型';
       }
       drawContextPanel(state,readonly);
     },

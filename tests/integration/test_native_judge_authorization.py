@@ -358,7 +358,7 @@ def test_lightweight_tombstones_do_not_retain_retired_provider_secret_or_draft(n
 
 
 @pytest.mark.parametrize('field,value', [
-    ('max_total_usd', 'NaN'), ('max_total_usd', 'Infinity'), ('max_total_usd', 0.5),
+    ('max_total_usd', 'NaN'), ('max_total_usd', 'Infinity'), ('max_total_usd', 0.5), ('max_total_usd', None),
     ('max_total_usd', '0'), ('max_total_usd', '0.0000000000001'),
     ('valid_for_seconds', 0), ('valid_for_seconds', 901), ('valid_for_seconds', True),
     ('expected_config_version', 'not-a-uuid'), ('unexpected', SECRET),

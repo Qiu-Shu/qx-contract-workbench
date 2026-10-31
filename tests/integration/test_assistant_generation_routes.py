@@ -49,10 +49,12 @@ def signin(client, username='lawyer'):
 
 
 def test_authorized_unicode_text_over_model_wire_limit_returns_fixed_error(world, tmp_path):
-    from cn_contract.assistant.providers.policy import sha
+    from cn_contract.assistant.providers.policy import encoded, sha
     database, _, _, _, runtime = world
+    runtime.provider.config = runtime.provider.config.model_copy(update={'max_input_bytes': 65536})
     content = '🦊' * 20000
-    runtime.policy = runtime.policy.model_copy(update={'allowed_content_sha256s':(sha(content),)})
+    runtime.policy = runtime.policy.model_copy(update={'allowed_content_sha256s':(sha(content),),
+        'config_sha256': sha(encoded(runtime.provider.config))})
     with boot(world,tmp_path) as http:
         save_draft(http,content)
         assert http.client.get(http.url+'/generation-capability').json()['state']=='unsupported'
@@ -62,6 +64,22 @@ def test_authorized_unicode_text_over_model_wire_limit_returns_fixed_error(world
         assert http.client.get(http.url).json()['draft_input']==content
         assert count(database)==count(database,'assistant_messages')==0
         assert runtime.provider.calls==[]
+
+
+def test_unlimited_generation_capability_is_ready_and_enqueues_once(world, tmp_path):
+    runtime = world[-1]
+    runtime.policy = runtime.policy.model_copy(update={'max_total_usd': None})
+    with boot(world, tmp_path) as http:
+        save_draft(http)
+        response = http.client.get(http.url+'/generation-capability')
+        assert response.status_code == 200, response.text
+        assert response.json()['state'] == 'ready'
+        sent = http.client.post(http.url+'/generations', headers=http.headers, json=http.body)
+        assert sent.status_code == 202, sent.text
+        completed = wait_attempt(http, sent.json()['id'])
+        assert completed['state'] == 'received'
+        assert http.client.post(http.url+'/generations', headers=http.headers, json=http.body).json() == completed
+        assert len(runtime.provider.calls) == 1
 
 
 def save_draft(http, content=None):

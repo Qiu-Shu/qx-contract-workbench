@@ -13,7 +13,7 @@ from ...security import ServiceError
 from .. import service
 from ..attachment_records import items
 from . import context_codec, rounds_codec
-from .policy import encoded, sha, prepare, require_policy, reservation, receipt, add_costs, validated
+from .policy import encoded, sha, prepare, require_policy, reservation, receipt, add_costs, validated, budget_exceeded
 
 
 def _model(model, raw):
@@ -193,7 +193,7 @@ def enqueue_generation(actor, conversation_id, request, db, runtime):
         raise ServiceError('BLOCKED_LIVE', 403)
     used, calls = _budget(policy, db)
     reserved = reservation(config)
-    if add_costs((used,reserved)) > policy.max_total_usd:
+    if budget_exceeded(add_costs((used,reserved)), policy.max_total_usd):
         raise ServiceError('BUDGET_EXCEEDED', 403)
     if calls >= policy.max_calls:
         raise ServiceError('CALL_LIMIT_EXCEEDED', 403)
@@ -259,7 +259,7 @@ def enqueue_context(actor, conversation_id, request, db, runtime):
         raise ServiceError('BLOCKED_LIVE', 403)
     used, calls = _budget(policy, db)
     reserved = reservation(config)
-    if add_costs((used,reserved)) > policy.max_total_usd:
+    if budget_exceeded(add_costs((used,reserved)), policy.max_total_usd):
         raise ServiceError('BUDGET_EXCEEDED', 403)
     if calls >= policy.max_calls:
         raise ServiceError('CALL_LIMIT_EXCEEDED', 403)
@@ -362,7 +362,7 @@ def claim(actor, identifier, db, runtime):
         prepared, config = _current(actor, row, db, runtime)
         policy = _model(d.MainModelPolicy, row['policy_json'])
         used, calls = _budget(policy, db)
-        if used > policy.max_total_usd:
+        if budget_exceeded(used, policy.max_total_usd):
             raise ServiceError('BUDGET_EXCEEDED', 403)
         if calls > policy.max_calls:
             raise ServiceError('CALL_LIMIT_EXCEEDED', 403)
@@ -564,7 +564,7 @@ def dispatch_round(actor, run_id, round_no, db, runtime):
     # (revoke/expiry/session change) through the existing failed_before_send seam.
     used, calls = _budget(policy, db)
     reserved = reservation(config)
-    if add_costs((used, reserved)) > policy.max_total_usd:
+    if budget_exceeded(add_costs((used, reserved)), policy.max_total_usd):
         raise ServiceError('BUDGET_EXCEEDED', 403)
     if calls >= policy.max_calls:
         return None

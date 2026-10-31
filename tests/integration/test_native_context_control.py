@@ -57,12 +57,14 @@ def configure(n):
         'expected_config_version': result['config_version']}
 
 
-def test_native_context_authorization_executes_one_exact_loopback_send(native_context):
+@pytest.mark.parametrize('budget', ['1', None])
+def test_native_context_authorization_executes_one_exact_loopback_send(native_context, budget):
     n = native_context
     async def scenario():
         with server(raw(envelope(SimpleNamespace(manifest=n.manifest)))) as (url, received, _):
             n.endpoint.append(url)
             payload = configure(n)
+            payload['max_total_usd'] = budget
             assert n.control.authorize_context(payload) == {'status': 'authorized'}
             lease = n.registry.resolve(n.actor, n.scope)
             assert lease.snapshot()[1].max_calls == 1

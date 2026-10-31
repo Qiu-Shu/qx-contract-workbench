@@ -7,7 +7,7 @@ const { Backend } = require('./backend.cjs');
 const { Maintenance } = require('./maintenance.cjs');
 const { createModelCredentialStore } = require('./model-credentials.cjs');
 const { registerModelSettings } = require('./model-settings.cjs');
-const { createModelSession, automaticAnalysisPolicy, validAutomaticAnalysis } = require('./model-session.cjs');
+const { createModelSession, automaticAnalysisPolicy, validAutomaticAnalysis, automaticAnalysisEnabled } = require('./model-session.cjs');
 const { registerModelApproval } = require('./model-approval.cjs');
 const { registerPersonalWeixin } = require('./personal-weixin.cjs');
 const { createModelApprovalWindow } = require('./model-approval-window.cjs');
@@ -40,7 +40,7 @@ function isSetup(event) {
 }
 function saveSettings(next) {
   if((next.workspace||'main')!==(settings.workspace||'main')){
-    next={...next};delete next.model_auto_analysis;
+    next={...next,model_auto_analysis:next.model_auto_analysis===false?false:undefined};
   }
   const temp = settingsPath+'.tmp';
   for (const file of [settingsPath,temp]) {
@@ -101,10 +101,10 @@ async function startBackend(credentials = {}) {
     await win.loadURL(origin+'/login');
     if(activeBackend?.instance!==owned)return {ok:false};
     setState({mode:'ready'});
-    // Restore only the owner's explicit scope for this model and workspace.
+    // Missing legacy preference uses the default; an explicit false survives restarts.
     if (mainModelSession) await autoConfigureModel({settings,runtime:{configure:model=>
       mainModelSession.configure(model,()=>!stopping&&activeBackend?.instance===owned,
-        validAutomaticAnalysis(settings.model_auto_analysis,model,workspacePath()))}});
+        automaticAnalysisEnabled(settings.model_auto_analysis,model,workspacePath()))}});
     return {ok:true};
   } catch {
     if (backend) await backend.stop();
@@ -207,8 +207,9 @@ else {
         if (Object.keys(saved).some(k=>!['library_root','workspace','model','model_auto_analysis'].includes(k)) || (saved.library_root && !path.isAbsolute(saved.library_root))
             || (saved.model!==undefined && !['deepseek-flash','deepseek-v4-pro'].includes(saved.model))
             || (saved.workspace!==undefined && (typeof saved.workspace!=='string'||!/^main$|^recovered\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(saved.workspace)))) throw new Error();
-        if(!validAutomaticAnalysis(saved.model_auto_analysis,saved.model,path.join(dataParent,'workspaces',saved.workspace||'main')))
-          delete saved.model_auto_analysis;
+        if(saved.model_auto_analysis!==undefined &&
+            !validAutomaticAnalysis(saved.model_auto_analysis,saved.model,path.join(dataParent,'workspaces',saved.workspace||'main')))
+          saved.model_auto_analysis=false;
         settings = saved;
       } catch { state = {mode:'error',message:'资料库设置无法读取。请保留资料目录并联系维护人员。'}; }
     }
@@ -256,16 +257,16 @@ else {
       onFailure:async owned=>{if(!stopping&&backend===owned)await showError(owned);}};
     const modelSession=createModelSession({store,...sessionOptions,getWorkspace:workspacePath});
     mainModelSession=modelSession;
-    const persistModel=(model,automatic=false)=>{
+    const persistModel=(model,automatic=automaticAnalysisEnabled(settings.model_auto_analysis,settings.model,workspacePath()))=>{
       const next={...settings};delete next.model_auto_analysis;
       if(model)next.model=model;else delete next.model;
-      if(automatic)next.model_auto_analysis=automaticAnalysisPolicy(model,workspacePath());
+      next.model_auto_analysis=automatic?automaticAnalysisPolicy(model,workspacePath()):false;
       try{saveSettings(next);return true;}catch{return false;}
     };
     const settingsFailure=async guard=>({...await modelSession.disable(guard),ok:false,code:'CREDENTIAL_STORAGE_FAILED'});
     const settingsRuntime=Object.freeze({...modelSession,
-      configure:async(model,guard,automatic=false)=>{
-        if(!persistModel(settings.model))return settingsFailure(guard);
+      configure:async(model,guard,automatic=true)=>{
+        if(!persistModel(settings.model,false))return settingsFailure(guard);
         const result=await modelSession.configure(model,guard,automatic);
         if(result?.ok===true&&result.runtime?.state==='configured'&&!persistModel(result.runtime.model,automatic))
           return settingsFailure(guard);
@@ -276,7 +277,7 @@ else {
         return modelSession.beforeCredentialChange(guard);
       },
       disable:async guard=>{
-        if(!persistModel(null))return settingsFailure(guard);
+        if(!persistModel(null,false))return settingsFailure(guard);
         return modelSession.disable(guard);
       }});
     const judgeStore=createModelCredentialStore({dataParent,safeStorage,platform:process.platform,provider:'typesafe'});

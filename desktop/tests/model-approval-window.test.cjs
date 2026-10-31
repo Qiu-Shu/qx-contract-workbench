@@ -109,6 +109,18 @@ test('approval default cancel focus preserves the initial top viewport',async()=
   assert.doesNotMatch(f.html,/\bautofocus\b/,'native autofocus must not race the controlled default focus');
 });
 
+test('legacy approval validators display null Main budget without admitting a null Jev budget',async()=>{
+  const f=fixture(),unlimited={...details,max_total_usd:null};
+  const pending=f.api.confirm({parent:f.parent,details:unlimited,guard:()=>true});await tick();
+  const win=f.windows[0];assert.ok(win);
+  assert.equal(f.handlers.get('desktop:approval-state')(f.event(win)).max_total_usd,null);
+  f.handlers.get('desktop:approval-decision')(f.event(win),false);await pending;
+  const rendered=page(async()=>unlimited);await tick();
+  assert.match(rendered.at('approval-budget').textContent,/不设费用上限/);
+  assert.equal(rendered.at('approval-confirm').disabled,false);
+  assert.equal(await f.api.confirm({parent:f.parent,details:{...unlimited,judge:{available:true,max_total_usd:null}},guard:()=>true}),false);
+});
+
 test('approval page renders full untrusted text as text and defaults focus to cancel',async()=>{
   const content='<img src=x onerror=alert(1)>\n'+'合成原文。'.repeat(4000);
   const f=page(async()=>({...details,content}));await tick();

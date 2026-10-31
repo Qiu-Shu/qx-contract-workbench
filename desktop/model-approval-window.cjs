@@ -10,7 +10,7 @@ function approvalDetails(value) {
   if(value?.kind==='material_business'){
     if(Object.keys(value).length!==6 || !validMaterialBasis(value.basis) || value.content!==value.basis.manifest.question ||
         !['deepseek-flash','deepseek-v4-pro'].includes(value.model) || value.recipient!=='DeepSeek（api.deepseek.com）' ||
-        !budget(value.max_total_usd))return null;
+        !(value.max_total_usd===null||budget(value.max_total_usd)))return null;
     return structuredClone(value);
   }
   if(value?.kind==='profile_draft'){
@@ -18,7 +18,7 @@ function approvalDetails(value) {
         !['kind','content','basis','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
         typeof value.content!=='string'||!value.content.trim()||Buffer.byteLength(value.content,'utf8')>65536||
         !['deepseek-flash','deepseek-v4-pro'].includes(value.model)||value.recipient!=='DeepSeek（api.deepseek.com）'||
-        !budget(value.max_total_usd))return null;
+        !(value.max_total_usd===null||budget(value.max_total_usd)))return null;
     const basis=canonicalProfileBasis(value.basis);
     if(!basis)return null;
     return {kind:'profile_draft',content:value.content,basis,model:value.model,
@@ -29,7 +29,7 @@ function approvalDetails(value) {
         !['kind','content','sources','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
         typeof value.content!=='string'||!value.content.trim()||Buffer.byteLength(value.content,'utf8')>65536||
         !['deepseek-flash','deepseek-v4-pro'].includes(value.model)||value.recipient!=='DeepSeek（api.deepseek.com）'||
-        !budget(value.max_total_usd)||!Array.isArray(value.sources)||!value.sources.length||value.sources.length>8)return null;
+        !(value.max_total_usd===null||budget(value.max_total_usd))||!Array.isArray(value.sources)||!value.sources.length||value.sources.length>8)return null;
     const sources=[];
     for(const source of value.sources){
       if(!source||typeof source!=='object'||Array.isArray(source)||Object.keys(source).length!==5||
@@ -51,7 +51,7 @@ function approvalDetails(value) {
       !['content','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
       typeof value.content!=='string'||!value.content.trim()||Buffer.byteLength(value.content,'utf8')>65536||
       !['deepseek-flash','deepseek-v4-pro'].includes(value.model)||value.recipient!=='DeepSeek（api.deepseek.com）'||
-      !budget(value.max_total_usd))return null;
+      !(value.max_total_usd===null||budget(value.max_total_usd)))return null;
   const snapshot={content:value.content,model:value.model,max_total_usd:value.max_total_usd,recipient:value.recipient};
   if(Object.hasOwn(value,'judge')){
     const judge=value.judge;

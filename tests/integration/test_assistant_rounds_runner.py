@@ -169,7 +169,8 @@ def integrity_ok(database):
         model_integrity.validate_model_records(db)
 
 
-def test_bounded_two_round_run_completes_with_persisted_chain(rounds_world):
+@pytest.mark.parametrize('budget', ['1', None])
+def test_bounded_two_round_run_completes_with_persisted_chain(rounds_world, budget):
     n = rounds_world
     n.providers = []
 
@@ -177,7 +178,7 @@ def test_bounded_two_round_run_completes_with_persisted_chain(rounds_world):
         with rounds_server(default_script(n)) as (url, received):
             n.providers.append(DeepSeekProvider.for_synthetic_loopback(n.config, lambda: SECRET, url))
             registry = MainModelRegistry()
-            lease, attempt = drive(n, registry, 2)
+            lease, attempt = drive(n, registry, 2, max_total_usd=budget)
             final = await execute_context_run(n.actor, attempt.id, n.database, lease,
                                               LegalLibraryAdapter(n.library_root))
             assert final.state == 'received' and final.output is not None
@@ -467,7 +468,8 @@ def test_budget_exhaustion_between_rounds_stops_bounded(rounds_world):
     n = rounds_world
     n.providers = []
     # Round 1 reports cap-sized usage; the granted budget covers one round only.
-    full_usage = {'prompt_tokens': 65536, 'completion_tokens': 4096, 'total_tokens': 69632}
+    full_usage = {'prompt_tokens': n.config.max_input_bytes, 'completion_tokens': n.config.max_output_tokens,
+        'total_tokens': n.config.max_input_bytes+n.config.max_output_tokens}
 
     def answer(body):
         if len(body['messages']) == 2:
@@ -478,7 +480,8 @@ def test_budget_exhaustion_between_rounds_stops_bounded(rounds_world):
         with rounds_server(answer) as (url, received):
             n.providers.append(DeepSeekProvider.for_synthetic_loopback(n.config, lambda: SECRET, url))
             registry = MainModelRegistry()
-            lease, attempt = drive(n, registry, 2, max_total_usd='0.03')
+            from cn_contract.assistant.providers.policy import reservation
+            lease, attempt = drive(n, registry, 2, max_total_usd=reservation(n.config))
             await execute_context_run(n.actor, attempt.id, n.database, lease,
                                       LegalLibraryAdapter(n.library_root))
             assert len(received) == 1

@@ -70,10 +70,12 @@ def enqueue(n, lease, request=None):
             request or n.request, db, lease)
 
 
-def test_private_authorization_is_single_intent_and_new_draft_does_not_invalidate_sent_request(native):
+@pytest.mark.parametrize('budget', ['1', None])
+def test_private_authorization_is_single_intent_and_new_draft_does_not_invalidate_sent_request(native, budget):
     n = native
     async def scenario():
         payload = configure(n)
+        payload['max_total_usd'] = budget
         assert n.control.authorize(payload) == {'status': 'authorized'}
         lease = n.registry.resolve(n.actor, n.draft.scope)
         original_policy = lease.snapshot()[1]

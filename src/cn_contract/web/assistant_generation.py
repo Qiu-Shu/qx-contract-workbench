@@ -12,7 +12,7 @@ from ..assistant import service
 from ..assistant.attachment_records import items
 from ..assistant.providers import attempts
 from ..assistant.providers.history import read_history
-from ..assistant.providers.policy import MainModelRuntime, add_costs, prepare, require_policy, reservation, sha
+from ..assistant.providers.policy import MainModelRuntime, add_costs, prepare, require_policy, reservation, sha, budget_exceeded
 from ..assistant.providers.registry import MainModelRegistry, resolve_runtime
 from ..assistant.providers.judge_policy import JudgeRuntime
 from ..ops.storage import quarantined, require_active
@@ -60,7 +60,7 @@ def _capability(actor, conversation, db, runtime, tasks):
         used,calls=attempts._budget(policy,db)
     except ServiceError:return result('unapproved')
     except ValueError:return result('unsupported')
-    if add_costs((used,reservation(config)))>policy.max_total_usd or calls>=policy.max_calls:
+    if budget_exceeded(add_costs((used,reservation(config))),policy.max_total_usd) or calls>=policy.max_calls:
         return result('budget_exhausted')
     return result('ready')
 

@@ -3,6 +3,7 @@ const assert=require('node:assert/strict');
 const http=require('node:http');
 const {createModelSession}=require('../model-session.cjs');
 const {registerModelApproval}=require('../model-approval.cjs');
+const {ModelControl}=require('../model-control.cjs');
 
 const ID='11111111-2222-4333-8444-555555555555';
 const REQUEST='aaaaaaaa-2222-4333-8444-555555555555';
@@ -27,6 +28,20 @@ function basisFor(input){
     manifest_sha256:'d'.repeat(64),system_sha256:'e'.repeat(64),config_sha256:'f'.repeat(64),
     wire_sha256:'0'.repeat(64),wire_bytes:512};
 }
+
+test('material authorization accepts explicit null through the native control validator',async t=>{
+  const writes=[],nonce='a'.repeat(32),protocol='qx-model-control-v1';
+  const control=new ModelControl({nonce,write:line=>writes.push(JSON.parse(line)),onReady(){},onFatal(){}});
+  t.after(()=>control.close());
+  control.feed(Buffer.from(JSON.stringify({event:'ready',port:19022,nonce,control_protocol:protocol})+'\n'));
+  const basis=basisFor({request_id:REQUEST,expected_scope:scope,expected_composer_revision:3});
+  const pending=control.request('authorize_material',{session_token:TOKEN,expected_config_version:ID,
+    basis,max_total_usd:null,valid_for_seconds:120});
+  assert.equal(writes.length,1);assert.equal(writes[0].payload.max_total_usd,null);
+  control.feed(Buffer.from(JSON.stringify({event:'model-control-result',protocol,nonce,sequence:1,
+    ok:true,status:'authorized'})+'\n'));
+  assert.equal((await pending).ok,true);
+});
 
 async function fixture(t,automatic=false){
   const input={conversation_id:ID,request_id:REQUEST,expected_scope:{...scope},expected_composer_revision:3,parent_business_run_id:PARENT};
@@ -86,12 +101,12 @@ for(const [name,status,body] of [
   assert.deepEqual(await f.invoke(),{ok:false,code:'BLOCKED_LIVE'});assert.deepEqual(f.calls,[]);
 });
 
-test('explicit automatic material analysis skips confirmation but keeps both snapshots and bounded lease',async t=>{
+test('automatic material analysis keeps both snapshots and an unlimited one-call lease',async t=>{
   const f=await fixture(t,true);f.state.confirm=false;
   assert.deepEqual(await f.invoke(),{ok:true});
   assert.deepEqual(f.calls,['authorize']);
   assert.equal(f.requests.filter(value=>value.method==='POST').length,2);
-  assert.equal(f.payload().max_total_usd,'0.0835584');
+  assert.equal(f.payload().max_total_usd,null);
   assert.equal(f.payload().expected_config_version,ID);
 });
 

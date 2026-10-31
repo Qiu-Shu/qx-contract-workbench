@@ -52,10 +52,12 @@ def world(tmp_path):
     database.engine.dispose()
 
 
-def test_explicit_generation_preserves_input_and_records_candidate_once(world):
+@pytest.mark.parametrize('budget', [Decimal('1'), None])
+def test_explicit_generation_preserves_input_and_records_candidate_once(world, budget):
     from cn_contract.assistant.providers.attempts import enqueue_generation, read_attempt
     from cn_contract.assistant.runner import execute_attempt
     database, actor, conversation, request, runtime = world
+    runtime.policy = runtime.policy.model_copy(update={'max_total_usd': budget})
     with database.session() as db:
         first = enqueue_generation(actor, conversation.scope.conversation_id, request, db, runtime)
     assert first.state == 'reserved' and first.receipt is None and first.output is None
@@ -150,10 +152,12 @@ def test_concurrent_execute_claims_only_once(world):
     assert len(runtime.provider.calls) == 1
 
 
+@pytest.mark.parametrize('budget', [Decimal('1'), None])
 @pytest.mark.parametrize('outcome', ['timeout', 'unknown_usage', 'invalid_output', 'unsent'])
-def test_response_accounting_does_not_invent_zero_or_retry(world, outcome):
+def test_response_accounting_does_not_invent_zero_or_retry(world, outcome, budget):
     from cn_contract.assistant.runner import execute_attempt
     database, actor, _, _, runtime = world
+    runtime.policy = runtime.policy.model_copy(update={'max_total_usd': budget})
     first = enqueue(world)
     calls = []
     async def generate(request, **kwargs):
@@ -264,6 +268,30 @@ def test_insufficient_budget_has_no_partial_message_even_if_error_is_caught(worl
             enqueue_generation(actor,conversation.scope.conversation_id,request,db,runtime)
         assert failure.value.code == 'BUDGET_EXCEEDED'
         assert service.read_conversation(actor,conversation.scope.conversation_id,db).messages == ()
+
+
+def test_unlimited_unknown_receipt_keeps_reservation_without_blocking_new_intent(world):
+    from cn_contract.assistant.providers import attempts
+    from cn_contract.assistant.runner import execute_attempt
+    database, actor, conversation, request, runtime = world
+    runtime.policy = runtime.policy.model_copy(update={'max_total_usd': None})
+    async def unknown(request, **kwargs):
+        runtime.provider.calls.append(request)
+        raise TimeoutError('synthetic timeout')
+    runtime.provider.generate = unknown
+    first = enqueue(world)
+    result = asyncio.run(execute_attempt(actor, first.id, database, runtime))
+    assert result.state == 'sent_unknown' and result.receipt.estimated_cost_usd is None
+    with database.session() as db:
+        before = attempts._budget(runtime.policy, db)
+        assert before[0] > 0 and before[1] == 1
+        other = service.create_conversation(actor, d.AssistantConversationCreateInput(request_id=uuid4()), db)
+        next_request = request.model_copy(update={'request_id': uuid4(), 'expected_scope': other.scope})
+        second = attempts.enqueue_generation(actor, other.scope.conversation_id, next_request, db, runtime)
+        assert second.state == 'reserved'
+        assert attempts._budget(runtime.policy, db)[1] == 2
+    assert asyncio.run(execute_attempt(actor, first.id, database, runtime)) == result
+    assert len(runtime.provider.calls) == 1
 
 
 @pytest.mark.parametrize('claimed', [False,True])

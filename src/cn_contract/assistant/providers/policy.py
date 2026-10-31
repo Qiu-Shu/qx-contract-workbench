@@ -70,6 +70,11 @@ def reservation(config):
     return estimated_cost(config.max_input_bytes, config.max_output_tokens, config)
 
 
+def budget_exceeded(amount, limit):
+    # Null is an explicit unlimited grant; reservations and usage remain recorded.
+    return limit is not None and amount > limit
+
+
 def estimated_cost(prompt_tokens, completion_tokens, config):
     # DTO limits bound all operands; never inherit caller precision or traps.
     with localcontext(Context(prec=60)):

@@ -35,12 +35,19 @@ function reservation(model) {
 
 function automaticAnalysisPolicy(model,workspace) {
   if(!MODELS.has(model) || typeof workspace!=='string' || !workspace)return null;
-  return {model,workspace,scope:'selected-task-materials',max_calls:1,max_total_usd:reservation(model)};
+  return {model,workspace,scope:'selected-task-materials',max_calls:1,max_total_usd:null};
 }
 function validAutomaticAnalysis(value,model,workspace) {
+  // Recognize the two released input-size reservations without rewriting old settings.
   const expected=automaticAnalysisPolicy(model,workspace);
   return Boolean(expected && exact(value,Object.keys(expected)) &&
-    Object.keys(expected).every(key=>value[key]===expected[key]));
+    Object.keys(expected).every(key=>key==='max_total_usd'
+      ?value[key]===null || [reservation(model),model==='deepseek-flash'?'0.024576':'0.10272768'].includes(value[key])
+      :value[key]===expected[key]));
+}
+
+function automaticAnalysisEnabled(value,model,workspace) {
+  return value===undefined || validAutomaticAnalysis(value,model,workspace);
 }
 
 function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()=>{},kind='main',judgeBudget=null}) {
@@ -116,7 +123,7 @@ function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()
     }
     active=true;
     let open=true,used=false,authorized=false,grantedToken=null,flight=null,profileStatus=null;
-    const budget=judge?judgeBudget:reservation(captured.model);
+    const budget=judge?judgeBudget:null;
     const valid=()=>open && metadata===captured && captured.workspace===getWorkspace() && matches(backend,guard) && supportsAuthorization();
     async function revoke() {
       if(!grantedToken)return okay();
@@ -254,10 +261,10 @@ function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()
       const valid=()=>!judge&&!active&&metadata===captured&&workspace===getWorkspace()&&matches(backend,guard);
       if(!valid())return null;
       return {automatic_policy:captured?.automatic===true
-        ?{expected_config_version:captured.config_version,max_total_usd:reservation(captured.model)}:null,guard:valid};
+        ?{expected_config_version:captured.config_version,max_total_usd:null}:null,guard:valid};
     },
     status:()=>({ok:true,runtime:active ? {state:'unavailable',model:null} : view()}),
-    configure:(model,guard=()=>true,automaticAnalysis=false)=>run(async()=>{
+    configure:(model,guard=()=>true,automaticAnalysis=!judge && Boolean(automaticAnalysisPolicy(model,getWorkspace())))=>run(async()=>{
       if(!check(guard))return rejected('STATE_CONFLICT');
       const backend=current(),workspace=getWorkspace();
       if(unsafe || !healthy(backend) || retired.has(backend))return rejected();
@@ -299,4 +306,4 @@ function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()
   });
 }
 
-module.exports={createModelSession,automaticAnalysisPolicy,validAutomaticAnalysis};
+module.exports={createModelSession,automaticAnalysisPolicy,validAutomaticAnalysis,automaticAnalysisEnabled};

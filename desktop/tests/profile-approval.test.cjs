@@ -97,7 +97,7 @@ test('profile IPC uses trusted saved text, direct basis, fixed cost and native a
   assert.deepEqual(await f.invoke(),{ok:true,status:'authorized'});
   assert.deepEqual(f.calls,['boundary','authorize-profile']);
   assert.deepEqual(f.payload,{session_token:TOKEN,expected_config_version:ID,basis:basisFor(f.input),
-    max_total_usd:'0.0835584',valid_for_seconds:120});
+    max_total_usd:null,valid_for_seconds:120});
   assert.equal(f.requests.length,6);
   for(const post of f.requests.filter(value=>value.method==='POST')){
     assert.ok(post.path.endsWith('/profile-preview'));

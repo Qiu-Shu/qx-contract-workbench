@@ -27,10 +27,11 @@ function registerAssistantModelBridge({ ipcMain, runtime, isAllowed, persist }) 
     if (current.state !== 'configured') return denied('UNCONFIGURED');
     const next = current.model === MODELS[0] ? MODELS[1] : MODELS[0];
     let result;
-    try { result = await runtime.configure(next); } catch { return denied('BLOCKED_LIVE'); }
+    const automatic=current.automatic_analysis===true;
+    try { result = await runtime.configure(next,undefined,automatic); } catch { return denied('BLOCKED_LIVE'); }
     const view = result?.runtime;
     if (result?.ok === true && validRuntime(view) && view.state === 'configured' && view.model === next) {
-      persist(next);
+      if(persist(next,automatic)===false){await runtime.disable();return denied('BLOCKED_LIVE');}
       return { ok: true, runtime: view };
     }
     return { ok: false, code: typeof result?.code === 'string' ? result.code : 'BLOCKED_LIVE',

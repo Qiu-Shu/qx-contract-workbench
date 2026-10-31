@@ -198,7 +198,7 @@ test('model switch button follows the desktop bridge state and guards',t=>{
   f.render.state(state());assert.equal(f.at('switch-model').hidden,true,'no bridge state stays hidden');
   f.render.state(state({desktopModel:{available:true,busy:false,model:'deepseek-flash'}}));
   assert.equal(f.at('switch-model').hidden,false);assert.equal(f.at('switch-model').disabled,false);
-  assert.equal(f.at('switch-model').textContent,'模型：DeepSeek Flash');
+  assert.equal(f.at('switch-model').textContent,'模型：DeepSeek V4.1 Flash');
   f.render.state(state({desktopModel:{available:true,busy:false,model:'deepseek-v4-pro'}}));
   assert.equal(f.at('switch-model').textContent,'模型：DeepSeek V4 Pro');
   f.render.state(state({desktopModel:{available:true,busy:false,model:null}}));

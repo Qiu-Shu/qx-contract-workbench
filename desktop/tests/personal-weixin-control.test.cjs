@@ -15,6 +15,17 @@ function setup(t,capability=true){
 const payload={session_token:'FICTIONAL_TOKEN',expected_scope:{workspace_id:id,conversation_id:id,
   scope_kind:'conversation',scope_ref:null,binding_revision:1,input_revision:0,materials_revision:0},
   automatic_policy:null};
+
+test('personal automatic policy carries a null main budget through the existing control frame',async t=>{
+  const {control,writes}=setup(t);
+  const pending=control.request('start_personal_weixin',{...payload,
+    automatic_policy:{expected_config_version:id,max_total_usd:null}});
+  assert.equal(writes.length,1);
+  assert.equal(JSON.parse(writes[0]).payload.automatic_policy.max_total_usd,null);
+  control.feed(frame({event:'model-control-result',protocol:'qx-model-control-v1',nonce,
+    sequence:1,ok:true,status:'started'}));
+  assert.equal((await pending).ok,true);
+});
 test('legacy backend never receives unknown personal operations',async t=>{
   const {control,writes}=setup(t,false);
   for(const op of ['start_personal_weixin','disable_personal_weixin','verify_personal_weixin'])

@@ -8,7 +8,7 @@ from ..security import ServiceError
 from ..ops.storage import require_active
 from . import service, material_codec as codec, material_preparation as inputs
 from .providers import attempts
-from .providers.policy import encoded, sha, require_policy, reservation, add_costs, receipt
+from .providers.policy import encoded, sha, require_policy, reservation, add_costs, receipt, budget_exceeded
 
 _logger = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ def enqueue(actor, selection, basis, db, runtime):
     require_policy(config, policy, actor, selection.expected_scope, basis.manifest_sha256)
     used, calls = attempts._budget(policy, db)
     reserved = reservation(config)
-    if calls >= policy.max_calls or add_costs((used, reserved)) > policy.max_total_usd:
+    if calls >= policy.max_calls or budget_exceeded(add_costs((used, reserved)), policy.max_total_usd):
         raise ServiceError('BUDGET_EXCEEDED', 403)
     with db.begin_nested():
         run = service.save_message(actor, cid, message(basis), db)

@@ -2,7 +2,7 @@
   const at=id=>document.getElementById(id),api=window.desktopApproval;
   const cancel=at('approval-cancel'),confirm=at('approval-confirm');
   const judgeSection=at('approval-judge'),judgeSelect=at('approval-judge-select');
-  const models={'deepseek-flash':'DeepSeek Flash','deepseek-v4-pro':'DeepSeek V4 Pro'};
+  const models={'deepseek-flash':'DeepSeek V4.1 Flash','deepseek-v4-pro':'DeepSeek V4 Pro'};
   const budget=value=>typeof value==='string'&&/^(0|[1-9]\d{0,6})(\.\d{1,12})?$/.test(value)&&
     /[1-9]/.test(value)&&(Number(value.split('.')[0])<1000000||/^1000000(?:\.0{1,12})?$/.test(value));
   let loaded=false,pending=false,gone=false,judgeOffered=false,judgeAvailable=false;
@@ -27,7 +27,7 @@
     if(value?.kind==='material_business'){
       const manifest=value.basis?.manifest;
       if(!manifest||value.basis.input_format!=='material-business-v1'||!Array.isArray(manifest.materials)||
-          !Array.isArray(manifest.sources)||!Object.hasOwn(models,value.model)||!budget(value.max_total_usd))throw Error();
+          !Array.isArray(manifest.sources)||!Object.hasOwn(models,value.model)||!(value.max_total_usd===null||budget(value.max_total_usd)))throw Error();
       at('approval-intro').textContent=manifest.materials.length===0?'本次仅咨询文字，发送给下列模型后生成待核接待草稿。取消不会发送。':'本次将发送下列选中材料的可读原文、读取范围和问题，生成有出处的律师待核草稿。取消不会调用模型。';
       if(manifest.conversation_history?.length)
         at('approval-intro').textContent+='同时包含下列同任务历史问答（最多最近8轮、32KiB），历史回答仍待核对。';
@@ -47,7 +47,7 @@
       if(Object.keys(value).length!==6||
           !['kind','content','basis','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
           typeof value.content!=='string'||!value.content.trim()||!Object.hasOwn(models,value.model)||
-          value.recipient!=='DeepSeek（api.deepseek.com）'||!budget(value.max_total_usd)||
+          value.recipient!=='DeepSeek（api.deepseek.com）'||!(value.max_total_usd===null||budget(value.max_total_usd))||
           !basis||basis.purpose!=='reply_and_profile_draft'||basis.handler_id!=='profile.save'||
           !Number.isSafeInteger(basis.base_profile_revision)||basis.base_profile_revision<0||
           typeof basis.project_intake!=='boolean'||
@@ -65,7 +65,7 @@
       if(Object.keys(value).length!==6||
           !['kind','content','sources','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
           typeof value.content!=='string'||!value.content.trim()||!Object.hasOwn(models,value.model)||
-          value.recipient!=='DeepSeek（api.deepseek.com）'||!budget(value.max_total_usd)||
+          value.recipient!=='DeepSeek（api.deepseek.com）'||!(value.max_total_usd===null||budget(value.max_total_usd))||
           !Array.isArray(value.sources)||!value.sources.length||value.sources.length>8)throw Error();
       const list=at('approval-sources-list');
       for(const source of value.sources){
@@ -86,7 +86,7 @@
         Object.hasOwn(value,'kind')||
         !['content','model','max_total_usd','recipient'].every(key=>Object.hasOwn(value,key))||
         typeof value.content!=='string'||!value.content.trim()||!Object.hasOwn(models,value.model)||
-        value.recipient!=='DeepSeek（api.deepseek.com）'||!budget(value.max_total_usd))throw Error();
+        value.recipient!=='DeepSeek（api.deepseek.com）'||!(value.max_total_usd===null||budget(value.max_total_usd)))throw Error();
     if(Object.hasOwn(value,'judge')){
       const judge=value.judge;
       if(!judge||typeof judge!=='object'||Array.isArray(judge)||Object.keys(judge).length!==2||
@@ -105,7 +105,7 @@
       value.basis.manifest.sources.map(s=>'['+s.source_id+']\n'+(s.reference.anchor?.quote??s.reference.quote)).join('\n\n'):'');
     at('approval-recipient').textContent=value.recipient;
     at('approval-model').textContent=`${models[value.model]}（${value.model}）`;
-    at('approval-budget').textContent=`USD ${value.max_total_usd}（本次一次调用）`;
+    at('approval-budget').textContent=value.max_total_usd===null?'不设费用上限（本次一次调用）':`USD ${value.max_total_usd}（本次一次调用）`;
     at('approval-status').textContent='请核对接收方、完整文字与程序预算，再决定是否发送。';
     loaded=true;confirm.disabled=false;cancel.disabled=false;cancel.focus({preventScroll:true});
   }).catch(()=>{

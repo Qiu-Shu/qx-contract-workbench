@@ -9,7 +9,7 @@ from sqlalchemy import text
 from .. import domain as d
 from ..storage_schema import identify_schema
 from .providers.main import _strict_json
-from .providers.policy import encoded, estimated_cost, prepare, reservation, sha
+from .providers.policy import encoded, estimated_cost, prepare, reservation, sha, budget_exceeded
 
 
 def _fail():
@@ -378,7 +378,7 @@ def _validate(db, attempts, receipts, outputs, workspace, *, context_schema, rou
                     {'id': row['id']}):
                 _fail()
         reserved = TypeAdapter(d.MainUSD).validate_python(row['reserved_usd'])
-        if reserved != reservation(config) or reserved > policy.max_total_usd or _json(run['budget_json'], 16384) != {
+        if reserved != reservation(config) or budget_exceeded(reserved, policy.max_total_usd) or _json(run['budget_json'], 16384) != {
                 'policy_id':row['policy_id'], 'reserved_usd':str(reserved), 'unit':'USD'}:
             _fail()
         output = outputs.get(identifier)

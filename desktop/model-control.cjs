@@ -59,23 +59,23 @@ function validPayload(operation, payload) {
         (scope.scope_ref!==null && !UUID.test(scope.scope_ref)) ||
         !['binding_revision','input_revision','materials_revision'].every(k=>Number.isSafeInteger(scope[k])&&scope[k]>=0)) return false;
     return policy===null || (keys(policy,['expected_config_version','max_total_usd']) &&
-      UUID.test(policy.expected_config_version) && typeof policy.max_total_usd==='string' &&
+      UUID.test(policy.expected_config_version) && (policy.max_total_usd===null || (typeof policy.max_total_usd==='string' &&
       policy.max_total_usd.length<=64 && /^\d+(?:\.\d+)?$/.test(policy.max_total_usd) &&
-      Number(policy.max_total_usd)>0 && Number(policy.max_total_usd)<=100);
+      Number(policy.max_total_usd)>0 && Number(policy.max_total_usd)<=100)));
   }
   if (operation === 'revoke' || operation === 'revoke_judge') return keys(payload,['session_token']) && token(payload.session_token);
   if (operation === 'authorize_profile' || operation === 'authorize_material')
     return keys(payload,['session_token','expected_config_version','basis','max_total_usd','valid_for_seconds']) &&
       token(payload.session_token) && typeof payload.expected_config_version === 'string' &&
       UUID.test(payload.expected_config_version) && (operation==='authorize_material'?validMaterialBasis(payload.basis):validProfileBasis(payload.basis)) &&
-      typeof payload.max_total_usd === 'string' && payload.max_total_usd.length <= 64 &&
+      (payload.max_total_usd===null || (typeof payload.max_total_usd === 'string' && payload.max_total_usd.length <= 64)) &&
       Number.isSafeInteger(payload.valid_for_seconds) && payload.valid_for_seconds >= 1 && payload.valid_for_seconds <= 900;
   if (operation === 'authorize_context')
     return keys(payload,['session_token','expected_config_version','basis','max_total_usd',
       'valid_for_seconds','max_rounds']) && token(payload.session_token) &&
       typeof payload.expected_config_version === 'string' && UUID.test(payload.expected_config_version) &&
       validContextBasis(payload.basis) && payload.max_rounds === 1 &&
-      typeof payload.max_total_usd === 'string' && payload.max_total_usd.length <= 64 &&
+      (payload.max_total_usd===null || (typeof payload.max_total_usd === 'string' && payload.max_total_usd.length <= 64)) &&
       Number.isSafeInteger(payload.valid_for_seconds) && payload.valid_for_seconds >= 1 &&
       payload.valid_for_seconds <= 900;
   const judge = operation === 'authorize_judge';
@@ -89,7 +89,7 @@ function validPayload(operation, payload) {
     UUID.test(basis.request_id) && object(basis.expected_scope) &&
     Number.isSafeInteger(basis.expected_composer_revision) && basis.expected_composer_revision >= 0 &&
     typeof basis.content_sha256 === 'string' && SHA256.test(basis.content_sha256) &&
-    typeof payload.max_total_usd === 'string' && payload.max_total_usd.length <= 64 &&
+    ((!judge && payload.max_total_usd===null) || (typeof payload.max_total_usd === 'string' && payload.max_total_usd.length <= 64)) &&
     Number.isSafeInteger(payload.valid_for_seconds) && payload.valid_for_seconds >= 1 &&
     payload.valid_for_seconds <= 900;
 }

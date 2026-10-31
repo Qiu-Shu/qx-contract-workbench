@@ -20,7 +20,7 @@ contextBridge.exposeInMainWorld('desktopSetup',Object.freeze({
   modelSave:secret=>ipcRenderer.invoke('desktop:model-save',secret),
   modelRemove:()=>ipcRenderer.invoke('desktop:model-remove'),
   modelRuntimeStatus:()=>ipcRenderer.invoke('desktop:model-runtime-status'),
-  modelConfigure:(model,automaticAnalysis=false)=>ipcRenderer.invoke('desktop:model-configure',model,automaticAnalysis),
+  modelConfigure:(model,automaticAnalysis=true)=>ipcRenderer.invoke('desktop:model-configure',model,automaticAnalysis),
   modelDisable:()=>ipcRenderer.invoke('desktop:model-disable'),
   judgeStatus:()=>ipcRenderer.invoke('desktop:judge-status'),
   judgeSave:secret=>ipcRenderer.invoke('desktop:judge-save',secret),

@@ -9,7 +9,7 @@ from ..config import canonical_json
 from ..security import ServiceError, authenticate
 from . import profile_preparation_service, profile_store, service, conversation_history
 from .providers import attempts, profile_preparation
-from .providers.policy import encoded, reservation, sha, validated
+from .providers.policy import encoded, reservation, sha, validated, budget_exceeded
 
 
 def _existing(actor, conversation, run, basis, config, db):
@@ -71,7 +71,7 @@ def authorize(control, value):
             expected_composer_revision=basis.expected_composer_revision, content=conversation['draft_input'])
         computed = profile_preparation_service.build_profile_basis(actor, basis.expected_scope.conversation_id,
             original, db, config=config, project_intake=basis.project_intake)
-        if computed != basis or value.max_total_usd < reservation(config):
+        if computed != basis or budget_exceeded(reservation(config), value.max_total_usd):
             raise ServiceError('BLOCKED_LIVE', 403)
         # A repeated confirmation cannot bypass a changed local save target.
         if previous is not None:

@@ -89,12 +89,14 @@ def change_baseline(n, change):
                 {'target': str(target.id), 'id': str(n.view.scope.conversation_id)})
 
 
-def test_native_profile_authorization_reuses_one_grant_and_existing_completed_request(native_profile):
+@pytest.mark.parametrize('budget', ['1', None])
+def test_native_profile_authorization_reuses_one_grant_and_existing_completed_request(native_profile, budget):
     n = native_profile
     with server(archive_response()) as (url, received, _):
         async def scenario():
             n.endpoints.append(url)
             payload = configure(n)
+            payload['max_total_usd'] = budget
             assert authorize(n, payload) == {'status': 'authorized'}
             policy = n.registry.resolve(n.actor, n.view.scope).snapshot()[1]
             assert policy.max_calls == 1

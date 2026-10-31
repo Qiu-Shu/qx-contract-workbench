@@ -150,13 +150,13 @@ test('credential form saves once, clears input immediately and labels stored cre
   assert.match(f.html,/保存密钥不会配置/);assert.match(f.html,/不授权|不会授权/);assert.match(f.html,/不会产生调用费用/);
 });
 
-test('automatic analysis starts unchecked, discloses bounds and sends explicit opt-in from native settings',async()=>{
+test('automatic analysis defaults on, discloses unlimited cost and preserves explicit off on model changes',async()=>{
   const f=page();await tick();f.api.modelStatus=async()=>({status:'saved'});
   f.state({mode:'model-settings'});await tick();
   const automatic=f.at('model-automatic-analysis');assert.ok(automatic);
-  assert.equal(Boolean(automatic.checked),false);
+  assert.equal(Boolean(automatic.checked),true);
   assert.match(f.html,/api\.deepseek\.com/);assert.match(f.html,/当前聊天.*选定材料/);
-  assert.match(f.at('model-automatic-limit').textContent,/0\.024576.*USD/);
+  assert.match(f.at('model-automatic-limit').textContent,/不设费用上限/);
   assert.match(f.at('model-automatic-limit').textContent,/每次分析最多调用 1 次/);
   f.api.modelConfigure=async(model,automatic)=>{f.calls.push([model,automatic]);
     return {ok:true,runtime:{state:'configured',model,automatic_analysis:automatic}};};
@@ -170,7 +170,7 @@ test('automatic analysis starts unchecked, discloses bounds and sends explicit o
   assert.match(f.at('model-runtime-status').textContent,/可手动发送.*自动分析关闭/);
   f.at('model-id').value='deepseek-v4-pro';f.at('model-id').listeners.change();
   assert.equal(automatic.checked,false);
-  assert.match(f.at('model-automatic-limit').textContent,/0\.10272768.*USD/);
+  assert.match(f.at('model-automatic-limit').textContent,/不设费用上限/);
 });
 
 test('credential errors clear inputs, hide raw errors and leaving discards delayed responses',async()=>{
