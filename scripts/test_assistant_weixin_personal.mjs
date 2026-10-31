@@ -130,3 +130,62 @@ test('reconnect cannot restart if disable has not actually cleared the old conne
   f.bridge.personalWeixinDisable=async()=>{f.calls.push(['Disable']);return {ok:true};};
   await f.at('start').fire('click');assert.deepEqual(f.calls,[['Disable']]);f.ui.dispose();
 });
+
+test('background polling leaves connection buttons stable and never disconnects',async()=>{
+  let scheduled;
+  const f=fixture({setTimer:fn=>{scheduled=fn;return 1;}});
+  f.status({state:'paused'});await f.ui.refresh();
+  for(let i=0;i<4;i++){
+    const gate=defer();f.bridge.personalWeixinStatus=()=>gate.promise;
+    scheduled();
+    assert.equal(f.at('disable').disabled,false,'background read must not dim the disconnect button');
+    assert.equal(f.at('refresh').disabled,false,'background read must not dim the refresh button');
+    gate.resolve({ok:true,connection:{state:'paused',conversation_id:cid,automatic:true,notice:'虚构',qr_ready:false}});
+    await tick();assert.equal(f.at('disable').disabled,false);
+  }
+  assert.deepEqual(f.calls,[]);f.ui.dispose();
+});
+
+test('disconnect clicked during a poll waits and runs once despite duplicate clicks',async()=>{
+  const f=fixture();f.status({});await f.ui.refresh();const read=defer(),ack=defer();
+  f.bridge.personalWeixinStatus=()=>read.promise;
+  f.bridge.personalWeixinDisable=()=>{f.calls.push(['Disable']);return ack.promise;};
+  const poll=f.ui.refresh(),clicked=f.at('disable').fire('click');
+  assert.equal(f.at('disable').disabled,true,'an explicit action remains visibly busy');
+  await f.at('disable').fire('click');assert.deepEqual(f.calls,[]);
+  read.resolve({ok:true,connection:{state:'connected',conversation_id:cid,automatic:true,notice:'虚构',qr_ready:false}});
+  await poll;await tick();assert.deepEqual(f.calls,[['Disable']]);
+  await f.at('disable').fire('click');assert.deepEqual(f.calls,[['Disable']]);
+  f.bridge.personalWeixinStatus=async()=>({ok:true,connection:null});ack.resolve({ok:true});
+  await clicked;await tick();assert.equal(f.at('disable').hidden,true);f.ui.dispose();
+});
+
+test('queued disconnect is dropped after conversation change or session revocation',async()=>{
+  for(const change of [f=>{f.controller.state.id=other;},f=>{f.controller.state.status='revoked';}]){
+    const f=fixture();f.status({});await f.ui.refresh();const read=defer();
+    f.bridge.personalWeixinStatus=()=>read.promise;
+    const poll=f.ui.refresh(),clicked=f.at('disable').fire('click');
+    change(f);f.ui.state(f.controller.state);
+    read.resolve({ok:true,connection:{state:'connected',conversation_id:cid,automatic:true,notice:'虚构',qr_ready:false}});
+    await poll;await clicked;assert.deepEqual(f.calls,[]);f.ui.dispose();
+  }
+});
+
+test('acknowledged disconnect cannot be repeated while its status confirmation is pending',async()=>{
+  const f=fixture();f.status({});await f.ui.refresh();const confirm=defer();
+  f.bridge.personalWeixinStatus=()=>confirm.promise;
+  await f.at('disable').fire('click');
+  assert.deepEqual(f.calls,[['Disable']]);
+  const duplicate=f.at('disable').fire('click');
+  confirm.resolve({ok:true,connection:null});await duplicate;await tick();
+  assert.deepEqual(f.calls,[['Disable']]);
+  assert.equal(f.at('disable').hidden,true);f.ui.dispose();
+});
+
+test('a queued disconnect is unnecessary when the in-flight read confirms no connection',async()=>{
+  const f=fixture();f.status({});await f.ui.refresh();const read=defer();
+  f.bridge.personalWeixinStatus=()=>read.promise;
+  const poll=f.ui.refresh(),clicked=f.at('disable').fire('click');
+  read.resolve({ok:true,connection:null});await poll;await clicked;await tick();
+  assert.deepEqual(f.calls,[]);assert.equal(f.at('disable').hidden,true);f.ui.dispose();
+});

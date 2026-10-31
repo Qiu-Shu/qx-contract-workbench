@@ -1,0 +1,74 @@
+{
+  "fixture": "fictional DOM/bridge, no real account or network",
+  "phase": "before-chrome",
+  "externalRequests": [],
+  "reads": 5,
+  "clicks": 0,
+  "disconnects": 0,
+  "starts": 0,
+  "changes": [
+    {
+      "disabled": true,
+      "background": "rgb(255, 255, 255)",
+      "active": false
+    },
+    {
+      "disabled": true,
+      "background": "rgb(236, 239, 235)",
+      "active": false
+    },
+    {
+      "disabled": false,
+      "background": "rgb(236, 239, 235)",
+      "active": false
+    },
+    {
+      "disabled": true,
+      "background": "rgb(255, 255, 255)",
+      "active": false
+    },
+    {
+      "disabled": true,
+      "background": "rgb(236, 239, 235)",
+      "active": false
+    },
+    {
+      "disabled": false,
+      "background": "rgb(236, 239, 235)",
+      "active": false
+    },
+    {
+      "disabled": true,
+      "background": "rgb(255, 255, 255)",
+      "active": false
+    },
+    {
+      "disabled": true,
+      "background": "rgb(236, 239, 235)",
+      "active": false
+    },
+    {
+      "disabled": false,
+      "background": "rgb(236, 239, 235)",
+      "active": false
+    },
+    {
+      "disabled": true,
+      "background": "rgb(255, 255, 255)",
+      "active": false
+    },
+    {
+      "disabled": true,
+      "background": "rgb(236, 239, 235)",
+      "active": false
+    },
+    {
+      "disabled": false,
+      "background": "rgb(236, 239, 235)",
+      "active": false
+    }
+  ],
+  "errors": [],
+  "result": "FAIL",
+  "error": "background status read must not repeatedly press/disable the disconnect control\n\ntrue !== false\n"
+}

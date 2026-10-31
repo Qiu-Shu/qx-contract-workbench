@@ -34,8 +34,9 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
     at('start').textContent=busy?'正在处理…':reconnect?'重新连接本人微信':'连接本人微信';
     if(reason&&!busy&&known)at('state').textContent=(connection?.notice||labels[state])+' · '+reason;
     at('disable').hidden=!connection;
-    at('disable').disabled=!available||readonly||busy||reading;
-    at('refresh').disabled=!available||readonly||busy||reading;
+    // Background reads must not animate the controls as if the user pressed them.
+    at('disable').disabled=!available||readonly||busy;
+    at('refresh').disabled=!available||readonly||busy;
     const verify=known&&here&&state==='need_verifycode';
     at('verify-form').hidden=!verify;at('code').disabled=!verify||busy;
     at('verify').disabled=!verify||busy;
@@ -69,7 +70,8 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
   }
   async function perform(operation){
     if(!active()||busy||readonly||!available)return false;
-    if(operation!=='Start'&&reading)return false;
+    if(operation==='Disable'&&!connection)return false;
+    if(operation==='Verify'&&reading)return false;
     if(operation==='Start'&&(!known||connection&&!(connection.conversation_id===cid&&connection.state==='paused')||!stable()||isBlocked()))return false;
     if(operation==='Verify'&&(connection?.conversation_id!==cid||connection?.state!=='need_verifycode'))return false;
     const code=at('code').value;
@@ -79,6 +81,7 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
       // A click during a poll waits for that read; it never starts from unknown status.
       if(statusRead)await statusRead;
       if(!valid(version,id))return false;
+      if(operation==='Disable'&&!connection)return false;
       if(operation==='Start'){
         if(!known||!stable()||isBlocked())return false;
         if(!cid){
@@ -105,6 +108,7 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
       const result=await bridge['personalWeixin'+operation](...(operation==='Verify'?[code]:[]));
       if(!valid(version,id))return false;
       if(result?.ok!==true)throw new Error();
+      if(operation==='Disable')connection=null;
       at('code').value='';tell(operation==='Disable'?'已断开连接，聊天与材料记录保留。':'已提交，正在读取状态…');
       if(operation==='Start')at('panel').open=true;
       return true;
