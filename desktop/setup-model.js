@@ -67,7 +67,8 @@
       const value=result?.runtime;
       const runtime=value&&['unavailable','unconfigured','configured'].includes(value.state)&&
         (value.state==='configured'?result.ok===true&&typeof value.model==='string'&&Object.hasOwn(section.models,value.model):value.model===null)
-        ?{state:value.state,model:value.model,...(section.prefix==='model'&&value.automatic_analysis===true?{automatic_analysis:true}:{})}
+        ?{state:value.state,model:value.model,...(section.prefix==='model'&&typeof value.automatic_analysis==='boolean'
+          ?{automatic_analysis:value.automatic_analysis}:{})}
           :{state:'unavailable',model:null};
       section.runtime=runtime;
       section.at('runtime-status').textContent=runtime.state==='configured'
@@ -75,7 +76,8 @@
         :runtime.state==='unconfigured'?(section.prefix==='judge'?'本次运行未配置 Jev，尚未批准发送。':'本次运行未配置模型。')
           :'当前无法配置本次运行，请返回工作台或重新检查。';
       if(runtime.state==='configured')section.at('id').value=runtime.model;
-      if(section.prefix==='model'&&runtime.state==='configured')automatic.checked=runtime.automatic_analysis===true;
+      if(section.prefix==='model'&&(runtime.state==='configured'||typeof runtime.automatic_analysis==='boolean'))
+        automatic.checked=runtime.automatic_analysis===true;
       error(section.at('runtime-validation'),result?.ok===true?null:(result?.code||'MODEL_RUNTIME_FAILED'),runtimeErrors);
     }
     async function action(section,operation,value) {

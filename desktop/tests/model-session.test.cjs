@@ -84,6 +84,11 @@ test('native settings forwards only explicit boolean automatic analysis and proj
   assert.equal(calls.length,1);
 });
 
+test('native settings projects the explicit off preference while the runtime is unconfigured',async()=>{
+  const f=brokerFixture({status:()=>({ok:true,runtime:{state:'unconfigured',model:null,automatic_analysis:false}})});
+  assert.deepEqual(await f.call('runtime-status'),{ok:true,runtime:{state:'unconfigured',model:null,automatic_analysis:false}});
+});
+
 test('second model uses bounded trusted configuration and projections omit private metadata',async()=>{
   const f=sessionFixture();
   const result=await f.session.configure('deepseek-v4-pro');

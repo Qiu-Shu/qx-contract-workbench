@@ -265,6 +265,11 @@ else {
     };
     const settingsFailure=async guard=>({...await modelSession.disable(guard),ok:false,code:'CREDENTIAL_STORAGE_FAILED'});
     const settingsRuntime=Object.freeze({...modelSession,
+      status:()=>{
+        const result=modelSession.status();
+        return result.runtime.state==='unconfigured'?{...result,runtime:{...result.runtime,
+          automatic_analysis:automaticAnalysisEnabled(settings.model_auto_analysis,settings.model,workspacePath())}}:result;
+      },
       configure:async(model,guard,automatic=true)=>{
         if(!persistModel(settings.model,false))return settingsFailure(guard);
         const result=await modelSession.configure(model,guard,automatic);

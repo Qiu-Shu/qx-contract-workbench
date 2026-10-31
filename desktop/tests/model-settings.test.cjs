@@ -173,6 +173,24 @@ test('automatic analysis defaults on, discloses unlimited cost and preserves exp
   assert.match(f.at('model-automatic-limit').textContent,/不设费用上限/);
 });
 
+test('explicit off survives credential replacement and reopening an unconfigured settings page',async()=>{
+  const f=page();let runtime={state:'configured',model:'deepseek-flash',automatic_analysis:false};
+  await tick();
+  f.api.modelStatus=async()=>({status:'saved'});
+  f.api.modelRuntimeStatus=async()=>({ok:true,runtime});
+  f.api.modelSave=async()=>{runtime={state:'unconfigured',model:null,automatic_analysis:false};return {status:'saved'};};
+  f.api.modelConfigure=async(model,automatic)=>{f.calls.push(['configure',model,automatic]);
+    return {ok:true,runtime:{state:'configured',model,automatic_analysis:automatic}};};
+  f.state({mode:'model-settings'});await tick();
+  assert.equal(f.at('model-automatic-analysis').checked,false);
+  f.at('model-secret').value='synthetic-replacement-secret';
+  await f.at('model-settings').listeners.submit({preventDefault(){}});
+  f.state({mode:'ready'});f.state({mode:'model-settings'});await tick();
+  assert.equal(f.at('model-automatic-analysis').checked,false);
+  await f.at('model-configure').listeners.click();
+  assert.deepEqual(f.calls.at(-1),['configure','deepseek-flash',false]);
+});
+
 test('credential errors clear inputs, hide raw errors and leaving discards delayed responses',async()=>{
   const f=page();await tick();assert.ok(f.at('model-secret'),'password field missing');f.state({mode:'model-settings'});await tick();
   f.api.modelSave=async()=>{throw Error('synthetic-private-diagnostic');};f.at('model-secret').value='synthetic-secret';

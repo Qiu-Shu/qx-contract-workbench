@@ -73,6 +73,17 @@ test('automatic analysis defaults on and explicit false survives restart and mod
   assert.notEqual((await restored.handlers.get('desktop:model-runtime-status')(restored.event())).runtime.automatic_analysis,true);
 });
 
+test('credential replacement and settings reopen project saved false before reconfiguration',async t=>{
+  const f=await fixture(t,{model:'deepseek-flash',automatic:false});
+  await f.menu('主模型设置…');
+  assert.equal((await f.handlers.get('desktop:model-save')(f.event(),'synthetic-replacement-secret')).status,'saved');
+  assert.equal(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')).model_auto_analysis,false);
+  await f.handlers.get('desktop:resume')(f.event());await f.menu('主模型设置…');
+  const result=await f.handlers.get('desktop:model-runtime-status')(f.event());
+  assert.equal(result.runtime.state,'unconfigured');
+  assert.equal(result.runtime.automatic_analysis,false);
+});
+
 test('personal Weixin captures only the actual main-frame CID and fences history navigation and restore',async t=>{
   const f=await fixture(t),capture=f.personalOptions.captureContext;
   assert.equal(capture(f.event()),null);

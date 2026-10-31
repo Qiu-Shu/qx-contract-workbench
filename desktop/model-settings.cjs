@@ -12,7 +12,9 @@ function runtimeResult(result,kind) {
   if(typeof result?.ok!=='boolean' || !['unavailable','unconfigured','configured'].includes(state) ||
       (state==='configured' ? !(kind==='judge'?['jev-1.13.0']:['deepseek-flash','deepseek-v4-pro']).includes(model) : model!==null))return runtimeDenied();
   return {ok:result.ok,runtime:{state,model,
-    ...(kind==='main' && state==='configured' && result.ok && result.runtime.automatic_analysis===true?{automatic_analysis:true}:{})},
+    ...(kind==='main' && result.ok && ((state==='configured' && result.runtime.automatic_analysis===true) ||
+      (state==='unconfigured' && typeof result.runtime.automatic_analysis==='boolean'))
+      ?{automatic_analysis:result.runtime.automatic_analysis}:{})},
     ...(runtimeCodes.has(result.code)?{code:result.code}:{})};
 }
 
