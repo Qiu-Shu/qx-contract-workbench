@@ -40,6 +40,27 @@ def test_review_explicit_readiness_overrides_opposite_jev(world,hold,start):
     asyncio.run(scenario())
 
 
+@pytest.mark.parametrize('message',['现在还不可以开始','尚未发送完毕','等我发送完毕后再开始'])
+def test_review_negative_or_conditional_release_remains_held(world,message):
+    async def scenario():
+        runtime,wire,manager,main,actor=await setup(world)
+        try:
+            await runtime.ingest(runtime._epoch,packet(command(1,'新事项：请审查合同，先别开始'),file_message(wire,2)))
+            await runtime.advance(runtime._epoch,now=later())
+            assert not main.calls
+            await runtime.ingest(runtime._epoch,packet(command(3,message),cursor='not-ready'))
+            await runtime.advance(runtime._epoch,now=later())
+            assert not main.calls
+            with world[0].session() as db:
+                assert db.scalar(text('SELECT state FROM weixin_service_batches'))=='held'
+            await runtime.ingest(runtime._epoch,packet(command(4,'可以开始'),cursor='ready'))
+            await runtime.advance(runtime._epoch)
+            await runtime.advance(runtime._epoch,now=later())
+            assert len(main.calls)==1
+        finally:await close(runtime,manager)
+    asyncio.run(scenario())
+
+
 def test_review_new_matter_clarification_keeps_original_files(world):
     async def scenario():
         runtime,wire,manager,main,actor=await setup(world)

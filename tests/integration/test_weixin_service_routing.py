@@ -1,5 +1,25 @@
 import pytest
-from cn_contract.weixin_inbox.service_routing import decide
+from cn_contract import domain as d
+from cn_contract.weixin_inbox.service_routing import decide,control,readiness
+
+
+@pytest.mark.parametrize('message',[
+    '现在还不可以开始','尚未发送完毕','还没有发送完毕','不可以现在开始',
+    '等我发送完毕后再开始','如果材料发送完毕就可以开始','发送完毕后才能开始',
+    '可以开始了吗？','对方说可以开始','明天可以开始',
+    '等材料到齐，可以开始','材料发送完毕后，可以开始',
+    '等我发完，再开始',
+])
+def test_negative_conditional_or_quoted_start_is_not_permission(message):
+    assert control(d.TaskInboxEventInput(event_id='control',text=message))=='paused'
+    assert readiness('可以开始\n'+message)=='paused'
+    assert readiness(message+'\n可以开始')=='collecting'
+
+
+@pytest.mark.parametrize('message',['可以开始','现在可以开始','开始','开始处理','发送完毕',
+    '材料发完了','我已发送完毕','新事项：请审查合同，可以开始'])
+def test_explicit_affirmative_readiness_is_supported(message):
+    assert control(d.TaskInboxEventInput(event_id='control',text=message))=='collecting'
 
 
 def test_two_matters_explicit_title_beats_recent_and_capability_change_reuses():
