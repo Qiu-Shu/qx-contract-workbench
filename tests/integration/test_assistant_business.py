@@ -26,6 +26,8 @@ def test_mvp_natural_commands_select_existing_workflow(chat, content, workflow):
     assert result.status_code == 200
     assert result.json()['workflow'] == workflow
     assert result.json()['task_id']
+    if workflow == 'contract':
+        assert '请上传主合同' in result.json()['text']
 
 
 def test_reception_is_saved_in_chat_with_one_receipt_and_source(chat):
@@ -235,3 +237,26 @@ def test_explicit_restart_overrides_selected_task_and_wrong_workflow_is_not_revo
                             workflow='court', task_id=first.json()['task_id'])
     assert mismatch.status_code == 409
     assert client.get(base).status_code == 200
+
+
+def test_partial_uploaded_contract_is_received_not_missing_and_still_cannot_execute(attachments):
+    import hashlib
+    from tests.integration.test_docx_office_parts import edited
+    client, database, headers, base, _, raw, _ = attachments
+    raw = edited(raw, {'word/fictional-unread.xml':b'<unknown>SYNTHETIC remaining content</unknown>'})
+    database._assistant_synthetic_hashes = frozenset({hashlib.sha256(raw).hexdigest()})
+    original = upload(attachments, raw=raw)
+    assert original.status_code == 201
+    aid = original.json()['attachment']['id']
+    parsed = client.post(base+'/attachments/'+aid+'/parses', headers=headers,
+        json={'request_id':str(uuid4()), 'expected_scope':client.get(base).json()['scope']})
+    assert parsed.status_code == 200 and parsed.json()['parse']['reading_status'] == 'partial'
+    result, _, _ = submit(client, headers, client.get(base).json(), '我是甲方，请审查这份虚构合同')
+    assert result.status_code == 200, result.text
+    assert '请上传主合同' not in result.json()['text']
+    assert '已收到' in result.json()['text'] and '未完整读取' in result.json()['text']
+    draft = client.get('/api/task-drafts/'+result.json()['contract_draft_id']).json()
+    assert 'main_contract_required' in draft['blockers'] and 'media_not_readable' in draft['blockers']
+    frozen = client.post('/api/task-drafts/'+draft['id']+'/freeze', headers=headers,
+        json={'expected_revision':draft['revision'], 'manifest_sha256':draft['manifest_sha256']})
+    assert frozen.status_code == 409

@@ -94,6 +94,8 @@ def contract(actor, run, request, previous, media, db, *, personal_draft_id=None
         'instruction_required':'请补充审查要求。', 'media_pending':'材料已关联，请在本对话读取原文。',
         'media_not_readable':'存在未完整读取的材料，请核对读取范围。',
         'media_unsupported':'包含暂不支持解析的材料，请补充可读版本。'}
+    if any(code.startswith('media_') for code in draft.blockers):
+        notes['main_contract_required'] = '已收到材料，但主合同尚未完整读取；请在材料区核对读取状态与未读范围。'
     reasons = [notes.get(code, '请核对材料版本与读取状态。') for code in draft.blockers]
     return ('合同任务已关联本次指令和材料。\n' + '\n'.join(dict.fromkeys(reasons)) +
         '\n\n这是材料归集记录。模型分析将按当前设置使用选定材料，结果保存在本对话。'

@@ -337,3 +337,146 @@ def test_structural_package_metadata_rejects_undeclared_content(part, location):
     with pytest.raises(ServiceError) as error:
         parse(edited(saved(office_document()), {part: mutation}))
     assert error.value.code == 'FILE_UNSUPPORTED'
+
+
+MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006'
+WPS_DATA = 'http://www.wps.cn/officeDocument/2013/wpsCustomData'
+OFFICE_REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/'
+ET.register_namespace('wpsCustomData', WPS_DATA)
+
+
+def finite_auxiliary_document(selected=('settings', 'fontTable', 'footnotes', 'endnotes')):
+    """Independent fictional metadata, generated from structural tag facts only."""
+    changes = {}
+    if 'settings' in selected:
+        def configuration(root):
+            ET.SubElement(root, f'{{{W}}}documentProtection', {f'{{{W}}}edit':'readOnly', f'{{{W}}}enforcement':'0'})
+            for kind in ('footnote', 'endnote'):
+                props = ET.SubElement(root, f'{{{W}}}{kind}Pr')
+                for identifier in ('0', '1'):
+                    ET.SubElement(props, f'{{{W}}}{kind}', {f'{{{W}}}id':identifier})
+            alternate = ET.SubElement(root, f'{{{MC}}}AlternateContent')
+            choice = ET.SubElement(alternate, f'{{{MC}}}Choice', {'Requires':'wpsCustomData'})
+            ET.SubElement(choice, f'{{{WPS_DATA}}}typoFeatureVersion', {'val':'0'})
+        changes['word/settings.xml'] = configuration
+    if 'fontTable' in selected:
+        def alternative_font(root):
+            ET.SubElement(root.find(f'{{{W}}}font'), f'{{{W}}}altName', {f'{{{W}}}val':'Fictional Alternate Font'})
+        changes['word/fontTable.xml'] = alternative_font
+    note_parts = [kind for kind in ('footnotes', 'endnotes') if kind in selected]
+    for kind in note_parts:
+        root = ET.Element(f'{{{W}}}{kind}')
+        for identifier, note_type in [('0', 'separator'), ('1', 'continuationSeparator')]:
+            note = ET.SubElement(root, f'{{{W}}}{kind[:-1]}', {f'{{{W}}}id':identifier, f'{{{W}}}type':note_type})
+            paragraph = ET.SubElement(note, f'{{{W}}}p')
+            ET.SubElement(ET.SubElement(paragraph, f'{{{W}}}pPr'), f'{{{W}}}spacing',
+                {f'{{{W}}}before':'0', f'{{{W}}}after':'0', f'{{{W}}}line':'300', f'{{{W}}}lineRule':'auto'})
+            ET.SubElement(ET.SubElement(paragraph, f'{{{W}}}r'), f'{{{W}}}{note_type}')
+        changes[f'word/{kind}.xml'] = ET.tostring(root)
+    def types(root):
+        for kind in note_parts:
+            ET.SubElement(root, f'{{{CT}}}Override', {'PartName':f'/word/{kind}.xml',
+                'ContentType':f'application/vnd.openxmlformats-officedocument.wordprocessingml.{kind}+xml'})
+    def relations(root):
+        for kind in note_parts:
+            ET.SubElement(root, f'{{{REL}}}Relationship', {'Id':'fictional-'+kind,
+                'Type':OFFICE_REL+kind, 'Target':kind+'.xml'})
+    changes['[Content_Types].xml'] = types
+    changes['word/_rels/document.xml.rels'] = relations
+    return edited(saved(office_document()), changes)
+
+
+@pytest.mark.parametrize('selected', [('settings',), ('fontTable',), ('footnotes',), ('endnotes',),
+                                     ('settings', 'fontTable', 'footnotes', 'endnotes')])
+def test_finite_wps_configuration_and_separator_notes_are_metadata(selected):
+    result = parse(finite_auxiliary_document(selected))
+    assert len(result.anchors) == 3
+    assert not result.quality_issues
+    assert not result.unsupported_parts
+    for kind in selected:
+        assert f'word/{kind}.xml:metadata_read' in result.parts
+
+
+@pytest.mark.parametrize('kind', ['footnotes', 'endnotes'])
+@pytest.mark.parametrize('mutation', ['body', 'unknown', 'type', 'relationship', 'root', 'external'])
+def test_separator_parts_do_not_hide_body_unknown_identity_or_external_content(kind, mutation):
+    def note_content(root):
+        if mutation == 'body':
+            note = ET.SubElement(root, f'{{{W}}}{kind[:-1]}', {f'{{{W}}}id':'2'})
+            ET.SubElement(ET.SubElement(ET.SubElement(note, f'{{{W}}}p'), f'{{{W}}}r'), f'{{{W}}}t').text = 'SYNTHETIC extra payment 8181.'
+        else:
+            ET.SubElement(root[0], f'{{{W}}}unknownEmptyObject')
+    def wrong_type(root):
+        next(node for node in root if node.get('PartName') == f'/word/{kind}.xml').set('ContentType', 'application/xml')
+    def wrong_relation(root):
+        relation = next(node for node in root if node.get('Target') == kind+'.xml')
+        relation.set('Type', 'urn:fictional:unknown') if mutation == 'relationship' else relation.set('TargetMode', 'External')
+    changes = {f'word/{kind}.xml':note_content} if mutation in {'body', 'unknown'} else (
+        {'[Content_Types].xml':wrong_type} if mutation == 'type' else
+        {f'word/{kind}.xml':b'<notNotes/>'} if mutation == 'root' else
+        {'word/_rels/document.xml.rels':wrong_relation})
+    result = parse(edited(finite_auxiliary_document(), changes))
+    assert f'word/{kind}.xml' in result.unsupported_parts
+    assert not any('8181' in anchor.quote for anchor in result.anchors)
+
+
+@pytest.mark.parametrize('mutation', ['text', 'unknown', 'fallback', 'namespace', 'version', 'attribute', 'requires', 'wrapper'])
+def test_wps_metadata_extension_does_not_admit_unknown_compatibility_content(mutation):
+    def mutate(root):
+        alternate = root.find(f'{{{MC}}}AlternateContent')
+        feature = alternate[0][0]
+        if mutation == 'text':
+            feature.text = 'SYNTHETIC hidden obligation 9292.'
+        elif mutation == 'unknown':
+            ET.SubElement(feature, f'{{{WPS_DATA}}}unknownFeature')
+        elif mutation == 'fallback':
+            ET.SubElement(alternate, f'{{{MC}}}Fallback')
+        elif mutation == 'namespace':
+            feature.tag = '{urn:fictional:other}typoFeatureVersion'
+        elif mutation == 'version':
+            feature.set('val', '1')
+        elif mutation == 'requires':
+            alternate[0].set('Requires', 'fictionalOtherFeature')
+        elif mutation == 'wrapper':
+            alternate[0].remove(feature)
+            ET.SubElement(alternate[0], f'{{{WPS_DATA}}}wpsCustomData').append(feature)
+        else:
+            feature.set('unknown', 'synthetic')
+    result = parse(edited(finite_auxiliary_document(), {'word/settings.xml':mutate}))
+    assert 'word/settings.xml' in result.unsupported_parts
+
+
+@pytest.mark.parametrize('kind', ['footnotes', 'endnotes'])
+def test_unknown_namespaced_feature_attribute_remains_unread(kind):
+    def qualified_version(root):
+        feature = root.find(f'{{{MC}}}AlternateContent/{{{MC}}}Choice/{{{WPS_DATA}}}typoFeatureVersion')
+        feature.attrib = {f'{{{WPS_DATA}}}val':'0'}
+    result = parse(edited(finite_auxiliary_document((kind, 'settings')), {'word/settings.xml':qualified_version}))
+    assert 'word/settings.xml' in result.unsupported_parts
+
+
+@pytest.mark.parametrize('kind', ['footnotes', 'endnotes'])
+@pytest.mark.parametrize('mutation', ['duplicate_id', 'duplicate_type', 'normal_type', 'wrong_marker', 'missing_marker', 'unknown_attribute', 'text_tail', 'spacing_unknown', 'spacing_rule', 'oversize_id'])
+def test_separator_metadata_rejects_ambiguous_record_structure(kind, mutation):
+    def mutate(root):
+        if mutation == 'duplicate_id':
+            root[1].set(f'{{{W}}}id', '00')
+        elif mutation == 'oversize_id':
+            root[1].set(f'{{{W}}}id', '12345678901')
+        elif mutation == 'duplicate_type':
+            root[1].set(f'{{{W}}}type', 'separator')
+        elif mutation == 'normal_type':
+            root[1].set(f'{{{W}}}type', 'normal')
+        elif mutation == 'wrong_marker':
+            root[1].find(f'{{{W}}}p/{{{W}}}r')[0].tag = f'{{{W}}}separator'
+        elif mutation == 'missing_marker':
+            root[1].find(f'{{{W}}}p/{{{W}}}r').clear()
+        elif mutation == 'unknown_attribute':
+            root[1].set('unknown', 'synthetic')
+        elif mutation in {'spacing_unknown', 'spacing_rule'}:
+            spacing = root[1].find(f'{{{W}}}p/{{{W}}}pPr/{{{W}}}spacing')
+            spacing.set(f'{{{W}}}'+('unknown' if mutation == 'spacing_unknown' else 'lineRule'), 'fictional')
+        else:
+            root[1].tail = 'SYNTHETIC outside-note obligation.'
+    result = parse(edited(finite_auxiliary_document(), {f'word/{kind}.xml':mutate}))
+    assert f'word/{kind}.xml' in result.unsupported_parts

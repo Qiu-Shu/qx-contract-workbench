@@ -2,6 +2,7 @@
 from io import BytesIO
 from pathlib import PurePosixPath
 import posixpath
+import re
 import stat
 import struct
 import unicodedata
@@ -25,6 +26,8 @@ O = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/'
 A = 'http://schemas.openxmlformats.org/drawingml/2006/main'
 B = 'http://schemas.openxmlformats.org/officeDocument/2006/bibliography'
 C = 'http://schemas.openxmlformats.org/officeDocument/2006/customXml'
+MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006'
+WPS_DATA = 'http://www.wps.cn/officeDocument/2013/wpsCustomData'
 
 # A deliberately finite structural subset. Unknown elements remain unread even
 # in a correctly named, declared and related Office auxiliary part.
@@ -38,7 +41,7 @@ STYLE_TAGS = set(('styles style docDefaults pPrDefault rPrDefault latentStyles l
 SETTINGS_TAGS = set(('settings zoom proofState defaultTabStop characterSpacingControl '
                     'savePreviewPicture doNotAutoCompressPictures compat compatSetting rsids '
                     'rsidRoot rsid themeFontLang clrSchemeMapping decimalSymbol listSeparator '
-                    'shapeDefaults useFELayout').split())
+                    'shapeDefaults useFELayout documentProtection footnotePr footnote endnotePr endnote').split())
 THEME_TAGS = set(('theme themeElements clrScheme dk1 dk2 lt1 lt2 accent1 accent2 accent3 '
                  'accent4 accent5 accent6 hlink folHlink sysClr srgbClr fontScheme majorFont '
                  'minorFont latin ea cs font fmtScheme fillStyleLst solidFill schemeClr '
@@ -56,6 +59,57 @@ def _tags(root, namespace, names):
     permitted = {f'{{{namespace}}}{name}' for name in names}
     return root is not None and all(node.tag in permitted and not (node.text or '').strip()
                                     and not (node.tail or '').strip() for node in root.iter())
+
+
+def _separator_notes(root, role):
+    names = {role, role[:-1], 'p', 'pPr', 'spacing', 'r', 'separator', 'continuationSeparator'}
+    if (not _tags(root, W, names) or len(root) != 2
+            or not root.attrib.keys() <= {f'{{{MC}}}Ignorable'}):
+        return False
+    kinds, identifiers = set(), set()
+    for note in root:
+        kind, identifier = note.get(f'{{{W}}}type'), note.get(f'{{{W}}}id', '')
+        if (note.tag != f'{{{W}}}{role[:-1]}' or set(note.attrib) != {f'{{{W}}}type', f'{{{W}}}id'}
+                or kind not in {'separator', 'continuationSeparator'} or kind in kinds
+                or not re.fullmatch(r'-?[0-9]{1,10}', identifier) or int(identifier) in identifiers
+                or len(note) != 1 or note[0].tag != f'{{{W}}}p'):
+            return False
+        kinds.add(kind); identifiers.add(int(identifier))
+        paragraph = note[0]
+        if [child.tag for child in paragraph] not in ([f'{{{W}}}r'], [f'{{{W}}}pPr', f'{{{W}}}r']):
+            return False
+        for node in paragraph.iter():
+            if node.tag in {f'{{{W}}}p', f'{{{W}}}r'}:
+                if any(name not in {f'{{{W}}}'+key for key in ('rsidR', 'rsidRPr', 'rsidRDefault', 'rsidP')}
+                       or not re.fullmatch('[0-9a-fA-F]{8}', value) for name, value in node.attrib.items()):
+                    return False
+            elif node.tag == f'{{{W}}}pPr':
+                if node.attrib or len(node) > 1 or any(child.tag != f'{{{W}}}spacing' for child in node):
+                    return False
+            elif node.tag == f'{{{W}}}spacing':
+                if len(node) or any((value not in {'auto', 'exact', 'atLeast'} if name == f'{{{W}}}lineRule'
+                    else name not in {f'{{{W}}}'+key for key in ('before', 'after', 'line')}
+                    or not re.fullmatch('[0-9]+', value)) for name, value in node.attrib.items()):
+                    return False
+            elif node.attrib or len(node):
+                return False
+        run = paragraph[-1]
+        if len(run) != 1 or run[0].tag != f'{{{W}}}{kind}':
+            return False
+    return True
+
+
+def _wps_settings_choice(node):
+    if (node.attrib or (node.text or '').strip() or (node.tail or '').strip() or len(node) != 1
+            or node[0].tag != f'{{{MC}}}Choice'):
+        return False
+    choice = node[0]
+    if (choice.attrib != {'Requires':'wpsCustomData'}
+            or len(choice) != 1 or choice[0].tag != f'{{{WPS_DATA}}}typoFeatureVersion'):
+        return False
+    feature = choice[0]
+    return (not len(feature) and feature.attrib == {'val':'0'}
+            and all(not (item.text or '').strip() and not (item.tail or '').strip() for item in choice.iter()))
 
 
 def _auxiliary_content(role, root, data):
@@ -78,18 +132,39 @@ def _auxiliary_content(role, root, data):
         return True
     if role == 'numbering':
         return _tags(root, W, NUMBERING_TAGS)
+    if role in {'footnotes', 'endnotes'}:
+        return _separator_notes(root, role)
     if role == 'settings':
         permitted = {f'{{{W}}}{name}' for name in SETTINGS_TAGS}
         permitted |= {f'{{http://schemas.openxmlformats.org/officeDocument/2006/math}}{name}'
                       for name in 'mathPr mathFont brkBin brkBinSub smallFrac dispDef lMargin rMargin defJc wrapIndent intLim naryLim'.split()}
         permitted |= {f'{{http://schemas.microsoft.com/office/word/2010/wordml}}{name}' for name in ('docId', 'defaultImageDpi')}
         permitted |= {f'{{urn:schemas-microsoft-com:office:office}}{name}' for name in ('shapedefaults', 'shapelayout', 'idmap')}
-        return root is not None and all(node.tag in permitted and not (node.text or '').strip()
-                                        and not (node.tail or '').strip() for node in root.iter())
+        pending = [(root, None)] if root is not None else []
+        while pending:
+            node, parent = pending.pop()
+            if node.tag == f'{{{MC}}}AlternateContent':
+                if parent != f'{{{W}}}settings' or not _wps_settings_choice(node):
+                    return False
+                continue
+            if node.tag not in permitted or (node.text or '').strip() or (node.tail or '').strip():
+                return False
+            if node.tag in {f'{{{W}}}footnote', f'{{{W}}}endnote'}:
+                if (parent != node.tag+'Pr' or len(node) or set(node.attrib) != {f'{{{W}}}id'}
+                        or not re.fullmatch(r'-?[0-9]+', node.get(f'{{{W}}}id', ''))):
+                    return False
+            if node.tag in {f'{{{W}}}documentProtection', f'{{{W}}}footnotePr', f'{{{W}}}endnotePr'}:
+                if parent != f'{{{W}}}settings' or node.tag.endswith('documentProtection') and len(node):
+                    return False
+            pending.extend((child, node.tag) for child in node)
+        return root is not None
     if role == 'webSettings':
         return _tags(root, W, {'webSettings', 'allowPNG', 'doNotSaveAsSingleFile'})
     if role == 'fontTable':
-        return _tags(root, W, {'fonts', 'font', 'charset', 'family', 'notTrueType', 'panose1', 'pitch', 'sig'})
+        return (_tags(root, W, {'fonts', 'font', 'charset', 'family', 'notTrueType', 'panose1', 'pitch', 'sig', 'altName'})
+                and all(child.tag != f'{{{W}}}altName' or (parent.tag == f'{{{W}}}font'
+                    and not len(child) and set(child.attrib) == {f'{{{W}}}val'} and child.get(f'{{{W}}}val', '').strip())
+                    for parent in root.iter() for child in parent))
     if role == 'theme':
         return _tags(root, A, THEME_TAGS)
     if role == 'customXml':
@@ -152,6 +227,8 @@ def _classify_auxiliaries(package, xml_parts):
     roles = [
         ('styles', O + 'styles', prefix + 'wordprocessingml.styles+xml', f'{{{W}}}styles', 'word/document.xml'),
         ('stylesWithEffects', 'http://schemas.microsoft.com/office/2007/relationships/stylesWithEffects', 'application/vnd.ms-word.stylesWithEffects+xml', f'{{{W}}}styles', 'word/document.xml'),
+        ('footnotes', O + 'footnotes', prefix + 'wordprocessingml.footnotes+xml', f'{{{W}}}footnotes', 'word/document.xml'),
+        ('endnotes', O + 'endnotes', prefix + 'wordprocessingml.endnotes+xml', f'{{{W}}}endnotes', 'word/document.xml'),
         ('settings', O + 'settings', prefix + 'wordprocessingml.settings+xml', f'{{{W}}}settings', 'word/document.xml'),
         ('webSettings', O + 'webSettings', prefix + 'wordprocessingml.webSettings+xml', f'{{{W}}}webSettings', 'word/document.xml'),
         ('fontTable', O + 'fontTable', prefix + 'wordprocessingml.fontTable+xml', f'{{{W}}}fonts', 'word/document.xml'),
