@@ -110,7 +110,9 @@ def main():
             from .weixin_inbox.personal_runtime import PersonalWeixinRuntime, attach_runtime
             from .desktop_control import PERSONAL_WEIXIN_PROTOCOL
             main_control = NativeModelControl(app.state.database, registry)
-            personal = PersonalWeixinRuntime(app.state.database, main_control, app.state.assistant_generation_tasks)
+            from .assistant.shared_judge import SharedJudgeService
+            shared_judge = SharedJudgeService(app.state.database, judge)
+            personal = PersonalWeixinRuntime(app.state.database, main_control, app.state.assistant_generation_tasks, judge=shared_judge)
             attach_runtime(app, personal)
             attach_control(app, channel, NativeControlHandler(
                 main_control, NativeJudgeControl(judge, database=app.state.database), personal))

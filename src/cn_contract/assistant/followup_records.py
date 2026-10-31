@@ -99,7 +99,7 @@ def validate_followup_records(db,*,allowed=True):
     from ..storage_schema import identify_schema
     schema=[tuple(r) for r in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
     native=any(r[1]=='local_workspace_identity' for r in schema)
-    if identify_schema(schema,native=native) not in ('assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1', 'weixin-personal-runtime-v1'):return
+    if identify_schema(schema,native=native) not in ('assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1', 'weixin-personal-runtime-v1', 'weixin-service-v1'):return
     ids=db.execute(text('SELECT DISTINCT conversation_id FROM assistant_followup_revisions')).scalars().all()
     if ids and not allowed:raise ValueError('FOLLOWUP_NOT_ALLOWED')
     for cid in ids:history(db,UUID(cid))

@@ -77,8 +77,11 @@ def test_schema_expands_only_two_checks_and_preserves_historical_objects(tmp_pat
         assert schema_migrations.upgrade_database(db)==storage_schema.CURRENT_VERSION
         after=schema_migrations.database_rows(db)
         assert storage_schema.identify_schema(after,native=native)==storage_schema.CURRENT_VERSION
+        from cn_contract.weixin_inbox.service_schema import expected_objects
+        added_tables={'weixin_personal_runs','weixin_personal_outbox'} | {
+            row[1] for row in expected_objects() if row[0]=='table'}
         assert [row for row in before if row[0]!='table' or row[1] not in ('task_channel_bindings','weixin_accounts')]==[
-            row for row in after if row[2] not in ('weixin_personal_runs','weixin_personal_outbox') and (row[0]!='table' or row[1] not in ('task_channel_bindings','weixin_accounts'))]
+            row for row in after if row[2] not in added_tables and (row[0]!='table' or row[1] not in ('task_channel_bindings','weixin_accounts'))]
         assert db.execute('SELECT username FROM users').fetchall()==[('fiction',)]
         assert db.execute('PRAGMA foreign_key_check').fetchall()==[]
     finally:

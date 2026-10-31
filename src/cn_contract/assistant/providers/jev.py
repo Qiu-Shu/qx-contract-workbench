@@ -140,7 +140,8 @@ class JevProvider:
                 status, reason = 'failed', 'config_changed'
             if loop.time() >= deadline:
                 status, reason = 'timed_out', 'timeout'
-            result = d.JudgeResult(status=status, reason_code=reason, evidence=evidence,
+            result_type = d.ServiceJudgeResult if type(value) is d.ServiceJudgeRequest else d.JudgeResult
+            result = result_type(status=status, reason_code=reason, evidence=evidence,
                 local_request_id=value.local_request_id, scope=value.scope, input_hash=digest,
                 elapsed_ms=max(0, int((loop.time() - started) * 1000)),
                 model=decoded['model'] if evidence == 'received' else None,
@@ -148,7 +149,7 @@ class JevProvider:
                 usage=decoded['usage'] if evidence == 'received' else None,
                 provider_request_id=decoded['provider_request_id'] if evidence == 'received' else None)
             if status == 'ok' and loop.time() >= deadline:
-                return d.JudgeResult.model_validate({**result.model_dump(mode='python'),
+                return result_type.model_validate({**result.model_dump(mode='python'),
                     'status': 'timed_out', 'reason_code': 'timeout', 'answers': {},
                     'elapsed_ms': max(0, int((loop.time() - started) * 1000))})
             return result

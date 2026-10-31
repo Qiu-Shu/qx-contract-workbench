@@ -50,6 +50,17 @@ def add_link(db, mapping_id, draft, event_id, result):
 
 
 def require_model_source(actor, basis, db):
+    if db.scalar(text("SELECT 1 FROM sqlite_master WHERE name='weixin_service_runs'")):
+        linked = db.execute(text('''SELECT r.*,c.account_id,c.owner_id FROM weixin_service_runs r
+            JOIN weixin_service_connections c ON c.id=r.connection_id WHERE r.model_request_id=:id'''),
+            {'id':str(basis.request_id)}).mappings().first()
+        if linked:
+            from . import accounts
+            accounts._account(actor,linked['account_id'],db,mode='weixin_personal')
+            if (linked['owner_id']!=str(actor.user_id)
+                    or d.ScopeSnapshot.model_validate_json(linked['scope_json'])!=basis.expected_scope
+                    or str(basis.parent_business_run_id)!=linked['business_run_id']):
+                raise ServiceError('BLOCKED_LIVE',403)
     if not db.scalar(text("SELECT 1 FROM sqlite_master WHERE name='weixin_personal_runs'")):
         return
     link = db.execute(text('SELECT * FROM weixin_personal_runs WHERE model_request_id=:id'),

@@ -4499,6 +4499,67 @@ class PersonalWeixinAutomaticPolicy(DomainModel):
     max_total_usd: Annotated[ExactDecimal, Field(gt=0, le=100)] | None
 
 
+class NativeServiceWeixinStart(DomainModel):
+    session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
+    workspace_id: UUID
+    automatic_policy: PersonalWeixinAutomaticPolicy | None = None
+
+
+class ServiceRouteDecision(DomainModel):
+    action: Literal['wait', 'start', 'clarify', 'ack']
+    relation: Literal['new', 'existing', 'unassigned'] = 'unassigned'
+    conversation_id: str | None = None
+    workflow: Literal['contract', 'case', 'court', 'sales'] | None = None
+    material_kind: JudgeMaterialKind = 'unknown'
+    notice: str = ''
+
+
+class SharedJudgeInput(DomainModel):
+    expected_scope: ScopeSnapshot
+    purpose: Literal['primary_intent', 'material_kind', 'service_intake']
+    text: Annotated[str, StringConstraints(strict=True, max_length=12000)]
+
+
+class ServiceJudgeScope(DomainModel):
+    workspace_id: UUID
+    owner_id: UUID
+    session_id: UUID
+    connection_id: UUID
+    batch_id: UUID
+    revision: PositiveInt
+
+
+class ServiceJudgeCandidate(DomainModel):
+    conversation_id: UUID
+    title: Annotated[str, StringConstraints(strict=True, max_length=120)]
+
+
+class ServiceJudgeRequest(DomainModel):
+    local_request_id: UUID
+    scope: ServiceJudgeScope | ScopeSnapshot
+    purpose: Literal['service_intake'] = 'service_intake'
+    text: Annotated[str, StringConstraints(strict=True, max_length=12000)]
+    candidates: Annotated[tuple[ServiceJudgeCandidate, ...], Field(max_length=12)] = ()
+    explicit_skill: None = None
+
+
+class ServiceJudgeResult(JudgeResult):
+    scope: ServiceJudgeScope | ScopeSnapshot
+    answers: Annotated[dict[str, JudgeChoice], Field(max_length=4)] = Field(default_factory=dict)
+
+    @model_validator(mode='after')
+    def result_evidence(self):
+        if self.status == 'ok':
+            if (self.reason_code is not None or self.evidence!='received' or self.model is None
+                    or self.elapsed_ms>=2000 or set(self.answers)!={'readiness','relation','workflow','material_kind'}):
+                raise ValueError('invalid service judgment')
+        elif self.answers or self.reason_code is None:
+            raise ValueError('unusable judgment has no answers')
+        if self.evidence!='received' and (self.usage is not None or self.provider_request_id is not None or self.model is not None):
+            raise ValueError('unknown judgment cannot claim received metadata')
+        return self
+
+
 class NativePersonalWeixinStart(DomainModel):
     session_token: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] = Field(repr=False)
     expected_scope: ScopeSnapshot

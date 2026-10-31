@@ -21,7 +21,7 @@ MODE = 'weixin_personal'
 def _validate(db):
     rows = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
     try:
-        if identify_schema(rows,native=True) not in ('weixin-personal-v1', 'weixin-personal-runtime-v1'):
+        if identify_schema(rows,native=True) not in ('weixin-personal-v1', 'weixin-personal-runtime-v1', 'weixin-service-v1'):
             raise ValueError('personal schema required')
     except ValueError:
         raise ServiceError('VERSION_CONFLICT',409) from None

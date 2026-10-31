@@ -10,8 +10,8 @@ def initialize_storage(database):
         version = identify_schema(rows,native=any(row[1]=='local_workspace_identity' for row in rows))
     except ValueError:
         version = None
-    if version in ('weixin-personal-v1', 'weixin-personal-runtime-v1'):
-        if version == 'weixin-personal-v1':
+    if version in ('weixin-personal-v1', 'weixin-personal-runtime-v1', 'weixin-service-v1'):
+        if version != 'weixin-service-v1':
             from .weixin_inbox.personal_schema import initialize_storage as upgrade
             upgrade(database)
         mark_storage_initialized(database)

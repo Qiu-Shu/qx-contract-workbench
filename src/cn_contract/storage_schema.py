@@ -23,8 +23,8 @@ from .assistant_schema_baseline import ASSISTANT_V1_ROWS
 from .schema_baseline import INTAKE_V1_ROWS
 
 
-CURRENT_VERSION = 'weixin-personal-runtime-v1'
-VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1', CURRENT_VERSION)
+CURRENT_VERSION = 'weixin-service-v1'
+VERSIONS = ('pre-intake', 'intake-v1', 'assistant-v1', 'assistant-attachments-v1', 'assistant-model-v1', 'assistant-judge-v1', 'assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1', 'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1', 'weixin-personal-runtime-v1', CURRENT_VERSION)
 SUPPORTED_VERSIONS = VERSIONS
 _INTAKE_TABLES = frozenset(('intake_cases', 'intake_revisions'))
 _LIBRARY_ROWS = tuple(library_objects())
@@ -99,9 +99,12 @@ def schema_rows(version, *, native=False):
         from .weixin_inbox.personal_schema import expected_tables, TABLES
         result = [row for row in result if row[0] != 'table' or row[1] not in TABLES]
         result.extend(expected_tables())
-    if version == 'weixin-personal-runtime-v1':
+    if version in VERSIONS[23:]:
         from .weixin_inbox.runtime_schema import expected_objects
         result.extend(expected_objects())
+    if version in VERSIONS[24:]:
+        from .weixin_inbox.service_schema import expected_objects as service_objects
+        result.extend(service_objects())
     if native:
         result.extend(_IDENTITY_ROWS)
     if len({row[1] for row in result}) != len(result):

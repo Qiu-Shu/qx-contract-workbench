@@ -325,7 +325,7 @@ def test_queued_reply_rechecks_authority_before_worker_send(world,fence):
 
 
 def test_runtime_has_exact_successor_schema():
-    assert storage_schema.CURRENT_VERSION == 'weixin-personal-runtime-v1'
+    assert storage_schema.CURRENT_VERSION == 'weixin-service-v1'
     from cn_contract.weixin_inbox.personal_runtime import PersonalWeixinRuntime
     assert PersonalWeixinRuntime
 
@@ -719,7 +719,7 @@ def test_status_same_session_and_chat_and_no_http_start(world):
         assert runtime.status(actor,other.scope.conversation_id).qr_url is None
         app=FastAPI();attach_runtime(app,runtime)
         routes=[r for r in app.routes if 'personal-weixin' in r.path]
-        assert len(routes)==2 and all(route.methods=={'GET'} for route in routes)
+        assert len(routes)==4 and all(route.methods=={'GET'} for route in routes)
         async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app),base_url='http://test',
                 cookies={'qx_session':runtime._value.session_token}) as client:
             result=await client.get(f'/api/assistant/conversations/{cid}/personal-weixin/status')
@@ -769,10 +769,11 @@ def test_exact_successor_migration_preserves_every_predecessor_object(tmp_path):
     db=old_db(tmp_path/'old.db','weixin-personal-v1',True)
     try:
         before=schema_migrations.database_rows(db)
-        assert schema_migrations.upgrade_database(db)=='weixin-personal-runtime-v1'
+        assert schema_migrations.upgrade_database(db)=='weixin-service-v1'
         after=schema_migrations.database_rows(db)
-        assert [row for row in after if row[2] not in ('weixin_personal_runs','weixin_personal_outbox')]==before
-        assert schema_migrations.upgrade_database(db)=='weixin-personal-runtime-v1'
+        additions={row[2] for row in storage_schema.schema_rows('weixin-service-v1',native=True)}-{row[2] for row in before}
+        assert [row for row in after if row[2] not in additions]==before
+        assert schema_migrations.upgrade_database(db)=='weixin-service-v1'
     finally:db.close()
 
 

@@ -21,9 +21,11 @@ NOTICE = records.NOTICES
 
 
 class PersonalWeixinRuntime:
-    def __init__(self, database, native_model, generation_tasks, *, client_factory=httpx.Client):
+    def __init__(self, database, native_model, generation_tasks, *, client_factory=httpx.Client, judge=None):
         self.database, self.native_model, self.generation_tasks = database, native_model, generation_tasks
         self.client_factory = client_factory
+        self.judge = judge
+        self._service = None
         self._epoch = 0
         self._task = self._transport = self._client = self._value = self._actor = None
         self._account = self._mapping = self._context = self._context_event = None
@@ -34,10 +36,18 @@ class PersonalWeixinRuntime:
         native_model.on_policy_change = self._policy_changed
 
     def _policy_changed(self, session_id=None):
+        if self._service is not None:
+            self._service._policy_changed(session_id)
         if session_id is None or self._actor is not None and self._actor.session_id == session_id:
             self.disable()
 
     def start(self, payload):
+        if isinstance(payload, dict) and 'workspace_id' in payload:
+            from .service_runtime import ServiceWeixinRuntime
+            self.disable()
+            self._service = ServiceWeixinRuntime(self.database, self.native_model, self.generation_tasks,
+                client_factory=self.client_factory, judge=self.judge)
+            return self._service.start(payload)
         try:
             value = d.NativePersonalWeixinStart.model_validate(payload)
             with self.database.session() as db:
@@ -60,6 +70,8 @@ class PersonalWeixinRuntime:
             raise ServiceError('BLOCKED_LIVE', 403) from None
 
     def verify(self, payload):
+        if self._service is not None:
+            return self._service.verify(payload)
         if (set(payload) != {'code'} or type(payload['code']) is not str
                 or not re.fullmatch(r'[0-9]{4,12}', payload['code']) or self._status.state != 'need_verifycode'):
             raise ServiceError('BLOCKED_LIVE', 403)
@@ -68,6 +80,9 @@ class PersonalWeixinRuntime:
         return {'status':'accepted'}
 
     def disable(self):
+        if self._service is not None:
+            self._service.disable()
+            self._service = None
         self._epoch += 1
         if self._active_run is not None and self._actor is not None:
             try:
@@ -91,7 +106,11 @@ class PersonalWeixinRuntime:
                 or (self._status.conversation_id == cid and self._status.state != 'disconnected')):
             raise ServiceError('PERSONAL_WEIXIN_CONNECTED', 409)
 
-    def status(self, actor, cid):
+    def status(self, actor, cid=None):
+        if self._service is not None:
+            return self._service.status(actor)
+        if cid is None:
+            return d.PersonalWeixinStatus(state='disconnected')
         with self.database.session() as db:
             service._owned(actor, cid, db)
         if self._status_actor != (actor.user_id,actor.session_id) or self._status.conversation_id != cid:
@@ -517,6 +536,42 @@ def attach_runtime(app, runtime):
     from ..web.request_context import actor_in
     previous = app.router.lifespan_context
     app.state.personal_weixin_runtime = runtime
+
+    @app.get('/api/assistant/personal-weixin/status')
+    async def service_status(request: Request):
+        with runtime.database.session() as db:
+            actor = actor_in(request,db)
+        value = runtime._service.details(actor) if runtime._service else {
+            **runtime.status(actor).model_dump(mode='json'), 'mode':'service',
+            'capabilities':['contract','case','court','sales'],
+            'jev_available':bool(runtime.judge and runtime.judge.available()), 'batches':[]}
+        return JSONResponse(value,headers={'Cache-Control':'no-store'})
+
+    @app.get('/api/assistant/personal-weixin/qr.svg')
+    async def service_qr(request: Request):
+        with runtime.database.session() as db:
+            actor = actor_in(request,db)
+        value = runtime.status(actor)
+        if request.query_params:
+            raise HTTPException(400)
+        if value.state != 'waiting_scan' or not value.qr_url:
+            raise HTTPException(404)
+        import qrcode
+        from qrcode.image.svg import SvgPathImage
+        image = qrcode.make(value.qr_url,image_factory=SvgPathImage)
+        return Response(image.to_string(),media_type='image/svg+xml',headers={
+            'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
+            'Content-Security-Policy':"default-src 'none'; style-src 'none'; sandbox"})
+
+    @app.post('/api/assistant/judge/assist')
+    async def shared_assist(request: Request):
+        with runtime.database.session() as db:
+            actor = actor_in(request,db,write=True)
+        from ..web.request_context import body_input
+        value = await body_input(request,d.SharedJudgeInput)
+        result = await runtime.judge.assist(actor,value) if runtime.judge else None
+        return JSONResponse({'available':bool(runtime.judge and runtime.judge.available()),
+            'result':result.model_dump(mode='json') if result else None},headers={'Cache-Control':'no-store'})
 
     @app.get('/api/assistant/conversations/{identifier}/personal-weixin/status')
     async def status(identifier: UUID, request: Request):
