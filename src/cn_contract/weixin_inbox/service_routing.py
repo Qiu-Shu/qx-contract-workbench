@@ -7,9 +7,19 @@ from ..task_drafts import service as tasks
 
 def control(request):
     clean=re.sub(r'[\s，,。.!！?？；;、]', '',request.text)
-    if clean in {'等待','稍等','等一下','先等等','还没发完','先别处理'}:
+    if any(word in clean for word in ('先别开始','先不要开始','不要开始','暂不开始','还没发完',
+            '尚未发完','没有发完','先别处理','先不要处理','请等待','稍等','等一下','先等等')) or clean=='等待':
         return 'paused'
+    if clean in {'开始','开始处理','发送完毕','可以开始','发完了'} or any(word in clean for word in (
+            '可以开始','发送完毕','材料发完了','请开始处理')):
+        return 'collecting'
     return tasks._control(request)
+
+
+def readiness(content):
+    # Later messages release earlier holds; within a message an explicit negative wins.
+    values=[control(d.TaskInboxEventInput(event_id='routing',text=line)) for line in content.splitlines() if line.strip()]
+    return next((value for value in reversed(values) if value),None)
 
 
 def decide(content, candidates, *, reference=None):
@@ -17,7 +27,7 @@ def decide(content, candidates, *, reference=None):
     clean = re.sub(r'[\s，,。.!！?？；;、]', '', content)
     if clean in {'测试', '你好', '您好', '在吗', '连接测试'}:
         return d.ServiceRouteDecision(action='ack', notice='已连接，消息已收到。')
-    if not content or control(d.TaskInboxEventInput(event_id='routing', text=content)) == 'paused':
+    if not content or readiness(content) in {'paused','cancelled'}:
         return d.ServiceRouteDecision(action='wait', notice='材料已保留，等待您发送完毕并说明处理要求。')
     workflow = business.classify(content)
     workflow = None if workflow == 'ambiguous' else workflow

@@ -79,7 +79,10 @@ def collect(connection, values, cursor, db, *, response_sha256, now=None):
         batch=db.execute(text('''SELECT * FROM weixin_service_batches WHERE connection_id=:id
             AND state IN ('collecting','held','clarify','waiting') ORDER BY rowid DESC LIMIT 1'''),
             {'id':connection['id']}).mappings().first()
-        if batch and (acknowledgement or new and any(payload(e).text.strip() for e in events(batch['id'],db))):
+        clarification_answer=bool(batch and batch['state']=='clarify' and not request.media
+            and request.text.strip().rstrip('。！!') in {'新事项','新案件','新业务'})
+        if batch and (acknowledgement or new and not clarification_answer
+                and any(payload(e).text.strip() for e in events(batch['id'],db))):
             batch=None
         if batch is None:
             batch=dict(id=str(uuid4()),connection_id=connection['id'],revision=1,state='collecting',
@@ -94,7 +97,7 @@ def collect(connection, values, cursor, db, *, response_sha256, now=None):
         ingress._insert('weixin_service_batch_events',dict(batch_id=batch['id'],event_id=identifier),db)
         directive=control(request)
         state='held' if directive in {'paused','cancelled'} or batch['state']=='held' and directive!='collecting' else 'collecting'
-        immediate=acknowledgement or directive=='collecting' or request.text.strip().rstrip('。！!') in ('开始','开始处理','发送完毕','可以开始')
+        immediate=acknowledgement or directive=='collecting'
         db.execute(text('''UPDATE weixin_service_batches SET revision=revision+1,state=:state,deadline=:deadline
             WHERE id=:id'''),{'id':batch['id'],'state':state,
                 'deadline':(now+timedelta(seconds=0 if immediate else 5)).isoformat()})
@@ -155,7 +158,11 @@ def validate_records(db, *, allowed=True):
         event=payload(row)
         if row['event_id']!=event.event_id or row['id']!=str(stable('service-event',row['connection_id'],event.event_id)):
             raise ValueError('SERVICE_EVENT_INTEGRITY')
-    for row in db.execute(text('SELECT * FROM weixin_service_media')).mappings():
+    media=list(db.execute(text('SELECT * FROM weixin_service_media')).mappings())
+    expected={(row['id'],item.media_id) for row in sources.values() for item in payload(row).media}
+    if {(row['event_id'],row['media_id']) for row in media}!=expected:
+        raise ValueError('SERVICE_MEDIA_INTEGRITY')
+    for row in media:
         event=payload(sources[row['event_id']])
         if not any(m.media_id==row['media_id'] for m in event.media) or hashlib.sha256(row['data']).hexdigest()!=row['sha256']:
             raise ValueError('SERVICE_MEDIA_INTEGRITY')

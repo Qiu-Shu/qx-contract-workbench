@@ -16,7 +16,7 @@ from ..task_drafts import service as tasks
 from ..weixin_transport import PersonalWeixinTransport, ProbeError
 from . import accounts, ingress, service_records as journal, runtime_records as records
 from .personal_runtime import PersonalWeixinRuntime
-from .service_routing import decide
+from .service_routing import decide,readiness
 
 
 class ServiceWeixinRuntime(PersonalWeixinRuntime):
@@ -271,7 +271,7 @@ class ServiceWeixinRuntime(PersonalWeixinRuntime):
                         elif len(candidates)==1 and answers.get('relation')=='candidate_a':
                             changes.update(action='start',relation='existing',conversation_id=candidates[0]['id'])
                     # Multiple plausible matters always require an explicit name/reference, even at high confidence.
-                    explicit_start=tasks._control(journal.payload(sources[-1]))=='collecting'
+                    explicit_start=readiness(question)=='collecting'
                     if answers.get('readiness')=='wait' and not explicit_start:
                         changes.update(action='wait',notice='材料已保留，请发送完毕后说“继续”或补充处理要求。')
                     decision=decision.model_copy(update=changes)
@@ -421,8 +421,18 @@ class ServiceWeixinRuntime(PersonalWeixinRuntime):
         if self._value.automatic_policy is None:
             await self._send(epoch,source_id,'collect:'+batch['id'],records.NOTICES['collect_only']);return
         if selected:
-            attachments.select_materials(actor,cid,d.AssistantMaterialSelectionInput(request_id=records.stable('service-selection',batch['id']),
-                expected_scope=scope,items=selected),database=self.database)
+            request_id=records.stable('service-selection',batch['id'])
+            with self.database.session() as db:
+                accepted=attachment_records.operation(cid,request_id,db)
+            selection_scope=scope
+            if accepted:
+                # A committed selection advances only materials_revision. Reconstruct the exact
+                # original request so the existing receipt hash also fences other scope changes.
+                if scope.materials_revision!=accepted['revision']:
+                    raise ServiceError('VERSION_CONFLICT',409)
+                selection_scope=scope.model_copy(update={'materials_revision':accepted['revision']-1})
+            attachments.select_materials(actor,cid,d.AssistantMaterialSelectionInput(request_id=request_id,
+                expected_scope=selection_scope,items=selected),database=self.database)
         actor,scope,composer,dirty=self._target(epoch,cid)
         if dirty:return
         with self.database.session() as db:

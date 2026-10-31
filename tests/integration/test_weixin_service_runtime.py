@@ -1,5 +1,6 @@
 """Synthetic service runtime through actual attachment/business/model ledgers."""
 import asyncio
+import pytest
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import text
 from cn_contract import domain as d
@@ -8,6 +9,101 @@ from cn_contract.weixin_inbox.service_runtime import ServiceWeixinRuntime
 from cn_contract.weixin_transport import PersonalWeixinTransport
 from tests.integration.test_weixin_personal_runtime import setup_runtime,close,packet,command,file_message,count
 from tests.integration.test_assistant_generation import world
+
+
+@pytest.mark.parametrize('hold,start',[(
+    '新事项：请审查合同，先别开始、还没发完','可以开始'),(
+    '新事项：请审查合同，我还没发完，请等待','发送完毕')])
+def test_review_explicit_readiness_overrides_opposite_jev(world,hold,start):
+    from cn_contract.assistant.shared_judge import SharedJudgeService
+    from tests.integration.test_shared_judge_service import JudgeRuntime,JevProvider,server,raw,KEY,service_envelope
+    async def scenario():
+        runtime,wire,manager,main,actor=await setup(world)
+        try:
+            with server(raw(service_envelope({'readiness':'start','relation':'new','workflow':'contract','material_kind':'contract'}))) as (url,received,_):
+                judge=JudgeRuntime();judge.configure(JevProvider.for_synthetic_loopback(d.JevConfig(enabled=True),lambda:KEY,url))
+                runtime.judge=SharedJudgeService(world[0],judge)
+                await runtime.ingest(runtime._epoch,packet(command(1,hold),file_message(wire,2)))
+                await runtime.advance(runtime._epoch,now=later())
+                assert not main.calls
+                with world[0].session() as db:
+                    assert db.scalar(text('SELECT state FROM weixin_service_batches'))=='held'
+            with server(raw(service_envelope({'readiness':'wait','relation':'new','workflow':'contract','material_kind':'contract'}))) as (url,received,_):
+                judge.configure(JevProvider.for_synthetic_loopback(d.JevConfig(enabled=True),lambda:KEY,url))
+                await runtime.ingest(runtime._epoch,packet(command(3,start),cursor='release'))
+                await runtime.advance(runtime._epoch)
+                assert len(main.calls)==1
+                assert received
+                await runtime.advance(runtime._epoch,now=later())
+                assert len(main.calls)==1
+        finally:await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+def test_review_new_matter_clarification_keeps_original_files(world):
+    async def scenario():
+        runtime,wire,manager,main,actor=await setup(world)
+        try:
+            for number,title in ((1,'甲事项'),(3,'乙事项')):
+                await runtime.ingest(runtime._epoch,packet(command(number,'新事项：'+title+'，请整理案件'),file_message(wire,number+1),cursor=title))
+                await runtime.advance(runtime._epoch,now=later())
+            await runtime.ingest(runtime._epoch,packet(command(5,'请审查这份合同'),file_message(wire,6),cursor='ambiguous'))
+            await runtime.advance(runtime._epoch,now=later())
+            with world[0].session() as db:
+                original=db.scalar(text("SELECT id FROM weixin_service_batches WHERE state='clarify'"))
+            assert original and len(main.calls)==2
+            await runtime.ingest(runtime._epoch,packet(command(7,'新事项'),cursor='answer'))
+            await runtime.advance(runtime._epoch,now=later())
+            assert len(main.calls)==3
+            with world[0].session() as db:
+                assert db.scalar(text('SELECT COUNT(*) FROM weixin_service_batches'))==3
+                assert db.scalar(text('SELECT COUNT(*) FROM weixin_service_batch_events WHERE batch_id=:id'),{'id':original})==3
+            await runtime.ingest(runtime._epoch,packet(command(8,'新事项：乙合同，先别处理'),file_message(wire,9),cursor='another'))
+            await runtime.ingest(runtime._epoch,packet(command(10,'新事项：丙合同，请审查合同'),file_message(wire,11),cursor='separate'))
+            with world[0].session() as db:
+                assert db.scalar(text('SELECT COUNT(*) FROM weixin_service_batches'))==5
+        finally:await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+def test_review_committed_material_selection_recovers_once(world,monkeypatch):
+    from cn_contract.assistant import attachments
+    async def scenario():
+        runtime,wire,manager,main,actor=await setup(world)
+        try:
+            await runtime.ingest(runtime._epoch,packet(command(1,'新事项：请审查合同'),file_message(wire,2)))
+            real=attachments.select_materials
+            def committed_then_crash(*args,**kwargs):
+                real(*args,**kwargs)
+                raise RuntimeError('synthetic crash after selection commit')
+            monkeypatch.setattr(attachments,'select_materials',committed_then_crash)
+            with pytest.raises(RuntimeError,match='after selection commit'):
+                await runtime.advance(runtime._epoch,now=later())
+            assert not main.calls and count(world[0],'weixin_service_runs')==0
+            monkeypatch.setattr(attachments,'select_materials',real)
+            await runtime.advance(runtime._epoch,now=later())
+            await runtime.advance(runtime._epoch,now=later())
+            assert len(main.calls)==1 and count(world[0],'weixin_service_runs')==1
+        finally:await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+def test_review_missing_original_rejected_with_unchanged_trigger_sql(world):
+    from cn_contract.weixin_inbox.service_records import validate_records
+    async def scenario():
+        runtime,wire,manager,main,actor=await setup(world,automatic=False)
+        try:
+            await runtime.ingest(runtime._epoch,packet(file_message(wire,1)))
+            with world[0].session() as db:
+                validate_records(db)
+                triggers=list(db.execute(text("SELECT name,sql FROM sqlite_master WHERE type='trigger' AND tbl_name='weixin_service_media'")))
+                for name,sql in triggers:db.execute(text('DROP TRIGGER '+name))
+                db.execute(text('DELETE FROM weixin_service_media'))
+                for name,sql in triggers:db.execute(text(sql))
+                with pytest.raises(ValueError,match='SERVICE_MEDIA_INTEGRITY'):
+                    validate_records(db)
+        finally:await close(runtime,manager)
+    asyncio.run(scenario())
 
 
 async def setup(world,automatic=True):
