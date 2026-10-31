@@ -64,6 +64,15 @@ test('network-unknown submission is recovered by GET with the original request i
   assert.equal(f.calls.find(call=>call[0]==='find')[2],'request-1');
 });
 
+test('accepted material does not read history against a failed draft refresh',async()=>{
+  const f=fixture();
+  f.host.refreshDraft=async()=>{f.calls.push(['draft']);return false;};
+  assert.equal(await f.controller.send('parent'),false);
+  assert.equal(f.controller.unknown(),false,'a confirmed registration is no longer an uncertain write');
+  assert.equal(f.calls.some(call=>call[0]==='history'),false);
+  assert.equal(f.calls.filter(call=>call[0]==='submit').length,1);
+});
+
 test('reset while confirmation is open invalidates late approval',async()=>{
   let release;
   const gate=new Promise(resolve=>{release=resolve;});

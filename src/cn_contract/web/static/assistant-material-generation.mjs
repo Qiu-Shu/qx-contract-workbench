@@ -27,8 +27,8 @@ export function createMaterialGenerationController(api,host){
         result.scope.input_revision!==action.body.expected_scope.input_revision+1)throw {code:'INVALID_RESPONSE'};
     host.accept(action.body,result,false);
     pending=null;state.materialGeneration.phase='idle';state.materialGeneration.error=null;
-    await host.refreshDraft();
-    if(current(t))await host.refreshHistory();
+    if(!await host.refreshDraft() || !current(t))return false;
+    await host.refreshHistory();
     return true;
   }
   function refresh(){

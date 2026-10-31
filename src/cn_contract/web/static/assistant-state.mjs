@@ -307,6 +307,9 @@ export function createDraftController(api, {
     accept(body,attempt,clearText) {
       state.view={...state.view,scope:{...attempt.scope},composer_revision:body.expected_composer_revision+1,draft_input:''};
       state.savedText='';if(clearText)state.text='';
+      if(attempt.input_format==='material-business-v1') {
+        state.generation.phase='tracking';state.generation.error=null;
+      }
       state.error=null;state.status=state.text?'idle':'saved';notify();
     },
     async readConflict() {
