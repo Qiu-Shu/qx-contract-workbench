@@ -422,6 +422,14 @@ def test_global_http_routes_qr_csrf_and_session_revocation(world):
                 status=await client.get('/api/assistant/personal-weixin/status')
                 assert status.status_code==200 and status.json()['state']=='connected'
                 assert status.json()['capabilities']==['contract','case','court','sales']
+                assert status.json()['workspace_id']==str(world[2].scope.workspace_id)
+                saved=runtime._value
+                runtime._value=None
+                assert (await client.get('/api/assistant/personal-weixin/status')).json()['workspace_id']==str(world[2].scope.workspace_id)
+                runtime._value=saved
+                facade._service=None
+                assert (await client.get('/api/assistant/personal-weixin/status')).json()['workspace_id']==str(world[2].scope.workspace_id)
+                facade._service=runtime
                 runtime._status=runtime._status.model_copy(update={'state':'waiting_scan','qr_url':'https://ilinkai.weixin.qq.com/qr/fiction'})
                 assert (await client.get('/api/assistant/personal-weixin/qr.svg')).status_code==200
                 denied=await client.post('/api/assistant/judge/assist',json={'expected_scope':world[2].scope.model_dump(mode='json'),

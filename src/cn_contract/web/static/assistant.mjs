@@ -26,6 +26,10 @@ const renderer=createRenderer(document,{isComposing:()=>composer?.isComposing(),
   onGenerateMaterial:id=>void safely(()=>controller.generateMaterial(id)),
   onPreviewContext:()=>void safely(()=>controller.previewContext())});
 const controller=createDraftController(api,{readonly,autoReadMaterials:true,
+  automaticIntake:typeof window.desktopAssistant?.modelStatus==='function'?async()=>{
+    const result=await window.desktopAssistant.modelStatus();return result?.ok===true&&
+      result.runtime?.state==='configured'&&result.runtime.automatic_analysis===true;
+  }:null,
   nativeAuthorization:typeof window.desktopAssistant?.authorizeGeneration==='function'
     ?value=>window.desktopAssistant.authorizeGeneration(value):null,
   nativeContextAuthorization:typeof window.desktopAssistant?.authorizeContext==='function'
@@ -72,6 +76,10 @@ function drawState(state) {
   weixinHistory?.state(state);
   weixinPending?.state(state);
   personalWeixin?.state(state);
+  const kinds={contract:'合同',chat:'聊天记录',transfer:'转账凭证',judgment:'裁判文书',mixed:'混合材料'};
+  const kind=state.intakeSuggestion?.material_kind;
+  byId('intake-material-suggestion').hidden=!kind;
+  byId('intake-material-suggestion').textContent=kind?'Jev 材料分类建议：'+kinds[kind]+'，请结合原件核对。':'';
   if(pendingRoute && !state.id && state.status!=='revoked') {
     byId('composer').disabled=true;byId('save-draft').disabled=true;byId('send').disabled=true;
     byId('add-material').disabled=true;
@@ -205,7 +213,7 @@ const localPending=()=>materials.hasSelection()||followups.hasPending()||evidenc
   tasks.hasPending()||weixin.hasPending()||weixinHistory.hasPending()||weixinPending.hasPending()||
   ['generation','research','context','business','materialGeneration'].some(key=>
     ['checking','confirming','submitting','unknown'].includes(controller.state[key]?.phase));
-personalWeixin=bindPersonalWeixin({controller,bridge:window.desktopAssistant,readonly,isBlocked:localPending,
+personalWeixin=bindPersonalWeixin({controller,bridge:window.desktopAssistant,readonly,isBlocked:localPending,onHistory:()=>loadList(),onOpen:id=>void open(id),
   onIncoming:async()=>{
     const id=controller.state.id;
     if(!await controller.refresh(false,()=>!localPending())||id!==controller.state.id||localPending())return;

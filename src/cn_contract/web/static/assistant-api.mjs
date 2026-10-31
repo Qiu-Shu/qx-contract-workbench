@@ -98,3 +98,5 @@ export const findFollowupReceipt=(id,key)=>request(conversation(id)+'/followups/
 export const getFollowupVersion=(id,revision)=>request(conversation(id)+'/followups/revisions/'+encodeURIComponent(revision));
 
 export const submitMaterialGeneration=(id,body)=>request(conversation(id)+'/material-generations',{method:'POST',body});
+
+export const assistJudge=body=>request('/api/assistant/judge/assist',{method:'POST',body});

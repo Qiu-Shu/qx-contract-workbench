@@ -90,3 +90,15 @@ test('startup auto-configure restores only a persisted known choice and never th
   const throwing = { configure: async () => { throw Error('synthetic'); } };
   assert.equal(await autoConfigureModel({ settings: { model: 'deepseek-flash' }, runtime: throwing }), false);
 });
+
+
+test('shared Jev restoration uses saved provider credential and preserves an explicit disable',async()=>{
+  const {autoConfigureJudge}=require('../model-bridge.cjs');const calls=[];
+  const store={status:async()=>({status:'saved'})},runtime={configure:async model=>{calls.push(model);return {ok:true};}};
+  assert.equal(await autoConfigureJudge({settings:{},store,runtime}),true);
+  assert.equal(await autoConfigureJudge({settings:{judge_model:false},store,runtime}),false);
+  assert.equal(await autoConfigureJudge({settings:{judge_model:'foreign'},store,runtime}),false);
+  assert.equal(await autoConfigureJudge({settings:{},store:{status:async()=>({status:'empty'})},runtime}),false);
+  assert.deepEqual(calls,['jev-1.13.0']);
+  assert.equal(await autoConfigureJudge({settings:{},store,runtime:{configure:async()=>({ok:false})}}),false);
+});

@@ -9,3 +9,17 @@
 .personal-weixin-qr figcaption { margin-top: .5rem; }
 .personal-weixin-code { max-width: 24rem; }
 .personal-weixin-code input { width: 100%; min-height: 2.75rem; margin-block: .5rem; font: inherit; }
+
+.sidebar .personal-weixin { margin: .5rem 0; border-top: 1px solid var(--line); font-size: .8125rem; }
+.sidebar .personal-weixin > summary { padding: .75rem .25rem; }
+.sidebar .personal-weixin-summary { display: block; margin: .25rem 0 0; font-size: .75rem; }
+.sidebar .personal-weixin-body { padding: 0 .25rem .75rem; }
+.sidebar .personal-weixin-actions { gap: .375rem; }
+.sidebar .personal-weixin-actions button { min-height: 2.5rem; font-size: inherit; }
+.sidebar .personal-weixin-qr img { width: 100%; max-width: 208px; }
+@media (min-width: 720px) and (max-width: 999px) {
+  body:not(.sidebar-open) .sidebar .personal-weixin:not([open]) > summary { font-size: 0; }
+  body:not(.sidebar-open) .sidebar .personal-weixin:not([open]) > summary::before { content: "微信"; font-size: .8125rem; }
+  body:not(.sidebar-open) .sidebar .personal-weixin:not([open]) .personal-weixin-summary { display: none; }
+  .sidebar:has(.personal-weixin[open]) { width: 224px; }
+}

@@ -34,7 +34,7 @@ function page() {
   return {api,calls,listeners,at:id=>elements.get('#'+id),state:value=>onState(value),html};
 }
 
-test('optional Jev credentials and runtime have separate explicit actions and no automatic configuration',async()=>{
+test('optional Jev credentials and runtime have separate explicit actions and actual configuration status',async()=>{
   const f=page();await tick();
   assert.ok(f.at('judge-settings'),'Jev settings area is missing');
   f.state({mode:'model-settings'});await tick();
@@ -42,7 +42,7 @@ test('optional Jev credentials and runtime have separate explicit actions and no
   assert.equal(f.at('judge-settings').hidden,false);
   assert.equal(f.at('judge-id').value,'jev-1.13.0');
   assert.match(f.at('judge-status').textContent,/尚未保存/);
-  assert.match(f.at('judge-runtime-status').textContent,/未配置.*未批准/);
+  assert.match(f.at('judge-runtime-status').textContent,/未配置.*本地规则/);
   assert.equal(f.at('judge-configure').disabled,true);
   f.calls.length=0;
   f.at('judge-secret').value='synthetic-typesafe-secret';
@@ -54,7 +54,7 @@ test('optional Jev credentials and runtime have separate explicit actions and no
   assert.equal(f.at('judge-configure').disabled,false);
   await f.at('judge-configure').listeners.click();
   assert.deepEqual(f.calls.at(-1),['judgeConfigure','jev-1.13.0']);
-  assert.match(f.at('judge-runtime-status').textContent,/本次运行已配置.*尚未批准发送/);
+  assert.match(f.at('judge-runtime-status').textContent,/本次运行已配置.*凭据有效性待实际请求核对/);
   assert.doesNotMatch(f.at('judge-runtime-status').textContent,/已连接|免费/);
   await f.at('judge-disable').listeners.click();
   assert.match(f.at('judge-runtime-status').textContent,/未配置/);
@@ -200,7 +200,7 @@ test('preload exposes only fixed Jev and assistant operations with isolated chan
 test('Jev copy and initial controls describe optional configuration without claiming permission or a network test',()=>{
   const f=page(),area=f.html.slice(f.html.indexOf('<form id="judge-settings"'),f.html.indexOf('<button id="resume"'));
   assert.match(area,/Jev 辅助判断.*可选/);assert.match(area,/TypeSafe（api.typesafe.ai）/);
-  assert.match(area,/尚未接入对话发送/);assert.match(area,/不会批准发送资料/);
+  assert.match(area,/开启自动分析时，桌面发送也会复用/);assert.match(area,/明确停用后保持关闭/);
   assert.doesNotMatch(area,/已连接|免费|最高收费|测试连接|联网测试/);
   assert.match(area,/<input id="judge-secret"[^>]*type="password"[^>]*autocomplete="off"[^>]*disabled/);
   assert.equal([...area.matchAll(/<option\b/g)].length,1);assert.match(area,/value="jev-1.13.0"/);

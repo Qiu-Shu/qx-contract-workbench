@@ -253,7 +253,7 @@ def main():
             report['http_ipc_denials'] = denied_native(p)
             current.settings(); current.configure('deepseek-v4-pro')
             expect(p.locator('#model-runtime-status')).to_contain_text('尚未授权')
-            expect(p.locator('#judge-runtime-status')).to_contain_text('尚未批准发送')
+            expect(p.locator('#judge-runtime-status')).to_contain_text('凭据有效性待实际请求核对')
             main_controls = current.controls('model')
             main_runtime = current.runtime()
             p.locator('#judge-disable').click(); expect(p.locator('#judge-recheck')).to_be_enabled()

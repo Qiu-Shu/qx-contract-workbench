@@ -42,7 +42,7 @@
 <button id="model-recheck" class="secondary" type="button" disabled>重新检查保存与运行状态</button>
 </form>
 <form id="judge-settings" hidden aria-labelledby="judge-title"><h2 id="judge-title">Jev 辅助判断 <span>可选</span></h2>
-<p>用于辅助判断首个处理流程。当前仅提供本机配置，尚未接入对话发送；保存或配置均不会批准发送资料。</p>
+<p>用于服务台的消息归集、事项类型与材料类型辅助判断。开启自动分析时，桌面发送也会复用；判断建议仍需结合原件核对。</p>
 <section class="model-section" aria-labelledby="judge-credential-title"><h3 id="judge-credential-title">本机密钥</h3>
 <p id="judge-status" class="credential-status" role="status" aria-live="polite">正在检查本机保存状态…</p>
 <label for="judge-secret">TypeSafe API 密钥</label><input id="judge-secret" type="password" required minlength="16" maxlength="512" autocomplete="off" spellcheck="false" aria-describedby="judge-help" disabled>
@@ -53,7 +53,7 @@
 <section class="model-section" aria-labelledby="judge-runtime-title"><h3 id="judge-runtime-title">本次运行</h3>
 <p id="judge-runtime-status" class="credential-status" role="status" aria-live="polite">正在检查本次运行配置…</p>
 <label for="judge-id">使用模型</label><select id="judge-id" aria-describedby="judge-runtime-help" disabled><option value="jev-1.13.0">Jev 1.13.0</option></select>
-<p id="judge-runtime-help" class="hint">接收方：TypeSafe（api.typesafe.ai）。配置仅在本次运行有效，重启后需重新配置；这里不检查联网可用性，也不授予发送许可。</p>
+<p id="judge-runtime-help" class="hint">接收方：TypeSafe（api.typesafe.ai）。配置保存在本机并在重启时恢复；明确停用后保持关闭。这里不检查凭据的联网有效性。</p>
 <p id="judge-runtime-validation" role="alert" hidden></p>
 <div class="model-actions"><button id="judge-configure" type="button" disabled>配置本次运行</button><button id="judge-disable" class="secondary" type="button" disabled>停用本次运行</button></div>
 </section>

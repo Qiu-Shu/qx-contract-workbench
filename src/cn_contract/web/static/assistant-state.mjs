@@ -16,13 +16,14 @@ const activeRuns = new Set(['queued', 'preparing', 'routing', 'retrieving', 'gen
 export function createDraftController(api, {
   onChange = () => {}, onConversation = () => {}, uuid = () => crypto.randomUUID(), readonly = false,
   nativeAuthorization = null, nativeContextAuthorization = null, nativeProfileAuthorization = null, nativeMaterialAuthorization = null,
-  autoReadMaterials = false,
+  autoReadMaterials = false, automaticIntake = null,
 } = {}) {
   const state = {id: null, view: null, text: '', savedText: '', skill: null,
     status: readonly ? 'readonly' : 'idle', error: null, conflict: null, dirty: false, loading: false,
-    materials: null, materialAction: null, desktopModel: null, archiving: null, archivePending: null};
+    materials: null, materialAction: null, desktopModel: null, archiving: null, archivePending: null, intakeSuggestion:null};
   let epoch = 0, closed = false, channel = null, creating = null, pending = null, materialPending = null;
   let reading = false, paging = false, cancelling = false, generation = null, research = null, context = null, business = null, materialGeneration = null;
+  let intakePending=null,intakeRevision=0;
   const stoppedRuns=new Set();
   const isRunStopped=id=>stoppedRuns.has(id)||(state.view?.latest_run?.id===id&&
     (state.view.latest_run.cancel_requested||state.view.latest_run.state==='cancelled'));
@@ -45,7 +46,7 @@ export function createDraftController(api, {
     state.view = null; state.text = state.savedText = ''; state.skill = null;
     state.conflict = state.error = null; state.loading = false;
     state.materials = null; state.materialAction = null;
-    state.archiving = state.archivePending = null;
+    state.archiving = state.archivePending = state.intakeSuggestion = null;intakePending=null;intakeRevision++;
     state.status = readonly ? 'readonly' : 'idle';
   }
   function fail(error, token) {
@@ -332,9 +333,9 @@ export function createDraftController(api, {
   materialGeneration=createMaterialGenerationController(api,{...workflowHost,
     blocked:()=>workflowHost.blocked() || generation?.blocked() || research?.blocked() || context?.blocked() || business?.blocked(),
     refreshHistory:()=>generation.refresh()});
-  async function sendBusiness(){
+  async function sendBusiness(suggestion=null){
     const token=epoch;
-    if(!await business.send()||!current(token))return false;
+    if(!await business.send(suggestion)||!current(token))return false;
     const receipt=business.lastAccepted();
     // Only an acknowledged user send may start analysis. History reads never send.
     // New typing and explicit collection instructions stay in the user's control.
@@ -342,6 +343,38 @@ export function createDraftController(api, {
         /稍等|等我|先别|先不要|暂不|上传完再|发完再/.test(business.lastAcceptedContent()))return true;
     if(receipt.workflow!=='sales'&&!state.materials?.items?.length)return true;
     return materialGeneration.send(receipt.run_id);
+  }
+  async function sendWithIntake(){
+    if(intakePending)return false;
+    if(!automaticIntake||!api.assistJudge||readonly||state.status==='revoked'||!state.text.trim()||
+        ['generation','research','context','business','materialGeneration'].some(key=>['checking','confirming','submitting','unknown'].includes(state[key]?.phase)))return sendCurrent();
+    const marker={},token=epoch,revision=intakeRevision;
+    intakePending=marker;
+    const valid=()=>current(token)&&revision===intakeRevision&&state.status!=='revoked'&&!state.conflict;
+    try{
+      let automatic=false;try{automatic=await automaticIntake();}catch{}
+      if(!automatic){if(!valid())return false;return await sendCurrent();}
+      if(!valid()||!await save(false,true)||!valid())return false;
+      const text=state.text,scope={...state.view.scope},composer=state.view.composer_revision;
+      let reply;
+      try{reply=await api.assistJudge({expected_scope:scope,purpose:'service_intake',text:text.slice(0,12000)});}catch(error){
+        if(isAuthorizationError(error))return fail(error,token);
+      }
+      if(!valid()||text!==state.text||!sameScope(scope,state.view?.scope)||composer!==state.view?.composer_revision)return false;
+      const result=reply?.available===true&&reply.result?.status==='ok'&&sameScope(reply.result.scope,scope)?reply.result:null;
+      const choice=(name,allowed)=>{const answer=result?.answers?.[name];return answer?.confidence>=.8&&allowed.includes(answer.choice)?answer.choice:null;};
+      const workflow=choice('workflow',['contract','case','court','sales']);
+      state.intakeSuggestion={material_kind:choice('material_kind',['contract','chat','transfer','judgment','mixed']),scope};
+      notify();
+      // Enter is an explicit send; readiness/relation never postpone or redirect it.
+      return await (!state.skill&&!state.context?.selected.length&&!state.business?.selectedTask&&workflow
+        ?sendBusiness(workflow):sendCurrent());
+    }finally{if(intakePending===marker)intakePending=null;}
+  }
+  function sendCurrent(){
+    return materialGeneration.unknown()?materialGeneration.refresh():business.unknown()?sendBusiness():research.unknown()?research.send():generation.unknown()?generation.send():
+      context.unknown()?context.send():business.handles()?sendBusiness():state.skill==='legal_research'?research.send():
+      !state.skill&&state.context?.selected.length?context.send():generation.send();
   }
   function refreshWorkflows(){
     if(materialGeneration.unknown())return materialGeneration.refresh();
@@ -360,7 +393,7 @@ export function createDraftController(api, {
     });
   }
   function canLeave() {
-    return closed || (!state.dirty && !state.loading && !channel && !reading && !paging && !cancelling &&
+    return closed || (!intakePending && !state.dirty && !state.loading && !channel && !reading && !paging && !cancelling &&
       !generation.blocked() && !research.blocked() && !context.blocked() && !business.blocked() && !materialGeneration.blocked());
   }
   async function archiveConversation(view) {
@@ -395,7 +428,7 @@ export function createDraftController(api, {
     state,
     edit(text) {
       if (closed || readonly || state.loading || state.status === 'revoked') return;
-      state.text = text; generation.changed();research.changed();context.changed();
+      intakeRevision++;state.intakeSuggestion=null;state.text = text; generation.changed();research.changed();context.changed();
       if (state.conflict) state.conflict.local = text;
       if (state.status === 'saved') state.status = 'idle';
       notify();
@@ -410,21 +443,17 @@ export function createDraftController(api, {
         }
         state.business.selectedTask=null;
       }
-      state.skill = skill; generation.changed();research.changed();context.changed(); notify();
+      intakeRevision++;state.intakeSuggestion=null;state.skill = skill; generation.changed();research.changed();context.changed(); notify();
     },
     open, archiveConversation, async ensureConversation() {
       if(closed || readonly || state.loading || state.conflict || state.status==='revoked' || state.status==='error')return false;
       if(!state.id){creating ||= {request_id:uuid()};notify();}
       return await save() && Boolean(state.id);
     }, save: () => save(), retry: () => save(true), refresh, loadEarlier, cancel,
-    send:()=>materialGeneration.unknown()?materialGeneration.refresh():business.unknown()?sendBusiness():research.unknown()?research.send():generation.unknown()?generation.send():
-      context.unknown()?context.send():
-      business.handles()?sendBusiness():
-      state.skill==='legal_research'?research.send():
-      !state.skill && state.context?.selected.length?context.send():generation.send(),
+    send:()=>!automaticIntake||!api.assistJudge?sendCurrent():sendWithIntake(),
     generateMaterial:id=>materialGeneration.send(id),
     previewContext:()=>context.preview(),
-    selectBusinessTask:id=>business.select(id),
+    selectBusinessTask:id=>{intakeRevision++;state.intakeSuggestion=null;return business.select(id);},
     toggleContextCitation(id){
       const selected=state.context.selected.join(',');context.toggle(id);
       if(selected!==state.context.selected.join(',')){generation.changed();notify();}

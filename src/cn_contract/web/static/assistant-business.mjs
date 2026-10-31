@@ -66,12 +66,14 @@ export function createBusinessController(api,host) {
     if(!result){state.business.phase='unknown';return false;}
     return accept(result,t);
   }
-  function send(){
+  function send(suggestion=null){
     if(pending)return perform(recover);
-    if(!api.submitBusiness||!usable()||!businessWorkflow(state))return Promise.resolve(false);
+    if(!api.submitBusiness||!usable()||!(businessWorkflow(state)||suggestion))return Promise.resolve(false);
     return perform(async t=>{
       if(!await host.saveDraft()||!current(t))return false;
-      const route=businessWorkflow(state),workflow=['sales','case','contract','court'].includes(route)?route:null;
+      const inferred=businessWorkflow(state);
+      const route=suggestion&&(!inferred||inferred==='continue'&&!state.business.items.some(item=>item.task_id))?suggestion:inferred;
+      const workflow=['sales','case','contract','court'].includes(route)?route:null;
       const fresh=/重新审查|新建任务|开始新任务/.test(state.text);
       let selected=state.business.items.find(item=>item.task_id===state.business.selectedTask);
       if(!selected&&route==='continue'&&!fresh){

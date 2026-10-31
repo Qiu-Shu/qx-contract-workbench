@@ -5,16 +5,10 @@ const exact=(value,keys)=>value&&typeof value==='object'&&!Array.isArray(value)&
   Object.keys(value).length===keys.length&&keys.every(key=>Object.hasOwn(value,key));
 const check=guard=>{try{return guard()===true;}catch{return false;}};
 const denied=()=>({ok:false,code:'STATE_CONFLICT'});
-function validScope(scope,cid){
-  return exact(scope,['workspace_id','conversation_id','scope_kind','scope_ref','binding_revision','input_revision','materials_revision'])&&
-    UUID.test(scope.workspace_id)&&scope.conversation_id===cid&&['conversation','intake','matter'].includes(scope.scope_kind)&&
-    (scope.scope_kind==='conversation'?scope.scope_ref===null:UUID.test(scope.scope_ref))&&
-    ['binding_revision','input_revision','materials_revision'].every(key=>Number.isSafeInteger(scope[key])&&scope[key]>=0)&&scope.binding_revision>0;
-}
 function registerPersonalWeixin({ipcMain,runtime,captureContext,readJSON=auth.readJSON}){
   let connection=null,pending=null,closed=false,epoch=0;
   const supported=context=>context&&check(context.guard)&&!context.backend.closing&&
-    context.backend.control?.personalWeixinEnabled===true&&(context.conversation_id===null||UUID.test(context.conversation_id));
+    context.backend.control?.personalWeixinEnabled===true;
   async function stop(captured){
     if(!captured)return;
     if(connection===captured)connection=null;
@@ -25,27 +19,45 @@ function registerPersonalWeixin({ipcMain,runtime,captureContext,readJSON=auth.re
   }
   async function authenticated(context,expected){
     if(!supported(context))throw new Error();
-    const paths=['/api/session',...(context.conversation_id?['/api/assistant/conversations/'+context.conversation_id]:[])];
+    const paths=['/api/session'];
     const token=await auth.tokenFor(context,paths,context.guard,expected);
-    await readJSON(context.origin,paths[0],token);
+    const actor=await readJSON(context.origin,paths[0],token);
+    if(typeof actor?.username!=='string'||!actor.username)throw new Error();
+    if(context.actor&&context.actor!==actor.username)throw new Error();
+    context.actor=actor.username;
     if(!check(context.guard))throw new Error();
     return token;
   }
   async function sameConnection(context,captured){
     if(!captured||captured.backend!==context.backend||captured.origin!==context.origin||captured.workspace!==context.workspace)throw new Error();
     await authenticated(context,captured.token);
+    if(context.actor!==captured.actor)throw new Error();
     if(connection!==captured)throw new Error();
+  }
+  async function globalStatus(context,token){
+    const value=await readJSON(context.origin,'/api/assistant/personal-weixin/status',token);
+    if(!check(context.guard)||!value||value.mode!=='service'||!UUID.test(value.workspace_id)||
+        value.conversation_id!==null||!STATES.has(value.state)||typeof value.automatic!=='boolean'||
+        typeof value.jev_available!=='boolean'||typeof value.notice!=='string'||value.notice.length>2000||
+        !Array.isArray(value.batches)||value.batches.length>50)throw new Error();
+    const batches=value.batches.map(row=>{
+      if(!UUID.test(row.id)||!Number.isSafeInteger(row.revision)||row.revision<1||
+          !['collecting','held','clarify','waiting','routed','executing','completed'].includes(row.state)||
+          row.conversation_id!==null&&!UUID.test(row.conversation_id)||
+          row.workflow!==null&&!['contract','case','court','sales'].includes(row.workflow))throw new Error();
+      return {id:row.id,revision:row.revision,state:row.state,conversation_id:row.conversation_id,workflow:row.workflow};
+    });
+    return {workspace_id:value.workspace_id,jev_available:value.jev_available,batches,
+      connection:value.state==='disconnected'?null:{mode:'service',state:value.state,conversation_id:null,
+        automatic:value.automatic,notice:value.notice,qr_ready:value.state==='waiting_scan'&&typeof value.qr_url==='string'}};
   }
   async function status(context,captured){
     await sameConnection(context,captured);
-    const value=await readJSON(context.origin,'/api/assistant/conversations/'+captured.conversation_id+'/personal-weixin/status',captured.token);
+    const result=await globalStatus(context,captured.token);
     await sameConnection(context,captured);
-    if(!exact(value,['state','conversation_id','automatic','notice','qr_url'])||!STATES.has(value.state)||
-        typeof value.automatic!=='boolean'||typeof value.notice!=='string'||value.notice.length>2000||
-        (value.state!=='disconnected'&&value.conversation_id!==captured.conversation_id))throw new Error();
-    if(value.state==='disconnected'){connection=null;return null;}
-    return {state:value.state,conversation_id:captured.conversation_id,automatic:value.automatic,notice:value.notice,
-      qr_ready:value.state==='waiting_scan'&&typeof value.qr_url==='string'};
+    if(result.workspace_id!==captured.workspace_id)throw new Error();
+    if(!result.connection)connection=null;
+    return result;
   }
   async function operate(event,value,operation){
     // Logout/disconnect waits for the current bounded read or ACK, then rechecks its page.
@@ -54,14 +66,14 @@ function registerPersonalWeixin({ipcMain,runtime,captureContext,readJSON=auth.re
         operation==='verify'&&(typeof value.code!=='string'||! /^[0-9]{4,12}$/.test(value.code)))return denied();
     const context=captureContext(event);
     if(!supported(context))return denied();
-    if(['start','verify'].includes(operation)&&!UUID.test(context.conversation_id))return denied();
     const captured=connection,startedEpoch=epoch;
     pending=(async()=>{
       let attempted=null;
       try{
         if(operation==='status'){
-          if(!captured){await authenticated(context);return {ok:true,connection:null};}
-          return {ok:true,connection:await status(context,captured)};
+          if(!captured){const token=await authenticated(context),result=await globalStatus(context,token);
+            await authenticated(context,token);return {ok:true,...result};}
+          return {ok:true,...await status(context,captured)};
         }
         if(operation==='disable'){
           if(captured)await sameConnection(context,captured);else await authenticated(context);
@@ -72,21 +84,21 @@ function registerPersonalWeixin({ipcMain,runtime,captureContext,readJSON=auth.re
           const policy=runtime.personalWeixinPolicy(context.backend,context.guard);
           if(!policy)return denied();
           const token=await authenticated(context);
-          const draft=await readJSON(context.origin,'/api/assistant/conversations/'+context.conversation_id,token);
-          if(!validScope(draft?.scope,context.conversation_id)||draft.archived_at!==null||!check(policy.guard))return denied();
+          const service=await globalStatus(context,token);
+          if(service.connection||!check(policy.guard))return denied();
           await authenticated(context,token);
           if(closed||epoch!==startedEpoch||!check(policy.guard))return denied();
-          attempted={...context,token};connection=attempted;
-          const result=await context.backend.startPersonalWeixin({session_token:token,expected_scope:draft.scope,
+          attempted={...context,token,workspace_id:service.workspace_id};connection=attempted;
+          const result=await context.backend.startPersonalWeixin({session_token:token,workspace_id:service.workspace_id,
             automatic_policy:policy.automatic_policy});
           if(!exact(result,['ok','status'])||result.ok!==true||result.status!=='started')throw new Error();
           await sameConnection(context,attempted);
           if(closed||epoch!==startedEpoch||!check(policy.guard))throw new Error();
           return {ok:true,status:'started'};
         }
-        if(!captured||captured.conversation_id!==context.conversation_id)return denied();
+        if(!captured)return denied();
         const policy=runtime.personalWeixinPolicy(context.backend,context.guard);
-        if(!policy|| (await status(context,captured))?.state!=='need_verifycode')return denied();
+        if(!policy|| (await status(context,captured))?.connection?.state!=='need_verifycode')return denied();
         if(closed||epoch!==startedEpoch||!check(policy.guard))return denied();
         attempted=captured;
         const result=await captured.backend.verifyPersonalWeixin({code:value.code});

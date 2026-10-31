@@ -6,19 +6,19 @@ const id='11111111-2222-4333-8444-555555555555',other='22222222-2222-4333-8444-5
 const scope={workspace_id:id,conversation_id:id,scope_kind:'conversation',scope_ref:null,binding_revision:1,input_revision:0,materials_revision:0};
 const defer=()=>{let resolve;return {promise:new Promise(r=>resolve=r),resolve:v=>resolve(v)};};
 function fixture(){
-  const handlers=new Map(),calls=[];let cid=id,token='FICTIONAL_TOKEN',valid=true,policyVersion=0;
+  const handlers=new Map(),calls=[];let cid=null,token='FICTIONAL_TOKEN',valid=true,policyVersion=0;
   const backend={control:{personalWeixinEnabled:true},closing:false,
-    startPersonalWeixin:async value=>{calls.push(['start',value]);return {ok:true,status:'started'};},
-    disablePersonalWeixin:async()=>{calls.push(['disable']);return {ok:true,status:'disabled'};},
+    startPersonalWeixin:async value=>{calls.push(['start',value]);server.state='connected';return {ok:true,status:'started'};},
+    disablePersonalWeixin:async()=>{calls.push(['disable']);server.state='disconnected';return {ok:true,status:'disabled'};},
     verifyPersonalWeixin:async value=>{calls.push(['verify',value]);return {ok:true,status:'accepted'};},
     stop:async()=>calls.push(['stop'])};
-  let server={state:'connected',conversation_id:id,automatic:true,notice:'虚构连接',qr_url:null},statusRead=null;
+  let server={mode:'service',workspace_id:id,state:'disconnected',conversation_id:null,automatic:true,notice:'虚构连接',qr_url:null,jev_available:false,batches:[]},statusRead=null;
   const ipcMain={handle:(name,fn)=>handlers.set(name,fn)};
   const bridge=registerPersonalWeixin({ipcMain,runtime:{personalWeixinPolicy(owned,guard){
     const version=policyVersion;return {automatic_policy:{expected_config_version:id,max_total_usd:'0.024576'},
       guard:()=>owned===backend&&guard()&&version===policyVersion};}},
     captureContext:()=>{const captured=cid;return valid?{origin:'http://127.0.0.1:12345',backend,conversation_id:cid,workspace:'main',
-      session:{cookies:{get:async()=>[{name:'qx_session',value:token}]}},guard:()=>valid&&cid===captured}:null;},
+      session:{cookies:{get:async()=>[{name:'qx_session',value:token}]}},guard:()=>valid}:null;},
     readJSON:async(_origin,path,actual)=>{assert.equal(actual,token);calls.push(['read',path]);
       if(path==='/api/session')return {username:'fiction'};
       if(path.endsWith('/status')){if(statusRead)await statusRead;return structuredClone(server);}
@@ -40,11 +40,11 @@ test('native policy comes from current model metadata, with a version fence',asy
 test('start uses native scope, cookie and policy; renderer authority is rejected',async()=>{
   const f=fixture();assert.equal((await f.call('start',{peer:'forged'})).ok,false);
   assert.equal((await f.call('start')).ok,true);
-  assert.deepEqual(f.calls.find(x=>x[0]==='start')[1],{session_token:'FICTIONAL_TOKEN',expected_scope:scope,
+  assert.deepEqual(f.calls.find(x=>x[0]==='start')[1],{session_token:'FICTIONAL_TOKEN',workspace_id:id,
     automatic_policy:{expected_config_version:id,max_total_usd:'0.024576'}});
   assert.equal((await f.call('start')).ok,false);assert.equal(f.calls.filter(x=>x[0]==='start').length,1);
 });
-for(const change of ['navigate','logout','config','invalidate'])test('late start ACK disables captured backend after '+change,async()=>{
+for(const change of ['logout','config','invalidate'])test('late start ACK disables captured backend after '+change,async()=>{
   const f=fixture(),hold=defer();f.backend.startPersonalWeixin=()=>hold.promise;
   const pending=f.call('start');await new Promise(setImmediate);f[change]();hold.resolve({ok:true,status:'started'});
   assert.equal((await pending).ok,false);assert.ok(f.calls.some(x=>x[0]==='disable'));
@@ -55,15 +55,15 @@ test('duplicate in-flight start is blocked',async()=>{
 });
 test('browsing preserves original connection and permits same-session disconnect',async()=>{
   const f=fixture();await f.call('start');f.navigate();
-  const result=await f.call('status');assert.equal(result.connection.conversation_id,id);
+  const result=await f.call('status');assert.equal(result.connection.conversation_id,null);
   assert.equal((await f.call('verify',{code:'001234'})).ok,false);
   assert.equal((await f.call('disable')).ok,true);assert.ok(f.calls.some(x=>x[0]==='disable'));
 });
 test('navigation during a read-only status query retains the fixed original connection',async()=>{
   const f=fixture();await f.call('start');const hold=defer();f.holdStatus(hold.promise);
   const pending=f.call('status');await new Promise(setImmediate);f.navigate();hold.resolve();
-  assert.equal((await pending).ok,false);assert.equal(f.calls.some(x=>x[0]==='disable'),false);
-  assert.equal((await f.call('status')).connection.conversation_id,id);
+  assert.equal((await pending).ok,true);assert.equal(f.calls.some(x=>x[0]==='disable'),false);
+  assert.equal((await f.call('status')).connection.conversation_id,null);
 });
 test('new login cannot see or retain previous connection',async()=>{
   const f=fixture();await f.call('start');f.logout();
@@ -73,7 +73,7 @@ test('verification preserves leading zeros, rejects extra keys and stale ACK',as
   const f=fixture();await f.call('start');f.status({state:'need_verifycode'});
   for(const value of [{code:1234},{code:'１２３４'},{code:'1234',peer:id}])assert.equal((await f.call('verify',value)).ok,false);
   const hold=defer();f.backend.verifyPersonalWeixin=value=>{assert.deepEqual(value,{code:'001234'});return hold.promise;};
-  const pending=f.call('verify',{code:'001234'});await new Promise(setImmediate);f.navigate();hold.resolve({ok:true,status:'accepted'});
+  const pending=f.call('verify',{code:'001234'});await new Promise(setImmediate);f.logout();hold.resolve({ok:true,status:'accepted'});
   assert.equal((await pending).ok,false);assert.ok(f.calls.some(x=>x[0]==='disable'));
 });
 test('QR URL is never returned to renderer IPC and close tears down authority',async()=>{

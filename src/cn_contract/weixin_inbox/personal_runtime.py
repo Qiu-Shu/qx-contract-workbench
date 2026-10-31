@@ -541,9 +541,13 @@ def attach_runtime(app, runtime):
     async def service_status(request: Request):
         with runtime.database.session() as db:
             actor = actor_in(request,db)
+            from ..assistant import service
+            from ..ops.storage import require_active
+            require_active(db)
+            workspace_id=str(service._workspace_id(db))
         value = runtime._service.details(actor) if runtime._service else {
             **runtime.status(actor).model_dump(mode='json'), 'mode':'service',
-            'capabilities':['contract','case','court','sales'],
+            'workspace_id':workspace_id, 'capabilities':['contract','case','court','sales'],
             'jev_available':bool(runtime.judge and runtime.judge.available()), 'batches':[]}
         return JSONResponse(value,headers={'Cache-Control':'no-store'})
 

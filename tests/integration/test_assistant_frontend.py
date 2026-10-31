@@ -14,7 +14,8 @@ from tests.integration.test_api import api
                                    'test_assistant_generation_entry.mjs', 'test_assistant_profile_generation.mjs',
                                    'test_assistant_profile_panel.mjs', 'test_assistant_tasks.mjs',
                                    'test_assistant_weixin.mjs', 'test_assistant_weixin_generations.mjs',
-                                   'test_assistant_weixin_pending.mjs'])
+                                   'test_assistant_weixin_pending.mjs', 'test_assistant_business.mjs',
+                                   'test_assistant_weixin_personal.mjs'])
 def test_browser_module_behaviour(script):
     node = shutil.which('node')
     assert node, 'The existing local Node runtime is required.'

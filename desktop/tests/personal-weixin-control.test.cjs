@@ -56,3 +56,14 @@ test('backend forwards the three trusted methods to its existing channel',async(
   await backend.startPersonalWeixin(payload);await backend.disablePersonalWeixin();await backend.verifyPersonalWeixin({code:'1234'});
   assert.deepEqual(calls.map(x=>x[0]),['start_personal_weixin','disable_personal_weixin','verify_personal_weixin']);
 });
+
+
+test('workspace service start accepts no conversation and rejects mixed authority',async t=>{
+  const {control,writes}=setup(t);
+  const service={session_token:'FICTIONAL_TOKEN',workspace_id:id,automatic_policy:null};
+  assert.deepEqual(await control.request('start_personal_weixin',{...service,expected_scope:payload.expected_scope}),{ok:false,code:'BLOCKED_LIVE'});
+  const pending=control.request('start_personal_weixin',service);
+  assert.equal(writes.length,1);assert.deepEqual(JSON.parse(writes[0]).payload,service);
+  control.feed(frame({event:'model-control-result',protocol:'qx-model-control-v1',nonce,sequence:1,ok:true,status:'started'}));
+  assert.equal((await pending).ok,true);
+});

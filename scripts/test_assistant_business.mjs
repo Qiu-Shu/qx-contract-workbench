@@ -20,7 +20,7 @@ test('clear intents route without a module selection; ordinary chat stays ordina
 function directFixture({unknown=false,canceled=false,onSave=null,onAuthorize=null,cancelledParent=false}={}) {
   let view={scope:{workspace_id:'w',conversation_id:'c',scope_kind:'conversation',scope_ref:null,
     binding_revision:1,input_revision:0,materials_revision:1},composer_revision:0,draft_input:'',messages:[]};
-  let sequence=0,receipt,submitted;
+  let sequence=0,receipt,submitted,businessBody,automatic=false;
   const calls=[],items=[];
   const bump=()=>{view={...view,scope:{...view.scope,input_revision:view.scope.input_revision+1},
     composer_revision:view.composer_revision+1,draft_input:''};};
@@ -30,7 +30,7 @@ function directFixture({unknown=false,canceled=false,onSave=null,onAuthorize=nul
       onSave?.(controller,body);return structuredClone(view);},
     getBusinessHistory:async()=>structuredClone(items),
     cancelRun:async()=>{calls.push('cancel');view.latest_run={id:'parent',state:'cancelled',cancel_requested:true};},
-    submitBusiness:async(cid,body)=>{calls.push('business');bump();
+    submitBusiness:async(cid,body)=>{businessBody=body;calls.push('business');bump();
       view.latest_run={id:'parent',state:cancelledParent?'cancelled':'awaiting_input',cancel_requested:cancelledParent};
       receipt={request_id:body.request_id,run_id:'parent',message_id:'input',task_id:'task',workflow:body.workflow,
         scope:structuredClone(view.scope)};items.push(receipt);return receipt;},
@@ -39,9 +39,9 @@ function directFixture({unknown=false,canceled=false,onSave=null,onAuthorize=nul
       return {request_id:body.request_id,input_format:'material-business-v1',scope:structuredClone(view.scope)};},
     findGenerationRequest:async(cid,id)=>{calls.push('lookup');assert.equal(id,submitted.request_id);
       return {request_id:id,input_format:'material-business-v1',scope:structuredClone(view.scope)};}};
-  const controller=createDraftController(api,{uuid:()=>String(++sequence),nativeMaterialAuthorization:async value=>{
+  const controller=createDraftController(api,{automaticIntake:async()=>automatic,uuid:()=>String(++sequence),nativeMaterialAuthorization:async value=>{
     calls.push('authorize');assert.equal(value.parent_business_run_id,'parent');await onAuthorize?.(controller);return {ok:!canceled};}});
-  return {controller,calls,get submitted(){return submitted;}};
+  return {controller,calls,api,setAutomatic:value=>automatic=value,get businessBody(){return businessBody;},get submitted(){return submitted;}};
 }
 
 test('one chat send chains contract preparation and native material execution without a second action',async()=>{
@@ -183,4 +183,56 @@ test('refresh after an unknown business write preserves new typing without inven
   assert.equal(controller.state.conflict,null);
   assert.equal(controller.state.text,'等待期间的新输入');
   assert.equal(writes,1);assert.equal(lookups,1);
+});
+
+
+test('desktop explicit send consumes four-workflow intake without readiness delay',async()=>{
+  const f=directFixture();const c=f.controller;await c.open('c');
+  c.edit('请推演举证和质证的应对');
+  f.api.assistJudge=async body=>{assert.equal(body.purpose,'service_intake');return {available:true,result:{status:'ok',scope:body.expected_scope,
+    answers:{readiness:{choice:'wait',confidence:1},workflow:{choice:'court',confidence:.95},material_kind:{choice:'judgment',confidence:.95}}}};};
+  f.setAutomatic(true);assert.equal(await c.send(),true);
+  assert.equal(f.businessBody.workflow,'court');assert.equal(c.state.intakeSuggestion.material_kind,'judgment');
+});
+test('desktop automatic OFF never calls Jev; explicit choice wins and late text edits discard assistance',async()=>{
+  for(const automatic of [false,true]){
+    const f=directFixture();await f.controller.open('c');f.setAutomatic(automatic);f.controller.edit('准备庭审应对');f.controller.selectSkill('contract_review');
+    let calls=0;f.api.assistJudge=async body=>{calls++;return {available:true,result:{status:'ok',scope:body.expected_scope,
+      answers:{workflow:{choice:'court',confidence:.99},material_kind:{choice:'judgment',confidence:.99}}}};};
+    await f.controller.send();assert.equal(calls,automatic?1:0);assert.equal(f.businessBody.workflow,'contract');
+  }
+  const f=directFixture();await f.controller.open('c');f.setAutomatic(true);f.controller.edit('准备庭审');
+  let release;f.api.assistJudge=()=>new Promise(r=>release=r);const sent=f.controller.send();
+  await new Promise(setImmediate);f.controller.edit('另外的内容');release({available:true,result:{status:'ok',answers:{workflow:{choice:'court',confidence:1}}}});
+  assert.equal(await sent,false);assert.deepEqual(f.calls,[]);assert.equal(f.controller.state.text,'另外的内容');
+});
+
+
+test('repeated desktop Enter during shared Jev wait sends one judgment and one business request',async()=>{
+  const f=directFixture();await f.controller.open('c');f.setAutomatic(true);f.controller.edit('请推演举证与质证');
+  let release,judgments=0;f.api.assistJudge=body=>{judgments++;return new Promise(r=>release=()=>r({available:true,result:{status:'ok',scope:body.expected_scope,
+    answers:{workflow:{choice:'court',confidence:.95},material_kind:{choice:'judgment',confidence:.9}}}}));};
+  const first=f.controller.send();await new Promise(setImmediate);
+  assert.equal(await f.controller.send(),false);assert.equal(judgments,1);release();assert.equal(await first,true);
+  assert.equal(judgments,1);assert.equal(f.calls.filter(x=>x==='business').length,1);
+});
+test('changing desktop conversation or retyping identical text discards a pending shared judgment',async()=>{
+  for(const change of [async c=>c.newConversation(),async c=>{c.edit('另外文字');c.edit('请推演举证与质证');}]){
+    const f=directFixture();await f.controller.open('c');f.setAutomatic(true);f.controller.edit('请推演举证与质证');
+    let release;f.api.assistJudge=body=>new Promise(r=>release=()=>r({available:true,result:{status:'ok',scope:body.expected_scope,
+      answers:{workflow:{choice:'court',confidence:.99}}}}));
+    const first=f.controller.send();await new Promise(setImmediate);await change(f.controller);release();
+    assert.equal(await first,false);assert.deepEqual(f.calls,[]);assert.equal(f.controller.state.intakeSuggestion,null);
+  }
+});
+test('low-confidence, unavailable, timeout and foreign-scope shared suggestions fall back to explicit rule route',async()=>{
+  for(const mode of ['low','unavailable','timeout','foreign']){
+    const f=directFixture();await f.controller.open('c');f.setAutomatic(true);f.controller.edit('审查合同');
+    f.api.assistJudge=async body=>{
+      if(mode==='timeout')throw {code:'NETWORK_UNKNOWN',status:0};
+      return {available:mode!=='unavailable',result:{status:'ok',scope:mode==='foreign'?{...body.expected_scope,conversation_id:'foreign'}:body.expected_scope,
+        answers:{workflow:{choice:'court',confidence:mode==='low'?.6:.99}}}};
+    };
+    assert.equal(await f.controller.send(),true);assert.equal(f.businessBody.workflow,'contract');
+  }
 });

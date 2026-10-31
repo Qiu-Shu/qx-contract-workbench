@@ -68,8 +68,11 @@ class ServiceWeixinRuntime(PersonalWeixinRuntime):
         return self._status
 
     def details(self,actor):
+        with self.database.session() as db:
+            require_active(db)
+            workspace_id=str(service._workspace_id(db))
         status=self.status(actor).model_dump(mode='json')
-        status.update(mode='service',capabilities=['contract','case','court','sales'],
+        status.update(workspace_id=workspace_id,mode='service',capabilities=['contract','case','court','sales'],
             jev_available=bool(self.judge and self.judge.available()),batches=[])
         if self._value and self._status_actor==(actor.user_id,actor.session_id):
             status['workspace_id']=str(self._value.workspace_id)

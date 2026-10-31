@@ -21,7 +21,7 @@ function fixture(options={}){
     onIncoming:async()=>incoming.push(controller.state.text),setTimer:()=>1,clearTimer:()=>{},...options});
   ui.state(controller.state);
   return {ui,controller,bridge,calls,incoming,at:name=>document.getElementById('personal-weixin-'+name),
-    blocked:value=>blocked=value,status:value=>read={ok:true,connection:{state:'connected',conversation_id:cid,automatic:true,notice:'虚构',qr_ready:false,...value}}};
+    blocked:value=>blocked=value,status:value=>read={ok:true,batches:[{id:cid,revision:1,state:'routed',conversation_id:cid,workflow:'contract'}],connection:{state:'connected',conversation_id:null,automatic:true,notice:'虚构',qr_ready:false,...value}}};
 }
 test('plain browser and restored copy cannot connect',async()=>{
   for(const options of [{bridge:null},{readonly:true}]){const f=fixture(options);await f.ui.refresh();assert.equal(f.at('start').disabled,true);await f.at('start').fire('click');assert.equal(f.calls.length,0);f.ui.dispose();}
@@ -31,18 +31,16 @@ test('native intent contains no renderer identity or policy and duplicate click 
   const pending=f.at('start').fire('click');await f.at('start').fire('click');await tick();assert.deepEqual(f.calls,[['Start']]);
   hold.resolve({ok:true});await pending;await tick();f.ui.dispose();
 });
-test('connection keeps original CID while browsing; QR never crosses into other chat',async()=>{
+test('navigation retains service QR and connection controls',async()=>{
   const f=fixture();f.status({state:'waiting_scan',qr_ready:true});await f.ui.refresh();
-  assert.equal(f.at('qr').getAttribute('src'),'/api/assistant/conversations/'+cid+'/personal-weixin/qr.svg');
   f.controller.state.id=other;f.ui.state(f.controller.state);await f.ui.refresh();
-  assert.equal(f.at('origin').hidden,false);assert.equal(f.at('origin').href,'/assistant/'+cid);
-  assert.match(f.at('scope').textContent,/原聊天/);assert.equal(f.at('start').disabled,true);
-  assert.equal(f.at('qr').getAttribute('src'),undefined);assert.equal(f.at('disable').hidden,false);f.ui.dispose();
+  assert.equal(f.at('qr').getAttribute('src'),'/api/assistant/personal-weixin/qr.svg');
+  assert.match(f.at('scope').textContent,/切换聊天仍保持/);assert.equal(f.at('disable').disabled,false);f.ui.dispose();
 });
-test('late status cannot replace the new page state',async()=>{
+test('late global status remains valid after same-workspace navigation',async()=>{
   const f=fixture(),hold=defer();f.bridge.personalWeixinStatus=()=>hold.promise;const pending=f.ui.refresh();
-  f.controller.state.id=other;f.ui.state(f.controller.state);hold.resolve({ok:true,connection:{conversation_id:cid,state:'waiting_scan',qr_ready:true}});await pending;
-  assert.equal(f.at('qr').getAttribute('src'),undefined);assert.match(f.at('summary').textContent,/核对/);f.ui.dispose();
+  f.controller.state.id=other;f.ui.state(f.controller.state);hold.resolve({ok:true,connection:{conversation_id:null,state:'waiting_scan',qr_ready:true}});await pending;
+  assert.equal(f.at('qr').getAttribute('src'),'/api/assistant/personal-weixin/qr.svg');f.ui.dispose();
 });
 test('explicit refresh retries a failed local QR without starting another connection',async()=>{
   const f=fixture();f.status({state:'waiting_scan',qr_ready:true});await f.ui.refresh();
@@ -91,20 +89,16 @@ test('background controller refresh retains text and conflict; pending guard pre
   assert.equal(controller.state.text,'本地草稿');assert.equal(controller.state.conflict.server,'新服务端草稿');controller.close();
 });
 
-test('fresh empty chat can connect after safely creating its conversation',async()=>{
+test('fresh empty chat connects without creating a conversation',async()=>{
   const f=fixture();f.controller.state.id=null;f.controller.state.status='idle';f.ui.state(f.controller.state);
-  f.controller.ensureConversation=async()=>{f.calls.push(['create']);f.controller.state.id=cid;f.controller.state.status='saved';f.ui.state(f.controller.state);return true;};
-  await f.ui.refresh();assert.equal(f.at('start').disabled,false);
-  await f.at('start').fire('click');assert.deepEqual(f.calls,[['create'],['Start']]);f.ui.dispose();
+  f.controller.ensureConversation=async()=>{throw Error('must not create');};
+  await f.ui.refresh();await f.at('start').fire('click');assert.deepEqual(f.calls,[['Start']]);f.ui.dispose();
 });
-test('paused connection reconnects in its original chat only',async()=>{
+test('paused service reconnects from every chat',async()=>{
   const f=fixture();f.status({state:'paused'});await f.ui.refresh();
-  assert.equal(f.at('start').disabled,false);assert.match(f.at('start').textContent,/重新连接/);
-  await f.at('start').fire('click');assert.deepEqual(f.calls,[['Disable'],['Start']]);
-  f.status({state:'paused'});f.controller.state.id=other;f.ui.state(f.controller.state);await f.ui.refresh();
-  assert.equal(f.at('start').disabled,true);f.ui.dispose();
+  f.controller.state.id=other;f.ui.state(f.controller.state);assert.equal(f.at('start').disabled,false);
+  await f.at('start').fire('click');assert.deepEqual(f.calls,[['Disable'],['Start']]);f.ui.dispose();
 });
-
 test('click during a known-status poll waits and starts exactly once',async()=>{
   const f=fixture();await f.ui.refresh();const gate=defer();let reads=0;
   f.bridge.personalWeixinStatus=async()=>++reads===1?gate.promise:{ok:true,connection:null};
@@ -117,13 +111,6 @@ test('failed in-flight status poll prevents a queued connection start',async()=>
   const f=fixture();await f.ui.refresh();const gate=defer();f.bridge.personalWeixinStatus=()=>gate.promise;
   const poll=f.ui.refresh(),clicked=f.at('start').fire('click');gate.resolve({ok:false});await poll;await clicked;
   assert.deepEqual(f.calls,[]);assert.equal(f.at('start').disabled,true);f.ui.dispose();
-});
-test('unknown empty conversation save does not start a native connection or retry creation',async()=>{
-  const f=fixture();f.controller.state.id=null;f.controller.state.status='idle';f.ui.state(f.controller.state);
-  let creates=0;f.controller.ensureConversation=async()=>{creates++;f.controller.state.status='error';return false;};
-  await f.ui.refresh();await f.at('start').fire('click');await tick();
-  assert.equal(creates,1);assert.deepEqual(f.calls,[]);assert.equal(f.at('start').disabled,true);
-  assert.match(f.at('start').title,/保存草稿|错误/);f.ui.dispose();
 });
 test('reconnect cannot restart if disable has not actually cleared the old connection',async()=>{
   const f=fixture();f.status({state:'paused'});await f.ui.refresh();
@@ -140,7 +127,7 @@ test('background polling leaves connection buttons stable and never disconnects'
     scheduled();
     assert.equal(f.at('disable').disabled,false,'background read must not dim the disconnect button');
     assert.equal(f.at('refresh').disabled,false,'background read must not dim the refresh button');
-    gate.resolve({ok:true,connection:{state:'paused',conversation_id:cid,automatic:true,notice:'虚构',qr_ready:false}});
+    gate.resolve({ok:true,connection:{state:'paused',conversation_id:null,automatic:true,notice:'虚构',qr_ready:false}});
     await tick();assert.equal(f.at('disable').disabled,false);
   }
   assert.deepEqual(f.calls,[]);f.ui.dispose();
@@ -153,21 +140,20 @@ test('disconnect clicked during a poll waits and runs once despite duplicate cli
   const poll=f.ui.refresh(),clicked=f.at('disable').fire('click');
   assert.equal(f.at('disable').disabled,true,'an explicit action remains visibly busy');
   await f.at('disable').fire('click');assert.deepEqual(f.calls,[]);
-  read.resolve({ok:true,connection:{state:'connected',conversation_id:cid,automatic:true,notice:'虚构',qr_ready:false}});
+  read.resolve({ok:true,connection:{state:'connected',conversation_id:null,automatic:true,notice:'虚构',qr_ready:false}});
   await poll;await tick();assert.deepEqual(f.calls,[['Disable']]);
   await f.at('disable').fire('click');assert.deepEqual(f.calls,[['Disable']]);
   f.bridge.personalWeixinStatus=async()=>({ok:true,connection:null});ack.resolve({ok:true});
   await clicked;await tick();assert.equal(f.at('disable').hidden,true);f.ui.dispose();
 });
 
-test('queued disconnect is dropped after conversation change or session revocation',async()=>{
-  for(const change of [f=>{f.controller.state.id=other;},f=>{f.controller.state.status='revoked';}]){
-    const f=fixture();f.status({});await f.ui.refresh();const read=defer();
-    f.bridge.personalWeixinStatus=()=>read.promise;
+test('queued disconnect survives navigation but is dropped on revocation',async()=>{
+  for(const revoke of [false,true]){
+    const f=fixture();f.status({});await f.ui.refresh();const read=defer();f.bridge.personalWeixinStatus=()=>read.promise;
     const poll=f.ui.refresh(),clicked=f.at('disable').fire('click');
-    change(f);f.ui.state(f.controller.state);
-    read.resolve({ok:true,connection:{state:'connected',conversation_id:cid,automatic:true,notice:'虚构',qr_ready:false}});
-    await poll;await clicked;assert.deepEqual(f.calls,[]);f.ui.dispose();
+    f.controller.state.id=other;if(revoke)f.controller.state.status='revoked';f.ui.state(f.controller.state);
+    read.resolve({ok:true,connection:{state:'connected',conversation_id:null,automatic:true,notice:'虚构',qr_ready:false}});
+    await poll;await clicked;assert.deepEqual(f.calls,revoke?[]:[['Disable']]);f.ui.dispose();
   }
 });
 
@@ -188,4 +174,28 @@ test('a queued disconnect is unnecessary when the in-flight read confirms no con
   const poll=f.ui.refresh(),clicked=f.at('disable').fire('click');
   read.resolve({ok:true,connection:null});await poll;await clicked;await tick();
   assert.deepEqual(f.calls,[]);assert.equal(f.at('disable').hidden,true);f.ui.dispose();
+});
+
+
+test('service panel precedes sidebar business abilities',()=>{
+  const html=readFileSync(new URL('../src/cn_contract/web/templates/assistant.html',import.meta.url),'utf8');
+  assert.ok(html.indexOf('id="personal-weixin-panel"')<html.indexOf('class="sidebar-capabilities"'));
+  assert.ok(html.indexOf('id="personal-weixin-panel"')<html.indexOf('</aside>'));
+});
+test('global service connects without creating or saving a chat; navigation keeps QR',async()=>{
+  const f=fixture();f.controller.state.id=null;f.controller.state.status='idle';f.ui.state(f.controller.state);
+  f.controller.ensureConversation=async()=>{throw Error('dummy chat forbidden');};f.controller.save=async()=>{throw Error('unrelated draft');};
+  await f.ui.refresh();await f.at('start').fire('click');assert.deepEqual(f.calls,[['Start']]);
+  f.status({mode:'service',conversation_id:null,state:'waiting_scan',qr_ready:true,jev_available:false,batches:[]});
+  await f.ui.refresh();f.controller.state.id=other;f.ui.state(f.controller.state);
+  assert.equal(f.at('qr').getAttribute('src'),'/api/assistant/personal-weixin/qr.svg');
+  assert.equal(f.at('disable').disabled,false);assert.equal(f.controller.state.text,'');f.ui.dispose();
+});
+
+
+test('global history updates without navigating or editing, and revocation clears activity links',async()=>{
+  let histories=0;const f=fixture({onHistory:async()=>histories++});f.controller.state.text='保留草稿';
+  f.status({});await f.ui.refresh();await f.ui.refresh();assert.equal(histories,1);
+  assert.equal(f.at('origin').href,'/assistant/'+cid);assert.equal(f.controller.state.text,'保留草稿');
+  f.controller.state.status='revoked';f.ui.state(f.controller.state);assert.equal(f.at('origin').hidden,true);f.ui.dispose();
 });

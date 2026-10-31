@@ -51,13 +51,15 @@ function validPayload(operation, payload) {
   const token = value => typeof value === 'string' && /^[\x21-\x7e]{1,256}$/.test(value);
   if (operation === 'verify_personal_weixin') return keys(payload,['code']) && typeof payload.code==='string' && /^[0-9]{4,12}$/.test(payload.code);
   if (operation === 'start_personal_weixin') {
-    if (!keys(payload,['session_token','expected_scope','automatic_policy']) || !token(payload.session_token)) return false;
+    const service=keys(payload,['session_token','workspace_id','automatic_policy']);
+    if ((!service&&!keys(payload,['session_token','expected_scope','automatic_policy'])) || !token(payload.session_token)) return false;
+    if(service&&!UUID.test(payload.workspace_id))return false;
     const scope=payload.expected_scope, policy=payload.automatic_policy;
-    if (!keys(scope,['workspace_id','conversation_id','scope_kind','scope_ref','binding_revision','input_revision','materials_revision']) ||
+    if (!service && (!keys(scope,['workspace_id','conversation_id','scope_kind','scope_ref','binding_revision','input_revision','materials_revision']) ||
         !UUID.test(scope.workspace_id) || !UUID.test(scope.conversation_id) ||
         !['conversation','matter','intake'].includes(scope.scope_kind) ||
         (scope.scope_ref!==null && !UUID.test(scope.scope_ref)) ||
-        !['binding_revision','input_revision','materials_revision'].every(k=>Number.isSafeInteger(scope[k])&&scope[k]>=0)) return false;
+        !['binding_revision','input_revision','materials_revision'].every(k=>Number.isSafeInteger(scope[k])&&scope[k]>=0))) return false;
     return policy===null || (keys(policy,['expected_config_version','max_total_usd']) &&
       UUID.test(policy.expected_config_version) && (policy.max_total_usd===null || (typeof policy.max_total_usd==='string' &&
       policy.max_total_usd.length<=64 && /^\d+(?:\.\d+)?$/.test(policy.max_total_usd) &&

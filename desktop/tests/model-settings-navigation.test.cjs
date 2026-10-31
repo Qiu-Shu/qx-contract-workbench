@@ -84,7 +84,7 @@ test('credential replacement and settings reopen project saved false before reco
   assert.equal(result.runtime.automatic_analysis,false);
 });
 
-test('personal Weixin captures only the actual main-frame CID and fences history navigation and restore',async t=>{
+test('personal Weixin guards workspace identity across navigation while ordinary approval stays conversation-bound',async t=>{
   const f=await fixture(t),capture=f.personalOptions.captureContext;
   assert.equal(capture(f.event()),null);
   const url='http://127.0.0.1:18001/assistant/00000000-0000-4000-8000-000000000003';
@@ -92,8 +92,10 @@ test('personal Weixin captures only the actual main-frame CID and fences history
   assert.equal(context.backend,f.backends[0]);assert.equal(context.workspace,'main');assert.equal(context.guard(),true);
   assert.equal(capture({sender:{},senderFrame:f.win.webContents.mainFrame}),null);
   assert.equal(capture({sender:f.win.webContents,senderFrame:{url}}),null);
-  f.win.events['did-start-navigation']({},url,true,true);assert.equal(context.guard(),false);
-  const inPlace=capture(f.event());f.win.events['did-navigate-in-page']({},url,true);assert.equal(inPlace.guard(),false);
+  const approval=f.approvalOptions.captureContext(f.event());
+  f.win.events['did-start-navigation']({},url,true,true);assert.equal(context.guard(),true);assert.equal(approval.guard(),false);
+  const inPlace=capture(f.event());f.win.events['did-navigate-in-page']({},url,true);assert.equal(inPlace.guard(),true);
+  await f.win.loadURL(url.replace(/003$/,'004'));assert.equal(inPlace.guard(),true);
   await f.win.loadURL(url+'?cid=forged');assert.equal(capture(f.event()),null);
   await f.win.loadURL('http://127.0.0.1:18001/assistant');assert.equal(capture(f.event()).conversation_id,null);
   const before=capture(f.event());await f.menu('重新打开工作台');assert.equal(before.guard(),false);
@@ -327,4 +329,27 @@ test('shared native settings busy lock prevents main credential writes during ju
   assert.equal(f.store.writes,0);
   finish({ok:true,status:'configured',config_sha256:'b'.repeat(64),config_version:'00000000-0000-4000-8000-000000000003'});
   assert.equal((await pending).ok,true);
+});
+
+
+test('shared Jev restores stored configuration but persists explicit disable through backend restart',async t=>{
+  const f=await fixture(t);assert.equal(f.backends[0].judgeConfigures,1);
+  await f.menu('Jev 辅助设置…');await f.handlers.get('desktop:judge-disable')(f.event());
+  assert.equal(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')).judge_model,false);
+  await f.menu('重新打开工作台');assert.equal(f.backends.at(-1).judgeConfigures,0);
+  assert.equal(Object.hasOwn(f.backends.at(-1).startParams,'judge_model'),false);
+  await f.menu('Jev 辅助设置…');await f.handlers.get('desktop:judge-configure')(f.event(),'jev-1.13.0');
+  assert.equal(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')).judge_model,'jev-1.13.0');
+  await f.menu('重新打开工作台');assert.equal(f.backends.at(-1).judgeConfigures,1);
+});
+
+
+test('failure to save a Jev preference disables only Jev and preserves main runtime',async t=>{
+  const f=await fixture(t,{model:'deepseek-flash'});await f.menu('Jev 辅助设置…');
+  const mainDisables=f.backends[0].disables,judgeDisables=f.backends[0].judgeDisables;
+  const settings=path.join(f.root,'desktop-settings.json');fs.unlinkSync(settings);fs.mkdirSync(settings);
+  const result=await f.handlers.get('desktop:judge-disable')(f.event());
+  assert.equal(result.ok,false);assert.equal(result.code,'CREDENTIAL_STORAGE_FAILED');
+  assert.equal((await f.handlers.get('desktop:model-runtime-status')(f.event())).runtime.state,'configured');
+  assert.equal(f.backends[0].disables,mainDisables);assert.equal(f.backends[0].judgeDisables,judgeDisables+1);
 });

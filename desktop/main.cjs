@@ -11,7 +11,7 @@ const { createModelSession, automaticAnalysisPolicy, validAutomaticAnalysis, aut
 const { registerModelApproval } = require('./model-approval.cjs');
 const { registerPersonalWeixin } = require('./personal-weixin.cjs');
 const { createModelApprovalWindow } = require('./model-approval-window.cjs');
-const { registerAssistantModelBridge, autoConfigureModel } = require('./model-bridge.cjs');
+const { registerAssistantModelBridge, autoConfigureModel, autoConfigureJudge } = require('./model-bridge.cjs');
 const { navigationAllowed, setupSenderAllowed, validLibraryRoot, clipboardWriteAllowed } = require('./policy.cjs');
 
 app.setName('群兴法律工作台验证版');
@@ -26,7 +26,7 @@ app.setPath('userData', dataParent);
 const setupURL = pathToFileURL(path.join(__dirname, 'setup.html')).href;
 const settingsPath = path.join(dataParent, 'desktop-settings.json');
 let win, backend, maintenance, modelSettings, modelApproval, approvalWindow, origin = '', stopping = false, busy = false;
-let mainModelSession = null, personalWeixin = null;
+let mainModelSession = null, sharedJudgeSession=null, sharedJudgeStore=null, personalWeixin = null;
 let settings = {}, state = {mode:'loading', message:'正在打开工作台…'};
 let documentEpoch=0, settingsReturn=null, activeBackend=null;
 function workspacePath(){return path.join(dataParent,'workspaces',settings.workspace||'main');}
@@ -94,7 +94,7 @@ async function startBackend(credentials = {}) {
     backend = new Backend(executable,args);
     const owned=backend;
     owned.on('failed', () => { if (!stopping && backend===owned) void showError(owned); });
-    const {model:_persistedModel,model_auto_analysis:_automaticAnalysis,...backendSettings}=settings;
+    const {model:_persistedModel,model_auto_analysis:_automaticAnalysis,judge_model:_judgeModel,...backendSettings}=settings;
     const ready = await backend.start({data_parent:dataParent,...credentials,...backendSettings});
     origin = `http://127.0.0.1:${ready.port}`;
     activeBackend={instance:owned,origin,workspace:settings.workspace||'main'};
@@ -105,6 +105,8 @@ async function startBackend(credentials = {}) {
     if (mainModelSession) await autoConfigureModel({settings,runtime:{configure:model=>
       mainModelSession.configure(model,()=>!stopping&&activeBackend?.instance===owned,
         automaticAnalysisEnabled(settings.model_auto_analysis,model,workspacePath()))}});
+    if(sharedJudgeSession)await autoConfigureJudge({settings,store:sharedJudgeStore,runtime:{configure:model=>
+      sharedJudgeSession.configure(model,()=>!stopping&&activeBackend?.instance===owned)}});
     return {ok:true};
   } catch {
     if (backend) await backend.stop();
@@ -132,6 +134,7 @@ async function showMaintenance(operation){
     const previous=win.webContents.getURL(),owned=activeBackend;
     if(!await leavePage())return;
     if(owned&&activeBackend!==owned)return;
+    await personalWeixin?.invalidate();
     if(operation==='model-settings') {
       if(previous!==setupURL)settingsReturn=navigationAllowed(previous,origin,'')?{owned,url:previous}:null;
     } else {
@@ -286,13 +289,25 @@ else {
         return modelSession.disable(guard);
       }});
     const judgeStore=createModelCredentialStore({dataParent,safeStorage,platform:process.platform,provider:'typesafe'});
-    const judgeSession=createModelSession({store:judgeStore,...sessionOptions,kind:'judge'});
+    const judgeSession=createModelSession({store:judgeStore,...sessionOptions,getWorkspace:workspacePath,kind:'judge'});
+    sharedJudgeSession=judgeSession;sharedJudgeStore=judgeStore;
+    const persistJudge=value=>{try{saveSettings({...settings,judge_model:value});return true;}catch{return false;}};
+    const judgeSettingsFailure=async guard=>({...await judgeSession.disable(guard),ok:false,code:'CREDENTIAL_STORAGE_FAILED'});
+    const judgeSettingsRuntime={status:()=>judgeSession.status(),
+      async configure(model,guard){
+        if(!persistJudge(false))return judgeSettingsFailure(guard);
+        const result=await judgeSession.configure(model,guard);
+        if(result?.ok===true&&!persistJudge(model)){await judgeSession.disable(guard);return judgeSettingsFailure(guard);}
+        return result;
+      },
+      async disable(guard){if(!persistJudge(false))return judgeSettingsFailure(guard);return judgeSession.disable(guard);},
+      async beforeCredentialChange(guard){if(!persistJudge(false))return judgeSettingsFailure(guard);return judgeSession.beforeCredentialChange(guard);}};
     const settingsOptions={ipcMain,
       isAllowed:event=>!busy&&!stopping&&state.mode==='model-settings'&&isSetup(event),
       captureGuard:event=>{const epoch=documentEpoch;return ()=>epoch===documentEpoch&&!stopping&&state.mode==='model-settings'&&isSetup(event);},
       setBusy:value=>{busy=value;}};
     const handlers=[registerModelSettings({...settingsOptions,store,runtime:settingsRuntime}),
-      registerModelSettings({...settingsOptions,store:judgeStore,runtime:judgeSession,kind:'judge'})];
+      registerModelSettings({...settingsOptions,store:judgeStore,runtime:judgeSettingsRuntime,kind:'judge'})];
     // Assistant-page bridge: in-place model status and switch, main frame only.
     const isAssistantPage=event=>{
       const url=win&&!win.isDestroyed()?win.webContents.getURL():'';
@@ -305,12 +320,13 @@ else {
     registerAssistantModelBridge({ipcMain,runtime:modelSession,isAllowed:isAssistantPage,persist:persistModel});
     modelSettings={wait:()=>Promise.allSettled(handlers.map(handler=>handler.wait()))};
     approvalWindow=createModelApprovalWindow({BrowserWindow,ipcMain,session});
-    const captureContext=(event,{allowHome=false}={})=>{
+    const captureContext=(event,{allowHome=false,service=false}={})=>{
         const owned=activeBackend,epoch=documentEpoch,url=win?.webContents.getURL();
+        if(service&&(!win||event.sender!==win.webContents||event.senderFrame!==win.webContents.mainFrame||event.senderFrame.url!==url))return null;
         const valid=()=>Boolean(win&&!win.isDestroyed()&&!stopping&&state.mode==='ready'&&
           owned&&activeBackend===owned&&owned.instance===backend&&!backend.closing&&origin===owned.origin&&
-          !owned.workspace.startsWith('recovered/')&&epoch===documentEpoch&&win.webContents.getURL()===url&&
-          event.sender===win.webContents&&event.senderFrame===win.webContents.mainFrame&&event.senderFrame.url===url);
+          !owned.workspace.startsWith('recovered/')&&(service ? (()=>{const current=win.webContents.getURL();return current===origin+'/assistant'||current.startsWith(origin+'/assistant/')&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(current.slice((origin+'/assistant/').length));})() : epoch===documentEpoch&&win.webContents.getURL()===url)&&
+          event.sender===win.webContents&&(service||event.senderFrame===win.webContents.mainFrame&&event.senderFrame.url===url));
         if(!valid())return null;
         if(allowHome&&url===origin+'/assistant')return {origin,session:isolated,parent:win,backend:owned.instance,
           workspace:owned.workspace,conversation_id:null,guard:valid};
@@ -321,7 +337,7 @@ else {
       };
     modelApproval=registerModelApproval({ipcMain,runtime:modelSession,judgeRuntime:judgeSession,
       isBusy:()=>busy||stopping,setBusy:value=>{busy=value;},confirm:approvalWindow.confirm,captureContext});
-    personalWeixin=registerPersonalWeixin({ipcMain,runtime:modelSession,captureContext:event=>captureContext(event,{allowHome:true})});
+    personalWeixin=registerPersonalWeixin({ipcMain,runtime:modelSession,captureContext:event=>captureContext(event,{allowHome:true,service:true})});
     ipcMain.handle('desktop:resume',resume);
     ipcMain.handle('desktop:start',(event,values)=>{
       if (!isSetup(event) || busy) return {ok:false};

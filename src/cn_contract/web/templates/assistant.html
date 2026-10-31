@@ -31,6 +31,32 @@
       <div id="conversation-list" class="conversation-list" aria-live="polite"><p class="muted">正在读取记录…</p></div>
       <button id="more-conversations" class="text-button" type="button" hidden>加载更多记录</button>
     </section>
+      <details id="personal-weixin-panel" class="personal-weixin">
+        <summary aria-label="本人微信连接">本人微信<span id="personal-weixin-summary" class="personal-weixin-summary muted">正在核对连接…</span></summary>
+        <div class="personal-weixin-body">
+          <p id="personal-weixin-state" role="status" aria-live="polite"></p>
+          <p id="personal-weixin-batches" class="muted"></p>
+          <p id="personal-weixin-judge" class="muted"></p>
+          <p id="personal-weixin-scope" class="muted"></p>
+          <a id="personal-weixin-origin" hidden>打开最新活动事项</a>
+          <div class="personal-weixin-actions">
+            <button id="personal-weixin-start" type="button" class="quiet-button" disabled>连接本人微信</button>
+            <button id="personal-weixin-disable" type="button" class="quiet-button" hidden disabled>暂停并断开</button>
+            <button id="personal-weixin-refresh" type="button" class="text-button" disabled>重新读取状态</button>
+          </div>
+          <figure id="personal-weixin-qr-frame" class="personal-weixin-qr" hidden>
+            <img id="personal-weixin-qr" width="208" height="208" alt="请用本人微信扫描的本机连接二维码">
+            <figcaption>用本人微信扫码。验证码用于本次微信连接，不会显示在聊天中。</figcaption>
+          </figure>
+          <form id="personal-weixin-verify-form" class="personal-weixin-code" hidden>
+            <label for="personal-weixin-code">微信验证码</label>
+            <input id="personal-weixin-code" type="text" inputmode="numeric" pattern="[0-9]{4,12}" minlength="4" maxlength="12" autocomplete="one-time-code" disabled>
+            <button id="personal-weixin-verify" type="submit" class="quiet-button" disabled>提交验证码</button>
+          </form>
+          <p id="personal-weixin-notice" role="status" aria-live="polite"></p>
+          <p class="muted">回传状态为“已提交”时，仍需在微信核对是否收到；结果未知时不会自动重发。</p>
+        </div>
+      </details>
     <details class="sidebar-capabilities"><summary><svg class="ui-icon" aria-hidden="true"><use href="#ui-scales"/></svg>业务能力</summary>
     <nav class="common-skills" aria-labelledby="common-heading">
       <h2 id="common-heading" class="sr-only">常用能力</h2>
@@ -82,32 +108,9 @@
         </details>
       </div>
       <noscript><p class="notice error">页面脚本未能运行，暂时无法读取或保存草稿。请重新打开应用，或进入已有工作区。</p></noscript>
+      <p id="intake-material-suggestion" class="muted" role="status" hidden></p>
       <p id="notice" class="notice" role="status" aria-live="polite"></p>
 
-      <details id="personal-weixin-panel" class="personal-weixin">
-        <summary>本人微信<span id="personal-weixin-summary" class="personal-weixin-summary muted">正在核对连接…</span></summary>
-        <div class="personal-weixin-body">
-          <p id="personal-weixin-state" role="status" aria-live="polite"></p>
-          <p id="personal-weixin-scope" class="muted"></p>
-          <a id="personal-weixin-origin" hidden>返回连接所在聊天</a>
-          <div class="personal-weixin-actions">
-            <button id="personal-weixin-start" type="button" class="quiet-button" disabled>连接本人微信</button>
-            <button id="personal-weixin-disable" type="button" class="quiet-button" hidden disabled>暂停并断开</button>
-            <button id="personal-weixin-refresh" type="button" class="text-button" disabled>重新读取状态</button>
-          </div>
-          <figure id="personal-weixin-qr-frame" class="personal-weixin-qr" hidden>
-            <img id="personal-weixin-qr" width="208" height="208" alt="请用本人微信扫描的本机连接二维码">
-            <figcaption>用本人微信扫码。验证码用于本次微信连接，不会显示在聊天中。</figcaption>
-          </figure>
-          <form id="personal-weixin-verify-form" class="personal-weixin-code" hidden>
-            <label for="personal-weixin-code">微信验证码</label>
-            <input id="personal-weixin-code" type="text" inputmode="numeric" pattern="[0-9]{4,12}" minlength="4" maxlength="12" autocomplete="one-time-code" disabled>
-            <button id="personal-weixin-verify" type="submit" class="quiet-button" disabled>提交验证码</button>
-          </form>
-          <p id="personal-weixin-notice" role="status" aria-live="polite"></p>
-          <p class="muted">回传状态为“已提交”时，仍需在微信核对是否收到；结果未知时不会自动重发。</p>
-        </div>
-      </details>
 
       <section class="history-section" aria-label="对话记录">
         <button id="older-messages" class="text-button older-messages" type="button" hidden>加载更早消息</button>

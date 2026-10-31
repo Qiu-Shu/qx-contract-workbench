@@ -49,4 +49,9 @@ async function autoConfigureModel({ settings, runtime }) {
   } catch { return false; }
 }
 
-module.exports = { registerAssistantModelBridge, autoConfigureModel, ASSISTANT_MODELS: MODELS };
+async function autoConfigureJudge({settings,store,runtime}) {
+  if(!runtime||!store||settings?.judge_model!==undefined&&settings.judge_model!=='jev-1.13.0')return false;
+  try{if((await store.status())?.status!=='saved')return false;return (await runtime.configure('jev-1.13.0'))?.ok===true;}catch{return false;}
+}
+
+module.exports = { registerAssistantModelBridge, autoConfigureModel, autoConfigureJudge, ASSISTANT_MODELS: MODELS };
