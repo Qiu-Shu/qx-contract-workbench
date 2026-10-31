@@ -7,12 +7,12 @@ const vm=require('node:vm');
 const {EventEmitter}=require('node:events');
 const desktop=path.resolve(__dirname,'..');
 
-async function fixture(t,{recovered=false,model,automatic,policyChange}={}) {
+async function fixture(t,{recovered=false,model,automatic,policyChange,judgeModel}={}) {
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'qx-model-navigation-'));
   t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
   const workspace=recovered?'recovered/00000000-0000-4000-8000-000000000001':'main';
   fs.mkdirSync(path.join(root,'workspaces',workspace),{recursive:true});
-  const initial={...(recovered?{workspace}:{}),...(model?{model}:{})};
+  const initial={...(recovered?{workspace}:{}),...(model?{model}:{}),...(judgeModel!==undefined?{judge_model:judgeModel}:{})};
   if(automatic)initial.model_auto_analysis={model,workspace:path.join(root,'workspaces',workspace),
     scope:'selected-task-materials',max_calls:1,max_total_usd:'0.024576'};
   if(automatic===false)initial.model_auto_analysis=false;
@@ -341,6 +341,20 @@ test('shared Jev restores stored configuration but persists explicit disable thr
   await f.menu('Jev 辅助设置…');await f.handlers.get('desktop:judge-configure')(f.event(),'jev-1.13.0');
   assert.equal(JSON.parse(fs.readFileSync(path.join(f.root,'desktop-settings.json'),'utf8')).judge_model,'jev-1.13.0');
   await f.menu('重新打开工作台');assert.equal(f.backends.at(-1).judgeConfigures,1);
+});
+
+
+test('saved Jev preference survives a fresh process and unsupported values stay rejected',async t=>{
+  const configured=await fixture(t,{judgeModel:'jev-1.13.0'});
+  assert.equal(configured.states.at(-1).mode,'ready');
+  assert.equal(configured.backends[0].judgeConfigures,1);
+  assert.equal(Object.hasOwn(configured.backends[0].startParams,'judge_model'),false);
+  const disabled=await fixture(t,{judgeModel:false});
+  assert.equal(disabled.states.at(-1).mode,'ready');
+  assert.equal(disabled.backends[0].judgeConfigures,0);
+  const invalid=await fixture(t,{judgeModel:'jev-1.14.0'});
+  assert.equal(invalid.states.at(-1).mode,'error');
+  assert.equal(invalid.backends.length,0);
 });
 
 

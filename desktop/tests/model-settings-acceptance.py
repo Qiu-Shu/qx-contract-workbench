@@ -252,7 +252,8 @@ def main():
             passed('configure_keeps_pid_login_and_draft_but_capability_unapproved_and_post_forbidden')
             report['http_ipc_denials'] = denied_native(p)
             current.settings(); current.configure('deepseek-v4-pro')
-            expect(p.locator('#model-runtime-status')).to_contain_text('尚未授权')
+            expect(p.locator('#model-runtime-status')).to_contain_text('本次运行已配置 DeepSeek V4 Pro')
+            expect(p.locator('#model-runtime-status')).to_contain_text('当前任务材料自动分析关闭')
             expect(p.locator('#judge-runtime-status')).to_contain_text('凭据有效性待实际请求核对')
             main_controls = current.controls('model')
             main_runtime = current.runtime()
@@ -306,19 +307,17 @@ def main():
             passed('actual_windows_settings_layout_at_100_150_200_percent_and_clean_shutdown')
             current=Running(2);p=current.page
             p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/login'),timeout=60000);login()
-            current.settings();assert current.runtime()['runtime']['state']=='unconfigured'
-            assert current.runtime('judge')['runtime']['state']=='unconfigured'
+            current.settings();assert current.runtime()['runtime']=={'state':'configured','model':'deepseek-flash'} and current.runtime()['runtime'].get('automatic_analysis') is not True
+            assert current.runtime('judge')['runtime']=={'state':'configured','model':'jev-1.13.0'}
             assert p.evaluate('()=>desktopSetup.modelStatus()')['status']=='saved'
             assert p.evaluate('()=>desktopSetup.judgeStatus()')['status']=='saved'
-            current.configure('deepseek-flash'); current.configure('jev-1.13.0', 'judge')
             current.command('stop-backend');expect(p.locator('#retry')).to_be_visible()
             denied=p.evaluate('()=>desktopSetup.modelRuntimeStatus()');assert denied.get('code')=='ACCESS_DENIED',denied
             denied=p.evaluate('()=>desktopSetup.judgeRuntimeStatus()');assert denied.get('code')=='ACCESS_DENIED',denied
             p.locator('#retry').click();p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/login'),timeout=60000);login()
-            current.settings();assert current.runtime()['runtime']['state']=='unconfigured'
-            assert current.runtime('judge')['runtime']['state']=='unconfigured'
-            passed('restart_retains_ciphertext_only_and_owned_backend_failure_clears_runtime')
-            current.configure('deepseek-flash'); current.configure('jev-1.13.0', 'judge')
+            current.settings();assert current.runtime()['runtime']=={'state':'configured','model':'deepseek-flash'} and current.runtime()['runtime'].get('automatic_analysis') is not True
+            assert current.runtime('judge')['runtime']=={'state':'configured','model':'jev-1.13.0'}
+            passed('restart_restores_saved_models_and_owned_backend_failure_clears_runtime_before_retry')
             renderer_pid = json.loads((current.dir/'bootstrap.json').read_text('utf-8'))['ready']['pid']
             crashed=current.command('crash-renderer');current.recover_renderer(crashed['loads']);p=current.page
             expect(p.locator('#retry')).to_be_visible()
@@ -331,10 +330,10 @@ def main():
             current.command('menu',label='备份案件资料…');expect(p.locator('#maintenance')).to_be_visible()
             report['maintenance_ipc_denials'] = denied_native(p)
             p.locator('#resume').click();p.wait_for_url(re.compile(r'http://127\.0\.0\.1:\d+/login'),timeout=60000);login()
-            current.settings();assert current.runtime()['runtime']['state']=='unconfigured'
+            current.settings();assert current.runtime()['runtime']=={'state':'configured','model':'deepseek-flash'} and current.runtime()['runtime'].get('automatic_analysis') is not True
             assert current.runtime('judge')['runtime']['state']=='unconfigured'
             current.close();current=None
-            passed('backup_maintenance_still_stops_backend_and_resume_starts_unconfigured')
+            passed('backup_maintenance_still_stops_backend_resume_restores_main_and_preserves_judge_off')
             original = data/'workspaces/main'
             report.update(zero_records(original))
             passed('zero_main_and_judge_records_no_plaintext_leak_and_scoped_network_observation')

@@ -207,8 +207,9 @@ else {
         const info = fs.lstatSync(settingsPath);
         if (info.isSymbolicLink() || info.nlink !== 1 || info.size > 8192) throw new Error();
         const saved = JSON.parse(fs.readFileSync(settingsPath,'utf8'));
-        if (Object.keys(saved).some(k=>!['library_root','workspace','model','model_auto_analysis'].includes(k)) || (saved.library_root && !path.isAbsolute(saved.library_root))
+        if (Object.keys(saved).some(k=>!['library_root','workspace','model','model_auto_analysis','judge_model'].includes(k)) || (saved.library_root && !path.isAbsolute(saved.library_root))
             || (saved.model!==undefined && !['deepseek-flash','deepseek-v4-pro'].includes(saved.model))
+            || (saved.judge_model!==undefined && saved.judge_model!==false && saved.judge_model!=='jev-1.13.0')
             || (saved.workspace!==undefined && (typeof saved.workspace!=='string'||!/^main$|^recovered\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(saved.workspace)))) throw new Error();
         if(saved.model_auto_analysis!==undefined &&
             !validAutomaticAnalysis(saved.model_auto_analysis,saved.model,path.join(dataParent,'workspaces',saved.workspace||'main')))
