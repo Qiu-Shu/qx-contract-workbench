@@ -150,6 +150,28 @@ def ordinary_message(identifier=18446744073709551615):
             'button_item_list':[], 'at_bot_username_list':[]}])
 
 
+@pytest.mark.parametrize('item_id', ['', 'client:fictional-item', '01', '7'])
+def test_optional_item_id_is_string_metadata_not_server_message_identity(scope, item_id):
+    adapter = adapter_module()
+    scope = d.WeixinOfflineScope(**scope)
+    incoming = ordinary_message()
+    baseline = plan(adapter, scope, [incoming])
+    incoming['item_list'][0]['msg_id'] = item_id
+    changed = plan(adapter, scope, [incoming])
+    assert changed.batch == baseline.batch
+    assert changed.event_payload_hashes != baseline.event_payload_hashes
+    incoming['message_id'] = ''
+    rejected(adapter, scope, wire([incoming]))
+
+
+@pytest.mark.parametrize('item_id', [None, True, False, 1.5, [], {}, -1, 2**64])
+def test_optional_item_id_still_requires_string_or_legacy_uint64(scope, item_id):
+    adapter = adapter_module()
+    incoming = ordinary_message()
+    incoming['item_list'][0]['msg_id'] = item_id
+    rejected(adapter, d.WeixinOfflineScope(**scope), wire([incoming]))
+
+
 @pytest.mark.parametrize('reference', [None, '7'])
 def test_ordinary_message_metadata_keeps_explicit_reference_and_scope_authoritative(scope, reference):
     adapter = adapter_module()

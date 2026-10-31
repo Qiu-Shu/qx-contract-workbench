@@ -452,7 +452,8 @@ def test_mixed_poll_records_blocked_neighbors_and_context_is_not_stored(world):
 
 
 @pytest.mark.parametrize('automatic',[False,True])
-def test_ordinary_message_shape_reaches_same_chat_once_without_reviving_blocked_history(world,monkeypatch,automatic):
+@pytest.mark.parametrize('item_id',[None,'','fictional:item-id'])
+def test_ordinary_message_shape_reaches_same_chat_once_without_reviving_blocked_history(world,monkeypatch,automatic,item_id):
     from cn_contract import weixin_offline as decoder
     async def scenario():
         runtime,wire,manager,provider,actor=await setup_runtime(world,automatic=automatic)
@@ -463,7 +464,7 @@ def test_ordinary_message_shape_reaches_same_chat_once_without_reviving_blocked_
                 create_time_ms=0,update_time_ms=1,delete_time_ms=0,group_id='',
                 root_id=0,parent_id=18446744073709551615)
             message['item_list'][0].update(create_time_ms=0,update_time_ms=1,is_completed=True,
-                msg_id=str(number),button_item_list=[],at_bot_username_list=[])
+                msg_id=str(number) if item_id is None else item_id,button_item_list=[],at_bot_username_list=[])
             return message
         old=ordinary(101);fresh=ordinary(102)
         try:

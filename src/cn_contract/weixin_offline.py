@@ -194,7 +194,10 @@ def _event(message, scope, settings):
             if not item['is_completed']:
                 _fail('NOT_SUPPORTED', 409)
         if 'msg_id' in item:
-            _message_id(item['msg_id'])
+            # Optional item metadata is a string, not the envelope's server uint64 ID.
+            # Keep the legacy integer form; only envelope/ref_msg IDs identify tasks.
+            if type(item['msg_id']) is not str:
+                _message_id(item['msg_id'])
         reference = _reference(item, scope)
         if reference:
             references.add(reference)
