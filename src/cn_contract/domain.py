@@ -2886,7 +2886,7 @@ class MainModelConfig(DomainModel):
     protocol_version: Literal['deepseek-chat-json-v1'] = 'deepseek-chat-json-v1'
     provider: Literal['deepseek'] = 'deepseek'
     model: Literal['deepseek-flash', 'deepseek-v4-pro']
-    max_input_bytes: Annotated[int, Field(strict=True, ge=1, le=262144)] = 65536
+    max_input_bytes: Annotated[int, Field(strict=True, ge=1, le=262144)] = 262144
     max_output_tokens: Annotated[int, Field(strict=True, ge=1, le=8192)] = 4096
     max_response_bytes: Annotated[int, Field(strict=True, ge=1, le=1048576)] = 1048576
     timeout_seconds: Annotated[int, Field(strict=True, ge=1, le=120)] = 30

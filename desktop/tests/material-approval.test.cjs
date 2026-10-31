@@ -31,7 +31,7 @@ function basisFor(input){
 async function fixture(t,automatic=false){
   const input={conversation_id:ID,request_id:REQUEST,expected_scope:{...scope},expected_composer_revision:3,parent_business_run_id:PARENT};
   const draft={scope:{...scope},composer_revision:3,archived_at:null};
-  const state={confirm:true,current:true,onConfirm:null,mutatePreview:null,workspace:'synthetic-workspace'};
+  const state={confirm:true,current:true,onConfirm:null,mutatePreview:null,previewError:null,workspace:'synthetic-workspace'};
   const requests=[],calls=[];let details,payload;
   const backend={control:{ready:true,enabled:true,failed:false,closed:false},closing:false,
     async configureModel(){return {ok:true,status:'configured',config_sha256:'f'.repeat(64),config_version:ID};},
@@ -49,6 +49,8 @@ async function fixture(t,automatic=false){
     if(req.url.endsWith('/material-preview')){
       let raw='';req.on('data',chunk=>raw+=chunk);return req.on('end',()=>{
         item.body=JSON.parse(raw);let basis=basisFor(input);
+        if(state.previewError){res.statusCode=state.previewError.status;
+          return res.end(state.previewError.body);}
         if(state.mutatePreview)basis=state.mutatePreview(basis,requests.filter(x=>x.method==='POST').length);
         res.end(JSON.stringify(basis));
       });
@@ -67,12 +69,29 @@ async function fixture(t,automatic=false){
   return {input,state,requests,calls,runtime,backend,details:()=>details,payload:()=>payload,invoke};
 }
 
+test('bounded material preview rejection retains its safe code without authorizing or exposing details',async t=>{
+  const f=await fixture(t);f.state.previewError={status:422,body:JSON.stringify({code:'MATERIAL_INPUT_TOO_LARGE',
+    message:'PRIVATE_FICTIONAL_CONTRACT_FRAGMENT',correlation_id:ID,retryable:false})};
+  assert.deepEqual(await f.invoke(),{ok:false,code:'MATERIAL_INPUT_TOO_LARGE'});
+  assert.deepEqual(f.calls,[]);assert.equal(f.payload(),undefined);assert.equal(f.backend.closing,false);
+});
+
+for(const [name,status,body] of [
+  ['unknown-code',422,JSON.stringify({code:'PRIVATE_FICTIONAL_CODE'})],
+  ['wrong-status',500,JSON.stringify({code:'MATERIAL_INPUT_TOO_LARGE'})],
+  ['over-limit',422,JSON.stringify({code:'MATERIAL_INPUT_TOO_LARGE',message:'x'.repeat(4096)})],
+  ['malformed',422,'{"code":"MATERIAL_INPUT_TOO_LARGE"'],
+])test('untrusted preview error remains generic: '+name,async t=>{
+  const f=await fixture(t);f.state.previewError={status,body};
+  assert.deepEqual(await f.invoke(),{ok:false,code:'BLOCKED_LIVE'});assert.deepEqual(f.calls,[]);
+});
+
 test('explicit automatic material analysis skips confirmation but keeps both snapshots and bounded lease',async t=>{
   const f=await fixture(t,true);f.state.confirm=false;
   assert.deepEqual(await f.invoke(),{ok:true});
   assert.deepEqual(f.calls,['authorize']);
   assert.equal(f.requests.filter(value=>value.method==='POST').length,2);
-  assert.equal(f.payload().max_total_usd,'0.024576');
+  assert.equal(f.payload().max_total_usd,'0.0835584');
   assert.equal(f.payload().expected_config_version,ID);
 });
 

@@ -31,5 +31,5 @@ def test_cost_arithmetic_is_independent_of_callers_decimal_context():
     with localcontext() as context:
         context.prec=3
         context.traps[Inexact]=True
-        assert reservation(config) == Decimal('0.024576')
+        assert reservation(config) == Decimal('0.0835584')
         assert receipt(reply,config).estimated_cost_usd == Decimal('0.0049035')

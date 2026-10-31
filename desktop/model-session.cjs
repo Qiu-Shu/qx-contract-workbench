@@ -7,7 +7,7 @@ const MODELS=new Map([
 const CREDENTIAL_CODES=new Set(['CREDENTIAL_INPUT_INVALID','CREDENTIAL_PATH_UNSAFE','CREDENTIAL_CORRUPT',
   'CREDENTIAL_STORAGE_UNAVAILABLE','CREDENTIAL_STORAGE_FAILED','CREDENTIAL_ROTATION_REQUIRED']);
 const CONTROL_CODES=new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT',
-  'BUDGET_EXCEEDED','CROSS_MATTER_DENIED']);
+  'BUDGET_EXCEEDED','CROSS_MATTER_DENIED','MATERIAL_INPUT_TOO_LARGE']);
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const exact=(value,fields)=>value && typeof value==='object' && !Array.isArray(value) &&
   Object.keys(value).length===fields.length && fields.every(field=>Object.hasOwn(value,field));
@@ -18,7 +18,7 @@ const rejected=(code='BLOCKED_LIVE')=>({ok:false,code});
 function configuration(model) {
   const [input,output]=MODELS.get(model);
   return {enabled:true,protocol_version:'deepseek-chat-json-v1',provider:'deepseek',model,
-    max_input_bytes:65536,max_output_tokens:4096,max_response_bytes:1048576,
+    max_input_bytes:262144,max_output_tokens:4096,max_response_bytes:1048576,
     timeout_seconds:model==='deepseek-v4-pro'?90:30,
     input_usd_per_million:input,output_usd_per_million:output,
     price_reference:'https://api-docs.deepseek.com/quick_start/pricing/ (2026-10-19; peak/cache-miss; USD)'};
@@ -26,8 +26,9 @@ function configuration(model) {
 
 function reservation(model) {
   const cents=value=>BigInt(value.split('.')[0])*100n+BigInt((value.split('.')[1] || '').padEnd(2,'0'));
-  const [input,output]=MODELS.get(model);
-  const amount=65536n*cents(input)+4096n*cents(output);
+  const config=configuration(model);
+  const amount=BigInt(config.max_input_bytes)*cents(config.input_usd_per_million)+
+    BigInt(config.max_output_tokens)*cents(config.output_usd_per_million);
   const digits=amount.toString().padStart(9,'0');
   return digits.slice(0,-8)+'.'+digits.slice(-8).replace(/0+$/,'');
 }
@@ -242,9 +243,9 @@ function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()
           rejected(CONTROL_CODES.has(result?.code)?result.code:'BLOCKED_LIVE');
       }
       return profileStatus===null ? okay() : {ok:true,status:profileStatus};
-    }catch{
+    }catch(error){
       if(flight)await flight;
-      await revoke();return rejected();
+      await revoke();return rejected(error?.code==='MATERIAL_INPUT_TOO_LARGE'?error.code:'BLOCKED_LIVE');
     }finally{open=false;active=false;}
   }
   return Object.freeze({

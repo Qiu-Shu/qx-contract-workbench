@@ -6,7 +6,7 @@ const {validProfileInput,createProfileSnapshot}=require('./profile-approval.cjs'
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const SCOPE=['workspace_id','conversation_id','scope_kind','scope_ref','binding_revision','input_revision','materials_revision'];
 const CODES=new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT','BUDGET_EXCEEDED',
-  'CROSS_MATTER_DENIED','ACCESS_DENIED','APPROVAL_CANCELED']);
+  'CROSS_MATTER_DENIED','ACCESS_DENIED','APPROVAL_CANCELED','MATERIAL_INPUT_TOO_LARGE']);
 const ACTIVE=new Set(['queued','preparing','routing','retrieving','generating','persisting']);
 const exact=(value,fields)=>value && typeof value==='object' && !Array.isArray(value) &&
   Object.keys(value).length===fields.length && fields.every(key=>Object.hasOwn(value,key));
@@ -97,26 +97,32 @@ function postJSON(origin,path,token,csrf,body) {
     let bytes=0,parts=[],done=false;
     const finish=(error,value)=>{
       if(done)return;done=true;clearTimeout(timer);parts=[];
-      if(error)reject(new Error('BLOCKED_LIVE'));else resolve(value);
+      if(error)reject(Object.assign(new Error('BLOCKED_LIVE'),
+        {code:error==='MATERIAL_INPUT_TOO_LARGE'?error:'BLOCKED_LIVE'}));else resolve(value);
     };
     let payload;
     try{payload=JSON.stringify(body);}catch{finish(true);return;}
     const request=http.request(origin+path,{agent:false,method:'POST',maxHeaderSize:8192,
       headers:{Accept:'application/json','Content-Type':'application/json',
         'X-CSRF-Token':csrf,Cookie:'qx_session='+token+'; qx_csrf='+csrf}},response=>{
-      if(response.statusCode!==200 || !/^application\/json(?:\s*;|$)/i.test(response.headers['content-type'] || '') ||
+      const materialLimit=response.statusCode===422;
+      if((response.statusCode!==200 && !materialLimit) || !/^application\/json(?:\s*;|$)/i.test(response.headers['content-type'] || '') ||
           (response.headers['content-encoding'] && response.headers['content-encoding']!=='identity')){
         response.destroy();request.destroy();finish(true);return;
       }
       response.on('data',chunk=>{
         bytes+=chunk.length;
-        if(bytes>524288){response.destroy();request.destroy();finish(true);return;}
+        if(bytes>(materialLimit?4096:524288)){response.destroy();request.destroy();finish(true);return;}
         parts.push(chunk);
       });
       response.on('error',()=>finish(true));
       response.on('aborted',()=>finish(true));
       response.on('end',()=>{
-        try{finish(false,JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(parts))));}
+        try{
+          const value=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(parts)));
+          if(materialLimit)finish(value?.code==='MATERIAL_INPUT_TOO_LARGE'?'MATERIAL_INPUT_TOO_LARGE':true);
+          else finish(false,value);
+        }
         catch{finish(true);}
       });
     });

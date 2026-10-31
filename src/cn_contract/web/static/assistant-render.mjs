@@ -47,6 +47,7 @@ const generationErrorText = error=>({
   VERSION_CONFLICT:'输入或材料版本已变化。请重新读取记录并核对生成条件。',
   STATE_CONFLICT:'当前状态暂不能生成。请刷新记录后核对。',
   MODEL_OUTPUT_INVALID:'已收到响应，但内容未通过校验，未形成可展示草稿。',
+  MATERIAL_INPUT_TOO_LARGE:'完整材料与来源信息超过本次模型输入上限。请减少所选材料后重试；不会截断或自动重发。',
   PROVIDER_ERROR:'本次生成未取得可用结果，请核对任务与费用记录。',
 }[error?.code] || '生成状态未能确认。请刷新记录后核对。');
 const attemptText = {

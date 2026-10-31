@@ -28,10 +28,10 @@ test('trusted authorization binds the private config version and exact bounded c
     return lease.authorize({session_token:TOKEN,basis});
   });
   assert.deepEqual(result,{ok:true});
-  assert.deepEqual(details,{model:'deepseek-flash',max_total_usd:'0.024576'});
+  assert.deepEqual(details,{model:'deepseek-flash',max_total_usd:'0.0835584'});
   assert.equal(f.authorized.expected_config_version,VERSION);
   assert.equal(f.authorized.valid_for_seconds,120);
-  assert.equal(f.authorized.max_total_usd,'0.024576');
+  assert.equal(f.authorized.max_total_usd,'0.0835584');
   assert.equal(f.authorized.session_token===TOKEN,true);
   assert.deepEqual(f.calls,['authorize']);
 });
@@ -39,7 +39,7 @@ test('trusted authorization binds the private config version and exact bounded c
 test('the pro model uses an exact eight-place reservation without floating-point rounding',async()=>{
   const f=await fixture('deepseek-v4-pro');
   await f.runtime.withAuthorization(f.backend,()=>true,lease=>lease.authorize({session_token:TOKEN,basis}));
-  assert.equal(f.authorized.max_total_usd,'0.10272768');
+  assert.equal(f.authorized.max_total_usd,'0.36225024');
 });
 
 test('the longer Pro timeout still uses one lease and cancellation revokes without a second call',async()=>{

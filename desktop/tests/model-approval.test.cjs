@@ -203,14 +203,14 @@ test('repeated confirmation keeps the same request and budget and accepts an exi
   f.backend.authorizeModel=async value=>{authorizations.push(value);return {ok:true,status:authorizations.length===1?'authorized':'existing'};};
   assert.deepEqual(await f.invoke(),{ok:true});assert.deepEqual(await f.invoke(),{ok:true});
   assert.equal(authorizations.length,2);assert.deepEqual(authorizations[1],authorizations[0]);
-  assert.equal(authorizations[1].max_total_usd,'0.024576');assert.equal(authorizations[1].valid_for_seconds,120);
+  assert.equal(authorizations[1].max_total_usd,'0.0835584');assert.equal(authorizations[1].valid_for_seconds,120);
 });
 
 test('exhausted previous approval permits a new explicit one-call confirmation',async t=>{
   const f=await fixture(t);f.capability.state='budget_exhausted';
   assert.deepEqual(await f.invoke(),{ok:true});
   assert.deepEqual(f.calls,['boundary','authorize']);
-  assert.equal(f.payload.max_total_usd,'0.024576');assert.equal(f.payload.valid_for_seconds,120);
+  assert.equal(f.payload.max_total_usd,'0.0835584');assert.equal(f.payload.valid_for_seconds,120);
 });
 
 test('a stalled owned HTTP response times out with fixed output and releases the busy lock',async t=>{

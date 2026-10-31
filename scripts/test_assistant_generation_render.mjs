@@ -263,3 +263,15 @@ test('completed material analysis stays under the original prompt with readable 
   attempt.output.manifest.parent_business_run_id='unrelated';f.render.state(s);
   assert.deepEqual(f.at('history').children.map(child=>child.dataset.messageId),[mid,'local',mid2]);
 });
+
+test('material input cap rejection explains complete material size before any attempt exists',t=>{
+  const f=fixture(t),s=state();s.view.scope.materials_revision=1;
+  s.view.messages=[{id:mid,role:'user',content:'独立虚构合同审查'}];
+  s.materials={items:[{attachment_id:'file',parse_revision:1}],attachments:[]};
+  s.business={items:[{run_id:'parent',message_id:mid,task_id:'task',workflow:'contract',
+    scope:{input_revision:1,materials_revision:1},text:'材料归集完成'}]};
+  s.materialGeneration={phase:'idle',available:true,error:{code:'MATERIAL_INPUT_TOO_LARGE'}};
+  f.render.state(s);
+  assert.match(f.at('history').textContent,/完整材料.*输入上限/);
+  assert.doesNotMatch(f.at('history').textContent,/生成状态未能确认/);
+});
