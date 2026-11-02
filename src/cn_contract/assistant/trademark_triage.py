@@ -4,6 +4,7 @@ import re
 from .. import domain as d
 from .providers.policy import sha
 from . import trademark_support
+from .render_budget import bounded
 
 METHOD_ID = 'trademark-triage-v1'
 UPSTREAM = 'https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/171903c9e5e91b3b7625f1dd557d146ba5a25adc/ip-legal/skills/infringement-triage/SKILL.md'
@@ -168,7 +169,7 @@ def candidate(value, manifest):
         _inline(quote.exact_quote, {quote.source_id})
     if isinstance(draft, d.TrademarkTriageDraftV3):
         trademark_support.validate(draft, quotes, _inline)
-        return d.MainMaterialCandidate(text=trademark_support.render(draft, manifest, quotes, FACTORS),
+        return d.MainMaterialCandidate(text=bounded(trademark_support.render(draft, manifest, quotes, FACTORS)),
             citations=tuple(dict.fromkeys(quote.source_id for quote in draft.quotes)), trademark_triage=draft)
     used = set()
     for factor in draft.factors:
@@ -182,7 +183,7 @@ def candidate(value, manifest):
     if used != quotes.keys():
         raise ValueError('TRADEMARK_REFERENCE_INVALID')
     _inline('\n'.join(draft.gaps), set())
-    return d.MainMaterialCandidate(text=_render(draft, manifest, quotes),
+    return d.MainMaterialCandidate(text=bounded(_render(draft, manifest, quotes)),
         citations=tuple(dict.fromkeys(quote.source_id for quote in draft.quotes)), trademark_triage=draft)
 
 

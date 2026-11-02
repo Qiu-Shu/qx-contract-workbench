@@ -13,6 +13,7 @@ import tempfile
 from types import ModuleType
 from .. import domain as d
 from ..assistant.providers.policy import sha
+from ..assistant.render_budget import bounded
 from ..config import canonical_json
 
 ROLES = {'issues':('moderator', 'plaintiff', 'defendant'), 'evidence':('plaintiff', 'defendant'),
@@ -141,8 +142,9 @@ class ChihengAdapter:
 
 
 def readable_text(result, candidate):
+    """Render the hearing transcript for display, bounded to the schema limit."""
     labels = dict(plaintiff='原告', defendant='被告', moderator='主持追问', reviewer='复盘')
     stages = dict(issues='争点整理', evidence='证据核对', questions='双方问答', debate='辩论', review='复盘')
-    return '\n\n'.join([stages[result.session.stage] + ' · 模拟演练 · 待律师核对',
+    return bounded('\n\n'.join([stages[result.session.stage] + ' · 模拟演练 · 待律师核对',
         *[labels[turn.role] + '：' + turn.text + '\n待核事项：' + '；'.join(turn.unresolved)
-            for turn in candidate.hearing_turns], result.notice])
+            for turn in candidate.hearing_turns], result.notice]))

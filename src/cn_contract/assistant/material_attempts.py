@@ -98,16 +98,21 @@ def settle(actor, identifier, token, reply, db, runtime):
             if reply.usage and (reply.usage.prompt_tokens > config.max_input_bytes or reply.usage.completion_tokens > config.max_output_tokens):
                 raise ValueError('MODEL_USAGE_INVALID')
         except ValueError as error:
-            _logger.warning('model_response_rejected stage=material_settle_candidate')
-            from .providers.deepseek_protocol import rejection_reason
+            from .providers.deepseek_protocol import rejected_detail, rejection_reason
+            field, kind = rejected_detail(error)
+            _logger.warning('model_response_rejected stage=material_settle_candidate field=%s error=%s',
+                field, kind)
             reply = d.MainMaterialReply(state='received', usage=reply.usage,
                 provider_request_id=reply.provider_request_id, error_code='MODEL_OUTPUT_INVALID',
                 rejection_reason=rejection_reason('candidate', error))
             candidate = None
     try:
         current(actor, row, db, runtime)
-    except (ServiceError, ValueError):
-        _logger.warning('model_response_rejected stage=material_settle_current')
+    except (ServiceError, ValueError) as error:
+        from .providers.deepseek_protocol import rejected_detail
+        field, kind = rejected_detail(error)
+        _logger.warning('model_response_rejected stage=material_settle_current field=%s error=%s',
+            field, kind)
         candidate = None
     hearing = None
     if candidate is not None:
@@ -121,10 +126,14 @@ def settle(actor, identifier, token, reply, db, runtime):
                 from ..integrations.chiheng import readable_text
                 candidate = d.MainMaterialCandidate.model_validate({**candidate.model_dump(mode='python'),
                     'text':readable_text(hearing, candidate)})
-        except (ServiceError, ValueError, OSError, ImportError):
-            _logger.warning('model_response_rejected stage=hearing_record')
+        except (ServiceError, ValueError, OSError, ImportError) as error:
+            from .providers.deepseek_protocol import rejected_detail
+            field, kind = rejected_detail(error)
+            _logger.warning('model_response_rejected stage=hearing_record field=%s error=%s',
+                field, kind)
             reply = d.MainMaterialReply(state='received', usage=reply.usage,
-                provider_request_id=reply.provider_request_id, error_code='MODEL_OUTPUT_INVALID')
+                provider_request_id=reply.provider_request_id, error_code='MODEL_OUTPUT_INVALID',
+                rejection_reason='schema')
             candidate = None
     require_active(db)
     checked = attempts._row(identifier, db)

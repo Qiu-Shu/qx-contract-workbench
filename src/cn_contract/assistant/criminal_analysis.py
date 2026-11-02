@@ -3,6 +3,7 @@ import re
 
 from .. import domain as d
 from .providers.policy import encoded, sha
+from .render_budget import bounded
 
 METHOD_ID = 'criminal-analysis-v1'
 UPSTREAM = 'https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/171903c9e5e91b3b7625f1dd557d146ba5a25adc/criminal-legal/skills/'
@@ -152,7 +153,7 @@ def candidate(value, manifest):
     inline('\n'.join(draft.gaps), set())
     citations = tuple(dict.fromkeys(q.source_id for q in draft.quotes))
     inline(encoded(draft), set(citations))
-    return d.MainMaterialCandidate(text=_render(draft, manifest, quotes), citations=citations, criminal_analysis=draft)
+    return d.MainMaterialCandidate(text=bounded(_render(draft, manifest, quotes)), citations=citations, criminal_analysis=draft)
 
 
 def _render(draft, manifest, quotes):

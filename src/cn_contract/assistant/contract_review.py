@@ -4,6 +4,7 @@ import re
 
 from .. import domain as d
 from .providers.policy import encoded, sha
+from .render_budget import bounded
 
 _logger = logging.getLogger(__name__)
 
@@ -319,7 +320,7 @@ def candidate(value, manifest):
         raise ValueError('CONTRACT_REFERENCE_INVALID')
     citations = tuple(dict.fromkeys(q.source_id for q in draft.quotes))
     inline(encoded(draft), set(citations))
-    return d.MainMaterialCandidate(text=_render(draft, manifest, quotes), citations=citations, contract_review=draft)
+    return d.MainMaterialCandidate(text=bounded(_render(draft, manifest, quotes)), citations=citations, contract_review=draft)
 
 
 def _render(draft, manifest, quotes):

@@ -4,11 +4,53 @@ import json
 import logging
 import math
 
+from pydantic import ValidationError
+
 from ... import domain as d
 from ...config import canonical_json
 
 
 _logger = logging.getLogger(__name__)
+
+
+# Only fixed identifiers may cross the log boundary: model-supplied field names and
+# exception text can carry private material, so both are reduced to closed vocabularies.
+_LOGGED_FIELDS = frozenset({
+    'text', 'citations', 'hearing_turns', 'case_evidence', 'contract_review',
+    'criminal_analysis', 'trademark_triage', 'quotes', 'reviews', 'findings',
+    'stance_quote_ids', 'stance', 'gaps', 'factors', 'source_statements',
+    'exact_quote', 'source_id', 'start', 'end', 'title', 'replacement',
+    'fallback', 'standard_position', 'turns', 'material_ids', 'unresolved',
+})
+_LOGGED_ERROR_TYPES = frozenset({
+    'string_too_long', 'string_too_short', 'string_pattern_mismatch', 'string_type',
+    'missing', 'extra_forbidden', 'too_short', 'too_long', 'too_many_items',
+    'too_few_items', 'greater_than_equal', 'less_than_equal', 'literal_error',
+    'model_type', 'value_error', 'tuple_type', 'list_type', 'dict_type',
+    'int_type', 'bool_type', 'union_tag_invalid', 'none_required',
+})
+# Business error codes are fixed source identifiers, so a closed allowlist (never a
+# pattern) is what keeps arbitrary model text out of the rejection log. ServiceError
+# carries its code on the instance, so those identifiers are listed here too.
+_LOGGED_CODES = frozenset({
+    'CONTRACT_QUOTE_INVALID', 'CONTRACT_REFERENCE_INVALID', 'CONTRACT_STANCE_INVALID',
+    'CONTRACT_COVERAGE_INVALID', 'CONTRACT_METHOD_INVALID', 'MODEL_USAGE_INVALID',
+    'MATERIAL_OUTPUT_INVALID', 'MATERIAL_INPUT_TOO_LARGE', 'MATERIAL_INPUT_INVALID',
+    'MATERIAL_BASIS_INVALID', 'MATERIAL_HISTORY_FORMAT_INVALID',
+    'MATERIAL_INSTRUCTION_CONFLICT', 'CASE_EVIDENCE_QUOTE_INVALID',
+    'CASE_EVIDENCE_INLINE_INVALID', 'CASE_EVIDENCE_FACT_SOURCE_INVALID',
+    'CASE_METHOD_INVALID', 'CRIMINAL_QUOTE_INVALID', 'CRIMINAL_REFERENCE_INVALID',
+    'CRIMINAL_EVIDENCE_INVALID', 'CRIMINAL_METHOD_INVALID', 'CRIMINAL_STAGE_INVALID',
+    'CRIMINAL_DATE_INVALID', 'CRIMINAL_SCOPE_INVALID', 'BUSINESS_EVIDENCE_INVALID',
+    'BUSINESS_RECORD_INVALID', 'CONTEXT_INPUT_INVALID', 'PROFILE_OUTPUT_INVALID',
+    'HEARING_OUTPUT_INVALID', 'HEARING_INPUT_INVALID', 'TRADEMARK_QUOTE_INVALID',
+    'TRADEMARK_REFERENCE_INVALID', 'TRADEMARK_FACTORS_INVALID', 'TRADEMARK_METHOD_INVALID',
+    'TRADEMARK_OUTPUT_INVALID', 'TRADEMARK_SUPPORT_INVALID', 'IP_SCOPE_UNSUPPORTED',
+    'CAPABILITY_SNAPSHOT_INVALID', 'STATE_CONFLICT', 'VERSION_CONFLICT',
+    'AUTHORIZATION_REQUIRED', 'BLOCKED_LIVE', 'CROSS_MATTER_DENIED', 'DATA_POLICY_UNAPPROVED',
+    'MATERIAL_NOT_READABLE', 'HEARING_MATERIAL_LIMIT', 'CRIMINAL_HEARING_UNAVAILABLE',
+    'CRIMINAL_SCOPE_REQUIRED', 'BUDGET_EXCEEDED', 'NOT_SUPPORTED', 'ASSISTANT_BUSY',
+})
 
 
 def rejection_reason(stage, error):
@@ -19,7 +61,39 @@ def rejection_reason(stage, error):
     code = error.args[0] if error.args and type(error.args[0]) is str else ''
     return {'CONTRACT_QUOTE_INVALID':'quotes', 'CONTRACT_REFERENCE_INVALID':'references',
             'CONTRACT_STANCE_INVALID':'stance', 'CONTRACT_COVERAGE_INVALID':'coverage',
-            'CONTRACT_METHOD_INVALID':'method', 'MODEL_USAGE_INVALID':'usage'}.get(code, 'schema')
+            'CONTRACT_METHOD_INVALID':'method', 'MODEL_USAGE_INVALID':'usage',
+            'CASE_EVIDENCE_QUOTE_INVALID':'quotes', 'CASE_EVIDENCE_INLINE_INVALID':'quotes',
+            'TRADEMARK_QUOTE_INVALID':'quotes', 'CRIMINAL_QUOTE_INVALID':'quotes',
+            'CASE_EVIDENCE_FACT_SOURCE_INVALID':'references',
+            'TRADEMARK_REFERENCE_INVALID':'references', 'CRIMINAL_REFERENCE_INVALID':'references',
+            'TRADEMARK_METHOD_INVALID':'method', 'CASE_METHOD_INVALID':'method',
+            'CRIMINAL_METHOD_INVALID':'method'}.get(code, 'schema')
+
+
+def rejected_detail(error):
+    """Return (fields, kinds) from closed vocabularies, joined in complaint order.
+
+    The first three distinct complaints are kept: a lone leading error can point at a
+    field that is merely unexpected while the real cause sits one entry later.
+    """
+    if isinstance(error, ValidationError):
+        pairs = []
+        for item in error.errors()[:3]:
+            loc = item.get('loc') or ()
+            name = next((part for part in loc
+                         if isinstance(part, str) and part in _LOGGED_FIELDS), 'other')
+            kind = item.get('type')
+            pair = (name, kind if kind in _LOGGED_ERROR_TYPES else 'other')
+            if pair not in pairs:
+                pairs.append(pair)
+        if not pairs:
+            return 'other', 'other'
+        return '|'.join(pair[0] for pair in pairs), '|'.join(pair[1] for pair in pairs)
+    # ServiceError keeps its fixed code as an attribute; args[0] is a generic sentence.
+    code = getattr(error, 'code', None)
+    if type(code) is not str:
+        code = error.args[0] if error.args and type(error.args[0]) is str else ''
+    return 'other', code if code in _LOGGED_CODES else 'other'
 
 
 def json_bytes(value):
@@ -131,7 +205,9 @@ def decode_response(raw, config, secret, *, parse_candidate, reply_type):
     except PrivateReflection:
         return reply_type(state='received',error_code='PROVIDER_ERROR')
     except (ValueError,KeyError,TypeError,RecursionError) as error:
-        # Fixed stages only: exception details and response text can contain private data.
-        _logger.warning('model_response_rejected stage=%s',stage)
+        # Fixed stages, fields and error kinds only: exception details and response text
+        # can contain private data, so both detail values come from closed vocabularies.
+        field,kind=rejected_detail(error)
+        _logger.warning('model_response_rejected stage=%s field=%s error=%s',stage,field,kind)
         return reply_type(state='received',provider_request_id=identifier,usage=usage,
                            error_code='MODEL_OUTPUT_INVALID',rejection_reason=rejection_reason(stage,error))

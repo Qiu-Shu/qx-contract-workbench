@@ -95,7 +95,11 @@ def test_material_received_rejection_preserves_ledger_without_resending(
         'material_sources': 'candidate'}.get(failure, failure)
     messages = [record.getMessage() for record in caplog.records
         if record.name.startswith('cn_contract.assistant.')]
-    assert 'model_response_rejected stage=' + stage in messages
+    # Suffixed lines carry field/kind after the stage, so match on a token boundary:
+    # stage=usage must not accept stage=usage_extra.
+    assert any(message == 'model_response_rejected stage=' + stage
+        or message.startswith('model_response_rejected stage=' + stage + ' ')
+        for message in messages)
     if failure == 'material_sources':
         assert 'model_response_rejected stage=material_sources' in messages
     assert all(message.startswith('model_response_rejected stage=') for message in messages)
@@ -145,4 +149,5 @@ def test_material_settlement_discard_is_distinguishable_from_provider_rejection(
         assert len(f.providers[0].calls) == 1
 
     asyncio.run(scenario())
-    assert 'model_response_rejected stage=material_settle_' + failure in caplog.messages
+    assert any(message.startswith('model_response_rejected stage=material_settle_' + failure + ' ')
+        for message in caplog.messages)
