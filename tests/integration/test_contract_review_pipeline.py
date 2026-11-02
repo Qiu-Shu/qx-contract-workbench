@@ -8,6 +8,7 @@ from docx import Document
 from sqlalchemy import text
 from cn_contract import domain as d
 from cn_contract.assistant import attachments, material_attempts, material_codec, material_preparation
+from cn_contract.assistant import contract_review as contract_method
 from cn_contract.assistant.model_integrity import validate_model_records
 from cn_contract.assistant.providers import attempts
 from cn_contract.assistant.providers.main import DeepSeekProvider
@@ -111,11 +112,24 @@ def test_contract_downgrade_keeps_cost_and_never_resends(material_world,monkeypa
             return reply.model_copy(update={'output':d.MainMaterialCandidate.model_validate(old)})
         monkeypatch.setattr(material_codec,'decode',downgrade)
     result,_=execute(w,chosen,old if boundary=='decode' else None)
-    assert result.output is None and result.receipt.error_code=='MODEL_OUTPUT_INVALID'
+    if boundary=='decode':
+        # Behaviour change (0.6.5): a legacy text/citations reply to a contract task is no
+        # longer a failed task. It is delivered as a text-only, explicitly marked
+        # unverified draft -- see contract_review.degraded_candidate -- because the general
+        # material prompt and the per-method prompt contradict each other about the shape.
+        assert result.output is not None
+        assert result.output.candidate.contract_review is None
+        assert result.output.candidate.text=='旧协议无专项条目'+contract_method.DEGRADED_NOTICE
+        assert result.output.candidate.citations==(basis.manifest.sources[0].source_id,)
+    else:
+        # Substituting an unmarked text-only candidate after decode is still refused: only
+        # the marked degradation may pass, so nothing unverified can be stored silently.
+        assert result.output is None and result.receipt.error_code=='MODEL_OUTPUT_INVALID'
     assert result.receipt.usage.total_tokens==42 and result.receipt.cost_status=='estimated'
     with w[0].session() as db:
         assert db.scalar(text('SELECT COUNT(*) FROM assistant_model_receipts'))==1
-        assert db.scalar(text('SELECT COUNT(*) FROM assistant_model_outputs'))==0
+        assert db.scalar(text('SELECT COUNT(*) FROM assistant_model_outputs'))==(
+            1 if boundary=='decode' else 0)
 
 
 def test_queued_c4_preserves_original_wire_after_upgrade(material_world,monkeypatch):

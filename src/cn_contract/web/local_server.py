@@ -195,6 +195,9 @@ def _worker_lock(root):
 def build_local_app(directory, *, port=8767, library_root=None, data_parent=None, assistant_model_runtime=None,
                     assistant_judge_runtime=None, reception_knowledge_root=None, capability_registry=None):
     root = _open_workspace(directory, data_parent=data_parent)
+    # Rejected model replies are kept next to workbench.db, never in the install dir.
+    from ..assistant.rejection_archive import configure as configure_rejection_archive
+    configure_rejection_archive(root)
     with _worker_lock(root):
         from .workspace_upgrade import upgrade
         upgrade(root)

@@ -216,8 +216,15 @@ def validate_manifest_candidate(candidate, manifest):
     elif candidate.case_evidence is not None:
         raise ValueError('MATERIAL_OUTPUT_INVALID')
     if manifest.contract_review is not None:
-        from .contract_review import candidate as build_contract_candidate
-        if candidate.contract_review is None or build_contract_candidate(candidate.contract_review.model_dump(mode='python'), manifest) != candidate:
+        from .contract_review import candidate as build_contract_candidate, is_degraded_text
+        if candidate.contract_review is None:
+            # A text-only reply is accepted only when it is the marked degradation
+            # produced when the structured draft did not validate. ``validate_candidate``
+            # above has already checked that every citation is one of this request's
+            # sources; the notice requirement keeps an unverified reply identifiable.
+            if not is_degraded_text(candidate.text):
+                raise ValueError('MATERIAL_OUTPUT_INVALID')
+        elif build_contract_candidate(candidate.contract_review.model_dump(mode='python'), manifest) != candidate:
             raise ValueError('MATERIAL_OUTPUT_INVALID')
     elif candidate.contract_review is not None:
         raise ValueError('MATERIAL_OUTPUT_INVALID')
@@ -226,23 +233,35 @@ def validate_manifest_candidate(candidate, manifest):
 
 def decode(raw, request, config, secret):
     def candidate(value):
-        manifest = request.basis.manifest
-        if manifest.trademark_triage is not None:
-            from .trademark_triage import candidate as build_candidate
-            result = build_candidate(value, manifest)
-        elif manifest.criminal_analysis is not None:
-            from .criminal_analysis import candidate as build_candidate
-            result = build_candidate(value, manifest)
-        elif manifest.contract_review is not None:
-            from .contract_review import candidate as build_candidate
-            result = build_candidate(value, manifest)
-        elif manifest.case_method is not None:
-            from .case_evidence import candidate as build_candidate
-            result = build_candidate(value, manifest)
-        else:
-            result = d.MainMaterialCandidate.model_validate(value)
-        result = validate_manifest_candidate(result, manifest)
-        from ..integrations.chiheng import check_candidate
-        check_candidate(result, request.basis.manifest)
-        return result
+        # A reply that reached this point has already been paid for; keep a local copy
+        # of what it actually said before the rejection is reduced to a fixed category.
+        # The archive is best effort and must not alter the reply or its error code.
+        try:
+            return _candidate(value, request)
+        except (ValueError, KeyError, TypeError, RecursionError):
+            from . import rejection_archive
+            rejection_archive.save_response(raw)
+            raise
     return decode_response(raw, config, secret, parse_candidate=candidate, reply_type=d.MainMaterialReply)
+
+
+def _candidate(value, request):
+    manifest = request.basis.manifest
+    if manifest.trademark_triage is not None:
+        from .trademark_triage import candidate as build_candidate
+        result = build_candidate(value, manifest)
+    elif manifest.criminal_analysis is not None:
+        from .criminal_analysis import candidate as build_candidate
+        result = build_candidate(value, manifest)
+    elif manifest.contract_review is not None:
+        from .contract_review import candidate as build_candidate
+        result = build_candidate(value, manifest)
+    elif manifest.case_method is not None:
+        from .case_evidence import candidate as build_candidate
+        result = build_candidate(value, manifest)
+    else:
+        result = d.MainMaterialCandidate.model_validate(value)
+    result = validate_manifest_candidate(result, manifest)
+    from ..integrations.chiheng import check_candidate
+    check_candidate(result, request.basis.manifest)
+    return result

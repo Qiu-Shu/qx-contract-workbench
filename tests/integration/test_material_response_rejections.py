@@ -31,7 +31,10 @@ def mutate_response(raw, failure):
     elif failure == 'content_json':
         message['content'] = '{PRIVATE-FICTIONAL-INCOMPLETE'
     elif failure == 'candidate_schema':
+        # Still invalid after the envelope keys are stripped and unusable as a
+        # degraded reply, so this case keeps exercising the rejection ledger.
         candidate['citations'] = []
+        candidate['format_version'] = 'fictional-format'
     elif failure == 'material_sources':
         if 'quotes' in candidate:
             candidate['quotes'][0]['source_id'] = 'a' * 64

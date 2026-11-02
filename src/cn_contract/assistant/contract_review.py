@@ -2,7 +2,10 @@
 import logging
 import re
 
+from pydantic import ValidationError
+
 from .. import domain as d
+from .providers.deepseek_protocol import rejected_detail
 from .providers.policy import encoded, sha
 from .render_budget import bounded
 
@@ -260,12 +263,121 @@ def _stance_v3(draft, manifest, quotes, stance_ids):
         and any(not q['invalid'] and q['roles'] == {draft.stance} and q['named'] == (expected,) for q in prior_quotes))
 
 
+# A degradation is only offered when the reply is a plain text/citations answer --
+# the shape the shared material prompt asks for -- but the per-method prompt asks for
+# the structured draft instead. The two instructions contradict each other, so a
+# model that follows the general one is not wrong, it is just unusable as a draft.
+# Such a reply is still delivered, but never silently: the fixed sentence below is
+# appended to the text and is required again by ``material_codec``, so an unverified
+# reply cannot be stored or reloaded without its warning.
+DEGRADED_NOTICE = '（本次未能生成结构化草稿，以下为模型原始正文，未做逐条引文核对，请逐字复核。）'
+# Mirrors the ``AssistantText`` limit in ``domain.py``: the notice itself has to fit.
+MAX_REPLY_CHARS = 20000
+# Mirrors the ``citations`` bound of ``MainMaterialCandidate``.
+MAX_CITATIONS = 100
+_HEX = re.compile(r'[a-f0-9]{64}\Z')
+
+
+def is_degraded_text(text):
+    """Report whether ``text`` is a degraded reply carrying its required notice.
+
+    Args:
+        text: A candidate text to inspect.
+
+    Returns:
+        True when ``text`` is a string that ends with :data:`DEGRADED_NOTICE` and
+        has actual content before it.
+    """
+    return type(text) is str and len(text) > len(DEGRADED_NOTICE) and text.endswith(DEGRADED_NOTICE)
+
+
+def degraded_candidate(value):
+    """Build a text-only candidate from a reply the draft schema refused.
+
+    Args:
+        value: The decoded model content that :class:`ContractReviewDraft` rejected.
+
+    Returns:
+        A validated ``MainMaterialCandidate`` with ``contract_review=None`` and the
+        notice appended to the model text, or ``None`` when this reply may not be
+        degraded. ``None`` keeps the caller's original rejection intact.
+    """
+    if type(value) is not dict:
+        return None
+    text = value.get('text')
+    citations = value.get('citations')
+    # The notice has to fit inside the same 20000 character limit as the text, so a
+    # full-length reply cannot be degraded -- silently cutting legal prose would read
+    # as a complete review, which is worse than the original rejection.
+    if type(text) is not str or not text.strip() or len(text) + len(DEGRADED_NOTICE) > MAX_REPLY_CHARS:
+        return None
+    if type(citations) is not list or not citations or len(citations) > MAX_CITATIONS:
+        return None
+    if any(type(item) is not str or not _HEX.match(item) for item in citations):
+        return None
+    unique = tuple(dict.fromkeys(citations))
+    if len(unique) != len(citations):
+        return None
+    try:
+        return d.MainMaterialCandidate(text=text + DEGRADED_NOTICE, citations=unique, contract_review=None)
+    except ValueError:
+        # The text carries characters the material schema forbids; the original
+        # rejection stands rather than a second, unrelated error being raised.
+        return None
+
+
+# The shared material prompt asks for exactly these two fields; the contract prompt
+# asks for the structured draft. A reply that carries both is answering both prompts
+# at once and is still a usable draft once the envelope keys are removed.
+ENVELOPE_KEYS = ('text', 'citations')
+
+
+def stripped_draft(value):
+    """Retry the draft schema after removing the shared envelope keys.
+
+    Args:
+        value: The decoded model content that :class:`ContractReviewDraft` rejected.
+
+    Returns:
+        A validated draft when the reply was a draft plus ``text``/``citations``,
+        otherwise ``None``. Only those two keys are removed: stripping anything else
+        would hide a real field error the model made.
+    """
+    if type(value) is not dict or not any(key in value for key in ENVELOPE_KEYS):
+        return None
+    stripped = {key: item for key, item in value.items() if key not in ENVELOPE_KEYS}
+    if not stripped:
+        return None
+    try:
+        return d.ContractReviewDraft.model_validate(stripped)
+    except ValidationError:
+        return None
+
+
 def candidate(value, manifest):
     snapshot = manifest.contract_review
     method_system(snapshot)
     if select_method(manifest.workflow, manifest.materials, manifest.sources, method_id=snapshot.method_id) != snapshot:
         raise ValueError('CONTRACT_METHOD_INVALID')
-    draft = d.ContractReviewDraft.model_validate(value)
+    try:
+        draft = d.ContractReviewDraft.model_validate(value)
+    except ValidationError as error:
+        # The structured draft is not this reply's shape. Log only closed-vocabulary
+        # tokens (field/kind), then try the two recoveries in order of fidelity: a
+        # draft that also carried the shared envelope keys, then clearly-marked
+        # unverified text. Failing the whole task is the last resort, not the first.
+        field, kind = rejected_detail(error)
+        draft = stripped_draft(value)
+        if draft is not None:
+            _logger.warning('model_response_rejected stage=candidate contract_draft_rejected '
+                'field=%s error=%s stripped_envelope=True fallback=False', field, kind)
+        else:
+            degraded = degraded_candidate(value)
+            _logger.warning('model_response_rejected stage=candidate contract_draft_rejected '
+                'field=%s error=%s stripped_envelope=False fallback=%s', field, kind, degraded is not None)
+            if degraded is None:
+                raise
+            return degraded
     quotes = {q.id:q for q in draft.quotes}
     sources = {s.source_id:s.reference for s in manifest.sources}
     if len(quotes) != len(draft.quotes):
