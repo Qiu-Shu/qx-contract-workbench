@@ -11,6 +11,17 @@ from ...config import canonical_json
 _logger = logging.getLogger(__name__)
 
 
+def rejection_reason(stage, error):
+    # Only fixed identifiers cross the receipt boundary, never exception text or inputs.
+    if stage != 'candidate':
+        return {'usage':'usage', 'choice':'completion', 'message':'message',
+                'content_json':'json'}.get(stage, 'envelope')
+    code = error.args[0] if error.args and type(error.args[0]) is str else ''
+    return {'CONTRACT_QUOTE_INVALID':'quotes', 'CONTRACT_REFERENCE_INVALID':'references',
+            'CONTRACT_STANCE_INVALID':'stance', 'CONTRACT_COVERAGE_INVALID':'coverage',
+            'CONTRACT_METHOD_INVALID':'method', 'MODEL_USAGE_INVALID':'usage'}.get(code, 'schema')
+
+
 def json_bytes(value):
     return canonical_json(value).encode('utf-8')
 
@@ -82,7 +93,7 @@ def decode_response(raw, config, secret, *, parse_candidate, reply_type):
         return reply_type(state='received',error_code='PROVIDER_ERROR')
     except (ValueError,KeyError,TypeError,RecursionError):
         _logger.warning('model_response_rejected stage=envelope')
-        return reply_type(state='received',error_code='MODEL_OUTPUT_INVALID')
+        return reply_type(state='received',error_code='MODEL_OUTPUT_INVALID',rejection_reason='envelope')
     stage='usage'
     try:
         usage=_usage(value.get('usage'))
@@ -94,7 +105,13 @@ def decode_response(raw, config, secret, *, parse_candidate, reply_type):
         if type(choices) is not list or len(choices)!=1:raise ValueError('single choice required')
         choice=choices[0]
         if (type(choice) is not dict or type(choice['index']) is not int or choice['index']!=0
-                or choice['finish_reason']!='stop' or choice.get('logprobs') is not None):
+                or choice.get('logprobs') is not None):
+            raise ValueError('incomplete or unsupported response')
+        if choice['finish_reason']=='length':
+            _logger.warning('model_response_rejected stage=choice')
+            return reply_type(state='received',provider_request_id=identifier,usage=usage,
+                              error_code='MODEL_OUTPUT_TRUNCATED')
+        if choice['finish_reason']!='stop':
             raise ValueError('incomplete or unsupported response')
         stage='message'
         message=choice['message']
@@ -113,8 +130,8 @@ def decode_response(raw, config, secret, *, parse_candidate, reply_type):
         return reply_type(state='received',provider_request_id=identifier,usage=usage,output=candidate)
     except PrivateReflection:
         return reply_type(state='received',error_code='PROVIDER_ERROR')
-    except (ValueError,KeyError,TypeError,RecursionError):
+    except (ValueError,KeyError,TypeError,RecursionError) as error:
         # Fixed stages only: exception details and response text can contain private data.
         _logger.warning('model_response_rejected stage=%s',stage)
         return reply_type(state='received',provider_request_id=identifier,usage=usage,
-                           error_code='MODEL_OUTPUT_INVALID')
+                           error_code='MODEL_OUTPUT_INVALID',rejection_reason=rejection_reason(stage,error))

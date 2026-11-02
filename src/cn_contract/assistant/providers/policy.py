@@ -97,4 +97,4 @@ def receipt(reply, config):
         status = 'estimated'
     with localcontext(Context(prec=60)):
         return d.MainReceipt(state=reply.state, provider_request_id=reply.provider_request_id,
-            usage=reply.usage, cost_status=status, estimated_cost_usd=cost, error_code=reply.error_code)
+            usage=reply.usage, cost_status=status, estimated_cost_usd=cost, error_code=reply.error_code, rejection_reason=reply.rejection_reason)

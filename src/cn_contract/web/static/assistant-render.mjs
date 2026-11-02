@@ -58,6 +58,7 @@ const generationErrorText = error=>({
   VERSION_CONFLICT:'输入或材料版本已变化。请重新读取记录并核对生成条件。',
   STATE_CONFLICT:'当前状态暂不能生成。请刷新记录后核对。',
   MODEL_OUTPUT_INVALID:'已收到响应，但内容未通过校验，未形成可展示草稿。',
+  MODEL_OUTPUT_TRUNCATED:'模型回答因长度限制被截断，未形成完整草稿。不会自动重试；重新生成可能再次计费。',
   CAPABILITY_UNAVAILABLE:'当前业务的方法来源暂不可用或版本已变化，请联系维护者核对配置。',
   KNOWLEDGE_UNAVAILABLE:'参考资料暂不可用或版本已变化，请核对来源后重新预览。',
   HEARING_ROLE_REQUIRED:'请补充“我是原告”或“我是被告”，再开始模拟法庭。',
@@ -68,6 +69,14 @@ const generationErrorText = error=>({
   MATERIAL_HISTORY_TOO_LARGE:'上一轮完整成果超出本次历史容量，无法完整承接，已停止发送。原任务、材料和成果均保留，请查看已保存成果并联系维护者核对容量。',
   PROVIDER_ERROR:'本次生成未取得可用结果，请核对任务与费用记录。',
 }[error?.code] || '生成状态未能确认。请刷新记录后核对。');
+const rejectionReasonText = {
+  envelope:'模型响应标识或外层格式未通过校验。', usage:'模型报告的用量数据不一致。',
+  completion:'模型未按支持的方式结束回答。', message:'模型返回的正文为空或带有不支持的内容。',
+  json:'回答不是完整、有效的结构化内容。', schema:'回答字段、格式或字段长度不符合要求。',
+  quotes:'引文内容、位置或标识未通过原文核对。', references:'回答中的引用与本次材料不匹配。',
+  stance:'回答采用的我方立场缺少符合要求的指令依据。', coverage:'回答未按要求覆盖本次材料与审查方法。',
+  method:'回答与本次登记的审查方法版本不匹配。', result_size:'完整成果超过本机可保存的篇幅。',
+};
 const attemptText = {
   reserved:'生成已登记，等待处理。',sending:'正在生成，等待返回。',
   sent_unknown:'发送结果未知，停止自动续发；实际费用仍待核对。',
@@ -212,6 +221,8 @@ function renderAttempt(attempt,visible,onCitation) {
   }
   const receipt=attempt.receipt;
   if(receipt?.error_code)section.append(node('p',generationErrorText({code:receipt.error_code}),'generation-note'));
+  if(receipt?.error_code==='MODEL_OUTPUT_INVALID' && Object.hasOwn(rejectionReasonText,receipt.rejection_reason))
+    section.append(node('p','具体原因：'+rejectionReasonText[receipt.rejection_reason],'generation-note'));
   const cost=receipt?.cost_status==='estimated' && receipt.estimated_cost_usd!==null
     ?'估算费用 '+receipt.estimated_cost_usd+' USD；实际扣费待核对。'
     :receipt?.cost_status==='not_sent'?'已确认未发送，费用 0 USD。'

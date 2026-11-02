@@ -57,7 +57,7 @@ test('trusted model selection configures only the fixed catalog and never grants
   assert.deepEqual(f.calls,['disable','consume','configure']);
   assert.equal(f.payload.secret===SECRET,true);
   assert.equal(f.payload.config.model,'deepseek-flash');
-  assert.equal(f.payload.config.timeout_seconds,30);
+  assert.equal(f.payload.config.timeout_seconds,600);
   assert.equal(f.payload.config.input_usd_per_million,'0.3');
   assert.equal(f.payload.config.output_usd_per_million,'1.2');
   assert.equal(f.payload.config.max_input_bytes,262144);
@@ -94,8 +94,8 @@ test('second model uses bounded trusted configuration and projections omit priva
   const result=await f.session.configure('deepseek-v4-pro');
   assert.deepEqual(result,{ok:true,runtime:{state:'configured',model:'deepseek-v4-pro'}});
   assert.deepEqual(f.payload.config,{enabled:true,protocol_version:'deepseek-chat-json-v1',
-    provider:'deepseek',model:'deepseek-v4-pro',max_input_bytes:262144,max_output_tokens:4096,
-    max_response_bytes:1048576,timeout_seconds:90,input_usd_per_million:'1.32',
+    provider:'deepseek',model:'deepseek-v4-pro',max_input_bytes:262144,max_output_tokens:393216,
+    max_response_bytes:8388608,timeout_seconds:600,input_usd_per_million:'1.32',
     output_usd_per_million:'3.96',
     price_reference:'https://api-docs.deepseek.com/quick_start/pricing/ (2026-10-19; peak/cache-miss; USD)'});
   assert.deepEqual(f.session.status(),result);
@@ -248,4 +248,14 @@ test('runtime status neither consumes credentials nor preserves metadata across 
   f.setBackend(null);
   assert.deepEqual(f.session.status().runtime,{state:'unavailable',model:null});
   assert.deepEqual(f.calls,[]);
+});
+
+
+test('provider maximum preserves all released automatic-analysis preferences',()=>{
+  const {automaticAnalysisPolicy,validAutomaticAnalysis}=require('../model-session.cjs');
+  for(const [model,legacy] of [['deepseek-flash',['0.024576','0.0835584']],['deepseek-v4-pro',['0.10272768','0.36225024']]]){
+    const policy=automaticAnalysisPolicy(model,'synthetic-workspace');
+    for(const amount of legacy)assert.equal(validAutomaticAnalysis({...policy,max_total_usd:amount},model,'synthetic-workspace'),true);
+    assert.equal(validAutomaticAnalysis({...policy,max_calls:2},model,'synthetic-workspace'),false);
+  }
 });

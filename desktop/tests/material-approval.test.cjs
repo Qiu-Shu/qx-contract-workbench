@@ -85,7 +85,7 @@ test('material authorization accepts explicit null through the native control va
   control.feed(Buffer.from(JSON.stringify({event:'ready',port:19022,nonce,control_protocol:protocol})+'\n'));
   const basis=basisFor({request_id:REQUEST,expected_scope:scope,expected_composer_revision:3});
   const pending=control.request('authorize_material',{session_token:TOKEN,expected_config_version:ID,
-    basis,max_total_usd:null,valid_for_seconds:120});
+    basis,max_total_usd:null,valid_for_seconds:900});
   assert.equal(writes.length,1);assert.equal(writes[0].payload.max_total_usd,null);
   control.feed(Buffer.from(JSON.stringify({event:'model-control-result',protocol,nonce,sequence:1,
     ok:true,status:'authorized'})+'\n'));
@@ -237,7 +237,7 @@ test('material confirmation presents exact sources and authorizes the same serve
   assert.deepEqual(await f.invoke(),{ok:true});
   assert.deepEqual(f.calls,['authorize']);
   assert.deepEqual(f.payload().basis,basisFor(f.input));
-  assert.equal(f.payload().session_token,TOKEN);assert.equal(f.payload().valid_for_seconds,120);
+  assert.equal(f.payload().session_token,TOKEN);assert.equal(f.payload().valid_for_seconds,900);
   const posts=f.requests.filter(x=>x.method==='POST');assert.equal(posts.length,2);
   for(const post of posts){
     assert.equal(post.cookie,'qx_session='+TOKEN+'; qx_csrf='+CSRF);assert.equal(post.csrf,CSRF);

@@ -103,6 +103,7 @@ class ErrorCode(StrEnum):
     BUDGET_EXCEEDED = 'BUDGET_EXCEEDED'
     QUERY_STATE_UNKNOWN = 'QUERY_STATE_UNKNOWN'
     MODEL_OUTPUT_INVALID = 'MODEL_OUTPUT_INVALID'
+    MODEL_OUTPUT_TRUNCATED = 'MODEL_OUTPUT_TRUNCATED'
     UNRESOLVED_HARD_GATE = 'UNRESOLVED_HARD_GATE'
     APPROVAL_STALE = 'APPROVAL_STALE'
     AUTHORIZATION_REQUIRED = 'AUTHORIZATION_REQUIRED'
@@ -2879,6 +2880,8 @@ MainUSD = Annotated[ExactDecimal, Field(ge=0, le=1000000000, max_digits=24, deci
 MainRate = Annotated[ExactDecimal, Field(gt=0, le=10000, max_digits=12, decimal_places=6)]
 MainAttemptState = Literal['reserved', 'sending', 'sent_unknown', 'received', 'failed_before_send']
 MainTokenCount = Annotated[int, Field(strict=True, ge=0, le=2147483647)]
+MainRejectionReason = Literal['envelope', 'usage', 'completion', 'message', 'json', 'schema',
+    'quotes', 'references', 'stance', 'coverage', 'method', 'result_size']
 
 
 class MainModelConfig(DomainModel):
@@ -2887,9 +2890,9 @@ class MainModelConfig(DomainModel):
     provider: Literal['deepseek'] = 'deepseek'
     model: Literal['deepseek-flash', 'deepseek-v4-pro']
     max_input_bytes: Annotated[int, Field(strict=True, ge=1, le=262144)] = 262144
-    max_output_tokens: Annotated[int, Field(strict=True, ge=1, le=8192)] = 4096
-    max_response_bytes: Annotated[int, Field(strict=True, ge=1, le=1048576)] = 1048576
-    timeout_seconds: Annotated[int, Field(strict=True, ge=1, le=120)] = 30
+    max_output_tokens: Annotated[int, Field(strict=True, ge=1, le=393216)] = 4096
+    max_response_bytes: Annotated[int, Field(strict=True, ge=1, le=8388608)] = 1048576
+    timeout_seconds: Annotated[int, Field(strict=True, ge=1, le=600)] = 30
     input_usd_per_million: MainRate
     output_usd_per_million: MainRate
     price_reference: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)]
@@ -2980,10 +2983,13 @@ class MainReply(DomainModel):
     provider_request_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)] | None = None
     usage: MainUsage | None = None
     output: MainCandidate | None = None
-    error_code: Literal['BLOCKED_LIVE', 'PROVIDER_ERROR', 'MODEL_OUTPUT_INVALID'] | None = None
+    error_code: Literal['BLOCKED_LIVE', 'PROVIDER_ERROR', 'MODEL_OUTPUT_INVALID', 'MODEL_OUTPUT_TRUNCATED'] | None = None
+    rejection_reason: MainRejectionReason | None = Field(default=None, exclude_if=lambda value: value is None)
 
     @model_validator(mode='after')
     def consistent_reply(self):
+        if self.rejection_reason is not None and (self.state != 'received' or self.error_code != 'MODEL_OUTPUT_INVALID'):
+            raise ValueError('rejection reason requires an invalid received response')
         if self.output is not None and (self.state != 'received' or self.error_code is not None):
             raise ValueError('output requires a received validated response')
         if self.output is None and self.error_code is None:
@@ -3018,10 +3024,13 @@ class MainReceipt(DomainModel):
     cost_status: Literal['unknown', 'estimated', 'not_sent']
     estimated_cost_usd: MainUSD | None
     unit: Literal['USD'] = 'USD'
-    error_code: Literal['BLOCKED_LIVE', 'PROVIDER_ERROR', 'MODEL_OUTPUT_INVALID'] | None
+    error_code: Literal['BLOCKED_LIVE', 'PROVIDER_ERROR', 'MODEL_OUTPUT_INVALID', 'MODEL_OUTPUT_TRUNCATED'] | None
+    rejection_reason: MainRejectionReason | None = Field(default=None, exclude_if=lambda value: value is None)
 
     @model_validator(mode='after')
     def no_false_zero_cost(self):
+        if self.rejection_reason is not None and (self.state != 'received' or self.error_code != 'MODEL_OUTPUT_INVALID'):
+            raise ValueError('rejection reason requires an invalid received response')
         if self.cost_status == 'unknown' and self.estimated_cost_usd is not None:
             raise ValueError('unknown usage has unknown cost')
         if self.cost_status == 'estimated' and (self.state != 'received' or self.usage is None or self.estimated_cost_usd is None):
@@ -3630,7 +3639,7 @@ class MainContextPreview(DomainModel):
                 'model', 'messages', 'max_tokens', 'stream', 'thinking', 'response_format'}
                 or canonical_json(body) != self.wire_payload_json or body['model'] != self.model
                 or body['messages'] != [{'role':'system', 'content':self.system_text}, {'role':'user', 'content':manifest}]
-                or type(body['max_tokens']) is not int or not 1 <= body['max_tokens'] <= 8192
+                or type(body['max_tokens']) is not int or not 1 <= body['max_tokens'] <= 393216
                 or body['stream'] is not False or body['thinking'] != {'type':'disabled'}
                 or body['response_format'] != {'type':'json_object'}
                 or len(raw) != self.wire_bytes or hashlib.sha256(raw).hexdigest() != self.wire_sha256
@@ -3728,10 +3737,13 @@ class MainContextReply(DomainModel):
     usage: MainUsage | None = None
     output: MainContextCandidate | None = None
     tool_plan: MainContextToolPlan | None = None
-    error_code: Literal['BLOCKED_LIVE', 'PROVIDER_ERROR', 'MODEL_OUTPUT_INVALID'] | None = None
+    error_code: Literal['BLOCKED_LIVE', 'PROVIDER_ERROR', 'MODEL_OUTPUT_INVALID', 'MODEL_OUTPUT_TRUNCATED'] | None = None
+    rejection_reason: MainRejectionReason | None = Field(default=None, exclude_if=lambda value: value is None)
 
     @model_validator(mode='after')
     def consistent_context_reply(self):
+        if self.rejection_reason is not None and (self.state != 'received' or self.error_code != 'MODEL_OUTPUT_INVALID'):
+            raise ValueError('rejection reason requires an invalid received response')
         if self.output is not None and self.tool_plan is not None:
             raise ValueError('a round is either a final candidate or a tool plan')
         if self.tool_plan is not None and (self.state != 'received' or self.error_code is not None):

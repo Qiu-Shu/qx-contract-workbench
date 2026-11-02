@@ -30,7 +30,7 @@ test('trusted authorization binds the private config version and explicit unlimi
   assert.deepEqual(result,{ok:true});
   assert.deepEqual(details,{model:'deepseek-flash',max_total_usd:null});
   assert.equal(f.authorized.expected_config_version,VERSION);
-  assert.equal(f.authorized.valid_for_seconds,120);
+  assert.equal(f.authorized.valid_for_seconds,900);
   assert.equal(f.authorized.max_total_usd,null);
   assert.equal(f.authorized.session_token===TOKEN,true);
   assert.deepEqual(f.calls,['authorize']);
@@ -51,7 +51,7 @@ test('the longer Pro timeout still uses one lease and cancellation revokes witho
     return {ok:false,canceled:true};
   });
   assert.deepEqual(result,{ok:false,code:'APPROVAL_CANCELED',canceled:true});
-  assert.equal(f.authorized.valid_for_seconds,120);
+  assert.equal(f.authorized.valid_for_seconds,900);
   assert.deepEqual(f.calls,['authorize','revoke']);
   assert.equal((await retained.authorize({session_token:TOKEN,basis})).ok,false);
   assert.deepEqual(f.calls,['authorize','revoke']);

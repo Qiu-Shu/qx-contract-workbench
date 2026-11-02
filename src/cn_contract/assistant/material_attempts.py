@@ -96,11 +96,13 @@ def settle(actor, identifier, token, reply, db, runtime):
         try:
             codec.validate_manifest_candidate(candidate, prepared.request.basis.manifest)
             if reply.usage and (reply.usage.prompt_tokens > config.max_input_bytes or reply.usage.completion_tokens > config.max_output_tokens):
-                raise ValueError
-        except ValueError:
+                raise ValueError('MODEL_USAGE_INVALID')
+        except ValueError as error:
             _logger.warning('model_response_rejected stage=material_settle_candidate')
+            from .providers.deepseek_protocol import rejection_reason
             reply = d.MainMaterialReply(state='received', usage=reply.usage,
-                provider_request_id=reply.provider_request_id, error_code='MODEL_OUTPUT_INVALID')
+                provider_request_id=reply.provider_request_id, error_code='MODEL_OUTPUT_INVALID',
+                rejection_reason=rejection_reason('candidate', error))
             candidate = None
     try:
         current(actor, row, db, runtime)
@@ -135,7 +137,8 @@ def settle(actor, identifier, token, reply, db, runtime):
         if len(encoded(output).encode('utf-8')) > 262144:
             _logger.warning('model_response_rejected stage=material_settle_size')
             reply = d.MainMaterialReply(state='received', usage=reply.usage,
-                provider_request_id=reply.provider_request_id, error_code='MODEL_OUTPUT_INVALID')
+                provider_request_id=reply.provider_request_id, error_code='MODEL_OUTPUT_INVALID',
+                rejection_reason='result_size')
             candidate, output = None, None
     value = receipt(reply, config)
     with db.begin_nested():

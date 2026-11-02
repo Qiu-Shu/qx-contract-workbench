@@ -18,8 +18,8 @@ const rejected=(code='BLOCKED_LIVE')=>({ok:false,code});
 function configuration(model) {
   const [input,output]=MODELS.get(model);
   return {enabled:true,protocol_version:'deepseek-chat-json-v1',provider:'deepseek',model,
-    max_input_bytes:262144,max_output_tokens:4096,max_response_bytes:1048576,
-    timeout_seconds:model==='deepseek-v4-pro'?90:30,
+    max_input_bytes:262144,max_output_tokens:393216,max_response_bytes:8388608,
+    timeout_seconds:600,
     input_usd_per_million:input,output_usd_per_million:output,
     price_reference:'https://api-docs.deepseek.com/quick_start/pricing/ (2026-10-19; peak/cache-miss; USD)'};
 }
@@ -38,11 +38,11 @@ function automaticAnalysisPolicy(model,workspace) {
   return {model,workspace,scope:'selected-task-materials',max_calls:1,max_total_usd:null};
 }
 function validAutomaticAnalysis(value,model,workspace) {
-  // Recognize the two released input-size reservations without rewriting old settings.
+  // Recognize released reservations without rewriting saved authorization scope.
   const expected=automaticAnalysisPolicy(model,workspace);
   return Boolean(expected && exact(value,Object.keys(expected)) &&
     Object.keys(expected).every(key=>key==='max_total_usd'
-      ?value[key]===null || [reservation(model),model==='deepseek-flash'?'0.024576':'0.10272768'].includes(value[key])
+      ?value[key]===null || [reservation(model),...(model==='deepseek-flash'?['0.0835584','0.024576']:['0.36225024','0.10272768'])].includes(value[key])
       :value[key]===expected[key]));
 }
 
@@ -148,7 +148,7 @@ function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()
           try{
             ack=await backend[authorizeMethod]({session_token:value.session_token,
               expected_config_version:captured.config_version,basis:value.basis,
-              max_total_usd:budget,valid_for_seconds:120});
+              max_total_usd:budget,valid_for_seconds:judge?120:900});
           }catch{return terminate(backend,guard);}
           if(!healthy(backend))return terminate(backend,guard);
           if(exact(ack,['ok','code']) && ack.ok===false && CONTROL_CODES.has(ack.code))return rejected(ack.code);
@@ -171,7 +171,7 @@ function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()
           try{
             ack=await backend.authorizeContextModel({session_token:value.session_token,
               expected_config_version:captured.config_version,basis:value.basis,
-              max_total_usd:budget,valid_for_seconds:120,max_rounds:1});
+              max_total_usd:budget,valid_for_seconds:900,max_rounds:1});
           }catch{return terminate(backend,guard);}
           if(!healthy(backend))return terminate(backend,guard);
           if(exact(ack,['ok','code']) && ack.ok===false && CONTROL_CODES.has(ack.code))return rejected(ack.code);
@@ -196,7 +196,7 @@ function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()
           let ack;
           try{
             ack=await backend.authorizeMaterialModel({session_token:value.session_token,
-              expected_config_version:captured.config_version,basis,max_total_usd:budget,valid_for_seconds:120});
+              expected_config_version:captured.config_version,basis,max_total_usd:budget,valid_for_seconds:900});
           }catch{return terminate(backend,guard);}
           if(!healthy(backend))return terminate(backend,guard);
           if(exact(ack,['ok','code']) && ack.ok===false && CONTROL_CODES.has(ack.code))return rejected(ack.code);
@@ -221,7 +221,7 @@ function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()
           let ack;
           try{
             ack=await backend.authorizeProfileModel({session_token:value.session_token,
-              expected_config_version:captured.config_version,basis,max_total_usd:budget,valid_for_seconds:120});
+              expected_config_version:captured.config_version,basis,max_total_usd:budget,valid_for_seconds:900});
           }catch{return terminate(backend,guard);}
           if(!healthy(backend))return terminate(backend,guard);
           if(exact(ack,['ok','code']) && ack.ok===false && CONTROL_CODES.has(ack.code))return rejected(ack.code);

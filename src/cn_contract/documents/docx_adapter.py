@@ -121,6 +121,16 @@ def _auxiliary_content(role, root, data):
         pending = [(root, None)]
         while pending:
             node, parent_tag = pending.pop()
+            # Word writes explicit no-border values in paragraph styles. These
+            # two empty markers do not affect text visibility; drawn borders
+            # and malformed/extended forms remain outside this finite subset.
+            if node.tag in {f'{{{W}}}between', f'{{{W}}}bar'}:
+                if (parent_tag != f'{{{W}}}pBdr' or len(node)
+                        or set(node.attrib) != {f'{{{W}}}val'}
+                        or node.get(f'{{{W}}}val') not in {'nil', 'none'}
+                        or (node.text or '').strip() or (node.tail or '').strip()):
+                    return False
+                continue
             if node.tag == f'{{{W14}}}textFill':
                 if parent_tag != f'{{{W}}}rPr' or not text_fill_supported(node):
                     return False

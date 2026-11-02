@@ -185,7 +185,8 @@ def test_invalid_output_never_becomes_candidate_and_known_usage_is_separate(muta
     elif mutation=='tool':message['tool_calls']=[{'id':'x','type':'function','function':{'name':'shell','arguments':'{}'}}]
     elif mutation=='reasoning':message['reasoning_content']='unrequested reasoning'
     with server(raw(payload)) as (url,calls,_):result=asyncio.run(provider(url).generate(value))
-    assert result.state=='received' and result.error_code=='MODEL_OUTPUT_INVALID' and result.output is None
+    expected = 'MODEL_OUTPUT_TRUNCATED' if mutation == 'finish' else 'MODEL_OUTPUT_INVALID'
+    assert result.state=='received' and result.error_code==expected and result.output is None
     assert len(calls)==1
     if mutation!='model':assert result.usage is not None
 

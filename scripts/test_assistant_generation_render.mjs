@@ -307,3 +307,25 @@ test('history capacity rejection preserves the task and explains why continuatio
   assert.match(f.at('history').textContent,/任务.*材料.*成果.*保留/);
   assert.doesNotMatch(f.at('history').textContent,/生成状态未能确认|减少所选材料|新建对话/);
 });
+
+
+test('truncated output shows the length failure and its estimated charge without a draft',t=>{
+  const f=fixture(t),result=item(mid,{output:null,receipt:{state:'received',cost_status:'estimated',estimated_cost_usd:'0.0187308',error_code:'MODEL_OUTPUT_TRUNCATED'}});
+  f.render.state(withResults([result]));
+  const text=f.at('history').textContent;
+  assert.match(text,/长度限制被截断/);assert.match(text,/不会自动重试/);
+  assert.match(text,/重新生成可能再次计费/);assert.match(text,/0\.0187308 USD/);
+  assert.doesNotMatch(text,/内部合成草稿/);
+});
+
+test('fixed rejection reason is readable while unknown private details never render',t=>{
+  const f=fixture(t),result=item(mid,{output:null,receipt:{state:'received',cost_status:'estimated',estimated_cost_usd:'0.024387',error_code:'MODEL_OUTPUT_INVALID',rejection_reason:'quotes'}});
+  f.render.state(withResults([result]));
+  assert.match(f.at('history').textContent,/具体原因：引文内容、位置或标识未通过原文核对/);
+  assert.match(f.at('history').textContent,/0\.024387 USD/);
+  result.attempt.receipt.rejection_reason='PRIVATE-DETAIL';f.render.state(withResults([result]));
+  assert.doesNotMatch(f.at('history').textContent,/具体原因|PRIVATE-DETAIL/);
+  delete result.attempt.receipt.rejection_reason;f.render.state(withResults([result]));
+  assert.match(f.at('history').textContent,/内容未通过校验/);
+  assert.doesNotMatch(f.at('history').textContent,/具体原因/);
+});

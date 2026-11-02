@@ -66,7 +66,12 @@ def test_material_received_rejection_preserves_ledger_without_resending(
         queued = enqueue(f, payload['basis'], lease)
         result = await execute_attempt(f.actor, queued.id, f.database, lease)
         assert result.state == 'received'
-        assert result.receipt.error_code == 'MODEL_OUTPUT_INVALID'
+        expected = 'MODEL_OUTPUT_TRUNCATED' if failure == 'choice' else 'MODEL_OUTPUT_INVALID'
+        assert result.receipt.error_code == expected
+        expected_reason = {'envelope':'envelope', 'usage':'usage', 'choice':None,
+            'message':'message', 'content_json':'json', 'candidate_schema':'schema',
+            'material_sources':'quotes', 'unsupported_business_output':'schema'}[failure]
+        assert result.receipt.rejection_reason == expected_reason
         assert result.output is None
         if failure in ('envelope', 'usage'):
             assert result.receipt.usage is None
