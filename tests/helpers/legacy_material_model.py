@@ -2,7 +2,7 @@
 import sqlite3
 
 from cn_contract.assistant import profile_model_schema, rounds_v2_schema
-from .legacy_personal import downgrade_runtime_statements, downgrade_statements
+from .legacy_personal import downgrade_runtime_statements, downgrade_service_statements, downgrade_statements
 
 _STATEMENTS = profile_model_schema.STATEMENTS[:7] + rounds_v2_schema.STATEMENTS[7:]
 
@@ -16,6 +16,7 @@ def downgrade_material_model(connection):
         connection.execute('BEGIN IMMEDIATE')
         try:
             for statement in (
+                *downgrade_service_statements(connection.execute),
                 *downgrade_statements(connection.execute),
                 *downgrade_runtime_statements(connection.execute),
                 *_STATEMENTS
@@ -37,6 +38,7 @@ def downgrade_material_model_session(session):
     session.execute(text('PRAGMA defer_foreign_keys=ON'))
     execute=lambda sql:session.execute(text(sql))
     for statement in (
+        *downgrade_service_statements(execute),
         *downgrade_statements(execute),
         *downgrade_runtime_statements(execute),
         *_STATEMENTS

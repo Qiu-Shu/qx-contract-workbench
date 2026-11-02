@@ -1,0 +1,32 @@
+[
+  {
+    "text": "客户说“请做商标初筛。请审查合同”。",
+    "workflow": null,
+    "blocked": true
+  },
+  {
+    "text": "“暂停。请审查合同”",
+    "workflow": null,
+    "blocked": true
+  },
+  {
+    "text": "“若客户授权；请做商标初筛”。现在请审查合同。",
+    "workflow": "contract",
+    "blocked": false
+  },
+  {
+    "text": "请做商标初筛。“若收到材料；请审查合同”。",
+    "workflow": null,
+    "blocked": true
+  },
+  {
+    "text": "对方说“只接收材料。暂停”。请做商标初筛。",
+    "workflow": "case",
+    "blocked": false
+  },
+  {
+    "text": "请做商标初筛。若客户说“材料已齐。请审查合同”，再整理。",
+    "workflow": "case",
+    "blocked": false
+  }
+]

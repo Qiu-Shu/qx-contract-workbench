@@ -71,7 +71,10 @@ def current(actor, row, db, runtime):
     config, policy = runtime.snapshot_for(actor, request.scope)
     runtime.check_material_submission(actor, basis)
     require_policy(config, policy, actor, request.scope, basis.manifest_sha256)
-    manifest, _ = inputs.assemble(actor, inputs.selection_for(basis), db, historical=True)
+    manifest, _ = inputs.assemble(actor, inputs.selection_for(basis), db, historical=True,
+        case_method=basis.manifest.case_method, contract_review=basis.manifest.contract_review,
+        criminal_analysis=basis.manifest.criminal_analysis, trademark_triage=basis.manifest.trademark_triage,
+        history_format=basis.manifest.history_format, enforce_policy=True)
     if (manifest != basis.manifest or service._snapshot(conversation) != request.scope
             or conversation['archived_at'] is not None or run['cancel_requested']
             or run['state'] not in ('queued', 'generating') or run['actor_id'] != str(actor.user_id)
@@ -91,7 +94,7 @@ def settle(actor, identifier, token, reply, db, runtime):
     candidate = reply.output
     if candidate is not None:
         try:
-            codec.validate_candidate(candidate, prepared.request.basis.manifest.sources)
+            codec.validate_manifest_candidate(candidate, prepared.request.basis.manifest)
             if reply.usage and (reply.usage.prompt_tokens > config.max_input_bytes or reply.usage.completion_tokens > config.max_output_tokens):
                 raise ValueError
         except ValueError:
@@ -104,18 +107,42 @@ def settle(actor, identifier, token, reply, db, runtime):
     except (ServiceError, ValueError):
         _logger.warning('model_response_rejected stage=material_settle_current')
         candidate = None
+    hearing = None
+    if candidate is not None:
+        try:
+            from ..integrations.chiheng import check_candidate
+            manifest = prepared.request.basis.manifest
+            check_candidate(candidate, manifest)
+            if manifest.hearing is not None:
+                registry = getattr(db.info.get('database'), '_capability_registry', None)
+                hearing = registry.hearing_adapter().record(manifest, candidate)
+                from ..integrations.chiheng import readable_text
+                candidate = d.MainMaterialCandidate.model_validate({**candidate.model_dump(mode='python'),
+                    'text':readable_text(hearing, candidate)})
+        except (ServiceError, ValueError, OSError, ImportError):
+            _logger.warning('model_response_rejected stage=hearing_record')
+            reply = d.MainMaterialReply(state='received', usage=reply.usage,
+                provider_request_id=reply.provider_request_id, error_code='MODEL_OUTPUT_INVALID')
+            candidate = None
     require_active(db)
     checked = attempts._row(identifier, db)
     if checked['state'] != 'sending' or checked['claim_sha256'] != sha(token):
         raise ServiceError('STATE_CONFLICT', 409)
-    at, value, output_id = service._at(), receipt(reply, config), None
+    at, output, output_id = service._at(), None, None
+    if candidate is not None:
+        output = d.MainMaterialOutputView(id=uuid4(), run_id=row['run_id'], scope=prepared.request.scope,
+            candidate=candidate, manifest=prepared.request.basis.manifest, hearing=hearing, created_at=at)
+        if len(encoded(output).encode('utf-8')) > 262144:
+            _logger.warning('model_response_rejected stage=material_settle_size')
+            reply = d.MainMaterialReply(state='received', usage=reply.usage,
+                provider_request_id=reply.provider_request_id, error_code='MODEL_OUTPUT_INVALID')
+            candidate, output = None, None
+    value = receipt(reply, config)
     with db.begin_nested():
         db.execute(text('INSERT INTO assistant_model_receipts VALUES(:id,:receipt,:at)'), {'id':row['id'], 'receipt':encoded(value), 'at':at})
         db.execute(text('UPDATE assistant_model_attempts SET state=:state,updated_at=:at WHERE id=:id'),
             {'state':reply.state, 'at':at, 'id':row['id']})
-        if candidate is not None:
-            output = d.MainMaterialOutputView(id=uuid4(), run_id=row['run_id'], scope=prepared.request.scope,
-                candidate=candidate, manifest=prepared.request.basis.manifest, created_at=at)
+        if output is not None:
             output_id = str(output.id)
             db.execute(text('INSERT INTO assistant_model_outputs VALUES(:id,:attempt,:cid,:run,:scope,:output,:at)'),
                 {'id':output_id, 'attempt':row['id'], 'cid':row['conversation_id'], 'run':row['run_id'],

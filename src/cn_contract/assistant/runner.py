@@ -13,7 +13,8 @@ async def execute_attempt(actor, identifier, database, runtime):
         if material:
             from . import material_preparation as inputs
             prepared = attempts._input(row)
-            _, files = inputs.assemble(actor, inputs.selection_for(prepared.request.basis), db, historical=True)
+            _, files = inputs.assemble(actor, inputs.selection_for(prepared.request.basis), db, historical=True,
+                history_format=prepared.request.basis.manifest.history_format)
     if material:
         from .attachment_files import read_checked
         try:
@@ -39,7 +40,8 @@ async def execute_attempt(actor, identifier, database, runtime):
                 with database.session() as db:
                     row = attempts._row(identifier, db)
                     material_attempts.current(actor, row, db, runtime)
-                    _, files = inputs.assemble(actor, inputs.selection_for(prepared.request.basis), db, historical=True)
+                    _, files = inputs.assemble(actor, inputs.selection_for(prepared.request.basis), db, historical=True,
+                        history_format=prepared.request.basis.manifest.history_format)
                 for file in files:
                     read_checked(file, database)
                 return True

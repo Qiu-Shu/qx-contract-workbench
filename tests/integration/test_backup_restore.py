@@ -184,18 +184,23 @@ def test_source_sqlite_hardlink_is_rejected_before_backup(tmp_path):
 
 def test_failed_materialization_leaves_no_restore_database(tmp_path, monkeypatch):
     from cn_contract.ops.backup import restore_backup
+    from cn_contract.ops.file_paths import application_path, filesystem_path
     database, _, _, _, report = backup_world(tmp_path)
     restore_parent = tmp_path/'failed-new-restores'
     actual = Path.write_bytes
+    observed = []
     def fail_after_validated_snapshot(self, value):
-        if self.name == 'database.db' and self.resolve().is_relative_to(restore_parent.resolve()):
+        if self.name == 'database.db' and application_path(self.resolve()).is_relative_to(application_path(restore_parent.resolve())):
             actual(self, value[:100])
+            observed.append('partial-snapshot-written')
             raise OSError('synthetic disk failure')
         return actual(self, value)
     monkeypatch.setattr(Path, 'write_bytes', fail_after_validated_snapshot)
     with pytest.raises(OSError):
         restore_backup(report.backup_ref, key_resolver=keys(), restore_parent=restore_parent, settings=database.settings)
+    assert observed == ['partial-snapshot-written']
     assert not list(restore_parent.rglob('database.db'))
+    assert list(filesystem_path(restore_parent).iterdir()) == []
 
 
 def test_restored_new_patch_approval_cannot_reuse_old_current_run(tmp_path):

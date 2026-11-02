@@ -61,6 +61,50 @@ def test_review_negative_or_conditional_release_remains_held(world,message):
     asyncio.run(scenario())
 
 
+@pytest.mark.parametrize('message,workflow',[
+    ('不需要理清诉求','sales'),('无需案件整理','case'),
+    ('不要审查合同','contract'),('取消庭审准备','court'),
+    ('请理清诉求\n不需要理清诉求','sales'),('整理材料\n无需案件整理','case'),
+    ('新事项：审查合同\n不要审查合同','contract'),('庭审准备\n取消庭审准备','court'),
+])
+def test_negative_function_cannot_be_revived_by_service_jev(world,message,workflow):
+    from cn_contract.assistant.shared_judge import SharedJudgeService
+    from tests.integration.test_shared_judge_service import JudgeRuntime,JevProvider,server,raw,KEY,service_envelope
+    async def scenario():
+        runtime,wire,manager,main,actor=await setup(world)
+        try:
+            response=service_envelope({'readiness':'start','relation':'new','workflow':workflow,'material_kind':'mixed'})
+            with server(raw(response)) as (url,received,_):
+                judge=JudgeRuntime();judge.configure(JevProvider.for_synthetic_loopback(d.JevConfig(enabled=True),lambda:KEY,url))
+                runtime.judge=SharedJudgeService(world[0],judge)
+                await runtime.ingest(runtime._epoch,packet(command(1,message),file_message(wire,2)))
+                await runtime.advance(runtime._epoch,now=later())
+                assert not main.calls and not received
+            assert count(world[0],'weixin_service_runs')==0
+            with world[0].session() as db:
+                batch=db.execute(text('SELECT workflow,state FROM weixin_service_batches')).mappings().one()
+                assert batch['workflow'] is None and batch['state']=='waiting'
+        finally:await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+def test_latest_negative_event_does_not_restore_older_contract_over_positive_case(world):
+    async def scenario():
+        runtime,wire,manager,main,actor=await setup(world)
+        try:
+            await runtime.ingest(runtime._epoch,packet(
+                command(1,'新事项：整理材料'),command(3,'审查合同'),command(4,'不要审查合同'),
+                file_message(wire,5),file_message(wire,6)))
+            await runtime.advance(runtime._epoch,now=later())
+            assert len(main.calls)==1
+            assert count(world[0],'weixin_service_runs')==1
+            with world[0].session() as db:
+                batch=db.execute(text('SELECT workflow,state FROM weixin_service_batches')).mappings().one()
+                assert batch['workflow']=='case' and batch['state']=='completed'
+        finally:await close(runtime,manager)
+    asyncio.run(scenario())
+
+
 def test_review_new_matter_clarification_keeps_original_files(world):
     async def scenario():
         runtime,wire,manager,main,actor=await setup(world)
@@ -170,6 +214,83 @@ def test_service_two_texts_two_files_wait_dedup_and_actual_execution(world):
                 validate_records(db)
                 from cn_contract.ops.backup import _file_references
                 _file_references(db)
+        finally:await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+def test_unreadable_first_file_still_imports_all_originals_before_stopping(world,monkeypatch):
+    import hashlib
+    from pathlib import Path
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup(world)
+        try:
+            fixtures=Path(__file__).parents[1]/'fixtures'
+            messages=[];downloads={};expected=set()
+            for number,name,relative in (
+                (2,'验收A-虚构销售合同-02.docx','acceptance/synthetic/sales-dev-1.docx'),
+                (3,'验收A-虚构销售合同-01.docx','synthetic/sales_basic.docx')):
+                data=(fixtures/relative).read_bytes();wire.fixture_file=(data,b'');expected.add(hashlib.sha256(data).hexdigest())
+                message=file_message(wire,number,name);messages.append(message);downloads[message['message_id']]=data
+            monkeypatch.setattr(runtime._transport,'download_file',
+                lambda message,item_index,max_bytes:downloads[message['message_id']])
+            await runtime.ingest(runtime._epoch,packet(command(1,'新事项：虚构合同，请审查，还没发完'),*messages,command(4,'可以开始')))
+            await runtime.advance(runtime._epoch,now=later())
+            assert not provider.calls and count(world[0],'weixin_service_runs')==0
+            assert count(world[0],'weixin_service_events')==4
+            with world[0].session() as db:
+                assert set(db.scalars(text('SELECT sha256 FROM weixin_service_media')))==expected
+            with world[0].session() as db:
+                rows=list(db.execute(text('''SELECT a.original_name,p.reading_status FROM assistant_attachments a
+                    JOIN assistant_attachment_parses p ON p.attachment_id=a.id
+                    WHERE a.original_name LIKE '验收A-%' ORDER BY a.original_name''')).mappings())
+                assert {row['original_name']:row['reading_status'] for row in rows}=={
+                    '验收A-虚构销售合同-01.docx':'readable','验收A-虚构销售合同-02.docx':'partial'}
+                assert db.scalar(text("SELECT COUNT(*) FROM weixin_service_outbox WHERE result_key LIKE 'unreadable:%'"))==1
+                assert '材料未完整读取' in db.scalar(text('SELECT decision_json FROM weixin_service_batches'))
+        finally:await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+def test_service_reception_executes_once_per_batch_and_continues_on_followup(world):
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup(world)
+        try:
+            epoch=runtime._epoch
+            await runtime.ingest(epoch,packet(command(1,'新事项：客户咨询，请理清诉求，准备下一步')))
+            await runtime.advance(epoch,now=later())
+            assert len(provider.calls)==1
+            with world[0].session() as db:
+                batch=db.execute(text('SELECT conversation_id,workflow,state FROM weixin_service_batches')).mappings().one()
+                assert batch['workflow']=='sales' and batch['state']=='completed'
+            followup=packet(command(2,'客户补充：虚构对方上周又发来一份通知，请继续接待'),cursor='followup')
+            await runtime.ingest(epoch,followup)
+            await runtime.advance(epoch,now=later())
+            assert len(provider.calls)==2
+            await runtime.ingest(epoch,followup)
+            await runtime.advance(epoch,now=later())
+            assert len(provider.calls)==2
+            with world[0].session() as db:
+                assert db.scalar(text('SELECT COUNT(*) FROM weixin_service_runs'))==2
+                assert set(db.scalars(text('SELECT conversation_id FROM weixin_service_batches')))=={batch['conversation_id']}
+                assert set(db.scalars(text('SELECT workflow FROM weixin_service_batches')))=={'sales'}
+        finally:await close(runtime,manager)
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize('message',[
+    '不需要理清诉求','无需案件整理','不要审查合同','取消庭审准备',
+])
+def test_service_negative_function_never_executes_model(world,message):
+    async def scenario():
+        runtime,wire,manager,provider,actor=await setup(world)
+        try:
+            await runtime.ingest(runtime._epoch,packet(command(1,message)))
+            await runtime.advance(runtime._epoch,now=later())
+            assert not provider.calls
+            assert count(world[0],'weixin_service_runs')==0
+            with world[0].session() as db:
+                batch=db.execute(text('SELECT workflow,state FROM weixin_service_batches')).mappings().one()
+                assert batch['workflow'] is None and batch['state']=='waiting'
         finally:await close(runtime,manager)
     asyncio.run(scenario())
 

@@ -71,6 +71,9 @@ class MaterialProvider(SyntheticProvider):
             if item.reference.kind == 'document')
         candidate = {'text': '合成待核草稿：交货日期存在冲突，请律师核对。[' + source_id + ']',
             'citations': [source_id]}
+        if request.basis.manifest.contract_review is not None:
+            from tests.helpers.contract_review import draft_for
+            candidate = draft_for(request.basis.manifest)
         raw = json.dumps({'id': 'synthetic-material-response', 'object': 'chat.completion',
             'created': 1, 'model': self.config.model,
             'usage': {'prompt_tokens': 20, 'completion_tokens': 10, 'total_tokens': 30},
@@ -157,7 +160,7 @@ def test_contract_material_flow_persists_source_bound_output_and_never_resends(m
         assert len(f.providers[0].calls) == 1
         wire = f.providers[0].calls[0]
         assert wire['model'] == 'deepseek-flash'
-        assert 'C4材料草稿适配版' in wire['messages'][0]['content']
+        assert 'contract-review-v1' in wire['messages'][0]['content']
         assert '算式结果相等不能同时声称数值不符' in wire['messages'][0]['content']
         assert wire['thinking'] == {'type': 'disabled'}
         assert json.loads(wire['messages'][1]['content']) == basis.manifest.model_dump(mode='json')
@@ -191,6 +194,7 @@ def test_pre_c4_completed_material_history_remains_readable(material_flow, monke
 
     async def scenario():
         with monkeypatch.context() as legacy:
+            legacy.setattr(material_preparation, 'contract_review_for', lambda *args: None)
             legacy.setattr(material_codec, 'system_for', lambda workflow: material_codec.SYSTEM)
             payload = configure_and_preview(f)
             f.control.authorize_material(payload)

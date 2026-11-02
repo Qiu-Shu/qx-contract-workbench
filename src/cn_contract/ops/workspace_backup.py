@@ -272,7 +272,7 @@ def create_workspace_backup(directory, destination, passphrase, *, data_parent):
         with closing(sqlite3.connect(sqlite_readonly_uri(root/'workbench.db'),uri=True)) as source:
             with closing(sqlite3.connect(snapshot/'workbench.db')) as target:
                 source.backup(target,pages=256,progress=progress)
-        (snapshot/'workspace.json').write_bytes((root/'workspace.json').read_bytes())
+        (snapshot/'workspace.json').write_bytes(filesystem_path(root/'workspace.json').read_bytes())
         inventory = _inventory(root)
         _references(root,inventory,source=True)
         # Only database snapshot bytes may differ from a live WAL main file.
@@ -307,14 +307,17 @@ def create_workspace_backup(directory, destination, passphrase, *, data_parent):
 def _fence(root, refs, archive_hash, manifest_hash):
     root = application_path(root)
     database = Database('sqlite:///'+str(root/'workbench.db'),filesystem_path(root/'protected'),load_settings(),initialize_schema=False)
+    @event.listens_for(database.engine, 'do_connect')
+    def native_filename(dialect, record, arguments, parameters):
+        arguments[0] = str(filesystem_path(root/'workbench.db'))
     _mark_storage_flags(database)
     try:
         with database.session() as db:
             for row in db.scalars(select(SessionRow)): row.revoked = True
-            from ..web.storage import JobRow, event
+            from ..web.storage import JobRow, event as job_event
             pending = list(db.scalars(select(JobRow).where(JobRow.state.in_(('queued','running')))))
             for job in pending:
-                job.state='blocked'; job.stage='恢复副本仅供核对'; job.error_code='BLOCKED_LIVE'; event(job,db)
+                job.state='blocked'; job.stage='恢复副本仅供核对'; job.error_code='BLOCKED_LIVE'; job_event(job,db)
             from ..assistant.providers.attempts import recover_attempts
             from ..assistant.providers.judge_attempts import recover_attempts as recover_judges
             judge_attempts = recover_judges(db)

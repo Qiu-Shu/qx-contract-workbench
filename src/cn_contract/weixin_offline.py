@@ -215,6 +215,7 @@ def _event(message, scope, settings):
     if len(text) > 20000:
         _fail('FILE_LIMIT', 413)
     return d.TaskInboxEventInput(event_id=identifier, text=text, media=tuple(media),
+        source_sequence=message.get('seq'), source_created_ms=message.get('create_time_ms'),
         reply_to_event_id=next(iter(references), None))
 
 

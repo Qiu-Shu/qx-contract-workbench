@@ -11,7 +11,18 @@ export const errorText = error=>({
   PERSONAL_WEIXIN_CONNECTED:'该对话仍连接本人微信。请返回该聊天，先断开连接，再删除对话。',
   ASSISTANT_BUSY:'该对话有正在处理的任务。请先停止任务并刷新状态，再删除对话。',
   MATERIAL_INPUT_TOO_LARGE:'选中的完整材料超出本次模型输入上限。请减少选中的材料后重试，不会自动截断发送。',
+  MATERIAL_HISTORY_TOO_LARGE:'上一轮完整成果超出本次历史容量，无法完整承接，已停止发送。原任务、材料和成果均保留，请查看已保存成果并联系维护者核对容量。',
+  CRIMINAL_SCOPE_REQUIRED:'本任务或材料沿用刑事处理限制。请明确输入刑事分析及所需成果，再继续本机合成验证。',
+  CRIMINAL_HEARING_UNAVAILABLE:'刑事庭审尚未接入。请使用案件整理中的刑事分析，核对证据与策略草稿。',
+  IP_SCOPE_UNSUPPORTED:'本批仅支持商标侵权因素初筛。请明确本次只处理商标；其他或混合权利需要分别整理，尚未接入对应专项。',
+  MATERIAL_INSTRUCTION_CONFLICT:'已按本次否定要求暂停分析。请重新明确需要生成的成果后再继续。',
   MATERIAL_NOT_READABLE:'有材料尚未读取，请先解析并核对读取范围。',
+  CAPABILITY_UNAVAILABLE:'当前业务的方法来源暂不可用或版本已变化，请联系维护者核对配置后继续。',
+  KNOWLEDGE_UNAVAILABLE:'参考资料暂不可用或版本已变化，请联系维护者核对来源后继续。',
+  HEARING_ROLE_REQUIRED:'请明确本次代表原告还是被告，例如“我是原告，请模拟法庭”。',
+  HEARING_ROLE_CONFLICT:'本次角色与已保存演练不同，请新建对话开展另一方演练。',
+  HEARING_RESTART_REQUIRED:'这次演练已完成或材料性质已变化，请新建对话开展新的演练。',
+  HEARING_MATERIAL_LIMIT:'本次演练材料片段过多，请减少选中的材料后继续。',
   FILE_LIMIT:'材料超过本机接收上限。请缩小文件或分开处理。',
   FILE_UNSUPPORTED:'暂时无法读取这份文件，请选择完整的 DOCX。',
   DATA_POLICY_UNAPPROVED:'此材料尚未获准在当前环境处理，请核对当前环境的材料处理范围。',
@@ -24,8 +35,8 @@ const runText = {
   completed:'任务已完成', cancelled:'已取消', failed:'执行失败', interrupted:'执行已中断',
   awaiting_input:'等待补充信息', blocked:'已阻断，不能自动续跑',
 };
-const skillText = {client_reply:'回复客户',material_organize:'整理资料',contract_review:'审查合同',
-  content_draft:'创作文案',legal_research:'检索法律资料',mock_trial:'庭审准备'};
+const skillText = {client_reply:'客户接待',material_organize:'案件整理',contract_review:'合同审查',
+  content_draft:'创作文案',legal_research:'检索法律资料',mock_trial:'模拟法庭'};
 const generationCapabilityText = {
   unconfigured:'当前环境未配置或未启用模型生成。可以继续保存本机草稿。',
   unapproved:'这份已保存的文字尚未取得有效的生成授权。请核对授权范围与有效期。',
@@ -47,7 +58,14 @@ const generationErrorText = error=>({
   VERSION_CONFLICT:'输入或材料版本已变化。请重新读取记录并核对生成条件。',
   STATE_CONFLICT:'当前状态暂不能生成。请刷新记录后核对。',
   MODEL_OUTPUT_INVALID:'已收到响应，但内容未通过校验，未形成可展示草稿。',
+  CAPABILITY_UNAVAILABLE:'当前业务的方法来源暂不可用或版本已变化，请联系维护者核对配置。',
+  KNOWLEDGE_UNAVAILABLE:'参考资料暂不可用或版本已变化，请核对来源后重新预览。',
+  HEARING_ROLE_REQUIRED:'请补充“我是原告”或“我是被告”，再开始模拟法庭。',
+  HEARING_ROLE_CONFLICT:'本次角色与已保存演练不同，请新建对话开展另一方演练。',
+  HEARING_RESTART_REQUIRED:'这次演练已完成或材料性质已变化，请新建对话开展新的演练。',
+  HEARING_MATERIAL_LIMIT:'演练材料片段过多，请减少选中的材料后继续。',
   MATERIAL_INPUT_TOO_LARGE:'完整材料与来源信息超过本次模型输入上限。请减少所选材料后重试；不会截断或自动重发。',
+  MATERIAL_HISTORY_TOO_LARGE:'上一轮完整成果超出本次历史容量，无法完整承接，已停止发送。原任务、材料和成果均保留，请查看已保存成果并联系维护者核对容量。',
   PROVIDER_ERROR:'本次生成未取得可用结果，请核对任务与费用记录。',
 }[error?.code] || '生成状态未能确认。请刷新记录后核对。');
 const attemptText = {
@@ -76,6 +94,46 @@ const contextErrorText = error=>({
 const node = (tag,text,className)=>{ const element=document.createElement(tag); if(text!==undefined)element.textContent=text;
   if(className)element.className=className; return element; };
 
+function renderMatterOverview(host,state){
+  if(!host)return;
+  host.replaceChildren();
+  const scope=state.view?.scope;
+  if(state.status==='revoked'||state.loading||!state.id||scope?.conversation_id!==state.id){
+    host.append(node('p',state.status==='revoked'?'访问已结束。':'正在读取当前事项…'));return;
+  }
+  const sameScope=value=>['workspace_id','conversation_id','scope_kind','scope_ref','binding_revision']
+    .every(key=>value?.[key]===scope[key]);
+  const names={sales:'客户接待',case:'案件整理',contract:'合同审查',court:'模拟法庭'};
+  const records=(state.business?.items||[]).filter(item=>sameScope(item.scope));
+  const tasks=new Map(records.filter(item=>item.task_id).map(item=>[item.task_id,item]));
+  host.append(node('h3','办理范围'),node('p',state.view.display_title||'本次对话'),
+    node('p',scope.scope_kind==='matter'?'已关联案件':scope.scope_kind==='intake'?'已关联接待':'当前对话 · 尚未绑定案件','muted'));
+  host.append(node('h3','任务与进度'));
+  const run=state.view.latest_run;
+  host.append(node('p',run?'最近任务：'+(runText[run.state]||'状态待核对'):'尚无已登记任务。'));
+  for(const task of [...tasks.values()].slice(-4))host.append(node('p',
+    (names[task.workflow]||'任务')+' · '+({completed:'准备记录已保存',awaiting_input:'等待补充',blocked:'处理已停止'}[task.state]||'状态待核对'),'muted'));
+  const selected=state.materials?.items||[];
+  host.append(node('h3','本次材料'),node('p',selected.length?
+    `已选 ${selected.length} 份 · 已读取 ${selected.filter(item=>item.parse_revision).length} 份`:'可先添加材料，再发送办理指令。'));
+  const attachments=new Map((state.materials?.attachments||[]).map(item=>[item.id,item]));
+  for(const item of selected.slice(0,5))host.append(node('p',attachments.get(item.attachment_id)?.original_name||'已保存材料','muted'));
+  if(selected.length>5)host.append(node('p','其余材料见输入框上方的本次材料。','muted'));
+  const order=new Map((state.view.messages||[]).map((message,index)=>[message.id,index]));
+  const results=(state.generation?.items||[]).filter(item=>order.has(item.message_id)&&sameScope(item.attempt.scope)&&
+    item.attempt.state==='received'&&item.attempt.output?.audience==='internal'&&item.attempt.output.review_status==='unverified')
+    .sort((a,b)=>order.get(a.message_id)-order.get(b.message_id));
+  host.append(node('h3','成果与依据'));
+  if(!results.length){host.append(node('p','当前记录尚无已保存的模型成果。'));return;}
+  host.append(node('p',`当前记录中 ${results.length} 份模型草稿 · 待律师核对`));
+  const manifest=results.at(-1).attempt.output.manifest,method=manifest?.capability;
+  const sources={'chiheng-legal-workbench':'持衡模拟法庭','gpt-958c124d339690e7de1ff546b82df4fe':'超级销冠智能体 · 律师接待版',
+    'gpt-19867b274b0a3efe4bf1303ebdd39559':'宋萌家事及通用办案技能'};
+  if(method)host.append(node('p',`最近成果采用：${sources[method.source_id]||(method.kind==='builtin'?'群兴合同审查':method.source_id)} · ${method.version}`));
+  const knowledge=manifest?.knowledge;
+  if(knowledge)host.append(node('p',knowledge.passages.length?`参考片段 ${knowledge.passages.length} 条 · 均待核验`:'本次检索未命中参考片段。','muted'));
+}
+
 function renderAttempt(attempt,visible,onCitation) {
   const section=node('section',undefined,'generation-result');
   section.dataset.attemptId=attempt.id;section.setAttribute('aria-label','生成结果与费用');
@@ -97,7 +155,19 @@ function renderAttempt(attempt,visible,onCitation) {
     for(const citation of displayedCitations) {
       if(materialBound){
         const source=output.manifest?.sources?.find(s=>s.source_id===citation);
-        if(!source)continue;
+        if(!source){
+          const reference=output.manifest?.knowledge?.passages?.find(s=>s.source_id===citation);
+          if(reference){
+            const detail=node('details');
+            detail.append(node('summary',`来源 ${displayedCitations.indexOf(citation)+1} · ${reference.source_name} · 参考资料待核验`),
+              node('p',reference.text,'generation-text'),node('small',`${reference.locator} · 版本 ${reference.version}`),
+              node('p',reference.source_reference),node('p',(reference.source_urls||[]).join('\n')),
+              node('small',`原始内容摘要 ${reference.source_sha256}；摘录摘要 ${reference.quote_sha256}`),
+              node('p',(reference.limitations||[]).join('；')));
+            links.append(detail);
+          }
+          continue;
+        }
         if(source.reference.kind==='message'){
           const detail=node('details');detail.append(node('summary',`来源 ${displayedCitations.indexOf(citation)+1} · 聊天原始陈述`),node('p',source.reference.quote,'generation-text'));links.append(detail);continue;
         }
@@ -198,6 +268,7 @@ export function createRenderer(root=document,{isComposing=()=>false,onCitation=(
   }
   return {
     state(state,readonly=false) {
+      renderMatterOverview(byId('matter-overview-content'),state);
       const input=byId('composer');
       if((state.status==='revoked' || !isComposing()) && input.value!==state.text)input.value=state.text;
       input.disabled=readonly || state.loading || state.status==='revoked';

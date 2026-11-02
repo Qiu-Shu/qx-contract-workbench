@@ -1,0 +1,22 @@
+[
+  {"text":"补充：客户说明2025年2月收到五千元，银行转账记录尚待提供。","workflow":null,"blocked":false,"continuing":true,"with_task":"continue"},
+  {"text":"补充：客户说已收到五千元。","workflow":null,"blocked":false,"continuing":true,"with_task":"continue"},
+  {"text":"补充：客户说“已收到五千元，凭证待核”。","workflow":null,"blocked":false,"continuing":true,"with_task":"continue"},
+  {"text":"补充：对方说尚未收到款项。","workflow":null,"blocked":false,"continuing":true,"with_task":"continue"},
+  {"text":"请继续客户接待：客户说明已收到五千元。","workflow":"sales","blocked":false,"continuing":true,"with_task":"sales"},
+  {"text":"客户说“继续”。","workflow":null,"blocked":true,"with_task":null},
+  {"text":"补充：客户说“继续”。","workflow":null,"blocked":true,"with_task":null},
+  {"text":"补充：客户说明请继续整理材料。","workflow":null,"blocked":true,"with_task":null},
+  {"text":"补充：对方说“继续，整理材料”。","workflow":null,"blocked":true,"with_task":null},
+  {"text":"补充：客户说，继续整理材料。","workflow":null,"blocked":true,"with_task":null},
+  {"text":"客户说已收款，现在请审查合同。","workflow":null,"blocked":true,"with_task":null},
+  {"text":"暂停处理。补充：客户说明已收到五千元。","workflow":null,"blocked":true,"with_task":null},
+  {"text":"补充：客户说明已收到五千元，暂停。","workflow":null,"blocked":true,"with_task":null},
+  {"text":"取消任务。补充：客户说明已收到五千元。","workflow":null,"blocked":true,"with_task":null},
+  {"text":"补充：客户说“已收到五千元”，取消。","workflow":null,"blocked":true,"with_task":null},
+  {"text":"对方说“暂时不审查合同”，现在请审查合同。","workflow":"contract","blocked":false,"with_task":"contract"},
+  {"text":"客户说已收款。现在请接待客户。","workflow":"sales","blocked":false,"with_task":"sales"},
+  {"text":"暂停。请做商标初筛。","workflow":"case","blocked":false,"with_task":"case"},
+  {"text":"补充：标签“客户说”只是原文名称，实际收款待核。","workflow":null,"blocked":false,"continuing":true,"with_task":"continue"},
+  {"text":"补充：链接https://example.invalid/客户说只是虚构来源，实际收款待核。","workflow":null,"blocked":false,"continuing":true,"with_task":"continue"}
+]

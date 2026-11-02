@@ -21,7 +21,10 @@ def legacy(tmp_path,monkeypatch):
         matter=create_case(client,login(client),title='升级前合成案件')
     # Remove versioned extensions, recreating the fixed pre-intake schema.
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        for table in ('assistant_followup_revisions', 'assistant_evidence_revisions',
+        for table in ('assistant_shared_judgments', 'weixin_service_outbox', 'weixin_service_runs',
+                      'weixin_service_batch_events', 'weixin_service_batches', 'weixin_service_media',
+                      'weixin_service_events', 'weixin_service_polls', 'weixin_service_connections',
+                      'assistant_followup_revisions', 'assistant_evidence_revisions',
                       'weixin_personal_outbox', 'weixin_personal_runs',
                       'weixin_descriptor_generations', 'weixin_peer_generations', 'weixin_peer_scope_grants', 'weixin_dispatch_receipts', 'weixin_inbox_descriptors', 'weixin_poll_receipts', 'weixin_peer_bindings', 'weixin_accounts',
                       'task_media_resolutions', 'task_executions', 'task_draft_events',

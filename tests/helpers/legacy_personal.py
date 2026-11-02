@@ -34,3 +34,16 @@ def downgrade_runtime_statements(execute):
         if execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='"+name+"'").fetchone():
             statements+=('DROP TABLE '+name,)
     return statements
+
+
+def downgrade_service_statements(execute):
+    """Remove only empty service-era tables when constructing a historical fixture."""
+    statements=()
+    for name in ('assistant_shared_judgments','weixin_service_outbox','weixin_service_runs',
+                 'weixin_service_batch_events','weixin_service_batches','weixin_service_media',
+                 'weixin_service_events','weixin_service_polls','weixin_service_connections'):
+        if execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='"+name+"'").fetchone():
+            if execute('SELECT 1 FROM '+name+' LIMIT 1').fetchone():
+                raise ValueError('empty synthetic service fixture required')
+            statements+=('DROP TABLE '+name,)
+    return statements

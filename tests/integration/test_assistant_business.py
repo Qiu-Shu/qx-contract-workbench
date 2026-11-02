@@ -18,6 +18,15 @@ def submit(client, headers, view, content, **extra):
     ('我是甲方，帮我审查并给出最小修改建议', 'contract'),
     ('整理这个案件并起草起诉状', 'case'),
     ('根据现有材料模拟开庭', 'court'),
+    ('请理清诉求，准备下一步', 'sales'),
+    ('案件整理：梳理事实与材料线索', 'case'),
+    ('审查合同：核对原文，准备修改建议', 'contract'),
+    ('庭审准备：从不同视角准备追问', 'court'),
+    ('不要审查合同，只整理材料', 'case'),
+    ('不需要理清诉求\n请理清诉求', 'sales'),
+    ('无需案件整理\n整理材料', 'case'),
+    ('不要审查合同\n审查合同', 'contract'),
+    ('取消庭审准备\n庭审准备', 'court'),
 ])
 def test_mvp_natural_commands_select_existing_workflow(chat, content, workflow):
     client, _, _ = chat
@@ -28,6 +37,36 @@ def test_mvp_natural_commands_select_existing_workflow(chat, content, workflow):
     assert result.json()['task_id']
     if workflow == 'contract':
         assert '请上传主合同' in result.json()['text']
+
+
+@pytest.mark.parametrize('content,workflow', [
+    ('不需要理清诉求','sales'), ('无需案件整理','case'),
+    ('不要审查合同','contract'), ('取消庭审准备','court'),
+    ('请理清诉求\n不需要理清诉求','sales'), ('整理材料\n无需案件整理','case'),
+    ('审查合同\n不要审查合同','contract'), ('庭审准备\n取消庭审准备','court'),
+])
+@pytest.mark.parametrize('explicit', [False, True])
+def test_negative_function_instruction_does_not_create_business_task(chat, content, workflow, explicit):
+    client, _, _ = chat
+    headers = sign_in(client)
+    extra = {'workflow':workflow} if explicit else {}
+    result, _, _ = submit(client, headers, create(client, headers), content, **extra)
+    assert result.status_code == 200
+    assert result.json()['workflow'] is None
+    assert result.json()['task_id'] is None
+
+
+@pytest.mark.parametrize('content', [
+    '不需要理清诉求', '无需案件整理', '不要审查合同', '取消庭审准备',
+])
+@pytest.mark.parametrize('workflow', ['sales', 'case', 'contract', 'court'])
+def test_pure_negative_instruction_rejects_every_explicit_workflow(chat, content, workflow):
+    client, _, _ = chat
+    headers = sign_in(client)
+    result, _, _ = submit(client, headers, create(client, headers), content, workflow=workflow)
+    assert result.status_code == 200
+    assert result.json()['workflow'] is None
+    assert result.json()['task_id'] is None
 
 
 def test_reception_is_saved_in_chat_with_one_receipt_and_source(chat):

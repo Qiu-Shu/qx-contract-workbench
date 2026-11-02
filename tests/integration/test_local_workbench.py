@@ -20,6 +20,58 @@ from tests.integration.test_api import create_case
 PASSWORD = 'local-test12'
 
 
+def test_long_worker_lock_remains_exclusive_and_releases(tmp_path):
+    from cn_contract.ops.file_paths import filesystem_path
+    from cn_contract.web.local_server import _worker_lock
+    root = tmp_path/'long-lock'
+    while len(str(root/'worker.lock')) <= 300:
+        root /= 'independent-lock-path'
+    filesystem_path(root).mkdir(parents=True)
+    with _worker_lock(root):
+        with pytest.raises(ValueError, match='WORKSPACE_IN_USE'):
+            with _worker_lock(root):
+                pass
+    with _worker_lock(root):
+        pass
+
+
+def test_long_worker_lock_rejects_hardlink(tmp_path):
+    import os
+    from cn_contract.ops.file_paths import filesystem_path
+    from cn_contract.web.local_server import _worker_lock
+    root = tmp_path/'linked-lock'
+    while len(str(root/'worker.lock')) <= 300:
+        root /= 'independent-lock-path'
+    filesystem_path(root).mkdir(parents=True)
+    original = tmp_path/'original-lock';original.write_bytes(b'preserved')
+    os.link(original, filesystem_path(root/'worker.lock'))
+    with pytest.raises(ValueError, match='REDIRECTED_WORKSPACE'):
+        with _worker_lock(root):
+            pass
+    assert original.read_bytes() == b'preserved'
+
+
+@pytest.mark.parametrize('redirected_node', ['root', 'parent'])
+def test_long_workspace_rejects_redirected_root_or_parent(tmp_path, redirected_node):
+    import os
+    from cn_contract.ops.file_paths import filesystem_path
+    from cn_contract.web.local_server import _workspace_path
+    target = tmp_path/'independent-target';target.mkdir()
+    (target/'workspace').mkdir()
+    sentinel = target/'preserved.txt';sentinel.write_bytes(b'independent synthetic bytes')
+    directory = tmp_path/'long-redirect'
+    while len(str(directory/'workspace-link')) <= 300:
+        directory /= 'independent-link-path'
+    filesystem_path(directory).mkdir(parents=True)
+    link = directory/'workspace-link'
+    os.symlink(filesystem_path(target), filesystem_path(link), target_is_directory=True)
+    assert len(str(link)) > 300 and filesystem_path(link).is_symlink()
+    root = link if redirected_node == 'root' else link/'workspace'
+    with pytest.raises(ValueError, match='^REDIRECTED_WORKSPACE$'):
+        _workspace_path(root, data_parent=tmp_path)
+    assert sentinel.read_bytes() == b'independent synthetic bytes'
+
+
 @pytest.fixture
 def local(tmp_path, monkeypatch):
     assert importlib.util.find_spec('cn_contract.web.local_server'), 'persistent startup is missing'

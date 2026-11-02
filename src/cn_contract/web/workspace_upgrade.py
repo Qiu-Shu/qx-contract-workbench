@@ -12,7 +12,7 @@ import sqlite3
 from uuid import uuid4
 
 from ..intake.schema import STATEMENTS
-from ..ops.file_paths import sqlite_readonly_uri
+from ..ops.file_paths import filesystem_path, sqlite_readonly_uri
 from ..schema_migrations import requires_foreign_keys_off, statements_for
 from ..storage_schema import VERSIONS, identify_schema, schema_rows
 
@@ -70,6 +70,7 @@ def _validate_history(path):
 
 
 def pending_matches(db,root,marker):
+    root=filesystem_path(root)
     from .local_server import _safe_file
     try:
         actual = _rows(db)
@@ -106,6 +107,7 @@ def pending_matches(db,root,marker):
 
 def upgrade(root):
     """Caller holds workspace worker lock and has validated paths and policy."""
+    root=filesystem_path(root)
     from .local_server import _safe_file
     marker=json.loads((root/'workspace.json').read_text('utf-8'))
     with closing(sqlite3.connect(root/'workbench.db')) as db:

@@ -4,6 +4,7 @@ This entry never calls a model or treats a local result as model output.
 """
 from uuid import UUID, NAMESPACE_URL, uuid4, uuid5
 import json
+import re
 
 from sqlalchemy import text
 
@@ -17,23 +18,234 @@ from .research import _append
 from . import business_preparation as preparation
 
 
-def classify(content):
-    choices = []
-    if any(word in content for word in ('客户咨询', '接待客户', '客户的咨询', '客户诉求', '销售接待')):
-        choices.append('sales')
-    if any(word in content for word in ('整理案件', '整理这个案件', '整理材料', '整理证据', '时间线', '事实线索', '起草起诉状', '起草答辩状')):
-        choices.append('case')
-    if (any(word in content for word in ('审查合同', '审查这个合同', '审阅合同', '审查这份合同', '合同审查', '重新审查'))
-            or any(word in content for word in ('我是甲方', '我是乙方', '代表甲方', '代表乙方'))
-            and any(word in content for word in ('审查', '审阅', '修改'))):
-        choices.append('contract')
-    if any(word in content for word in ('模拟法庭', '模拟开庭', '模拟对方律师', '法官角度', '对方律师和法官', '庭审准备')):
-        choices.append('court')
+_IP_WORDS = ('商标侵权', '商标初筛', '商标分析', '商标筛查', '商标因素', '分析商标', '筛查商标',
+    '侵权初筛', '侵权筛查', '侵权分析', '侵权因素', '知识产权初筛', '知识产权分析', '知识产权侵权',
+    '专利侵权', '著作权侵权', '版权侵权', '商业秘密侵权', 'IP初筛', 'IP分析')
+
+
+# Earlier material methods replay this vocabulary when checking saved requests.
+_METHOD_WORKFLOW_WORDS = {
+    'sales': ('客户咨询', '接待客户', '客户接待', '客户的咨询', '客户诉求', '理清诉求', '诉求澄清', '接待跟进', '销售接待'),
+    'case': ('整理案件', '案件整理', '整理这个案件', '整理材料', '整理证据', '梳理事实', '材料线索', '时间线', '事实线索', '起草起诉状', '起草答辩状',
+        '刑事案件', '刑事分析', '刑事证据分析', '刑事辩护分析', '辩护策略', '辩护思路', '供述矛盾', '刑事证据链'),
+    'contract': ('审查合同', '审查这个合同', '审阅合同', '审查这份合同', '合同审查', '重新审查'),
+    'court': ('模拟法庭', '模拟开庭', '模拟对方律师', '法官角度', '对方律师和法官', '庭审准备'),
+}
+_WORKFLOW_WORDS = {**_METHOD_WORKFLOW_WORDS, 'case':(*_METHOD_WORKFLOW_WORDS['case'], *_IP_WORDS)}
+
+
+def _direct_text(content, *, current=False):
+    # Quoted material is evidence, not an instruction to start a business run.
+    pattern = r'“[^”]*”|‘[^’]*’|「[^」]*」|"[^"]*"' if current else r'“[^”]*”|‘[^’]*’|「[^」]*」|"[^"\n]*"'
+    direct = re.sub(pattern, '', content)
+    return re.sub(r'https?://[^\s，。；！？]+', '', direct) if current else direct
+
+
+def _current_segments(content):
+    """A semicolon cannot release a condition; a new sentence can start a request.
+
+    Keep commas with their premise, and retain raw quotations for hold detection.
+    Legacy method replay deliberately does not use this interpretation.
+    """
+    parts, start = [], 0
+    # Skip punctuation within quoted evidence before finding sentence boundaries.
+    for match in re.finditer(r'“[^”]*”|‘[^’]*’|「[^」]*」|"[^"]*"|https?://[^\s，。；！？]+|[。.!！?？；;\n]', content):
+        if len(match.group()) == 1:
+            # Decimal/date/version punctuation is not the end of its condition.
+            if match.group() in '.!?' and re.search(r'[A-Za-z0-9]',
+                    content[max(0, match.start()-1):match.start()] + content[match.end():match.end()+1]):
+                continue
+            parts.extend((content[start:match.start()], match.group()))
+            start = match.end()
+    parts.append(content[start:])
+    segments, conditional, has_condition = [], False, False
+    for part in parts:
+        if part in ('。', '.', '!', '！', '?', '？', '\n'):
+            conditional = False
+        elif part not in ('；', ';'):
+            conditional = conditional or bool(re.search(r'如果|假如|要是|除非|只有|一旦|若', _direct_text(part, current=True)))
+            has_condition = has_condition or conditional
+            if not conditional and part.strip():
+                segments.append(part)
+    return segments, has_condition
+
+
+def _current_clauses(content):
+    start = 0
+    for match in re.finditer(r'“[^”]*”|‘[^’]*’|「[^」]*」|"[^"]*"|https?://[^\s，。；！？]+|[，,]', content):
+        if len(match.group()) == 1:
+            yield content[start:match.start()]
+            start = match.end()
+    yield content[start:]
+
+
+def _current_report_parts(content):
+    """Keep direct prefixes; an unquoted report continues across its commas."""
+    quoted = r'“[^”]*”|‘[^’]*’|「[^」]*」|"[^"]*"'
+    reporting = False
+    for clause in _current_clauses(content):
+        if reporting:
+            yield '', clause
+            continue
+        marker = next((match for match in re.finditer(
+            quoted + r'|https?://[^\s，。；！？]+|(?P<report>对方说|客户说(?:明)?|转述|引用)', clause)
+            if match.group('report') is not None), None)
+        if marker is None:
+            yield clause, ''
+        else:
+            tail = clause[marker.end():]
+            reporting = re.fullmatch(r'\s*[:：]?\s*(?:' + quoted + r')\s*', tail) is None
+            yield clause[:marker.start()], tail
+
+
+def _current_execution_hold(content, *, reported_scope=False):
+    segments, has_condition = _current_segments(content)
+    has_request = any(_workflow_command(part, workflow, reported_scope=reported_scope)
+        for part in segments for workflow in _WORKFLOW_WORDS)
+    held = has_condition and not has_request
+    action = r'审查(?!起诉)|审阅|分析|整理|处理|接待|诉求|庭审|模拟|起草|初筛|筛查'
+    continuation = r'继续|补充|这次任务|这个任务|上述|刚才'
+    for original in segments:
+        line = _direct_text(original, current=True)
+        if line != original and (re.search(action, original) and not re.search(action, line)
+                or not has_request and re.search(continuation, original) and not re.search(continuation, line)):
+            held = True
+        parts = (_current_report_parts(original) if reported_scope
+                 else ((clause, '') for clause in re.split(r'[，,]', line)))
+        for direct, reported in parts:
+            clause = _direct_text(direct, current=True)
+            report = (re.sub(r'https?://[^\s，。；！？]+', '', reported) if reported_scope
+                      else clause if re.search(r'对方说|客户说|转述|引用', clause) else '')
+            if (any(execution_hold(part)
+                    or re.fullmatch(r'\s*(?:请|现在|先|好的|好|暂时)*(?:停止|暂停|取消|撤回|停)(?:一下)?\s*', part)
+                    or re.fullmatch(r'\s*(?:请|现在|先)*(?:别做了|别处理了|只收材料)\s*', part)
+                    for part in ((clause, _direct_text(reported, current=True)) if reported_scope else (clause,)))
+                    or re.search(action, report) or not has_request and re.search(continuation, report)):
+                held = True
+            elif re.match(r'^(?:现在|请|重新开始|继续|接着|开始|重新|做)*(?:审查|审阅|整理|梳理|起草|模拟|庭审|客户接待|接待客户|理清|诉求澄清|案件整理|合同审查|商标)', clause.strip()) and any(
+                    _workflow_command(clause, workflow, reported_scope=reported_scope) for workflow in _WORKFLOW_WORDS):
+                held = False
+    return held
+
+
+def execution_hold(content, *, current=False, reported_scope=False):
+    """Fail closed for explicit collection-only commands and uncertain requests."""
+    if current:
+        return _current_execution_hold(content, reported_scope=reported_scope)
+    held = False
+    action = r'审查(?!起诉)|审阅|分析|整理|处理|接待|诉求|庭审|模拟|起草'
+    for original in content.splitlines():
+        line = _direct_text(original)
+        if (re.fullmatch(r'\s*(?:请|现在)?(?:停止|暂停|取消|撤回)[。！!\s]*', line)
+                or re.search(r'只(?:接收|收集|保存|接收并保存)材料|(?:停止|暂停|取消|撤回)(?:本次)?(?:处理|分析|任务|指令)|(?:不要|不需要|无需|不用|别|暂不|暂时不|不再|先不)[^，,。.!！?？；;\n]{0,6}(?:分析|处理)', line)
+                or re.search(r'如果|假如|要是|除非|只有|一旦|若', line) and re.search(action, line)
+                or any(re.search(r'对方说|客户说|转述|引用', clause) and re.search(action, clause)
+                       for clause in re.split(r'[，,。.!！?？；;]', line))
+                or line != original and re.search(action, original) and not re.search(action, line)):
+            held = True
+        elif re.match(r'^(?:现在|请|重新开始|继续|接着|开始|重新)*(?:审查|审阅|整理|梳理|起草|模拟|庭审|客户接待|接待客户|理清|诉求澄清|案件整理|合同审查)', line.strip()) and any(
+                _workflow_command(line, workflow, legacy=True) for workflow in _METHOD_WORKFLOW_WORDS):
+            held = False
+    return held
+
+
+def _is_negated(content, match):
+    prefix = content[max(0, match.start()-16):match.start()]
+    if re.search(r'(?:不需要|无需|不用|不要|别|暂不|暂时不|不再|先不|禁止|取消|停止|暂停|撤回)[^，,。.!！?？；;\n]{0,10}\Z', prefix):
+        return True
+    # Keep the interpretation of immutable earlier method snapshots unchanged.
+    return match.group() in (*_IP_WORDS, '商标', '专利', '著作权', '版权', '商业秘密') and re.search(
+        r'(?:不做|不进行)[^，,。.!！?？；;\n]{0,10}\Z', prefix) is not None
+
+
+def _command(content, words, *, current=False, reported_scope=False):
+    content = _command_text(content, current=current, reported_scope=reported_scope)
+    return any(not _is_negated(content, match) for word in words
+               for match in re.finditer(re.escape(word), content))
+
+
+def _command_text(content, *, current=False, reported_scope=False):
+    if current:
+        if reported_scope:
+            return '\n'.join(_direct_text(direct, current=True) for part in _current_segments(content)[0]
+                             for direct, _ in _current_report_parts(part))
+        return '\n'.join(clause for part in _current_segments(content)[0]
+                         for clause in re.split(r'[，,]', _direct_text(part, current=True))
+                         if not re.search(r'对方说|客户说|转述|引用', clause))
+    return '\n'.join(clause for line in _direct_text(content).splitlines()
+                     if not re.search(r'如果|假如|要是|除非|只有|一旦|若', line)
+                     for clause in re.split(r'[，,。.!！?？；;]', line)
+                     if not re.search(r'对方说|客户说|转述|引用', clause))
+
+
+def _latest_command(content, words, *, current=False, reported_scope=False):
+    content = _command_text(content, current=current, reported_scope=reported_scope)
+    matches = [match for word in words for match in re.finditer(re.escape(word), content)]
+    if not matches:
+        return None
+    latest = max(matches, key=lambda match: match.start())
+    prefix = content[:latest.start()].rsplit('\n', 1)[-1]
+    if current and (re.search(r'(?:不需要|无需|不用|不要|别|暂不|暂时不|不再|先不|禁止|取消|停止|暂停|撤回|不做|不进行|不予)[^\n]*\Z', prefix)
+            or prefix.endswith('不')):
+        return False
+    return not _is_negated(content, latest)
+
+
+def _workflow_command(content, workflow, *, legacy=False, reported_scope=False):
+    words = (_METHOD_WORKFLOW_WORDS if legacy else _WORKFLOW_WORDS)[workflow]
+    if workflow == 'contract':
+        return (_latest_command(content, words, current=not legacy, reported_scope=reported_scope) is True
+                or _command(content, ('我是甲方', '我是乙方', '代表甲方', '代表乙方'), current=not legacy, reported_scope=reported_scope)
+                and _latest_command(content, ('审查', '审阅', '修改'), current=not legacy, reported_scope=reported_scope) is True)
+    if workflow == 'case':
+        if (not legacy and _latest_command(content, tuple(word for word in _IP_WORDS if '商标' in word), current=True, reported_scope=reported_scope) is True
+                and _latest_command(content, ('商标',), current=True, reported_scope=reported_scope) is not False):
+            return True
+        if not legacy and _latest_command(content, ('商标',), current=True, reported_scope=reported_scope) is False:
+            # A later withdrawal of the right also withdraws its earlier triage request.
+            # A separate evidence task or explicit other right remains independently visible.
+            words = tuple(word for word in words if word not in _IP_WORDS or any(
+                right in word for right in ('专利', '著作权', '版权', '商业秘密')))
+        # Declining a strategy deliverable does not cancel a separate evidence request.
+        analysis_words = tuple(word for word in words if word not in ('辩护策略', '辩护思路', '刑事辩护分析'))
+        if _latest_command(content, analysis_words, current=not legacy, reported_scope=reported_scope) is True:
+            return True
+    return _latest_command(content, words, current=not legacy, reported_scope=reported_scope) is True
+
+
+def rejected(content, workflow):
+    """The latest instruction for a capability controls explicit and model suggestions."""
+    words = _WORKFLOW_WORDS.get(workflow)
+    return execution_hold(content, current=True, reported_scope=True) or bool(words and (
+        _latest_command(content, words, current=True, reported_scope=True) is False
+        or workflow == 'case' and _latest_command(content, ('商标',), current=True, reported_scope=True) is False)
+        and not (workflow == 'case' and _workflow_command(content, workflow, reported_scope=True)))
+
+
+def negative_only(content):
+    return execution_hold(content, current=True, reported_scope=True) or classify(content) is None and any(rejected(content, workflow) for workflow in _WORKFLOW_WORDS)
+
+
+def mentions_workflow(content):
+    return execution_hold(content, current=True, reported_scope=True) or any(_latest_command(content, words, current=True, reported_scope=True) is not None for words in _WORKFLOW_WORDS.values()) or (
+        _command(content, ('我是甲方', '我是乙方', '代表甲方', '代表乙方'), current=True, reported_scope=True)
+        and _latest_command(content, ('审查', '审阅', '修改'), current=True, reported_scope=True) is not None)
+
+
+def classify(content, *, reported_scope=True):
+    if execution_hold(content, current=True, reported_scope=reported_scope):
+        return None
+    choices = [workflow for workflow in _WORKFLOW_WORDS if _workflow_command(content, workflow, reported_scope=reported_scope)]
     return choices[0] if len(choices) == 1 else 'ambiguous' if choices else None
 
 
 def continuing(content):
-    return any(word in content for word in ('继续', '补充', '这次任务', '这个任务', '上述', '刚才'))
+    return any(word in _command_text(content, current=True, reported_scope=True) for word in ('继续', '补充', '这次任务', '这个任务', '上述', '刚才'))
+
+
+def starts_new_task(content, *, explicit=False):
+    intent = _latest_command(content, ('重新审查', '新建任务', '开始新任务'), current=True, reported_scope=True)
+    return not execution_hold(content, current=True, reported_scope=True) and intent is not False and (explicit or intent is True)
 
 
 def _record(run, db):
@@ -269,12 +481,14 @@ def submit(actor, cid, value, db, *, personal_draft_id=None):
             raise ServiceError('VERSION_CONFLICT', 409)
         return previous[1]
     old = history(actor, cid, db)
-    new_task = request.new_task or any(word in request.content for word in ('重新审查', '新建任务', '开始新任务'))
-    intent = request.workflow or classify(request.content)
+    new_task = starts_new_task(request.content, explicit=request.new_task)
+    inferred = classify(request.content)
+    blocked = negative_only(request.content)
+    intent = None if blocked else request.workflow if request.workflow and not rejected(request.content, request.workflow) else inferred
     workflow = None if intent == 'ambiguous' else intent
-    can_continue = intent != 'ambiguous' and (workflow is not None or continuing(request.content) or request.task_id)
+    can_continue = not blocked and intent != 'ambiguous' and (workflow is not None or continuing(request.content) or request.task_id)
     candidates = {item.task_id:item for item in old if item.task_id and (workflow is None or item.workflow == workflow)}
-    if request.task_id is not None and not new_task:
+    if request.task_id is not None and not new_task and not blocked:
         selected = candidates.get(request.task_id)
         if selected is None:
             if any(item.task_id == request.task_id for item in old):

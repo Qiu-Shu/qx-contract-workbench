@@ -155,6 +155,59 @@ def test_long_parent_paths_create_restore_and_rebackup(source, tmp_path):
         filesystem_path(original).chmod(0o400)
 
 
+def test_restore_with_long_database_and_lock_paths_preserves_source_and_fence(source, tmp_path, record_property):
+    from fastapi.testclient import TestClient
+    from cn_contract.ops.file_paths import filesystem_path, sqlite_readonly_uri
+    from tests.integration.test_local_workbench import login as http_login
+    root, database, _, cid, receipt, _, raw, _ = source
+    with database.session() as db:
+        old_token, _ = login(USERNAME, PASSWORD, db)
+    with local_server._worker_lock(root):
+        pass
+    before = {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()}
+    archive = tmp_path/'long-database.qxbak'
+    workspace_backup.create_workspace_backup(root, archive, PASSPHRASE, data_parent=tmp_path)
+    archive_digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+    target_parent = tmp_path/'独立恢复'
+    while len(str(target_parent)) <= 280:
+        target_parent /= '路径资料'*8
+    result = workspace_backup.restore_workspace_backup(archive, target_parent, PASSPHRASE)
+    target = Path(result['restored_root'])
+    assert target != root and target.is_relative_to(target_parent)
+    assert len(str(target/'workbench.db')) > 260 and len(str(target/'worker.lock')) > 260
+    assert result['quarantined'] is True
+    original = target/'protected'/'assistant'/str(cid)/str(receipt.attachment.id)/'original.bin'
+    assert backup.checked_file(original, target/'protected') == raw
+    with closing(sqlite3.connect(sqlite_readonly_uri(target/'workbench.db'), uri=True)) as connection:
+        revoked = connection.execute('SELECT revoked FROM sessions').fetchall()
+        assert revoked and all(value == (1,) for value in revoked)
+        fence = json.loads(connection.execute('SELECT payload FROM ops_restore_fences ORDER BY sequence DESC LIMIT 1').fetchone()[0])
+        assert fence['state'] == 'quarantined' and fence['old_sessions_revoked'] is True
+        assert fence['live_egress'] is False and fence['current_approvals_valid'] is False
+        assert fence['weixin_dispatch_enabled'] is False and fence['task_inbox_enabled'] is False
+    with local_server._worker_lock(target):
+        with pytest.raises(ValueError, match='WORKSPACE_IN_USE'):
+            with local_server._worker_lock(target):
+                pass
+    assert filesystem_path(target/'worker.lock').is_file()
+    app = local_server.build_local_app(target, data_parent=tmp_path)
+    assert str(app.state.database.engine.url.database) == str(target/'workbench.db')
+    original_url = f'/api/assistant/conversations/{cid}/attachments/{receipt.attachment.id}/original'
+    with TestClient(app) as client:
+        client.cookies.set('qx_session', old_token)
+        assert client.get(original_url).status_code == 401
+        client.cookies.clear()
+        headers = http_login(client, USERNAME, PASSWORD)
+        response = client.get(original_url)
+        assert response.status_code == 200 and response.content == raw
+        denied = client.post('/api/assistant/conversations', headers=headers, json={})
+        assert denied.status_code == 409 and denied.json()['code'] == 'BLOCKED_LIVE'
+    assert hashlib.sha256(archive.read_bytes()).hexdigest() == archive_digest
+    assert {p.relative_to(root).as_posix():p.read_bytes() for p in root.rglob('*') if p.is_file()} == before
+    record_property('restored_database_path_chars', len(str(target/'workbench.db')))
+    record_property('restored_lock_path_chars', len(str(target/'worker.lock')))
+
+
 @pytest.mark.parametrize('fault', ['missing', 'hash', 'size', 'hardlink', 'workspace', 'owner',
     'path', 'parse_digest', 'parse_version', 'quote_hash', 'snapshot_attachment',
     'snapshot_parse', 'snapshot_duplicate', 'snapshot_request', 'latest_revision'])

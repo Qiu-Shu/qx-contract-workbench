@@ -1,0 +1,26 @@
+{
+  "upstream_repository": "https://github.com/CSlawyer1985/claude-for-legal-ZH",
+  "commit": "171903c9e5e91b3b7625f1dd557d146ba5a25adc",
+  "authors": [
+    "Anthropic",
+    "陈石律师 (CSlawyer1985)"
+  ],
+  "license": "Apache-2.0",
+  "license_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+  "usage": "Host-authored trademark factors only; source templates and static law are audit references, not runtime instructions or verified law.",
+  "files": [
+    {
+      "path": "ip-legal/skills/infringement-triage/SKILL.md",
+      "sha256": "44058fd453d8d70bd72cb04bb26a73285293ac0ea9423382211b4fe5bd2f4755"
+    },
+    {
+      "path": "ip-legal/CLAUDE.md",
+      "sha256": "47d778cd82ea5803e4053bd97005fdb4f9f53b9eb1950e53841fda01a2b29e12"
+    },
+    {
+      "path": "ip-legal/references/ip-core-rules.md",
+      "sha256": "a4180ed39ba525fb7daa2a3d4570fa565446ef1ace0562388cfcf3883bb48b43"
+    }
+  ],
+  "status": "development synthetic validation; other IP branches, real-model A/B and lawyer-quality review pending"
+}

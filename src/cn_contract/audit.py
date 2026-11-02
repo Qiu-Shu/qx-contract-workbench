@@ -15,8 +15,8 @@ ALLOWED_ACTIONS = frozenset({'authorization_denied', 'csrf_denied', 'document_cr
                              'patch_approved','patch_revoked','export_prepared','finding_decided','working_draft_confirmed','effective_text_reviewed',
                              'case_bridge_granted','case_bridge_revoked','case_bridge_selection_cancelled',
                              'case_bridge_read','case_bridge_submitted',
-                             'local_material_case_created','local_material_admitted'})
-ALLOWED_ENTITIES = frozenset({'matter', 'document', 'facts', 'parse', 'party','authority','rule','policy','review'})
+                             'local_material_case_created','local_material_admitted','task_draft_resumed'})
+ALLOWED_ENTITIES = frozenset({'matter', 'document', 'facts', 'parse', 'party','authority','rule','policy','review','task_draft'})
 
 
 def append_event(event: AuditEvent, db: Session) -> UUID:

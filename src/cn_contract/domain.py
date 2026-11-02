@@ -4117,7 +4117,7 @@ class ConversationHistoryMessage(DomainModel):
 ConversationHistory = Annotated[tuple[ConversationHistoryMessage, ...], Field(max_length=16)]
 
 
-def _conversation_history(history, revision):
+def _conversation_history(history, revision, *, byte_limit=32768):
     if len(history) % 2 or len({item.message_id for item in history}) != len(history):
         raise ValueError('history requires unique completed question/answer pairs')
     previous = 0
@@ -4129,7 +4129,7 @@ def _conversation_history(history, revision):
             raise ValueError('history order or revision invalid')
         previous = question.source_revision
     if len(json.dumps([item.model_dump(mode='json') for item in history],
-                      ensure_ascii=False, separators=(',', ':')).encode('utf-8')) > 32768:
+                      ensure_ascii=False, separators=(',', ':')).encode('utf-8')) > byte_limit:
         raise ValueError('history exceeds its local byte budget')
 
 
@@ -4414,6 +4414,8 @@ class TaskMediaInput(DomainModel):
 class TaskInboxEventInput(DomainModel):
     event_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)]
     text: Annotated[str, StringConstraints(strict=True, max_length=20000)] = ''
+    source_sequence: NonNegativeInt | None = Field(default=None, exclude_if=lambda value: value is None)
+    source_created_ms: NonNegativeInt | None = Field(default=None, exclude_if=lambda value: value is None)
     task_id: UUID | None = None
     reply_to_event_id: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)] | None = Field(
         default=None, exclude_if=lambda value: value is None)
@@ -4459,6 +4461,8 @@ class TaskInboxEventView(DomainModel):
     binding_id: UUID
     event_id: NonEmpty
     text: str
+    source_sequence: NonNegativeInt | None = Field(default=None, exclude_if=lambda value: value is None)
+    source_created_ms: NonNegativeInt | None = Field(default=None, exclude_if=lambda value: value is None)
     task_id: UUID | None
     reply_to_event_id: str | None = Field(default=None,exclude_if=lambda value: value is None)
     start_new: StrictBool
@@ -5484,6 +5488,309 @@ class MainMaterialFile(DomainModel):
     quality_issues: tuple[NonEmpty, ...]
 
 
+class LocalSkillBinding(DomainModel):
+    workflow: Literal['sales', 'case']
+    source_id: Annotated[NonEmpty, Field(max_length=128)]
+    version: Annotated[NonEmpty, Field(max_length=128)]
+    root: Annotated[NonEmpty, Field(max_length=4096)]
+    source_reference: Annotated[NonEmpty, Field(max_length=2048)]
+    license_notice: Annotated[NonEmpty, Field(max_length=4000)]
+    local_use_approved: StrictBool
+    metadata_sha256: SHA256
+    method_sha256: SHA256
+
+
+class CapabilityCodeFile(DomainModel):
+    path: Literal['mock_hearing.py', 'hearing_audit.py', 'hearing_tracking.py', 'portable_lock.py', 'windows_private.py']
+    sha256: SHA256
+
+
+class ChihengBinding(DomainModel):
+    root: Annotated[NonEmpty, Field(max_length=4096)]
+    version: Annotated[NonEmpty, Field(max_length=128)]
+    source_reference: Annotated[NonEmpty, Field(max_length=2048)]
+    license_notice: Annotated[NonEmpty, Field(max_length=4000)]
+    local_use_approved: StrictBool
+    files: Annotated[tuple[CapabilityCodeFile, ...], Field(min_length=5, max_length=5)]
+
+    @model_validator(mode='after')
+    def all_files(self):
+        if len({item.path for item in self.files}) != 5:
+            raise ValueError('CAPABILITY_SOURCE_INVALID')
+        return self
+
+
+class KnowledgeFilePin(DomainModel):
+    path: Annotated[NonEmpty, Field(max_length=1024)]
+    sha256: SHA256
+
+
+class PublicLawBinding(DomainModel):
+    adapter_root: Annotated[NonEmpty, Field(max_length=4096)]
+    adapter_sha256: SHA256
+    corpus_path: Annotated[NonEmpty, Field(max_length=4096)]
+    corpus_sha256: SHA256
+    source_reference: Annotated[NonEmpty, Field(max_length=2048)]
+    version: Annotated[NonEmpty, Field(max_length=128)]
+
+
+class LocalKnowledgeConfig(DomainModel):
+    local_use_approved: StrictBool
+    reception_root: Annotated[NonEmpty, Field(max_length=4096)] | None = None
+    reception_manifest_sha256: SHA256 | None = None
+    family_files: Annotated[tuple[KnowledgeFilePin, ...], Field(max_length=8)] = ()
+    public_law: PublicLawBinding | None = None
+
+    @model_validator(mode='after')
+    def complete_bindings(self):
+        if ((self.reception_root is None) != (self.reception_manifest_sha256 is None)
+                or len({item.path for item in self.family_files}) != len(self.family_files)):
+            raise ValueError('KNOWLEDGE_BINDING_INVALID')
+        return self
+
+
+class LocalSkillRegistryConfig(DomainModel):
+    schema_version: Literal[1] = 1
+    skills: Annotated[tuple[LocalSkillBinding, ...], Field(max_length=2)]
+    chiheng: ChihengBinding | None = Field(default=None, exclude_if=lambda value: value is None)
+    knowledge: LocalKnowledgeConfig | None = Field(default=None, exclude_if=lambda value: value is None)
+
+    @model_validator(mode='after')
+    def unique_workflows(self):
+        if len({item.workflow for item in self.skills}) != len(self.skills):
+            raise ValueError('DUPLICATE_CAPABILITY')
+        return self
+
+
+class CapabilityInvocation(DomainModel):
+    workflow: BusinessWorkflow
+    kind: Literal['builtin', 'local_skill', 'local_adapter']
+    source_id: Annotated[NonEmpty, Field(max_length=128)]
+    version: Annotated[NonEmpty, Field(max_length=128)]
+    source_reference: Annotated[NonEmpty, Field(max_length=2048)]
+    license_notice: Annotated[NonEmpty, Field(max_length=4000)]
+    method_source: Annotated[NonEmpty, Field(max_length=240)]
+    method_sha256: SHA256
+    code_files: tuple[CapabilityCodeFile, ...] = Field(default=(), exclude_if=lambda value: not value)
+    metadata_sha256: SHA256 | None = Field(default=None, exclude_if=lambda value: value is None)
+    method_text: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=32768)] | None = Field(
+        default=None, exclude_if=lambda value: value is None)
+
+    @model_validator(mode='after')
+    def exact_method(self):
+        if self.kind == 'local_adapter':
+            raw = json.dumps([item.model_dump(mode='json') for item in self.code_files], ensure_ascii=False,
+                sort_keys=True, separators=(',', ':'))
+            if (self.workflow != 'court' or self.source_id != 'chiheng-legal-workbench'
+                    or len(self.code_files) != 5 or len({item.path for item in self.code_files}) != 5
+                    or self.method_text is not None or self.metadata_sha256 is not None
+                    or hashlib.sha256(raw.encode('utf-8')).hexdigest() != self.method_sha256):
+                raise ValueError('CAPABILITY_SNAPSHOT_INVALID')
+            return self
+        if self.code_files:
+            raise ValueError('CAPABILITY_SNAPSHOT_INVALID')
+        if self.kind == 'builtin':
+            if self.workflow != 'contract' or self.method_text is not None or self.metadata_sha256 is not None:
+                raise ValueError('CAPABILITY_SNAPSHOT_INVALID')
+        elif (self.workflow not in {'sales', 'case'} or self.method_text is None
+                or not self.method_text.strip() or self.metadata_sha256 is None
+                or hashlib.sha256(self.method_text.encode('utf-8')).hexdigest() != self.method_sha256):
+            raise ValueError('CAPABILITY_SNAPSHOT_INVALID')
+        return self
+
+
+KnowledgeOrigin = Literal['reception', 'family', 'public_law']
+
+
+class KnowledgePassage(DomainModel):
+    source_id: SHA256
+    origin: KnowledgeOrigin
+    source_name: Annotated[NonEmpty, Field(max_length=1000)]
+    source_sha256: SHA256
+    index_sha256: SHA256
+    locator: Annotated[NonEmpty, Field(max_length=512)]
+    text: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=1400)]
+    quote_sha256: SHA256
+    source_reference: Annotated[NonEmpty, Field(max_length=2048)]
+    source_urls: Annotated[tuple[Annotated[NonEmpty, Field(max_length=2048)], ...], Field(max_length=20)] = ()
+    version: Annotated[NonEmpty, Field(max_length=256)]
+    review_state: Literal['user_unverified', 'unverified_mirror']
+    applicability_verified: Literal[False] = False
+    upstream_status: Annotated[str, Field(max_length=128)] | None = None
+    upstream_effective_date: Annotated[str, Field(max_length=128)] | None = None
+    limitations: Annotated[tuple[Annotated[NonEmpty, Field(max_length=1000)], ...], Field(min_length=1, max_length=10)]
+
+    @model_validator(mode='after')
+    def exact_passage(self):
+        raw = json.dumps(self.model_dump(mode='json', exclude={'source_id'}),ensure_ascii=False,sort_keys=True,separators=(',', ':'))
+        if (not self.text.strip() or hashlib.sha256(self.text.encode('utf-8')).hexdigest() != self.quote_sha256
+                or hashlib.sha256(raw.encode('utf-8')).hexdigest() != self.source_id
+                or (self.origin == 'public_law') != (self.review_state == 'unverified_mirror')):
+            raise ValueError('KNOWLEDGE_PASSAGE_INVALID')
+        return self
+
+
+class KnowledgeSearchRecord(DomainModel):
+    origin: KnowledgeOrigin
+    query: Annotated[NonEmpty, Field(max_length=300)]
+    state: Literal['searched', 'no_match']
+    source_count: NonNegativeInt
+    original_documents: NonNegativeInt | None = None
+    index_sha256: SHA256
+    source_reference: Annotated[NonEmpty, Field(max_length=2048)]
+
+
+class KnowledgePacket(DomainModel):
+    searches: Annotated[tuple[KnowledgeSearchRecord, ...], Field(max_length=3)]
+    passages: Annotated[tuple[KnowledgePassage, ...], Field(max_length=8)]
+
+    @model_validator(mode='after')
+    def traced_passages(self):
+        origins = {item.origin:item for item in self.searches}
+        if (len(origins) != len(self.searches) or len({item.source_id for item in self.passages}) != len(self.passages)
+                or any(item.origin not in origins or origins[item.origin].index_sha256 != item.index_sha256
+                    or origins[item.origin].state != 'searched' for item in self.passages)
+                or any((item.state == 'searched') != any(p.origin == item.origin for p in self.passages) for item in self.searches)):
+            raise ValueError('KNOWLEDGE_PACKET_INVALID')
+        return self
+
+
+HearingStage = Literal['issues', 'evidence', 'questions', 'debate', 'review']
+HearingRole = Literal['plaintiff', 'defendant', 'moderator', 'reviewer']
+
+
+class HearingTurn(DomainModel):
+    stage: HearingStage
+    role: HearingRole
+    text: Annotated[NonEmpty, Field(max_length=2000)]
+    material_ids: Annotated[tuple[SHA256, ...], Field(min_length=1, max_length=20)]
+    unresolved: Annotated[tuple[Annotated[NonEmpty, Field(max_length=500)], ...], Field(min_length=1, max_length=10)]
+    knowledge_ids: tuple[SHA256, ...] = Field(default=(), max_length=8, exclude_if=lambda value: not value)
+
+
+class HearingStoredTurn(HearingTurn):
+    case_id: UUID
+    source_cards: Annotated[tuple[KnowledgePassage, ...], Field(max_length=8)] = ()
+    synthetic: StrictBool
+    human_review: None = None
+
+
+class HearingMaterial(DomainModel):
+    id: SHA256
+    relative_path: Annotated[NonEmpty, Field(max_length=80)]
+    sha256: SHA256
+
+
+class HearingSession(DomainModel):
+    schema_version: Literal[2]
+    case_id: UUID
+    procedure: Literal['civil_first_instance']
+    our_role: Literal['plaintiff', 'defendant']
+    materials: Annotated[tuple[HearingMaterial, ...], Field(min_length=1, max_length=100)]
+    synthetic: StrictBool
+    human_review: None = None
+    manifest_sha256: SHA256
+    content_sha256: SHA256
+    turns: Annotated[tuple[HearingStoredTurn, ...], Field(max_length=20)]
+    stage: HearingStage
+    completed: StrictBool
+
+    @model_validator(mode='after')
+    def snapshot_hashes(self):
+        value = self.model_dump(mode='json')
+        digest = lambda obj: hashlib.sha256(json.dumps(obj, ensure_ascii=False, sort_keys=True,
+            separators=(',', ':')).encode('utf-8')).hexdigest()
+        packet = {key:value[key] for key in ('case_id', 'procedure', 'our_role', 'materials', 'synthetic', 'human_review')}
+        if (self.manifest_sha256 != digest(packet)
+                or self.content_sha256 != digest({key:val for key,val in value.items() if key != 'content_sha256'})):
+            raise ValueError('HEARING_SNAPSHOT_INVALID')
+        return self
+
+
+class HearingContext(DomainModel):
+    our_role: Literal['plaintiff', 'defendant']
+    synthetic: StrictBool
+    stage: HearingStage
+    roles: Annotated[tuple[HearingRole, ...], Field(min_length=1, max_length=3)]
+    previous_output_id: UUID | None = None
+    previous_session: HearingSession | None = None
+    reset_reason: Literal['materials_changed', 'method_changed'] | None = None
+
+
+class HearingResult(DomainModel):
+    session: HearingSession
+    structural_completed: StrictBool
+    notice: Annotated[NonEmpty, Field(max_length=2000)]
+
+
+class CaseMethodSnapshot(DomainModel):
+    method_id: Literal['case-evidence-v1', 'case-evidence-v2', 'case-evidence-v3',
+        'case-evidence-v4', 'case-evidence-v5']
+    method_sha256: SHA256
+
+
+class CriminalMethodSource(DomainModel):
+    method_id: Literal['case_analysis', 'defense_strategy']
+    method_sha256: SHA256
+    source_reference: Annotated[NonEmpty, Field(max_length=2048)]
+    license_notice: Annotated[NonEmpty, Field(max_length=2000)]
+
+
+class CriminalMethodSnapshot(DomainModel):
+    method_id: Literal['criminal-analysis-v1']
+    method_sha256: SHA256
+    method_sources: Annotated[tuple[CriminalMethodSource, ...], Field(min_length=1, max_length=2)]
+    stage: Literal['unknown', 'investigation', 'prosecution', 'trial']
+    stage_source_id: SHA256 | None
+    material_policy: Literal['synthetic-only-v1']
+
+    @model_validator(mode='after')
+    def stage_binding(self):
+        if ((self.stage == 'unknown') != (self.stage_source_id is None)
+                or tuple(s.method_id for s in self.method_sources) not in (
+                    ('case_analysis',), ('case_analysis', 'defense_strategy'))):
+            raise ValueError('CRIMINAL_METHOD_INVALID')
+        return self
+
+
+ContractReviewMethod = Literal['general', 'nda', 'vendor']
+ContractReviewRisk = Literal['low', 'medium', 'high', 'unknown']
+
+
+class ContractMethodSource(DomainModel):
+    method_id: ContractReviewMethod
+    method_sha256: SHA256
+    source_reference: Annotated[NonEmpty, Field(max_length=2048)]
+    license_notice: Annotated[NonEmpty, Field(max_length=2000)]
+
+
+class ContractReviewRoute(DomainModel):
+    attachment_id: UUID
+    methods: Annotated[tuple[ContractReviewMethod, ...], Field(max_length=3)]
+    evidence_source_ids: Annotated[tuple[SHA256, ...], Field(max_length=40)]
+    uncovered: Annotated[tuple[Literal['saas', 'dpa'], ...], Field(max_length=2)]
+
+
+class ContractMethodSnapshot(DomainModel):
+    method_id: Literal['contract-review-v1', 'contract-review-v2', 'contract-review-v3']
+    method_sha256: SHA256
+    method_sources: Annotated[tuple[ContractMethodSource, ...], Field(min_length=1, max_length=3)]
+    routes: Annotated[tuple[ContractReviewRoute, ...], Field(min_length=1, max_length=20)]
+    playbook_status: Literal['unavailable'] = 'unavailable'
+
+
+class TrademarkMethodSnapshot(DomainModel):
+    method_id: Literal['trademark-triage-v1', 'trademark-triage-v2', 'trademark-triage-v3', 'trademark-triage-v4', 'trademark-triage-v5', 'trademark-triage-v6']
+    method_sha256: SHA256
+    source_reference: Annotated[NonEmpty, Field(max_length=2048)]
+    license_notice: Annotated[NonEmpty, Field(max_length=2000)]
+    right_type: Literal['trademark']
+
+
+MaterialHistoryFormat = Literal['contract-full-text-v1']
+CONTRACT_HISTORY_BYTES = 65536
+
+
 class MainMaterialManifest(DomainModel):
     input_format: Literal['material-business-v1'] = 'material-business-v1'
     workflow: BusinessWorkflow
@@ -5493,18 +5800,45 @@ class MainMaterialManifest(DomainModel):
     materials: Annotated[tuple[MainMaterialFile, ...], Field(max_length=20)]
     sources: Annotated[tuple[MainMaterialSource, ...], Field(min_length=1, max_length=2000)]
     conversation_history: ConversationHistory = Field(default=(), exclude_if=lambda value: not value)
+    history_format: MaterialHistoryFormat | None = Field(default=None, exclude_if=lambda value: value is None)
+    capability: CapabilityInvocation | None = Field(default=None, exclude_if=lambda value: value is None)
+    hearing: HearingContext | None = Field(default=None, exclude_if=lambda value: value is None)
+    knowledge: KnowledgePacket | None = Field(default=None, exclude_if=lambda value: value is None)
+    case_method: CaseMethodSnapshot | None = Field(default=None, exclude_if=lambda value: value is None)
+    contract_review: ContractMethodSnapshot | None = Field(default=None, exclude_if=lambda value: value is None)
+    criminal_analysis: CriminalMethodSnapshot | None = Field(default=None, exclude_if=lambda value: value is None)
+    trademark_triage: TrademarkMethodSnapshot | None = Field(default=None, exclude_if=lambda value: value is None)
 
     @model_validator(mode='after')
     def exact_material_selection(self):
+        if self.trademark_triage is not None and (self.workflow != 'case' or any(
+                method is not None for method in (self.case_method, self.criminal_analysis, self.contract_review))):
+            raise ValueError('TRADEMARK_METHOD_WORKFLOW_INVALID')
+        if self.criminal_analysis is not None and (self.workflow != 'case' or self.case_method is not None):
+            raise ValueError('CRIMINAL_METHOD_WORKFLOW_INVALID')
+        if self.case_method is not None and self.workflow != 'case':
+            raise ValueError('CASE_METHOD_WORKFLOW_INVALID')
+        if self.contract_review is not None and self.workflow != 'contract':
+            raise ValueError('CONTRACT_METHOD_WORKFLOW_INVALID')
+        if self.capability is not None and self.capability.workflow != self.workflow:
+            raise ValueError('CAPABILITY_WORKFLOW_MISMATCH')
+        if (self.hearing is not None) != bool(self.capability and self.capability.kind == 'local_adapter'):
+            raise ValueError('HEARING_CONTEXT_INVALID')
         messages = [item for item in self.sources if isinstance(item.reference, ProfileMessageRef)]
         current = messages[0].reference if messages else None
-        _conversation_history(self.conversation_history, current.source_revision - 1 if current else 0)
+        if self.history_format is not None and self.workflow != 'contract':
+            raise ValueError('MATERIAL_HISTORY_FORMAT_INVALID')
+        _conversation_history(self.conversation_history, current.source_revision - 1 if current else 0,
+            byte_limit=CONTRACT_HISTORY_BYTES if self.history_format is not None else 32768)
         context = messages[1:]
         if context:
-            if (self.workflow != 'court' or len(context) > 8
-                    or len({item.reference.message_id for item in messages}) != len(messages)
-                    or any(item.reference.source_revision >= current.source_revision for item in context)
-                    or len(json.dumps([item.model_dump(mode='json') for item in context], ensure_ascii=False, separators=(',', ':')).encode('utf-8'))
+            contract_stance = (self.workflow == 'contract' and self.contract_review is not None
+                and self.contract_review.method_id == 'contract-review-v3')
+            if (len({item.reference.message_id for item in messages}) != len(messages)
+                    or any(item.reference.source_revision >= current.source_revision
+                        or item.reference.conversation_id != current.conversation_id for item in context)
+                    or (len(context) != 1 if contract_stance else self.workflow != 'court' or len(context) > 8)
+                    or not contract_stance and len(json.dumps([item.model_dump(mode='json') for item in context], ensure_ascii=False, separators=(',', ':')).encode('utf-8'))
                         + len(json.dumps([item.model_dump(mode='json') for item in self.conversation_history], ensure_ascii=False, separators=(',', ':')).encode('utf-8')) > 32768):
                 raise ValueError('MATERIAL_MANIFEST_INVALID')
         files = {item.attachment_id:item for item in self.materials}
@@ -5563,12 +5897,225 @@ class MainMaterialPreparedInput(DomainModel):
         return self
 
 
+CaseEvidenceId = Annotated[str, StringConstraints(strict=True, pattern=r'^[A-Za-z0-9_-]{1,32}$')]
+CaseEvidenceIds = Annotated[tuple[CaseEvidenceId, ...], Field(max_length=40)]
+CaseEvidenceNotes = Annotated[tuple[Annotated[NonEmpty, Field(max_length=1000)], ...], Field(max_length=20)]
+
+
+class CaseEvidenceQuote(DomainModel):
+    id: CaseEvidenceId
+    source_id: SHA256
+    start: NonNegativeInt
+    end: PositiveInt
+    exact_quote: Annotated[NonEmpty, Field(max_length=2000)]
+
+
+class CaseEvidenceStatement(DomainModel):
+    kind: Literal['source_statement', 'inference', 'legal_analysis', 'proposed_text']
+    text: Annotated[NonEmpty, Field(max_length=2000)]
+    support: CaseEvidenceIds
+    opposing: CaseEvidenceIds
+    unresolved: CaseEvidenceNotes
+
+
+class CaseTimelineEvent(DomainModel):
+    id: CaseEvidenceId
+    event_text: Annotated[NonEmpty, Field(max_length=1000)]
+    raw_date: Annotated[str, StringConstraints(strict=True, max_length=100)]
+    quote_ids: Annotated[CaseEvidenceIds, Field(min_length=1)]
+    conflict_group: CaseEvidenceId | None
+    uncertainty: Annotated[NonEmpty, Field(max_length=1000)]
+
+
+class CaseEvidenceDraft(DomainModel):
+    format_version: Literal['case-evidence-v1']
+    quotes: Annotated[tuple[CaseEvidenceQuote, ...], Field(min_length=1, max_length=40)]
+    statements: Annotated[tuple[CaseEvidenceStatement, ...], Field(max_length=30)]
+    timeline: Annotated[tuple[CaseTimelineEvent, ...], Field(max_length=40)]
+    gaps: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+    @model_validator(mode='after')
+    def references(self):
+        quotes = {q.id:q for q in self.quotes}
+        if (len(quotes) != len(self.quotes) or not (self.statements or self.timeline)
+                or len({e.id for e in self.timeline}) != len(self.timeline)):
+            raise ValueError('CASE_EVIDENCE_INVALID')
+        used = set()
+        for item in self.statements:
+            refs = (*item.support, *item.opposing)
+            if (item.kind == 'source_statement' and not item.support
+                    or item.kind in {'inference', 'legal_analysis'} and not item.unresolved
+                    or len(set(refs)) != len(refs) or not set(refs) <= quotes.keys()):
+                raise ValueError('CASE_EVIDENCE_INVALID')
+            used.update(refs)
+        for item in self.timeline:
+            if len(set(item.quote_ids)) != len(item.quote_ids) or not set(item.quote_ids) <= quotes.keys():
+                raise ValueError('CASE_EVIDENCE_INVALID')
+            if item.raw_date and not any(item.raw_date in quotes[key].exact_quote for key in item.quote_ids):
+                raise ValueError('CASE_EVIDENCE_DATE_INVALID')
+            used.update(item.quote_ids)
+        if used != quotes.keys():
+            raise ValueError('CASE_EVIDENCE_INVALID')
+        return self
+
+
+class CriminalEvidenceItem(DomainModel):
+    id: CaseEvidenceId
+    category: Literal['conviction', 'sentencing', 'authenticity', 'legality']
+    topic: Literal['general', 'restitution']
+    claim: Annotated[NonEmpty, Field(max_length=1000)]
+    support: Annotated[CaseEvidenceIds, Field(min_length=1)]
+    opposing: CaseEvidenceIds
+    unresolved: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+
+class CriminalElementAnalysis(DomainModel):
+    title: Annotated[NonEmpty, Field(max_length=200)]
+    prosecution: Annotated[NonEmpty, Field(max_length=1000)]
+    defense: Annotated[NonEmpty, Field(max_length=1000)]
+    evidence_ids: CaseEvidenceIds
+    unresolved: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+
+class CriminalStrategy(DomainModel):
+    kind: Literal['elements', 'sentencing', 'investigation', 'non_prosecution']
+    analysis: Annotated[NonEmpty, Field(max_length=1000)]
+    evidence_ids: CaseEvidenceIds
+    unresolved: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+
+class CriminalAnalysisDraft(DomainModel):
+    format_version: Literal['criminal-analysis-v1']
+    quotes: Annotated[tuple[CaseEvidenceQuote, ...], Field(min_length=1, max_length=40)]
+    evidence: Annotated[tuple[CriminalEvidenceItem, ...], Field(min_length=1, max_length=30)]
+    timeline: Annotated[tuple[CaseTimelineEvent, ...], Field(max_length=30)]
+    elements: Annotated[tuple[CriminalElementAnalysis, ...], Field(max_length=12)]
+    strategies: Annotated[tuple[CriminalStrategy, ...], Field(max_length=12)]
+    gaps: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+
+class ContractReviewFinding(DomainModel):
+    title: Annotated[NonEmpty, Field(max_length=200)]
+    quote_ids: Annotated[CaseEvidenceIds, Field(min_length=1)]
+    standard_position: Annotated[NonEmpty, Field(max_length=1000)]
+    gap: Annotated[NonEmpty, Field(max_length=1000)]
+    legal_risk: ContractReviewRisk
+    commercial_friction: ContractReviewRisk
+    replacement: Annotated[NonEmpty, Field(max_length=2000)]
+    fallback: Annotated[NonEmpty, Field(max_length=1000)]
+
+
+class ContractReviewSection(DomainModel):
+    attachment_id: UUID
+    method_id: ContractReviewMethod
+    summary: Annotated[NonEmpty, Field(max_length=1000)]
+    findings: Annotated[tuple[ContractReviewFinding, ...], Field(min_length=1, max_length=10)]
+
+
+class ContractReviewDraft(DomainModel):
+    format_version: Literal['contract-review-v1']
+    stance: Literal['supplier', 'customer', 'discloser', 'recipient', 'mutual', 'unknown']
+    stance_quote_ids: CaseEvidenceIds
+    quotes: Annotated[tuple[CaseEvidenceQuote, ...], Field(min_length=1, max_length=40)]
+    reviews: Annotated[tuple[ContractReviewSection, ...], Field(min_length=1, max_length=60)]
+    gaps: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+
+class TrademarkObservation(DomainModel):
+    text: Annotated[NonEmpty, Field(max_length=1000)]
+    quote_ids: Annotated[CaseEvidenceIds, Field(min_length=1)]
+
+
+class TrademarkFactor(DomainModel):
+    kind: Literal['rights_basis', 'sign_similarity', 'goods_services', 'relevant_public',
+        'distinctiveness', 'intent', 'actual_confusion', 'market_overlap']
+    holder: Annotated[tuple[TrademarkObservation, ...], Field(max_length=5)]
+    respondent: Annotated[tuple[TrademarkObservation, ...], Field(max_length=5)]
+    unresolved: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+
+class TrademarkTriageDraft(DomainModel):
+    format_version: Literal['trademark-triage-v1']
+    quotes: Annotated[tuple[CaseEvidenceQuote, ...], Field(min_length=1, max_length=40)]
+    factors: Annotated[tuple[TrademarkFactor, ...], Field(min_length=8, max_length=8)]
+    gaps: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+
+class TrademarkFactorV2(TrademarkFactor):
+    neutral: Annotated[tuple[TrademarkObservation, ...], Field(max_length=10)]
+
+
+class TrademarkTriageDraftV2(DomainModel):
+    format_version: Literal['trademark-triage-v2']
+    quotes: Annotated[tuple[CaseEvidenceQuote, ...], Field(min_length=1, max_length=40)]
+    factors: Annotated[tuple[TrademarkFactorV2, ...], Field(min_length=8, max_length=8)]
+    gaps: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+
+TrademarkSupportSlot = Literal['issuer', 'speaker', 'actor', 'object', 'event_time', 'report_time', 'record_time']
+
+
+class TrademarkSourceSpan(DomainModel):
+    quote_id: CaseEvidenceId
+    start: NonNegativeInt
+    end: PositiveInt
+
+
+class TrademarkSourceStatement(DomainModel):
+    id: CaseEvidenceId
+    quote_ids: Annotated[CaseEvidenceIds, Field(min_length=1, max_length=8)]
+    issuer: TrademarkSourceSpan | None
+    speaker: TrademarkSourceSpan | None
+    actor: TrademarkSourceSpan | None
+    object: TrademarkSourceSpan | None
+    event_time: TrademarkSourceSpan | None
+    report_time: TrademarkSourceSpan | None
+    record_time: TrademarkSourceSpan | None
+
+
+class TrademarkSupportDependency(DomainModel):
+    statement_id: CaseEvidenceId
+    slot: TrademarkSupportSlot
+
+
+class TrademarkSupportObservation(DomainModel):
+    text: Annotated[NonEmpty, Field(max_length=1000)]
+    statement_ids: Annotated[CaseEvidenceIds, Field(min_length=1, max_length=8)]
+    relation: Literal['recorded', 'conditional_inference', 'comparison']
+    dependencies: Annotated[tuple[TrademarkSupportDependency, ...], Field(max_length=24)]
+
+
+class TrademarkFactorV3(DomainModel):
+    kind: Literal['rights_basis', 'sign_similarity', 'goods_services', 'relevant_public',
+        'distinctiveness', 'intent', 'actual_confusion', 'market_overlap']
+    holder: Annotated[tuple[TrademarkSupportObservation, ...], Field(max_length=5)]
+    respondent: Annotated[tuple[TrademarkSupportObservation, ...], Field(max_length=5)]
+    neutral: Annotated[tuple[TrademarkSupportObservation, ...], Field(max_length=10)]
+    unresolved: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+
+class TrademarkTriageDraftV3(DomainModel):
+    format_version: Literal['trademark-triage-v3']
+    quotes: Annotated[tuple[CaseEvidenceQuote, ...], Field(min_length=1, max_length=40)]
+    source_statements: Annotated[tuple[TrademarkSourceStatement, ...], Field(min_length=1, max_length=40)]
+    factors: Annotated[tuple[TrademarkFactorV3, ...], Field(min_length=8, max_length=8)]
+    gaps: Annotated[CaseEvidenceNotes, Field(min_length=1)]
+
+
 class MainMaterialCandidate(DomainModel):
     text: AssistantText
     citations: Annotated[tuple[SHA256, ...], Field(min_length=1, max_length=100)]
+    hearing_turns: tuple[HearingTurn, ...] = Field(default=(), max_length=3, exclude_if=lambda value: not value)
+    case_evidence: CaseEvidenceDraft | None = Field(default=None, exclude_if=lambda value: value is None)
+    contract_review: ContractReviewDraft | None = Field(default=None, exclude_if=lambda value: value is None)
+    criminal_analysis: CriminalAnalysisDraft | None = Field(default=None, exclude_if=lambda value: value is None)
+    trademark_triage: TrademarkTriageDraft | TrademarkTriageDraftV2 | TrademarkTriageDraftV3 | None = Field(default=None, exclude_if=lambda value: value is None)
 
     @model_validator(mode='after')
     def unique_citations(self):
+        if self.trademark_triage is not None and any(method is not None for method in (
+                self.case_evidence, self.criminal_analysis, self.contract_review)):
+            raise ValueError('TRADEMARK_OUTPUT_INVALID')
         if not self.text.strip() or len(set(self.citations)) != len(self.citations):
             raise ValueError('MATERIAL_OUTPUT_INVALID')
         return self
@@ -5581,6 +6128,7 @@ class MainMaterialReply(MainReply):
 class MainMaterialOutputView(MainOutputView):
     candidate: MainMaterialCandidate
     manifest: MainMaterialManifest
+    hearing: HearingResult | None = Field(default=None, exclude_if=lambda value: value is None)
 
 
 class MainMaterialAttemptView(MainAttemptView):

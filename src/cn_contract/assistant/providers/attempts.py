@@ -102,7 +102,11 @@ def read_attempt(actor, identifier, db):
         state=row['state'], reserved_usd=row['reserved_usd'],
         receipt=_model(d.MainReceipt, usage) if usage else None)
     if isinstance(prepared, d.MainMaterialPreparedInput):
-        return validated(d.MainMaterialAttemptView, dict(values, output=_model(d.MainMaterialOutputView, output) if output else None))
+        view = _model(d.MainMaterialOutputView, output) if output else None
+        if view is not None:
+            from ..material_integrity import validate_output
+            validate_output(view, prepared)
+        return validated(d.MainMaterialAttemptView, dict(values, output=view))
     if isinstance(prepared, d.MainProfilePreparedInput):
         from .profile_history import read_save
         view = _model(d.MainProfileOutputView, output) if output else None

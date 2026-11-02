@@ -85,7 +85,8 @@ def test_all_four_workflows_send_exact_selected_materials_once_and_validate_arch
     selection = selection_for(w, workflow)
     basis = material_preparation.preview(actor, selection, database, config())
     assert len(basis.manifest.sources) == 3
-    with server(response(basis)) as (url, received, _):
+    from tests.helpers.contract_review import response as contract_response
+    with server(contract_response(basis) if workflow == 'contract' else response(basis)) as (url, received, _):
         async def scenario():
             registry, lease, approved = grant(w, selection, DeepSeekProvider.for_synthetic_loopback(config(), lambda:KEY, url), budget)
             with database.session() as db:

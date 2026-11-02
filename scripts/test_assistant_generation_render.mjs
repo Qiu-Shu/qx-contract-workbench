@@ -60,6 +60,25 @@ const messages=()=>[{id:mid,role:'user',content:'第一段原文\n第二行'},{i
 const withResults=(items=[item(),item(mid2)])=>state({view:{scope:{conversation_id:cid,scope_kind:'conversation'},messages:messages()},
   generation:{phase:'idle',capability:{state:'ready'},canSend:true,items,error:null}});
 
+test('matter overview reflects saved output sources and clears on revocation or scope switch',t=>{
+  const f=fixture(t),value=item();
+  value.attempt.scope.scope_kind='conversation';
+  value.attempt.output.manifest={capability:{source_id:'chiheng-legal-workbench',version:'synthetic-1'},knowledge:{passages:[{origin:'public_law'}]}};
+  const s=withResults([value]);s.materials={items:[{attachment_id:'one',parse_revision:2}],attachments:[]};
+  f.render.state(s);assert.match(f.at('matter-overview-content').textContent,/持衡模拟法庭/);
+  assert.match(f.at('matter-overview-content').textContent,/synthetic-1/);
+  assert.match(f.at('matter-overview-content').textContent,/1 条.*待核验/);
+  s.status='revoked';f.render.state(s);assert.doesNotMatch(f.at('matter-overview-content').textContent,/持衡|synthetic-1/);
+  s.status='saved';s.view.scope={...s.view.scope,conversation_id:'other'};f.render.state(s);
+  assert.doesNotMatch(f.at('matter-overview-content').textContent,/持衡|synthetic-1/);
+});
+
+test('selected capability alone is not shown as an actual source call',t=>{
+  const f=fixture(t);f.render.state(state({skill:'mock_trial'}));
+  assert.match(f.at('matter-overview-content').textContent,/尚无.*模型成果/);
+  assert.doesNotMatch(f.at('matter-overview-content').textContent,/已采用|持衡模拟法庭/);
+});
+
 test('send follows the generation gate and existing draft/readonly guards',t=>{
   const f=fixture(t);f.render.state(state());assert.equal(f.at('send').disabled,false);
   for(const overrides of [{loading:true},{status:'saving'},{status:'conflict'},{status:'revoked'},{status:'readonly'},{skill:'client_reply'}]) {
@@ -274,4 +293,17 @@ test('material input cap rejection explains complete material size before any at
   f.render.state(s);
   assert.match(f.at('history').textContent,/完整材料.*输入上限/);
   assert.doesNotMatch(f.at('history').textContent,/生成状态未能确认/);
+});
+
+test('history capacity rejection preserves the task and explains why continuation stopped',t=>{
+  const f=fixture(t),s=state();s.view.scope.materials_revision=1;
+  s.view.messages=[{id:mid,role:'user',content:'继续审查独立虚构合同'}];
+  s.materials={items:[{attachment_id:'file',parse_revision:1}],attachments:[]};
+  s.business={items:[{run_id:'parent',message_id:mid,task_id:'task',workflow:'contract',
+    scope:{input_revision:1,materials_revision:1},text:'补件归集完成'}]};
+  s.materialGeneration={phase:'idle',available:true,error:{code:'MATERIAL_HISTORY_TOO_LARGE'}};
+  f.render.state(s);
+  assert.match(f.at('history').textContent,/上一轮.*成果.*完整承接/);
+  assert.match(f.at('history').textContent,/任务.*材料.*成果.*保留/);
+  assert.doesNotMatch(f.at('history').textContent,/生成状态未能确认|减少所选材料|新建对话/);
 });

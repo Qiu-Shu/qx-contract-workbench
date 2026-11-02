@@ -20,7 +20,8 @@ export function bindPersonalWeixin({controller,bridge,document=globalThis.docume
     at('origin').hidden=!latest;
     if(latest){at('origin').href='/assistant/'+latest.conversation_id;at('origin').textContent='打开最新活动事项';}
     const stages={collecting:'收集中',held:'等待补充',clarify:'待澄清',waiting:'等待处理',routed:'已关联事项',executing:'分析中',completed:'已完成'};
-    at('batches').textContent=batches.length?'最近收件：'+(stages[batches[0].state]||'待核对')+' · '+batches.length+' 批':'尚无本次连接收件。';
+    let batchNotice='';try{const value=JSON.parse(batches[0]?.decision_json||'{}').notice;if(typeof value==='string')batchNotice=value.slice(0,120);}catch{}
+    at('batches').textContent=batches.length?'最近收件：'+(stages[batches[0].state]||'待核对')+' · '+batches.length+' 批'+(batchNotice?' · '+batchNotice:''):'尚无本次连接收件。';
     at('judge').textContent=!known?'辅助判断状态待核对':jevAvailable?'Jev 辅助已配置 · 凭据有效性尚待实际请求核对':'Jev 未启用 · 使用本地规则';
     at('scope').textContent=connection?'微信连接当前工作区，切换聊天仍保持连接。'+
       (connection.automatic?' 收齐材料后自动分析。':' 自动分析已关闭；只接收材料。'):

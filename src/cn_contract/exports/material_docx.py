@@ -20,7 +20,14 @@ def build(output):
         notes.append('本次仅依据已保存的咨询文字，未使用附件。')
     sources = {item.source_id:item.reference for item in manifest.sources}
     citations = []
+    knowledge = {item.source_id:item for item in manifest.knowledge.passages} if manifest.knowledge else {}
     for identifier in output.candidate.citations:
+        if identifier in knowledge:
+            item = knowledge[identifier]
+            citations.append(f'[{identifier}] 参考资料（未核验）：{item.source_name} · {item.locator}\n'
+                f'版本：{item.version}；原始内容 SHA256 {item.source_sha256}\n来源：{item.source_reference}\n'
+                + '\n'.join(item.source_urls) + f'\n摘录：{item.text}\n' + '；'.join(item.limitations))
+            continue
         reference = sources[identifier]
         if isinstance(reference, d.ProfileDocumentRef):
             anchor = reference.anchor

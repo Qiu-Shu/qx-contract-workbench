@@ -2,7 +2,7 @@ import {createMaterialGenerationController} from './assistant-material-generatio
 import {createGenerationController,isAuthorizationError} from './assistant-generation.mjs';
 import {createResearchController} from './assistant-research.mjs';
 import {createContextController} from './assistant-context.mjs';
-import {createBusinessController} from './assistant-business.mjs';
+import {createBusinessController,negativeBusinessInstruction} from './assistant-business.mjs';
 
 // This controller stores only the current page in memory; the server owns revisions.
 const scopeKeys = ['workspace_id', 'conversation_id', 'scope_kind', 'scope_ref',
@@ -346,6 +346,7 @@ export function createDraftController(api, {
   }
   async function sendWithIntake(){
     if(intakePending)return false;
+    if(negativeBusinessInstruction(state.text||''))return sendCurrent();
     if(!automaticIntake||!api.assistJudge||readonly||state.status==='revoked'||!state.text.trim()||
         ['generation','research','context','business','materialGeneration'].some(key=>['checking','confirming','submitting','unknown'].includes(state[key]?.phase)))return sendCurrent();
     const marker={},token=epoch,revision=intakeRevision;
@@ -355,6 +356,7 @@ export function createDraftController(api, {
       let automatic=false;try{automatic=await automaticIntake();}catch{}
       if(!automatic){if(!valid())return false;return await sendCurrent();}
       if(!valid()||!await save(false,true)||!valid())return false;
+      if(negativeBusinessInstruction(state.text||''))return false;
       const text=state.text,scope={...state.view.scope},composer=state.view.composer_revision;
       let reply;
       try{reply=await api.assistJudge({expected_scope:scope,purpose:'service_intake',text:text.slice(0,12000)});}catch(error){
@@ -372,6 +374,8 @@ export function createDraftController(api, {
     }finally{if(intakePending===marker)intakePending=null;}
   }
   function sendCurrent(){
+    if(negativeBusinessInstruction(state.text||'')&&![materialGeneration,business,research,generation,context].some(work=>work.unknown()))
+      return save(false,true).then(()=>false);
     return materialGeneration.unknown()?materialGeneration.refresh():business.unknown()?sendBusiness():research.unknown()?research.send():generation.unknown()?generation.send():
       context.unknown()?context.send():business.handles()?sendBusiness():state.skill==='legal_research'?research.send():
       !state.skill&&state.context?.selected.length?context.send():generation.send();

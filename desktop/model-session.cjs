@@ -1,4 +1,4 @@
-const {validMaterialBasis}=require('./material-basis.cjs');
+const {validMaterialBasis,MATERIAL_ERRORS}=require('./material-basis.cjs');
 const {canonicalProfileBasis}=require('./profile-basis.cjs');
 const MODELS=new Map([
   ['deepseek-flash',['0.3','1.2']],
@@ -7,7 +7,7 @@ const MODELS=new Map([
 const CREDENTIAL_CODES=new Set(['CREDENTIAL_INPUT_INVALID','CREDENTIAL_PATH_UNSAFE','CREDENTIAL_CORRUPT',
   'CREDENTIAL_STORAGE_UNAVAILABLE','CREDENTIAL_STORAGE_FAILED','CREDENTIAL_ROTATION_REQUIRED']);
 const CONTROL_CODES=new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT',
-  'BUDGET_EXCEEDED','CROSS_MATTER_DENIED','MATERIAL_INPUT_TOO_LARGE']);
+  'BUDGET_EXCEEDED','CROSS_MATTER_DENIED',...MATERIAL_ERRORS]);
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const exact=(value,fields)=>value && typeof value==='object' && !Array.isArray(value) &&
   Object.keys(value).length===fields.length && fields.every(field=>Object.hasOwn(value,field));
@@ -252,7 +252,7 @@ function createModelSession({store,getBackend,getWorkspace=()=>null,onFailure=()
       return profileStatus===null ? okay() : {ok:true,status:profileStatus};
     }catch(error){
       if(flight)await flight;
-      await revoke();return rejected(error?.code==='MATERIAL_INPUT_TOO_LARGE'?error.code:'BLOCKED_LIVE');
+      await revoke();return rejected(MATERIAL_ERRORS.includes(error?.code)?error.code:'BLOCKED_LIVE');
     }finally{open=false;active=false;}
   }
   return Object.freeze({

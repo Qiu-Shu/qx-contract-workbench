@@ -1,7 +1,50 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {createBusinessController,businessWorkflow} from '../src/cn_contract/web/static/assistant-business.mjs';
+import {createBusinessController,businessWorkflow,negativeBusinessInstruction} from '../src/cn_contract/web/static/assistant-business.mjs';
+import {readFileSync} from 'node:fs';
 import {createDraftController} from '../src/cn_contract/web/static/assistant-state.mjs';
+
+for(const example of JSON.parse(readFileSync(new URL('../tests/fixtures/business-intent-synthetic.json',import.meta.url),'utf8'))){
+  test('shared command boundary: '+example.text,()=>{
+    assert.equal(businessWorkflow({text:example.text,materials:{items:[{}]}}),example.workflow);
+    assert.equal(negativeBusinessInstruction(example.text),example.blocked);
+  });
+}
+
+// No skill selection and no materials: the shared scope fixture alone decides routing.
+for(const example of JSON.parse(readFileSync(new URL('../tests/fixtures/current-command-reported-prefix-synthetic.json',import.meta.url),'utf8'))){
+  test('reported prefix boundary: '+example.text,()=>{
+    assert.equal(businessWorkflow({text:example.text}),example.workflow);
+    assert.equal(negativeBusinessInstruction(example.text),example.blocked);
+    assert.equal(businessWorkflow({text:example.text,business:{selectedTask:'old',items:[{task_id:'old'}]}}),example.with_task);
+    assert.equal(businessWorkflow({text:example.text,business:{items:[{task_id:'old'}]}}),example.with_task);
+  });
+}
+
+for(const name of ['current-command-scope-synthetic.json','current-command-denials-synthetic.json','current-command-quotes-synthetic.json','current-command-review-synthetic.json','current-command-data-synthetic.json'])
+for(const example of JSON.parse(readFileSync(new URL('../tests/fixtures/'+name,import.meta.url),'utf8'))){
+  test('current command scope: '+example.text,()=>{
+    assert.equal(businessWorkflow({text:example.text}),example.workflow==='ambiguous'?'clarify':example.workflow);
+    assert.equal(negativeBusinessInstruction(example.text),example.blocked);
+    if(example.blocked)assert.equal(businessWorkflow({text:example.text,materials:{items:[{}]},business:{selectedTask:'old',items:[{task_id:'old'}]}}),null);
+  });
+}
+
+test('current trademark and IP vocabulary routes to case and keeps 不做/不进行 negation',()=>{
+  for(const text of ['请做商标初筛','帮我分析商标侵权风险','知识产权侵权初筛'])
+    assert.equal(businessWorkflow({text}),'case');
+  for(const text of ['不做商标初筛','不进行知识产权初筛','不做商标侵权分析']){
+    assert.equal(businessWorkflow({text}),null);
+    assert.equal(negativeBusinessInstruction(text),true);
+  }
+});
+
+test('quoted punctuation stays inside the quotation and never becomes a command',()=>{
+  const quoted='客户说“合同审查：每件一万元。请审查合同。”';
+  assert.equal(businessWorkflow({text:quoted}),null);
+  assert.equal(negativeBusinessInstruction(quoted),true);
+  assert.equal(businessWorkflow({text:'请审查合同。报价“每件一万元。含税。”'}),'contract');
+});
 
 test('clear intents route without a module selection; ordinary chat stays ordinary',()=>{
   assert.equal(businessWorkflow({text:'帮我审查这个合同'}),'contract');
@@ -15,6 +58,19 @@ test('clear intents route without a module selection; ordinary chat stays ordina
   assert.equal(businessWorkflow({text:'我是甲方，帮我审查并给出最小修改建议',materials:{items:[{}]}}),'contract');
   assert.equal(businessWorkflow({text:'整理这个案件并起草起诉状'}),'case');
   assert.equal(businessWorkflow({text:'根据现有材料模拟开庭'}),'court');
+  assert.equal(businessWorkflow({text:'请理清诉求，准备下一步'}),'sales');
+  assert.equal(businessWorkflow({text:'案件整理：梳理事实与材料线索'}),'case');
+  assert.equal(businessWorkflow({text:'审查合同：核对原文，准备修改建议'}),'contract');
+  assert.equal(businessWorkflow({text:'庭审准备：从不同视角准备追问'}),'court');
+  for(const text of ['不需要理清诉求','无需案件整理','不要审查合同','取消庭审准备'])
+    assert.equal(businessWorkflow({text,materials:{items:[{}]},business:{items:[{task_id:'old'}]}}),null);
+  assert.equal(businessWorkflow({text:'不要审查合同，只整理材料',materials:{items:[{}]}}),'case');
+  for(const [text,workflow] of [
+    ['请理清诉求\n不需要理清诉求',null],['整理材料\n无需案件整理',null],
+    ['审查合同\n不要审查合同',null],['庭审准备\n取消庭审准备',null],
+    ['不需要理清诉求\n请理清诉求','sales'],['无需案件整理\n整理材料','case'],
+    ['不要审查合同\n审查合同','contract'],['取消庭审准备\n庭审准备','court'],
+  ])assert.equal(businessWorkflow({text,materials:{items:[{}]},business:{items:[{task_id:'old'}]}}),workflow);
 });
 
 function directFixture({unknown=false,canceled=false,onSave=null,onAuthorize=null,cancelledParent=false}={}) {
@@ -134,6 +190,24 @@ test('selected task follows an explicit restart and subsequent continuation',asy
   assert.equal(bodies[1].task_id,'new-task');
 });
 
+for(const [text,fresh] of [
+  ['不要新建任务，请整理材料。',false],['客户说“开始新任务”。请整理材料。',false],
+  ['若以后有需要，再新建任务。请整理材料。',false],['请新建任务整理材料。',true],
+])test('new task must be a current instruction: '+text,async()=>{
+  const scope={conversation_id:'c',input_revision:0};
+  const state={id:'c',text,view:{scope,composer_revision:0},status:'saved'};
+  const bodies=[];
+  const api={submitBusiness:async(cid,body)=>{bodies.push(body);return {run_id:'run',request_id:body.request_id,
+    task_id:fresh?'new-task':'old-task',workflow:'case',scope:{...scope,input_revision:1}};}};
+  const work=createBusinessController(api,{state,readonly:false,uuid:()=> 'key',notify:()=>{},token:()=>1,
+    current:()=>true,blocked:()=>false,saveDraft:async()=>true,refreshDraft:async()=>true,
+    accept:()=>{state.text='';},fail:()=>false});
+  state.business.items=[{task_id:'old-task',workflow:'case'}];work.select('old-task');
+  assert.equal(await work.send(),true);
+  assert.equal(Boolean(bodies[0].new_task),fresh);
+  assert.equal(bodies[0].task_id,fresh?undefined:'old-task');
+});
+
 test('attachment follow-up uses the only task and never chooses among several by recency',async()=>{
   for(const count of [1,2]){
     const state={id:'c',text:'把第二条修改得更简洁',view:{scope:{conversation_id:'c',input_revision:0},composer_revision:0},
@@ -194,6 +268,39 @@ test('desktop explicit send consumes four-workflow intake without readiness dela
   f.setAutomatic(true);assert.equal(await c.send(),true);
   assert.equal(f.businessBody.workflow,'court');assert.equal(c.state.intakeSuggestion.material_kind,'judgment');
 });
+test('desktop negative instruction cannot be revived by high-confidence Jev workflow',async()=>{
+  for(const workflow of ['sales','case','contract','court']){
+    const f=directFixture(),c=f.controller;await c.open('c');c.edit('不要审查合同');
+    f.api.assistJudge=async body=>({available:true,result:{status:'ok',scope:body.expected_scope,
+      answers:{readiness:{choice:'start',confidence:1},relation:{choice:'new',confidence:1},workflow:{choice:workflow,confidence:1}}}});
+    f.setAutomatic(true);await c.send();
+    assert.deepEqual(f.calls.filter(x=>['business','authorize','model'].includes(x)),[]);
+    assert.equal(f.businessBody,undefined);
+  }
+});
+test('held commands never reach Jev or generic generation with automatic intake on or off',async()=>{
+  for(const automatic of [false,true])for(const prompt of ['暂停','取消','停止','只接收材料','暂时不审查合同，只接收材料']){
+    const f=directFixture();await f.controller.open('c');f.setAutomatic(automatic);f.controller.edit(prompt);
+    f.api.assistJudge=async body=>{f.calls.push('Jev');return {available:true,result:{status:'ok',scope:body.expected_scope,
+      answers:{workflow:{choice:'contract',confidence:1}}}};};
+    f.api.submitGeneration=async()=>{f.calls.push('generic-model');throw {code:'SHOULD_NOT_CALL'};};
+    assert.equal(await f.controller.send(),false);
+    assert.deepEqual(f.calls,[]);assert.equal(f.controller.state.savedText,prompt);
+  }
+});
+
+test('hold added while saving never reaches auxiliary model',async()=>{
+  const f=directFixture({onSave:c=>c.edit('只接收材料')});await f.controller.open('c');f.setAutomatic(true);f.controller.edit('审查合同');
+  f.api.assistJudge=async()=>{f.calls.push('Jev');return {available:false};};
+  await f.controller.send();assert.deepEqual(f.calls,[]);
+});
+
+test('new hold text still permits lookup of an earlier unknown request without resend',async()=>{
+  const f=directFixture({unknown:true});await f.controller.open('c');f.controller.edit('审查合同');
+  assert.equal(await f.controller.send(),false);f.controller.edit('停止处理');
+  await f.controller.send();assert.deepEqual(f.calls,['business','authorize','model','lookup']);
+});
+
 test('desktop automatic OFF never calls Jev; explicit choice wins and late text edits discard assistance',async()=>{
   for(const automatic of [false,true]){
     const f=directFixture();await f.controller.open('c');f.setAutomatic(automatic);f.controller.edit('准备庭审应对');f.controller.selectSkill('contract_review');

@@ -40,6 +40,8 @@ def decide(content, candidates, *, reference=None):
         return d.ServiceRouteDecision(action='ack', notice='已连接，消息已收到。')
     if not content or readiness(content) in {'paused','cancelled'}:
         return d.ServiceRouteDecision(action='wait', notice='材料已保留，等待您发送完毕并说明处理要求。')
+    if business.negative_only(content):
+        return d.ServiceRouteDecision(action='wait', notice='已保留否定指令，不执行被取消的功能。')
     workflow = business.classify(content)
     workflow = None if workflow == 'ambiguous' else workflow
     explicit = [c for c in candidates if c['id'] == reference or c['id'] in content
@@ -50,7 +52,13 @@ def decide(content, candidates, *, reference=None):
             conversation_id=explicit[0]['id'], workflow=workflow)
     if new or not candidates and workflow:
         return d.ServiceRouteDecision(action='start', relation='new', workflow=workflow)
-    continuation = business.continuing(content) or any(x in content for x in ('这个', '这份', '上述', '接着', '开始', '庭审准备'))
+    lines=[line.strip() for line in content.splitlines() if line.strip()]
+    latest=lines[-1] if lines else ''
+    continuation = business.continuing(latest) or any(x in latest for x in ('这个', '这份', '上述', '接着', '庭审准备'))
+    if readiness(latest)=='collecting':
+        # A release confirms readiness; an earlier explicit continuation binds the matter.
+        continuation = continuation or any(re.match(r'^(?:请)?(?:继续|接着)', line)
+            for line in lines[:-1])
     if len(candidates) == 1 and continuation:
         return d.ServiceRouteDecision(action='start', relation='existing',
             conversation_id=candidates[0]['id'], workflow=workflow)

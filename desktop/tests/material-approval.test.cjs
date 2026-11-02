@@ -29,6 +29,55 @@ function basisFor(input){
     wire_sha256:'0'.repeat(64),wire_bytes:512};
 }
 
+const sourceMethod=()=>({workflow:'case',kind:'local_skill',source_id:'synthetic-family',version:'0.2.0',
+  source_reference:'synthetic-fixture',license_notice:'Synthetic test only',method_source:'skills/instructions/SKILL.md',
+  method_sha256:'1'.repeat(64),metadata_sha256:'2'.repeat(64),method_text:'合成办案方法'});
+
+test('native material authorization carries the registered method unchanged',async t=>{
+  const f=await fixture(t,true);
+  f.state.mutatePreview=basis=>({...basis,manifest:{...basis.manifest,workflow:'case',capability:sourceMethod()}});
+  assert.deepEqual(await f.invoke(),{ok:true});
+  assert.deepEqual(f.payload().basis.manifest.capability,sourceMethod());
+});
+
+test('native material authorization refuses a changed method between snapshots',async t=>{
+  const f=await fixture(t,true);
+  f.state.mutatePreview=(basis,count)=>({...basis,manifest:{...basis.manifest,workflow:'case',
+    capability:{...sourceMethod(),version:count>1?'changed':'0.2.0'}}});
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,[]);
+});
+
+test('native contract authorization carries versioned full long history unchanged',async t=>{
+  const f=await fixture(t,true);
+  const history=[{message_id:ID,role:'user',source_revision:1,content:'虚构上一轮问题'},
+    {message_id:REQUEST,role:'assistant',source_revision:1,content:'待核'.repeat(6000)}];
+  assert.ok(Buffer.byteLength(JSON.stringify(history),'utf8')>32768);
+  f.state.mutatePreview=basis=>({...basis,manifest:{...basis.manifest,
+    history_format:'contract-full-text-v1',conversation_history:history}});
+  assert.deepEqual(await f.invoke(),{ok:true});
+  assert.deepEqual(f.payload().basis.manifest.conversation_history,history);
+});
+
+for(const [workflow,history_format] of [['case','contract-full-text-v1'],['contract','unknown'],['contract',null]])
+test('native history format rejects unsupported workflow/version: '+workflow+'/'+history_format,async t=>{
+  const f=await fixture(t,true);
+  f.state.mutatePreview=basis=>({...basis,manifest:{...basis.manifest,workflow,history_format}});
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,[]);
+});
+
+test('native material authorization carries structured hearing context',async t=>{
+  const f=await fixture(t,true);
+  f.state.mutatePreview=basis=>({...basis,manifest:{...basis.manifest,workflow:'court',
+    capability:{workflow:'court',kind:'local_adapter',source_id:'chiheng-legal-workbench',version:'synthetic',
+      source_reference:'synthetic-fixture',license_notice:'Synthetic test only',method_source:'mock_hearing',
+      method_sha256:'1'.repeat(64),code_files:['mock_hearing.py','hearing_audit.py','hearing_tracking.py','portable_lock.py','windows_private.py']
+        .map(path=>({path,sha256:'2'.repeat(64)}))},
+    hearing:{our_role:'plaintiff',synthetic:true,stage:'issues',roles:['moderator','plaintiff','defendant'],
+      previous_output_id:null,previous_session:null,reset_reason:null}}});
+  assert.deepEqual(await f.invoke(),{ok:true});
+  assert.equal(f.payload().basis.manifest.hearing.stage,'issues');
+});
+
 test('material authorization accepts explicit null through the native control validator',async t=>{
   const writes=[],nonce='a'.repeat(32),protocol='qx-model-control-v1';
   const control=new ModelControl({nonce,write:line=>writes.push(JSON.parse(line)),onReady(){},onFatal(){}});
@@ -89,6 +138,35 @@ test('bounded material preview rejection retains its safe code without authorizi
     message:'PRIVATE_FICTIONAL_CONTRACT_FRAGMENT',correlation_id:ID,retryable:false})};
   assert.deepEqual(await f.invoke(),{ok:false,code:'MATERIAL_INPUT_TOO_LARGE'});
   assert.deepEqual(f.calls,[]);assert.equal(f.payload(),undefined);assert.equal(f.backend.closing,false);
+});
+
+for(const code of ['MATERIAL_HISTORY_TOO_LARGE','HEARING_ROLE_REQUIRED','HEARING_ROLE_CONFLICT','HEARING_RESTART_REQUIRED','HEARING_MATERIAL_LIMIT','CAPABILITY_UNAVAILABLE','KNOWLEDGE_UNAVAILABLE'])
+test('native preview returns a safe actionable capability error: '+code,async t=>{
+  const f=await fixture(t);f.state.previewError={status:409,body:JSON.stringify({code,message:'PRIVATE_SYNTHETIC_DETAIL'})};
+  assert.deepEqual(await f.invoke(),{ok:false,code});
+  assert.deepEqual(f.calls,[]);assert.equal(f.payload(),undefined);
+});
+
+const knowledgePacket=()=>({searches:[{origin:'family',query:'借款',state:'searched',source_count:5,original_documents:null,
+  index_sha256:'4'.repeat(64),source_reference:'synthetic'}],passages:[{source_id:'3'.repeat(64),origin:'family',
+  source_name:'合成资料.txt',source_sha256:'4'.repeat(64),index_sha256:'4'.repeat(64),locator:'段落1',text:'合成知识摘录',
+  quote_sha256:'5'.repeat(64),source_reference:'synthetic',source_urls:[],version:'0.2.0',review_state:'user_unverified',
+  applicability_verified:false,upstream_status:null,upstream_effective_date:null,limitations:['未核验']}]});
+
+test('native authorization includes the exact retrieved knowledge snapshot',async t=>{
+  const f=await fixture(t,true);
+  f.state.mutatePreview=basis=>({...basis,manifest:{...basis.manifest,workflow:'case',capability:sourceMethod(),knowledge:knowledgePacket()}});
+  assert.deepEqual(await f.invoke(),{ok:true});
+  assert.deepEqual(f.payload().basis.manifest.knowledge,knowledgePacket());
+});
+
+test('changed retrieved quote between native snapshots prevents authorization',async t=>{
+  const f=await fixture(t,true);
+  f.state.mutatePreview=(basis,count)=>{
+    const knowledge=knowledgePacket();if(count>1)knowledge.passages[0].text='变化的合成摘录';
+    return {...basis,manifest:{...basis.manifest,workflow:'case',capability:sourceMethod(),knowledge}};
+  };
+  assert.equal((await f.invoke()).ok,false);assert.deepEqual(f.calls,[]);
 });
 
 for(const [name,status,body] of [

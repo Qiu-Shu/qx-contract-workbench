@@ -46,10 +46,10 @@ class Element extends Events {
   }
   click(){if(this.disabled)return;this.focus();const event=this.fire('click',{},true);this.fire('click',event,false);}
 }
-function fixture({inertComposer=false}={}){
+function fixture({inertComposer=false,initialMode='workbench'}={}){
   assert.equal(typeof mod.bindViewMode,'function','view-mode binder must exist');
   const doc=new Events(),els=new Map(),create=(id,tag)=>{const element=new Element(doc,id,tag);els.set(id,element);return element;};
-  doc.body=create('body','body');doc.body.dataset.viewMode='workbench';doc.activeElement=doc.body;
+  doc.body=create('body','body');doc.body.dataset.viewMode=initialMode;doc.activeElement=doc.body;
   doc.getElementById=id=>els.get(id)||null;
   doc.querySelector=selector=>selector==='.compose-section'?els.get('compose-section'):selector==='.page-toolbar'?els.get('page-toolbar'):null;
   const top=create('page-toolbar'),switcher=create('view-mode-switch'),bench=create('view-mode-workbench','button'),chat=create('view-mode-chat','button');
@@ -59,6 +59,8 @@ function fixture({inertComposer=false}={}){
   doc.body.append(thread,compose);thread.append(history);compose.append(form);form.append(input);compose.inert=inertComposer;
   const materialAdd=create('add-material','button');compose.append(materialAdd);
   const dock=create('chat-workarea'),title=create('chat-workarea-title'),close=create('close-chat-workarea','button');dock.append(title,close);doc.body.append(dock);
+  const overview=create('matter-overview'),overviewToggle=create('toggle-matter-overview','button'),overviewClose=create('close-matter-overview','button');
+  overview.hidden=true;top.append(overviewToggle);doc.body.append(overview);overview.append(overviewClose);
   const tasks=create('show-workbench-tasks','button'),taskPanel=create('task-draft-panel','details'),taskSummary=create('task-draft-summary','summary');
   nav.append(tasks);doc.body.append(taskPanel);taskPanel.append(taskSummary);
   const panels={};const businessEvents=[];
@@ -178,10 +180,31 @@ test('Escape lets source handlers run first and uses the original close button a
   f.flush();assert.equal(f.at('output-panel').hidden,true);assert.equal(f.closeCounts.get('output-panel'),1);
   assert.equal(f.at('chat-workarea').classList.contains('is-open'),true);
 });
-test('more workflows returns to the original workbench panel with its draft preserved',()=>{
+test('task tools stay in the current chat with the original draft preserved',()=>{
   const f=fixture(),task=f.at('task-draft-panel');task.draft={content:'原流程草稿'};f.view.setMode('chat');
-  f.at('show-workbench-tasks').click();f.flush();assert.equal(f.view.mode(),'workbench');assert.equal(task.open,true);
-  assert.equal(task.draft.content,'原流程草稿');assert.equal(f.doc.activeElement,f.at('task-draft-summary'));assert.deepEqual(f.businessEvents,[]);
+  f.at('show-workbench-tasks').click();f.flush();assert.equal(f.view.mode(),'chat');assert.equal(task.open,true);
+  assert.equal(task.dataset.chatActive,'true');assert.equal(task.draft.content,'原流程草稿');assert.deepEqual(f.businessEvents,[]);
+});
+
+test('chat shell initializes without an extra click or business action',()=>{
+  const f=fixture({initialMode:'chat'});f.flush();
+  assert.equal(f.view.mode(),'chat');assert.equal(f.at('conversation-tools').parentNode,f.at('chat-tools-host'));
+  assert.equal(f.at('view-mode-chat').getAttribute('aria-pressed'),'true');assert.deepEqual(f.businessEvents,[]);
+});
+
+test('opening a task sheet closes the covered overview and preserves editor inert state',()=>{
+  const f=fixture({initialMode:'chat'});f.at('toggle-matter-overview').click();
+  assert.equal(f.at('matter-overview').hidden,false);assert.equal(f.at('compose-section').inert,true);
+  f.at('show-workbench-tasks').click();f.flush();
+  assert.equal(f.at('matter-overview').hidden,true);assert.equal(f.at('compose-section').inert,true);
+  f.at('close-chat-workarea').click();assert.equal(f.at('compose-section').inert,false);
+});
+
+test('overview cannot reopen behind an existing task or source drawer',()=>{
+  const f=fixture({initialMode:'chat'});f.at('show-workbench-tasks').click();f.flush();
+  f.at('toggle-matter-overview').click();assert.equal(f.at('matter-overview').hidden,true);
+  f.at('close-chat-workarea').click();f.at('profile-preview').hidden=false;
+  f.at('toggle-matter-overview').click();assert.equal(f.at('matter-overview').hidden,true);
 });
 test('reading positions are independent and first chat entry starts at the history tail',()=>{
   const f=fixture();f.win.scrollY=240;f.view.setMode('chat');f.flush();assert.equal(f.at('conversation-thread').scrollTop,700);

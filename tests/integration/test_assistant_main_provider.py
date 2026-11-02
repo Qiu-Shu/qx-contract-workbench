@@ -297,7 +297,7 @@ def test_over_budget_usage_is_preserved_even_when_output_is_rejected(field):
     usage[field+'_tokens']=70000 if field=='prompt' else 5000
     usage['total_tokens']=usage['prompt_tokens']+usage['completion_tokens']
     with server(raw(envelope(value,usage=usage))) as (url,_,_):
-        result=asyncio.run(provider(url).generate(value))
+        result=asyncio.run(provider(url,max_input_bytes=65536,max_output_tokens=4096).generate(value))
     assert result.error_code=='MODEL_OUTPUT_INVALID' and result.output is None
     assert result.usage is not None and result.usage.total_tokens==usage['total_tokens']
 

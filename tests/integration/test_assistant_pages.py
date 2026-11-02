@@ -22,6 +22,8 @@ def test_home_shell_is_authenticated_and_does_not_create_conversations(chat):
     assert response.status_code == 200
     assert 'data-conversation-id=""' in response.text
     assert 'data-readonly="false"' in response.text
+    assert 'data-view-mode="chat"' in response.text
+    assert 'id="matter-overview"' in response.text
     assert 'data-library-enabled="false"' in response.text
     assert 'id="composer"' in response.text
     assert 'no-store' in response.headers['cache-control']

@@ -199,3 +199,13 @@ test('global history updates without navigating or editing, and revocation clear
   assert.equal(f.at('origin').href,'/assistant/'+cid);assert.equal(f.controller.state.text,'保留草稿');
   f.controller.state.status='revoked';f.ui.state(f.controller.state);assert.equal(f.at('origin').hidden,true);f.ui.dispose();
 });
+
+
+test('unreadable service batch exposes its notice and original-matter link',async()=>{
+  const f=fixture();f.bridge.personalWeixinStatus=async()=>({ok:true,
+    connection:{state:'connected',conversation_id:null,automatic:true,notice:'虚构',qr_ready:false},
+    batches:[{id:'batch',revision:6,state:'routed',conversation_id:cid,workflow:'contract',
+      decision_json:JSON.stringify({notice:'材料未完整读取，请到桌面检查原文和解析状态。'})}]});
+  await f.ui.refresh();assert.match(f.at('batches').textContent,/材料未完整读取/);
+  assert.equal(f.at('origin').href,'/assistant/'+cid);assert.equal(f.at('origin').hidden,false);f.ui.dispose();
+});

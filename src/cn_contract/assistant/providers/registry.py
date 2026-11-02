@@ -206,6 +206,11 @@ class _RuntimeLease:
     def check_material_submission(self, actor, basis):
         basis = _copy(d.MainMaterialSendBasis, basis)
         config, policy = self.snapshot_for(actor, basis.expected_scope)
+        if basis.manifest.criminal_analysis is not None:
+            from .main import DeepSeekProvider
+            # This pilot never discloses any part of the packet to a real endpoint.
+            if type(self._fixed_provider) is not DeepSeekProvider or not self._fixed_provider.is_synthetic:
+                raise ServiceError('BLOCKED_LIVE', 403)
         if type(self._basis) is not d.MainMaterialSendBasis or basis != self._basis:
             raise ServiceError('BLOCKED_LIVE', 403)
         require_policy(config, policy, actor, basis.expected_scope, basis.manifest_sha256)

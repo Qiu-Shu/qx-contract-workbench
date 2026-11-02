@@ -239,9 +239,20 @@ class ServiceWeixinRuntime(PersonalWeixinRuntime):
         actor,_,_,_=self._guard(epoch)
         with self.database.session() as db:
             sources=journal.events(batch['id'],db)
+            instructions=journal.instruction_events(sources,db)
         if not sources:return
-        question='\n'.join(journal.payload(e).text for e in sources if journal.payload(e).text.strip())
+        if instructions is None:
+            with self.database.session() as db:
+                decision=d.ServiceRouteDecision(action='clarify',notice='停止后的消息顺序无法确认，材料已保留，请在桌面核对后重新发起任务。')
+                db.execute(text("UPDATE weixin_service_batches SET state='clarify',workflow=NULL,decision_json=:decision WHERE id=:id"),
+                    {'id':batch['id'],'decision':canonical_json(decision.model_dump(mode='json'))})
+            return
+        question='\n'.join(journal.payload(e).text for e in instructions)
         source_id=sources[-1]['id']
+        if business.negative_only(question):
+            with self.database.session() as db:
+                db.execute(text("UPDATE weixin_service_batches SET state='waiting',workflow=NULL WHERE id=:id"),{'id':batch['id']})
+            return
         if not batch['conversation_id']:
             reference=None
             refs=[journal.payload(e).reply_to_event_id for e in sources if journal.payload(e).reply_to_event_id]
@@ -264,7 +275,8 @@ class ServiceWeixinRuntime(PersonalWeixinRuntime):
                 if assessment and assessment.status=='ok':
                     answers={key:answer.choice for key,answer in assessment.answers.items() if answer.confidence>=.8}
                     changes={}
-                    if answers.get('workflow') in {'case','court','contract','sales'} and not decision.workflow:
+                    if answers.get('workflow') in {'case','court','contract','sales'} and not decision.workflow \
+                            and not business.rejected(question,answers['workflow']):
                         changes['workflow']=answers['workflow']
                     if answers.get('material_kind'):
                         changes['material_kind']=answers['material_kind']
@@ -278,10 +290,14 @@ class ServiceWeixinRuntime(PersonalWeixinRuntime):
                     if answers.get('readiness')=='wait' and not explicit_start:
                         changes.update(action='wait',notice='材料已保留，请发送完毕后说“继续”或补充处理要求。')
                     decision=decision.model_copy(update=changes)
-            explicit_workflow=next((choice for choice in (business.classify(journal.payload(e).text)
-                for e in reversed(sources)) if choice and choice!='ambiguous'),None)
-            if explicit_workflow:
-                decision=decision.model_copy(update={'workflow':explicit_workflow})
+            for event in reversed(instructions):
+                event_text=journal.payload(event).text
+                if not business.mentions_workflow(event_text):continue
+                choice=business.classify(event_text)
+                explicit_workflow=choice if choice and choice!='ambiguous' else None
+                if explicit_workflow:
+                    decision=decision.model_copy(update={'workflow':explicit_workflow})
+                break
             if decision.action in {'wait','clarify','ack'}:
                 with self.database.session() as db:
                     changed=db.execute(text('''UPDATE weixin_service_batches SET state=:state,decision_json=:decision
@@ -310,6 +326,7 @@ class ServiceWeixinRuntime(PersonalWeixinRuntime):
         # Route is frozen before registering originals. Later intake is another batch.
         uploaded=[]
         excerpts=[]
+        unreadable=False
         for source in sources:
             event=journal.payload(source)
             for media in event.media:
@@ -333,10 +350,19 @@ class ServiceWeixinRuntime(PersonalWeixinRuntime):
                     parsed=attachments.parse_attachment(actor,cid,original.attachment.id,
                         d.AssistantAttachmentParseInput(request_id=parse_id,expected_scope=scope),database=self.database)
                 if parsed.parse.reading_status!='readable':
-                    await self._send(epoch,source_id,'unreadable:'+batch['id'],records.NOTICES['media_not_readable']);return
+                    unreadable=True
+                    continue
                 uploaded.append((source['id'],media.model_copy(update={'attachment_id':original.attachment.id,
                     'sha256':original.attachment.sha256,'parse_revision':parsed.parse.revision,'status':'ready'})))
                 excerpts.extend(anchor.quote for anchor in parsed.parse.result.anchors)
+        if unreadable:
+            with self.database.session() as db:
+                saved=db.scalar(text('SELECT decision_json FROM weixin_service_batches WHERE id=:id'),{'id':batch['id']})
+                decision=d.ServiceRouteDecision.model_validate_json(saved).model_copy(
+                    update={'notice':records.NOTICES['media_not_readable']})
+                db.execute(text('UPDATE weixin_service_batches SET decision_json=:decision WHERE id=:id'),
+                    {'id':batch['id'],'decision':canonical_json(decision.model_dump(mode='json'))})
+            await self._send(epoch,source_id,'unreadable:'+batch['id'],records.NOTICES['media_not_readable']);return
         actor,scope,composer,dirty=self._target(epoch,cid)
         if dirty:return
         with self.database.session() as db:
@@ -352,7 +378,8 @@ class ServiceWeixinRuntime(PersonalWeixinRuntime):
             if not workflow and result and result.status=='ok':
                 answer=result.answers.get('primary_intent')
                 if answer and answer.confidence>=.8:
-                    workflow={'contract_review':'contract','material_organize':'case','client_reply':'sales'}.get(answer.choice)
+                    suggested={'contract_review':'contract','material_organize':'case','client_reply':'sales'}.get(answer.choice)
+                    if suggested and not business.rejected(question,suggested):workflow=suggested
             if excerpts:
                 material=await self.judge.assist(actor,d.SharedJudgeInput(expected_scope=scope,purpose='material_kind',
                     text='\n'.join(excerpts)[:12000]),current=lambda:self._epoch==epoch)

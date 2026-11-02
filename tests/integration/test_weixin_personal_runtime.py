@@ -13,15 +13,17 @@ from sqlalchemy import text
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cn_contract import domain as d
-from cn_contract.assistant import service, business
+from cn_contract.assistant import service, business, contract_review
 from cn_contract.assistant.native_model_control import NativeModelControl
 from cn_contract.assistant.providers.registry import MainModelRegistry
 from cn_contract.assistant.task_manager import GenerationTasks
 from cn_contract.security import login, authenticate, ServiceError
 from cn_contract.weixin_inbox.personal_runtime import PersonalWeixinRuntime
+from cn_contract.weixin_inbox.runtime_records import bounded_reply
 from cn_contract.weixin_transport import PersonalWeixinTransport
 from cn_contract.task_drafts import service as drafts
 from tests.integration.test_assistant_generation import world
+from tests.helpers.contract_review import draft_for
 from tests.unit.test_weixin_transport import Wire, incoming, KEY
 
 
@@ -38,10 +40,14 @@ class Provider:
         self.calls.append(prepared)
         if self.hold:
             await self.hold.wait()
+        manifest = prepared.basis.manifest
+        output = (contract_review.candidate(draft_for(manifest), manifest)
+            if manifest.contract_review is not None else
+            d.MainMaterialCandidate(text='虚构材料已分析，原文和履行事实仍待律师核对。',
+                citations=(manifest.sources[0].source_id,)))
         return d.MainMaterialReply(state='received',provider_request_id='fictional-material',
             usage=d.MainUsage(prompt_tokens=20,completion_tokens=10,total_tokens=30),
-            output=d.MainMaterialCandidate(text='虚构材料已分析，原文和履行事实仍待律师核对。',
-                citations=(prepared.basis.manifest.sources[0].source_id,)))
+            output=output)
 
 
 def packet(*messages, cursor='next'):
@@ -50,6 +56,12 @@ def packet(*messages, cursor='next'):
 
 def command(number=2, content='请审查合同'):
     return incoming(message_id=number,item_list=[{'type':1,'text_item':{'text':content}}])
+
+
+def sequenced_command(number=2, content='请审查合同'):
+    value = command(number, content)
+    value.update(seq=number, create_time_ms=number * 1000)
+    return value
 
 
 def file_message(wire, number=1, name='独立虚构合同.docx'):
@@ -156,7 +168,7 @@ def test_explicit_hold_retains_later_material_and_requires_resume_after_reconnec
     async def scenario():
         runtime,wire,manager,provider,actor=await setup_runtime(world)
         database=world[0];cid=world[2].scope.conversation_id;epoch=runtime._epoch
-        first=packet(file_message(wire),command(),command(3,hold),cursor='first')
+        first=packet(file_message(wire),sequenced_command(),sequenced_command(3,hold),cursor='first')
         await runtime.ingest(epoch,first);await runtime.advance(epoch)
         assert not provider.calls
         with database.session() as db:
@@ -185,7 +197,7 @@ def test_explicit_hold_retains_later_material_and_requires_resume_after_reconnec
             assert draft.state=='paused'
         await runtime.advance(epoch)
         assert not provider.calls
-        resumed=packet(command(5,' 继续！ '),cursor='resume')
+        resumed=packet(sequenced_command(5,' 继续！ '),cursor='resume')
         await runtime.ingest(epoch,resumed);await runtime.advance(epoch)
         assert len(provider.calls)==1
         assert len(provider.calls[0].basis.manifest.materials)==2
@@ -216,8 +228,13 @@ def test_personal_desktop_main_selection_completes_in_same_chat_without_mock(wor
             history=business.history(actor,cid,db)
             assert history[0].contract_draft_id==draft.id
             assert db.scalar(text('SELECT COUNT(*) FROM assistant_model_outputs'))==1
-        assert any('虚构材料已分析' in request.content.decode() for request in wire.requests
-            if request.url.path.endswith('/sendmessage'))
+            saved=d.MainMaterialOutputView.model_validate_json(db.scalar(text(
+                'SELECT output_json FROM assistant_model_outputs')))
+            assert saved.candidate.contract_review is not None
+        expected=bounded_reply(saved.candidate.text+'\n\n工作草稿，事实与依据待核。完整材料与引用见桌面本对话。')
+        sent=[json.loads(request.content)['msg']['item_list'][0]['text_item']['text']
+            for request in wire.requests if request.url.path.endswith('/sendmessage')]
+        assert sent.count(expected)==1
         await close(runtime,manager)
     asyncio.run(scenario())
 
@@ -227,7 +244,7 @@ def test_ambiguous_paused_resume_requires_desktop_assignment_and_keeps_sources(w
     async def scenario():
         runtime,wire,manager,provider,actor=await setup_runtime(world)
         database=world[0];cid=world[2].scope.conversation_id;epoch=runtime._epoch
-        await runtime.ingest(epoch,packet(file_message(wire),command(),command(3,'暂停'),cursor='first'))
+        await runtime.ingest(epoch,packet(file_message(wire),sequenced_command(),sequenced_command(3,'暂停'),cursor='first'))
         with database.session() as db:
             first=drafts.list_drafts(actor,cid,db).items[0]
             other=drafts._new_draft(cid,db,parent=drafts._draft(actor,first.id,db))
@@ -235,7 +252,7 @@ def test_ambiguous_paused_resume_requires_desktop_assignment_and_keeps_sources(w
             if other_state=='paused':
                 drafts.update_draft(actor,other.id,d.TaskDraftUpdateInput(expected_revision=other.revision,action='pause'),db)
             original=tuple(db.execute(text('SELECT id,payload_json,payload_sha256 FROM task_inbox_events')))
-        await runtime.ingest(epoch,packet(command(4,'继续'),file_message(wire,5,'归属待定附件.docx'),cursor='resume'))
+        await runtime.ingest(epoch,packet(sequenced_command(4,'继续'),file_message(wire,5,'归属待定附件.docx'),cursor='resume'))
         await runtime.advance(epoch);await runtime.advance(epoch)
         assert not provider.calls
         assert len([r for r in wire.requests if r.url.path.endswith('/sendmessage')])==1

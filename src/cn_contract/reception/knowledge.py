@@ -112,15 +112,18 @@ def import_plugin(source, destination):
 
 
 class KnowledgeStore:
-    def __init__(self, root):
+    def __init__(self, root, *, manifest_bytes=None):
         self.root = Path(root)
+        if manifest_bytes is not None and (type(manifest_bytes) is not bytes or len(manifest_bytes)>MAX_TEXT):
+            raise ValueError('KNOWLEDGE_MANIFEST_INVALID')
+        self._manifest_bytes = manifest_bytes
 
     def catalog(self):
         if not self.root.exists():
             return d.ReceptionKnowledgeCatalog(state='not_configured')
         try:
             root = checked_root(self.root)
-            raw = checked_file(root / 'manifest.json', root, limit=MAX_TEXT)
+            raw = self._manifest_bytes if self._manifest_bytes is not None else checked_file(root / 'manifest.json', root, limit=MAX_TEXT)
             value = strict_json(raw)
             if value['format'] != 'qx-reception-knowledge-v1' or len(value['sources']) > 128:
                 raise ValueError('KNOWLEDGE_MANIFEST_INVALID')

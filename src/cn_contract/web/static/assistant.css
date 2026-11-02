@@ -7,7 +7,7 @@
   --canvas: #f8f6f3;
   --text: #343640;
   --muted: #686872;
-  --accent: #666f9e;
+  --accent: #59638f;
   --accent-hover: #555f8e;
   --selected: #eeedf5;
   --line: #e2dfe2;
@@ -55,7 +55,7 @@ button {
 }
 button:hover { background: var(--accent-hover); }
 button:active { background: #505780; }
-button:disabled { color: #768078; background: #ecefeb; border-color: var(--line); cursor: not-allowed; }
+button:disabled { color: #626d65; background: #ecefeb; border-color: var(--line); cursor: not-allowed; }
 a { color: var(--accent); text-underline-offset: .2em; }
 a:hover { text-decoration-thickness: 2px; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
@@ -577,7 +577,7 @@ body.source-open .workspace-tabs button { flex: none; }
 /* Two presentations share the existing editor, messages and matter sheets. */
 .header-actions { display: flex; align-items: center; justify-content: end; gap: 12px; min-width: 0; }
 .view-mode-switch { display: inline-flex; flex: none; gap: 3px; padding: 3px; border: 1px solid #e2dfe7; border-radius: 8px; background: #efedf2; }
-.view-mode-switch button { min-height: 30px; padding: 4px 10px; border: 1px solid transparent; border-radius: 5px; color: #716a7b; background: transparent; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.view-mode-switch button { min-height: 30px; padding: 4px 10px; border: 1px solid transparent; border-radius: 5px; color: #686173; background: transparent; font-size: 12px; font-weight: 500; white-space: nowrap; }
 .view-mode-switch button:hover { color: #5b6088; background: #f8f6fb; }
 .view-mode-switch button[aria-pressed="true"] { color: #565f8e; border-color: #e1dce8; background: #fffefd; box-shadow: 0 1px 3px #50445a08; }
 .conversation-thread { display: contents; }
@@ -592,12 +592,10 @@ body[data-view-mode="workbench"] .workspace-tabs button.chat-only { display: non
 
 body[data-view-mode="chat"] { overflow: hidden; }
 body[data-view-mode="chat"] .workspace-atmosphere,
-body[data-view-mode="chat"] .skill-shelf,
-body[data-view-mode="chat"] .workspace-eyebrow,
-body[data-view-mode="chat"] #task-draft-panel { display: none; }
+body[data-view-mode="chat"] .workspace-eyebrow { display: none; }
 body[data-view-mode="chat"] .assistant-main { display: flex; flex-direction: column; height: 100dvh; min-height: 0; padding: 0 28px; }
 body[data-view-mode="chat"] .page-toolbar { position: relative; z-index: 20; flex: none; }
-body[data-view-mode="chat"] .conversation-surface { display: flex; flex: 1; flex-direction: column; min-height: 0; width: 100%; max-width: none; margin: 0; padding: 0; }
+body[data-view-mode="chat"] .conversation-surface { display: flex; flex: 1; flex-direction: column; align-items: stretch; min-height: 0; width: 100%; max-width: none; margin: 0; padding: 0; }
 body[data-view-mode="chat"] .conversation-thread { display: block; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px max(8px, calc((100% - 800px) / 2)) 16px; scrollbar-gutter: stable; }
 body[data-view-mode="chat"] .conversation-heading { display: block; min-height: 0; margin: 0 0 28px; padding: 0; }
 body[data-view-mode="chat"] .conversation-heading h1 { color: #3b3646; font: 600 22px/1.6 "PingFang SC", "Microsoft YaHei UI", sans-serif; letter-spacing: 0; }
@@ -657,6 +655,24 @@ body[data-view-mode="chat"] .chat-workarea > details .followup-content { padding
 body[data-view-mode="chat"] .material-preview { top: var(--chat-header-height, 64px); z-index: 15; }
 body[data-view-mode="chat"].source-open .assistant-main { margin-right: 0; }
 body[data-view-mode="chat"].sidebar-open .sidebar { z-index: 30; }
+.matter-overview { display: none; }
+body[data-view-mode="chat"] .matter-overview:not([hidden]) { display: block; position: fixed; top: var(--chat-header-height,64px); right: 0; bottom: 0; z-index: 11; width: min(320px,100vw); overflow-y: auto; padding: 20px; background: #fffefd; border-left: 1px solid #e1dce7; }
+.matter-overview header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.matter-overview h2 { font-size: 16px; }
+.matter-overview h3 { margin: 24px 0 8px; font-size: 14px; }
+.matter-overview p { margin: 8px 0; font-size: 13px; line-height: 1.8; overflow-wrap: anywhere; }
+.matter-overview button { min-height: 36px; }
+body[data-view-mode="chat"] #toggle-matter-overview { display: inline-flex; min-height: 34px; font-size: 12px; white-space: nowrap; }
+body[data-view-mode="chat"] #chat-skills-host .skill-shelf { display: block; margin: 0 0 10px; padding: 0; border: 0; background: transparent; box-shadow: none; }
+body[data-view-mode="chat"] .skill-shelf .shelf-heading { display: none; }
+body[data-view-mode="chat"] .skill-cards { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
+body[data-view-mode="chat"] .skill-cards button { display: block; min-height: 44px; padding: 10px 8px; text-align: center; background: #fffefd; box-shadow: none; }
+body[data-view-mode="chat"] .skill-cards strong { font-size: 13px; }
+body[data-view-mode="chat"] .skill-cards button > span, body[data-view-mode="chat"] .skill-cards svg { display: none; }
+body[data-view-mode="chat"] .skill-cards button[aria-pressed="true"] { border-color: var(--accent); background: var(--selected); }
+@media (min-width: 1200px) {
+  body[data-view-mode="chat"].matter-overview-open:not(.source-open) .conversation-surface { padding-right: 300px; }
+}
 @media (min-width: 1100px) {
   body[data-view-mode="chat"].source-open .conversation-surface { padding-right: 34rem; }
 }
@@ -684,4 +700,8 @@ body[data-view-mode="chat"].sidebar-open .sidebar { z-index: 30; }
   body[data-view-mode="chat"] .conversation-tools > summary .ui-icon { display: none; }
   body[data-view-mode="chat"] .workspace-tabs { left: 0; right: auto; }
   body[data-view-mode="chat"] .chat-workarea-header { padding: 14px 16px; }
+  body[data-view-mode="chat"] .skill-cards { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  body[data-view-mode="chat"] #toggle-matter-overview { min-height: 44px; padding-inline: 6px; }
+  .matter-overview button { min-height: 44px; }
+  body[data-view-mode="chat"] .header-actions { flex-wrap: wrap; }
 }

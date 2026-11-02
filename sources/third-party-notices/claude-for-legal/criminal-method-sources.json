@@ -1,0 +1,30 @@
+{
+  "usage": "Host-authored criminal evidence/strategy adaptation; upstream templates and static law excerpts are audit-only, not runtime instructions or verified current law.",
+  "upstream_repository": "https://github.com/CSlawyer1985/claude-for-legal-ZH",
+  "commit": "171903c9e5e91b3b7625f1dd557d146ba5a25adc",
+  "authors": [
+    "Anthropic",
+    "陈石律师 (CSlawyer1985)"
+  ],
+  "license": "Apache-2.0",
+  "license_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+  "files": [
+    {
+      "path": "criminal-legal/skills/case-analysis/SKILL.md",
+      "sha256": "bda62c94fe88d6c08dfbb81629c620b90eec52a804f4a5825c984adc1fdc8a9d"
+    },
+    {
+      "path": "criminal-legal/skills/defense-strategy/SKILL.md",
+      "sha256": "0bb3964e04f7c2b7d326dc5d7960762d07681a9494f3827d303c64006161e7bf"
+    },
+    {
+      "path": "criminal-legal/CLAUDE.md",
+      "sha256": "987873ee563f090eb296a15537801b962ed1cbf7972cad958a0fe77f98824543"
+    },
+    {
+      "path": "criminal-legal/references/criminal-procedure-core.md",
+      "sha256": "04a2b86f98d6d5e95761371aedd3d7283a21c9c04d3e5856ecdb98f8c952db76"
+    }
+  ],
+  "status": "development_synthetic_loopback_only; real criminal redaction policy, model A/B and legal-quality review pending"
+}

@@ -33,7 +33,10 @@ def mutate_response(raw, failure):
     elif failure == 'candidate_schema':
         candidate['citations'] = []
     elif failure == 'material_sources':
-        candidate['citations'] = ['a' * 64]
+        if 'quotes' in candidate:
+            candidate['quotes'][0]['source_id'] = 'a' * 64
+        else:
+            candidate['citations'] = ['a' * 64]
     elif failure == 'unsupported_business_output':
         candidate['workflow'] = 'unsupported-fictional-workflow'
     if failure not in ('content_json',):

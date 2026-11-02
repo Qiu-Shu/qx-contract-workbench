@@ -468,6 +468,9 @@ def update_draft(actor, identifier, value, db):
         result = read_draft(actor,identifier,db)
         if value.main_attachment_id is not None and 'main_contract_unavailable' in result.blockers:
             raise ServiceError('VERSION_CONFLICT',409)
+        if value.action == 'resume':
+            from .controls import record_resume
+            record_resume(actor, result, db)
         return result
 
 

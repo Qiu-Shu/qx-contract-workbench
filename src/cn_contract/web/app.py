@@ -52,7 +52,8 @@ def project_bundle(bundle,*,purpose='mock_demo',local_material=False):
 
 def create_app(settings: Settings, *, database: Database, synthetic_upload_hashes=None, synthetic_loopback_endpoints=(),
                synthetic_signing_user_ids=(), purpose='mock_demo', assisted_policy=None, local_materials_enabled=False,
-               assistant_home_enabled=False, assistant_model_runtime=None, assistant_judge_runtime=None):
+               assistant_home_enabled=False, assistant_model_runtime=None, assistant_judge_runtime=None,
+               capability_registry=None):
     if not isinstance(database,Database):raise TypeError('explicit Database required')
     if type(assistant_home_enabled) is not bool:raise TypeError('assistant_home_enabled must be bool')
     settings=Settings.model_validate(settings.model_dump(mode='python'))
@@ -63,6 +64,10 @@ def create_app(settings: Settings, *, database: Database, synthetic_upload_hashe
     if type(local_materials_enabled) is not bool or local_materials_enabled and purpose != 'assisted_draft':
         raise ServiceError('DATA_POLICY_UNAPPROVED',409)
     database._local_materials_enabled=local_materials_enabled
+    from ..integrations.skill_registry import SkillRegistry
+    if capability_registry is not None and type(capability_registry) is not SkillRegistry:
+        raise TypeError('trusted SkillRegistry required')
+    database._capability_registry = capability_registry
     if policy is not None and synthetic_upload_hashes is not None:
         raise ServiceError('DATA_POLICY_UNAPPROVED',409)
     allowed=frozenset(policy.document_hashes) if policy is not None else (frozenset(synthetic_upload_hashes) if synthetic_upload_hashes is not None else frozenset(EXPECTED_HASHES.values()))

@@ -160,6 +160,17 @@ def _remove_created(path: Path, root: Path):
         path.parent.rmdir()
 
 
+def _initialize_base_schema(engine):
+    Base.metadata.create_all(engine)
+    with engine.begin() as connection:
+        for table in ('document_versions', 'audit_events', 'parse_snapshots', 'fact_snapshots'):
+            for operation in ('UPDATE', 'DELETE'):
+                connection.exec_driver_sql(
+                    f'CREATE TRIGGER IF NOT EXISTS immutable_{table}_{operation.lower()} '
+                    f'BEFORE {operation} ON {table} BEGIN '
+                    "SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
+
+
 class Database:
     def __init__(self, url: str, storage_root: Path, settings: Settings, *, initialize_schema: bool = True):
         if not url.startswith('sqlite:'):
@@ -184,14 +195,7 @@ class Database:
             connection.exec_driver_sql('BEGIN IMMEDIATE')
 
         if initialize_schema:
-            Base.metadata.create_all(self.engine)
-            with self.engine.begin() as connection:
-                for table in ('document_versions', 'audit_events', 'parse_snapshots', 'fact_snapshots'):
-                    for operation in ('UPDATE', 'DELETE'):
-                        connection.exec_driver_sql(
-                            f'CREATE TRIGGER IF NOT EXISTS immutable_{table}_{operation.lower()} '
-                            f'BEFORE {operation} ON {table} BEGIN '
-                            "SELECT RAISE(ABORT, 'IMMUTABLE_RECORD'); END")
+            _initialize_base_schema(self.engine)
         self.session_factory = sessionmaker(bind=self.engine, expire_on_commit=False,
                                            info={'database': self})
 

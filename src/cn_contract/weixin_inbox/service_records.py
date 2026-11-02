@@ -49,6 +49,34 @@ def payload(row):
     return value
 
 
+def instruction_events(rows, db):
+    """Order commands by retained upstream metadata; never guess from message IDs."""
+    from ..assistant import business
+    from .instruction_order import ordered_commands
+    by_id = {row['id']: row for row in rows}
+    commands = [(row['id'], payload(row)) for row in rows if payload(row).text.strip()]
+
+    def first_batches():
+        first_poll = {}
+        if not commands:
+            return first_poll
+        wanted = {key for key, _ in commands}
+        polls = db.execute(text('''SELECT revision,event_ids_json FROM weixin_service_polls
+            WHERE connection_id=:cid ORDER BY revision'''), {'cid': by_id[commands[0][0]]['connection_id']}).mappings()
+        for poll in polls:
+            for identifier in json.loads(poll['event_ids_json']):
+                if identifier in wanted:
+                    first_poll.setdefault(identifier, poll['revision'])
+            if wanted <= first_poll.keys():
+                break
+        return first_poll
+
+    ordered = ordered_commands(commands, first_batches,
+        is_stop=lambda value: business.negative_only(value.text),
+        is_resume=lambda value: business.classify(value.text) is not None)
+    return None if ordered is None else [by_id[key] for key, _ in ordered]
+
+
 def collect(connection, values, cursor, db, *, response_sha256, now=None):
     now=now or datetime.now(timezone.utc)
     current=db.execute(text('SELECT * FROM weixin_service_connections WHERE id=:id'),{'id':connection['id']}).mappings().one()

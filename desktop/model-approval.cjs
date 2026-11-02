@@ -1,12 +1,13 @@
 const {validMaterialInput,createMaterialSnapshot}=require('./material-approval.cjs');
 const http=require('node:http');
+const {MATERIAL_ERRORS}=require('./material-basis.cjs');
 const {createHash}=require('node:crypto');
 const {TextDecoder}=require('node:util');
 const {validProfileInput,createProfileSnapshot}=require('./profile-approval.cjs');
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const SCOPE=['workspace_id','conversation_id','scope_kind','scope_ref','binding_revision','input_revision','materials_revision'];
 const CODES=new Set(['BLOCKED_LIVE','VERSION_CONFLICT','STATE_CONFLICT','BUDGET_EXCEEDED',
-  'CROSS_MATTER_DENIED','ACCESS_DENIED','APPROVAL_CANCELED','MATERIAL_INPUT_TOO_LARGE']);
+  'CROSS_MATTER_DENIED','ACCESS_DENIED','APPROVAL_CANCELED',...MATERIAL_ERRORS]);
 const ACTIVE=new Set(['queued','preparing','routing','retrieving','generating','persisting']);
 const exact=(value,fields)=>value && typeof value==='object' && !Array.isArray(value) &&
   Object.keys(value).length===fields.length && fields.every(key=>Object.hasOwn(value,key));
@@ -98,14 +99,14 @@ function postJSON(origin,path,token,csrf,body) {
     const finish=(error,value)=>{
       if(done)return;done=true;clearTimeout(timer);parts=[];
       if(error)reject(Object.assign(new Error('BLOCKED_LIVE'),
-        {code:error==='MATERIAL_INPUT_TOO_LARGE'?error:'BLOCKED_LIVE'}));else resolve(value);
+        {code:MATERIAL_ERRORS.includes(error)?error:'BLOCKED_LIVE'}));else resolve(value);
     };
     let payload;
     try{payload=JSON.stringify(body);}catch{finish(true);return;}
     const request=http.request(origin+path,{agent:false,method:'POST',maxHeaderSize:8192,
       headers:{Accept:'application/json','Content-Type':'application/json',
         'X-CSRF-Token':csrf,Cookie:'qx_session='+token+'; qx_csrf='+csrf}},response=>{
-      const materialLimit=response.statusCode===422;
+      const materialLimit=response.statusCode===422||response.statusCode===409;
       if((response.statusCode!==200 && !materialLimit) || !/^application\/json(?:\s*;|$)/i.test(response.headers['content-type'] || '') ||
           (response.headers['content-encoding'] && response.headers['content-encoding']!=='identity')){
         response.destroy();request.destroy();finish(true);return;
@@ -120,7 +121,8 @@ function postJSON(origin,path,token,csrf,body) {
       response.on('end',()=>{
         try{
           const value=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(parts)));
-          if(materialLimit)finish(value?.code==='MATERIAL_INPUT_TOO_LARGE'?'MATERIAL_INPUT_TOO_LARGE':true);
+          if(materialLimit)finish(MATERIAL_ERRORS.includes(value?.code)&&
+            response.statusCode===(value.code==='MATERIAL_INPUT_TOO_LARGE'?422:409)?value.code:true);
           else finish(false,value);
         }
         catch{finish(true);}

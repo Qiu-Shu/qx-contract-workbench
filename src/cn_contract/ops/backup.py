@@ -20,13 +20,13 @@ from zipfile import ZipFile, ZIP_STORED, BadZipFile
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.exceptions import InvalidTag
-from sqlalchemy import select
+from sqlalchemy import event as sqlalchemy_event, select
 
 from ..domain import BackupConfig, BackupReport, BackupArchiveHeader, BackupManifestEvidence, Role
 from ..persistence import Database, DocumentRow, ExportRow, SessionRow
 from ..security import ServiceError, _principal
 from . import storage
-from .file_paths import sqlite_readonly_uri
+from .file_paths import application_path, filesystem_path, sqlite_readonly_uri
 
 MAGIC = b'CN_SYNTHETIC_BACKUP_V1\n'
 LIMIT = 256*1024*1024
@@ -316,6 +316,19 @@ def _decode_archive(path, resolver):
     return raw, header, plain
 
 
+def _restored_database(root, settings):
+    """Use native filenames only when connecting the verified restored copy."""
+    root = application_path(root)
+    path = root/'database.db'
+    database = Database('sqlite:///'+str(path), root/'protected', settings, initialize_schema=False)
+
+    @sqlalchemy_event.listens_for(database.engine, 'do_connect')
+    def native_filename(dialect, record, arguments, parameters):
+        arguments[0] = str(filesystem_path(path))
+
+    return database
+
+
 def restore_backup(backup_ref, *, key_resolver, restore_parent, settings):
     if type(key_resolver) is not SyntheticKeyStore: raise ServiceError('DATA_POLICY_UNAPPROVED', 409)
     raw, header, plain = _decode_archive(backup_ref, key_resolver)
@@ -369,22 +382,22 @@ def restore_backup(backup_ref, *, key_resolver, restore_parent, settings):
     parent = checked_root(restore_parent, create=True)
     # A failed write or safety delta never exposes an authoritative new root.
     # TemporaryDirectory only owns its checked newly created child of parent.
-    with TemporaryDirectory(prefix='.restore-staging-', dir=parent) as staging:
-        root = Path(staging)/'ready'; root.mkdir()
-        database_path = root/'database.db'; database_path.write_bytes(payloads['database.db'])
-        protected = root/'protected'; protected.mkdir()
+    with TemporaryDirectory(prefix='.restore-staging-', dir=filesystem_path(parent)) as staging:
+        root = application_path(Path(staging)/'ready'); filesystem_path(root).mkdir()
+        database_path = root/'database.db'; filesystem_path(database_path).write_bytes(payloads['database.db'])
+        protected = root/'protected'; filesystem_path(protected).mkdir()
         for name, file_raw in payloads.items():
             if not name.startswith('files/'): continue
-            target = protected/safe_relative(name[6:]); target.parent.mkdir(parents=True, exist_ok=True)
+            target = filesystem_path(protected/safe_relative(name[6:])); target.parent.mkdir(parents=True, exist_ok=True)
             with target.open('xb') as stream: stream.write(file_raw)
             target.chmod(stat.S_IREAD)
         # Only this fully verified staging copy may change; old table counts and
         # archive bytes were checked before any schema upgrade.
         from ..schema_migrations import upgrade_database
-        with closing(sqlite3.connect(database_path)) as connection:
+        with closing(sqlite3.connect(filesystem_path(database_path))) as connection:
             upgrade_database(connection)
         validate_raw_database(database_path, settings)
-        restored = Database('sqlite:///'+str(database_path), protected, settings, initialize_schema=False)
+        restored = _restored_database(root, settings)
         _mark_storage_flags(restored)
         fence = uuid4()
         try:
@@ -424,10 +437,10 @@ def restore_backup(backup_ref, *, key_resolver, restore_parent, settings):
                 for item in refs:
                     physical = storage.relocation(item['logical_ref'], item['sha256'], db)
                     if digest(checked_file(physical, protected)) != item['sha256']: raise ValueError('RESTORED_FILE_HASH_MISMATCH')
-            restored_hash = digest(database_path.read_bytes())
+            restored_hash = digest(filesystem_path(database_path).read_bytes())
         finally: restored.engine.dispose()
         published = parent/str(uuid4())
-        root.rename(published)
+        filesystem_path(root).rename(filesystem_path(published))
     return BackupReport(backup_ref=str(Path(backup_ref).absolute()), restored_at=datetime.now(timezone.utc), ok=True, differences=(),
         archive_sha256=digest(raw), manifest_sha256=digest(manifest_raw), restored_root=str(published), restored_database_sha256=restored_hash,
         verified_file_count=len({i['physical_ref'] for i in refs}), source_table_counts={k: v['count'] for k, v in manifest['tables'].items()}, quarantine_ref=fence,
@@ -447,7 +460,7 @@ def open_restored_database(report, *, settings):
     if not report.ok or report.restored_root is None or report.quarantine_ref is None: raise ValueError('VERIFIED_RESTORE_REQUIRED')
     root = checked_root(report.restored_root)
     validate_raw_database(root/'database.db', settings)
-    database = Database('sqlite:///'+str(root/'database.db'), root/'protected', settings, initialize_schema=False)
+    database = _restored_database(root, settings)
     _mark_storage_flags(database)
     with database.session() as db:
         fence = db.scalar(select(storage.RestoreFenceRow).where(storage.RestoreFenceRow.ref == str(report.quarantine_ref)))

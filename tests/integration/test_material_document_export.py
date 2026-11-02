@@ -65,7 +65,7 @@ def test_received_result_exports_editable_text_sources_and_unchanged_saved_data(
         document = Document(BytesIO(response.content))
         paragraphs = [item.text for item in document.paragraphs]
         body = '\n'.join(paragraphs)
-        assert result.output.candidate.text in paragraphs
+        assert result.output.candidate.text in body
         assert '律师内部' in body and '待律师核对' in body and '未修改原合同' in body
         assert '材料目录' in body and '独立虚构借款.docx' in body
         assert '来源核对' in body

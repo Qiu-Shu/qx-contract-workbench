@@ -45,19 +45,32 @@ def validate_input(db, row, prepared, config, policy, run, *, history_queue=None
                 expected_sources.append(d.MainMaterialSource(source_id=sha(encoded(ref)), reference=ref))
     context = tuple(source for source in manifest.sources if isinstance(source.reference, d.ProfileMessageRef)
                     and source.reference.message_id != record[1].message_id)
-    if context:
+    if manifest.contract_review is not None and manifest.contract_review.method_id == 'contract-review-v3':
+        from .material_stance import contract_stance_sources
+        if context != contract_stance_sources(db, record[1], manifest.question):
+            raise ValueError('MATERIAL_INPUT_INVALID')
+        expected_sources.extend(context)
+        context = ()  # Contract stance is a source, separate from the court shared history budget.
+    elif context:
         from .material_history import statement_sources
         if context != statement_sources(db, record[1], selected):
             raise ValueError('MATERIAL_INPUT_INVALID')
         expected_sources.extend(context)
     if tuple(expected_sources) != manifest.sources or codec.rebuild_basis(basis, config) != basis:
         raise ValueError('MATERIAL_INPUT_INVALID')
-    if manifest.conversation_history:
+    if manifest.conversation_history or manifest.history_format is not None:
         from .material_history import select_history, history_budget
         history = select_history(db, record[1].scope, manifest.stable_task_id,
-            before_at=record[1].created_at, validation_queue=history_queue, budget=history_budget(context))
+            before_at=record[1].created_at, validation_queue=history_queue,
+            budget=history_budget(context, manifest.history_format), history_format=manifest.history_format)
         if history != manifest.conversation_history:
             raise ValueError('MATERIAL_INPUT_INVALID')
+    if manifest.hearing is not None:
+        from ..integrations.hearing_context import build
+        expected = build(db, record[1], manifest.materials, manifest.capability,
+            synthetic=manifest.hearing.synthetic, validation_queue=history_queue)
+        if expected != manifest.hearing:
+            raise ValueError('HEARING_INPUT_INVALID')
     from .material_attempts import message
     if run['request_sha256'] != service._digest({'actor_id':run['actor_id'], 'workspace_id':str(basis.expected_scope.workspace_id),
             'conversation_id':row['conversation_id'], 'request':message(basis).model_dump(mode='json')}):
@@ -67,4 +80,6 @@ def validate_input(db, row, prepared, config, policy, run, *, history_queue=None
 def validate_output(view, prepared):
     if view.manifest != prepared.request.basis.manifest:
         raise ValueError('MATERIAL_OUTPUT_INVALID')
-    codec.validate_candidate(view.candidate, view.manifest.sources)
+    codec.validate_manifest_candidate(view.candidate, view.manifest)
+    from ..integrations.chiheng import validate_result
+    validate_result(view)

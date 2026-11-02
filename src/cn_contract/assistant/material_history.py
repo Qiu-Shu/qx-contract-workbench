@@ -40,8 +40,12 @@ def _verify(db, queue, workspace, attachment_rows):
                         files.add(identifier)
 
 
-def select_history(db, scope, task_id, *, before_at, validation_queue=None, attachment_rows=None, budget=MAX_BYTES):
+def select_history(db, scope, task_id, *, before_at, validation_queue=None, attachment_rows=None,
+        budget=None, require_latest=False, history_format=None):
     from . import model_integrity as ledger
+    limit = history_budget((), history_format)
+    if budget is not None:
+        limit = min(limit, budget)
     # Filter before the bounded selection so another task cannot evict this one.
     rows = db.execute(text('''SELECT * FROM (SELECT a.*,
         ROW_NUMBER() OVER (PARTITION BY json_extract(a.input_json,'$.request.basis.parent_business_run_id')
@@ -81,7 +85,11 @@ def select_history(db, scope, task_id, *, before_at, validation_queue=None, atta
                 d.ConversationHistoryMessage(message_id=output.id, role='assistant',
                     source_revision=source.source_revision, content=output.candidate.text))
         candidate = (*pair, *turns)
-        if len(turns) == MAX_TURNS * 2 or len(json_bytes([item.model_dump(mode='json') for item in candidate])) > min(MAX_BYTES, budget):
+        if len(turns) == MAX_TURNS * 2 or len(json_bytes([item.model_dump(mode='json') for item in candidate])) > limit:
+            if (require_latest or history_format is not None) and not turns:
+                from ..security import ServiceError
+                _verify(db, [row], scope.workspace_id, attachment_rows)
+                raise ServiceError('MATERIAL_HISTORY_TOO_LARGE', 409)
             break
         turns = candidate
         selected.append(row)
@@ -143,5 +151,9 @@ def statement_sources(db, current, selected):
     return sources
 
 
-def history_budget(context):
+def history_budget(context, history_format=None):
+    if history_format is not None:
+        if history_format != 'contract-full-text-v1' or context:
+            raise ValueError('MATERIAL_HISTORY_FORMAT_INVALID')
+        return d.CONTRACT_HISTORY_BYTES
     return MAX_BYTES - len(json_bytes([item.model_dump(mode='json') for item in context])) if context else MAX_BYTES

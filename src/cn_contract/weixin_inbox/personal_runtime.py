@@ -411,10 +411,14 @@ class PersonalWeixinRuntime:
                 fresh = [event for event in draft.events if event.id not in {UUID(value) for value in parent_events}]
                 personal_source = next((event for event in reversed(fresh)
                     if event.binding_id == self._mapping.task_binding_id), None)
-                question = '\n'.join(event.text for event in fresh if event.text.strip())
+                question = self._question(actor, draft, fresh, db)
                 parent_links = [item for item in known if item.draft_id == draft.parent_draft_id]
                 previous = business._record(service._owned_run(actor,parent_links[-1].business_run_id,db),db)[1] if parent_links else None
             if personal_source is None:
+                return
+            if question is None:
+                await self._reply(epoch, f'notice:{draft.id}:{draft.revision}:source-order',
+                    '材料已保留。暂停与继续的先后顺序无法确认，请在桌面核对后重新发起。', personal_source.id)
                 return
             if not question and previous and any(event.media for event in fresh):
                 question = '请结合本次补充材料继续处理当前任务。'
@@ -464,6 +468,37 @@ class PersonalWeixinRuntime:
             # Existing attempt lookup is replay-safe; missing attempts may only use unchanged parent scope.
             for link in known:
                 await self._execute(epoch, link)
+
+    def _question(self, actor, draft, fresh, db):
+        from .instruction_order import ordered_commands
+        from ..task_drafts.controls import confirmed_resume
+
+        # This receipt is created only by the owned desktop update endpoint. It
+        # covers observed controls; any newly received stop invalidates its hash.
+        if confirmed_resume(actor, draft, db):
+            return '\n'.join(event.text for event in fresh
+                if event.text.strip() and tasks._control(event) is None)
+
+        def first_batches():
+            return dict(db.execute(text('''SELECT r.task_event_id,MIN(p.next_revision)
+                FROM weixin_dispatch_receipts r
+                JOIN weixin_inbox_descriptors de ON de.id=r.descriptor_id
+                JOIN weixin_poll_receipts p ON p.id=de.poll_id
+                WHERE p.account_id=:account GROUP BY r.task_event_id'''),
+                {'account':str(self._account.id)}).all())
+
+        ordered = ordered_commands([(str(event.id),event) for event in fresh if event.text.strip()],
+            first_batches, is_stop=lambda value: tasks._control(value) in {'paused','cancelled'}
+                or business.negative_only(value.text),
+            is_resume=lambda value: tasks._control(value) == 'collecting'
+                or business.classify(value.text) is not None)
+        if ordered is None:
+            return None
+        controls = [tasks._control(event) for _,event in ordered if tasks._control(event)]
+        if controls and controls[-1] != 'collecting':
+            return None
+        # Retain original events; resolved draft controls are not new instructions.
+        return '\n'.join(event.text for _,event in ordered if tasks._control(event) is None)
 
     def _busy(self, cid):
         with self.database.session() as db:

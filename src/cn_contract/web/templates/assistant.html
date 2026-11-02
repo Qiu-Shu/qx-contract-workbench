@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/static/assistant-weixin-personal.css">
   <script type="module" src="/static/assistant.mjs"></script>
 </head>
-<body data-view-mode="workbench" data-conversation-id="{{ conversation_id }}" data-readonly="{{ 'true' if readonly else 'false' }}" data-local-materials="{{ 'true' if local_materials_enabled else 'false' }}" data-library-enabled="{{ 'true' if library_enabled else 'false' }}">
+<body data-view-mode="chat" data-conversation-id="{{ conversation_id }}" data-readonly="{{ 'true' if readonly else 'false' }}" data-local-materials="{{ 'true' if local_materials_enabled else 'false' }}" data-library-enabled="{{ 'true' if library_enabled else 'false' }}">
   <svg class="icon-sprite" aria-hidden="true" focusable="false"><defs>
     <symbol id="ui-chat" viewBox="0 0 24 24"><path d="M6 18 3 21V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6Z"/><path d="M7 8h10M7 12h7"/></symbol>
     <symbol id="ui-folder" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/><path d="M3 9h18"/></symbol>
@@ -62,8 +62,8 @@
       <h2 id="common-heading" class="sr-only">常用能力</h2>
       <button type="button" data-skill="client_reply" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#ui-chat"/></svg>客户接待</button>
       <button type="button" data-skill="material_organize" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#ui-folder"/></svg>案件整理</button>
-      <button type="button" data-skill="contract_review" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#ui-document"/></svg>审查合同</button>
-      <button type="button" data-skill="mock_trial" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#ui-scales"/></svg>庭审准备</button>
+      <button type="button" data-skill="contract_review" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#ui-document"/></svg>合同审查</button>
+      <button type="button" data-skill="mock_trial" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#ui-scales"/></svg>模拟法庭</button>
     </nav>
     </details>
     <div class="account-area"><span class="account-avatar" aria-hidden="true">律</span><span id="account-name" class="muted"></span><button id="logout" class="text-button" type="button">退出登录</button></div>
@@ -76,9 +76,10 @@
       <div class="toolbar-context"><span class="toolbar-title">事项工作台</span><p class="availability">{% if readonly %}恢复副本 · 只读{% else %}本机草稿 · 受控生成{% endif %}</p></div>
       <div class="header-actions">
         <div id="chat-tools-host" class="chat-tools-host"></div>
+        <button id="toggle-matter-overview" class="chat-only quiet-button" type="button" aria-expanded="false" aria-controls="matter-overview">事项概览</button>
         <div id="view-mode-switch" class="view-mode-switch" role="group" aria-label="视图模式">
-          <button id="view-mode-workbench" type="button" aria-pressed="true">工作台</button>
-          <button id="view-mode-chat" type="button" aria-pressed="false">对话</button>
+          <button id="view-mode-workbench" type="button" aria-pressed="false">工作台</button>
+          <button id="view-mode-chat" type="button" aria-pressed="true">对话</button>
         </div>
         <label class="reading-control" for="body-size"><span>阅读字号</span><select id="body-size"><option value="16">标准 16</option><option value="18">较大 18</option><option value="20">大号 20</option></select></label>
       </div>
@@ -103,7 +104,7 @@
       <button id="show-worksheet" class="text-button" type="button" aria-expanded="false" aria-controls="worksheet-panel" disabled><svg class="ui-icon" aria-hidden="true"><use href="#ui-chat"/></svg>接待底稿<svg class="tool-chevron" aria-hidden="true"><use href="#ui-chevron"/></svg></button>
       <button id="show-evidence" class="text-button" type="button" aria-expanded="false" aria-controls="evidence-panel" disabled><svg class="ui-icon" aria-hidden="true"><use href="#ui-folder"/></svg>事实与材料<svg class="tool-chevron" aria-hidden="true"><use href="#ui-chevron"/></svg></button>
       <button id="show-followups" class="text-button" type="button" aria-expanded="false" aria-controls="followup-panel" disabled><svg class="ui-icon" aria-hidden="true"><use href="#ui-scales"/></svg>待补与跟进<svg class="tool-chevron" aria-hidden="true"><use href="#ui-chevron"/></svg></button>
-      <button id="show-workbench-tasks" class="chat-only text-button" type="button">更多工作流程 · 工作台</button>
+      <button id="show-workbench-tasks" class="chat-only text-button" type="button" aria-controls="task-draft-panel" aria-expanded="false">任务与收件记录</button>
       </nav>
         </details>
       </div>
@@ -133,6 +134,7 @@
       </div>
 
       <section class="compose-section" aria-label="输入、保存与生成草稿">
+        <div id="chat-skills-host"></div>
         <section id="material-section" class="material-section" aria-labelledby="material-heading" hidden>
           <h2 id="material-heading">本次材料</h2>
           <div id="material-list"></div>
@@ -189,8 +191,8 @@
         <div id="skill-cards" class="skill-cards" aria-label="选择本次能力">
           <button type="button" data-skill="client_reply" aria-pressed="false"><svg class="skill-icon" aria-hidden="true"><use href="#ui-chat"/></svg><strong>客户接待</strong><span>理清诉求，准备下一步</span><svg class="skill-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
           <button type="button" data-skill="material_organize" aria-pressed="false"><svg class="skill-icon" aria-hidden="true"><use href="#ui-folder"/></svg><strong>案件整理</strong><span>梳理事实与材料线索</span><svg class="skill-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
-          <button type="button" data-skill="contract_review" aria-pressed="false"><svg class="skill-icon" aria-hidden="true"><use href="#ui-document"/></svg><strong>审查合同</strong><span>核对原文，准备修改建议</span><svg class="skill-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
-          <button type="button" data-skill="mock_trial" aria-pressed="false"><svg class="skill-icon" aria-hidden="true"><use href="#ui-scales"/></svg><strong>庭审准备</strong><span>从不同视角准备追问</span><svg class="skill-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
+          <button type="button" data-skill="contract_review" aria-pressed="false"><svg class="skill-icon" aria-hidden="true"><use href="#ui-document"/></svg><strong>合同审查</strong><span>核对原文，准备修改建议</span><svg class="skill-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
+          <button type="button" data-skill="mock_trial" aria-pressed="false"><svg class="skill-icon" aria-hidden="true"><use href="#ui-scales"/></svg><strong>模拟法庭</strong><span>对方律师、法官与己方演练</span><svg class="skill-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></button>
         </div>
         </section>
 
@@ -305,8 +307,6 @@
         </div>
       </details>
 
-      </aside>
-
       <details id="task-draft-panel" class="task-draft-panel">
         <summary>收件任务<span class="muted">本人微信与合成演练分别标记，分析成果见聊天记录</span></summary>
         <div class="task-draft-body">
@@ -363,6 +363,13 @@
           <div id="task-unassigned"></div>
         </div>
       </details>
+      </aside>
+
+      <aside id="matter-overview" class="matter-overview" aria-labelledby="matter-overview-title" hidden>
+        <header><h2 id="matter-overview-title">当前事项</h2><button id="close-matter-overview" type="button" class="text-button">收起概览</button></header>
+        <div id="matter-overview-content"></div>
+        <p class="muted">在“事项工具”中核对档案、事实、任务与成果。参考资料和模型草稿均需律师核对。</p>
+      </aside>
 
     </div>
   </main>

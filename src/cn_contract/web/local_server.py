@@ -11,13 +11,13 @@ import sys
 from unicodedata import category
 from uuid import UUID, uuid4
 
-from sqlalchemy import select
+from sqlalchemy import event, select
 
 from ..config import PROJECT_ROOT, load_settings
 from ..domain import Role
 from ..ops.backup import redirected
-from ..ops.file_paths import sqlite_readonly_uri
-from ..persistence import Database, UserRow
+from ..ops.file_paths import filesystem_path, sqlite_readonly_uri
+from ..persistence import Database, UserRow, _initialize_base_schema
 from ..security import ServiceError, provision_user
 from ..storage_bootstrap import initialize_storage, mark_storage_initialized
 from ..storage_schema import CURRENT_VERSION, identify_schema
@@ -30,7 +30,8 @@ from .demo_server import attach_job_worker
 def _workspace_path(directory, *, data_parent=None):
     path = Path(directory).absolute()
     for item in (path, *path.parents):
-        if (item.exists() or item.is_symlink()) and redirected(item):
+        native = filesystem_path(item)
+        if (native.exists() or native.is_symlink()) and redirected(native):
             raise ValueError('REDIRECTED_WORKSPACE')
     path = path.resolve()
     # Only trusted native entry points may supply a parent; HTTP never does.
@@ -63,10 +64,11 @@ def _open_workspace(directory, *, data_parent=None):
     root = _workspace_path(directory, data_parent=data_parent)
     for name in ('workspace.json', 'workbench.db', 'workbench.db-wal', 'workbench.db-shm',
                  'workbench.db-journal', 'protected', 'worker.lock'):
-        _safe_file(root / name)
-    marker = root / 'workspace.json'
+        _safe_file(filesystem_path(root / name))
+    marker = filesystem_path(root / 'workspace.json')
     if (not marker.is_file() or marker.stat().st_size > 4096
-            or not (root / 'workbench.db').is_file() or not (root / 'protected').is_dir()):
+            or not filesystem_path(root / 'workbench.db').is_file()
+            or not filesystem_path(root / 'protected').is_dir()):
         raise ValueError('WORKSPACE_NOT_INITIALIZED')
     payload = json.loads(marker.read_text(encoding='utf-8'))
     expected = _marker()
@@ -104,9 +106,13 @@ def _database(root, *, initialize=False):
             if identify_schema(database_rows(connection), native=True) != CURRENT_VERSION:
                 raise ValueError('WORKSPACE_DATABASE_MISMATCH')
     database = Database('sqlite:///' + str(root / 'workbench.db'), root / 'protected', load_settings(),
-                        initialize_schema=initialize)
+                        initialize_schema=False)
+    @event.listens_for(database.engine, 'do_connect')
+    def native_filename(dialect, record, arguments, parameters):
+        arguments[0] = str(filesystem_path(root/'workbench.db'))
     try:
         if initialize:
+            _initialize_base_schema(database.engine)
             initialize_storage(database)
         else:
             mark_storage_initialized(database)
@@ -120,21 +126,21 @@ def initialize_workspace(directory, username, password, *, data_parent=None):
     _credentials(username, password)
     root = _workspace_path(directory, data_parent=data_parent)
     marker = _marker()
-    if root.exists():
+    if filesystem_path(root).exists():
         raise ValueError('WORKSPACE_ALREADY_EXISTS')
-    root.mkdir(parents=True, exist_ok=False)
+    filesystem_path(root).mkdir(parents=True, exist_ok=False)
     database = _database(root, initialize=True)
     try:
         with database.session() as db:
             provision_user(username, password, {Role.HANDLING_LAWYER}, db, local_workbench_password=True)
         marker['workspace_id'] = str(uuid4())
-        with closing(sqlite3.connect(root / 'workbench.db')) as db:
+        with closing(sqlite3.connect(filesystem_path(root / 'workbench.db'))) as db:
             with db:
                 db.execute('CREATE TABLE local_workspace_identity (id TEXT PRIMARY KEY NOT NULL)')
                 db.execute('INSERT INTO local_workspace_identity (id) VALUES (?)', (marker['workspace_id'],))
                 marker['schema_sha256'] = _schema_hash(db)
         # A partial initialization is never silently repaired or overwritten.
-        with (root / 'workspace.json').open('x', encoding='utf-8') as output:
+        with filesystem_path(root / 'workspace.json').open('x', encoding='utf-8') as output:
             json.dump(marker, output, ensure_ascii=False, indent=2)
     finally:
         database.engine.dispose()
@@ -161,7 +167,7 @@ def add_local_user(directory, username, password, role):
 
 @contextmanager
 def _worker_lock(root):
-    path = root / 'worker.lock'
+    path = filesystem_path(root / 'worker.lock')
     _safe_file(path)
     with path.open('a+b') as stream:
         if path.stat().st_size == 0:
@@ -187,17 +193,22 @@ def _worker_lock(root):
 
 
 def build_local_app(directory, *, port=8767, library_root=None, data_parent=None, assistant_model_runtime=None,
-                    assistant_judge_runtime=None, reception_knowledge_root=None):
+                    assistant_judge_runtime=None, reception_knowledge_root=None, capability_registry=None):
     root = _open_workspace(directory, data_parent=data_parent)
     with _worker_lock(root):
         from .workspace_upgrade import upgrade
         upgrade(root)
         database = _database(root)
     try:
+        if capability_registry is None:
+            from ..integrations.skill_registry import SkillRegistry
+            capability_file = root.parent / 'capabilities.json'
+            if capability_file.exists():
+                capability_registry = SkillRegistry.from_file(capability_file)
         app = create_app(load_settings(), database=database, purpose='assisted_draft',
                          assisted_policy=load_seed_policy(), local_materials_enabled=True,
                          assistant_home_enabled=True, assistant_model_runtime=assistant_model_runtime,
-                         assistant_judge_runtime=assistant_judge_runtime)
+                         assistant_judge_runtime=assistant_judge_runtime, capability_registry=capability_registry)
         from .recovery import attach_recovery
         attach_recovery(app,database)
         from .reception_assistant import attach_reception
