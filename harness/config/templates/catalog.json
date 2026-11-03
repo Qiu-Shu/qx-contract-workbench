@@ -1,0 +1,220 @@
+{
+  "templates": [
+    {
+      "id": "complaint-loan",
+      "name": "起诉状模板-民间借贷",
+      "kind": "complaint",
+      "format": "paragraph",
+      "layout": {
+        "page_width": 11906,
+        "page_height": 16838,
+        "top_margin": 1440,
+        "bottom_margin": 1440,
+        "left_margin": 1800,
+        "right_margin": 1800,
+        "title_pt": 22,
+        "body_pt": 15,
+        "line_pt": 25
+      },
+      "source": {
+        "archive": "分发包-模板.zip",
+        "archive_sha256": "a07368386777982b040417580da82397eaa5b15c6cb1b0531e1ad090004f36a5",
+        "entry": "分发包-模板/complaint-draft/assets/起诉状模板-民间借贷.docx",
+        "sha256": "d69b272e1830e691ab5a772723f01cdd6c752adc1f40996b42af84b558041f6b"
+      },
+      "input_fields": [
+        "parties",
+        "claims",
+        "facts",
+        "court",
+        "signature",
+        "date"
+      ],
+      "notice": "只参考版式；示例事实、元信息及固定页码不进入生成文件。"
+    },
+    {
+      "id": "complaint-inheritance",
+      "name": "起诉状模板-遗产继承纠纷",
+      "kind": "complaint",
+      "format": "paragraph",
+      "layout": {
+        "page_width": 11906,
+        "page_height": 16838,
+        "top_margin": 1440,
+        "bottom_margin": 1440,
+        "left_margin": 1800,
+        "right_margin": 1800,
+        "title_pt": 22,
+        "body_pt": 15,
+        "line_pt": 25
+      },
+      "source": {
+        "archive": "分发包-模板.zip",
+        "archive_sha256": "a07368386777982b040417580da82397eaa5b15c6cb1b0531e1ad090004f36a5",
+        "entry": "分发包-模板/complaint-draft/assets/起诉状模板-遗产继承纠纷.docx",
+        "sha256": "70187c4f4aedec01b48fac71217f1f6d286a6db34425983fe922789fecd40363"
+      },
+      "input_fields": [
+        "parties",
+        "claims",
+        "facts",
+        "court",
+        "signature",
+        "date"
+      ],
+      "notice": "只参考版式；示例事实、元信息及固定页码不进入生成文件。"
+    },
+    {
+      "id": "complaint-sales",
+      "name": "起诉状模板-买卖合同欠款",
+      "kind": "complaint",
+      "format": "paragraph",
+      "layout": {
+        "page_width": 11906,
+        "page_height": 16838,
+        "top_margin": 1440,
+        "bottom_margin": 1440,
+        "left_margin": 1800,
+        "right_margin": 1800,
+        "title_pt": 22,
+        "body_pt": 15,
+        "line_pt": 25
+      },
+      "source": {
+        "archive": "分发包-模板.zip",
+        "archive_sha256": "a07368386777982b040417580da82397eaa5b15c6cb1b0531e1ad090004f36a5",
+        "entry": "分发包-模板/complaint-draft/assets/起诉状模板-买卖合同欠款.docx",
+        "sha256": "673bc7e69a94e82065aa892e4bd74084a187d171f3fa202bd52a743557c11951"
+      },
+      "input_fields": [
+        "parties",
+        "claims",
+        "facts",
+        "court",
+        "signature",
+        "date"
+      ],
+      "notice": "只参考版式；示例事实、元信息及固定页码不进入生成文件。"
+    },
+    {
+      "id": "complaint-service",
+      "name": "起诉状模板-服务合同欠款",
+      "kind": "complaint",
+      "format": "paragraph",
+      "layout": {
+        "page_width": 11906,
+        "page_height": 16838,
+        "top_margin": 1440,
+        "bottom_margin": 1440,
+        "left_margin": 1800,
+        "right_margin": 1800,
+        "title_pt": 18,
+        "body_pt": 14,
+        "line_pt": 28
+      },
+      "source": {
+        "archive": "分发包-模板.zip",
+        "archive_sha256": "a07368386777982b040417580da82397eaa5b15c6cb1b0531e1ad090004f36a5",
+        "entry": "分发包-模板/complaint-draft/assets/起诉状模板-服务合同欠款.docx",
+        "sha256": "a88a770d02184efeefa98291dd0527c157635a7bc1caa30f68cd863b0367e515"
+      },
+      "input_fields": [
+        "parties",
+        "claims",
+        "facts",
+        "court",
+        "signature",
+        "date"
+      ],
+      "notice": "只参考版式；示例事实、元信息及固定页码不进入生成文件。"
+    },
+    {
+      "id": "evidence-sales",
+      "name": "证据目录模板-买卖合同（段落版）",
+      "kind": "evidence",
+      "format": "paragraph",
+      "layout": {
+        "page_width": 11906,
+        "page_height": 16838,
+        "top_margin": 1440,
+        "bottom_margin": 1440,
+        "left_margin": 1800,
+        "right_margin": 1800,
+        "title_pt": 20,
+        "body_pt": 15,
+        "line_pt": 25
+      },
+      "source": {
+        "archive": "分发包-模板.zip",
+        "archive_sha256": "a07368386777982b040417580da82397eaa5b15c6cb1b0531e1ad090004f36a5",
+        "entry": "分发包-模板/evidence-list/assets/证据目录模板-买卖合同（段落版）.docx",
+        "sha256": "80d5556ad3e1d756c899d7ee51825db017b443699da69f6352602ac454ac9e06"
+      },
+      "input_fields": [
+        "evidence",
+        "submitter",
+        "date"
+      ],
+      "notice": "只参考版式；示例事实、元信息及固定页码不进入生成文件。"
+    },
+    {
+      "id": "evidence-construction",
+      "name": "证据目录模板-建设工程（段落版）",
+      "kind": "evidence",
+      "format": "paragraph",
+      "layout": {
+        "page_width": 11906,
+        "page_height": 16838,
+        "top_margin": 1440,
+        "bottom_margin": 1440,
+        "left_margin": 1800,
+        "right_margin": 1800,
+        "title_pt": 20,
+        "body_pt": 15,
+        "line_pt": 25
+      },
+      "source": {
+        "archive": "分发包-模板.zip",
+        "archive_sha256": "a07368386777982b040417580da82397eaa5b15c6cb1b0531e1ad090004f36a5",
+        "entry": "分发包-模板/evidence-list/assets/证据目录模板-建设工程（段落版）.docx",
+        "sha256": "bc3a909d14befb86e020b0be4e48456eb53fc2639169116a729c02156591c68f"
+      },
+      "input_fields": [
+        "evidence",
+        "submitter",
+        "date"
+      ],
+      "notice": "只参考版式；示例事实、元信息及固定页码不进入生成文件。"
+    },
+    {
+      "id": "evidence-table",
+      "name": "证据目录模板-表格版",
+      "kind": "evidence",
+      "format": "table",
+      "layout": {
+        "page_width": 11906,
+        "page_height": 16838,
+        "top_margin": 1460,
+        "bottom_margin": 1440,
+        "left_margin": 1800,
+        "right_margin": 1800,
+        "title_pt": 16,
+        "body_pt": 12,
+        "line_pt": 20
+      },
+      "source": {
+        "archive": "分发包-模板.zip",
+        "archive_sha256": "a07368386777982b040417580da82397eaa5b15c6cb1b0531e1ad090004f36a5",
+        "entry": "分发包-模板/evidence-list/assets/证据目录模板-表格版.docx",
+        "sha256": "589eb1818eae5b0a8fa49196299d0d05adb46f58d258f9dbc55f443a9c29b4e1"
+      },
+      "input_fields": [
+        "evidence",
+        "submitter",
+        "date"
+      ],
+      "notice": "只参考版式；示例事实、元信息及固定页码不进入生成文件。"
+    }
+  ],
+  "notice": "版式参考用户提供模板；不内置示例案件事实或诉请内容。"
+}

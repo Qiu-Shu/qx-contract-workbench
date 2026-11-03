@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "transport": "MCP stdio",
+  "tools": [
+    "list_materials",
+    "import_material",
+    "parse_material",
+    "read_material",
+    "search_materials",
+    "write_word_draft"
+  ],
+  "real_formats": [
+    "TXT",
+    "DOCX",
+    "two-page scanned PDF",
+    "Chinese PNG"
+  ],
+  "checks": [
+    "import",
+    "parse",
+    "resume PDF page batch",
+    "read pagination",
+    "full-text search",
+    "actual DOCX output",
+    "no overwrite",
+    "workspace boundary",
+    "original hashes unchanged"
+  ],
+  "model_requests": 0
+}

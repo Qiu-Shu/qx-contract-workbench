@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "transport": "real MCP stdio",
+  "model_requests": 0,
+  "tools": [
+    "get_workflow",
+    "list_cases",
+    "create_case",
+    "get_case",
+    "link_case_materials",
+    "record_case_note",
+    "record_reception",
+    "read_case_note",
+    "read_case_material",
+    "search_case_materials",
+    "export_case",
+    "start_hearing",
+    "get_hearing",
+    "list_hearings",
+    "read_hearing_turn",
+    "record_hearing_turn",
+    "get_hearing_role_context"
+  ],
+  "checks": [
+    "four sourced natural-language methods through MCP",
+    "case-scoped materials and request retry",
+    "append-only corrections and unresolved quote keeps prose",
+    "client-only actual DOCX and non-overwrite",
+    "five stages / eleven turns persisted",
+    "process restart restores case, hearing IDs, full long turn and material snapshot",
+    "original material bytes unchanged"
+  ]
+}

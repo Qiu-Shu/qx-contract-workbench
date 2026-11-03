@@ -1,0 +1,105 @@
+{
+  "bb_browser": {
+    "tools": [
+      "browser"
+    ],
+    "status": {
+      "meta": null,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"running\": false\n}",
+          "annotations": null,
+          "meta": null
+        }
+      ],
+      "structured_content": null,
+      "is_error": false,
+      "result_type": "complete"
+    }
+  },
+  "scrapling": {
+    "tools": [
+      "browser_open",
+      "browser_save_state",
+      "browser_load_state",
+      "open_request_session",
+      "close_session",
+      "list_sessions",
+      "make_request",
+      "browser_fetch_once",
+      "browser_fetch",
+      "session_make_request",
+      "browser_extract",
+      "browser_actions",
+      "browser_evaluate",
+      "browser_network_requests",
+      "browser_network_request",
+      "browser_screenshot"
+    ],
+    "publicPage": {
+      "meta": null,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"status\": 200,\n  \"content\": [\n    \"Example Domain\\nThis domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\",\n    \"\"\n  ],\n  \"url\": \"https://example.com/\"\n}",
+          "annotations": null,
+          "meta": null
+        }
+      ],
+      "structured_content": {
+        "status": 200,
+        "content": [
+          "Example Domain\nThis domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.",
+          ""
+        ],
+        "url": "https://example.com/"
+      },
+      "is_error": false,
+      "result_type": "complete"
+    }
+  },
+  "windows": {
+    "tools": [
+      "ControlStatus",
+      "App",
+      "DisplayInventory",
+      "PowerShell",
+      "FileSystem",
+      "Snapshot",
+      "Screenshot",
+      "Click",
+      "Type",
+      "Scroll",
+      "Move",
+      "Shortcut",
+      "Wait",
+      "WaitFor",
+      "Scrape",
+      "MultiSelect",
+      "MultiEdit",
+      "Clipboard",
+      "Process",
+      "Notification",
+      "Registry"
+    ],
+    "status": {
+      "meta": null,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"state\":\"user\",\"generation\":2,\"wait_seconds\":9.942044799914584}",
+          "annotations": null,
+          "meta": null
+        }
+      ],
+      "structured_content": {
+        "state": "user",
+        "generation": 2,
+        "wait_seconds": 9.942044799914584
+      },
+      "is_error": false,
+      "result_type": "complete"
+    }
+  }
+}

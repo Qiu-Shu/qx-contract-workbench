@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-03T06:20:47.029Z",
+  "providerId": "llm-deepseek",
+  "policy": {
+    "maxRetries": 5,
+    "retryableCodes": [
+      "EMPTY_RESPONSE",
+      "RATE_LIMIT",
+      "SERVER",
+      "TIMEOUT",
+      "TRANSPORT",
+      "MALFORMED_RESPONSE",
+      "STREAM_CLOSED"
+    ],
+    "mode": "normal",
+    "backoff": {
+      "initialDelayMs": 500,
+      "maxDelayMs": 10000,
+      "jitterRatio": 0.1
+    }
+  },
+  "source": "authenticated running settings/describe"
+}

@@ -1,0 +1,158 @@
+- id: agent-preset-registry
+  config:
+    default: qunxing
+- id: session-title-llm
+  disabled: true
+- insert:
+    - id: qx-first-content-title
+      name: D:/qx-harness-workbench-20261102/plugins/session-title/index.mjs
+      config:
+        workspace: D:/qx-harness-workbench-20261102/workspace
+        python: D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe
+- id: attachment-local
+  config:
+    dshHome: D:/qx-harness-workbench-20261102/workspace/inbox/.harness
+    # No application-level image-count or byte quota. Provider and machine
+    # capacity still apply; source files remain available for OCR/paged reading.
+    maxImagesPerMessage: 9007199254740991
+    maxImageBytes: 4503599627370495
+    maxMessageImageBytes: 4503599627370495
+- id: connection
+  config:
+    maxRequestBodyBytes: 9007199254740991
+- id: session-telemetry-otel
+  disabled: true
+- id: system-prompt
+  config:
+    personaPrefix: '你是群兴法律工作台，使用 {{model}} 帮助用户理解材料、拟稿和处理工作。用中文清楚回答。'
+- insert:
+    - id: qx-account-balance
+      name: D:/qx-harness-workbench-20261102/plugins/account/index.mjs
+    - id: qx-desktop-session
+      name: '@qunxing/desktop-session'
+    - id: qx-materials
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        transport: stdio
+        serverName: qx_materials
+        command: D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe
+        args:
+          - D:/qx-harness-workbench-20261102/bridge/server.py
+          - --workspace
+          - D:/qx-harness-workbench-20261102/workspace
+        cwd: D:/qx-harness-workbench-20261102/workspace
+        env:
+          PYTHONIOENCODING: utf-8
+        toolCallTimeoutMs: 600000
+    - id: preset-qunxing
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: qunxing
+        order: 0
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: '你是群兴法律工作台，使用 {{model}} 协助用户处理材料。根据需求自行选择并加载适用的中文法律 Skill。先理解目标，再行动；信息不足时只问会影响结果的问题。'
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              sampleOverCapGlobResults: false
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+          - id: tool-ask-user
+            name: '@deepseek-ai/dsh-tool-ask-user'
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: present
+            name: '@deepseek-ai/dsh-tool-present'
+    - id: qx-personal-wechat
+      name: D:/qx-harness-workbench-20261102/plugins/wechat/qx-plugin.js
+      config:
+        workspace: D:/qx-harness-workbench-20261102/workspace
+        stateDir: D:/qx-harness-workbench-20261102/.local/dsh-home/qx-wechat
+        sessionId: qx-personal-workbench
+        agentPreset: qunxing
+        autoConnect: true
+
+# qunxing-web-desktop-tools-v1
+- insert:
+    - {"id": "qx-bb-browser", "name": "@deepseek-ai/dsh-mcp-client", "config": {"transport": "stdio", "serverName": "bb_browser", "command": "D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe", "args": ["D:\\qx-harness-workbench-20261102\\bridge\\browser.py"], "cwd": "D:\\qx-harness-workbench-20261102\\workspace", "env": {"PYTHONIOENCODING": "utf-8", "QX_BROWSER_ADAPTER_VERSION": "1.1.1"}, "toolCallTimeoutMs": 120000}}
+    - {"id": "qx-scrapling", "name": "@deepseek-ai/dsh-mcp-client", "config": {"transport": "stdio", "serverName": "scrapling", "command": "C:/Users/Lenovo/.codex/tools/scrapling/venv/Scripts/scrapling.exe", "args": ["mcp", "--executable-path", "C:/Program Files/Google/Chrome/Application/chrome.exe"], "cwd": "D:\\qx-harness-workbench-20261102\\workspace", "env": {"PYTHONIOENCODING": "utf-8"}, "toolCallTimeoutMs": 120000}}
+    - {"id": "qx-windows", "name": "@deepseek-ai/dsh-mcp-client", "config": {"transport": "stdio", "serverName": "windows", "command": "C:/Users/Lenovo/.codex/tools/windows-mcp/venv/Scripts/windows-mcp.exe", "args": ["serve", "--transport", "stdio"], "cwd": "D:\\qx-harness-workbench-20261102\\workspace", "env": {"PYTHONIOENCODING": "utf-8"}, "toolCallTimeoutMs": 120000}}
+
+# qunxing-legal-workflows-v1
+- insert:
+    - id: qx-legal
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        transport: stdio
+        serverName: qx_legal
+        command: D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe
+        args:
+          - D:/qx-harness-workbench-20261102/bridge/business_server.py
+          - --workspace
+          - D:/qx-harness-workbench-20261102/workspace
+        cwd: D:/qx-harness-workbench-20261102/workspace
+        env:
+          PYTHONIOENCODING: utf-8
+        toolCallTimeoutMs: 600000
+
+# qunxing-local-knowledge-v1
+- insert:
+    - {"id": "qx-knowledge-ui", "name": "D:\\qx-harness-workbench-20261102\\plugins\\knowledge\\index.mjs", "config": {"workspace": "D:\\qx-harness-workbench-20261102\\workspace", "python": "D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe"}}
+    - {"id": "qx-knowledge", "name": "@deepseek-ai/dsh-mcp-client", "config": {"transport": "stdio", "serverName": "qx_knowledge", "command": "D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe", "args": ["D:\\qx-harness-workbench-20261102\\bridge\\knowledge_server.py", "--workspace", "D:\\qx-harness-workbench-20261102\\workspace"], "cwd": "D:\\qx-harness-workbench-20261102\\workspace", "env": {"PYTHONIOENCODING": "utf-8"}, "toolCallTimeoutMs": 120000}}
+
+# qunxing-upload-privacy-v1
+- insert:
+    - id: qx-upload-privacy
+      name: D:/qx-harness-workbench-20261102/plugins/privacy/index.mjs
+      config:
+        workspace: D:/qx-harness-workbench-20261102/workspace
+        python: D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe
+
+# qunxing-model-recovery-v1
+# Retry only the failed model request. The official loop retains completed tool results.
+- id: llm-deepseek
+  config:
+    retryPolicy:
+      mode: normal
+      maxRetries: 5
+      retryableCodes:
+        - EMPTY_RESPONSE
+        - RATE_LIMIT
+        - SERVER
+        - TIMEOUT
+        - TRANSPORT
+        - MALFORMED_RESPONSE
+        - STREAM_CLOSED

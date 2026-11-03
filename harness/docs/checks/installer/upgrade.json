@@ -1,0 +1,31 @@
+{
+  "fromVersion": "0.2.0",
+  "toVersion": "0.2.1",
+  "materialsRetained": true,
+  "privateMappingRetained": true,
+  "encryptedCredentialRetained": true,
+  "customInstructionsRetained": true,
+  "contractDefaultsUpdated": true,
+  "exactInstalledAsar": true,
+  "effectiveProviderId": "llm-deepseek",
+  "effectiveRetryPolicy": {
+    "maxRetries": 5,
+    "retryableCodes": [
+      "EMPTY_RESPONSE",
+      "RATE_LIMIT",
+      "SERVER",
+      "TIMEOUT",
+      "TRANSPORT",
+      "MALFORMED_RESPONSE",
+      "STREAM_CLOSED"
+    ],
+    "mode": "normal",
+    "backoff": {
+      "initialDelayMs": 500,
+      "maxDelayMs": 10000,
+      "jitterRatio": 0.1
+    }
+  },
+  "migrationBackups": true,
+  "noModelRequest": true
+}

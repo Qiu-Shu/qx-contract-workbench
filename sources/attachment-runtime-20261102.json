@@ -1,0 +1,204 @@
+{
+  "scope": "Local document/image text extraction; no audio/video and no external inference",
+  "python": "3.12",
+  "roots": [
+    "python-calamine",
+    "python-pptx",
+    "odfpy",
+    "striprtf",
+    "beautifulsoup4",
+    "olefile",
+    "legacy-doc",
+    "ppt2pptx",
+    "rapidocr-onnxruntime",
+    "Pillow",
+    "pypdfium2"
+  ],
+  "packages": [
+    {
+      "name": "beautifulsoup4",
+      "version": "4.15.0",
+      "license_expression": null,
+      "license": "MIT License"
+    },
+    {
+      "name": "colorama",
+      "version": "0.4.6",
+      "license_expression": null,
+      "license": null
+    },
+    {
+      "name": "defusedxml",
+      "version": "0.7.1",
+      "license_expression": null,
+      "license": "PSFL"
+    },
+    {
+      "name": "flatbuffers",
+      "version": "25.12.19",
+      "license_expression": null,
+      "license": "Apache 2.0"
+    },
+    {
+      "name": "legacy-doc",
+      "version": "0.2.1",
+      "license_expression": "MIT",
+      "license": null
+    },
+    {
+      "name": "lxml",
+      "version": "6.1.3",
+      "license_expression": null,
+      "license": "BSD-3-Clause"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.4",
+      "license_expression": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "license": null
+    },
+    {
+      "name": "odfpy",
+      "version": "1.4.1",
+      "license_expression": null,
+      "license": null
+    },
+    {
+      "name": "olefile",
+      "version": "0.47",
+      "license_expression": null,
+      "license": "BSD"
+    },
+    {
+      "name": "onnxruntime",
+      "version": "1.31.1",
+      "license_expression": null,
+      "license": "MIT License"
+    },
+    {
+      "name": "opencv-python",
+      "version": "5.0.0.93",
+      "license_expression": null,
+      "license": "Apache 2.0"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "license_expression": "Apache-2.0 OR BSD-2-Clause",
+      "license": null
+    },
+    {
+      "name": "pillow",
+      "version": "12.3.0",
+      "license_expression": "MIT-CMU",
+      "license": null
+    },
+    {
+      "name": "ppt2pptx",
+      "version": "0.4.2",
+      "license_expression": "MIT",
+      "license": null
+    },
+    {
+      "name": "protobuf",
+      "version": "7.36.2",
+      "license_expression": null,
+      "license": "3-Clause BSD License"
+    },
+    {
+      "name": "pyclipper",
+      "version": "1.4.0",
+      "license_expression": null,
+      "license": "MIT"
+    },
+    {
+      "name": "pypdfium2",
+      "version": "5.13.0",
+      "license_expression": null,
+      "license": "BSD-3-Clause, Apache-2.0, dependency licenses"
+    },
+    {
+      "name": "python-calamine",
+      "version": "0.9.0",
+      "license_expression": "MIT",
+      "license": null
+    },
+    {
+      "name": "python-pptx",
+      "version": "1.0.2",
+      "license_expression": null,
+      "license": "MIT"
+    },
+    {
+      "name": "pyyaml",
+      "version": "6.0.3",
+      "license_expression": null,
+      "license": "MIT"
+    },
+    {
+      "name": "rapidocr-onnxruntime",
+      "version": "1.4.4",
+      "license_expression": null,
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "shapely",
+      "version": "2.2.0",
+      "license_expression": "BSD-3-Clause",
+      "license": null
+    },
+    {
+      "name": "six",
+      "version": "1.17.0",
+      "license_expression": null,
+      "license": "MIT"
+    },
+    {
+      "name": "soupsieve",
+      "version": "3.0.4",
+      "license_expression": "MIT",
+      "license": null
+    },
+    {
+      "name": "striprtf",
+      "version": "0.0.35",
+      "license_expression": "BSD-3-Clause",
+      "license": null
+    },
+    {
+      "name": "tqdm",
+      "version": "4.70.1",
+      "license_expression": null,
+      "license": "MPL-2.0 AND MIT"
+    },
+    {
+      "name": "typing-extensions",
+      "version": "4.16.0",
+      "license_expression": "PSF-2.0",
+      "license": null
+    },
+    {
+      "name": "xlsxwriter",
+      "version": "3.3.1",
+      "license_expression": "BSD-2-Clause",
+      "license": null
+    }
+  ],
+  "bundled_ocr_models": [
+    {
+      "path": "rapidocr_onnxruntime/models/ch_PP-OCRv4_det_infer.onnx",
+      "bytes": 4745517,
+      "sha256": "d2a7720d45a54257208b1e13e36a8479894cb74155a5efe29462512d42f49da9"
+    },
+    {
+      "path": "rapidocr_onnxruntime/models/ch_PP-OCRv4_rec_infer.onnx",
+      "bytes": 10857958,
+      "sha256": "48fc40f24f6d2a207a2b1091d3437eb3cc3eb6b676dc3ef9c37384005483683b"
+    },
+    {
+      "path": "rapidocr_onnxruntime/models/ch_ppocr_mobile_v2.0_cls_infer.onnx",
+      "bytes": 585532,
+      "sha256": "e47acedf663230f8863ff1ab0e64dd2d82b838fceb5957146dab185a89d6215c"
+    }
+  ]
+}

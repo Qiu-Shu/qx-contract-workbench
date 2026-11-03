@@ -1,0 +1,11 @@
+{
+  "name":"@qunxing/personal-wechat",
+  "version":"0.1.0",
+  "private":true,
+  "type":"module",
+  "license":"MIT",
+  "main":"qx-plugin.js",
+  "exports":{".":"./qx-plugin.js","./package.json":"./package.json"},
+  "engines":{"node":">=22"},
+  "dsh":{"bundle":{"patch":"./cordis.patch.yml"}}
+}

@@ -1,0 +1,32 @@
+// Read-only verification of the isolated install's effective configuration and data.
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const {createHash,randomUUID}=require('node:crypto');
+const root=path.resolve(__dirname,'..'),installed=path.resolve(process.argv[2]);
+const baseline=JSON.parse(fs.readFileSync(path.join(root,'docs/checks/installer/upgrade-baseline.json'),'utf8'));
+const data=baseline.data;
+assert.ok(data.startsWith(path.join(root,'.local'))&&data.includes('installer-check-'));
+const hash=file=>createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+(async()=>{
+  for(const [file,digest] of Object.entries(baseline.files))assert.equal(hash(path.join(data,file)),digest,file);
+  const payload=path.join(installed,'resources/workbench');
+  const agents=fs.readFileSync(path.join(data,'workspace/AGENTS.md'),'utf8');
+  assert.ok(agents.includes('个人验收规则：不要覆盖这段自定义内容。'));
+  assert.ok(agents.includes('默认以 comments')&&agents.includes('write_contract_opinion'));
+  for(const file of ['.dsh/skills/qx-contract-review/SKILL.md','.dsh/skills/qx-contract-review/references/method.md'])assert.equal(hash(path.join(data,'workspace',file)),hash(path.join(payload,'workspace-seed',file)));
+  assert.equal(hash(path.join(installed,'resources/app.asar')),hash(path.join(root,'dist/win-unpacked/resources/app.asar')));
+  const runtime=JSON.parse(fs.readFileSync(path.join(data,'.local/runtime.json'),'utf8'));
+  const url=new URL(runtime.url);assert.equal(url.hostname,'127.0.0.1');
+  const auth=await fetch(url,{redirect:'manual'}),cookie=auth.headers.getSetCookie().map(s=>s.split(';')[0]).join('; ');
+  const method='settings/describe';
+  const response=await fetch(url.origin+'/api/'+method,{method:'POST',headers:{Origin:url.origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify({type:'client-request',rpcId:randomUUID(),method,payload:{args:{}}}),signal:AbortSignal.timeout(15000)});
+  const envelope=await response.json();assert.ok(envelope.result?.ok);
+  const provider=envelope.result.value.namespaces.find(row=>row.ns==='llm-deepseek');assert.ok(provider);
+  const policy=provider.value.retryPolicy;
+  assert.equal(policy.mode,'normal');assert.equal(policy.maxRetries,5);
+  for(const code of ['EMPTY_RESPONSE','RATE_LIMIT','SERVER','TIMEOUT','TRANSPORT','MALFORMED_RESPONSE','STREAM_CLOSED'])assert.ok(policy.retryableCodes.includes(code),code);
+  const markers=['contract-delivery-v1','model-recovery-v1'].map(version=>JSON.parse(fs.readFileSync(path.join(data,'.local/migrations',version+'.json'),'utf8')));
+  for(const marker of markers)assert.ok(marker.backupDirectory&&fs.existsSync(marker.backupDirectory));
+  const report={fromVersion:'0.2.0',toVersion:'0.2.1',materialsRetained:true,privateMappingRetained:true,encryptedCredentialRetained:true,customInstructionsRetained:true,contractDefaultsUpdated:true,exactInstalledAsar:true,effectiveProviderId:'llm-deepseek',effectiveRetryPolicy:policy,migrationBackups:true,noModelRequest:true};
+  fs.writeFileSync(path.join(root,'docs/checks/installer/upgrade.json'),JSON.stringify(report,null,2));
+  console.log(JSON.stringify(report));
+})().catch(error=>{console.error(error.message);process.exitCode=1});

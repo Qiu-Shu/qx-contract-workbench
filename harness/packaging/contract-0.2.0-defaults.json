@@ -1,0 +1,8 @@
+{
+  "files": {
+    ".dsh/skills/qx-contract-review/SKILL.md": "bae69f5484173d6f30a6bb2a2e6c517c8ed62d031e0da5b83d80f175b3a6a1df",
+    ".dsh/skills/qx-contract-review/references/method.md": "e02984a5e4bd016db6787c2b6b9d60730d86daa14ae4dc507c2fcb8ba14e91d4"
+  },
+  "instructionPrefix": "用户要修改原合同Word时，",
+  "oldInstruction": "用户要修改原合同Word时，先 qx_materials.inspect_word_document 获取段落编号和版本，再 write_review_word 生成带修订/批注的新文件，逐项说明未应用的修改。诉状/证据目录可用 list_document_templates 和 generate_document_from_template；未知事实保留待补，不填示例金额和页码。"
+}

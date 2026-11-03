@@ -1,0 +1,92 @@
+{
+  "uploadFollowup": {
+    "providerCost": "not returned",
+    "status": "passed",
+    "sessionId": "qx-smoke-ce822b3f-b740-4fff-b654-c95b3c0b1022",
+    "readEvidence": [
+      {
+        "filename": "qx-fixture.txt",
+        "path": "D:\\qx-harness-workbench-20261102\\workspace\\inbox\\.harness\\attachments\\v1\\files\\fb\\fbedafbf831777001d4f13b0b13174bd650db0ea54eaa1a68cfdc3c481555b40\\qx-fixture.txt",
+        "readVerified": true
+      },
+      {
+        "filename": "qx-fixture.docx",
+        "path": "D:\\qx-harness-workbench-20261102\\workspace\\inbox\\.harness\\attachments\\v1\\files\\80\\803f4e82bf565604bde1ee3f8b0c081ff020ecdbd8f76d041df75427aa4bfde9\\qx-fixture.docx",
+        "readVerified": true
+      },
+      {
+        "filename": "qx-fixture.png",
+        "path": "D:\\qx-harness-workbench-20261102\\workspace\\inbox\\.harness\\attachments\\v1\\files\\f7\\f7e2aec7957bc5698e0ecebce7c6355cc892ca87d1b494af7420fdc982328da3\\qx-fixture.png",
+        "readVerified": true
+      }
+    ],
+    "usage": {
+      "inputTokens": 17772,
+      "outputTokens": 1396,
+      "cacheReadTokens": 68864,
+      "cacheWriteTokens": 0,
+      "totalTokens": 88032
+    }
+  },
+  "fullRun": {
+    "recall": {
+      "amount": true,
+      "deadline": true
+    },
+    "word": {
+      "path": "D:\\qx-harness-workbench-20261102\\workspace\\drafts\\qx-smoke-review-2026-11-03T03-04-24-316Z.docx",
+      "bytes": 37300,
+      "amountVerified": true
+    },
+    "usage": {
+      "inputTokens": 41463,
+      "outputTokens": 4474,
+      "cacheReadTokens": 211840,
+      "cacheWriteTokens": 0,
+      "totalTokens": 257777
+    },
+    "sessionId": "qx-smoke-4e02792a-de51-4e60-850d-1ba9ed875e81",
+    "status": "partial",
+    "compaction": {
+      "result": {
+        "commandId": "cmd-88a59cf4-1",
+        "result": {
+          "kind": "success",
+          "text": "Compacted 31 history items (~11913 tokens).",
+          "sourceEventSeq": 98
+        }
+      },
+      "events": [
+        {
+          "seq": 95,
+          "type": "command/run"
+        },
+        {
+          "seq": 96,
+          "type": "compaction/start"
+        },
+        {
+          "seq": 98,
+          "type": "compaction/summary",
+          "usage": {
+            "inputTokens": 428,
+            "outputTokens": 1496,
+            "cacheReadTokens": 25344,
+            "cacheWriteTokens": 0,
+            "totalTokens": 27268
+          }
+        },
+        {
+          "seq": 100,
+          "type": "compaction/end"
+        },
+        {
+          "seq": 101,
+          "type": "command/done"
+        }
+      ]
+    },
+    "uploadIssue": "Official immutable upload aliases were rejected as hard links; model used original synthetic fixtures. Word and compaction succeeded."
+  },
+  "checkedAt": "2026-11-03T03:19:06.4296581Z"
+}

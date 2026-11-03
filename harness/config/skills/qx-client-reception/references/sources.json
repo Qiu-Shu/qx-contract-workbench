@@ -1,0 +1,51 @@
+{
+  "version": "qx-legal-methods-v1",
+  "sources": [
+    {
+      "name": "接待成果要求",
+      "path": "src/cn_contract/assistant/material_codec.py",
+      "repository": "https://github.com/Qiu-Shu/qx-contract-workbench",
+      "url": "https://github.com/Qiu-Shu/qx-contract-workbench/blob/a26ae24c494c23c5b5d4a68a774a0f158df37eb0/src/cn_contract/assistant/material_codec.py",
+      "git_head": "a26ae24c494c23c5b5d4a68a774a0f158df37eb0",
+      "snapshot": "working_tree_bytes",
+      "sha256": "1bb418579b7149433461915a958aa699d39f5a0c77447a1e09c7f40b97869677",
+      "bytes": 16058,
+      "git_head_blob_sha256": "2675dfff479dc6e1ed3348814237e2fd4d51a5e0f38d00449bc4178d00c8b6d6",
+      "working_tree_changed": true,
+      "sections": {
+        "start_line": 26,
+        "end_line": 35,
+        "sha256": "b894c1e0f6f8c4b440e5950e799c878e404c328ace89623f7781b7d854356d7d"
+      },
+      "usage": "保留接待目标、紧急线索、客户回复与内部底稿分离；去掉旧JSON总协议。",
+      "license": "保留旧项目来源；本条不声明新的许可授权。"
+    },
+    {
+      "name": "连续接待与原话追问",
+      "path": "src/cn_contract/assistant/reception_worksheet.py",
+      "repository": "https://github.com/Qiu-Shu/qx-contract-workbench",
+      "url": "https://github.com/Qiu-Shu/qx-contract-workbench/blob/a26ae24c494c23c5b5d4a68a774a0f158df37eb0/src/cn_contract/assistant/reception_worksheet.py",
+      "git_head": "a26ae24c494c23c5b5d4a68a774a0f158df37eb0",
+      "snapshot": "working_tree_bytes",
+      "sha256": "b860a77c59f15344be51d890a47243111ccbac5f2d6321ca5c7fef975b6dce13",
+      "bytes": 8340,
+      "git_head_blob_sha256": "b860a77c59f15344be51d890a47243111ccbac5f2d6321ca5c7fef975b6dce13",
+      "working_tree_changed": false,
+      "sections": {
+        "start_line": 94,
+        "end_line": 108,
+        "sha256": "78d919603e91d8029bccd392243aca0f7bb7a184244c4a76e27f56d31d6d5b7c"
+      },
+      "usage": "保留已答问题不重复、约定/交付/还款分离、已收到不等于已核实；不导入旧字段门禁。",
+      "license": "保留旧项目来源；本条不声明新的许可授权。"
+    }
+  ],
+  "adaptation": {
+    "delivery": "natural_language",
+    "legacy_execution": "not_imported",
+    "character_offsets": "not_required_from_model",
+    "changes": "静态提炼业务方法；通过新qx_legal案件记录与qx_materials材料工具编排，不调用旧拒收器。",
+    "quality_scope": "迁移方法不是法律质量认证，不继承旧实验评分或生产结论。",
+    "private_knowledge_packages": "not_connected"
+  }
+}

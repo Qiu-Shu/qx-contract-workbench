@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self';">
+<title>配置 API · 群兴法律工作台</title><link rel="stylesheet" href="setup.css"></head>
+<body><main>
+<header><span class="brand">群兴</span><span>法律工作台</span></header>
+<h1>连接你的 DeepSeek</h1>
+<p class="intro">填写 API Key，开始审阅合同、整理案件和拟写文书。模型费用由你的 DeepSeek 账户结算。</p>
+<form id="setup-form">
+<label for="api-key">DeepSeek API Key</label>
+<div class="input-row"><input id="api-key" type="password" autocomplete="off" spellcheck="false" maxlength="512" required aria-describedby="key-note" placeholder="粘贴你的 API Key"><button type="button" id="reveal" aria-pressed="false">显示</button></div>
+<p id="key-note" class="note">密钥使用 Windows 加密后保存在这台电脑，仅用于连接 DeepSeek。</p>
+<button type="button" id="get-key" class="link">前往 DeepSeek 创建 API Key</button>
+<p id="status" role="status" aria-live="polite"></p>
+<button id="submit" type="submit" class="primary">验证并进入工作台</button>
+</form>
+<footer>验证只查询账户状态，不提交模型任务。以后可在“工作台 → API 设置”中更换密钥。</footer>
+</main><script src="setup.js"></script></body></html>

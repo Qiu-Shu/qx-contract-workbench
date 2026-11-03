@@ -1,0 +1,30 @@
+{
+  "version": "qx-legal-methods-v1",
+  "sources": [
+    {
+      "name": "旧群兴持衡适配层的五阶段与角色顺序",
+      "path": "D:/qx-contract-workbench-20261102/src/cn_contract/integrations/chiheng.py",
+      "url": "https://github.com/Qiu-Shu/qx-contract-workbench/blob/a26ae24c494c23c5b5d4a68a774a0f158df37eb0/src/cn_contract/integrations/chiheng.py#L21",
+      "git_head": "a26ae24c494c23c5b5d4a68a774a0f158df37eb0",
+      "sha256": "ee3d62f779d19e9bef2e079ed7a5be117386763326718a1471de7ebc29aacbaf",
+      "bytes": 8024,
+      "git_head_blob_sha256": "ee3d62f779d19e9bef2e079ed7a5be117386763326718a1471de7ebc29aacbaf",
+      "working_tree_changed": false,
+      "license": "沿用用户已有项目来源；本次未对原私有引擎许可作判断",
+      "usage": "仅摘取ROLES/STAGES顺序；未加载私有持衡引擎，不复用严格输出DTO或整答拒收逻辑"
+    },
+    {
+      "name": "MiroFish逐轮记录与定向角色采访设计参考",
+      "url": "https://github.com/666ghj/MiroFish/blob/7657031ac01184afe2cb220f5ee3545573b5e843/backend/scripts/run_parallel_simulation.py#L317",
+      "revision": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "license": "AGPL-3.0（上游声明）；仅设计研究，没有复制其产品源码",
+      "usage": "借鉴按角色取得上下文、记录实际轮次和按记录复盘；没有接入OASIS、社交平台或Zep Cloud"
+    }
+  ],
+  "adaptation": {
+    "runtime": "Harness已有模型与工具；本机HearingStore(CaseStore)",
+    "output": "自然语言发言逐条保存，未匹配引文为待核提示，不因正文篇幅拒收",
+    "history": "材料和输入笔记快照、追加轮次、请求幂等、显式previous_id重开；模拟言论不回灌证据",
+    "limits": "仅实现民事原告/被告五阶段演练；不是原私有持衡引擎，不作裁判预测；同一助理扮演不称独立Agent隔离"
+  }
+}

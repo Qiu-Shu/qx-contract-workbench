@@ -1,0 +1,91 @@
+{
+  "opinion": {
+    "status": "draft",
+    "html": {
+      "path": "D:\\qx-harness-workbench-20261102\\docs\\checks\\contract-opinion\\drafts\\synthetic-opinion.html",
+      "relative_path": "drafts/synthetic-opinion.html",
+      "bytes": 5781,
+      "sha256": "f9041d156f383ebcf0e4d802931ed2d6d296cee37e3fb116cc54ba2bf3b787a6"
+    },
+    "word": {
+      "path": "D:\\qx-harness-workbench-20261102\\docs\\checks\\contract-opinion\\drafts\\synthetic-opinion.docx",
+      "relative_path": "drafts/synthetic-opinion.docx",
+      "bytes": 38995,
+      "sha256": "04a264fb8f94d349b6b3ed63cbaebf3375feecdd6ea4635ed0508131e0c30608"
+    },
+    "html_path": "D:\\qx-harness-workbench-20261102\\docs\\checks\\contract-opinion\\drafts\\synthetic-opinion.html",
+    "word_path": "D:\\qx-harness-workbench-20261102\\docs\\checks\\contract-opinion\\drafts\\synthetic-opinion.docx",
+    "counts": {
+      "sections": 6,
+      "paragraphs": 7,
+      "tables": 1,
+      "rows": 5,
+      "references": 1
+    },
+    "notice": "HTML 与 Word 使用同一份传入正文。请核对事实、条款对应和法律来源；未自动补写结论或日期。"
+  },
+  "long_opinion": {
+    "status": "draft",
+    "html": {
+      "path": "D:\\qx-harness-workbench-20261102\\docs\\checks\\contract-opinion\\drafts\\long-flow.html",
+      "relative_path": "drafts/long-flow.html",
+      "bytes": 11404,
+      "sha256": "a7b113dac6fb01c04d35f3d000e52d56ecc3d0fcaa0da5097ab92cae035efe8b"
+    },
+    "word": {
+      "path": "D:\\qx-harness-workbench-20261102\\docs\\checks\\contract-opinion\\drafts\\long-flow.docx",
+      "relative_path": "drafts/long-flow.docx",
+      "bytes": 37627,
+      "sha256": "b64e29e233cd86a54487835ad49ac2c61b4b4e54426cb59615cb01bec6f19623"
+    },
+    "html_path": "D:\\qx-harness-workbench-20261102\\docs\\checks\\contract-opinion\\drafts\\long-flow.html",
+    "word_path": "D:\\qx-harness-workbench-20261102\\docs\\checks\\contract-opinion\\drafts\\long-flow.docx",
+    "counts": {
+      "sections": 2,
+      "paragraphs": 1,
+      "tables": 1,
+      "rows": 3,
+      "references": 0
+    },
+    "notice": "HTML 与 Word 使用同一份传入正文。请核对事实、条款对应和法律来源；未自动补写结论或日期。"
+  },
+  "comments": {
+    "status": "draft",
+    "mode": "comments",
+    "source_sha256": "6c23330aec4e5f630d28c23741c0e45d69974b45d34857ced7f182fa36620263",
+    "applied": 2,
+    "failed": 0,
+    "results": [
+      {
+        "index": 0,
+        "edit": {
+          "paragraph_id": "p000002-468cacf7b1236eb7",
+          "old": "立即交付",
+          "new": "在双方约定的交付期限内完成交付",
+          "comment": "建议把期限写清，便于双方履行和核对。"
+        },
+        "status": "applied",
+        "reason": ""
+      },
+      {
+        "index": 1,
+        "edit": {
+          "paragraph_id": "p000003-079b97f1bed7260e",
+          "old": "另行确认",
+          "new": "按双方书面确认的费用清单执行",
+          "comment": "请将费用清单与正文对应。"
+        },
+        "status": "applied",
+        "reason": ""
+      }
+    ],
+    "notice": "仅落入已明确定位的正文及表格普通文字；原件和已有修订批注保留。请逐条查看未应用项，并在 Word/WPS 核对版式。",
+    "path": "D:\\qx-harness-workbench-20261102\\docs\\checks\\contract-opinion\\drafts\\default-comments.docx",
+    "relative_path": "drafts/default-comments.docx",
+    "bytes": 37396,
+    "sha256": "e57172606cb26655289199e5611baa8c8e08d4e7b8dbd280213917e5883c6fd8"
+  },
+  "source_sha256": "6c23330aec4e5f630d28c23741c0e45d69974b45d34857ced7f182fa36620263",
+  "source_unchanged": true,
+  "visible_body_unchanged": true
+}

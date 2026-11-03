@@ -1,0 +1,160 @@
+{
+  "open": {
+    "result": {
+      "url": "http://127.0.0.1:56664/",
+      "tabId": "DFA9197C4C992853EC59D0A807C9191C",
+      "tab": "191c",
+      "seq": 61
+    }
+  },
+  "snapshot": {
+    "result": {
+      "title": "群兴合成交互验证",
+      "url": "http://127.0.0.1:56664/",
+      "snapshotData": {
+        "snapshot": "label [ref=0] \"合成测试\"\ntextbox [ref=1] \"测试输入\"\nbutton [ref=2] \"确认测试\"",
+        "refs": {
+          "0": {
+            "xpath": "html/body/label",
+            "role": "label",
+            "name": "合成测试",
+            "tagName": "label"
+          },
+          "1": {
+            "xpath": "html/body/label/input",
+            "role": "textbox",
+            "name": "测试输入",
+            "tagName": "input"
+          },
+          "2": {
+            "xpath": "html/body/button",
+            "role": "button",
+            "name": "确认测试",
+            "tagName": "button"
+          }
+        }
+      },
+      "tab": "191c"
+    }
+  },
+  "fill": {
+    "result": {
+      "value": "群兴工具验证成功",
+      "tab": "191c",
+      "seq": 62
+    }
+  },
+  "beforeClick": {
+    "result": {
+      "result": {
+        "value": "群兴工具验证成功",
+        "handler": "function onclick(event) {\ndocument.querySelector('output').textContent=document.querySelector('input').value\n}",
+        "button": {
+          "x": 241.60000610351562,
+          "y": 8.600000381469727,
+          "width": 68.51250457763672,
+          "height": 24.399999618530273,
+          "top": 8.600000381469727,
+          "right": 310.11251068115234,
+          "bottom": 33,
+          "left": 241.60000610351562
+        }
+      },
+      "tab": "191c",
+      "seq": 63
+    }
+  },
+  "activated": "Target activated",
+  "window": "{\"windowId\":1380348791,\"bounds\":{\"left\":334,\"top\":66,\"width\":1055,\"height\":898,\"windowState\":\"normal\"}}\n",
+  "click": {
+    "result": {
+      "tab": "191c",
+      "seq": 65
+    }
+  },
+  "afterClick": {
+    "result": {
+      "title": "群兴合成交互验证",
+      "url": "http://127.0.0.1:56664/",
+      "snapshotData": {
+        "snapshot": "label [ref=0] \"合成测试\"\ntextbox [ref=1] \"测试输入\"\nbutton [ref=2] \"确认测试\"",
+        "refs": {
+          "0": {
+            "xpath": "html/body/label",
+            "role": "label",
+            "name": "合成测试",
+            "tagName": "label"
+          },
+          "1": {
+            "xpath": "html/body/label/input",
+            "role": "textbox",
+            "name": "测试输入",
+            "tagName": "input"
+          },
+          "2": {
+            "xpath": "html/body/button",
+            "role": "button",
+            "name": "确认测试",
+            "tagName": "button"
+          }
+        }
+      },
+      "tab": "191c"
+    }
+  },
+  "text": {
+    "result": {
+      "result": "",
+      "tab": "191c",
+      "seq": 66
+    }
+  },
+  "clickEvents": {
+    "result": {
+      "result": {
+        "clicks": [],
+        "scale": 1.25,
+        "viewport": 1
+      },
+      "tab": "191c",
+      "seq": 67
+    }
+  },
+  "nativeClickPassed": false,
+  "focus": {
+    "result": {
+      "result": "BUTTON",
+      "tab": "191c",
+      "seq": 68
+    }
+  },
+  "enter": {
+    "result": {
+      "tab": "191c",
+      "seq": 69
+    }
+  },
+  "keyboardText": {
+    "result": {
+      "result": "",
+      "tab": "191c",
+      "seq": 70
+    }
+  },
+  "passed": false,
+  "domClick": {
+    "result": {
+      "result": "群兴工具验证成功",
+      "tab": "191c",
+      "seq": 71
+    }
+  },
+  "domInteractionPassed": true,
+  "usableDomPath": true,
+  "close": {
+    "result": {
+      "tab": "191c",
+      "seq": 72
+    }
+  }
+}

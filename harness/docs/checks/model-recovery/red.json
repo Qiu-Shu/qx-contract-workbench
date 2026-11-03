@@ -1,0 +1,24 @@
+{
+  "mode": "red",
+  "startedAt": "2026-11-03T06:18:24.905Z",
+  "realModelRequests": 0,
+  "checks": [
+    {
+      "kind": "recover",
+      "requests": 2,
+      "end": {
+        "kind": "error",
+        "error": {
+          "message": "DeepSeek Messages stream: tool input is invalid JSON",
+          "code": "MALFORMED_RESPONSE"
+        }
+      },
+      "retries": 0,
+      "attempts": 1
+    }
+  ],
+  "policy": "official defaults",
+  "artifactSha256": "ad711879c3271b1658e58c22af43c7dcb6e4de9162f78345dd921d7c4e36b95b",
+  "status": "expected_red",
+  "finishedAt": "2026-11-03T06:18:37.272Z"
+}

@@ -1,0 +1,92 @@
+{
+  "checkedAt": "2026-11-03T03:16:22.2331287Z",
+  "harnessVersion": "0.2.2-alpha.2",
+  "hostPid": 8752,
+  "hostStartedAt": "2026-11-03T03:15:26.3170164Z",
+  "restartConfirmedBy": "root coordinator",
+  "prepareSucceeded": true,
+  "sessionId": "qx-personal-workbench",
+  "workspaceId": "f38de535-1d83-4979-acfd-9fedae8d0b5e",
+  "workspacePath": "D:\\qx-harness-workbench-20261102\\workspace",
+  "workspaceTitle": "群兴工作区",
+  "attachedToExactlyOneWorkspace": true,
+  "workspaceMembershipVerifiedBy": "storages/workspace.json tables.workspaces[workspaceId].sessionIds",
+  "sessionSha256Before": "B91BC6218A4F0E42F7CDFA4E5133CEEF24F31C67C6BDD26D83AAEE2065FEF1DB",
+  "sessionSha256After": "B91BC6218A4F0E42F7CDFA4E5133CEEF24F31C67C6BDD26D83AAEE2065FEF1DB",
+  "durableSessionUnchanged": true,
+  "modelTurnsSubmittedByThisCheck": 0,
+  "wechatConnected": false,
+  "wechatLoginStarted": false,
+  "forwardedBefore": 0,
+  "forwardedAfter": 0,
+  "settingsPageStatus": 200,
+  "desktopMenu": "工作台 > 本人微信",
+  "desktopMenuSource": "desktop/main.cjs",
+  "desktopUiSendVerification": "PASS: actual Electron selected qx-personal-workbench under 群兴工作区; composer editable; TXT selection and native file/image Ctrl+V uploaded successfully without sending a model prompt.",
+  "qrOrMessageSent": false,
+  "desktopUiEvidence": "desktop/checks/20261103-111817/report.json",
+  "desktopUiVerifiedBy": "frontend agent actual Electron integration check",
+  "wechatMenuVerification": "Verified desktop menu source opens /qx-wechat, and destination returned HTTP 200 with explicit QR button. No native menu click or QR request performed by this agent.",
+  "checkPhase": "cold-start-before-pairing",
+  "liveWechat": {
+    "checkedAt": "2026-11-03T03:29:24.166Z",
+    "status": "passed_user_confirmed",
+    "sessionId": "qx-personal-workbench",
+    "qrPairing": "confirmed",
+    "connected": true,
+    "forwardedCount": 1,
+    "lastErrorEmpty": true,
+    "actualUserMessage": {
+      "seq": 10,
+      "sourceKind": "user",
+      "time": 1793676172252
+    },
+    "modelReply": {
+      "seq": 22,
+      "turn": 1,
+      "textCharacters": 329,
+      "time": 1793676174674
+    },
+    "completedTurn": {
+      "seq": 24,
+      "turn": 1,
+      "reason": "completed",
+      "time": 1793676182527
+    },
+    "phoneReceipt": {
+      "confirmed": true,
+      "evidence": "User explicitly stated 已经收到回复, relayed by the root coordinator."
+    },
+    "platformSendAckPersisted": false,
+    "deliveryEvidenceNote": "Forwarded count proves admission only. Delivery is confirmed by the user on the phone together with the completed reply in the exact bridged session; the plugin did not persist a separate iLink send acknowledgement.",
+    "extraMessagesOrModelCallsFromThisCheck": 0,
+    "desktopContextAlignment": {
+      "status": "resolved_existing_branch_binding",
+      "initialWechatSessionId": "qx-personal-workbench",
+      "currentWechatSessionId": "session-fbd44eed-c381-47f5-b41a-aa32018110be",
+      "currentDesktopContractSessionId": "session-fbd44eed-c381-47f5-b41a-aa32018110be",
+      "branchIsSeeded": true,
+      "inheritedEndSeedSeq": 25,
+      "sharedFirstTurnEndTime": 1793676182527,
+      "correction": "Used existing local pause/session/resume actions. Pause only aborts WeChat long polling; it does not stop or dispose the Agent. Existing contract branch and both histories were retained.",
+      "connectedAfterCorrection": true,
+      "forwardedBeforeCorrection": 1,
+      "forwardedAfterCorrection": 1,
+      "lastErrorEmptyAfterCorrection": true,
+      "extraModelTasksSubmitted": 0,
+      "userContractInterrupted": false,
+      "followingWechatMessageAfterCorrectionTested": false,
+      "startupBehavior": "Desktop startup reads the persisted WeChat binding instead of always reopening qx-personal-workbench; frontend owns that implementation.",
+      "automaticTrackingOfUnrelatedSessions": "not implemented or claimed; future intentional independent conversations remain separate unless selected for WeChat"
+    },
+    "normalContinuationEvidence": {
+      "package": "@deepseek-ai/dsh-api-session-controller 0.2.2-alpha.2",
+      "client": "lib/client.js:2344 sends ordinary prompt through remote.session.prompt(this.sessionId)",
+      "host": "lib/index.js:832,858 resolves the requested same session ID and calls agent.followup",
+      "explicitFork": "ClientSessions.fork(opts) at lib/client.js:4020 receives an explicit source ID and returns a new child ID; ui-chat forkAt and ui-workspace forkSession use increaseTitle:true.",
+      "conclusion": "Ordinary prompt continues the same session. The observed seeded child matches an explicit fork, not an automatic blank-session replacement.",
+      "verification": "Installed official source inspected by backend/frontend agents; session metadata only inspected for the real user turn."
+    },
+    "finalRecordedAt": "2026-11-03T03:34:17.173Z"
+  }
+}

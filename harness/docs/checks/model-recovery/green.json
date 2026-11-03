@@ -1,0 +1,104 @@
+{
+  "mode": "green",
+  "startedAt": "2026-11-03T06:20:28.470Z",
+  "realModelRequests": 0,
+  "checks": [
+    {
+      "kind": "recover",
+      "requests": 3,
+      "end": {
+        "kind": "completed"
+      },
+      "retries": 1,
+      "attempts": 1,
+      "savedEffects": {
+        "write_file": 1,
+        "present": 1,
+        "record_case_note": 1
+      },
+      "userMessages": 1,
+      "partialAttemptPreserved": true,
+      "sameStepRetry": true,
+      "priorToolResultInRetry": true
+    },
+    {
+      "kind": "stream_closed",
+      "requests": 2,
+      "end": {
+        "kind": "completed"
+      },
+      "retries": 1,
+      "attempts": 1,
+      "partialAttemptPreserved": true
+    },
+    {
+      "kind": "auth",
+      "requests": 1,
+      "end": {
+        "kind": "error",
+        "error": {
+          "message": "synthetic auth",
+          "code": "AUTH",
+          "status": 401
+        }
+      },
+      "retries": 0,
+      "attempts": 1
+    },
+    {
+      "kind": "quota",
+      "requests": 1,
+      "end": {
+        "kind": "error",
+        "error": {
+          "message": "synthetic quota",
+          "code": "QUOTA",
+          "status": 402
+        }
+      },
+      "retries": 0,
+      "attempts": 1
+    },
+    {
+      "kind": "cancel",
+      "requests": 1,
+      "end": {
+        "kind": "aborted",
+        "reason": {
+          "kind": "user"
+        }
+      },
+      "retries": 1,
+      "attempts": 1
+    },
+    {
+      "kind": "permanent",
+      "requests": 6,
+      "end": {
+        "kind": "error",
+        "error": {
+          "message": "DeepSeek Messages stream: tool input is invalid JSON",
+          "code": "MALFORMED_RESPONSE"
+        }
+      },
+      "retries": 5,
+      "attempts": 6
+    }
+  ],
+  "policy": {
+    "mode": "normal",
+    "maxRetries": 5,
+    "retryableCodes": [
+      "EMPTY_RESPONSE",
+      "RATE_LIMIT",
+      "SERVER",
+      "TIMEOUT",
+      "TRANSPORT",
+      "MALFORMED_RESPONSE",
+      "STREAM_CLOSED"
+    ]
+  },
+  "artifactSha256": "ad711879c3271b1658e58c22af43c7dcb6e4de9162f78345dd921d7c4e36b95b",
+  "status": "passed",
+  "finishedAt": "2026-11-03T06:20:56.544Z"
+}
