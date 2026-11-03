@@ -54,6 +54,11 @@ with sync_playwright() as p:
         start=page.get_by_role('button',name=re.compile('^(开始使用|继续)$'))
         if start.is_visible():start.click()
         assert page.evaluate('typeof window.__DSH_DIRECTORY_PICKER__.pick')=='function'
+        if os.environ.get('QX_EXPECT_UPDATER_VERSION'):
+            update=page.evaluate('window.__QX_UPDATES__.read()')
+            assert update and update['version']==os.environ['QX_EXPECT_UPDATER_VERSION']
+            assert page.evaluate("window.__QX_UPDATES__.act('invalid-action')") is None
+            report['packagedUpdaterIPC']=True
         assert (page.get_by_role('button',name='微信连接',exact=True).bounding_box()['y']<page.locator('.qx-balance-refresh').bounding_box()['y'])
         page.get_by_role('checkbox',name='上传前脱敏',exact=True).wait_for()
         assert not page.get_by_role('checkbox',name='上传前脱敏',exact=True).is_checked()

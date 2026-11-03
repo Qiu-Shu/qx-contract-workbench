@@ -1,6 +1,14 @@
 const {contextBridge,ipcRenderer}=require('electron');
 const expectedOrigin=process.argv.find(arg=>arg.startsWith('--qx-origin='))?.slice('--qx-origin='.length);
 if(process.isMainFrame&&location.origin===expectedOrigin){
+  contextBridge.exposeInMainWorld('__QX_UPDATES__',{
+    read:()=>ipcRenderer.invoke('qx:update-state'),
+    act:action=>['check','download','cancel','install'].includes(action)?ipcRenderer.invoke('qx:update-action',action):Promise.resolve(null),
+    subscribe:listener=>{
+      const handler=(_event,state)=>listener(state);ipcRenderer.on('qx:update-state',handler);
+      return()=>ipcRenderer.removeListener('qx:update-state',handler);
+    },
+  });
   contextBridge.exposeInMainWorld('__DSH_LOCALE__',{
     read:()=>ipcRenderer.invoke('qx:locale'),
     onChange:locale=>ipcRenderer.send('qx:locale-change',locale),

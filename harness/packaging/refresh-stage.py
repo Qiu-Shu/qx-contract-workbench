@@ -4,7 +4,7 @@ import json
 import shutil
 import sys
 import re
-from stage import ROOT,RUNTIME,copytree,portable_config
+from stage import ROOT,RUNTIME,copytree,portable_config,bundle_node
 
 stage=Path(sys.argv[1]).resolve()
 assert stage.is_relative_to(ROOT/'.local') and (stage/'workbench/runtime/node.exe').is_file()
@@ -21,6 +21,12 @@ shutil.copy2(ROOT/'desktop/installed-migrations.cjs',stage/'app/installed-migrat
 for file in (stage/'app').iterdir():
     source=ROOT/'desktop'/file.name
     if source.is_file():shutil.copy2(source,file)
+for name in ['updates.cjs','update-download.cjs','update-integrity.cjs','update-config.json']:
+    shutil.copy2(ROOT/'desktop'/name,stage/'app'/name)
+package=stage/'app/package.json';metadata=json.loads(package.read_text(encoding='utf-8'))
+metadata.setdefault('dependencies',{})['electron-updater']='6.8.11'
+package.write_text(json.dumps(metadata,ensure_ascii=False,indent=2),encoding='utf-8')
+bundle_node([(ROOT/'node_modules/electron-updater','electron-updater')],stage/'app')
 for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','desktop/integration']:
     copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py'))
 copytree(ROOT/'plugins/wechat',payload/'plugins/wechat',('*.vsix','test','tests','docs','scripts','.github','vscode-extension'))

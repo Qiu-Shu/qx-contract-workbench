@@ -1,14 +1,16 @@
 # 群兴法律工作台 · Harness 版
 
-面向律师的 Windows 桌面工作台：在一个输入框中描述需求，拖入、粘贴或选择资料，由模型调用法律 Skill 和文档工具。当前安装版为 **0.2.2（2026-11-03）**；底层固定为 DeepSeek Harness `0.2.2-alpha.2`。
+0.2.3 新增 GitHub 增量更新：律所知识库上方黄色升级按钮，支持取消及稍后安装，失败不转为整包下载，旧版继续可用。0.2.2 及更早版本需先手动安装一次此基础版。[更新与发布说明](packaging/UPDATES.md)。
+
+面向律师的 Windows 桌面工作台：在一个输入框中描述需求，拖入、粘贴或选择资料，由模型调用法律 Skill 和文档工具。当前安装版为 **0.2.3（2026-11-03）**；底层固定为 DeepSeek Harness `0.2.2-alpha.2`。
 
 0.2.2 将欢迎介绍和首页改为律所软件文案，修复安装版方法文件路径及 Word 缺失样式导致空正文的问题。见[本次工具修复与验证](docs/2026-11-03-工具读取修复.md)。
 
-[下载安装包](https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.2) · [最新交接](docs/2026-11-03-GitHub交接.md) · [安装说明](docs/2026-11-03-Windows安装包交付.md)
+[下载安装包](https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.3) · [最新交接](docs/2026-11-03-GitHub交接.md) · [安装说明](docs/2026-11-03-Windows安装包交付.md)
 
 ## 安装使用
 
-下载 `Qunxing-Workbench-0.2.2-Setup.exe`，双击安装。无需另装 Node 或 Python。首次启动填写自己的 DeepSeek API Key；左下显示账户余额，微信入口由本人扫码连接。关闭窗口后后台继续处理微信，电脑需要保持开机、不休眠并联网；未设置开机自启。
+下载 `Qunxing-Workbench-0.2.3-Setup.exe`，双击安装。无需另装 Node 或 Python。首次启动填写自己的 DeepSeek API Key；左下显示账户余额，微信入口由本人扫码连接。关闭窗口后后台继续处理微信，电脑需要保持开机、不休眠并联网；未设置开机自启。
 
 用户资料和加密设置位于 `%APPDATA%/QunxingHarness`。升级保留已有资料、自定义规则和设置，卸载保留资料。安装包未签名，Windows 可能显示未知发布者；当前完成本机隔离安装、升级和卸载验证，尚未在另一台干净电脑验收。
 

@@ -4,6 +4,11 @@
   "private": true,
   "description": "群兴本机法律工作台：Harness 与文档工具集成",
   "type": "module",
-  "engines": { "node": ">=24.9.0" },
-  "dependencies": { "@deepseek-ai/dsh": "0.2.2-alpha.2" }
+  "engines": {
+    "node": ">=24.9.0"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh": "0.2.2-alpha.2",
+    "electron-updater": "6.8.11"
+  }
 }

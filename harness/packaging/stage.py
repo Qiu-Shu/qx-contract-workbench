@@ -109,9 +109,10 @@ def stage(destination,version='0.2.1'):
     payload.mkdir(parents=True);app.mkdir()
     (payload/'desktop-runner').mkdir()
     for name in ['installed-host.cjs','installed-runtime.cjs','installed-migrations.cjs','stop-installed.cjs']:shutil.copy2(ROOT/'desktop'/name,payload/'desktop-runner'/name)
-    for name in ['main.cjs','preload.cjs','unavailable.html','installed.cjs','installed-runtime.cjs','installed-migrations.cjs','model-credentials.cjs','setup-service.cjs','setup-preload.cjs','setup.html','setup.css','setup.js']:
+    for name in ['main.cjs','preload.cjs','unavailable.html','installed.cjs','installed-runtime.cjs','installed-migrations.cjs','model-credentials.cjs','setup-service.cjs','setup-preload.cjs','setup.html','setup.css','setup.js','updates.cjs','update-download.cjs','update-integrity.cjs','update-config.json']:
         shutil.copy2(ROOT/'desktop'/name,app/name)
-    (app/'package.json').write_text(json.dumps({'name':'qunxing-harness-desktop','version':version,'private':True,'description':'群兴法律工作台','author':'群兴法律工作台项目','main':'installed.cjs'}),encoding='utf-8')
+    (app/'package.json').write_text(json.dumps({'name':'qunxing-harness-desktop','version':version,'private':True,'description':'AI师兄法律助手平台','author':'AI师兄法律助手平台项目','main':'installed.cjs','dependencies':{'electron-updater':'6.8.11'}}),encoding='utf-8')
+    bundle_node([(ROOT/'node_modules/electron-updater','electron-updater')],app)
     for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','desktop/integration']:
         copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py'))
     # Only active WeChat runtime assets; exclude development VSIXs, snapshots and tests.

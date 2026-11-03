@@ -8,7 +8,7 @@ const {execFile}=require('node:child_process');
 const root=resolve(process.env.QX_WORKBENCH_ROOT||resolve(__dirname,'..'));
 const userData=resolve(process.env.QX_DESKTOP_DATA||join(root,'.local','desktop-data'));
 mkdirSync(userData,{recursive:true});
-app.setName('群兴法律工作台');
+app.setName('AI师兄法律助手平台');
 app.setPath('userData',userData);
 const runtimePath=join(root,'.local','runtime.json');
 function runtimeUrl(){
@@ -70,11 +70,11 @@ async function pasteCopiedFiles(event,request){
 }
 async function createWindow(){
   const url=runtimeUrl();origin=url.origin;
-  window=new BrowserWindow({width:1320,height:920,minWidth:800,minHeight:600,title:'群兴法律工作台',
+  window=new BrowserWindow({width:1320,height:920,minWidth:800,minHeight:600,title:'AI师兄法律助手平台',
     backgroundColor:'#ffffff',show:false,autoHideMenuBar:false,
     webPreferences:{preload:join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,
       additionalArguments:[`--qx-origin=${origin}`]}});
-  window.webContents.on('page-title-updated',event=>{event.preventDefault();window.setTitle('群兴法律工作台');});
+  window.webContents.on('page-title-updated',event=>{event.preventDefault();window.setTitle('AI师兄法律助手平台');});
   window.once('ready-to-show',()=>{if(process.env.QX_DESKTOP_HIDDEN!=='1')window.show();});
   window.webContents.on('will-navigate',(event,target)=>{if(new URL(target).origin!==origin){event.preventDefault();if(/^https?:/.test(target))void shell.openExternal(target);}});
   window.webContents.setWindowOpenHandler(({url})=>{
@@ -91,6 +91,10 @@ async function createWindow(){
       ...(global.qxOpenApiSettings?[{label:'API 设置',click:()=>global.qxOpenApiSettings()}]:[]),
       {label:'打开材料文件夹',click:()=>void shell.openPath(join(root,'workspace'))},
       {label:'重新连接',click:()=>void window.loadURL(runtimeUrl().href)},
+      ...(global.qxUpdates?[{label:'检查更新',click:()=>{
+        void global.qxUpdates.check();
+        void window.webContents.executeJavaScript("window.dispatchEvent(new Event('qx-open-update'))").catch(()=>{});
+      }}]:[]),
       {type:'separator'},{label:'关闭窗口（微信继续运行）',role:'quit'}]},
     {label:'编辑',submenu:[{role:'undo',label:'撤销'},{role:'redo',label:'重做'},{type:'separator'},
       {role:'cut',label:'剪切'},{role:'copy',label:'复制'},{role:'paste',label:'粘贴'},{role:'selectAll',label:'全选'}]},
@@ -110,6 +114,11 @@ if(!app.requestSingleInstanceLock())app.quit();
 else{
   app.on('second-instance',(_event,argv)=>{if(window){if(window.isMinimized())window.restore();window.show();window.focus();if(argv.includes('--wechat'))showWechat();}});
   ipcMain.handle('qx:paste-files',pasteCopiedFiles);
+  ipcMain.handle('qx:update-state',event=>owns(event)&&global.qxUpdates?global.qxUpdates.state():null);
+  ipcMain.handle('qx:update-action',(event,action)=>{
+    if(!owns(event)||!global.qxUpdates||!['check','download','cancel','install'].includes(action))return null;
+    return global.qxUpdates[action]();
+  });
   ipcMain.handle('qx:pick-directory',async event=>{
     if(!owns(event))return null;
     const chosen=await dialog.showOpenDialog(window,{title:'选择工作区',defaultPath:join(root,'workspace'),properties:['openDirectory']});
@@ -121,6 +130,6 @@ else{
     catch{return {languages:['zh-CN','zh'],preference:'zh'};}
   });
   ipcMain.on('qx:locale-change',(event,locale)=>{if(owns(event)&&typeof locale==='string'&&/^[a-z]{2}(?:-[A-Za-z]+)?$/.test(locale))void writeFile(join(userData,'locale.json'),JSON.stringify({locale}));});
-  global.qxMainReady=app.whenReady().then(createWindow).catch(()=>{dialog.showErrorBox('工作台暂未打开','请先启动本机服务，再重新打开群兴法律工作台。');app.quit();});
+  global.qxMainReady=app.whenReady().then(createWindow).catch(()=>{dialog.showErrorBox('工作台暂未打开','请先启动本机服务，再重新打开AI师兄法律助手平台。');app.quit();});
   app.on('window-all-closed',()=>app.quit());
 }

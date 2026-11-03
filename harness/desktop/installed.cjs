@@ -10,7 +10,7 @@ const {initialize,readRuntime,stopRuntime}=require('./installed-runtime.cjs');
 const payload=process.env.QX_PAYLOAD_ROOT||path.join(process.resourcesPath,'workbench');
 const data=process.env.QX_INSTALL_DATA||path.join(app.getPath('appData'),'QunxingHarness');
 fs.mkdirSync(path.join(data,'.local'),{recursive:true});
-app.setName('群兴法律工作台');
+app.setName('AI师兄法律助手平台');
 // Encryption uses Electron's profile key; UI and background must share this path.
 app.setPath('userData',path.join(data,'.local','desktop-data'));
 process.env.QX_WORKBENCH_ROOT=data;
@@ -46,7 +46,7 @@ async function enter(){
 }
 function showSetup(){
   if(setupWindow&&!setupWindow.isDestroyed()){setupWindow.show();setupWindow.focus();return;}
-  setupWindow=new BrowserWindow({width:700,height:720,minWidth:460,minHeight:620,title:'API 设置 · 群兴法律工作台',
+  setupWindow=new BrowserWindow({width:700,height:720,minWidth:460,minHeight:620,title:'API 设置 · AI师兄法律助手平台',
     show:process.env.QX_DESKTOP_HIDDEN!=='1',
     autoHideMenuBar:true,backgroundColor:'#f7f8f5',webPreferences:{preload:path.join(__dirname,'setup-preload.cjs'),sandbox:true,contextIsolation:true,nodeIntegration:false}});
   setupWindow.webContents.setWindowOpenHandler(()=>({action:'deny'}));
@@ -76,6 +76,29 @@ else{
     finally{starting=false;}
   });
   app.whenReady().then(async()=>{
+    // Updating is optional: failure to initialize it must never block the existing workbench.
+    if(app.isPackaged){
+      try{
+        const {StrictNsisUpdater,validateFeed}=require('./update-download.cjs');
+        const {createUpdateController,createInstallHandoff}=require('./updates.cjs');
+        const config=require('./update-config.json');
+        const updater=new StrictNsisUpdater(validateFeed(config.feed));
+        const handoff=createInstallHandoff({isStarting:()=>starting,setStarting:value=>{starting=value},
+          stop:async()=>{const runtime=await readRuntime(data);if(runtime)await stopRuntime(runtime)},restore:enter});
+        global.qxUpdates=createUpdateController({updater,version:app.getVersion(),publicKey:config.publicKey,
+          onState:state=>{for(const win of BrowserWindow.getAllWindows())if(!win.isDestroyed())win.webContents.send('qx:update-state',state)},
+          confirmInstall:async()=>{
+            const answer=await dialog.showMessageBox({type:'question',title:'安装更新',message:'现在安装并重启工作台？',
+              detail:'请先保存正在编辑的内容，并等待文档处理、模型回答和微信任务结束。安装会关闭工作台及微信后台，完成后重新打开。你的材料和设置会保留。',
+              buttons:['稍后再说','安装并重启'],defaultId:0,cancelId:0,noLink:true});return answer.response===1;
+          },
+          prepareInstall:handoff.prepare,recoverInstall:handoff.recover,
+        });
+        const checkTimer=setTimeout(()=>void global.qxUpdates.check(),15000);checkTimer.unref();
+        const periodic=setInterval(()=>void global.qxUpdates.check(),6*60*60*1000);periodic.unref();
+        app.once('before-quit',()=>{clearTimeout(checkTimer);clearInterval(periodic)});
+      }catch{global.qxUpdates=null;}
+    }
     if((await store.status()).status==='saved'){
       try{await enter()}catch(error){dialog.showErrorBox('工作台暂未启动',error.message);showSetup()}
     }else showSetup();

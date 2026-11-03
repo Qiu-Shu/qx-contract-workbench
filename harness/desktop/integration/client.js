@@ -1,6 +1,42 @@
 window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
   const React=require('react');
   const h=React.createElement;
+  const capabilities=[
+    {id:'reception',title:'客户接待',description:'梳理来访诉求，准备接待回复',icon:'M4 4h16v11H9l-5 4V4m4 4h8m-8 3h5',prompt:'请协助我接待一位客户，先梳理事情经过、核心诉求和紧急事项，再给出适合发给客户的回复及需要补充的材料清单。信息不足时，先问最关键的问题，不推断尚未确认的事实。\n\n客户情况：'},
+    {id:'contract',title:'合同审查',description:'看清条款风险，形成修改建议',icon:'M14 3H5v18h14V8l-5-5v5h5M8 12h8m-8 4h5',prompt:'请审查我提供的合同，结合我方立场和交易目的，说明关键风险、对应条款及具体修改建议。请保留原合同，另存审查成果；缺少的事实或附件请明确指出。\n\n我方立场与关注事项：'},
+    {id:'case',title:'办案整理',description:'串联事实证据，理清办案思路',icon:'M3 7h7l2 2h9v11H3V7m0 0V4h7l2 3h7v2M7 13h10m-10 3h6',prompt:'请根据我提供的案件材料，整理时间线、争议焦点和证据对应关系，区分已确认事实、各方陈述与待核事项，并列出材料缺口及下一步办案建议。\n\n案件背景与当前目标：'},
+    {id:'hearing',title:'模拟法庭',description:'演练质证攻防，做好庭前准备',icon:'M12 3v17m-6 1h12M4 7h16M6 7l-4 8h8L6 7m12 0-4 8h8l-4-8',prompt:'请围绕我提供的案件开展模拟法庭演练。先确认我方诉讼角色、争议焦点和已有证据，再分角色展开法庭调查、质证与辩论，重点追问薄弱环节，最后给出庭前补强清单。未提供的证据和事实不要编造。\n\n我方角色与案件情况：'}
+  ];
+  function CapabilityCards({session,input,inputActions}){
+    const root=React.useRef(null),frame=React.useRef(0);
+    const [notice,setNotice]=React.useState('');
+    React.useEffect(()=>()=>cancelAnimationFrame(frame.current),[]);
+    React.useEffect(()=>{if(!capabilities.some(item=>input.draft.includes(item.prompt)))setNotice('');},[input.draft]);
+    if(!session.blank)return null;
+    const disabled=input.phase!=='plain';
+    function fill(item){
+      const editor=root.current?.closest('[data-conversation-content]')?.querySelector('[contenteditable="true"][role="textbox"]');
+      if(!editor){setNotice('请先在上方选择工作区，等待输入框就绪后再试。');return;}
+      editor.focus();
+      const range=document.createRange();range.selectNodeContents(editor);range.collapse(false);
+      const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);
+      cancelAnimationFrame(frame.current);
+      // Let the resident editor observe the end caret, then use its guarded undoable insertion API.
+      frame.current=requestAnimationFrame(()=>{
+        if(!root.current?.isConnected||!editor.isConnected)return;
+        if(input.draft.includes(item.prompt)){setNotice('这项提示词已在输入框中，可直接补充。');return;}
+        const span=inputActions.captureInsertion();
+        const inserted=inputActions.insertText((input.draft?'\n\n':'')+item.prompt,{...span,start:span.end});
+        if(inserted){inputActions.persistDraft();setNotice('已填入“'+item.title+'”提示词，补充后即可发送。');}
+        else setNotice('输入内容正在更新，请再点一次卡片。');
+      });
+    }
+    return h('section',{ref:root,className:'qx-capabilities','aria-label':'四大法律服务能力'},
+      h('div',{className:'qx-capability-grid'},capabilities.map(item=>h('button',{key:item.id,type:'button',className:'qx-capability',disabled,'aria-label':item.title+'：填入提示词',onClick:()=>fill(item)},
+        h('span',{className:'qx-capability-top'},h('svg',{width:23,height:23,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.5,strokeLinecap:'round',strokeLinejoin:'round','aria-hidden':true},h('path',{d:item.icon})),h('svg',{className:'qx-capability-arrow',width:17,height:17,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.5,'aria-hidden':true},h('path',{d:'M5 12h14m-5-5 5 5-5 5'}))),
+        h('strong',null,item.title),h('span',{className:'qx-capability-description'},item.description)))),
+      h('p',{className:'qx-capability-hint',role:'status'},notice||'选择一项能力，将提示词填入下方输入框'));
+  }
   // The library view ships in the same registered client bundle as its entry.
   function createKnowledgeView(React){
     const h=React.createElement;
@@ -207,11 +243,33 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       h('details',null,h('summary',null,'查看错误信息'),h('pre',{style:{whiteSpace:'pre-wrap'}},this.state.message))):this.props.children;}
   }
   const styles=`
+    .qx-capabilities{width:100%;padding:12px 16px 4px;box-sizing:border-box;container-type:inline-size}
+    [data-content-phase]:not([data-content-phase="hero"]) .qx-capabilities{display:none}
+    .qx-capability-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .qx-capability{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:0;padding:18px 18px 20px;text-align:left;font:inherit;border:0;border-radius:14px;background:var(--dsw-alias-bg-base,#fff);color:var(--dsw-alias-label-primary,#252930);box-shadow:0 3px 14px #172b4d0d,0 1px 3px #172b4d0c;cursor:pointer;transform:translateY(0) scale(1);transition:transform 480ms cubic-bezier(.34,1.7,.42,1),box-shadow 200ms ease-out,background-color 160ms ease-out;touch-action:manipulation}
+    .qx-capability-top{display:flex;align-items:center;justify-content:space-between;color:var(--dsw-alias-state-business-primary,#3f6cdb);margin-bottom:8px}
+    .qx-capability strong{font-size:16px;line-height:24px;font-weight:600}
+    .qx-capability-description{font-size:13px;line-height:21px;color:var(--dsw-alias-label-secondary,#626b78);text-wrap:pretty}
+    .qx-capability-arrow{opacity:.45;transition:opacity 160ms ease-out}
+    .qx-capability:focus-visible{outline:2px solid var(--dsw-alias-state-business-primary,#3f6cdb);outline-offset:4px}
+    @media(hover:hover) and (pointer:fine){.qx-capability:hover:enabled{transform:translateY(-5px) scale(1.035);box-shadow:0 12px 26px #172b4d16,0 3px 8px #172b4d0c;z-index:1}.qx-capability:hover .qx-capability-arrow{opacity:1}}
+    .qx-capability:active:enabled{transform:translateY(-1px) scale(.985);transition-duration:100ms}
+    .qx-capability:disabled{opacity:.5;cursor:default}
+    .qx-capability-hint{min-height:20px;margin:14px 0 0;text-align:center;font-size:12px;line-height:20px;color:var(--dsw-alias-label-secondary,#626b78)}
+    @container(max-width:620px){.qx-capability-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.qx-capability{padding:14px 16px}.qx-capability-top{margin-bottom:2px}}
+    @media(prefers-reduced-motion:reduce){.qx-capability,.qx-capability:hover:enabled,.qx-capability:active:enabled{transform:none;transition:background-color 120ms ease-out,box-shadow 120ms ease-out}}
     [data-slot="sidebar"] nav:has([data-slot="sidebar.panellist"]){display:none}
-    .qx-wordmark{font-family:inherit;font-size:20px;font-weight:600;letter-spacing:.08em;white-space:nowrap}
-    .qx-brand-compact{display:none;font-family:inherit;font-size:11px;font-weight:600;white-space:nowrap}
-    [data-sidebar-collapsed=true] .qx-brand-compact{display:inline-flex}
+  .qx-wordmark{font-family:inherit;font-size:16px;font-weight:600;letter-spacing:.02em;white-space:nowrap}
+  .qx-brand-compact{display:inline-flex;align-items:center;justify-content:center;flex:none;width:28px;height:34px}
+  .qx-brand-logo{display:block;width:100%;height:100%;object-fit:contain}
+  [data-slot="sidebar"] :has(> span > .qx-brand-compact){min-height:34px}
+  span:has(> span > [data-slot="sidebar.brand.mark"]){min-height:34px}
     .qx-sidebar-account{width:100%;min-width:0}
+    .qx-upgrade{display:flex;align-items:center;gap:10px;width:calc(100% - 8px);min-height:38px;margin:0 4px 6px;padding:8px 10px;border:1px solid #d4a72c;border-radius:6px;background:#ffdc69;color:#3b2b00;font-family:inherit;font-size:14px;font-weight:600;line-height:20px;cursor:pointer}
+    .qx-upgrade:hover{background:#ffd34a}.qx-upgrade:focus-visible,.qx-update-panel button:focus-visible{outline:2px solid #785500;outline-offset:3px}
+    .qx-sidebar-account-compact .qx-upgrade{width:36px;margin:0 0 6px;justify-content:center;padding:8px}
+    .qx-update-panel{position:fixed;inset:auto auto 100px 250px;width:324px;max-width:calc(100vw - 24px);max-height:calc(100vh - 40px);margin:0;padding:18px;border:1px solid var(--dsw-alias-border-l,#d0d6df);border-radius:10px;background:var(--dsw-alias-bg-base,#fff);color:var(--dsw-alias-label-primary,#20242b);font:14px/1.65 "Microsoft YaHei UI",sans-serif;overflow:auto}
+    .qx-update-panel p{margin:12px 0}.qx-update-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.qx-update-heading strong{font-size:17px}.qx-update-muted{color:var(--dsw-alias-label-secondary,#596579);font-size:12px}.qx-update-notes{white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto}.qx-update-panel progress{width:100%;height:8px;accent-color:#b57e00}.qx-update-error{color:#a12e20}.qx-update-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.qx-update-panel button{font:inherit;padding:6px 10px;min-height:34px;border:1px solid var(--dsw-alias-border-l,#bec7d2);border-radius:6px;background:var(--dsw-alias-bg-base,#fff);color:inherit;cursor:pointer}.qx-update-panel button:hover:enabled{background:var(--dsw-alias-interactive-bg-hover,#f3f5f8)}.qx-update-panel button:disabled{opacity:.55;cursor:default}.qx-update-heading button{border:0;font-size:12px}
     .qx-wechat-link{box-sizing:border-box;display:flex;align-items:center;gap:10px;min-height:36px;margin:0 4px;padding:8px;border-radius:var(--dsw-radius-sm);color:var(--dsw-alias-label-primary);font:inherit;font-size:14px;line-height:20px;text-decoration:none;transition:background-color 160ms ease-out}
     .qx-wechat-link:hover,.qx-wechat-link:active{background:var(--dsw-alias-interactive-bg-hover)}
     .qx-wechat-link:focus-visible{outline:2px solid var(--dsw-alias-state-business-primary);outline-offset:2px}
@@ -234,6 +292,52 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
   `;
   function RefreshIcon(){return h('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,'aria-hidden':true},h('path',{d:'M19 8a8 8 0 1 0 1 7M19 3v5h-5',strokeLinecap:'round',strokeLinejoin:'round'}));}
   function PhoneIcon(){return h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,'aria-hidden':true},h('rect',{x:6,y:2.5,width:12,height:19,rx:2}),h('path',{d:'M10 18.5h4',strokeLinecap:'round'}));}
+  function UpdateEntry({wide}){
+    const [state,setState]=React.useState(null),[open,setOpen]=React.useState(false);
+    const panel=React.useRef(null),button=React.useRef(null);
+    React.useEffect(()=>{
+      const bridge=window.__QX_UPDATES__;if(!bridge)return;
+      let alive=true;const update=value=>{if(alive)setState(value)};
+      const unsubscribe=bridge.subscribe(update);bridge.read().then(update).catch(()=>{});
+      const show=()=>setOpen(true);window.addEventListener('qx-open-update',show);
+      return()=>{alive=false;unsubscribe();window.removeEventListener('qx-open-update',show)};
+    },[]);
+    React.useEffect(()=>{
+      if(!open||!panel.current)return;
+      const element=panel.current,anchor=button.current?.getBoundingClientRect();
+      element.style.left=Math.max(12,Math.min(window.innerWidth-348,anchor?anchor.right+10:24))+'px';
+      element.showPopover();
+      const closed=event=>{if(event.newState==='closed')setOpen(false)};
+      element.addEventListener('toggle',closed);
+      return()=>{element.removeEventListener('toggle',closed);if(element.matches(':popover-open'))element.hidePopover()};
+    },[open]);
+    if(!state)return null;
+    const busy=['checking','downloading','cancelling','confirming','installing'].includes(state.phase);
+    const available=Boolean(state.availableVersion);
+    const act=action=>{window.__QX_UPDATES__.act(action).then(value=>{if(value)setState(value)}).catch(()=>setState(previous=>({...previous,error:'操作未完成，请重试。'})))};
+    const format=bytes=>(bytes/1024/1024).toFixed(1)+' MB';
+    const label=state.phase==='downloading'?'下载中 '+Math.floor(state.progress)+'%':state.ready?'安装升级':'升级';
+    return h(React.Fragment,null,
+      available&&h('button',{ref:button,type:'button',className:'qx-upgrade','aria-label':label,'aria-expanded':open,title:'有新版本 '+state.availableVersion,onClick:()=>setOpen(!open)},
+        h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.8,'aria-hidden':true},h('path',{d:'M12 17V4m-5 5 5-5 5 5M5 16v5h14v-5',strokeLinecap:'round',strokeLinejoin:'round'})),wide&&h('span',null,label)),
+      open&&h('section',{ref:panel,popover:'auto',className:'qx-update-panel','aria-label':'软件更新'},
+        h('div',{className:'qx-update-heading'},h('strong',null,available?'新版本 '+state.availableVersion:'软件更新'),h('button',{type:'button','aria-label':'关闭更新面板',onClick:()=>setOpen(false)},'关闭')),
+        h('p',{className:'qx-update-muted'},'当前版本 '+state.version+' · 可继续使用旧版'),
+        state.notes&&h('p',{className:'qx-update-notes'},state.notes),
+        state.phase==='checking'&&h('p',{role:'status'},'正在检查更新…'),
+        state.phase==='idle'&&h('p',{role:'status'},'当前已是最新版本。'),
+        state.phase==='available'&&h('p',null,'仅下载变化部分，完成后由你决定何时安装。'),
+        ['downloading','cancelling'].includes(state.phase)&&h('div',null,h('progress',{max:100,value:state.progress,'aria-label':'增量下载进度'}),h('p',{role:'status'},state.phase==='cancelling'?'正在取消…':state.total?format(state.transferred)+' / '+format(state.total):'正在计算增量大小…')),
+        state.ready&&h('p',null,'更新已下载并校验，可稍后安装。'),
+        state.phase==='installing'&&h('p',{role:'status'},'正在关闭后台并启动安装…'),
+        state.error&&h('p',{className:'qx-update-error',role:'alert'},state.error),
+        h('div',{className:'qx-update-actions'},
+          state.phase==='downloading'?h('button',{type:'button',onClick:()=>act('cancel')},'取消下载'):
+          state.ready?h('button',{type:'button',disabled:busy,onClick:()=>act('install')},'安装并重启'):
+          available?h('button',{type:'button',disabled:busy,onClick:()=>act('download')},state.phase==='error'?'重试增量下载':'下载增量更新'):
+          h('button',{type:'button',disabled:busy,onClick:()=>act('check')},'重新检查'),
+          h('button',{type:'button',onClick:()=>setOpen(false)},'稍后再说'))));
+  }
   function AccountFooter({wide}){
     const [knowledgeOpen,setKnowledgeOpen]=React.useState(false);
     const [wechatOpen,setWechatOpen]=React.useState(false);
@@ -244,6 +348,7 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       return()=>window.removeEventListener('qx-open-wechat',open);
     },[]);
     return h('div',{className:'qx-sidebar-account'+(wide?'':' qx-sidebar-account-compact')},
+      h(UpdateEntry,{wide}),
       h('button',{type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'律所知识库',title:'律所知识库',onClick:()=>setKnowledgeOpen(true)},h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,'aria-hidden':true},h('path',{d:'M4 3h12a2 2 0 0 1 2 2v16H6a2 2 0 0 1-2-2V3zm0 13h14M8 7h6M8 11h6'})),wide&&h('span',null,'律所知识库')),
       knowledgeOpen&&h(KnowledgeBoundary,{onClose:()=>setKnowledgeOpen(false)},h(KnowledgePanel,{onClose:()=>setKnowledgeOpen(false)})),
       h('button',{type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'微信连接',title:'微信连接','aria-haspopup':'dialog',onClick:()=>setWechatOpen(true)},h(PhoneIcon),wide&&h('span',null,'微信连接')),
@@ -294,9 +399,10 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       return()=>{window.qxPrivacy?.dispose();script.remove();};
     },'qunxing: optional upload privacy');
     ctx.effect(()=>{const style=document.createElement('style');style.dataset.qxChrome='true';style.textContent=styles;document.head.append(style);return()=>style.remove();},'qunxing: concise desktop chrome');
-    ctx.slots.inject('sidebar.brand.mark',()=>ctx.slots.register({name:'sidebar.brand.mark',priority:-100},()=>h('span',{className:'qx-brand-compact'},'群兴')));
-    ctx.slots.inject('sidebar.brand.name',()=>ctx.slots.register({name:'sidebar.brand.name',priority:-100},()=>h('span',{className:'qx-wordmark'},'群兴')));
+    ctx.slots.inject('sidebar.brand.mark',()=>ctx.slots.register({name:'sidebar.brand.mark',priority:-100},()=>h('span',{className:'qx-brand-compact'},h('img',{className:'qx-brand-logo',src:'/api/qx-brand/logo.png?v=20261103',alt:'群兴律师事务所标识',draggable:false}))));
+    ctx.slots.inject('sidebar.brand.name',()=>ctx.slots.register({name:'sidebar.brand.name',priority:-100},()=>h('span',{className:'qx-wordmark'},'AI师兄法律助手平台')));
     ctx.slots.inject('conversation.hero.brand.mark',()=>ctx.slots.register({name:'conversation.hero.brand.mark',priority:-100},()=>null));
+    ctx.slots.inject('conversation.input.dock',()=>ctx.slots.register({name:'conversation.input.dock',id:'qx-capabilities',order:-100},CapabilityCards));
     ctx.slots.inject('settings.launcher',()=>ctx.slots.register({name:'settings.launcher',priority:-100},()=>null));
     ctx.slots.inject('sidebar.footer.action',()=>ctx.slots.register({name:'sidebar.footer.action',id:'qx-balance',order:100},AccountFooter));
     // A plugin hot reload must not move a window the user is already working in.

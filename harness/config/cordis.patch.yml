@@ -24,7 +24,7 @@
   disabled: true
 - id: system-prompt
   config:
-    personaPrefix: '你是群兴法律工作台，使用 {{model}} 帮助用户理解材料、拟稿和处理工作。用中文清楚回答。'
+    personaPrefix: '你是AI师兄法律助手平台，使用 {{model}} 帮助用户理解材料、拟稿和处理工作。用中文清楚回答。'
 - insert:
     - id: qx-account-balance
       name: D:/qx-harness-workbench-20261102/plugins/account/index.mjs
@@ -53,7 +53,7 @@
           - id: persona
             name: '@deepseek-ai/dsh-persona'
             config:
-              prefix: '你是群兴法律工作台，使用 {{model}} 协助用户处理材料。根据需求自行选择并加载适用的中文法律 Skill。先理解目标，再行动；信息不足时只问会影响结果的问题。'
+              prefix: '你是AI师兄法律助手平台，使用 {{model}} 协助用户处理材料。根据需求自行选择并加载适用的中文法律 Skill。先理解目标，再行动；信息不足时只问会影响结果的问题。'
           - id: agent-instructions
             name: '@deepseek-ai/dsh-agent-instructions'
             config:

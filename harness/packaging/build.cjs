@@ -10,19 +10,18 @@ process.env.PATH=shim+path.delimiter+path.dirname(process.execPath)+path.delimit
 process.env.ELECTRON_BUILDER_COMPRESSION_LEVEL??='1';
 const packageInfo=JSON.parse(fs.readFileSync(path.join(stage,'app/package.json'),'utf8'));
 fs.writeFileSync(path.join(stage,'app/package-lock.json'),JSON.stringify({name:packageInfo.name,version:packageInfo.version,lockfileVersion:3,packages:{'':{name:packageInfo.name,version:packageInfo.version}}}));
-build({projectDir:path.join(stage,'app'),...(process.argv[4]==='--prepackaged'?{prepackaged:path.join(output,'win-unpacked')}:{}),config:{
-  appId:'cn.qunxing.harness.workbench',productName:'群兴法律工作台',asar:true,compression:'normal',
+build({publish:'never',projectDir:path.join(stage,'app'),...(process.argv[4]==='--prepackaged'?{prepackaged:path.join(output,'win-unpacked')}:{}),config:{
+  appId:'cn.qunxing.harness.workbench',productName:'AI师兄法律助手平台',asar:true,compression:'normal',
   electronVersion:'44.8.0',electronDist:'D:/qx-contract-workbench-20261102/desktop/node_modules/electron/dist',
-  directories:{output},files:['*.cjs','*.html','*.css','*.js','package.json'],
+  directories:{output},files:['*.cjs','*.html','*.css','*.js','package.json','update-config.json'],
+  publish:require('../desktop/update-config.json').feed,
   extraResources:[
     {from:path.join(stage,'workbench'),to:'workbench',filter:['**/*','!**/__pycache__/**','!**/*.pyc','!**/*.d.ts','!**/*.map','!bridge/test*.py','!bridge/check_*.py','!plugins/**/*.test.mjs']},
     // electron-builder omits a FileSet's root node_modules unless copied explicitly.
     {from:path.join(stage,'workbench/node_modules'),to:'workbench/node_modules',filter:['**/*','!**/*.d.ts','!**/*.map']},
   ],
   afterPack:async context=>{
-    // NSIS nsisunz accepts classic ZIP only, including its directory entries.
-    const entries=fs.readdirSync(context.appOutDir,{recursive:true}).length;
-    if(entries>=65000)throw Error(`NSIS ZIP entry limit approached: ${entries}`);
+    // Differential NSIS packages use non-solid 7z archives for reusable blocks.
     const bundled=path.join(context.appOutDir,'resources/workbench');
     for(const relative of ['node_modules/@deepseek-ai/dsh/lib/bin.js','node_modules/@qunxing/desktop-session/client.js','browser/node_modules/bb-browser/dist/cli.js','runtime/python/python.exe','desktop-runner/installed-host.cjs','workspace-seed/AGENTS.md','config/templates/catalog.json','config/contract-0.2.0-defaults.json','plugins/privacy/client.js']){
       if(!fs.existsSync(path.join(bundled,relative)))throw Error('Required runtime file missing from package: '+relative);
@@ -32,6 +31,9 @@ build({projectDir:path.join(stage,'app'),...(process.argv[4]==='--prepackaged'?{
     console.log('Packaged Node and Harness startup verified.');
   },
   win:{executableName:'QunxingWorkbench',target:[{target:'nsis',arch:['x64']}],signAndEditExecutable:false,artifactName:'Qunxing-Workbench-${version}-Setup.${ext}'},
-  nsis:{oneClick:true,perMachine:false,deleteAppDataOnUninstall:false,runAfterFinish:true,createDesktopShortcut:true,createStartMenuShortcut:true,include:path.resolve(__dirname,'installer.nsh'),differentialPackage:false,useZip:true},
+  nsis:{oneClick:true,perMachine:false,deleteAppDataOnUninstall:false,runAfterFinish:true,createDesktopShortcut:true,createStartMenuShortcut:true,include:path.resolve(__dirname,'installer.nsh'),differentialPackage:true,useZip:false},
   npmRebuild:false,
-}}).then(paths=>console.log(JSON.stringify(paths))).catch(error=>{console.error(error.message);process.exitCode=1});
+}}).then(paths=>{
+  require('./update-release.cjs').signManifest(output,fs.readFileSync(path.join(__dirname,'update-notes.txt'),'utf8'));
+  console.log(JSON.stringify(paths));
+}).catch(error=>{console.error(error.message);process.exitCode=1});
