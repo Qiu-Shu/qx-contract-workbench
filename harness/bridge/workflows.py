@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 SKILLS = Path(__file__).resolve().parents[1] / 'config' / 'skills'
+PACKAGED_SKILLS = Path(__file__).resolve().parents[1] / 'workspace-seed' / '.dsh' / 'skills'
 VERSION = 'qx-legal-methods-v1'
 _WORKFLOWS = {
     'reception': ('qx-client-reception', '客户接待与跟进',
@@ -30,7 +31,7 @@ def workflow(name: str) -> dict:
     if selected not in _WORKFLOWS:
         raise ValueError('未知工作方法；可选 reception、contract、case、hearing。')
     skill, title, suggested = _WORKFLOWS[selected]
-    directory = SKILLS / skill
+    directory = (SKILLS if SKILLS.is_dir() else PACKAGED_SKILLS) / skill
     try:
         method = (directory / 'references' / 'method.md').read_text(encoding='utf-8')
         provenance = json.loads((directory / 'references' / 'sources.json').read_text(encoding='utf-8'))

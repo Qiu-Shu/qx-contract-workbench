@@ -1,6 +1,8 @@
 # 群兴法律工作台 · Harness 版
 
-面向律师的 Windows 桌面工作台：在一个输入框中描述需求，拖入、粘贴或选择资料，由模型调用法律 Skill 和文档工具。当前安装版为 **0.2.1（2026-11-03）**，基于固定版本 DeepSeek Harness `0.2.2-alpha.2`。
+面向律师的 Windows 桌面工作台：在一个输入框中描述需求，拖入、粘贴或选择资料，由模型调用法律 Skill 和文档工具。本机修复版为 **0.2.2（2026-11-03）**，GitHub 已发布版为 **0.2.1**；底层固定为 DeepSeek Harness `0.2.2-alpha.2`。
+
+本机 0.2.2 已将欢迎介绍和首页改为律所软件文案，修复安装版方法文件路径及 Word 缺失样式导致空正文的问题。见[本次工具修复与验证](docs/2026-11-03-工具读取修复.md)；本机新包位于 `dist/Qunxing-Workbench-0.2.2-Setup.exe`。
 
 [下载安装包](https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.1) · [最新交接](docs/2026-11-03-GitHub交接.md) · [安装说明](docs/2026-11-03-Windows安装包交付.md)
 
@@ -33,7 +35,7 @@
 
 GitHub 中本目录位于 `harness/`；仓库根目录保留旧工作台及复用的 Python 文档解析器。现有开发机运行目录仍为 `D:/qx-harness-workbench-20261102`，依赖 `D:/qx-contract-workbench-20261102/.venv`、旧版 Electron 和本机工具路径。`启动群兴工作台.cmd` 是该开发环境入口，不能当作任意电脑解压即用的安装入口。
 
-`package.json` 的 `0.1.0` 是内部集成包标识，安装产品版本由打包参数指定为 `0.2.1`。依赖版本见 `pnpm-lock.yaml`；构建说明见 [packaging/README.md](packaging/README.md)。移植开发环境时需调整启动脚本、`config/cordis.patch.yml` 和打包脚本内的本机路径，再安装对应依赖；此次同步未将它改造成通用跨平台构建工程。
+`package.json` 的 `0.1.0` 是内部集成包标识，安装产品版本由打包参数指定。依赖版本及中文界面补丁见 `pnpm-lock.yaml`、`pnpm-workspace.yaml`；构建说明见 [packaging/README.md](packaging/README.md)。移植开发环境时需调整启动脚本、`config/cordis.patch.yml` 和打包脚本内的本机路径，再安装对应依赖；此次同步未将它改造成通用跨平台构建工程。
 
 法律库归档及许可证见 [sources/README.md](sources/README.md)。运行 `python scripts/prepare_legal_skills.py --workspace <工作区路径>` 可重建法律库；工作区、密钥、微信会话、脱敏映射、依赖缓存和安装包不进入 Git。文档工具见 [bridge/README.md](bridge/README.md)，微信来源见 [plugins/wechat/README.QX.md](plugins/wechat/README.QX.md)。
 

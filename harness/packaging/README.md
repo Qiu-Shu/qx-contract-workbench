@@ -20,7 +20,7 @@ Windows x64 用户级一键安装，首次启动配置 DeepSeek API Key。用户
 - `python -m unittest discover -s packaging -p test_stage.py`
 - `check-first-run.py`：真实 Electron 引导页、无效输入不保存、显示/隐藏及窄窗口。
 - `check-transition.py`：模拟服务商接受虚构密钥，但真实执行加密、IPC、独立后台启动、更换密钥及微信弹窗。**服务商验真在此用测试替代，未调用付费模型。**
-- `check-portable.py <分发运行目录>`：便携 MCP 握手、虚构 DOCX 读取、Word 草稿、公开网页读取、Windows 控制状态。
+- `check-portable.py <分发运行目录>`：便携 MCP 握手、缺失样式的虚构 DOCX 读取、默认批注、意见书、四项工作方法、公开网页读取、Windows 控制状态。末尾可加 `documents legal` 只执行相关服务的验证。
 - `check-installed.py <安装目录> <隔离资料目录>`：实际安装程序的首次引导、无效输入拒绝、虚构密钥下主界面启动、桌面桥和微信入口顺序。
 - 同一命令末尾加 `upgrade` 检查已有配置启动；`check-upgrade.cjs <安装目录>` 比较升级前后材料、私有映射、加密凭据摘要，以及实际运行的 `settings/describe` 恢复策略。
 

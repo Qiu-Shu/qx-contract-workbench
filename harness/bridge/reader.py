@@ -1,11 +1,13 @@
 """Parse in a separate process; PDF and plain text are indexed incrementally."""
 from pathlib import Path
+from io import BytesIO
 import codecs
 import ctypes
 import json
 import os
 import sys
 from uuid import UUID
+from zipfile import ZipFile
 
 LEGACY = Path('D:/qx-contract-workbench-20261102')
 sys.path.insert(0,str(LEGACY/'src'))
@@ -32,6 +34,45 @@ def text_encoding(path):
         try:codecs.getincrementaldecoder(encoding)().decode(sample,final=False);return encoding
         except UnicodeDecodeError:continue
     raise ValueError('文本编码无法识别，请另存为 UTF-8 后重试。')
+
+
+def docx_style_fallback(raw, revision_mode):
+    """Read body text from the same package bytes already checked by parse_docx."""
+    from docx_delivery import _paragraphs, _w, _xml
+    from cn_contract.documents.docx_styles import EffectiveStyles, StyleDependencyError
+    with ZipFile(BytesIO(raw)) as archive:
+        root = _xml(archive.read('word/document.xml'))
+        styles = EffectiveStyles(_xml(archive.read('word/styles.xml')) if 'word/styles.xml' in archive.namelist() else None)
+    excluded = {'del', 'moveFrom'} if revision_mode == 'accepted_view' else {'ins', 'moveTo'}
+    excluded.update({'drawing', 'pict', 'object'})
+    excluded = {_w(tag) for tag in excluded}
+    for _, paragraph in _paragraphs(root):
+        if any(node.tag in excluded for node in paragraph.iterancestors()): continue
+        tables = [node for node in paragraph.iterancestors() if node.tag == _w('tbl')]
+        try:
+            if any(styles.table_hidden(table) for table in tables): continue
+        except StyleDependencyError:
+            pass  # Unresolved inherited appearance is reported, not a reason to lose text.
+        values = []
+        for node in paragraph.iter():
+            if node.tag not in {_w(tag) for tag in ('t', 'delText', 'tab', 'br', 'cr')}: continue
+            ancestors = list(node.iterancestors())
+            if next((a for a in ancestors if a.tag == _w('p')), None) is not paragraph: continue
+            if any(a.tag in excluded for a in ancestors): continue
+            run = next((a for a in ancestors if a.tag == _w('r')), None)
+            if run is not None:
+                try:
+                    hidden = styles.run_hidden(paragraph, run)
+                except StyleDependencyError:
+                    # Still honour explicit hidden text even if its imported style is missing.
+                    hidden = any(flag.get(_w('val'), 'true') in {'1', 'true', 'on'}
+                                 for prop in run.findall(_w('rPr')) for flag in prop
+                                 if flag.tag in {_w('vanish'), _w('webHidden')})
+                if hidden: continue
+            values.append(node.text or '' if node.tag in {_w('t'), _w('delText')}
+                          else '\t' if node.tag == _w('tab') else '\n')
+        value = ''.join(values)
+        if value.strip(): yield value, 'word/document.xml:' + root.getroottree().getpath(paragraph)
 
 
 def parse(store,path,start_page=1,page_count=20,force_ocr=False,revision_mode='original'):
@@ -109,7 +150,14 @@ def parse(store,path,start_page=1,page_count=20,force_ocr=False,revision_mode='o
                     # Only the parser's format hint changes; the stored path and bytes do not.
                     parser_name=source.name if source.suffix else source.name+extension
                     result=parse_material(raw,parser_name,identifier,settings)
-                for anchor in result.anchors:add(anchor.quote,anchor.part_name+':'+anchor.element_id,anchor.page)
+                style_fallback = extension == '.docx' and any(
+                    'STYLE_DEPENDENCY_REQUIRES_CONFIRMATION' in issue for issue in result.quality_issues)
+                if style_fallback:
+                    warnings.append('样式依赖不完整，已按段落、表格及指定修订视图读取正文；未能确定的隐藏样式、颜色和自动编号请对照原件。')
+                    for value, location in docx_style_fallback(raw, revision_mode): add(value, location)
+                for anchor in result.anchors:
+                    if style_fallback and anchor.part_name == 'word/document.xml': continue
+                    add(anchor.quote,anchor.part_name+':'+anchor.element_id,anchor.page)
                 warnings.extend(result.quality_issues)
                 if result.unsupported_parts:warnings.append('部分嵌入对象或版式未提取；必要时对照原件。')
             existing={0};db.execute('INSERT OR REPLACE INTO parsed_pages VALUES(?,0)',(key,))

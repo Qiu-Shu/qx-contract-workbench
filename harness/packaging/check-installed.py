@@ -1,5 +1,5 @@
 """Test the actual installed executable, then leave its background for upgrade QA."""
-import json,os,socket,subprocess,sys,time,urllib.request
+import json,os,re,socket,subprocess,sys,time,urllib.request
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
@@ -51,7 +51,8 @@ with sync_playwright() as p:
         while not context.pages and time.time()<end:time.sleep(.2);browser.new_browser_cdp_session().send('Browser.getVersion')
         page=context.pages[0]
         page.get_by_role('button',name='微信连接',exact=True).wait_for(timeout=180000)
-        if page.get_by_role('button',name='继续',exact=True).is_visible():page.get_by_role('button',name='继续',exact=True).click()
+        start=page.get_by_role('button',name=re.compile('^(开始使用|继续)$'))
+        if start.is_visible():start.click()
         assert page.evaluate('typeof window.__DSH_DIRECTORY_PICKER__.pick')=='function'
         assert (page.get_by_role('button',name='微信连接',exact=True).bounding_box()['y']<page.locator('.qx-balance-refresh').bounding_box()['y'])
         page.get_by_role('checkbox',name='上传前脱敏',exact=True).wait_for()

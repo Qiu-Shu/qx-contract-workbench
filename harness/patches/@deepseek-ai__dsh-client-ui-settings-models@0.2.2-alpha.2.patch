@@ -1,0 +1,17 @@
+diff --git a/lib/client.js b/lib/client.js
+index d411b8ceddd4f107747061068a5e02509b4f9b07..41253daff8828ae164fd0c203f429c38b56ebeb7 100644
+--- a/lib/client.js
++++ b/lib/client.js
+@@ -3603,9 +3603,9 @@ window.__ModuleLoader__.load({
+ 			settingsPathUnresolvable: "无法解析设置路径",
+ 			create: "创建提供商",
+ 			creating: "创建中…",
+-			welcomeTitle: "预览版说明",
+-			welcomeBody: "DeepSeek Harness 目前的 0.2 版本仍处于预览阶段，还有许多地方需要持续改进和打磨，希望听取广大开发者和用户的反馈建议。现在，新的桌面端面向广泛用户，开发者相关的进阶功能可在配置中开启使用。预计 DeepSeek Harness 的产品功能以及插件 API 都会继续快速迭代、持续演化，并逐渐趋于稳定。\n\n我们期待与全球用户和开发者一起，在开源、可复用、可组合的基础设施之上，共同探索智能上限。欢迎大家用 DeepSeek Harness 将想法变成现实，与社区一起丰富插件生态。",
+-			welcomeContinue: "继续",
++			welcomeTitle: "欢迎使用群兴法律工作台",
++			welcomeBody: "把需求和资料交给工作台，集中完成日常法律工作。\n\n客户接待｜生成可直接发给当事人的回复，内部分析单独保存。\n\n合同审查｜读取合同、梳理风险，导出批注版合同及 Word 意见书。\n\n办案整理｜持续整理时间线、证据缺口和待办，更正保留原记录。\n\n模拟法庭｜按五阶段演练，逐条保存发言，支持回读续接。\n\n开始使用：在输入框描述需求，拖入或粘贴文档、图片；上传时可选择脱敏。\n\n左下角可打开律所知识库、连接本人微信；手机继续工作时，请保持电脑开机并联网。",
++			welcomeContinue: "开始使用",
+ 			welcomeError: "暂时无法保存确认状态，请重试。",
+ 			onboardingTitle: "添加一个 API Key 开始使用",
+ 			onboardingDescription: "配置 DeepSeek 官方模型，即可开始使用。",

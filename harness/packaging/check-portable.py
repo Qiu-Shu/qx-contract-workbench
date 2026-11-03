@@ -6,12 +6,19 @@ from pathlib import Path
 from mcp import ClientSession,StdioServerParameters
 from mcp.client.stdio import stdio_client
 from docx import Document
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 
 ROOT=Path(__file__).resolve().parents[1]
 BUNDLE=Path(sys.argv[1]).resolve()
+SELECTED=set(sys.argv[2:])
 WORK=ROOT/'.local/installer-check-文档'
 WORK.mkdir(parents=True,exist_ok=True)
-document=Document();document.add_paragraph('虚构安装验收：合同金额35000元，验收后十日内付款。');document.save(WORK/'虚构验收.docx')
+document=Document();paragraph=document.add_paragraph('虚构安装验收：合同金额35000元，验收后十日内付款。')
+# A valid imported DOCX can reference a style absent from styles.xml.
+style=OxmlElement('w:pStyle');style.set(qn('w:val'),'MissingImportedStyle')
+paragraph._p.get_or_add_pPr().append(style)
+document.save(WORK/'虚构验收.docx')
 env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',PYTHONPATH=str(BUNDLE/'legacy/src'),QX_LEGACY_ROOT=str(BUNDLE/'legacy'),PYTHONIOENCODING='utf-8',BB_BROWSER_NODE=str(BUNDLE/'runtime/node.exe'),BB_BROWSER_CLI=str(BUNDLE/'browser/node_modules/bb-browser/dist/cli.js'))
 async def main():
     report={}
@@ -23,6 +30,7 @@ async def main():
         'windows':('windows',[str(BUNDLE/'python-tool.py'),'windows','serve','--transport','stdio']),
     }
     for name,(runtime,args) in specs.items():
+        if SELECTED and name not in SELECTED:continue
         async with stdio_client(StdioServerParameters(command=str(BUNDLE/f'runtime/{runtime}/python.exe'),args=args,cwd=str(WORK),env=env)) as streams:
             async with ClientSession(*streams,read_timeout_seconds=120) as client:
                 await client.initialize();tools=await client.list_tools()
@@ -52,7 +60,14 @@ async def main():
                     opinion=value(await client.call_tool('write_contract_opinion',{'filename':'虚构意见验收','title':'纯虚构安装验收意见','sections':[{'heading':'结论','paragraphs':['仅用于验证文件生成。']},{'heading':'风险表','table':{'headers':['优先级','位置','影响','建议'],'rows':[['验收','虚构条款','测试','人工核对']]}}]}))
                     assert Path(opinion['html_path']).is_file() and Path(opinion['word_path']).is_file()
                     assert hashlib.sha256(source.read_bytes()).hexdigest()==digest
-                    result.update(docxRead=True,wordDraft=True,templates=True,templateWord=True,defaultComments=True,originalUnchanged=True,htmlWordOpinion=True)
+                    result.update(docxRead=True,importedStyleReadable=True,wordDraft=True,templates=True,templateWord=True,defaultComments=True,originalUnchanged=True,htmlWordOpinion=True)
+                elif name=='legal':
+                    for workflow in ('reception','contract','case','hearing'):
+                        response=await client.call_tool('get_workflow',{'name':workflow})
+                        assert not response.is_error,(workflow,str(response))
+                        method=json.loads(next(block.text for block in response.content if block.type=='text'))
+                        assert method['name']==workflow and method['method'].strip() and method['sources']
+                    result['fourWorkflowMethods']=True
                 elif name=='scrapling':
                     response=await client.call_tool('make_request',{'url':'https://example.com','extraction_type':'text','main_content_only':False,'timeout':25})
                     assert not response.is_error and 'Example Domain' in str(response)
@@ -62,5 +77,6 @@ async def main():
                     result['controlStatus']=True
                 report[name]=result;print(json.dumps({name:result}),flush=True)
     report['noModelRequest']=True
-    (ROOT/'docs/checks/installer/portable-tools.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+    report_name='portable-tools-focused.json' if SELECTED else 'portable-tools.json'
+    (ROOT/'docs/checks/installer'/report_name).write_text(json.dumps(report,indent=2),encoding='utf-8')
 asyncio.run(main())
