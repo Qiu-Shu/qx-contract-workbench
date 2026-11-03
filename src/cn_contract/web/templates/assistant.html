@@ -24,6 +24,7 @@
     <nav class="workspace-links" aria-label="已有工作区">
       <a href="/workspace" aria-label="工作区与接待"><span class="compact-label" aria-hidden="true">接待</span><span class="expanded-label">工作区与接待</span></a>
       {% if library_enabled %}<a href="/library" aria-label="法律资料库"><span class="compact-label" aria-hidden="true">法库</span><span class="expanded-label">法律资料库</span></a>{% endif %}
+      {% if knowledge_enabled %}<a href="/knowledge" aria-label="知识服务（只读试点）"><span class="compact-label" aria-hidden="true">知识</span><span class="expanded-label">知识服务（只读）</span></a>{% endif %}
     </nav>
     <section class="sidebar-section recent-section" aria-labelledby="recent-heading">
       <h2 id="recent-heading">事项记录</h2>
@@ -111,7 +112,7 @@
         <div class="skill-options">
           <p><span id="selected-skill">自动选择能力</span><button id="clear-skill" class="text-button" type="button" hidden>取消选择</button></p>
           <div id="business-task-choice" hidden><label for="business-task-select">这条消息的任务归属</label><select id="business-task-select"><option value="">自动判断</option></select></div>
-          <details id="more-skills"><summary>更多能力</summary><div class="more-skills-content"><button type="button" data-skill="legal_research" aria-pressed="false">检索法律资料</button><p class="muted">关键词检索仅使用本机资料库；选择后按发送执行。</p></div></details>
+          <details id="more-skills"><summary>更多能力</summary><div class="more-skills-content"><button type="button" data-skill="legal_research" aria-pressed="false">检索法律资料</button><p class="muted">关键词检索使用{% if knowledge_enabled %}本机只读法律资料服务{% elif library_enabled %}本机资料库{% else %}本机资料库（当前未连接）{% endif %}；选择后按发送执行。</p></div></details>
         </div>
         <form id="composer-form" class="composer-form">
           <div class="composer-topline"><label for="composer"><svg class="ui-icon" aria-hidden="true"><use href="#ui-document"/></svg>咨询内容与工作指令</label><span>工作草稿</span></div>

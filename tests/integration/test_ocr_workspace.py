@@ -1,11 +1,21 @@
 """Synthetic temporary jobs; ordinary CI substitutes the native predictor only."""
 from hashlib import sha256
 from io import BytesIO
+import sys
 from uuid import uuid4
 import pytest
 from PIL import Image
-from cn_contract.documents import ocr_process,_windows_ocr
+from cn_contract.documents import ocr_process
 from cn_contract.security import ServiceError
+
+# `_windows_ocr` binds kernel32/userenv/advapi32 through `ctypes.WinDLL` at import
+# time, so importing it on a POSIX host aborts *collection* and takes the whole
+# suite down (exit 2, nothing runs). Guard the import and report the module as
+# platform-unverified instead of hiding every other result behind it.
+pytestmark = pytest.mark.skipif(sys.platform != 'win32',
+    reason='Windows-only OCR job bindings (ctypes.WinDLL); platform unverified')
+if sys.platform == 'win32':
+    from cn_contract.documents import _windows_ocr
 
 
 @pytest.fixture

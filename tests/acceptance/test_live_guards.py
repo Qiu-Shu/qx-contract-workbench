@@ -178,7 +178,23 @@ def test_actual_canonical_source_and_runtime_gates_reread():
     assert result.server_gate_counts == {'source': 9, 'runtime': 59, 'total': 77}
     assert result.evidence_hashes['server/source_lock'] == hashlib.sha256((PROJECT_ROOT/'sources/upstream.lock.json').read_bytes()).hexdigest()
     assert result.evidence_hashes['server/config'] == hashlib.sha256((PROJECT_ROOT/'config/defaults.json').read_bytes()).hexdigest()
+    # The counts are only traceable if the diagnostic names the runtime baseline
+    # that produced them: the hash must be of the same active lock the gate reads.
+    assert result.evidence_hashes['server/runtime_lock'] == hashlib.sha256((PROJECT_ROOT/'sources/runtime-dependencies.lock.json').read_bytes()).hexdigest()
+    assert result.evidence_currentness['server/runtime_lock'] == 'CURRENT_SERVER_BYTES_PRODUCTION_APPROVAL_PENDING'
     assert result.decision == 'BLOCKED'
+
+
+def test_runtime_baseline_hash_cannot_degrade_the_refusal(monkeypatch, tmp_path):
+    """The added diagnostic read must not turn a refusal into a pass or a crash."""
+    module = importlib.import_module('cn_contract.live.readiness')
+    # A root with no runtime lock: the diagnostic read itself fails.
+    monkeypatch.setattr(module, 'PROJECT_ROOT', tmp_path)
+    result = module.assess_go_live(evidence())
+    assert result.decision == 'BLOCKED'
+    assert result.reasons['server_release'] == 'CURRENT_FIXED_SERVER_GATES_UNAVAILABLE_BLOCKED'
+    assert result.server_gate_counts == {}
+    assert 'server/runtime_lock' not in result.evidence_hashes
 
 
 @pytest.mark.parametrize('ref', ['https://no-request.invalid/private', '\\\\no-request.invalid\\share\\file.json', 'sources/upstream.lock.json:private', 'C:/outside/private.json'])

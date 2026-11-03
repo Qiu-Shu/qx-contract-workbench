@@ -185,12 +185,8 @@ def test_native_missing_version_index_is_rejected_before_any_repair(tmp_path):
     local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
     marker = (root/'workspace.json').read_bytes()
     with closing(sqlite3.connect(root/'workbench.db')) as connection:
-        connection.execute('DROP TABLE assistant_followup_revisions')
-        connection.execute('DROP TABLE assistant_evidence_revisions')
-        connection.execute('DROP INDEX '+INDEX)
-        connection.commit()
-        from tests.helpers.legacy_material_model import downgrade_material_model
-        downgrade_material_model(connection)
+        from tests.helpers.legacy_schema import rebuild_to_version
+        rebuild_to_version(connection, PREVIOUS)
         assert schema_migrations.database_rows(connection) == storage_schema.schema_rows(PREVIOUS, native=True)
     before = (root/'workbench.db').read_bytes()
     with pytest.raises(ValueError, match='WORKSPACE_DATABASE_MISMATCH'):
@@ -205,12 +201,8 @@ def test_native_v18_upgrade_saves_old_structure_and_closes_marker_gap(tmp_path, 
     root = tmp_path/'native'
     local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as connection:
-        connection.execute('DROP TABLE assistant_followup_revisions')
-        connection.execute('DROP TABLE assistant_evidence_revisions')
-        connection.execute('DROP INDEX '+INDEX)
-        connection.commit()
-        from tests.helpers.legacy_material_model import downgrade_material_model
-        downgrade_material_model(connection)
+        from tests.helpers.legacy_schema import rebuild_to_version
+        rebuild_to_version(connection, PREVIOUS)
         marker = json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256'] = local_server._schema_hash(connection)
     (root/'workspace.json').write_text(json.dumps(marker), encoding='utf-8')

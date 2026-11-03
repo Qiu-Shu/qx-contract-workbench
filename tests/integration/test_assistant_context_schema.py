@@ -82,9 +82,21 @@ def test_all_historical_versions_upgrade_without_replacing_objects_or_rows(tmp_p
         rounds = db.execute('SELECT round_no FROM assistant_model_attempts').fetchall()
         assert all(value == (1,) for value in rounds)
         # Shared old objects keep their original SQL; only the model family changes.
+        # assistant_handler_receipts 是例外：knowledge 步骤要重建它才能放开
+        # handler_id 的 CHECK（旧结构只允许两个 local library 处理器名）。
+        # `assistant_model_attempts` is rebuilt with new columns by the rounds
+        # step, so its whole family (including `immutable_assistant_model_input`)
+        # legitimately changes. `assistant_handler_receipts` only gains CHECK
+        # values: exempt the TABLE row alone, so its two immutability triggers and
+        # its indexes are still compared one by one. Excluding by owning table
+        # (row[2]) for the receipt would wave through an altered or dropped
+        # trigger; that is a real relaxation and is not used here.
+        rebuilt_table_rows = {('table', 'assistant_handler_receipts')}
         old_objects = {row[1]: row for row in before}
         for row in after:
-            if row[1] in old_objects and row[2] not in ('assistant_model_attempts',):
+            if row[2] == 'assistant_model_attempts':
+                continue
+            if row[1] in old_objects and (row[0], row[1]) not in rebuilt_table_rows:
                 assert row == old_objects[row[1]]
         assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         assert schema_migrations.database_rows(db) == after

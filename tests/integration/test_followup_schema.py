@@ -50,7 +50,12 @@ def test_all_40_predecessor_structures_are_unchanged(item):
 
 def test_followups_append_only_the_snapshot_family_to_v20():
     assert len(FROZEN) == 40
-    assert storage_schema.VERSIONS[-3:-1] == ('assistant-evidence-v1', TARGET)
+    # The followup version must be the *immediate* successor of the evidence
+    # version. Slicing VERSIONS[-3:-1] said the same thing only while those were
+    # the last two entries; later versions moved the goalposts without this
+    # relationship changing.
+    evidence = storage_schema.VERSIONS.index('assistant-evidence-v1')
+    assert storage_schema.VERSIONS[evidence + 1] == TARGET
     before = set(storage_schema.schema_rows('assistant-evidence-v1'))
     after = set(storage_schema.schema_rows(TARGET))
     assert before < after
@@ -158,10 +163,8 @@ def test_native_v20_upgrade_preserves_saved_evidence_and_identity(native):
     database.engine.dispose()
     with closing(sqlite3.connect(root/'workbench.db')) as connection:
         saved = connection.execute('SELECT * FROM assistant_evidence_revisions').fetchall()
-        connection.execute('DROP TABLE '+TABLE)
-        connection.commit()
-        from tests.helpers.legacy_material_model import downgrade_material_model
-        downgrade_material_model(connection)
+        from tests.helpers.legacy_schema import rebuild_to_version
+        rebuild_to_version(connection, 'assistant-evidence-v1')
         rows = schema_migrations.database_rows(connection)
         assert storage_schema.identify_schema(rows, native=True) == 'assistant-evidence-v1'
     marker = json.loads((root/'workspace.json').read_text())

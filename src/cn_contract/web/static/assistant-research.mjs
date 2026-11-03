@@ -25,11 +25,21 @@ export function createResearchController(api,host) {
     if(!result?.run?.id || result.run.requested_skill!=='legal_research' ||
         !historicalScope(result.run.scope,scope) || !Array.isArray(result.receipts) || result.receipts.length>8)throw invalid();
     for(const receipt of result.receipts) {
-      const page=receipt.result?.result?.page;
+      // 两种来源各自带自己的结果字段：本地资料库给 page.citations，只读知识服务给
+      // knowledge_page.groups。这里按来源分别核对条数与 citation_ids 的对齐关系，
+      // 不把其中一种的形状当成另一种的。
+      const body=receipt.result?.result,page=body?.page,knowledge=body?.knowledge_page;
       if(receipt.run_id!==result.run.id || !sameScope(receipt.scope,result.run.scope) ||
-          !sameScope(receipt.result?.result?.scope,result.run.scope) || receipt.handler_id!=='legal_library.search' ||
-          !page || !Array.isArray(page.citations) || page.citations.length>8 ||
-          !Array.isArray(receipt.result.citation_ids) || page.citations.length!==receipt.result.citation_ids.length)throw invalid();
+          !sameScope(receipt.result?.result?.scope,result.run.scope) ||
+          !Array.isArray(receipt.result.citation_ids) || (!page && !knowledge))throw invalid();
+      if(knowledge) {
+        const count=(knowledge.groups?.law?.length||0)+(knowledge.groups?.case?.length||0);
+        if(receipt.handler_id!=='legal_knowledge.search' || !['ready','empty'].includes(knowledge.state) ||
+            count>8 || count!==receipt.result.citation_ids.length)throw invalid();
+        continue;
+      }
+      if(receipt.handler_id!=='legal_library.search' || !Array.isArray(page.citations) ||
+          page.citations.length>8 || page.citations.length!==receipt.result.citation_ids.length)throw invalid();
     }
     return result;
   }

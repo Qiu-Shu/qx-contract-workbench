@@ -202,15 +202,10 @@ def native_grant_workspace(tmp_path, monkeypatch):
     root = tmp_path/'workspace'
     local_server.initialize_workspace(root, 'synthetic-lawyer', 'fiction123', data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        # Keep this fixture at the exact historical schema, without later worksheets.
-        db.execute('DROP TABLE assistant_followup_revisions')
-        db.execute('DROP TABLE assistant_evidence_revisions')
-        db.execute('DROP INDEX weixin_dispatch_binding_cursor')
-        db.execute('DROP TABLE IF EXISTS weixin_descriptor_generations')
-        db.execute('DROP TABLE IF EXISTS weixin_peer_generations')
-        db.commit()
-        from tests.helpers.legacy_material_model import downgrade_material_model
-        downgrade_material_model(db)
+        # Keep this fixture at the exact historical schema. The object list is
+        # derived from the version contract (tests/helpers/legacy_schema.py).
+        from tests.helpers.legacy_schema import rebuild_to_version
+        rebuild_to_version(db, 'weixin-reauthorization-v1')
         marker = json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256'] = local_server._schema_hash(db)
         assert schema_migrations.database_rows(db) == storage_schema.schema_rows('weixin-reauthorization-v1', native=True)
@@ -293,13 +288,8 @@ def test_native_workspace_advances_all_later_versions_with_distinct_verified_rec
     root=tmp_path/'two-step-workspace'
     local_server.initialize_workspace(root,'synthetic-lawyer','fiction123',data_parent=tmp_path)
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        db.execute('DROP TABLE assistant_followup_revisions')
-        db.execute('DROP TABLE assistant_evidence_revisions')
-        db.execute('DROP INDEX weixin_dispatch_binding_cursor')
-        db.execute('DROP TABLE weixin_descriptor_generations')
-        db.execute('DROP TABLE weixin_peer_generations');db.commit()
-        from tests.helpers.legacy_material_model import downgrade_material_model
-        downgrade_material_model(db)
+        from tests.helpers.legacy_schema import rebuild_to_version
+        rebuild_to_version(db, 'weixin-reauthorization-v1')
         marker=json.loads((root/'workspace.json').read_text('utf-8'))
         marker['schema_sha256']=local_server._schema_hash(db)
         assert schema_migrations.database_rows(db)==storage_schema.schema_rows('weixin-reauthorization-v1',native=True)

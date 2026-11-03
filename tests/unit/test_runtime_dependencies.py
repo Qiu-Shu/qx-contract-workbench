@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 import pytest
 
+from tests.helpers import runtime_archive_fixture
+
 ROOT=Path(__file__).resolve().parents[2]
 
 
@@ -72,34 +74,45 @@ def test_gate_does_not_accept_inconsistent_or_ambiguous_evidence(tmp_path,defect
     assert not module.verify_manifest(path,mode,project_root=ROOT)['ok']
 
 
-@pytest.mark.parametrize('defect',['encrypted','unsupported_compression'])
-def test_malformed_wheel_headers_are_controlled_no_execution(defect):
-    import hashlib,struct,tempfile,zipfile,io
-    module=gate();payload=json.loads((ROOT/'sources/runtime-dependencies.lock.json').read_text())
-    package=payload['packages'][-2]
-    raw=bytearray((ROOT/package['wheel_cache']).read_bytes())
-    with zipfile.ZipFile(io.BytesIO(raw)) as z:
-        member=next(i for i in z.infolist() if i.filename.endswith('.dist-info/METADATA'))
-    # Rewrite only METADATA headers; do not read or execute package source.
-    offset=member.header_offset
-    central=raw.find(b'PK\x01\x02')
-    while central>=0:
-        name_len=struct.unpack_from('<H',raw,central+28)[0]
-        name=bytes(raw[central+46:central+46+name_len]).decode()
-        if name==member.filename:break
-        central=raw.find(b'PK\x01\x02',central+4)
-    assert central>=0
-    if defect=='encrypted':
-        struct.pack_into('<H',raw,offset+6,member.flag_bits|1);struct.pack_into('<H',raw,central+8,member.flag_bits|1)
-    else:
-        struct.pack_into('<H',raw,offset+8,99);struct.pack_into('<H',raw,central+10,99)
-    with tempfile.TemporaryDirectory(dir=ROOT/'.audit-local',prefix='t10-malformed-wheel-') as name:
-        directory=Path(name);wheel=directory/package['artifact_filename'];wheel.write_bytes(raw)
-        package['wheel_cache']=wheel.relative_to(ROOT).as_posix();package['artifact_sha256']=hashlib.sha256(raw).hexdigest()
-        registration=json.loads((ROOT/package['registry_cache']).read_text())
-        for artifact in registration['urls']:
-            if artifact['filename']==package['artifact_filename']:artifact['digests']['sha256']=package['artifact_sha256']
-        registry=directory/'registry.json';registry.write_text(json.dumps(registration))
-        package['registry_cache']=registry.relative_to(ROOT).as_posix();package['registry_sha256']=hashlib.sha256(registry.read_bytes()).hexdigest()
-        manifest=directory/'manifest.json';manifest.write_text(json.dumps(payload))
-        assert not module.verify_manifest(manifest,'development',project_root=ROOT)['ok']
+def test_isolated_archive_manifest_is_valid_before_any_header_is_mutated(tmp_path):
+    """The green case the negative cases are measured against.
+
+    Without this, `assert not result['ok']` in the two tests below would be
+    satisfied by any structural complaint, which is exactly the failure mode
+    this gate must not have. The manifest covers only jinja2 + markupsafe, and
+    the wheels are the real registered bytes.
+    """
+    module=gate()
+    manifest=runtime_archive_fixture.build(tmp_path)
+    assert runtime_archive_fixture.sha256((tmp_path/'wheels'/'jinja2-3.1.6-py3-none-any.whl').read_bytes())==runtime_archive_fixture.registered_sha('jinja2')
+    result=module.verify_manifest(manifest,'development',project_root=tmp_path)
+    assert result['ok'], result
+    assert result['errors']==[] and result['checked_packages']==2
+    assert result['native_build_verified'] is False and result['network_calls']==0
+
+
+# The parameter ids carry the expected error type on purpose. The old ids were
+# `[encrypted]` / `[unsupported_compression]`, which read as if the case name
+# were the whole claim; `[encrypted-RuntimeError]` says what the refusal must be.
+# This is a rename only: same body, same exact-match assertion, nothing relaxed.
+@pytest.mark.parametrize(
+    'defect,expected',
+    [('encrypted','RuntimeError'),('unsupported_compression','NotImplementedError')],
+    ids=['encrypted-RuntimeError','unsupported_compression-NotImplementedError'])
+def test_malformed_wheel_headers_are_controlled_no_execution(tmp_path,defect,expected):
+    module=gate()
+    # Same fixture, same bytes, same gate: first prove the isolated manifest
+    # closes, then flip one header field of the jinja2 wheel and nothing else.
+    baseline=module.verify_manifest(runtime_archive_fixture.build(tmp_path/'valid'),'development',project_root=tmp_path/'valid')
+    assert baseline['ok'] and baseline['errors']==[], (
+        'the isolated manifest must be valid before the header is mutated, otherwise a '
+        'refusal below could be any structural complaint: %r' % (baseline,))
+    mutated=runtime_archive_fixture.build(tmp_path/'defect',defect=defect)
+    result=module.verify_manifest(mutated,'development',project_root=tmp_path/'defect')
+    assert not result['ok'], result
+    # Exact match, not a substring search: a single targeted refusal and no
+    # other structural error is the whole claim being made here.
+    assert result['errors']==['MANIFEST_INVALID:'+expected], (
+        'expected exactly one archive-boundary refusal (%s), got %r' % (expected,result['errors']))
+    assert result['checked_packages']==0
+

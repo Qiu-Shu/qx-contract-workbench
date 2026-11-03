@@ -46,8 +46,13 @@ def initialize_storage(database):
             "SELECT type,name,tbl_name,sql FROM sqlite_master WHERE tbl_name IN "
             "('assistant_handler_receipts','assistant_library_citations') ORDER BY type,name")]
         if found:
-            if found != expected_objects():
-                raise ValueError('DATABASE_SCHEMA_MISMATCH')
-            return
+            if found == expected_objects():
+                return
+            # 回执表被 knowledge-v1 加宽过：那是同一个库的新版本结构，
+            # 不是被改坏的库，所以也接受。
+            from .knowledge_schema import expected_objects as widened
+            if found == widened():
+                return
+            raise ValueError('DATABASE_SCHEMA_MISMATCH')
         for statement in STATEMENTS:
             connection.exec_driver_sql(statement)

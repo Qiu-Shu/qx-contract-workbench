@@ -194,6 +194,12 @@ def test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance(histor
     first = receipts[0]
     target = first['id']
     other_account = seed_history(database, seed['actor'], bot_account_id='independent-other-dispatch-bot')['account_id'] if damage == 'account' else None
+    if damage == 'overlap':
+        # The slot collision this case plants is legal at v18 and forbidden at
+        # v19, so the database has to *be* v18 first. Its object list comes from
+        # the version contract rather than another hand-maintained DROP list.
+        from tests.helpers.legacy_schema import rebuild_database
+        rebuild_database(database, 'weixin-target-provenance-v1')
     with database.session() as db:
         if damage in ('actor', 'account', 'mapping', 'binding', 'task_event', 'source', 'payload_hash', 'receipt_uuid', 'descriptor_uuid'):
             key, value = {
@@ -270,11 +276,6 @@ def test_coherent_receipt_rehash_cannot_hide_broken_historical_provenance(histor
         elif damage == 'overlap':
             # v19 SQL forbids this slot collision; retain the exact v18 archive rejection.
             from cn_contract.storage_schema import identify_schema
-            db.execute(text('DROP TABLE assistant_followup_revisions'))
-            db.execute(text('DROP TABLE assistant_evidence_revisions'))
-            db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
-            from tests.helpers.legacy_material_model import downgrade_material_model_session
-            downgrade_material_model_session(db)
             rows=[tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
             assert identify_schema(rows,native=True)=='weixin-target-provenance-v1'
             corrupt(db, 'UPDATE weixin_dispatch_receipts SET expected_task_cursor=0,next_task_cursor=1 WHERE id=:id', {'id':receipts[1]['id']})

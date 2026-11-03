@@ -52,12 +52,10 @@ def test_native_upgrade_keeps_workspace_identity_and_prior_profile(native):
     # Simulate the precise predecessor, not a partially initialized fixture.
     db.engine.dispose()
     with sqlite3.connect(root/'workbench.db') as raw:
-        for action in ('update','delete'):raw.execute('DROP TRIGGER immutable_assistant_evidence_revisions_'+action)
-        raw.execute('DROP TABLE assistant_followup_revisions')
-        raw.execute('DROP TABLE assistant_evidence_revisions')
-        raw.commit()
-        from tests.helpers.legacy_material_model import downgrade_material_model
-        downgrade_material_model(raw)
+        # Contract-derived predecessor: dropping the followup table was not
+        # enough once later versions added their own families.
+        from tests.helpers.legacy_schema import rebuild_to_version
+        rebuild_to_version(raw, 'weixin-generation-dispatch-v1')
         rows=raw.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall()
     marker=json.loads((root/'workspace.json').read_text());marker['schema_sha256']=digest(rows)
     (root/'workspace.json').write_text(json.dumps(marker))

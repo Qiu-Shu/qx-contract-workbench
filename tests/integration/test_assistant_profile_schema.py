@@ -56,7 +56,9 @@ def test_all_historical_versions_upgrade_without_losing_rows(tmp_path, version, 
         assert schema_migrations.upgrade_database(db) == storage_schema.CURRENT_VERSION
         after = schema_migrations.database_rows(db)
         assert {row[1] for row in set(before)-set(after)} <= {
-            'assistant_model_attempts', 'immutable_assistant_model_input'}
+            'assistant_model_attempts', 'immutable_assistant_model_input',
+            # knowledge 步骤重建回执表，放开 handler_id 的 CHECK。
+            'assistant_handler_receipts'}
         assert after == storage_schema.schema_rows(storage_schema.CURRENT_VERSION, native=native)
         assert db.execute('SELECT username FROM users').fetchall() == [('old-user',)]
         assert db.execute('PRAGMA foreign_key_check').fetchall() == []

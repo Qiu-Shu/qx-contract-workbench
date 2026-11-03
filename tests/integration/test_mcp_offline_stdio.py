@@ -1,6 +1,7 @@
 """Actual local child initialize/list/call/refuse/shutdown, never a supplier."""
 
 import json
+import os
 import sys
 from tempfile import TemporaryFile
 
@@ -144,8 +145,12 @@ def test_installed_sdk_client_actual_stdio_roundtrip_and_refusal():
     api()
     async def exercise():
         with anyio.fail_after(20), TemporaryFile(mode='w+', encoding='utf-8') as errors:
+            # The SDK builds its own child env; without PYTHONPATH a source
+            # checkout cannot be imported by that child, and the handshake dies
+            # with "Connection closed" before any frame is exchanged.
             parameters = StdioServerParameters(command=sys.executable,
-                args=['-X', 'utf8', '-m', 'cn_contract.mcp.offline_server'], env={}, cwd=str(ROOT))
+                args=['-X', 'utf8', '-m', 'cn_contract.mcp.offline_server'],
+                env={'PYTHONPATH': os.environ.get('PYTHONPATH', str(ROOT/'src'))}, cwd=str(ROOT))
             async with stdio_client(parameters, errlog=errors) as streams:
                 async with ClientSession(*streams) as session:
                     await session.initialize()

@@ -17,7 +17,12 @@ CANARY = 'INDEPENDENT_FICTIONAL_MCP_CANARY'
 @contextmanager
 def child(*, launch_code=None):
     # Test-owned environment: no real credential values are inherited here.
-    env = {key: os.environ[key] for key in ('SYSTEMROOT', 'PATH', 'TEMP', 'TMP') if key in os.environ}
+    # PYTHONPATH is not a credential — it is how a source checkout tells the
+    # child where `cn_contract` lives. Leaving it out made every stdio test time
+    # out with "offline child did not produce a finite reply" whenever the
+    # package had not been pip-installed into the interpreter, because the child
+    # died on ModuleNotFoundError before reading a single frame.
+    env = {key: os.environ[key] for key in ('SYSTEMROOT', 'PATH', 'TEMP', 'TMP', 'PYTHONPATH') if key in os.environ}
     env['DEEPSEEK_API_KEY'] = CANARY
     command = [sys.executable, '-X', 'utf8']
     command += ['-c', launch_code] if launch_code is not None else ['-m', 'cn_contract.mcp.offline_server']

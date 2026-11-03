@@ -87,11 +87,15 @@ def test_budget_rejects_low_disk_and_high_memory(tmp_path, monkeypatch):
 
 def test_killed_index_resumes_with_same_rows(tmp_path):
     from cn_contract.library import index
+    from tests.helpers.library_cli import child_command, child_env
     root = tmp_path / 'library'
     fixture(root, 3000)
-    command = [sys.executable, '-X', 'utf8', '-m', 'cn_contract.library', 'build-index', '--library-root', str(root)]
-    child = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    observed, generation = 0, None
+    # The child does not inherit the pytest fixture: the launcher declares the
+    # capacity this child measures, so resume does not depend on host free space.
+    command = child_command('build-index', '--library-root', str(root))
+    child = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                             env=child_env())
+    observed, generation, interrupted, child_err = 0, None, False, b''
     try:
         deadline = time.monotonic() + 30
         while child.poll() is None and time.monotonic() < deadline:
@@ -105,10 +109,14 @@ def test_killed_index_resumes_with_same_rows(tmp_path):
                     pass
             if 0 < observed < 3000:
                 child.kill()
+                interrupted = True
                 break
             time.sleep(.02)
-        child.communicate(timeout=30)
-        assert 0 < observed < 3000, 'no committed intermediate batch observed'
+        _, child_err = child.communicate(timeout=30)
+        detail = 'child_rc=%s child_stderr=%r observed=%d' % (
+            child.returncode, child_err.decode()[-400:], observed)
+        assert interrupted, 'the build was never interrupted, so resume was not proven: ' + detail
+        assert 0 < observed < 3000, 'no committed intermediate batch observed: ' + detail
     finally:
         if child.poll() is None:
             child.kill()

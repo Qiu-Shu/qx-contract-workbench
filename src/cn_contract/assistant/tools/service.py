@@ -16,6 +16,29 @@ def _check(actor, call, database):
         service._expected(row, call)
 
 
+class ResearchSources:
+    """显式研究路径的来源分派：按工具名选本地资料库还是只读知识服务。
+
+    两层各自返回自己的引用模型，这里**不做互转**——转一次就要编字段，
+    编出来的引用回查不了原文。只负责"路由"，不负责"翻译"。
+    """
+
+    def __init__(self, library=None, knowledge=None):
+        self.library = library
+        self.knowledge = knowledge
+
+    def search(self, query):
+        return self.library.search(query)
+
+    def read_original(self, citation):
+        return self.library.read_original(citation)
+
+    def knowledge_search(self, query):
+        if self.knowledge is None:
+            raise ValueError('LIBRARY_NOT_CONFIGURED')
+        return self.knowledge.search(query)
+
+
 def execute_tool(actor, call, database, adapter):
     try:
         call = d.AssistantLibraryToolCall.model_validate(
@@ -25,7 +48,15 @@ def execute_tool(actor, call, database, adapter):
     _check(actor, call, database)
     try:
         # Release the business DB transaction while reading the separate library.
-        if call.tool == 'legal_library.search':
+        if call.tool == 'legal_knowledge.search':
+            knowledge = getattr(adapter, 'knowledge_search', None)
+            if knowledge is None:
+                raise ValueError('LIBRARY_NOT_CONFIGURED')
+            page = d.KnowledgeSearchPage.model_validate(
+                knowledge(call.query).model_dump(mode='python', warnings=False))
+            result = d.AssistantLibraryToolResult(tool=call.tool, scope=call.expected_scope,
+                knowledge_page=page)
+        elif call.tool == 'legal_library.search':
             result = d.AssistantLibraryToolResult(tool=call.tool, scope=call.expected_scope,
                 page=d.LibraryCitationPage.model_validate(adapter.search(call.query).model_dump(mode='python', warnings=False)))
         else:

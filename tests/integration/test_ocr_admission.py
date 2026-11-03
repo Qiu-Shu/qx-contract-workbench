@@ -1,9 +1,16 @@
 """Admission through service entry points; no real OCR model calls."""
 from concurrent.futures import ThreadPoolExecutor
+import sys
 import threading
 import pytest
 from cn_contract.documents import ocr_process
 from cn_contract.security import ServiceError
+
+# The admission path under test is the Windows OCR runtime: a native worker in a
+# job object, reached through `ctypes.WinDLL`. Nothing here can execute on a
+# POSIX host, so the whole module is unverified off Windows rather than "passing".
+pytestmark = pytest.mark.skipif(sys.platform != 'win32',
+    reason='Windows-only OCR runtime and process isolation (ctypes.WinDLL, job objects); platform unverified')
 
 
 @pytest.mark.parametrize('entry',['bitmap','pdf'])

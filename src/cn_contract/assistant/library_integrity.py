@@ -15,6 +15,41 @@ def _fail():
     raise ValueError('ASSISTANT_LIBRARY_INTEGRITY')
 
 
+def _carries(result, source_value):
+    """本次结果里是否确实带着被引用的那一条。
+
+    本地资料库的结果是单条 `citation`，直接相等比较；知识服务的结果是按来源分组的
+    一组条目，被引用的那条必须原样出现在其中。形状从"单条"变成"一组"不构成跳过
+    这项绑定的理由。
+    """
+    body = result.citation
+    if body is not None:
+        return body == source_value
+    return source_value in result_citations(result)
+
+
+def _citation(row):
+    """引用表里存着两种引用契约，按各自的契约完整解析。
+
+    - 本地资料库：`CitationRef`，`citation_id` 必须等于内容摘要；
+    - 只读知识服务：`KnowledgeCitation`，片段文本必须对得上 `snippet.sha256`、
+      版本必须是 64 位哈希、字符窗口必须自洽。
+
+    两种都解析不出才算记录无效。这不是"哪种能过算哪种"——每一种都按自己的全部
+    约束校验过了，只是不再拿旧模型去套新引用。历史引用因此既没被清空，也没有
+    因为换了形状就被判成损坏。
+    """
+    raw = row['citation_json']
+    try:
+        return model(d.CitationRef, raw)
+    except ValueError:
+        pass
+    try:
+        return model(d.KnowledgeCitation, raw)
+    except ValueError:
+        _fail()
+
+
 def _uuid(value):
     if type(value) is not str or str(UUID(value)) != value:
         _fail()
@@ -79,7 +114,7 @@ def _validate(db, events, receipts, citations, workspace):
     for row in citations:
         identifier = _uuid(row['id'])
         _uuid(row['receipt_id'])
-        citation = model(d.CitationRef, row['citation_json'])
+        citation = _citation(row)
         if sha(row['citation_json']) != row['citation_sha256']:
             _fail()
         stored[identifier] = (row, citation)
@@ -139,7 +174,7 @@ def _validate(db, events, receipts, citations, workspace):
                         or view.request != payload.request or view.handler_id != payload.handler_id
                         or view.handler_version != payload.handler_version
                         or view.created_at < _at(event['created_at'])
-                        or source is not None and view.result.result.citation != source_value):
+                        or source is not None and not _carries(view.result.result, source_value)):
                     _fail()
     if by_event:
         _fail()
@@ -155,7 +190,7 @@ def validate_library_records(db, *, allowed=True):
     events = db.execute(text('''SELECT * FROM assistant_run_events WHERE lower(event_type) LIKE 'tool.%'
         OR lower(event_type) LIKE 'research.%' OR payload_json LIKE '%local-research-v1%' ''')).mappings().all()
     if version not in ('assistant-library-v1', 'assistant-context-v1', 'assistant-rounds-v1',
-                       'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1', 'weixin-personal-runtime-v1'):
+                       'assistant-rounds-v2', 'assistant-profiles-v1', 'assistant-profile-model-v1', 'task-drafts-v1', 'weixin-inbox-v1', 'weixin-dispatch-v1', 'weixin-reauthorization-v1', 'weixin-generations-v1', 'weixin-target-provenance-v1', 'weixin-generation-dispatch-v1', 'assistant-evidence-v1', 'assistant-followups-v1', 'assistant-material-model-v1', 'weixin-personal-v1', 'weixin-personal-runtime-v1', 'assistant-knowledge-v1'):
         if events:
             _fail()
         return

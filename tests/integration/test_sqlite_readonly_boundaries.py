@@ -12,6 +12,11 @@ from cn_contract.ops.file_paths import filesystem_path
 from tests.integration.test_local_workbench import local, PASSWORD
 from tests.unit.test_library_search import query, world as library_world
 
+# sqlite3's POSIX VFS (os_unix.c, MAX_PATHNAME) refuses filenames longer than
+# this, returning "unable to open database file" for a path that is otherwise
+# perfectly valid on the filesystem. It is a driver ceiling, not a contract one.
+SQLITE_PATH_CEILING = 512
+
 
 def write_sentinel(path, rows):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -40,8 +45,25 @@ def test_raw_database_validation_reads_literal_percent_filename(tmp_path, collis
 
 
 def deep_directory(path):
-    while len(str(path)) < 300:
-        path /= '独立合成资料' * 3
+    """Grow the path with non-ASCII components, staying inside SQLite's ceiling.
+
+    The long layout exists to prove readers keep the *exact* target on an
+    awkward path (spaces, `%`, `#`, `&`, long non-ASCII components). It must not
+    also cross into territory SQLite refuses to open: the POSIX VFS caps a
+    filename at MAX_PATHNAME = 512 **bytes** (`os_unix.c`), so padding by
+    *character* count silently overshoots once the components are CJK (3 bytes
+    each) and every reader then fails with "unable to open database file".
+    Measured on this host: 418 bytes opens, 583 bytes does not, for both a plain
+    filename and the `file:...?mode=ro` URI. Stay under ~440 bytes and assert it.
+    """
+    while True:
+        longer = path / ('独立合成资料' * 3)
+        # Leave room for the subpaths a reader appends, e.g.
+        # `generations/<id>/search.sqlite` and `catalog.sqlite`.
+        if len(str(longer).encode()) > 380:
+            break
+        path = longer
+    assert len(str(path).encode()) + 120 < SQLITE_PATH_CEILING
     return path
 
 

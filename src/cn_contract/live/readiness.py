@@ -54,7 +54,13 @@ def assess_go_live(evidence: ReadinessEvidence, *, database=None, actor=None, ma
     try:
         release = build_release_manifest(ReleaseConfig(source_lock_ref='sources/upstream.lock.json',
             config_ref='config/defaults.json', rule_version_refs=(), test_evidence_refs=(), deployment_evidence_refs=()))
-        hashes.update({'server/source_lock': release.source_lock_sha256, 'server/config': release.config_sha256})
+        hashes.update({'server/source_lock': release.source_lock_sha256, 'server/config': release.config_sha256,
+            # Which runtime baseline produced these counts is part of the
+            # diagnostic, not an approval: a hash of the fixed active lock.
+            # Read directly rather than through checked_file so the guard that
+            # proves unsafe caller refs never probe the filesystem stays exact.
+            'server/runtime_lock': hashlib.sha256(
+                (PROJECT_ROOT/'sources/runtime-dependencies.lock.json').read_bytes()).hexdigest()})
         currentness.update({name: 'CURRENT_SERVER_BYTES_PRODUCTION_APPROVAL_PENDING' for name in hashes})
         counts = {'source': sum(b.startswith('SOURCE:') for b in release.blockers),
             'runtime': sum(b.startswith('RUNTIME:') for b in release.blockers), 'total': len(release.blockers)}
@@ -72,8 +78,12 @@ def assess_go_live(evidence: ReadinessEvidence, *, database=None, actor=None, ma
                 if len(ref) > 4096 or any(ord(c) < 32 for c in ref): raise ValueError('UNSAFE_REF')
                 # Reject UNC/URLs/ADS/outside lexical roots before resolve,
                 # stat or open. Data cannot initiate a remote filesystem probe.
+                # A Windows drive prefix has to be rejected on *every* host:
+                # `C:/outside/private.json` is absolute on Windows but merely
+                # relative on POSIX, where it used to slip through and get
+                # probed as PROJECT_ROOT/'C:/outside/private.json'.
                 win = PureWindowsPath(ref)
-                if str(win.drive).startswith('\\\\') or ':' in ref[len(win.drive):]: raise ValueError('UNSAFE_REF')
+                if win.drive or ':' in ref: raise ValueError('UNSAFE_REF')
                 path = Path(ref)
                 path = path if path.is_absolute() else PROJECT_ROOT/path
                 if not path.absolute().is_relative_to(PROJECT_ROOT): raise ValueError('UNSAFE_REF')

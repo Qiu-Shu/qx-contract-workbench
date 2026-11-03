@@ -77,8 +77,17 @@ def test_schema_expands_only_two_checks_and_preserves_historical_objects(tmp_pat
         assert schema_migrations.upgrade_database(db)==storage_schema.CURRENT_VERSION
         after=schema_migrations.database_rows(db)
         assert storage_schema.identify_schema(after,native=native)==storage_schema.CURRENT_VERSION
-        assert [row for row in before if row[0]!='table' or row[1] not in ('task_channel_bindings','weixin_accounts')]==[
-            row for row in after if row[2] not in ('weixin_personal_runs','weixin_personal_outbox') and (row[0]!='table' or row[1] not in ('task_channel_bindings','weixin_accounts'))]
+        # personal-v1 之后还有 runtime 与 knowledge 两步：前者加宽 task_channel_bindings
+        # 与 weixin_accounts 的 CHECK，后者重建回执表以放开 handler_id 的 CHECK。
+        # 这三张表（含其索引/触发器）本来就该变；其余历史对象必须逐字保留。
+        # Exclude only the rebuilt TABLE rows: their indexes and triggers must
+        # still match object-for-object, so a dropped immutability trigger cannot
+        # hide behind this exclusion.
+        rebuilt={('table','task_channel_bindings'),('table','weixin_accounts'),
+                 ('table','assistant_handler_receipts')}
+        added=('weixin_personal_runs','weixin_personal_outbox')
+        assert [row for row in before if (row[0],row[1]) not in rebuilt]==[
+            row for row in after if row[2] not in added and (row[0],row[1]) not in rebuilt]
         assert db.execute('SELECT username FROM users').fetchall()==[('fiction',)]
         assert db.execute('PRAGMA foreign_key_check').fetchall()==[]
     finally:

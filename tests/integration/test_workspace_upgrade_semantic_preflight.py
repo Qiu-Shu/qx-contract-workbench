@@ -30,14 +30,9 @@ def old_history(world):
     history['original'] = original_material(history)
     history['generation'] = append_generation(history)
     root, database = history['root'], history['database']
-    with database.session() as db:
-        db.execute(text('DROP TABLE assistant_followup_revisions'))
-        db.execute(text('DROP TABLE assistant_evidence_revisions'))
-        db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
-        db.execute(text('DROP TABLE weixin_descriptor_generations'))
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        from tests.helpers.legacy_material_model import downgrade_material_model
-        downgrade_material_model(db)
+        from tests.helpers.legacy_schema import rebuild_to_version
+        rebuild_to_version(db, PREVIOUS)
         assert identify_schema(db.execute(
             'SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall(), native=True) == PREVIOUS
     with database.session() as db:

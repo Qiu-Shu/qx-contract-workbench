@@ -12,6 +12,7 @@ import time
 
 def test_kill_resume_exact_count(tmp_path):
     assert importlib.util.find_spec('cn_contract.library.__main__'), 'library CLI missing'
+    from tests.helpers.library_cli import child_command, child_env
     original = tmp_path / '虚构.csv'
     count = 20000
     with original.open('w', encoding='utf-8', newline='') as stream:
@@ -19,10 +20,15 @@ def test_kill_resume_exact_count(tmp_path):
         writer.writerow(['案号', '文书内容'])
         writer.writerows([[str(i), '完全虚构的恢复测试正文' * 30] for i in range(count)])
     root = tmp_path / '资料 库'
-    command = [sys.executable, '-X', 'utf8', '-m', 'cn_contract.library', 'import-cases',
-               '--library-root', str(root), '--input', str(original), '--batch-id', 'fiction', '--batch-size', '100']
-    child = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    command = child_command('import-cases', '--library-root', str(root), '--input', str(original),
+                            '--batch-id', 'fiction', '--batch-size', '100')
+    # The child does not inherit the pytest fixture: the launcher declares the
+    # capacity this child measures, so durability does not depend on host free space.
+    env = child_env()
+    child = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
     observed = 0
+    interrupted = False
+    child_err = b''
     try:
         deadline = time.monotonic() + 30
         while time.monotonic() < deadline and child.poll() is None:
@@ -35,15 +41,20 @@ def test_kill_resume_exact_count(tmp_path):
                     pass
             if 0 < observed < count:
                 child.kill()
+                interrupted = True
                 break
             time.sleep(.02)
-        child.communicate(timeout=30)
-        assert 0 < observed < count, 'did not observe an intermediate durable batch'
+        _, child_err = child.communicate(timeout=30)
+        detail = 'child_rc=%s child_stderr=%r observed=%d' % (
+            child.returncode, child_err.decode()[-400:], observed)
+        assert interrupted, 'the import was never interrupted, so resume was not proven: ' + detail
+        assert 0 < observed < count, 'did not observe an intermediate durable batch: ' + detail
     finally:
         if child.poll() is None:
             child.kill()
             child.communicate()
-    result = subprocess.run(command, capture_output=True, text=True, encoding='utf-8', timeout=120)
+    result = subprocess.run(command, capture_output=True, text=True, encoding='utf-8',
+                            timeout=180, env=env)
     assert result.returncode == 0, result.stderr
     report = json.loads(result.stdout)
     assert report['stored'] == count and report['complete']

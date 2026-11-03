@@ -125,12 +125,10 @@ def test_complete_account_prefix_and_strict_utc_time_boundary_still_hold(world,d
 def test_schema18_empty_later_poll_preserves_the_generation_prefix(world):
     from tests.helpers.synthetic_weixin_inbox import insert,poll_receipt
     api();h=setup_history(world);generation=append(h)
+    # Contract-derived v18 predecessor; rows in the fixtures are carried across.
+    from tests.helpers.legacy_schema import rebuild_database
+    rebuild_database(h['database'],'weixin-generation-dispatch-v1')
     with h['database'].session() as db:
-        db.execute(text('DROP TABLE assistant_followup_revisions'))
-        db.execute(text('DROP TABLE assistant_evidence_revisions'))
-        db.execute(text('DROP INDEX weixin_dispatch_binding_cursor'))
-        from tests.helpers.legacy_material_model import downgrade_material_model_session
-        downgrade_material_model_session(db)
         account=db.execute(text('SELECT * FROM weixin_accounts WHERE id=:id'),{'id':str(h['account'].id)}).mappings().one()
         at=generation.created_at+timedelta(microseconds=1)
         poll=poll_receipt(h['account'].id,account['checkpoint_revision'],account['upstream_cursor'],account['upstream_cursor'],(),at)

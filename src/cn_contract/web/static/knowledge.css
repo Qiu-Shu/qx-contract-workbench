@@ -1,0 +1,69 @@
+/* 只读知识服务试点页；配色沿用工作台的浅石/墨绿，不引入新主题。 */
+* { box-sizing: border-box; }
+body { margin: 0; font: 15px/1.65 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #1f2a24; background: #f6f4ef; }
+a { color: #1f5f43; }
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 8px; top: 8px; background: #fff; padding: 6px 10px; }
+header { display: flex; align-items: center; gap: 20px; padding: 12px 24px;
+  background: #fff; border-bottom: 1px solid #e2ddd2; }
+header .brand { font-weight: 700; text-decoration: none; }
+header nav { display: flex; gap: 16px; font-size: 14px; }
+header nav a { text-decoration: none; color: #46544c; }
+header nav a[aria-current] { color: #1f5f43; font-weight: 600; }
+main { max-width: 1180px; margin: 0 auto; padding: 22px 24px 60px; }
+.heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.heading h1 { margin: 0 0 4px; font-size: 22px; }
+.heading p { margin: 0; color: #4d5a52; font-size: 14px; }
+#knowledge-status { text-align: right; font-size: 13px; color: #3c5a49; max-width: 460px; }
+.notice { margin: 14px 0 18px; padding: 10px 12px; background: #fdf8e7; border: 1px solid #e8dcae;
+  border-radius: 8px; font-size: 13px; color: #6a5a1f; }
+.working { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 18px; align-items: start; }
+.panel { background: #fff; border: 1px solid #e2ddd2; border-radius: 12px; padding: 16px; }
+label { display: block; font-size: 13px; color: #46544c; margin-bottom: 4px; }
+input[type=text], input:not([type]), select { width: 100%; padding: 9px 10px; font-size: 15px;
+  border: 1px solid #cfc8b8; border-radius: 8px; background: #fffdf8; }
+input:focus, select:focus, button:focus-visible { outline: 2px solid #7ba58c; outline-offset: 1px; }
+fieldset.kinds { border: 1px solid #e2ddd2; border-radius: 8px; margin: 12px 0; padding: 8px 10px; }
+fieldset.kinds legend { font-size: 12px; color: #46544c; padding: 0 4px; }
+fieldset.kinds label { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; }
+fieldset.kinds input { width: auto; }
+button { font: inherit; padding: 9px 16px; border-radius: 8px; border: 1px solid #1f5f43;
+  background: #1f5f43; color: #fff; cursor: pointer; }
+button:disabled { opacity: .55; cursor: default; }
+button.secondary { background: #fff; color: #1f5f43; }
+#knowledge-submit { width: 100%; margin-top: 14px; }
+.muted { color: #6b7670; font-size: 12.5px; }
+.error { color: #a4231b !important; }
+.results h2 { margin: 0 0 8px; font-size: 16px; }
+.group { margin-top: 14px; }
+.group h3 { margin: 0 0 8px; font-size: 14px; color: #1f5f43; }
+.card { border: 1px solid #e6e1d6; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
+  background: #fffdf8; }
+.card.selected { border-color: #1f5f43; box-shadow: 0 0 0 1px #1f5f43 inset; }
+.card-head { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; }
+.card-head h4 { margin: 0; font-size: 15px; }
+.badge { font-size: 11.5px; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+.badge.pending { background: #fdf1d8; color: #7a5a12; border: 1px solid #e8d9ac; }
+.meta { margin: 6px 0 8px; font-size: 12.5px; color: #5b6862; }
+.meta .path { color: #6b7670; }
+.card blockquote { margin: 0 0 10px; padding: 8px 10px; background: #f7f5ee;
+  border-left: 3px solid #c9d8cd; border-radius: 0 6px 6px 0; font-size: 13.5px; color: #2c3a33;
+  max-height: 8.5em; overflow: hidden; }
+.card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.card-foot button { padding: 6px 12px; font-size: 13px; }
+.original { margin-top: 18px; }
+.original .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.original h2 { margin: 0; font-size: 16px; }
+#original-state { font-size: 13px; color: #46544c; }
+#original-details { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 4px 12px;
+  font-size: 13px; margin: 8px 0 12px; }
+#original-details dt { color: #6b7670; }
+#original-details dd { margin: 0; word-break: break-all; }
+.hint { font-size: 12.5px; color: #6b7670; background: #f7f5ee; padding: 8px 10px; border-radius: 8px; }
+#original-text { margin: 10px 0 0; padding: 14px; background: #fbfaf5; border: 1px solid #e6e1d6;
+  border-radius: 8px; white-space: pre-wrap; word-break: break-word; font-size: 14px; line-height: 1.8;
+  max-height: 46vh; overflow: auto; font-family: inherit; }
+#original-text mark, mark#original-mark { background: #ffe9a8; color: inherit; padding: 1px 2px; border-radius: 3px; }
+@media (max-width: 860px) { .working { grid-template-columns: 1fr; } .heading { flex-direction: column; }
+  #knowledge-status { text-align: left; } }

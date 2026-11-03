@@ -98,7 +98,11 @@ def count(database,table):
 
 
 def test_runtime_has_exact_successor_schema():
-    assert storage_schema.CURRENT_VERSION == 'weixin-personal-runtime-v1'
+    # runtime-v1 是 personal-v1 的后继；它之后还可能再追加版本（例如
+    # assistant-knowledge-v1），所以这里断言「已落地且没有被回退」，而不是钉死当前头。
+    assert 'weixin-personal-runtime-v1' in storage_schema.VERSIONS
+    assert (storage_schema.VERSIONS.index(storage_schema.CURRENT_VERSION)
+            >= storage_schema.VERSIONS.index('weixin-personal-runtime-v1'))
     from cn_contract.weixin_inbox.personal_runtime import PersonalWeixinRuntime
     assert PersonalWeixinRuntime
 
@@ -469,10 +473,20 @@ def test_exact_successor_migration_preserves_every_predecessor_object(tmp_path):
     db=old_db(tmp_path/'old.db','weixin-personal-v1',True)
     try:
         before=schema_migrations.database_rows(db)
-        assert schema_migrations.upgrade_database(db)=='weixin-personal-runtime-v1'
+        assert schema_migrations.upgrade_database(db)==storage_schema.CURRENT_VERSION
         after=schema_migrations.database_rows(db)
-        assert [row for row in after if row[2] not in ('weixin_personal_runs','weixin_personal_outbox')]==before
-        assert schema_migrations.upgrade_database(db)=='weixin-personal-runtime-v1'
+        # 链尾现在不止一步：runtime 之后还有 knowledge，后者重建回执表以放开
+        # handler_id 的 CHECK。除「personal 新增的两张表」与「knowledge 重建的
+        # 回执表」外，predecessor 的每个对象都必须原样保留；整体结构还要与
+        # CURRENT_VERSION 的定义逐行相等，比只比 predecessor 更严。
+        assert after==storage_schema.schema_rows(storage_schema.CURRENT_VERSION,native=True)
+        # Same rule as the personal test: only rebuilt TABLE rows are exempt, so
+        # the receipt's indexes and immutability triggers stay under comparison.
+        rebuilt_tables=('weixin_personal_runs','weixin_personal_outbox')
+        rebuilt={('table','assistant_handler_receipts')}
+        assert [row for row in after if row[2] not in rebuilt_tables and (row[0],row[1]) not in rebuilt]==[
+            row for row in before if (row[0],row[1]) not in rebuilt]
+        assert schema_migrations.upgrade_database(db)==storage_schema.CURRENT_VERSION
     finally:db.close()
 
 

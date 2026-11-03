@@ -266,8 +266,15 @@ def backup_and_verify(config, *, database, actor, key_resolver, restore_parent):
     # SQLite BEGIN IMMEDIATE is the maintenance write barrier. A separate read
     # connection performs native backup while this barrier protects referenced
     # transaction-owned immutable file bytes; no main-db file copy or live delete.
+    # checked_root/checked_file reject any ancestry that contains a redirect, so
+    # the scratch root must be canonical before it reaches them. On macOS the
+    # system temp dir is spelled `/var/...`, and `/var` is the OS's own alias for
+    # `/private/var` — leaving it unresolved made every backup fail with
+    # REDIRECTED_ROOT on that platform. Resolving the scratch dir keeps the
+    # guard's rule intact; it never tolerates a redirect the app did not create.
     with TemporaryDirectory(prefix='cn-synthetic-backup-') as temp:
-        snapshot = Path(temp)/'database.db'
+        temp = Path(temp).resolve()
+        snapshot = temp/'database.db'
         with database.session() as db:
             _admin(actor, db)
             if any(is_local(identifier,db) for identifier in db.scalars(select(MatterRow.id))):
@@ -348,10 +355,11 @@ def restore_backup(backup_ref, *, key_resolver, restore_parent, settings):
     # All byte/hash/schema validation completes in a temporary root before the
     # new restore directory is allocated. No historical database is overwritten.
     with TemporaryDirectory(prefix='cn-synthetic-restore-check-') as temp:
-        path = Path(temp)/'database.db'; path.write_bytes(payloads['database.db'])
+        temp = Path(temp).resolve()
+        path = temp/'database.db'; path.write_bytes(payloads['database.db'])
         if validate_raw_database(path, settings, expected_schema=schema) != manifest['tables']:
             raise ValueError('DATABASE_ROWS_MISMATCH')
-        check = Database('sqlite:///'+str(path), Path(temp)/'files', settings, initialize_schema=False)
+        check = Database('sqlite:///'+str(path), temp/'files', settings, initialize_schema=False)
         try:
             _mark_storage_flags(check)
             with check.session() as db:

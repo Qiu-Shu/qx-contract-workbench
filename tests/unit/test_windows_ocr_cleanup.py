@@ -1,9 +1,16 @@
 """Fault-injected native launch checks; these are not actual OS isolation evidence."""
 import ctypes
 from pathlib import Path
+import sys
 import pytest
-from cn_contract.documents import _windows_ocr as native
 from cn_contract.config import PROJECT_ROOT
+
+# `_windows_ocr` calls `ctypes.WinDLL` at import time: on macOS the import itself
+# aborts collection and the entire suite exits 2 without running anything.
+pytestmark = pytest.mark.skipif(sys.platform != 'win32',
+    reason='Windows-only ctypes.WinDLL OCR bindings; platform unverified')
+if sys.platform == 'win32':
+    from cn_contract.documents import _windows_ocr as native
 
 
 @pytest.mark.parametrize('fault',['assign','wait','cleanup','acl_timeout','accounting','active','resource','grant_timeout','grant_failed','grant_and_revoke_failed'])

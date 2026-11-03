@@ -19,21 +19,12 @@ def legacy(tmp_path,monkeypatch):
     local_server.initialize_workspace(root,'local-lawyer',PASSWORD)
     with TestClient(local_server.build_local_app(root)) as client:
         matter=create_case(client,login(client),title='升级前合成案件')
-    # Remove versioned extensions, recreating the fixed pre-intake schema.
+    # Strip every later version so the starting point is exactly pre-intake.
+    # The list is derived from the version contract (see tests/helpers/legacy_schema.py)
+    # because a hand-written one silently fell out of date.
     with closing(sqlite3.connect(root/'workbench.db')) as db:
-        for table in ('assistant_followup_revisions', 'assistant_evidence_revisions',
-                      'weixin_descriptor_generations', 'weixin_peer_generations', 'weixin_peer_scope_grants', 'weixin_dispatch_receipts', 'weixin_inbox_descriptors', 'weixin_poll_receipts', 'weixin_peer_bindings', 'weixin_accounts',
-                      'task_media_resolutions', 'task_executions', 'task_draft_events',
-                      'task_drafts', 'task_inbox_events', 'task_channel_bindings',
-                      'assistant_profile_handlers', 'assistant_profile_receipts', 'assistant_profile_revisions',
-                      'assistant_model_input_citations', 'assistant_library_citations', 'assistant_handler_receipts',
-                      'assistant_judge_decisions', 'assistant_judge_receipts', 'assistant_judge_attempts',
-                      'assistant_model_outputs', 'assistant_model_receipts', 'assistant_model_attempts',
-                      'assistant_material_snapshots', 'assistant_attachment_parses', 'assistant_attachments',
-                      'assistant_run_events', 'assistant_runs', 'assistant_messages',
-                      'assistant_conversations', 'intake_revisions','intake_cases'):
-            db.execute('DROP TABLE IF EXISTS '+table)
-        db.commit()
+        from tests.helpers.legacy_schema import rebuild_to_version
+        rebuild_to_version(db, 'pre-intake')
         from cn_contract.storage_schema import schema_rows
         assert db.execute('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name').fetchall() == schema_rows('pre-intake', native=True)
         marker=json.loads((root/'workspace.json').read_text('utf-8'))

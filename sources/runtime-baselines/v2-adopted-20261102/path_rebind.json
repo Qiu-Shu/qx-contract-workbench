@@ -1,0 +1,1530 @@
+{
+ "candidate_manifest": "knowledge_service_pilot_20261101/evidence/regression_v3/artifact_candidate_v4/setuptools_84_1_0_v4/gate_root/manifest.json",
+ "candidate_manifest_sha256": "cd4c1fdf4df21841c232b1e70c7035f20dfc2450d5b4522233797fa9860815c1",
+ "active_lock": "sources/runtime-dependencies.lock.json",
+ "active_lock_sha256": "f0f2793c945c207d16dc13e7d6ebef67f8320a07b69661fd62a9b288cbc7ce25",
+ "active_lock_bytes": 932050,
+ "rebind_families": [
+  {
+   "from": "wheels/",
+   "to": "sources/runtime-baseline-v4/wheels/"
+  },
+  {
+   "from": "metadata/",
+   "to": "sources/runtime-baseline-v4/metadata/"
+  },
+  {
+   "from": "registry/",
+   "to": "sources/runtime-baseline-v4/registry/"
+  },
+  {
+   "from": ".audit-local/t07-dependencies/native-metadata/",
+   "to": "sources/runtime-baseline-v4/native-metadata/"
+  },
+  {
+   "from": ".audit-local/t07-dependencies/notices/",
+   "to": "sources/runtime-baseline-v4/notices/"
+  }
+ ],
+ "changed_string_count": 187,
+ "changed_pointer_count": 187,
+ "semantic_equality_after_path_restore": true,
+ "changed_strings": [
+  {
+   "candidate_path": ".audit-local/t07-dependencies/native-metadata/pywin32-312/pywin32-312.data/scripts/pywin32_postinstall.py",
+   "active_path": "sources/runtime-baseline-v4/native-metadata/pywin32-312/pywin32-312.data/scripts/pywin32_postinstall.py",
+   "json_pointers": [
+    "/packages/42/native_member_evidence/static_startup_or_postinstall_hook_files/0/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/native-metadata/pywin32-312/pywin32.pth",
+   "active_path": "sources/runtime-baseline-v4/native-metadata/pywin32-312/pywin32.pth",
+   "json_pointers": [
+    "/packages/42/native_member_evidence/static_startup_or_postinstall_hook_files/1/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/native-metadata/pywin32-312/win32/lib/pywin32_bootstrap.py",
+   "active_path": "sources/runtime-baseline-v4/native-metadata/pywin32-312/win32/lib/pywin32_bootstrap.py",
+   "json_pointers": [
+    "/packages/42/native_member_evidence/static_startup_or_postinstall_hook_files/2/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/native-metadata/pywin32-312/win32/scripts/pywin32_postinstall.py",
+   "active_path": "sources/runtime-baseline-v4/native-metadata/pywin32-312/win32/scripts/pywin32_postinstall.py",
+   "json_pointers": [
+    "/packages/42/native_member_evidence/static_startup_or_postinstall_hook_files/3/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/licenses/adodbapi/license.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/licenses/adodbapi/license.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/0/license_evidence/1/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/licenses/com/License.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/licenses/com/License.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/3/license_evidence/0/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/licenses/com/win32comext/mapi/src/MAPIStubLibrary/LICENSE",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/licenses/com/win32comext/mapi/src/MAPIStubLibrary/LICENSE",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/4/license_evidence/0/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/licenses/isapi/README.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/licenses/isapi/README.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/5/license_evidence/0/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/licenses/pythonwin/License.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/licenses/pythonwin/License.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/1/license_evidence/1/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/licenses/pythonwin/Scintilla/License.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/licenses/pythonwin/Scintilla/License.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/6/license_evidence/0/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/licenses/pythonwin/pywin/idle/LICENSE.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/licenses/pythonwin/pywin/idle/LICENSE.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/2/license_evidence/1/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/licenses/win32/License.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/licenses/win32/License.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/7/license_evidence/0/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/wheel-content/adodbapi/license.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/wheel-content/adodbapi/license.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/0/license_evidence/0/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/wheel-content/pythonwin/License.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/wheel-content/pythonwin/License.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/1/license_evidence/0/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/wheel-content/pythonwin/pywin/idle/LICENSE.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/wheel-content/pythonwin/pywin/idle/LICENSE.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/2/license_evidence/0/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/wheel-content/win32/License.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/wheel-content/win32/License.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/7/license_evidence/1/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/wheel-content/win32com/License.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/wheel-content/win32com/License.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/3/license_evidence/1/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/wheel-content/win32comext/License.txt",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/wheel-content/win32comext/License.txt",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/3/license_evidence/2/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": ".audit-local/t07-dependencies/notices/pywin32-312/wheel-content/win32comext/mapi/NOTICE.md",
+   "active_path": "sources/runtime-baseline-v4/notices/pywin32-312/wheel-content/win32comext/mapi/NOTICE.md",
+   "json_pointers": [
+    "/packages/42/bundled_code_license_declarations/4/license_evidence/1/local_target"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/annotated_doc-0.0.5-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/annotated_doc-0.0.5-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/8/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/annotated_types-0.8.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/annotated_types-0.8.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/9/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/anyio-4.15.1-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/anyio-4.15.1-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/19/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/argon2_cffi-25.1.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/argon2_cffi-25.1.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/10/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/argon2_cffi_bindings-26.1.0-cp310-abi3-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/argon2_cffi_bindings-26.1.0-cp310-abi3-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/25/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/attrs-26.1.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/attrs-26.1.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/45/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/certifi-2026.7.22-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/certifi-2026.7.22-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/23/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/cffi-2.1.1-cp312-cp312-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/cffi-2.1.1-cp312-cp312-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/26/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/charset_normalizer-3.5.2-cp312-cp312-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/charset_normalizer-3.5.2-cp312-cp312-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/33/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/click-8.5.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/click-8.5.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/46/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/colorama-0.4.6-py2.py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/colorama-0.4.6-py2.py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/11/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/cryptography-50.0.2-cp311-abi3-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/cryptography-50.0.2-cp311-abi3-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/34/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/defusedxml-0.7.1-py2.py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/defusedxml-0.7.1-py2.py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/29/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/fastapi-0.142.2-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/fastapi-0.142.2-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/3/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/greenlet-3.5.6-cp312-cp312-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/greenlet-3.5.6-cp312-cp312-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/12/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/h11-0.16.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/h11-0.16.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/24/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/httpcore-1.0.9-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/httpcore-1.0.9-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/6/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/httpcore2-2.13.1-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/httpcore2-2.13.1-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/38/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/httpx-0.28.1-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/httpx-0.28.1-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/5/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/httpx2-2.13.1-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/httpx2-2.13.1-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/37/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/idna-3.20-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/idna-3.20-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/20/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/iniconfig-2.3.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/iniconfig-2.3.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/13/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/jinja2-3.1.6-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/jinja2-3.1.6-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/53/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/jsonschema-4.26.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/jsonschema-4.26.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/39/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/jsonschema_specifications-2025.9.1-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/jsonschema_specifications-2025.9.1-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/47/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/lxml-6.1.3-cp312-cp312-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/lxml-6.1.3-cp312-cp312-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/52/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/markupsafe-3.0.4-cp312-cp312-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/markupsafe-3.0.4-cp312-cp312-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/54/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/mcp-2.2.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/mcp-2.2.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/35/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/mcp_types-2.2.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/mcp_types-2.2.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/36/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/opentelemetry_api-1.45.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/opentelemetry_api-1.45.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/14/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/packaging-26.3-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/packaging-26.3-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/15/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pdfminer_six-20260107-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pdfminer_six-20260107-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/30/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pdfplumber-0.11.10-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pdfplumber-0.11.10-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/28/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pillow-12.3.0-cp312-cp312-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pillow-12.3.0-cp312-cp312-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/31/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pluggy-1.6.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pluggy-1.6.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/16/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pwdlib-0.3.1-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pwdlib-0.3.1-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/4/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pycparser-3.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pycparser-3.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/27/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pydantic-2.13.5-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pydantic-2.13.5-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/0/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pydantic_core-2.46.5-cp312-cp312-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pydantic_core-2.46.5-cp312-cp312-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/7/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pygments-2.21.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pygments-2.21.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/17/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pyjwt-2.15.1-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pyjwt-2.15.1-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/40/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pypdfium2-5.13.0-py3-none-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pypdfium2-5.13.0-py3-none-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/32/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pytest-9.0.3-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pytest-9.0.3-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/1/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/python_docx-1.2.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/python_docx-1.2.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/51/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/python_multipart-0.0.32-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/python_multipart-0.0.32-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/41/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/pywin32-312-cp312-cp312-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/pywin32-312-cp312-cp312-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/42/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/referencing-0.37.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/referencing-0.37.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/48/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/rpds_py-2026.6.3-cp312-cp312-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/rpds_py-2026.6.3-cp312-cp312-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/49/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/setuptools-84.1.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/setuptools-84.1.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/build_packages/0/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/sqlalchemy-2.0.54-cp312-cp312-win_amd64.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/sqlalchemy-2.0.54-cp312-cp312-win_amd64.whl.METADATA",
+   "json_pointers": [
+    "/packages/2/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/sse_starlette-3.5.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/sse_starlette-3.5.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/43/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/starlette-1.7.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/starlette-1.7.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/18/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/truststore-0.10.4-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/truststore-0.10.4-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/50/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/typing_extensions-4.16.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/typing_extensions-4.16.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/21/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/typing_inspection-0.4.4-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/typing_inspection-0.4.4-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/22/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "metadata/uvicorn-0.54.0-py3-none-any.whl.METADATA",
+   "active_path": "sources/runtime-baseline-v4/metadata/uvicorn-0.54.0-py3-none-any.whl.METADATA",
+   "json_pointers": [
+    "/packages/44/metadata_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/annotated-doc-0.0.5.json",
+   "active_path": "sources/runtime-baseline-v4/registry/annotated-doc-0.0.5.json",
+   "json_pointers": [
+    "/packages/8/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/annotated-types-0.8.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/annotated-types-0.8.0.json",
+   "json_pointers": [
+    "/packages/9/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/anyio-4.15.1.json",
+   "active_path": "sources/runtime-baseline-v4/registry/anyio-4.15.1.json",
+   "json_pointers": [
+    "/packages/19/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/argon2-cffi-25.1.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/argon2-cffi-25.1.0.json",
+   "json_pointers": [
+    "/packages/10/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/argon2-cffi-bindings-26.1.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/argon2-cffi-bindings-26.1.0.json",
+   "json_pointers": [
+    "/packages/25/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/attrs-26.1.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/attrs-26.1.0.json",
+   "json_pointers": [
+    "/packages/45/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/certifi-2026.7.22.json",
+   "active_path": "sources/runtime-baseline-v4/registry/certifi-2026.7.22.json",
+   "json_pointers": [
+    "/packages/23/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/cffi-2.1.1.json",
+   "active_path": "sources/runtime-baseline-v4/registry/cffi-2.1.1.json",
+   "json_pointers": [
+    "/packages/26/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/charset-normalizer-3.5.2.json",
+   "active_path": "sources/runtime-baseline-v4/registry/charset-normalizer-3.5.2.json",
+   "json_pointers": [
+    "/packages/33/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/click-8.5.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/click-8.5.0.json",
+   "json_pointers": [
+    "/packages/46/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/colorama-0.4.6.json",
+   "active_path": "sources/runtime-baseline-v4/registry/colorama-0.4.6.json",
+   "json_pointers": [
+    "/packages/11/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/cryptography-50.0.2.json",
+   "active_path": "sources/runtime-baseline-v4/registry/cryptography-50.0.2.json",
+   "json_pointers": [
+    "/packages/34/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/defusedxml-0.7.1.json",
+   "active_path": "sources/runtime-baseline-v4/registry/defusedxml-0.7.1.json",
+   "json_pointers": [
+    "/packages/29/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/fastapi-0.142.2.json",
+   "active_path": "sources/runtime-baseline-v4/registry/fastapi-0.142.2.json",
+   "json_pointers": [
+    "/packages/3/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/greenlet-3.5.6.json",
+   "active_path": "sources/runtime-baseline-v4/registry/greenlet-3.5.6.json",
+   "json_pointers": [
+    "/packages/12/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/h11-0.16.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/h11-0.16.0.json",
+   "json_pointers": [
+    "/packages/24/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/httpcore-1.0.9.json",
+   "active_path": "sources/runtime-baseline-v4/registry/httpcore-1.0.9.json",
+   "json_pointers": [
+    "/packages/6/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/httpcore2-2.13.1.json",
+   "active_path": "sources/runtime-baseline-v4/registry/httpcore2-2.13.1.json",
+   "json_pointers": [
+    "/packages/38/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/httpx-0.28.1.json",
+   "active_path": "sources/runtime-baseline-v4/registry/httpx-0.28.1.json",
+   "json_pointers": [
+    "/packages/5/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/httpx2-2.13.1.json",
+   "active_path": "sources/runtime-baseline-v4/registry/httpx2-2.13.1.json",
+   "json_pointers": [
+    "/packages/37/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/idna-3.20.json",
+   "active_path": "sources/runtime-baseline-v4/registry/idna-3.20.json",
+   "json_pointers": [
+    "/packages/20/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/iniconfig-2.3.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/iniconfig-2.3.0.json",
+   "json_pointers": [
+    "/packages/13/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/jinja2-3.1.6.json",
+   "active_path": "sources/runtime-baseline-v4/registry/jinja2-3.1.6.json",
+   "json_pointers": [
+    "/packages/53/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/jsonschema-4.26.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/jsonschema-4.26.0.json",
+   "json_pointers": [
+    "/packages/39/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/jsonschema-specifications-2025.9.1.json",
+   "active_path": "sources/runtime-baseline-v4/registry/jsonschema-specifications-2025.9.1.json",
+   "json_pointers": [
+    "/packages/47/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/lxml-6.1.3.json",
+   "active_path": "sources/runtime-baseline-v4/registry/lxml-6.1.3.json",
+   "json_pointers": [
+    "/packages/52/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/markupsafe-3.0.4.json",
+   "active_path": "sources/runtime-baseline-v4/registry/markupsafe-3.0.4.json",
+   "json_pointers": [
+    "/packages/54/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/mcp-2.2.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/mcp-2.2.0.json",
+   "json_pointers": [
+    "/packages/35/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/mcp-types-2.2.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/mcp-types-2.2.0.json",
+   "json_pointers": [
+    "/packages/36/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/opentelemetry-api-1.45.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/opentelemetry-api-1.45.0.json",
+   "json_pointers": [
+    "/packages/14/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/packaging-26.3.json",
+   "active_path": "sources/runtime-baseline-v4/registry/packaging-26.3.json",
+   "json_pointers": [
+    "/packages/15/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pdfminer-six-20260107.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pdfminer-six-20260107.json",
+   "json_pointers": [
+    "/packages/30/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pdfplumber-0.11.10.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pdfplumber-0.11.10.json",
+   "json_pointers": [
+    "/packages/28/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pillow-12.3.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pillow-12.3.0.json",
+   "json_pointers": [
+    "/packages/31/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pluggy-1.6.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pluggy-1.6.0.json",
+   "json_pointers": [
+    "/packages/16/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pwdlib-0.3.1.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pwdlib-0.3.1.json",
+   "json_pointers": [
+    "/packages/4/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pycparser-3.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pycparser-3.0.json",
+   "json_pointers": [
+    "/packages/27/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pydantic-2.13.5.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pydantic-2.13.5.json",
+   "json_pointers": [
+    "/packages/0/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pydantic-core-2.46.5.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pydantic-core-2.46.5.json",
+   "json_pointers": [
+    "/packages/7/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pygments-2.21.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pygments-2.21.0.json",
+   "json_pointers": [
+    "/packages/17/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pyjwt-2.15.1.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pyjwt-2.15.1.json",
+   "json_pointers": [
+    "/packages/40/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pypdfium2-5.13.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pypdfium2-5.13.0.json",
+   "json_pointers": [
+    "/packages/32/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pytest-9.0.3.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pytest-9.0.3.json",
+   "json_pointers": [
+    "/packages/1/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/python-docx-1.2.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/python-docx-1.2.0.json",
+   "json_pointers": [
+    "/packages/51/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/python-multipart-0.0.32.json",
+   "active_path": "sources/runtime-baseline-v4/registry/python-multipart-0.0.32.json",
+   "json_pointers": [
+    "/packages/41/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/pywin32-312.json",
+   "active_path": "sources/runtime-baseline-v4/registry/pywin32-312.json",
+   "json_pointers": [
+    "/packages/42/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/referencing-0.37.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/referencing-0.37.0.json",
+   "json_pointers": [
+    "/packages/48/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/rpds-py-2026.6.3.json",
+   "active_path": "sources/runtime-baseline-v4/registry/rpds-py-2026.6.3.json",
+   "json_pointers": [
+    "/packages/49/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/setuptools-84.1.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/setuptools-84.1.0.json",
+   "json_pointers": [
+    "/build_packages/0/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/sqlalchemy-2.0.54.json",
+   "active_path": "sources/runtime-baseline-v4/registry/sqlalchemy-2.0.54.json",
+   "json_pointers": [
+    "/packages/2/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/sse-starlette-3.5.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/sse-starlette-3.5.0.json",
+   "json_pointers": [
+    "/packages/43/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/starlette-1.7.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/starlette-1.7.0.json",
+   "json_pointers": [
+    "/packages/18/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/truststore-0.10.4.json",
+   "active_path": "sources/runtime-baseline-v4/registry/truststore-0.10.4.json",
+   "json_pointers": [
+    "/packages/50/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/typing-extensions-4.16.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/typing-extensions-4.16.0.json",
+   "json_pointers": [
+    "/packages/21/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/typing-inspection-0.4.4.json",
+   "active_path": "sources/runtime-baseline-v4/registry/typing-inspection-0.4.4.json",
+   "json_pointers": [
+    "/packages/22/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "registry/uvicorn-0.54.0.json",
+   "active_path": "sources/runtime-baseline-v4/registry/uvicorn-0.54.0.json",
+   "json_pointers": [
+    "/packages/44/registry_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/annotated_doc-0.0.5-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/annotated_doc-0.0.5-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/8/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/annotated_types-0.8.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/annotated_types-0.8.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/9/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/anyio-4.15.1-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/anyio-4.15.1-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/19/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/argon2_cffi-25.1.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/argon2_cffi-25.1.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/10/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/argon2_cffi_bindings-26.1.0-cp310-abi3-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/argon2_cffi_bindings-26.1.0-cp310-abi3-win_amd64.whl",
+   "json_pointers": [
+    "/packages/25/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/attrs-26.1.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/attrs-26.1.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/45/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/certifi-2026.7.22-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/certifi-2026.7.22-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/23/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/cffi-2.1.1-cp312-cp312-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/cffi-2.1.1-cp312-cp312-win_amd64.whl",
+   "json_pointers": [
+    "/packages/26/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/charset_normalizer-3.5.2-cp312-cp312-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/charset_normalizer-3.5.2-cp312-cp312-win_amd64.whl",
+   "json_pointers": [
+    "/packages/33/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/click-8.5.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/click-8.5.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/46/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/colorama-0.4.6-py2.py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/colorama-0.4.6-py2.py3-none-any.whl",
+   "json_pointers": [
+    "/packages/11/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/cryptography-50.0.2-cp311-abi3-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/cryptography-50.0.2-cp311-abi3-win_amd64.whl",
+   "json_pointers": [
+    "/packages/34/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/defusedxml-0.7.1-py2.py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/defusedxml-0.7.1-py2.py3-none-any.whl",
+   "json_pointers": [
+    "/packages/29/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/fastapi-0.142.2-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/fastapi-0.142.2-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/3/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/greenlet-3.5.6-cp312-cp312-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/greenlet-3.5.6-cp312-cp312-win_amd64.whl",
+   "json_pointers": [
+    "/packages/12/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/h11-0.16.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/h11-0.16.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/24/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/httpcore-1.0.9-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/httpcore-1.0.9-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/6/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/httpcore2-2.13.1-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/httpcore2-2.13.1-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/38/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/httpx-0.28.1-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/httpx-0.28.1-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/5/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/httpx2-2.13.1-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/httpx2-2.13.1-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/37/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/idna-3.20-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/idna-3.20-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/20/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/iniconfig-2.3.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/iniconfig-2.3.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/13/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/jinja2-3.1.6-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/jinja2-3.1.6-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/53/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/jsonschema-4.26.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/jsonschema-4.26.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/39/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/jsonschema_specifications-2025.9.1-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/jsonschema_specifications-2025.9.1-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/47/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/lxml-6.1.3-cp312-cp312-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/lxml-6.1.3-cp312-cp312-win_amd64.whl",
+   "json_pointers": [
+    "/packages/52/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/markupsafe-3.0.4-cp312-cp312-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/markupsafe-3.0.4-cp312-cp312-win_amd64.whl",
+   "json_pointers": [
+    "/packages/54/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/mcp-2.2.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/mcp-2.2.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/35/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/mcp_types-2.2.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/mcp_types-2.2.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/36/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/opentelemetry_api-1.45.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/opentelemetry_api-1.45.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/14/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/packaging-26.3-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/packaging-26.3-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/15/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pdfminer_six-20260107-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pdfminer_six-20260107-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/30/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pdfplumber-0.11.10-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pdfplumber-0.11.10-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/28/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pillow-12.3.0-cp312-cp312-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pillow-12.3.0-cp312-cp312-win_amd64.whl",
+   "json_pointers": [
+    "/packages/31/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pluggy-1.6.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pluggy-1.6.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/16/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pwdlib-0.3.1-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pwdlib-0.3.1-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/4/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pycparser-3.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pycparser-3.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/27/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pydantic-2.13.5-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pydantic-2.13.5-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/0/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pydantic_core-2.46.5-cp312-cp312-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pydantic_core-2.46.5-cp312-cp312-win_amd64.whl",
+   "json_pointers": [
+    "/packages/7/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pygments-2.21.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pygments-2.21.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/17/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pyjwt-2.15.1-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pyjwt-2.15.1-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/40/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pypdfium2-5.13.0-py3-none-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pypdfium2-5.13.0-py3-none-win_amd64.whl",
+   "json_pointers": [
+    "/packages/32/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pytest-9.0.3-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pytest-9.0.3-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/1/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/python_docx-1.2.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/python_docx-1.2.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/51/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/python_multipart-0.0.32-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/python_multipart-0.0.32-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/41/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/pywin32-312-cp312-cp312-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/pywin32-312-cp312-cp312-win_amd64.whl",
+   "json_pointers": [
+    "/packages/42/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/referencing-0.37.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/referencing-0.37.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/48/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/rpds_py-2026.6.3-cp312-cp312-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/rpds_py-2026.6.3-cp312-cp312-win_amd64.whl",
+   "json_pointers": [
+    "/packages/49/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/setuptools-84.1.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/setuptools-84.1.0-py3-none-any.whl",
+   "json_pointers": [
+    "/build_packages/0/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/sqlalchemy-2.0.54-cp312-cp312-win_amd64.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/sqlalchemy-2.0.54-cp312-cp312-win_amd64.whl",
+   "json_pointers": [
+    "/packages/2/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/sse_starlette-3.5.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/sse_starlette-3.5.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/43/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/starlette-1.7.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/starlette-1.7.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/18/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/truststore-0.10.4-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/truststore-0.10.4-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/50/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/typing_extensions-4.16.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/typing_extensions-4.16.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/21/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/typing_inspection-0.4.4-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/typing_inspection-0.4.4-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/22/wheel_cache"
+   ],
+   "occurrence_count": 1
+  },
+  {
+   "candidate_path": "wheels/uvicorn-0.54.0-py3-none-any.whl",
+   "active_path": "sources/runtime-baseline-v4/wheels/uvicorn-0.54.0-py3-none-any.whl",
+   "json_pointers": [
+    "/packages/44/wheel_cache"
+   ],
+   "occurrence_count": 1
+  }
+ ]
+}

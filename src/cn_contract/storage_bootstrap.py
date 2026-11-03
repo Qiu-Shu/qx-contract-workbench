@@ -3,17 +3,23 @@
 
 def initialize_storage(database):
     from sqlalchemy import text
-    from .storage_schema import identify_schema
+    from .storage_schema import identify_schema, VERSIONS
     with database.session() as db:
         rows = [tuple(row) for row in db.execute(text('SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name'))]
     try:
         version = identify_schema(rows,native=any(row[1]=='local_workspace_identity' for row in rows))
     except ValueError:
         version = None
-    if version in ('weixin-personal-v1', 'weixin-personal-runtime-v1'):
-        if version == 'weixin-personal-v1':
-            from .weixin_inbox.personal_schema import initialize_storage as upgrade
-            upgrade(database)
+    # weixin-personal-v1 及其之后的版本都含表重建迁移。已经落在这一段里的库不能再
+    # 走一遍完整初始化链：那条链上的族校验（如 task_drafts）比的是各族建表语句的
+    # 原始形态，而 personal / runtime / knowledge 的重建已经把那几张表（例如
+    # task_channel_bindings）改写成带引号的新形态，重跑必然报 DATABASE_SCHEMA_MISMATCH。
+    # 这里按版本序号判断，而不是列举版本名——后续再加版本时不会漏。
+    if version is not None and VERSIONS.index(version) >= VERSIONS.index('weixin-personal-v1'):
+        # 统一交给 schema_migrations：它对 CURRENT_VERSION 直接返回，对旧版本
+        # 走带 FK OFF 窗口与前后哈希核对的原子链式升级，重复调用安全。
+        from .weixin_inbox.personal_schema import initialize_storage as upgrade
+        upgrade(database)
         mark_storage_initialized(database)
         return
     # Existing families keep their order; versioned extensions are additive.
@@ -50,6 +56,11 @@ def initialize_storage(database):
     from .assistant.followup_schema import initialize_storage as followups
     from .assistant.material_model_schema import initialize_storage as material_model
     from .weixin_inbox.personal_schema import initialize_storage as personal
+    # 注意：assistant-knowledge-v1 不在这里就地加宽回执表。初始化链只建到
+    # weixin-personal-v1 之前的结构，personal(database) 再交给 schema_migrations
+    # 从 personal-v1 一路链式升到 CURRENT_VERSION；knowledge 的加宽是那条链上的
+    # 一步。若在链中段先加宽，会出现"旧版本结构 + 新回执表"的混合形态，
+    # identify_schema 认不出任何版本，整条升级链直接失败。
     for init in (authorities, rules, facts, reviews, providers, queries, exports,
                  jobs, operations, proofreading, ocr_candidates, intake, assistant, attachments, model, judge, library, context, rounds, rounds_v2, profiles, profile_model, task_drafts, weixin_inbox, weixin_dispatch, weixin_grant, weixin_generation, weixin_provenance, weixin_generation_dispatch, evidence, followups, material_model):
         init(database)

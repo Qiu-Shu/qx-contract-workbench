@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from datetime import date, datetime, timezone
 from decimal import Decimal, DecimalException
 from enum import StrEnum
@@ -3367,7 +3368,7 @@ class LibraryCitationPage(DomainModel):
         return self
 
 
-AssistantLibraryTool = Literal['legal_library.search', 'legal_library.read_original']
+AssistantLibraryTool = Literal['legal_library.search', 'legal_library.read_original', 'legal_knowledge.search']
 
 
 class AssistantLibraryToolCall(DomainModel):
@@ -3379,7 +3380,9 @@ class AssistantLibraryToolCall(DomainModel):
 
     @model_validator(mode='after')
     def exact_library_tool_input(self):
-        search = self.tool == 'legal_library.search'
+        # 检索类工具带 query，回读类工具带 citation；两类都按工具名的后缀判定，
+        # 新增来源（如只读知识服务）时不必再回头改这里的布尔组合。
+        search = self.tool.endswith('.search')
         if search != (self.query is not None) or search == (self.citation is not None):
             raise ValueError('LIBRARY_TOOL_INPUT_INVALID')
         return self
@@ -3390,11 +3393,20 @@ class AssistantLibraryToolResult(DomainModel):
     scope: ScopeSnapshot
     page: LibraryCitationPage | None = None
     citation: CitationRef | None = None
+    # 只读知识服务返回的是自己的引用模型：法条自带原文哈希与行区间，案例自带
+    # 锚点区间。把它硬塞进 CitationRef（kind 只认 case_csv / law_markdown）只能靠
+    # 伪造文件类型，所以这里按来源各带一个字段，各自保持原有契约。
+    knowledge_page: KnowledgeSearchPage | None = None
 
     @model_validator(mode='after')
     def exact_library_tool_result(self):
-        search = self.tool == 'legal_library.search'
-        if search != (self.page is not None) or search == (self.citation is not None):
+        if self.tool == 'legal_library.search':
+            valid = self.page is not None and self.citation is None and self.knowledge_page is None
+        elif self.tool == 'legal_knowledge.search':
+            valid = self.knowledge_page is not None and self.page is None and self.citation is None
+        else:
+            valid = self.citation is not None and self.page is None and self.knowledge_page is None
+        if not valid:
             raise ValueError('LIBRARY_TOOL_RESULT_INVALID')
         return self
 
@@ -3406,7 +3418,8 @@ class LibraryHandlerRequest(DomainModel):
 
     @model_validator(mode='after')
     def server_owned_library_reference(self):
-        search = self.tool == 'legal_library.search'
+        # 两种检索工具都只接受 query，回读工具只接受服务端持有的引用 ID。
+        search = self.tool.endswith('.search')
         if search != (self.query is not None) or search == (self.saved_citation_id is not None):
             raise ValueError('LIBRARY_TOOL_INPUT_INVALID')
         return self
@@ -3441,7 +3454,13 @@ class LibraryHandlerResult(DomainModel):
 
     @model_validator(mode='after')
     def exact_saved_citation_ids(self):
-        count = len(self.result.page.citations) if self.result.page is not None else 1
+        result = self.result
+        if result.page is not None:
+            count = len(result.page.citations)
+        elif result.knowledge_page is not None:
+            count = sum(len(items) for items in result.knowledge_page.groups.values())
+        else:
+            count = 1
         if count != len(self.citation_ids) or len(set(self.citation_ids)) != count:
             raise ValueError('LIBRARY_HANDLER_RESULT_INVALID')
         return self
@@ -3463,8 +3482,16 @@ class LibraryHandlerReceiptView(DomainModel):
         if (self.handler_id != self.request.tool or self.handler_id != self.result.result.tool
                 or self.scope != self.result.result.scope):
             raise ValueError('LIBRARY_HANDLER_RECEIPT_INVALID')
-        if self.request.query is not None and self.request.query != self.result.result.page.query:
-            raise ValueError('LIBRARY_HANDLER_RECEIPT_INVALID')
+        # 回执里的关键词必须就是这次请求的关键词：本地资料库按 AssistantLibraryQuery
+        # 整体比对，只读知识服务只关心关键词本身（它的检索面没有法院/案号这些筛选）。
+        page = self.result.result.page
+        if self.request.query is not None:
+            if page is not None and self.request.query != page.query:
+                raise ValueError('LIBRARY_HANDLER_RECEIPT_INVALID')
+            knowledge = self.result.result.knowledge_page
+            if knowledge is not None and (' '.join(self.request.query.text.split())
+                                          != ' '.join(knowledge.query.split())):
+                raise ValueError('LIBRARY_HANDLER_RECEIPT_INVALID')
         return self
 
 
@@ -3478,8 +3505,16 @@ class SavedLibraryCitation(DomainModel):
     receipt_id: UUID
     run_id: UUID
     scope: ScopeSnapshot
-    citation: CitationRef
+    citation: CitationRef | None = None
+    knowledge_citation: KnowledgeCitation | None = None
     created_at: UTCDatetime
+
+    @model_validator(mode='after')
+    def exact_saved_citation_body(self):
+        # 同一份引用只能有一种形态；两个都给或都不给都不是"兼容"，是契约破了。
+        if (self.citation is None) == (self.knowledge_citation is None):
+            raise ValueError('LIBRARY_RECORD_INVALID')
+        return self
 
 
 class AssistantResearchAccepted(DomainModel):
@@ -5532,3 +5567,173 @@ class NativeMaterialAuthorization(DomainModel):
 
 MainGenerationHistoryItem.model_rebuild()
 MainGenerationHistoryView.model_rebuild()
+
+
+# ---------------------------------------------------------------- 只读知识服务试点（2026-11-01）
+# 与既有 CitationRef 平行、不改其枚举：CitationRef 的 kind 只有 case_csv / law_markdown，
+# 且带 generation_id、fragment_role 等本地法库专属约束。把知识服务硬塞进它，会让老引用、
+# 老历史和老接口跟着改。所以新开一组 DTO，老接口一字不动（回归见 tests）。
+KnowledgeSourceId = Annotated[str, StringConstraints(
+    strict=True, pattern=r'^(law_unit:unit_[0-9a-f]{24}|case_book:\d{4}年度案例【[^】]{1,40}】#\d{3})$')]
+
+# 除常见分词空白（\t \n \r）之外的 C0/C1 控制字符，见 KnowledgeSearchRequest.query
+_KNOWLEDGE_CONTROL = re.compile(r'[\x00-\x08\x0e-\x1f\x7f-\x9f]')
+_KNOWLEDGE_WHITESPACE = re.compile(r'[\t\n\r]')
+
+
+class KnowledgeSearchRequest(DomainModel):
+    query: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)]
+    kinds: Annotated[tuple[Literal['law', 'case'], ...], Field(min_length=1, max_length=2)] = ('law', 'case')
+    limit: Annotated[int, Field(strict=True, ge=1, le=10)] = 3
+
+    @field_validator('query')
+    @classmethod
+    def no_control_chars(cls, value):
+        # 制表/换行视作分词空白；其余控制字符直接拒绝。放行的话服务端会把它
+        # 归一掉并返回"空结果"，与"库里确实没有"无法区分。
+        cleaned = _KNOWLEDGE_WHITESPACE.sub(' ', value).strip()
+        if not cleaned:
+            raise ValueError('KNOWLEDGE_QUERY_EMPTY')
+        if _KNOWLEDGE_CONTROL.search(cleaned):
+            raise ValueError('KNOWLEDGE_QUERY_CONTROL_CHAR')
+        return cleaned
+
+    @model_validator(mode='after')
+    def unique_kinds(self):
+        if len(set(self.kinds)) != len(self.kinds):
+            raise ValueError('KNOWLEDGE_KINDS_DUPLICATED')
+        return self
+        return self
+
+
+class KnowledgeLocation(DomainModel):
+    line_start: PositiveInt
+    line_end: PositiveInt
+    char_start: NonNegativeInt
+    char_end: PositiveInt
+    basis: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=40)]
+
+    @model_validator(mode='after')
+    def ordered(self):
+        if self.char_end <= self.char_start or self.line_end < self.line_start:
+            raise ValueError('KNOWLEDGE_LOCATION_INVALID')
+        return self
+
+
+class KnowledgeSnippet(DomainModel):
+    """引用片段：范围、原文、摘要三者必须自洽，否则拒绝返回。"""
+
+    text: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=1200)]
+    start: NonNegativeInt
+    end: PositiveInt
+    sha256: LibraryHash
+    match_field: Literal['body', 'block']
+    match_start: NonNegativeInt | None = None
+    match_end: PositiveInt | None = None
+
+    @model_validator(mode='after')
+    def exact(self):
+        if self.end - self.start != len(self.text):
+            raise ValueError('KNOWLEDGE_SNIPPET_RANGE_INVALID')
+        if hashlib.sha256(self.text.encode('utf-8')).hexdigest() != self.sha256:
+            raise ValueError('KNOWLEDGE_SNIPPET_HASH_INVALID')
+        body = self.match_field == 'body'
+        has = self.match_start is not None and self.match_end is not None
+        if body != has:
+            raise ValueError('KNOWLEDGE_SNIPPET_MATCH_INVALID')
+        if body and not (self.start <= self.match_start < self.match_end <= self.end):
+            raise ValueError('KNOWLEDGE_SNIPPET_MATCH_INVALID')
+        if not body and has:
+            raise ValueError('KNOWLEDGE_SNIPPET_MATCH_INVALID')
+        return self
+
+
+class KnowledgeVerification(DomainModel):
+    support: Literal['unverified'] = 'unverified'
+    applicability: Literal['unverified'] = 'unverified'
+
+
+class KnowledgeCitation(DomainModel):
+    source_id: KnowledgeSourceId
+    kind: Literal['law', 'case']
+    title: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=400)]
+    heading_path: Annotated[str, StringConstraints(strict=True, max_length=400)] = ''
+    source_version: Annotated[dict[str, Annotated[str, StringConstraints(strict=True, max_length=200)]],
+                              Field(min_length=1, max_length=8)]
+    location: KnowledgeLocation
+    snippet: KnowledgeSnippet
+    verification: KnowledgeVerification
+    score: float
+    score_basis: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=60)]
+    query_coverage: float | None = None
+    metadata: dict[str, Annotated[str, StringConstraints(strict=True, max_length=200)]] = Field(default_factory=dict)
+
+    @model_validator(mode='after')
+    def snippet_inside_location(self):
+        loc = self.location
+        if not loc.char_start <= self.snippet.start < self.snippet.end <= loc.char_end:
+            raise ValueError('KNOWLEDGE_SNIPPET_OUTSIDE_LOCATION')
+        if self.source_id.startswith('law_unit:') != (self.kind == 'law'):
+            raise ValueError('KNOWLEDGE_SOURCE_KIND_MISMATCH')
+        if 'sha256' not in self.source_version:
+            raise ValueError('KNOWLEDGE_SOURCE_VERSION_MISSING')
+        return self
+
+
+class KnowledgeSearchPage(DomainModel):
+    state: Literal['ready', 'empty']
+    query: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)]
+    grouped: Literal[True] = True
+    groups: dict[Literal['law', 'case'], tuple[KnowledgeCitation, ...]]
+    notes: Annotated[tuple[Annotated[str, StringConstraints(strict=True, max_length=400)], ...],
+                     Field(max_length=8)] = ()
+    degraded: tuple[dict[str, str], ...] = ()
+    elapsed_ms: float = 0.0
+
+    @model_validator(mode='after')
+    def consistent(self):
+        total = sum(len(items) for items in self.groups.values())
+        if (self.state == 'empty') != (total == 0):
+            raise ValueError('KNOWLEDGE_PAGE_STATE_INVALID')
+        return self
+
+
+class KnowledgeContent(DomainModel):
+    start: NonNegativeInt
+    end: PositiveInt
+    text: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=20000)]
+    truncated: StrictBool
+    full_length: PositiveInt
+    sha256: LibraryHash
+
+    @model_validator(mode='after')
+    def exact(self):
+        if self.end - self.start != len(self.text):
+            raise ValueError('KNOWLEDGE_CONTENT_RANGE_INVALID')
+        if self.end > self.full_length:
+            raise ValueError('KNOWLEDGE_CONTENT_RANGE_INVALID')
+        if hashlib.sha256(self.text.encode('utf-8')).hexdigest() != self.sha256:
+            raise ValueError('KNOWLEDGE_CONTENT_HASH_INVALID')
+        return self
+
+
+class KnowledgeSourceView(DomainModel):
+    source_id: KnowledgeSourceId
+    title: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=400)]
+    source_version: Annotated[dict[str, Annotated[str, StringConstraints(strict=True, max_length=200)]],
+                              Field(min_length=1, max_length=8)]
+    location: KnowledgeLocation
+    # 整个可引用块的边界（{start, end}），前端据此判断"读到的这一段是否已到块尾"
+    whole_block: Annotated[dict[str, NonNegativeInt], Field(min_length=2, max_length=2)]
+    content: KnowledgeContent
+    verification: KnowledgeVerification
+    elapsed_ms: float = 0.0
+
+    @model_validator(mode='after')
+    def content_inside_block(self):
+        block = self.whole_block
+        if not block.get('start', -1) <= self.content.start < self.content.end <= block.get('end', -1):
+            raise ValueError('KNOWLEDGE_CONTENT_OUTSIDE_BLOCK')
+        if self.location.char_start != block.get('start') or self.location.char_end != block.get('end'):
+            raise ValueError('KNOWLEDGE_BLOCK_MISMATCH')
+        return self

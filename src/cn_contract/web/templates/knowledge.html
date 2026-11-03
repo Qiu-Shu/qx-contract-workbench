@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>知识服务（只读试点）· 群兴工作台</title>
+<link rel="stylesheet" href="/static/knowledge.css"><script src="/static/knowledge.js" defer></script></head>
+<body><a class="skip" href="#knowledge-query">跳到检索</a>
+<header><a href="/assistant" class="brand">群兴工作台</a><nav aria-label="工作区"><a href="/assistant">对话</a><a href="/workspace">工作区与接待</a><a href="/library">法律资料库</a><a href="/knowledge" aria-current="page">知识服务</a></nav></header>
+<main>
+  <div class="heading">
+    <div><h1>知识服务（只读试点）</h1>
+      <p>检索法条与案例，点开引用回到原文的对应位置。本页不调用任何生成式模型。</p></div>
+    <p id="knowledge-status" role="status">正在读取服务状态…</p>
+  </div>
+  <p class="notice">来源与效力均待核验。引用位置来自登记锚点，打开时会重新校验原文哈希；版本不符即阻断。</p>
+
+  <div class="working">
+    <aside class="panel search" aria-label="检索">
+      <form id="knowledge-form">
+        <label for="knowledge-query">关键词或问题</label>
+        <input id="knowledge-query" name="query" maxlength="200" autocomplete="off"
+               placeholder="例如：质量瑕疵 减价 / 违约金过高">
+        <fieldset class="kinds"><legend>检索范围</legend>
+          <label><input type="checkbox" name="kinds" value="law" checked>法条</label>
+          <label><input type="checkbox" name="kinds" value="case" checked>案例</label>
+        </fieldset>
+        <label for="knowledge-limit">每类条数</label>
+        <select id="knowledge-limit" name="limit"><option>3</option><option>5</option><option>8</option></select>
+        <button type="submit" id="knowledge-submit">检索</button>
+      </form>
+      <p class="muted">法条与案例的分数口径不同（FTS5 bm25 / 自算 BM25），因此分组显示、不混排。</p>
+    </aside>
+
+    <section class="panel results" aria-labelledby="results-title">
+      <h2 id="results-title">检索结果</h2>
+      <p id="knowledge-message" role="status" aria-live="polite">输入关键词后开始检索。</p>
+      <div id="knowledge-groups">
+        <section class="group" id="law-group" hidden aria-labelledby="law-title">
+          <h3 id="law-title">法条</h3><div id="law-results"></div>
+        </section>
+        <section class="group" id="case-group" hidden aria-labelledby="case-title">
+          <h3 id="case-title">案例</h3><div id="case-results"></div>
+        </section>
+      </div>
+      <p id="knowledge-notes" class="muted"></p>
+    </section>
+  </div>
+
+  <section class="panel original" id="original-panel" hidden aria-labelledby="original-title">
+    <div class="toolbar">
+      <h2 id="original-title" tabindex="-1"></h2>
+      <button type="button" id="original-close" class="secondary">收起</button>
+    </div>
+    <p id="original-state" role="status"></p>
+    <dl id="original-details"></dl>
+    <div id="original-body" hidden>
+      <p class="hint">下面是<b>当前从原文回读</b>的内容；上方检索结果是<b>检索时的片段</b>，二者分开显示。</p>
+      <pre id="original-text" tabindex="0"></pre>
+    </div>
+  </section>
+</main></body></html>

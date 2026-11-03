@@ -64,7 +64,7 @@ def find_research(actor, conversation_id, request_id, db):
     return read_research(actor, UUID(identifier), db) if identifier else None
 
 
-def enqueue_research(actor, conversation_id, request, db):
+def enqueue_research(actor, conversation_id, request, db, *, knowledge=False):
     request = d.AssistantMessageInput.model_validate(request.model_dump(mode='python'))
     conversation = service._owned(actor, conversation_id, db)
     require_active(db)
@@ -76,6 +76,9 @@ def enqueue_research(actor, conversation_id, request, db):
             raise ValueError('keyword length')
     except (ValueError, TypeError):
         raise ServiceError('LIBRARY_TOOL_INPUT_INVALID', 422) from None
+    # 配了只读知识服务就走它，否则保持原来的本地资料库路径——两者的会话权限、
+    # 回执、引用快照完全共用，只有来源不同。
+    tool = 'legal_knowledge.search' if knowledge else 'legal_library.search'
     previous = find_research(actor, conversation_id, request.request_id, db)
     if previous is not None:
         service.save_message(actor, conversation_id, request, db)
@@ -88,7 +91,7 @@ def enqueue_research(actor, conversation_id, request, db):
             accepted = d.AssistantResearchAccepted(call_id=uuid4(), request_sha256=run.request_sha256)
             _append(run.id, 'research.accepted', accepted.model_dump(mode='json'), db)
             handlers.begin_library_call_in_session(actor, run.id, accepted.call_id,
-                d.LibraryHandlerRequest(tool='legal_library.search', query=query), db)
+                d.LibraryHandlerRequest(tool=tool, query=query), db)
             return read_research(actor, run.id, db)
     except SQLAlchemyError:
         raise ServiceError('LIBRARY_RECORD_INVALID', 409) from None

@@ -30,7 +30,8 @@ def test_library_chain_upgrades_judge_to_current_with_exact_delta(tmp_path):
         after = schema_migrations.database_rows(db)
         # Library tables are additive; the context step replaces the model
         # family's attempts table and immutable-input trigger in place.
-        assert {row[2] for row in set(after) - set(before)} == {
+        added = {row[2] for row in set(after) - set(before)}
+        assert added == {
             'assistant_handler_receipts', 'assistant_library_citations',
             'assistant_model_input_citations', 'assistant_model_attempts',
             'assistant_profile_revisions', 'assistant_profile_receipts', 'assistant_profile_handlers',
@@ -38,7 +39,12 @@ def test_library_chain_upgrades_judge_to_current_with_exact_delta(tmp_path):
             'task_draft_events', 'task_executions', 'task_media_resolutions',
             'weixin_accounts', 'weixin_peer_bindings', 'weixin_poll_receipts', 'weixin_inbox_descriptors',
             'weixin_dispatch_receipts', 'weixin_peer_scope_grants', 'weixin_peer_generations',
-            'weixin_descriptor_generations', 'assistant_evidence_revisions', 'assistant_followup_revisions'}
+            'weixin_descriptor_generations', 'weixin_personal_runs', 'weixin_personal_outbox',
+            'assistant_evidence_revisions', 'assistant_followup_revisions'}
+        # The list above documents the intent; `identify_schema` on the next line
+        # is what actually holds it to the contract. It cannot be reduced to a
+        # pure set difference of owner names because `assistant_model_attempts`
+        # exists at both ends with different objects underneath.
         assert {row[1] for row in set(before) - set(after)} == {
             'assistant_model_attempts', 'immutable_assistant_model_input'}
         assert storage_schema.identify_schema(after) == storage_schema.CURRENT_VERSION

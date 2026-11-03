@@ -2,6 +2,10 @@
 # Public evidence and fingerprints retain the exact measured bytes.
 sources/** -text -whitespace
 tests/fixtures/synthetic/** -text -whitespace
+# Frozen post-hoc replay inputs are registered by SHA in their manifest. They were
+# captured with CRLF; `* text=auto eol=lf` used to rewrite them on checkout, which
+# made every replay fail on "Frozen fixture changed". Keep the bytes as measured.
+tests/fixtures/contract_calculation/*.json -text -whitespace
 tests/fixtures/acceptance/** -text -whitespace
 tests/acceptance/cases.json -text -whitespace
 requirements*.lock -text -whitespace
@@ -193,3 +197,7 @@ tests/fixtures/task-pdf-v1/*.pdf binary -whitespace
 # Preserve measured media-selection receipts and intentional CRLF test fixtures.
 docs/testing/weixin-media-selection/20261025/** -text -whitespace
 scripts/test_assistant_task_media_selection.mjs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Real registered wheel bytes used as archive-boundary test input; the digest is
+# re-checked against the frozen lock in the test, so no normalisation is allowed.
+tests/fixtures/runtime_wheels/*.whl binary -whitespace

@@ -29,6 +29,8 @@ def statements_for(version):
         from .assistant.judge_schema import STATEMENTS
     elif version == 'assistant-library-v1':
         from .assistant.library_schema import STATEMENTS
+    elif version == 'assistant-knowledge-v1':
+        from .assistant.knowledge_schema import STATEMENTS
     elif version == 'assistant-context-v1':
         from .assistant.context_schema import STATEMENTS
     elif version == 'assistant-rounds-v1':
@@ -59,6 +61,9 @@ def statements_for(version):
 
 
 def _module(version):
+    if version == 'assistant-knowledge-v1':
+        from .assistant import knowledge_schema
+        return knowledge_schema
     if version == 'weixin-personal-v1':
         from .weixin_inbox import personal_schema
         return personal_schema

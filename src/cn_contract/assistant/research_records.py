@@ -31,11 +31,16 @@ def initial_call(run, content, events):
         call = d.LibraryHandlerCall(run_id=UUID(run['id']), event_seq=selected[1]['seq'],
             payload=model(d.LibraryHandlerEvent, selected[1]['payload_json']))
         scope = model(d.ScopeSnapshot, run['scope_snapshot'])
-        expected = d.LibraryHandlerRequest(tool='legal_library.search',
-            query=d.AssistantLibraryQuery(text=content, limit=5))
+        # 检索来源随运行记录一起留存：老记录是本地资料库，接上只读知识服务之后
+        # 是 legal_knowledge.search。这里只认「检索类工具 + 关键词等于消息正文」，
+        # 换来源不改身份判定，也不放宽到能塞进别的工具名。
+        request = call.payload.request
+        if request.tool not in ('legal_library.search', 'legal_knowledge.search'):
+            raise ValueError('initial research tool')
+        expected = d.AssistantLibraryQuery(text=content, limit=5)
         if (accepted.request_sha256 != run['request_sha256'] or not content or len(content) > 200
                 or call.payload.call_id != accepted.call_id or call.payload.scope != scope
-                or call.payload.request != expected):
+                or request.query != expected or request.saved_citation_id is not None):
             raise ValueError('initial research query')
         return call
     except (ValueError, TypeError, KeyError, IndexError):

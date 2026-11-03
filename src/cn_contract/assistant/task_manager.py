@@ -20,13 +20,16 @@ MAX_ACTIVE_TASKS = 4
 class GenerationTasks:
     """start/submit run synchronously on the application's lifespan event loop."""
 
-    def __init__(self, database, runtime, *, judge_runtime=None, library_adapter=None):
+    def __init__(self, database, runtime, *, judge_runtime=None, library_adapter=None,
+                 knowledge_adapter=None):
         if judge_runtime is not None and type(judge_runtime) is not JudgeRuntime:
             raise TypeError('trusted JudgeRuntime required')
         self.database = database
         self.runtime = runtime
         self.judge_runtime = judge_runtime
         self.library_adapter = library_adapter
+        # 只读知识服务：没配置就是 None，显式检索据此选择本地资料库还是知识服务。
+        self.knowledge_adapter = knowledge_adapter
         self._loop = None
         self._started = False
         self._tasks = {}
@@ -173,7 +176,11 @@ class GenerationTasks:
                 {'cid':str(conversation_id), 'request':str(request.request_id)})
             if previous is None:
                 self._admit()
-            view = research.enqueue_research(actor, conversation_id, request, db)
+            # 配了只读知识服务就用它；没配时这条路径的每一步都与原来的本地资料库
+            # 完全一致（同一套会话权限、回执、引用快照，只是来源不同）。
+            knowledge = self.knowledge_adapter is not None
+            view = research.enqueue_research(actor, conversation_id, request, db,
+                                             knowledge=knowledge)
         if previous is None:
             self._dispatch(view.run.id, view.run.id, self._execute_research(actor, view.run.id), local=True)
         return view
@@ -192,7 +199,10 @@ class GenerationTasks:
     async def _execute_research(self, actor, run_id):
         from . import research
         from .tools.library import LegalLibraryAdapter
-        adapter = self.library_adapter if self.library_adapter is not None else LegalLibraryAdapter(None)
+        from .tools.service import ResearchSources
+        adapter = ResearchSources(
+            self.library_adapter if self.library_adapter is not None else LegalLibraryAdapter(None),
+            self.knowledge_adapter)
         worker = asyncio.create_task(asyncio.to_thread(
             research.execute_research, actor, run_id, self.database, adapter))
         cancelled = False

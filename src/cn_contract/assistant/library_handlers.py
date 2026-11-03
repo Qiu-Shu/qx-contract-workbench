@@ -137,8 +137,12 @@ def read_saved_citation(actor, saved_citation_id, db):
     if receipt is None or receipt.scope != scope or identifier not in receipt.result.citation_ids:
         raise ServiceError('LIBRARY_RECORD_INVALID', 409)
     ordinal = receipt.result.citation_ids.index(identifier)
+    saved_body = result_citations(receipt.result.result)[ordinal]
+    # 两种来源各自保留自己的引用契约，不互相冒充。
+    citations = ({'knowledge_citation': saved_body} if isinstance(saved_body, d.KnowledgeCitation)
+                 else {'citation': saved_body})
     return d.SavedLibraryCitation(id=identifier, receipt_id=receipt.id, run_id=receipt.run_id,
-        scope=receipt.scope, citation=result_citations(receipt.result.result)[ordinal], created_at=receipt.created_at)
+        scope=receipt.scope, created_at=receipt.created_at, **citations)
 
 
 def _source(actor, run_id, request, db, *, before_seq=None):

@@ -1,0 +1,81 @@
+{
+ "index_scope": "development dependency baseline versions; not a selector and not an approval",
+ "repository": "qx-contract-workbench",
+ "entries": [
+  {
+   "label": "v1_frozen_20261022",
+   "status": "frozen_archived_read_only_superseded_for_development_validation",
+   "archive_dir": "sources/runtime-baselines/v1-frozen-20261022",
+   "runtime_lock_sha256": "23bb8f1d82abe11448796b74ecf355dd6f80844af57325674a323a693786af94",
+   "runtime_lock_bytes": 1017031,
+   "build_pin": "setuptools==84.0.0",
+   "packages": 55,
+   "build_packages": 1,
+   "evidence_state": "the wheelhouse, METADATA, registry and member mirrors this lock names were held in the git-ignored .audit-local scratch root and are not present; the gate therefore refuses this baseline today and the refusal is preserved, not repaired"
+  },
+  {
+   "label": "v2_adopted_20261102",
+   "status": "active_development_baseline",
+   "active_lock": "sources/runtime-dependencies.lock.json",
+   "runtime_lock_sha256": "f0f2793c945c207d16dc13e7d6ebef67f8320a07b69661fd62a9b288cbc7ce25",
+   "runtime_lock_bytes": 932050,
+   "approved_candidate_sha256": "cd4c1fdf4df21841c232b1e70c7035f20dfc2450d5b4522233797fa9860815c1",
+   "build_pin": "setuptools==84.1.0",
+   "packages": 55,
+   "build_packages": 1,
+   "evidence_roots": [
+    "sources/runtime-baseline-v4",
+    "sources/third-party-notices/runtime",
+    "sources/evidence/runtime"
+   ],
+   "production_approved": false,
+   "difference_from_candidate": "path strings only; see v2-adopted-20261102/path_rebind.json"
+  }
+ ],
+ "no_selector_note": "There is no active-version registry, environment variable or CLI switch: the active baseline is the fixed bytes at the fixed path, and every declared file is still refused on unknown, wrong-SHA or missing bytes.",
+ "archive": {
+  "archive_dir": "sources/runtime-baselines/v1-frozen-20261022",
+  "files": {
+   "runtime-dependencies.lock.json": {
+    "repository_source": "sources/runtime-dependencies.lock.json",
+    "archived_target": "sources/runtime-baselines/v1-frozen-20261022/runtime-dependencies.lock.json",
+    "sha256": "23bb8f1d82abe11448796b74ecf355dd6f80844af57325674a323a693786af94",
+    "bytes": 1017031,
+    "repository_source_sha256_at_this_run": "f0f2793c945c207d16dc13e7d6ebef67f8320a07b69661fd62a9b288cbc7ce25",
+    "state": "preserved_repository_source_now_differs"
+   },
+   "pyproject.toml": {
+    "repository_source": "pyproject.toml",
+    "archived_target": "sources/runtime-baselines/v1-frozen-20261022/pyproject.toml",
+    "sha256": "97338c76d290849ea84697e79d2f444e4b8e17c4804880b22b647293902846bf",
+    "bytes": 849,
+    "repository_source_sha256_at_this_run": "d1582220765870bb333760617ec66efbb124bdb9e0c6f55a22345f744fc16062",
+    "state": "preserved_repository_source_now_differs"
+   },
+   "requirements.lock": {
+    "repository_source": "requirements.lock",
+    "archived_target": "sources/runtime-baselines/v1-frozen-20261022/requirements.lock",
+    "sha256": "2c4986f4cdf676baee6448893272bac94a17c0aed9ec8596d9802f849b3a0c50",
+    "bytes": 5574,
+    "repository_source_sha256_at_this_run": "2c4986f4cdf676baee6448893272bac94a17c0aed9ec8596d9802f849b3a0c50",
+    "state": "already_archived_identical"
+   },
+   "requirements-build.lock": {
+    "repository_source": "requirements-build.lock",
+    "archived_target": "sources/runtime-baselines/v1-frozen-20261022/requirements-build.lock",
+    "sha256": "32f01b45becd50693dc3763b8cd112706290105972cf906b4e073f1b31188918",
+    "bytes": 354,
+    "repository_source_sha256_at_this_run": "e068e56a17e3ed772023d74907c794ac75945739adff476e5dbf3b154b36599c",
+    "state": "preserved_repository_source_now_differs"
+   }
+  },
+  "old_runtime_lock_sha256": "23bb8f1d82abe11448796b74ecf355dd6f80844af57325674a323a693786af94",
+  "old_runtime_lock_sha256_expected": "23bb8f1d82abe11448796b74ecf355dd6f80844af57325674a323a693786af94",
+  "readback_matches": true
+ },
+ "materialization_summary": {
+  "declared_gate_read_files": 294,
+  "newly_materialized": 204,
+  "newly_materialized_bytes": 46417714
+ }
+}

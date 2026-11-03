@@ -187,7 +187,7 @@ def _worker_lock(root):
 
 
 def build_local_app(directory, *, port=8767, library_root=None, data_parent=None, assistant_model_runtime=None,
-                    assistant_judge_runtime=None, reception_knowledge_root=None):
+                    assistant_judge_runtime=None, reception_knowledge_root=None, knowledge_service=None):
     root = _open_workspace(directory, data_parent=data_parent)
     with _worker_lock(root):
         from .workspace_upgrade import upgrade
@@ -206,6 +206,9 @@ def build_local_app(directory, *, port=8767, library_root=None, data_parent=None
         if library_root is not None:
             from .library import attach_library
             attach_library(app, database, library_root)
+        if knowledge_service is not None:
+            from .knowledge_service import attach_knowledge_service
+            attach_knowledge_service(app, database, knowledge_service)
         bridge = None
         if root == (PROJECT_ROOT / '.local' / 'workbench').resolve() and port == 8767:
             from .case_bridge import attach_case_bridge
@@ -280,10 +283,15 @@ def main(argv=None):
                     raise ValueError('INTERACTIVE_PASSWORD_REQUIRED')
                 username = input('首次使用，请设置本机用户名：')
                 initialize_workspace(args.directory, username, _prompt_password())
+            from ..assistant.tools.kb_readonly import KnowledgeServiceConfig
+            knowledge = KnowledgeServiceConfig.from_env()
             import uvicorn
-            app = build_local_app(args.directory, port=args.port, library_root=args.library_directory)
+            app = build_local_app(args.directory, port=args.port, library_root=args.library_directory,
+                                  knowledge_service=knowledge)
             print(f'本机工作台：http://127.0.0.1:{args.port}/login', flush=True)
             print('案件原地保存；本机DOCX逐份确认后供人工工作稿；真实模型与企查查关闭。', flush=True)
+            print('只读知识服务：' + ('已配置（' + knowledge.url + '）' if knowledge else '未配置，相关入口隐藏'),
+                  flush=True)
             uvicorn.run(app, host='127.0.0.1', port=args.port, workers=1, access_log=False, log_level='warning')
         else:
             password = _prompt_password()
