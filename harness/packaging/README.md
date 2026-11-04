@@ -1,6 +1,6 @@
 # 群兴 Windows 安装包
 
-Windows x64 用户级一键安装，首次启动配置 DeepSeek API Key。用户无需安装 Node 或 Python。API 验证通过官方余额接口完成，不提交模型任务。
+Windows x64 当前用户安装，首次启动配置 DeepSeek API Key。用户无需安装 Node 或 Python。API 验证通过官方余额接口完成，不提交模型任务。已发布 0.2.6 使用一键安装；已完成隔离验证的本地安装优化候选改为可选目录向导，并在匹配的旧版本上仅更新变化文件。
 
 ## 文件边界
 
@@ -12,9 +12,18 @@ Windows x64 用户级一键安装，首次启动配置 DeepSeek API Key。用户
 
 `stage.py <新的暂存目录> --version 0.2.1` 从明确列出的本机依赖和项目源码生成分发内容。`refresh-stage.py <暂存目录> 0.2.1` 在并行开发完成后刷新业务源码和配置。`build.cjs <暂存目录> <输出目录>` 使用既有 electron-builder 26.15.3 / Electron 44.8.0 生成 NSIS EXE。构建工具来源路径固定在脚本中，仅构建机使用；最终运行路径由安装位置生成。
 
+当前构建还须指定 `QX_BASE_DIR`（从已发布安装包提取的原始程序目录）和 `QX_BASE_VERSION`。不可使用实际安装后被修改过的目录作为基线。HDiffPatch 5.1.3 构建工具按固定摘要下载到 `.local/build-tools`；源码只保存许可证和来源。变更清单、补丁在最终归档输入就绪后生成。每次使用新的输出目录，避免复用中断的压缩缓存。
+
+升级分两步：原有 blockmap 仅下载变化块，本机重建安装器；新安装器随后只备份、替换或移除清单中的变化文件，未变程序文件留在原位。首次安装直接展开到用户所选目录。升级沿用已有目录；不匹配基线时保留旧程序并停止，不暗中卸载重装。候选暂只提供 0.2.6 → 0.2.7 的基线。
+
 随包分别携带文档 Python 3.12、Scrapling Python 3.12、Windows-MCP Python 3.14，避免原生模块版本冲突。Node 依赖按版本解析，冲突依赖保留局部嵌套。Python `.dist-info` 和 npm 包内许可随依赖保留；法律库和 Skill 许可证保留原目录结构。
 
 ## 验证
+
+- `node --test packaging/incremental-package.test.cjs packaging/incremental-install.test.cjs`：真实 HDiffPatch、变更清单、未知文件保留、事务恢复和文件占用。
+- `node packaging/check-incremental-installer.cjs`：独立 QA 标识的真实 NSIS 首次安装与增量升级；不会替换正在使用的工作台。
+- `node packaging/check-fresh-installer.cjs`：在上述 QA 上卸载并测试新向导安装器首次展开，路径含中文和空格。
+- `node packaging/check-full-incremental.cjs <发布基线目录> <候选输出目录>`：完整程序目录的真实补丁应用，逐文件确认未变文件身份、时间戳和长度；不执行生产安装器。
 
 - `node --test desktop/setup-service.test.cjs desktop/installed-runtime.test.cjs desktop/installed-migrations.test.cjs desktop/installed-contract-migration.test.cjs`
 - `python -m unittest discover -s packaging -p test_stage.py`

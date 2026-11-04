@@ -37,15 +37,17 @@ for spec in patched:
     if source is None:raise RuntimeError('Missing patched dependency: '+name)
     copytree(source,payload/'node_modules'/name)
 for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','plugins/legal-search','plugins/case-memory','desktop/integration']:
-    copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py','ui-check.py'))
+    copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py','ui-check.py','practice_eval_session.py'))
 copytree(ROOT/'plugins/wechat',payload/'plugins/wechat',('*.vsix','test','tests','docs','scripts','.github','vscode-extension'))
 copytree(ROOT/'desktop/integration',payload/'node_modules/@qunxing/desktop-session')
 reader=payload/'bridge/reader.py'
 reader.write_text(reader.read_text(encoding='utf-8').replace("Path('D:/qx-contract-workbench-20261102')","Path(os.environ['QX_LEGACY_ROOT'])"),encoding='utf-8')
 copytree(ROOT/'workspace/.dsh/skills',payload/'workspace-seed/.dsh/skills')
 copytree(ROOT/'config/skills',payload/'workspace-seed/.dsh/skills')
+copytree(ROOT/'config/skill-references',payload/'workspace-seed/legal-library/workbench')
 copytree(ROOT/'config/templates',payload/'config/templates')
 shutil.copy2(ROOT/'packaging/contract-0.2.0-defaults.json',payload/'config/contract-0.2.0-defaults.json')
+shutil.copy2(ROOT/'config/skill-quality-upgrades.json',payload/'config/skill-quality-upgrades.json')
 shutil.copy2(ROOT/'packaging/case-memory-requirements.lock',payload/'config/case-memory-requirements.lock')
 instructions=(ROOT/'config/workspace-AGENTS.md').read_text(encoding='utf-8').replace(str(RUNTIME/'node/bin/node.exe').replace('\\','/'),'@APP@/runtime/node.exe')
 (payload/'workspace-seed/AGENTS.md').write_text(instructions,encoding='utf-8')

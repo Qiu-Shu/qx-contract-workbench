@@ -14,6 +14,12 @@ metadata:
 
 Rewrite AI-sounding text so it reads like the writer, not a chatbot. Keep what it says. Do not make anything up.
 
+## 本机法律文本适配
+
+接待回复、意见书与其他法律任务调用本技能时使用下文 embedded mode，只交付最终正文。保留客户陈述的归属、尚待核验状态、金额、日期、期限口径、法律条件及可追溯来源；合同逐字引文和引用链接不改。入口要求的 `【可发送回复】`、`【律师参考】` 是复制与内部参考边界，不能按“装饰标题”删除。润色不得把未见材料写成行为未发生，也不替律师新增报价、审阅安排或结果承诺。
+
+本目录为工作台适配的技能资源包，不是上游插件发布包。`scripts/validate-package.py` 校验上游 Claude/Cursor 插件清单，当前资源包未包含这些清单；它的缺清单错误不代表技能正文不可用，不能声称该发布包检查已通过。运行脚本需实际 Python 解释器。
+
 ## Why AI text sounds the way it does
 
 A language model writes whatever is most likely to come next, so by default it makes the choice that fits the widest range of readers and subjects. A human writer chooses for one reader and one subject, so their choices are uneven and specific. Every pattern below is one form of the default choice:

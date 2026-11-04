@@ -12,6 +12,14 @@ import workflows
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_release_registers_only_approved_practice_method(self):
+        self.assertEqual(set(workflows._WORKFLOWS), {'reception', 'contract', 'case', 'hearing', 'evidence'})
+        for name in ('litigation', 'employment', 'corporate', 'compliance', 'ip',
+                     'qx-litigation-drafting', 'qx-employment-review', 'qx-corporate-records',
+                     'qx-compliance-work', 'qx-ip-register'):
+            with self.subTest(name=name), self.assertRaises(ValueError):
+                workflows.workflow(name)
+
     def test_all_four_methods_load_as_natural_text_with_provenance(self):
         for name, (skill, _title, _suggested) in workflows._WORKFLOWS.items():
             with self.subTest(name=name):

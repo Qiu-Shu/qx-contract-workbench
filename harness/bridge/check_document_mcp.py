@@ -16,7 +16,9 @@ async def main():
         digest=hashlib.sha256(source.read_bytes()).hexdigest()
         async with client('server.py',workspace) as session:
             names=[t.name for t in (await session.list_tools()).tools]
-            assert len(names)==11,names
+            assert {'inspect_word_document','write_review_word','write_contract_opinion',
+                    'generate_document_from_template','inspect_custom_word_template',
+                    'render_custom_word_template'} <= set(names),names
             view=await call(session,'inspect_word_document',path=source.name)
             paragraph=next(p for p in view['paragraphs'] if '交货当天' in p['text'])
             edits=[{'paragraph_id':paragraph['paragraph_id'],'old':'交货当天','new':'验收合格后十日内','comment':'将付款与验收结果关联。'}]

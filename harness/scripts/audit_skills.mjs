@@ -80,6 +80,9 @@ async function providerLocation(providerEntry) {
 }
 
 async function auditWorkspace(label, workspace, Provider, out, labels) {
+  const lifecycleFile=join(root,'config/skill-lifecycle.json');
+  const lifecycle=await exists(lifecycleFile)?JSON.parse(await readFile(lifecycleFile,'utf8')):{skills:[]};
+  const disabled=new Set(lifecycle.skills.filter(row=>row.action==='disable').map(row=>row.name));
   const skillRoot = join(workspace, '.dsh/skills');
   const files = await walk(skillRoot);
   const skillFiles = files.filter(path => basename(path).toLowerCase() === 'skill.md');
@@ -112,9 +115,13 @@ async function auditWorkspace(label, workspace, Provider, out, labels) {
         const loaded = await provider.get(candidate, {cwd: workspace});
         row.loaded = true;
         row.modelInvocable = loaded.invocation?.modelInvocable === true;
+        row.userInvocable = loaded.invocation?.userInvocable === true;
+        row.intentionallyDisabled = disabled.has(row.name);
         row.characters = loaded.content.length;
         row.resourceBase = slash(relative(workspace, loaded.resourceBase.path));
-        if (!row.modelInvocable) row.issues.push({type: 'model-invocation-disabled'});
+        if (row.intentionallyDisabled) {
+          if(row.modelInvocable||row.userInvocable)row.issues.push({type:'declared-disabled-but-invocable'});
+        } else if (!row.modelInvocable) row.issues.push({type: 'unexpected-model-invocation-disabled'});
         if (!loaded.content.trim()) row.issues.push({type: 'empty-body'});
         const bundleRoot = loaded.resourceBase.path;
         const bundleFiles = files.filter(path => inside(path, bundleRoot));
@@ -184,7 +191,7 @@ async function auditWorkspace(label, workspace, Provider, out, labels) {
             }
           }
         }
-        row.status = row.issues.length ? 'needs-review' : 'load-and-resources-ok';
+        row.status = row.issues.length ? 'needs-review' : row.intentionallyDisabled?'intentionally-disabled':'load-and-resources-ok';
       } catch (error) {
         row.loaded = false;
         row.status = 'load-failed';

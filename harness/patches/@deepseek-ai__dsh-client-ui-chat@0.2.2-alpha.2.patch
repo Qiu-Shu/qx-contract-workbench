@@ -1,8 +1,36 @@
-diff --git a/lib/client.js b/lib/client.js
-index 0f920afed649897214130b0613bd4181c46ba173..cc4cdc485ea3cd027c0e0683a69f2a96ba2888a6 100644
 --- a/lib/client.js
 +++ b/lib/client.js
-@@ -9257,7 +9257,7 @@ window.__ModuleLoader__.load({
+@@ -8890,7 +8890,9 @@
+ 		* @returns concatenated text blocks.
+ 		*/
+ 		function assistantText(blocks) {
+-			return blocks.flatMap((block) => block.kind === "text" ? [block.text] : []).join("");
++			const text = blocks.flatMap((block) => block.kind === "text" ? [block.text] : []).join("");
++            const start = text.indexOf("【可发送回复】"), end = text.indexOf("【律师参考】", start + 7);
++            return start >= 0 && end > start ? text.slice(start + "【可发送回复】".length, end).trim() : text;
+ 		}
+ 		//#endregion
+ 		//#region \0dsh-css:/home/runner/work/deepseek-harness/deepseek-harness/packages/client/ui-chat/src/client/chat/TurnTailNodeView.module.css.mjs
+@@ -9175,6 +9177,7 @@
+ 				key: "assistant-step",
+ 				locale: NS,
+ 				children: {
++					"conversation.chat.assistant.business": { kind: "chain", scope: "session" },
+ 					"conversation.chat.reasoning.body": {
+ 						kind: "single",
+ 						scope: "session"
+@@ -9185,7 +9188,9 @@
+ 					}
+ 				},
+ 				inject: () => ({ hooks: { presentation } })
+-			}, AssistantNodeView));
++			} , props => props.renderSlotChain("conversation.chat.assistant.business", {
++                ...props,renderOriginal:changes=>react.createElement(AssistantNodeView,{...props,...changes})
++            }, {fallback:react.createElement(AssistantNodeView,props)})));
+ 			ctx.slots.inject("conversation.chat.node", () => ctx.slots.register({
+ 				name: "conversation.chat.node",
+ 				key: "command",
+@@ -9257,7 +9262,7 @@
  		* @param props - prepared content, facts, authorized image loader, and framework Factory/locale seats.
  		* @returns the content stack using the existing user-message layout.
  		*/
@@ -11,7 +39,7 @@ index 0f920afed649897214130b0613bd4181c46ba173..cc4cdc485ea3cd027c0e0683a69f2a96
  			const { text, attachments, extraBlocks, referenceLabels = EMPTY_LABELS } = content;
  			const compactImages = attachments.length > 1;
  			const truncated = (total) => t("json.truncated", { total });
-@@ -9273,7 +9273,11 @@ window.__ModuleLoader__.load({
+@@ -9273,7 +9278,11 @@
  							loadImage,
  							align: "end",
  							compact: compactImages
@@ -24,7 +52,7 @@ index 0f920afed649897214130b0613bd4181c46ba173..cc4cdc485ea3cd027c0e0683a69f2a96
  							className: MessageItem_module_css_default.fileCard,
  							title: attachment.file.name,
  							children: [(0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.FileTypeIcon, {
-@@ -15268,6 +15272,7 @@ window.__ModuleLoader__.load({
+@@ -15268,6 +15277,7 @@
  				name: "conversation.chat.user.content",
  				scope: "session",
  				locale: NS,

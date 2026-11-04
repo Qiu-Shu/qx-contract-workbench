@@ -160,6 +160,26 @@ def generate_document_from_template(template_id:str,filename:str,data:dict,autho
     return generate_template_document(store,template_id,filename,data,author)
 
 
+@mcp.tool()
+@friendly_errors
+def inspect_custom_word_template(path:str)->dict:
+    """读取用户工作区DOCX空白模板的变量名及source_sha256；保留页眉、样式。仅支持{{ 字段名 }}。
+    模板固定正文也会保留，应先核对不是其他案件样例；拒绝外链、宏与可执行模板表达式。
+    """
+    from custom_word_template import inspect_custom_word_template as inspect
+    return inspect(store,path)
+
+
+@mcp.tool()
+@friendly_errors
+def render_custom_word_template(path:str,filename:str,data:dict,source_sha256:str)->dict:
+    """用已确认字段另存律所Word模板。先inspect获取版本；只填字符串、数字或布尔值，缺失不猜。
+    不覆盖原模板；静态正文不会自动清除，须先核对其中姓名/金额/事实。产物仍是待核草稿。
+    """
+    from custom_word_template import render_custom_word_template as render
+    return render(store,path,filename,data,source_sha256=source_sha256)
+
+
 def main():
     global store
     parser=argparse.ArgumentParser();parser.add_argument('--workspace',default=str(DEFAULT_WORKSPACE))

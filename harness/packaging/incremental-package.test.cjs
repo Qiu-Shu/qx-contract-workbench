@@ -1,0 +1,30 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs/promises');
+const path=require('node:path');
+const os=require('node:os');
+
+test('builds a changes-only directory patch and leaves both release trees untouched',async()=>{
+  const {prepareIncrementalPackage}=require('./incremental-package.cjs');
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'qx-incremental-package-'));
+  const oldDir=path.join(root,'旧版'),newDir=path.join(root,'新版');
+  await fs.mkdir(path.join(oldDir,'resources'),{recursive:true});
+  await fs.mkdir(path.join(newDir,'resources'),{recursive:true});
+  await fs.writeFile(path.join(oldDir,'resources/app.asar'),'old application');
+  await fs.writeFile(path.join(newDir,'resources/app.asar'),'new application');
+  await fs.writeFile(path.join(oldDir,'删除.txt'),'deleted');
+  await fs.writeFile(path.join(newDir,'新增.txt'),'added');
+  for(const dir of [oldDir,newDir])await fs.writeFile(path.join(dir,'不变.txt'),'retained');
+  const before=await fs.stat(path.join(oldDir,'不变.txt'));
+  const toolsDir=path.resolve(__dirname,'../.local/install-speed-check/hdiff-proof/vendor-v5.1.3/windows64');
+  const output=path.join(root,'package');
+  const result=await prepareIncrementalPackage({oldDir,newDir,fromVersion:'0.2.6',toVersion:'0.2.7',output,toolsDir});
+  const plan=JSON.parse(await fs.readFile(result.planFile,'utf8'));
+  assert.deepEqual(plan.changes.map(v=>v.path).sort(),['resources/app.asar','删除.txt','新增.txt'].sort());
+  assert.equal(plan.stats.unchangedFiles,1);
+  assert.equal((await fs.stat(path.join(oldDir,'不变.txt'))).mtimeMs,before.mtimeMs);
+  assert.equal(await fs.readFile(path.join(oldDir,'resources/app.asar'),'utf8'),'old application');
+  await assert.rejects(fs.access(path.join(output,'old-changes','不变.txt')));
+  await assert.rejects(fs.access(path.join(output,'new-changes','不变.txt')));
+  assert.ok((await fs.stat(result.patchFile)).size>0);
+});

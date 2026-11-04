@@ -139,7 +139,7 @@ def stage(destination,version='0.2.1'):
     (app/'package.json').write_text(json.dumps({'name':'qunxing-harness-desktop','version':version,'private':True,'description':'AI师兄法律助手平台','author':'AI师兄法律助手平台项目','main':'installed.cjs','dependencies':{'electron-updater':'6.8.11'}}),encoding='utf-8')
     bundle_node([(ROOT/'node_modules/electron-updater','electron-updater')],app)
     for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','plugins/legal-search','plugins/case-memory','desktop/integration']:
-        copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py','ui-check.py'))
+        copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py','ui-check.py','practice_eval_session.py'))
     # Only active WeChat runtime assets; exclude development VSIXs, snapshots and tests.
     copytree(ROOT/'plugins/wechat',payload/'plugins/wechat',('*.vsix','test','tests','docs','scripts','.github','vscode-extension'))
     reader=payload/'bridge/reader.py'
@@ -165,6 +165,7 @@ def stage(destination,version='0.2.1'):
     # This seed contains code/library sources only. Never copy the workspace root.
     seed=payload/'workspace-seed'
     copytree(ROOT/'workspace/legal-library',seed/'legal-library')
+    copytree(ROOT/'config/skill-references',seed/'legal-library/workbench')
     copytree(ROOT/'workspace/.dsh/skills',seed/'.dsh/skills')
     copytree(ROOT/'config/skills',seed/'.dsh/skills')
     instructions=(ROOT/'config/workspace-AGENTS.md').read_text(encoding='utf-8').replace(str(RUNTIME/'node/bin/node.exe').replace('\\','/'),'@APP@/runtime/node.exe')
@@ -173,6 +174,7 @@ def stage(destination,version='0.2.1'):
     shutil.copy2(ROOT/'packaging/case-memory-requirements.lock',payload/'config/case-memory-requirements.lock')
     copytree(ROOT/'config/templates',payload/'config/templates')
     shutil.copy2(ROOT/'packaging/contract-0.2.0-defaults.json',payload/'config/contract-0.2.0-defaults.json')
+    shutil.copy2(ROOT/'config/skill-quality-upgrades.json',payload/'config/skill-quality-upgrades.json')
     (payload/'config/portable.json').write_text(json.dumps(portable_config(),ensure_ascii=False,indent=2),encoding='utf-8')
     pkg=json.loads((ROOT/'.local/dsh-home/profiles/web/package.json').read_text(encoding='utf-8-sig'))
     pkg['dependencies']={'@qunxing/desktop-session':'0.1.0'}

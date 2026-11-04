@@ -15,6 +15,14 @@ description: >-
 
 # tasteskill v2
 
+## 本机法律报告适配（先判断）
+
+法律意见书、审查报告、证据说明和其他以原文/证据为核心的 HTML 阅读文档属于 **报告**，不套下面的营销 page 或业务 app screen 完整流程。优先由 `impeccable` Read 模式组织，本技能仅按需补充排版参考；用户已给内容和版式时直接交付，不再问卷或随机选择视觉方向。
+
+报告不执行营销 `draw`，不以 `lint/inspect` 的图片数、首屏按钮、大hero、动画、两行标题等阈值验收；这些规则不衡量法律报告的质量。不得为消除 `few-pictures`、`focal-point`、`still-page`、`first-action` 等提示补图片、CTA或动效。报告有独立检查：真实内容及出处完整、逐字引文不变、金额日期与限定保留、标题语义清楚、正文对比度、窄屏长文和四列风险表可读、打印分页及表头重复。
+
+默认单文件、内联样式、本地中文字体，遵守已有模板。不得引入外链字体、远程图表或客户资料上传；缺事实就保留待核，不套下文营销样例细节规则，不补金额、案例、评价或统计。只在实际打开/渲染后报告检查结果；缺工具时说明未预览。报告之外的网页和界面仍使用下文原流程。
+
 A page built by a model usually looks like the average of every page the model has seen: a centred
 headline over three lines, a little label above it, a row of icon cards, a soft gradient, a few thin
 rules and a monospace caption. Nothing in it is wrong and nothing in it was decided.

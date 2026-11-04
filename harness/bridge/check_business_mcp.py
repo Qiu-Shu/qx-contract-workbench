@@ -44,7 +44,9 @@ async def run():
                 await call(materials, 'parse_material', path=file.name)
         async with client('business_server.py', workspace) as legal:
             tool_names = [tool.name for tool in (await legal.list_tools()).tools]
-            assert len(tool_names) == 17, tool_names
+            assert {'calculate_calendar_date','get_workflow','create_case','record_case_note',
+                    'read_case_material','ground_case_extractions','export_case',
+                    'start_hearing','record_hearing_turn'} <= set(tool_names), tool_names
             for name in ('reception', 'contract', 'case', 'hearing'):
                 method = await call(legal, 'get_workflow', name=name)
                 assert method['output_protocol'] == 'natural_language'

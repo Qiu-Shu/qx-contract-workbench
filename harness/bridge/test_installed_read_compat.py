@@ -20,7 +20,7 @@ def test_installed_methods_use_seed_without_active_workspace(tmp_path, monkeypat
     shutil.copytree(workflows.SKILLS, seed)
     monkeypatch.setattr(workflows, 'SKILLS', tmp_path / 'config/skills')
     monkeypatch.setattr(workflows, 'PACKAGED_SKILLS', seed, raising=False)
-    for name in ('contract', 'reception', 'case', 'hearing'):
+    for name in ('contract', 'reception', 'case', 'hearing', 'evidence'):
         result = workflows.workflow(name)
         assert result['method'] and result['sources']
         assert result['name'] == name

@@ -1,42 +1,6 @@
 window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
   const React=require('react');
   const h=React.createElement;
-  const capabilities=[
-    {id:'reception',title:'客户接待',description:'梳理来访诉求，准备接待回复',icon:'M4 4h16v11H9l-5 4V4m4 4h8m-8 3h5',prompt:'请协助我接待一位客户，先梳理事情经过、核心诉求和紧急事项，再给出适合发给客户的回复及需要补充的材料清单。信息不足时，先问最关键的问题，不推断尚未确认的事实。\n\n客户情况：'},
-    {id:'contract',title:'合同审查',description:'看清条款风险，形成修改建议',icon:'M14 3H5v18h14V8l-5-5v5h5M8 12h8m-8 4h5',prompt:'请审查我提供的合同，结合我方立场和交易目的，说明关键风险、对应条款及具体修改建议。请保留原合同，另存审查成果；缺少的事实或附件请明确指出。\n\n我方立场与关注事项：'},
-    {id:'case',title:'办案整理',description:'串联事实证据，理清办案思路',icon:'M3 7h7l2 2h9v11H3V7m0 0V4h7l2 3h7v2M7 13h10m-10 3h6',prompt:'请根据我提供的案件材料，整理时间线、争议焦点和证据对应关系，区分已确认事实、各方陈述与待核事项，并列出材料缺口及下一步办案建议。\n\n案件背景与当前目标：'},
-    {id:'hearing',title:'模拟法庭',description:'演练质证攻防，做好庭前准备',icon:'M12 3v17m-6 1h12M4 7h16M6 7l-4 8h8L6 7m12 0-4 8h8l-4-8',prompt:'请围绕我提供的案件开展模拟法庭演练。先确认我方诉讼角色、争议焦点和已有证据，再分角色展开法庭调查、质证与辩论，重点追问薄弱环节，最后给出庭前补强清单。未提供的证据和事实不要编造。\n\n我方角色与案件情况：'}
-  ];
-  function CapabilityCards({session,input,inputActions}){
-    const root=React.useRef(null),frame=React.useRef(0);
-    const [notice,setNotice]=React.useState('');
-    React.useEffect(()=>()=>cancelAnimationFrame(frame.current),[]);
-    React.useEffect(()=>{if(!capabilities.some(item=>input.draft.includes(item.prompt)))setNotice('');},[input.draft]);
-    if(!session.blank)return null;
-    const disabled=input.phase!=='plain';
-    function fill(item){
-      const editor=root.current?.closest('[data-conversation-content]')?.querySelector('[contenteditable="true"][role="textbox"]');
-      if(!editor){setNotice('请先在上方选择工作区，等待输入框就绪后再试。');return;}
-      editor.focus();
-      const range=document.createRange();range.selectNodeContents(editor);range.collapse(false);
-      const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);
-      cancelAnimationFrame(frame.current);
-      // Let the resident editor observe the end caret, then use its guarded undoable insertion API.
-      frame.current=requestAnimationFrame(()=>{
-        if(!root.current?.isConnected||!editor.isConnected)return;
-        if(input.draft.includes(item.prompt)){setNotice('这项提示词已在输入框中，可直接补充。');return;}
-        const span=inputActions.captureInsertion();
-        const inserted=inputActions.insertText((input.draft?'\n\n':'')+item.prompt,{...span,start:span.end});
-        if(inserted){inputActions.persistDraft();setNotice('已填入“'+item.title+'”提示词，补充后即可发送。');}
-        else setNotice('输入内容正在更新，请再点一次卡片。');
-      });
-    }
-    return h('section',{ref:root,className:'qx-capabilities','aria-label':'四大法律服务能力'},
-      h('div',{className:'qx-capability-grid'},capabilities.map(item=>h('button',{key:item.id,type:'button',className:'qx-capability',disabled,'aria-label':item.title+'：填入提示词',onClick:()=>fill(item)},
-        h('span',{className:'qx-capability-top'},h('svg',{width:23,height:23,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.5,strokeLinecap:'round',strokeLinejoin:'round','aria-hidden':true},h('path',{d:item.icon})),h('svg',{className:'qx-capability-arrow',width:17,height:17,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.5,'aria-hidden':true},h('path',{d:'M5 12h14m-5-5 5 5-5 5'}))),
-        h('strong',null,item.title),h('span',{className:'qx-capability-description'},item.description)))),
-      h('p',{className:'qx-capability-hint',role:'status'},notice||'选择一项能力，将提示词填入下方输入框'));
-  }
   // The library view ships in the same registered client bundle as its entry.
   function createKnowledgeView(React){
     const h=React.createElement;
@@ -379,21 +343,6 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       h('details',null,h('summary',null,'查看错误信息'),h('pre',{style:{whiteSpace:'pre-wrap'}},this.state.message))):this.props.children;}
   }
   const styles=`
-    .qx-capabilities{width:100%;padding:12px 16px 4px;box-sizing:border-box;container-type:inline-size}
-    [data-content-phase]:not([data-content-phase="hero"]) .qx-capabilities{display:none}
-    .qx-capability-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-    .qx-capability{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:0;padding:18px 18px 20px;text-align:left;font:inherit;border:0;border-radius:14px;background:var(--dsw-alias-bg-base,#fff);color:var(--dsw-alias-label-primary,#252930);box-shadow:0 3px 14px #172b4d0d,0 1px 3px #172b4d0c;cursor:pointer;transform:translateY(0) scale(1);transition:transform 480ms cubic-bezier(.34,1.7,.42,1),box-shadow 200ms ease-out,background-color 160ms ease-out;touch-action:manipulation}
-    .qx-capability-top{display:flex;align-items:center;justify-content:space-between;color:var(--dsw-alias-state-business-primary,#3f6cdb);margin-bottom:8px}
-    .qx-capability strong{font-size:16px;line-height:24px;font-weight:600}
-    .qx-capability-description{font-size:13px;line-height:21px;color:var(--dsw-alias-label-secondary,#626b78);text-wrap:pretty}
-    .qx-capability-arrow{opacity:.45;transition:opacity 160ms ease-out}
-    .qx-capability:focus-visible{outline:2px solid var(--dsw-alias-state-business-primary,#3f6cdb);outline-offset:4px}
-    @media(hover:hover) and (pointer:fine){.qx-capability:hover:enabled{transform:translateY(-5px) scale(1.035);box-shadow:0 12px 26px #172b4d16,0 3px 8px #172b4d0c;z-index:1}.qx-capability:hover .qx-capability-arrow{opacity:1}}
-    .qx-capability:active:enabled{transform:translateY(-1px) scale(.985);transition-duration:100ms}
-    .qx-capability:disabled{opacity:.5;cursor:default}
-    .qx-capability-hint{min-height:20px;margin:14px 0 0;text-align:center;font-size:12px;line-height:20px;color:var(--dsw-alias-label-secondary,#626b78)}
-    @container(max-width:620px){.qx-capability-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.qx-capability{padding:14px 16px}.qx-capability-top{margin-bottom:2px}}
-    @media(prefers-reduced-motion:reduce){.qx-capability,.qx-capability:hover:enabled,.qx-capability:active:enabled{transform:none;transition:background-color 120ms ease-out,box-shadow 120ms ease-out}}
     [data-slot="sidebar"] nav:has([data-slot="sidebar.panellist"]){display:none}
   .qx-wordmark{font-family:inherit;font-size:16px;font-weight:600;letter-spacing:.02em;white-space:nowrap}
   .qx-brand-compact{display:inline-flex;align-items:center;justify-content:center;flex:none;width:28px;height:34px}
@@ -597,7 +546,13 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
     ctx.slots.inject('sidebar.brand.mark',()=>ctx.slots.register({name:'sidebar.brand.mark',priority:-100},()=>h('span',{className:'qx-brand-compact'},h('img',{className:'qx-brand-logo',src:'/api/qx-brand/logo.png?v=20261103',alt:'群兴律师事务所标识',draggable:false}))));
     ctx.slots.inject('sidebar.brand.name',()=>ctx.slots.register({name:'sidebar.brand.name',priority:-100},()=>h('span',{className:'qx-wordmark'},'AI师兄法律助手平台')));
     ctx.slots.inject('conversation.hero.brand.mark',()=>ctx.slots.register({name:'conversation.hero.brand.mark',priority:-100},()=>null));
-    ctx.slots.inject('conversation.input.dock',()=>ctx.slots.register({name:'conversation.input.dock',id:'qx-capabilities',order:-100},CapabilityCards));
+    ctx.effect(()=>{
+      let dispose,stopped=false;const script=document.createElement('script');script.src='/api/qx-business/client.js';
+      script.onload=()=>{if(!stopped)dispose=window.qxInstallBusiness(ctx,React);};
+      script.onerror=()=>console.warn('业务引导暂未加载，请刷新工作台后重试。');
+      document.head.append(script);
+      return()=>{stopped=true;dispose?.();script.remove();};
+    },'qunxing: guided business conversations');
     ctx.slots.inject('settings.launcher',()=>ctx.slots.register({name:'settings.launcher',priority:-100},()=>null));
     ctx.slots.inject('sidebar.footer.action',()=>ctx.slots.register({name:'sidebar.footer.action',id:'qx-balance',order:100},AccountFooter));
     // A plugin hot reload must not move a window the user is already working in.

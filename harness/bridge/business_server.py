@@ -1,6 +1,8 @@
 """Small persistent legal workflows on the existing local material transport."""
 import argparse
+from datetime import date, timedelta
 from pathlib import Path
+import re
 
 from mcp.server.mcpserver import MCPServer
 from store import MaterialStore
@@ -20,8 +22,31 @@ hearings = None
 
 @mcp.tool()
 @friendly_errors
+def calculate_calendar_date(base_date: str, offset_days: int, rule_source: str) -> dict:
+    """按明确基准日和规则作自然日偏移。提前30日传-30，次日起第15日传15。
+
+    必须提供YYYY-MM-DD基准及规则来源说明，不代选起算事件、不查法、不调整节假日或工作日。
+    基准/期间规则未知时先核实，结果不能直接当已确认的法定期限；不读写任何案件。
+    """
+    if not isinstance(base_date, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', base_date):
+        raise ValueError('请提供已确认的基准日期，格式为YYYY-MM-DD。')
+    if type(offset_days) is not int or not -36600 <= offset_days <= 36600:
+        raise ValueError('自然日偏移必须为-36600至36600之间的整数。')
+    if not isinstance(rule_source, str) or not rule_source.strip() or len(rule_source) > 2000:
+        raise ValueError('请说明本次天数及起算口径的来源，未知规则不能由计算器推定。')
+    try:
+        result = date.fromisoformat(base_date) + timedelta(days=offset_days)
+    except (ValueError, OverflowError):
+        raise ValueError('日期不存在或结果超出可表示范围。') from None
+    return {'base_date': base_date, 'offset_days': offset_days, 'result_date': result.isoformat(),
+            'rule_source': rule_source.strip(), 'rule_verified': False, 'holiday_adjusted': False,
+            'scope': '仅核对自然日算术；法律适用、起算事实和节假日顺延须另行核实。'}
+
+
+@mcp.tool()
+@friendly_errors
 def get_workflow(name: str) -> dict:
-    """按需读取接待reception、合同contract、办案case、庭审hearing方法与实际来源；不调用模型。"""
+    """按需读取reception/contract/case/hearing/evidence方法与来源；不调用模型。"""
     return workflow(name)
 
 
@@ -191,6 +216,66 @@ def record_hearing_turn(hearing_id: str, stage: str, role: str, text: str,
 def get_hearing_role_context(hearing_id: str, role: str) -> dict:
     """生成指定角色的目标、材料版本与已发生发言摘要；供定向追问，不声称同模型角色上下文独立。"""
     return hearings.role_context(hearing_id, role)
+
+
+@mcp.tool()
+@friendly_errors
+def ground_case_extractions(case_id: str, path: str, source_sha256: str,
+                            chunk: int, extractions: list[dict]) -> dict:
+    """用本机LangExtract核对本案摘录出处，不另调模型。先read_case_material获取sha256和ordinal。
+
+    extractions每项仅label、quote逐字原文，最多30项；返回页/片段/字符位置及matched/unmatched/ambiguous。
+    不接受无出处事实，不做法律认定，不自动保存；未匹配或重复原句请回读补充上下文。
+    """
+    from grounded_extraction import ground_case_extractions as ground
+    return ground(cases, case_id, path, source_sha256, chunk, extractions)
+
+
+@mcp.tool()
+@friendly_errors
+def save_evidence_analysis(case_id: str, issues: list[dict], request_id: str = '', supersedes: str = '') -> dict:
+    """保存本案证据分析。每项proposition、finding_kind(material_statement/inference/unknown)、assessment、supporting/opposing列表、unknown/supplement文字列表、admissibility。
+
+    材料项statement/speaker/carrier/citations；admissibility有authenticity/legality/relevance待核问题列表。
+    引用必须本案path/quote，可带sha256/chunk/start/end，保留定位失败状态。不将引用匹配认定为法律事实；更正用supersedes。
+    """
+    from evidence_analysis import save_evidence_analysis as save
+    return save(cases, case_id, issues, request_id, supersedes)
+
+
+@mcp.tool()
+@friendly_errors
+def generate_litigation_document(case_id: str, document_type: str, filename: str, data: dict) -> dict:
+    """生成真实Word正文草稿及独立内部来源稿，不发出/提交。类型civil_complaint/civil_defense/representation/evidence_list/cross_examination/labor_arbitration/lawyer_letter。
+
+    data可含parties[{role,text,citations}]、requests/facts[{heading,text,citations}]、sections[{heading,text,citations}]，title/authority/case_number/signatory/date；律师函mandate{client,issuer,recipient,authorized,citations}。
+    事实与理由及其分节放facts，sections仅其他章节；heading可省略。不要留空facts而把事实全放sections。
+    未知保留待核；引用必须本案材料，工作草稿不作证据；不冒称授权、签署或已完成审查。只向用户展示正文，内部稿单列。
+    """
+    from litigation_documents import generate_litigation_document as generate
+    return generate(cases, case_id, document_type, filename, data)
+
+
+@mcp.tool()
+@friendly_errors
+def save_employment_review(case_id: str, stage: str, findings: list[dict], request_id: str = '', supersedes: str = '') -> dict:
+    """追加劳动用工审查，stage=hiring/change/termination/dispute。
+
+    findings每项fact/basis/source/risk/action文字，另可topic/pending/citations。未知事实保留待核，不从办公室开业等日期猜实际解除日。
+    引用按本案核对；具体法律适用和劳动关系状态由承办人复核。更正仅明确要求时用supersedes。
+    """
+    from employment_review import save_employment_review as save
+    return save(cases, case_id, stage, findings, request_id, supersedes)
+
+
+@mcp.tool()
+@friendly_errors
+def calculate_employment_amount(base: str, years: str = '1', multiplier: str = '1', assumptions: str = '') -> dict:
+    """精确计算已明确的基数×年限×倍数，参数为非负十进制字符串，assumptions注明情景条件。
+    只做算术，不认定N/2N适用，不推算工龄/工资基数/封顶；工资、补偿、赔偿、代通知金分别核定。
+    """
+    from employment_review import calculate_employment_amount as calculate
+    return calculate(base, years, multiplier, assumptions)
 
 
 def main():

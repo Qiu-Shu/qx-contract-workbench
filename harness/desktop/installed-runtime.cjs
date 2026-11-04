@@ -6,7 +6,7 @@ const {randomBytes}=require('node:crypto');
 const {spawn}=require('node:child_process');
 const {createSupervisor,createEventLog}=require('./host-recovery.cjs');
 const {createCaseMemoryRuntime}=require('./case-memory-runtime.cjs');
-const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledLegalSearch,migrateInstalledCaseMemory}=require('./installed-migrations.cjs');
+const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory}=require('./installed-migrations.cjs');
 
 function redactedLines(secret,write){
   let pending='',dropping=false;
@@ -48,6 +48,7 @@ function initialize(payload,data){
   migrateInstalledModelRecovery({data,payload,portableConfig});
   migrateInstalledContract({data,payload});
   migrateInstalledSkillFixes({data,payload});
+  migrateInstalledSkillQuality({data,payload,portableConfig,seedInstructions:transform(fs.readFileSync(path.join(payload,'workspace-seed/AGENTS.md'),'utf8'))});
   const pkg=JSON.parse(fs.readFileSync(path.join(payload,'config/profile-package.json'),'utf8'));
   fs.writeFileSync(path.join(profile,'package.json'),JSON.stringify(pkg,null,2));
   fs.copyFileSync(path.join(payload,'config/profile-cordis.yml'),path.join(profile,'cordis.yml'));

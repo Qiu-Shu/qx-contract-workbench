@@ -1,0 +1,1248 @@
+{
+  "version": 2,
+  "originalBatchCount": 91,
+  "dependencyCount": 1,
+  "skills": [
+    {
+      "name": "legal-zh-ai-governance-ai-inventory",
+      "action": "disable",
+      "reason": "助手判读，仅核合成输入与输出的一致性及最小可用性，非人工/律师认证。旧题合同状态已分开，可用；新题将给定“供应商说它仅提供软件，工厂承担全部义务”误引为供应商“承担全部义务”，改变责任陈述主体。属重复事实归属失真，建议停用两类入口；不据此判断实际法律责任。",
+      "beforeSha256": "ee24236f4bc0acff46b98f82eb64fce1735cf08792c77058637ac375139d7e2f",
+      "afterSha256": "53fc2ec9333b145249fcef4d2ad12056eee4ae1c4b53f225df8af6e41f9d120e",
+      "criticalChecks": [
+        "业务角色不等于法定角色或免责",
+        "技术类型与监管类别未知时不预填"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "cc554127fed3942d1b50a6a84f8ba279b0728dce1a6c30b61741262a2cb93da0"
+    },
+    {
+      "name": "legal-zh-ai-governance-aia-generation",
+      "action": "disable",
+      "reason": "助手判读，仅核合成输入与输出的一致性及最小可用性，非人工/律师认证。旧题仍写“控制措施均未实施”“全面评估未启动”，材料只缺实施和评估状态信息；新题四栏与权限状态正确，但两套未同时过。重复未知转否定事实，建议停用。",
+      "beforeSha256": "69c95c14d60f53000ee0479839692a3a3f31580d5645814f1cbe2af81b06096d",
+      "afterSha256": "00fc72c184da4b817c811829c7dfe6eacd96e3337adb3a83af96de8de26f5c62",
+      "criticalChecks": [
+        "问答不推定生成式、员工不推定全为成年人",
+        "快速轨不生成监管低风险或批准结论"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "4e20a48c14037fa3f95e31062ff7a2067752093b6e8ca96741e11b3bb08cdf04"
+    },
+    {
+      "name": "legal-zh-ai-governance-customize",
+      "action": "merge",
+      "reason": "保留共享practice-context路由，以字段白名单和最小差异替换宽泛领域问卷，避免风格修改夹带制度变更。",
+      "beforeSha256": "cb5345353eb54b4e1eb03f7f828ce94ad23c39a2f68c3619add281aacc930aac",
+      "afterSha256": "485db217c957ad85211e55ac7f93b127ae4b0fac5ae38b2ff5afacd720946390",
+      "criticalChecks": [
+        "只改用户指定字段",
+        "无旧配置标未知而非默认",
+        "不把业务负责人或事实变成配置权限"
+      ],
+      "replacement": "legal-library/workbench/practice-context.md"
+    },
+    {
+      "name": "legal-zh-ai-governance-matter-workspace",
+      "action": "merge",
+      "reason": "移除重复的旧文件型事项管理，以现有案件工作流承接并保留本领域事实字段；修复无依据默认值。",
+      "beforeSha256": "f67526b469f1e5d339e421edf12bc8c355e7c0793d4df0363a30b29be4272cf8",
+      "afterSha256": "42c91c7fbdabf0801cc183e5388b0f7f1254773b5adfab426c03e24b2d4605d2",
+      "criticalChecks": [
+        "合并qx-case-work且保留领域字段",
+        "不设置默认客户、保密等级或无关联事项",
+        "不虚构旧文件系统和全局活跃指针"
+      ],
+      "replacement": "qx-case-work"
+    },
+    {
+      "name": "legal-zh-ai-governance-policy-monitor",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "7e44f1b925db702fbbec3ac6241badd985d1b41fb645265a920d628f30927aab",
+      "afterSha256": "439c7d77896f79e713416e2361aba068c8eafe3db10b67aeb7897dff714624f8",
+      "criticalChecks": [
+        "缺政策原文时不宣称已覆盖或遗漏",
+        "建议文案不虚报能力或新上线红线"
+      ]
+    },
+    {
+      "name": "legal-zh-ai-governance-reg-gap-analysis",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "9f48850b5ff2e26261b736b3f8913e72c7274114a788bcf952ba263b6db97fbb",
+      "afterSha256": "488fb1c3cf801058a11e5998ce6d293dd1859aac570ce7aa9eedeb76dfd08b19",
+      "criticalChecks": [
+        "无要求或现状原文不定差距程度",
+        "内部使用不自动豁免伦理或其他制度"
+      ]
+    },
+    {
+      "name": "legal-zh-ai-governance-use-case-triage",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "ded5a1e05052162d2bf42954be3afb405005e64b576bce1b534712f6087a74e4",
+      "afterSha256": "4615acb67d36b93678d7b37b2d0e6b11985ea479c997ebebc9ee0ab6618f3802",
+      "criticalChecks": [
+        "未查询不等于无匹配",
+        "红线未知不写否且不以内部使用排除危害"
+      ]
+    },
+    {
+      "name": "legal-zh-ai-governance-vendor-ai-review",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "1fa6e5174be59ed243de50dc79bc178389cd62a8f67490a76c3e549a6b059555",
+      "afterSha256": "8a5e7b8bd8bb1615d3457038d211e46b96d93f8be601a8ebb0e38f5fbe7f5355",
+      "criticalChecks": [
+        "拟议条款不升级为合同事实",
+        "不推定SaaS、不虚构固定通知期或核准"
+      ]
+    },
+    {
+      "name": "legal-zh-ip-cease-desist",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "50be65f5e1bf3d84b9a97749126ee980c6f12237df6d17f693a9dd7fb1fc0de4",
+      "afterSha256": "5d9eb171e78cb55caf5908b82cfa01ff64e5ab90b98cc02b963847b0ce8da9e1",
+      "criticalChecks": [
+        "法律依据未知不填具体条号",
+        "权利资格与被控行为未证不作侵权断言"
+      ]
+    },
+    {
+      "name": "legal-zh-ip-clearance",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "927dd78e9c4d8f4a0f7f5aa33caa86cac0c141e15d93ce836411710d481eb495",
+      "afterSha256": "7baabab44838b451a4c1f5a0bbe2c5b147cb805abe304fda8cddaa86a961369f",
+      "criticalChecks": [
+        "无来源不补法条",
+        "无查询不报无冲突"
+      ]
+    },
+    {
+      "name": "legal-zh-ip-invention-intake",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "0a3ee6cd8cd6d186de86279fa789faa740c1218597541d89409bf34c790cba71",
+      "afterSha256": "17b2613a18fb9c965f6e8bc7d6c176a4da1c2390969f3040d542c12b8672c017",
+      "criticalChecks": [
+        "未核公开例外不补期限数字",
+        "提交日不等于公开或申请日"
+      ]
+    },
+    {
+      "name": "legal-zh-ip-ip-clause-review",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "421245d02b390fe61fed113eac94c9641c93e5e2889f3e871df5a48ad283ac47",
+      "afterSha256": "8cce6b5877c5164b8be07e4dda64f65b063870f503efd2303929e716de6fd613",
+      "criticalChecks": [
+        "无合同不认定无书面依据",
+        "候选条款不写成无条件强制方案"
+      ]
+    },
+    {
+      "name": "legal-zh-ip-matter-workspace",
+      "action": "merge",
+      "reason": "移除重复的旧文件型事项管理，以现有案件工作流承接并保留本领域事实字段；修复无依据默认值。",
+      "beforeSha256": "b9c596ee66f40c1a7d94dfe266a273f0203608e6d2cd3c0520498428093e1c06",
+      "afterSha256": "80b2718141ea596517a62a2f30733e2d4e60c094ead8f7013513708cc6bd5b68",
+      "criticalChecks": [
+        "合并qx-case-work且保留领域字段",
+        "不设置默认客户、保密等级或无关联事项",
+        "不虚构旧文件系统和全局活跃指针"
+      ],
+      "replacement": "qx-case-work"
+    },
+    {
+      "name": "legal-zh-ip-oss-review",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "5ec281fa7d8100a8af51e3d6418a9889692227f0552718f725e66c774e488a87",
+      "afterSha256": "e8a251dc888d5e5fd9eaa26364414a399262a41d1d1755bf22194c8dc06c0344",
+      "criticalChecks": [
+        "MIT等标签也不能自动放行",
+        "版本和使用未明不预设义务兼容性"
+      ]
+    },
+    {
+      "name": "legal-zh-ip-portfolio",
+      "action": "disable",
+      "reason": "助手判读，仅核合成输入与输出的一致性及最小可用性，非人工/律师认证。旧题在权利主张者栏填“甲公司（开发产品P）”，但甲开发产品/员工提交均不证明甲已经提出权利主张，重复把业务主体映射到权利身份。新题主要归属与期限核验可用，但商标受理回执事实过度待核、客户名单“无固定期限基础”仍宜保留待核。建议停用。",
+      "beforeSha256": "35f9ba99aec7a94a5551af8f5255b5bf72adbe939d4d1b5823f91a70df2cb3e1",
+      "afterSha256": "e8c1e9038d4a2543dbd450c69679767636b2564bfbc6a0a65e093918dce94ddd",
+      "criticalChecks": [
+        "主张方式未知不写口头",
+        "基础日期缺失不计算期限"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "9525916bf14438da096a9aeaeb30c9c1ea40dd6de2ea28b166953ceeffb00302"
+    },
+    {
+      "name": "legal-zh-ip-takedown",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "df9d304fddc09ee8040a690710c59b7ed7066a54e33e058e0085d7424010bb83",
+      "afterSha256": "da4b3718241e525544d0479d4a52c50fd3812fd6558d473bfc3e45ea118efca6",
+      "criticalChecks": [
+        "不移植合理使用或司法管辖机制",
+        "未知法条责任期限不补造",
+        "未核权属和授权不预填确信声明"
+      ]
+    },
+    {
+      "name": "legal-zh-privacy-dpa-review",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "1025044eb9ac2167fecd1b30baf9fbc0cfe37302120b891f36d08fc065436146",
+      "afterSha256": "469671c77476e841b421458a5c3f35376c2a1c146ca0fb0b44eb014a0dd5f853",
+      "criticalChecks": [
+        "未明确不改写为无条款",
+        "位置未知不认定出境机制缺失即高风险"
+      ]
+    },
+    {
+      "name": "legal-zh-privacy-matter-workspace",
+      "action": "disable",
+      "reason": "助手判读，仅核合成输入与输出的一致性及最小可用性，非人工/律师认证。旧题评估状态改正为未知，却再次把甲公司填为委托客户，原材料没有委托关系；新题正确。实际评测输入会预载共享目标，不能单独归因原适配正文；组合入口仍重复事实身份错误，建议停用该专业别名，保留核心qx-case-work直接入口。",
+      "beforeSha256": "76f56d21b7b97a5ceddbeaf371ecd5e1174b302aac3b62d7fd0698f01d7eb9d0",
+      "afterSha256": "b0f910b6b006ab1795bf1bdd282854bc6c2317f700b5e615aaecb4f2ce93d3d6",
+      "criticalChecks": [
+        "合并qx-case-work且保留领域字段",
+        "不设置默认客户、保密等级或无关联事项",
+        "不虚构旧文件系统和全局活跃指针"
+      ],
+      "priorAction": "merge",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "d5b098b352335c05d96c52f2848f06b8157987c9d25302aa79b2e2fb84ffa4ba"
+    },
+    {
+      "name": "legal-zh-privacy-pia-generation",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "02caee369914c71d8ace1cf964fb6f89fbae16cdba275c0daa9eb860b3f2c0e6",
+      "afterSha256": "dd23624ed2de0f0000b27ed10e47cdefbad3de0e0dd26b389122f1207ebc2bbb",
+      "criticalChecks": [
+        "未知原告知不认定超目的",
+        "未知退出机制不认定不存在",
+        "草稿不作附条件批准"
+      ]
+    },
+    {
+      "name": "legal-zh-privacy-policy-monitor",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "58a75d3b6473b1c7d61246a7102153e4a931e445e056dee1fafdb22312237582",
+      "afterSha256": "22b36b4ef7207eabc42f68de19e1a7792f8467bef0903515f6e2cdf087c57176",
+      "criticalChecks": [
+        "假设规则不等于公司政策",
+        "无公司原文不判已覆盖或遗漏"
+      ]
+    },
+    {
+      "name": "legal-zh-privacy-reg-gap-analysis",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "a44ea717a0bd14426242ffec9c310634521d6b2c75f9460b9ef5a69a888d0dcf",
+      "afterSha256": "72f4157384237c2d38863314bdf9a75cbc2c5d2db270ab3ef7fc27c963eff56a",
+      "criticalChecks": [
+        "规则外建议不算该规则缺口",
+        "未见告知不等于部分完成"
+      ]
+    },
+    {
+      "name": "legal-zh-product-customize",
+      "action": "merge",
+      "reason": "保留共享practice-context路由，以字段白名单和最小差异替换宽泛领域问卷，避免风格修改夹带制度变更。",
+      "beforeSha256": "841b15fbf329455f4fc7b738590a51220d8705272518d0e57e7d62ee386ab2e0",
+      "afterSha256": "bd12ff55970e20ad5bf9d99b5f54ac312903002c1ae3833429aa694b8d70b4b0",
+      "criticalChecks": [
+        "只改用户指定字段",
+        "无旧配置标未知而非默认",
+        "不把业务负责人或事实变成配置权限"
+      ],
+      "replacement": "legal-library/workbench/practice-context.md"
+    },
+    {
+      "name": "legal-zh-product-feature-risk-assessment",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "4018872407e951e500f4546c8739121d76edf051f5054bd0dd1bc07dcf574771",
+      "afterSha256": "aa4030d92db979fb52c163f6663944e6410bccb4dd179cf53b9fff75637960b3",
+      "criticalChecks": [
+        "未知用户和供应商信息不定具体概率",
+        "优先级与法定等级及概率区分"
+      ]
+    },
+    {
+      "name": "legal-zh-product-launch-review",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "e3efd666d48b177c9a447f43fc0ba00f8ae2ef7ba946c176c769621a93014b11",
+      "afterSha256": "f97f570541940c2d0671b66852f3d868957a4e9ce7ffc5376fcb5cb117bef04b",
+      "criticalChecks": [
+        "无规则原文不填年龄阈值或义务",
+        "概念审查不等于上线审批"
+      ]
+    },
+    {
+      "name": "legal-zh-product-marketing-claims-review",
+      "action": "repair",
+      "reason": "重写专业输入、证据判断及输出结构，消除实际基线中的事实升级、规则越界或未经授权结论；保留有效业务范围。",
+      "beforeSha256": "40dba6258aa160712f674c6962bda38b0dc13665b93bc97dee651ccd52555528",
+      "afterSha256": "11afac3e46365c8154dc4eeef7d4e3e80056800ccd5c1590ef42cf91a2a4149f",
+      "criticalChecks": [
+        "不作合规宣传一概禁止或必然违约断言",
+        "替代文案不添加未知技术事实"
+      ]
+    },
+    {
+      "name": "legal-zh-product-matter-workspace",
+      "action": "merge",
+      "reason": "移除重复的旧文件型事项管理，以现有案件工作流承接并保留本领域事实字段；修复无依据默认值。",
+      "beforeSha256": "5989e4847409ae902604756d8a71374e9d68d0c4b580f216cef7193159d9afac",
+      "afterSha256": "0ed76d9b5c2b83a31480b10c4a9c62f5f458c1fad6ac42dfdc6e86df0e19ad1c",
+      "criticalChecks": [
+        "合并qx-case-work且保留领域字段",
+        "不设置默认客户、保密等级或无关联事项",
+        "不虚构旧文件系统和全局活跃指针"
+      ],
+      "replacement": "qx-case-work"
+    },
+    {
+      "name": "legal-zh-regulatory-comments",
+      "action": "disable",
+      "reason": "原双题通过后，移除停用依赖的末次复核将没有提供决策记录写成“未提交、不提交、放弃均未发生”，把未知决策状态转为否定事实。新题正确，但两题未同时达标，停用此入口。",
+      "beforeSha256": "61ae44680e521623be971d3cc0735d6f9d70a6d11e34a22502d406d8b5559e9b",
+      "afterSha256": "f501426b8072462469cfd52c8c878f3b5bdaf1be0f2f9639866933332e79d0c2",
+      "criticalChecks": [
+        "履行通知不转换为征求意见",
+        "履行日期不当意见截止"
+      ],
+      "evaluatedBodySha256": "db8505de3126ec8bf124dfc22178ba9745b3689bf4801be17b3ee022a41d8bf6",
+      "postEvaluationRouteChange": {
+        "from": "并转 legal-zh-regulatory-gap-surfacer",
+        "to": "并由 qx-case-work 整理已确认要求、材料状态和待办",
+        "validation": "Pending official-tool route verification; no new legal instructions."
+      },
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "2de095926e18fc4c733573c0cc0176e2a236ee3d1ed4b4b8444ba10ef3f5d6ac"
+    },
+    {
+      "name": "legal-zh-regulatory-customize",
+      "action": "merge",
+      "reason": "保留共享practice-context路由，以字段白名单和最小差异替换宽泛领域问卷，避免风格修改夹带制度变更。",
+      "beforeSha256": "2f49c2b28c2c5dea76ef32adfb5c81b1eb86e66336ab13d2a631dbd0558bf400",
+      "afterSha256": "0e23a71c0a5cba1af090fb8f805a67ac5968636dd4508203da29b0c19946041d",
+      "criticalChecks": [
+        "只改用户指定字段",
+        "无旧配置标未知而非默认",
+        "不把业务负责人或事实变成配置权限"
+      ],
+      "replacement": "legal-library/workbench/practice-context.md"
+    },
+    {
+      "name": "legal-zh-regulatory-gap-surfacer",
+      "action": "disable",
+      "reason": "助手判读，仅核合成输入与输出的一致性及最小可用性，非人工/律师认证。旧题制度摘要覆盖边界已改善。新题明确参考2026-11-04、K1期限2026-11-01且源记录open，却仍只报“是否逾期取决于期限来源，待核”，漏掉可从题干直接给出的“按源记录期限已过，实际履行待核”状态，削弱跟踪器核心排序用途。此项是过度待核造成的功能不足，不是错误断言实际未履行，也不是工具缺失；两轮未同时达标，建议停用并用核心事项跟踪替代。",
+      "beforeSha256": "558168794397cccd54ab3400eb8cb914e5f6f9328cac91a0da481206e8f894a0",
+      "afterSha256": "2460c0da0f9d3e39a9abcea8a1834f5f0a529abda75bd600debd50b9eec55a25",
+      "criticalChecks": [
+        "未知要求不借用相邻行同上",
+        "称完成不等于已验收关闭"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "db135a60557aac524eab23ff9c3e23a1fbffc27dcbd88eeb8e5599d9081daffb"
+    },
+    {
+      "name": "legal-zh-regulatory-matter-workspace",
+      "action": "merge",
+      "reason": "移除重复的旧文件型事项管理，以现有案件工作流承接并保留本领域事实字段；修复无依据默认值。",
+      "beforeSha256": "2b9b380f5696ad3c8ea3b8891b16332279a5512571db92c629d155b1303016c4",
+      "afterSha256": "26125b9e023d11afcb568dd762e8f940c65152067deb8697b1cc210d34946f13",
+      "criticalChecks": [
+        "合并qx-case-work且保留领域字段",
+        "不设置默认客户、保密等级或无关联事项",
+        "不虚构旧文件系统和全局活跃指针"
+      ],
+      "replacement": "qx-case-work"
+    },
+    {
+      "name": "legal-zh-regulatory-policy-redraft",
+      "action": "disable",
+      "reason": "助手判读，仅核合成输入与输出的一致性及最小可用性，非人工/律师认证。旧题已分离规则和选项；新题再次在候选正文加入处理前、变更更新与按保留期限保存，并把更新称“必要配套”，还把保存45天错误表述成“政策A第45天”。题干Q仅要求记录用途且仅授权该改动，重复扩写义务和混淆参数来源，建议停用。",
+      "beforeSha256": "e1e1d5b4714167f2392a67f0c7be972d07ba9f4133f1732f0c70e1eb9d34f5f0",
+      "afterSha256": "b2d418d9b5ca3af0c5fb87171d91b131b7d97d9a675b1af39ec1436093491173",
+      "criticalChecks": [
+        "草案新值不默认替代有效值",
+        "无完整原文不捏造删除线原句"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "1534bca52372e0ff82448a997fe67c6488eb4225d414ce8d0fd21e944758de7b"
+    },
+    {
+      "name": "chinese-legal-commercial",
+      "action": "disable",
+      "reason": "邮件与履行证据已分开，但旧题未确认委托立场即定我方为甲方；题干只有甲采购乙，不能等同代理甲。第二轮仍有实质角色补事实，建议停用该总入口，以qx-contract-review明确立场入口替代。",
+      "beforeSha256": "3191acaed76ea815fdb512bcad67a22a0e11827e8c67fb523fb12ed8105cb90e",
+      "afterSha256": "0057747245b38a27033aa26db379bfa2410895166b048db35d550d763b06b971",
+      "criticalChecks": [
+        "供应商免责先恢复承担责任",
+        "立场和变更效力有条件",
+        "保留商事专项路由",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "d3390acf9de86d3a98d49b92d1b89431ae96959f7636ee27dc0c4b5c6be5d9e4",
+      "priorAction": "merge",
+      "fallback": "qx-contract-review",
+      "reviewedBodySha256": "b6e40db30c3316683d554a2be532ada23ff2ab06f7b96af2c4ec305261ed9fb8"
+    },
+    {
+      "name": "chinese-legal-renewal-watcher",
+      "action": "repair",
+      "reason": "合同2026-12-01起一年，首次到期在2027；通知日错误提前一年，且续期一年为未给定假设。",
+      "beforeSha256": "206678764225ff6c2d9855d575803d62c19711ac8af66c6d2d8e0690b24f71bf",
+      "afterSha256": "e5b049c9be3c54f13435a3961dfaefad4296fd33a8b635853c563578e74224bf",
+      "criticalChecks": [
+        "通知基准不误用起始日",
+        "不补续期一年",
+        "日期必须工具计算或待核",
+        "监控需明确请求"
+      ]
+    },
+    {
+      "name": "legal-zh-commercial-amendment-history",
+      "action": "repair",
+      "reason": "将未签字等同未生效过于绝对，未核履行/电子确认/约定生效条件；现行有效表需保留条件。",
+      "beforeSha256": "c455ecb316d7558cca47e8230e919ec5e6a842e6ed101e389eb32100c4ece240",
+      "afterSha256": "c68b86ca2508a6d3a0daf2cdb9db42d7513f807bbd2322dd3c78e65a2a37ee2d",
+      "criticalChecks": [
+        "未签不等于未生效",
+        "文本与效力分表",
+        "未修订不等于现行有效"
+      ]
+    },
+    {
+      "name": "legal-zh-commercial-escalation-flagger",
+      "action": "repair",
+      "reason": "第3条是期限、E2是费用，未签不导致两者冲突；并将示例50万元矩阵用于具体路由。",
+      "beforeSha256": "bc839b7f042a9c83852ad39865a90a564c85b2ede644b3dc07f2f788a8de38b4",
+      "afterSha256": "220e5e9351ae0aef8f5d0e8042786bd7d3cd7260d423f8739a6f691598daa5b3",
+      "criticalChecks": [
+        "移除示例审批阈值",
+        "矩阵缺失仍交付上报文稿",
+        "不同命题不制造冲突",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "13e6053e74807b61633c2104d3abdc29ad332209ee460110cd67b93d5b036b79"
+    },
+    {
+      "name": "legal-zh-commercial-matter-workspace",
+      "action": "merge",
+      "reason": "目录方案和隔离合理，但用旧slash式切换语义，当前运行时是否支持未验证。",
+      "replacement": "qx-case-work",
+      "beforeSha256": "598c58dff98d88e5667c9e6aa13bced0c99d727e22b0e8ce1f25cd9c9e24a83f",
+      "afterSha256": "42a7a87c642242f293ad6453a0c9e8f7814a85ccf89ed97a3bce1144919981f5",
+      "criticalChecks": [
+        "短路由qx-case-work",
+        "保留领域字段",
+        "不猜委托人/解除/保密级别",
+        "删除旧切换命令"
+      ]
+    },
+    {
+      "name": "legal-zh-commercial-review",
+      "action": "disable",
+      "reason": "原双题通过后，停用专项依赖并改接主业务的末次复核出现新实质错误：旧题未确认委托立场仍写我方（采购方）；新题限责条款错误引用付款第三款，且追加保密、知识产权例外，可能扩大我方责任。保留失败证据并停用此重复总入口，一般合同任务使用主业务。",
+      "beforeSha256": "083f2d2e981e14864d9a8bfe60d42bb6746b0518c6a98418cdf643c1c50adbc9",
+      "afterSha256": "311c3d6492974ca34596328719f5dfe35da9e0589d67f8e61a330f69ce8c6a54",
+      "criticalChecks": [
+        "复用qx-contract-review",
+        "不歧义免除故意重大过失责任",
+        "变更效力保留条件"
+      ],
+      "evaluatedBodySha256": "8127313f2eb8ae78df6191f548cfd54f46e9badacddab55e6666babb59955e21",
+      "postEvaluationRouteChange": {
+        "from": "SaaS使用 `legal-zh-commercial-saas-msa-review`",
+        "to": "SaaS继续由 `qx-contract-review` 按主协议、数据条款及附件审查",
+        "validation": "Pending official-tool route verification; no new legal instructions."
+      },
+      "priorAction": "merge",
+      "fallback": "qx-contract-review",
+      "reviewedBodySha256": "fc089694501652cd81e21ba61aa1d4e7795b307c05b0430a7e72be1a49e909d0"
+    },
+    {
+      "name": "legal-zh-commercial-review-proposals",
+      "action": "disable",
+      "reason": "新题没有法律来源，仍直接断言故意重大过失责任不能约定排除；后列法律效果待核不能撤销前文确定规则。与首轮未经核验法律效果同类错误重复，建议停用。",
+      "beforeSha256": "792253abfff3baf4375e18b47cf6a09fa37c93407311b8ed7531520708503aaa",
+      "afterSha256": "0fe2e071ace977875673fbc81a87205b207878af5b80a83b0186784749a83872",
+      "criticalChecks": [
+        "建议不自动写手册",
+        "免责与上限明确分层",
+        "未知文件不冒充搜索结果",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "4218bd445c4797a096ce49aa39597efb54a8470a2361ace079e2c34c2c81bc62",
+      "priorAction": "repair",
+      "fallback": "qx-contract-review",
+      "reviewedBodySha256": "5e3c3acdc4299c6bdeded036ef5ff2411dc6055eccc45fa4867b39b203730ff5"
+    },
+    {
+      "name": "legal-zh-commercial-saas-msa-review",
+      "action": "disable",
+      "reason": "旧题价格误引已修复，但仍把仅摘要未提供数据退出条款写成合同均未约定，制造实质合同缺失。第二轮来源边界仍不可靠，建议停用专项入口，改由核心合同审查明确已读范围。",
+      "beforeSha256": "50addfc05f88f1a0d38a20efd567de54ff7ca1b094f6ee28e900dc29d9c35b70",
+      "afterSha256": "8ac6e70d71e3f17235b50f0953f7144aa91000a9ef4e23419900b19e434f8bec",
+      "criticalChecks": [
+        "保留SaaS七类专项",
+        "供应商免责先恢复责任",
+        "AI匿名化非当然授权",
+        "价格效力有条件",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "496d7d5585da90eb27a59d9047f018cf75429d5ee6d99a2cbf6bc6562b978692",
+      "priorAction": "repair",
+      "fallback": "qx-contract-review",
+      "reviewedBodySha256": "d9ebde96d200c3aa2e59d2878d0932d50a8c368b0b1f7d2c1a77467d3e2472e1"
+    },
+    {
+      "name": "legal-zh-commercial-stakeholder-summary",
+      "action": "repair",
+      "reason": "题设只约定自动续期，未给续期期限，摘要补成再锁一年。",
+      "beforeSha256": "a7afc6186ff649d9332c490812378878b2a9bbe314f7bb013f4dbb5a33871510",
+      "afterSha256": "da0e33bdc7e65ed6ba0e50ccc0b2bd6b529af4753ce5d981f9eba415ad580a84",
+      "criticalChecks": [
+        "商业转述不补续期一年",
+        "保留金额及效力不确定性",
+        "不保证追回上限",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "b360d31dbf4b5e34de95fc33146625f537db9b8c65202fe3996af66dd3c33c56"
+    },
+    {
+      "name": "legal-zh-commercial-vendor-agreement-review",
+      "action": "repair",
+      "reason": "责任实质修改较清楚，但30天改60天可能加重采购方退出负担；15万元较高审批权限无机构依据。",
+      "beforeSha256": "80e27b0879f982241f87fddac717262659f53a101d784d314324d64c5a0eab00",
+      "afterSha256": "a77b39beb35fa9afcecc3a868cce78200759a4cac505afc7fd509ab8421fabf4",
+      "criticalChecks": [
+        "采购通知方向正确",
+        "不硬编码责任上限或审批权限",
+        "保留供应商交付/验收等专项",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "a663103d58c360312022d86874744d8f21e5e112fd99952a1f1d904f3437bf82"
+    },
+    {
+      "name": "legal-zh-corporate-board-minutes",
+      "action": "disable",
+      "reason": "旧题E3只给董事会签到A/B，并未给其董事身份，E1仅给股东身份；本次仍将签到者直接确认为董事并宣称E3支持。此前虚构C/交割条件虽修复，公司记录身份事实仍越界，建议停用。",
+      "beforeSha256": "895c91697cd54bc5a7bf928b60e2b554df21b7a961d80871c854104a43be7350",
+      "afterSha256": "c5b384d15d18bde0976f2a53870d67761f0251b41b0c8deddbbc6c97c689a156",
+      "criticalChecks": [
+        "无记录不造汇报/讨论/批准",
+        "签到不等于投票或缺席",
+        "拟议与已发生分栏",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "ef66e6a1b9242772aa35fdb0d15aa6739e025a934f05dc866a4fe5df3b3bd047",
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "4748771fb24b5eaea7308e4b0eb75d3aa909d8210141f8aa5c8e76f1839483ff"
+    },
+    {
+      "name": "legal-zh-corporate-cold-start-interview",
+      "action": "merge",
+      "reason": "配置草稿大部分有来源，但无上市信息不能直接判公众公司模块不适用。",
+      "replacement": "workspace/legal-library/workbench/practice-context.md",
+      "beforeSha256": "10216f0d5c8a06223476ff30953aac0ab95cec6eeb455547a1f4ece9553690ab",
+      "afterSha256": "4e39694a135766d42471b400b1a107c07f3f0e1e9f67e157afbfac10f2e6a789",
+      "criticalChecks": [
+        "公众身份缺失保持未知",
+        "保留公司配置字段",
+        "共享流程短路由"
+      ]
+    },
+    {
+      "name": "legal-zh-corporate-diligence-issue-extraction",
+      "action": "repair",
+      "reason": "转让方未给，却把全数从A购买及A退出定为事实。",
+      "beforeSha256": "36a6ebdc7f9f8a2b95d593d02961864dc730ce7725f5d6a94d547803abc99a98",
+      "afterSha256": "1406d1195c11d557d223886ba146bb3ba0f2a99ae2da1b7bf9af03886bcb7ef8",
+      "criticalChecks": [
+        "不从收购比例猜卖方或退出",
+        "交易前后分表",
+        "摘要不充原件",
+        "同意触发与交割条件分开"
+      ]
+    },
+    {
+      "name": "legal-zh-corporate-entity-compliance",
+      "action": "repair",
+      "reason": "用户未给年报1-6月规则，模型自行补规则再称测试材料；股权表与计划收购也不必然冲突。",
+      "beforeSha256": "15d266955a8469965372eff912001718ed2e7ecd357bfc434a9071ea90a78429",
+      "afterSha256": "8aa2b7a5d50a93926990eb4b38e9940fcb9aa680fc4c0a71c86787b36b5bae3d",
+      "criticalChecks": [
+        "不创造假设年报规则",
+        "无凭证状态未知",
+        "现有股权与计划不伪造冲突",
+        "保留导出防公式注入"
+      ]
+    },
+    {
+      "name": "legal-zh-corporate-integration-management",
+      "action": "repair",
+      "reason": "无同意书不证明尚未开始接洽；Day30/90同意与主体变更/IP转让等计划也未据交易合同。",
+      "beforeSha256": "80bb591b7a6be2179d68c90a6c11319f23ca33bf30c0e955e088722de2771b24",
+      "afterSha256": "203ef3bcd08359f60111e1f51dffc4caa1b04160d23ef48b136a2df9e1984b27",
+      "criticalChecks": [
+        "无同意书不等于未开始",
+        "股权收购不自动安排主体/IP转让",
+        "无依据不造Day-N截止",
+        "义务与计划分栏",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "771ff14dd8f96e411f198d13ec2e0ba645f3225757bd77a40f387e1550d9bfa3"
+    },
+    {
+      "name": "legal-zh-corporate-written-consent",
+      "action": "disable",
+      "reason": "既定生效条件和未审议事实已修复，但旧题签署表把只见签到/股东身份的A/B直接当董事及签署人，尚缺董事名册与签署资格。第二轮仍生成未核公司身份，建议停用。",
+      "beforeSha256": "01fdb8a7f3b2e622d3cc11cd4733c1f7f46516049b45d09d7329cb1aae9d8d41",
+      "afterSha256": "36dd3c9bf9b102e8b847ec96157d21460bd04e1b64541adf26c50ba9e18715a8",
+      "criticalChecks": [
+        "无先例可起草待核文本",
+        "批准仅为拟决议不造既成事实",
+        "保留签署人和权限核查",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "656c13778d50fda1148a49e24a9dd624d4087207a4b4810e914c9ba7dbdcaccf",
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "01e41b07cdd9525fdb2eb500a83cdc66ed2bd40af28d63705d30d686f9902628"
+    },
+    {
+      "name": "legal-zh-employment-expansion-kickoff",
+      "action": "repair",
+      "reason": "地域未定且规则未给，却把当地实体/分支写成直接用工必备条件，需适用性复核。",
+      "beforeSha256": "ba531e25dd196702706a7ea2d90d7781efc2e505383524c46bb93c33fb3961b3",
+      "afterSha256": "fcab180dea3c18aa13e762003ee5d64f4fca7e1ffc76eb8264f7c87ea88514ac",
+      "criticalChecks": [
+        "直接用工不预设当地实体必要",
+        "分支任务有条件",
+        "员工与新城关系不猜",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "40063ae97d7f8dd94d52ccdba7dc34618387ba75d8b5a6e24e4d0d6594d94e91"
+    },
+    {
+      "name": "legal-zh-employment-expansion-update",
+      "action": "repair",
+      "reason": "未确认需设分支/用工模式就判注册和社保链受阻，应作为条件方案；追踪文件未提供不能当真实搜索结果。",
+      "beforeSha256": "aa756bce98cb7fbfaa75f0446db8ca79bffc2876e11a5f1c3e4959ebf504a09a",
+      "afterSha256": "14a7972fac14550b43a94e3abb54ee7acfab129a3d6f4dff72eab357201ab30a",
+      "criticalChecks": [
+        "未给文件不伪造检索",
+        "状态未知不等于受阻",
+        "用工依赖必须有条件",
+        "日期事件区分"
+      ]
+    },
+    {
+      "name": "legal-zh-employment-handbook-updates",
+      "action": "repair",
+      "reason": "给定材料明确所有法律规则待核且禁联网；仍给出确定程序规则和具体条号。diff及待补清单可用，但法源核验边界未守住。 原文 handbook-updates/SKILL.md:60 已含同一条号与程序要求，观察到原文硬编码内容绕过待核约束；不判断条文现行效力。 本记录为助手逐项判读，仅核合成输入与产出一致性，非全量现行法或律师审查。 未解决项：workspace/legal-library/zh/employment-legal/skills/handbook-updates/SKILL.md:60 原句“《劳动合同法》第4条合规提醒”“须经职工代表大会或者全体职工讨论”。建议在工作台适配层改为“民主程序/公示要求及对应条文：检索现行原文后填写；未核验仅列待核事项”，原库内容保留为参考。",
+      "beforeSha256": "fed7a0647ce381a1119e966f4b806d2c4556dd6387b55ddbc7709c0bed54db36",
+      "afterSha256": "7e4d90008cfaf969cff832a405141ce7b10c4c1142e3758457aa388dea0f4d48",
+      "criticalChecks": [
+        "去硬编码法条程序",
+        "diff仍可用",
+        "个人余额不写通用规则",
+        "未提供不等于违法",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "e0db27bd4660d750a3d6155730f9e69af7a21fc8e4c3d2e04e12cc1f778bc573"
+    },
+    {
+      "name": "legal-zh-employment-hiring-review",
+      "action": "disable",
+      "reason": "旧题服务期未核前提已改为问题；新题仍把竞业另签的单独书面约定作为确定要求，再附待核。未提供法源时预埋程序要求重复，建议停用自动录用专项。",
+      "beforeSha256": "be0d606c8ef75586fbf8d42af216ef197cab91915caa393d83ac18f75028e6a2",
+      "afterSha256": "b2be4953c3296985820b00b296303a406548e3248c7f5c8bf8f9a52c583ee11a",
+      "criticalChecks": [
+        "删除8h40h/2y/签约固定数字",
+        "竞业保密服务期专项完整",
+        "无通知不冒充已读",
+        "未知工作地不猜",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "b0546a0ea7e94faa9ecc0aa49570eecac316454b81c3385e717c2ec5a25f5842",
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "f10ac6ba6d961066f121e319adb825275624aa9e2634f1f205f8ba975749e797"
+    },
+    {
+      "name": "legal-zh-employment-international-expansion",
+      "action": "repair",
+      "reason": "城市差异表和待核处理可用，但国内新城市场景沿用了国际扩张项目，未标明这些跨境项仅在另有境外事实时适用。 本记录为助手逐项判读，仅核合成输入与产出一致性，非全量现行法或律师审查。",
+      "beforeSha256": "fc402e96eadcb9e68473badba6d46dc099a7e68c51320164bfaaa54c64bca12d",
+      "afterSha256": "14d133c5b2722c089be8a2bea2fa2182332a7bc296cf0b106992618e8f63e13c",
+      "criticalChecks": [
+        "境内场景不强塞跨境项",
+        "EOR等按跨境事实启用",
+        "保留跨境比较字段",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "9a74ab884abc08e2aad9ae9f070e360a645cec045bed949c6aed566315ba4860"
+    },
+    {
+      "name": "legal-zh-employment-investigation-memo",
+      "action": "repair",
+      "reason": "现有题干仅是摘要，已取得原件的措辞过强；办公室关联未给定却作否定结论。备忘录及证据不足判断可用，需修正事实层级。 本记录为助手逐项判读，仅核合成输入与产出一致性，非全量现行法或律师审查。",
+      "beforeSha256": "c3efeac68969aebf3a5937872976a235eee838a0b817b603db543ca722dc5489",
+      "afterSha256": "e92e05cb4822f27749f0ca018bf701b63111bfe91872e961af5669660a88c442",
+      "criticalChecks": [
+        "摘要不写已取得原件",
+        "通知日不当调查起始日",
+        "关联未知不写无关",
+        "保密标题不保法律效果"
+      ]
+    },
+    {
+      "name": "legal-zh-employment-investigation-summary",
+      "action": "repair",
+      "reason": "三受众摘要可用且未称核验，但材料无该法源，仍添具体条号作为待核引用；需删除未取源条号或仅列核验事项。 本记录为助手逐项判读，仅核合成输入与产出一致性，非全量现行法或律师审查。",
+      "beforeSha256": "73e69e2d69ace45aca2f007917ff22b8c123908fc9de5ba342dd0b57693571f5",
+      "afterSha256": "66c69b1ad5c86ada1ad5b9e935a5b6fc31ad0ec7288bb2f31f2b7569645bb58d",
+      "criticalChecks": [
+        "无未取源律师法条号",
+        "保持受众差异",
+        "摘要保留来源层级与不确定"
+      ]
+    },
+    {
+      "name": "legal-zh-employment-matter-workspace",
+      "action": "merge",
+      "reason": "目录、切换和不执行界限可用，但未给定委托立场、解除决定、保密级别或关联案件，却填成确定字段；应待确认。归因未证，限本次模型输出。 本记录为助手逐项判读，仅核合成输入与产出一致性，非全量现行法或律师审查。",
+      "replacement": "qx-case-work",
+      "beforeSha256": "8df18f09fb2719eb15dc57dcaed310bf8b0442d89ed48e92929261388e9bbd4c",
+      "afterSha256": "1430c1d69ddf23c8a10b691eb93d9dd8fb7741fb6d129cbfe8095ce3d0b129be",
+      "criticalChecks": [
+        "短路由qx-case-work",
+        "保留领域字段",
+        "不猜委托人/解除/保密级别",
+        "删除旧切换命令",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "856a91d166040bc3e918113fe1ad0f587f6ba24ebc18fc2d3021a2352b740474"
+    },
+    {
+      "name": "legal-zh-employment-policy-drafting",
+      "action": "repair",
+      "reason": "假设材料没有这些法律原文，仍给确定禁止规则及条号；其余制度草稿待补有用，但未取源边界不符合题意。需与skill原文分别核对，不据此宣布现行法判断错误。 原文 policy-drafting/SKILL.md:41 含第4条强制要求，具体条号有可追溯模板来源；其他断言仍属本次推断，未作全面法源认证。 本记录为助手逐项判读，仅核合成输入与产出一致性，非全量现行法或律师审查。 未解决项：workspace/legal-library/zh/employment-legal/skills/policy-drafting/SKILL.md:41 原句“《劳动合同法》第4条强制性要求”“应当经职工代表大会或者全体职工讨论”。建议适配层将确定条号和程序改为待核验规则占位，提供现行原文、适用范围后再写入制度，不把原库参考直接升级为本轮确定法律结论。",
+      "beforeSha256": "3774242db3db2ba77d9c06bb2ddc8c334433734a273d5f7080e4e27124847f1c",
+      "afterSha256": "a00cbd5285deb1b87522a8ec2955d344c5c2f11f7fef1aa0487677184b0271c5",
+      "criticalChecks": [
+        "删除强制法条与未经培训禁止规则",
+        "管理建议不冒充法律",
+        "个人事实不写通用制度",
+        "仍交付制度正文",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "2e4821d5cfa95cf8fe483bdb9a30a76474025ac892ecb3825918b75db3e49750"
+    },
+    {
+      "name": "legal-zh-employment-termination-review",
+      "action": "disable",
+      "reason": "旧题再次预埋未取源补偿倍数，且写“新办公室启用日与解除无关联”，与上轮未核法律规则/缺关联推无关同类错误。新题守住不能抵消旧题实质失败，建议停用。",
+      "beforeSha256": "3d1f07940b06e587735d1ea2fdd40ba423a4f022c430d274fba298f2c21e4171",
+      "afterSha256": "686eb8bba2b0a8895820dda1e5515f11f7d9de81a19d6b1c5b2d706af5a6addc",
+      "criticalChecks": [
+        "解除日期独立输入",
+        "不借办公室日条件测算",
+        "未核补偿规则不计算",
+        "缺证不等未履行",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "fadca9c1d1ec43eefc8c6d7c5f8879138c21582e1e3741640407c1c91ffd84d4",
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "cce0695563c29479a9748b7b4f7a66410d1f1c98e33edae784cb0e232ebd2721"
+    },
+    {
+      "name": "legal-zh-employment-wage-hour-qa",
+      "action": "repair",
+      "reason": "多项待核及缺口处理正确，但无材料将2026-12-01与解除联系；条件化表达减轻误导，仍宜删除或另询解除时间。 本记录为助手逐项判读，仅核合成输入与产出一致性，非全量现行法或律师审查。",
+      "beforeSha256": "9f0095fb9894738e427ed58c3c247b51bfcb092a1856996deb9715694819761d",
+      "afterSha256": "e99e29348c239bbd03c41193e55d51d445a205235e36b002efc20ec4ef2cf81f",
+      "criticalChecks": [
+        "无关日期不条件化冒充解除日",
+        "不硬编码倍率法条",
+        "工资组成与已付款防重复",
+        "实际工作地不猜",
+        "按54份实测反例作一次字段结构补救，待旧题与新题复测"
+      ],
+      "round1AfterSha256": "fa81c3311e5d33cecc9c036f787aa72e353d899641e3c20204e3991eb8c569d3"
+    },
+    {
+      "name": "chinese-legal-law-student",
+      "action": "disable",
+      "reason": "法考、课堂教学总入口不属于当前律所实务工作台，原入口会继续分派已停用教学技能。",
+      "beforeSha256": "07ac29e53e4c399c2daf88885831cffd257d922eda5725b9761f820842862ae3",
+      "afterSha256": "cd16f70f908437ee10327ea05f47a31f81cde4b0fc84be2edb81a5d06703eb17",
+      "criticalChecks": [
+        "disable-model-invocation: true",
+        "user-invocable: false",
+        "当前工作台替代"
+      ]
+    },
+    {
+      "name": "legal-zh-builder-hub-customize",
+      "action": "disable",
+      "reason": "旧 Claude 插件中心的画像与版本管理混合，风格调整可能误改固定 SHA 或安装元数据。",
+      "beforeSha256": "a379ed0d41e45c5649b3c2c3941c1f0871cffdc66d5f527ac0559fc1be02d98c",
+      "afterSha256": "03c8a4dffa68e8f9ad6d253ac75319759f1c3ff49ec05a3a7147ba9a963bd29f",
+      "criticalChecks": [
+        "disable-model-invocation: true",
+        "user-invocable: false",
+        "当前工作台替代"
+      ]
+    },
+    {
+      "name": "legal-zh-builder-hub-uninstall",
+      "action": "disable",
+      "reason": "旧 Claude 卸载机制和安装来源尚未认证适用于本工作台，不能推定由本中心安装。",
+      "beforeSha256": "e0ccedcb8d307948b3312d550cbdc53efde9eda47b32961e9086189fb40435ca",
+      "afterSha256": "ca0842a1b332306a9e06564f1018ddaf4caca9b90ecb73195eea89bcd6bf5e98",
+      "criticalChecks": [
+        "disable-model-invocation: true",
+        "user-invocable: false",
+        "当前工作台替代"
+      ]
+    },
+    {
+      "name": "legal-zh-clinic-client-comms-log",
+      "action": "repair",
+      "reason": "将真实沟通与计划联系分区，去掉默认现在/内部节点作沟通日期和旧全局日志路径。",
+      "beforeSha256": "706db486e5b8fd6ab1a4458afd7a36b74da4b93d69c816e8ee9fe86454679f2c",
+      "afterSha256": "430b077120566366e19005decb49075db2a73fa5b452ec40ca4a5e602d46d4f5",
+      "criticalChecks": [
+        "已发生沟通",
+        "后续待办",
+        "不替代通话/邮件发生日",
+        "起草或导出信函不构成已发送记录"
+      ]
+    },
+    {
+      "name": "legal-zh-clinic-deadlines",
+      "action": "repair",
+      "reason": "将日期登记与期间计算分开，以明确基准日和可计数条目生成预警，不臆测导师日期或完整台账。",
+      "beforeSha256": "4302527689de76c8607c92241e9028f04af8d4baa4fbc039d612cbe5c564d889",
+      "afterSha256": "b6172f07d0835479ad90ff19183661f0854a07409dd3c0ab8408003e143f878b",
+      "criticalChecks": [
+        "评估基准日",
+        "未来7天为1–7天",
+        "未知日期不等于零条",
+        "报告不自动改状态"
+      ]
+    },
+    {
+      "name": "legal-zh-clinic-draft",
+      "action": "disable",
+      "reason": "助手逐项判读合成输入与输出，不是人工/律师认证。新场景把未知状态写成正在执行，并擅自改变说明书随设备提供的履行条件；内部说明不能补救对外正文。",
+      "beforeSha256": "12babd9846bf9934e5bb1a4338947e11fd21b0b607ca98d1bf016d4dc8e090d8",
+      "afterSha256": "f8390ab01d6df66f7541a81e807de5e32b20263479e1812ac9d66ba6be6b8d48",
+      "criticalChecks": [
+        "qx-case-work",
+        "不再执行教学",
+        "“审阅”不扩成必须签字"
+      ],
+      "priorAction": "merge",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "5a9974b33cf4014d3b5aa9b38343d918c98560a5d0530a8dd493cac7334e1a18"
+    },
+    {
+      "name": "legal-zh-clinic-plain-language-letters",
+      "action": "disable",
+      "reason": "自身双题通过，但合并目标 legal-zh-clinic-status 复测未通过并停用，不能保留通向停用目标的入口。",
+      "beforeSha256": "0a66da331b527fcb97f8de7b58c02f61674e3224aef41ced7f7067e069be4e37",
+      "afterSha256": "10789e1402c867667f0d69febfe4d02547fff70a8a242d188a64782c937f878a",
+      "criticalChecks": [
+        "legal-zh-clinic-status",
+        "供审阅的沟通草稿",
+        "权利的影响尚待核实"
+      ],
+      "priorAction": "merge",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "58b7702417f1b15908edf4e604c741e7765eb967a0c09dec850b0ed0a0d03584"
+    },
+    {
+      "name": "legal-zh-clinic-research-start",
+      "action": "repair",
+      "reason": "保留检索路线图，按未提供/未读取/实际检索未命中区分状态，去掉默认读取诊所种子文件。",
+      "beforeSha256": "3945e6d51f812a904c30a3cfe8dd238605ec5af389f6f84387f702fe8d54d1c0",
+      "afterSha256": "0f0759face21e96f56408457d6227ee0d5dfbdbefe55d8293c59843a59bd56a4",
+      "criticalChecks": [
+        "本次未提供",
+        "尚未读取",
+        "实际查过明确范围",
+        "计划检索"
+      ]
+    },
+    {
+      "name": "legal-zh-clinic-semester-handoff",
+      "action": "disable",
+      "reason": "学生离届、学期和导师分配是教学诊所制度，当前律所工作台没有该制度或名册。",
+      "beforeSha256": "dfefc6de9c6fd8dd5ea774522ee750173f9ae836377e32a190e6adc875a1ecc8",
+      "afterSha256": "31301858cb9abd34c4652c6610e8e8148084b3c70e99ce56ac10c0bc99317279",
+      "criticalChecks": [
+        "disable-model-invocation: true",
+        "user-invocable: false",
+        "当前工作台替代"
+      ]
+    },
+    {
+      "name": "legal-zh-clinic-status",
+      "action": "disable",
+      "reason": "助手逐项判读合成输入与输出，不是人工/律师认证。回归仍将未提供登记记录推成尚未登记，与该技能修复的状态边界相同。",
+      "beforeSha256": "bdeeacef1cca8183f45eeae491ec1e93a791fae300cff928868de98686387f1f",
+      "afterSha256": "3fe06e30ac0b9da52670a92e81e63bc1840b4d5cdf9a357a30d946752e7d47e6",
+      "criticalChecks": [
+        "正在进行（实际执行记录）",
+        "拟办",
+        "不能因暂无记录就承诺",
+        "建议动作不是完成事实"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "c1f3c116ab859f395beb345a156c86cf573890a5c41ad95e050c38f2edff0ade"
+    },
+    {
+      "name": "legal-zh-clinic-supervisor-review-queue",
+      "action": "repair",
+      "reason": "保留可用的审阅条目整理，不把缺配置判断成休眠，也不模拟批准或通知。",
+      "beforeSha256": "92c45ce47aef5c0f580af4f69f9dc4f8078a13445929b799a911f7089301d829",
+      "afterSha256": "182a80b275845da725357f17ce7d7648798300bc1b72a92261f553d9bc8b8418",
+      "criticalChecks": [
+        "启用状态未确认",
+        "待审条目草稿",
+        "助手不代替人批准"
+      ]
+    },
+    {
+      "name": "legal-zh-criminal-bail-application",
+      "action": "repair",
+      "reason": "按阶段与措施类型分支处理，不把未知措施日起算羁押，不默认退赔、保证金或随传随到承诺。",
+      "beforeSha256": "1986f6f40fe968e1dbb79c8368790742a97256e9b70b19ce7a2c2ccefd7ffebb",
+      "afterSha256": "339d0c2649a1d337ba7fe01ab31d244bdcb7d0461f2df3172f27fe26ee62e394",
+      "criticalChecks": [
+        "实际羁押起点及凭据",
+        "不能据此计算羁押天数",
+        "待申请人确认",
+        "付款情况未核实"
+      ]
+    },
+    {
+      "name": "legal-zh-criminal-case-analysis",
+      "action": "repair",
+      "reason": "保留供述与客观证据比较，将否定事实、缺件及量刑因素分栏，消除缺付款凭证推断未退赔。",
+      "beforeSha256": "a86d696dee1e5a99e2583cdb0ba01973b7cfea2a703742600f384064d81d20fd",
+      "afterSha256": "7e7ca5849d1fe975a75d93976e3de0938821ea6db8945b20c81d4a269be25139",
+      "criticalChecks": [
+        "不能同时成立的说法",
+        "退赔情况未核实",
+        "定罪证据、量刑材料与程序问题"
+      ]
+    },
+    {
+      "name": "legal-zh-criminal-compliance-non-prosecution",
+      "action": "repair",
+      "reason": "保留整改差距分析，把程序适用性独立待核，不从侦查阶段直接排除合规机制。",
+      "beforeSha256": "5fee9a36c346d528a4590d230f4adc288156c1a55b3b9edfac8b34b96d6971a2",
+      "afterSha256": "fc3d08a568635d61ca7e0ed84332bbcd64a36349abd713731fe6fc7b369c3c17",
+      "criticalChecks": [
+        "整改计划差距表",
+        "程序适用待核表",
+        "不能单凭阶段断言",
+        "不将企业整改写成个人责任自动切割"
+      ]
+    },
+    {
+      "name": "legal-zh-criminal-matter-workspace",
+      "action": "disable",
+      "reason": "助手逐项判读合成输入与输出，不是人工/律师认证。原ID问题修复，但新场景仍在工作区事实字段补造材料来源/形态。",
+      "beforeSha256": "30e7e2126734a1b7e7da3332fd29900f34bd96defd6897ea83d339729a019e92",
+      "afterSha256": "37fa1d3f45ab44b3e869d9ecbc420c163a7c8d6e7461dfb4921319dbcc9ebf3a",
+      "criticalChecks": [
+        "qx-case-work",
+        "明确 case_id",
+        "未知/本次不检索",
+        "家属身份、委托关系、律师授权分别记录"
+      ],
+      "priorAction": "merge",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "6e18b307661df267819a93516d863cf8e5975ab53e6b5966f146c7a95c80b67b"
+    },
+    {
+      "name": "legal-zh-law-student-bar-prep-questions",
+      "action": "disable",
+      "reason": "法考试题生成属于教学备考功能，当前律所实务工作台不支持其课程、训练与学习状态管理。",
+      "beforeSha256": "a612db7e041ac89c890ee6604d75ff421c08add0c0916bddb6804198e6dbc4d6",
+      "afterSha256": "5b829a0d3432811ff20618e4ed33fd33006ede00f8f18a35d1a4aa312d7a99e6",
+      "criticalChecks": [
+        "disable-model-invocation: true",
+        "user-invocable: false",
+        "当前工作台替代"
+      ]
+    },
+    {
+      "name": "legal-zh-law-student-case-brief",
+      "action": "disable",
+      "reason": "助手逐项判读合成输入与输出，不是人工/律师认证。更换为实务摘要后仍扩大假设规则或把材料缺失转为否定事实，教学旧模式也回流。",
+      "beforeSha256": "b7994c4217730fa13e651986870f72fe0e7debf621bb9817634d1898884bca0d",
+      "afterSha256": "d47cb64ba45a6347966d29cedb4b88e5b56ad2cdef17153cedb02d22e422a206",
+      "criticalChecks": [
+        "原技能是课堂引导",
+        "假设案例",
+        "不推定超额交易当然切成",
+        "直接交付"
+      ],
+      "priorAction": "replace",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "cdd55ec2e81e1c0c096ce3a295f5ec0d3b3619c9449aa7ed82edaaec6092107c"
+    },
+    {
+      "name": "legal-zh-law-student-exam-forecast",
+      "action": "disable",
+      "reason": "历年考题与考点预测属于教学备考功能，当前律所实务工作台不支持其课程、训练与学习状态管理。",
+      "beforeSha256": "8a97377e169c0d6580087e59078a1b3fc66cce6028fb1ad79cfb78d9b4715d0c",
+      "afterSha256": "13c84cebb18e92f95809117f01b4b1e8f882afaf5906f75f862ab7e0e7f8c917",
+      "criticalChecks": [
+        "disable-model-invocation: true",
+        "user-invocable: false",
+        "当前工作台替代"
+      ]
+    },
+    {
+      "name": "legal-zh-law-student-flashcards",
+      "action": "disable",
+      "reason": "法条记忆卡片属于教学备考功能，当前律所实务工作台不支持其课程、训练与学习状态管理。",
+      "beforeSha256": "41a6fd700c5684a37ad8f1c2695a1e1fea659b76122e29eb6c6d04ddd970c0db",
+      "afterSha256": "13ae14a219d67eba9256d169ad3f5ff5d8e56a5065e049a468838a41900bbe15",
+      "criticalChecks": [
+        "disable-model-invocation: true",
+        "user-invocable: false",
+        "当前工作台替代"
+      ]
+    },
+    {
+      "name": "legal-zh-law-student-outline-builder",
+      "action": "disable",
+      "reason": "法学课程大纲属于教学备考功能，当前律所实务工作台不支持其课程、训练与学习状态管理。",
+      "beforeSha256": "4fda46f3ec443d55e0e73bf6945ea03b1baf0cab19441cf4709caefcb872a137",
+      "afterSha256": "6ded019bf28bf8e9c2a5331ab22bf5dcddf7ccaec0b79e2813839c91fc8640e6",
+      "criticalChecks": [
+        "disable-model-invocation: true",
+        "user-invocable: false",
+        "当前工作台替代"
+      ]
+    },
+    {
+      "name": "legal-zh-law-student-session",
+      "action": "disable",
+      "reason": "专项教学练习属于教学备考功能，当前律所实务工作台不支持其课程、训练与学习状态管理。",
+      "beforeSha256": "cc4eb22be35943521a55f9da8790ff72b6132ef3cef72387e831fdc0eaf26545",
+      "afterSha256": "a641d515fb9481fc50f8dee66f90cfe58e38d78420a3bf5035736ad333079d96",
+      "criticalChecks": [
+        "disable-model-invocation: true",
+        "user-invocable: false",
+        "当前工作台替代"
+      ]
+    },
+    {
+      "name": "legal-zh-law-student-study-plan",
+      "action": "disable",
+      "reason": "法考学习计划属于教学备考功能，当前律所实务工作台不支持其课程、训练与学习状态管理。",
+      "beforeSha256": "a6695a7d85365f8fac75f705e16e0029662e03c6567a1aebda10b9e7aa08955b",
+      "afterSha256": "21dff36ab8446ad429fe1d06a5ddae70cd591c7b41a14937a046e7c551266a36",
+      "criticalChecks": [
+        "disable-model-invocation: true",
+        "user-invocable: false",
+        "当前工作台替代"
+      ]
+    },
+    {
+      "name": "legal-zh-litigation-brief-section-drafter",
+      "action": "disable",
+      "reason": "助手逐项判读合成输入与输出，不是人工/律师认证。签收认定已修，但实质段落的来源说明仍补造表达媒介，不能当作忠实案卷摘要。",
+      "beforeSha256": "b202e4587c7ac812cbadb989e5120f7891b2ecb7b320bedc95744ba4094179b4",
+      "afterSha256": "9b9f0d8cdcab469ec5d9410e941bff0a1713033b90c7ea5a30a5a0d6cf1d1ba8",
+      "criticalChecks": [
+        "物流签收日是两类记录",
+        "对方主张及回应",
+        "成文日期用明确出具日"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "d311c4acc4b9d87b2680e93b14225dbfde2abea9fe9c55cd36328d3e0014cc21"
+    },
+    {
+      "name": "legal-zh-litigation-claim-chart",
+      "action": "disable",
+      "reason": "助手逐项判读合成输入与输出，不是人工/律师认证。要件表核心的相反证据映射仍混淆不同性质事件，影响补证/论证方向。",
+      "beforeSha256": "67f91f4807f5c0b504edc8e1864897f36654c132b864e1acf82b2d2360f347d8",
+      "afterSha256": "7358d0879508545fcba7170c6935a9c65d7426651e5e61f6fc3bfc0ec55a476d",
+      "criticalChecks": [
+        "单一要件/命题",
+        "合同成立、效力、完整内容分别待核",
+        "从属权利要求展开",
+        "按文本转义"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "829a00e21eaa54edba5e1478b60bfd5ddd2ba4c476828ac957c98ec2f489a712"
+    },
+    {
+      "name": "legal-zh-litigation-demand-draft",
+      "action": "disable",
+      "reason": "助手逐项判读合成输入与输出，不是人工/律师认证。现版仍在对外正文补造受函主体或已成立委托；内部待核不能补救正文的确定陈述。",
+      "beforeSha256": "3db6d199bc37e80cb03435aee46b80e8bef1ea3d8a7a0a5723b6f7a7edbd9a20",
+      "afterSha256": "c3f1eb35b07c93d7a58e5c3b6a0ef4ab95765f7e14e12f91a25250fcc9fadb01",
+      "criticalChecks": [
+        "供审阅的函件正文",
+        "不能改成“4月1日前交货”",
+        "起草不授权外发"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "44a65a5e9b7a5e236b2a181bad63a69881d16b91b2df47dc6f9609eb61a36586"
+    },
+    {
+      "name": "legal-zh-litigation-demand-intake",
+      "action": "disable",
+      "reason": "助手逐项判读合成输入与输出，不是人工/律师认证。授权分栏修复，但缺角色映射时仍按甲乙模板填定发收函方，核心登记不可靠。",
+      "beforeSha256": "7f33a2f937a24040dbd6cc3e4504f6bbb5d11c1b6a92e8db290b6146fe87e20b",
+      "afterSha256": "83158497c2c38c1e63545de39bcf47fd56d8383e3388fa26e0ff5fb7ea29544b",
+      "criticalChecks": [
+        "本次未提供",
+        "不补成口头约定",
+        "待决策事项"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "15875a39b1925d2d7b89d32610fc4dcdc393984ac813b6d0a335d5d087ee5bfe"
+    },
+    {
+      "name": "legal-zh-litigation-demand-received",
+      "action": "repair",
+      "reason": "来函缺失时先承认输入缺口，主张方向固定分栏，避免把我方主张反转成对方来函指控。",
+      "beforeSha256": "c9b814d299162896e54d493678f82f02cb04dfdd01af700a863a422dc1176137",
+      "afterSha256": "e482c9a5da3710479deec52576865ff76c5518796491d5fd62c46ed923b88284",
+      "criticalChecks": [
+        "纠纷材料预分析（来函未提供）",
+        "提出者及来源",
+        "两者不能倒置",
+        "不直接推荐暂搁置/不回复"
+      ]
+    },
+    {
+      "name": "legal-zh-litigation-deposition-prep",
+      "action": "repair",
+      "reason": "先核身份与亲历范围，问题采用开放事实，不填物流职业/中立立场，不以不记得推成不在场。",
+      "beforeSha256": "368c42c1778ac98a17355f6451469d1b0ddf6cc69eebb5530d62fa09e1d6f0e8",
+      "afterSha256": "0e07d50d9402ba7dbcd5a36f35311fa472acee3bacc9dff2bddb754bd3114fdc",
+      "criticalChecks": [
+        "已知身份/关系及来源",
+        "亲眼看到、亲自参与还是从其他途径",
+        "不要求证人认同预写答案"
+      ]
+    },
+    {
+      "name": "legal-zh-litigation-matter-intake",
+      "action": "repair",
+      "reason": "保留登记核心，将身份、利冲、程序、日期事实与法律认定区分，归档复用现工作台。",
+      "beforeSha256": "a0fb4a0f86b5b645c361bbafb56ee4de2bd8e656c37615c123924952201eeb56",
+      "afterSha256": "3b41821e66b9c08a3d7148e78c16ee4054490ca0ae19316d54e10ece5c8a659c",
+      "criticalChecks": [
+        "是否迟延交付待核",
+        "登记日期不是立案日期",
+        "未检索写未检索"
+      ]
+    },
+    {
+      "name": "legal-zh-litigation-matter-workspace",
+      "action": "merge",
+      "reason": "与当前案件工作流重复，移除活跃事项全局切换和旧插件目录管理，统一显式案件ID。",
+      "beforeSha256": "8d4d93fa611cc43087e13c8a10b1fc4df840e03b3482fe69fef8e0aae83067c5",
+      "afterSha256": "f6044f8518bab6e16b91ebba91f0c5b3625cf722b22ddf3ef947009ea40bdc26",
+      "criticalChecks": [
+        "qx-case-work",
+        "明确 case_id",
+        "未知/本次不检索",
+        "家属身份、委托关系、律师授权分别记录"
+      ],
+      "replacement": "qx-case-work"
+    },
+    {
+      "name": "legal-zh-litigation-portfolio-status",
+      "action": "repair",
+      "reason": "基于完整程度和明确时点评估组合统计，不从单案或未知基准日断言零逾期。",
+      "beforeSha256": "6f4c43407fc61ac90d83f98a3e8cce276e3cf8a604e253f136d81f101f81ae41",
+      "afterSha256": "f4235c8f25203265ae2fca90fcad4c0f1a8d31929c6cbb70b16aff3dcca9dffc",
+      "criticalChecks": [
+        "评估基准日及来源",
+        "没有台账不能",
+        "完成状态未知的单列",
+        "覆盖数量与未知数量"
+      ]
+    },
+    {
+      "name": "legal-zh-litigation-privilege-log-review",
+      "action": "disable",
+      "reason": "助手逐项判读合成输入与输出，不是人工/律师认证。程序提交状态仍被补造；新增默认争点过拟合旧题，无法泛化。停止继续加规则，建议停用该独立入口。",
+      "beforeSha256": "5d01055fea923d800662047748079d27b376736681004ace0feb33ee7fb9ebde",
+      "afterSha256": "3fac7aca17df3e1caaf531431626b357d6a45164405eeae2e566c15cec35e1e2",
+      "criticalChecks": [
+        "程序提交状态",
+        "可采性待核",
+        "不等于整体无关联或无证明力",
+        "不代作法院采信决定"
+      ],
+      "priorAction": "repair",
+      "fallback": "qx-case-work",
+      "reviewedBodySha256": "d1197435496e2febb88552f732b2758df3da2d415d856b7f7fc80a0c59c87d8e"
+    },
+    {
+      "name": "legal-zh-litigation-subpoena-triage",
+      "action": "repair",
+      "reason": "先核通知类型与原文，分开关联性、证明力和程序义务，不从日期不清推出异议理由。",
+      "beforeSha256": "ed1b9cf41d3a549c05a3eb31be0e44d501efdf877ddb9574709222de97981c62",
+      "afterSha256": "011bebb8327110893c17c327d897c04cc460655af1d379dc5d2f304a7a9da0a3",
+      "criticalChecks": [
+        "通知未提供",
+        "关联性问材料是否",
+        "不自动构成无关联异议",
+        "起点未知不算确定截止日"
+      ]
+    },
+    {
+      "name": "legal-zh-clinic-form-generation",
+      "action": "disable",
+      "reason": "原91项之外的旧文书生成别名仅转发到已停用的clinic-draft；因目标停用同步关闭，未将它改名保留为另一条自动入口。",
+      "fallback": "qx-case-work",
+      "scope": "dependent-alias-outside-original-91",
+      "beforeSha256": "26b20ffa454a0a0fbd9ceeaf17aac1119dcf40c18214e8ebc75dfb84f136b0ab",
+      "afterSha256": "58497a67dc864a4c3c4175fc99b7c2dd1512fe6056a4f06cf3867de69297b5d9"
+    }
+  ],
+  "scope": "91 reviewed workbench skills plus dependent aliases whose targets were retired."
+}

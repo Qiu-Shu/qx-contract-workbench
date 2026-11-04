@@ -39,10 +39,18 @@ try {
   assert.ok(candidate,'Contract review must be discoverable by its unique name');
   const loaded=await provider.get(candidate,{cwd:workspace});
   assert.equal(loaded.name,name);
-  assert.equal(loaded.invocation.modelInvocable,true);
+  const lifecycle=JSON.parse(await readFile(join(root,'config/skill-lifecycle.json'),'utf8'));
+  const intentionallyDisabled=lifecycle.skills.some(row=>row.name===name&&row.action==='disable');
+  assert.equal(loaded.invocation.modelInvocable,!intentionallyDisabled);
+  if(intentionallyDisabled) assert.equal(loaded.invocation.userInvocable,false);
+  const primary=await provider.get(candidates.find(item=>item.name==='qx-contract-review'),{cwd:workspace});
+  assert.equal(primary.invocation.modelInvocable,true);
+  assert.ok(primary.content.trim());
   const original=await readFile(join(workspace,'legal-library','zh','commercial-legal','skills','review','SKILL.md'),'utf8');
   const originalBody=original.replace(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/,'').trim();
-  assert.ok(loaded.content.endsWith(originalBody),'Loader must return the complete original workflow');
+  const adapted=await readFile(join(workspace,'.dsh/skills',name,'SKILL.md'),'utf8');
+  const adaptedBody=adapted.replace(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/,'').trim();
+  assert.equal(loaded.content.trim(),adaptedBody,'Loader must return the current adapted workflow, without appending retired instructions');
   assert.equal(loaded.resourceBase.kind,'directory');
   const reference=await readFile(join(loaded.resourceBase.path,'references','contract-law-core.md'),'utf8');
   const originalReference=await readFile(join(workspace,'legal-library','zh','commercial-legal','references','contract-law-core.md'),'utf8');
@@ -61,9 +69,10 @@ try {
   assert.deepEqual(warnings,[]);
   const report={status:'passed',providerEntry,workspace,catalogCount:candidates.length,
     addedSkills,
-    scope:'Official filesystem provider discovery, one complete contract skill and six added skill loads; no model calls or claim of all legal workflows executed.',
-    loadedSkill:{name:loaded.name,path:loaded.path,source:loaded.source,modelInvocable:loaded.invocation.modelInvocable,
-      bodyCharacters:loaded.content.length,originalBodyComplete:true,resourceBase:loaded.resourceBase,
+    scope:'Official filesystem provider discovery, preserved contract adapter/source, active primary contract workflow and six helper loads; no model calls or claim of all legal workflows executed.',
+    primaryContractWorkflow:{name:primary.name,modelInvocable:true},
+    loadedSkill:{name:loaded.name,path:loaded.path,source:loaded.source,modelInvocable:loaded.invocation.modelInvocable,intentionallyDisabled,
+      bodyCharacters:loaded.content.length,originalBodyComplete:loaded.content.endsWith(originalBody),adaptedBodyComplete:true,resourceBase:loaded.resourceBase,
       referenceSha256:createHash('sha256').update(reference).digest('hex'),domainContextReadable:true},warnings};
   await mkdir(reportDir,{recursive:true});
   await writeFile(join(reportDir,'report.json'),JSON.stringify(report,null,2)+'\n','utf8');

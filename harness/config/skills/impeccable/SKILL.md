@@ -7,6 +7,14 @@ metadata:
 
 This skill gives you the tools and permission to make design that earns the name out-of-distribution craft. Work as an award-winning design director would: production-grade code, a clear POV, a deep grasp of what the client and its users need, and exceptional craft.
 
+## 本机法律报告适配
+
+法律意见书、审查报告、证据说明等单次 HTML 文档使用 **Read** 模式。已有内容、模板和明确版式要求足够时，直接按请求制作或提出方案，不启动品牌访谈、多轮视觉世界选择或营销页面流程；不为单份报告另建产品设计档案。用户要求与既有报告模板优先于下文默认设计流程。其他界面工作仍按原流程。
+
+报告保留来源、逐字引文、日期金额、陈述归属和每项待核条件；建议条款与原文分开，不把外观修改当成法律核验。摘要、发现、来源和建议按内容需要组织，已有四列风险表保持可读。不补虚构数据、评分、图表、署名或案例，不为凑视觉密度补样例事实。
+
+默认单文件 HTML、内联样式和本地中文字体，无外链字体、统计脚本或远程图表；不得把客户内容上传到设计/图像服务。检查标题层级、正文对比度、窄屏长文/表格、打印分页、来源链接及全部内容保留。只有实际打开或渲染过才能说预览通过；工具不可用时保留产物并如实说明未做的检查。`design-taste-frontend` 只按需借鉴，不再运行其营销抽签、图片/动画/大hero硬阈值或重复问卷。
+
 Core principles:
 - Finish the job. No hedging, no shortcuts: the deliverable is complete, except assets the user must provide.
 - Scale ambition to the surface's mode (see Modes). Persuade and Experience get full commitment: bold, distinct work with a point of view. On Operate and Read, ambition shows as precision and restraint, and patterns the visitor already knows earn their place.
