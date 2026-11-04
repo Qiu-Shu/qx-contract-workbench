@@ -1,0 +1,130 @@
+{
+  "date": "2026-11-04",
+  "scope": "Public legal queries only; no client/case documents",
+  "automatedChecks": {
+    "node": 42,
+    "python": 12,
+    "failed": 0
+  },
+  "realModel": {
+    "completed": true,
+    "queries": [
+      {
+        "query": "site:court.gov.cn 民法典 合同编 通则 司法解释",
+        "status": "success",
+        "attempts": [
+          {
+            "provider": "deepseek",
+            "status": "success"
+          }
+        ],
+        "provider": "deepseek",
+        "truncated": false
+      },
+      {
+        "query": "site:gov.cn 中华人民共和国民法典",
+        "status": "success",
+        "attempts": [
+          {
+            "provider": "deepseek",
+            "status": "success"
+          }
+        ],
+        "provider": "deepseek",
+        "truncated": false
+      },
+      {
+        "query": "site:court.gov.cn 劳动争议 司法解释 二 2025",
+        "status": "success",
+        "attempts": [
+          {
+            "provider": "deepseek",
+            "status": "success"
+          }
+        ],
+        "provider": "deepseek",
+        "truncated": false
+      }
+    ],
+    "savedSources": 29,
+    "toolErrors": 0,
+    "readCalls": 5
+  },
+  "fallbackInitialLiveChecks": [
+    {
+      "query": "site:court.gov.cn 民法典 合同编 通则 司法解释",
+      "httpStatus": 200,
+      "count": 7
+    },
+    {
+      "query": "site:gov.cn 中华人民共和国 民法典",
+      "httpStatus": 200,
+      "count": 7
+    },
+    {
+      "query": "site:court.gov.cn 劳动争议 司法解释 二",
+      "httpStatus": 200,
+      "count": 7
+    }
+  ],
+  "fallbackLaterPackagedRuntimeCheck": {
+    "status": "failed",
+    "attempts": [
+      {
+        "query": "site:court.gov.cn 民法典 合同编 通则 司法解释",
+        "status": "failed",
+        "attempts": [
+          {
+            "provider": "deepseek",
+            "status": "failed",
+            "code": "WEB_PROVIDER_ERROR"
+          },
+          {
+            "provider": "so360",
+            "status": "failed",
+            "code": "CAPTCHA"
+          }
+        ]
+      },
+      {
+        "query": "site:gov.cn 中华人民共和国民法典",
+        "status": "failed",
+        "attempts": [
+          {
+            "provider": "deepseek",
+            "status": "failed",
+            "code": "WEB_PROVIDER_ERROR"
+          },
+          {
+            "provider": "so360",
+            "status": "failed",
+            "code": "COOLDOWN"
+          }
+        ]
+      },
+      {
+        "query": "site:court.gov.cn 劳动争议 司法解释 二 2025",
+        "status": "failed",
+        "attempts": [
+          {
+            "provider": "deepseek",
+            "status": "failed",
+            "code": "WEB_PROVIDER_ERROR"
+          },
+          {
+            "provider": "so360",
+            "status": "failed",
+            "code": "COOLDOWN"
+          }
+        ]
+      }
+    ]
+  },
+  "publication": "local enabled; future package configuration updated; not in sealed v0.2.5",
+  "browser": {
+    "chineseSearchCard": true,
+    "chineseReadCard": true,
+    "expandableSources": 8,
+    "pageErrors": []
+  }
+}

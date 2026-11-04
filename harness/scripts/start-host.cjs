@@ -9,6 +9,7 @@ const legacy = 'D:/qx-contract-workbench-20261102';
 const dataParent = path.join(legacy,'.local/desktop-data');
 const node = 'C:/Users/Lenovo/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe';
 const {createModelCredentialStore} = require(path.join(legacy,'desktop/model-credentials.cjs'));
+const {createCaseMemoryRuntime} = require('../desktop/case-memory-runtime.cjs');
 app.setName('qunxing-workbench-desktop');
 app.setPath('userData',dataParent);
 app.disableHardwareAcceleration();
@@ -19,12 +20,16 @@ app.whenReady().then(async()=>{
   const profilePatch=path.join(profile,'cordis.patch.yml');
   if(!fs.existsSync(profilePatch))fs.copyFileSync(path.join(root,'config/cordis.patch.yml'),profilePatch);
   const store=createModelCredentialStore({dataParent,safeStorage});
-  let child;
-  const status=await store.withSecret(secret=>{
+  let child,memoryRuntime;
+  const finish=async code=>{await memoryRuntime?.stop().catch(()=>{});app.exit(code);};
+  const status=await store.withSecret(async secret=>{
+    try{memoryRuntime=await createCaseMemoryRuntime({data:root,payload:root,
+      python:path.join(legacy,'.venv/Scripts/python.exe'),secret});}
+    catch{console.warn('案件增强记忆暂不可用，本机记忆管理及工作台仍可使用。');}
     const log=fs.createWriteStream(path.join(local,'host.log'),{flags:'a'});
     child=spawn(node,[path.join(root,'node_modules/@deepseek-ai/dsh/lib/bin.js'),'web','--no-open','--host','127.0.0.1','--port','3080'],{
       cwd:path.join(root,'workspace'), windowsHide:true,
-      stdio:['ignore','pipe','pipe'], env:{...process.env,DSH_HOME:path.join(local,'dsh-home'),DEEPSEEK_API_KEY:secret,DSH_TELEMETRY_MODE:'OFF'}
+      stdio:['ignore','pipe','pipe'], env:{...process.env,...memoryRuntime?.env,DSH_HOME:path.join(local,'dsh-home'),DEEPSEEK_API_KEY:secret,DSH_TELEMETRY_MODE:'OFF'}
     });
     let pending='';
     child.stdout.on('data',chunk=>{
@@ -40,9 +45,9 @@ app.whenReady().then(async()=>{
       }
     });
     child.stderr.pipe(log,{end:false});
-    child.on('error',()=>{console.error('本机服务未能启动，请查看 .local/host.log');app.exit(1);});
-    child.on('close',code=>app.exit(code||0));
+    child.on('error',()=>{console.error('本机服务未能启动，请查看 .local/host.log');void finish(1);});
+    child.on('close',code=>void finish(code||0));
     fs.writeFileSync(path.join(local,'host-process.json'),JSON.stringify({launcherPid:process.pid,hostPid:child.pid,port:3080})+'\n');
   });
-  if(status.status!=='saved'||!child){console.error('无法读取已有模型配置：'+(status.code||status.status));app.exit(1);}
+  if(status.status!=='saved'||!child){console.error('无法读取已有模型配置：'+(status.code||status.status));await finish(1);}
 }).catch(error=>{console.error('启动失败：'+error.message);app.exit(1);});

@@ -12,6 +12,11 @@ export const inject=['connection'];
 const formats=new Set('.txt .md .csv .tsv .json .html .htm .rtf .doc .docx .pdf .xls .xlsx .ppt .pptx .odt .ods .odp .png .jpg .jpeg .webp .gif .bmp .tif .tiff'.split(' '));
 const root=resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const errorResponse=(error,status=400)=>Response.json({error},{status,headers:{'cache-control':'no-store'}});
+function ownerRequest(request){
+  const expected=new URL(request.url);
+  if(request.headers.get('host'))expected.host=request.headers.get('host');
+  return request.headers.get('x-qx-privacy')==='1'&&(!request.headers.get('origin')||request.headers.get('origin')===expected.origin);
+}
 function stop(child){
   if(!child.pid||child.exitCode!==null)return;
   if(process.platform==='win32')spawn('taskkill',['/PID',String(child.pid),'/T','/F'],{windowsHide:true,stdio:'ignore'}).on('error',()=>child.kill());
@@ -43,17 +48,33 @@ export function apply(ctx,config={}){
   const children=new Set();let disposed=false;
   ctx.effect(()=>()=>{disposed=true;for(const child of children)stop(child);},'qx privacy workers');
   ctx.connection.fetch.register({path:'/api/qx-privacy/client.js',methods:['GET'],requestBody:'buffered',fetch:async()=>new Response(await readFile(join(root,'plugins/privacy/client.js')),{headers:{'content-type':'text/javascript; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'}})});
+  ctx.connection.fetch.register({path:'/api/qx-privacy/review.js',methods:['GET'],requestBody:'buffered',fetch:async()=>new Response(await readFile(join(root,'plugins/privacy/review.js')),{headers:{'content-type':'text/javascript; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'}})});
+  ctx.connection.fetch.register({path:'/api/qx-privacy/confirm',methods:['POST'],requestBody:'buffered',fetch:async request=>{
+    try{
+      if(!ownerRequest(request))return errorResponse('请从工作台复核资料。',403);
+      if(disposed)return errorResponse('脱敏服务正在重启，请稍后确认。',503);
+      const body=await request.json();
+      const result=await runPrivacy(config.python,{action:'confirm',vault_dir:vault,workspace_dir:workspace,
+        document_id:body.document_id,review_token:body.review_token,text:body.text,manual_replacements:body.manual_replacements},children,request.signal);
+      const safe=await realpath(result.safe_path),actualVault=await realpath(vault);
+      if(!safe.startsWith(actualVault+sep)||extname(safe)!=='.txt')throw Error('safe path');
+      return new Response(Readable.toWeb(createReadStream(safe)),{headers:{'content-type':'text/plain; charset=utf-8','cache-control':'no-store',
+        'x-content-type-options':'nosniff','x-qx-reviewed':result.revision,'x-qx-safe-name':encodeURIComponent(result.display_name)}});
+    }catch{return errorResponse('复核版本未能保存，附件未发送。请保留当前修改并重试。');}
+  }});
   ctx.connection.fetch.register({path:'/api/qx-privacy/prepare',methods:['POST'],requestBody:'streaming',fetch:async request=>{
     let incoming;
     try{
       if(disposed)return errorResponse('脱敏服务正在重启，请稍后重新添加附件。',503);
-      const origin=request.headers.get('origin'),expected=new URL(request.url);
-      // Harness bridges its Request URL through dsh.internal; the authenticated
-      // carrier has already checked Host/Origin. Compare with that real Host.
-      if(request.headers.get('host'))expected.host=request.headers.get('host');
-      if(request.headers.get('x-qx-privacy')!=='1'||(origin&&origin!==expected.origin))return errorResponse('请从工作台上传资料。',403);
+      if(!ownerRequest(request))return errorResponse('请从工作台上传资料。',403);
       if(!request.body)return errorResponse('没有收到文件，原件未发送。');
       const url=new URL(request.url),extension=extname(url.searchParams.get('name')||'').toLowerCase();
+      if(url.searchParams.get('review')!=='1'){
+        // Drain without storing bytes so the HTTP carrier can deliver the refresh
+        // response instead of resetting a connection with an unread upload body.
+        if(request.body)for await(const chunk of request.body){void chunk;}
+        return errorResponse('工作台已升级为逐份复核。请刷新或重新打开工作台后添加文件，原件未发送。',409);
+      }
       if(!formats.has(extension))return errorResponse('此格式暂不支持本机脱敏，原件未发送。请转换为文档、图片或纯文本后重试。');
       const contextId=url.searchParams.get('context')||undefined;
       if(contextId&&!/^[A-Za-z0-9_-]{1,128}$/.test(contextId))return errorResponse('上传批次无效。');
@@ -68,12 +89,12 @@ export function apply(ctx,config={}){
       if((await lstat(inbox)).isSymbolicLink())throw Error('vault');
       const id=randomUUID();incoming=join(inbox,id+extension);
       await pipeline(Readable.fromWeb(request.body),createWriteStream(incoming,{flags:'wx'}),{signal:request.signal});
-      const result=await runPrivacy(config.python,{source_path:incoming,vault_dir:actualVault,workspace_dir:actualWorkspace,document_id:id,custom_terms:terms,context_id:contextId,privacy_mode:privacyMode},children,request.signal);
+      const result=await runPrivacy(config.python,{source_path:incoming,vault_dir:actualVault,workspace_dir:actualWorkspace,document_id:id,custom_terms:terms,context_id:contextId,privacy_mode:privacyMode,review:true},children,request.signal);
       if(result.privacy_mode!==privacyMode)throw Error('本机脱敏方式未应用，原件未发送。请更新工作台后再试。');
-      const safe=await realpath(result.safe_path);
-      if(!safe.startsWith(actualVault+sep)||extname(safe)!=='.txt')throw Error('safe path');
-      // Only the plain-text derivative crosses into Harness. Never expose vault paths or maps.
-      return new Response(Readable.toWeb(createReadStream(safe)),{headers:{'content-type':'text/plain; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff',
+      const preview=await realpath(result.review_path);
+      if(!preview.startsWith(join(actualVault,'documents')+sep)||extname(preview)!=='.json')throw Error('review path');
+      // Private comparison is for the local reviewer; only confirm returns a File body.
+      return new Response(await readFile(preview),{headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff',
         'x-qx-safe-name':encodeURIComponent(result.display_name),'x-qx-replacements':String(result.replacement_count||0),
         'x-qx-privacy-mode':privacyMode,
         'x-qx-privacy-warning':encodeURIComponent('已生成脱敏文字副本；图片与版式不随附。自动识别可能遗漏，请核对关键身份信息。')}});

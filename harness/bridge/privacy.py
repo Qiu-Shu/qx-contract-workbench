@@ -6,6 +6,7 @@ See privacy_sources.md for sources, scope and deliberate limitations.
 import argparse
 from contextlib import contextmanager
 import hashlib
+import hmac
 import json
 import os
 from pathlib import Path
@@ -128,7 +129,7 @@ _PATTERNS = [
 
 # Only explicit naming contexts establish a brand/product identity. Quotation
 # marks alone, and generic technical/organization categories, are not identities.
-_GENERIC_VALUES = {'合同', '协议', '技术服务', '服务', '学校', '机构', '企业', '公司', '产品',
+_GENERIC_VALUES = {'四轮驱动产品体系', '合同', '协议', '技术服务', '服务', '学校', '机构', '企业', '公司', '产品',
                    '品牌', '模型', '系统', '平台', '相关资料', '知名', '自有', '自主', '旗下',
                    '甲方', '乙方', '丙方', '丁方', '双方', '本公司', '该公司', '本合同', '本协议',
                    '本项目', '采购方', '供应方', '买方', '卖方', '委托方', '受托方'}
@@ -151,13 +152,16 @@ _NAMED_AFTER_QUOTE = re.compile(r'[“"「《](?P<value>' + _NAME_BODY + r')[”
                                 r'(?:品牌|产品(?:体系|系列)?|(?:学习|语言|教育|AI)?大模型|训练体系|测评体系)')
 _NAMED_BARE = re.compile(r'(?P<value>[\u3400-\u9fffA-Za-z0-9·._\-]{2,60}?)(?P<suffix>品牌|产品体系|训练体系|测评体系|大模型)'
                          r'(?=$|[\s，,。；;、（）()]|及|和|与|已)')
-_ENTITY_PREFIX = re.compile(r'^(?:(?:甲方|乙方|本公司|该公司|公司|其|产品包括|包括|采用|使用|以及|或|和|与|自主研发|自主开发|自主|自研|研发|开发|推出|打造|保护|维持|旗下|拥有|的))+')
+_ENTITY_PREFIX = re.compile(r'^(?:(?:甲方|乙方|本公司|该公司|公司|其|产品包括|包括|但不限于|不限于|保证|承诺|确保|基于|依托|采用|使用|以及|或|和|与|自主研发|自主开发|自主|自研|研发|开发|推出|打造|保护|维持|旗下|拥有|的))+')
 _FILING_NUMBER = re.compile(r'(?:备案编号|备案号|备案编码|备案标识)\s*[:：]?\s*'
                             r'(?P<value>[\u3400-\u9fffA-Za-z0-9][\u3400-\u9fffA-Za-z0-9_\-/]{3,100})')
 _COMPETITION = re.compile(r'[《“"](?P<value>[^》”"\n\r]{2,100}(?:大赛|比赛|赛事|竞赛|挑战赛|锦标赛|联赛))[》”"]')
+_BARE_COMPETITION = re.compile(r'(?:参加|参与|承办|主办|举办|开展|及|、|：|:)'
+    r'(?P<value>[\u3400-\u9fffA-Za-z0-9]{2,60}?(?:大赛|比赛|竞赛|挑战赛|锦标赛|联赛))'
+    r'(?=$|[\s，,。；;、（）()]|等|四大板块|四项)')
 _GENERIC_COMPETITION = re.compile(
     r'(?:(?:全国|全市|全省|国家级|省级|市级|国际|校园|学校|校内|校际|青少年|中小学|学生|儿童|成人|中学生|小学生|大学生|'
-    r'机器人|编程|数学|英语|科学|科技|人工智能|AI|体育|篮球|足球|作文|创新|创业|知识))*'
+    r'机器人|编程|数学|英语|科学|科技|人工智能|AI|体育|篮球|足球|作文|创新|创业|知识|白名单))*'
     r'(?:大赛|比赛|赛事|竞赛|挑战赛|锦标赛|联赛)', re.I)
 _QUALIFICATIONS = re.compile(
     r'(?:国家(?:级)?|省级|市级)?(?:高新技术企业|专精特新(?:小巨人|中小)?企业|科技型中小企业|创新型中小企业|'
@@ -193,6 +197,23 @@ def _specific_name(value):
             and not re.fullmatch(r'[\d\s.\-/]+', value))
 
 
+def _product_identity(value, known=()):
+    value = _ENTITY_PREFIX.sub('', value)
+    if not _specific_name(value):
+        return None
+    # Keep the generic suffix in the sentence, so the full name and a named
+    # module share one reversible identity instead of inventing several objects.
+    if value.endswith('大模型') and _specific_name(value[:-3]):
+        value = value[:-3]
+    # Prefer established names over a regex's longer grammatical phrase.
+    for identity in sorted(known, key=len, reverse=True):
+        if value.endswith(identity):
+            return identity
+    if re.search(r'不得|不应|不使用|并非|必须|不能|禁止|应当|本项目|该系统', value) or value.startswith(('将', '就')):
+        return None
+    return value
+
+
 def _profile_quantity(text, start):
     clause = re.split(r'[。；;\n]', text[max(0, start-200):start])[-1]
     return not re.search(r'本合同|本协议|本项目|本次|本期|约定|交付|履行|验收|应当|必须|计划', clause)
@@ -225,19 +246,22 @@ def _candidates(text, custom_terms, privacy_mode='standard'):
     for pattern in (_NAMED_LABELLED, _NAMED_QUOTED, _NAMED_AFTER_QUOTE):
         for match in pattern.finditer(text):
             value = match['value'].strip()
-            if _specific_name(value):
-                add(value, '专名')
-    for match in _NAMED_BARE.finditer(text):
+            identity = _product_identity(value)
+            if identity:
+                add(identity, '专名')
+    for match in sorted(_NAMED_BARE.finditer(text), key=lambda match: len(match['value'])):
         value = _ENTITY_PREFIX.sub('', match['value'])
         value = value if match['suffix'] == '品牌' else value + match['suffix']
-        if _specific_name(value):
-            add(value, '专名')
+        identity = _product_identity(value, [name for name, kind in found.items() if kind == '专名'])
+        if identity:
+            add(identity, '专名')
     for match in _FILING_NUMBER.finditer(text):
         if re.search(r'\d', match['value']):
             add(match['value'], '备案编号')
-    for match in _COMPETITION.finditer(text):
-        if not _GENERIC_COMPETITION.fullmatch(match['value']):
-            add(match['value'], '赛事')
+    for pattern in (_COMPETITION, _BARE_COMPETITION):
+        for match in pattern.finditer(text):
+            if not _GENERIC_COMPETITION.fullmatch(match['value']):
+                add(match['value'], '赛事')
     if privacy_mode == 'deep':
         for match in _QUALIFICATIONS.finditer(text):
             add(match.group(), '资质头衔')
@@ -302,7 +326,10 @@ def _redact(text, custom_terms, mapping_path, privacy_mode='standard'):
                 return False
             if kind == '组织':
                 return not _generic_organization(original)
-            if kind in {'姓名', '专名'}:
+            if kind == '专名':
+                known = [name for name, category in candidates.items() if category == '专名' and name != original]
+                return _product_identity(original, known) == original
+            if kind == '姓名':
                 return _specific_name(original)
             return True
         relevant = [original for original in mapping if original in text and active(original)]
@@ -329,7 +356,7 @@ def _redact(text, custom_terms, mapping_path, privacy_mode='standard'):
 
 
 def prepare_upload(source_path, vault_dir, document_id=None, custom_terms=None, context_id=None, workspace_dir=None,
-                   privacy_mode='standard'):
+                   privacy_mode='standard', review=False):
     """Return only safe-copy metadata. Original, mapping and index stay private.
 
     The caller must keep the vault and upload staging outside every model-accessible
@@ -340,7 +367,7 @@ def prepare_upload(source_path, vault_dir, document_id=None, custom_terms=None, 
     try:
         if not isinstance(source_path, str) or not isinstance(vault_dir, str):
             raise PrivacyError('INVALID_INPUT')
-        if privacy_mode not in ('standard', 'deep'):
+        if privacy_mode not in ('standard', 'deep') or not isinstance(review, bool):
             raise PrivacyError('INVALID_INPUT')
         source, vault = Path(source_path), Path(vault_dir)
         if not source.is_absolute() or not vault.is_absolute():
@@ -401,12 +428,67 @@ def prepare_upload(source_path, vault_dir, document_id=None, custom_terms=None, 
         warnings = list(WARNINGS)
         if privacy_mode == 'deep':
             warnings.append('深度脱敏另隐去资质头衔、机构覆盖规模与荣誉等间接标识；副本不能用于判断这些业务事实，请回看本机原件。')
-        return {'status': 'ready', 'safe_path': str(safe_path), 'display_name': display_name,
-                'privacy_mode': privacy_mode, 'replacement_count': count, 'warnings': warnings}
+        result = {'status': 'ready', 'safe_path': str(safe_path), 'display_name': display_name,
+                  'privacy_mode': privacy_mode, 'replacement_count': count, 'warnings': warnings}
+        if review:
+            with sqlite3.connect(mapping_path) as db:
+                replacements = [{'original': value, 'token': token} for value, token in
+                                db.execute('SELECT original,token FROM replacements') if token in safe]
+            preview = {'document_id': identifier, 'review_token': uuid4().hex,
+                       'original_text': text, 'safe_text': safe, 'display_name': display_name,
+                       'privacy_mode': privacy_mode, 'replacement_count': count,
+                       'replacements': replacements, 'warnings': warnings}
+            review_path = document_dir / 'review.json'
+            review_path.write_text(json.dumps(preview, ensure_ascii=False), encoding='utf-8')
+            result['review_path'] = str(review_path)
+        return result
     except Exception as error:
         if safe_path is not None and safe_path.exists():
             safe_path.unlink(missing_ok=True)
         code = error.code if isinstance(error, PrivacyError) else 'PARSE_FAILED'
+        return {'status': 'failed', 'error_code': code, 'error': ERRORS[code], 'warnings': []}
+
+
+def finalize_review(vault_dir, document_id, review_token, text, manual_replacements=None, workspace_dir=None):
+    """Store a new immutable reviewed copy; never rewrite the original or auto copy."""
+    try:
+        vault = Path(vault_dir)
+        _reject_links(vault)
+        vault = vault.resolve()
+        workspace = Path(workspace_dir).resolve() if workspace_dir else Path(__file__).resolve().parents[1] / 'workspace'
+        if vault.is_relative_to(workspace) or workspace.is_relative_to(vault):
+            raise PrivacyError('VAULT_BOUNDARY')
+        identifier = str(UUID(document_id))
+        document = _private_child(vault, 'documents', identifier)
+        review_path = _private_child(vault, 'documents', identifier, 'review.json')
+        preview = json.loads(review_path.read_text(encoding='utf-8'))
+        if not isinstance(review_token, str) or not hmac.compare_digest(review_token, preview['review_token']):
+            raise PrivacyError('INVALID_INPUT')
+        if not isinstance(text, str) or not text.strip() or '\x00' in text:
+            raise PrivacyError('INVALID_INPUT')
+        manual = manual_replacements if manual_replacements is not None else []
+        if not isinstance(manual, list) or any(not isinstance(item, dict) or
+                set(item) != {'original', 'token'} or not all(isinstance(v, str) and v for v in item.values())
+                for item in manual):
+            raise PrivacyError('INVALID_INPUT')
+        revision = uuid4().hex
+        name = '已复核脱敏文字-' + revision[:16] + '.txt'
+        safe = _private_child(vault, 'safe', name)
+        record = {'document_id': identifier, 'revision': revision, 'safe_file': 'safe/' + name,
+                  'sha256': hashlib.sha256(text.encode('utf-8')).hexdigest(),
+                  'manual_replacements': manual, 'privacy_mode': preview['privacy_mode']}
+        with safe.open('x', encoding='utf-8', newline='\n') as stream:
+            stream.write(text)
+        try:
+            with (document / ('reviewed-' + revision + '.json')).open('x', encoding='utf-8') as stream:
+                json.dump(record, stream, ensure_ascii=False)
+        except Exception:
+            safe.unlink(missing_ok=True)
+            raise
+        return {'status': 'ready', 'safe_path': str(safe), 'display_name': name,
+                'privacy_mode': preview['privacy_mode'], 'revision': revision}
+    except Exception as error:
+        code = error.code if isinstance(error, PrivacyError) else 'INVALID_INPUT'
         return {'status': 'failed', 'error_code': code, 'error': ERRORS[code], 'warnings': []}
 
 
@@ -451,7 +533,10 @@ def main():
         else:
             payload = json.load(sys.stdin)
         with _quiet_libraries():
-            result = prepare_upload(**payload)
+            action = payload.pop('action', 'prepare')
+            if action not in {'prepare', 'confirm'}:
+                raise PrivacyError('INVALID_INPUT')
+            result = finalize_review(**payload) if action == 'confirm' else prepare_upload(**payload)
     except Exception:
         result = {'status': 'failed', 'error_code': 'INVALID_INPUT', 'error': ERRORS['INVALID_INPUT'], 'warnings': []}
     print(json.dumps(result, ensure_ascii=False))

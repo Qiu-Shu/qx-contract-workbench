@@ -5,7 +5,8 @@ const http=require('node:http');
 const {randomBytes}=require('node:crypto');
 const {spawn}=require('node:child_process');
 const {createSupervisor,createEventLog}=require('./host-recovery.cjs');
-const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes}=require('./installed-migrations.cjs');
+const {createCaseMemoryRuntime}=require('./case-memory-runtime.cjs');
+const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledLegalSearch,migrateInstalledCaseMemory}=require('./installed-migrations.cjs');
 
 function redactedLines(secret,write){
   let pending='',dropping=false;
@@ -42,6 +43,8 @@ function initialize(payload,data){
   migrateInstalledKnowledge({data,payload,portableConfig,
     seedInstructions:transform(fs.readFileSync(path.join(payload,'workspace-seed/AGENTS.md'),'utf8'))});
   migrateInstalledPrivacy({data,payload,portableConfig});
+  migrateInstalledCaseMemory({data,payload,portableConfig,seedInstructions:transform(fs.readFileSync(path.join(payload,'workspace-seed/AGENTS.md'),'utf8'))});
+  migrateInstalledLegalSearch({data,payload,portableConfig});
   migrateInstalledModelRecovery({data,payload,portableConfig});
   migrateInstalledContract({data,payload});
   migrateInstalledSkillFixes({data,payload});
@@ -102,15 +105,17 @@ async function runHost({payload,data,store,app}){
     const killer=spawn('taskkill',['/PID',String(child.pid),'/T','/F'],{windowsHide:true,stdio:'ignore'});
     killer.once('error',()=>child.kill());killer.once('exit',code=>{if(code&&processAlive(child.pid))child.kill()});
   };
-  const result=await store.withSecret(secret=>{
-    supervisor=createSupervisor({log:events,kill,onStopped:()=>{control.close();log.end(()=>app.exit(0));},
+  const result=await store.withSecret(async secret=>{
+    let memoryRuntime;
+    try{memoryRuntime=await createCaseMemoryRuntime({data,payload,secret});}catch{events('case_memory_unavailable');}
+    supervisor=createSupervisor({log:events,kill,onStopped:()=>{void (async()=>{await memoryRuntime?.stop();control.close();log.end(()=>app.exit(0));})();},
       onState:state=>{
         if(state.phase!=='running')readyUrl=null;
         writeJson(path.join(local,'host-state.json'),{...state,launcherPid:process.pid,time:new Date().toISOString()});
         writeJson(runtimePath,{url:readyUrl,hostPid:state.hostPid,launcherPid:process.pid,port,controlUrl,controlToken});
       },start:onReady=>{
       const child=spawn(path.join(payload,'runtime/node.exe'),[path.join(payload,'node_modules/@deepseek-ai/dsh/lib/bin.js'),'web','--no-open','--host','127.0.0.1','--port',String(port)],{
-        cwd:path.join(data,'workspace'),windowsHide:true,stdio:['ignore','pipe','pipe'],env:{...process.env,
+        cwd:path.join(data,'workspace'),windowsHide:true,stdio:['ignore','pipe','pipe'],env:{...process.env,...memoryRuntime?.env,
           DSH_HOME:path.join(local,'dsh-home'),DEEPSEEK_API_KEY:secret,DSH_TELEMETRY_MODE:'OFF',
           PATH:path.join(payload,'runtime')+path.delimiter+(process.env.PATH||''),
           PYTHONPATH:path.join(payload,'legacy/src'),QX_LEGACY_ROOT:path.join(payload,'legacy'),
@@ -151,7 +156,7 @@ async function stopRuntime(runtime){
   if(url.protocol!=='http:'||url.hostname!=='127.0.0.1'||url.pathname!=='/stop')throw Error('Invalid control endpoint');
   const response=await fetch(url,{method:'POST',headers:{Authorization:`Bearer ${runtime.controlToken}`},signal:AbortSignal.timeout(5000),redirect:'error'});
   if(!response.ok)throw Error('Background restart failed');
-  const deadline=Date.now()+15000;
+  const deadline=Date.now()+45000;
   while(Date.now()<deadline){
     try{process.kill(runtime.launcherPid,0)}catch{return}
     await new Promise(resolve=>setTimeout(resolve,200));

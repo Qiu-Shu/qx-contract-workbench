@@ -33,7 +33,7 @@ function providerConfig(value,id){
   };
   visit(value);return merged;
 }
-function knowledgeSection(text){
+function knowledgeSection(text,sectionHeading=HEADING){
   const lines=text.split(/\r?\n/);let start=-1,end=lines.length,fence=null;
   for(let index=0;index<lines.length;index++){
     const code=lines[index].match(/^\s{0,3}(`{3,}|~{3,})/);
@@ -42,7 +42,7 @@ function knowledgeSection(text){
     const heading=lines[index].match(/^\s{0,3}(#{1,6})\s+(.+?)\s*#*\s*$/);
     if(!heading)continue;
     if(start>=0&&heading[1].length<=2){end=index;break;}
-    if(heading[1]==='##'&&heading[2]===HEADING)start=index;
+    if(heading[1]==='##'&&heading[2]===sectionHeading)start=index;
   }
   return start<0?null:lines.slice(start,end).join('\n').trimEnd()+'\n';
 }
@@ -70,7 +70,7 @@ function atomicWrite(file,contents){
 }
 
 // Call after initial seeding, before launching dsh. Never inspect case files or history.
-function migrateInstalled({data,portableConfig,seedInstructions,payload,yaml},{version,ids,withInstructions=false,providerOverride=false}){
+function migrateInstalled({data,portableConfig,seedInstructions,payload,yaml},{version,ids,withInstructions=false,providerOverride=false,sectionHeading=HEADING}){
   data=path.resolve(data);
   const migrationRoot=path.join(data,'.local/migrations');
   const marker=path.join(migrationRoot,`${version}.json`);
@@ -83,7 +83,7 @@ function migrateInstalled({data,portableConfig,seedInstructions,payload,yaml},{v
   }
   const desired=findIds(portableConfig);
   for(const id of ids)if(!desired.has(id)||(providerOverride?!Array.isArray(desired.get(id).config?.retryPolicy?.retryableCodes):typeof desired.get(id).name!=='string'))throw new Error(`Portable configuration is missing ${id}.`);
-  const section=withInstructions?knowledgeSection(seedInstructions||''):null;
+  const section=withInstructions?knowledgeSection(seedInstructions||'',sectionHeading):null;
   if(withInstructions&&!section)throw new Error('Portable instructions are missing the knowledge section.');
   const originalConfig=fs.readFileSync(patch,'utf8');
   const originalInstructions=withInstructions?fs.readFileSync(instructions,'utf8'):null;
@@ -120,7 +120,7 @@ function migrateInstalled({data,portableConfig,seedInstructions,payload,yaml},{v
     }
     changes.push({file:patch,name:'cordis.patch.yml',original:originalConfig,contents,relative:'.local/dsh-home/profiles/web/cordis.patch.yml'});
   }
-  if(withInstructions&&!knowledgeSection(originalInstructions))changes.push({file:instructions,name:'AGENTS.md',original:originalInstructions,
+  if(withInstructions&&!knowledgeSection(originalInstructions,sectionHeading))changes.push({file:instructions,name:'AGENTS.md',original:originalInstructions,
     contents:originalInstructions+(originalInstructions.endsWith('\n')?'\n':'\n\n')+section,relative:'workspace/AGENTS.md'});
 
   let backupDirectory=null;
@@ -146,6 +146,27 @@ function migrateInstalledKnowledge(options){
 }
 function migrateInstalledPrivacy(options){
   return migrateInstalled(options,{version:'upload-privacy-v1',ids:['qx-upload-privacy']});
+}
+function migrateInstalledCaseMemory(options){
+  const desired=findIds(options.portableConfig);
+  if(!desired.has('qx-case-memory-ui')||!desired.has('qx-case-memory'))return {status:'deferred',changedFiles:[]};
+  return migrateInstalled(options,{version:'case-memory-v1',ids:['qx-case-memory-ui','qx-case-memory'],withInstructions:true,sectionHeading:'案件记忆'});
+}
+function migrateInstalledLegalSearch(options){
+  // Optional capability: an older/partial payload must not block the workbench.
+  if(!findIds(options.portableConfig).has('qx-legal-search'))return {status:'deferred',changedFiles:[]};
+  // A self-contained extension survives installation of a concurrently prepared
+  // older package. New packages refresh only these application-owned code files.
+  const {payload,data}=options;
+  if(payload&&fs.existsSync(path.join(payload,'plugins/legal-search/index.mjs'))){
+    const root=path.join(data,'.local/legal-search-runtime');
+    for(const relative of ['plugins/legal-search/index.mjs','plugins/legal-search/core.mjs','bridge/legal_search_fallback.py','bridge/vendor/union_search']){
+      const target=path.join(root,relative);assertNoLinks(path.resolve(data),path.resolve(target));
+      fs.mkdirSync(path.dirname(target),{recursive:true});
+      fs.cpSync(path.join(payload,relative),target,{recursive:true,force:true,filter:source=>!source.includes('__pycache__')});
+    }
+  }
+  return migrateInstalled(options,{version:'legal-search-v1',ids:['qx-legal-search']});
 }
 function migrateInstalledModelRecovery(options){
   return migrateInstalled(options,{version:'model-recovery-v1',ids:['llm-deepseek'],providerOverride:true});
@@ -235,4 +256,4 @@ function migrateInstalledSkillFixes({data,payload}){
   return {status:pending.length?'deferred':'applied',backupDirectory,changedFiles,preservedCustom};
 }
 
-module.exports={migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes};
+module.exports={migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledLegalSearch,migrateInstalledCaseMemory};

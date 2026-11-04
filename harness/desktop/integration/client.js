@@ -163,6 +163,142 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
     };
   }
   const KnowledgePanel=createKnowledgeView(React);
+  function createMemoryView(React){
+    const h=React.createElement;
+    const css=`
+      .qx-memory{width:min(940px,94vw);max-height:90vh;padding:0;border:1px solid #d7dce4;border-radius:12px;background:#fff;color:#172a3d;font:14px/1.65 "Microsoft YaHei",system-ui,sans-serif;box-shadow:0 18px 65px #10203030}
+      .qx-memory::backdrop{background:#15293d70}.qx-memory *{box-sizing:border-box}.qx-memory ::selection{background:#d6e7f6}.qx-memory header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 24px;border-bottom:1px solid #e1e6ed}.qx-memory h2{margin:0;font-size:22px}.qx-memory h3{margin:0 0 10px;font-size:16px}.qx-memory p{margin:8px 0}.qx-memory-body{padding:20px 24px;max-height:calc(90vh - 80px);overflow:auto;scrollbar-color:#9aafc2 #f4f7fa}
+      .qx-memory button,.qx-memory input,.qx-memory select,.qx-memory textarea{font:inherit;max-width:100%;color:inherit}.qx-memory button{border:1px solid #b8c4d2;border-radius:6px;background:#fff;padding:8px 12px;color:#173c65;cursor:pointer;touch-action:manipulation}.qx-memory button:hover:enabled{background:#edf3f8}.qx-memory button:disabled{opacity:.55;cursor:default}.qx-memory button.primary{background:#235b91;color:#fff;border-color:#235b91}.qx-memory button.danger{color:#9c3321;border-color:#bb7567}.qx-memory input:not([type=checkbox]),.qx-memory select,.qx-memory textarea{width:100%;padding:9px 12px;border:1px solid #b8c4d2;border-radius:6px;background:#fff;caret-color:#235b91}.qx-memory textarea{min-height:120px;resize:vertical;line-height:1.75}.qx-memory input::placeholder,.qx-memory textarea::placeholder{color:#58687a;opacity:1}.qx-memory input[type=checkbox]{accent-color:#235b91;width:17px;height:17px;margin:0}
+      .qx-memory :is(button,input,select,textarea,summary):focus-visible{outline:2px solid #235ba0;outline-offset:3px}.qx-memory label{display:block}.qx-memory .check{display:flex;align-items:center;gap:9px}.qx-memory .muted{color:#58687a;font-size:13px}.qx-memory .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}.qx-memory .row>input{flex:1;min-width:180px}.qx-memory .field{margin:14px 0}.qx-memory .field>span{display:block;margin-bottom:6px}.qx-memory .notice{padding:10px 14px;background:#eef4fa;margin:12px 0;white-space:pre-wrap;overflow-wrap:anywhere}.qx-memory .error{color:#8e351a;background:#fff1ec}.qx-memory .section{margin-top:22px;padding-top:20px;border-top:1px solid #e1e6ed}.qx-memory article{padding:18px 0;border-bottom:1px solid #e1e6ed}.qx-memory .body-text{white-space:pre-wrap;overflow-wrap:anywhere;max-width:75ch}.qx-memory pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere;max-height:300px;overflow:auto;background:#f5f8fb;padding:14px}.qx-memory details{margin:10px 0}.qx-memory summary{cursor:pointer}.qx-memory .pager{display:flex;justify-content:space-between;gap:10px;margin:12px 0}.qx-memory .confirm{padding:16px;background:#fff5ef;margin:14px 0}.qx-memory .empty{padding:24px 0;color:#58687a}.qx-memory .case-select{max-width:100%}
+      @media(max-width:650px){.qx-memory{width:96vw}.qx-memory header,.qx-memory-body{padding:16px}.qx-memory h2{font-size:20px}.qx-memory .row>input{width:100%;flex-basis:100%}.qx-memory button{min-height:40px}.qx-memory .row{gap:8px}}
+    `;
+    async function api(path,options={}){
+      const response=await fetch('/api/qx-case-memory/'+path,{credentials:'same-origin',cache:'no-store',...options,
+        headers:{'x-qx-case-memory':'1',...(options.body?{'content-type':'application/json'}:{}),...options.headers}});
+      if(response.status===401||response.status===403)throw Error('工作台连接已失效，请从“工作台 → 重新连接”恢复。');
+      if(!response.headers.get('content-type')?.includes('application/json'))throw Error('案件记忆服务暂时不可用，请稍后重试。');
+      const value=await response.json();if(!response.ok)throw Error(value.error||'操作未完成，请重试。');return value;
+    }
+    const post=(path,value)=>api(path,{method:'POST',body:JSON.stringify(value)});
+    const kinds={fact:'事实记录',timeline:'时间线',consultation:'接待记录',client_reply:'客户回复',internal_note:'内部笔记',todo:'待办',manual:'手工记忆'};
+    function CaseMemories({caseId,enabled,onStatus}){
+      const alive=React.useRef(true),cancelDelete=React.useRef(null),listVersion=React.useRef(0);
+      const [catalog,setCatalog]=React.useState({memories:[],total:0,next_offset:null}),[offset,setOffset]=React.useState(0);
+      const [loading,setLoading]=React.useState(true),[busy,setBusy]=React.useState(false),[error,setError]=React.useState(''),[notice,setNotice]=React.useState('');
+      const [query,setQuery]=React.useState(''),[results,setResults]=React.useState(null),[adding,setAdding]=React.useState(false);
+      const [mode,setMode]=React.useState('note'),[notes,setNotes]=React.useState({notes:[],total:0,next_offset:null}),[noteOffset,setNoteOffset]=React.useState(0),[noteId,setNoteId]=React.useState('');
+      const [content,setContent]=React.useState(''),[source,setSource]=React.useState(''),[confirmed,setConfirmed]=React.useState(false);
+      const [editing,setEditing]=React.useState(null),[editContent,setEditContent]=React.useState(''),[deleting,setDeleting]=React.useState(null);
+      React.useEffect(()=>{alive.current=true;return()=>{alive.current=false;};},[]);
+      const load=React.useCallback(async()=>{const version=++listVersion.current;const next=await api(`list?case_id=${caseId}&offset=${offset}`);if(alive.current&&version===listVersion.current)setCatalog(next);},[caseId,offset]);
+      React.useEffect(()=>{let cancelled=false;setLoading(true);setError('');void load().catch(e=>{if(!cancelled)setError(e.message);}).finally(()=>{if(!cancelled)setLoading(false);});return()=>{cancelled=true;};},[load]);
+      React.useEffect(()=>{
+        if(!adding||mode!=='note')return;const controller=new AbortController();setNoteId('');
+        void api(`sources?case_id=${caseId}&offset=${noteOffset}`,{signal:controller.signal}).then(next=>{if(!controller.signal.aborted)setNotes(next);}).catch(e=>{if(!controller.signal.aborted)setError(e.message);});
+        return()=>controller.abort();
+      },[caseId,adding,mode,noteOffset]);
+      React.useEffect(()=>{if(deleting)cancelDelete.current?.focus();},[deleting]);
+      async function act(task){setBusy(true);setError('');try{await task();}catch(e){if(alive.current)setError(e.message);}finally{if(alive.current)setBusy(false);}}
+      async function refresh(){await load();if(alive.current)await onStatus();}
+      async function readSource(item){await act(async()=>{
+        const current=await api(`read?case_id=${caseId}&memory_id=${item.id}`);if(!alive.current)return;
+        setCatalog(previous=>({...previous,memories:previous.memories.map(value=>value.id===current.id?current:value)}));
+        setResults(previous=>previous?{...previous,matches:previous.matches.map(value=>value.id===current.id?current:value)}:null);
+      });}
+      async function add(){await act(async()=>{
+        await post('add',mode==='note'?{case_id:caseId,note_id:noteId}:{case_id:caseId,content,source,confirmed});
+        if(!alive.current)return;setAdding(false);setContent('');setSource('');setConfirmed(false);setNoteId('');setResults(null);
+        setNotice('已保存到本案记忆。后台同步不影响本机查看。');await refresh();
+      });}
+      async function update(){await act(async()=>{
+        await post('update',{case_id:caseId,memory_id:editing.id,revision:editing.revision,content:editContent});
+        if(!alive.current)return;setEditing(null);setResults(null);setNotice('记忆已修订，保存时的来源原文保留。');await refresh();
+      });}
+      async function remove(){await act(async()=>{
+        const result=await post('delete',{case_id:caseId,memory_id:deleting.id,revision:deleting.revision});
+        if(!alive.current)return;setDeleting(null);setResults(null);
+        setNotice(result.pending_cleanup?'本机记忆已删除，案件原始记录保留。增强服务中的旧索引待后台清理，请留意上方状态。':'本机记忆已删除，案件原始记录保留。');await refresh();
+      });}
+      const selectedNote=notes.notes.find(item=>item.id===noteId);
+      const shown=results?results.matches:catalog.memories;
+      return h('section',{className:'section','aria-label':'本案记忆内容'},
+        h('div',{className:'row'},h('h3',null,`本案记忆 · ${catalog.total} 条`),h('button',{type:'button',disabled:busy||!enabled,onClick:()=>{setAdding(!adding);setEditing(null);setDeleting(null);setError('');}},adding?'收起添加':'添加记忆'),h('button',{type:'button',disabled:busy,onClick:()=>act(async()=>{setResults(null);await refresh();})},'刷新列表')),
+        !enabled&&h('p',{className:'notice'},'记忆已关闭，已有记录仍可查看、修订和删除。开启后才能添加或检索。'),
+        error&&h('p',{className:'notice error',role:'alert'},error),notice&&h('p',{className:'notice',role:'status'},notice),
+        adding&&h('form',{className:'section',onSubmit:e=>{e.preventDefault();void add();},'aria-label':'添加案件记忆'},
+          h('label',{className:'field'},h('span',null,'记忆来源'),h('select',{'aria-label':'记忆来源',value:mode,disabled:busy,onChange:e=>setMode(e.target.value)},h('option',{value:'note'},'选择本案记录'),h('option',{value:'manual'},'手工填写已确认内容'))),
+          h('p',{className:'muted'},'单条记忆最多 16000 字，每案最多 500 条。较长记录不在选择列表中，可手工摘录重点并注明来源。'),
+          mode==='note'?h(React.Fragment,null,
+            h('label',{className:'field'},h('span',null,'选择一条记录'),h('select',{'aria-label':'选择一条记录',value:noteId,disabled:busy,onChange:e=>setNoteId(e.target.value)},h('option',{value:''},'请选择要保存的本案记录'),notes.notes.map(item=>h('option',{key:item.id,value:item.id},`${kinds[item.kind]||item.kind} · ${item.content.slice(0,65)}`)))),
+            h('p',{className:'muted'},'只列出本案当前版本、正文不超过 16,000 字的记录。不会读取全部聊天或其他案件正文。'),
+            selectedNote&&h('div',null,h('p',{className:'muted'},`来源：${selectedNote.source||'案件记录'} · ${kinds[selectedNote.kind]||selectedNote.kind}`),h('pre',null,selectedNote.content)),
+            h('div',{className:'pager'},h('button',{type:'button',disabled:busy||noteOffset===0,onClick:()=>setNoteOffset(Math.max(0,noteOffset-20))},'上一页记录'),h('button',{type:'button',disabled:busy||notes.next_offset==null,onClick:()=>setNoteOffset(notes.next_offset)},'下一页记录')))
+            :h(React.Fragment,null,h('label',{className:'field'},h('span',null,'来源说明'),h('input',{value:source,onChange:e=>setSource(e.target.value),maxLength:1000,required:true,disabled:busy,placeholder:'例如：2026年11月4日，客户电话确认'})),
+              h('label',{className:'field'},h('span',null,'记忆正文'),h('textarea',{value:content,onChange:e=>setContent(e.target.value),maxLength:16000,required:true,disabled:busy})),
+              h('label',{className:'check'},h('input',{type:'checkbox',checked:confirmed,onChange:e=>setConfirmed(e.target.checked),disabled:busy,required:true}),'我已核对上述内容和来源')),
+          h('p',{className:'muted'},'仅保存你选中的这一条。增强服务运行时，该记忆片段会交由当前配置的 DeepSeek 处理。'),
+          h('button',{type:'submit',className:'primary',disabled:busy||!enabled||(mode==='note'?!noteId:!content.trim()||!source.trim()||!confirmed)},busy?'正在保存…':'保存到本案记忆')),
+        h('form',{className:'row',onSubmit:e=>{e.preventDefault();void act(async()=>{const found=await api(`recall?case_id=${caseId}&query=${encodeURIComponent(query.trim())}`);if(alive.current){setResults(found);setEditing(null);setDeleting(null);}});}},
+          h('input',{type:'search',value:query,onChange:e=>setQuery(e.target.value),maxLength:300,'aria-label':'检索本案记忆',placeholder:'检索本案已保存的记忆'}),h('button',{type:'submit',disabled:busy||!enabled||!query.trim()},'检索记忆'),results&&h('button',{type:'button',onClick:()=>setResults(null)},'返回全部')),
+        results&&h('p',{className:'muted'},results.mode==='hindsight'?'增强记忆检索 · 最多显示 10 条；结果均对应本案保存的来源。':results.mode==='disabled'?'本案记忆已关闭。':'当前使用本机关键词匹配 · 增强服务未就绪或暂不可用，最多显示 10 条。'),
+        deleting&&h('section',{className:'confirm','aria-labelledby':'qx-memory-delete-title'},h('h3',{id:'qx-memory-delete-title'},'确认删除这条记忆？'),h('p',null,'将删除这条派生记忆及其来源快照；案件原始记录和原文件保留。增强服务离线时，旧索引需等待服务恢复后清理。'),h('p',{className:'body-text'},deleting.content.slice(0,200)),h('div',{className:'row'},h('button',{ref:cancelDelete,type:'button',disabled:busy,onClick:()=>setDeleting(null)},'取消删除'),h('button',{type:'button',className:'danger',disabled:busy,onClick:remove},'确认删除此记忆'))),
+        editing&&h('form',{className:'section',onSubmit:e=>{e.preventDefault();void update();},'aria-label':'修订案件记忆'},h('h3',null,`修订记忆 · 版本 ${editing.revision}`),h('p',{className:'muted'},'这里只修改派生记忆，来源原文保持不变。若记录已被他人修改，将提示刷新。'),h('label',{className:'field'},h('span',null,'修订后的记忆正文'),h('textarea',{value:editContent,onChange:e=>setEditContent(e.target.value),maxLength:16000,required:true,disabled:busy})),h('div',{className:'row'},h('button',{type:'submit',className:'primary',disabled:busy||!editContent.trim()},'保存修订'),h('button',{type:'button',disabled:busy,onClick:()=>setEditing(null)},'取消修订'))),
+        shown.length?shown.map(item=>h('article',{key:item.id,'aria-label':'记忆条目'},h('p',{className:'body-text'},item.content),
+          h('p',{className:'muted'},`来源：${item.source?.label||'案件记录'} · 版本 ${item.revision} · ${new Date(item.updated_at).toLocaleDateString('zh-CN')}`),
+          (item.source_warning||item.source_stale||item.source_changed)&&h('p',{className:'notice error'},`${item.source_warning||'来源记录已被更正，此记忆不再参与检索。'} 请重新选择本案当前记录；修订记忆不会更新来源。`),
+          h('details',{onToggle:e=>{if(e.currentTarget.open)void readSource(item);}},h('summary',null,'查看保存时的来源原文'),h('p',{className:'muted'},item.source_note_id?`来自本案选中的${kinds[item.source?.kind]||'记录'}。后续对记忆的修订不会改写这份快照。`:'来自你确认的手工内容。'),h('pre',null,item.source?.snapshot||'来源原文暂不可用，请刷新重试。')),
+          h('div',{className:'row'},h('button',{type:'button',disabled:busy,onClick:()=>{setEditing(item);setEditContent(item.content);setDeleting(null);setAdding(false);setError('');}},'修订记忆'),h('button',{type:'button',className:'danger',disabled:busy,onClick:()=>{setDeleting(item);setEditing(null);setAdding(false);setError('');}},'删除记忆'))))
+          :h('p',{className:'empty'},loading?'正在读取本案记忆…':results?'没有匹配的本案记忆，请尝试其他关键词。':'本案还没有记忆。可选择一条案件记录，或手工填写有明确来源的内容。'),
+        !results&&h('div',{className:'pager'},h('button',{type:'button',disabled:busy||offset===0,onClick:()=>setOffset(Math.max(0,offset-20))},'上一页记忆'),h('button',{type:'button',disabled:busy||catalog.next_offset==null,onClick:()=>setOffset(catalog.next_offset)},'下一页记忆')));
+    }
+    return function MemoryPanel({onClose}){
+      const dialog=React.useRef(null),alive=React.useRef(true),generation=React.useRef(0),selectedCase=React.useRef(null);
+      const [cases,setCases]=React.useState({cases:[],total:0,next_offset:null}),[caseOffset,setCaseOffset]=React.useState(0),[caseQuery,setCaseQuery]=React.useState(''),[caseSearch,setCaseSearch]=React.useState('');
+      const [chosen,setChosen]=React.useState(null),[status,setStatus]=React.useState(null),[runtime,setRuntime]=React.useState(null);
+      const [busy,setBusy]=React.useState(false),[error,setError]=React.useState(''),[notice,setNotice]=React.useState('');
+      selectedCase.current=chosen?.id||null;
+      React.useEffect(()=>{alive.current=true;const element=dialog.current,previous=document.activeElement;element.showModal();return()=>{alive.current=false;if(element.open)element.close();previous?.focus?.();};},[]);
+      React.useEffect(()=>{const controller=new AbortController();void api(`list_cases?offset=${caseOffset}&query=${encodeURIComponent(caseSearch)}`,{signal:controller.signal}).then(setCases).catch(e=>{if(!controller.signal.aborted)setError(e.message);});return()=>controller.abort();},[caseOffset,caseSearch]);
+      const refresh=React.useCallback(async()=>{
+        const caseId=chosen?.id||null;
+        if(!alive.current||selectedCase.current!==caseId)return;
+        const turn=++generation.current;
+        const [next,engine]=await Promise.all([api('status'+(chosen?'?case_id='+chosen.id:'')),api('runtime-status')]);
+        if(alive.current&&selectedCase.current===caseId&&generation.current===turn){setStatus(next);setRuntime(engine);}
+      },[chosen?.id]);
+      React.useEffect(()=>{let cancelled=false,timer;setStatus(null);
+        const poll=async()=>{try{await refresh();}catch(e){if(!cancelled)setError(e.message);}finally{if(!cancelled)timer=setTimeout(poll,5000);}};void poll();
+        return()=>{cancelled=true;++generation.current;clearTimeout(timer);};
+      },[refresh]);
+      async function act(task){setBusy(true);setError('');try{await task();await refresh();}catch(e){if(alive.current)setError(e.message);}finally{if(alive.current)setBusy(false);}}
+      const states={empty:'尚未加入记忆',disabled:'已关闭',unconfigured:'增强服务未配置 · 使用本机记忆',pending:'待同步 · 使用本机记忆',syncing:'正在同步 · 本机记忆可用',ready:'增强记忆已同步',error:'增强服务暂不可用 · 使用本机记忆'};
+      const runtimeStates={'not-installed':'增强引擎尚未准备',installing:'正在下载和准备增强引擎',starting:'增强引擎正在启动',ready:'增强引擎已启动',error:'增强引擎准备未完成',stopped:'增强引擎已停止',unavailable:'当前环境未提供一键准备'};
+      const preparing=runtime&&['installing','starting'].includes(runtime.phase);
+      return h('dialog',{ref:dialog,className:'qx-memory','aria-labelledby':'qx-memory-heading',onCancel:e=>{e.preventDefault();onClose();}},h('style',null,css),
+        h('header',null,h('h2',{id:'qx-memory-heading'},'案件记忆'),h('button',{type:'button',onClick:onClose,'aria-label':'关闭案件记忆'},'关闭')),
+        h('div',{className:'qx-memory-body'},
+          h('p',null,'按案件保存你明确选择的记录。默认开启，可随时关闭；各案分别保存，不自动收录全部聊天。'),
+          h('p',{className:'muted'},'记忆是办案提示，不是证据。请核对来源原文；启用增强服务后，选定的记忆片段会发送给当前配置的 DeepSeek 处理。'),
+          error&&h('p',{className:'notice error',role:'alert'},error),notice&&h('p',{className:'notice',role:'status'},notice),
+          h('div',{className:'row'},h('label',{className:'check'},h('input',{type:'checkbox',checked:status?.global_enabled??false,disabled:busy||!status,onChange:e=>{const enabled=e.target.checked;void act(()=>post('settings',{enabled}));}}),'启用案件记忆（全局）'),
+            h('span',{className:'muted',role:'status'},status?(status.global_enabled?'已开启':'已关闭'):'正在读取状态…')),
+          h('section',{'aria-label':'增强记忆服务'},h('p',{className:'muted',role:'status'},runtime?runtimeStates[runtime.phase]||'正在读取增强服务状态…':'正在读取增强服务状态…'),
+            runtime&&runtime.phase!=='ready'&&runtime.phase!=='unavailable'&&h('button',{type:'button',disabled:busy||preparing,onClick:()=>act(async()=>{await post('prepare',{});setNotice('已开始在后台准备增强引擎，可以继续使用本机记忆。');})},preparing?'正在准备…':'一键准备增强记忆'),
+            h('details',{className:'muted'},h('summary',null,'增强服务与本机记录'),h('p',null,'增强引擎首次准备需要下载组件。增强索引可重建，本机保存的选定记录与来源仍为依据；服务不可用时，页面继续提供本机查看与关键词检索。'))),
+          h('section',{className:'section','aria-label':'选择案件'},h('form',{className:'row',onSubmit:e=>{e.preventDefault();setCaseOffset(0);setCaseSearch(caseQuery.trim());}},h('input',{type:'search',value:caseQuery,maxLength:300,onChange:e=>setCaseQuery(e.target.value),'aria-label':'查找案件',placeholder:'按案件名称查找'}),h('button',{type:'submit'},'查找案件')),
+            h('label',{className:'field'},h('span',null,'当前案件'),h('select',{'aria-label':'当前案件',className:'case-select',value:chosen?.id||'',disabled:busy,onChange:e=>{setStatus(null);setChosen(cases.cases.find(item=>item.id===e.target.value)||null);setNotice('');setError('');}},h('option',{value:''},'请选择案件'),chosen&&!cases.cases.some(item=>item.id===chosen.id)&&h('option',{value:chosen.id},chosen.title),cases.cases.map(item=>h('option',{key:item.id,value:item.id},`${item.title} · ${item.id.slice(0,8)}`)))),
+            cases.total>20&&h('div',{className:'pager'},h('button',{type:'button',disabled:caseOffset===0,onClick:()=>setCaseOffset(Math.max(0,caseOffset-20))},'上一页案件'),h('button',{type:'button',disabled:cases.next_offset==null,onClick:()=>setCaseOffset(cases.next_offset)},'下一页案件')),
+            !cases.total&&h('p',{className:'muted'},'没有找到案件。请先在办案流程中建立案件，再选择要保存的记录。')),
+          chosen&&h(React.Fragment,null,h('div',{className:'row'},h('label',{className:'check'},h('input',{type:'checkbox',checked:status?.case_enabled??false,disabled:busy||!status||!status.global_enabled,onChange:e=>{const enabled=e.target.checked;void act(()=>post('settings',{case_id:chosen.id,enabled}));}}),'本案使用记忆'),
+            h('span',{className:'muted',role:'status'},status?states[status.sync_state]||'正在读取本案状态…':'正在读取本案状态…'),
+            h('button',{type:'button',disabled:busy||!status?.service_configured,onClick:()=>act(()=>post('sync',{case_id:chosen.id}))},'重试同步')),
+            status?.pending_cleanup>0&&h('p',{className:'notice',role:'status'},`有 ${status.pending_cleanup} 份旧增强索引待清理。删除或修订已在本机生效，旧索引清理尚未确认。`),
+            status?.last_error&&h('p',{className:'notice error'},status.last_error),
+            h(CaseMemories,{key:chosen.id,caseId:chosen.id,enabled:Boolean(status?.enabled),onStatus:refresh})),
+          !chosen&&h('p',{className:'empty'},'选择案件后查看该案记忆和可选来源。')));
+    };
+  }
+  const MemoryPanel=createMemoryView(React);
   function WechatPanel({onClose}){
     const dialog=React.useRef(null),alive=React.useRef(true),refreshVersion=React.useRef(0),actionRunning=React.useRef(false);
     const [state,setState]=React.useState(null),[settings,setSettings]=React.useState(null);
@@ -340,6 +476,7 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
   }
   function AccountFooter({wide}){
     const [knowledgeOpen,setKnowledgeOpen]=React.useState(false);
+    const [memoryOpen,setMemoryOpen]=React.useState(false);
     const [wechatOpen,setWechatOpen]=React.useState(false);
     React.useEffect(()=>{
       const open=()=>{window.__qxOpenWechatRequested=false;setWechatOpen(true)};
@@ -351,6 +488,8 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       h(UpdateEntry,{wide}),
       h('button',{type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'律所知识库',title:'律所知识库',onClick:()=>setKnowledgeOpen(true)},h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,'aria-hidden':true},h('path',{d:'M4 3h12a2 2 0 0 1 2 2v16H6a2 2 0 0 1-2-2V3zm0 13h14M8 7h6M8 11h6'})),wide&&h('span',null,'律所知识库')),
       knowledgeOpen&&h(KnowledgeBoundary,{onClose:()=>setKnowledgeOpen(false)},h(KnowledgePanel,{onClose:()=>setKnowledgeOpen(false)})),
+      h('button',{type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'案件记忆',title:'案件记忆','aria-haspopup':'dialog',onClick:()=>setMemoryOpen(true)},h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,'aria-hidden':true},h('path',{d:'M5 4h14v16H5V4zm4 4h6m-6 4h6m-6 4h4M2 8h3m-3 4h3m-3 4h3'})),wide&&h('span',null,'案件记忆')),
+      memoryOpen&&h(MemoryPanel,{onClose:()=>setMemoryOpen(false)}),
       h('button',{type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'微信连接',title:'微信连接','aria-haspopup':'dialog',onClick:()=>setWechatOpen(true)},h(PhoneIcon),wide&&h('span',null,'微信连接')),
       wechatOpen&&h(WechatPanel,{onClose:()=>setWechatOpen(false)}),
       h(Balance,{wide}));
@@ -391,7 +530,35 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       h('div',{className:'qx-balance-heading'},h('span',null,'DeepSeek 余额'),button),
       h('div',{'aria-live':'polite','aria-atomic':true},values.length>0&&h('div',{className:'qx-balance-values'},values.map(value=>h('span',{key:value},value))),notice&&h('div',{className:'qx-balance-notice'},notice)));
   }
+  function LegalSearchRow({toolName,block,phase}){
+    const [open,setOpen]=React.useState(false);
+    const read=toolName==='legal_search_read',title=read?'读取法律检索资料':'法律资料检索';
+    let args={},data=null;
+    try{args=JSON.parse(block?.call?.argsRaw??block?.argsRaw??'{}');}catch{}
+    try{data=JSON.parse((block?.content??[]).filter(x=>x.type==='text').map(x=>x.text).join(''));}catch{}
+    if(!args||typeof args!=='object')args={};
+    if(!data||typeof data!=='object')data=null;
+    const queries=Array.isArray(args.queries)?args.queries.filter(x=>typeof x==='string'):[];
+    const rows=Array.isArray(data?.items)?data.items.filter(x=>x&&typeof x.url==='string'):[];
+    const outcomes=Array.isArray(data?.queries)?data.queries.filter(x=>x&&typeof x==='object'):[];
+    const settled=Boolean(block&&'kind' in block),status=block?.isError?'调用失败':data?.status==='failed'?'渠道暂不可用':data?.status==='partial'?'已保留部分结果':data?.status==='empty'?'未找到结果':data?.status==='cancelled'?'已取消':settled?'已完成':'检索中';
+    const detail=read?(!Number.isInteger(args.entry)?'查看已保存的结果目录':`查看第 ${args.entry+1} 条资料`):queries.join('；');
+    return h('div',{className:'qx-legal-search-row','data-tool':toolName,'data-state':status},
+      h('button',{type:'button',className:'qx-legal-search-toggle','aria-expanded':open,onClick:()=>setOpen(x=>!x)},
+        h('span',{'aria-hidden':true},open?'▾':'▸'),h('span',null,title),h('span',{className:'qx-legal-search-detail'},phase==='preparing'?'准备检索':detail),h('span',null,status)),
+      open&&h('div',{className:'qx-legal-search-body'},
+        Number.isFinite(data?.total)&&h('p',null,`已保存 ${data.total} 条来源；当前显示 ${rows.length} 条。`),
+        outcomes.map((q,i)=>h('p',{key:i},`${q.provider==='so360'?'360 备用检索':'现有检索'}：${q.status==='success'?'已找到来源':q.status==='empty'?'未找到结果':'暂未取得结果'}${Array.isArray(q.attempts)&&q.attempts.some(a=>['CAPTCHA','COOLDOWN'].includes(a?.code))?'（备用渠道要求验证，已暂停重试）':''}`)),
+        rows.length>0&&h('ol',null,rows.map((item,i)=>h('li',{key:i},/^https?:\/\//i.test(item.url)?h('a',{href:item.url,target:'_blank',rel:'noopener noreferrer'},typeof item.title==='string'?item.title:item.url):h('span',null,'来源链接不可用'),typeof item.snippet==='string'&&h('p',null,item.snippet)))),
+        typeof data?.text==='string'&&h('p',{style:{whiteSpace:'pre-wrap'}},data.text),
+        typeof data?.note==='string'&&h('p',null,data.note),
+        !data&&h('p',null,settled?'未取得可展示结果，可在调用轨迹中查看详情。':'正在检索，已返回的资料会保存在本机。')));
+  }
   return {inject:['sessions','uiWorkspace','slots','sidebarRight'],apply(ctx){
+    ctx.effect(()=>{
+      const css=document.createElement('style');css.textContent='.qx-legal-search-row{margin:6px 0;color:var(--dsw-alias-label-secondary,#687282);font-size:13px}.qx-legal-search-toggle{display:flex;align-items:center;gap:8px;width:100%;border:0;padding:6px 0;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit}.qx-legal-search-toggle:focus-visible{outline:2px solid #3563a5;outline-offset:2px}.qx-legal-search-detail{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.qx-legal-search-body{padding:4px 16px 8px;border-left:1px solid var(--dsw-alias-border-default,#d8dde5);overflow-wrap:anywhere}.qx-legal-search-body p{margin:6px 0}.qx-legal-search-body a{color:var(--dsw-alias-link,#3563a5)}';document.head.append(css);return()=>css.remove();
+    },'qunxing: legal search cards');
+    for(const key of ['legal_search','legal_search_read'])ctx.slots.inject('tool.call.toolview',()=>ctx.slots.register({name:'tool.call.toolview',key},LegalSearchRow));
     ctx.effect(()=>{
       let notice,timer;
       const pending=new Map(),controller=new AbortController();

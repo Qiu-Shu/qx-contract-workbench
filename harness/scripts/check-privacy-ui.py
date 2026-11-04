@@ -18,8 +18,11 @@ with sync_playwright() as p:
         calls.append(request.request.post_data_buffer.decode())
         if 'FAIL' in calls[-1]:request.fulfill(status=400,content_type='application/json',body=json.dumps({'error':'识字失败，原件未发送。'}));return
         mode=parse_qs(urlsplit(request.request.url).query).get('mode',['standard'])[0]
-        request.fulfill(status=200,headers={'content-type':'text/plain','x-qx-safe-name':'safe.txt','x-qx-replacements':'1','x-qx-privacy-mode':mode},body='姓名：[人物1]。金额1000元。')
+        request.fulfill(status=200,headers={'content-type':'application/json','x-qx-privacy-mode':mode},body=json.dumps({'document_id':'synthetic-id',
+            'review_token':'synthetic-token','original_text':'PRIVATE','safe_text':'姓名：[人物1]。金额1000元。','replacements':[],'privacy_mode':mode,'replacement_count':1}))
     page.route('http://127.0.0.1:37213/api/qx-privacy/prepare?*',route)
+    page.route('http://127.0.0.1:37213/api/qx-privacy/review.js',lambda r:r.fulfill(content_type='text/javascript',body=(ROOT/'plugins/privacy/review.js').read_text(encoding='utf8')))
+    page.route('http://127.0.0.1:37213/api/qx-privacy/confirm',lambda r:r.fulfill(headers={'content-type':'text/plain','x-qx-safe-name':'safe.txt','x-qx-reviewed':'test'},body=r.request.post_data_json['text']))
     page.route('http://127.0.0.1:37213/',lambda r:r.fulfill(content_type='text/html',body=HTML))
     page.goto('http://127.0.0.1:37213/')
     page.add_script_tag(path=str(ROOT/'plugins/privacy/client.js'))
@@ -29,13 +32,16 @@ with sync_playwright() as p:
     page.wait_for_function('received.length===1');assert page.evaluate('received[0].text')=='UNCHANGED' and not calls
     check.check()
     page.locator('#chatfiles').set_input_files({'name':'private.txt','mimeType':'text/plain','buffer':b'PRIVATE'})
+    page.get_by_role('button',name='确认使用此版本',exact=True).click()
     page.wait_for_function('received.length===2');assert page.evaluate('received[1].name')=='safe.txt', page.evaluate('JSON.stringify(received)')
     for kind in ['paste','drop']:
         page.locator('[contenteditable]').evaluate('''(el,type)=>{const dt=new DataTransfer();dt.items.add(new File(['PRIVATE'],'image.png',{type:'image/png'}));el.dispatchEvent(type==='paste'?new ClipboardEvent(type,{bubbles:true,cancelable:true,clipboardData:dt}):new DragEvent(type,{bubbles:true,cancelable:true,dataTransfer:dt}));}''',kind)
+        page.get_by_role('button',name='确认使用此版本',exact=True).click()
         page.wait_for_function(f'received.length==={3 if kind=="paste" else 4}')
     assert all(x['text'].startswith('姓名：[人物1]') for x in page.evaluate('received.slice(1)'))
     page.locator('.qx-kb input[type=checkbox]').check()
     page.locator('#knowledge').set_input_files({'name':'k.txt','mimeType':'text/plain','buffer':b'PRIVATE'})
+    page.get_by_role('button',name='确认使用此版本',exact=True).click()
     page.wait_for_function('received.length===5');assert page.evaluate('received[4].text').startswith('姓名：[人物1]')
     page.locator('#restore').set_input_files({'name':'backup.zip','mimeType':'application/zip','buffer':b'BACKUP'})
     page.wait_for_function('received.length===6');assert page.evaluate('received[5].text')=='BACKUP'

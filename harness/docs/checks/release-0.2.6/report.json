@@ -1,0 +1,47 @@
+{
+  "version": "0.2.6",
+  "checkedAt": "2026-11-04T13:51:44.249Z",
+  "passed": true,
+  "installer": {
+    "name": "Qunxing-Workbench-0.2.6-Setup.exe",
+    "size": 612273795,
+    "sha256": "bc5e2546577ccad5f18993ff016fd560d1d3df0ea00eea0ff0d4af2355a75559"
+  },
+  "integrity": "Ed25519 update signature, complete SHA512 and SHA256 passed",
+  "packagedSources": {
+    "criticalCurrentSourceMatches": 22,
+    "stageFileAndConfigMatches": 14,
+    "additionalLegalSearchMatches": 6,
+    "shellSourceMatches": 18,
+    "drift": 0
+  },
+  "caseMemoryRealModel": {
+    "passed": true,
+    "checks": 12,
+    "report": "../case-memory/real-model.json"
+  },
+  "freshUnitTests": {
+    "python": 24,
+    "nodeUnique": 10,
+    "skipsRemaining": 0
+  },
+  "delta": {
+    "oldVersion": "0.2.5",
+    "newVersion": "0.2.6",
+    "downloadBytes": 1787666,
+    "copyBytes": 610486129,
+    "fullBytes": 612273795,
+    "actualDownloadBytes": 1787666,
+    "rangeRequests": 13,
+    "savedPercent": 99.71,
+    "productionInstallerReconstructed": true,
+    "signatureAndSha512Verified": true,
+    "scope": "Production installers reconstructed through loopback HTTP; installer not executed"
+  },
+  "scope": "Final actual installer extracted and verified; real model used the matching candidate runtime. No new full NSIS install or clean second-PC test in this release verification.",
+  "knownNotes": [
+    "Windows Authenticode remains NotSigned; application update signature is valid.",
+    "Differential test emitted a nonfatal MaxListenersExceededWarning and exited 0 with matching complete file digests.",
+    "Two public privacy test source files remain in payload; no customer records or model credentials are included."
+  ]
+}

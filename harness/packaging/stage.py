@@ -92,6 +92,9 @@ def portable_config():
     for block in value:
         for plugin in block.get('insert',[]):
             config=plugin.get('config',{})
+            if plugin['id']=='qx-legal-search':
+                plugin['name']='@DATA@/.local/legal-search-runtime/plugins/legal-search/index.mjs'
+                config['python']='@APP@/runtime/scrapling/python.exe'
             if plugin['id']=='qx-scrapling':
                 config['command']='@APP@/runtime/scrapling/python.exe'
                 config['args']=['@APP@/python-tool.py','scrapling','mcp']
@@ -130,13 +133,13 @@ def stage(destination,version='0.2.1'):
     payload=destination/'workbench';app=destination/'app'
     payload.mkdir(parents=True);app.mkdir()
     (payload/'desktop-runner').mkdir()
-    for name in ['installed-host.cjs','installed-runtime.cjs','installed-migrations.cjs','host-recovery.cjs','stop-installed.cjs']:shutil.copy2(ROOT/'desktop'/name,payload/'desktop-runner'/name)
-    for name in ['main.cjs','preload.cjs','unavailable.html','installed.cjs','installed-runtime.cjs','installed-migrations.cjs','host-recovery.cjs','model-credentials.cjs','setup-service.cjs','setup-preload.cjs','setup.html','setup.css','setup.js','updates.cjs','update-download.cjs','update-integrity.cjs','update-config.json']:
+    for name in ['installed-host.cjs','installed-runtime.cjs','installed-migrations.cjs','case-memory-runtime.cjs','host-recovery.cjs','stop-installed.cjs']:shutil.copy2(ROOT/'desktop'/name,payload/'desktop-runner'/name)
+    for name in ['main.cjs','preload.cjs','unavailable.html','installed.cjs','installed-runtime.cjs','installed-migrations.cjs','case-memory-runtime.cjs','host-recovery.cjs','model-credentials.cjs','setup-service.cjs','setup-preload.cjs','setup.html','setup.css','setup.js','updates.cjs','update-download.cjs','update-integrity.cjs','update-config.json']:
         shutil.copy2(ROOT/'desktop'/name,app/name)
     (app/'package.json').write_text(json.dumps({'name':'qunxing-harness-desktop','version':version,'private':True,'description':'AI师兄法律助手平台','author':'AI师兄法律助手平台项目','main':'installed.cjs','dependencies':{'electron-updater':'6.8.11'}}),encoding='utf-8')
     bundle_node([(ROOT/'node_modules/electron-updater','electron-updater')],app)
-    for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','desktop/integration']:
-        copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py'))
+    for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','plugins/legal-search','plugins/case-memory','desktop/integration']:
+        copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py','ui-check.py'))
     # Only active WeChat runtime assets; exclude development VSIXs, snapshots and tests.
     copytree(ROOT/'plugins/wechat',payload/'plugins/wechat',('*.vsix','test','tests','docs','scripts','.github','vscode-extension'))
     reader=payload/'bridge/reader.py'
@@ -167,6 +170,7 @@ def stage(destination,version='0.2.1'):
     instructions=(ROOT/'config/workspace-AGENTS.md').read_text(encoding='utf-8').replace(str(RUNTIME/'node/bin/node.exe').replace('\\','/'),'@APP@/runtime/node.exe')
     (seed/'AGENTS.md').write_text(instructions,encoding='utf-8')
     (payload/'config').mkdir()
+    shutil.copy2(ROOT/'packaging/case-memory-requirements.lock',payload/'config/case-memory-requirements.lock')
     copytree(ROOT/'config/templates',payload/'config/templates')
     shutil.copy2(ROOT/'packaging/contract-0.2.0-defaults.json',payload/'config/contract-0.2.0-defaults.json')
     (payload/'config/portable.json').write_text(json.dumps(portable_config(),ensure_ascii=False,indent=2),encoding='utf-8')

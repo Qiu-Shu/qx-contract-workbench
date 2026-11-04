@@ -26,6 +26,11 @@
   config:
     personaPrefix: '你是AI师兄法律助手平台，使用 {{model}} 帮助用户理解材料、拟稿和处理工作。用中文清楚回答。'
 - insert:
+    - id: qx-legal-search
+      name: D:/qx-harness-workbench-20261102/plugins/legal-search/index.mjs
+      config:
+        workspace: D:/qx-harness-workbench-20261102/workspace
+        python: C:/Users/Lenovo/.codex/tools/scrapling/venv/Scripts/python.exe
     - id: qx-account-balance
       name: D:/qx-harness-workbench-20261102/plugins/account/index.mjs
     - id: qx-desktop-session
@@ -140,6 +145,30 @@
       config:
         workspace: D:/qx-harness-workbench-20261102/workspace
         python: D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe
+
+# qunxing-case-memory-v1
+- insert:
+    - id: qx-case-memory-ui
+      name: D:/qx-harness-workbench-20261102/plugins/case-memory/index.mjs
+      config:
+        workspace: D:/qx-harness-workbench-20261102/workspace
+        python: D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe
+    - id: qx-case-memory
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        transport: stdio
+        serverName: qx_case_memory
+        command: D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe
+        args:
+          - D:/qx-harness-workbench-20261102/bridge/case_memory_server.py
+          - --workspace
+          - D:/qx-harness-workbench-20261102/workspace
+        cwd: D:/qx-harness-workbench-20261102/workspace
+        env:
+          PYTHONIOENCODING: utf-8
+          QX_HINDSIGHT_TOKEN:
+            __jsExpr: process.env.QX_HINDSIGHT_TOKEN || ''
+        toolCallTimeoutMs: 120000
 
 # qunxing-model-recovery-v1
 # Retry only the failed model request. The official loop retains completed tool results.

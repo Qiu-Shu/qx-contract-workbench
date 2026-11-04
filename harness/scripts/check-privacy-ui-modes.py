@@ -36,7 +36,10 @@ with sync_playwright() as p:
         if body=='NETWORK':route.abort('failed');return
         headers={'content-type':'text/plain','x-qx-safe-name':f'{mode}-safe.txt','x-qx-replacements':'1'}
         if body!='MISSING_MODE':headers['x-qx-privacy-mode']='standard' if body=='WRONG_MODE' else mode
-        route.fulfill(status=200,headers=headers,body=f'姓名：【人物1】。方式：{mode}。金额1000元。')
+        headers['content-type']='application/json'
+        route.fulfill(status=200,headers=headers,body=json.dumps({'document_id':'synthetic-id','review_token':'synthetic-token',
+            'original_text':body,'safe_text':f'姓名：【人物1】。方式：{mode}。金额1000元。','replacements':[],
+            'privacy_mode':mode,'replacement_count':1}))
     def prepare(route):
         request=route.request;body=request.post_data_buffer.decode();params=parse_qs(urlsplit(request.url).query)
         calls.append({'body':body,'mode':params.get('mode',[''])[0],'context':params.get('context',[''])[0],
@@ -47,6 +50,8 @@ with sync_playwright() as p:
         uploads.append({'body':route.request.post_data_buffer.decode(),'transport':route.request.resource_type})
         route.fulfill(status=200,content_type='application/json',body='{"ok":true}')
     page.route(ORIGIN+'/api/qx-privacy/prepare?*',prepare)
+    page.route(ORIGIN+'/api/qx-privacy/review.js',lambda r:r.fulfill(content_type='text/javascript',body=(ROOT/'plugins/privacy/review.js').read_text(encoding='utf8')))
+    page.route(ORIGIN+'/api/qx-privacy/confirm',lambda r:r.fulfill(headers={'content-type':'text/plain','x-qx-safe-name':'safe.txt','x-qx-reviewed':'synthetic-revision'},body=r.request.post_data_json['text']))
     page.route(ORIGIN+'/api/session/uploadFileBinary?*',downstream)
     page.route(ORIGIN+'/api/qx-knowledge/upload?*',downstream)
     page.route(ORIGIN+'/',lambda route:route.fulfill(content_type='text/html',body=HTML))
@@ -55,7 +60,13 @@ with sync_playwright() as p:
     check,mode=card.locator('input[type=checkbox]'),card.get_by_role('combobox',name='脱敏方式')
     def file(body='PRIVATE',name='synthetic.txt'):return {'name':name,'mimeType':'text/plain','buffer':body.encode()}
     def count():return page.evaluate('received.length')
-    def wait(n):page.wait_for_function('(n)=>received.length===n',arg=n)
+    def wait(n):
+        deadline=time.monotonic()+15
+        while count()<n and time.monotonic()<deadline:
+            confirm=page.get_by_role('button',name='确认使用此版本',exact=True)
+            if confirm.count() and confirm.is_enabled():confirm.click()
+            page.wait_for_timeout(30)
+        assert count()==n
     def settle():expect(card.locator('.qx-privacy')).to_have_attribute('data-busy','false')
     def release():complete(*held.pop(0))
     def drag(kind,target,body='PRIVATE'):

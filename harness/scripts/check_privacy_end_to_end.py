@@ -184,6 +184,10 @@ def main():
                     else:
                         payload = {'kind': event, 'name': files[extension].name, 'mime': 'image/png' if extension == 'png' else 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'body': base64.b64encode(files[extension].read_bytes()).decode()}
                         page.locator('[contenteditable]').evaluate('''(element,data)=>{const bytes=Uint8Array.from(atob(data.body),char=>char.charCodeAt(0)),transfer=new DataTransfer();transfer.items.add(new File([bytes],data.name,{type:data.mime}));element.dispatchEvent(data.kind==='paste'?new ClipboardEvent('paste',{bubbles:true,cancelable:true,clipboardData:transfer}):new DragEvent('drop',{bubbles:true,cancelable:true,dataTransfer:transfer}));}''', payload)
+                    review=page.get_by_role('dialog',name='脱敏复核',exact=True)
+                    expect(review).to_be_visible(timeout=180000)
+                    assert page.evaluate('window.received.length') == counter, 'File uploaded before review'
+                    review.get_by_role('button',name='确认使用此版本',exact=True).click()
                     counter += 1
                     page.wait_for_function('count=>window.received.length===count||document.querySelector(".qx-privacy").dataset.error==="true"', arg=counter, timeout=180000)
                     assert page.evaluate('window.received.length') == counter, control.locator('[role=status]').inner_text()

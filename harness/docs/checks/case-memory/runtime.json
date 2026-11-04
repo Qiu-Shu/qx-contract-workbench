@@ -1,0 +1,39 @@
+{
+  "startedAt": "2026-11-04T13:14:24.292Z",
+  "scope": "isolated Hindsight bootstrap, synthetic credential, all LLM calls redirected to local rejecting endpoint",
+  "modelCalls": 0,
+  "state": {
+    "phase": "ready",
+    "message": "增强记忆引擎已就绪。只有明确选中的记忆会使用已保存的 DeepSeek 密钥调用 Flash 模型。",
+    "engine": "hindsight",
+    "version": "1.2.0",
+    "databaseMode": "embedded-cache",
+    "model": "deepseek-flash",
+    "instanceId": "123ea3b4-e51e-4758-ad31-ce76ae7dfa69"
+  },
+  "instanceId": "123ea3b4-e51e-4758-ad31-ce76ae7dfa69",
+  "health": {
+    "status": "healthy",
+    "database": "connected",
+    "db_acquire_ms": 0,
+    "db_pool_waiting": 0,
+    "db_pool_in_use": 0,
+    "db_pool_max": 100,
+    "db_pool_idle": 5
+  },
+  "banksStatus": 200,
+  "banks": {
+    "banks": [],
+    "total": 0,
+    "limit": 100,
+    "offset": 0
+  },
+  "unauthenticatedStatus": 401,
+  "nativeUnauthorizedStatus": 403,
+  "nativeOriginStatus": 403,
+  "databaseDirectory": "D:\\qx-harness-workbench-20261102\\.local\\hindsight-engine-check\\.local\\case-memory-runtime\\database",
+  "databasePresent": true,
+  "stableIdentityAfterRestart": true,
+  "status": "passed",
+  "finishedAt": "2026-11-04T13:14:51.295Z"
+}

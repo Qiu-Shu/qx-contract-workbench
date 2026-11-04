@@ -1,7 +1,6 @@
 const path=require('node:path');
 const fs=require('node:fs');
 const {execFileSync}=require('node:child_process');
-const {build}=require('D:/qx-contract-workbench-20261102/desktop/node_modules/electron-builder');
 const stage=path.resolve(process.argv[2]);
 const output=path.resolve(process.argv[3]||path.join(stage,'dist'));
 const shim=path.join(stage,'build-tools');fs.mkdirSync(shim,{recursive:true});
@@ -9,8 +8,11 @@ fs.writeFileSync(path.join(shim,'npm.cmd'),'@"C:\\Users\\Lenovo\\.cache\\codex-r
 process.env.PATH=shim+path.delimiter+path.dirname(process.execPath)+path.delimiter+process.env.PATH;
 process.env.ELECTRON_BUILDER_COMPRESSION_LEVEL??='1';
 const packageInfo=JSON.parse(fs.readFileSync(path.join(stage,'app/package.json'),'utf8'));
+const existingArchive=path.join(output,`${packageInfo.name}-${packageInfo.version}-x64.nsis.7z`);
+if(fs.existsSync(existingArchive))throw Error('A previous archive cache exists. Use a new output directory to avoid packaging stale or interrupted files.');
+const {build}=require('D:/qx-contract-workbench-20261102/desktop/node_modules/electron-builder');
 fs.writeFileSync(path.join(stage,'app/package-lock.json'),JSON.stringify({name:packageInfo.name,version:packageInfo.version,lockfileVersion:3,packages:{'':{name:packageInfo.name,version:packageInfo.version}}}));
-build({publish:'never',projectDir:path.join(stage,'app'),...(process.argv[4]==='--prepackaged'?{prepackaged:path.join(output,'win-unpacked')}:{}),config:{
+build({publish:'never',projectDir:path.join(stage,'app'),...(process.argv[4]==='--prepackaged'?{prepackaged:path.resolve(process.argv[5]||path.join(output,'win-unpacked'))}:{}),config:{
   appId:'cn.qunxing.harness.workbench',productName:'AI师兄法律助手平台',asar:true,compression:'normal',
   electronVersion:'44.8.0',electronDist:'D:/qx-contract-workbench-20261102/desktop/node_modules/electron/dist',
   directories:{output},files:['*.cjs','*.html','*.css','*.js','package.json','update-config.json'],
@@ -23,6 +25,9 @@ build({publish:'never',projectDir:path.join(stage,'app'),...(process.argv[4]==='
   afterPack:async context=>{
     // Differential NSIS packages use non-solid 7z archives for reusable blocks.
     const bundled=path.join(context.appOutDir,'resources/workbench');
+    for(const relative of ['bridge/case_memory.py','bridge/case_memory_server.py','plugins/case-memory/index.mjs','desktop-runner/case-memory-runtime.cjs','config/case-memory-requirements.lock']){
+      if(!fs.existsSync(path.join(bundled,relative)))throw Error('Required case memory file missing from package: '+relative);
+    }
     for(const relative of ['node_modules/@deepseek-ai/dsh/lib/bin.js','node_modules/@deepseek-ai/libreoffice-kit-win32-x64/bin/libreoffice-kit.exe','node_modules/@deepseek-ai/libreoffice-kit-win32-x64/prebuilds.json','node_modules/@qunxing/desktop-session/attachment-preview.mjs','node_modules/@qunxing/desktop-session/client.js','browser/node_modules/bb-browser/dist/cli.js','runtime/python/python.exe','desktop-runner/installed-host.cjs','workspace-seed/AGENTS.md','config/templates/catalog.json','config/contract-0.2.0-defaults.json','plugins/privacy/client.js']){
       if(!fs.existsSync(path.join(bundled,relative)))throw Error('Required runtime file missing from package: '+relative);
     }

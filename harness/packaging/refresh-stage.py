@@ -18,12 +18,12 @@ if len(sys.argv)>2:
     package.write_text(json.dumps(metadata,ensure_ascii=False,indent=2),encoding='utf-8')
 shutil.copy2(ROOT/'packaging/LICENSE.node.txt',payload/'runtime/LICENSE.node.txt')
 (payload/'desktop-runner').mkdir(exist_ok=True)
-for name in ['installed-host.cjs','installed-runtime.cjs','installed-migrations.cjs','host-recovery.cjs','stop-installed.cjs']:shutil.copy2(ROOT/'desktop'/name,payload/'desktop-runner'/name)
+for name in ['installed-host.cjs','installed-runtime.cjs','installed-migrations.cjs','case-memory-runtime.cjs','host-recovery.cjs','stop-installed.cjs']:shutil.copy2(ROOT/'desktop'/name,payload/'desktop-runner'/name)
 shutil.copy2(ROOT/'desktop/installed-migrations.cjs',stage/'app/installed-migrations.cjs')
 for file in (stage/'app').iterdir():
     source=ROOT/'desktop'/file.name
     if source.is_file():shutil.copy2(source,file)
-for name in ['updates.cjs','update-download.cjs','update-integrity.cjs','update-config.json','host-recovery.cjs']:
+for name in ['updates.cjs','update-download.cjs','update-integrity.cjs','update-config.json','host-recovery.cjs','case-memory-runtime.cjs']:
     shutil.copy2(ROOT/'desktop'/name,stage/'app'/name)
 package=stage/'app/package.json';metadata=json.loads(package.read_text(encoding='utf-8'))
 metadata.setdefault('dependencies',{})['electron-updater']='6.8.11'
@@ -36,8 +36,8 @@ for spec in patched:
     source=package_source((ROOT/'node_modules/@deepseek-ai/dsh').resolve(),name)
     if source is None:raise RuntimeError('Missing patched dependency: '+name)
     copytree(source,payload/'node_modules'/name)
-for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','desktop/integration']:
-    copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py'))
+for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','plugins/legal-search','plugins/case-memory','desktop/integration']:
+    copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py','ui-check.py'))
 copytree(ROOT/'plugins/wechat',payload/'plugins/wechat',('*.vsix','test','tests','docs','scripts','.github','vscode-extension'))
 copytree(ROOT/'desktop/integration',payload/'node_modules/@qunxing/desktop-session')
 reader=payload/'bridge/reader.py'
@@ -46,6 +46,7 @@ copytree(ROOT/'workspace/.dsh/skills',payload/'workspace-seed/.dsh/skills')
 copytree(ROOT/'config/skills',payload/'workspace-seed/.dsh/skills')
 copytree(ROOT/'config/templates',payload/'config/templates')
 shutil.copy2(ROOT/'packaging/contract-0.2.0-defaults.json',payload/'config/contract-0.2.0-defaults.json')
+shutil.copy2(ROOT/'packaging/case-memory-requirements.lock',payload/'config/case-memory-requirements.lock')
 instructions=(ROOT/'config/workspace-AGENTS.md').read_text(encoding='utf-8').replace(str(RUNTIME/'node/bin/node.exe').replace('\\','/'),'@APP@/runtime/node.exe')
 (payload/'workspace-seed/AGENTS.md').write_text(instructions,encoding='utf-8')
 (payload/'config/portable.json').write_text(json.dumps(portable_config(),ensure_ascii=False,indent=2),encoding='utf-8')

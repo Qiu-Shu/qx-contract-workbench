@@ -5,11 +5,24 @@ const os=require('node:os');
 const path=require('node:path');
 const {createRequire}=require('node:module');
 const yaml=createRequire(fs.realpathSync(path.join(__dirname,'../node_modules/@deepseek-ai/dsh/package.json')))('js-yaml');
-const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledModelRecovery}=require('./installed-migrations.cjs');
+const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledModelRecovery,migrateInstalledCaseMemory}=require('./installed-migrations.cjs');
 const portableConfig=[{insert:[{id:'qx-knowledge-ui',name:'app/knowledge',config:{workspace:'data/workspace'}},{id:'qx-knowledge',name:'mcp',config:{command:'app/python.exe'}}]}];
 const privacyConfig=[{insert:[{id:'qx-upload-privacy',name:'app/privacy',config:{workspace:'data/workspace',enabled:true}}]}];
 const recoveryConfig=[{id:'llm-deepseek',config:{retryPolicy:{mode:'normal',maxRetries:5,retryableCodes:['TIMEOUT','MALFORMED_RESPONSE','STREAM_CLOSED']}}}];
 const seedInstructions='# Workbench\n\n## 本机律所知识库\n\nOnly explicitly uploaded documents.\n\n## Other\nNot copied.\n';
+test('case memory migration is independent and preserves disabled plugins and customized rules',t=>{
+  const memoryConfig=[{insert:[{id:'qx-case-memory-ui',name:'app/memory-ui'},{id:'qx-case-memory',name:'mcp'}]}];
+  const f=fixture(t,'[{"id":"qx-case-memory","disabled":true}]');f.run();
+  const before=fs.readFileSync(f.agents,'utf8');
+  const options={data:f.data,portableConfig:memoryConfig,seedInstructions:'## 案件记忆\nOnly selected sources.\n## Next\nDo not copy.\n'};
+  assert.equal(migrateInstalledCaseMemory(options).status,'applied');
+  assert.equal(fs.readFileSync(f.agents,'utf8'),before+'\n## 案件记忆\nOnly selected sources.\n');
+  const value=JSON.parse(fs.readFileSync(f.patch));assert.deepEqual(value[0],{id:'qx-case-memory',disabled:true});
+  assert.deepEqual(value.at(-1),{insert:[memoryConfig[0].insert[0]]});
+  assert.equal(migrateInstalledCaseMemory(options).status,'already-applied');
+  const other=fixture(t,'[]','User rules\n## 案件记忆\nMy restrictions.\n');
+  migrateInstalledCaseMemory({...options,data:other.data});assert.equal(fs.readFileSync(other.agents,'utf8'),'User rules\n## 案件记忆\nMy restrictions.\n');
+});
 function fixture(t,config,instructions='Custom lawyer instructions.\n'){
   const data=fs.mkdtempSync(path.join(os.tmpdir(),'qx 迁移 '));
   t.after(()=>fs.rmSync(data,{recursive:true,force:true}));
