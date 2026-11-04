@@ -30,7 +30,7 @@ try:
   safe=True
   page.screenshot(path=str(out/'0-before-checks.png'))
   report['chrome_buttons']=page.get_by_role('button',name='插件',exact=True).evaluate_all('(nodes)=>nodes.map(node=>node.outerHTML)')
-  expect(page.locator('.qx-wordmark')).to_have_text('群兴')
+  expect(page.locator('.qx-wordmark')).to_have_text('AI师兄法律助手平台')
   for name in ['插件','自动化任务','更多']:
    expect(page.get_by_role('button',name=name,exact=True)).to_have_count(0)
   expect(page.get_by_role('button',name='新建会话',exact=True).last).to_be_visible()

@@ -5,7 +5,8 @@ const {spawn}=require('node:child_process');
 const {pathToFileURL}=require('node:url');
 const {createModelCredentialStore}=require('./model-credentials.cjs');
 const {validateKey}=require('./setup-service.cjs');
-const {initialize,readRuntime,stopRuntime}=require('./installed-runtime.cjs');
+const {initialize,readRuntime,readControl,readHostState,inspectHost,stopInstalledHost,restartRuntime}=require('./installed-runtime.cjs');
+const {createHostMonitor,createEventLog}=require('./host-recovery.cjs');
 
 const payload=process.env.QX_PAYLOAD_ROOT||path.join(process.resourcesPath,'workbench');
 const data=process.env.QX_INSTALL_DATA||path.join(app.getPath('appData'),'QunxingHarness');
@@ -16,33 +17,52 @@ app.setPath('userData',path.join(data,'.local','desktop-data'));
 process.env.QX_WORKBENCH_ROOT=data;
 process.env.QX_DESKTOP_DATA=path.join(data,'.local','desktop-data');
 const store=createModelCredentialStore({dataParent:path.join(data,'.local','desktop-data'),safeStorage});
-let setupWindow,starting=false,mainLoaded=false;
+let setupWindow,starting=false,mainLoaded=false,quitting=false,connection;
+const log=createEventLog(data,'desktop');
+global.qxDesktopLog=log;
+log('desktop_start');
+app.on('before-quit',()=>{quitting=true;log('desktop_quit',{intentional:true})});
+process.on('exit',code=>log('desktop_exit',{code}));
+process.on('uncaughtExceptionMonitor',error=>log('desktop_exception',{errorName:error.name,errorCode:error.code}));
 
-async function ensureHost(){
+async function ensureHost(manual=false){
   const existing=await readRuntime(data);
-  if(existing){process.env.QX_HARNESS_URL=existing.url;return;}
-  initialize(payload,data);
+  if(existing){process.env.QX_HARNESS_URL=existing.url;return existing;}
+  const control=readControl(data);
   let failed=false;
-  const result=await store.withSecret(secret=>{
+  if(control){
+    if(readHostState(data)?.phase==='failed'){
+      if(!manual)throw Error('后台连续启动失败，请点击重试恢复。');
+      await restartRuntime(control);
+    }
+  }else{
+    const host=await inspectHost(data);
+    if(host.hostAlive)throw Error('后台仍在运行但暂时无法连接，请稍后重试，避免打断正在处理的任务。');
+    initialize(payload,data);
+    const result=await store.withSecret(secret=>{
     const child=spawn(path.join(payload,'runtime/node.exe'),[path.join(payload,'desktop-runner/installed-host.cjs')],{
       detached:true,stdio:'ignore',windowsHide:true,
       env:{...process.env,QX_PAYLOAD_ROOT:payload,QX_INSTALL_DATA:data,DEEPSEEK_API_KEY:secret}});
-    child.unref();child.once('error',()=>{failed=true});child.once('exit',code=>{if(code!==0)failed=true});
-  });
-  if(result.status!=='saved')throw Error('Windows 暂时无法读取加密配置，请重新填写 API Key。');
+      child.unref();child.once('error',error=>{failed=true;log('launcher_spawn_error',{errorName:error.name,errorCode:error.code})});
+      child.once('exit',(code,signal)=>{failed=true;log('launcher_observed_exit',{code,signal})});
+    });
+    if(result.status!=='saved')throw Error('Windows 暂时无法读取加密配置，请重新填写 API Key。');
+  }
   const deadline=Date.now()+120000;
   while(Date.now()<deadline&&!failed){
     const runtime=await readRuntime(data);
-    if(runtime){process.env.QX_HARNESS_URL=runtime.url;return;}
+    if(runtime){process.env.QX_HARNESS_URL=runtime.url;return runtime;}
+    if(readControl(data)&&readHostState(data)?.phase==='failed')break;
     await new Promise(resolve=>setTimeout(resolve,500));
   }
   throw Error('本机服务未能启动，请查看资料目录中的 .local/host.log 后重试。');
 }
 async function enter(){
-  await ensureHost();
+  const runtime=await ensureHost(true);
   if(!mainLoaded){mainLoaded=true;require('./main.cjs');await global.qxMainReady;}
   else await global.qxReloadMain();
   if(setupWindow&&!setupWindow.isDestroyed())setupWindow.close();
+  connection?.connected(runtime);
 }
 function showSetup(){
   if(setupWindow&&!setupWindow.isDestroyed()){setupWindow.show();setupWindow.focus();return;}
@@ -59,6 +79,18 @@ const owns=event=>setupWindow&&!setupWindow.isDestroyed()&&event.sender===setupW
 
 if(!app.requestSingleInstanceLock())app.quit();
 else{
+  connection=createHostMonitor({probe:()=>inspectHost(data),isPaused:()=>starting||quitting||!mainLoaded,
+    recover:async()=>{if(starting||quitting)return;starting=true;try{await ensureHost()}finally{starting=false}},log,
+    onState:state=>{for(const win of BrowserWindow.getAllWindows())if(!win.isDestroyed())win.webContents.send('qx:connection-state',state)},
+  });
+  global.qxConnection=connection;
+  global.qxReconnectHost=async()=>{
+    if(starting||quitting)return {ok:false};starting=true;connection.reset();
+    try{await enter();return {ok:true}}catch(error){log('manual_reconnect_failed',{errorName:error.name,errorCode:error.code});return {ok:false}}
+    finally{starting=false;void connection.tick()}
+  };
+  const healthTimer=setInterval(()=>void connection.tick(),3000);healthTimer.unref();
+  app.once('before-quit',()=>clearInterval(healthTimer));
   global.qxOpenApiSettings=showSetup;
   app.on('second-instance',()=>{if(setupWindow){setupWindow.show();setupWindow.focus()}});
   ipcMain.handle('qx:setup-keys',event=>{if(owns(event))void shell.openExternal('https://platform.deepseek.com/api_keys')});
@@ -69,8 +101,7 @@ else{
       const checked=await validateKey(key);if(!checked.ok)return checked;
       const result=await store.save(key);
       if(result.status!=='saved')return {ok:false,message:'Windows 未能加密保存密钥，请检查当前账户权限后重试。'};
-      const prior=await readRuntime(data);
-      if(prior)await stopRuntime(prior);
+      await stopInstalledHost(data);
       await enter();return {ok:true};
     }catch{return {ok:false,message:'密钥已保存，但工作台启动未完成。请重新打开；如仍失败，查看资料目录中的 .local/host.log。'};}
     finally{starting=false;}
@@ -84,7 +115,7 @@ else{
         const config=require('./update-config.json');
         const updater=new StrictNsisUpdater(validateFeed(config.feed));
         const handoff=createInstallHandoff({isStarting:()=>starting,setStarting:value=>{starting=value},
-          stop:async()=>{const runtime=await readRuntime(data);if(runtime)await stopRuntime(runtime)},restore:enter});
+          stop:()=>stopInstalledHost(data),restore:enter});
         global.qxUpdates=createUpdateController({updater,version:app.getVersion(),publicKey:config.publicKey,
           onState:state=>{for(const win of BrowserWindow.getAllWindows())if(!win.isDestroyed())win.webContents.send('qx:update-state',state)},
           confirmInstall:async()=>{

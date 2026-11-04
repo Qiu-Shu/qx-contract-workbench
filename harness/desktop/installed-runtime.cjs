@@ -4,7 +4,8 @@ const net=require('node:net');
 const http=require('node:http');
 const {randomBytes}=require('node:crypto');
 const {spawn}=require('node:child_process');
-const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery}=require('./installed-migrations.cjs');
+const {createSupervisor,createEventLog}=require('./host-recovery.cjs');
+const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes}=require('./installed-migrations.cjs');
 
 function redactedLines(secret,write){
   let pending='',dropping=false;
@@ -43,6 +44,7 @@ function initialize(payload,data){
   migrateInstalledPrivacy({data,payload,portableConfig});
   migrateInstalledModelRecovery({data,payload,portableConfig});
   migrateInstalledContract({data,payload});
+  migrateInstalledSkillFixes({data,payload});
   const pkg=JSON.parse(fs.readFileSync(path.join(payload,'config/profile-package.json'),'utf8'));
   fs.writeFileSync(path.join(profile,'package.json'),JSON.stringify(pkg,null,2));
   fs.copyFileSync(path.join(payload,'config/profile-cordis.yml'),path.join(profile,'cordis.yml'));
@@ -60,31 +62,54 @@ async function readRuntime(data){
     return response.ok?runtime:null;
   }catch{return null}
 }
+function processAlive(pid){if(!Number.isInteger(pid)||pid<=0)return false;try{process.kill(pid,0);return true}catch{return false}}
+function readHostRecord(data){try{return JSON.parse(fs.readFileSync(path.join(data,'.local/runtime.json'),'utf8'))}catch{return null}}
+function readHostState(data){try{return JSON.parse(fs.readFileSync(path.join(data,'.local/host-state.json'),'utf8'))}catch{return null}}
+function readControl(data){
+  const runtime=readHostRecord(data);
+  try{
+    const url=new URL(runtime.controlUrl);
+    if(url.protocol!=='http:'||url.hostname!=='127.0.0.1'||url.pathname!=='/stop'||!processAlive(runtime.launcherPid)||!runtime.controlToken)return null;
+    return runtime;
+  }catch{return null}
+}
+async function inspectHost(data){
+  const runtime=await readRuntime(data),record=readHostRecord(data);
+  return {runtime,control:readControl(data),state:readHostState(data),hostAlive:processAlive(record?.hostPid)};
+}
+function writeJson(file,value){const temporary=file+'.tmp';fs.writeFileSync(temporary,JSON.stringify(value));fs.renameSync(temporary,file);}
 const freePort=()=>new Promise((resolve,reject)=>{
   const server=net.createServer();server.once('error',reject);server.listen(0,'127.0.0.1',()=>{const port=server.address().port;server.close(()=>resolve(port))});
 });
 async function runHost({payload,data,store,app}){
   initialize(payload,data);
   const local=path.join(data,'.local'),runtimePath=path.join(local,'runtime.json');
-  let child;
+  let supervisor,readyUrl=null;
+  const events=createEventLog(data,'host');
+  const port=await freePort();
   const controlToken=randomBytes(32).toString('hex');
   const control=http.createServer((request,response)=>{
-    if(request.method!=='POST'||request.url!=='/stop'||request.headers.authorization!==`Bearer ${controlToken}`){response.writeHead(403).end();return;}
-    response.writeHead(200).end('stopping');
-    if(child){
-      if(process.platform==='win32'){
-        const killer=spawn('taskkill',['/PID',String(child.pid),'/T','/F'],{windowsHide:true,stdio:'ignore'});
-        killer.once('error',()=>child.kill());
-      }else child.kill();
-    }else app.exit(0);
+    if(request.method!=='POST'||!['/stop','/restart'].includes(request.url)||request.headers.authorization!==`Bearer ${controlToken}`){response.writeHead(403).end();return;}
+    if(!supervisor){response.writeHead(503).end();return;}
+    if(request.url==='/restart'){const started=supervisor.retry();response.writeHead(started?200:409).end();return;}
+    response.writeHead(200).end('stopping');supervisor.stop();
   });
   await new Promise((resolve,reject)=>{control.once('error',reject);control.listen(0,'127.0.0.1',resolve)});
   const controlUrl=`http://127.0.0.1:${control.address().port}/stop`;
   const log=fs.createWriteStream(path.join(local,'host.log'),{flags:'a'});
-  async function start(){
-    const port=await freePort();
-    const result=await store.withSecret(secret=>{
-      child=spawn(path.join(payload,'runtime/node.exe'),[path.join(payload,'node_modules/@deepseek-ai/dsh/lib/bin.js'),'web','--no-open','--host','127.0.0.1','--port',String(port)],{
+  const kill=child=>{
+    if(process.platform!=='win32'){child.kill();return;}
+    const killer=spawn('taskkill',['/PID',String(child.pid),'/T','/F'],{windowsHide:true,stdio:'ignore'});
+    killer.once('error',()=>child.kill());killer.once('exit',code=>{if(code&&processAlive(child.pid))child.kill()});
+  };
+  const result=await store.withSecret(secret=>{
+    supervisor=createSupervisor({log:events,kill,onStopped:()=>{control.close();log.end(()=>app.exit(0));},
+      onState:state=>{
+        if(state.phase!=='running')readyUrl=null;
+        writeJson(path.join(local,'host-state.json'),{...state,launcherPid:process.pid,time:new Date().toISOString()});
+        writeJson(runtimePath,{url:readyUrl,hostPid:state.hostPid,launcherPid:process.pid,port,controlUrl,controlToken});
+      },start:onReady=>{
+      const child=spawn(path.join(payload,'runtime/node.exe'),[path.join(payload,'node_modules/@deepseek-ai/dsh/lib/bin.js'),'web','--no-open','--host','127.0.0.1','--port',String(port)],{
         cwd:path.join(data,'workspace'),windowsHide:true,stdio:['ignore','pipe','pipe'],env:{...process.env,
           DSH_HOME:path.join(local,'dsh-home'),DEEPSEEK_API_KEY:secret,DSH_TELEMETRY_MODE:'OFF',
           PATH:path.join(payload,'runtime')+path.delimiter+(process.env.PATH||''),
@@ -98,22 +123,28 @@ async function runHost({payload,data,store,app}){
         while((end=pending.indexOf('\n'))>=0){
           const line=pending.slice(0,end);pending=pending.slice(end+1);
           const match=line.match(/^dsh web: (http:\/\/127\.0\.0\.1:\d+\/\?token=\S+)/);
-          if(match){fs.writeFileSync(runtimePath,JSON.stringify({url:match[1],hostPid:child.pid,launcherPid:process.pid,port,controlUrl,controlToken}));log.write('本机工作台已启动。\n');}
+          if(match){readyUrl=match[1];onReady();log.write('本机工作台已启动。\n');}
           else log.write(scrub(line)+'\n');
         }
       });
       const errors=redactedLines(secret,text=>log.write(text));
       child.stderr.on('data',chunk=>errors.push(chunk));
       child.stderr.on('end',()=>errors.end());
-      child.on('error',()=>{log.write('本机服务进程启动失败。\n');app.exit(1)});
-      child.on('close',code=>app.exit(code||0));
-    });
-    if(result.status!=='saved'){
-      fs.appendFileSync(path.join(local,'host.log'),'加密配置读取失败：'+result.status+' '+(result.code||'')+'\n');
-      throw Error('Credential unavailable');
-    }
+      return child;
+    }});
+    supervisor.start();
+  });
+  if(result.status!=='saved'){
+    control.close();log.end();events('credential_unavailable');throw Error('Credential unavailable');
   }
-  await start();
+  return supervisor;
+}
+async function restartRuntime(runtime){
+  const url=new URL(runtime.controlUrl);
+  if(url.protocol!=='http:'||url.hostname!=='127.0.0.1'||url.pathname!=='/stop')throw Error('Invalid control endpoint');
+  url.pathname='/restart';
+  const response=await fetch(url,{method:'POST',headers:{Authorization:`Bearer ${runtime.controlToken}`},signal:AbortSignal.timeout(5000),redirect:'error'});
+  if(!response.ok)throw Error('Background restart failed');
 }
 async function stopRuntime(runtime){
   const url=new URL(runtime.controlUrl);
@@ -127,4 +158,9 @@ async function stopRuntime(runtime){
   }
   throw Error('Background stop timed out');
 }
-module.exports={initialize,readRuntime,runHost,stopRuntime,redactedLines};
+async function stopInstalledHost(data){
+  const runtime=readControl(data);
+  if(runtime)await stopRuntime(runtime);
+  else if((await inspectHost(data)).hostAlive)throw Error('Background control unavailable');
+}
+module.exports={initialize,readRuntime,readControl,readHostState,inspectHost,runHost,stopRuntime,stopInstalledHost,restartRuntime,redactedLines};

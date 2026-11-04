@@ -1,0 +1,55 @@
+diff --git a/lib/client.js b/lib/client.js
+index 3e138782620b24b6c21ff146e63770953913ff9d..5c94e3651279e894cc5e7a73427d94e63344abb9 100644
+--- a/lib/client.js
++++ b/lib/client.js
+@@ -386,7 +386,7 @@ window.__ModuleLoader__.load({
+ 		//#endregion
+ 		//#region lib/types/FileCard.js
+ 		/** One pending file card: type glyph, name, size or upload status, remove, retry. */
+-		function FileCard({ name, bytes, state, progress, labels, onRemove, onRetry }) {
++		function FileCard({ name, bytes, state, progress, labels, onRemove, onRetry, onOpen }) {
+ 			const extension = (0, _deepseek_ai_dsh_client_ui_primitives.fileExtension)(name).toUpperCase().slice(0, 8);
+ 			const meta = state === "uploading" ? labels.uploading : state === "error" ? labels.failed : [extension, (0, _deepseek_ai_dsh_client_ui_primitives.fileSizeText)(bytes)].filter((part) => part !== "").join(" ");
+ 			const retryable = state === "error";
+@@ -411,9 +411,12 @@ window.__ModuleLoader__.load({
+ 							className: `${FileCard_module_css_default.meta} ${FileCard_module_css_default.metaFailed}`,
+ 							children: meta
+ 						})]
+-					}) : (0, react_jsx_runtime.jsxs)("span", {
+-						className: FileCard_module_css_default.body,
+-						"aria-label": labels.label,
++					}) : (0, react_jsx_runtime.jsxs)(state === "ready" && onOpen ? "button" : "span", {
++						type: state === "ready" && onOpen ? "button" : void 0,
++						className: `${FileCard_module_css_default.body}${state === "ready" && onOpen ? ` ${FileCard_module_css_default.retry}` : ""}`,
++						"aria-label": state === "ready" && onOpen ? `预览 ${name}` : labels.label,
++						title: state === "ready" && onOpen ? "点击在右侧预览" : void 0,
++						onClick: state === "ready" ? onOpen : void 0,
+ 						children: [(0, react_jsx_runtime.jsx)("span", {
+ 							className: FileCard_module_css_default.name,
+ 							children: name
+@@ -2001,7 +2004,7 @@ window.__ModuleLoader__.load({
+ 		//#endregion
+ 		//#region lib/types/client/ComposerAttachments.js
+ 		/** Draft image previews, pending-file cards, drop target, and original-image preview. */
+-		function ComposerAttachments({ attachments, canAcceptDrop, onAddFiles, onRemoveAttachment, uploads, onRetryFile, uploadFailureText, dropLimits, t, readFileDrag }) {
++		function ComposerAttachments({ attachments, canAcceptDrop, onAddFiles, onRemoveAttachment, uploads, onRetryFile, uploadFailureText, dropLimits, t, readFileDrag, openUploadedFile }) {
+ 			const [preview, setPreview] = (0, react.useState)(null);
+ 			const [dragActive, setDragActive] = (0, react.useState)(false);
+ 			const dragDepth = (0, react.useRef)(0);
+@@ -2042,6 +2045,7 @@ window.__ModuleLoader__.load({
+ 									state: upload === void 0 || upload.status === "uploading" ? "uploading" : upload.status === "ready" ? "ready" : "error",
+ 									...upload?.status === "uploading" && upload.total !== void 0 && upload.total > 0 ? { progress: upload.loaded / upload.total } : {},
+ 									labels: fileCardLabels(t, attachment.file.name),
++									onOpen: upload?.status === "ready" && upload.file && openUploadedFile ? () => openUploadedFile(upload.file) : void 0,
+ 									onRemove: () => {
+ 										onRemoveAttachment(attachment.id);
+ 									},
+@@ -2357,7 +2361,7 @@ window.__ModuleLoader__.load({
+ 			}, MessageImagesContent);
+ 			ctx.slots.inject("conversation.input.attachments", () => ctx.slots.register({
+ 				name: "conversation.input.attachments",
+-				inject: () => ({ readFileDrag: ctx.fileDrag.read }),
++				inject: (sessionId) => ({ readFileDrag: ctx.fileDrag.read, openUploadedFile: file => ctx.get("qxUploadedPreview")?.open(sessionId, file) }),
+ 				locale: "conversation"
+ 			}, ComposerAttachments));
+ 			ctx.slots.inject("conversation.chat.message.images", () => ctx.slots.register({

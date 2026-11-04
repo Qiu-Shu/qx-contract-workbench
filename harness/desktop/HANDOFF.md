@@ -1,5 +1,7 @@
 # 桌面与 Skill 接入交接（2026-11-03）
 
+首页能力卡片（21:55）：`desktop/integration/client.js` 新增四张业务卡片，走官方 `conversation.input.dock` 和草稿插入接口；悬停放大、移开回弹，点击只填词。已同步当前安装版三份客户端副本，不重启服务。实际安装版独立浏览器验收通过，见 `docs/2026-11-03-首页能力卡片.md` 与 `desktop/checks/20261103-215444-capabilities/report.json`。下次打包需保留当前 integration 源文件。
+
 当前使用官方 Harness 0.2.2-alpha.2 的 Web UI，Electron 44 薄壳入口 `desktop/main.cjs`。
 服务地址与临时访问凭据只从 `.local/runtime.json` 读取，不应复制到文档或日志。
 用户数据为 `.local/desktop-data`；关闭窗口保留独立后台服务，供微信继续运行。

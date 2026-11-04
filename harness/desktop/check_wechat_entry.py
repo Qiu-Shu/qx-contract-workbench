@@ -43,7 +43,7 @@ try:
             pass
         link = page.get_by_role('button', name='微信连接', exact=True)
         expect(link).to_be_visible(timeout=40000)
-        expect(page.locator('.qx-wordmark')).to_have_text('群兴')
+  expect(page.locator('.qx-wordmark')).to_have_text('AI师兄法律助手平台')
         expect(page.locator('.qx-balance-values')).to_have_text('123.45 CNY')
         for label in ['插件', '自动化任务', '更多']:
             expect(page.get_by_role('button', name=label, exact=True)).to_have_count(0)

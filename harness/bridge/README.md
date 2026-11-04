@@ -40,6 +40,10 @@ Harness 上传图片保存为 `inbox/.harness/attachments/v1/objects/<前缀>/<�
 
 ## 运行依赖与自检
 
+上传前脱敏由 `plugins/privacy` 调用 `bridge/privacy.py`，复用本机文档解析和 OCR。`prepare_upload` 的 `privacy_mode` 参数支持 `standard`（默认）与 `deep`，命令行对应 `--privacy-mode`；标准模式保留业务事实，深度模式额外替换识别到的资质、荣誉、协会职务和覆盖规模。返回值及本机 manifest 记录实际模式。
+
+原件和可恢复映射位于工作区外的 `.qx-private/uploads`，上传的只有脱敏 TXT 副本。历史映射保留用于恢复；通用类别误识别、非本次自定义词和深度专属条目不会在标准模式中被盲目沿用。具体行为、边界和复测命令见[脱敏增强交接](../docs/2026-11-04-脱敏增强与两种模式.md)。
+
 复用 `D:/qx-contract-workbench-20261102/.venv` 和其 `src`，不复制、不修改旧项目代码。依赖清单见本目录 `requirements.txt`；新环境还需安装旧项目本身，保留其配置文件。当前环境不需要再次安装。
 
 ```powershell

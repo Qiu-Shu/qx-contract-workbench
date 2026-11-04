@@ -391,7 +391,35 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       h('div',{className:'qx-balance-heading'},h('span',null,'DeepSeek 余额'),button),
       h('div',{'aria-live':'polite','aria-atomic':true},values.length>0&&h('div',{className:'qx-balance-values'},values.map(value=>h('span',{key:value},value))),notice&&h('div',{className:'qx-balance-notice'},notice)));
   }
-  return {inject:['sessions','uiWorkspace','slots'],apply(ctx){
+  return {inject:['sessions','uiWorkspace','slots','sidebarRight'],apply(ctx){
+    ctx.effect(()=>{
+      let notice,timer;
+      const pending=new Map(),controller=new AbortController();
+      const preview={open(sessionId,file){
+        if(typeof sessionId!=='string'||!sessionId)return Promise.resolve(false);
+        const key=JSON.stringify([sessionId,file]);if(pending.has(key))return pending.get(key);
+        const operation=(async()=>{
+          try{
+            const response=await fetch('/api/qx-preview/attachment-path',{method:'POST',credentials:'same-origin',
+              headers:{'content-type':'application/json'},body:JSON.stringify(file),signal:controller.signal});
+            if(!response.ok)throw Error('Preview unavailable');
+            const result=await response.json();if(typeof result.path!=='string'||!result.path)throw Error('Preview unavailable');
+            if(controller.signal.aborted)return false;
+            const address='dsh-resource://file/session/'+encodeURIComponent(sessionId)+'/'+result.path.replace(/\\/g,'/').split('/').map(encodeURIComponent).join('/');
+            ctx.sidebarRight.openResource(address);return true;
+          }catch(error){
+            if(error.name==='AbortError')return false;
+            if(!notice){notice=document.createElement('div');notice.setAttribute('role','alert');
+              Object.assign(notice.style,{position:'fixed',bottom:'24px',left:'50%',transform:'translateX(-50%)',maxWidth:'calc(100vw - 48px)',
+                padding:'12px 16px',borderRadius:'8px',background:'#26334a',color:'#fff',font:'14px/1.6 system-ui',zIndex:'10000'});document.body.append(notice);}
+            notice.textContent='附件预览未能打开，请确认上传已完成后重试。';
+            clearTimeout(timer);timer=setTimeout(()=>{notice?.remove();notice=null},8000);return false;
+          }finally{pending.delete(key)}
+        })();pending.set(key,operation);return operation;
+      }};
+      const dispose=ctx.reflect.provide('qxUploadedPreview',preview);
+      return()=>{controller.abort();dispose();clearTimeout(timer);notice?.remove();};
+    },'qunxing: uploaded file preview');
     ctx.effect(()=>{
       const script=document.createElement('script');script.src='/api/qx-privacy/client.js';script.async=true;
       script.onerror=()=>console.warn('群兴：上传脱敏组件暂未加载，可刷新工作台重试；当前上传保持原流程。');

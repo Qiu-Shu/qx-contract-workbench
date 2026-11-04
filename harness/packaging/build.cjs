@@ -23,11 +23,12 @@ build({publish:'never',projectDir:path.join(stage,'app'),...(process.argv[4]==='
   afterPack:async context=>{
     // Differential NSIS packages use non-solid 7z archives for reusable blocks.
     const bundled=path.join(context.appOutDir,'resources/workbench');
-    for(const relative of ['node_modules/@deepseek-ai/dsh/lib/bin.js','node_modules/@qunxing/desktop-session/client.js','browser/node_modules/bb-browser/dist/cli.js','runtime/python/python.exe','desktop-runner/installed-host.cjs','workspace-seed/AGENTS.md','config/templates/catalog.json','config/contract-0.2.0-defaults.json','plugins/privacy/client.js']){
+    for(const relative of ['node_modules/@deepseek-ai/dsh/lib/bin.js','node_modules/@deepseek-ai/libreoffice-kit-win32-x64/bin/libreoffice-kit.exe','node_modules/@deepseek-ai/libreoffice-kit-win32-x64/prebuilds.json','node_modules/@qunxing/desktop-session/attachment-preview.mjs','node_modules/@qunxing/desktop-session/client.js','browser/node_modules/bb-browser/dist/cli.js','runtime/python/python.exe','desktop-runner/installed-host.cjs','workspace-seed/AGENTS.md','config/templates/catalog.json','config/contract-0.2.0-defaults.json','plugins/privacy/client.js']){
       if(!fs.existsSync(path.join(bundled,relative)))throw Error('Required runtime file missing from package: '+relative);
     }
     const version=execFileSync(path.join(bundled,'runtime/node.exe'),[path.join(bundled,'node_modules/@deepseek-ai/dsh/lib/bin.js'),'--version'],{cwd:bundled,windowsHide:true,timeout:30000,encoding:'utf8'}).trim();
     if(version!=='0.2.2-alpha.2')throw Error('Bundled Harness failed its startup check');
+    execFileSync(path.join(bundled,'runtime/node.exe'),[path.resolve(__dirname,'../scripts/check_office_preview.mjs'),bundled],{windowsHide:true,timeout:30000,stdio:'pipe'});
     console.log('Packaged Node and Harness startup verified.');
   },
   win:{executableName:'QunxingWorkbench',target:[{target:'nsis',arch:['x64']}],signAndEditExecutable:false,artifactName:'Qunxing-Workbench-${version}-Setup.${ext}'},

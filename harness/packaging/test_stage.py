@@ -1,10 +1,24 @@
 import json
+import hashlib
 from pathlib import Path
 import tempfile
 import unittest
-from stage import bundle_node,portable_config
+from stage import bundle_node,portable_config,verify_office_engine
 
 class StageTests(unittest.TestCase):
+    def test_missing_or_corrupt_office_engine_cannot_be_packaged(self):
+        with tempfile.TemporaryDirectory(prefix='qx-office-package-') as folder:
+            payload=Path(folder)
+            with self.assertRaisesRegex(RuntimeError,'Office'):verify_office_engine(payload)
+            engine=payload/'node_modules/@deepseek-ai/libreoffice-kit-win32-x64'
+            engine.mkdir(parents=True)
+            (engine/'package.json').write_text(json.dumps({'name':'@deepseek-ai/libreoffice-kit-win32-x64','version':'0.1.5'}))
+            (engine/'bin').mkdir();(engine/'bin/helper.exe').write_bytes(b'synthetic engine')
+            digest=hashlib.sha256(b'synthetic engine').hexdigest()
+            (engine/'prebuilds.json').write_text(json.dumps({'version':'0.1.5','platform':'win32-x64','status':'built','files':{'bin/helper.exe':digest}}))
+            verify_office_engine(payload)
+            (engine/'bin/helper.exe').write_bytes(b'broken')
+            with self.assertRaisesRegex(RuntimeError,'Office'):verify_office_engine(payload)
     def test_nearer_other_version_cannot_shadow_required_dependency(self):
         with tempfile.TemporaryDirectory(prefix='qx-stage-') as folder:
             root=Path(folder)

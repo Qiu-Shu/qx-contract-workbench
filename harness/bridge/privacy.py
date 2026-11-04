@@ -126,8 +126,79 @@ _PATTERNS = [
     ('组织代码', re.compile(r'(?<![A-Za-z0-9])[159Y][1239]\d{6}[0-9A-HJ-NPQRTUWXY]{10}(?![A-Za-z0-9])')),
 ]
 
+# Only explicit naming contexts establish a brand/product identity. Quotation
+# marks alone, and generic technical/organization categories, are not identities.
+_GENERIC_VALUES = {'合同', '协议', '技术服务', '服务', '学校', '机构', '企业', '公司', '产品',
+                   '品牌', '模型', '系统', '平台', '相关资料', '知名', '自有', '自主', '旗下',
+                   '甲方', '乙方', '丙方', '丁方', '双方', '本公司', '该公司', '本合同', '本协议',
+                   '本项目', '采购方', '供应方', '买方', '卖方', '委托方', '受托方'}
+_GENERIC_ORG = re.compile(
+    r'(?:(?:中小|中小学|普通|公办|公立|民办|私立|职业|高等|义务教育|特殊教育|各类|农村|乡村|城市|教育|医疗|金融|商业))*'
+    r'(?:学校|中小学|高校|大学|小学|中学|医院|银行|研究院|研究所|机构|公司|企业|单位|律师事务所)')
+_GENERIC_ORG_PREFIX = re.compile(
+    r'^(?:(?:本合同|本协议|本项目|本公司|该公司|甲方|乙方|合同|企业|公司|我们|主要|累计|现已|已经|已|目前|'
+    r'服务|覆盖|面向|提供|对接|合作|约定|涉及|支持|包括|本次|按|应|须|需|将|共计|共|全国|全市|全省|为|向|和|与|及)|'
+    r'[0-9一二三四五六七八九十百千万两]+|超过|近|约|余|多|所|家|个)+')
+_GENERIC_PRODUCT = re.compile(
+    r'(?:(?:AI|人工智能|数字人|通用|智能|测评|心理|训练|教育|教学|学习|语言|大语言|文本|知识|问答|'
+    r'行为|认知|情绪|能力|个人|成长|个性化|综合|青少年|学生|技术|信息|数字|自主|自有|基础|管理|数据|服务|原有|现有|既有|相关|产品))*'
+    r'(?:引擎|大模型|模型|平台|系统|产品|工具|方案|体系|服务|机器人)', re.I)
+_NAMING_LABEL = r'(?:品牌(?:名称|名)?|产品(?:名称|名|体系|系列)|平台名称|系统名称|模型名称|自有模型|(?:以下)?简称|以下简称)'
+_NAME_BODY = r'[^\n\r，,。；;：:“”"「」《》（）()]{2,80}'
+_NAMED_LABELLED = re.compile(_NAMING_LABEL + r'\s*[:：]\s*[“"「《]?(?P<value>' + _NAME_BODY + r')')
+_NAMED_QUOTED = re.compile(_NAMING_LABEL + r'\s*(?:为|是|名为|叫做)?\s*[“"「《](?P<value>' + _NAME_BODY + r')[”"」》]')
+_NAMED_AFTER_QUOTE = re.compile(r'[“"「《](?P<value>' + _NAME_BODY + r')[”"」》]\s*'
+                                r'(?:品牌|产品(?:体系|系列)?|(?:学习|语言|教育|AI)?大模型|训练体系|测评体系)')
+_NAMED_BARE = re.compile(r'(?P<value>[\u3400-\u9fffA-Za-z0-9·._\-]{2,60}?)(?P<suffix>品牌|产品体系|训练体系|测评体系|大模型)'
+                         r'(?=$|[\s，,。；;、（）()]|及|和|与|已)')
+_ENTITY_PREFIX = re.compile(r'^(?:(?:甲方|乙方|本公司|该公司|公司|其|产品包括|包括|采用|使用|以及|或|和|与|自主研发|自主开发|自主|自研|研发|开发|推出|打造|保护|维持|旗下|拥有|的))+')
+_FILING_NUMBER = re.compile(r'(?:备案编号|备案号|备案编码|备案标识)\s*[:：]?\s*'
+                            r'(?P<value>[\u3400-\u9fffA-Za-z0-9][\u3400-\u9fffA-Za-z0-9_\-/]{3,100})')
+_COMPETITION = re.compile(r'[《“"](?P<value>[^》”"\n\r]{2,100}(?:大赛|比赛|赛事|竞赛|挑战赛|锦标赛|联赛))[》”"]')
+_GENERIC_COMPETITION = re.compile(
+    r'(?:(?:全国|全市|全省|国家级|省级|市级|国际|校园|学校|校内|校际|青少年|中小学|学生|儿童|成人|中学生|小学生|大学生|'
+    r'机器人|编程|数学|英语|科学|科技|人工智能|AI|体育|篮球|足球|作文|创新|创业|知识))*'
+    r'(?:大赛|比赛|赛事|竞赛|挑战赛|锦标赛|联赛)', re.I)
+_QUALIFICATIONS = re.compile(
+    r'(?:国家(?:级)?|省级|市级)?(?:高新技术企业|专精特新(?:小巨人|中小)?企业|科技型中小企业|创新型中小企业|'
+    r'瞪羚企业|独角兽企业|企业技术中心|工程技术研究中心)|教育部白名单(?:赛事|项目)?')
+_COVERAGE_NUMBER = r'(?:全国|全省|全市)?(?:超过|逾|超|近|约)?[0-9一二三四五六七八九十百千万两,，]+(?:余|多|以上|\+)?(?:所|家|个)'
+_COVERAGE_ORG = r'(?:中小学校|中小学|高等学校|公办学校|民办学校|学校|医院|教育机构|医疗机构|机构|企业|单位)'
+_COVERAGE = re.compile(r'(?:累计(?:已)?|已累计|现已|目前已|已|先后)(?:服务|覆盖|接入|合作)\s*'
+                       r'(?P<value>' + _COVERAGE_NUMBER + _COVERAGE_ORG + r')')
+_COVERAGE_LABEL = re.compile(r'(?:累计服务|已服务|覆盖|合作)(?:学校|医院|机构)(?:数量|数|规模)\s*[:：]\s*'
+                             r'(?P<value>' + _COVERAGE_NUMBER + r'(?:' + _COVERAGE_ORG + r')?)')
+_COVERAGE_POSTFIX = re.compile(r'(?:累计|现已|已|先后)?(?:服务|覆盖|接入|合作)' + _COVERAGE_ORG +
+                               r'\s*(?P<value>' + _COVERAGE_NUMBER + r')')
+_COVERAGE_REGIONS = re.compile(r'(?:已|现已|累计)?覆盖\s*(?P<value>' + _COVERAGE_NUMBER +
+                               r'(?:省区市|省市区|省市|省份|省|自治区|城市|地市|地区))')
+_ASSOCIATION_APPOINTMENT = re.compile(
+    r'(?P<value>(?:中国|全国|[\u3400-\u9fff]{2,8}(?:省|市|区))[^\n\r，,。；;]{2,50}?'
+    r'(?:协会|学会|联合会)[^\n\r，,。；;]{0,65}?(?:实施运营单位|实施单位|运营单位|授权单位|指定单位|会员单位))')
+_HONORS = re.compile(r'(?:曾获(?:得)?|获得|获评|荣获|被授予|入选)\s*[“"《]?'
+                     r'(?P<value>[^\n\r，,。；;“”"《》]{2,70}?(?:一等奖|二等奖|三等奖|特等奖|金奖|银奖|铜奖|荣誉称号|优秀企业|示范企业))')
+_DEEP_KINDS = {'资质头衔', '机构覆盖规模', '荣誉'}
 
-def _candidates(text, custom_terms):
+
+def _generic_organization(value):
+    stripped = _GENERIC_ORG_PREFIX.sub('', value)
+    quantified_category = re.search(r'[0-9一二三四五六七八九十百千万两]+(?:余|多)?(?:所|家|个)'
+                                     + _GENERIC_ORG.pattern + r'$', value)
+    return value in _GENERIC_VALUES or bool(_GENERIC_ORG.fullmatch(stripped) or quantified_category)
+
+
+def _specific_name(value):
+    return (len(value) >= 2 and value not in _GENERIC_VALUES
+            and not _generic_organization(value) and not _GENERIC_PRODUCT.fullmatch(value)
+            and not re.fullmatch(r'[\d\s.\-/]+', value))
+
+
+def _profile_quantity(text, start):
+    clause = re.split(r'[。；;\n]', text[max(0, start-200):start])[-1]
+    return not re.search(r'本合同|本协议|本项目|本次|本期|约定|交付|履行|验收|应当|必须|计划', clause)
+
+
+def _candidates(text, custom_terms, privacy_mode='standard'):
     found = {}
     def add(value, kind):
         value = value.strip()
@@ -145,10 +216,42 @@ def _candidates(text, custom_terms):
         add(match['value'], kind)
     for match in _ORGANIZATIONS.finditer(text):
         value = re.sub(r'^(?:本合同由|甲方|乙方|原告|被告|申请人|被申请人|与|和|向|由|及)+', '', match.group())
-        add(value, '组织')
+        if not _generic_organization(value):
+            add(value, '组织')
     for pattern in (_LABEL_NAMES, _TITLE_NAMES):
         for match in pattern.finditer(text):
-            add(match['value'], '姓名')
+            if _specific_name(match['value']):
+                add(match['value'], '姓名')
+    for pattern in (_NAMED_LABELLED, _NAMED_QUOTED, _NAMED_AFTER_QUOTE):
+        for match in pattern.finditer(text):
+            value = match['value'].strip()
+            if _specific_name(value):
+                add(value, '专名')
+    for match in _NAMED_BARE.finditer(text):
+        value = _ENTITY_PREFIX.sub('', match['value'])
+        value = value if match['suffix'] == '品牌' else value + match['suffix']
+        if _specific_name(value):
+            add(value, '专名')
+    for match in _FILING_NUMBER.finditer(text):
+        if re.search(r'\d', match['value']):
+            add(match['value'], '备案编号')
+    for match in _COMPETITION.finditer(text):
+        if not _GENERIC_COMPETITION.fullmatch(match['value']):
+            add(match['value'], '赛事')
+    if privacy_mode == 'deep':
+        for match in _QUALIFICATIONS.finditer(text):
+            add(match.group(), '资质头衔')
+        for match in _ASSOCIATION_APPOINTMENT.finditer(text):
+            add(match['value'], '资质头衔')
+        for pattern in (_COVERAGE, _COVERAGE_LABEL, _COVERAGE_POSTFIX, _COVERAGE_REGIONS):
+            for match in pattern.finditer(text):
+                if _profile_quantity(text, match.start()):
+                    add(match['value'], '机构覆盖规模')
+        for match in _HONORS.finditer(text):
+            # A leading award year/date is still a date, not a name to conceal.
+            value = re.sub(r'^\d{4}年(?:\d{1,2}月(?:\d{1,2}日)?)?(?:度)?\s*', '', match['value'])
+            if not re.search(r'\d{4}[-/年]\d{1,2}', value):
+                add(value, '荣誉')
     for match in _ADDRESSES.finditer(text):
         value = re.split(r'\s+(?:电话|手机|邮箱|联系人|身份证|邮编)\s*[:：]', match['value'])[0]
         add(value, '地址')
@@ -167,8 +270,8 @@ def _candidates(text, custom_terms):
     return found
 
 
-def _redact(text, custom_terms, mapping_path):
-    candidates = _candidates(text, custom_terms)
+def _redact(text, custom_terms, mapping_path, privacy_mode='standard'):
+    candidates = _candidates(text, custom_terms, privacy_mode)
     with sqlite3.connect(mapping_path, timeout=60) as db:
         db.execute('BEGIN IMMEDIATE')
         db.execute('CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY,value TEXT NOT NULL)')
@@ -188,7 +291,21 @@ def _redact(text, custom_terms, mapping_path):
                 db.execute('INSERT INTO replacements VALUES(?,?,?)', (original, kind, token))
                 mapping[original] = token
                 kinds[original] = kind
-        relevant = [original for original in mapping if original in text]
+        def active(original):
+            if original in candidates:
+                return True
+            kind = kinds[original]
+            # Keep the dictionary for restoration/token stability, but never let
+            # old generic errors, removed custom terms or a deep run change this
+            # upload's mode. Confirmed names still carry across case documents.
+            if kind in _DEEP_KINDS or kind == '自定义':
+                return False
+            if kind == '组织':
+                return not _generic_organization(original)
+            if kind in {'姓名', '专名'}:
+                return _specific_name(original)
+            return True
+        relevant = [original for original in mapping if original in text and active(original)]
         if not relevant:
             return text, 0
         pattern = re.compile('|'.join(re.escape(value) for value in sorted(relevant, key=lambda value: (-len(value), value))))
@@ -197,6 +314,11 @@ def _redact(text, custom_terms, mapping_path):
         def replace(match):
             nonlocal count
             original = match.group()
+            # The same count can describe a company profile and a contractual
+            # obligation. A global dictionary must not erase the latter.
+            if (original not in custom and candidates.get(original, kinds[original]) == '机构覆盖规模'
+                    and not _profile_quantity(text, match.start())):
+                return original
             if (original not in custom and kinds[original] in {'身份证', '电话', '银行账号'}
                     and (re.match(r'\s*(?:元|万元|亿元)', text[match.end():])
                          or re.search(r'(?:金额|价款|人民币|RMB|CNY|[￥¥])\s*[:：]?\s*$', text[max(0, match.start()-16):match.start()]))):
@@ -206,7 +328,8 @@ def _redact(text, custom_terms, mapping_path):
         return pattern.sub(replace, text), count
 
 
-def prepare_upload(source_path, vault_dir, document_id=None, custom_terms=None, context_id=None, workspace_dir=None):
+def prepare_upload(source_path, vault_dir, document_id=None, custom_terms=None, context_id=None, workspace_dir=None,
+                   privacy_mode='standard'):
     """Return only safe-copy metadata. Original, mapping and index stay private.
 
     The caller must keep the vault and upload staging outside every model-accessible
@@ -216,6 +339,8 @@ def prepare_upload(source_path, vault_dir, document_id=None, custom_terms=None, 
     safe_path = None
     try:
         if not isinstance(source_path, str) or not isinstance(vault_dir, str):
+            raise PrivacyError('INVALID_INPUT')
+        if privacy_mode not in ('standard', 'deep'):
             raise PrivacyError('INVALID_INPUT')
         source, vault = Path(source_path), Path(vault_dir)
         if not source.is_absolute() or not vault.is_absolute():
@@ -250,6 +375,7 @@ def prepare_upload(source_path, vault_dir, document_id=None, custom_terms=None, 
         manifest = {
             'document_id': identifier, 'original_path': str(source), 'sha256': digest,
             'context_hash': hashlib.sha256(context_id.encode()).hexdigest() if context_id else None,
+            'privacy_mode': privacy_mode,
         }
         manifest_path = document_dir / 'manifest.json'
         manifest_path.write_text(json.dumps(manifest, ensure_ascii=False), encoding='utf-8')
@@ -261,19 +387,22 @@ def prepare_upload(source_path, vault_dir, document_id=None, custom_terms=None, 
             context_dir = _private_child(vault, 'contexts', hashlib.sha256(context_id.encode()).hexdigest())
             context_dir.mkdir(exist_ok=True)
             mapping_path = _private_child(vault, 'contexts', context_dir.name, 'mapping.sqlite')
-        safe, count = _redact(text, custom_terms, mapping_path)
+        safe, count = _redact(text, custom_terms, mapping_path, privacy_mode)
         safe_dir = _private_child(vault, 'safe')
         safe_dir.mkdir(exist_ok=True)
         # The output name never incorporates a source name, case name or supplied id.
-        display_name = '脱敏文字-' + uuid4().hex[:16] + '.txt'
+        display_name = ('深度脱敏文字-' if privacy_mode == 'deep' else '脱敏文字-') + uuid4().hex[:16] + '.txt'
         safe_path = _private_child(vault, 'safe', display_name)
         with safe_path.open('x', encoding='utf-8', newline='\n') as output:
             output.write(safe)
         manifest.update(safe_file=safe_path.relative_to(vault).as_posix(),
                         mapping_file=mapping_path.relative_to(vault).as_posix(), replacement_count=count)
         manifest_path.write_text(json.dumps(manifest, ensure_ascii=False), encoding='utf-8')
+        warnings = list(WARNINGS)
+        if privacy_mode == 'deep':
+            warnings.append('深度脱敏另隐去资质头衔、机构覆盖规模与荣誉等间接标识；副本不能用于判断这些业务事实，请回看本机原件。')
         return {'status': 'ready', 'safe_path': str(safe_path), 'display_name': display_name,
-                'replacement_count': count, 'warnings': list(WARNINGS)}
+                'privacy_mode': privacy_mode, 'replacement_count': count, 'warnings': warnings}
     except Exception as error:
         if safe_path is not None and safe_path.exists():
             safe_path.unlink(missing_ok=True)
@@ -313,11 +442,12 @@ def main():
             parser.add_argument('--vault', required=True)
             parser.add_argument('--workspace')
             parser.add_argument('--context-id')
+            parser.add_argument('--privacy-mode', choices=('standard', 'deep'), default='standard')
             parser.add_argument('--term', action='append', default=[])
             arguments = parser.parse_args()
             payload = {'source_path': arguments.source, 'vault_dir': arguments.vault,
                        'workspace_dir': arguments.workspace, 'context_id': arguments.context_id,
-                       'custom_terms': arguments.term}
+                       'custom_terms': arguments.term, 'privacy_mode': arguments.privacy_mode}
         else:
             payload = json.load(sys.stdin)
         with _quiet_libraries():

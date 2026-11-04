@@ -1,0 +1,129 @@
+{
+  "date": "2026-11-04",
+  "status": "passed",
+  "scope": "Local privacy processing and upload; no model or WeChat messages sent",
+  "python_regression": {
+    "tests_passed": 165,
+    "subtests_passed": 21,
+    "new_mode_tests": 12
+  },
+  "route_checks_passed": 12,
+  "synthetic_real_pipeline": {
+    "case_count": 6,
+    "cases": [
+      {
+        "case": "standard-txt-change",
+        "passed": true
+      },
+      {
+        "case": "standard-docx-drop",
+        "passed": true
+      },
+      {
+        "case": "standard-png-paste",
+        "passed": true
+      },
+      {
+        "case": "deep-txt-change",
+        "passed": true
+      },
+      {
+        "case": "deep-docx-drop",
+        "passed": true
+      },
+      {
+        "case": "deep-png-paste",
+        "passed": true
+      }
+    ]
+  },
+  "synthetic_ui": {
+    "passed": true,
+    "check_groups": 10,
+    "prepare_requests": 19,
+    "safe_downstream_uploads": 11
+  },
+  "designated_attachment": {
+    "passed": true,
+    "checks": {
+      "standard_identifier_coverage": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "deep_identifier_coverage": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "generic_school_terms_preserved": true,
+      "standard_business_facts_preserved": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "deep_profile_facts_removed": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "filing_date_preserved": true,
+      "original_unchanged": true
+    }
+  },
+  "installed_live": {
+    "passed": true,
+    "clientReady": true,
+    "results": [
+      {
+        "mode": "standard",
+        "status": 200,
+        "appliedMode": "standard",
+        "identifiersRemoved": true,
+        "factsCorrect": true,
+        "obligationsPreserved": true
+      },
+      {
+        "mode": "deep",
+        "status": 200,
+        "appliedMode": "deep",
+        "identifiersRemoved": true,
+        "factsCorrect": true,
+        "obligationsPreserved": true
+      }
+    ],
+    "modelCalls": 0,
+    "wechatMessages": 0
+  },
+  "installed_ui": {
+    "passed": true,
+    "model_requests": 0,
+    "files_uploaded": 0,
+    "messages_sent": 0,
+    "default_mode": "standard",
+    "modes": [
+      "standard",
+      "deep"
+    ],
+    "explanations_visible": true
+  },
+  "files": {
+    "bridge/privacy.py": "a17ca67dcb2421713ee2469aec3d569dbe735dfd2c239dcda2024278008e6336",
+    "plugins/privacy/index.mjs": "8c530b540587c2751745fa7b3dcb267fac23ecb643bf9f201c7d620ccc0e8aad",
+    "plugins/privacy/client.js": "15458cdf4913d10a7cea977ff7458f932a4d0b39807e979b1d3eea44defa41f1"
+  },
+  "limitations": [
+    "Rule-based recognition and OCR may miss information.",
+    "De-identified output is plain text, not a redacted native Office/PDF/image file.",
+    "Changing mode applies only to newly added files.",
+    "No new installer built or published by this task."
+  ]
+}

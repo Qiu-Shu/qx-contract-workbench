@@ -27,7 +27,7 @@ with (out/'first-run.log').open('w') as log:
             browser=playwright.chromium.connect_over_cdp(f'http://127.0.0.1:{port}')
             page=browser.contexts[0].pages[0]
             page.wait_for_selector('#api-key')
-            assert page.title()=='配置 API · 群兴法律工作台'
+            assert page.title()=='配置 API · AI师兄法律助手平台'
             page.locator('#api-key').fill('tiny')
             page.locator('#submit').click()
             page.get_by_text('请填写完整的 DeepSeek API Key。',exact=True).wait_for()

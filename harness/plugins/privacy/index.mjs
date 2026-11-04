@@ -57,6 +57,8 @@ export function apply(ctx,config={}){
       if(!formats.has(extension))return errorResponse('此格式暂不支持本机脱敏，原件未发送。请转换为文档、图片或纯文本后重试。');
       const contextId=url.searchParams.get('context')||undefined;
       if(contextId&&!/^[A-Za-z0-9_-]{1,128}$/.test(contextId))return errorResponse('上传批次无效。');
+      const privacyMode=url.searchParams.get('mode')||'standard';
+      if(!['standard','deep'].includes(privacyMode))return errorResponse('脱敏方式无效，请重新选择。');
       const terms=JSON.parse(request.headers.get('x-qx-terms')?decodeURIComponent(request.headers.get('x-qx-terms')):'[]');
       if(!Array.isArray(terms)||terms.some(t=>typeof t!=='string'))return errorResponse('敏感词格式无效。');
       await mkdir(workspace,{recursive:true});await mkdir(vault,{recursive:true});
@@ -66,12 +68,14 @@ export function apply(ctx,config={}){
       if((await lstat(inbox)).isSymbolicLink())throw Error('vault');
       const id=randomUUID();incoming=join(inbox,id+extension);
       await pipeline(Readable.fromWeb(request.body),createWriteStream(incoming,{flags:'wx'}),{signal:request.signal});
-      const result=await runPrivacy(config.python,{source_path:incoming,vault_dir:actualVault,workspace_dir:actualWorkspace,document_id:id,custom_terms:terms,context_id:contextId},children,request.signal);
+      const result=await runPrivacy(config.python,{source_path:incoming,vault_dir:actualVault,workspace_dir:actualWorkspace,document_id:id,custom_terms:terms,context_id:contextId,privacy_mode:privacyMode},children,request.signal);
+      if(result.privacy_mode!==privacyMode)throw Error('本机脱敏方式未应用，原件未发送。请更新工作台后再试。');
       const safe=await realpath(result.safe_path);
       if(!safe.startsWith(actualVault+sep)||extname(safe)!=='.txt')throw Error('safe path');
       // Only the plain-text derivative crosses into Harness. Never expose vault paths or maps.
       return new Response(Readable.toWeb(createReadStream(safe)),{headers:{'content-type':'text/plain; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff',
         'x-qx-safe-name':encodeURIComponent(result.display_name),'x-qx-replacements':String(result.replacement_count||0),
+        'x-qx-privacy-mode':privacyMode,
         'x-qx-privacy-warning':encodeURIComponent('已生成脱敏文字副本；图片与版式不随附。自动识别可能遗漏，请核对关键身份信息。')}});
     }catch(error){return errorResponse(error.message?.includes('原件未发送')?error.message:'本机脱敏未完成，原件未发送。请检查文件后重新添加。');}
     finally{if(incoming)await unlink(incoming).catch(()=>{});}

@@ -193,4 +193,46 @@ function migrateInstalledContract({data,payload}){
   return {status:'applied',backupDirectory,changedFiles,preservedCustom};
 }
 
-module.exports={migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery};
+function migrateInstalledSkillFixes({data,payload}){
+  data=path.resolve(data);
+  const version='skill-tool-fixes-v1',migrationRoot=path.join(data,'.local/migrations');
+  const marker=path.join(migrationRoot,version+'.json');
+  assertNoLinks(data,marker);
+  if(fs.existsSync(marker))return {status:'already-applied',changedFiles:[]};
+  const defaults={
+    '.dsh/skills/impeccable/SKILL.md':'fab04b31f946573b00a8559db1fc070f8ea5825254d491c2b13156e5661a86d7',
+    '.dsh/skills/windows-desktop/SKILL.md':'8869f57ed29b3368bcdbbb9ef71d9a87eae929e882f01c5bc346cc36cf8e64a8',
+  };
+  const changes=[],preservedCustom=[],pending=[];
+  for(const [relative,hash] of Object.entries(defaults)){
+    const file=path.join(data,'workspace',relative),seed=path.join(payload,'workspace-seed',relative);
+    assertNoLinks(data,file);
+    if(!fs.existsSync(file))continue;
+    if(!fs.existsSync(seed)){pending.push(relative);continue;}
+    const original=fs.readFileSync(file),contents=fs.readFileSync(seed);
+    if(original.equals(contents))continue;
+    if(createHash('sha256').update(original).digest('hex')===hash)changes.push({file,relative,original,contents});
+    else preservedCustom.push(relative);
+  }
+  fs.mkdirSync(migrationRoot,{recursive:true});
+  let backupDirectory=null;
+  const changedFiles=[];
+  if(changes.length){
+    backupDirectory=path.join(migrationRoot,version+'-'+randomUUID());
+    assertNoLinks(data,backupDirectory);fs.mkdirSync(backupDirectory);
+    for(const change of changes)atomicWrite(path.join(backupDirectory,change.relative.replaceAll('/','__')),change.original);
+    for(const change of changes){
+      assertNoLinks(data,change.file);
+      // An editor may have changed a default since it was read. Preserve it too.
+      if(!fs.existsSync(change.file)||!fs.readFileSync(change.file).equals(change.original)){
+        preservedCustom.push(change.relative);continue;
+      }
+      atomicWrite(change.file,change.contents);changedFiles.push(change.relative);
+    }
+  }
+  // A partial package must not block startup or prevent a later complete package from retrying.
+  if(!pending.length)atomicWrite(marker,JSON.stringify({version,completedAt:new Date().toISOString(),backupDirectory,changedFiles,preservedCustom},null,2)+'\n');
+  return {status:pending.length?'deferred':'applied',backupDirectory,changedFiles,preservedCustom};
+}
+
+module.exports={migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes};

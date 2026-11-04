@@ -5,13 +5,14 @@
   const states=new Map(),replayed=new WeakSet(),controllers=new Set(),controls=new Set();
   let disposed=false,scheduled=false;
   const current=()=>document.documentElement.dataset.qxSessionId||'new-session';
-  const stateFor=key=>{if(!states.has(key))states.set(key,{enabled:false,terms:'',busy:0,message:'',error:false,context:crypto.randomUUID()});return states.get(key);};
+  const stateFor=key=>{if(!states.has(key))states.set(key,{enabled:false,mode:'standard',terms:'',busy:0,message:'',error:false,context:crypto.randomUUID()});return states.get(key);};
   const keyFor=element=>element.closest?.('.qx-kb')?'knowledge':current();
   const scopeFor=element=>element.closest?.('.qx-kb')||element.closest?.('[data-composer-card]');
   const css=document.createElement('style');css.dataset.qxPrivacy='';css.textContent=`
     .qx-privacy{padding:8px 14px 0;font:inherit;font-size:12px;line-height:1.5;color:var(--dsw-alias-label-secondary,#526071);display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
     .qx-kb .qx-privacy{padding:0;width:100%;order:3}.qx-privacy label{display:inline-flex;gap:6px;align-items:center;cursor:pointer;min-height:28px}
     .qx-privacy input[type=checkbox]{accent-color:#3563a5;width:15px;height:15px;padding:0;margin:0}.qx-privacy details{max-width:100%}.qx-privacy summary{cursor:pointer;padding:4px 0;color:var(--dsw-alias-label-secondary,#526071)}
+    .qx-privacy .qx-privacy-mode[hidden]{display:none}.qx-privacy select{max-width:100%;font:inherit;padding:4px 6px;border:1px solid #bdc7d2;border-radius:6px;background:var(--dsw-alias-bg-base,#fff);color:var(--dsw-alias-label-primary,#1d2937)}
     .qx-privacy details[open]{flex-basis:100%}.qx-privacy p{font-size:12px;margin:6px 0;line-height:1.6;max-width:68ch}.qx-privacy textarea{box-sizing:border-box;width:100%;max-width:480px;font:inherit;padding:7px 9px;resize:vertical;border:1px solid #bdc7d2;border-radius:6px;background:var(--dsw-alias-bg-base,#fff);color:var(--dsw-alias-label-primary,#1d2937)}
     .qx-privacy :focus-visible{outline:2px solid #3563a5;outline-offset:3px}.qx-privacy-status{flex-basis:100%;margin:0!important;color:var(--dsw-alias-label-secondary,#526071);transition:color .18s ease-out}.qx-privacy-status:empty{display:none}.qx-privacy[data-error=true] .qx-privacy-status{color:#a33a29}
     .qx-privacy[data-busy=true] label{cursor:progress}.qx-privacy::selection{background:#dbe8f8;color:#173858}@media(prefers-reduced-motion:reduce){.qx-privacy-status{transition:none}}
@@ -23,6 +24,8 @@
       const check=node.querySelector('input');check.checked=state.enabled;
       const disabled=Boolean(node.closest('[data-composer-card]')?.querySelector('input[type=file]')?.disabled);
       if(check.disabled!==disabled)check.disabled=disabled;
+      const mode=node.querySelector('select');mode.value=state.mode;mode.disabled=disabled;mode.closest('label').hidden=!state.enabled;
+      node.querySelector('[data-mode-hint]').textContent=state.mode==='deep'?'深度脱敏还会替换可识别的资质、荣誉与覆盖规模，相关信息不能再作为业务判断依据。金额、日期和履行期限仍保留；不保证完全匿名。':'标准脱敏替换识别到的姓名、机构、品牌、专属产品、备案编号等身份线索，保留资质、覆盖规模等业务事实。';
       const textarea=node.querySelector('textarea');if(document.activeElement!==textarea)textarea.value=state.terms;
       node.dataset.error=String(state.error);node.dataset.busy=String(state.busy>0);
       const message=state.busy?`正在本机脱敏（${state.busy} 批）… 完成后附件会出现在输入框内。`:state.message;
@@ -35,12 +38,18 @@
     node.addEventListener('click',event=>event.stopPropagation());
     const label=document.createElement('label'),check=document.createElement('input');check.type='checkbox';
     label.append(check,document.createTextNode('上传前脱敏'));node.append(label);
+    const modeLabel=document.createElement('label');modeLabel.className='qx-privacy-mode';modeLabel.hidden=true;
+    const mode=document.createElement('select');mode.setAttribute('aria-label','脱敏方式');
+    for(const [value,text] of [['standard','标准脱敏'],['deep','深度脱敏']]){const option=document.createElement('option');option.value=value;option.textContent=text;mode.append(option);}
+    modeLabel.append(document.createTextNode('方式'),mode);node.append(modeLabel);
     const details=document.createElement('details'),summary=document.createElement('summary');summary.textContent='说明与敏感词';
     const hint=document.createElement('p');hint.textContent='仅作用于之后添加的文件。本机提取文字并替换识别到的身份信息，再上传文字副本；原件留在本机，图片与版式不随附。自动识别可能遗漏，可在下方补充姓名、公司或其他敏感词。';
     const textarea=document.createElement('textarea');textarea.rows=2;textarea.placeholder='补充敏感词，每行一个（可选）';textarea.setAttribute('aria-label','补充需要脱敏的敏感词，每行一个');
-    details.append(summary,hint,textarea);node.append(details);
+    const modeHint=document.createElement('p');modeHint.dataset.modeHint='';
+    details.append(summary,modeHint,hint,textarea);node.append(details);
     const status=document.createElement('p');status.className='qx-privacy-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');node.append(status);
     check.addEventListener('change',()=>{const s=stateFor(keyFor(node));s.enabled=check.checked;s.message=s.enabled?'之后添加的文件将先在本机脱敏；已添加的附件不会改变。':'之后添加的文件按原件上传。';s.error=false;repaint();});
+    mode.addEventListener('change',()=>{const s=stateFor(keyFor(node));s.mode=mode.value;s.message=s.mode==='deep'?'之后添加的文件使用深度脱敏，资质与覆盖规模也会替换；已添加的附件不会改变。':'之后添加的文件使用标准脱敏，保留业务事实；已添加的附件不会改变。';s.error=false;repaint();});
     textarea.addEventListener('input',()=>{stateFor(keyFor(node)).terms=textarea.value;});
     host.prepend(node);controls.add(node);
   }
@@ -55,9 +64,10 @@
     return Array.from((event.type==='paste'?event.clipboardData:event.dataTransfer)?.files||[]);
   }
   async function convert(file,settings,signal){
-    const query=new URLSearchParams({name:file.name,context:settings.context});
+    const query=new URLSearchParams({name:file.name,context:settings.context,mode:settings.mode});
     const response=await fetch('/api/qx-privacy/prepare?'+query,{method:'POST',credentials:'same-origin',signal,headers:{'content-type':'application/octet-stream','x-qx-privacy':'1','x-qx-terms':encodeURIComponent(JSON.stringify(settings.terms.split(/\r?\n/).map(t=>t.trim()).filter(Boolean)))},body:file});
     if(!response.ok){let message='脱敏服务未就绪，原件未发送。请稍后重新添加。';try{message=(await response.json()).error||message;}catch{}throw Error(message);}
+    if(response.headers.get('x-qx-privacy-mode')!==settings.mode)throw Error('脱敏服务尚未应用所选方式，原件未发送。请更新或重新连接工作台后再添加文件。');
     if(!response.headers.get('x-qx-safe-name'))throw Error('脱敏响应不完整，原件未发送。请重新添加。');
     return {file:new File([await response.blob()],decodeURIComponent(response.headers.get('x-qx-safe-name')),{type:'text/plain'}),count:Number(response.headers.get('x-qx-replacements')||0)};
   }
@@ -78,7 +88,7 @@
     event.preventDefault();event.stopImmediatePropagation();
     if(event.type==='change')target.value='';
     const controller=new AbortController();controllers.add(controller);
-    const settings={context:key==='knowledge'?crypto.randomUUID():state.context,terms:state.terms};state.busy++;state.error=false;state.message='';repaint();
+    const settings={context:key==='knowledge'?crypto.randomUUID():state.context,terms:state.terms,mode:state.mode};state.busy++;state.error=false;state.message='';repaint();
     void(async()=>{
       try{
         const converted=[];for(const file of files)converted.push(await convert(file,settings,controller.signal));
@@ -94,7 +104,7 @@
         else if(event.type==='paste')replay=new ClipboardEvent('paste',{bubbles:true,cancelable:true,clipboardData:transfer});
         else replay=new DragEvent('drop',{bubbles:true,cancelable:true,dataTransfer:transfer});
         replayed.add(replay);replayTarget.dispatchEvent(replay);
-        state.message=`已生成 ${converted.length} 份脱敏文字副本，共替换 ${converted.reduce((n,r)=>n+r.count,0)} 处。原件留在本机，上传状态请查看附件。`;
+        state.message=`已生成 ${converted.length} 份${settings.mode==='deep'?'深度':'标准'}脱敏文字副本，共替换 ${converted.reduce((n,r)=>n+r.count,0)} 处。原件留在本机，上传状态请查看附件。`;
       }catch(error){state.error=true;state.message=error instanceof TypeError?'本机连接中断，原件未发送。恢复连接后重新添加文件。':error.message||'本机脱敏失败，原件未发送。请重新添加文件。';}
       finally{controllers.delete(controller);state.busy--;repaint();}
     })();

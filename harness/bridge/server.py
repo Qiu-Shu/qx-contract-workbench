@@ -22,7 +22,13 @@ store=None
 def friendly_errors(function):
     @wraps(function)
     def wrapped(*args,**kwargs):
-        try:return function(*args,**kwargs)
+        try:
+            result=function(*args,**kwargs)
+            # Reader failures are recoverable, but must not appear as successful
+            # MCP calls. Keep the original hint and metadata for the next attempt.
+            if isinstance(result,dict) and result.get('error'):
+                raise ToolError(json.dumps(result,ensure_ascii=False))
+            return result
         except ValueError as error:raise ToolError(str(error)) from None
         except (OSError,sqlite3.Error):
             raise ToolError('本机文件或索引操作未完成，请检查磁盘空间、权限和文件是否仍存在。') from None

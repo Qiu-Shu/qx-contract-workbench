@@ -5,7 +5,7 @@ sys.path.append('C:/Users/Lenovo/.codex/tools/scrapling/venv/Lib/site-packages')
 from playwright.sync_api import sync_playwright,expect
 ROOT=Path(__file__).resolve().parents[1]
 out=ROOT/'.local/update-checks';out.mkdir(exist_ok=True)
-runtime=json.loads((ROOT/'.local/installer-check-updates-0.2.3/.local/runtime.json').read_text(encoding='utf-8'))
+runtime=json.loads((Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'.local/installer-check-updates-0.2.3/.local/runtime.json').read_text(encoding='utf-8'))
 script="""
 window.__updateState={phase:'idle',version:'0.2.3',availableVersion:null,ready:false,notes:'',progress:0,total:0,transferred:0,error:''};
 window.__updateActions=[];window.__updateListeners=[];
@@ -21,7 +21,7 @@ with sync_playwright() as p:
     context.route('**/api/qx-account/balance*',lambda r:r.fulfill(json={'status':'unavailable','balances':[]}))
     page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto(runtime['url'],wait_until='domcontentloaded')
-    start=page.get_by_role('button',name='继续',exact=True)
+    start=page.get_by_role('button',name='开始使用',exact=True)
     try:start.click(timeout=5000)
     except Exception:pass
     knowledge=page.get_by_role('button',name='律所知识库',exact=True);expect(knowledge).to_be_visible(timeout=60000)

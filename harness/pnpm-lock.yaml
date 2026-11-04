@@ -5,8 +5,11 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
+  '@deepseek-ai/dsh-client-ui-attachment@0.2.2-alpha.2': 4d5a9ad2f194c72b9f6a14d27ca5663043702c7638701a3d9a2c804895ac3431
+  '@deepseek-ai/dsh-client-ui-chat@0.2.2-alpha.2': 85171b7473d34376ede05266a02cabd14b90d6d5191335a54448fbe7ffd2c88f
   '@deepseek-ai/dsh-client-ui-conversation@0.2.2-alpha.2': c12c09a2193d895bee24ca7d2c14c1d16ed760d4bcdb68eba45dd0a10de7475b
   '@deepseek-ai/dsh-client-ui-settings-models@0.2.2-alpha.2': 76ab111317e3e1803249b993c09d2e68b90ed15db58112477c2b20402ca8da72
+  '@deepseek-ai/dsh-client-ui-skill@0.2.2-alpha.2': c34c7cdac4d4aa012696ab4ae6cebcb20a76fecc0c73366cdfc10f80903a23be
 
 importers:
 
@@ -2755,6 +2758,12 @@ packages:
     engines: {node: '>=24.9.0'}
     hasBin: true
 
+  '@deepseek-ai/libreoffice-kit-win32-x64@0.1.5':
+    resolution: {integrity: sha512-uKuDGZdofxuW4iRmUh8b3+XWU28JeOCYMTAONzo7tEHIq00DV2cARcgUYiTP7gUH49tH4A/RyPMOVEBzK7qjjw==}
+    engines: {node: '>=22.19.0'}
+    cpu: [x64]
+    os: [win32]
+
   '@deepseek-ai/libreoffice-kit@0.1.5':
     resolution: {integrity: sha512-H12xtUsAyl70zFeQ5pk5GGRc3N1+6zn+DVAcqwlguI6EvqopBGP3xkUmePU7g5f6ydYlDZLWedHT9lTSL7zLxA==}
     engines: {node: '>=22.19.0'}
@@ -4132,7 +4141,6 @@ ignoredOptionalDependencies:
   - '@deepseek-ai/libreoffice-kit-darwin-x64'
   - '@deepseek-ai/libreoffice-kit-wasm'
   - '@deepseek-ai/libreoffice-kit-win32-arm64'
-  - '@deepseek-ai/libreoffice-kit-win32-x64'
 
 snapshots:
 
@@ -4942,7 +4950,7 @@ snapshots:
     dependencies:
       '@deepseek-ai/cordis': 4.0.6-alpha.1(@deepseek-ai/cordis-plugin-include@1.0.11-alpha.1)(@deepseek-ai/cordis-plugin-loader@1.0.7-alpha.1)
 
-  '@deepseek-ai/dsh-client-ui-attachment@0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)':
+  '@deepseek-ai/dsh-client-ui-attachment@0.2.2-alpha.2(patch_hash=4d5a9ad2f194c72b9f6a14d27ca5663043702c7638701a3d9a2c804895ac3431)(@deepseek-ai/cordis@4.0.6-alpha.1)':
     dependencies:
       '@deepseek-ai/cordis': 4.0.6-alpha.1(@deepseek-ai/cordis-plugin-include@1.0.11-alpha.1)(@deepseek-ai/cordis-plugin-loader@1.0.7-alpha.1)
 
@@ -4950,7 +4958,7 @@ snapshots:
     dependencies:
       '@deepseek-ai/cordis': 4.0.6-alpha.1(@deepseek-ai/cordis-plugin-include@1.0.11-alpha.1)(@deepseek-ai/cordis-plugin-loader@1.0.7-alpha.1)
 
-  '@deepseek-ai/dsh-client-ui-chat@0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)':
+  '@deepseek-ai/dsh-client-ui-chat@0.2.2-alpha.2(patch_hash=85171b7473d34376ede05266a02cabd14b90d6d5191335a54448fbe7ffd2c88f)(@deepseek-ai/cordis@4.0.6-alpha.1)':
     dependencies:
       '@deepseek-ai/cordis': 4.0.6-alpha.1(@deepseek-ai/cordis-plugin-include@1.0.11-alpha.1)(@deepseek-ai/cordis-plugin-loader@1.0.7-alpha.1)
       '@deepseek-ai/schemastery': 3.18.6-alpha.1
@@ -5142,7 +5150,7 @@ snapshots:
     dependencies:
       '@deepseek-ai/cordis': 4.0.6-alpha.1(@deepseek-ai/cordis-plugin-include@1.0.11-alpha.1)(@deepseek-ai/cordis-plugin-loader@1.0.7-alpha.1)
 
-  '@deepseek-ai/dsh-client-ui-skill@0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)':
+  '@deepseek-ai/dsh-client-ui-skill@0.2.2-alpha.2(patch_hash=c34c7cdac4d4aa012696ab4ae6cebcb20a76fecc0c73366cdfc10f80903a23be)(@deepseek-ai/cordis@4.0.6-alpha.1)':
     dependencies:
       '@deepseek-ai/cordis': 4.0.6-alpha.1(@deepseek-ai/cordis-plugin-include@1.0.11-alpha.1)(@deepseek-ai/cordis-plugin-loader@1.0.7-alpha.1)
 
@@ -7491,9 +7499,9 @@ snapshots:
       '@deepseek-ai/dsh-client-shortcuts': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-agent-preset': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-approval': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
-      '@deepseek-ai/dsh-client-ui-attachment': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
+      '@deepseek-ai/dsh-client-ui-attachment': 0.2.2-alpha.2(patch_hash=4d5a9ad2f194c72b9f6a14d27ca5663043702c7638701a3d9a2c804895ac3431)(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-brand-official': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
-      '@deepseek-ai/dsh-client-ui-chat': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
+      '@deepseek-ai/dsh-client-ui-chat': 0.2.2-alpha.2(patch_hash=85171b7473d34376ede05266a02cabd14b90d6d5191335a54448fbe7ffd2c88f)(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-commands': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-conversation': 0.2.2-alpha.2(patch_hash=c12c09a2193d895bee24ca7d2c14c1d16ed760d4bcdb68eba45dd0a10de7475b)(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-cordis': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
@@ -7535,7 +7543,7 @@ snapshots:
       '@deepseek-ai/dsh-client-ui-sidebar-files': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-sidebar-right': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-sidebar-terminal': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
-      '@deepseek-ai/dsh-client-ui-skill': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
+      '@deepseek-ai/dsh-client-ui-skill': 0.2.2-alpha.2(patch_hash=c34c7cdac4d4aa012696ab4ae6cebcb20a76fecc0c73366cdfc10f80903a23be)(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-subagent': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-theme': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-tool': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
@@ -7950,12 +7958,17 @@ snapshots:
       - ws
       - zod
 
+  '@deepseek-ai/libreoffice-kit-win32-x64@0.1.5':
+    optional: true
+
   '@deepseek-ai/libreoffice-kit@0.1.5':
     dependencies:
       fflate: 0.8.2
       fontkit: 2.0.4
       koffi: 3.1.1
       saxes: 6.0.0
+    optionalDependencies:
+      '@deepseek-ai/libreoffice-kit-win32-x64': 0.1.5
 
   '@deepseek-ai/node-addon-system-darwin-arm64@0.1.2':
     optional: true

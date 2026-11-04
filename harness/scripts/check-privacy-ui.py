@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import time
+from urllib.parse import parse_qs, urlsplit
 from playwright.sync_api import sync_playwright, expect
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -16,7 +17,8 @@ with sync_playwright() as p:
     def route(request):
         calls.append(request.request.post_data_buffer.decode())
         if 'FAIL' in calls[-1]:request.fulfill(status=400,content_type='application/json',body=json.dumps({'error':'识字失败，原件未发送。'}));return
-        request.fulfill(status=200,headers={'content-type':'text/plain','x-qx-safe-name':'safe.txt','x-qx-replacements':'1'},body='姓名：[人物1]。金额1000元。')
+        mode=parse_qs(urlsplit(request.request.url).query).get('mode',['standard'])[0]
+        request.fulfill(status=200,headers={'content-type':'text/plain','x-qx-safe-name':'safe.txt','x-qx-replacements':'1','x-qx-privacy-mode':mode},body='姓名：[人物1]。金额1000元。')
     page.route('http://127.0.0.1:37213/api/qx-privacy/prepare?*',route)
     page.route('http://127.0.0.1:37213/',lambda r:r.fulfill(content_type='text/html',body=HTML))
     page.goto('http://127.0.0.1:37213/')

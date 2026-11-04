@@ -1,0 +1,3930 @@
+{
+  "generatedAt": "2026-11-04T09:43:03.385Z",
+  "scope": "185 Skill official provider list/get; static local resources, catalog sources, qualified nested Skill references, script imports and syntax; real local MCP discovery and four get_workflow calls. No paid model, customer documents, archived script execution, or external service acceptance.",
+  "summary": {
+    "skills": 185,
+    "loaded": 185,
+    "chineseNames": 185,
+    "requiredResourceIssues": 0,
+    "references": 1544,
+    "nestedCalls": 502,
+    "nonBlockingAdvisories": 20,
+    "auxiliaryScriptEntries": 19,
+    "parsedJavaScriptFiles": 15,
+    "localToolCounts": {
+      "qx_materials": 11,
+      "qx_legal": 17
+    },
+    "loadedWorkflows": 4,
+    "explicitBusinessToolReferences": 38,
+    "externalBusinessConnectorsVerified": 0
+  },
+  "workspaces": [
+    {
+      "label": "source",
+      "discovered": 185,
+      "loaded": 185,
+      "modelInvocable": 185,
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "label": "installed-seed",
+      "discovered": 185,
+      "loaded": 185,
+      "modelInvocable": 185,
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "label": "installed-user",
+      "discovered": 185,
+      "loaded": 185,
+      "modelInvocable": 185,
+      "warnings": [],
+      "errors": []
+    }
+  ],
+  "comparison": [
+    {
+      "source": "source",
+      "target": "installed-seed",
+      "differences": []
+    },
+    {
+      "source": "source",
+      "target": "installed-user",
+      "differences": []
+    }
+  ],
+  "deployment": {
+    "status": "post-deployment-rechecked",
+    "checkedAt": "2026-11-04T09:43:03.385Z",
+    "installedMigration": {
+      "status": "applied",
+      "backupDirectory": "C:\\Users\\Lenovo\\AppData\\Roaming\\QunxingHarness\\.local\\migrations\\skill-tool-fixes-v1-74da86ca-107e-4719-b5a5-fb4a140da83a",
+      "changedFiles": [
+        ".dsh/skills/impeccable/SKILL.md",
+        ".dsh/skills/windows-desktop/SKILL.md"
+      ],
+      "preservedCustom": []
+    }
+  },
+  "changes": [
+    {
+      "skill": "impeccable",
+      "change": "Windows launcher now uses the provided skill base directory, not a hard-coded .agents path."
+    },
+    {
+      "skill": "windows-desktop",
+      "change": "USER_CONTROL stops repeated desktop-service retries and permits independent material/file tools while control is released."
+    }
+  ],
+  "preEditHashes": [
+    {
+      "path": "config/skills/impeccable/SKILL.md",
+      "sha256": "fab04b31f946573b00a8559db1fc070f8ea5825254d491c2b13156e5661a86d7"
+    },
+    {
+      "path": "workspace/.dsh/skills/impeccable/SKILL.md",
+      "sha256": "fab04b31f946573b00a8559db1fc070f8ea5825254d491c2b13156e5661a86d7"
+    },
+    {
+      "path": "config/skills/windows-desktop/SKILL.md",
+      "sha256": "8869f57ed29b3368bcdbbb9ef71d9a87eae929e882f01c5bc346cc36cf8e64a8"
+    },
+    {
+      "path": "workspace/.dsh/skills/windows-desktop/SKILL.md",
+      "sha256": "8869f57ed29b3368bcdbbb9ef71d9a87eae929e882f01c5bc346cc36cf8e64a8"
+    }
+  ],
+  "auxiliaryRuntime": {
+    "impeccable": {
+      "launcher": "workspace/.dsh/skills/impeccable/scripts/impeccable.cmd",
+      "argument": "context",
+      "exitCode": 127,
+      "probeMode": true,
+      "engineBundled": false,
+      "engineDownloaded": false,
+      "output": [],
+      "interpretation": "The .cmd launcher path resolves; no engine is bundled. A no-download probe returns 127, so actual design-engine execution is not claimed."
+    },
+    "designTaste": {
+      "optionalSceneLibraryBundled": false,
+      "codeFallback": "draw.mjs uses an empty scene array when library/scenes.json is absent; no scene templates are fabricated."
+    }
+  },
+  "externalIntegrationNotes": {
+    "skills": [
+      "legal-zh-employment-cold-start-interview",
+      "legal-zh-ip-cold-start-interview",
+      "legal-zh-ip-customize",
+      "legal-zh-privacy-customize",
+      "legal-zh-product-cold-start-interview",
+      "legal-zh-product-launch-review",
+      "legal-zh-litigation-oc-status"
+    ],
+    "registeredDedicatedConnectors": 0,
+    "namedSystems": [
+      "Gmail",
+      "Slack",
+      "SharePoint"
+    ],
+    "genericSystemCategories": [
+      "DMS"
+    ],
+    "scope": "These seven Skill bodies explicitly discuss email/collaboration/document integrations. None of these dedicated connectors is registered in current project configuration; use authored text/local files unless separately connected. This is not a census of every provider in preserved domain reference templates. CLM in skills-qa, Salesforce in transaction examples, and Outlook in humanizer prose are not classified as runtime dependencies."
+  },
+  "rows": [
+    {
+      "name": "bb-browser",
+      "chineseName": "浏览器操作",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 3,
+      "bundleSha256": "7f5f224c2356818d419926a3ddfc8d8eba0c17c94a0f53d9ff76c0e19d791fc7",
+      "referenceCount": 3,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "README.md",
+          "kind": "markdown-link",
+          "line": 13,
+          "fenced": false,
+          "source": "references/upstream-README.md",
+          "classification": "upstream-documentation",
+          "status": "missing"
+        },
+        {
+          "type": "missing-local-reference",
+          "path": "README.zh-CN.md",
+          "kind": "markdown-link",
+          "line": 13,
+          "fenced": false,
+          "source": "references/upstream-README.md",
+          "classification": "upstream-documentation",
+          "status": "missing"
+        }
+      ],
+      "conditions": [
+        "browser",
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-ai-governance",
+      "chineseName": "AI 治理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "9deb8576cc312b88924af66175b7d9e6775f9ea8294c3b1f9b92f766de493188",
+      "referenceCount": 2,
+      "nestedCallCount": 10,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-builder-hub",
+      "chineseName": "法律技能运营",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "628fdbf0041b240606213b2165faff56efca291f1d34415f20c0424f19179148",
+      "referenceCount": 2,
+      "nestedCallCount": 10,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-clinic",
+      "chineseName": "法律诊所",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "316c25ab1f5509e4012b29acb6d1f6bd86417d66ab8d295852562425851b26a7",
+      "referenceCount": 2,
+      "nestedCallCount": 16,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-commercial",
+      "chineseName": "商事合同",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "82f5ab2df8a5fc36a5066cbb863f5f0463b8614b385a8242835ec5b01a3b59e0",
+      "referenceCount": 2,
+      "nestedCallCount": 12,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-corporate",
+      "chineseName": "公司与并购",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "aac54b3d86e452a3fb91fa7104ad7e731d02cf2bd52fb7f996fa716b753d332e",
+      "referenceCount": 2,
+      "nestedCallCount": 13,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-criminal",
+      "chineseName": "刑事辩护与合规",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "e28d6779b7cff841385990dd9f0047c5d3544952398f93aecb520ebc63b3f386",
+      "referenceCount": 2,
+      "nestedCallCount": 7,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-diligence-grid",
+      "chineseName": "尽调问题表格",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "d7090f15892665c4b542cdda934eccadb19e5cd8fb4d30e8589c223710c5c66f",
+      "referenceCount": 4,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-docket-watcher",
+      "chineseName": "案件期限监控",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "3543562de01f82acd009f3097e9f49d49b84961eb97c879d69122737b37a8cf3",
+      "referenceCount": 4,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-employment",
+      "chineseName": "劳动用工",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "23733da12fb1878dbb5d40c9993708dc46d5d647eb684bcdc902c444c2b75230",
+      "referenceCount": 2,
+      "nestedCallCount": 20,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-ip",
+      "chineseName": "知识产权",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "b1e896d63e16c9f4665dd1fa58f9166b1a89dd2304a6bfba2d824e1b3c7123c6",
+      "referenceCount": 2,
+      "nestedCallCount": 12,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-launch-radar",
+      "chineseName": "产品上线风险汇总",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "ebc3c264a15fe0c5522b20550af18b4410154f3821ddb2c4ad197cfb7780016d",
+      "referenceCount": 4,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-law-student",
+      "chineseName": "法学学习与法考",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "31f99f01fe4793c683c32592597ef1f1ffca03dcbec82a1855a876886f93dbed",
+      "referenceCount": 2,
+      "nestedCallCount": 13,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-litigation",
+      "chineseName": "诉讼与仲裁",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "01b80afc08380b01801fc95b1640b39528ad2b03ec757d068c21227be1d091d6",
+      "referenceCount": 2,
+      "nestedCallCount": 19,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-privacy",
+      "chineseName": "数据合规与隐私",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "e51f44e9b43d5a3e508542202bf6981484f16c68b0f40f4da122d5fb331a965c",
+      "referenceCount": 2,
+      "nestedCallCount": 9,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-product",
+      "chineseName": "产品与营销合规",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "f8ca4b9483e9ee2620e204571e80753aff40e2c4926f1072d0b68167d163771b",
+      "referenceCount": 2,
+      "nestedCallCount": 7,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-reg-monitor",
+      "chineseName": "监管动态监控",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "dbc53606d0a16ac9016a6a42ce056d66dbd3bf25b7c19f87881e67d513cbe141",
+      "referenceCount": 4,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-regulatory",
+      "chineseName": "监管合规",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "05ec243c386c81a655c727659a44209302662d509fdf1353b1b9d4963e90c75f",
+      "referenceCount": 2,
+      "nestedCallCount": 9,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "chinese-legal-renewal-watcher",
+      "chineseName": "合同续约监控",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "fb6ad1947aed6393e559716504c2764c615b853b4c8ed622a659bf63bfb53533",
+      "referenceCount": 4,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "design-taste-frontend",
+      "chineseName": "网页视觉设计",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 40,
+      "bundleSha256": "4917fa276979d972ff6cfd417ff51d339c9c38a4071b430cf0b34f310f335a75",
+      "referenceCount": 77,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "assets/credits.json",
+          "kind": "resource-path",
+          "line": 71,
+          "fenced": false,
+          "source": "README.md",
+          "classification": "generated-output",
+          "status": "missing"
+        },
+        {
+          "type": "missing-local-reference",
+          "path": "assets/credits.json",
+          "kind": "resource-path",
+          "line": 157,
+          "fenced": false,
+          "source": "references/imagery.md",
+          "classification": "generated-output",
+          "status": "missing"
+        },
+        {
+          "type": "missing-local-reference",
+          "path": "assets/fig-engraving.jpg",
+          "kind": "resource-path",
+          "line": 292,
+          "fenced": true,
+          "source": "references/imagery.md",
+          "classification": "example",
+          "status": "missing"
+        },
+        {
+          "type": "missing-local-reference",
+          "path": "assets/river-poster.jpg",
+          "kind": "resource-path",
+          "line": 364,
+          "fenced": false,
+          "source": "references/imagery.md",
+          "classification": "example",
+          "status": "missing"
+        },
+        {
+          "type": "missing-local-reference",
+          "path": "assets/river.webm",
+          "kind": "resource-path",
+          "line": 365,
+          "fenced": false,
+          "source": "references/imagery.md",
+          "classification": "example",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": [
+        {
+          "path": "scripts/assets.mjs",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/draw.mjs",
+          "exists": true,
+          "executed": false,
+          "localImports": [
+            {
+              "path": "./lib/app-draw.mjs",
+              "exists": true
+            }
+          ]
+        },
+        {
+          "path": "scripts/inspect.mjs",
+          "exists": true,
+          "executed": false,
+          "localImports": [
+            {
+              "path": "./lib/cdp.mjs",
+              "exists": true
+            },
+            {
+              "path": "./lib/probe.mjs",
+              "exists": true
+            },
+            {
+              "path": "./lib/rules.mjs",
+              "exists": true
+            },
+            {
+              "path": "./lib/inspection-files.mjs",
+              "exists": true
+            }
+          ]
+        },
+        {
+          "path": "scripts/lib/app-draw.mjs",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/lib/cdp.mjs",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/lib/inspection-files.mjs",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/lib/probe.mjs",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/lib/rules.mjs",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/lint.mjs",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/scenes.mjs",
+          "exists": true,
+          "executed": false,
+          "localImports": [
+            {
+              "path": "./lib/cdp.mjs",
+              "exists": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "humanizer",
+      "chineseName": "文字润色与去除 AI 痕迹",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 5,
+      "bundleSha256": "b5795537a2e0f7b5be3c057d4083042b0adb00931e8948e6d4208c8717f03608",
+      "referenceCount": 1,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "unresolved-skill-call",
+          "original": "/humanizer:humanizer",
+          "resolved": null,
+          "status": "unresolved",
+          "source": "README.md"
+        }
+      ],
+      "conditions": [
+        "network",
+        "external-service-mentions"
+      ],
+      "externalServiceMentions": [
+        "outlook"
+      ],
+      "scripts": [
+        {
+          "path": "scripts/validate-package.py",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        }
+      ]
+    },
+    {
+      "name": "impeccable",
+      "chineseName": "界面设计与优化",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 59,
+      "bundleSha256": "93e3989447cab967862c68af702ba85f1bab3d5482829c305f9e4c36220a4372",
+      "referenceCount": 108,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "assets/plates/sky.png",
+          "kind": "resource-path",
+          "line": 48,
+          "fenced": true,
+          "source": "reference/component-review.md",
+          "classification": "example",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": [
+        {
+          "path": "scripts/VERSION",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/impeccable",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/impeccable.cmd",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/live-browser-dom.js",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/live-browser-ignores.js",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/live-browser-session.js",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/live-browser.js",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        },
+        {
+          "path": "scripts/modern-screenshot.umd.js",
+          "exists": true,
+          "executed": false,
+          "localImports": []
+        }
+      ]
+    },
+    {
+      "name": "legal-zh-ai-governance-ai-inventory",
+      "chineseName": "AI 系统清单编制",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "7116127fa80cef04a605f6b274cf146a8ff97ada7439845f28af9770d1360408",
+      "referenceCount": 9,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ai-governance-aia-generation",
+      "chineseName": "AI 系统风险与合规评估",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "25b20994fa797b49f1ff7d6e15bc6ea3f89dd2adaea2f524ba1bb5cf8977bcd1",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ai-governance-cold-start-interview",
+      "chineseName": "AI 治理初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "f8d3679029c6e126e32910a431770c377e9b3fbe475b496cb5ff6869312f0fc0",
+      "referenceCount": 9,
+      "nestedCallCount": 6,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ai-governance-customize",
+      "chineseName": "AI 治理设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "4036e5f8d8714fa1b0c9d5de83c852f125217658763472cf45fdcd757bf9ee27",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ai-governance-matter-workspace",
+      "chineseName": "AI 治理事项管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "b0ec887530eb2d52753f364c0ecb55f75c0f8b64f57a0ed52d427992cefeb618",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ai-governance-policy-monitor",
+      "chineseName": "AI 使用政策监测",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "887f1df69cc12118e9b003db5f666e740f3e0e9ff44a4c8bb19fc3ecc2530aac",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ai-governance-policy-starter",
+      "chineseName": "AI 使用政策起草",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "b59601689dc91bce17aac7aa60206bdfafbac3c2ca50a640750de8ad0d073a51",
+      "referenceCount": 9,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ai-governance-reg-gap-analysis",
+      "chineseName": "AI 合规差距分析",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "55a079cd177705535ca217dcce055e2961bb9026ded7c8fa79100927163dc645",
+      "referenceCount": 9,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ai-governance-use-case-triage",
+      "chineseName": "AI 应用风险分级",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "5ab7216518fafab84d187f82b6796ba8288b4ebacbdb1079f6195ef05dc3e133",
+      "referenceCount": 9,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ai-governance-vendor-ai-review",
+      "chineseName": "AI 供应商合同审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "5845349d89d3656d3c00ce04992b63e4acbe07b80ecb249843b2de8219043978",
+      "referenceCount": 9,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-builder-hub-auto-updater",
+      "chineseName": "法律技能更新",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "150b3b70af318ba2e6679189625a6f50a4782f533c84776546d31ebcd6e11791",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-builder-hub-cold-start-interview",
+      "chineseName": "法律技能初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "2c393d60d9501d15d74bcf9d1df9e25fd1cd2753b2eb95f452a657666dd9f886",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-builder-hub-customize",
+      "chineseName": "法律技能设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "ccd10a39f846496fe5bed001cbc03febad16ccbc0940dd12ffdce25e07bb1df3",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-builder-hub-disable",
+      "chineseName": "法律技能停用与启用",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "30d367a0c0fdbb5f90b817ac6c039a1e279f621fed4022753ef357d9b81b0be5",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-builder-hub-registry-browser",
+      "chineseName": "法律技能搜索",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "88a78db62084c5e6ea42838dcc86a3d0a3ccf5115ab3cf81c96a72fd389d34a8",
+      "referenceCount": 9,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "references/registry-cache.json",
+          "kind": "resource-path",
+          "line": 51,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "generated-output",
+          "status": "missing"
+        }
+      ],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-builder-hub-related-skills-surfacer",
+      "chineseName": "相关法律技能推荐",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "f5a374e1a9349796c99a5f3ef2674a96663a87367e8ee15db2393a9b1f04a7a1",
+      "referenceCount": 9,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "references/surfaced.json",
+          "kind": "resource-path",
+          "line": 68,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "generated-output",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-builder-hub-skill-installer",
+      "chineseName": "法律技能安装",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "2dd554df7bdf17816e6127449f6b44b706cca56c74d3bb4025ce9b94d17d4cd0",
+      "referenceCount": 10,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-builder-hub-skill-manager",
+      "chineseName": "法律技能管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "f9bba11f3567abd8a7ab853c6888d37c90ab0cdc7c94d6c79b06d93ee878d8f9",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-builder-hub-skills-qa",
+      "chineseName": "法律技能质量评估",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "71cb49946bb3aaf961cb280112b2d3f168fdeed66b5b87ebfcaf47e07b6c46dc",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "external-service-mentions"
+      ],
+      "externalServiceMentions": [
+        "clm",
+        "slack"
+      ],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-builder-hub-uninstall",
+      "chineseName": "法律技能卸载",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "70c8cd556688ba402678b6454d1c69998e2e2e4b01fca0e773b71790ee31ff54",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-build-guide",
+      "chineseName": "诊所实践指南编写",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "02b6f0e7f9cf980e16540189bc7670b3b7c70de3f6267702c8a7b54bd928db19",
+      "referenceCount": 8,
+      "nestedCallCount": 6,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-client-comms-log",
+      "chineseName": "诊所当事人沟通记录",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "7b23584d994390dc24e54e669c83c5b0ca607229b25fa5a106c0df45acf4d8de",
+      "referenceCount": 8,
+      "nestedCallCount": 4,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-client-intake",
+      "chineseName": "诊所当事人接待",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "ebde33a4e4ef7334fb6b3c46a0d6b9fcf05f0d3ae96199177211563d898a35a0",
+      "referenceCount": 8,
+      "nestedCallCount": 4,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-client-letter",
+      "chineseName": "诊所日常信函起草",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "c62ae57e29fe5f2a76ea4c853508a90aedc4a12c25f0fa7ba8900b9d29face46",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-cold-start-interview",
+      "chineseName": "法律诊所初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "635f8255fc7aabebcd9dbed768b86e46bbe13b47392ea389021ea6917b171ece",
+      "referenceCount": 9,
+      "nestedCallCount": 11,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-customize",
+      "chineseName": "法律诊所设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "496109913b34285d5f3d582d5aabdbce8bd2dcfe9cd4fd5895073c95a7f05b5d",
+      "referenceCount": 8,
+      "nestedCallCount": 4,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-deadlines",
+      "chineseName": "诊所案件期限管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "4133894cf6b422819fbb81277c4ee5a4cadda9ea1ad68c9ff58fefdb6914d317",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-draft",
+      "chineseName": "诊所法律文书起草",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "46968ba45c61f9a2aa9e865b09e724bbfd089865e9cfa1368487fb4005a50690",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-form-generation",
+      "chineseName": "诊所表格生成（旧入口）",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "a36fb757e30d1f9e28293de88c4358b8337303f00aad30a73d900e131c164186",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-memo",
+      "chineseName": "诊所案件分析提纲",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "7565365179bb7c0fdaabeec16d42494e28446b24d6ef7b0d3c73984480e6c621",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-plain-language-letters",
+      "chineseName": "诊所通俗信函（旧入口）",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "614fd56190b1e25a27856cf8c92b298af30a5dd75f146098ae6eb1a85fcd8b0a",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-ramp",
+      "chineseName": "法律诊所学期入门",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "604abba346d7f6903f11ea4123fa5a40d43d037de58fa266f7912d3ca366b54f",
+      "referenceCount": 8,
+      "nestedCallCount": 4,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-research-start",
+      "chineseName": "法律检索路线规划",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "5f39182c3383d0f12b00ab6f751aa3fe5e9baa32a20005e90edaadf4d070de9c",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-semester-handoff",
+      "chineseName": "诊所学期案件交接",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "276b39d195dcc933f54df44d703d0a3534a94c07b9fd7ef44d170b47093699de",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-status",
+      "chineseName": "诊所案件进展摘要",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "e461763be751dca5675d564641b08e5e25ada6ed0a491af99b4ac5641e9bde3b",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-clinic-supervisor-review-queue",
+      "chineseName": "诊所指导老师审阅",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "6534128f04b1839e8de02f303c9f42097b0de2039b7b5d0c8d6d2933ca387b84",
+      "referenceCount": 9,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-amendment-history",
+      "chineseName": "合同修订历史追踪",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "c17b0919b57772bb758d324392bdfe27d6c68fe043b2b1f1c85ae910cf597624",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-cold-start-interview",
+      "chineseName": "商事合同初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "4775a7562b780c9304b5f8808d32a3326c9bcba14bad86f8effcba596654ce0b",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-customize",
+      "chineseName": "商事合同设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "3a545bc55d94a8039006c36831f6288a7a09010a0057ee225a1e3678444c60b3",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-escalation-flagger",
+      "chineseName": "合同风险上报",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "4c62830b19db4a7ef9659d49c24f73db72689042277dc99663025bc98108fcbd",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-matter-workspace",
+      "chineseName": "商事合同事项管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "b99708aeee7fd9a4cc6627b6df433449edfa34563c056170fbf88dca6223c6e3",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-nda-review",
+      "chineseName": "保密协议审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "1c8834f29ac9da6683ea46649e93661f1932c13b2b01ca09ecf81bff53cbf4ec",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-renewal-tracker",
+      "chineseName": "合同续约期限追踪",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "ef1b0daf48fb28bb964cbb12cd6ca6135380af7239eabd0816fa690a182189b6",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-review",
+      "chineseName": "商事合同综合审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "39550600dc9b418b3c4bbfe997d02f42758edd1c6cafc56367e38a85382a8f83",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-review-proposals",
+      "chineseName": "合同审查指引更新处理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "cdd2787242301e5ca04fb2bd2eb0d00b45fedc1b937f23afdf1fcfe981e7b759",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-saas-msa-review",
+      "chineseName": "软件订阅服务协议审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "85725dc06116ee154d6f1fd3724bf7329698a9578de6e4860ba10bd875dfc5a6",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-stakeholder-summary",
+      "chineseName": "合同审查业务摘要",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "6635193d2ede1698121144c21a02d6da632648e937d5ff049fad3d7a726f3dee",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-commercial-vendor-agreement-review",
+      "chineseName": "供应商协议审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "5b931991b0a6d3c786922b4b915cdac64d639092a14eb75d16fbba776082a123",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-ai-tool-handoff",
+      "chineseName": "尽调 AI 工具协作",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "51fb1d6d469b97345bd0e96e57292941d03e0a08f154234392e01fdf3e20751f",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-board-minutes",
+      "chineseName": "董事会会议纪要起草",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "5fa52f811cb44b8e5af280394be37fb16e05c009a415bbe82729c15a63c50a1d",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-closing-checklist",
+      "chineseName": "交易交割清单",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "7cb0568e9897d1e58bfc1f40c679b09fd0cae247add48c38153e7f1cfb7089f4",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-cold-start-interview",
+      "chineseName": "公司与并购初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "17d64c9d02fa7bc797cb7e07291d9266bf82f674be5f1c28c9cab9b424d8447e",
+      "referenceCount": 10,
+      "nestedCallCount": 8,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "URL",
+          "kind": "markdown-link",
+          "line": 90,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "example",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-customize",
+      "chineseName": "公司与并购设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "0b13103bc98f73303c2d157488aa8db7fda72b7d16625575afbb1ab70c2addec",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-deal-team-summary",
+      "chineseName": "交易团队尽调简报",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "f10966f60b571facd83d8b11604e59e5d749f4c96d3d00142da717a369d95d1c",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-diligence-issue-extraction",
+      "chineseName": "尽调问题提取",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "156a60478c2e37d2bbba0d5066c659d9edd4b276b1494ecebf2db30b66f6d1e7",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-entity-compliance",
+      "chineseName": "公司主体合规追踪",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "db2218cad7535d3a5cfa1b210fdff67a73245c44c17b49c45864f574a193e84a",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-integration-management",
+      "chineseName": "并购交割后整合管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "c8741b58d86bfb03d61434ecb6da6a1cd238d1fcd70e6b0e7395a3cdda2dfa28",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "external-service-mentions"
+      ],
+      "externalServiceMentions": [
+        "salesforce"
+      ],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-material-contract-schedule",
+      "chineseName": "重大合同披露清单",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "6354cf5144e1b44c36472a57a432cfdb07f3fbad16f570013f23c79da0542bd6",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-matter-workspace",
+      "chineseName": "公司与并购事项管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "a404bea0bd0f97937232ce1a256245743e7882e2b6c2917611fba619fcd85e0c",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-tabular-review",
+      "chineseName": "批量文件表格审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 14,
+      "bundleSha256": "0b13a3acb0e1239c0744136eceff76fa767b695d271fefd3067154c9f1dd9b05",
+      "referenceCount": 10,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-corporate-written-consent",
+      "chineseName": "董事会书面决议起草",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "e18bb80f4072fd9a80e95110416969598b17e603c28d5e213f629ea82864e9b0",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-criminal-bail-application",
+      "chineseName": "取保候审与羁押审查申请",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "df3be41511e3e7bf5604d558bc3ccb296845a2b4ef2a17ad9900ea499d4c0d5a",
+      "referenceCount": 9,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "legal-library/en/criminal-legal/skills/bail-application/SKILL.md",
+          "kind": "resource-path",
+          "line": 18,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "optional-translation",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-criminal-case-analysis",
+      "chineseName": "刑事案卷与证据链梳理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "1a40105130fcbe985b1b6a9d5a9d6f1d58c0ec027d824b3a18f39ed3bbe927c8",
+      "referenceCount": 9,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "legal-library/en/criminal-legal/skills/case-analysis/SKILL.md",
+          "kind": "resource-path",
+          "line": 19,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "optional-translation",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-criminal-cold-start-interview",
+      "chineseName": "刑事业务初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "96240ebae2c73dc7aa86a6ad69021de81e92bf90bfe5c177b55e2774ce27a5b1",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "legal-library/en/criminal-legal/skills/cold-start-interview/SKILL.md",
+          "kind": "resource-path",
+          "line": 19,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "optional-translation",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-criminal-compliance-non-prosecution",
+      "chineseName": "涉案企业合规不起诉评估",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "9330f2fd476199d26de5b4bf7b6057caf985bbb7d46553e53aa98879809b95e8",
+      "referenceCount": 9,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "legal-library/en/criminal-legal/skills/compliance-non-prosecution/SKILL.md",
+          "kind": "resource-path",
+          "line": 19,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "optional-translation",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-criminal-customize",
+      "chineseName": "刑事业务设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "4d66d8a0b444d67e926ddc5213803b8bb6b7c6f051090ea8f52dc28d3937ee71",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "legal-library/en/criminal-legal/skills/customize/SKILL.md",
+          "kind": "resource-path",
+          "line": 19,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "optional-translation",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-criminal-defense-strategy",
+      "chineseName": "刑事辩护策略分析",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "92ba3344f7105cd93c31a9c62e4b6cfd8830ee685d11750e73f14bd9b9da6414",
+      "referenceCount": 9,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "legal-library/en/criminal-legal/skills/defense-strategy/SKILL.md",
+          "kind": "resource-path",
+          "line": 18,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "optional-translation",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-criminal-matter-workspace",
+      "chineseName": "刑事案件事项管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "5d8b24a7a864956b93ef7a89093e27132ce021229b03d512737ec42d65290b37",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "legal-library/en/criminal-legal/skills/matter-workspace/SKILL.md",
+          "kind": "resource-path",
+          "line": 19,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "optional-translation",
+          "status": "missing"
+        }
+      ],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-cold-start-interview",
+      "chineseName": "劳动用工初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "da28ffc90a2a9f3eea49013d45d646e68961dafbf577f6a51d4fafe960695191",
+      "referenceCount": 8,
+      "nestedCallCount": 7,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "external-service-mentions"
+      ],
+      "externalServiceMentions": [
+        "sharepoint"
+      ],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-customize",
+      "chineseName": "劳动用工设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "079f7ecea71d597a5b3290949de7a230edc3daf4cd958a3d57f88e7ee7327b25",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-expansion-kickoff",
+      "chineseName": "跨地域用工规划启动",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "ab21bfffd992e1a2e747073e81e1456d8888d11eedd90403155b55889af4cc03",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-expansion-update",
+      "chineseName": "跨地域用工进展更新",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "855b003a7aa92e9fbbadfd05940a5c440b48ecdafa5b1a564da9a67937924b27",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-handbook-updates",
+      "chineseName": "员工规章制度修订比对",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "f5c7147fddd0deec369e123e6cf62b51532a364b3a78dd27fd6f97d70b89a06a",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-hiring-review",
+      "chineseName": "录用通知与入职条款审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "8d7515c54fa342d0786fb3087e0aeb9412245ef3772922f7c37763a6fd81a2d2",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-internal-investigation",
+      "chineseName": "内部调查工作框架",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "4f6520732d48716839078790afb4d99efe38db8e3b8e8625295f85cb10ffc902",
+      "referenceCount": 8,
+      "nestedCallCount": 6,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-international-expansion",
+      "chineseName": "跨境用工规划框架",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "9f15fa44bcaab47fd0e8188b7ac9f4da44549481a87983928d201c5d7113d8c1",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-investigation-add",
+      "chineseName": "内部调查材料补充",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "39e09f10a03a47ed584a990b5289d65a889659c109770daf06affcf14beb32f5",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-investigation-memo",
+      "chineseName": "内部调查备忘录起草",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "b2b1b45c5288c2e34229f7a1f74cc55974a88c986ca14416b7b9fae33d7a8f5a",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-investigation-open",
+      "chineseName": "内部调查事项启动",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "bdd383dc224dd9c02eb3e978e01beedde17e36da3698dea6ae2a178929289b9d",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-investigation-query",
+      "chineseName": "内部调查记录查询",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "bb42dace2b7d7ad1d6b8f7c2292b6e451438a5935864bd51a09edd538f907b6a",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-investigation-summary",
+      "chineseName": "内部调查结果摘要",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "132d6800f572557ff559e284f6ac856caafc7a36d165f6ce516f42179f4b859b",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-leave-tracker",
+      "chineseName": "员工休假期限追踪",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "d4d68be9225b41a2ba77f28417ef2179e1b608d770e78acab1b022719bedfac1",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-log-leave",
+      "chineseName": "员工休假登记",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "a228b60fadb974f5fd83db95665a2d9889302a9a759d027b72aa4b4c8709b146",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-matter-workspace",
+      "chineseName": "劳动用工事项管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "51530faa0259f188c7b8404bcb368381087e4600898b0ff9ebad09b5167789e2",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-policy-drafting",
+      "chineseName": "员工规章制度起草",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "4453de76a926c7c58670b67f65615ccf6d91ea0abb5d56ae5f571031cc57582d",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-termination-review",
+      "chineseName": "劳动合同解除审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "03e8de20b24d23d819d69b58c3b6480e3cff684609eda4d6c5f891314c8a5b27",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-wage-hour-qa",
+      "chineseName": "工资工时与休假咨询",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "296665e2250c3276ff448809cd734369e521827557acc3190fee5fcb064220b6",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-employment-worker-classification",
+      "chineseName": "劳动关系认定分析",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "2a79f0cc196c8c908a3c9ed1bffd405de2c5baa46ea56b669749fe1f85ea53f3",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-cease-desist",
+      "chineseName": "侵权警告函起草与应对",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "ad7e5aa16843f4b56229c45fe19c5cc960ec7e481516387fc5b215bda6aeec7c",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-clearance",
+      "chineseName": "商标冲突初步检索",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "c1b2e7b81cf28d6828588f1d370531bf75b287ff7e17d366eab07e596b0d45f2",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-cold-start-interview",
+      "chineseName": "知识产权初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "eeed84ffc55825bd9637211ee2a9b2b61f26aa8991f4d6f9b6f2de7a1d098fab",
+      "referenceCount": 8,
+      "nestedCallCount": 8,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "external-service-mentions"
+      ],
+      "externalServiceMentions": [
+        "sharepoint",
+        "slack"
+      ],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-customize",
+      "chineseName": "知识产权设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "0f02ff14c41951bcd291e0afd959b93ee11e6612e7f5b248b2ddb9a8e7954748",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "external-service-mentions"
+      ],
+      "externalServiceMentions": [
+        "slack"
+      ],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-fto-triage",
+      "chineseName": "专利自由实施初筛",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "7189149f713bf7b816b5edc197d1a99ce85f654c18996e14a4ea96ee614ad046",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-infringement-triage",
+      "chineseName": "知识产权侵权初筛",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "a56359db36756f421e8fa012ab63e6e56b6c660ea681ec2eaa6e1f6da2ab798a",
+      "referenceCount": 8,
+      "nestedCallCount": 6,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-invention-intake",
+      "chineseName": "发明披露初步评估",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "a2d3ecebc1429006a493851d5d7057bce1d839d5290a2b8abde4d32df7304186",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-ip-clause-review",
+      "chineseName": "知识产权条款审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "7d44144e3e96b71f64735bcab1be620a9eaa1e86e2aff6ce0bf5b96fbeacbec0",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-matter-workspace",
+      "chineseName": "知识产权事项管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "9af7b756b20e826274677674453bfe1000180499c7fece72e7ea2a40787c72f3",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-oss-review",
+      "chineseName": "开源许可证合规审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "29a791e4fb88c5962699fe601cc3ccd7656fcc3679b9fb321f87bab1dc90b37a",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-portfolio",
+      "chineseName": "知识产权资产管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "5b44f4b6be3b64368e4274ec4dd5fbf3a4bd566e2f67fe1e376572a192935ffa",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-ip-takedown",
+      "chineseName": "著作权通知删除与反通知",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "be9ce35c39d02381d569dabce99f623e8acee18b7c4aa9e0badcb1aa32c5a4fb",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-bar-prep-questions",
+      "chineseName": "法考备考练习",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "c1609e1e2e0d3ebc0a2e1581b5d56537a1b40286c2fa5c03802312a8ffacdba5",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-case-brief",
+      "chineseName": "法学案例摘要",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "2162244b4c69dc1611f6fe6d731c0fe9c756d583c9b4a4448f8ba1da33a47dd2",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-cold-call-prep",
+      "chineseName": "课堂提问准备",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "6bd5f10051d79b132f7a9bf2b0681106e0e90d5700c8a4f361238fecd89099fc",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-cold-start-interview",
+      "chineseName": "法学学习初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "bc6b32b063dbccb00ecec35c80b73dbc51c78707ad44573192e23793d164028f",
+      "referenceCount": 8,
+      "nestedCallCount": 12,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-customize",
+      "chineseName": "法学学习设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "0a252ff1f3d319da8a55eaaa1ce4aa3e7eca931dd0c4929b2e227e3b0c0aa15b",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-exam-forecast",
+      "chineseName": "历年考题与考点分析",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "4fed9157c083579ec2bfb3922637b7fc9d87b85a11ccaa6c172b53cd2ccdb0ba",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-flashcards",
+      "chineseName": "法条概念记忆卡片",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "5319230b8b374b91d792c380665a6397cf2620a098b781467502692778e37945",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-irac-practice",
+      "chineseName": "法律论证练习批改",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "d341701909c9929fca793bb7caf05b53f08749fc0fbbaf7f7a744704b2880f97",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-legal-writing",
+      "chineseName": "法律写作反馈",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "9d407d7c8541c2a475d04e07c8645724f3c8413fe6ee8f7c7e269862c0a1afb1",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-outline-builder",
+      "chineseName": "法学课程大纲整理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "9dcb13ed16b17228ea9b5413f793d7f764fb2d2a65fc10793814e18901635497",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-session",
+      "chineseName": "法学专项练习",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "967cce44594ea49a9b4edbcb9b892ffa23f224b8ac26e9637d0c552d8c44604d",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-socratic-drill",
+      "chineseName": "法学追问训练",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "3c95b946fdb29a9f3db4b4d420000bc521c434f4340aaa1848b2d61a4ad3d28c",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-law-student-study-plan",
+      "chineseName": "法学备考计划",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 10,
+      "bundleSha256": "95aa5521f103f035b323a4a5529285fcb96f89ae40403e22a73ed2ea30a234ac",
+      "referenceCount": 8,
+      "nestedCallCount": 6,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-brief-section-drafter",
+      "chineseName": "诉讼文书章节起草",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "bce445f356fafd0c9b5097d0fa247d55bed0b06240a206050c42b2d1b74a9beb",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-chronology",
+      "chineseName": "案件时间线整理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "857a663ddba4bf5220324be6e7c0519474ae00be1950b96c64fedda0d11cb3dc",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-claim-chart",
+      "chineseName": "构成要件与证据对照",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 14,
+      "bundleSha256": "13aa528bc7ff3b82d081383531e45ea72cca4eccd50fac65a28c381d8f4d11d7",
+      "referenceCount": 9,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-cold-start-interview",
+      "chineseName": "诉讼业务初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "b0985956d479ce37dd8340afe69719e0e39c7c1e552b2f7dca4717dc89446bf3",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-customize",
+      "chineseName": "诉讼业务设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "a3cec90d32338ec88dfd004f2087119b289baace6cce5fcc7e0fff67ad6689a4",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-demand-draft",
+      "chineseName": "律师函起草",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "9505427188f46916a16be1b3beac06c46741abe7e50b0be25e913b5eb02cb125",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-demand-intake",
+      "chineseName": "律师函委托登记",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "257457b542a33ecf8f3e9d8343f3360a7a437c165583f8f68ec7cde93028d003",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-demand-received",
+      "chineseName": "收到律师函分析应对",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "8504a50b455572b4b6aa6ecda413187b4ba831010812b8b875fed2d1b27af5dc",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-deposition-prep",
+      "chineseName": "证人庭前准备",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "1c1357072ecb57b40211de0142bba4139bda364c8ca69a4d1413459ea03aad10",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-legal-hold",
+      "chineseName": "证据保全通知管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "73391b0fd96b0e4dede901521b3f90e9775a2c6ebe57ceb2dd8ee7ea62804644",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-matter-briefing",
+      "chineseName": "单案深度简报",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "1b0f348c7d14aa8d0a5bd5d31864685e860b264e4a925e7dd8c98206d5fda16e",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-matter-close",
+      "chineseName": "诉讼案件结案归档",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "fab77fc7e5f68dd85e343065631d62995905912c41ccde05f3b8aeeebb4652b0",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-matter-intake",
+      "chineseName": "诉讼新案登记",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "cbcd6f03b850871fcb1d683c19dce3fd18be3b845ac25c45af090ba981987589",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-matter-update",
+      "chineseName": "诉讼案件进展记录",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "d7b15fce6a8668265fb4c8daec50672add135e99621912c152f04e057d4858ee",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-matter-workspace",
+      "chineseName": "诉讼案件工作区管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "5a85e867e0f5e256dc1faa9d4cfe8111e4d3c58d8c403c3dc7287560e46a0c5a",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-oc-status",
+      "chineseName": "外聘律师进展询函",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "56b8123f7b753c6d74128d6025bffd81d8144a539c87460c501128e2c1e19fb7",
+      "referenceCount": 8,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "external-service-mentions"
+      ],
+      "externalServiceMentions": [
+        "gmail"
+      ],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-portfolio-status",
+      "chineseName": "全部诉讼案件状态汇总",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "37dd4b6a59be5a29a09082bfb0ee2f4f30fc2e95c42e67ff918a5b19731a004e",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-privilege-log-review",
+      "chineseName": "证据三性审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "cc7b828d058394504f3177c9ee4fe802c610b6c293cc57b75e458ffff758a924",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-litigation-subpoena-triage",
+      "chineseName": "调查令与协查通知处理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "e0a64c6d2dcd2458b015036f79436ca3d3e40750ed308fbc8bf82e8faac44d9e",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-privacy-cold-start-interview",
+      "chineseName": "数据合规初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "80dba39676b90bfab9d72bec6806a2a79bb11254876d39ed026ebd90ee0d0220",
+      "referenceCount": 10,
+      "nestedCallCount": 8,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-privacy-customize",
+      "chineseName": "数据合规设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "62f474d2461f744a34126039b407eb81389c9f05d54b17576e59f62a63e3382c",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "external-service-mentions"
+      ],
+      "externalServiceMentions": [
+        "slack"
+      ],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-privacy-dpa-review",
+      "chineseName": "数据处理协议审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "33bb68b70d017184165e5fa551ce3f59174dcaec27c08fa36769a0dfeec14809",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-privacy-dsar-response",
+      "chineseName": "个人信息权利请求回复",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "cf193bd0edeba7b276b896176293d79e1d9c16c8492179341212fe4cc1209114",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-privacy-matter-workspace",
+      "chineseName": "数据合规事项管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "d1f735aa07c4145c065c9180fe0c212aa96fd402dff2441f7a2434ebef309517",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-privacy-pia-generation",
+      "chineseName": "个人信息保护影响评估",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "0535168807d542de1c85973b2f5f6618400d12869ffc8dfc5da825dd8cb3f9ec",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-privacy-policy-monitor",
+      "chineseName": "个人信息处理规则监测",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "6ff087c8d9c002bb0b8da70c0bf1e095f856c508f7c26bb66d68eb8bdeb55e3f",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-privacy-reg-gap-analysis",
+      "chineseName": "个人信息合规差距分析",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "93f3fbdb2898d547eee99bb1f961a136e6727b4b4777ffe81763a11661c77b7b",
+      "referenceCount": 9,
+      "nestedCallCount": 1,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-privacy-use-case-triage",
+      "chineseName": "个人信息处理活动分流",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "7c6e86e125c75ce6a1eadbd1602964f27059c98ef2fa60da16b63f4a04cb576f",
+      "referenceCount": 9,
+      "nestedCallCount": 6,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-product-cold-start-interview",
+      "chineseName": "产品法务初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "633373fa37b6debb91b723935a1ecc5b644b85d0d52b222a77d18ae62b0fc14d",
+      "referenceCount": 11,
+      "nestedCallCount": 5,
+      "issues": [],
+      "advisories": [
+        {
+          "type": "missing-local-reference",
+          "path": "URL",
+          "kind": "markdown-link",
+          "line": 100,
+          "fenced": false,
+          "source": "SKILL.md",
+          "classification": "example",
+          "status": "missing"
+        }
+      ],
+      "conditions": [
+        "external-service-mentions"
+      ],
+      "externalServiceMentions": [
+        "sharepoint",
+        "slack"
+      ],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-product-customize",
+      "chineseName": "产品法务设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "022c107b03dd6721f00de8d9185f6f8eac8e06c9c49b48dbe841c7dbb58cdbb7",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-product-feature-risk-assessment",
+      "chineseName": "产品功能法律风险评估",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "f2df4bb5623038304d248099ab4c18010ee0eb86bec43fb378e26513939cda54",
+      "referenceCount": 9,
+      "nestedCallCount": 4,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-product-is-this-a-problem",
+      "chineseName": "产品法务快速咨询",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "db3dac951c05800524f5119da5f32a51d7afab43311026d1f229843bda1dcf00",
+      "referenceCount": 9,
+      "nestedCallCount": 4,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-product-launch-review",
+      "chineseName": "产品上线合规审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "01bf5d81f88bb7bdc3e3ede7f6beadd77c3e5cdf6ed6ebb08ccf8b4856ac63ab",
+      "referenceCount": 9,
+      "nestedCallCount": 7,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "external-service-mentions"
+      ],
+      "externalServiceMentions": [
+        "dms"
+      ],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-product-marketing-claims-review",
+      "chineseName": "营销宣传文案审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "4d5f3ece7200b15915b2b6c0fe370820aed8d121f1ae21506808c4d478204c5f",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-product-matter-workspace",
+      "chineseName": "产品法务事项管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "e61f89c29699eb0cab60ec1676e43b273b335033045548c292c4a4ce6db2d437",
+      "referenceCount": 9,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-regulatory-cold-start-interview",
+      "chineseName": "监管合规初始配置",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "9d20d0659f661cc0e92842ea28381174df31fee18dbecc532d496cedfa4d3f41",
+      "referenceCount": 8,
+      "nestedCallCount": 6,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-regulatory-comments",
+      "chineseName": "法规征求意见事项跟踪",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "298fa397fc56c9b36db0432327e5d4506d12d95417e49a22463f99f6ebe59063",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-regulatory-customize",
+      "chineseName": "监管合规设置调整",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "12f061ab09ac77615a3f67e2f4be7e0cc7c44df7154faf8d1ba859f85ef121c7",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-regulatory-gap-surfacer",
+      "chineseName": "合规差距跟踪框架",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 13,
+      "bundleSha256": "101508275cb781022443b980034a2b3712e412f8577c7bcfbfd478f1ed29b6a6",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-regulatory-gaps",
+      "chineseName": "合规整改进度跟踪",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "54cb8065dc833f4fe2fb123bb9f6441c7bbfda794599f6e6e58acd12f5a98141",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-regulatory-matter-workspace",
+      "chineseName": "监管合规事项管理",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "b3796c9b1839a111cb8213821673a4c8f24c5d156caf0bcd7c08596717382fd5",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-regulatory-policy-diff",
+      "chineseName": "法规与内部制度差异分析",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "b33695c9c6fb7f6be8416cf07934f1f1da7d8de8790e8c860310dd0dc6130f10",
+      "referenceCount": 8,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-regulatory-policy-redraft",
+      "chineseName": "合规制度修订建议",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 11,
+      "bundleSha256": "27238e43223f9bd12693c246d2e2b3bb1c74424158d757a5d70fa0222d897194",
+      "referenceCount": 8,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "legal-zh-regulatory-reg-feed-watcher",
+      "chineseName": "法规更新筛选",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 12,
+      "bundleSha256": "7e03fda26b68df05d77fc01fca6c4566b0e2d7ee03f7ee05067d2431568814e3",
+      "referenceCount": 8,
+      "nestedCallCount": 3,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "network",
+        "scheduled-runtime"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "qx-case-work",
+      "chineseName": "办案整理与文书起草",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 3,
+      "bundleSha256": "e12c0f30b1a466820d58a6b68457b036ff6600bd9647f51f44b9176b75ceebfd",
+      "referenceCount": 2,
+      "nestedCallCount": 4,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "local-qx-legal-tools",
+        "local-qx-materials-tools"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "qx-client-reception",
+      "chineseName": "客户接待与跟进",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 4,
+      "bundleSha256": "4604d2a1f1e58a4e9c5c96c6c973467120d6af18425cfdbaaeb626f6e14744b6",
+      "referenceCount": 3,
+      "nestedCallCount": 2,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "local-qx-legal-tools",
+        "local-qx-materials-tools"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "qx-contract-review",
+      "chineseName": "合同审查",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 4,
+      "bundleSha256": "bebfc98e5120dea4a0a4389d7255eca5560f167de38380a6453eb9c3aef2e27b",
+      "referenceCount": 3,
+      "nestedCallCount": 4,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "local-qx-legal-tools",
+        "local-qx-materials-tools"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "qx-mock-hearing",
+      "chineseName": "模拟法庭",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 3,
+      "bundleSha256": "ae972fe95170bedc4189d3224539ba2b8861e56f24e8cc9e0f98e00a4d2e57ea",
+      "referenceCount": 1,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "scrapling",
+      "chineseName": "网页资料采集",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "d8d5eb909ed54d4935cc418010f4176beac997cdcfc133a90106511279bc4b18",
+      "referenceCount": 0,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "browser",
+        "network"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    },
+    {
+      "name": "windows-desktop",
+      "chineseName": "Windows 桌面操作",
+      "status": "load-and-resources-ok",
+      "loaded": true,
+      "modelInvocable": true,
+      "fileCount": 1,
+      "bundleSha256": "6dba40ba246f72b06fe99b22ceaf18072c1eafe9ec0218c33d60faef56cd979d",
+      "referenceCount": 0,
+      "nestedCallCount": 0,
+      "issues": [],
+      "advisories": [],
+      "conditions": [
+        "browser",
+        "network",
+        "local-qx-materials-tools"
+      ],
+      "externalServiceMentions": [],
+      "scripts": []
+    }
+  ],
+  "localTools": {
+    "tools": {
+      "qx_materials": [
+        "generate_document_from_template",
+        "import_material",
+        "inspect_word_document",
+        "list_document_templates",
+        "list_materials",
+        "parse_material",
+        "read_material",
+        "search_materials",
+        "write_contract_opinion",
+        "write_review_word",
+        "write_word_draft"
+      ],
+      "qx_legal": [
+        "create_case",
+        "export_case",
+        "get_case",
+        "get_hearing",
+        "get_hearing_role_context",
+        "get_workflow",
+        "link_case_materials",
+        "list_cases",
+        "list_hearings",
+        "read_case_material",
+        "read_case_note",
+        "read_hearing_turn",
+        "record_case_note",
+        "record_hearing_turn",
+        "record_reception",
+        "search_case_materials",
+        "start_hearing"
+      ]
+    },
+    "workflows": [
+      {
+        "name": "reception",
+        "method_characters": 2067,
+        "method_sha256": "4e8eaf2e0243010868d95509306f029fdbe7fc16f293a435dbf21fa571d9a552",
+        "suggested_skills": [
+          "legal-zh-clinic-client-intake",
+          "legal-zh-litigation-demand-intake"
+        ]
+      },
+      {
+        "name": "contract",
+        "method_characters": 4914,
+        "method_sha256": "ed32c1140bcc9de9d6c0ed819cd5fdaf9797316e9efb4ccf98463d3abdb682dd",
+        "suggested_skills": [
+          "legal-zh-commercial-nda-review",
+          "legal-zh-commercial-vendor-agreement-review",
+          "legal-zh-commercial-saas-msa-review",
+          "legal-zh-privacy-dpa-review"
+        ]
+      },
+      {
+        "name": "case",
+        "method_characters": 2809,
+        "method_sha256": "bc8c325a8654cb78afcfbfd1d5fd83aad1daa1c757b24c1a64fccb0a60624187",
+        "suggested_skills": [
+          "legal-zh-litigation-chronology",
+          "legal-zh-litigation-claim-chart",
+          "legal-zh-litigation-brief-section-drafter",
+          "legal-zh-litigation-matter-briefing"
+        ]
+      },
+      {
+        "name": "hearing",
+        "method_characters": 1574,
+        "method_sha256": "94634b23a74edde4be7bb34adc913633f01e07da4e4684d596c5c665918bca15",
+        "suggested_skills": [
+          "legal-zh-litigation-deposition-prep",
+          "legal-zh-litigation-claim-chart"
+        ]
+      }
+    ],
+    "references": [
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/case-records.md",
+        "tool": "create_case",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/case-records.md",
+        "tool": "export_case",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/case-records.md",
+        "tool": "get_case",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/case-records.md",
+        "tool": "import_material",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/case-records.md",
+        "tool": "link_case_materials",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/case-records.md",
+        "tool": "list_cases",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/case-records.md",
+        "tool": "read_case_material",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/case-records.md",
+        "tool": "read_case_note",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/case-records.md",
+        "tool": "record_case_note",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/case-records.md",
+        "tool": "search_case_materials",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/method.md",
+        "tool": "export_case",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/references/method.md",
+        "tool": "record_reception",
+        "registered": true
+      },
+      {
+        "skill": "qx-client-reception",
+        "file": "config/skills/qx-client-reception/SKILL.md",
+        "tool": "get_workflow",
+        "registered": true
+      },
+      {
+        "skill": "qx-contract-review",
+        "file": "config/skills/qx-contract-review/references/method.md",
+        "tool": "export_case",
+        "registered": true
+      },
+      {
+        "skill": "qx-contract-review",
+        "file": "config/skills/qx-contract-review/references/method.md",
+        "tool": "import_material",
+        "registered": true
+      },
+      {
+        "skill": "qx-contract-review",
+        "file": "config/skills/qx-contract-review/references/method.md",
+        "tool": "inspect_word_document",
+        "registered": true
+      },
+      {
+        "skill": "qx-contract-review",
+        "file": "config/skills/qx-contract-review/references/method.md",
+        "tool": "read_case_material",
+        "registered": true
+      },
+      {
+        "skill": "qx-contract-review",
+        "file": "config/skills/qx-contract-review/references/method.md",
+        "tool": "record_case_note",
+        "registered": true
+      },
+      {
+        "skill": "qx-contract-review",
+        "file": "config/skills/qx-contract-review/references/method.md",
+        "tool": "write_contract_opinion",
+        "registered": true
+      },
+      {
+        "skill": "qx-contract-review",
+        "file": "config/skills/qx-contract-review/references/method.md",
+        "tool": "write_review_word",
+        "registered": true
+      },
+      {
+        "skill": "qx-contract-review",
+        "file": "config/skills/qx-contract-review/references/method.md",
+        "tool": "write_word_draft",
+        "registered": true
+      },
+      {
+        "skill": "qx-contract-review",
+        "file": "config/skills/qx-contract-review/SKILL.md",
+        "tool": "get_workflow",
+        "registered": true
+      },
+      {
+        "skill": "qx-contract-review",
+        "file": "config/skills/qx-contract-review/SKILL.md",
+        "tool": "read_case_material",
+        "registered": true
+      },
+      {
+        "skill": "qx-case-work",
+        "file": "config/skills/qx-case-work/references/method.md",
+        "tool": "create_case",
+        "registered": true
+      },
+      {
+        "skill": "qx-case-work",
+        "file": "config/skills/qx-case-work/references/method.md",
+        "tool": "export_case",
+        "registered": true
+      },
+      {
+        "skill": "qx-case-work",
+        "file": "config/skills/qx-case-work/references/method.md",
+        "tool": "generate_document_from_template",
+        "registered": true
+      },
+      {
+        "skill": "qx-case-work",
+        "file": "config/skills/qx-case-work/references/method.md",
+        "tool": "get_case",
+        "registered": true
+      },
+      {
+        "skill": "qx-case-work",
+        "file": "config/skills/qx-case-work/references/method.md",
+        "tool": "import_material",
+        "registered": true
+      },
+      {
+        "skill": "qx-case-work",
+        "file": "config/skills/qx-case-work/references/method.md",
+        "tool": "list_document_templates",
+        "registered": true
+      },
+      {
+        "skill": "qx-case-work",
+        "file": "config/skills/qx-case-work/references/method.md",
+        "tool": "read_case_note",
+        "registered": true
+      },
+      {
+        "skill": "qx-case-work",
+        "file": "config/skills/qx-case-work/references/method.md",
+        "tool": "record_case_note",
+        "registered": true
+      },
+      {
+        "skill": "qx-case-work",
+        "file": "config/skills/qx-case-work/references/method.md",
+        "tool": "write_word_draft",
+        "registered": true
+      },
+      {
+        "skill": "qx-case-work",
+        "file": "config/skills/qx-case-work/SKILL.md",
+        "tool": "get_workflow",
+        "registered": true
+      },
+      {
+        "skill": "qx-mock-hearing",
+        "file": "config/skills/qx-mock-hearing/references/method.md",
+        "tool": "list_hearings",
+        "registered": true
+      },
+      {
+        "skill": "qx-mock-hearing",
+        "file": "config/skills/qx-mock-hearing/references/method.md",
+        "tool": "read_hearing_turn",
+        "registered": true
+      },
+      {
+        "skill": "qx-mock-hearing",
+        "file": "config/skills/qx-mock-hearing/SKILL.md",
+        "tool": "get_hearing",
+        "registered": true
+      },
+      {
+        "skill": "qx-mock-hearing",
+        "file": "config/skills/qx-mock-hearing/SKILL.md",
+        "tool": "read_case_note",
+        "registered": true
+      },
+      {
+        "skill": "qx-mock-hearing",
+        "file": "config/skills/qx-mock-hearing/SKILL.md",
+        "tool": "start_hearing",
+        "registered": true
+      }
+    ]
+  }
+}

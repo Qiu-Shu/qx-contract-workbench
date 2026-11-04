@@ -9,10 +9,11 @@ await mkdir(workspace);
 const routes=new Map(),cleanup=[];
 apply({connection:{fetch:{register(route){routes.set(route.path,route.fetch);}}},effect(fn){cleanup.push(fn());}},{workspace,python:process.env.QX_TEST_PYTHON||'D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe'});
 const prepare=routes.get('/api/qx-privacy/prepare');
-const request=(name,body,extra={})=>new Request('http://localhost/api/qx-privacy/prepare?name='+encodeURIComponent(name),{method:'POST',headers:{origin:'http://localhost','x-qx-privacy':'1',...extra},body});
+const request=(name,body,extra={},mode)=>new Request('http://localhost/api/qx-privacy/prepare?'+new URLSearchParams({name,...(mode?{mode}:{})}),{method:'POST',headers:{origin:'http://localhost','x-qx-privacy':'1',...extra},body});
 try{
   assert.equal((await prepare(request('a.txt','secret',{origin:'https://attacker.test'}))).status,403);
   assert.equal((await prepare(request('a.zip','secret'))).status,400);
+  assert.equal((await prepare(request('a.txt','secret',{},'unknown'))).status,400);
   const bridged=await prepare(new Request('http://dsh.internal/api/qx-privacy/prepare?name=carrier.txt',{method:'POST',headers:{host:'127.0.0.1:3080',origin:'http://127.0.0.1:3080','x-qx-privacy':'1'},body:'电话：13800138000'}));
   assert.equal(bridged.status,200,await bridged.clone().text());
   const response=await prepare(request('张三合同.txt','姓名：张三\n电话：13800138000\n邮箱：zhang@example.com\n应付10000元。',{'x-qx-terms':encodeURIComponent(JSON.stringify(['张三']))}));
@@ -20,8 +21,22 @@ try{
   const body=await response.text();assert.ok(!body.includes('张三'));assert.ok(!body.includes('13800138000'));assert.ok(!body.includes('zhang@example.com'));assert.ok(body.includes('10000'));
   assert.ok(!decodeURIComponent(response.headers.get('x-qx-safe-name')).includes('张三'));
   assert.ok(Number(response.headers.get('x-qx-replacements'))>=3);
+  assert.equal(response.headers.get('x-qx-privacy-mode'),'standard');
   assert.ok(!body.includes(temp));
+  const example='品牌名称：星屿评测；产品名称：晨光成长引擎。\n生成式AI备案编号：Beijing-Fiction-202604030199。\n国家高新技术企业，服务中小学校逾万所。\n合同总价12500元，2026年4月3日签署，期限五年，30日内交付20所学校。';
+  const standard=await prepare(request('虚构合同.txt',example,{},'standard'));
+  assert.equal(standard.status,200,await standard.clone().text());
+  const standardText=await standard.text();
+  for(const value of ['星屿评测','晨光成长引擎','Beijing-Fiction-202604030199'])assert.ok(!standardText.includes(value),value+' remains in standard');
+  assert.ok(standardText.includes('国家高新技术企业'));
+  assert.ok(standardText.includes('服务中小学校逾万所'));
+  const deep=await prepare(request('虚构合同.txt',example,{},'deep'));
+  assert.equal(deep.status,200,await deep.clone().text());
+  assert.equal(deep.headers.get('x-qx-privacy-mode'),'deep');
+  const deepText=await deep.text();
+  for(const value of ['星屿评测','晨光成长引擎','Beijing-Fiction-202604030199','国家高新技术企业','逾万所'])assert.ok(!deepText.includes(value),value+' remains in deep');
+  for(const value of ['12500元','2026年4月3日','五年','30日内交付20所学校'])assert.ok(deepText.includes(value),value+' was removed');
   const empty=await prepare(request('empty.txt',''));assert.equal(empty.status,400);
   const script=await routes.get('/api/qx-privacy/client.js')();assert.match(await script.text(),/window.qxPrivacy/);
-  console.log(JSON.stringify({passed:true,checks:['owner origin','unsupported format','real local text masking','no raw identifiers or vault path','amount retained','empty input fail closed','client route']}));
+  console.log(JSON.stringify({passed:true,checks:['owner origin','unsupported format','invalid mode','default standard mode','real local text masking','brand/product/filing identifiers','generic school terms retained','deep-only business facts masking','dates/amounts/delivery retained','no raw identifiers or vault path','empty input fail closed','client route']}));
 }finally{for(const fn of cleanup)fn?.();await rm(resolve(temp),{recursive:true,force:true});}

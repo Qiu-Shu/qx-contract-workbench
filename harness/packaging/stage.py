@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import shutil
 import sys
+import hashlib
 import yaml
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -103,13 +104,34 @@ def portable_config():
                 config.setdefault('env',{}).update(PYTHONPATH='@APP@/legacy/src',QX_LEGACY_ROOT='@APP@/legacy',PYTHONIOENCODING='utf-8')
     return value
 
+def verify_office_engine(payload):
+    engine=payload/'node_modules/@deepseek-ai/libreoffice-kit-win32-x64'
+    try:
+        meta=json.loads((engine/'package.json').read_text(encoding='utf-8'))
+        manifest=json.loads((engine/'prebuilds.json').read_text(encoding='utf-8'))
+        if meta['name']!='@deepseek-ai/libreoffice-kit-win32-x64' or meta['version']!='0.1.5' or manifest['version']!=meta['version'] or manifest['status']!='built' or manifest['platform']!='win32-x64' or not manifest['files']:
+            raise ValueError('incompatible engine')
+        for relative,digest in manifest['files'].items():
+            file=(engine/relative).resolve()
+            if not file.is_relative_to(engine.resolve()) or hashlib.sha256(file.read_bytes()).hexdigest()!=digest:
+                raise ValueError('incomplete engine')
+    except (OSError,ValueError,KeyError) as error:
+        raise RuntimeError('Office preview engine is missing or incomplete; run pnpm install before packaging.') from error
+
+def bundle_office_engine(payload):
+    kit=package_source((ROOT/'node_modules/@deepseek-ai/dsh').resolve(),'@deepseek-ai/libreoffice-kit')
+    engine=package_source(kit,'@deepseek-ai/libreoffice-kit-win32-x64') if kit else None
+    if not engine:raise RuntimeError('Office preview engine is missing; run pnpm install before packaging.')
+    bundle_node([(engine,'@deepseek-ai/libreoffice-kit-win32-x64')],payload)
+    verify_office_engine(payload)
+
 def stage(destination,version='0.2.1'):
     if destination.exists():raise RuntimeError('Use a new staging directory to prevent stale files: '+str(destination))
     payload=destination/'workbench';app=destination/'app'
     payload.mkdir(parents=True);app.mkdir()
     (payload/'desktop-runner').mkdir()
-    for name in ['installed-host.cjs','installed-runtime.cjs','installed-migrations.cjs','stop-installed.cjs']:shutil.copy2(ROOT/'desktop'/name,payload/'desktop-runner'/name)
-    for name in ['main.cjs','preload.cjs','unavailable.html','installed.cjs','installed-runtime.cjs','installed-migrations.cjs','model-credentials.cjs','setup-service.cjs','setup-preload.cjs','setup.html','setup.css','setup.js','updates.cjs','update-download.cjs','update-integrity.cjs','update-config.json']:
+    for name in ['installed-host.cjs','installed-runtime.cjs','installed-migrations.cjs','host-recovery.cjs','stop-installed.cjs']:shutil.copy2(ROOT/'desktop'/name,payload/'desktop-runner'/name)
+    for name in ['main.cjs','preload.cjs','unavailable.html','installed.cjs','installed-runtime.cjs','installed-migrations.cjs','host-recovery.cjs','model-credentials.cjs','setup-service.cjs','setup-preload.cjs','setup.html','setup.css','setup.js','updates.cjs','update-download.cjs','update-integrity.cjs','update-config.json']:
         shutil.copy2(ROOT/'desktop'/name,app/name)
     (app/'package.json').write_text(json.dumps({'name':'qunxing-harness-desktop','version':version,'private':True,'description':'AI师兄法律助手平台','author':'AI师兄法律助手平台项目','main':'installed.cjs','dependencies':{'electron-updater':'6.8.11'}}),encoding='utf-8')
     bundle_node([(ROOT/'node_modules/electron-updater','electron-updater')],app)
@@ -126,6 +148,7 @@ def stage(destination,version='0.2.1'):
         if (LEGACY/name).exists():shutil.copy2(LEGACY/name,payload/'legacy'/name)
     print('Bundling Harness dependency graph',flush=True)
     count=bundle_node([(ROOT/'node_modules/@deepseek-ai/dsh','@deepseek-ai/dsh'),(ROOT/'desktop/integration','@qunxing/desktop-session')],payload)
+    verify_office_engine(payload)
     print(f'Bundled {count} Node packages',flush=True)
     bundle_node([(TOOLS/'bb-browser/node_modules/bb-browser','bb-browser')],payload/'browser')
     (payload/'runtime').mkdir(exist_ok=True)

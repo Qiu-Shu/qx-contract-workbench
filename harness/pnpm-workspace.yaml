@@ -1,9 +1,11 @@
 ignoredOptionalDependencies:
-  - '@deepseek-ai/libreoffice-kit-win32-x64'
   - '@deepseek-ai/libreoffice-kit-win32-arm64'
   - '@deepseek-ai/libreoffice-kit-wasm'
   - '@deepseek-ai/libreoffice-kit-darwin-x64'
   - '@deepseek-ai/libreoffice-kit-darwin-arm64'
 patchedDependencies:
+  '@deepseek-ai/dsh-client-ui-attachment@0.2.2-alpha.2': patches/@deepseek-ai__dsh-client-ui-attachment@0.2.2-alpha.2.patch
+  '@deepseek-ai/dsh-client-ui-chat@0.2.2-alpha.2': patches/@deepseek-ai__dsh-client-ui-chat@0.2.2-alpha.2.patch
   '@deepseek-ai/dsh-client-ui-conversation@0.2.2-alpha.2': patches/@deepseek-ai__dsh-client-ui-conversation@0.2.2-alpha.2.patch
   '@deepseek-ai/dsh-client-ui-settings-models@0.2.2-alpha.2': patches/@deepseek-ai__dsh-client-ui-settings-models@0.2.2-alpha.2.patch
+  '@deepseek-ai/dsh-client-ui-skill@0.2.2-alpha.2': patches/@deepseek-ai__dsh-client-ui-skill@0.2.2-alpha.2.patch

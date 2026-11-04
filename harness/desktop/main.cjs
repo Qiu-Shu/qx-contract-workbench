@@ -4,6 +4,7 @@ const {readFileSync,mkdirSync}=require('node:fs');
 const {readFile,writeFile,stat}=require('node:fs/promises');
 const {join,resolve}=require('node:path');
 const {execFile}=require('node:child_process');
+const {pathToFileURL}=require('node:url');
 
 const root=resolve(process.env.QX_WORKBENCH_ROOT||resolve(__dirname,'..'));
 const userData=resolve(process.env.QX_DESKTOP_DATA||join(root,'.local','desktop-data'));
@@ -19,8 +20,26 @@ function runtimeUrl(){
   return url;
 }
 let window,origin;
+const unavailableUrl=pathToFileURL(join(__dirname,'unavailable.html')).href;
+const ownsConnection=event=>window&&!window.isDestroyed()&&event.sender===window.webContents&&
+  event.senderFrame===window.webContents.mainFrame&&
+  (event.senderFrame.url===unavailableUrl||new URL(event.senderFrame.url).origin===origin);
 const owns=event=>window&&!window.isDestroyed()&&event.sender===window.webContents&&
   event.senderFrame===window.webContents.mainFrame&&new URL(event.senderFrame.url).origin===origin;
+let reconnecting=false;
+async function reconnect(){
+  if(reconnecting||!window||window.isDestroyed())return {ok:false};reconnecting=true;
+  try{
+    if(window.webContents.getURL()!==unavailableUrl){
+      const answer=await dialog.showMessageBox(window,{type:'question',title:'重新连接后台',
+        message:'已保存未发送的内容？',detail:'重新连接会刷新窗口。请先复制尚未发送的文字；已保存的聊天和材料会保留，中断的任务不会自动重发。',
+        buttons:['先保留当前页面','重新连接'],defaultId:0,cancelId:0,noLink:true});
+      if(answer.response!==1)return {ok:false,cancelled:true};
+    }
+    if(global.qxReconnectHost)return await global.qxReconnectHost();
+    await global.qxReloadMain();return {ok:true};
+  }finally{reconnecting=false}
+}
 function showWechat(){
   if(!window||window.isDestroyed())return;
   window.show();window.focus();
@@ -73,7 +92,10 @@ async function createWindow(){
   window=new BrowserWindow({width:1320,height:920,minWidth:800,minHeight:600,title:'AI师兄法律助手平台',
     backgroundColor:'#ffffff',show:false,autoHideMenuBar:false,
     webPreferences:{preload:join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,
-      additionalArguments:[`--qx-origin=${origin}`]}});
+      additionalArguments:[`--qx-origin=${origin}`,`--qx-unavailable=${unavailableUrl}`]}});
+  window.webContents.on('render-process-gone',(_event,details)=>global.qxDesktopLog?.('renderer_exit',{reason:details.reason,exitCode:details.exitCode}));
+  window.on('unresponsive',()=>global.qxDesktopLog?.('window_unresponsive'));
+  window.on('responsive',()=>global.qxDesktopLog?.('window_responsive'));
   window.webContents.on('page-title-updated',event=>{event.preventDefault();window.setTitle('AI师兄法律助手平台');});
   window.once('ready-to-show',()=>{if(process.env.QX_DESKTOP_HIDDEN!=='1')window.show();});
   window.webContents.on('will-navigate',(event,target)=>{if(new URL(target).origin!==origin){event.preventDefault();if(/^https?:/.test(target))void shell.openExternal(target);}});
@@ -90,7 +112,8 @@ async function createWindow(){
     {label:'工作台',submenu:[{label:'手机微信',click:showWechat},
       ...(global.qxOpenApiSettings?[{label:'API 设置',click:()=>global.qxOpenApiSettings()}]:[]),
       {label:'打开材料文件夹',click:()=>void shell.openPath(join(root,'workspace'))},
-      {label:'重新连接',click:()=>void window.loadURL(runtimeUrl().href)},
+      {label:'重新连接',click:()=>void reconnect()},
+      {label:'打开运行日志',click:()=>void shell.openPath(join(root,'.local'))},
       ...(global.qxUpdates?[{label:'检查更新',click:()=>{
         void global.qxUpdates.check();
         void window.webContents.executeJavaScript("window.dispatchEvent(new Event('qx-open-update'))").catch(()=>{});
@@ -114,6 +137,8 @@ if(!app.requestSingleInstanceLock())app.quit();
 else{
   app.on('second-instance',(_event,argv)=>{if(window){if(window.isMinimized())window.restore();window.show();window.focus();if(argv.includes('--wechat'))showWechat();}});
   ipcMain.handle('qx:paste-files',pasteCopiedFiles);
+  ipcMain.handle('qx:connection-state',event=>ownsConnection(event)?global.qxConnection?.state()||null:null);
+  ipcMain.handle('qx:reconnect',event=>ownsConnection(event)?reconnect():{ok:false});
   ipcMain.handle('qx:update-state',event=>owns(event)&&global.qxUpdates?global.qxUpdates.state():null);
   ipcMain.handle('qx:update-action',(event,action)=>{
     if(!owns(event)||!global.qxUpdates||!['check','download','cancel','install'].includes(action))return null;

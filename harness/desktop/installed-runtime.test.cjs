@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const os=require('node:os');
-const {initialize,readRuntime,redactedLines}=require('./installed-runtime.cjs');
+const {initialize,readRuntime,redactedLines,stopInstalledHost}=require('./installed-runtime.cjs');
 test('logs redact secrets split between chunks and on final flush',()=>{
   let output='';const key='sk-synthetic-sensitive';const sink=redactedLines(key,value=>output+=value);
   sink.push('prefix sk-synthetic-');sink.push('sensitive\nfinal sk-');sink.push('synthetic-sensitive');sink.end();
@@ -37,3 +37,15 @@ test('initialize Chinese/spaced path without overwriting user configuration or m
   }finally{fs.rmSync(temp,{recursive:true,force:true})}
 });
 test('missing runtime does not count as running',async()=>assert.equal(await readRuntime(path.join(os.tmpdir(),'qx-missing-runtime')),null));
+
+test('settings and installer refuse an uncontrolled live backend instead of reporting a completed restart',async()=>{
+  const data=fs.mkdtempSync(path.join(os.tmpdir(),'qx-orphan-test-'));
+  try{
+    fs.mkdirSync(path.join(data,'.local'));
+    fs.writeFileSync(path.join(data,'.local/runtime.json'),JSON.stringify({hostPid:process.pid,launcherPid:-1,url:'http://127.0.0.1:1'}));
+    await assert.rejects(async()=>stopInstalledHost(data),/Background control unavailable/);
+    const stopped=require('node:child_process').spawnSync(process.execPath,[path.join(__dirname,'stop-installed.cjs')],{
+      env:{...process.env,QX_INSTALL_DATA:data},windowsHide:true,encoding:'utf8'});
+    assert.equal(stopped.status,1,'standalone installer must also refuse an uncontrolled live backend');
+  }finally{fs.rmSync(data,{recursive:true,force:true})}
+});
