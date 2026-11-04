@@ -172,12 +172,13 @@ function acquire(root){
   }
 }
 async function nativePatch(executable,work,patched,patch,onSpawn){
+  const nativePath=value=>'\\\\?\\'+path.resolve(value);
   await new Promise((resolve,reject)=>{
-    const child=spawn(executable,['-C-all',work,patch,patched],{windowsHide:true,stdio:['ignore','pipe','pipe']});
-    let preparationError;
-    for(const stream of [child.stdout,child.stderr])stream.resume();
+    const child=spawn(executable,['-C-all',nativePath(work),nativePath(patch),nativePath(patched)],{windowsHide:true,stdio:['ignore','pipe','pipe']});
+    let preparationError,log='';
+    for(const stream of [child.stdout,child.stderr])stream.on('data',chunk=>{log=(log+chunk).slice(-12000);});
     child.on('spawn',()=>{try{onSpawn(child.pid);}catch(error){preparationError=error;child.kill();}});
-    child.on('error',reject);child.on('exit',code=>{if(preparationError)reject(preparationError);else if(code===0)resolve();else{const error=new Error(`HDiffPatch exited ${code}`);error.code='UPDATE_PATCH_FAILED';error.nativeExitCode=code;reject(error);}});
+    child.on('error',reject);child.on('exit',code=>{if(preparationError)reject(preparationError);else if(code===0)resolve();else{const error=new Error(`HDiffPatch exited ${code}: ${log}`);error.code='UPDATE_PATCH_FAILED';error.nativeExitCode=code;reject(error);}});
   });
 }
 function verifyWork(work,plan){

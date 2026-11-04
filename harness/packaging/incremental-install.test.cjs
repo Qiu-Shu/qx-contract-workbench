@@ -46,6 +46,12 @@ test('changes-only native patch preserves unchanged file IDs and timestamps, inc
   assert.ok(!fs.existsSync(path.join(f.app,'.qx-update-transaction/backup/z-unchanged.txt')));
   assert.equal(finalizeUpdate({installDir:f.app}).status,'finalized');assert.ok(!fs.existsSync(path.join(f.app,'.qx-update-transaction')));
 });
+test('native patch supports extended-length transaction paths',{skip:!native||process.platform!=='win32'},async t=>{
+  const f=fixture(t),nested=path.join(f.root,'long-path-'.repeat(18)),app=path.join(nested,'应用 中文 空格');
+  fs.mkdirSync(nested,{recursive:true});fs.renameSync(f.app,app);f.app=app;f.args.installDir=app;
+  assert.ok(path.join(app,'.qx-update-transaction/patched/new/added.txt').length>260);
+  await applyUpdate(f.args);assertTarget(f);assert.equal(finalizeUpdate({installDir:app}).status,'finalized');
+});
 test('metadata retry is idempotent before and after finalize',{skip:!native},async t=>{
   const f=fixture(t);await applyUpdate(f.args);const before=tree(f.app);
   assert.equal((await applyUpdate(f.args)).alreadyApplied,true);assert.deepEqual(tree(f.app),before);
