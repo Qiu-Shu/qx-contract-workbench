@@ -94,6 +94,19 @@ async function createWindow(){
     webPreferences:{preload:join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,
       additionalArguments:[`--qx-origin=${origin}`,`--qx-unavailable=${unavailableUrl}`]}});
   window.webContents.on('render-process-gone',(_event,details)=>global.qxDesktopLog?.('renderer_exit',{reason:details.reason,exitCode:details.exitCode}));
+  window.webContents.on('did-fail-load',(_event,code,_description,_url,isMainFrame)=>{
+    if(isMainFrame&&code!==-3)global.qxDesktopLog?.('page_load_failed',{code});
+  });
+  window.webContents.on('preload-error',(_event,_path,error)=>global.qxDesktopLog?.('preload_failed',{errorName:error.name}));
+  const loggedPageErrors=new Set();
+  window.webContents.on('console-message',details=>{
+    if(details.level!=='error')return;
+    const errorName=details.message.match(/\b(TypeError|SyntaxError|ReferenceError|RangeError|URIError)\b/)?.[1]||'Error';
+    const code=Number.isSafeInteger(details.lineNumber)?details.lineNumber:0,key=errorName+':'+code;
+    if(loggedPageErrors.has(key)||loggedPageErrors.size>=50)return;loggedPageErrors.add(key);
+    // Record the error class and source line, never message text or credential URLs.
+    global.qxDesktopLog?.('page_script_error',{errorName,code});
+  });
   window.on('unresponsive',()=>global.qxDesktopLog?.('window_unresponsive'));
   window.on('responsive',()=>global.qxDesktopLog?.('window_responsive'));
   window.webContents.on('page-title-updated',event=>{event.preventDefault();window.setTitle('AI师兄法律助手平台');});
@@ -124,6 +137,7 @@ async function createWindow(){
     {label:'显示',submenu:[{role:'resetZoom',label:'实际大小'},{role:'zoomIn',label:'放大'},{role:'zoomOut',label:'缩小'},
       {type:'separator'},{role:'togglefullscreen',label:'全屏'}]},
   ]));
+  if(global.qxStartUnavailable){global.qxStartUnavailable=false;await window.loadFile(join(__dirname,'unavailable.html'));return;}
   try{await window.loadURL(url.href);if(process.argv.includes('--wechat'))showWechat();}catch{
     await window.loadFile(join(__dirname,'unavailable.html'));
   }
@@ -138,6 +152,12 @@ else{
   app.on('second-instance',(_event,argv)=>{if(window){if(window.isMinimized())window.restore();window.show();window.focus();if(argv.includes('--wechat'))showWechat();}});
   ipcMain.handle('qx:paste-files',pasteCopiedFiles);
   ipcMain.handle('qx:connection-state',event=>ownsConnection(event)?global.qxConnection?.state()||null:null);
+  ipcMain.on('qx:page-state',(event,state)=>{
+    if(!owns(event)||!['page-loading','page-ready','load-timeout','page-empty','page-error'].includes(state?.phase))return;
+    global.qxDesktopLog?.('page_state',{phase:state.phase,
+      ...['script-resource','script-error','promise-error'].includes(state.reason)?{reason:state.reason}:{},
+      ...['Error','TypeError','SyntaxError','ReferenceError','RangeError','URIError'].includes(state.errorName)?{errorName:state.errorName}:{}});
+  });
   ipcMain.handle('qx:reconnect',event=>ownsConnection(event)?reconnect():{ok:false});
   ipcMain.handle('qx:update-state',event=>owns(event)&&global.qxUpdates?global.qxUpdates.state():null);
   ipcMain.handle('qx:update-action',(event,action)=>{

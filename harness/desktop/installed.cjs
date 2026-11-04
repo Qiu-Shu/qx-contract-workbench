@@ -57,10 +57,13 @@ async function ensureHost(manual=false){
   }
   throw Error('本机服务未能启动，请查看资料目录中的 .local/host.log 后重试。');
 }
-async function enter(){
-  const runtime=await ensureHost(true);
+async function showMain(){
   if(!mainLoaded){mainLoaded=true;require('./main.cjs');await global.qxMainReady;}
   else await global.qxReloadMain();
+}
+async function enter(){
+  const runtime=await ensureHost(true);
+  await showMain();
   if(setupWindow&&!setupWindow.isDestroyed())setupWindow.close();
   connection?.connected(runtime);
 }
@@ -131,7 +134,11 @@ else{
       }catch{global.qxUpdates=null;}
     }
     if((await store.status()).status==='saved'){
-      try{await enter()}catch(error){dialog.showErrorBox('工作台暂未启动',error.message);showSetup()}
+      try{await enter()}catch(error){
+        log('initial_connection_failed',{errorName:error.name,errorCode:error.code});
+        // A slow or failed backend does not invalidate an already saved API key.
+        global.qxStartUnavailable=true;connection.reset();await showMain();
+      }
     }else showSetup();
   }).catch(()=>{dialog.showErrorBox('工作台暂未启动','无法初始化本机配置，请检查用户目录权限。');app.quit()});
 }

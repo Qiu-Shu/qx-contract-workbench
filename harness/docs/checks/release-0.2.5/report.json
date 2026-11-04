@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "version": "0.2.5",
+  "desktopTestsPassed": 69,
+  "packagedRelease": {
+    "version": "0.2.5",
+    "size": 612196368,
+    "signatureVerified": true,
+    "installerHashVerified": true,
+    "packagedSourcesMatch": true,
+    "githubFeedAndCacheVerified": true,
+    "noPrivateOrTestShellFiles": true
+  },
+  "startupRecovery": {
+    "startupFailureShowsRecoveryInsteadOfApiSetup": true,
+    "reconnectedWithExistingEncryptedKey": true,
+    "noCredentialWrite": true,
+    "noModelRequest": true
+  },
+  "loadingUi": {
+    "passed": true,
+    "checks": [
+      "empty successful HTML immediately shows loading status",
+      "stalled blank page shows recovery and records timeout",
+      "late successful render clears the fallback",
+      "nonfatal error preserves visible UI and logs no error content",
+      "root removed after render shows recovery without auto reload",
+      "desktop and narrow view remain readable"
+    ],
+    "model_calls": 0,
+    "messages_sent": 0
+  },
+  "loadingElectron": {
+    "passed": true,
+    "checks": [
+      "real shell catches empty-root script failure and timeout",
+      "isolated-world boundary still records main-page JavaScript errors",
+      "late render clears notice and logs readiness",
+      "later empty renderer recovers without reloading or submitting",
+      "logs exclude content and credential URL"
+    ]
+  },
+  "productionDeltas": [
+    {
+      "oldVersion": "0.2.3",
+      "newVersion": "0.2.5",
+      "downloadBytes": 56745304,
+      "copyBytes": 555451064,
+      "fullBytes": 612196368,
+      "actualDownloadBytes": 56745304,
+      "rangeRequests": 20,
+      "savedPercent": 90.73,
+      "productionInstallerReconstructed": true,
+      "signatureAndSha512Verified": true,
+      "scope": "Production installers reconstructed through loopback HTTP; installer not executed"
+    },
+    {
+      "oldVersion": "0.2.4",
+      "newVersion": "0.2.5",
+      "downloadBytes": 1331020,
+      "copyBytes": 610865348,
+      "fullBytes": 612196368,
+      "actualDownloadBytes": 1331020,
+      "rangeRequests": 7,
+      "savedPercent": 99.78,
+      "productionInstallerReconstructed": true,
+      "signatureAndSha512Verified": true,
+      "scope": "Production installers reconstructed through loopback HTTP; installer not executed"
+    }
+  ],
+  "fullNsisInstallationRepeated": false,
+  "priorFullInstallationVersion": "0.2.4",
+  "priorFullInstallationPreservedFiles": 74,
+  "publicPostPublishVerification": "Run after release promotion"
+}

@@ -2,17 +2,20 @@ const {contextBridge,ipcRenderer}=require('electron');
 const expectedOrigin=process.argv.find(arg=>arg.startsWith('--qx-origin='))?.slice('--qx-origin='.length);
 const unavailableUrl=process.argv.find(arg=>arg.startsWith('--qx-unavailable='))?.slice('--qx-unavailable='.length);
 if(process.isMainFrame&&(location.origin===expectedOrigin||location.href===unavailableUrl)){
-  let current={phase:'connected'},host,text,button,busy=false;
+  let current={phase:'connected'},host,text,button,busy=false,pagePhase=null;
   const labels={
     recovering:['后台连接已断开，正在恢复。请保留当前页面，未发送的内容不会自动重发。',''],
     disconnected:['本机后台暂时无法连接，正在检查。请先保留未发送的内容。','重试连接'],
     ready:['后台已恢复。请先复制未发送的文字，再重新连接。中断的任务不会自动重发。','重新连接'],
     failed:['后台未能恢复，已暂停自动重试。请先保留未发送的内容，再重试恢复。','重试恢复'],
     stopped:['后台已停止。如需继续使用，请先保留未发送的内容，再启动后台。','启动后台'],
+    'page-loading':['正在打开工作台，请稍候…',''],
+    'load-timeout':['界面尚未加载完成。可以重新连接；已保存的聊天和材料会保留。','重新连接'],
+    'page-empty':['界面显示中断。请重新连接，已保存的聊天和材料会保留。','重新连接'],
   };
   function render(){
     if(!document.body)return;
-    if(!host){
+    if(!host?.isConnected){
       host=document.createElement('div');host.id='qx-connection-notice';host.hidden=true;
       Object.assign(host.style,{position:'fixed',top:'12px',right:'16px',width:'min(560px, calc(100vw - 32px))',zIndex:'2147483000'});
       const shadow=host.attachShadow({mode:'open'}),style=document.createElement('style');
@@ -27,7 +30,7 @@ if(process.isMainFrame&&(location.origin===expectedOrigin||location.href===unava
       });
       notice.append(text,button);shadow.append(style,notice);document.body.append(host);
     }
-    const label=labels[current?.phase];host.hidden=!label;
+    const label=labels[current?.phase]||labels[pagePhase];host.hidden=!label;
     if(!label)return;
     text.textContent=label[0];button.textContent=busy?'正在连接…':label[1];button.hidden=!label[1];button.disabled=busy;
   }
@@ -35,6 +38,43 @@ if(process.isMainFrame&&(location.origin===expectedOrigin||location.href===unava
   ipcRenderer.on('qx:connection-state',(_event,state)=>{received=true;current=state;render()});
   ipcRenderer.invoke('qx:connection-state').then(state=>{if(!received&&state){current=state;render()}}).catch(()=>{});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render,{once:true});else render();
+  if(location.origin===expectedOrigin){
+    let hadContent=false,timedOut=false,pending;
+    const reported=new Set();
+    const report=(phase,extra={})=>{
+      const key=phase+':'+(extra.reason||'')+':'+(extra.errorName||'');
+      if(reported.has(key))return;reported.add(key);
+      ipcRenderer.send('qx:page-state',{phase,...extra});
+    };
+    function inspectPage(){
+      const root=document.getElementById('root');
+      if(!root&&!hadContent)return;
+      const content=Boolean(root&&(root.childElementCount||root.textContent.trim()));
+      const next=content?null:hadContent?'page-empty':timedOut?'load-timeout':'page-loading';
+      if(content&&!hadContent){hadContent=true;report('page-ready');}
+      if(next!==pagePhase){pagePhase=next;if(next)report(next);render();}
+    }
+    function watchPage(){
+      inspectPage();
+      const observer=new MutationObserver(records=>{
+        const root=document.getElementById('root');
+        if(!records.some(r=>r.target===root||[...r.addedNodes,...r.removedNodes].some(n=>n.id==='root')))return;
+        clearTimeout(pending);pending=setTimeout(inspectPage,200);
+      });
+      observer.observe(document.body,{childList:true,subtree:true});
+      const timeout=setTimeout(()=>{timedOut=true;inspectPage();},15000);
+      addEventListener('pagehide',()=>{observer.disconnect();clearTimeout(timeout);clearTimeout(pending);},{once:true});
+    }
+    // Page content and exception messages can contain client material; log types only.
+    addEventListener('error',event=>{
+      const reason=event.target instanceof HTMLScriptElement?'script-resource':event instanceof ErrorEvent?'script-error':null;
+      if(!reason)return;
+      const errorName=['TypeError','SyntaxError','ReferenceError','RangeError','URIError'].includes(event.error?.name)?event.error.name:'Error';
+      report('page-error',{reason,errorName});
+    },true);
+    addEventListener('unhandledrejection',()=>report('page-error',{reason:'promise-error'}));
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watchPage,{once:true});else watchPage();
+  }
 }
 if(process.isMainFrame&&location.origin===expectedOrigin){
   contextBridge.exposeInMainWorld('__QX_UPDATES__',{
