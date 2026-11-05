@@ -1,6 +1,17 @@
+diff --git a/lib/client.js b/lib/client.js
+index 8295565097064bd39bac53bb34925f9bbac12399..129b5120e49cbbabfdd60a53bd0d0deb8a2ff5f4 100644
 --- a/lib/client.js
 +++ b/lib/client.js
-@@ -5981,6 +5981,7 @@
+@@ -1412,7 +1412,7 @@ window.__ModuleLoader__.load({
+ 				const blank = sessions.ids.find((id) => {
+ 					const summary = sessions.byId[id];
+ 					const listed = summary?.projectionValues?.agentPreset;
+-					return summary !== void 0 && summary.blank && summary.cwd === workspace.path && workspace.sessionIds.includes(id) && !archived.includes(id) && (options.agentPreset === void 0 || typeof listed !== "string" || listed === options.agentPreset);
++					return summary !== void 0 && summary.blank && this.canReuseBlank?.(id) !== false && summary.cwd === workspace.path && workspace.sessionIds.includes(id) && !archived.includes(id) && (options.agentPreset === void 0 || typeof listed !== "string" || listed === options.agentPreset);
+ 				});
+ 				return this.createNamed({
+ 					workspaceId: workspace.workspaceId,
+@@ -5981,6 +5981,7 @@ window.__ModuleLoader__.load({
  			ctx.slots.inject("sidebar.workspaces", () => ctx.slots.register({
  				name: "sidebar.workspaces",
  				children: {
@@ -8,7 +19,7 @@
  					"sidebar.workspaces.directoryFlow": {
  						kind: "single",
  						scope: "root"
-@@ -6015,7 +6016,9 @@
+@@ -6015,7 +6016,9 @@ window.__ModuleLoader__.load({
  				store: viewStore,
  				inject: browserInjected,
  				locale: NS

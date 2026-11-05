@@ -55,6 +55,8 @@ window.__ModuleLoader__={load({id,factory}){
   if(typeof plugin.apply!=='function')throw Error('Client registration did not expose apply');
   window.__fixture.inject=plugin.inject;
   const ctx={
+    reflect:{provide:()=>()=>{}},
+    sidebarRight:{openResource:()=>{}},
     effect(fn){window.__fixture.effects.push(fn());},
     slots:{inject(name,fn){return fn();},register(options,Component){
       window.__fixture.registered.push(options.name);
@@ -78,6 +80,8 @@ def main():
     REPORT['client_sha256'] = hashlib.sha256(client).hexdigest()
     assets = {'/': ('text/html', HTML), '/react.js': ('text/javascript', react_asset('react')),
               '/react-dom.js': ('text/javascript', react_asset('react-dom')),
+              '/api/qx-business/client.js': ('text/javascript', b'window.qxInstallBusiness=()=>()=>{};'),
+              '/api/qx-layered/client.js': ('text/javascript', (ROOT / 'desktop/integration/knowledge-client.js').read_bytes()),
               '/harness.js': ('text/javascript', HARNESS.encode()), '/client.js': ('text/javascript', client)}
 
     class Handler(BaseHTTPRequestHandler):

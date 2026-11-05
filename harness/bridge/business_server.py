@@ -3,6 +3,7 @@ import argparse
 from datetime import date, timedelta
 from pathlib import Path
 import re
+import hashlib
 
 from mcp.server.mcpserver import MCPServer
 from store import MaterialStore
@@ -11,6 +12,8 @@ from hearing import HearingStore
 from workflows import workflow
 import server as material_server
 from server import friendly_errors
+from source_bound_inputs import MaterialCitation, Excerpt, Calculation, LitigationBrief, RegisterEntry, ComplianceTracking
+from verified_delivery import attach_delivery, text_sha256
 
 mcp = MCPServer('qx_legal', instructions=(
     '按需求读取业务方法。持续办理时明确案件ID，把本轮材料关联到该案再读取；'
@@ -172,7 +175,10 @@ def export_case(case_id: str, filename: str = '案件工作稿.docx', audience: 
             sections.extend('待核：' + str(warning) for warning in item.get('warnings', []))
     title = '客户回复' if audience == 'client' else page['case']['title'] + ' · 工作稿'
     result = material_server.write_word_draft(filename, title, '\n\n'.join(sections))
-    return {**result, 'case_id': case_id, 'audience': audience, 'note_ids': [note['id'] for note in notes]}
+    return {**result, 'case_id': case_id, 'audience': audience,
+            'sha256': hashlib.sha256(cases.safe(result['path']).read_bytes()).hexdigest(),
+            'note_ids': [note['id'] for note in notes],
+            'note_versions': [{'id': note['id'], 'sha256': text_sha256(note['content'])} for note in notes]}
 
 
 @mcp.tool()
@@ -276,6 +282,77 @@ def calculate_employment_amount(base: str, years: str = '1', multiplier: str = '
     """
     from employment_review import calculate_employment_amount as calculate
     return calculate(base, years, multiplier, assumptions)
+
+
+@mcp.tool()
+@friendly_errors
+def build_source_bound_litigation(case_id: str, document_type: str, filename: str,
+                                  excerpts: list[Excerpt], calculations: list[Calculation] | None = None,
+                                  brief: LitigationBrief | None = None) -> dict:
+    """按本案当前原文组装可编辑诉讼来源草稿及内部核对稿；不发送、不认定事实。
+
+    document_type支持civil_complaint/civil_defense/representation/evidence_list/cross_examination/labor_arbitration/lawyer_letter。
+    excerpts每项仅section(parties/requests/facts/sections)、citation{path,quote,sha256,chunk}。先read_case_material取得真实版本与原句。
+    不接收模型改写的text、角色全称或已立案/授权/客户知悉声明；未知元数据由程序留空。
+    calculations可选，每项{minuend:{citation,amount},subtrahends:[{citation,amount}]}；amount必须为原句中带单位完整金额如96000元或9.6万元。
+    brief可选：parties[{role,name,citation}]、claim_kind(payment/return/undetermined)、claim_amount{citation,amount}或calculation_index（两者互斥，指向本次算式）。
+    roles为plaintiff/defendant；劳动申请为applicant/respondent；律师函为client/issuer/recipient。name须原文逐字名称，角色对应仍待律师核实。
+    brief用于生成固定条件式拟请求；不给任意正文。representation必须有非空brief及requests、facts两类引文，分别保留主张与依据/限制，缺项拒绝生成。
+    差额不认定到期应付。引用失败拒绝生成。最终使用user_summary与实际文件；内部完整片段不等于正文已采用所有观点，不能另加事实或承诺。
+    """
+    from source_bound_litigation import build_source_bound_litigation as build
+    result = build(cases, case_id, document_type, filename,
+                 [x.model_dump(exclude_unset=True, exclude_none=True) for x in excerpts],
+                 None if calculations is None else [x.model_dump(exclude_unset=True, exclude_none=True) for x in calculations],
+                 None if brief is None else brief.model_dump(exclude_unset=True, exclude_none=True))
+    return attach_delivery(cases, case_id, result)
+
+
+@mcp.tool()
+@friendly_errors
+def assess_employment_termination(case_id: str, citations: list[MaterialCitation],
+                                  request_id: str = '', supersedes: str = '',
+                                  scenario_citations: list[MaterialCitation] | None = None) -> dict:
+    """保存来源约束的劳动解除初审：逐字材料＋固定条件清单，不自动决定适用路径。
+
+    citations每项须path、quote、sha256、chunk；先read_case_material取原句和当前版本。拒绝跨案、失效或不匹配原文。
+    不接受模型自定true/false事实；未访谈不推无调查证据。程序列明协商解除、39/40/41条、期满、违法解除各自条件，不能简化为一律N/N+1/2N。
+    不自定工资基数、解除日或工龄；显式情景金额另用calculate_employment_amount。返回id可用export_case(note_ids=[id])生成Word，完成说明使用user_summary，不另改写路径或事实。
+    同时要求情景算术并归档时，scenario_citations引用原始材料中独立完整一行“情景假设：基数10000元，折算年限8.5年，倍数2。”（示例不能充当本案假设）。
+    各项从原句解析后调用同一精确计算程序，与清单存为同一笔记和Word，不相加、不认定实际应付；没有明确原句时拒绝而不猜参数。
+    """
+    from employment_decisions import assess_employment_termination as assess
+    return attach_delivery(cases, case_id,
+                           assess(cases, case_id, [x.model_dump() for x in citations], request_id, supersedes,
+                                  None if scenario_citations is None else [x.model_dump() for x in scenario_citations]))
+
+
+@mcp.tool()
+@friendly_errors
+def save_source_bound_register(case_id: str, domain: str, entries: list[RegisterEntry],
+                               request_id: str = '', supersedes: str = '',
+                               document_type: str = '', filename: str = '',
+                               tracking: ComplianceTracking | None = None) -> dict:
+    """保存公司/合规/IP来源台账；仅登记本案原句和上下文，不把缺记录当未发生。
+
+    domain=corporate/compliance/ip；entries每项仅field与citation{path,quote,sha256,chunk}，先read_case_material。
+    corporate字段agenda/entity/participants/notice/meeting/votes/decision/signature/mandate/debt/follow_up；
+    compliance字段obligation/responsible_party/scope/deadline/feedback_deadline/report_deadline/decision/submission/implementation/acceptance/evidence_status；
+    ip候选分类asset_type/jurisdiction/intended_use/application_place/applicant/inventor/agent/registered_holder/licensor/licensee/license_scope/status/date_context/fees；也接受filing_date/certificate_term/internal_estimate候选。
+    所有领域的field都仅是模型未核验分类，单列classification_audit（不是事实字段）；实际保存条目均为source_excerpt原文，不把分类当事实值。
+    corporate需要纪要时填document_type=minutes及filename；proposal仅为任务已明确的股东会担保拟议案骨架，不用于其他议案或替用户选择有权机关。
+    正文由程序生成，完整出处保存在笔记；其余返回id可用export_case(note_ids=[id])导出。
+    合规跟踪可传tracking{as_of,as_of_entry,deadlines:[{entry,date,year_basis}]}；索引对应本次entries从0起，日期为YYYY-MM-DD。
+    参考日须有原文完整日期；截止日期year_basis=explicit须原文完整日期，same_as_reference_assumption须明确月日并显著标同年假设。
+    程序计算自然日差并保存条件建议；不判断法律期间或是否已履行。已有决定和发送记载照录，缺回执不改为未发送。
+    不接收模型自填实际状态、票数结论或法律有效性。IP附历史法条件，证载期限不等于当前有效。最终完成说明使用user_summary与实际文件。
+    """
+    from source_bound_registers import save_source_bound_register as save
+    result = save(cases, case_id, domain,
+                [x.model_dump(exclude_unset=True, exclude_none=True) for x in entries],
+                request_id, supersedes, document_type, filename,
+                None if tracking is None else tracking.model_dump(exclude_unset=True, exclude_none=True))
+    return attach_delivery(cases, case_id, result)
 
 
 def main():

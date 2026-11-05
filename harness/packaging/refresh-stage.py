@@ -4,7 +4,7 @@ import json
 import shutil
 import sys
 import re
-from stage import ROOT,RUNTIME,copytree,portable_config,bundle_node,package_source,bundle_office_engine
+from stage import ROOT,RUNTIME,copytree,portable_config,bundle_node,package_source,bundle_office_engine,copy_agent_desktop
 import yaml
 
 stage=Path(sys.argv[1]).resolve()
@@ -36,9 +36,10 @@ for spec in patched:
     source=package_source((ROOT/'node_modules/@deepseek-ai/dsh').resolve(),name)
     if source is None:raise RuntimeError('Missing patched dependency: '+name)
     copytree(source,payload/'node_modules'/name)
-for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','plugins/legal-search','plugins/case-memory','desktop/integration']:
+for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','plugins/legal-search','plugins/case-memory','plugins/verified-delivery','desktop/integration']:
     copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py','ui-check.py','practice_eval_session.py'))
 copytree(ROOT/'plugins/wechat',payload/'plugins/wechat',('*.vsix','test','tests','docs','scripts','.github','vscode-extension'))
+copy_agent_desktop(payload/'tools/agent-desktop/1.2.0')
 copytree(ROOT/'desktop/integration',payload/'node_modules/@qunxing/desktop-session')
 reader=payload/'bridge/reader.py'
 reader.write_text(reader.read_text(encoding='utf-8').replace("Path('D:/qx-contract-workbench-20261102')","Path(os.environ['QX_LEGACY_ROOT'])"),encoding='utf-8')

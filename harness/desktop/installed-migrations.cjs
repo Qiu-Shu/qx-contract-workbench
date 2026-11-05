@@ -147,6 +147,14 @@ function migrateInstalledKnowledge(options){
 function migrateInstalledPrivacy(options){
   return migrateInstalled(options,{version:'upload-privacy-v1',ids:['qx-upload-privacy']});
 }
+function migrateInstalledAgentDesktop(options){
+  if(!findIds(options.portableConfig).has('qx-agent-desktop'))return {status:'deferred',changedFiles:[]};
+  return migrateInstalled(options,{version:'agent-desktop-v1',ids:['qx-agent-desktop']});
+}
+function migrateInstalledVerifiedDelivery(options){
+  if(!findIds(options.portableConfig).has('qx-verified-delivery'))return {status:'deferred',changedFiles:[]};
+  return migrateInstalled(options,{version:'verified-delivery-v1',ids:['qx-verified-delivery']});
+}
 function migrateInstalledCaseMemory(options){
   const desired=findIds(options.portableConfig);
   if(!desired.has('qx-case-memory-ui')||!desired.has('qx-case-memory'))return {status:'deferred',changedFiles:[]};
@@ -226,7 +234,7 @@ function migrateInstalledSkillQuality(options){
   const manifest=path.join(options.payload,'config/skill-quality-upgrades.json');
   if(!fs.existsSync(manifest))return {status:'deferred',changedFiles:[]};
   const spec=JSON.parse(fs.readFileSync(manifest,'utf8'));
-  if(!['skill-quality-v1','skill-quality-v2','skill-quality-v3'].includes(spec.version)||!Array.isArray(spec.files))throw new Error('Invalid Skill quality upgrade manifest.');
+  if(!['skill-quality-v1','skill-quality-v2','skill-quality-v3','skill-quality-v4'].includes(spec.version)||!Array.isArray(spec.files))throw new Error('Invalid Skill quality upgrade manifest.');
   const required=['legal-library/workbench/practice-context.md','legal-library/workbench/source-verification.md'];
   if(spec.version!=='skill-quality-v1')required.push('legal-library/workbench/skill-status.md');
   if(!Array.isArray(spec.resources)||spec.resources.length!==required.length||new Set(spec.resources.map(r=>r.path)).size!==required.length)throw new Error('Invalid Skill quality resources.');
@@ -237,6 +245,11 @@ function migrateInstalledSkillQuality(options){
     if(!fs.existsSync(seed)||!fs.existsSync(installed)||!fs.statSync(installed).isFile()||createHash('sha256').update(fs.readFileSync(seed)).digest('hex')!==row.sha256)return {status:'deferred',changedFiles:[]};
   }
   const defaults={},targets={};
+  for(const row of spec.resources){
+    if(row.previousSha256===undefined)continue;
+    if(!Array.isArray(row.previousSha256)||!row.previousSha256.length||!row.previousSha256.every(h=>/^[a-f0-9]{64}$/.test(h)))throw new Error('Invalid Skill resource defaults.');
+    defaults[row.path]=row.previousSha256;targets[row.path]=row.sha256;
+  }
   for(const row of spec.files){
     if(!/^\.dsh\/skills\/[a-z0-9-]+\/(?:[a-zA-Z0-9_.-]+\/)*[a-zA-Z0-9_.-]+$/.test(row.path)||row.path.split('/').some(p=>p==='..'||p==='.')||defaults[row.path]||
       !Array.isArray(row.previousSha256)||!row.previousSha256.length||!row.previousSha256.every(h=>/^[a-f0-9]{64}$/.test(h))||!/^[a-f0-9]{64}$/.test(row.sha256))throw new Error('Invalid Skill quality upgrade entry.');
@@ -244,11 +257,12 @@ function migrateInstalledSkillQuality(options){
   }
   const files=migrateSkillFiles(options,{version:spec.version,defaults,targets});
   if(files.status==='deferred')return files;
-  const sectionHeading=spec.version==='skill-quality-v3'?'实务专项替代方法':spec.version==='skill-quality-v2'?'Skill 调用与停用':'Skill 质量与法源核验';
+  const sectionHeading=spec.version==='skill-quality-v4'?'来源约束交付':spec.version==='skill-quality-v3'?'实务专项替代方法':spec.version==='skill-quality-v2'?'Skill 调用与停用':'Skill 质量与法源核验';
   if(!knowledgeSection(options.seedInstructions||'',sectionHeading))return {...files,status:'deferred'};
   // v2 also seeds v1 guidance for people upgrading directly from a released build.
   if(spec.version!=='skill-quality-v1'&&knowledgeSection(options.seedInstructions||'','Skill 质量与法源核验'))migrateInstalled(options,{version:'skill-quality-instructions-v1',ids:[],withInstructions:true,sectionHeading:'Skill 质量与法源核验'});
-  if(spec.version==='skill-quality-v3'&&knowledgeSection(options.seedInstructions||'','Skill 调用与停用'))migrateInstalled(options,{version:'skill-quality-instructions-v2',ids:[],withInstructions:true,sectionHeading:'Skill 调用与停用'});
+  if(['skill-quality-v3','skill-quality-v4'].includes(spec.version)&&knowledgeSection(options.seedInstructions||'','Skill 调用与停用'))migrateInstalled(options,{version:'skill-quality-instructions-v2',ids:[],withInstructions:true,sectionHeading:'Skill 调用与停用'});
+  if(spec.version==='skill-quality-v4'&&knowledgeSection(options.seedInstructions||'','实务专项替代方法'))migrateInstalled(options,{version:'skill-quality-instructions-v3',ids:[],withInstructions:true,sectionHeading:'实务专项替代方法'});
   const instructions=migrateInstalled(options,{version:spec.version.replace('quality-','quality-instructions-'),ids:[],withInstructions:true,sectionHeading});
   return {...files,instructions};
 }
@@ -291,4 +305,4 @@ function migrateSkillFiles({data,payload},{version,defaults,targets={}}){
   return {status:pending.length?'deferred':'applied',backupDirectory,changedFiles,preservedCustom};
 }
 
-module.exports={migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory};
+module.exports={migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory,migrateInstalledAgentDesktop,migrateInstalledVerifiedDelivery};

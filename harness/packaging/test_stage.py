@@ -41,5 +41,11 @@ class StageTests(unittest.TestCase):
         self.assertNotIn('D:/qx-',config)
         self.assertIn('@DATA@/workspace',config)
         self.assertIn('@APP@/runtime/windows/python.exe',config)
+    def test_verified_delivery_uses_the_data_workspace(self):
+        plugins=[p for block in portable_config() for p in block.get('insert',[])
+                 if p.get('id')=='qx-verified-delivery']
+        self.assertEqual(len(plugins),1)
+        self.assertEqual(plugins[0]['name'],'@APP@/plugins/verified-delivery/index.mjs')
+        self.assertEqual(plugins[0]['config']['workspace'],'@DATA@/workspace')
 
 if __name__=='__main__':unittest.main()

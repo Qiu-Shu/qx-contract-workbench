@@ -1,18 +1,27 @@
 {
-  "version": "skill-quality-v3",
-  "sourceBaseline": "2026-11-04:185-skills-and-reviewed-defaults-through-2026-11-05",
+  "version": "skill-quality-v4",
+  "sourceBaseline": "Published 0.2.7 and local 0.2.8 defaults; reviewed narrow workflows 2026-11-05",
   "resources": [
     {
       "path": "legal-library/workbench/practice-context.md",
-      "sha256": "755dbab0e10fdd5af7d0182bc04cfd3454400d5b30c7c366d3d6e1c4e6eceba1"
+      "sha256": "755dbab0e10fdd5af7d0182bc04cfd3454400d5b30c7c366d3d6e1c4e6eceba1",
+      "previousSha256": [
+        "755dbab0e10fdd5af7d0182bc04cfd3454400d5b30c7c366d3d6e1c4e6eceba1"
+      ]
     },
     {
       "path": "legal-library/workbench/source-verification.md",
-      "sha256": "d62742353e0c9983d376239f241d630902835ecc82d97cd2d4c95a1045fd4c5c"
+      "sha256": "d62742353e0c9983d376239f241d630902835ecc82d97cd2d4c95a1045fd4c5c",
+      "previousSha256": [
+        "d62742353e0c9983d376239f241d630902835ecc82d97cd2d4c95a1045fd4c5c"
+      ]
     },
     {
       "path": "legal-library/workbench/skill-status.md",
-      "sha256": "6be62476ccc6df31254fca8dcdb47ef968f18a35e6369ba8f95523f221a7aebb"
+      "sha256": "0495fdb198ee0dfdc7145a2ca670869afbbee2901fa93b7c00f2aa7ae5cfed3a",
+      "previousSha256": [
+        "6be62476ccc6df31254fca8dcdb47ef968f18a35e6369ba8f95523f221a7aebb"
+      ]
     }
   ],
   "policy": "Replace only known shipped defaults; preserve user edits and exact backups.",
@@ -20,7 +29,8 @@
     {
       "path": ".dsh/skills/bb-browser/SKILL.md",
       "previousSha256": [
-        "080343d2e0c64e4b1b9aa33d554eb67c0fa638ac32bbf643e66cad2f0ee13aa5"
+        "080343d2e0c64e4b1b9aa33d554eb67c0fa638ac32bbf643e66cad2f0ee13aa5",
+        "e9c86940d2dd065be98f017356744c983039e465099ada10ba4b6913b498b31d"
       ],
       "sha256": "e9c86940d2dd065be98f017356744c983039e465099ada10ba4b6913b498b31d"
     },
@@ -28,14 +38,16 @@
       "path": ".dsh/skills/chinese-legal-ai-governance/SKILL.md",
       "previousSha256": [
         "8e214b2541c64088fa58dc678005537224560732430aa16565cf1f2a48c2914a",
-        "b7cbfc400b11debc2e1337a4189f549d8a298fabc8d62eee922b8fa792c79a4c"
+        "b7cbfc400b11debc2e1337a4189f549d8a298fabc8d62eee922b8fa792c79a4c",
+        "3eb7ce1dee924730061ce19754aed266ca570f1fd273652511d6403ea1f14f44"
       ],
       "sha256": "3eb7ce1dee924730061ce19754aed266ca570f1fd273652511d6403ea1f14f44"
     },
     {
       "path": ".dsh/skills/chinese-legal-builder-hub/SKILL.md",
       "previousSha256": [
-        "08b933500a8cdcee57751010d671a01b22145953eff0925d5e9469f290428b63"
+        "08b933500a8cdcee57751010d671a01b22145953eff0925d5e9469f290428b63",
+        "5894ddf5a6dc1a2d4957a19bfbe6f9fed8f1189c7040c4daf5cbabdebfe138af"
       ],
       "sha256": "5894ddf5a6dc1a2d4957a19bfbe6f9fed8f1189c7040c4daf5cbabdebfe138af"
     },
@@ -43,7 +55,8 @@
       "path": ".dsh/skills/chinese-legal-clinic/SKILL.md",
       "previousSha256": [
         "23a368c29738a0acdba35cbe411f6e06163494bdbd3340533a70afe055b7afc5",
-        "4ef868511698362b28a1a37f557b545df52d2e6bf98a26f326cdb5c629ddeb75"
+        "4ef868511698362b28a1a37f557b545df52d2e6bf98a26f326cdb5c629ddeb75",
+        "83bbf95752e2d758a2ac7264a488b327616d8fa9558d623329c5b4416b95fd4c"
       ],
       "sha256": "83bbf95752e2d758a2ac7264a488b327616d8fa9558d623329c5b4416b95fd4c"
     },
@@ -51,7 +64,8 @@
       "path": ".dsh/skills/chinese-legal-commercial/SKILL.md",
       "previousSha256": [
         "3191acaed76ea815fdb512bcad67a22a0e11827e8c67fb523fb12ed8105cb90e",
-        "c749d44c7a58f887b2057d0711065290717485bd0150ad69485061c6d638d93c"
+        "c749d44c7a58f887b2057d0711065290717485bd0150ad69485061c6d638d93c",
+        "0057747245b38a27033aa26db379bfa2410895166b048db35d550d763b06b971"
       ],
       "sha256": "0057747245b38a27033aa26db379bfa2410895166b048db35d550d763b06b971"
     },
@@ -59,29 +73,33 @@
       "path": ".dsh/skills/chinese-legal-corporate/SKILL.md",
       "previousSha256": [
         "8a0d78b751731734d7dafcd5c99c88395dee37f36d9dcec720e6cfe3cde981f1",
-        "8da1be6b525c3fbeff939c797d915a80a67caa05eb1fee6dd4c1b58083ee3537"
+        "8da1be6b525c3fbeff939c797d915a80a67caa05eb1fee6dd4c1b58083ee3537",
+        "c4e24399e75213563371d061f85f1631e0b2bad8fdadacdd5db32021d7c3aa24"
       ],
-      "sha256": "c4e24399e75213563371d061f85f1631e0b2bad8fdadacdd5db32021d7c3aa24"
+      "sha256": "752ea2086390e6f761418ad0af01e7b034a2c67ef70c7ba93e5ed4ea4e24c509"
     },
     {
       "path": ".dsh/skills/chinese-legal-criminal/SKILL.md",
       "previousSha256": [
         "187c2fc113d913282eace478aa61cf1e4257f39e66ec23dcd62da9f362bfb5d5",
-        "902af35df4b9f7d5c141b968274862d890086747359d8b1c74868acc7362e72b"
+        "902af35df4b9f7d5c141b968274862d890086747359d8b1c74868acc7362e72b",
+        "c4156e8f5233664f254be39ec415779847e40468b7725de6b47f8257ad344f35"
       ],
       "sha256": "c4156e8f5233664f254be39ec415779847e40468b7725de6b47f8257ad344f35"
     },
     {
       "path": ".dsh/skills/chinese-legal-diligence-grid/SKILL.md",
       "previousSha256": [
-        "df448af725d60b1c72e493be3d72d98b67c459c8a97e5ec5cb9dc940569a3876"
+        "df448af725d60b1c72e493be3d72d98b67c459c8a97e5ec5cb9dc940569a3876",
+        "bc582a83a57e32f293343265e1693e35677c8b751b4f760e8cdc00ee34c2804c"
       ],
       "sha256": "bc582a83a57e32f293343265e1693e35677c8b751b4f760e8cdc00ee34c2804c"
     },
     {
       "path": ".dsh/skills/chinese-legal-docket-watcher/SKILL.md",
       "previousSha256": [
-        "eb8a3b5913039628a98ac5ea06d350cd393d27361027c700c274f03995b4cb51"
+        "eb8a3b5913039628a98ac5ea06d350cd393d27361027c700c274f03995b4cb51",
+        "f12b38f20fa9e8d85b5d18ae346e9f44803f2724feb51621337fa2e846a6cb84"
       ],
       "sha256": "f12b38f20fa9e8d85b5d18ae346e9f44803f2724feb51621337fa2e846a6cb84"
     },
@@ -89,22 +107,25 @@
       "path": ".dsh/skills/chinese-legal-employment/SKILL.md",
       "previousSha256": [
         "92d7a24d0db8adbb42300ed6deebef91fee99f732f46f993fb2b9b05926b95de",
-        "cf9957d512609bd1bac9b7e18c746f81e3835f13937eed42132ee8b5e123d15c"
+        "cf9957d512609bd1bac9b7e18c746f81e3835f13937eed42132ee8b5e123d15c",
+        "8f47eeebfc927ff287f9139c5149be71262ce8dd42c1c82514e1d207c53d38df"
       ],
-      "sha256": "8f47eeebfc927ff287f9139c5149be71262ce8dd42c1c82514e1d207c53d38df"
+      "sha256": "e374962206fb35e528c4fd9be75bcdfa6cedc01037e2d7dbe0145871f73ebecd"
     },
     {
       "path": ".dsh/skills/chinese-legal-ip/SKILL.md",
       "previousSha256": [
         "4a9b6fd5c38de542c7d370f1cb060824832133bafb7da2d335af8efd9b8b9454",
-        "b4b575a1e06e60fe09b5273ff609731e0780e905a2e476abc7109586d05a7f6c"
+        "b4b575a1e06e60fe09b5273ff609731e0780e905a2e476abc7109586d05a7f6c",
+        "48fc8dddc2fdaadd78ed69a3fb739ec149cfaf5744a7617f78c8ce8f069f8a5a"
       ],
-      "sha256": "48fc8dddc2fdaadd78ed69a3fb739ec149cfaf5744a7617f78c8ce8f069f8a5a"
+      "sha256": "f4be5d0f9f5d2866bd58c987ec32ad4cd15548fea97f76eb4f636be1a4148d8c"
     },
     {
       "path": ".dsh/skills/chinese-legal-launch-radar/SKILL.md",
       "previousSha256": [
-        "035f0cdf4b340ce11b0f21d035728638149b615d0ea2c29eda5ec30f581113fa"
+        "035f0cdf4b340ce11b0f21d035728638149b615d0ea2c29eda5ec30f581113fa",
+        "5c1baa8b94d0a9da590bdfb349b4b3b3c4c2425b3aae2aef80f665623e6fb5d4"
       ],
       "sha256": "5c1baa8b94d0a9da590bdfb349b4b3b3c4c2425b3aae2aef80f665623e6fb5d4"
     },
@@ -112,7 +133,8 @@
       "path": ".dsh/skills/chinese-legal-law-student/SKILL.md",
       "previousSha256": [
         "07ac29e53e4c399c2daf88885831cffd257d922eda5725b9761f820842862ae3",
-        "693b6cf2d714669a2040368905f140cd9d168331efd510b66e3ff9f8d52e750b"
+        "693b6cf2d714669a2040368905f140cd9d168331efd510b66e3ff9f8d52e750b",
+        "cd16f70f908437ee10327ea05f47a31f81cde4b0fc84be2edb81a5d06703eb17"
       ],
       "sha256": "cd16f70f908437ee10327ea05f47a31f81cde4b0fc84be2edb81a5d06703eb17"
     },
@@ -120,29 +142,33 @@
       "path": ".dsh/skills/chinese-legal-litigation/SKILL.md",
       "previousSha256": [
         "384e971bc87100d183aeb22612f1cdd5e7552d0faf7440739b12af7a4bf08707",
-        "934ff055f5e4fa3490c692ca5b20d285a1b65adf8a6c1c1fd68bad20e79afd9a"
+        "934ff055f5e4fa3490c692ca5b20d285a1b65adf8a6c1c1fd68bad20e79afd9a",
+        "93cec76d46107909dca3c9562e274b215c91357772470c82cffc4b4641a2ea96"
       ],
-      "sha256": "93cec76d46107909dca3c9562e274b215c91357772470c82cffc4b4641a2ea96"
+      "sha256": "44e58a1535fb84a1999d29b57d1dd50c00bae48ea982de61a569be1f3f48b179"
     },
     {
       "path": ".dsh/skills/chinese-legal-privacy/SKILL.md",
       "previousSha256": [
         "728d3e90f226ed1368c309624ec4719b4cef8b6cdd8a593849d0af7fac5b7c3c",
-        "c155e01ab269e548450afa9bd8d980f50b9bcaccf1770cc47516431da6d15757"
+        "c155e01ab269e548450afa9bd8d980f50b9bcaccf1770cc47516431da6d15757",
+        "de18ea3d0975a1896b5c5d129f0b394f7080c25c6d5531aba598c745ae1d27d2"
       ],
       "sha256": "de18ea3d0975a1896b5c5d129f0b394f7080c25c6d5531aba598c745ae1d27d2"
     },
     {
       "path": ".dsh/skills/chinese-legal-product/SKILL.md",
       "previousSha256": [
-        "bd552494b5f4b86cdc08978a41dd99964d92b958e239591f72a591e0be792ecb"
+        "bd552494b5f4b86cdc08978a41dd99964d92b958e239591f72a591e0be792ecb",
+        "c6b7268d4493cdf2211ad611b340f6fd0b621ba34a2a13fc6c41150c6f253700"
       ],
       "sha256": "c6b7268d4493cdf2211ad611b340f6fd0b621ba34a2a13fc6c41150c6f253700"
     },
     {
       "path": ".dsh/skills/chinese-legal-reg-monitor/SKILL.md",
       "previousSha256": [
-        "950a630770254fafedb553c9c20183f0bab644e631630a07d36eef854e03022e"
+        "950a630770254fafedb553c9c20183f0bab644e631630a07d36eef854e03022e",
+        "7848c8d009cf30f8e52a135e1d1867c6c83d08ddd67debca6d89ec3f83cfb32a"
       ],
       "sha256": "7848c8d009cf30f8e52a135e1d1867c6c83d08ddd67debca6d89ec3f83cfb32a"
     },
@@ -150,36 +176,41 @@
       "path": ".dsh/skills/chinese-legal-regulatory/SKILL.md",
       "previousSha256": [
         "44733340b0181171908628abccb1e4069370d025e3288efec121f35ccb76968d",
-        "514d91cf7045e414d4d0b971b2f154ce856ee2467bd6bc974cf77c094797a4d3"
+        "514d91cf7045e414d4d0b971b2f154ce856ee2467bd6bc974cf77c094797a4d3",
+        "29b7119133d145e2a6e6da4edb4be7e03ea5d7d07482190017333d58a7ecf7e7"
       ],
-      "sha256": "29b7119133d145e2a6e6da4edb4be7e03ea5d7d07482190017333d58a7ecf7e7"
+      "sha256": "8dcc97fcc00ba697a622c955de184e83bd2959d1acacd5733ae9f26cce819369"
     },
     {
       "path": ".dsh/skills/chinese-legal-renewal-watcher/SKILL.md",
       "previousSha256": [
         "206678764225ff6c2d9855d575803d62c19711ac8af66c6d2d8e0690b24f71bf",
-        "c18c78d6b51dd3ac8ed872b885dbc96386fafe3ef39600049cd074103e9972b1"
+        "c18c78d6b51dd3ac8ed872b885dbc96386fafe3ef39600049cd074103e9972b1",
+        "e5b049c9be3c54f13435a3961dfaefad4296fd33a8b635853c563578e74224bf"
       ],
       "sha256": "e5b049c9be3c54f13435a3961dfaefad4296fd33a8b635853c563578e74224bf"
     },
     {
       "path": ".dsh/skills/design-taste-frontend/SKILL.md",
       "previousSha256": [
-        "3435ed963b15a1b6447746ec8844ab2cd38d8d2e8ead3451937f42df01e408c4"
+        "3435ed963b15a1b6447746ec8844ab2cd38d8d2e8ead3451937f42df01e408c4",
+        "5b02cad0714865348437de849a92bb41457cc74b937d8b67fecbb0ea83276064"
       ],
       "sha256": "5b02cad0714865348437de849a92bb41457cc74b937d8b67fecbb0ea83276064"
     },
     {
       "path": ".dsh/skills/humanizer/SKILL.md",
       "previousSha256": [
-        "0612f1dfb1672b0ea9b97e139bf1f06cabe98d8b27424fe8ff01e1fb4cc99cad"
+        "0612f1dfb1672b0ea9b97e139bf1f06cabe98d8b27424fe8ff01e1fb4cc99cad",
+        "e9af419abed9e2c5d5bdf4c106fa0e2d6e3c172d861c1153f142100672e77400"
       ],
       "sha256": "e9af419abed9e2c5d5bdf4c106fa0e2d6e3c172d861c1153f142100672e77400"
     },
     {
       "path": ".dsh/skills/impeccable/SKILL.md",
       "previousSha256": [
-        "6055d7c609786edff3e26bf400f87a9e70c3c48508f0de6c75f807b6d877b0fd"
+        "6055d7c609786edff3e26bf400f87a9e70c3c48508f0de6c75f807b6d877b0fd",
+        "da1e36a4bf94e36c18ef527b84f2ea0b5ffc70f052527f9862ab53ca01bbbc43"
       ],
       "sha256": "da1e36a4bf94e36c18ef527b84f2ea0b5ffc70f052527f9862ab53ca01bbbc43"
     },
@@ -187,7 +218,8 @@
       "path": ".dsh/skills/legal-zh-ai-governance-ai-inventory/SKILL.md",
       "previousSha256": [
         "077aacbd75c1a2905ac742df2adb5086627c808ec95872235848130862d0543f",
-        "ee24236f4bc0acff46b98f82eb64fce1735cf08792c77058637ac375139d7e2f"
+        "ee24236f4bc0acff46b98f82eb64fce1735cf08792c77058637ac375139d7e2f",
+        "53fc2ec9333b145249fcef4d2ad12056eee4ae1c4b53f225df8af6e41f9d120e"
       ],
       "sha256": "53fc2ec9333b145249fcef4d2ad12056eee4ae1c4b53f225df8af6e41f9d120e"
     },
@@ -195,14 +227,16 @@
       "path": ".dsh/skills/legal-zh-ai-governance-aia-generation/SKILL.md",
       "previousSha256": [
         "0796646ba637db3898922e350f7d360dcf80dc93a1650fa80bc9d77d111c7945",
-        "69c95c14d60f53000ee0479839692a3a3f31580d5645814f1cbe2af81b06096d"
+        "69c95c14d60f53000ee0479839692a3a3f31580d5645814f1cbe2af81b06096d",
+        "00fc72c184da4b817c811829c7dfe6eacd96e3337adb3a83af96de8de26f5c62"
       ],
       "sha256": "00fc72c184da4b817c811829c7dfe6eacd96e3337adb3a83af96de8de26f5c62"
     },
     {
       "path": ".dsh/skills/legal-zh-ai-governance-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "3e98f8653ba4718ad290eb96bb4761eae10d6e39d5edd3b8e123d73e2697e7e3"
+        "3e98f8653ba4718ad290eb96bb4761eae10d6e39d5edd3b8e123d73e2697e7e3",
+        "83c7116674458e48f8cefbba96fec8d3ce9c02d1e389cbabda6919a39b843fd7"
       ],
       "sha256": "83c7116674458e48f8cefbba96fec8d3ce9c02d1e389cbabda6919a39b843fd7"
     },
@@ -210,7 +244,8 @@
       "path": ".dsh/skills/legal-zh-ai-governance-customize/SKILL.md",
       "previousSha256": [
         "cb5345353eb54b4e1eb03f7f828ce94ad23c39a2f68c3619add281aacc930aac",
-        "f39b9f65bf259f533b633478506a6e0b5b6f0b17f09efc09eb26ffc54db584f3"
+        "f39b9f65bf259f533b633478506a6e0b5b6f0b17f09efc09eb26ffc54db584f3",
+        "485db217c957ad85211e55ac7f93b127ae4b0fac5ae38b2ff5afacd720946390"
       ],
       "sha256": "485db217c957ad85211e55ac7f93b127ae4b0fac5ae38b2ff5afacd720946390"
     },
@@ -218,7 +253,8 @@
       "path": ".dsh/skills/legal-zh-ai-governance-matter-workspace/SKILL.md",
       "previousSha256": [
         "a5f5d4e2c88eed3d306bbf4ba6e75ef0e62db08596ca7631fef3506d82fbb679",
-        "f67526b469f1e5d339e421edf12bc8c355e7c0793d4df0363a30b29be4272cf8"
+        "f67526b469f1e5d339e421edf12bc8c355e7c0793d4df0363a30b29be4272cf8",
+        "42c91c7fbdabf0801cc183e5388b0f7f1254773b5adfab426c03e24b2d4605d2"
       ],
       "sha256": "42c91c7fbdabf0801cc183e5388b0f7f1254773b5adfab426c03e24b2d4605d2"
     },
@@ -226,14 +262,16 @@
       "path": ".dsh/skills/legal-zh-ai-governance-policy-monitor/SKILL.md",
       "previousSha256": [
         "18e5e373c64fe1d9bf863baaed307782dc5259bfb59f7caeed89dc1b4764b757",
-        "7e44f1b925db702fbbec3ac6241badd985d1b41fb645265a920d628f30927aab"
+        "7e44f1b925db702fbbec3ac6241badd985d1b41fb645265a920d628f30927aab",
+        "439c7d77896f79e713416e2361aba068c8eafe3db10b67aeb7897dff714624f8"
       ],
       "sha256": "439c7d77896f79e713416e2361aba068c8eafe3db10b67aeb7897dff714624f8"
     },
     {
       "path": ".dsh/skills/legal-zh-ai-governance-policy-starter/SKILL.md",
       "previousSha256": [
-        "aefff7e87b240e6b11d31aefee1439ec40dd0a571c0b246cc639c386c210d46a"
+        "aefff7e87b240e6b11d31aefee1439ec40dd0a571c0b246cc639c386c210d46a",
+        "ae80ef00aca292d2592e11f131741ceb2200a7576097055c6865318e677d371a"
       ],
       "sha256": "ae80ef00aca292d2592e11f131741ceb2200a7576097055c6865318e677d371a"
     },
@@ -241,7 +279,8 @@
       "path": ".dsh/skills/legal-zh-ai-governance-reg-gap-analysis/SKILL.md",
       "previousSha256": [
         "339838864f87ddedaa1871fcddcd80c3cc73292c7cc7a5483bdd1a578360d076",
-        "9f48850b5ff2e26261b736b3f8913e72c7274114a788bcf952ba263b6db97fbb"
+        "9f48850b5ff2e26261b736b3f8913e72c7274114a788bcf952ba263b6db97fbb",
+        "488fb1c3cf801058a11e5998ce6d293dd1859aac570ce7aa9eedeb76dfd08b19"
       ],
       "sha256": "488fb1c3cf801058a11e5998ce6d293dd1859aac570ce7aa9eedeb76dfd08b19"
     },
@@ -249,7 +288,8 @@
       "path": ".dsh/skills/legal-zh-ai-governance-use-case-triage/SKILL.md",
       "previousSha256": [
         "9902d94c9bb83a60dbeb9dbb8e2af4bf66f7222576835a985aac6259a03b8ab5",
-        "ded5a1e05052162d2bf42954be3afb405005e64b576bce1b534712f6087a74e4"
+        "ded5a1e05052162d2bf42954be3afb405005e64b576bce1b534712f6087a74e4",
+        "4615acb67d36b93678d7b37b2d0e6b11985ea479c997ebebc9ee0ab6618f3802"
       ],
       "sha256": "4615acb67d36b93678d7b37b2d0e6b11985ea479c997ebebc9ee0ab6618f3802"
     },
@@ -257,21 +297,24 @@
       "path": ".dsh/skills/legal-zh-ai-governance-vendor-ai-review/SKILL.md",
       "previousSha256": [
         "1fa6e5174be59ed243de50dc79bc178389cd62a8f67490a76c3e549a6b059555",
-        "7c9f15d9f6545e2c5d90bf93eb8b90711cdc496f5b36d704819e8ac65514b6f2"
+        "7c9f15d9f6545e2c5d90bf93eb8b90711cdc496f5b36d704819e8ac65514b6f2",
+        "8a5e7b8bd8bb1615d3457038d211e46b96d93f8be601a8ebb0e38f5fbe7f5355"
       ],
       "sha256": "8a5e7b8bd8bb1615d3457038d211e46b96d93f8be601a8ebb0e38f5fbe7f5355"
     },
     {
       "path": ".dsh/skills/legal-zh-builder-hub-auto-updater/SKILL.md",
       "previousSha256": [
-        "c2e75cbbefc8266404421f5f7067230278d31f3ce292fe7ba53671f69f68e212"
+        "c2e75cbbefc8266404421f5f7067230278d31f3ce292fe7ba53671f69f68e212",
+        "b07c5db17c80e4e149a8a7f4362e53314f8e2e78b34e3c137113954c5d8bb6de"
       ],
       "sha256": "b07c5db17c80e4e149a8a7f4362e53314f8e2e78b34e3c137113954c5d8bb6de"
     },
     {
       "path": ".dsh/skills/legal-zh-builder-hub-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "333158cb0f0096228c6c362dafb1697a3d7b431f652a3e3d60afbce9f2e7038a"
+        "333158cb0f0096228c6c362dafb1697a3d7b431f652a3e3d60afbce9f2e7038a",
+        "7ff7a6cba629139d262180d50995c770ffc347ffbe4303d1f84272d84cdc739c"
       ],
       "sha256": "7ff7a6cba629139d262180d50995c770ffc347ffbe4303d1f84272d84cdc739c"
     },
@@ -279,49 +322,56 @@
       "path": ".dsh/skills/legal-zh-builder-hub-customize/SKILL.md",
       "previousSha256": [
         "34dd530a2f3177d5413fa9e2946ae0633479240a9eed33d1474e9d514c841060",
-        "a379ed0d41e45c5649b3c2c3941c1f0871cffdc66d5f527ac0559fc1be02d98c"
+        "a379ed0d41e45c5649b3c2c3941c1f0871cffdc66d5f527ac0559fc1be02d98c",
+        "03c8a4dffa68e8f9ad6d253ac75319759f1c3ff49ec05a3a7147ba9a963bd29f"
       ],
       "sha256": "03c8a4dffa68e8f9ad6d253ac75319759f1c3ff49ec05a3a7147ba9a963bd29f"
     },
     {
       "path": ".dsh/skills/legal-zh-builder-hub-disable/SKILL.md",
       "previousSha256": [
-        "5aa4bfe9ec6f91ba346bcd7f1ed82ad2a68aa46bf5763c1d5d3188130bf236a7"
+        "5aa4bfe9ec6f91ba346bcd7f1ed82ad2a68aa46bf5763c1d5d3188130bf236a7",
+        "ea3edd7dcc1a44a51889ad306c0f4e23e7b00f2865e81632266227bb4baa4ebf"
       ],
       "sha256": "ea3edd7dcc1a44a51889ad306c0f4e23e7b00f2865e81632266227bb4baa4ebf"
     },
     {
       "path": ".dsh/skills/legal-zh-builder-hub-registry-browser/SKILL.md",
       "previousSha256": [
-        "4009ad909bb045afa3d2f75ab0ac1c5dc1a525cebf95137b78215ccf35a68fe7"
+        "4009ad909bb045afa3d2f75ab0ac1c5dc1a525cebf95137b78215ccf35a68fe7",
+        "5d4888ac5557cffb8622dfe6c72fbc16bb736bb49aa7fa08197be4ed0501420b"
       ],
       "sha256": "5d4888ac5557cffb8622dfe6c72fbc16bb736bb49aa7fa08197be4ed0501420b"
     },
     {
       "path": ".dsh/skills/legal-zh-builder-hub-related-skills-surfacer/SKILL.md",
       "previousSha256": [
-        "1c5059177f7fa0c39edcd9edcdbd6e254d3f83408fc1a07e67d329f6407b67c8"
+        "1c5059177f7fa0c39edcd9edcdbd6e254d3f83408fc1a07e67d329f6407b67c8",
+        "f5011155c47e9cefd820488effaf0a2ab519abeaa30c08e88fe840af8d2e96af"
       ],
       "sha256": "f5011155c47e9cefd820488effaf0a2ab519abeaa30c08e88fe840af8d2e96af"
     },
     {
       "path": ".dsh/skills/legal-zh-builder-hub-skill-installer/SKILL.md",
       "previousSha256": [
-        "9bcdb90e6368faa1f3eef385cc8742bdbb144ab7f4a1c917958c8630e9e1ef3a"
+        "9bcdb90e6368faa1f3eef385cc8742bdbb144ab7f4a1c917958c8630e9e1ef3a",
+        "8828dfea5d4e828c3e923cff7426f679aa418fdad24653680f2395a41d58f514"
       ],
       "sha256": "8828dfea5d4e828c3e923cff7426f679aa418fdad24653680f2395a41d58f514"
     },
     {
       "path": ".dsh/skills/legal-zh-builder-hub-skill-manager/SKILL.md",
       "previousSha256": [
-        "7e61d4ee3df147a13794897b62e45b86b507c455b42cdf7468b31b7c37de7536"
+        "7e61d4ee3df147a13794897b62e45b86b507c455b42cdf7468b31b7c37de7536",
+        "11ccd589f1ab8d101a1eadafaf0497063fb8a961236811940b1708381c66ebcf"
       ],
       "sha256": "11ccd589f1ab8d101a1eadafaf0497063fb8a961236811940b1708381c66ebcf"
     },
     {
       "path": ".dsh/skills/legal-zh-builder-hub-skills-qa/SKILL.md",
       "previousSha256": [
-        "400469c8864c8053554d11fea290cff06576fed774d128ea29ff8913311e3beb"
+        "400469c8864c8053554d11fea290cff06576fed774d128ea29ff8913311e3beb",
+        "eb7268ee7ef771cd0a634a5e64c0a25f004c912ad59ace0ab9d2e52af2715fc5"
       ],
       "sha256": "eb7268ee7ef771cd0a634a5e64c0a25f004c912ad59ace0ab9d2e52af2715fc5"
     },
@@ -329,7 +379,8 @@
       "path": ".dsh/skills/legal-zh-builder-hub-uninstall/SKILL.md",
       "previousSha256": [
         "2010d239bf89523c5b9698d69c93d869a0f27fc6c8aae637893f2105d5be8c66",
-        "e0ccedcb8d307948b3312d550cbdc53efde9eda47b32961e9086189fb40435ca"
+        "e0ccedcb8d307948b3312d550cbdc53efde9eda47b32961e9086189fb40435ca",
+        "ca0842a1b332306a9e06564f1018ddaf4caca9b90ecb73195eea89bcd6bf5e98"
       ],
       "sha256": "ca0842a1b332306a9e06564f1018ddaf4caca9b90ecb73195eea89bcd6bf5e98"
     },
@@ -337,7 +388,8 @@
       "path": ".dsh/skills/legal-zh-clinic-build-guide/SKILL.md",
       "previousSha256": [
         "311443b62121ac62fce9c4697ed758419abb9cd5927a7191f5e131d9ebf07742",
-        "c07bce242d097b376ad6f38252bdb2083f2c8461b7a38db559397a23326599ed"
+        "c07bce242d097b376ad6f38252bdb2083f2c8461b7a38db559397a23326599ed",
+        "d3a8cc2d28e40ebeeffe98c9c33938d03874c449e72af5268a8f0c53ab1ae6d2"
       ],
       "sha256": "d3a8cc2d28e40ebeeffe98c9c33938d03874c449e72af5268a8f0c53ab1ae6d2"
     },
@@ -345,35 +397,40 @@
       "path": ".dsh/skills/legal-zh-clinic-client-comms-log/SKILL.md",
       "previousSha256": [
         "5fed91bc04ed83785fdafa2372d7a703039cf3daadad740e9301cfd65a1e22a1",
-        "706db486e5b8fd6ab1a4458afd7a36b74da4b93d69c816e8ee9fe86454679f2c"
+        "706db486e5b8fd6ab1a4458afd7a36b74da4b93d69c816e8ee9fe86454679f2c",
+        "430b077120566366e19005decb49075db2a73fa5b452ec40ca4a5e602d46d4f5"
       ],
       "sha256": "430b077120566366e19005decb49075db2a73fa5b452ec40ca4a5e602d46d4f5"
     },
     {
       "path": ".dsh/skills/legal-zh-clinic-client-intake/SKILL.md",
       "previousSha256": [
-        "2c03288614614f04fb033802d3432f15c24bc8ddb76932a616eb50b33bbc8a55"
+        "2c03288614614f04fb033802d3432f15c24bc8ddb76932a616eb50b33bbc8a55",
+        "66f2bddb8f056d2cb15ed12368fd3aab3b174f6a1c2110d750e0a27b379208c9"
       ],
       "sha256": "66f2bddb8f056d2cb15ed12368fd3aab3b174f6a1c2110d750e0a27b379208c9"
     },
     {
       "path": ".dsh/skills/legal-zh-clinic-client-letter/SKILL.md",
       "previousSha256": [
-        "c8f8424abe26434fa1cdbaeece7a4b39165cda4b9f3b7ed4790f01e5705d66e2"
+        "c8f8424abe26434fa1cdbaeece7a4b39165cda4b9f3b7ed4790f01e5705d66e2",
+        "c6bcbb4811023ea8290eeb1a7da7fee0ae5e9a91ce0992a287778f38362a738e"
       ],
       "sha256": "c6bcbb4811023ea8290eeb1a7da7fee0ae5e9a91ce0992a287778f38362a738e"
     },
     {
       "path": ".dsh/skills/legal-zh-clinic-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "a1bfda63ec975a95f7ed423be3174d7de6897fa70ceaa80ea3c60762cff5fb0c"
+        "a1bfda63ec975a95f7ed423be3174d7de6897fa70ceaa80ea3c60762cff5fb0c",
+        "e48b055dd31fde6a22b06281c0bd47a3e4356a45aad908df75e40b702bb93c07"
       ],
       "sha256": "e48b055dd31fde6a22b06281c0bd47a3e4356a45aad908df75e40b702bb93c07"
     },
     {
       "path": ".dsh/skills/legal-zh-clinic-customize/SKILL.md",
       "previousSha256": [
-        "ed6cbc307a53de22c88a3a3cf65991aa07bec42f3a35b44c2488c4360e520fff"
+        "ed6cbc307a53de22c88a3a3cf65991aa07bec42f3a35b44c2488c4360e520fff",
+        "24f0b0b5b24b74fdcb7f49cd34ac460fb80f636b829517f42d45cb92b53ed600"
       ],
       "sha256": "24f0b0b5b24b74fdcb7f49cd34ac460fb80f636b829517f42d45cb92b53ed600"
     },
@@ -381,7 +438,8 @@
       "path": ".dsh/skills/legal-zh-clinic-deadlines/SKILL.md",
       "previousSha256": [
         "4302527689de76c8607c92241e9028f04af8d4baa4fbc039d612cbe5c564d889",
-        "537de29e39041ff2275f571157c145ec263a2f0a2ea5cc3ed605dae75cbf914e"
+        "537de29e39041ff2275f571157c145ec263a2f0a2ea5cc3ed605dae75cbf914e",
+        "b6172f07d0835479ad90ff19183661f0854a07409dd3c0ab8408003e143f878b"
       ],
       "sha256": "b6172f07d0835479ad90ff19183661f0854a07409dd3c0ab8408003e143f878b"
     },
@@ -389,7 +447,8 @@
       "path": ".dsh/skills/legal-zh-clinic-draft/SKILL.md",
       "previousSha256": [
         "12babd9846bf9934e5bb1a4338947e11fd21b0b607ca98d1bf016d4dc8e090d8",
-        "e92b89292370429b52424a47378516c650e7231782efa39a002293fe124f1561"
+        "e92b89292370429b52424a47378516c650e7231782efa39a002293fe124f1561",
+        "f8390ab01d6df66f7541a81e807de5e32b20263479e1812ac9d66ba6be6b8d48"
       ],
       "sha256": "f8390ab01d6df66f7541a81e807de5e32b20263479e1812ac9d66ba6be6b8d48"
     },
@@ -397,14 +456,16 @@
       "path": ".dsh/skills/legal-zh-clinic-form-generation/SKILL.md",
       "previousSha256": [
         "26b20ffa454a0a0fbd9ceeaf17aac1119dcf40c18214e8ebc75dfb84f136b0ab",
-        "cb08ad524615dcdec0ced53faf14266af0b8b274699da78235c74b2a54122787"
+        "cb08ad524615dcdec0ced53faf14266af0b8b274699da78235c74b2a54122787",
+        "58497a67dc864a4c3c4175fc99b7c2dd1512fe6056a4f06cf3867de69297b5d9"
       ],
       "sha256": "58497a67dc864a4c3c4175fc99b7c2dd1512fe6056a4f06cf3867de69297b5d9"
     },
     {
       "path": ".dsh/skills/legal-zh-clinic-memo/SKILL.md",
       "previousSha256": [
-        "463718665c3dd5fd12347efb0cadbfe003256e1010e86da6193c93466ece4aa1"
+        "463718665c3dd5fd12347efb0cadbfe003256e1010e86da6193c93466ece4aa1",
+        "c48f4f5c1c4632d777aa6669ef2ebe41dacbcf67005a772984f5f2b474374a0e"
       ],
       "sha256": "c48f4f5c1c4632d777aa6669ef2ebe41dacbcf67005a772984f5f2b474374a0e"
     },
@@ -412,14 +473,16 @@
       "path": ".dsh/skills/legal-zh-clinic-plain-language-letters/SKILL.md",
       "previousSha256": [
         "0a66da331b527fcb97f8de7b58c02f61674e3224aef41ced7f7067e069be4e37",
-        "a419e4bae2c430be63274711e47b55604480d390dec1a2b055add15eab5bf863"
+        "a419e4bae2c430be63274711e47b55604480d390dec1a2b055add15eab5bf863",
+        "10789e1402c867667f0d69febfe4d02547fff70a8a242d188a64782c937f878a"
       ],
       "sha256": "10789e1402c867667f0d69febfe4d02547fff70a8a242d188a64782c937f878a"
     },
     {
       "path": ".dsh/skills/legal-zh-clinic-ramp/SKILL.md",
       "previousSha256": [
-        "fa160593694054be8df7fffffd985dd7478b03ab6703c35d750549cb0e644d2e"
+        "fa160593694054be8df7fffffd985dd7478b03ab6703c35d750549cb0e644d2e",
+        "5ef6ea0dd7b2652c2ef518b3218637e994372876863c17c380d1e67e696a76e2"
       ],
       "sha256": "5ef6ea0dd7b2652c2ef518b3218637e994372876863c17c380d1e67e696a76e2"
     },
@@ -427,7 +490,8 @@
       "path": ".dsh/skills/legal-zh-clinic-research-start/SKILL.md",
       "previousSha256": [
         "2577eb7ee7b2211e759c898806fa10baba420a3ec7b525e27d4b27ba3e216421",
-        "3945e6d51f812a904c30a3cfe8dd238605ec5af389f6f84387f702fe8d54d1c0"
+        "3945e6d51f812a904c30a3cfe8dd238605ec5af389f6f84387f702fe8d54d1c0",
+        "0f0759face21e96f56408457d6227ee0d5dfbdbefe55d8293c59843a59bd56a4"
       ],
       "sha256": "0f0759face21e96f56408457d6227ee0d5dfbdbefe55d8293c59843a59bd56a4"
     },
@@ -435,7 +499,8 @@
       "path": ".dsh/skills/legal-zh-clinic-semester-handoff/SKILL.md",
       "previousSha256": [
         "9fcb5791320724c207f710552d65d222a1237c81e0fbc7821bf832fd4530ad0d",
-        "dfefc6de9c6fd8dd5ea774522ee750173f9ae836377e32a190e6adc875a1ecc8"
+        "dfefc6de9c6fd8dd5ea774522ee750173f9ae836377e32a190e6adc875a1ecc8",
+        "31301858cb9abd34c4652c6610e8e8148084b3c70e99ce56ac10c0bc99317279"
       ],
       "sha256": "31301858cb9abd34c4652c6610e8e8148084b3c70e99ce56ac10c0bc99317279"
     },
@@ -443,7 +508,8 @@
       "path": ".dsh/skills/legal-zh-clinic-status/SKILL.md",
       "previousSha256": [
         "bdeeacef1cca8183f45eeae491ec1e93a791fae300cff928868de98686387f1f",
-        "c0a7b293e17e0d3b413c3379e6d79353dd25259b7c49e6a83b3f0936ca832b54"
+        "c0a7b293e17e0d3b413c3379e6d79353dd25259b7c49e6a83b3f0936ca832b54",
+        "3fe06e30ac0b9da52670a92e81e63bc1840b4d5cdf9a357a30d946752e7d47e6"
       ],
       "sha256": "3fe06e30ac0b9da52670a92e81e63bc1840b4d5cdf9a357a30d946752e7d47e6"
     },
@@ -451,7 +517,8 @@
       "path": ".dsh/skills/legal-zh-clinic-supervisor-review-queue/SKILL.md",
       "previousSha256": [
         "461e499ee9848045dc547e95f510087780a3f072b8ee925a13850a61eba76a81",
-        "92c45ce47aef5c0f580af4f69f9dc4f8078a13445929b799a911f7089301d829"
+        "92c45ce47aef5c0f580af4f69f9dc4f8078a13445929b799a911f7089301d829",
+        "182a80b275845da725357f17ce7d7648798300bc1b72a92261f553d9bc8b8418"
       ],
       "sha256": "182a80b275845da725357f17ce7d7648798300bc1b72a92261f553d9bc8b8418"
     },
@@ -459,21 +526,24 @@
       "path": ".dsh/skills/legal-zh-commercial-amendment-history/SKILL.md",
       "previousSha256": [
         "383658d7eba895ca000466f5644a860093e77c6d7cc7ef9a2b438ee90ebf29a2",
-        "c455ecb316d7558cca47e8230e919ec5e6a842e6ed101e389eb32100c4ece240"
+        "c455ecb316d7558cca47e8230e919ec5e6a842e6ed101e389eb32100c4ece240",
+        "c68b86ca2508a6d3a0daf2cdb9db42d7513f807bbd2322dd3c78e65a2a37ee2d"
       ],
       "sha256": "c68b86ca2508a6d3a0daf2cdb9db42d7513f807bbd2322dd3c78e65a2a37ee2d"
     },
     {
       "path": ".dsh/skills/legal-zh-commercial-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "beea1b6c90f36e5c81b50a574cf54ca9ae64a9d0cfffeb89156dd723f6e61e3e"
+        "beea1b6c90f36e5c81b50a574cf54ca9ae64a9d0cfffeb89156dd723f6e61e3e",
+        "e1a44ddb7b76240a94052b4cb40d9e159608a32d6454cd1f3213d8f9942934f5"
       ],
       "sha256": "e1a44ddb7b76240a94052b4cb40d9e159608a32d6454cd1f3213d8f9942934f5"
     },
     {
       "path": ".dsh/skills/legal-zh-commercial-customize/SKILL.md",
       "previousSha256": [
-        "d156cccbd65c11d4002856e20c011934e45517ab06e1fe2755758afc26a14bb2"
+        "d156cccbd65c11d4002856e20c011934e45517ab06e1fe2755758afc26a14bb2",
+        "9e2bd98e4a9b7c47b6595080e7ec15eb4a6f22133995a4e076100045bdcda97a"
       ],
       "sha256": "9e2bd98e4a9b7c47b6595080e7ec15eb4a6f22133995a4e076100045bdcda97a"
     },
@@ -481,7 +551,8 @@
       "path": ".dsh/skills/legal-zh-commercial-escalation-flagger/SKILL.md",
       "previousSha256": [
         "0d115d698bdea8bed96e7997d11986d4e0b3ba8daea1436ea86048945d71f609",
-        "bc839b7f042a9c83852ad39865a90a564c85b2ede644b3dc07f2f788a8de38b4"
+        "bc839b7f042a9c83852ad39865a90a564c85b2ede644b3dc07f2f788a8de38b4",
+        "220e5e9351ae0aef8f5d0e8042786bd7d3cd7260d423f8739a6f691598daa5b3"
       ],
       "sha256": "220e5e9351ae0aef8f5d0e8042786bd7d3cd7260d423f8739a6f691598daa5b3"
     },
@@ -489,7 +560,8 @@
       "path": ".dsh/skills/legal-zh-commercial-matter-workspace/SKILL.md",
       "previousSha256": [
         "598c58dff98d88e5667c9e6aa13bced0c99d727e22b0e8ce1f25cd9c9e24a83f",
-        "a523bf2c07cc59e24c32769ead4a04723c56fae986f0d34651f4aa060daad535"
+        "a523bf2c07cc59e24c32769ead4a04723c56fae986f0d34651f4aa060daad535",
+        "42a7a87c642242f293ad6453a0c9e8f7814a85ccf89ed97a3bce1144919981f5"
       ],
       "sha256": "42a7a87c642242f293ad6453a0c9e8f7814a85ccf89ed97a3bce1144919981f5"
     },
@@ -497,7 +569,8 @@
       "path": ".dsh/skills/legal-zh-commercial-nda-review/SKILL.md",
       "previousSha256": [
         "3a062023abdd2355a2ce7a65a25d7d4f2318e0622c5c8e3f7edc7ef3738fa609",
-        "be101c7a36467c934b2d3969f690f1c3a5f1932135c1b400e24fcab5da5fa3a0"
+        "be101c7a36467c934b2d3969f690f1c3a5f1932135c1b400e24fcab5da5fa3a0",
+        "fb322ba15cff12fb45c6d9ef5eab124dbc6f442b25aa8aa4aaf1ad58ed848a6a"
       ],
       "sha256": "fb322ba15cff12fb45c6d9ef5eab124dbc6f442b25aa8aa4aaf1ad58ed848a6a"
     },
@@ -505,7 +578,8 @@
       "path": ".dsh/skills/legal-zh-commercial-renewal-tracker/SKILL.md",
       "previousSha256": [
         "1818f5fc46cbca3c59fa0dbfc62458993e2c2565a87b5fd27aa6fed4fdafff30",
-        "9b31ce6ad3e08d71d8bf715fbc938f42674be06ed6c872d079c34f8d021f7567"
+        "9b31ce6ad3e08d71d8bf715fbc938f42674be06ed6c872d079c34f8d021f7567",
+        "daf47c648a48b757001dde06da0ac74d6d7251e6839ea569705ca619bbe94220"
       ],
       "sha256": "daf47c648a48b757001dde06da0ac74d6d7251e6839ea569705ca619bbe94220"
     },
@@ -513,7 +587,8 @@
       "path": ".dsh/skills/legal-zh-commercial-review/SKILL.md",
       "previousSha256": [
         "083f2d2e981e14864d9a8bfe60d42bb6746b0518c6a98418cdf643c1c50adbc9",
-        "9640224c4811ebb0cdd4ff3361690ce29e35f0ac29320e9e7535a7615274f36e"
+        "9640224c4811ebb0cdd4ff3361690ce29e35f0ac29320e9e7535a7615274f36e",
+        "311c3d6492974ca34596328719f5dfe35da9e0589d67f8e61a330f69ce8c6a54"
       ],
       "sha256": "311c3d6492974ca34596328719f5dfe35da9e0589d67f8e61a330f69ce8c6a54"
     },
@@ -521,7 +596,8 @@
       "path": ".dsh/skills/legal-zh-commercial-review-proposals/SKILL.md",
       "previousSha256": [
         "792253abfff3baf4375e18b47cf6a09fa37c93407311b8ed7531520708503aaa",
-        "81f7023bb5d377b4212504a903f4fa8550370dc616664f6f8cd7f7328c340fb3"
+        "81f7023bb5d377b4212504a903f4fa8550370dc616664f6f8cd7f7328c340fb3",
+        "0fe2e071ace977875673fbc81a87205b207878af5b80a83b0186784749a83872"
       ],
       "sha256": "0fe2e071ace977875673fbc81a87205b207878af5b80a83b0186784749a83872"
     },
@@ -529,7 +605,8 @@
       "path": ".dsh/skills/legal-zh-commercial-saas-msa-review/SKILL.md",
       "previousSha256": [
         "50addfc05f88f1a0d38a20efd567de54ff7ca1b094f6ee28e900dc29d9c35b70",
-        "53190baf8747faaf996f35cae2378c2f6df3a651cdb022b2649498d7f64cd52c"
+        "53190baf8747faaf996f35cae2378c2f6df3a651cdb022b2649498d7f64cd52c",
+        "8ac6e70d71e3f17235b50f0953f7144aa91000a9ef4e23419900b19e434f8bec"
       ],
       "sha256": "8ac6e70d71e3f17235b50f0953f7144aa91000a9ef4e23419900b19e434f8bec"
     },
@@ -537,7 +614,8 @@
       "path": ".dsh/skills/legal-zh-commercial-stakeholder-summary/SKILL.md",
       "previousSha256": [
         "12d7a1a0ba8cdce5f5fbd74465e49ec0afa4473fe392d7b8feb93d32daa71077",
-        "a7afc6186ff649d9332c490812378878b2a9bbe314f7bb013f4dbb5a33871510"
+        "a7afc6186ff649d9332c490812378878b2a9bbe314f7bb013f4dbb5a33871510",
+        "da0e33bdc7e65ed6ba0e50ccc0b2bd6b529af4753ce5d981f9eba415ad580a84"
       ],
       "sha256": "da0e33bdc7e65ed6ba0e50ccc0b2bd6b529af4753ce5d981f9eba415ad580a84"
     },
@@ -545,14 +623,16 @@
       "path": ".dsh/skills/legal-zh-commercial-vendor-agreement-review/SKILL.md",
       "previousSha256": [
         "6c40e1cb02fda80ec7cfa2df5bd62b24cb0afc1191d3d19e7afad51aa3af73a2",
-        "80e27b0879f982241f87fddac717262659f53a101d784d314324d64c5a0eab00"
+        "80e27b0879f982241f87fddac717262659f53a101d784d314324d64c5a0eab00",
+        "a77b39beb35fa9afcecc3a868cce78200759a4cac505afc7fd509ab8421fabf4"
       ],
       "sha256": "a77b39beb35fa9afcecc3a868cce78200759a4cac505afc7fd509ab8421fabf4"
     },
     {
       "path": ".dsh/skills/legal-zh-corporate-ai-tool-handoff/SKILL.md",
       "previousSha256": [
-        "b6a9cf295034a9aee4407396309bcbab94570b4f22897ea2a27fab5ee43c59c4"
+        "b6a9cf295034a9aee4407396309bcbab94570b4f22897ea2a27fab5ee43c59c4",
+        "12be8d24b3da3cfcd2054140f4b583dc295b01be5c4af75ecd7aadb88f58adb1"
       ],
       "sha256": "12be8d24b3da3cfcd2054140f4b583dc295b01be5c4af75ecd7aadb88f58adb1"
     },
@@ -560,14 +640,16 @@
       "path": ".dsh/skills/legal-zh-corporate-board-minutes/SKILL.md",
       "previousSha256": [
         "53f45d37df30f826236b219e7be2076fb9e79f1b2c2744565c9e96c45cfc7fe6",
-        "895c91697cd54bc5a7bf928b60e2b554df21b7a961d80871c854104a43be7350"
+        "895c91697cd54bc5a7bf928b60e2b554df21b7a961d80871c854104a43be7350",
+        "c5b384d15d18bde0976f2a53870d67761f0251b41b0c8deddbbc6c97c689a156"
       ],
       "sha256": "c5b384d15d18bde0976f2a53870d67761f0251b41b0c8deddbbc6c97c689a156"
     },
     {
       "path": ".dsh/skills/legal-zh-corporate-closing-checklist/SKILL.md",
       "previousSha256": [
-        "8cd9baa9e87e2fac8b9e2ed78c0727026b94758fccbcf72e14c74da2f31b68b4"
+        "8cd9baa9e87e2fac8b9e2ed78c0727026b94758fccbcf72e14c74da2f31b68b4",
+        "4f52ba270c40f8cfe5697e7959dff7beed7f660766d4d42b49aea68846fc6f9e"
       ],
       "sha256": "4f52ba270c40f8cfe5697e7959dff7beed7f660766d4d42b49aea68846fc6f9e"
     },
@@ -575,21 +657,24 @@
       "path": ".dsh/skills/legal-zh-corporate-cold-start-interview/SKILL.md",
       "previousSha256": [
         "10216f0d5c8a06223476ff30953aac0ab95cec6eeb455547a1f4ece9553690ab",
-        "ae61f96cd089470a6d37e9bf6b904180d58536614da551f703b83bc4123c60f5"
+        "ae61f96cd089470a6d37e9bf6b904180d58536614da551f703b83bc4123c60f5",
+        "4e39694a135766d42471b400b1a107c07f3f0e1e9f67e157afbfac10f2e6a789"
       ],
       "sha256": "4e39694a135766d42471b400b1a107c07f3f0e1e9f67e157afbfac10f2e6a789"
     },
     {
       "path": ".dsh/skills/legal-zh-corporate-customize/SKILL.md",
       "previousSha256": [
-        "40f65a35d2e3f1f881308e4e2c8c8c6165f4f834c8a48a895a08ad77bd3381f8"
+        "40f65a35d2e3f1f881308e4e2c8c8c6165f4f834c8a48a895a08ad77bd3381f8",
+        "4f3cceb7cfe265ec2169a3acdd3b29d57fe2d228b9cedc5c88d546f579322279"
       ],
       "sha256": "4f3cceb7cfe265ec2169a3acdd3b29d57fe2d228b9cedc5c88d546f579322279"
     },
     {
       "path": ".dsh/skills/legal-zh-corporate-deal-team-summary/SKILL.md",
       "previousSha256": [
-        "7a9f3c27782c90808c38c25ba511ce7096b35e8a59830a5918d7e83e67289130"
+        "7a9f3c27782c90808c38c25ba511ce7096b35e8a59830a5918d7e83e67289130",
+        "4db6817bc4db358b76b6f0cb042c5949af24213fa2a2c947431cfe9cd3af3f57"
       ],
       "sha256": "4db6817bc4db358b76b6f0cb042c5949af24213fa2a2c947431cfe9cd3af3f57"
     },
@@ -597,7 +682,8 @@
       "path": ".dsh/skills/legal-zh-corporate-diligence-issue-extraction/SKILL.md",
       "previousSha256": [
         "36a6ebdc7f9f8a2b95d593d02961864dc730ce7725f5d6a94d547803abc99a98",
-        "cc748f47c1b310812d5d9fcef40121fc5479eb3a41b8463ae2b49c197613722e"
+        "cc748f47c1b310812d5d9fcef40121fc5479eb3a41b8463ae2b49c197613722e",
+        "1406d1195c11d557d223886ba146bb3ba0f2a99ae2da1b7bf9af03886bcb7ef8"
       ],
       "sha256": "1406d1195c11d557d223886ba146bb3ba0f2a99ae2da1b7bf9af03886bcb7ef8"
     },
@@ -605,7 +691,8 @@
       "path": ".dsh/skills/legal-zh-corporate-entity-compliance/SKILL.md",
       "previousSha256": [
         "15d266955a8469965372eff912001718ed2e7ecd357bfc434a9071ea90a78429",
-        "7859a4c45c2cd8346d422867f3831a9aab08517f673d001c0d227377ce7683b9"
+        "7859a4c45c2cd8346d422867f3831a9aab08517f673d001c0d227377ce7683b9",
+        "8aa2b7a5d50a93926990eb4b38e9940fcb9aa680fc4c0a71c86787b36b5bae3d"
       ],
       "sha256": "8aa2b7a5d50a93926990eb4b38e9940fcb9aa680fc4c0a71c86787b36b5bae3d"
     },
@@ -613,28 +700,32 @@
       "path": ".dsh/skills/legal-zh-corporate-integration-management/SKILL.md",
       "previousSha256": [
         "80bb591b7a6be2179d68c90a6c11319f23ca33bf30c0e955e088722de2771b24",
-        "eb7ac74b6600d7105ed49ccb8da0fa9180e926847f0472ae5bb7eec65bfdc841"
+        "eb7ac74b6600d7105ed49ccb8da0fa9180e926847f0472ae5bb7eec65bfdc841",
+        "203ef3bcd08359f60111e1f51dffc4caa1b04160d23ef48b136a2df9e1984b27"
       ],
       "sha256": "203ef3bcd08359f60111e1f51dffc4caa1b04160d23ef48b136a2df9e1984b27"
     },
     {
       "path": ".dsh/skills/legal-zh-corporate-material-contract-schedule/SKILL.md",
       "previousSha256": [
-        "aa46d580d1d2ee27e31bbde9297f4bf8263ff1cce02e02aed6acc31d24e46d47"
+        "aa46d580d1d2ee27e31bbde9297f4bf8263ff1cce02e02aed6acc31d24e46d47",
+        "699605d0580960921b29de435cfb7496a13d3710e0c1949553e83b6f658bfdc3"
       ],
       "sha256": "699605d0580960921b29de435cfb7496a13d3710e0c1949553e83b6f658bfdc3"
     },
     {
       "path": ".dsh/skills/legal-zh-corporate-matter-workspace/SKILL.md",
       "previousSha256": [
-        "af9a4cbcda8907d69bbd4b5972ed3dd131af1c630927fe09ee8ad202b9eef50c"
+        "af9a4cbcda8907d69bbd4b5972ed3dd131af1c630927fe09ee8ad202b9eef50c",
+        "0a1d14bc1416b93290768e18b3bd209418f251840b632d1ca266590a0bc9afd0"
       ],
       "sha256": "0a1d14bc1416b93290768e18b3bd209418f251840b632d1ca266590a0bc9afd0"
     },
     {
       "path": ".dsh/skills/legal-zh-corporate-tabular-review/SKILL.md",
       "previousSha256": [
-        "5e8f902d87f1d67503b76a74d8a79b1cc9fb538f190f6448a80c14871a97dd8f"
+        "5e8f902d87f1d67503b76a74d8a79b1cc9fb538f190f6448a80c14871a97dd8f",
+        "e206317ca54b4501ef720cdd0b18573a6b8bb8acb6ad37db3edb8fd217d9de7c"
       ],
       "sha256": "e206317ca54b4501ef720cdd0b18573a6b8bb8acb6ad37db3edb8fd217d9de7c"
     },
@@ -642,7 +733,8 @@
       "path": ".dsh/skills/legal-zh-corporate-written-consent/SKILL.md",
       "previousSha256": [
         "01fdb8a7f3b2e622d3cc11cd4733c1f7f46516049b45d09d7329cb1aae9d8d41",
-        "78b630945301bd19d45d29d722d40560f7ac538e919364e54440547c4b400e81"
+        "78b630945301bd19d45d29d722d40560f7ac538e919364e54440547c4b400e81",
+        "36dd3c9bf9b102e8b847ec96157d21460bd04e1b64541adf26c50ba9e18715a8"
       ],
       "sha256": "36dd3c9bf9b102e8b847ec96157d21460bd04e1b64541adf26c50ba9e18715a8"
     },
@@ -650,7 +742,8 @@
       "path": ".dsh/skills/legal-zh-criminal-bail-application/SKILL.md",
       "previousSha256": [
         "1986f6f40fe968e1dbb79c8368790742a97256e9b70b19ce7a2c2ccefd7ffebb",
-        "43511f65b9fd21f0a4692088bf7f5be86c0b92bf2f8fdb4e40bf5fb578c9f3ca"
+        "43511f65b9fd21f0a4692088bf7f5be86c0b92bf2f8fdb4e40bf5fb578c9f3ca",
+        "339d0c2649a1d337ba7fe01ab31d244bdcb7d0461f2df3172f27fe26ee62e394"
       ],
       "sha256": "339d0c2649a1d337ba7fe01ab31d244bdcb7d0461f2df3172f27fe26ee62e394"
     },
@@ -658,14 +751,16 @@
       "path": ".dsh/skills/legal-zh-criminal-case-analysis/SKILL.md",
       "previousSha256": [
         "68ba74bf926dfccb3e25b958305afc2702879f935131ee73c9df30fc3798f35c",
-        "a86d696dee1e5a99e2583cdb0ba01973b7cfea2a703742600f384064d81d20fd"
+        "a86d696dee1e5a99e2583cdb0ba01973b7cfea2a703742600f384064d81d20fd",
+        "7e7ca5849d1fe975a75d93976e3de0938821ea6db8945b20c81d4a269be25139"
       ],
       "sha256": "7e7ca5849d1fe975a75d93976e3de0938821ea6db8945b20c81d4a269be25139"
     },
     {
       "path": ".dsh/skills/legal-zh-criminal-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "9009ff4d9e1e899124b517acab8054fa3df5d40dfa6ad41aae432c4aa852f1cc"
+        "9009ff4d9e1e899124b517acab8054fa3df5d40dfa6ad41aae432c4aa852f1cc",
+        "5b63fca5297ac29b446cd17b381e121824b366947fdb57ed7b2d1bb36aeb57d2"
       ],
       "sha256": "5b63fca5297ac29b446cd17b381e121824b366947fdb57ed7b2d1bb36aeb57d2"
     },
@@ -673,21 +768,24 @@
       "path": ".dsh/skills/legal-zh-criminal-compliance-non-prosecution/SKILL.md",
       "previousSha256": [
         "5fee9a36c346d528a4590d230f4adc288156c1a55b3b9edfac8b34b96d6971a2",
-        "945f9047e9220ae49270a3de4ca3d603218392a087f766d7a5d16a78d08a86b6"
+        "945f9047e9220ae49270a3de4ca3d603218392a087f766d7a5d16a78d08a86b6",
+        "fc3d08a568635d61ca7e0ed84332bbcd64a36349abd713731fe6fc7b369c3c17"
       ],
       "sha256": "fc3d08a568635d61ca7e0ed84332bbcd64a36349abd713731fe6fc7b369c3c17"
     },
     {
       "path": ".dsh/skills/legal-zh-criminal-customize/SKILL.md",
       "previousSha256": [
-        "44a0c7773c1f86695fd9ee62b98cef33f275ce103245a672a3062811813b6b63"
+        "44a0c7773c1f86695fd9ee62b98cef33f275ce103245a672a3062811813b6b63",
+        "49b9f2709226a082285b48685edbd2d7ff398aec49ad3b4b4f76d4c7d48b051c"
       ],
       "sha256": "49b9f2709226a082285b48685edbd2d7ff398aec49ad3b4b4f76d4c7d48b051c"
     },
     {
       "path": ".dsh/skills/legal-zh-criminal-defense-strategy/SKILL.md",
       "previousSha256": [
-        "cf78dea26597ac715c44f5738078010e9dfd260db9900c5b60d737af5f6a2801"
+        "cf78dea26597ac715c44f5738078010e9dfd260db9900c5b60d737af5f6a2801",
+        "89a0fbfc429e11aad3ac7e12a87d22c2619c5663164795566f50435f23141941"
       ],
       "sha256": "89a0fbfc429e11aad3ac7e12a87d22c2619c5663164795566f50435f23141941"
     },
@@ -695,21 +793,24 @@
       "path": ".dsh/skills/legal-zh-criminal-matter-workspace/SKILL.md",
       "previousSha256": [
         "30e7e2126734a1b7e7da3332fd29900f34bd96defd6897ea83d339729a019e92",
-        "f16782c439dbf8069914fa292d771c897461fad54a2677bbe28ba09bb02abf77"
+        "f16782c439dbf8069914fa292d771c897461fad54a2677bbe28ba09bb02abf77",
+        "37fa1d3f45ab44b3e869d9ecbc420c163a7c8d6e7461dfb4921319dbcc9ebf3a"
       ],
       "sha256": "37fa1d3f45ab44b3e869d9ecbc420c163a7c8d6e7461dfb4921319dbcc9ebf3a"
     },
     {
       "path": ".dsh/skills/legal-zh-employment-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "968c3b8c7775c23f2e0d4f89e7322b9f6db14dc2d75a8fa4221d6c0abe08724e"
+        "968c3b8c7775c23f2e0d4f89e7322b9f6db14dc2d75a8fa4221d6c0abe08724e",
+        "a356696113ccb2e32846ab7b44f844272c0124d10701d6d47f8162d38d806629"
       ],
       "sha256": "a356696113ccb2e32846ab7b44f844272c0124d10701d6d47f8162d38d806629"
     },
     {
       "path": ".dsh/skills/legal-zh-employment-customize/SKILL.md",
       "previousSha256": [
-        "768806f2b992ad28a7513f01f579dcbc38f3622a4d07c9999e17e6e273bba70f"
+        "768806f2b992ad28a7513f01f579dcbc38f3622a4d07c9999e17e6e273bba70f",
+        "94467b1581e7b88d1ca89de4398161440230ab1ca4f497949c4a11aee545e7e1"
       ],
       "sha256": "94467b1581e7b88d1ca89de4398161440230ab1ca4f497949c4a11aee545e7e1"
     },
@@ -717,7 +818,8 @@
       "path": ".dsh/skills/legal-zh-employment-expansion-kickoff/SKILL.md",
       "previousSha256": [
         "b590a94970f29012d65c6275e13eb61cc7940a439b9b162d73d31d6dffea49e7",
-        "ba531e25dd196702706a7ea2d90d7781efc2e505383524c46bb93c33fb3961b3"
+        "ba531e25dd196702706a7ea2d90d7781efc2e505383524c46bb93c33fb3961b3",
+        "fcab180dea3c18aa13e762003ee5d64f4fca7e1ffc76eb8264f7c87ea88514ac"
       ],
       "sha256": "fcab180dea3c18aa13e762003ee5d64f4fca7e1ffc76eb8264f7c87ea88514ac"
     },
@@ -725,7 +827,8 @@
       "path": ".dsh/skills/legal-zh-employment-expansion-update/SKILL.md",
       "previousSha256": [
         "aa756bce98cb7fbfaa75f0446db8ca79bffc2876e11a5f1c3e4959ebf504a09a",
-        "b4955e8d1979c270dcc6b45866c5c0329cb3d20a99ab8f580642ce4a8f972327"
+        "b4955e8d1979c270dcc6b45866c5c0329cb3d20a99ab8f580642ce4a8f972327",
+        "14a7972fac14550b43a94e3abb54ee7acfab129a3d6f4dff72eab357201ab30a"
       ],
       "sha256": "14a7972fac14550b43a94e3abb54ee7acfab129a3d6f4dff72eab357201ab30a"
     },
@@ -733,7 +836,8 @@
       "path": ".dsh/skills/legal-zh-employment-handbook-updates/SKILL.md",
       "previousSha256": [
         "d9a8bc8e9a36a87d778720a1c9e023957d1198f352c0e31247866c1086bfe523",
-        "fed7a0647ce381a1119e966f4b806d2c4556dd6387b55ddbc7709c0bed54db36"
+        "fed7a0647ce381a1119e966f4b806d2c4556dd6387b55ddbc7709c0bed54db36",
+        "7e4d90008cfaf969cff832a405141ce7b10c4c1142e3758457aa388dea0f4d48"
       ],
       "sha256": "7e4d90008cfaf969cff832a405141ce7b10c4c1142e3758457aa388dea0f4d48"
     },
@@ -741,14 +845,16 @@
       "path": ".dsh/skills/legal-zh-employment-hiring-review/SKILL.md",
       "previousSha256": [
         "537892e207d951da70b90eb52cf2e858a842a55d470b2d2dd137117e77601b85",
-        "be0d606c8ef75586fbf8d42af216ef197cab91915caa393d83ac18f75028e6a2"
+        "be0d606c8ef75586fbf8d42af216ef197cab91915caa393d83ac18f75028e6a2",
+        "b2be4953c3296985820b00b296303a406548e3248c7f5c8bf8f9a52c583ee11a"
       ],
       "sha256": "b2be4953c3296985820b00b296303a406548e3248c7f5c8bf8f9a52c583ee11a"
     },
     {
       "path": ".dsh/skills/legal-zh-employment-internal-investigation/SKILL.md",
       "previousSha256": [
-        "2d59a2ad5af6116b50c2c77747c923c722bd71244bb529a747e2b8080deb9a56"
+        "2d59a2ad5af6116b50c2c77747c923c722bd71244bb529a747e2b8080deb9a56",
+        "2765b1d9ab546ce9f0ff8740b2be30767de3b61d3763436d364868c9a1122366"
       ],
       "sha256": "2765b1d9ab546ce9f0ff8740b2be30767de3b61d3763436d364868c9a1122366"
     },
@@ -756,14 +862,16 @@
       "path": ".dsh/skills/legal-zh-employment-international-expansion/SKILL.md",
       "previousSha256": [
         "d327b3d16de49d985efef42038b1eff7449cd67c282a52d8bd5c35150d5224f1",
-        "fc402e96eadcb9e68473badba6d46dc099a7e68c51320164bfaaa54c64bca12d"
+        "fc402e96eadcb9e68473badba6d46dc099a7e68c51320164bfaaa54c64bca12d",
+        "14d133c5b2722c089be8a2bea2fa2182332a7bc296cf0b106992618e8f63e13c"
       ],
       "sha256": "14d133c5b2722c089be8a2bea2fa2182332a7bc296cf0b106992618e8f63e13c"
     },
     {
       "path": ".dsh/skills/legal-zh-employment-investigation-add/SKILL.md",
       "previousSha256": [
-        "d4e774143ebb0aba6bae8f74d34d1b31a894baa78824410b44ec541ec2da5535"
+        "d4e774143ebb0aba6bae8f74d34d1b31a894baa78824410b44ec541ec2da5535",
+        "14d844637ebb21529404ee9affb46fd5f52bed58507e4f9aa05634df6ad89eb2"
       ],
       "sha256": "14d844637ebb21529404ee9affb46fd5f52bed58507e4f9aa05634df6ad89eb2"
     },
@@ -771,21 +879,24 @@
       "path": ".dsh/skills/legal-zh-employment-investigation-memo/SKILL.md",
       "previousSha256": [
         "c3efeac68969aebf3a5937872976a235eee838a0b817b603db543ca722dc5489",
-        "d683365ba70b6c9bf769ead9667c0ebcb4da560aab4dcea611674db79a977caa"
+        "d683365ba70b6c9bf769ead9667c0ebcb4da560aab4dcea611674db79a977caa",
+        "e92e05cb4822f27749f0ca018bf701b63111bfe91872e961af5669660a88c442"
       ],
       "sha256": "e92e05cb4822f27749f0ca018bf701b63111bfe91872e961af5669660a88c442"
     },
     {
       "path": ".dsh/skills/legal-zh-employment-investigation-open/SKILL.md",
       "previousSha256": [
-        "9e9a5c7f4abe21b33d9ce84e3d971ef3bf4522fba453ef3759a09983dd82c355"
+        "9e9a5c7f4abe21b33d9ce84e3d971ef3bf4522fba453ef3759a09983dd82c355",
+        "f35aad7ad149e535b9ca04ed4af7bccfb723d8b13bb3964765b03661e30c9ff8"
       ],
       "sha256": "f35aad7ad149e535b9ca04ed4af7bccfb723d8b13bb3964765b03661e30c9ff8"
     },
     {
       "path": ".dsh/skills/legal-zh-employment-investigation-query/SKILL.md",
       "previousSha256": [
-        "4f0da469570f60ac3f930bae1ef64ff47ae22cf2e5626344d49784a1fbc06d62"
+        "4f0da469570f60ac3f930bae1ef64ff47ae22cf2e5626344d49784a1fbc06d62",
+        "6111f827bbd072233c18e40eed20408efb36b8f5c0f75009d369a7f27feac918"
       ],
       "sha256": "6111f827bbd072233c18e40eed20408efb36b8f5c0f75009d369a7f27feac918"
     },
@@ -793,21 +904,24 @@
       "path": ".dsh/skills/legal-zh-employment-investigation-summary/SKILL.md",
       "previousSha256": [
         "4b4ca959191acfc3120730c5709f749546254f041b1e999194644dea801a5921",
-        "73e69e2d69ace45aca2f007917ff22b8c123908fc9de5ba342dd0b57693571f5"
+        "73e69e2d69ace45aca2f007917ff22b8c123908fc9de5ba342dd0b57693571f5",
+        "66c69b1ad5c86ada1ad5b9e935a5b6fc31ad0ec7288bb2f31f2b7569645bb58d"
       ],
       "sha256": "66c69b1ad5c86ada1ad5b9e935a5b6fc31ad0ec7288bb2f31f2b7569645bb58d"
     },
     {
       "path": ".dsh/skills/legal-zh-employment-leave-tracker/SKILL.md",
       "previousSha256": [
-        "e998cfbb272ddd43b297a18565ddaa00d5ca87057f9c0fe43da3a4879e5cb072"
+        "e998cfbb272ddd43b297a18565ddaa00d5ca87057f9c0fe43da3a4879e5cb072",
+        "7eb80bf92f2a5c4163cf1488d4d0c91375f06f49519e720ba2ff58f89774616f"
       ],
       "sha256": "7eb80bf92f2a5c4163cf1488d4d0c91375f06f49519e720ba2ff58f89774616f"
     },
     {
       "path": ".dsh/skills/legal-zh-employment-log-leave/SKILL.md",
       "previousSha256": [
-        "5cac09d702d7783b7f5f7e7b852dbdb9580302a22ef2adda8a0a7c3def12e75e"
+        "5cac09d702d7783b7f5f7e7b852dbdb9580302a22ef2adda8a0a7c3def12e75e",
+        "f7ef769483e78cd5dfeeb2665fb8219ef9d70622a7c253bb14e32b6d639dea21"
       ],
       "sha256": "f7ef769483e78cd5dfeeb2665fb8219ef9d70622a7c253bb14e32b6d639dea21"
     },
@@ -815,7 +929,8 @@
       "path": ".dsh/skills/legal-zh-employment-matter-workspace/SKILL.md",
       "previousSha256": [
         "5220a28e239665b2154e638c71fa3ff4610be1b98189536558a1ee0732ead05a",
-        "8df18f09fb2719eb15dc57dcaed310bf8b0442d89ed48e92929261388e9bbd4c"
+        "8df18f09fb2719eb15dc57dcaed310bf8b0442d89ed48e92929261388e9bbd4c",
+        "1430c1d69ddf23c8a10b691eb93d9dd8fb7741fb6d129cbfe8095ce3d0b129be"
       ],
       "sha256": "1430c1d69ddf23c8a10b691eb93d9dd8fb7741fb6d129cbfe8095ce3d0b129be"
     },
@@ -823,7 +938,8 @@
       "path": ".dsh/skills/legal-zh-employment-policy-drafting/SKILL.md",
       "previousSha256": [
         "3774242db3db2ba77d9c06bb2ddc8c334433734a273d5f7080e4e27124847f1c",
-        "6168c733017edba6f77de2662bc201e86cf9ba8e09c5d08b1acd3f172ca6dd8c"
+        "6168c733017edba6f77de2662bc201e86cf9ba8e09c5d08b1acd3f172ca6dd8c",
+        "a00cbd5285deb1b87522a8ec2955d344c5c2f11f7fef1aa0487677184b0271c5"
       ],
       "sha256": "a00cbd5285deb1b87522a8ec2955d344c5c2f11f7fef1aa0487677184b0271c5"
     },
@@ -831,7 +947,8 @@
       "path": ".dsh/skills/legal-zh-employment-termination-review/SKILL.md",
       "previousSha256": [
         "3d1f07940b06e587735d1ea2fdd40ba423a4f022c430d274fba298f2c21e4171",
-        "5c9be72104c55d2b464ce6520c5acb4bfb4719f5accb0f39fbd769bac1490b7f"
+        "5c9be72104c55d2b464ce6520c5acb4bfb4719f5accb0f39fbd769bac1490b7f",
+        "686eb8bba2b0a8895820dda1e5515f11f7d9de81a19d6b1c5b2d706af5a6addc"
       ],
       "sha256": "686eb8bba2b0a8895820dda1e5515f11f7d9de81a19d6b1c5b2d706af5a6addc"
     },
@@ -839,7 +956,8 @@
       "path": ".dsh/skills/legal-zh-employment-wage-hour-qa/SKILL.md",
       "previousSha256": [
         "9f0095fb9894738e427ed58c3c247b51bfcb092a1856996deb9715694819761d",
-        "a30f8cc675b7aa5e62038d301ad97d0dc7325ab20623751a6df17c24906eaea5"
+        "a30f8cc675b7aa5e62038d301ad97d0dc7325ab20623751a6df17c24906eaea5",
+        "e99e29348c239bbd03c41193e55d51d445a205235e36b002efc20ec4ef2cf81f"
       ],
       "sha256": "e99e29348c239bbd03c41193e55d51d445a205235e36b002efc20ec4ef2cf81f"
     },
@@ -847,7 +965,8 @@
       "path": ".dsh/skills/legal-zh-employment-worker-classification/SKILL.md",
       "previousSha256": [
         "35dfad70043e6d8fc43a139e8faa1c5924d9df317eaa130d9960077c46e46fbd",
-        "c8911b37b91f11ed526f2ca36ea294ac9c4fd38986286d436c6d88e1d68f22ea"
+        "c8911b37b91f11ed526f2ca36ea294ac9c4fd38986286d436c6d88e1d68f22ea",
+        "3fcf684aad475e2a17c6d4c8b0e12e5835dfafecb2afafa31208886a0ff3bc18"
       ],
       "sha256": "3fcf684aad475e2a17c6d4c8b0e12e5835dfafecb2afafa31208886a0ff3bc18"
     },
@@ -855,7 +974,8 @@
       "path": ".dsh/skills/legal-zh-ip-cease-desist/SKILL.md",
       "previousSha256": [
         "50be65f5e1bf3d84b9a97749126ee980c6f12237df6d17f693a9dd7fb1fc0de4",
-        "5ab1a988557dcd7f3433406c33671f8bf825b6315aba83b1539d408ff3415040"
+        "5ab1a988557dcd7f3433406c33671f8bf825b6315aba83b1539d408ff3415040",
+        "5d9eb171e78cb55caf5908b82cfa01ff64e5ab90b98cc02b963847b0ce8da9e1"
       ],
       "sha256": "5d9eb171e78cb55caf5908b82cfa01ff64e5ab90b98cc02b963847b0ce8da9e1"
     },
@@ -863,35 +983,40 @@
       "path": ".dsh/skills/legal-zh-ip-clearance/SKILL.md",
       "previousSha256": [
         "395abd1d69bba9fa2972ff9b8fd76a7957331ae5bf266f1f1a1dcd4a783dc1f2",
-        "927dd78e9c4d8f4a0f7f5aa33caa86cac0c141e15d93ce836411710d481eb495"
+        "927dd78e9c4d8f4a0f7f5aa33caa86cac0c141e15d93ce836411710d481eb495",
+        "7baabab44838b451a4c1f5a0bbe2c5b147cb805abe304fda8cddaa86a961369f"
       ],
       "sha256": "7baabab44838b451a4c1f5a0bbe2c5b147cb805abe304fda8cddaa86a961369f"
     },
     {
       "path": ".dsh/skills/legal-zh-ip-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "188ac73d43b187f98ee4c2d86848c446d16cccd88c4e49ba4e7bb9e5c81b26f1"
+        "188ac73d43b187f98ee4c2d86848c446d16cccd88c4e49ba4e7bb9e5c81b26f1",
+        "3b1b64f79587faa83e97a6a6c6711716e775e34c0a5b3c0c9dba713ae0441690"
       ],
       "sha256": "3b1b64f79587faa83e97a6a6c6711716e775e34c0a5b3c0c9dba713ae0441690"
     },
     {
       "path": ".dsh/skills/legal-zh-ip-customize/SKILL.md",
       "previousSha256": [
-        "ee15457667066ee2eb7b2399760c1fd3b170d1a8618d308eed3f8ecc31f47b20"
+        "ee15457667066ee2eb7b2399760c1fd3b170d1a8618d308eed3f8ecc31f47b20",
+        "9c3c3f4fe5e78283e7c7292488cecd8b0e8793e3143d4a52d2faa0a30d6982dd"
       ],
       "sha256": "9c3c3f4fe5e78283e7c7292488cecd8b0e8793e3143d4a52d2faa0a30d6982dd"
     },
     {
       "path": ".dsh/skills/legal-zh-ip-fto-triage/SKILL.md",
       "previousSha256": [
-        "2e392e99215ee7e2954ab3ddfd402cfc1e5eee012bc0cc1c90d8c4aedabeec45"
+        "2e392e99215ee7e2954ab3ddfd402cfc1e5eee012bc0cc1c90d8c4aedabeec45",
+        "6dcb7efee1a21abfb31f78d0a136314f2ea0bc53f93731fada3a6547c05f8e22"
       ],
       "sha256": "6dcb7efee1a21abfb31f78d0a136314f2ea0bc53f93731fada3a6547c05f8e22"
     },
     {
       "path": ".dsh/skills/legal-zh-ip-infringement-triage/SKILL.md",
       "previousSha256": [
-        "e453990fb4647ba116d94867ab0c78bc6d9088597eb8d2d339900ce92ef75251"
+        "e453990fb4647ba116d94867ab0c78bc6d9088597eb8d2d339900ce92ef75251",
+        "bfbacdd5e41356f854741262693b360f15e637a99afbfbb83d4703d02ca7390d"
       ],
       "sha256": "bfbacdd5e41356f854741262693b360f15e637a99afbfbb83d4703d02ca7390d"
     },
@@ -899,7 +1024,8 @@
       "path": ".dsh/skills/legal-zh-ip-invention-intake/SKILL.md",
       "previousSha256": [
         "0a3ee6cd8cd6d186de86279fa789faa740c1218597541d89409bf34c790cba71",
-        "6c29f8720ae78493333bcae89c8dc681e95478458d68589f4f4b14693c54fa70"
+        "6c29f8720ae78493333bcae89c8dc681e95478458d68589f4f4b14693c54fa70",
+        "17b2613a18fb9c965f6e8bc7d6c176a4da1c2390969f3040d542c12b8672c017"
       ],
       "sha256": "17b2613a18fb9c965f6e8bc7d6c176a4da1c2390969f3040d542c12b8672c017"
     },
@@ -907,7 +1033,8 @@
       "path": ".dsh/skills/legal-zh-ip-ip-clause-review/SKILL.md",
       "previousSha256": [
         "421245d02b390fe61fed113eac94c9641c93e5e2889f3e871df5a48ad283ac47",
-        "ab2e588aeb1f86b76a6b02e813839c02a7ae8dc3e07f392b583af3e10df4c973"
+        "ab2e588aeb1f86b76a6b02e813839c02a7ae8dc3e07f392b583af3e10df4c973",
+        "8cce6b5877c5164b8be07e4dda64f65b063870f503efd2303929e716de6fd613"
       ],
       "sha256": "8cce6b5877c5164b8be07e4dda64f65b063870f503efd2303929e716de6fd613"
     },
@@ -915,7 +1042,8 @@
       "path": ".dsh/skills/legal-zh-ip-matter-workspace/SKILL.md",
       "previousSha256": [
         "b9c596ee66f40c1a7d94dfe266a273f0203608e6d2cd3c0520498428093e1c06",
-        "fa1bd2d7f14ce30353dc46b0bb6818074401897b6366a9753b212b339220dc07"
+        "fa1bd2d7f14ce30353dc46b0bb6818074401897b6366a9753b212b339220dc07",
+        "80b2718141ea596517a62a2f30733e2d4e60c094ead8f7013513708cc6bd5b68"
       ],
       "sha256": "80b2718141ea596517a62a2f30733e2d4e60c094ead8f7013513708cc6bd5b68"
     },
@@ -923,7 +1051,8 @@
       "path": ".dsh/skills/legal-zh-ip-oss-review/SKILL.md",
       "previousSha256": [
         "33300b612db09d9fc6f3d0071396d3b0319b934b9527fc123d9d0afa36f850f5",
-        "5ec281fa7d8100a8af51e3d6418a9889692227f0552718f725e66c774e488a87"
+        "5ec281fa7d8100a8af51e3d6418a9889692227f0552718f725e66c774e488a87",
+        "e8a251dc888d5e5fd9eaa26364414a399262a41d1d1755bf22194c8dc06c0344"
       ],
       "sha256": "e8a251dc888d5e5fd9eaa26364414a399262a41d1d1755bf22194c8dc06c0344"
     },
@@ -931,7 +1060,8 @@
       "path": ".dsh/skills/legal-zh-ip-portfolio/SKILL.md",
       "previousSha256": [
         "35f9ba99aec7a94a5551af8f5255b5bf72adbe939d4d1b5823f91a70df2cb3e1",
-        "ad9dbbf33b48eac4baf35e52dda996ac89fe6b14008766a88aad6eebbb41c47d"
+        "ad9dbbf33b48eac4baf35e52dda996ac89fe6b14008766a88aad6eebbb41c47d",
+        "e8c1e9038d4a2543dbd450c69679767636b2564bfbc6a0a65e093918dce94ddd"
       ],
       "sha256": "e8c1e9038d4a2543dbd450c69679767636b2564bfbc6a0a65e093918dce94ddd"
     },
@@ -939,7 +1069,8 @@
       "path": ".dsh/skills/legal-zh-ip-takedown/SKILL.md",
       "previousSha256": [
         "965e34f798b2e541f3107952ebd5e3a4e04400fde1634b61ce99d8da079599ae",
-        "df9d304fddc09ee8040a690710c59b7ed7066a54e33e058e0085d7424010bb83"
+        "df9d304fddc09ee8040a690710c59b7ed7066a54e33e058e0085d7424010bb83",
+        "da4b3718241e525544d0479d4a52c50fd3812fd6558d473bfc3e45ea118efca6"
       ],
       "sha256": "da4b3718241e525544d0479d4a52c50fd3812fd6558d473bfc3e45ea118efca6"
     },
@@ -947,7 +1078,8 @@
       "path": ".dsh/skills/legal-zh-law-student-bar-prep-questions/SKILL.md",
       "previousSha256": [
         "3238266376403ae7ec7d54934adc62bdeb3d3975e7d1319a54b336dd35ce509f",
-        "a612db7e041ac89c890ee6604d75ff421c08add0c0916bddb6804198e6dbc4d6"
+        "a612db7e041ac89c890ee6604d75ff421c08add0c0916bddb6804198e6dbc4d6",
+        "5b829a0d3432811ff20618e4ed33fd33006ede00f8f18a35d1a4aa312d7a99e6"
       ],
       "sha256": "5b829a0d3432811ff20618e4ed33fd33006ede00f8f18a35d1a4aa312d7a99e6"
     },
@@ -955,7 +1087,8 @@
       "path": ".dsh/skills/legal-zh-law-student-case-brief/SKILL.md",
       "previousSha256": [
         "8cd5bc5515f7e5929fefb0ca73922054e7f90c74986ee54bfebcf0dd6c35193a",
-        "b7994c4217730fa13e651986870f72fe0e7debf621bb9817634d1898884bca0d"
+        "b7994c4217730fa13e651986870f72fe0e7debf621bb9817634d1898884bca0d",
+        "d47cb64ba45a6347966d29cedb4b88e5b56ad2cdef17153cedb02d22e422a206"
       ],
       "sha256": "d47cb64ba45a6347966d29cedb4b88e5b56ad2cdef17153cedb02d22e422a206"
     },
@@ -963,21 +1096,24 @@
       "path": ".dsh/skills/legal-zh-law-student-cold-call-prep/SKILL.md",
       "previousSha256": [
         "42f376e5f3f7a49b1d967e41883a5747589232b3ce82fcbfc3faa4c375bda49e",
-        "78380b5722011b05f834981d37c1b54491d2e182bf823da8d764bc1403906be4"
+        "78380b5722011b05f834981d37c1b54491d2e182bf823da8d764bc1403906be4",
+        "357b479c6817e39219c3e9faf167e5db94a92f0fab92ed313fa7a9dc1e28b133"
       ],
       "sha256": "357b479c6817e39219c3e9faf167e5db94a92f0fab92ed313fa7a9dc1e28b133"
     },
     {
       "path": ".dsh/skills/legal-zh-law-student-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "a6134eb62db51baa1af8277873fc2b58e02f93d9fe96bc2d9f725dc95e1ae180"
+        "a6134eb62db51baa1af8277873fc2b58e02f93d9fe96bc2d9f725dc95e1ae180",
+        "2ebd81011fbb0b11a654f29be9b3344ac6e387f05797ef7571303ba498771519"
       ],
       "sha256": "2ebd81011fbb0b11a654f29be9b3344ac6e387f05797ef7571303ba498771519"
     },
     {
       "path": ".dsh/skills/legal-zh-law-student-customize/SKILL.md",
       "previousSha256": [
-        "588b33653a5e5c43b149df87d02677a6010721f09bf70869bf626a6c6a270845"
+        "588b33653a5e5c43b149df87d02677a6010721f09bf70869bf626a6c6a270845",
+        "ecedfbf8f190ed6630fce83941a6a3ecde247d82788c59cbf13c246711dae69f"
       ],
       "sha256": "ecedfbf8f190ed6630fce83941a6a3ecde247d82788c59cbf13c246711dae69f"
     },
@@ -985,7 +1121,8 @@
       "path": ".dsh/skills/legal-zh-law-student-exam-forecast/SKILL.md",
       "previousSha256": [
         "323a14f76cf52316ad675e859e906d37f51beaca6c04942d50e76216a2e3c3ec",
-        "8a97377e169c0d6580087e59078a1b3fc66cce6028fb1ad79cfb78d9b4715d0c"
+        "8a97377e169c0d6580087e59078a1b3fc66cce6028fb1ad79cfb78d9b4715d0c",
+        "13c84cebb18e92f95809117f01b4b1e8f882afaf5906f75f862ab7e0e7f8c917"
       ],
       "sha256": "13c84cebb18e92f95809117f01b4b1e8f882afaf5906f75f862ab7e0e7f8c917"
     },
@@ -993,7 +1130,8 @@
       "path": ".dsh/skills/legal-zh-law-student-flashcards/SKILL.md",
       "previousSha256": [
         "41a6fd700c5684a37ad8f1c2695a1e1fea659b76122e29eb6c6d04ddd970c0db",
-        "66dbe20ae4fd3f8fd25ddfc04340df0b05dff9758299a8a68994b4bc3fd9ccea"
+        "66dbe20ae4fd3f8fd25ddfc04340df0b05dff9758299a8a68994b4bc3fd9ccea",
+        "13ae14a219d67eba9256d169ad3f5ff5d8e56a5065e049a468838a41900bbe15"
       ],
       "sha256": "13ae14a219d67eba9256d169ad3f5ff5d8e56a5065e049a468838a41900bbe15"
     },
@@ -1001,14 +1139,16 @@
       "path": ".dsh/skills/legal-zh-law-student-irac-practice/SKILL.md",
       "previousSha256": [
         "09ffe5328c0700fcc02593ab75728bb2897a8f7628ed602b188cdb868323c7dc",
-        "333ac11742ec4ead980a684b28755dfc1d4c95d79971266c5bce787222dcbb19"
+        "333ac11742ec4ead980a684b28755dfc1d4c95d79971266c5bce787222dcbb19",
+        "91d0808fb9163cbd333e03bc3aa71eed28baa9fcc612efa86c958ac47cb33130"
       ],
       "sha256": "91d0808fb9163cbd333e03bc3aa71eed28baa9fcc612efa86c958ac47cb33130"
     },
     {
       "path": ".dsh/skills/legal-zh-law-student-legal-writing/SKILL.md",
       "previousSha256": [
-        "5c7f48ec7187684a4f46943c7ee6780fccc819bc85c67d12f6425f0e8cae57ad"
+        "5c7f48ec7187684a4f46943c7ee6780fccc819bc85c67d12f6425f0e8cae57ad",
+        "dc4a3726987b519a79a4e7a21afe98972a9364713aa769174b1b7f4c08ff4d96"
       ],
       "sha256": "dc4a3726987b519a79a4e7a21afe98972a9364713aa769174b1b7f4c08ff4d96"
     },
@@ -1016,7 +1156,8 @@
       "path": ".dsh/skills/legal-zh-law-student-outline-builder/SKILL.md",
       "previousSha256": [
         "1def006d35d32f9e17521bd4fd9f39b835354ddce849ea45c91fb0d78172f357",
-        "4fda46f3ec443d55e0e73bf6945ea03b1baf0cab19441cf4709caefcb872a137"
+        "4fda46f3ec443d55e0e73bf6945ea03b1baf0cab19441cf4709caefcb872a137",
+        "6ded019bf28bf8e9c2a5331ab22bf5dcddf7ccaec0b79e2813839c91fc8640e6"
       ],
       "sha256": "6ded019bf28bf8e9c2a5331ab22bf5dcddf7ccaec0b79e2813839c91fc8640e6"
     },
@@ -1024,14 +1165,16 @@
       "path": ".dsh/skills/legal-zh-law-student-session/SKILL.md",
       "previousSha256": [
         "cc4eb22be35943521a55f9da8790ff72b6132ef3cef72387e831fdc0eaf26545",
-        "ed7189342fc13ee4806dc615c7355f4ddadaeca16fe68eb5f8a4fee71d929f2d"
+        "ed7189342fc13ee4806dc615c7355f4ddadaeca16fe68eb5f8a4fee71d929f2d",
+        "a641d515fb9481fc50f8dee66f90cfe58e38d78420a3bf5035736ad333079d96"
       ],
       "sha256": "a641d515fb9481fc50f8dee66f90cfe58e38d78420a3bf5035736ad333079d96"
     },
     {
       "path": ".dsh/skills/legal-zh-law-student-socratic-drill/SKILL.md",
       "previousSha256": [
-        "f0c3565a3899f6bb82dd3e38269e34979d1f805dbcc70e0b6c0fe05e37b5c750"
+        "f0c3565a3899f6bb82dd3e38269e34979d1f805dbcc70e0b6c0fe05e37b5c750",
+        "08f0dd9a0db05cd670a6081f57d71dc91d6a1438a729610ec7b46a40536fc81a"
       ],
       "sha256": "08f0dd9a0db05cd670a6081f57d71dc91d6a1438a729610ec7b46a40536fc81a"
     },
@@ -1039,7 +1182,8 @@
       "path": ".dsh/skills/legal-zh-law-student-study-plan/SKILL.md",
       "previousSha256": [
         "034ab3d018a50edb58a264f1aefdc3b4473ac66a2be42b6bf3f37e1952d992df",
-        "a6695a7d85365f8fac75f705e16e0029662e03c6567a1aebda10b9e7aa08955b"
+        "a6695a7d85365f8fac75f705e16e0029662e03c6567a1aebda10b9e7aa08955b",
+        "21dff36ab8446ad429fe1d06a5ddae70cd591c7b41a14937a046e7c551266a36"
       ],
       "sha256": "21dff36ab8446ad429fe1d06a5ddae70cd591c7b41a14937a046e7c551266a36"
     },
@@ -1047,14 +1191,16 @@
       "path": ".dsh/skills/legal-zh-litigation-brief-section-drafter/SKILL.md",
       "previousSha256": [
         "433150e3527792ecba7c567284d3bd03f4719f799051b190f69740bd9643908b",
-        "b202e4587c7ac812cbadb989e5120f7891b2ecb7b320bedc95744ba4094179b4"
+        "b202e4587c7ac812cbadb989e5120f7891b2ecb7b320bedc95744ba4094179b4",
+        "9b9f0d8cdcab469ec5d9410e941bff0a1713033b90c7ea5a30a5a0d6cf1d1ba8"
       ],
       "sha256": "9b9f0d8cdcab469ec5d9410e941bff0a1713033b90c7ea5a30a5a0d6cf1d1ba8"
     },
     {
       "path": ".dsh/skills/legal-zh-litigation-chronology/SKILL.md",
       "previousSha256": [
-        "b1fd802576a17110bc877d29f914e229e0dfc6c70fa96427d7bff73a75082f19"
+        "b1fd802576a17110bc877d29f914e229e0dfc6c70fa96427d7bff73a75082f19",
+        "4488da9602795f79dce6ca6f5bd0d5209ad8eec65b33a0d63566e2e76033d8b5"
       ],
       "sha256": "4488da9602795f79dce6ca6f5bd0d5209ad8eec65b33a0d63566e2e76033d8b5"
     },
@@ -1062,21 +1208,24 @@
       "path": ".dsh/skills/legal-zh-litigation-claim-chart/SKILL.md",
       "previousSha256": [
         "67f91f4807f5c0b504edc8e1864897f36654c132b864e1acf82b2d2360f347d8",
-        "d06a5ffbda2db7e7a3a5049b21311cbc8e6901e4d0207232126f35c660266614"
+        "d06a5ffbda2db7e7a3a5049b21311cbc8e6901e4d0207232126f35c660266614",
+        "7358d0879508545fcba7170c6935a9c65d7426651e5e61f6fc3bfc0ec55a476d"
       ],
       "sha256": "7358d0879508545fcba7170c6935a9c65d7426651e5e61f6fc3bfc0ec55a476d"
     },
     {
       "path": ".dsh/skills/legal-zh-litigation-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "3ceb5e740c4149efed403030d7ac84669ebde80602c018a8d8e26466c634db9b"
+        "3ceb5e740c4149efed403030d7ac84669ebde80602c018a8d8e26466c634db9b",
+        "7bc66a7e649fc246f36164425f951abe820b6a46ac1933675e965351e5866cce"
       ],
       "sha256": "7bc66a7e649fc246f36164425f951abe820b6a46ac1933675e965351e5866cce"
     },
     {
       "path": ".dsh/skills/legal-zh-litigation-customize/SKILL.md",
       "previousSha256": [
-        "f81b232733b84ab7d07233e3d639100e8160b0edd5361b02d70b7ba7cfb237e6"
+        "f81b232733b84ab7d07233e3d639100e8160b0edd5361b02d70b7ba7cfb237e6",
+        "b60bae81558cc1474af9b8a0f809d568f8bbd6f34566b3cca22196c82b5d7c57"
       ],
       "sha256": "b60bae81558cc1474af9b8a0f809d568f8bbd6f34566b3cca22196c82b5d7c57"
     },
@@ -1084,7 +1233,8 @@
       "path": ".dsh/skills/legal-zh-litigation-demand-draft/SKILL.md",
       "previousSha256": [
         "282dff792557a332dee01c9c105f261f65f9cd21e6fb56f2bda13f4439717e17",
-        "3db6d199bc37e80cb03435aee46b80e8bef1ea3d8a7a0a5723b6f7a7edbd9a20"
+        "3db6d199bc37e80cb03435aee46b80e8bef1ea3d8a7a0a5723b6f7a7edbd9a20",
+        "c3f1eb35b07c93d7a58e5c3b6a0ef4ab95765f7e14e12f91a25250fcc9fadb01"
       ],
       "sha256": "c3f1eb35b07c93d7a58e5c3b6a0ef4ab95765f7e14e12f91a25250fcc9fadb01"
     },
@@ -1092,7 +1242,8 @@
       "path": ".dsh/skills/legal-zh-litigation-demand-intake/SKILL.md",
       "previousSha256": [
         "553e7b65be4e8679b8fd14996ef1a5e056781d08d2cdbdcee4a693274100e3aa",
-        "7f33a2f937a24040dbd6cc3e4504f6bbb5d11c1b6a92e8db290b6146fe87e20b"
+        "7f33a2f937a24040dbd6cc3e4504f6bbb5d11c1b6a92e8db290b6146fe87e20b",
+        "83158497c2c38c1e63545de39bcf47fd56d8383e3388fa26e0ff5fb7ea29544b"
       ],
       "sha256": "83158497c2c38c1e63545de39bcf47fd56d8383e3388fa26e0ff5fb7ea29544b"
     },
@@ -1100,7 +1251,8 @@
       "path": ".dsh/skills/legal-zh-litigation-demand-received/SKILL.md",
       "previousSha256": [
         "b1a96bf466d075f2ac035de2b1254d0f85ffe4cde4c967e5f402ac9ad53297d2",
-        "c9b814d299162896e54d493678f82f02cb04dfdd01af700a863a422dc1176137"
+        "c9b814d299162896e54d493678f82f02cb04dfdd01af700a863a422dc1176137",
+        "e482c9a5da3710479deec52576865ff76c5518796491d5fd62c46ed923b88284"
       ],
       "sha256": "e482c9a5da3710479deec52576865ff76c5518796491d5fd62c46ed923b88284"
     },
@@ -1108,28 +1260,32 @@
       "path": ".dsh/skills/legal-zh-litigation-deposition-prep/SKILL.md",
       "previousSha256": [
         "368c42c1778ac98a17355f6451469d1b0ddf6cc69eebb5530d62fa09e1d6f0e8",
-        "43a70fb07d94f64bfd3eb6e9798ea9533d9a96faf2a774173ceac067a1604142"
+        "43a70fb07d94f64bfd3eb6e9798ea9533d9a96faf2a774173ceac067a1604142",
+        "0e07d50d9402ba7dbcd5a36f35311fa472acee3bacc9dff2bddb754bd3114fdc"
       ],
       "sha256": "0e07d50d9402ba7dbcd5a36f35311fa472acee3bacc9dff2bddb754bd3114fdc"
     },
     {
       "path": ".dsh/skills/legal-zh-litigation-legal-hold/SKILL.md",
       "previousSha256": [
-        "1aab573f179dd2dd255560f05588bb1da4a60eb7ecb8145b286a8e7c243c09de"
+        "1aab573f179dd2dd255560f05588bb1da4a60eb7ecb8145b286a8e7c243c09de",
+        "a4c2e11ef0242c239e346cebabcb6b3b3b8fd19c37a3698a63b09df1f68711b4"
       ],
       "sha256": "a4c2e11ef0242c239e346cebabcb6b3b3b8fd19c37a3698a63b09df1f68711b4"
     },
     {
       "path": ".dsh/skills/legal-zh-litigation-matter-briefing/SKILL.md",
       "previousSha256": [
-        "23f42cceefa5c7f8919f801cfd4df89fdac3ad02b25cb45268a15ade5c014463"
+        "23f42cceefa5c7f8919f801cfd4df89fdac3ad02b25cb45268a15ade5c014463",
+        "e892cbff7511044bc84bc526080aa806268ef46d9ec67104ff1c45406dbd8697"
       ],
       "sha256": "e892cbff7511044bc84bc526080aa806268ef46d9ec67104ff1c45406dbd8697"
     },
     {
       "path": ".dsh/skills/legal-zh-litigation-matter-close/SKILL.md",
       "previousSha256": [
-        "4ce17c6f3ab0ef34a51cdedde81de6e06a85c364bdfa4cf1725dca0e0ff6e687"
+        "4ce17c6f3ab0ef34a51cdedde81de6e06a85c364bdfa4cf1725dca0e0ff6e687",
+        "e5f43c8d8cc0e9afe06f21242f81be7280fe8e58ad0a8b056d3f5689f555ad6a"
       ],
       "sha256": "e5f43c8d8cc0e9afe06f21242f81be7280fe8e58ad0a8b056d3f5689f555ad6a"
     },
@@ -1137,14 +1293,16 @@
       "path": ".dsh/skills/legal-zh-litigation-matter-intake/SKILL.md",
       "previousSha256": [
         "8de334e4f974c4335c7067dc883523da9fc49db78a61cfa7a7e1b8c29effe3c9",
-        "a0fb4a0f86b5b645c361bbafb56ee4de2bd8e656c37615c123924952201eeb56"
+        "a0fb4a0f86b5b645c361bbafb56ee4de2bd8e656c37615c123924952201eeb56",
+        "3b41821e66b9c08a3d7148e78c16ee4054490ca0ae19316d54e10ece5c8a659c"
       ],
       "sha256": "3b41821e66b9c08a3d7148e78c16ee4054490ca0ae19316d54e10ece5c8a659c"
     },
     {
       "path": ".dsh/skills/legal-zh-litigation-matter-update/SKILL.md",
       "previousSha256": [
-        "2ba03cfd9b20e2030cf3647caedce838f55870d7c1f95dcc7efd0a745dd401d0"
+        "2ba03cfd9b20e2030cf3647caedce838f55870d7c1f95dcc7efd0a745dd401d0",
+        "63836d5141e201f77d921d761b723400bbdce4d39156cbb11d29a41288e004b0"
       ],
       "sha256": "63836d5141e201f77d921d761b723400bbdce4d39156cbb11d29a41288e004b0"
     },
@@ -1152,14 +1310,16 @@
       "path": ".dsh/skills/legal-zh-litigation-matter-workspace/SKILL.md",
       "previousSha256": [
         "8d4d93fa611cc43087e13c8a10b1fc4df840e03b3482fe69fef8e0aae83067c5",
-        "a57fefd60d24690203e0bfd9487b90b03f5ab11f087a62f119b26ccfd0d1000d"
+        "a57fefd60d24690203e0bfd9487b90b03f5ab11f087a62f119b26ccfd0d1000d",
+        "f6044f8518bab6e16b91ebba91f0c5b3625cf722b22ddf3ef947009ea40bdc26"
       ],
       "sha256": "f6044f8518bab6e16b91ebba91f0c5b3625cf722b22ddf3ef947009ea40bdc26"
     },
     {
       "path": ".dsh/skills/legal-zh-litigation-oc-status/SKILL.md",
       "previousSha256": [
-        "b30de05dcb8d39ccd6870e02a8529b6c2585628818563ed03c97a63694cce588"
+        "b30de05dcb8d39ccd6870e02a8529b6c2585628818563ed03c97a63694cce588",
+        "278c33816a962a99e7f54db707dc36d977a58d54fcf86d5c11d66d448ea06da9"
       ],
       "sha256": "278c33816a962a99e7f54db707dc36d977a58d54fcf86d5c11d66d448ea06da9"
     },
@@ -1167,7 +1327,8 @@
       "path": ".dsh/skills/legal-zh-litigation-portfolio-status/SKILL.md",
       "previousSha256": [
         "0d47a52e93b4ba8afe74810f9f9ca6f0c000a8d7b30ea8607bf1c35738697bcf",
-        "6f4c43407fc61ac90d83f98a3e8cce276e3cf8a604e253f136d81f101f81ae41"
+        "6f4c43407fc61ac90d83f98a3e8cce276e3cf8a604e253f136d81f101f81ae41",
+        "f4235c8f25203265ae2fca90fcad4c0f1a8d31929c6cbb70b16aff3dcca9dffc"
       ],
       "sha256": "f4235c8f25203265ae2fca90fcad4c0f1a8d31929c6cbb70b16aff3dcca9dffc"
     },
@@ -1175,7 +1336,8 @@
       "path": ".dsh/skills/legal-zh-litigation-privilege-log-review/SKILL.md",
       "previousSha256": [
         "5d01055fea923d800662047748079d27b376736681004ace0feb33ee7fb9ebde",
-        "9c7bf85cfed240b57fddf4f5be9f6c155b16e317bdbf45a0194d0383799f9e57"
+        "9c7bf85cfed240b57fddf4f5be9f6c155b16e317bdbf45a0194d0383799f9e57",
+        "3fac7aca17df3e1caaf531431626b357d6a45164405eeae2e566c15cec35e1e2"
       ],
       "sha256": "3fac7aca17df3e1caaf531431626b357d6a45164405eeae2e566c15cec35e1e2"
     },
@@ -1183,21 +1345,24 @@
       "path": ".dsh/skills/legal-zh-litigation-subpoena-triage/SKILL.md",
       "previousSha256": [
         "9d52ee6828c579a271e097de248d9875aed5312c5448a2959cc92ace70ca7a7d",
-        "ed1b9cf41d3a549c05a3eb31be0e44d501efdf877ddb9574709222de97981c62"
+        "ed1b9cf41d3a549c05a3eb31be0e44d501efdf877ddb9574709222de97981c62",
+        "011bebb8327110893c17c327d897c04cc460655af1d379dc5d2f304a7a9da0a3"
       ],
       "sha256": "011bebb8327110893c17c327d897c04cc460655af1d379dc5d2f304a7a9da0a3"
     },
     {
       "path": ".dsh/skills/legal-zh-privacy-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "a10480cf4ebb1d34165711dc639ea874f6f3938d374fd9954f781b7e63ce9d4c"
+        "a10480cf4ebb1d34165711dc639ea874f6f3938d374fd9954f781b7e63ce9d4c",
+        "9d43041c6092e64349aef9f2e7810f0a6b6044ce10633ec3e5e1cd97dda2d881"
       ],
       "sha256": "9d43041c6092e64349aef9f2e7810f0a6b6044ce10633ec3e5e1cd97dda2d881"
     },
     {
       "path": ".dsh/skills/legal-zh-privacy-customize/SKILL.md",
       "previousSha256": [
-        "8eef20fd4dfe3efe74900f31611e90468ee9bd35d6c01bd97237746c0695a95a"
+        "8eef20fd4dfe3efe74900f31611e90468ee9bd35d6c01bd97237746c0695a95a",
+        "101691c98bb5ea0a1d1a027dd5f0743b9a2295daf7628966491a5f5d521e158d"
       ],
       "sha256": "101691c98bb5ea0a1d1a027dd5f0743b9a2295daf7628966491a5f5d521e158d"
     },
@@ -1205,7 +1370,8 @@
       "path": ".dsh/skills/legal-zh-privacy-dpa-review/SKILL.md",
       "previousSha256": [
         "1025044eb9ac2167fecd1b30baf9fbc0cfe37302120b891f36d08fc065436146",
-        "cd173487fbe9a905b3296a7fd4865369330bb573921d8f4739ad4b5a8c0b2a4b"
+        "cd173487fbe9a905b3296a7fd4865369330bb573921d8f4739ad4b5a8c0b2a4b",
+        "469671c77476e841b421458a5c3f35376c2a1c146ca0fb0b44eb014a0dd5f853"
       ],
       "sha256": "469671c77476e841b421458a5c3f35376c2a1c146ca0fb0b44eb014a0dd5f853"
     },
@@ -1213,7 +1379,8 @@
       "path": ".dsh/skills/legal-zh-privacy-dsar-response/SKILL.md",
       "previousSha256": [
         "47122ecb6d326692a4829420731f0e26dfbc96ca3ea746409a47dd58f851b796",
-        "a9a6b62d02a865e43033e3816d68abfc3fe74b52471e7e0cf87c89179a778909"
+        "a9a6b62d02a865e43033e3816d68abfc3fe74b52471e7e0cf87c89179a778909",
+        "8d027054bea561533b62b30a87ad8ad8be9dd34399728b09516a9ba68b7ed181"
       ],
       "sha256": "8d027054bea561533b62b30a87ad8ad8be9dd34399728b09516a9ba68b7ed181"
     },
@@ -1221,7 +1388,8 @@
       "path": ".dsh/skills/legal-zh-privacy-matter-workspace/SKILL.md",
       "previousSha256": [
         "76f56d21b7b97a5ceddbeaf371ecd5e1174b302aac3b62d7fd0698f01d7eb9d0",
-        "8bc3a917501a51cfa8388bb08b1355935f1cdbe45887f64e66823fe0bef7d9e4"
+        "8bc3a917501a51cfa8388bb08b1355935f1cdbe45887f64e66823fe0bef7d9e4",
+        "b0f910b6b006ab1795bf1bdd282854bc6c2317f700b5e615aaecb4f2ce93d3d6"
       ],
       "sha256": "b0f910b6b006ab1795bf1bdd282854bc6c2317f700b5e615aaecb4f2ce93d3d6"
     },
@@ -1229,7 +1397,8 @@
       "path": ".dsh/skills/legal-zh-privacy-pia-generation/SKILL.md",
       "previousSha256": [
         "02caee369914c71d8ace1cf964fb6f89fbae16cdba275c0daa9eb860b3f2c0e6",
-        "1046197f9d98746df9281a81e3c2c9b3b36a61a5f69f3ea05e24881d249ac863"
+        "1046197f9d98746df9281a81e3c2c9b3b36a61a5f69f3ea05e24881d249ac863",
+        "dd23624ed2de0f0000b27ed10e47cdefbad3de0e0dd26b389122f1207ebc2bbb"
       ],
       "sha256": "dd23624ed2de0f0000b27ed10e47cdefbad3de0e0dd26b389122f1207ebc2bbb"
     },
@@ -1237,7 +1406,8 @@
       "path": ".dsh/skills/legal-zh-privacy-policy-monitor/SKILL.md",
       "previousSha256": [
         "58a75d3b6473b1c7d61246a7102153e4a931e445e056dee1fafdb22312237582",
-        "ba3b0ddfb09e3d29bcae55e4c017c6ce607bfe9746b06456a999d94d788c72ca"
+        "ba3b0ddfb09e3d29bcae55e4c017c6ce607bfe9746b06456a999d94d788c72ca",
+        "22b36b4ef7207eabc42f68de19e1a7792f8467bef0903515f6e2cdf087c57176"
       ],
       "sha256": "22b36b4ef7207eabc42f68de19e1a7792f8467bef0903515f6e2cdf087c57176"
     },
@@ -1245,7 +1415,8 @@
       "path": ".dsh/skills/legal-zh-privacy-reg-gap-analysis/SKILL.md",
       "previousSha256": [
         "38514ff866eaeb7ff31c4cbc4cc72a826fc047f969e28b045dc5ee3fe45d2134",
-        "a44ea717a0bd14426242ffec9c310634521d6b2c75f9460b9ef5a69a888d0dcf"
+        "a44ea717a0bd14426242ffec9c310634521d6b2c75f9460b9ef5a69a888d0dcf",
+        "72f4157384237c2d38863314bdf9a75cbc2c5d2db270ab3ef7fc27c963eff56a"
       ],
       "sha256": "72f4157384237c2d38863314bdf9a75cbc2c5d2db270ab3ef7fc27c963eff56a"
     },
@@ -1253,14 +1424,16 @@
       "path": ".dsh/skills/legal-zh-privacy-use-case-triage/SKILL.md",
       "previousSha256": [
         "1ac693a1ee6266899c3d8d3510e12de878ec3d4e3297b2aa0cfabd45fb2a30ff",
-        "a59b9dea221477d37fa56d30bd13d05f262b5460d8de08808bd71919a979ce9e"
+        "a59b9dea221477d37fa56d30bd13d05f262b5460d8de08808bd71919a979ce9e",
+        "551139a6f21305c6cf52a1d4e4cc785c97767ad5c957d7797be2bd90e0096768"
       ],
       "sha256": "551139a6f21305c6cf52a1d4e4cc785c97767ad5c957d7797be2bd90e0096768"
     },
     {
       "path": ".dsh/skills/legal-zh-product-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "80c08fa0b9bfa6e985ff507bafbf05f27738e30f347843ddfbf2c43ae454197a"
+        "80c08fa0b9bfa6e985ff507bafbf05f27738e30f347843ddfbf2c43ae454197a",
+        "47b4eaaac82fa06f770acaa78bb0e30e689f67f2fa091c30d60d7bfa90a771e3"
       ],
       "sha256": "47b4eaaac82fa06f770acaa78bb0e30e689f67f2fa091c30d60d7bfa90a771e3"
     },
@@ -1268,7 +1441,8 @@
       "path": ".dsh/skills/legal-zh-product-customize/SKILL.md",
       "previousSha256": [
         "4b185d8347198f17a0ddf0d65490c6eddcf27835e5fcded98b42d10f7e5d8ebd",
-        "841b15fbf329455f4fc7b738590a51220d8705272518d0e57e7d62ee386ab2e0"
+        "841b15fbf329455f4fc7b738590a51220d8705272518d0e57e7d62ee386ab2e0",
+        "bd12ff55970e20ad5bf9d99b5f54ac312903002c1ae3833429aa694b8d70b4b0"
       ],
       "sha256": "bd12ff55970e20ad5bf9d99b5f54ac312903002c1ae3833429aa694b8d70b4b0"
     },
@@ -1276,14 +1450,16 @@
       "path": ".dsh/skills/legal-zh-product-feature-risk-assessment/SKILL.md",
       "previousSha256": [
         "4018872407e951e500f4546c8739121d76edf051f5054bd0dd1bc07dcf574771",
-        "6dbbd3b7b74072e3a0c4f36949a68324350fd4d0fe929ee33827e386a8aae93d"
+        "6dbbd3b7b74072e3a0c4f36949a68324350fd4d0fe929ee33827e386a8aae93d",
+        "aa4030d92db979fb52c163f6663944e6410bccb4dd179cf53b9fff75637960b3"
       ],
       "sha256": "aa4030d92db979fb52c163f6663944e6410bccb4dd179cf53b9fff75637960b3"
     },
     {
       "path": ".dsh/skills/legal-zh-product-is-this-a-problem/SKILL.md",
       "previousSha256": [
-        "943340b89e6307d34cdb8631282fa2ca3694b66162c8afd9a3a9d4b16da55dca"
+        "943340b89e6307d34cdb8631282fa2ca3694b66162c8afd9a3a9d4b16da55dca",
+        "03a84847b1b7bb8defea8014131daf87a0099c99f099145b879d1b86f2c94a08"
       ],
       "sha256": "03a84847b1b7bb8defea8014131daf87a0099c99f099145b879d1b86f2c94a08"
     },
@@ -1291,7 +1467,8 @@
       "path": ".dsh/skills/legal-zh-product-launch-review/SKILL.md",
       "previousSha256": [
         "d4a90bdc8c7b347174868bb5a77dd3bea0070145389e97074a666ae7c4009133",
-        "e3efd666d48b177c9a447f43fc0ba00f8ae2ef7ba946c176c769621a93014b11"
+        "e3efd666d48b177c9a447f43fc0ba00f8ae2ef7ba946c176c769621a93014b11",
+        "f97f570541940c2d0671b66852f3d868957a4e9ce7ffc5376fcb5cb117bef04b"
       ],
       "sha256": "f97f570541940c2d0671b66852f3d868957a4e9ce7ffc5376fcb5cb117bef04b"
     },
@@ -1299,7 +1476,8 @@
       "path": ".dsh/skills/legal-zh-product-marketing-claims-review/SKILL.md",
       "previousSha256": [
         "40dba6258aa160712f674c6962bda38b0dc13665b93bc97dee651ccd52555528",
-        "93dc909d5728f43dd2be44c77f4428e3f662b70870039f5f8768b94cf47f4afa"
+        "93dc909d5728f43dd2be44c77f4428e3f662b70870039f5f8768b94cf47f4afa",
+        "11afac3e46365c8154dc4eeef7d4e3e80056800ccd5c1590ef42cf91a2a4149f"
       ],
       "sha256": "11afac3e46365c8154dc4eeef7d4e3e80056800ccd5c1590ef42cf91a2a4149f"
     },
@@ -1307,14 +1485,16 @@
       "path": ".dsh/skills/legal-zh-product-matter-workspace/SKILL.md",
       "previousSha256": [
         "04d1ded4f5034cc46e964e585599ecaaab49c3ae7797de8514f0259bb6e9d958",
-        "5989e4847409ae902604756d8a71374e9d68d0c4b580f216cef7193159d9afac"
+        "5989e4847409ae902604756d8a71374e9d68d0c4b580f216cef7193159d9afac",
+        "0ed76d9b5c2b83a31480b10c4a9c62f5f458c1fad6ac42dfdc6e86df0e19ad1c"
       ],
       "sha256": "0ed76d9b5c2b83a31480b10c4a9c62f5f458c1fad6ac42dfdc6e86df0e19ad1c"
     },
     {
       "path": ".dsh/skills/legal-zh-regulatory-cold-start-interview/SKILL.md",
       "previousSha256": [
-        "046898ca1276f46f2de133c959c3200567a511e0cd2ac9a41756e724f45fde3c"
+        "046898ca1276f46f2de133c959c3200567a511e0cd2ac9a41756e724f45fde3c",
+        "bed7ac0ed461996c41206347f30cf503f56a31f07e2a6ddeef486c384f3c8cbb"
       ],
       "sha256": "bed7ac0ed461996c41206347f30cf503f56a31f07e2a6ddeef486c384f3c8cbb"
     },
@@ -1322,7 +1502,8 @@
       "path": ".dsh/skills/legal-zh-regulatory-comments/SKILL.md",
       "previousSha256": [
         "0a0834ce5fb95d6fa9f91b69f85a54e3c37aa731fcb5be84ab1825319acd677e",
-        "61ae44680e521623be971d3cc0735d6f9d70a6d11e34a22502d406d8b5559e9b"
+        "61ae44680e521623be971d3cc0735d6f9d70a6d11e34a22502d406d8b5559e9b",
+        "f501426b8072462469cfd52c8c878f3b5bdaf1be0f2f9639866933332e79d0c2"
       ],
       "sha256": "f501426b8072462469cfd52c8c878f3b5bdaf1be0f2f9639866933332e79d0c2"
     },
@@ -1330,7 +1511,8 @@
       "path": ".dsh/skills/legal-zh-regulatory-customize/SKILL.md",
       "previousSha256": [
         "2f49c2b28c2c5dea76ef32adfb5c81b1eb86e66336ab13d2a631dbd0558bf400",
-        "bec49e5360f453fcc493d58d27738901577a54e7a9e30a2e40dee059ac120084"
+        "bec49e5360f453fcc493d58d27738901577a54e7a9e30a2e40dee059ac120084",
+        "0e23a71c0a5cba1af090fb8f805a67ac5968636dd4508203da29b0c19946041d"
       ],
       "sha256": "0e23a71c0a5cba1af090fb8f805a67ac5968636dd4508203da29b0c19946041d"
     },
@@ -1338,7 +1520,8 @@
       "path": ".dsh/skills/legal-zh-regulatory-gap-surfacer/SKILL.md",
       "previousSha256": [
         "558168794397cccd54ab3400eb8cb914e5f6f9328cac91a0da481206e8f894a0",
-        "fa32da9e1fdd09f05a355bfda3b10f78e0504e4701195c64ed5c83366ebd19c9"
+        "fa32da9e1fdd09f05a355bfda3b10f78e0504e4701195c64ed5c83366ebd19c9",
+        "2460c0da0f9d3e39a9abcea8a1834f5f0a529abda75bd600debd50b9eec55a25"
       ],
       "sha256": "2460c0da0f9d3e39a9abcea8a1834f5f0a529abda75bd600debd50b9eec55a25"
     },
@@ -1346,7 +1529,8 @@
       "path": ".dsh/skills/legal-zh-regulatory-gaps/SKILL.md",
       "previousSha256": [
         "1eb0dc6c438d6ac3ad9a6c8f4136a0f69adb3b4c4b8986a035f248b71730a0ca",
-        "ce336b0268f82664b7a58f6d67dd6b67e365159dc602dd3269f2cb42672402e6"
+        "ce336b0268f82664b7a58f6d67dd6b67e365159dc602dd3269f2cb42672402e6",
+        "6a0b5920eb6c2e7a490b01230551012059df3b379da0215a8bc313d4a5fa4b88"
       ],
       "sha256": "6a0b5920eb6c2e7a490b01230551012059df3b379da0215a8bc313d4a5fa4b88"
     },
@@ -1354,7 +1538,8 @@
       "path": ".dsh/skills/legal-zh-regulatory-matter-workspace/SKILL.md",
       "previousSha256": [
         "2b9b380f5696ad3c8ea3b8891b16332279a5512571db92c629d155b1303016c4",
-        "bcde7ee5158df7600c30a352d07df0d627fcd5b1e6ced41c70fdc46a6341f65d"
+        "bcde7ee5158df7600c30a352d07df0d627fcd5b1e6ced41c70fdc46a6341f65d",
+        "26125b9e023d11afcb568dd762e8f940c65152067deb8697b1cc210d34946f13"
       ],
       "sha256": "26125b9e023d11afcb568dd762e8f940c65152067deb8697b1cc210d34946f13"
     },
@@ -1362,7 +1547,8 @@
       "path": ".dsh/skills/legal-zh-regulatory-policy-diff/SKILL.md",
       "previousSha256": [
         "5c3b1f73551144653c4e2d06c8cd05b27c81ebcbec6722828402dc3f55e9f6a9",
-        "c2cfada7185e50243de7bbb6ee460f7b97fd545ca9dd1685699c2295bf33f6f2"
+        "c2cfada7185e50243de7bbb6ee460f7b97fd545ca9dd1685699c2295bf33f6f2",
+        "85a35aab5067c8cda91c60d0007f6f036d6b875e338244515df14fecf5a6f061"
       ],
       "sha256": "85a35aab5067c8cda91c60d0007f6f036d6b875e338244515df14fecf5a6f061"
     },
@@ -1370,7 +1556,8 @@
       "path": ".dsh/skills/legal-zh-regulatory-policy-redraft/SKILL.md",
       "previousSha256": [
         "6d6ccca86fbc265269a35c80144820aa9fe108dfee0d2121807e42a2bca73274",
-        "e1e1d5b4714167f2392a67f0c7be972d07ba9f4133f1732f0c70e1eb9d34f5f0"
+        "e1e1d5b4714167f2392a67f0c7be972d07ba9f4133f1732f0c70e1eb9d34f5f0",
+        "b2d418d9b5ca3af0c5fb87171d91b131b7d97d9a675b1af39ec1436093491173"
       ],
       "sha256": "b2d418d9b5ca3af0c5fb87171d91b131b7d97d9a675b1af39ec1436093491173"
     },
@@ -1378,7 +1565,8 @@
       "path": ".dsh/skills/legal-zh-regulatory-reg-feed-watcher/SKILL.md",
       "previousSha256": [
         "6f03d6e0e3439ca4ed3105a51505f02826bbc369e8ab038f8d51c259650a322b",
-        "c0001d1b0d699999afea4aa88f3a1e84eb1e51f612b0ba846318ecb9d5c4b871"
+        "c0001d1b0d699999afea4aa88f3a1e84eb1e51f612b0ba846318ecb9d5c4b871",
+        "9e50df344472b93b4c082bae598e0bff467d962f12f41863b469e5625a85675d"
       ],
       "sha256": "9e50df344472b93b4c082bae598e0bff467d962f12f41863b469e5625a85675d"
     },
@@ -1387,78 +1575,89 @@
       "previousSha256": [
         "4139110c766936837cffe5a7772296fffecdef62d7f3635dd866573bb453b399",
         "4fe748b6219f6faaefe58edd21acf27fe83aabf337f9fceb554e8e93e2d74e3b",
-        "60d68acaa93d70eb87147532aa0b041e827addfbef4d6b2535572d1b7a552581"
+        "60d68acaa93d70eb87147532aa0b041e827addfbef4d6b2535572d1b7a552581",
+        "ef6ac9af19b47ca711f78acbf168b02d559aeea01e63d0597312ff65ccb4d1e1"
       ],
-      "sha256": "ef6ac9af19b47ca711f78acbf168b02d559aeea01e63d0597312ff65ccb4d1e1"
+      "sha256": "01482e4b0ea99cb1a3106096eb20023a0251e7209f698c49d598da705f6b2dd1"
     },
     {
       "path": ".dsh/skills/qx-case-work/references/method.md",
       "previousSha256": [
-        "bc8c325a8654cb78afcfbfd1d5fd83aad1daa1c757b24c1a64fccb0a60624187"
+        "bc8c325a8654cb78afcfbfd1d5fd83aad1daa1c757b24c1a64fccb0a60624187",
+        "8e1d8c4c9d08923ae1e388679e606f19a0ffcd5faf734110d5beade3e16e6b33"
       ],
-      "sha256": "8e1d8c4c9d08923ae1e388679e606f19a0ffcd5faf734110d5beade3e16e6b33"
+      "sha256": "2c86955367abbf03db5653564830e2a0e3a9d0ccc500a76e2a047da1b30d84e9"
     },
     {
       "path": ".dsh/skills/qx-client-reception/SKILL.md",
       "previousSha256": [
         "54b3cc30c60b4761850a8fb813a1c27370a9495ccc7605c3f1cc1ab2992badc3",
-        "8f0ea950409536db3c4cdea254b496a20ce83d958fdb73fda36ca778c56695a4"
+        "8f0ea950409536db3c4cdea254b496a20ce83d958fdb73fda36ca778c56695a4",
+        "f0c74c6df2542003376e308dbdaedd85cd892ebf40cf7bf49a5a1de5e10434a1"
       ],
       "sha256": "f0c74c6df2542003376e308dbdaedd85cd892ebf40cf7bf49a5a1de5e10434a1"
     },
     {
       "path": ".dsh/skills/qx-client-reception/references/method.md",
       "previousSha256": [
-        "691aca2d6cdf282fccae27a4d3f84edc17e63ce7a8298235a079d1e713af65bc"
+        "691aca2d6cdf282fccae27a4d3f84edc17e63ce7a8298235a079d1e713af65bc",
+        "2f5157c4c61fd0cdafb274823e0d523adbbb93be162a2587053845d79a84a011"
       ],
       "sha256": "2f5157c4c61fd0cdafb274823e0d523adbbb93be162a2587053845d79a84a011"
     },
     {
       "path": ".dsh/skills/qx-contract-review/SKILL.md",
       "previousSha256": [
-        "9d6eba05bd42f36731d5f0768554575ffecfa5356b6c622a1089330ab9422528"
+        "9d6eba05bd42f36731d5f0768554575ffecfa5356b6c622a1089330ab9422528",
+        "ff394935537aeffc8aef3aa79f9e5b10288dba5ce807f5f12c4707aa3bdd4897"
       ],
       "sha256": "ff394935537aeffc8aef3aa79f9e5b10288dba5ce807f5f12c4707aa3bdd4897"
     },
     {
       "path": ".dsh/skills/qx-contract-review/references/method.md",
       "previousSha256": [
-        "ed32c1140bcc9de9d6c0ed819cd5fdaf9797316e9efb4ccf98463d3abdb682dd"
+        "ed32c1140bcc9de9d6c0ed819cd5fdaf9797316e9efb4ccf98463d3abdb682dd",
+        "3b1de4222f705d96c1554f4b6a140d57e23c0150b7996893e965423501bbdb13"
       ],
       "sha256": "3b1de4222f705d96c1554f4b6a140d57e23c0150b7996893e965423501bbdb13"
     },
     {
       "path": ".dsh/skills/qx-contract-review/references/specializations.md",
       "previousSha256": [
-        "608311a50500b1e824496d77f9120007183f2d2b85b3af4b52f58c62641e42b0"
+        "608311a50500b1e824496d77f9120007183f2d2b85b3af4b52f58c62641e42b0",
+        "22d5068e552cf0e89a49386b801b9e57e46e91e27b41719a5609661fc8314710"
       ],
       "sha256": "22d5068e552cf0e89a49386b801b9e57e46e91e27b41719a5609661fc8314710"
     },
     {
       "path": ".dsh/skills/qx-mock-hearing/SKILL.md",
       "previousSha256": [
-        "0920c65829665541e164a5b62150ca86190b2f0ad7e7b18decf353b90cd1a04c"
+        "0920c65829665541e164a5b62150ca86190b2f0ad7e7b18decf353b90cd1a04c",
+        "685f2c7ff8238bdfdde1caf8072f065fd24c7cb97ab7dfbb22d1ee4a4481fed7"
       ],
       "sha256": "685f2c7ff8238bdfdde1caf8072f065fd24c7cb97ab7dfbb22d1ee4a4481fed7"
     },
     {
       "path": ".dsh/skills/qx-mock-hearing/references/method.md",
       "previousSha256": [
-        "94634b23a74edde4be7bb34adc913633f01e07da4e4684d596c5c665918bca15"
+        "94634b23a74edde4be7bb34adc913633f01e07da4e4684d596c5c665918bca15",
+        "cc5043754f5ec72c2fa5fafe24059fe611ad362ce6687c311ea39e6cf27f3436"
       ],
       "sha256": "cc5043754f5ec72c2fa5fafe24059fe611ad362ce6687c311ea39e6cf27f3436"
     },
     {
       "path": ".dsh/skills/scrapling/SKILL.md",
       "previousSha256": [
-        "15e5c6e4e199573ecd8148885cbcd374ec764720e717328b1b88ee74f5d7f765"
+        "15e5c6e4e199573ecd8148885cbcd374ec764720e717328b1b88ee74f5d7f765",
+        "69cae0e7586b5005501090cdf8bd1e355980726493b2069d4f72521ef759f4cb"
       ],
       "sha256": "69cae0e7586b5005501090cdf8bd1e355980726493b2069d4f72521ef759f4cb"
     },
     {
       "path": ".dsh/skills/windows-desktop/SKILL.md",
       "previousSha256": [
-        "bbb6fa979b181791bcee6dfc2ca0ff7cc5adda6cf270ba9abb6f64a9181fb22e"
+        "bbb6fa979b181791bcee6dfc2ca0ff7cc5adda6cf270ba9abb6f64a9181fb22e",
+        "6a2ff0f4aecdafd143467cc6e418322e33322c23c404e2615987bc3a4a729af7"
       ],
       "sha256": "6a2ff0f4aecdafd143467cc6e418322e33322c23c404e2615987bc3a4a729af7"
     }

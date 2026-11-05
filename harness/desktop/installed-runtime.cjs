@@ -6,6 +6,7 @@ const {randomBytes}=require('node:crypto');
 const {spawn}=require('node:child_process');
 const {createSupervisor,createEventLog}=require('./host-recovery.cjs');
 const {createCaseMemoryRuntime}=require('./case-memory-runtime.cjs');
+const {migrateInstalledAgentDesktop,migrateInstalledVerifiedDelivery}=require('./installed-migrations.cjs');
 const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory}=require('./installed-migrations.cjs');
 
 function redactedLines(secret,write){
@@ -43,6 +44,8 @@ function initialize(payload,data){
   migrateInstalledKnowledge({data,payload,portableConfig,
     seedInstructions:transform(fs.readFileSync(path.join(payload,'workspace-seed/AGENTS.md'),'utf8'))});
   migrateInstalledPrivacy({data,payload,portableConfig});
+  migrateInstalledAgentDesktop({data,payload,portableConfig});
+  migrateInstalledVerifiedDelivery({data,payload,portableConfig});
   migrateInstalledCaseMemory({data,payload,portableConfig,seedInstructions:transform(fs.readFileSync(path.join(payload,'workspace-seed/AGENTS.md'),'utf8'))});
   migrateInstalledLegalSearch({data,payload,portableConfig});
   migrateInstalledModelRecovery({data,payload,portableConfig});

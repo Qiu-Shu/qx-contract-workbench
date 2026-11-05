@@ -4,6 +4,11 @@
 - id: session-title-llm
   disabled: true
 - insert:
+    - id: qx-verified-delivery
+      name: D:/qx-harness-workbench-20261102/plugins/verified-delivery/index.mjs
+      config:
+        workspace: D:/qx-harness-workbench-20261102/workspace
+- insert:
     - id: qx-first-content-title
       name: D:/qx-harness-workbench-20261102/plugins/session-title/index.mjs
       config:
@@ -115,6 +120,24 @@
     - {"id": "qx-bb-browser", "name": "@deepseek-ai/dsh-mcp-client", "config": {"transport": "stdio", "serverName": "bb_browser", "command": "D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe", "args": ["D:\\qx-harness-workbench-20261102\\bridge\\browser.py"], "cwd": "D:\\qx-harness-workbench-20261102\\workspace", "env": {"PYTHONIOENCODING": "utf-8", "QX_BROWSER_ADAPTER_VERSION": "1.1.1"}, "toolCallTimeoutMs": 120000}}
     - {"id": "qx-scrapling", "name": "@deepseek-ai/dsh-mcp-client", "config": {"transport": "stdio", "serverName": "scrapling", "command": "C:/Users/Lenovo/.codex/tools/scrapling/venv/Scripts/scrapling.exe", "args": ["mcp", "--executable-path", "C:/Program Files/Google/Chrome/Application/chrome.exe"], "cwd": "D:\\qx-harness-workbench-20261102\\workspace", "env": {"PYTHONIOENCODING": "utf-8"}, "toolCallTimeoutMs": 120000}}
     - {"id": "qx-windows", "name": "@deepseek-ai/dsh-mcp-client", "config": {"transport": "stdio", "serverName": "windows", "command": "C:/Users/Lenovo/.codex/tools/windows-mcp/venv/Scripts/windows-mcp.exe", "args": ["serve", "--transport", "stdio"], "cwd": "D:\\qx-harness-workbench-20261102\\workspace", "env": {"PYTHONIOENCODING": "utf-8"}, "toolCallTimeoutMs": 120000}}
+
+# qunxing-agent-desktop-v1 (enabled by default; user can disable in plugin management)
+- insert:
+    - id: qx-agent-desktop
+      name: '@deepseek-ai/dsh-mcp-client'
+      disabled: false
+      config:
+        transport: stdio
+        serverName: agent_desktop
+        command: D:/qx-harness-workbench-20261102/tools/agent-desktop/1.2.0/agent-desktop.exe
+        args: [mcp]
+        cwd: D:/qx-harness-workbench-20261102/workspace
+        env:
+          AGENT_DESKTOP_HOME: D:/qx-harness-workbench-20261102/.local/agent-desktop
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false
+        reconnect:
+          enabled: false
 
 # qunxing-legal-workflows-v1
 - insert:

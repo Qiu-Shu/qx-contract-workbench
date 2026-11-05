@@ -42,7 +42,12 @@ with (OUT/'stderr.log').open('w',encoding='utf8') as stderr:
             add();dialog=panel();assert count()==0
             editor=dialog.get_by_role('textbox',name='最终发送文字',exact=True)
             initial=editor.input_value();assert '李明' not in initial and '13800138000' not in initial
-            dialog.get_by_text('原文对照（仅本机）',exact=True).click()
+            original=dialog.locator('[data-original]')
+            highlight=dialog.locator('.qx-review-highlight')
+            expect(original).to_be_visible()
+            expect(highlight).to_be_visible()
+            assert original.bounding_box()['x'] < editor.bounding_box()['x']
+            assert highlight.locator('mark').count()>0
             assert '李明' in dialog.locator('[data-original]').inner_text()
             assert page.evaluate('window.leaked') is None
             selected(editor,'晨露工程');dialog.get_by_label('同时处理全部相同文字').check()
@@ -92,10 +97,26 @@ with (OUT/'stderr.log').open('w',encoding='utf8') as stderr:
             expect(page.locator('.qx-privacy')).to_have_attribute('data-busy','false')
             expect(page.locator('.qx-privacy [role=status]')).to_contain_text('已取消')
             expect(page.get_by_role('dialog',name='脱敏复核',exact=True)).not_to_be_visible();assert count()==6
+            # The visible editable highlighter and the original scroll together in both directions.
+            long_source='\n'.join(f'第{i}段 姓名：李明。合同金额8000元。'+'补充条款与事实说明。'*10 for i in range(90))
+            add(long_source);dialog=panel();editor=dialog.get_by_role('textbox',name='最终发送文字',exact=True)
+            original=dialog.locator('[data-original]');highlight=dialog.locator('.qx-review-highlight')
+            for source_scroll,other_scroll in [(editor,original),(original,editor)]:
+                source_scroll.evaluate('(el)=>el.scrollTop=(el.scrollHeight-el.clientHeight)*0.55')
+                page.wait_for_timeout(350)
+                position=lambda el:el.evaluate('(el)=>el.scrollTop/(el.scrollHeight-el.clientHeight)')
+                assert abs(position(source_scroll)-0.55)<0.015, 'Scroll position drifted after synchronization'
+                assert abs(position(source_scroll)-position(other_scroll))<0.015
+                assert abs(editor.evaluate('(el)=>el.scrollTop')-highlight.evaluate('(el)=>el.scrollTop'))<1
+            page.screenshot(path=str(OUT/'review-synchronized.png'))
+            # Direct editing and a trailing newline preserve exact approved bytes and highlighted tokens.
+            editor.fill(editor.input_value()+'\n律师补充核对意见。\n')
+            assert highlight.inner_text().rstrip('\n')==editor.input_value().rstrip('\n')
+            final_long=editor.input_value();confirm();wait(7);assert page.evaluate('received[6].text')==final_long
             assert not errors,errors
             assert all('李明' not in item['text'] and '13800138000' not in item['text'] for item in page.evaluate('received'))
             browser.close()
-        (OUT/'report.json').write_text(json.dumps({'passed':True,'uploads':6,'models_called':0,'errors':errors,'checks':['confirmation gate','original private comparison','manual all-match redaction','undo','restore','exact final bytes','cancel','batch','session switch','failed confirm retry','concurrent queue','no HTML execution','1280/420/320 layout']},ensure_ascii=False,indent=2),encoding='utf8')
+        (OUT/'report.json').write_text(json.dumps({'passed':True,'uploads':7,'models_called':0,'errors':errors,'checks':['confirmation gate','visible original comparison','editable inline highlights','two-way synchronized scrolling','manual all-match redaction','undo','restore','exact final bytes','cancel','batch','session switch','failed confirm retry','concurrent queue','no HTML execution','1280/420/320 layout']},ensure_ascii=False,indent=2),encoding='utf8')
         print(OUT)
     finally:
         host.terminate();host.wait(timeout=20)

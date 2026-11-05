@@ -4,18 +4,23 @@
   let queue=Promise.resolve(),activeCancel,disposed=false;
   const style=document.createElement('style');
   style.textContent=`
-  .qx-review{position:fixed;z-index:9000;inset:56px 0 0 auto;width:min(650px,100vw);display:flex;flex-direction:column;background:var(--dsw-alias-bg-base,#fff);color:var(--dsw-alias-label-primary,#243248);border-left:1px solid var(--dsw-alias-border-default,#bdc7d2);font:14px/1.65 system-ui,sans-serif;box-sizing:border-box}
+  .qx-review{position:fixed;z-index:9000;inset:56px 0 0 auto;width:min(1180px,100vw);display:flex;flex-direction:column;background:var(--dsw-alias-bg-base,#fff);color:var(--dsw-alias-label-primary,#243248);border-left:1px solid var(--dsw-alias-border-default,#bdc7d2);font:14px/1.65 system-ui,sans-serif;box-sizing:border-box}
   .qx-review *{box-sizing:border-box}.qx-review header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 24px 14px;border-bottom:1px solid #d7dfe8}
   .qx-review h2{font-size:20px;line-height:1.4;margin:0 0 4px}.qx-review p{margin:6px 0;overflow-wrap:anywhere}.qx-review small{font-size:12px;color:var(--dsw-alias-label-secondary,#526071);overflow-wrap:anywhere}
   .qx-review-body{overflow:auto;flex:1;padding:16px 24px;min-height:0}.qx-review label{display:block}.qx-review label:has(input){display:flex;align-items:center;gap:8px;margin:10px 0}
-  .qx-review textarea{display:block;resize:vertical;width:100%;min-height:250px;max-height:65vh;padding:12px;font:14px/1.8 system-ui,sans-serif;background:var(--dsw-alias-bg-base,#fff);color:inherit;border:1px solid #899aae;border-radius:6px;caret-color:#315d96}
+  .qx-review-comparison{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:14px}.qx-review-pane{min-width:0}.qx-review-pane>label{font-weight:600;margin-bottom:8px}
+  .qx-review-editor{position:relative;height:clamp(220px,47vh,520px);isolation:isolate}
+  .qx-review .qx-review-text{display:block;width:100%;height:clamp(220px,47vh,520px);margin:0;padding:12px;font:14px/1.8 system-ui,sans-serif;letter-spacing:normal;white-space:pre-wrap;overflow-wrap:break-word;tab-size:8;overflow:auto;scrollbar-gutter:stable;border:1px solid #899aae;border-radius:6px;background:var(--dsw-alias-bg-base,#fff);color:inherit}
+  .qx-review-editor .qx-review-highlight{position:absolute;inset:0;height:100%;pointer-events:none;scrollbar-color:transparent transparent;border-color:transparent}
+  .qx-review-editor textarea.qx-review-text{position:relative;height:100%;resize:none;background:transparent;color:transparent;caret-color:var(--dsw-alias-label-primary,#243248)}
+  .qx-review-editor textarea::selection{background:rgba(49,93,150,.24);color:transparent}.qx-review [data-original]{background:var(--dsw-alias-bg-hover,#f3f6f9)}
   .qx-review-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.qx-review button{font:inherit;line-height:1.4;min-height:36px;padding:7px 12px;border:1px solid #899aae;border-radius:6px;color:inherit;background:var(--dsw-alias-bg-base,#fff);cursor:pointer}
   .qx-review button:hover{background:var(--dsw-alias-bg-hover,#edf3f9)}.qx-review button:disabled{opacity:.55;cursor:default}.qx-review :focus-visible{outline:2px solid #3563a5;outline-offset:3px}
-  .qx-review summary{cursor:pointer;padding:10px 0}.qx-review pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;margin:0;padding:12px;background:var(--dsw-alias-bg-hover,#f3f6f9);max-height:350px;overflow:auto}
   .qx-review mark{background:#fbe4a5;color:#463500}.qx-review [role=status]{min-height:24px;color:var(--dsw-alias-label-secondary,#526071)}.qx-review [data-error=true]{color:#aa3324}
   .qx-review footer{padding:12px 24px 18px;border-top:1px solid #d7dfe8;background:var(--dsw-alias-bg-base,#fff)}.qx-review footer button{width:100%;background:#315d96;color:white;border-color:#315d96}.qx-review footer button:hover{background:#254b7d}
   .qx-review ::selection{background:#cfe1f6;color:#173858}.qx-review input{accent-color:#315d96}.qx-review footer small{display:block;margin-bottom:10px}
-  @media(max-width:600px){.qx-review{inset:0;width:100vw}.qx-review header,.qx-review-body,.qx-review footer{padding-left:16px;padding-right:16px}.qx-review textarea{min-height:220px}}
+  @media(max-width:760px){.qx-review{inset:0;width:100vw}.qx-review header,.qx-review-body,.qx-review footer{padding-left:16px;padding-right:16px}.qx-review-comparison{grid-template-columns:minmax(0,1fr)}.qx-review .qx-review-text,.qx-review-editor{height:240px}.qx-review-editor .qx-review-text{height:100%}}
+  @media(forced-colors:active){.qx-review-highlight{display:none!important}.qx-review-editor textarea.qx-review-text{color:CanvasText;background:Canvas}.qx-review-editor textarea::selection{background:Highlight;color:HighlightText}}
   `;
   document.head.append(style);
   const node=(tag,text,attrs={})=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;for(const [k,v]of Object.entries(attrs))el.setAttribute(k,v);return el;};
@@ -29,30 +34,46 @@
       const body=node('div',undefined,{class:'qx-review-body'});
       body.append(node('p','请检查每份文字。确认后才加入待发送附件，原件保留在本机。'));
       body.append(node('small',`${preview.privacy_mode==='deep'?'深度':'标准'}脱敏 · 自动替换 ${preview.replacement_count} 处。此处为提取文字，不保留原文件版式。`));
-      const title=node('label','最终发送文字'),editor=node('textarea',undefined,{'aria-label':'最终发送文字',spellcheck:'false'});
-      editor.value=preview.safe_text;title.append(editor);body.append(title);
+      const comparison=node('div',undefined,{class:'qx-review-comparison'}),sourcePane=node('section',undefined,{class:'qx-review-pane'}),reviewPane=node('section',undefined,{class:'qx-review-pane'});
+      const originalText=node('pre',preview.original_text,{'data-original':'',class:'qx-review-text',tabindex:'0',role:'region','aria-label':'原文对照（仅本机）'});
+      sourcePane.append(node('label','原文对照（仅本机）'),originalText);
+      const title=node('label','最终发送文字 · 高亮可直接编辑',{'for':'qx-reviewed-text'}),editor=node('textarea',undefined,{id:'qx-reviewed-text',class:'qx-review-text','aria-label':'最终发送文字',spellcheck:'false',wrap:'soft'});
+      const editorBox=node('div',undefined,{class:'qx-review-editor'}),markedText=node('pre',undefined,{class:'qx-review-highlight qx-review-text','aria-hidden':'true'});
+      editor.value=preview.safe_text;editorBox.append(markedText,editor);reviewPane.append(title,editorBox);comparison.append(sourcePane,reviewPane);body.append(comparison);
+      body.append(node('small','左侧原文只在本机显示；右侧黄色标记为已脱敏内容。滚动任一文本框，两侧同步对照。'));
       const actions=node('div',undefined,{class:'qx-review-actions'}),mask=node('button','脱敏选中文字',{type:'button'}),restore=node('button','恢复所选原文',{type:'button'}),undo=node('button','撤销上一步',{type:'button'});
       actions.append(mask,restore,undo);body.append(actions);
       const allLabel=node('label'),all=node('input',undefined,{type:'checkbox'});allLabel.append(all,document.createTextNode('同时处理全部相同文字'));body.append(allLabel);
       const status=node('p','可直接编辑文字，也可选中文字后点击脱敏。',{role:'status','aria-live':'polite'});body.append(status);
-      const marked=node('details'),markedText=node('pre');marked.append(node('summary','查看高亮预览'),markedText);body.append(marked);
-      const original=node('details'),originalText=node('pre',preview.original_text,{'data-original':''});original.append(node('summary','原文对照（仅本机）'),originalText);body.append(original);
       const footer=node('footer'),confirm=node('button','确认使用此版本',{type:'button'});
       footer.append(node('small','以当前文字为准。恢复原文或手动编辑可能重新带入身份信息，请核对后确认。'),confirm);
       panel.append(header,body,footer);document.body.append(panel);
       const focusBefore=document.activeElement;panel.focus();
       let manual=[],history=[],closed=false,saving=false,lastText=editor.value;
+      const expectedScroll=new WeakMap();
+      const syncScroll=source=>{
+        markedText.scrollTop=editor.scrollTop;markedText.scrollLeft=editor.scrollLeft;
+        const expected=expectedScroll.get(source);expectedScroll.delete(source);
+        if(expected!==undefined&&Math.abs(source.scrollTop-expected)<1)return;
+        const target=source===editor?originalText:editor,range=source.scrollHeight-source.clientHeight;
+        const top=range>0?source.scrollTop/range*(target.scrollHeight-target.clientHeight):0;
+        if(Math.abs(target.scrollTop-top)>.5){expectedScroll.set(target,top);target.scrollTop=top;}
+        markedText.scrollTop=editor.scrollTop;markedText.scrollLeft=editor.scrollLeft;
+      };
+      editor.addEventListener('scroll',()=>syncScroll(editor),{passive:true});
+      originalText.addEventListener('scroll',()=>syncScroll(originalText),{passive:true});
+      const resizeObserver=new ResizeObserver(()=>syncScroll(editor));resizeObserver.observe(editor);resizeObserver.observe(originalText);
       const requestController=new AbortController();
       const notify=(message,error=false)=>{status.textContent=message;status.dataset.error=String(error);};
       const paint=()=>{
         const fragments=document.createDocumentFragment();let end=0;
         for(const match of tokens(editor.value)){fragments.append(document.createTextNode(editor.value.slice(end,match.index)),node('mark',match[0]));end=match.index+match[0].length;}
-        fragments.append(document.createTextNode(editor.value.slice(end)));markedText.replaceChildren(fragments);
+        fragments.append(document.createTextNode(editor.value.slice(end)+'\n'));markedText.replaceChildren(fragments);syncScroll(editor);
         undo.disabled=!history.length||saving;lastText=editor.value;
       };
       const checkpoint=()=>{history.push({text:lastText,manual:manual.slice()});if(history.length>30)history.shift();};
       const finish=(error,value)=>{
-        if(closed)return;closed=true;requestController.abort();observer.disconnect();signal.removeEventListener('abort',abort);
+        if(closed)return;closed=true;requestController.abort();observer.disconnect();resizeObserver.disconnect();signal.removeEventListener('abort',abort);
         panel.remove();if(activeCancel===abort)activeCancel=null;if(focusBefore?.isConnected)focusBefore.focus();
         error?reject(error):resolve(value);
       };

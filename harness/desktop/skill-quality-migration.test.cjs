@@ -1,8 +1,9 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os'),{createHash}=require('node:crypto');
 const {migrateInstalledSkillQuality}=require('./installed-migrations.cjs');
 const sha=s=>createHash('sha256').update(s).digest('hex');
-test('candidate route repairs preserve recorded defaults and match current files',()=>{
+test('candidate route repairs preserve recorded defaults and match current files',t=>{
  const project=path.resolve(__dirname,'..');
+ if(!fs.existsSync(path.join(project,'docs/checks/candidate-install/routes-changes.json'))){t.skip('Local recorded route evidence unavailable');return;}
  const changes=JSON.parse(fs.readFileSync(path.join(project,'docs/checks/candidate-install/routes-changes.json'),'utf8')).changes;
  const spec=JSON.parse(fs.readFileSync(path.join(project,'config/skill-quality-upgrades.json'),'utf8'));
  for(const change of changes.filter(r=>r.path.startsWith('workspace/'))){
@@ -22,7 +23,7 @@ function fixture(t){
  for(const resource of resources)for(const dir of [path.join(payload,'workspace-seed'),path.join(data,'workspace')]){const file=path.join(dir,resource.path);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,path.basename(resource.path));}
  const spec={version:'skill-quality-v1',resources,files:[{path:relative,previousSha256:[sha('old'),sha('older')],sha256:sha('new')}]};
  fs.writeFileSync(manifest,JSON.stringify(spec));
- return {data,payload,file,seed,manifest,spec,run:()=>migrateInstalledSkillQuality({data,payload,portableConfig:[],seedInstructions:'# App\n\n## Skill 质量与法源核验\nNew rules\n\n## Skill 调用与停用\nLifecycle rules\n\n## 实务专项替代方法\nPractice rules\n'})};
+ return {data,payload,file,seed,manifest,spec,run:()=>migrateInstalledSkillQuality({data,payload,portableConfig:[],seedInstructions:'# App\n\n## Skill 质量与法源核验\nNew rules\n\n## Skill 调用与停用\nLifecycle rules\n\n## 实务专项替代方法\nPractice rules\n\n## 来源约束交付\nProtected delivery rules\n'})};
 }
 test('known default updates with backup; custom instructions survive; restart is idempotent',t=>{
  const f=fixture(t),first=f.run();assert.equal(fs.readFileSync(f.file,'utf8'),'new');assert.equal(fs.readFileSync(path.join(first.backupDirectory,'.dsh__skills__example__SKILL.md'),'utf8'),'old');
@@ -82,4 +83,25 @@ test('v3 updates a v2 default once and adds practice guidance while preserving u
  const result=f.run();assert.equal(result.status,'applied');assert.equal(fs.readFileSync(f.file,'utf8'),'practice');
  const notes=fs.readFileSync(path.join(f.data,'workspace/AGENTS.md'),'utf8');assert.match(notes,/Keep this/);assert.match(notes,/Lifecycle rules/);assert.match(notes,/Practice rules/);
  assert.equal(fs.readFileSync(path.join(result.backupDirectory,'.dsh__skills__example__SKILL.md'),'utf8'),'new');assert.equal(f.run().status,'already-applied');
+});
+
+test('v4 upgrades after v3 and migrates only recognized shared resources',t=>{
+ const f=fixture(t),relative='legal-library/workbench/skill-status.md';
+ const resource={path:relative,sha256:sha('new status'),previousSha256:[sha('old status')]};
+ for(const [dir,body] of [[path.join(f.payload,'workspace-seed'),'new status'],[path.join(f.data,'workspace'),'old status']])fs.writeFileSync(path.join(dir,relative),body);
+ f.spec.version='skill-quality-v4';f.spec.resources.push(resource);fs.writeFileSync(f.manifest,JSON.stringify(f.spec));
+ fs.mkdirSync(path.join(f.data,'.local/migrations'),{recursive:true});fs.writeFileSync(path.join(f.data,'.local/migrations/skill-quality-v3.json'),'{}');
+ const run=()=>migrateInstalledSkillQuality({...f,portableConfig:[],seedInstructions:'## 来源约束交付\nUse protected tools.\n'});
+ const result=run();assert.equal(result.status,'applied');assert.equal(fs.readFileSync(f.file,'utf8'),'new');
+ assert.equal(fs.readFileSync(path.join(f.data,'workspace',relative),'utf8'),'new status');
+ assert.match(fs.readFileSync(path.join(f.data,'workspace/AGENTS.md'),'utf8'),/Keep this[\s\S]*Use protected tools/);
+ assert.equal(run().status,'already-applied');
+});
+
+test('v4 preserves lawyer-edited status resources',t=>{
+ const f=fixture(t),relative='legal-library/workbench/skill-status.md';
+ for(const [dir,body] of [[path.join(f.payload,'workspace-seed'),'new status'],[path.join(f.data,'workspace'),'my status']])fs.writeFileSync(path.join(dir,relative),body);
+ f.spec.version='skill-quality-v4';f.spec.resources.push({path:relative,sha256:sha('new status'),previousSha256:[sha('old status')]});fs.writeFileSync(f.manifest,JSON.stringify(f.spec));
+ const result=migrateInstalledSkillQuality({...f,portableConfig:[],seedInstructions:'## 来源约束交付\nUse protected tools.\n'});
+ assert.ok(result.preservedCustom.includes(relative));assert.equal(fs.readFileSync(path.join(f.data,'workspace',relative),'utf8'),'my status');
 });

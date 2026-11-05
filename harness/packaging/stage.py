@@ -76,6 +76,19 @@ def python_runtime(base,site,target):
     for file in (target/'Lib/site-packages').glob('*.pth'):
         if 'D:\\' in file.read_text(errors='replace') or 'D:/' in file.read_text(errors='replace'):file.unlink()
 
+def copy_agent_desktop(target,source=None):
+    source=source or ROOT/'tools/agent-desktop/1.2.0'
+    manifest=json.loads((source/'provenance.json').read_text(encoding='utf-8'))
+    digest=hashlib.sha256((source/'agent-desktop.exe').read_bytes()).hexdigest()
+    if manifest.get('version')!='1.2.0' or digest!=manifest.get('binarySha256'):
+        raise RuntimeError('agent-desktop version or executable checksum mismatch')
+    names=['agent-desktop.exe','LICENSE','provenance.json']
+    for name in names:
+        if not (source/name).is_file():raise RuntimeError('Missing agent-desktop runtime file: '+name)
+    target.mkdir(parents=True,exist_ok=True)
+    for name in names:shutil.copy2(source/name,target/name)
+
+
 def portable_config():
     value=yaml.safe_load((ROOT/'config/cordis.patch.yml').read_text(encoding='utf-8-sig'))
     def walk(item):
@@ -138,7 +151,7 @@ def stage(destination,version='0.2.1'):
         shutil.copy2(ROOT/'desktop'/name,app/name)
     (app/'package.json').write_text(json.dumps({'name':'qunxing-harness-desktop','version':version,'private':True,'description':'AI师兄法律助手平台','author':'AI师兄法律助手平台项目','main':'installed.cjs','dependencies':{'electron-updater':'6.8.11'}}),encoding='utf-8')
     bundle_node([(ROOT/'node_modules/electron-updater','electron-updater')],app)
-    for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','plugins/legal-search','plugins/case-memory','desktop/integration']:
+    for folder in ['bridge','plugins/account','plugins/knowledge','plugins/privacy','plugins/session-title','plugins/legal-search','plugins/case-memory','plugins/verified-delivery','desktop/integration']:
         copytree(ROOT/folder,payload/folder,('test','tests','check*.mjs','test_*.py','selfcheck.py','ui-check.py','practice_eval_session.py'))
     # Only active WeChat runtime assets; exclude development VSIXs, snapshots and tests.
     copytree(ROOT/'plugins/wechat',payload/'plugins/wechat',('*.vsix','test','tests','docs','scripts','.github','vscode-extension'))
@@ -156,6 +169,7 @@ def stage(destination,version='0.2.1'):
     bundle_node([(TOOLS/'bb-browser/node_modules/bb-browser','bb-browser')],payload/'browser')
     (payload/'runtime').mkdir(exist_ok=True)
     shutil.copy2(RUNTIME/'node/bin/node.exe',payload/'runtime/node.exe')
+    copy_agent_desktop(payload/'tools/agent-desktop/1.2.0')
     shutil.copy2(ROOT/'packaging/LICENSE.node.txt',payload/'runtime/LICENSE.node.txt')
     print('Bundling portable Python runtimes',flush=True)
     python_runtime(RUNTIME/'python',LEGACY/'.venv/Lib/site-packages',payload/'runtime/python')

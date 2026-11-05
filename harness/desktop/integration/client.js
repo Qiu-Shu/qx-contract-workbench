@@ -22,7 +22,7 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       if(!response.headers.get('content-type')?.includes('application/json'))throw new Error(`知识库服务暂时不可用（${response.status}），请稍后重试。`);
       const data=await response.json();if(!response.ok)throw new Error(data.error||'操作未完成');return data;
     }
-    return function KnowledgePanel({onClose}){
+    return function KnowledgePanel({onClose,onGraph}){
       const dialog=React.useRef(null),file=React.useRef(null),backupFile=React.useRef(null),alive=React.useRef(true);
       const [catalog,setCatalog]=React.useState({documents:[],total:0,next_offset:null});
       const [offset,setOffset]=React.useState(0),[archived,setArchived]=React.useState(false),[category,setCategory]=React.useState('');
@@ -98,6 +98,7 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
         h('style',null,css),
         h('header',{className:'qx-kb-head'},h('div',null,h('h2',{id:'qx-kb-heading'},'律所知识库'),h('p',{className:'qx-kb-muted'},'本机保存 · 原文可追溯')),h('button',{className:'qx-kb-close',disabled:busy,onClick:onClose,'aria-label':'关闭知识库'},'×')),
         h('div',{className:'qx-kb-body'},
+          h('div',{className:'qx-kb-toolbar'},h('button',{onClick:onGraph},'关系图与三层知识')),
           h('p',{className:'qx-kb-muted'},'上传律所范本、办案经验、制度与研究资料。上传和检索在本机完成；用于 AI 问答的片段会发送给当前配置的模型。'),
           h('div',{className:'qx-kb-toolbar'},h('input',{value:category,onChange:e=>setCategory(e.target.value),placeholder:'上传分类，如：合同范本',maxLength:80,'aria-label':'上传资料分类'}),
             h('input',{ref:file,type:'file',multiple:true,hidden:true,accept:'.txt,.md,.csv,.tsv,.json,.html,.htm,.rtf,.doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.png,.jpg,.jpeg,.webp,.gif,.bmp,.tif,.tiff',onChange:e=>{void upload(e.target.files);e.target.value='';}}),
@@ -126,7 +127,13 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
               h('div',{className:'qx-kb-pager'},h('button',{disabled:busy||offset===0,onClick:()=>setOffset(Math.max(0,offset-50))},'上一页'),h('button',{disabled:busy||catalog.next_offset===null,onClick:()=>setOffset(catalog.next_offset)},'下一页')))));
     };
   }
-  const KnowledgePanel=createKnowledgeView(React);
+  const LibraryPanel=createKnowledgeView(React);
+  function KnowledgePanel({onClose}){
+    const [graph,setGraph]=React.useState(false),[ready,setReady]=React.useState(!!window.qxKnowledgePanel);
+    React.useEffect(()=>{const loaded=()=>setReady(true);window.addEventListener('qx-knowledge-ready',loaded);return()=>window.removeEventListener('qx-knowledge-ready',loaded);},[]);
+    if(graph&&ready&&window.qxKnowledgePanel)return h(window.qxKnowledgePanel,{onClose,onLibrary:()=>setGraph(false)});
+    return h(LibraryPanel,{onClose,onGraph:()=>{if(window.qxKnowledgePanel){setReady(true);setGraph(true);}else window.alert('关系图组件正在加载；若一直未出现，请刷新工作台重试。');}});
+  }
   function createMemoryView(React){
     const h=React.createElement;
     const css=`
@@ -553,6 +560,12 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       document.head.append(script);
       return()=>{stopped=true;dispose?.();script.remove();};
     },'qunxing: guided business conversations');
+    ctx.effect(()=>{
+      let dispose,stopped=false;const script=document.createElement('script');script.src='/api/qx-layered/client.js';
+      script.onload=()=>{if(!stopped)dispose=window.qxInstallKnowledge(ctx,React);};
+      script.onerror=()=>console.warn('知识关系图暂未加载，请刷新工作台后重试。');
+      document.head.append(script);return()=>{stopped=true;dispose?.();script.remove();};
+    },'qunxing: layered knowledge');
     ctx.slots.inject('settings.launcher',()=>ctx.slots.register({name:'settings.launcher',priority:-100},()=>null));
     ctx.slots.inject('sidebar.footer.action',()=>ctx.slots.register({name:'sidebar.footer.action',id:'qx-balance',order:100},AccountFooter));
     // A plugin hot reload must not move a window the user is already working in.

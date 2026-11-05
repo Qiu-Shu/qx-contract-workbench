@@ -9,7 +9,8 @@ import {WechatState} from './state.js';
 import {saveInboundMedia, describeForModel, prepareOutbound} from './media.js';
 import qrcode from './vendor/qrcode-generator.mjs';
 import {ReplyCollector, chunkText} from './qx-reply.js';
-import {ownerAccepts, workspaceFile, publicLogin} from './qx-owner.js';
+import {ownerAccepts, publicLogin} from './qx-owner.js';
+import {createDesktopFileAccess} from './qx-desktop-files.js';
 import {openSessionAgent} from './session.js';
 import {MessageCoalescer} from './qx-coalescer.js';
 
@@ -18,6 +19,7 @@ export const inject=['agents'];
 export async function apply(ctx,config={}) {
   if (!config.workspace || !config.stateDir) throw new Error('微信插件需要明确的 workspace 与 stateDir');
   const workspace=resolve(config.workspace), stateDir=resolve(config.stateDir);
+  const desktopFiles=createDesktopFileAccess({workspace});
   await mkdir(workspace,{recursive:true});
   const state=new WechatState({root:stateDir}); await state.init();
   const logins=new WechatLoginManager({state,ilink:protocol,reuseStoredBinding:false});
@@ -196,17 +198,27 @@ export async function apply(ctx,config={}) {
   }
 
   ctx.inject(['tools'],toolCtx=>{
+    const disposeFind=toolCtx.tools.register({
+      name:'wechat_find_desktop_files',description:'按用户提供的文件名查找本人电脑桌面文件，只返回文件名、路径和大小，不读取正文。多个匹配先请用户选一个，不能猜测发送；桌面子目录须明确指定。',
+      parameters:{name:{type:'string',required:true,description:'用户指定的文件名或文件名片段'},directory:{type:'string',description:'桌面内相对目录，默认桌面当前层，不扫描整盘'}},
+      output:{schema:{type:'string'},render:(_args,value)=>[{type:'text',text:value}]},timeoutMs:30000,
+      async execute(args){
+        if(!account?.userId)throw Error('尚未绑定本人微信');
+        return JSON.stringify(await desktopFiles.find(args.name,args.directory));
+      },
+    });
+    toolCtx.effect(()=>disposeFind,'qx-wechat desktop file lookup');
     const dispose=toolCtx.tools.register({
-      name:'wechat_send_file',description:'把当前工作区的文件发回已经扫码绑定的本人微信。没有客户或群收件人参数。',
-      parameters:{path:{type:'string',required:true,description:'工作区内文件的绝对路径'}},
+      name:'wechat_send_file',description:'按用户明确要求，把工作区或本人电脑桌面内指定的文件发回已扫码绑定的本人微信。桌面文件先复制到工作区，原件不改动；不支持客户或群收件人。多个候选必须先明确选择。',
+      parameters:{path:{type:'string',required:true,description:'工作区内或桌面查找返回的已选文件绝对路径'}},
       output:{schema:{type:'string'},render:(_args,value)=>[{type:'text',text:value}]},timeoutMs:300000,
       async execute(args){
         const recipient=account;
         if(!recipient?.userId)throw new Error('尚未绑定本人微信');
-        const path=await workspaceFile(workspace,args.path);
-        const file=await prepareOutbound(path,{maxBytes:Number.MAX_SAFE_INTEGER});
         const context=(await state.loadContextTokens(recipient.accountId))[recipient.userId]?.token;
         if(!context)throw new Error('请先从本人微信发送一条消息');
+        const path=await desktopFiles.prepare(args.path);
+        const file=await prepareOutbound(path,{maxBytes:Number.MAX_SAFE_INTEGER});
         const send=file.kind==='image'?protocol.sendImage:file.kind==='video'?protocol.sendVideo:protocol.sendFile;
         if(disposed||account!==recipient)throw new Error('微信已切换，文件未发送，请在当前会话重新操作。');
         await send({baseUrl:recipient.baseUrl,token:recipient.token,toWxid:recipient.userId,filePath:path,fileName:file.name,contextToken:context});

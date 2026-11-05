@@ -3,9 +3,13 @@
   "baselineCount": 185,
   "disabledLegacyCount": 36,
   "skills": [
-    "qx-evidence-analysis"
+    "qx-evidence-analysis",
+    "qx-source-drafting",
+    "qx-employment-checklist",
+    "qx-source-registers"
   ],
-  "policy": "Release selection: evidence passed targeted hard cases and actual tool E2E; five practice Skills withheld outside discovery and package inputs. Baseline 185 and 36 legacy-disabled entries unchanged. Retain tested underlying document, arithmetic and citation fixes. No legal certification.",
+  "externalSkills": ["agent-desktop"],
+  "policy": "Development selection: evidence and three narrowly scoped source-bound workflows available; five broad practice Skills remain withheld. Legacy baseline 185 and 36 disabled entries unchanged; separately count the parallel-session agent-desktop addition. No release or legal certification.",
   "withheld": [
     "qx-litigation-drafting",
     "qx-employment-review",
@@ -13,6 +17,6 @@
     "qx-compliance-work",
     "qx-ip-register"
   ],
-  "discoveredCount": 186,
-  "automaticallyAvailableCount": 150
+  "discoveredCount": 190,
+  "automaticallyAvailableCount": 154
 }

@@ -1,8 +1,9 @@
 // Real Harness host with a loopback-only model fixture and isolated synthetic data.
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http');
 const {initialize,runHost}=require('./installed-runtime.cjs');
-const root=path.resolve(__dirname,'..'),payload=path.join(root,'.local/package-updates-0.2.3/workbench');
-const data=path.join(root,'.local/business-workflows-qa/data');
+const root=path.resolve(__dirname,'..'),payload=process.env.QX_QA_PAYLOAD||path.join(root,'.local/package-updates-0.2.3/workbench');
+const data=process.env.QX_QA_DATA||path.join(root,'.local/business-workflows-qa/data');
+if(!path.resolve(data).startsWith(path.join(root,'.local')+path.sep))throw Error('QA data must stay in the project scratch directory');
 fs.mkdirSync(data,{recursive:true});
 let calls=0;
 const mock=http.createServer((request,response)=>{

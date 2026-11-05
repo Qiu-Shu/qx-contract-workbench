@@ -1,6 +1,6 @@
 // Deterministic transport/artifact checks only. Legal quality requires separate review.
 function assessFunctional({scenario,completed,actual,rounds}){
- const succeeded=rounds.flatMap(r=>r.toolResults||[]).filter(t=>t.result?.executed===true&&t.result.is_error===false&&t.result.result?.saved!==false&&t.result.result?.error===undefined);
+ const succeeded=rounds.flatMap(r=>r.toolResults||[]).filter(t=>t.result?.executed===true&&t.result.is_error===false&&t.result.result?.saved!==false&&t.result.result?.recorded!==false&&t.result.result?.error===undefined);
  const names=succeeded.map(t=>t.name),drafts=actual?.drafts||[];
  const genericSavedIds=new Set(succeeded.filter(t=>t.name==='record_case_note').map(t=>t.result.result?.id).filter(Boolean));
  const outputs=succeeded.flatMap(t=>{const r=t.result.result||{};return [['path','sha256'],['word_path','word_sha256'],['internal_path','internal_sha256']].filter(([key])=>typeof r[key]==='string'&&/\.docx$/i.test(r[key])).map(([key,digest])=>({path:r[key],sha256:r[digest]}));});

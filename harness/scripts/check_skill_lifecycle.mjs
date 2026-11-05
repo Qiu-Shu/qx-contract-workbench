@@ -22,14 +22,17 @@ const provider=new FileSystemSkillProvider({get:()=>undefined,logger:{warn:s=>wa
 try{
  const observation=await provider.list({cwd:workspace}),candidates=Array.isArray(observation)?observation:observation.candidates;
  const definitions=[];for(const candidate of candidates)definitions.push(await provider.get(candidate,{cwd:workspace}));
- assert.equal(definitions.length,additions.baselineCount+additions.skills.length);assert.deepEqual(warnings,[]);
+ assert.equal(definitions.length,additions.baselineCount+additions.skills.length+(additions.externalSkills||[]).length);assert.deepEqual(warnings,[]);
+ assert.equal(definitions.length,additions.discoveredCount);
+ assert.equal(definitions.filter(r=>r.invocation.modelInvocable).length,additions.automaticallyAvailableCount);
  const byName=new Map(definitions.map(r=>[r.name,r])),hooks=[];let tool;
  for(const name of additions.withheld||[])assert.ok(!byName.has(name),'Withheld Skill discovered: '+name);
- for(const name of additions.skills){assert.equal(byName.get(name)?.invocation.modelInvocable,true,name);assert.ok(byName.get(name)?.content.trim());}
+ for(const name of [...additions.skills,...(additions.externalSkills||[])]){assert.equal(byName.get(name)?.invocation.modelInvocable,true,name);assert.ok(byName.get(name)?.content.trim());}
  apply({tools:{register:t=>{tool=t;},get:()=>tool},skills:{list:async()=>definitions,get:async n=>byName.get(n),snapshot:async()=>({skills:definitions,complete:true})},
   workingDirectory:{ensure:async()=>workspace},on:(_,f)=>hooks.push(f)});
  assert.equal(tool.name,'skill');
  const exec={signal:control.signal},disabled=spec.skills.filter(r=>r.action==='disable');
+ for(const name of additions.skills){const value=await tool.execute({name},exec);assert.equal(value.name,name);assert.ok(value.content.trim());}
  for(const row of disabled){
   const skill=byName.get(row.name);assert.equal(skill.invocation.modelInvocable,false,row.name);assert.equal(skill.invocation.userInvocable,false,row.name);
   await assert.rejects(tool.execute({name:row.name},exec),/not available for model invocation/);

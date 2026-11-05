@@ -26,6 +26,7 @@ async function main(){
     }
   }
   copy();
+  assert.equal(files,plan.stats.oldFiles,'Full upgrade baseline is incomplete');
   fs.writeFileSync(path.join(out,'用户保留文件.txt'),'preserve unmanaged data');
   console.log(JSON.stringify({stage:'prepared',files,unchangedFiles:unchanged.length}));
   const start=Date.now();

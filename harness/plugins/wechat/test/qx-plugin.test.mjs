@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp, readFile, readdir, mkdir, writeFile} from 'node:fs/promises';
+import {mkdtemp, readFile, readdir, mkdir, writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {apply} from '../qx-plugin.js';
 import {WechatState} from '../state.js';
-import {encryptAesEcb} from '../ilink.js';
+import {encryptAesEcb,decryptAesEcb} from '../ilink.js';
+import {createDesktopFileAccess} from '../qx-desktop-files.js';
 
 function context({deferReplies=false,onFollowup=()=>{}}={}) {
   const routes=new Map(),tools=[],events=new Map(),disposers=[],messages=[],registered=[],attached=[];
@@ -36,14 +37,50 @@ function context({deferReplies=false,onFollowup=()=>{}}={}) {
 }
 async function getState(env){let payload;await env.routes.get('/qx-wechat/state')({method:'GET',headers:{host:'127.0.0.1:3080'},socket:{remoteAddress:'127.0.0.1'}},{writeHead(){},end(text){payload=JSON.parse(text);}});return payload;}
 
-test('fresh installation mounts only personal file tool and settings, with no requests',async()=>{
+test('fresh installation mounts personal file lookup/send tools and settings, with no requests',async()=>{
   const root=await mkdtemp(join(tmpdir(),'qx-empty-'));
   const original=globalThis.fetch;globalThis.fetch=()=>{throw new Error('network forbidden');};
   const env=context();try{
     await apply(env.ctx,{workspace:join(root,'workspace'),stateDir:join(root,'state'),sessionId:'fixed-session'});
-    assert.deepEqual(env.tools.map(t=>t.name),['wechat_send_file']);
+    assert.deepEqual(env.tools.map(t=>t.name),['wechat_find_desktop_files','wechat_send_file']);
+    await assert.rejects(env.tools.find(t=>t.name==='wechat_find_desktop_files').execute({name:'合同'}),/尚未绑定/);
     assert.equal(env.routes.size,4);assert.equal((await getState(env)).connected,false);
     assert.deepEqual(env.counts(),{created:0,resumed:0,turn:0});
+  }finally{env.stop();globalThis.fetch=original;}
+});
+
+test('selected synthetic desktop file reaches only bound owner with exact bytes through real send tool',async t=>{
+  const root=await mkdtemp(join(tmpdir(),'qx-desktop-send-'));t.after(()=>rm(root,{recursive:true,force:true}));
+  const workspace=join(root,'workspace'),desktop=join(root,'desktop'),stateDir=join(root,'state');
+  await mkdir(workspace);await mkdir(desktop);
+  const bytes=Buffer.from('synthetic requested contract');await writeFile(join(desktop,'合同.docx'),bytes);
+  const access=createDesktopFileAccess({workspace,getDirectories:async()=>[desktop]});
+  const candidates=await access.find('合同');assert.equal(candidates.files.length,1);
+  const staged=await access.prepare(candidates.files[0].path);
+  const state=new WechatState({root:stateDir});
+  await state.saveAccount('bot',{token:'synthetic-token',baseUrl:'https://example.invalid',userId:'owner',botId:'bot'});
+  await state.saveContextToken('bot','owner','synthetic-context');
+  const sent=[];let uploadKey;const original=globalThis.fetch;
+  globalThis.fetch=async(url,options)=>{
+    if(String(url).includes('getupdates'))return new Promise((_,reject)=>options.signal.addEventListener('abort',()=>reject(new DOMException('aborted','AbortError')),{once:true}));
+    if(String(url).includes('getuploadurl')){
+      const body=JSON.parse(options.body);assert.equal(body.to_user_id,'owner');uploadKey=Buffer.from(body.aeskey,'hex');
+      return new Response(JSON.stringify({upload_full_url:'https://example.invalid/test-upload'}));
+    }
+    if(String(url)==='https://example.invalid/test-upload'){
+      assert.deepEqual(decryptAesEcb(Buffer.from(options.body),uploadKey),bytes);
+      return new Response('',{headers:{'x-encrypted-param':'synthetic-download'}});
+    }
+    if(String(url).includes('sendmessage')){sent.push(JSON.parse(options.body));return new Response(JSON.stringify({ret:0}));}
+    throw Error('Unexpected network call');
+  };
+  const env=context();try{
+    await apply(env.ctx,{workspace,stateDir,sessionId:'fixed-session'});
+    const tool=env.tools.find(x=>x.name==='wechat_send_file');assert.deepEqual(Object.keys(tool.parameters),['path']);
+    assert.match(await tool.execute({path:staged}),/已发回本人微信/);
+    assert.equal(sent.length,1);assert.equal(sent[0].msg.to_user_id,'owner');
+    assert.equal(sent[0].msg.item_list[0].file_item.file_name,'合同.docx');
+    assert.deepEqual(await readFile(join(desktop,'合同.docx')),bytes);
   }finally{env.stop();globalThis.fetch=original;}
 });
 
