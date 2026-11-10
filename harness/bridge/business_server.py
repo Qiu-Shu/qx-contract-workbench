@@ -12,7 +12,8 @@ from hearing import HearingStore
 from workflows import workflow
 import server as material_server
 from server import friendly_errors
-from source_bound_inputs import MaterialCitation, Excerpt, Calculation, LitigationBrief, RegisterEntry, ComplianceTracking
+from source_bound_inputs import MaterialCitation, Citation, Excerpt, Calculation, LitigationBrief, LitigationIssue, LitigationClaim, LegalReview, RegisterEntry, ComplianceTracking, SourceGroup
+from pydantic import StrictBool
 from verified_delivery import attach_delivery, text_sha256
 
 mcp = MCPServer('qx_legal', instructions=(
@@ -114,7 +115,9 @@ def read_case_note(case_id: str, note_id: str, start: int = 0, limit: int = 8000
 @friendly_errors
 def read_case_material(case_id: str, path: str, start: int = 0, limit: int = 6,
                        page: int | None = None, version: int | None = None) -> dict:
-    """读取本案关联材料；默认核对当前原件，指定version可回读已保存的历史解析文字快照。"""
+    """读取本案关联材料；默认核对当前原件，指定version可回读历史解析文字快照。
+    当前分页材料返回page_count和next_page；next_start是当前筛选内的片段偏移。读完最后一页不继续试探空白页。
+    """
     return cases.read_material(case_id, path, start, limit, page, version)
 
 
@@ -159,7 +162,9 @@ def export_case(case_id: str, filename: str = '案件工作稿.docx', audience: 
             if note.get('source'):
                 sections.append('记录来源：' + note['source'])
             for citation in note.get('citations', []):
-                sections.append(f"出处：{citation.get('path', '')}；{citation.get('location', '')}；"
+                from material_scan import location_label
+                display_location=location_label(citation) or citation.get('location','')
+                sections.append(f"出处：{citation.get('path', '')}；{display_location}；"
                                 f"引用版本：{citation.get('version', '未记录')}；"
                                 f"SHA-256 {citation.get('sha256', '未记录')}；片段：{citation.get('chunk', '未记录')}；"
                                 f"记录时原文匹配：{citation.get('status', 'unverified')}\n{citation.get('quote', '')}")
@@ -257,9 +262,10 @@ def generate_litigation_document(case_id: str, document_type: str, filename: str
     data可含parties[{role,text,citations}]、requests/facts[{heading,text,citations}]、sections[{heading,text,citations}]，title/authority/case_number/signatory/date；律师函mandate{client,issuer,recipient,authorized,citations}。
     事实与理由及其分节放facts，sections仅其他章节；heading可省略。不要留空facts而把事实全放sections。
     未知保留待核；引用必须本案材料，工作草稿不作证据；不冒称授权、签署或已完成审查。只向用户展示正文，内部稿单列。
+    返回body_text为实际保存的正文；最终使用同次user_summary及真实文件链接，不在聊天另写一套事实或意见。回执只核对保存版本，不认证正文结论正确。
     """
     from litigation_documents import generate_litigation_document as generate
-    return generate(cases, case_id, document_type, filename, data)
+    return attach_delivery(cases, case_id, generate(cases, case_id, document_type, filename, data))
 
 
 @mcp.tool()
@@ -269,9 +275,12 @@ def save_employment_review(case_id: str, stage: str, findings: list[dict], reque
 
     findings每项fact/basis/source/risk/action文字，另可topic/pending/citations。未知事实保留待核，不从办公室开业等日期猜实际解除日。
     引用按本案核对；具体法律适用和劳动关系状态由承办人复核。更正仅明确要求时用supersedes。
+    保存成功后以id回读并用export_case(note_ids=[id],audience="internal")导出；最终原样交付user_summary和文件。摘要来自同一保存记录，不另行改写事实/建议，来源或记录改变须回读后处理。
+    hiring中的试用工资项使用{rule:"probation_pay",parameters:{contract_pay:金额对象,grade_pay:金额对象,minimum_pay:金额对象,probation_pay:金额对象}}。金额对象为{amount:"原文金额含元/万元",citation:{path,quote,sha256,chunk}}，引用须含对应标签且四项同一片段。程序按实施条例15条计算两种80%候选及月差额并生成候选条款，替代本项模型自填的fact/basis/risk/action。缺值/疑点只保留本项待核，其他意见照常保存；查看rule_reviews。标题明确为试用工资而未传参数时，同样不保存模型自拟金额结论。
+    竞业金额比较可用{rule:"noncompete_comparison",parameters:{penalty:金额对象,loss:金额对象,monthly_compensation:金额对象,monthly_pay:金额对象}}；参数可缺省，不补零。标签分别为违约金、损失、月补偿、月工资；同源且口径明确才算比值，比值不自动认定过高或失衡。查看rule_reviews的逐项结果。保存前会检查常见的未知变否定、重复试用候选条款、无依据竞业比较；只修关联语句，review_changes及内部核对稿保留原稿和理由，最终交付user_summary与本次note_ids的导出。
     """
     from employment_review import save_employment_review as save
-    return save(cases, case_id, stage, findings, request_id, supersedes)
+    return attach_delivery(cases, case_id, save(cases, case_id, stage, findings, request_id, supersedes))
 
 
 @mcp.tool()
@@ -288,24 +297,64 @@ def calculate_employment_amount(base: str, years: str = '1', multiplier: str = '
 @friendly_errors
 def build_source_bound_litigation(case_id: str, document_type: str, filename: str,
                                   excerpts: list[Excerpt], calculations: list[Calculation] | None = None,
-                                  brief: LitigationBrief | None = None) -> dict:
+                                  brief: LitigationBrief | None = None,
+                                  issues: list[LitigationIssue] | None = None,
+                                  claims: list[LitigationClaim] | None = None,
+                                  legal_review: LegalReview | None = None) -> dict:
     """按本案当前原文组装可编辑诉讼来源草稿及内部核对稿；不发送、不认定事实。
 
-    document_type支持civil_complaint/civil_defense/representation/evidence_list/cross_examination/labor_arbitration/lawyer_letter。
+    document_type支持civil_complaint/civil_defense/representation/evidence_list/cross_examination/labor_arbitration/lawyer_letter，纯程序核查用procedure_review（必须有legal_review.procedure，不传brief，不生成拟诉求），以及civil_appeal民事上诉来源草稿、labor_award_set_aside撤销劳动仲裁裁决申请来源草稿。
     excerpts每项仅section(parties/requests/facts/sections)、citation{path,quote,sha256,chunk}。先read_case_material取得真实版本与原句。
     不接收模型改写的text、角色全称或已立案/授权/客户知悉声明；未知元数据由程序留空。
     calculations可选，每项{minuend:{citation,amount},subtrahends:[{citation,amount}]}；amount必须为原句中带单位完整金额如96000元或9.6万元。
     brief可选：parties[{role,name,citation}]、claim_kind(payment/return/undetermined)、claim_amount{citation,amount}或calculation_index（两者互斥，指向本次算式）。
-    roles为plaintiff/defendant；劳动申请为applicant/respondent；律师函为client/issuer/recipient。name须原文逐字名称，角色对应仍待律师核实。
+    roles为plaintiff/defendant；民事上诉为appellant/appellee；劳动申请和撤销裁决为applicant/respondent；律师函为client/issuer/recipient。name须原文逐字名称，角色对应仍待律师核实。
     brief用于生成固定条件式拟请求；不给任意正文。representation必须有非空brief及requests、facts两类引文，分别保留主张与依据/限制，缺项拒绝生成。
     差额不认定到期应付。引用失败拒绝生成。最终使用user_summary与实际文件；内部完整片段不等于正文已采用所有观点，不能另加事实或承诺。
+    issues可选最多20项：claim为主张原文引用，supporting/opposing/legal_basis各为引用列表；全部必须本案来源。逐项保留相反、限制材料及法源摘录，不接收自由结论；缺组只表示未选入，不判定不存在或主张成立。
+    多项诉求用claims，最多20项，每项request是诉求原文引用，issue_indices是本次issues的0起始索引列表；未确定关联时留空。程序分别保存请求、争点和缺组，不合并金额，不认证关联正确。
+    请求权/程序核查用legal_review：claims[{claim_index,basis,elements:[{key,supporting:[引用],opposing:[引用]}]}]对应本次claims。
+    basis=sale_price或service_fee要件key为agreement/performance/due/balance/defenses；service_fee用于服务报酬的合同通则核查，具体合同类型另核；private_loan为agreement/delivery/due/balance/interest；unjust_enrichment为benefit/loss/no_basis/exceptions/scope。这是拟选路径，不能伪称事实成立。
+    legal_review.procedure={route,items:[{key,citations:[引用]}]}；route=civil_first_instance的key为standing/jurisdiction/arbitration/limitation/prior_proceedings/service/authority，labor_arbitration为scope/jurisdiction/limitation/prior_proceedings/service/authority。
+    复杂程序可选civil_appeal（decision/standing/service/scope/filing/prior_proceedings/authority）、labor_award_remedy（decision/standing/service/grounds/filing/prior_proceedings/authority）、jurisdiction_objection（jurisdiction/response/service/arbitration/standing/authority）。
+    前两者可加procedure.remedy={decision_kind,actor,classification_citations:[引用],service_citation:引用}；decision_kind=civil_judgment/civil_order/labor_final/labor_nonfinal/labor_mixed/unknown，actor=party/worker/employer/unknown。分类来源须包含对应一审判决/可上诉裁定或终局/非终局裁决及救济主体；原文明示同一份裁决同时含终局和非终局事项时用labor_mixed，分别多份裁决或否定语境不能套用；不明时用unknown，不伪选。service_citation可省，收到日期只识别完整行或分句“收到日期：YYYY-MM-DD”（亦支持送达日期/签收日期），不从作出日、发出日、预计日期补值；输出仅为未处理法定休假日的条件算术参考点，不是法律截止日。民事上诉、撤销劳动终局裁决的专用来源草稿另见下列模板条件；不能改名冒充完整可提交文书。
+    未选入项自动列待补，支持与反证均原文保存；不得填established、satisfied或自由法律结论。不知道的路径不伪选，不据材料齐全宣布可起诉或未过时效。
+    专用civil_appeal/labor_award_set_aside必须有匹配的legal_review.procedure.remedy候选及requests/facts两类引文；brief只填角色，不能套用payment/return、claim_amount或calculation_index。原裁判信息、具体诉求和法定事由仍须逐项核实；这两类只是来源草稿，不是自动完成或可提交文书。
     """
     from source_bound_litigation import build_source_bound_litigation as build
     result = build(cases, case_id, document_type, filename,
                  [x.model_dump(exclude_unset=True, exclude_none=True) for x in excerpts],
                  None if calculations is None else [x.model_dump(exclude_unset=True, exclude_none=True) for x in calculations],
-                 None if brief is None else brief.model_dump(exclude_unset=True, exclude_none=True))
+                 None if brief is None else brief.model_dump(exclude_unset=True, exclude_none=True),
+                 None if issues is None else [x.model_dump(exclude_unset=True, exclude_none=True) for x in issues],
+                 None if claims is None else [x.model_dump(exclude_none=True) for x in claims],
+                 None if legal_review is None else legal_review.model_dump(exclude_none=True))
     return attach_delivery(cases, case_id, result)
+
+
+@mcp.tool()
+@friendly_errors
+def assess_employment_terms(case_id: str, review_stage: str, citations: list[Citation],
+                            request_id: str = '', supersedes: str = '',
+                            scenario_citations: list[Citation] | None = None,
+                            extract_parameters: StrictBool = False) -> dict:
+    """保存本案原文条款与阶段核验清单；review_stage为hiring录用、change变更、noncompete竞业、payroll工资对账。
+
+    先read_case_material；citations须1至30条path/quote/sha256/chunk真实引用，原句重复时可带精确start/end位置。保留拟议、否定和未知，拒绝跨案、过期及改写来源。
+    程序生成阶段条件与完整出处，不自动认定条款有效/无效、义务成立、实际应付款或行为状态。
+    recorded成功后用read_case_note回读，export_case(note_ids=[id],audience="internal")导出同记录。
+    request_id仅同参数重试；supersedes仅明确更正。最终使用user_summary和真实文件，不补未归档判断。解除另用assess_employment_termination。
+    scenario_citations可选，至多10条来源中独立完整假设行；程序核算后与清单、Word和最终交付保持一致。只接受以下格式（数字据真实原文，不得伪造假设或截掉否定）：
+    hiring：“试用期核算假设：固定期限12个月，试用期6个月。”（固定期限12个月也可替换为无固定期限或以完成任务为期限）；
+    hiring：“试用工资假设：合同工资10000元，同岗最低档工资9000元，适用最低工资2500元，拟试用工资7000元。”；
+    noncompete：“竞业期限假设：离职后竞业36个月。”。change不接受核算。仅情景对照，不认定实际欠薪或约定整体效力。
+    payroll配合extract_parameters=true提取工资表物理行或分号分隔键值行，字段为姓名(或劳动者)、工资期间(或月份)、应发工资、代扣合计、实发工资；金额需明确元/万元，表格可继承元单位。期间须明确年月。按行计算应发-代扣-实发的账面差额，不认定欠薪或代扣合法性，不跨人/月/文件拼接或求全案总额。缺值只暂停对应行，其他行继续。读取所有相关片段及表头；不把原件改写成支持格式。此阶段不传scenario_citations。
+    自然语言材料可设extract_parameters=true（仅hiring/noncompete）。程序从引用所在完整片段逐行识别带标签和单位的合同期限、试用期、工资或离职后竞业期限候选，保留原文位置。跨行关联要求原文有“劳动者：姓名；合同编号：编号”（也支持相邻两行），其后连续纯参数行才做候选关联；Word连续段落须逐片段引用，缺片段、空行、新身份头隔开。跨文件另须每份原件明示相同姓名、劳动者编号、合同编号（也支持连续三段），回读全部相关段落后查看cross_source_groups；不能模型补造编号或仅凭同名合并。否定、多个主体、版本、冲突值、未知参数或未解析行保留并暂停关联核算。相同参数换算后一致则只核算一次且保留所有来源；副本不增加证据效力。此分支无需伪造scenario_citations或把候选改写成用户已确认假设；最终原样交付包含候选边界的user_summary。
+    """
+    from employment_decisions import assess_employment_terms as assess
+    return attach_delivery(cases, case_id, assess(cases, case_id, review_stage,
+                           [x.model_dump(exclude_unset=True, exclude_none=True) for x in citations], request_id, supersedes,
+                           None if scenario_citations is None else [x.model_dump(exclude_unset=True,exclude_none=True) for x in scenario_citations],extract_parameters))
 
 
 @mcp.tool()
@@ -332,7 +381,8 @@ def assess_employment_termination(case_id: str, citations: list[MaterialCitation
 def save_source_bound_register(case_id: str, domain: str, entries: list[RegisterEntry],
                                request_id: str = '', supersedes: str = '',
                                document_type: str = '', filename: str = '',
-                               tracking: ComplianceTracking | None = None) -> dict:
+                               tracking: ComplianceTracking | None = None,
+                               source_groups: list[SourceGroup] | None = None) -> dict:
     """保存公司/合规/IP来源台账；仅登记本案原句和上下文，不把缺记录当未发生。
 
     domain=corporate/compliance/ip；entries每项仅field与citation{path,quote,sha256,chunk}，先read_case_material。
@@ -340,6 +390,7 @@ def save_source_bound_register(case_id: str, domain: str, entries: list[Register
     compliance字段obligation/responsible_party/scope/deadline/feedback_deadline/report_deadline/decision/submission/implementation/acceptance/evidence_status；
     ip候选分类asset_type/jurisdiction/intended_use/application_place/applicant/inventor/agent/registered_holder/licensor/licensee/license_scope/status/date_context/fees；也接受filing_date/certificate_term/internal_estimate候选。
     所有领域的field都仅是模型未核验分类，单列classification_audit（不是事实字段）；实际保存条目均为source_excerpt原文，不把分类当事实值。
+    多议题/多义务/多资产用source_groups，最多20组，每组{subject_entry,entries}都是本次entries的0起始索引，entries必须含subject_entry。组内不重复相同原文，未分组或共享原文显式保留，不能靠分组认定法律关系或权利状态。输出正文及台账均保留该关联。
     corporate需要纪要时填document_type=minutes及filename；proposal仅为任务已明确的股东会担保拟议案骨架，不用于其他议案或替用户选择有权机关。
     正文由程序生成，完整出处保存在笔记；其余返回id可用export_case(note_ids=[id])导出。
     合规跟踪可传tracking{as_of,as_of_entry,deadlines:[{entry,date,year_basis}]}；索引对应本次entries从0起，日期为YYYY-MM-DD。
@@ -351,7 +402,8 @@ def save_source_bound_register(case_id: str, domain: str, entries: list[Register
     result = save(cases, case_id, domain,
                 [x.model_dump(exclude_unset=True, exclude_none=True) for x in entries],
                 request_id, supersedes, document_type, filename,
-                None if tracking is None else tracking.model_dump(exclude_unset=True, exclude_none=True))
+                None if tracking is None else tracking.model_dump(exclude_unset=True, exclude_none=True),
+                None if source_groups is None else [x.model_dump() for x in source_groups])
     return attach_delivery(cases, case_id, result)
 
 

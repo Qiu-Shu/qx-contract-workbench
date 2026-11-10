@@ -1,0 +1,243 @@
+"""Bounded private parent pipe; application authority stays on its event loop."""
+import asyncio
+from contextlib import asynccontextmanager
+import json
+import math
+import os
+import re
+from threading import Event
+from uuid import UUID
+
+PROTOCOL = 'qx-model-control-v1'
+JUDGE_PROTOCOL = 'qx-judge-control-v1'
+JUDGE_AUTH_PROTOCOL = 'qx-judge-authorization-v1'
+PERSONAL_WEIXIN_PROTOCOL = 'qx-personal-weixin-v1'
+MAX_BYTES = 524288
+LEGACY_MAX_BYTES = 32768
+_MATERIAL_OPERATION = re.compile(rb'"operation"\s*:\s*"authorize_material"')
+MAX_SEQUENCE = 9007199254740991
+_OPERATIONS = {'configure', 'disable', 'authorize', 'revoke', 'configure_judge', 'disable_judge',
+               'authorize_judge', 'revoke_judge', 'authorize_context', 'authorize_profile', 'authorize_material',
+               'start_personal_weixin', 'disable_personal_weixin', 'verify_personal_weixin'}
+_CODES = {'BLOCKED_LIVE', 'VERSION_CONFLICT', 'STATE_CONFLICT', 'BUDGET_EXCEEDED', 'CROSS_MATTER_DENIED'}
+
+
+class NativeControlHandler:
+    """Fixed composition of native model and personal-channel lifecycles."""
+    def __init__(self, main, judge, personal=None):
+        self.configure, self.disable = main.configure, main.disable
+        self.authorize, self.revoke = main.authorize, main.revoke
+        self.authorize_context = main.authorize_context
+        self.authorize_profile = main.authorize_profile
+        # Older trusted Main assemblies predate material disclosure grants.
+        self.authorize_material = getattr(main, 'authorize_material', self._unsupported_material)
+        self.configure_judge, self.disable_judge = judge.configure, judge.disable
+        self._judge = judge
+        self._personal = personal
+
+    def start_personal_weixin(self, payload):
+        return self._personal.start(payload) if self._personal else self._unsupported_material(payload)
+
+    def disable_personal_weixin(self):
+        return self._personal.disable() if self._personal else {'status':'disabled'}
+
+    def verify_personal_weixin(self, payload):
+        return self._personal.verify(payload) if self._personal else self._unsupported_material(payload)
+
+    @staticmethod
+    def _unsupported_material(payload):
+        from .security import ServiceError
+        raise ServiceError('BLOCKED_LIVE', 403)
+
+    def authorize_judge(self, payload):
+        return self._judge.authorize(payload)
+
+    def revoke_judge(self, payload):
+        return self._judge.revoke(payload)
+
+    def disable_all(self):
+        if self._personal is not None:
+            self._personal.disable()
+        try:
+            self.disable()
+        finally:
+            self.disable_judge()
+
+
+def _unique(pairs):
+    value = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError('CONTROL_REJECTED')
+        value[key] = item
+    return value
+
+
+def _constant(value):
+    raise ValueError('CONTROL_REJECTED')
+
+
+def parse_control_line(line, nonce, sequence):
+    try:
+        if type(line) is bytes:
+            if len(line) > MAX_BYTES:
+                raise ValueError
+            line = line.decode('utf-8')
+        if type(line) is not str:
+            raise ValueError
+        if not line.endswith('\n') or len(line.encode('utf-8')) > MAX_BYTES:
+            raise ValueError
+        value = json.loads(line, object_pairs_hook=_unique, parse_constant=_constant)
+        if (type(value) is not dict or set(value) != {'event','protocol','nonce','sequence','operation','payload'}
+                or value['event'] != 'model-control' or value['protocol'] != PROTOCOL
+                or value['nonce'] != nonce or type(value['sequence']) is not int
+                or not 1 <= value['sequence'] <= MAX_SEQUENCE or value['sequence'] != sequence
+                or type(value['operation']) is not str or value['operation'] not in _OPERATIONS
+                or type(value['payload']) is not dict):
+            raise ValueError
+        if value['operation'] != 'authorize_material' and len(line.encode('utf-8')) > LEGACY_MAX_BYTES:
+            raise ValueError
+        pending = [(value['payload'], 0)]
+        while pending:
+            item, depth = pending.pop()
+            if depth > 16 or (type(item) is float and not math.isfinite(item)):
+                raise ValueError
+            if type(item) is dict:
+                pending.extend((part, depth+1) for part in item.values())
+            elif type(item) is list:
+                pending.extend((part, depth+1) for part in item)
+        return value['operation'], value['payload']
+    except (ValueError, TypeError, KeyError, RecursionError, UnicodeError):
+        raise ValueError('CONTROL_REJECTED') from None
+
+
+class ParentControlChannel:
+    def __init__(self, stream, nonce, emit, on_eof, *, fatal=os._exit, timeout=10):
+        self._stream, self._nonce = stream, nonce
+        self._emit, self._on_eof, self._fatal = emit, on_eof, fatal
+        self._timeout = timeout
+        self._closed = Event()
+        self._loop = self._handler = None
+
+    def bind(self, handler):
+        if self._closed.is_set() or self._loop is not None:
+            raise ValueError('CONTROL_REJECTED')
+        self._handler = handler
+        self._loop = asyncio.get_running_loop()
+
+    def close(self):
+        self._closed.set()
+        if self._handler is not None:
+            # Older Main-only trusted assemblies keep their fixed cleanup seam.
+            getattr(self._handler, 'disable_all', self._handler.disable)()
+
+    def _request_close(self):
+        self._closed.set()
+        if self._loop is not None:
+            stopped = Event()
+            def clear():
+                try:
+                    self.close()
+                except Exception:
+                    pass  # Parent shutdown/fatal exit also destroys the process identity.
+                finally:
+                    stopped.set()
+            try:
+                self._loop.call_soon_threadsafe(clear)
+                stopped.wait(self._timeout)
+            except RuntimeError:
+                pass
+
+    def _fail(self):
+        self._request_close()
+        self._fatal(2)
+
+    async def _dispatch(self, operation, payload):
+        from .security import ServiceError
+        if (self._closed.is_set() or asyncio.get_running_loop() is not self._loop
+                or operation not in _OPERATIONS):
+            raise ValueError('CONTROL_REJECTED')
+        try:
+            if operation in ('disable', 'disable_judge', 'disable_personal_weixin'):
+                if payload:
+                    raise ServiceError('BLOCKED_LIVE', 403)
+                result = getattr(self._handler, operation)()
+            else:
+                result = getattr(self._handler, operation)(payload)
+        except ServiceError as error:
+            return {'ok':False, 'code':error.code if error.code in _CODES else 'BLOCKED_LIVE'}
+        except Exception:
+            getattr(self._handler, 'disable_all', self._handler.disable)()
+            return {'ok':False, 'code':'BLOCKED_LIVE'}
+        expected = {'configure':{'configured'}, 'disable':{'disabled'},
+                    'authorize':{'authorized','existing'}, 'revoke':{'revoked'},
+                    'configure_judge':{'configured'}, 'disable_judge':{'disabled'},
+                    'authorize_judge':{'authorized','existing'}, 'revoke_judge':{'revoked'},
+                    'authorize_context':{'authorized','existing'},
+                    'authorize_profile':{'authorized','existing'},
+                    'authorize_material':{'authorized','existing'},
+                    'start_personal_weixin':{'started'}, 'disable_personal_weixin':{'disabled'},
+                    'verify_personal_weixin':{'accepted'}}[operation]
+        if type(result) is not dict or result.get('status') not in expected:
+            raise ValueError('CONTROL_REJECTED')
+        configuring = operation in ('configure', 'configure_judge')
+        keys = {'status','config_sha256','config_version'} if configuring else {'status'}
+        if set(result) != keys:
+            raise ValueError('CONTROL_REJECTED')
+        if configuring:
+            if (type(result['config_sha256']) is not str or not re.fullmatch('[0-9a-f]{64}', result['config_sha256'])
+                    or type(result['config_version']) is not str
+                    or str(UUID(result['config_version'])) != result['config_version']):
+                raise ValueError('CONTROL_REJECTED')
+        return {'ok':True, **result}
+
+    def watch(self):
+        sequence = 1
+        while not self._closed.is_set():
+            future = None
+            try:
+                line = self._stream.readline(LEGACY_MAX_BYTES+1)
+                if (len(line) > LEGACY_MAX_BYTES and not line.endswith(b'\n')
+                        and _MATERIAL_OPERATION.search(line)):
+                    line += self._stream.readline(MAX_BYTES-len(line)+1)
+                if line == b'':
+                    self._request_close()
+                    self._on_eof()
+                    return
+                operation, payload = parse_control_line(line, self._nonce, sequence)
+                if self._loop is None or self._closed.is_set():
+                    raise ValueError('CONTROL_REJECTED')
+                coroutine = self._dispatch(operation, payload)
+                try:
+                    future = asyncio.run_coroutine_threadsafe(coroutine, self._loop)
+                except RuntimeError:
+                    coroutine.close()
+                    raise
+                result = future.result(timeout=self._timeout)
+                if self._closed.is_set():
+                    return
+                self._emit(event='model-control-result', protocol=PROTOCOL,
+                           nonce=self._nonce, sequence=sequence, **result)
+                sequence += 1
+                # References are released, not a claim to erase immutable strings.
+                line = payload = result = None
+            except Exception:
+                if future is not None:
+                    future.cancel()
+                self._fail()
+                return
+
+
+def attach_control(app, channel, handler):
+    previous = app.router.lifespan_context
+
+    @asynccontextmanager
+    async def lifespan(application):
+        async with previous(application):
+            channel.bind(handler)
+            try:
+                yield
+            finally:
+                channel.close()
+
+    app.router.lifespan_context = lifespan

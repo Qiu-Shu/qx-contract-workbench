@@ -37,6 +37,36 @@ function page(params,max=50){
   const offset=number('offset',0),limit=number('limit',20);if(limit<1||limit>max)fail(`每页数量须为 1–${max}。`);return {offset,limit};
 }
 
+// Internal host bridge: the knowledge layer cannot mutate or bypass memory switches.
+export function createKnowledgeReader(run){return async(action,args)=>{
+  const allowed={list:['case_id','offset'],read:['case_id','memory_id'],recall:['case_id','query']};
+  if(!allowed[action])fail('知识库仅可读取案件记忆。',403);
+  keys(args,allowed[action]);const case_id=id(args.case_id);let result;
+  if(action==='list'){
+    const offset=args.offset??0;if(!Number.isSafeInteger(offset)||offset<0)fail('分页参数无效。');
+    result=await run('list',{case_id,offset,limit:20,require_enabled:true,deduplicate:true});
+  }else if(action==='read'){
+    result=await run('read',{case_id,memory_id:id(args.memory_id),require_enabled:true});
+    if(result.source_stale)fail('记忆来源已失效，请重新选择当前笔记。',409);
+  }else result=await run('recall',{case_id,query:text(args.query,300,'检索词'),limit:8,use_hindsight:false,deduplicate:true});
+  return result;
+};}
+
+export function createKnowledgeManager(run,queue){return async(action,args)=>{
+  const allowed={list_cases:['query','offset','limit'],status:['case_id'],update:['case_id','memory_id','revision','content']};
+  if(!allowed[action])fail('知识管理操作无效',403);keys(args,allowed[action]);
+  if(action==='list_cases'){
+    const offset=args.offset??0,limit=args.limit??50;if(!Number.isSafeInteger(offset)||offset<0||!Number.isSafeInteger(limit)||limit<1||limit>50)fail('分页参数无效。');
+    if(args.query!==undefined&&(typeof args.query!=='string'||args.query.length>300))fail('检索词无效。');
+    return run(action,{query:args.query||'',offset,limit});
+  }
+  const case_id=id(args.case_id);if(action==='status')return run(action,{case_id});
+  const state=await run('status',{case_id});if(!state.enabled)fail('案件记忆已关闭。',409);
+  const current=await run('read',{case_id,memory_id:id(args.memory_id),require_enabled:true});if(current.source_stale)fail('记忆来源已变化，请重新核对。',409);
+  const result=await run('update',{case_id,memory_id:args.memory_id,revision:revision(args.revision),content:text(args.content,16000,'记忆正文'),require_current:true});
+  queue(case_id);return result;
+};}
+
 export function apply(ctx,config={}){
   if(!config.workspace||!config.python)throw new Error('案件记忆需要配置 workspace 和 python。');
   const workspace=resolve(config.workspace),root=resolve(fileURLToPath(new URL('../../',import.meta.url)));
@@ -86,11 +116,13 @@ export function apply(ctx,config={}){
         if(ended)return;if(code!==0)return finish(new Error('案件记忆进程中断，请稍后重试。'));
         let data;try{data=JSON.parse(stdout.trim());}catch{return finish(new Error('案件记忆返回异常。'));}
         if(!data||typeof data!=='object'||typeof data.ok!=='boolean')return finish(new Error('案件记忆返回异常。'));
-        data.ok?finish(null,data.result):finish(new Error(typeof data.error==='string'?data.error:'案件记忆操作未完成。'));
+        data.ok?finish(null,data.result):finish(Object.assign(new Error(typeof data.error==='string'?data.error:'案件记忆操作未完成。'),{status:data.status===409?409:400}));
       });
       child.stdin.end(JSON.stringify({action,args}));
     });
   }
+  ctx.on?.('qx/case-memory/read',createKnowledgeReader(run));
+  ctx.on?.('qx/case-memory/manage',createKnowledgeManager(run,queue));
   function queue(caseId){
     if(disposed)return;pending.add(caseId);if(!draining)void drain();
   }

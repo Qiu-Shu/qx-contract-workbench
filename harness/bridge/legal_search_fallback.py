@@ -5,7 +5,12 @@ The Node caller owns request spacing and cooldowns.
 """
 import json
 import sys
+from pathlib import Path
 from urllib.parse import urlencode, urlsplit
+
+# Portable Python's isolated path file intentionally omits cwd and script folders.
+# This entrypoint needs only its own bundled vendor parser, never an arbitrary cwd.
+sys.path.insert(0,str(Path(__file__).resolve().parent))
 
 from lxml import html
 

@@ -52,7 +52,7 @@ def import_material(path:str)->dict:
 @mcp.tool()
 @friendly_errors
 def parse_material(path:str,start_page:int=1,page_count:int=20,force_ocr:bool=False,revision_mode:str='original')->dict:
-    """解析已导入材料并建立全文索引。PDF逐页处理，按返回next_page继续；图片用本机OCR。DOCX修订视图original或accepted_view。"""
+    """解析已导入材料。PDF、图片及多帧扫描件按next_page逐批读取；failed_pages可用start_page及page_count=1单独重试，其余已提取内容先用。本机OCR保留文字框和置信信息，DOCX表格保留行列与合并范围。修订视图original或accepted_view。"""
     if revision_mode not in {'original','accepted_view'}:raise ValueError('revision_mode 只能为 original 或 accepted_view。')
     with store.db() as db:store.current(path,db)
     request={'workspace':str(store.root),'path':path,'start_page':start_page,'page_count':page_count,
@@ -96,13 +96,8 @@ def write_word_draft(filename:str,title:str,content:str)->dict:
     store.safe(directory,internal=True)
     target=store.safe(directory/filename,must_exist=False)
     if target.exists():target=store.safe(directory/(target.stem+'-'+uuid4().hex[:8]+'.docx'),must_exist=False)
-    document=Document();document.styles['Normal'].font.name='Microsoft YaHei';document.styles['Normal'].font.size=Pt(11)
-    document.add_heading(title,0)
-    for line in content.splitlines():
-        if line.startswith('### '):document.add_heading(line[4:],3)
-        elif line.startswith('## '):document.add_heading(line[3:],2)
-        elif line.startswith('# '):document.add_heading(line[2:],1)
-        else:document.add_paragraph(line)
+    from word_render import document_from_text
+    document=document_from_text(title,content)
     temporary=None
     try:
         with NamedTemporaryFile(dir=directory,prefix='.qx-word-',suffix='.tmp',delete=False) as stream:

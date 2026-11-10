@@ -1,0 +1,449 @@
+[
+  {
+    "id": "agent-preset-registry",
+    "config": {
+      "default": "qunxing"
+    }
+  },
+  {
+    "id": "session-title-llm",
+    "disabled": true
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-verified-delivery",
+        "name": "@APP@/plugins/verified-delivery/index.mjs",
+        "config": {
+          "workspace": "@DATA@/workspace"
+        }
+      }
+    ]
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-first-content-title",
+        "name": "@APP@/plugins/session-title/index.mjs",
+        "config": {
+          "workspace": "@DATA@/workspace",
+          "python": "@APP@/runtime/python/python.exe"
+        }
+      }
+    ]
+  },
+  {
+    "id": "attachment-local",
+    "config": {
+      "dshHome": "@DATA@/workspace/inbox/.harness",
+      "maxImagesPerMessage": 9007199254740991,
+      "maxImageBytes": 4503599627370495,
+      "maxMessageImageBytes": 4503599627370495
+    }
+  },
+  {
+    "id": "connection",
+    "config": {
+      "maxRequestBodyBytes": 9007199254740991
+    }
+  },
+  {
+    "id": "session-telemetry-otel",
+    "disabled": true
+  },
+  {
+    "id": "system-prompt",
+    "config": {
+      "personaPrefix": "你是AI师兄法律助手平台，使用 {{model}} 帮助用户理解材料、拟稿和处理工作。用中文清楚回答。"
+    }
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-legal-search",
+        "name": "@DATA@/.local/legal-search-runtime/plugins/legal-search/index.mjs",
+        "config": {
+          "workspace": "@DATA@/workspace",
+          "python": "@APP@/runtime/scrapling/python.exe"
+        }
+      },
+      {
+        "id": "qx-account-balance",
+        "name": "@APP@/plugins/account/index.mjs"
+      },
+      {
+        "id": "qx-desktop-session",
+        "name": "@qunxing/desktop-session"
+      },
+      {
+        "id": "qx-materials",
+        "name": "@APP@/plugins/lazy-mcp/index.mjs",
+        "config": {
+          "transport": "stdio",
+          "serverName": "qx_materials",
+          "command": "@APP@/runtime/python/python.exe",
+          "args": [
+            "@APP@/bridge/server.py",
+            "--workspace",
+            "@DATA@/workspace"
+          ],
+          "cwd": "@DATA@/workspace",
+          "env": {
+            "PYTHONIOENCODING": "utf-8",
+            "PYTHONPATH": "@APP@/legacy/src",
+            "QX_LEGACY_ROOT": "@APP@/legacy"
+          },
+          "toolCallTimeoutMs": 600000
+        },
+        "disabled": false
+      },
+      {
+        "id": "preset-qunxing",
+        "name": "@deepseek-ai/dsh-agent-preset",
+        "config": {
+          "id": "qunxing",
+          "name": "律师工作助手",
+          "description": "协助客户接待、合同审查、材料整理、庭审准备与律师账号运营。",
+          "order": 0,
+          "plugins": [
+            {
+              "id": "persona",
+              "name": "@deepseek-ai/dsh-persona",
+              "config": {
+                "prefix": "你是AI师兄法律助手平台，使用 {{model}} 协助用户处理材料。根据需求自行选择并加载适用的中文法律 Skill。先理解目标，再行动；信息不足时只问会影响结果的问题。"
+              }
+            },
+            {
+              "id": "agent-instructions",
+              "name": "@deepseek-ai/dsh-agent-instructions",
+              "config": {
+                "maxBytes": 65536
+              }
+            },
+            {
+              "id": "time-context",
+              "name": "@deepseek-ai/dsh-time-context"
+            },
+            {
+              "id": "tool-fs",
+              "name": "@deepseek-ai/dsh-tool-fs"
+            },
+            {
+              "id": "tool-fs-search",
+              "name": "@deepseek-ai/dsh-tool-fs-search",
+              "config": {
+                "sampleOverCapGlobResults": false
+              }
+            },
+            {
+              "id": "skill-filesystem",
+              "name": "@deepseek-ai/dsh-skill-filesystem",
+              "config": {
+                "customSkillDirs": ["@DATA@/workspace/.dsh/skills"]
+              }
+            },
+            {
+              "id": "tool-skill",
+              "name": "@deepseek-ai/dsh-tool-skill"
+            },
+            {
+              "id": "compaction",
+              "name": "cordis:group",
+              "group": true,
+              "isolate": {
+                "compaction": true,
+                "toolResultPruner": true
+              },
+              "config": [
+                {
+                  "id": "compaction-basic",
+                  "name": "@deepseek-ai/dsh-compaction-basic"
+                },
+                {
+                  "id": "command-compact",
+                  "name": "@deepseek-ai/dsh-command-compact"
+                },
+                {
+                  "id": "tool-result-pruner",
+                  "name": "@deepseek-ai/dsh-compaction-tool-result-pruner",
+                  "config": {
+                    "thresholdChars": 8192,
+                    "headChars": 4096,
+                    "tailChars": 1024
+                  }
+                }
+              ]
+            },
+            {
+              "id": "tool-ask-user",
+              "name": "@deepseek-ai/dsh-tool-ask-user"
+            },
+            {
+              "id": "tool-web",
+              "name": "@deepseek-ai/dsh-tool-web",
+              "config": {
+                "fetch": true,
+                "searchTimeoutMs": 60000
+              }
+            },
+            {
+              "id": "present",
+              "name": "file:///@APP@/plugins/present/index.mjs",
+              "config": { "workspace": "@DATA@/workspace", "maxFiles": 8 }
+            }
+          ]
+        }
+      },
+      {
+        "id": "qx-personal-wechat",
+        "name": "@APP@/plugins/wechat/qx-plugin.js",
+        "config": {
+          "workspace": "@DATA@/workspace",
+          "stateDir": "@DATA@/.local/dsh-home/qx-wechat",
+          "sessionId": "qx-personal-workbench",
+          "agentPreset": "qunxing",
+          "autoConnect": true
+        }
+      }
+    ]
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-bb-browser",
+        "name": "@APP@/plugins/lazy-mcp/index.mjs",
+        "config": {
+          "transport": "stdio",
+          "serverName": "bb_browser",
+          "command": "@APP@/runtime/python/python.exe",
+          "args": [
+            "@APP@/bridge/browser.py"
+          ],
+          "cwd": "@DATA@/workspace",
+          "env": {
+            "PYTHONIOENCODING": "utf-8",
+            "QX_BROWSER_ADAPTER_VERSION": "1.1.1",
+            "BB_BROWSER_NODE": "@APP@/runtime/node.exe",
+            "BB_BROWSER_CLI": "@APP@/browser/node_modules/bb-browser/dist/cli.js",
+            "PYTHONPATH": "@APP@/legacy/src",
+            "QX_LEGACY_ROOT": "@APP@/legacy"
+          },
+          "toolCallTimeoutMs": 120000
+        },
+        "disabled": false
+      },
+      {
+        "id": "qx-scrapling",
+        "name": "@APP@/plugins/lazy-mcp/index.mjs",
+        "config": {
+          "transport": "stdio",
+          "serverName": "scrapling",
+          "command": "@APP@/runtime/scrapling/python.exe",
+          "args": [
+            "@APP@/python-tool.py",
+            "scrapling",
+            "mcp"
+          ],
+          "cwd": "@DATA@/workspace",
+          "env": {
+            "PYTHONIOENCODING": "utf-8",
+            "PYTHONPATH": "@APP@/legacy/src",
+            "QX_LEGACY_ROOT": "@APP@/legacy"
+          },
+          "toolCallTimeoutMs": 120000
+        },
+        "disabled": false
+      },
+      {
+        "id": "qx-windows",
+        "name": "@APP@/plugins/lazy-mcp/index.mjs",
+        "config": {
+          "transport": "stdio",
+          "serverName": "windows",
+          "command": "@APP@/runtime/windows/python.exe",
+          "args": [
+            "@APP@/python-tool.py",
+            "windows",
+            "serve",
+            "--transport",
+            "stdio"
+          ],
+          "cwd": "@DATA@/workspace",
+          "env": {
+            "PYTHONIOENCODING": "utf-8",
+            "PYTHONPATH": "@APP@/legacy/src",
+            "QX_LEGACY_ROOT": "@APP@/legacy"
+          },
+          "toolCallTimeoutMs": 120000
+        },
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-agent-desktop",
+        "name": "@APP@/plugins/lazy-mcp/index.mjs",
+        "disabled": false,
+        "config": {
+          "transport": "stdio",
+          "serverName": "agent_desktop",
+          "command": "@APP@/tools/agent-desktop/1.2.0/agent-desktop.exe",
+          "args": [
+            "mcp"
+          ],
+          "cwd": "@DATA@/workspace",
+          "env": {
+            "AGENT_DESKTOP_HOME": "@DATA@/.local/agent-desktop"
+          },
+          "toolCallTimeoutMs": 120000,
+          "failOnStartupError": false,
+          "reconnect": {
+            "enabled": false
+          }
+        }
+      }
+    ]
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-legal",
+        "name": "@APP@/plugins/lazy-mcp/index.mjs",
+        "config": {
+          "transport": "stdio",
+          "serverName": "qx_legal",
+          "command": "@APP@/runtime/python/python.exe",
+          "args": [
+            "@APP@/bridge/business_server.py",
+            "--workspace",
+            "@DATA@/workspace"
+          ],
+          "cwd": "@DATA@/workspace",
+          "env": {
+            "PYTHONIOENCODING": "utf-8",
+            "PYTHONPATH": "@APP@/legacy/src",
+            "QX_LEGACY_ROOT": "@APP@/legacy"
+          },
+          "toolCallTimeoutMs": 600000
+        },
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-knowledge-ui",
+        "name": "@APP@/plugins/knowledge/index.mjs",
+        "config": {
+          "workspace": "@DATA@/workspace",
+          "python": "@APP@/runtime/python/python.exe"
+        }
+      },
+      {
+        "id": "qx-knowledge",
+        "name": "@APP@/plugins/lazy-mcp/index.mjs",
+        "config": {
+          "transport": "stdio",
+          "serverName": "qx_knowledge",
+          "command": "@APP@/runtime/python/python.exe",
+          "args": [
+            "@APP@/bridge/knowledge_server.py",
+            "--workspace",
+            "@DATA@/workspace"
+          ],
+          "cwd": "@DATA@/workspace",
+          "env": {
+            "PYTHONIOENCODING": "utf-8",
+            "PYTHONPATH": "@APP@/legacy/src",
+            "QX_LEGACY_ROOT": "@APP@/legacy"
+          },
+          "toolCallTimeoutMs": 120000
+        },
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-upload-privacy",
+        "name": "@APP@/plugins/privacy/index.mjs",
+        "config": {
+          "workspace": "@DATA@/workspace",
+          "python": "@APP@/runtime/python/python.exe"
+        }
+      }
+    ]
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-case-memory-ui",
+        "name": "@APP@/plugins/case-memory/index.mjs",
+        "config": {
+          "workspace": "@DATA@/workspace",
+          "python": "@APP@/runtime/python/python.exe"
+        }
+      },
+      {
+        "id": "qx-case-memory",
+        "name": "@APP@/plugins/lazy-mcp/index.mjs",
+        "config": {
+          "transport": "stdio",
+          "serverName": "qx_case_memory",
+          "command": "@APP@/runtime/python/python.exe",
+          "args": [
+            "@APP@/bridge/case_memory_server.py",
+            "--workspace",
+            "@DATA@/workspace"
+          ],
+          "cwd": "@DATA@/workspace",
+          "env": {
+            "PYTHONIOENCODING": "utf-8",
+            "QX_HINDSIGHT_TOKEN": {
+              "__jsExpr": "process.env.QX_HINDSIGHT_TOKEN || ''"
+            },
+            "PYTHONPATH": "@APP@/legacy/src",
+            "QX_LEGACY_ROOT": "@APP@/legacy"
+          },
+          "toolCallTimeoutMs": 120000
+        },
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-media",
+        "name": "@APP@/plugins/media/index.mjs",
+        "config": {
+          "workspace": "@DATA@/workspace",
+          "python": "@APP@/runtime/python/python.exe",
+          "scraperPython": "@APP@/runtime/scrapling/python.exe"
+        }
+      }
+    ]
+  },
+  {
+    "id": "llm-deepseek",
+    "config": {
+      "retryPolicy": {
+        "mode": "normal",
+        "maxRetries": 5,
+        "retryableCodes": [
+          "EMPTY_RESPONSE",
+          "RATE_LIMIT",
+          "SERVER",
+          "TIMEOUT",
+          "TRANSPORT",
+          "MALFORMED_RESPONSE",
+          "STREAM_CLOSED"
+        ]
+      }
+    }
+  }
+]

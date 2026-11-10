@@ -1,4 +1,8 @@
 * text=auto eol=lf
+# Release overlays and initialization/source fingerprints preserve measured bytes.
+harness/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+harness/workspace-seed/** -whitespace
+harness/legacy/** -whitespace
 # Public evidence and fingerprints retain the exact measured bytes.
 sources/** -text -whitespace
 tests/fixtures/synthetic/** -text -whitespace

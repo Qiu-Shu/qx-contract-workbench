@@ -4,7 +4,8 @@ window.qxInstallBusiness=function(ctx,React){
   const modes=[{id:'reception',title:'客户接待',hint:'粘贴客户原话或截图，准备回复并推进下一步',icon:'M4 4h16v11H9l-5 4V4m4 4h8m-8 3h5'},
     {id:'contract',title:'合同审查',hint:'先发合同，再确认我方立场和审查程度',icon:'M14 3H5v18h14V8l-5-5v5h5M8 12h8m-8 4h5'},
     {id:'case',title:'办案整理',hint:'直接发送材料，逐步理清事实、证据和办案目标',icon:'M3 7h7l2 2h9v11H3V7m0 0V4h7l2 3h7v2M7 13h10m-10 3h6'},
-    {id:'hearing',title:'模拟法庭',hint:'发送案件材料，确认我方角色后开始演练',icon:'M12 3v17m-6 1h12M4 7h16M6 7l-4 8h8L6 7m12 0-4 8h8l-4-8'}];
+    {id:'hearing',title:'模拟法庭',hint:'发送案件材料，确认我方角色后开始演练',icon:'M12 3v17m-6 1h12M4 7h16M6 7l-4 8h8L6 7m12 0-4 8h8l-4-8'},
+    {id:'media',title:'律师账号运营',hint:'从账号定位、选题到文稿与拍摄清单，逐步完成',icon:'M3 5h13v14H3V5m13 5 5-3v10l-5-3M7 9l5 3-5 3V9'}];
   const stages={new:'初次接触',consulting:'沟通需求',scheduling:'推进预约',quoted:'已报价',pending:'待委托',engaged:'已委托'};
   let snapshot={states:{},index:[],busy:false,error:''},indexReady=false;const listeners=new Set(),inputs=new Map(),pendingCreations=new Map();
   const publish=patch=>{if(controller.signal.aborted)return;snapshot={...snapshot,...patch};listeners.forEach(fn=>fn());};
@@ -72,7 +73,7 @@ window.qxInstallBusiness=function(ctx,React){
   function Entries({wide=true}){
     const data=useBusiness(),sessions=useSessions(),[expanded,setExpanded]=React.useState(null);
     const current=Object.values(sessions.byId).find(row=>(row.retainedBy?.mainView||0)>0)?.id;
-    return h('section',{className:'qx-business-entries','aria-label':'四大业务入口'},wide&&h('p',{className:'qx-business-eyebrow'},'开始一项工作'),
+    return h('section',{className:'qx-business-entries','aria-label':'业务入口'},wide&&h('p',{className:'qx-business-eyebrow'},'开始一项工作'),
       modes.map(item=>h('div',{key:item.id},h('div',{className:'qx-business-entry-row'},
         h('button',{type:'button',className:'qx-business-entry',disabled:data.busy,title:item.title,'aria-label':'新建'+item.title+'对话','aria-current':data.states[current]?.mode===item.id?'true':undefined,onClick:()=>{void create(item.id).catch(()=>{})}},icon(item),wide&&h('span',null,item.title),wide&&h('span',{className:'qx-business-plus','aria-hidden':true},'+')),
         wide&&h('button',{type:'button',className:'qx-business-history-toggle','aria-label':item.title+'历史对话','aria-expanded':expanded===item.id,onClick:()=>setExpanded(expanded===item.id?null:item.id)},expanded===item.id?'▴':'▾')),

@@ -16,7 +16,7 @@ test('builds a changes-only directory patch and leaves both release trees untouc
   await fs.writeFile(path.join(newDir,'新增.txt'),'added');
   for(const dir of [oldDir,newDir])await fs.writeFile(path.join(dir,'不变.txt'),'retained');
   const before=await fs.stat(path.join(oldDir,'不变.txt'));
-  const toolsDir=path.resolve(__dirname,'../.local/install-speed-check/hdiff-proof/vendor-v5.1.3/windows64');
+  const toolsDir=await require('./hdiffpatch-tools.cjs').ensureHdiffTools();
   const output=path.join(root,'package');
   const result=await prepareIncrementalPackage({oldDir,newDir,fromVersion:'0.2.6',toVersion:'0.2.7',output,toolsDir});
   const plan=JSON.parse(await fs.readFile(result.planFile,'utf8'));

@@ -36,7 +36,7 @@ class Calculation(Input):
 
 
 class Party(Input):
-    role: Literal['plaintiff', 'defendant', 'applicant', 'respondent', 'client', 'issuer', 'recipient']
+    role: Literal['plaintiff', 'defendant', 'appellant', 'appellee', 'applicant', 'respondent', 'client', 'issuer', 'recipient']
     name: str
     citation: Citation
 
@@ -46,6 +46,58 @@ class LitigationBrief(Input):
     claim_kind: Literal['payment', 'return', 'undetermined'] = 'undetermined'
     claim_amount: Money | None = Field(default=None, description='原文金额及其引文；不能在这里放算式索引。')
     calculation_index: StrictInt | None = Field(default=None, description='与claim_amount互斥；本次calculations的0起始索引，直接放在brief中。')
+
+
+class LitigationIssue(Input):
+    claim: Citation
+    supporting: list[Citation] = Field(default_factory=list, max_length=10)
+    opposing: list[Citation] = Field(default_factory=list, max_length=10)
+    legal_basis: list[Citation] = Field(default_factory=list, max_length=10)
+
+
+class LitigationClaim(Input):
+    request: Citation
+    issue_indices: list[StrictInt] = Field(default_factory=list, max_length=20)
+
+
+class ClaimElement(Input):
+    key: str
+    supporting: list[Citation] = Field(default_factory=list,max_length=10)
+    opposing: list[Citation] = Field(default_factory=list,max_length=10)
+
+
+class ClaimReview(Input):
+    claim_index: StrictInt
+    basis: Literal['sale_price','private_loan','unjust_enrichment','service_fee']
+    elements: list[ClaimElement] = Field(default_factory=list,max_length=5)
+
+
+class ProcedureItem(Input):
+    key: str
+    citations: list[Citation] = Field(default_factory=list,max_length=10)
+
+
+class RemedyReview(Input):
+    decision_kind: Literal['civil_judgment','civil_order','labor_final','labor_nonfinal','labor_mixed','unknown']
+    actor: Literal['party','worker','employer','unknown']
+    classification_citations: list[Citation] = Field(default_factory=list,max_length=10)
+    service_citation: Citation | None = None
+
+
+class ProcedureReview(Input):
+    route: Literal['civil_first_instance','labor_arbitration','civil_appeal','labor_award_remedy','jurisdiction_objection']
+    items: list[ProcedureItem] = Field(default_factory=list,max_length=7)
+    remedy: RemedyReview | None = None
+
+
+class LegalReview(Input):
+    claims: list[ClaimReview] = Field(default_factory=list,max_length=20)
+    procedure: ProcedureReview | None = None
+
+
+class SourceGroup(Input):
+    subject_entry: StrictInt
+    entries: list[StrictInt] = Field(min_length=1, max_length=40)
 
 
 class RegisterCitation(MaterialCitation):

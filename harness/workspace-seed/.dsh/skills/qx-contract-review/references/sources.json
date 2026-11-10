@@ -1,0 +1,54 @@
+{
+  "version": "qx-legal-methods-v1",
+  "sources": [
+    {
+      "name": "C4材料事实核对",
+      "path": "src/cn_contract/assistant/contract_method.py",
+      "repository": "https://github.com/Qiu-Shu/qx-contract-workbench",
+      "url": "https://github.com/Qiu-Shu/qx-contract-workbench/blob/a26ae24c494c23c5b5d4a68a774a0f158df37eb0/src/cn_contract/assistant/contract_method.py",
+      "git_head": "a26ae24c494c23c5b5d4a68a774a0f158df37eb0",
+      "snapshot": "working_tree_bytes",
+      "sha256": "e106ad2eeb5b71ea0f9645f59926a5845a0ed64a053d627806989a3d34ec4827",
+      "bytes": 2416,
+      "git_head_blob_sha256": "e106ad2eeb5b71ea0f9645f59926a5845a0ed64a053d627806989a3d34ec4827",
+      "working_tree_changed": false,
+      "sections": {
+        "start_line": 10,
+        "end_line": 18,
+        "sha256": "f140eafe548783df1d3c45a3ff32827adc32826c7233163deae300a4042edfaf"
+      },
+      "usage": "提炼条件、相反原文、缺项与履行区分、原文数字推导和结论一致性；去掉text/citations强制协议。",
+      "license": "保留旧项目来源；本条不声明新的许可授权。"
+    },
+    {
+      "name": "合同专项与立场续接",
+      "path": "src/cn_contract/assistant/contract_review.py",
+      "repository": "https://github.com/Qiu-Shu/qx-contract-workbench",
+      "url": "https://github.com/Qiu-Shu/qx-contract-workbench/blob/a26ae24c494c23c5b5d4a68a774a0f158df37eb0/src/cn_contract/assistant/contract_review.py",
+      "git_head": "a26ae24c494c23c5b5d4a68a774a0f158df37eb0",
+      "snapshot": "working_tree_bytes",
+      "sha256": "4408e72e07f4b1d759788a626fd2fd3b09009511e3fbea129a37469c74d81067",
+      "bytes": 27183,
+      "git_head_blob_sha256": "6674d63e8aa0e0b77714b2eca5cce69975236876ddc8addff129b7a11aeda5fe",
+      "working_tree_changed": true,
+      "sections": {
+        "start_line": 16,
+        "end_line": 53,
+        "sha256": "f5b3415a45ba82152c8e2a8b512eeabdf243fe66112129c9ba998d1893909c36"
+      },
+      "usage": "保留NDA/供应专项、替换和备选、显式立场与同案续接；去掉固定JSON、字符偏移及字段长度拒收。",
+      "license": "保留旧项目来源；本条不声明新的许可授权。"
+    }
+  ],
+  "adaptation": {
+    "delivery": "natural_language",
+    "legacy_execution": "not_imported",
+    "character_offsets": "not_required_from_model",
+    "changes": "静态提炼业务方法；通过新qx_legal案件记录与qx_materials材料工具编排，不调用旧拒收器。",
+    "quality_scope": "迁移方法不是法律质量认证，不继承旧实验评分或生产结论。",
+    "private_knowledge_packages": "not_connected",
+    "upstream_notice": "原专项来源记录：Anthropic claude-for-legal、陈石律师(CSlawyer1985)中国法适配，Apache-2.0；当前为群兴方法提炼。",
+    "upstream_reference": "https://github.com/CSlawyer1985/claude-for-legal-ZH/tree/171903c9e5e91b3b7625f1dd557d146ba5a25adc/commercial-legal/skills",
+    "preserved_license": "legal-library/zh/LICENSE"
+  }
+}

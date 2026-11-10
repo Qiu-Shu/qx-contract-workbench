@@ -10,6 +10,166 @@ function bundledYaml(payload){
   if(!payload)throw new Error('Existing YAML configuration requires the bundled YAML parser.');
   return createRequire(fs.realpathSync(path.join(payload,'node_modules/@deepseek-ai/dsh/package.json')))('js-yaml');
 }
+
+function migrationYaml(yaml){
+  // Match Harness's entry-list dialect; retain expressions as data, never evaluate them.
+  const expression=new yaml.Type('tag:yaml.org,2002:js',{kind:'scalar',resolve:value=>typeof value==='string',
+    construct:value=>({__jsExpr:value}),predicate:value=>value&&typeof value==='object'&&typeof value.__jsExpr==='string',
+    represent:value=>value.__jsExpr});
+  const schema=yaml.JSON_SCHEMA.extend(expression);
+  return {load:text=>yaml.load(text,{schema}),dump:(value,options)=>yaml.dump(value,{...options,schema})};
+}
+
+// Only infer old roots from known bundled plugin paths, never from a user folder.
+function relocateInstalledPaths({data,payload,template,yaml,previousData}){
+  const profile=path.join(data,'.local/dsh-home/profiles/web'),patch=path.join(profile,'cordis.patch.yml');
+  const modules=path.join(profile,'node_modules'),target=path.join(payload,'node_modules');
+  const normalize=value=>value.replaceAll('\\','/').replace(/\/$/,'');
+  const currentRoot=normalize(path.resolve(payload)),currentData=normalize(path.resolve(data)),roots=new Set(),dataRoots=new Set();
+  if(typeof previousData==='string'&&path.isAbsolute(previousData)&&normalize(previousData).toLowerCase()!==currentData.toLowerCase())dataRoots.add(normalize(previousData));
+  const asPath=value=>value.startsWith('file:')?require('node:url').fileURLToPath(value):value;
+  const inferData=(value,wanted)=>{
+    if(typeof value==='string'&&typeof wanted==='string'&&wanted.startsWith('@DATA@/.local/')){
+      const suffix=wanted.slice(6);let normalized;try{normalized=normalize(asPath(value))}catch{return}
+      if(normalized.toLowerCase().endsWith(suffix.toLowerCase())){
+        const root=normalized.slice(0,-suffix.length);
+        if(path.isAbsolute(root)&&root.toLowerCase()!==currentData.toLowerCase())dataRoots.add(root);
+      }
+    }else if(value&&wanted&&typeof value==='object'&&typeof wanted==='object'){
+      for(const key of Object.keys(wanted))inferData(value[key],wanted[key]);
+    }
+  };
+  let original,config,json=true;
+  if(fs.existsSync(patch)){
+    assertNoLinks(path.resolve(data),path.resolve(patch));original=fs.readFileSync(patch,'utf8');
+    try{config=JSON.parse(original.replace(/^\uFEFF/,''));}
+    catch{json=false;yaml=migrationYaml(yaml||bundledYaml(payload));config=yaml.load(original);}
+    if(!Array.isArray(config))throw Error('Installed configuration must be a patch array.');
+    const active=new Set(),seen=new Set();
+    const validate=node=>{if(!node||typeof node!=='object'||seen.has(node))return;if(active.has(node))throw Error('Cyclic installed configuration is not supported.');active.add(node);for(const value of Object.values(node))validate(value);active.delete(node);seen.add(node)};
+    validate(config);
+    const desired=findIds(template);
+    const discover=node=>{
+      if(!node||typeof node!=='object')return;
+      if(typeof node.__jsExpr==='string')return;
+      if(desired.has(node.id))inferData(node,desired.get(node.id));
+      const name=desired.get(node.id)?.name;
+      if(typeof name==='string'&&name.startsWith('@APP@/')&&typeof node.name==='string'){
+        let value=normalize(node.name);
+        if(value.startsWith('file:')){try{value=normalize(require('node:url').fileURLToPath(value));}catch{return;}}
+        const suffix=name.slice(5);
+        if(value.toLowerCase().endsWith(suffix.toLowerCase())){
+          const root=value.slice(0,-suffix.length);
+          if(path.isAbsolute(root)&&root.toLowerCase()!==currentRoot.toLowerCase())roots.add(root);
+        }
+      }
+      for(const child of Object.values(node))discover(child);
+    };
+    discover(config);
+  }
+  const mappings=[...roots].map(root=>({root,next:currentRoot})).concat([...dataRoots].map(root=>({root,next:currentData}))).sort((a,b)=>b.root.length-a.root.length);
+  const replace=value=>{
+    if(typeof value==='string'){
+      const uri=value.startsWith('file:');let normalized=value;
+      if(uri){try{normalized=require('node:url').fileURLToPath(value);}catch{return value;}}
+      normalized=normalize(normalized);
+      for(const {root,next} of mappings)if(normalized.toLowerCase()===root.toLowerCase()||normalized.toLowerCase().startsWith(root.toLowerCase()+'/')){
+        const changed=next+normalized.slice(root.length);
+        if(!uri)return changed;
+        const oldUrl=new URL(value),nextUrl=require('node:url').pathToFileURL(changed);nextUrl.search=oldUrl.search;nextUrl.hash=oldUrl.hash;return nextUrl.href;
+      }
+      return value;
+    }
+    if(Array.isArray(value))return value.map(replace);
+    if(value&&typeof value==='object')return typeof value.__jsExpr==='string'?value:Object.fromEntries(Object.entries(value).map(([key,child])=>[key,replace(child)]));
+    return value;
+  };
+  const changes=[];
+  if(mappings.length){
+    const next=replace(config);
+    const instructions=path.join(data,'workspace/AGENTS.md');
+    if(fs.existsSync(instructions)){
+      assertNoLinks(path.resolve(data),path.resolve(instructions));
+      const prior=fs.readFileSync(instructions,'utf8');let updated=prior;
+      const escape=value=>value.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      const pattern=new RegExp('(?:'+mappings.map(({root})=>root.split('/').map(escape).join('[/\\\\]')).join('|')+')(?=$|[\\\\/\\s\'"`])','gi');
+      updated=prior.replace(pattern,matched=>{
+        const mapping=mappings.find(({root})=>root.toLowerCase()===matched.replaceAll('\\','/').toLowerCase());
+        return matched.includes('\\')?mapping.next.replaceAll('/','\\'):mapping.next;
+      });
+      if(updated!==prior)changes.push({file:instructions,original:prior,contents:updated});
+    }
+    if(config!==undefined)changes.push({file:patch,original,contents:json?JSON.stringify(next,null,2)+'\n':yaml.dump(next,{noRefs:true,lineWidth:-1})});
+  }
+  // lstat sees a broken junction; existsSync does not. Never delete its target.
+  let link;
+  try{link=fs.lstatSync(modules);}catch(error){if(error.code!=='ENOENT')throw error;}
+  const linked=link?.isSymbolicLink()?fs.readlinkSync(modules):null;
+  const replaceLink=!link||(linked&&normalize(path.resolve(profile,linked)).toLowerCase()!==normalize(path.resolve(target)).toLowerCase());
+  let pending,unlinked=false,backup;const written=[];
+  try{
+    if(replaceLink){
+      assertNoLinks(path.resolve(data),path.resolve(profile));
+      if(!fs.statSync(target).isDirectory())throw Error('Bundled dependencies are missing.');
+      fs.mkdirSync(profile,{recursive:true});pending=path.join(profile,'.node_modules.'+randomUUID()+'.tmp');
+      fs.symlinkSync(target,pending,'junction');
+    }
+    if(changes.length){
+      backup=path.join(data,'.local/migrations','relocation-'+randomUUID());
+      assertNoLinks(path.resolve(data),path.resolve(backup));fs.mkdirSync(backup,{recursive:true});
+      for(const change of changes)fs.writeFileSync(path.join(backup,path.basename(change.file)),change.original,{mode:0o600});
+      for(const change of changes)if(fs.readFileSync(change.file,'utf8')!==change.original)throw Error('Configuration changed during relocation; original backups preserved.');
+      for(const change of changes){
+        assertNoLinks(path.resolve(data),path.resolve(change.file));
+        if(fs.readFileSync(change.file,'utf8')!==change.original)throw Error('Configuration changed during relocation; retry after closing other editors.');
+        atomicWrite(change.file,change.contents);written.push(change);
+      }
+    }
+    if(pending){
+      if(linked){if(!fs.lstatSync(modules).isSymbolicLink()||fs.readlinkSync(modules)!==linked)throw Error('Dependency link changed during relocation.');fs.unlinkSync(modules);unlinked=true;}
+      fs.renameSync(pending,modules);pending=null;unlinked=false;
+    }
+  }catch(error){
+    const failures=[];
+    for(const change of written.reverse())try{if(fs.readFileSync(change.file,'utf8')===change.contents)atomicWrite(change.file,change.original);else failures.push(change.file)}catch{failures.push(change.file)}
+    if(unlinked)try{fs.symlinkSync(linked,modules,'junction')}catch{failures.push(modules)}
+    if(failures.length)error.message+=' Some changes could not be rolled back; originals remain in '+backup;
+    throw error;
+  }finally{if(pending)try{fs.unlinkSync(pending)}catch(error){if(error.code!=='ENOENT')throw error}}
+  return {relocated:mappings.length>0};
+}
+function migrateInstalledLazyTools({data,payload,portableConfig,yaml}){
+  const plugin=path.join(payload,'plugins/lazy-mcp/index.mjs');
+  if(!fs.existsSync(plugin))return {status:'deferred'};
+  const patch=path.join(data,'.local/dsh-home/profiles/web/cordis.patch.yml');
+  if(!fs.existsSync(patch))return {status:'deferred'};
+  assertNoLinks(path.resolve(data),path.resolve(patch));
+  const original=fs.readFileSync(patch,'utf8');let current,json=true;
+  try{current=JSON.parse(original.replace(/^\uFEFF/,''));}catch{json=false;yaml=migrationYaml(yaml||bundledYaml(payload));current=yaml.load(original);}
+  if(!Array.isArray(current))throw Error('Installed configuration must be a patch array.');
+  const canonical=value=>typeof value==='string'&&(path.isAbsolute(value)||path.win32.isAbsolute(value))?value.replaceAll('\\','/').toLowerCase():value;
+  const defaults=findIds(portableConfig),allowed=new Set(['qx-materials','qx-bb-browser','qx-scrapling','qx-windows','qx-agent-desktop','qx-legal','qx-knowledge','qx-case-memory']);
+  const nodes=[];const visit=value=>{if(!value||typeof value!=='object')return;if(value.id)nodes.push(value);for(const child of Object.values(value))visit(child)};visit(current);
+  let changed=false;
+  for(const id of allowed){
+    const desired=defaults.get(id),same=nodes.filter(n=>n.id===id);
+    if(!desired||canonical(desired.name)!==canonical(plugin)||!same.length)continue;
+    const cfg=Object.assign({},...same.map(n=>n.config||{}));
+    const selected=same.filter(n=>n.name).at(-1);
+    if(selected?.name!=='@deepseek-ai/dsh-mcp-client'||cfg.transport!=='stdio'||cfg.serverName!==desired.config?.serverName||
+      canonical(cfg.command)!==canonical(desired.config.command)||!isDeepStrictEqual((cfg.args||[]).map(canonical),(desired.config.args||[]).map(canonical)))continue;
+    if(!/^[a-zA-Z0-9_-]+$/.test(cfg.serverName)||!fs.existsSync(path.join(payload,'plugins/lazy-mcp/catalogs',cfg.serverName+'.json')))continue;
+    for(const node of same)if(node.name==='@deepseek-ai/dsh-mcp-client'){node.name=desired.name;changed=true;}
+  }
+  if(!changed)return {status:'unchanged'};
+  const backupDirectory=path.join(data,'.local/migrations','lazy-tools-v1-'+randomUUID());
+  assertNoLinks(path.resolve(data),path.resolve(backupDirectory));fs.mkdirSync(backupDirectory,{recursive:true});
+  fs.writeFileSync(path.join(backupDirectory,'cordis.patch.yml'),original,{mode:0o600});
+  if(fs.readFileSync(patch,'utf8')!==original)throw Error('Configuration changed during migration. Retry after configuration edits finish.');
+  atomicWrite(patch,json?JSON.stringify(current,null,2)+'\n':yaml.dump(current,{noRefs:true,lineWidth:-1}));
+  return {status:'applied',backupDirectory};
+}
+
 function findIds(value,found=new Map(),seen=new Set()){
   if(!value||typeof value!=='object'||seen.has(value))return found;
   seen.add(value);
@@ -90,7 +250,7 @@ function migrateInstalled({data,portableConfig,seedInstructions,payload,yaml},{v
   let current,json=true;
   try{current=JSON.parse(originalConfig.replace(/^\uFEFF/,''));}
   catch{
-    json=false;yaml=yaml||bundledYaml(payload);
+    json=false;yaml=migrationYaml(yaml||bundledYaml(payload));
     try{current=yaml.load(originalConfig);}
     catch{throw new Error('Cannot migrate invalid installed configuration; user files were left unchanged.');}
   }
@@ -147,6 +307,24 @@ function migrateInstalledKnowledge(options){
 function migrateInstalledPrivacy(options){
   return migrateInstalled(options,{version:'upload-privacy-v1',ids:['qx-upload-privacy']});
 }
+function migrateInstalledSkillRoots({data,payload,portableConfig}){
+  const desired=findIds(portableConfig).get('skill-filesystem');
+  if(!desired?.config?.customSkillDirs)return {status:'deferred'};
+  const file=path.join(data,'.local/dsh-home/profiles/web/cordis.patch.yml');assertNoLinks(path.resolve(data),path.resolve(file));
+  const original=fs.readFileSync(file,'utf8');let config,json=true,yaml;
+  try{config=JSON.parse(original.replace(/^\uFEFF/,''));}catch{json=false;yaml=migrationYaml(bundledYaml(payload));config=yaml.load(original);}
+  const entry=findIds(config).get('skill-filesystem');
+  const effective=providerConfig(config,'skill-filesystem');
+  if(!entry||effective.__jsExpr)return {status:'deferred'};
+  const root=path.join(data,'workspace/.dsh/skills').replaceAll('\\','/'),existing=effective.customSkillDirs;
+  if(existing!==undefined&&(!Array.isArray(existing)||existing.some(value=>typeof value!=='string')))return {status:'deferred'};
+  const normalized=value=>path.resolve(value).toLowerCase();
+  if(existing?.some(value=>normalized(value)===normalized(root)))return {status:'unchanged'};
+  entry.config={...entry.config,customSkillDirs:[...existing||[],root]};
+  const contents=json?JSON.stringify(config,null,2)+'\n':yaml.dump(config,{noRefs:true,lineWidth:-1});
+  if(fs.readFileSync(file,'utf8')!==original)throw Error('Configuration changed during skill root upgrade; retry after closing other editors.');
+  atomicWrite(file,contents);return {status:'applied'};
+}
 function migrateInstalledAgentDesktop(options){
   if(!findIds(options.portableConfig).has('qx-agent-desktop'))return {status:'deferred',changedFiles:[]};
   return migrateInstalled(options,{version:'agent-desktop-v1',ids:['qx-agent-desktop']});
@@ -154,6 +332,10 @@ function migrateInstalledAgentDesktop(options){
 function migrateInstalledVerifiedDelivery(options){
   if(!findIds(options.portableConfig).has('qx-verified-delivery'))return {status:'deferred',changedFiles:[]};
   return migrateInstalled(options,{version:'verified-delivery-v1',ids:['qx-verified-delivery']});
+}
+function migrateInstalledMedia(options){
+  if(!findIds(options.portableConfig).has('qx-media'))return {status:'deferred',changedFiles:[]};
+  return migrateInstalled(options,{version:'media-v1',ids:['qx-media']});
 }
 function migrateInstalledCaseMemory(options){
   const desired=findIds(options.portableConfig);
@@ -234,7 +416,9 @@ function migrateInstalledSkillQuality(options){
   const manifest=path.join(options.payload,'config/skill-quality-upgrades.json');
   if(!fs.existsSync(manifest))return {status:'deferred',changedFiles:[]};
   const spec=JSON.parse(fs.readFileSync(manifest,'utf8'));
-  if(!['skill-quality-v1','skill-quality-v2','skill-quality-v3','skill-quality-v4'].includes(spec.version)||!Array.isArray(spec.files))throw new Error('Invalid Skill quality upgrade manifest.');
+  const headings=['Skill 质量与法源核验','Skill 调用与停用','实务专项替代方法','来源约束交付','已验证程序与材料关联','已验证救济文稿与跨文件候选'];
+  const versionIndex=headings.map((_,i)=>`skill-quality-v${i+1}`).indexOf(spec.version);
+  if(versionIndex<0||!Array.isArray(spec.files))throw new Error('Invalid Skill quality upgrade manifest.');
   const required=['legal-library/workbench/practice-context.md','legal-library/workbench/source-verification.md'];
   if(spec.version!=='skill-quality-v1')required.push('legal-library/workbench/skill-status.md');
   if(!Array.isArray(spec.resources)||spec.resources.length!==required.length||new Set(spec.resources.map(r=>r.path)).size!==required.length)throw new Error('Invalid Skill quality resources.');
@@ -257,13 +441,13 @@ function migrateInstalledSkillQuality(options){
   }
   const files=migrateSkillFiles(options,{version:spec.version,defaults,targets});
   if(files.status==='deferred')return files;
-  const sectionHeading=spec.version==='skill-quality-v4'?'来源约束交付':spec.version==='skill-quality-v3'?'实务专项替代方法':spec.version==='skill-quality-v2'?'Skill 调用与停用':'Skill 质量与法源核验';
+  const sectionHeading=headings[versionIndex];
   if(!knowledgeSection(options.seedInstructions||'',sectionHeading))return {...files,status:'deferred'};
-  // v2 also seeds v1 guidance for people upgrading directly from a released build.
-  if(spec.version!=='skill-quality-v1'&&knowledgeSection(options.seedInstructions||'','Skill 质量与法源核验'))migrateInstalled(options,{version:'skill-quality-instructions-v1',ids:[],withInstructions:true,sectionHeading:'Skill 质量与法源核验'});
-  if(['skill-quality-v3','skill-quality-v4'].includes(spec.version)&&knowledgeSection(options.seedInstructions||'','Skill 调用与停用'))migrateInstalled(options,{version:'skill-quality-instructions-v2',ids:[],withInstructions:true,sectionHeading:'Skill 调用与停用'});
-  if(spec.version==='skill-quality-v4'&&knowledgeSection(options.seedInstructions||'','实务专项替代方法'))migrateInstalled(options,{version:'skill-quality-instructions-v3',ids:[],withInstructions:true,sectionHeading:'实务专项替代方法'});
-  const instructions=migrateInstalled(options,{version:spec.version.replace('quality-','quality-instructions-'),ids:[],withInstructions:true,sectionHeading});
+  // Direct upgrades seed each supplied earlier chapter through the same custom-preserving mechanism.
+  let instructions;
+  for(let i=0;i<=versionIndex;i++)if(knowledgeSection(options.seedInstructions||'',headings[i])){
+    instructions=migrateInstalled(options,{version:`skill-quality-instructions-v${i+1}`,ids:[],withInstructions:true,sectionHeading:headings[i]});
+  }
   return {...files,instructions};
 }
 
@@ -305,4 +489,4 @@ function migrateSkillFiles({data,payload},{version,defaults,targets={}}){
   return {status:pending.length?'deferred':'applied',backupDirectory,changedFiles,preservedCustom};
 }
 
-module.exports={migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory,migrateInstalledAgentDesktop,migrateInstalledVerifiedDelivery};
+module.exports={migrateInstalledMedia,migrateInstalledLazyTools,relocateInstalledPaths,migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory,migrateInstalledAgentDesktop,migrateInstalledVerifiedDelivery,migrateInstalledSkillRoots};

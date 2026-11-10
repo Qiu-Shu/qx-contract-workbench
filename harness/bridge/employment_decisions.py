@@ -1,11 +1,120 @@
 """Save source-bound employment checklists without inferring facts or selecting a route."""
 import json
 import re
+from source_bound_litigation import _reference, _contextual_quote
 from employment_review import calculate_employment_amount
 
 
 LAW_URL = 'https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/bgt/art/2023/art_0abfdd261c03417b949df19d869add8d.html'
 REGULATION_URL = 'https://www.beijing.gov.cn/zhengce/gwywj/201105/t20110506_780976.html'
+INTERPRETATION_ONE = 'https://www.hncourt.gov.cn/public/detail.php?id=183584'
+INTERPRETATION_TWO = 'https://www.court.gov.cn/fabu/xiangqing/472691.html'
+
+_TERMS = {
+    'payroll': ('工资记录对账', [
+        '按同一原文行的姓名、工资期间、应发工资、代扣合计及实发工资核对；缺项不补零，不跨人、月份、版本或文件拼金额。',
+        '只作来源条件算术：应发减代扣再减实发。代扣的合法性、应发口径和支付事实另核；账面差额不等于已认定欠薪，负差额也不自动认定应退。',
+        '各行独立保存，不累计为全案应付款；其他收入、加班、补偿与税费依据未核，不自动换算。局部待核不影响其余完整记录。',
+    ], []),
+    'hiring': ('录用与合同条款', [
+        '核实际用工、合同起止、签署及主体；offer、拟签稿和实际用工分别保存。核书面合同及法定必备事项，不以摘录缺项认定原合同缺项。（劳动合同法第7、10、17条）',
+        '按合同期限核试用期上限：三个月以上不满一年为一个月，一年以上不满三年为二个月，三年以上固定期限及无固定期限为六个月；不满三个月或以完成任务为期限不得约定。同一用人单位与同一劳动者只能约定一次；试用期包含在合同期限内。（第19条）',
+        '试用期工资须核相同岗位最低档工资或合同约定工资的法定80%标准，并同时核适用最低工资；基数、地区和用工状态未查清前不算实际欠薪。（第20条、实施条例第14、15条）',
+        '担保或扣证、培训服务期及违约金逐项核；不要把合同拟写条件当已实际执行，违法约定与已发生损失分别审查。（第9、22、25条）',
+    ], [LAW_URL, REGULATION_URL]),
+    'change': ('合同变更', [
+        '分别对照原条款、拟变更内容、劳动者意见、实际履行及书面记录；单方通知不等于协商一致，也不以材料未交推出没有协商。（劳动合同法第35条）',
+        '未签书面变更不直接判无效：还须核协商一致、口头变更实际履行超过一个月、内容合法且不违背公序良俗等条件；单纯经过一个月不替代这些条件。（劳动争议解释一第43条）',
+        '工资、地点、岗位、时间及主体变化分别核对；合理性、履行事实、地方规则和特殊保护条件另审。本次不自动据变更认定解除、降薪合法性或赔偿金额。',
+    ], [LAW_URL, INTERPRETATION_ONE]),
+    'noncompete': ('竞业限制', [
+        '先区分在职与离职后限制，核人员范围、实际知悉或接触的秘密及保密事项；仅签字、职务名称或缺保密材料不能替代核查，也不能把接触状态未知认定为未接触。（劳动合同法第23、24条；劳动争议解释二第13、14条）',
+        '离职后限制核范围、地域与秘密的对应、期限上限二年及按月补偿；在职限制的补偿问题另核，不能直接照搬离职后规则。范围超过合理比例的部分与条款全部效力须区分。（第23、24条；解释二第13、14条）',
+        '核是否启动、实际履行、补偿支付、有效约定和违约事实，再讨论停止履行、返还补偿或违约金；签字不自动证明违约成立。规则时间适用、地方标准及损失证据另审。（解释二第15条及相关解释）',
+    ], [LAW_URL, INTERPRETATION_TWO]),
+}
+
+
+def assess_employment_terms(cases, case_id, review_stage, citations, request_id='', supersedes='', scenario_citations=None, extract_parameters=False):
+    """Save source clauses and stage-specific review conditions, never an individual legal verdict."""
+    if not isinstance(review_stage, str) or review_stage not in _TERMS:
+        raise ValueError('review_stage须为hiring/change/noncompete/payroll。解除使用原解除工具。')
+    if type(extract_parameters) is not bool:raise ValueError('extract_parameters须为布尔值。')
+    if not isinstance(citations, list) or not 1 <= len(citations) <= 30:
+        raise ValueError('citations须为1至30项本案原文。')
+    scenario_citations = [] if scenario_citations is None else scenario_citations
+    if not isinstance(scenario_citations,list) or len(scenario_citations)>10:
+        raise ValueError('scenario_citations至多10项完整假设行。')
+    if len(json.dumps([citations,scenario_citations], ensure_ascii=False)) > 100000:
+        raise ValueError('引用总长超过上限，请拆分，不截断原文。')
+    sources = {s['path']:s for s in cases.materials(case_id)}
+    contexts, refs, rows = {}, [], []
+    for raw in citations:
+        ref, source = _reference(cases, case_id, raw, sources, contexts)
+        quote, span = _contextual_quote(source, ref['start'], ref['end'])
+        refs.append(ref); rows.append({'citation':ref,'quote':quote,'span':span})
+    from employment_term_scenarios import compare_term_scenario
+    scenarios=[]
+    for raw in scenario_citations:
+        ref, source = _reference(cases,case_id,raw,sources,contexts)
+        scenario=compare_term_scenario(review_stage,ref['quote'],source,ref['start'],ref['end'])
+        scenarios.append({**scenario,'citation':ref,'assumption':ref['quote']})
+        refs.append(ref)
+    if sum(len(c['text']) for c in contexts.values()) > 120000:
+        raise ValueError('来源上下文超过上限，请分批保存。')
+    extraction,extraction_text=None,''
+    if extract_parameters:
+        if review_stage=='payroll':
+            from employment_payroll import extract_payroll
+            extraction,extraction_text=extract_payroll(list(contexts.values()))
+        else:
+            from employment_parameter_extraction import extract_term_parameters
+            extraction,extraction_text=extract_term_parameters(review_stage,list(contexts.values()))
+    title, checks, urls = _TERMS[review_stage]
+    lines = [f'劳动用工｜{title}｜内部待核稿',
+             '一、材料原文（按句界保留，真实性及上下文另核；本稿不作条款效力认定）']
+    for index,row in enumerate(rows,1):
+        ref=row['citation']
+        lines.extend([f'{index}. {row["quote"]}',f'出处：{ref["path"]}；片段{ref["chunk"]}；SHA-256 {ref["sha256"]}'])
+    lines.extend(['二、逐项核验条件（全国一般规则；未自动认定本案满足或不满足）',*checks,
+                  '三、法源与边界','法源于2026-11-05编制时核对，不表示本次运行已联网检索；仍须核适用时点及地方规定。',*urls,
+                  '四、完整来源片段（供核对否定、条件及陈述主体）'])
+    for context in contexts.values(): lines.extend([context['path'],context['text']])
+    scenario_text='\n'.join(s['assumption']+'\n'+s['text'] for s in scenarios)
+    if scenarios:
+        lines.extend(['五、来源明确假设的程序核算（不是案件事实认定）',scenario_text])
+    if extraction_text:lines.extend(['自动提取与条件核算',extraction_text])
+    from material_scan import location_label
+    provenance=[]
+    notices=[]
+    for context in contexts.values():
+        label=location_label(context)
+        if label:provenance.append(f'{context["path"]}；片段{context["chunk"]}；{label}')
+        notices.extend(f'{context["path"]}：{warning}' for warning in context.get('parse_warnings',[]))
+        if context.get('failed_pages'):
+            notices.append(f'{context["path"]}：尚未读完整的页 {context["failed_pages"]}；已读内容仍可使用。')
+    delivery_sections=[]
+    if provenance:delivery_sections.append('来源位置\n'+'\n'.join(dict.fromkeys(provenance)))
+    if notices:delivery_sections.append('材料读取提示（仅影响所述部分）\n'+'\n'.join(dict.fromkeys(notices)))
+    delivery_text='\n\n'.join(delivery_sections)
+    if delivery_text:lines.append(delivery_text)
+    with cases.db() as db:
+        db.execute('BEGIN IMMEDIATE')
+        note=cases._add_note(db,case_id,'employment_review','\n'.join(lines),
+                             source='来源绑定的'+title+'核验清单，未作法律认定',
+                             citations=refs,request_id=request_id,supersedes=supersedes)
+        if note.get('warnings'):
+            raise ValueError('保存时来源变化或失配，本次未保存，请回读材料。')
+    recorded=note.get('recorded',True)
+    result={'recorded':recorded,'note':note,'review_stage':review_stage,'legal_verified':False,
+            'clauses':rows,'checks':checks,'source_contexts':list(contexts.values()),'scenarios':scenarios,'parameter_extraction':extraction,
+            'user_summary':f'已保存{title}原文及核验清单，共{len(rows)}项引文。未作个案效力认定、实际应付金额计算或对外提交；具体条件和来源见同一保存记录。' if recorded else '本次更正未保存，请回读当前记录后处理。'}
+    if recorded:
+        result.update(id=note['id'],kind=note['kind'])
+        if scenario_text: result['user_summary']+='\n\n同一记录中的假设核算：\n'+scenario_text
+        if extraction_text:result['user_summary']+='\n\n同一记录中的参数候选：\n'+extraction_text
+        if delivery_text:result['user_summary']+='\n\n'+delivery_text
+    return result
 _USER_SUMMARY = ('已保存劳动解除条件清单。程序未判断任何路径成立或不成立，'
                  '未确定实际应付款、补偿月份或最晚通知日；材料陈述见文档保存的原句及完整片段上下文。'
                  '已给事实不会因程序未判断变为未知。用户明确给定参数的情景算术可另行核算，不等于实际应付认定。')

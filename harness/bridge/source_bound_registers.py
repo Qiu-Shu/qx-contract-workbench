@@ -7,6 +7,7 @@ from contextlib import contextmanager
 from datetime import date
 
 from docx_delivery import _filename, _publish
+from source_bound_litigation import _contextual_quote
 
 
 FIELDS = {
@@ -53,6 +54,34 @@ IP_RULE_CARD = {
 }
 
 
+def _register_context(context, quote, domain):
+    """Keep same-chunk qualifiers visible without certifying their relationship."""
+    positions = [m.start() for m in re.finditer('(?=' + re.escape(quote) + ')', context)]
+    spans = [_contextual_quote(context, start, start + len(quote))[1] for start in positions]
+    # shortcut: lexical same-chunk guard, not a cross-paragraph or semantic classifier.
+    common = r'草案|拟稿|征求意见稿|定稿|正式版|待批准|待审批|未经批准|仅适用|适用范围|主体[：:]|版本[：:]'
+    specific = {
+        'corporate': r'未获批准|撤回|暂缓|尚未表决|尚未签署',
+        'compliance': r'整改状态|待验收|未验收|业务自报|试点|不在.{0,12}范围',
+        'ip': r'登记状态|当前状态|证载期|内部预计|未核.{0,8}登记|续展.{0,8}待核|权属.{0,8}待核',
+    }
+    qualifiers = {}
+    for match in re.finditer(common + '|' + specific[domain], context):
+        text, span = _contextual_quote(context, match.start(), match.end())
+        qualifiers[(span['start'], span['end'])] = {'quote': text, **span}
+        spans.append(span)
+    merged = []
+    for span in sorted(spans, key=lambda item: (item['start'], item['end'])):
+        if merged and span['start'] <= merged[-1]['end']:
+            merged[-1]['end'] = max(merged[-1]['end'], span['end'])
+        else:
+            merged.append(dict(span))
+    return '\n'.join(context[s['start']:s['end']] for s in merged), merged, {
+        'mode': 'expanded_sentences' if len(merged) > 1 else 'sentence',
+        'qualifiers': list(qualifiers.values()), 'relationship_verified': False,
+    }
+
+
 @contextmanager
 def _publication_guard(cases):
     published = {}
@@ -66,7 +95,7 @@ def _publication_guard(cases):
         raise
 
 
-def _corporate_document(rows, document_type, classifications):
+def _corporate_document(rows, document_type, classifications, grouping_text=''):
     """Compose source excerpts and fixed drafting conditions; no inferred legal events."""
     from docx import Document
     from docx.shared import Cm, Pt, RGBColor
@@ -92,10 +121,16 @@ def _corporate_document(rows, document_type, classifications):
     title = '会议纪要 待核稿' if document_type == 'minutes' else '担保事项拟议案'
     doc.add_paragraph(title, 'Title')
     doc.add_paragraph('本轮根据本案材料整理，供核对和修改；未认定既有会议程序、决定或签署的法律效力。')
+    if any(row['context_review']['qualifiers'] for row in rows):
+        doc.add_paragraph('原文中的范围、版本或状态用语已随来源保留；同片段其他主体的内容不据此归属于本议题。')
     if document_type == 'proposal':
         doc.add_heading('拟审议事项', 1)
         doc.add_paragraph('拟提请股东会审议材料所述担保事项，具体要素以已核材料补齐。')
-    groups = [('主体与会议信息', {'entity', 'participants', 'notice', 'meeting'}),
+    if grouping_text:
+        doc.add_heading('按议题整理的材料',1)
+        for line in grouping_text.splitlines():
+            doc.add_paragraph(line)
+    groups = [] if grouping_text else [('主体与会议信息', {'entity', 'participants', 'notice', 'meeting'}),
               ('议题与材料记载', {'agenda', 'debt', 'mandate'}),
               ('表态与决定记录', {'votes', 'decision'}),
               ('签署与后续安排', {'signature', 'follow_up'})]
@@ -107,13 +142,14 @@ def _corporate_document(rows, document_type, classifications):
         doc.add_heading(heading, 1)
         for row in selected:
             ref = row['citation']
-            key = (ref['path'], ref['chunk'], row['quote'])
+            displayed=row['contextual_quote']
+            key = (ref['path'], ref['chunk'], displayed)
             if key in seen:
                 continue
             seen.add(key)
             source_key = (ref['path'], ref['version'], ref['chunk'], ref['sha256'])
             source_number = sources.setdefault(source_key, len(sources) + 1)
-            doc.add_paragraph(f'材料记载：{row["quote"]} [{source_number}]')
+            doc.add_paragraph(f'材料记载（按句界恢复）：{displayed} [{source_number}]')
     doc.add_heading('待核事项', 1)
     doc.add_paragraph('材料明确的决定、票数和签署照录；未明确的相关结果本稿待核，不能据材料未记载认定事项未发生。')
     doc.add_paragraph('请逐议题核对既有通知、会议记录、表决和签署材料；公司类型、事项时点、有效章程、权限及适用程序须结合原件复核。')
@@ -173,13 +209,15 @@ def _compliance_tracking(rows, tracking):
             raise ValueError('每个日期线索只接受entry、date、year_basis。')
         value = _calendar_date(item['date'])
         quote = selected(item['entry'])
+        source_context = rows[item['entry']]['contextual_quote']
         basis = item['year_basis']
         if basis == 'explicit':
             if not _date_in_quote(value, quote, True):
                 raise ValueError('所选日期的完整年月日未在该条原文匹配，不能补成年份已知。')
             year_text = '年月日据来源原文'
         elif basis == 'same_as_reference_assumption':
-            if value.year != reference.year or not _date_in_quote(value, quote, False):
+            if (value.year != reference.year or not _date_in_quote(value, quote, False)
+                    or not _date_in_quote(value, source_context, False)):
                 raise ValueError('同年假设只适用于来源明确月日且未附年份的日期，不得另造日期。')
             year_text = '年份未给，暂按参考日同年假设；须核原通知年份'
         else:
@@ -192,12 +230,13 @@ def _compliance_tracking(rows, tracking):
         lines.extend(['', f'日期线索{number}｜来源摘录{item["entry"] + 1}',
                       f'材料原文：{quote}', f'用于比较的日期：{value.isoformat()}；{year_text}。', comparison,
                       '若该日期是意见反馈截止日，则据此核对反馈窗口；若是整改报告截止日，则分别跟踪报告义务。'])
-        results.append({**item, 'source_quote': quote, 'days_from_reference': delta,
+        results.append({**item, 'source_quote': quote, 'source_context': source_context,
+                        'days_from_reference': delta,
                         'date_relation': relation, 'date_semantics_verified': False,
                         'year_assumption': basis != 'explicit', 'comparison': comparison})
     lines.extend(['', '相关材料原文（不由分类推定实际事件）'])
     for index, row in enumerate(rows, 1):
-        lines.append(f'来源摘录{index}：{row["quote"]}')
+        lines.append(f'来源摘录{index}（按句界恢复）：{row["contextual_quote"]}')
     actions = ('内部建议：按上述日期线索分别核对事项和通知年份；材料已有明确决定时先核对并沿用其范围。'
                '如已有发送记载，先核投递记录和回执，不安排重复首次提交；无回执只需核受理状态。'
                '材料缺记录时先查既有记录，不认定实际未决定、未提交或未受理。'
@@ -209,7 +248,7 @@ def _compliance_tracking(rows, tracking):
 
 
 def save_source_bound_register(cases, case_id, domain, entries, request_id='', supersedes='',
-                               document_type='', filename='', tracking=None):
+                               document_type='', filename='', tracking=None, source_groups=None):
     """Save literal case citations, never accept model-written event/effect states.
 
     entries: [{field: domain enum, citation: {path, sha256, chunk, quote}}].
@@ -284,11 +323,16 @@ def save_source_bound_register(cases, case_id, domain, entries, request_id='', s
                 raise ValueError('本批上下文过长，请分批整理。')
             classifications.append({'entry': len(rows), 'requested_field': field,
                                     'classification_verified': False, 'is_fact_field': False})
+            displayed, spans, context_review = _register_context(context, ref['quote'], domain)
             rows.append({'field': 'source_excerpt', 'label': '来源原文', 'quote': ref['quote'],
+                         'contextual_quote': displayed, 'contextual_spans': spans,
+                         'context_review': context_review,
                          'classification_verified': False,
                          'context': context, 'citation': ref, 'actual_status': ACTUAL_STATUS,
                          'legal_effect': '待复核；程序不作法律效力判断。'})
 
+        from source_grouping import group_sources
+        grouping,grouping_text=group_sources(rows,source_groups) if source_groups is not None else (None,'')
         cards = [copy.deepcopy(IP_RULE_CARD)] if domain == 'ip' else []
         lines = [TITLES[domain], '', NOTICE, '', '本轮整理状态：新整理稿，不改变材料所述历史事件。']
         for index, row in enumerate(rows, 1):
@@ -300,6 +344,7 @@ def save_source_bound_register(cases, case_id, domain, entries, request_id='', s
         lines.extend(['', '分类审计（与事实条目分开保存）'])
         for audit in classifications:
             lines.append(f'来源摘录{audit["entry"] + 1}：模型候选分类（未核验；不是事实字段）：{audit["requested_field"]}')
+        if grouping_text: lines.extend(['',grouping_text])
         tracked, tracking_text = _compliance_tracking(rows, tracking) if tracking is not None else (None, '')
         if tracking_text:
             lines.extend(['', tracking_text])
@@ -307,7 +352,7 @@ def save_source_bound_register(cases, case_id, domain, entries, request_id='', s
             lines.extend(['', '规则核对卡（未应用于本案）', card['text'],
                           f'官方来源：{card["official_source"]}；核验日：{card["checked_at"]}。'])
         lines.extend(['', '风险与下一步核查', REVIEW_ACTIONS[domain]])
-        data, body = _corporate_document(rows, document_type, classifications) if document_type else (None, '')
+        data, body = _corporate_document(rows, document_type, classifications,grouping_text) if document_type else (None, '')
         if body:
             lines.extend(['', '本次可编辑文稿正文', body])
         lines.extend(['', '复核与下一步：先核原件、身份、事项和材料时点；缺记录先查既有记录，'
@@ -333,10 +378,21 @@ def save_source_bound_register(cases, case_id, domain, entries, request_id='', s
         if published:
             summary += f'已生成可编辑文稿：{published["relative_path"]}。正文与本次内部底稿一致。'
         summary += REVIEW_ACTIONS[domain] + '来源匹配不认证事实真实性或法律效力；本工具未提交、签署或对外发送。'
+        if saved:
+            qualifier_lines = {}
+            for row in rows:
+                ref = row['citation']
+                for item in row['context_review']['qualifiers']:
+                    key = (ref['path'], ref['sha256'], ref['chunk'], item['start'], item['end'])
+                    qualifier_lines[key] = f'{ref["path"]}，片段{ref["chunk"]}：{item["quote"]}'
+            if qualifier_lines:
+                summary += '\n\n同片段限定语原文（与摘录的关系待核，不据此认定批准或完成）：\n' + '\n'.join(qualifier_lines.values())
         if saved and tracking_text:
             summary += '\n\n' + tracking_text
+        if saved and grouping:
+            summary += f'\n已保存逐事项分组{len(grouping["groups"])}项；未分组{len(grouping["unassigned_entries"])}条，共享{len(grouping["shared_entries"])}条，具体来源和拟议关联见同一保存稿。'
         return {**note, 'saved': note.get('recorded') is not False, 'entries': rows,
-                'classification_audit': classifications, 'tracking': tracked,
+                'classification_audit': classifications, 'tracking': tracked,'grouping':grouping,
                 'tracking_text': tracking_text if saved else '',
                 'rule_cards': cards, 'legal_verified': False, 'notice': NOTICE,
                 'review_actions': REVIEW_ACTIONS[domain], 'user_summary': summary,

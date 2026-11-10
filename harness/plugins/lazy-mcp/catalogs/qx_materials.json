@@ -1,0 +1,386 @@
+{
+  "serverName": "qx_materials",
+  "instructions": "材料只在工作区内处理。先列文件/导入，解析后分批读取或搜索，不一次塞入全文。PDF按next_page继续解析。生成的Word是待核草稿。",
+  "tools": [
+    {
+      "name": "list_materials",
+      "description": "列出工作区文档和图片，包含尚未导入的上传文件；分页不限制总数量。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 50,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "list_materialsArguments"
+      }
+    },
+    {
+      "name": "import_material",
+      "description": "注册工作区内材料，保留原路径与摘要。上传图片的 objects/哈希 路径没有扩展名也可直接导入，无需复制/改名或调用Windows工具；随后parse_material。文件改变后重新导入。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "title": "Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "title": "import_materialArguments"
+      }
+    },
+    {
+      "name": "parse_material",
+      "description": "解析已导入材料并建立全文索引。PDF逐页处理，按返回next_page继续；图片用本机OCR。DOCX修订视图original或accepted_view。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "start_page": {
+            "default": 1,
+            "title": "Start Page",
+            "type": "integer"
+          },
+          "page_count": {
+            "default": 20,
+            "title": "Page Count",
+            "type": "integer"
+          },
+          "force_ocr": {
+            "default": false,
+            "title": "Force Ocr",
+            "type": "boolean"
+          },
+          "revision_mode": {
+            "default": "original",
+            "title": "Revision Mode",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "title": "parse_materialArguments"
+      }
+    },
+    {
+      "name": "read_material",
+      "description": "分页读取已解析材料的原文片段，返回位置、文件摘要和next_start；PDF可指定page。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "start": {
+            "default": 0,
+            "title": "Start",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 6,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Page"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "title": "read_materialArguments"
+      }
+    },
+    {
+      "name": "search_materials",
+      "description": "检索所有已解析内容中的原词/短语（支持中文），返回位置和短摘录；更多结果按next_offset继续。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Path"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 10,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "search_materialsArguments"
+      }
+    },
+    {
+      "name": "write_word_draft",
+      "description": "把拟好的文字生成工作区drafts目录内的真实Word草稿。不会覆盖原文件；filename须为.docx文件名。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filename",
+          "title",
+          "content"
+        ],
+        "title": "write_word_draftArguments"
+      }
+    },
+    {
+      "name": "inspect_word_document",
+      "description": "准备修改Word原件前，读取带稳定段落编号的正文与表格。返回source_sha256，用于修订时核对版本；按next_offset继续。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 100,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "title": "inspect_word_documentArguments"
+      }
+    },
+    {
+      "name": "write_review_word",
+      "description": "默认生成批注版Word，保留正文：先inspect_word_document定位。edits每项paragraph_id、old、comment（理由）及new（可选建议文本），new默认也只写入批注。仅用户明确要修订正文时传mode=tracked_changes。原件与已有批注保留；检查逐项results，不把失败项称为已应用。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "edits": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Edits",
+            "type": "array"
+          },
+          "source_sha256": {
+            "title": "Source Sha256",
+            "type": "string"
+          },
+          "author": {
+            "default": "律师",
+            "title": "Author",
+            "type": "string"
+          },
+          "mode": {
+            "default": "comments",
+            "title": "Mode",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "filename",
+          "edits",
+          "source_sha256"
+        ],
+        "title": "write_review_wordArguments"
+      }
+    },
+    {
+      "name": "write_contract_opinion",
+      "description": "生成同内容的合同审查意见书HTML与Word，不覆盖原件。filename可为简单文件基名/.html/.docx。sections每项heading、paragraphs文字列表，可选table{headers,rows}、subsections、references[{label,url}]。推荐结论、事实、四列风险表、条款建议与补件等章节，不强制章节数量；普通文字会转义。先保存本案审查记录，再展示返回文件。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "sections": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "subtitle": {
+            "default": "",
+            "title": "Subtitle",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filename",
+          "title",
+          "sections"
+        ],
+        "title": "write_contract_opinionArguments"
+      }
+    },
+    {
+      "name": "list_document_templates",
+      "description": "列出诉状和证据目录模板、template_id及填写字段。根据业务需要选择，不强制用户先填表。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "list_document_templatesArguments"
+      }
+    },
+    {
+      "name": "generate_document_from_template",
+      "description": "根据模板生成独立Word。诉状data: parties/claims/facts字符串列表、court/signature/date；证据目录data: evidence[{name,content,purpose,page_range,source}]、title/submitter/date。未知事实写待补，不编造证据页码。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "template_id": {
+            "title": "Template Id",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          },
+          "author": {
+            "default": "",
+            "title": "Author",
+            "type": "string"
+          }
+        },
+        "required": [
+          "template_id",
+          "filename",
+          "data"
+        ],
+        "title": "generate_document_from_templateArguments"
+      }
+    },
+    {
+      "name": "inspect_custom_word_template",
+      "description": "读取用户工作区DOCX空白模板的变量名及source_sha256；保留页眉、样式。仅支持{{ 字段名 }}。\n    模板固定正文也会保留，应先核对不是其他案件样例；拒绝外链、宏与可执行模板表达式。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "title": "Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "title": "inspect_custom_word_templateArguments"
+      }
+    },
+    {
+      "name": "render_custom_word_template",
+      "description": "用已确认字段另存律所Word模板。先inspect获取版本；只填字符串、数字或布尔值，缺失不猜。\n    不覆盖原模板；静态正文不会自动清除，须先核对其中姓名/金额/事实。产物仍是待核草稿。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          },
+          "source_sha256": {
+            "title": "Source Sha256",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "filename",
+          "data",
+          "source_sha256"
+        ],
+        "title": "render_custom_word_templateArguments"
+      }
+    }
+  ]
+}

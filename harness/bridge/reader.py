@@ -5,15 +5,18 @@ import codecs
 import ctypes
 import json
 import os
+import re
+import sqlite3
 import sys
 from uuid import UUID
 from zipfile import ZipFile
 
-LEGACY = Path('D:/qx-contract-workbench-20261102')
+LEGACY = Path(os.environ['QX_LEGACY_ROOT'])
 sys.path.insert(0,str(LEGACY/'src'))
 from store import MaterialStore, material_extension
 
 CHARS = 4000
+IMAGE_EXTENSIONS={'.png','.jpg','.jpeg','.webp','.gif','.bmp','.tif','.tiff'}
 
 
 def available_memory():
@@ -80,9 +83,11 @@ def parse(store,path,start_page=1,page_count=20,force_ocr=False,revision_mode='o
     with store.db() as db:
         source,key,record=store.current(path,db)
         db.execute('CREATE TABLE IF NOT EXISTS parsed_pages(path TEXT,page INTEGER,PRIMARY KEY(path,page))')
+        db.execute('CREATE TABLE IF NOT EXISTS parse_failures(path TEXT,page INTEGER,detail TEXT,PRIMARY KEY(path,page))')
         existing=set(x[0] for x in db.execute('SELECT page FROM parsed_pages WHERE path=?',(key,)))
         if record['status']=='pending' and existing:
             db.execute('DELETE FROM parsed_pages WHERE path=?',(key,));existing=set()
+        if record['status']=='pending':db.execute('DELETE FROM parse_failures WHERE path=?',(key,))
         warnings=[];extension=material_extension(source);ordinal=0
         def add(value,location,page=None):
             nonlocal ordinal
@@ -94,17 +99,38 @@ def parse(store,path,start_page=1,page_count=20,force_ocr=False,revision_mode='o
                     (key,index,page,location+(f':chars:{offset}-{offset+len(part)}'),part))
                 ordinal+=1
         total_pages=None;next_page=None
+        def scan(image,number,prefix='page',native=''):
+            from material_scan import ocr_rows
+            rows,issues=ocr_rows(image,number,prefix)
+            native_lines={re.sub(r'\s+','',line) for line in native.splitlines() if line.strip()}
+            for row in rows:
+                if re.sub(r'\s+','',row['value']) not in native_lines:
+                    add(row['value'],row['location'],number)
+            warnings.extend(issues)
+            warnings.append('OCR 文字需核对数字、日期及否定词；位置框基于识别用图像。')
+            if not native.strip() and not rows:warnings.append(f'{prefix}:{number} 未识别到文字，可对照原图；其他页继续处理。')
+        def page_start(number):
+            nonlocal ordinal
+            db.execute('DELETE FROM chunks WHERE path=? AND page=?',(key,number));ordinal=0
+            db.execute('DELETE FROM parsed_pages WHERE path=? AND page=?',(key,number));existing.discard(number)
+        def page_done(number,error=None):
+            if error is not None:
+                if isinstance(error,sqlite3.Error):raise error
+                detail=f'未完成页 {number}：{type(error).__name__}；已提取文字保留，可单独重试该页。'
+                db.execute('INSERT OR REPLACE INTO parse_failures VALUES(?,?,?)',(key,number,detail))
+            else:
+                db.execute('DELETE FROM parse_failures WHERE path=? AND page=?',(key,number))
+                db.execute('INSERT OR REPLACE INTO parsed_pages VALUES(?,?)',(key,number));existing.add(number)
         if extension=='.pdf':
             import pypdfium2 as pdfium
-            from cn_contract.documents.material_ocr import recognize
             with pdfium.PdfDocument(str(source)) as document:
                 total_pages=len(document)
                 if start_page>total_pages:raise ValueError('起始页超过文件总页数。')
                 end=min(total_pages,start_page+page_count-1)
                 for number in range(start_page,end+1):
-                    db.execute('DELETE FROM chunks WHERE path=? AND page=?',(key,number));ordinal=0
-                    page=document[number-1]
+                    page_start(number);page=None
                     try:
+                        page=document[number-1]
                         textpage=page.get_textpage()
                         try:value=textpage.get_text_bounded()
                         finally:textpage.close()
@@ -114,14 +140,28 @@ def parse(store,path,start_page=1,page_count=20,force_ocr=False,revision_mode='o
                         if force_ocr or not value.strip() or images:
                             width,height=page.get_size()
                             bitmap=page.render(scale=min(2,2400/max(width,height)))
-                            try:blocks=recognize(bitmap.to_pil().convert('RGB'))
+                            try:scan(bitmap.to_pil().convert('RGB'),number,native=value)
                             finally:bitmap.close()
-                            for index,(_,text,_) in enumerate(blocks):
-                                if text.strip() not in value:add(text,f'page:{number}:ocr:{index}',number)
-                            warnings.append('OCR 文字需核对数字、日期及否定词。')
-                            if not value.strip() and not blocks:warnings.append(f'第 {number} 页未识别到文字。')
-                    finally:page.close()
-                    db.execute('INSERT OR REPLACE INTO parsed_pages VALUES(?,?)',(key,number));existing.add(number)
+                    except Exception as error:page_done(number,error)
+                    else:page_done(number)
+                    finally:
+                        if page is not None:page.close()
+                next_page=next((n for n in range(1,total_pages+1) if n not in existing),None)
+        elif extension in IMAGE_EXTENSIONS:
+            from PIL import Image,ImageOps
+            with Image.open(source) as image:
+                total_pages=getattr(image,'n_frames',1)
+                if start_page>total_pages:raise ValueError('起始页超过图片帧数。')
+                for number in range(start_page,min(total_pages,start_page+page_count-1)+1):
+                    page_start(number)
+                    try:
+                        image.seek(number-1)
+                        frame=ImageOps.exif_transpose(image)
+                        frame.thumbnail((2400,2400))
+                        try:scan(frame.convert('RGB'),number,'image')
+                        finally:frame.close()
+                    except Exception as error:page_done(number,error)
+                    else:page_done(number)
                 next_page=next((n for n in range(1,total_pages+1) if n not in existing),None)
         else:
             db.execute('DELETE FROM chunks WHERE path=?',(key,))
@@ -143,7 +183,12 @@ def parse(store,path,start_page=1,page_count=20,force_ocr=False,revision_mode='o
                 settings=load_settings().model_copy(update={'upload_max_file_mib':max(1,(record['size']+1024**2-1)//1024**2),
                     'archive_uncompressed_max_mib':max(1,budget//1024**2),'parse_max_pages_per_file':1000000})
                 raw=source.read_bytes();identifier=UUID(record['sha256'][:32])
-                if extension=='.docx':
+                if extension=='.xlsx':
+                    from material_spreadsheets import xlsx_rows
+                    spreadsheet_rows,issues=xlsx_rows(raw,settings)
+                    for item in spreadsheet_rows:add(item['value'],item['location'])
+                    warnings.extend(issues);result=None
+                elif extension=='.docx':
                     result=parse_docx(raw,DocumentParseInput(id=identifier,baseline_view=BaselineView(revision_mode)),settings)
                     warnings.append('DOCX 修订视图：'+revision_mode)
                 else:
@@ -154,24 +199,40 @@ def parse(store,path,start_page=1,page_count=20,force_ocr=False,revision_mode='o
                     'STYLE_DEPENDENCY_REQUIRES_CONFIRMATION' in issue for issue in result.quality_issues)
                 if style_fallback:
                     warnings.append('样式依赖不完整，已按段落、表格及指定修订视图读取正文；未能确定的隐藏样式、颜色和自动编号请对照原件。')
-                    for value, location in docx_style_fallback(raw, revision_mode): add(value, location)
-                for anchor in result.anchors:
+                entries=[(value,location,None) for value,location in docx_style_fallback(raw,revision_mode)] if style_fallback else []
+                for anchor in result.anchors if result is not None else []:
                     if style_fallback and anchor.part_name == 'word/document.xml': continue
-                    add(anchor.quote,anchor.part_name+':'+anchor.element_id,anchor.page)
-                warnings.extend(result.quality_issues)
-                if result.unsupported_parts:warnings.append('部分嵌入对象或版式未提取；必要时对照原件。')
+                    entries.append((anchor.quote,anchor.part_name+':'+anchor.element_id,anchor.page))
+                covered=set();row_starts={}
+                if extension=='.docx':
+                    from material_tables import docx_table_rows
+                    rows,covered,issues=docx_table_rows(raw,[(value,location) for value,location,_ in entries])
+                    warnings.extend(issues)
+                    row_starts={row['source_locations'][0]:row for row in rows if row['source_locations']}
+                for value,location,page in entries:
+                    if location in row_starts:
+                        row=row_starts[location];add(row['value'],row['location'],page)
+                    if location not in covered:add(value,location,page)
+                if result is not None:
+                    warnings.extend(result.quality_issues)
+                    if result.unsupported_parts:warnings.append('部分嵌入对象或版式未提取；必要时对照原件。')
             existing={0};db.execute('INSERT OR REPLACE INTO parsed_pages VALUES(?,0)',(key,))
+        if extension=='.pdf' or extension in IMAGE_EXTENSIONS:
+            from material_scan_continuation import refresh_scan_headers
+            refresh_scan_headers(db,key,existing)
         # Never publish an index assembled across a concurrent source edit.
         store.current(path,db)
         count=db.execute('SELECT COUNT(*) FROM chunks WHERE path=?',(key,)).fetchone()[0]
         status='partial' if next_page else 'ready' if count else 'no_text'
-        old_warnings=json.loads(record['warnings']) if extension=='.pdf' else []
+        old_warnings=[w for w in json.loads(record['warnings']) if not w.startswith('未完成页 ')] if total_pages else []
+        failures=db.execute('SELECT page,detail FROM parse_failures WHERE path=? ORDER BY page',(key,)).fetchall()
+        warnings.extend(row['detail'] for row in failures)
         warnings=list(dict.fromkeys(old_warnings+warnings))
         db.execute('UPDATE materials SET status=?,page_count=?,warnings=? WHERE path=?',
                    (status,total_pages,json.dumps(warnings,ensure_ascii=False),key))
     return {'path':key,'status':status,'chunks':count,'total_pages':total_pages,
-            'next_page':next_page,'warnings':warnings[:20],
-            'next_step':'使用 read_material 分页读取；PDF 未读完时继续 parse_material(next_page)。'}
+            'next_page':next_page,'failed_pages':[row['page'] for row in failures],'warnings':warnings[:20],
+            'next_step':'已提取内容可先 read_material 使用；未完成页可用 start_page 和 page_count=1 单独重试。'}
 
 
 if __name__=='__main__':

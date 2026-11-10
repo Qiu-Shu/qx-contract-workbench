@@ -1,0 +1,32 @@
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+const {execFileSync}=require('node:child_process');
+const {createRequire}=require('node:module');
+const {load}=require('./toolchain.cjs');
+const yaml=createRequire(load.resolve('app-builder-lib'))('js-yaml');
+const {inventory,hash}=require('./incremental-package.cjs');
+const {verifyRelease}=require('../desktop/update-integrity.cjs');
+async function main(){
+  if(process.argv.length!==5)throw Error('Use check-release.cjs <stage> <release> <new-extraction-directory>');
+  const [stage,release,out]=process.argv.slice(2).map(value=>path.resolve(value));
+  assert.equal(fs.existsSync(out),false);fs.mkdirSync(out,{recursive:true});
+  const info=yaml.load(fs.readFileSync(path.join(release,'latest.yml'),'utf8'));
+  verifyRelease(info,require('../desktop/update-config.json').publicKey);
+  assert.equal(info.version,require('./app-template.json').version);
+  const name='Qunxing-Workbench-'+info.version+'-Setup.exe';
+  assert.equal(info.files[0].url,name);
+  const installer=path.join(release,name),sum=crypto.createHash('sha512');
+  for await(const chunk of fs.createReadStream(installer))sum.update(chunk);
+  assert.equal(sum.digest('base64'),info.files[0].sha512);
+  const seven=path.join(stage,'extractor/7z.exe');
+  execFileSync(seven,['x',installer,'-o'+out,'-y','$PLUGINSDIR/app-64.7z'],{windowsHide:true,stdio:'pipe'});
+  const extracted=path.join(out,'application');
+  execFileSync(seven,['x',path.join(out,'$PLUGINSDIR/app-64.7z'),'-o'+extracted,'-y','-bso0','-bsp0'],{windowsHide:true,stdio:'pipe'});
+  const [candidate,packaged]=await Promise.all([inventory(path.join(stage,'win-unpacked')),inventory(extracted)]);
+  assert.equal(candidate.size,packaged.size,'Full installer and delta inputs must have the same files');
+  for(const [name,entry] of candidate)assert.deepEqual(packaged.get(name),entry,'Installer payload mismatch: '+name);
+  const files=[];for(const file of [name,name+'.blockmap','latest.yml'])files.push({name:file,sha256:await hash(path.join(release,file)),bytes:fs.statSync(path.join(release,file)).size});
+  fs.writeFileSync(path.join(release,'SHA256SUMS.txt'),files.map(item=>item.sha256+'  '+item.name).join('\n')+'\n');
+  const report={passed:true,version:info.version,originalUpdateSignatureVerified:true,installerSha512Verified:true,fullArchiveMatchesDeltaInput:true,packagedFiles:packaged.size,files};
+  fs.writeFileSync(path.join(release,'release-verification.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
+}
+main().catch(error=>{console.error(error);process.exitCode=1});

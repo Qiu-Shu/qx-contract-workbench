@@ -1,0 +1,26 @@
+{
+  "serverName": "bb_browser",
+  "instructions": "",
+  "tools": [
+    {
+      "name": "browser",
+      "description": "操作 bb-browser，传字符串数组。open 返回 tabId 后，用 snap -i --tab ID 观察。\n    fill @3 内容 --tab ID；click @5 --tab ID；press Enter --tab ID。\n    click 使用最近快照保留的真实 DOM 节点进行一次程序化激活，非可信鼠标事件。\n    press 使用完整键码的 CDP 事件。结果仅表示动作已发出，不等于业务成功。\n    页面改变/超时后先观察，禁止自动补点；只操作获授权页面。先加载 bb-browser Skill。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "arguments": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Arguments",
+            "type": "array"
+          }
+        },
+        "required": [
+          "arguments"
+        ],
+        "title": "browserArguments"
+      }
+    }
+  ]
+}

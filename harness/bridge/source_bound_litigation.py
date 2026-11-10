@@ -6,7 +6,14 @@ from pathlib import Path
 import re
 
 from docx_delivery import _filename, _publish
-from litigation_documents import TYPES, _bytes, _document
+from litigation_documents import TYPES as BASE_TYPES, _bytes, _document
+
+TYPES = {**BASE_TYPES,
+         'procedure_review': ('程序核查底稿', '材料所载主张（非拟提出请求）', '程序事实及限制材料'),
+         'civil_appeal': ('民事上诉状', '上诉请求（原文拟议，范围待核）', '上诉事实与理由'),
+         'labor_award_set_aside': ('撤销劳动仲裁裁决申请书', '撤销申请事项（原文拟议，范围待核）', '申请理由及证据')}
+REMEDY_DOCUMENTS = {'civil_appeal': ('civil_appeal', 'appeal'),
+                    'labor_award_set_aside': ('labor_award_remedy', 'set_aside')}
 
 
 SECTIONS = ('parties', 'requests', 'facts', 'sections')
@@ -69,7 +76,10 @@ def _reference(cases, case_id, ref, sources, contexts=None):
         end = start + len(ref['quote'])
     if contexts is not None:
         contexts[(path, ref['sha256'], ref['chunk'])] = {
-            'path': path, 'sha256': ref['sha256'], 'chunk': ref['chunk'], 'text': source_text}
+            'path': path, 'sha256': ref['sha256'], 'chunk': ref['chunk'], 'text': source_text,
+            'location':chunks[0].get('location',''),
+            'parse_warnings':read.get('warnings',[]),
+            'failed_pages':read.get('failed_pages',[])}
     return {**citation, 'start': start, 'end': end}, source_text
 
 
@@ -110,8 +120,11 @@ def _contextual_quote(source, start, end):
 
 
 def _role_labels(kind):
+    if kind == 'procedure_review':
+        return {}
     return ({'client': '拟委托人', 'issuer': '拟发函人', 'recipient': '拟收函人'} if kind == 'lawyer_letter'
-            else {'applicant': '拟申请人', 'respondent': '拟被申请人'} if kind == 'labor_arbitration'
+            else {'appellant': '拟上诉人', 'appellee': '拟被上诉人'} if kind == 'civil_appeal'
+            else {'applicant': '拟申请人', 'respondent': '拟被申请人'} if kind in ('labor_arbitration', 'labor_award_set_aside')
             else {'plaintiff': '拟原告', 'defendant': '拟被告'})
 
 
@@ -120,6 +133,8 @@ def _prepare_brief(cases, case_id, kind, brief, arithmetic, sources, used, conte
         return None
     _shape(brief, (), ('parties', 'claim_kind', 'claim_amount', 'calculation_index'))
     claim = brief.get('claim_kind', 'undetermined')
+    if kind in REMEDY_DOCUMENTS and (claim != 'undetermined' or 'claim_amount' in brief or 'calculation_index' in brief):
+        raise ValueError('救济文书须使用requests原文列明具体请求，不能套用给付金额请求。')
     if claim not in ('payment', 'return', 'undetermined'):
         raise ValueError('claim_kind只支持payment/return/undetermined，不推断借款等关系。')
     roles = _role_labels(kind)
@@ -185,7 +200,7 @@ def _prepare_brief(cases, case_id, kind, brief, arithmetic, sources, used, conte
             'role_assignment_verified': False}
 
 
-def build_source_bound_litigation(cases, case_id, document_type, filename, excerpts, calculations=None, brief=None):
+def build_source_bound_litigation(cases, case_id, document_type, filename, excerpts, calculations=None, brief=None, issues=None, claims=None, legal_review=None):
     """Build source-only Word and audit; no caller-authored facts or legal conclusions.
 
     excerpts: [{section: parties|requests|facts|sections, citation:{path,quote,sha256,chunk[,start,end]}}].
@@ -196,10 +211,14 @@ def build_source_bound_litigation(cases, case_id, document_type, filename, excer
     _filename(filename)
     if document_type not in TYPES:
         raise ValueError('不支持的文书类型。')
+    if document_type == 'procedure_review' and brief:
+        raise ValueError('纯程序核查不接受brief拟请求或角色分配；请保留来源并使用legal_review.procedure。')
     _list(excerpts, 'excerpts', 100, 1)
     calculations = [] if calculations is None else _list(calculations, 'calculations', 20)
+    issues = [] if issues is None else _list(issues, 'issues', 20)
+    claims = [] if claims is None else _list(claims, 'claims', 20)
     try:
-        if len(json.dumps([excerpts, calculations, brief], ensure_ascii=False)) > 250000:
+        if len(json.dumps([excerpts, calculations, brief, issues, claims, legal_review], ensure_ascii=False)) > 250000:
             raise ValueError('资料超过250000字，请拆分。')
     except (TypeError, OverflowError) as error:
         raise ValueError('资料须使用JSON基础类型。') from error
@@ -236,8 +255,62 @@ def build_source_bound_litigation(cases, case_id, document_type, filename, excer
         arithmetic.append({'minuend': first, 'subtrahends': terms, 'result_yuan': _number(total)})
 
     prepared_brief = _prepare_brief(cases, case_id, document_type, brief, arithmetic, sources, used, contexts)
+    prepared_issues = []
+    for issue in issues:
+        _shape(issue, ('claim',), ('supporting', 'opposing', 'legal_basis'))
+        prepared = {}
+        for key in ('claim', 'supporting', 'opposing', 'legal_basis'):
+            refs = [issue['claim']] if key == 'claim' else _list(issue.get(key, []), key, 10)
+            prepared[key] = []
+            for raw in refs:
+                ref, source_text = _reference(cases, case_id, raw, sources, contexts)
+                quote, span = _contextual_quote(source_text, ref['start'], ref['end'])
+                prepared[key].append({'citation': ref, 'contextual_quote': quote, 'contextual_span': span})
+                used[ref['path']] = sources[ref['path']]
+        prepared['missing_groups'] = [k for k in ('supporting','opposing','legal_basis') if not prepared[k]]
+        prepared_issues.append(prepared)
+    prepared_claims=[]
+    for item in claims:
+        _shape(item,('request','issue_indices'))
+        indices=_list(item['issue_indices'],'issue_indices',20)
+        if any(type(i) is not int or not 0<=i<len(prepared_issues) for i in indices) or len(set(indices))!=len(indices):
+            raise ValueError('请求须关联本次issues的有效且不重复的0起始索引。')
+        ref,source_text=_reference(cases,case_id,item['request'],sources,contexts)
+        quote,span=_contextual_quote(source_text,ref['start'],ref['end'])
+        used[ref['path']]=sources[ref['path']]
+        prepared_claims.append({'request':ref,'quote':quote,'span':span,'issue_indices':indices,
+                                'legal_verified':False})
+    prepared_review,review_text=None,''
+    if legal_review is not None:
+        from litigation_review import prepare_legal_review
+        def bind_review(raw,include_context=False):
+            ref,text=_reference(cases,case_id,raw,sources,contexts)
+            quote,span=_contextual_quote(text,ref['start'],ref['end'])
+            used[ref['path']]=sources[ref['path']]
+            return {'citation':ref,'quote':quote,'span':span,**({'context':text} if include_context else {})}
+        prepared_review,review_text=prepare_legal_review(legal_review,prepared_claims,bind_review)
     conditional = bool(prepared_brief and prepared_brief['request_text'])
     selected_sections = {key: sum(r['section'] == key for r in rows) for key in SECTIONS}
+    if document_type == 'procedure_review' and not (prepared_review or {}).get('procedure'):
+        raise ValueError('程序核查底稿需要legal_review.procedure，不生成空白程序结论。')
+    if document_type in REMEDY_DOCUMENTS:
+        route, action = REMEDY_DOCUMENTS[document_type]
+        procedure = (prepared_review or {}).get('procedure') or {}
+        remedy = procedure.get('remedy') or {}
+        if procedure.get('route') != route or remedy.get('candidate_action') != action:
+            raise ValueError('救济文书缺少匹配的来源绑定程序候选；先核对裁判类型和救济主体，不生成错误类型文书。')
+        if not selected_sections['requests'] or not selected_sections['facts']:
+            raise ValueError('救济文书须同时选入requests具体请求与facts理由/限制材料；缺项未生成文稿。')
+        role_fields = ({'appellant': '上诉人', 'appellee': '被上诉人'} if document_type == 'civil_appeal'
+                       else {'applicant': '用人单位', 'respondent': '劳动者'})
+        from procedure_remedies import _labels
+        # Explicit source labels can disprove a selected role; absence never proves it.
+        for party in (prepared_brief or {}).get('parties', []):
+            label = role_fields[party['role']]
+            names = {name.strip() for context in contexts.values()
+                     for name in _labels(context['text'], r'(?:拟)?' + re.escape(label))}
+            if names and names != {party['name']}:
+                raise ValueError('所填角色与原文明确主体标识冲突或有多个候选；请核对后重试。')
     if document_type == 'representation':
         missing = ([] if conditional else ['brief（形成待审条件主张）'])
         missing += [key for key in ('requests', 'facts') if not selected_sections[key]]
@@ -253,6 +326,19 @@ def build_source_bound_litigation(cases, case_id, document_type, filename, excer
     audit.add_paragraph(f'案件ID：{case_id}')
     if prepared_brief:
         audit.add_paragraph(json.dumps(prepared_brief, ensure_ascii=False, indent=2))
+    if document_type in REMEDY_DOCUMENTS:
+        draft.add_heading('原裁判标识与受理机关核对', 1)
+        draft.add_paragraph('原审法院或仲裁委员会、原案号、案由、裁判作出日期及所争议部分：'
+                            '【请据原件逐项补全；下列引用不等于已经确认这些项目。】')
+        for row in prepared_review['procedure']['remedy']['classification_citations']:
+            draft.add_paragraph('程序分类来源：' + row['citation']['path'])
+            draft.add_paragraph(row['quote'])
+        if document_type == 'labor_award_set_aside':
+            draft.add_paragraph('承办人核对：仲裁委员会所在地中级人民法院、法定撤销事由及对应证据；'
+                                '对实体结果不满不当然构成撤销事由，不套用一般上诉。')
+        else:
+            draft.add_paragraph('承办人核对：原审法院、二审受理机关、具体上诉范围、理由及当事人信息；'
+                                '本稿未自动认定上诉条件或代为选择撤销、改判或发回的具体请求。')
     labels = {'parties': '当事人及角色', 'requests': requests_label,
               'facts': facts_label, 'sections': '其他材料所载事项'}
     for key, label in labels.items():
@@ -270,7 +356,7 @@ def build_source_bound_litigation(cases, case_id, document_type, filename, excer
             draft.add_paragraph(f'材料《{ref["path"]}》记载如下（按句界恢复的原文，陈述人及真实性依原材料另核）：')
             draft.add_paragraph(row['contextual_quote'])
             audit.add_paragraph(json.dumps(row, ensure_ascii=False, indent=2))
-        if key == 'requests':
+        if key == 'requests' and document_type != 'procedure_review':
             draft.add_paragraph(prepared_brief['request_text'] if conditional else
                                 '拟请求事项：【待承办人根据材料确定具体请求、对象和成立条件；引述材料不等于采用其中主张。】')
     if arithmetic:
@@ -281,6 +367,44 @@ def build_source_bound_litigation(cases, case_id, document_type, filename, excer
             draft.add_paragraph(expression + ' = ' + row['result_yuan'] + '元。')
         draft.add_paragraph('上述差额仅按选定原文数值计算；对应关系、是否应扣、是否到期及能否作为请求金额均待核实。')
         audit.add_paragraph(json.dumps(arithmetic, ensure_ascii=False, indent=2))
+    if prepared_issues:
+        draft.add_heading('逐项争点与论证底稿（分类及适用待核）', 1)
+        draft.add_paragraph('下列分组是拟议材料关联，不认定证明力、法律依据适用或主张成立；未选入不代表材料不存在。')
+        group_labels = {'claim':'拟讨论主张','supporting':'拟支持材料','opposing':'相反或限制材料','legal_basis':'法律依据'}
+        for index, issue in enumerate(prepared_issues, 1):
+            draft.add_heading(f'争点{index}', 2)
+            for key, label in group_labels.items():
+                if not issue[key]:
+                    draft.add_paragraph(f'本争点未选入{label}；请回读完整材料后补入或说明适用范围，不据此认定不存在。')
+                for row in issue[key]:
+                    draft.add_paragraph(label+'（材料原文，分类待核）：'+row['contextual_quote'])
+                    draft.add_paragraph('出处：'+row['citation']['path']+'；片段'+str(row['citation']['chunk']))
+            draft.add_paragraph('律师待核：请求权构成、各项事实与证据对应、相反材料回应、举证责任、法源效力及程序条件；本程序未自动完成这些判断。')
+        audit.add_heading('逐项争点来源与位置', 1)
+        audit.add_paragraph(json.dumps(prepared_issues, ensure_ascii=False, indent=2))
+    if prepared_claims:
+        draft.add_heading('逐项请求与争点对应（待核关联）',1)
+        draft.add_paragraph('各请求分别展示，不合并金额或推定彼此兼容；原文中的请求不等于律师已决定采用。')
+        linked=set()
+        for number,item in enumerate(prepared_claims,1):
+            draft.add_heading(f'请求{number}',2)
+            draft.add_paragraph('请求原文：'+item['quote'])
+            draft.add_paragraph('出处：'+item['request']['path']+'；片段'+str(item['request']['chunk']))
+            if not item['issue_indices']:
+                draft.add_paragraph('未关联争点：请补请求依据、事实要件和相反材料；不据此认定无请求权。')
+            for index in item['issue_indices']:
+                linked.add(index)
+                issue=prepared_issues[index]
+                draft.add_paragraph(f'对应争点{index+1}；拟支持{len(issue["supporting"])}条，相反或限制{len(issue["opposing"])}条，法律依据{len(issue["legal_basis"])}条；来源及全文见该争点。')
+                if issue['missing_groups']:
+                    draft.add_paragraph('未选入组：'+ '、'.join(group_labels[k] for k in issue['missing_groups'])+'；需要补选或说明，不等于不存在。')
+        unlinked=[str(i+1) for i in range(len(prepared_issues)) if i not in linked]
+        if unlinked: draft.add_paragraph('尚未关联请求的争点：'+ '、'.join(unlinked)+'；请核对是否遗漏。')
+        audit.add_paragraph(json.dumps(prepared_claims,ensure_ascii=False,indent=2))
+    if review_text:
+        draft.add_heading('请求权与程序工作底稿',1)
+        for line in review_text.splitlines():draft.add_paragraph(line)
+        audit.add_paragraph(json.dumps(prepared_review,ensure_ascii=False,indent=2))
     draft.add_heading('独立风险提示（待审）', 1)
     draft.add_paragraph('引用和计算不证明请求成立；来源完整性、责任条件、程序期限及实际可实现范围须复核。'
                         '本提示不表示客户已接受风险说明或已经认可任何方案。')
@@ -305,9 +429,21 @@ def build_source_bound_litigation(cases, case_id, document_type, filename, excer
     missing_roles = [role for role in role_labels if role not in filled_roles]
     selections = '；'.join(f'{labels[key]}{count}处' for key, count in selected_sections.items() if count)
     user_summary = ('已保存待审条件文稿。' if conditional else '已保存部分完成的来源整理稿。')
+    if document_type in REMEDY_DOCUMENTS:
+        user_summary += '文书类型：' + title + '（来源草稿）。已分列原裁判核对、专用角色、请求和理由，尚未完成全文法律论证或提交要件审核。'
+    elif document_type == 'procedure_review':
+        user_summary += '文书类型：程序核查底稿，仅整理程序候选和来源，不生成答辩主张或拟提出的请求。'
     user_summary += '正文选入原文：' + selections + '。'
     user_summary += '已形成待审条件请求。' if conditional else '未形成条件请求。'
     user_summary += f'程序金额核对{len(arithmetic)}项。'
+    if prepared_review:
+        user_summary+=f'已保存请求权要件核查{len(prepared_review["claims"])}项及'+('程序核查表；' if prepared_review['procedure'] else '未选程序路线；')+'正反材料与缺选项均在文档，尚未认定要件成立、管辖或期限。'
+        if prepared_review['procedure'] and prepared_review['procedure'].get('remedy'):
+            user_summary+='\n'+prepared_review['procedure']['remedy']['text']+'\n'
+    if prepared_claims:
+        user_summary += f'已保存来源绑定请求对应{len(prepared_claims)}项；逐项列明争点关联和未关联缺口，不合并金额或认证请求成立。'
+    if prepared_issues:
+        user_summary += f'已保存来源绑定争点{len(prepared_issues)}项，分别列出拟支持、相反或限制材料与法律依据；空组仅表示未选入，分类及适用仍待核。'
     if missing_sections:
         user_summary += '本稿待补章节：' + '、'.join(labels[key] for key in missing_sections) + '。'
     if missing_roles:
@@ -338,7 +474,7 @@ def build_source_bound_litigation(cases, case_id, document_type, filename, excer
             target.unlink()
         raise
     return {**output, 'internal_path': internal['path'], 'internal_sha256': internal['sha256'],
-            'body_text': '\n'.join(p.text for p in draft.paragraphs),
+            'body_text': '\n'.join(p.text for p in draft.paragraphs),'claims':prepared_claims,'legal_review':prepared_review,
             'internal_text': '\n'.join(p.text for p in audit.paragraphs),
             'case_id': case_id, 'document_type': document_type,
             'status': 'conditional_draft' if conditional else 'source_bound_draft',
@@ -349,5 +485,5 @@ def build_source_bound_litigation(cases, case_id, document_type, filename, excer
             'source_contexts': list(contexts.values()),
             'pending_work': ['承办人核实角色、选定请求及其适用条件。',
                              '依据完整材料补全事实论证、法律依据与程序要求。'],
-            'excerpts': rows, 'calculations': arithmetic, 'sources': list(used.values()),
+            'excerpts': rows, 'issues': prepared_issues, 'calculations': arithmetic, 'sources': list(used.values()),
             'ready_to_submit': False, 'legal_verified': False, 'limits': LIMITS}

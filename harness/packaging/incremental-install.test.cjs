@@ -16,7 +16,7 @@ function tree(root){
 }
 function fixture(t,extra={}){
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'qx-incremental-test-'));
-  t.after(()=>{assert.equal(path.dirname(root),os.tmpdir());assert.ok(path.basename(root).startsWith('qx-incremental-test-'));fs.rmSync(root,{recursive:true,force:true,maxRetries:3});});
+  t.after(()=>{assert.equal(path.dirname(root),path.resolve(os.tmpdir()));assert.ok(path.basename(root).startsWith('qx-incremental-test-'));fs.rmSync(root,{recursive:true,force:true,maxRetries:3});});
   const app=path.join(root,'应用 中文 空格');fs.mkdirSync(path.join(app,'resources'),{recursive:true});
   const initial={'QunxingWorkbench.exe':'synthetic unchanged exe','resources/app.asar':'synthetic 0.2.6','change.txt':'old content','delete.txt':'old deletion','z-unchanged.txt':'duplicate reusable content',...extra};
   for(const [name,content] of Object.entries(initial)){fs.mkdirSync(path.dirname(path.join(app,name)),{recursive:true});fs.writeFileSync(path.join(app,name),content);}

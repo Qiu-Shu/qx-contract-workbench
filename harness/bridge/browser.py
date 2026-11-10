@@ -11,8 +11,9 @@ from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 
 mcp = MCPServer('bb_browser', log_level='WARNING')
-NODE = os.environ.get('BB_BROWSER_NODE', 'C:/Users/Lenovo/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe')
-CLI = os.environ.get('BB_BROWSER_CLI', 'C:/Users/Lenovo/.codex/tools/bb-browser/node_modules/bb-browser/dist/cli.js')
+APP_ROOT = Path(__file__).resolve().parent.parent
+NODE = os.environ.get('BB_BROWSER_NODE', str(APP_ROOT / 'runtime' / 'node.exe'))
+CLI = os.environ.get('BB_BROWSER_CLI', str(APP_ROOT / 'browser' / 'node_modules' / 'bb-browser' / 'dist' / 'cli.js'))
 SNAPSHOTS = {}
 LOCK = RLock()
 ACTIONS = {'status', 'open', 'goto', 'snap', 'snapshot', 'click', 'hover', 'fill', 'type',

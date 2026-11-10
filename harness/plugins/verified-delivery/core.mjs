@@ -3,12 +3,17 @@ import {isAbsolute,relative,resolve,sep} from 'node:path';
 import {createHash} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 
-const protectedNames=new Set(['build_source_bound_litigation','assess_employment_termination','save_source_bound_register']);
+const protectedNames=new Set(['build_source_bound_litigation','assess_employment_termination','assess_employment_terms','save_source_bound_register','generate_litigation_document','save_employment_review']);
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const failure='未能确认本轮保存成果与当前文档一致。请回读当前案件记录和文件后重试；本次不交付未经核对的模型解释。';
 const prefix='mcp__qx_legal__';
 const deliveryKey=({name,args})=>JSON.stringify([args.case_id,name,
- name==='save_source_bound_register'?args.domain||'':name==='build_source_bound_litigation'?args.document_type||'':'']);
+ name==='save_source_bound_register'?args.domain||'':['build_source_bound_litigation','generate_litigation_document'].includes(name)?args.document_type||'':name==='assess_employment_terms'?args.review_stage||'':name==='save_employment_review'?args.stage||'':'']);
+function missingRouting(name,args){
+ const field=['build_source_bound_litigation','generate_litigation_document'].includes(name)?'document_type':
+  name==='save_source_bound_register'?'domain':name==='assess_employment_terms'?'review_stage':name==='save_employment_review'?'stage':null;
+ return typeof args.case_id!=='string'||!args.case_id.trim()||Boolean(field&&(typeof args[field]!=='string'||!args[field].trim()));
+}
 function unpack(message){
  if(message.isError)return null;
  try{
@@ -29,15 +34,19 @@ export function deliveriesInTurn(messages){
  for(const message of messages.slice(start+1)){
   if(message.role==='assistant')for(const block of message.content||[]){
    if(block.type!=='tool-call'||!block.name.startsWith(prefix))continue;
-   let args;try{args=JSON.parse(block.arguments);}catch{args={};}
-   const name=block.name.slice(prefix.length);calls.set(block.id,{name,args});
-   if(protectedNames.has(name))results.set(deliveryKey({name,args}),{call:{name,args},value:null});
+   let args,malformed=false;try{args=JSON.parse(block.arguments);if(!args||typeof args!=='object'||Array.isArray(args))throw Error('invalid object');}catch{args={};malformed=true;}
+   const name=block.name.slice(prefix.length),invalidRouting=protectedNames.has(name)&&missingRouting(name,args);
+   const key=malformed||invalidRouting?'invalid:'+block.id:deliveryKey({name,args});
+   const call={name,args,key,malformed,invalidRouting};calls.set(block.id,call);
+   if(protectedNames.has(name))results.set(key,{call,value:null});
   }
   if(message.role!=='tool')continue;
   const call=calls.get(message.toolCallId);
   if(!call)continue;
   const value=unpack(message);
-  if(protectedNames.has(call.name))results.set(deliveryKey(call),{call,value});
+  // Only an explicit failure with unusable routing is isolated. Real save or
+  // source failures still invalidate that scoped result until a valid retry.
+  if(protectedNames.has(call.name))results.set(call.key,{call,value,malformedFailure:(call.malformed||call.invalidRouting)&&message.isError===true});
   if(call.name==='export_case')exports.push({call,value});
  }
  return results.size?{results:[...results.values()],exports}:null;
@@ -60,8 +69,9 @@ export async function canonicalDelivery(state,workspace){
  try{
   const root=await realpath(workspace);
   db=new DatabaseSync(await safeFile(root,'.qx-materials/index.sqlite'),{readOnly:true});
-  const sections=[];
-  for(const {call,value} of state.results){
+  const sections=[];let malformedFailures=0;
+  for(const {call,value,malformedFailure} of state.results){
+   if(malformedFailure){malformedFailures++;continue;}
    const d=value?.delivery;
    if(value?.recorded===false||value?.saved===false||!d||d.version!==1||d.case_id!==call.args.case_id||
       typeof d.summary!=='string'||!d.summary.trim()||d.summary.length>200000||
@@ -97,7 +107,9 @@ export async function canonicalDelivery(state,workspace){
    }
    sections.push(d.summary+'\n\n'+(links.length?links.join('\n\n'):'尚无本轮匹配的 Word 文件；已保存记录可在本案工作区查看。'));
   }
-  return '以下说明由已保存成果生成；具体审查内容见对应文档。\n\n'+sections.join('\n\n');
+  if(!sections.length)throw Error('no verified receipts');
+  const warning=malformedFailures?`另有${malformedFailures}次参数格式错误的调用未执行；下列仅交付实际成功保存并通过校验的成果，不代表失败调用的请求已经完成。\n\n`:'';
+  return warning+'以下说明由已保存成果生成；具体审查内容见对应文档。\n\n'+sections.join('\n\n');
  }catch{return failure;}finally{db?.close();}
 }
 function* textChunks(text){

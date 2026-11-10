@@ -5,8 +5,8 @@ const {spawn}=require('node:child_process');
 const {pathToFileURL}=require('node:url');
 const {createModelCredentialStore}=require('./model-credentials.cjs');
 const {validateKey}=require('./setup-service.cjs');
-const {initialize,readRuntime,readControl,readHostState,inspectHost,stopInstalledHost,restartRuntime}=require('./installed-runtime.cjs');
-const {createHostMonitor,createEventLog}=require('./host-recovery.cjs');
+const {readHostState,inspectHost,stopInstalledHost,restartRuntime}=require('./installed-runtime.cjs');
+const {createHostMonitor,createEventLog,hostStartupPending}=require('./host-recovery.cjs');
 
 const payload=process.env.QX_PAYLOAD_ROOT||path.join(process.resourcesPath,'workbench');
 const data=process.env.QX_INSTALL_DATA||path.join(app.getPath('appData'),'QunxingHarness');
@@ -19,6 +19,13 @@ process.env.QX_DESKTOP_DATA=path.join(data,'.local','desktop-data');
 const store=createModelCredentialStore({dataParent:path.join(data,'.local','desktop-data'),safeStorage});
 let setupWindow,starting=false,mainLoaded=false,quitting=false,connection;
 const log=createEventLog(data,'desktop');
+const desktopStartedAt=Date.now();
+function startupState(phase,errorCode){
+  global.qxStartupState={phase,startedAt:global.qxStartupState?.startedAt||Date.now(),
+    errorCode:typeof errorCode==='string'&&/^[A-Z0-9_]{1,64}$/.test(errorCode)?errorCode:undefined};
+  log('startup_phase',{phase,elapsedMs:Date.now()-desktopStartedAt,errorCode});
+  for(const win of BrowserWindow.getAllWindows())if(!win.isDestroyed())win.webContents.send('qx:startup-state',global.qxStartupState);
+}
 global.qxDesktopLog=log;
 log('desktop_start');
 app.on('before-quit',()=>{quitting=true;log('desktop_quit',{intentional:true})});
@@ -26,46 +33,71 @@ process.on('exit',code=>log('desktop_exit',{code}));
 process.on('uncaughtExceptionMonitor',error=>log('desktop_exception',{errorName:error.name,errorCode:error.code}));
 
 async function ensureHost(manual=false){
-  const existing=await readRuntime(data);
-  if(existing){process.env.QX_HARNESS_URL=existing.url;return existing;}
-  const control=readControl(data);
-  let failed=false;
-  if(control){
-    if(readHostState(data)?.phase==='failed'){
-      if(!manual)throw Error('后台连续启动失败，请点击重试恢复。');
-      await restartRuntime(control);
-    }
-  }else{
-    const host=await inspectHost(data);
-    if(host.hostAlive)throw Error('后台仍在运行但暂时无法连接，请稍后重试，避免打断正在处理的任务。');
-    initialize(payload,data);
-    const result=await store.withSecret(secret=>{
-    const child=spawn(path.join(payload,'runtime/node.exe'),[path.join(payload,'desktop-runner/installed-host.cjs')],{
-      detached:true,stdio:'ignore',windowsHide:true,
-      env:{...process.env,QX_PAYLOAD_ROOT:payload,QX_INSTALL_DATA:data,DEEPSEEK_API_KEY:secret}});
-      child.unref();child.once('error',error=>{failed=true;log('launcher_spawn_error',{errorName:error.name,errorCode:error.code})});
-      child.once('exit',(code,signal)=>{failed=true;log('launcher_observed_exit',{code,signal})});
-    });
-    if(result.status!=='saved')throw Error('Windows 暂时无法读取加密配置，请重新填写 API Key。');
-  }
+  let failed=false,spawned=false,retried=false;
   const deadline=Date.now()+120000;
-  while(Date.now()<deadline&&!failed){
-    const runtime=await readRuntime(data);
-    if(runtime){process.env.QX_HARNESS_URL=runtime.url;return runtime;}
-    if(readControl(data)&&readHostState(data)?.phase==='failed')break;
+  while(!quitting){
+    const host=await inspectHost(data);
+    if(host.runtime){process.env.QX_HARNESS_URL=host.runtime.url;return host.runtime;}
+    if(Date.now()>=deadline&&!hostStartupPending(host))break;
+    if(host.control&&host.state?.phase==='failed'){
+      if(!manual)throw Error('后台连续启动失败，请点击重试恢复。');
+      if(retried)break;
+      await restartRuntime(host.control);retried=true;
+    }else if(!host.control&&!host.launcherAlive){
+      if(host.hostAlive)throw Error('后台仍在运行但暂时无法连接，请稍后重试，避免打断正在处理的任务。');
+      if(failed)break;
+      if(!spawned){
+        startupState('starting');spawned=true;
+        const result=await store.withSecret(secret=>{
+          const child=spawn(path.join(payload,'runtime/node.exe'),[path.join(payload,'desktop-runner/installed-host.cjs')],{
+            detached:true,stdio:'ignore',windowsHide:true,
+            env:{...process.env,QX_PAYLOAD_ROOT:payload,QX_INSTALL_DATA:data,DEEPSEEK_API_KEY:secret}});
+          child.unref();child.once('error',error=>{failed=true;log('launcher_spawn_error',{errorName:error.name,errorCode:error.code})});
+          child.once('exit',(code,signal)=>{failed=true;log('launcher_observed_exit',{code,signal})});
+        });
+        if(result.status!=='saved')throw Error('Windows 暂时无法读取加密配置，请重新填写 API Key。');
+      }
+    }
+    startupState('connecting');
     await new Promise(resolve=>setTimeout(resolve,500));
   }
-  throw Error('本机服务未能启动，请查看资料目录中的 .local/host.log 后重试。');
+  const error=Error('本机服务未能启动，请查看资料目录中的 .local/host.log 后重试。');
+  error.code=failed?'HOST_EXITED':readHostState(data)?.phase==='running'?'SERVICE_UNAVAILABLE':'STARTUP_TIMEOUT';throw error;
 }
+async function restoreConnection(){
+  if(starting||quitting)return false;starting=true;
+  try{
+    for(let attempt=0;attempt<3&&!quitting;attempt++){
+      if(attempt)await new Promise(resolve=>setTimeout(resolve,attempt*1000));
+      const runtime=await ensureHost();
+      if(await global.qxTryReconnectInPlace?.(runtime)){
+        connection.connected(runtime);log('connection_restored_in_place');return true;
+      }
+    }
+  }catch(error){log('connection_restore_error',{errorName:error.name,errorCode:error.code});}
+  finally{starting=false;}
+  for(const win of BrowserWindow.getAllWindows())if(!win.isDestroyed())win.webContents.send('qx:connection-state',{phase:'auto-reconnect-failed'});
+  log('connection_restore_failed');return false;
+}
+global.qxRestoreConnection=restoreConnection;
 async function showMain(){
   if(!mainLoaded){mainLoaded=true;require('./main.cjs');await global.qxMainReady;}
   else await global.qxReloadMain();
 }
 async function enter(){
-  const runtime=await ensureHost(true);
+  global.qxStartupState=null;startupState('checking');
+  global.qxStartUnavailable=true;
   await showMain();
   if(setupWindow&&!setupWindow.isDestroyed())setupWindow.close();
-  connection?.connected(runtime);
+  log('startup_window_ready',{elapsedMs:Date.now()-desktopStartedAt});
+  try{
+    const runtime=await ensureHost(true);
+    if(quitting)return;
+    startupState('opening');await showMain();
+    if(global.qxIsRecoveryPage?.())throw Object.assign(Error('Workbench page failed to load'),{code:'PAGE_LOAD_FAILED'});
+    connection?.connected(runtime);global.qxStartupState=null;
+    log('startup_complete',{elapsedMs:Date.now()-desktopStartedAt});
+  }catch(error){startupState('failed',error.code);connection?.reset();throw error;}
 }
 function showSetup(){
   if(setupWindow&&!setupWindow.isDestroyed()){setupWindow.show();setupWindow.focus();return;}
@@ -83,8 +115,17 @@ const owns=event=>setupWindow&&!setupWindow.isDestroyed()&&event.sender===setupW
 if(!app.requestSingleInstanceLock())app.quit();
 else{
   connection=createHostMonitor({probe:()=>inspectHost(data),isPaused:()=>starting||quitting||!mainLoaded,
-    recover:async()=>{if(starting||quitting)return;starting=true;try{await ensureHost()}finally{starting=false}},log,
-    onState:state=>{for(const win of BrowserWindow.getAllWindows())if(!win.isDestroyed())win.webContents.send('qx:connection-state',state)},
+    recover:async()=>{
+      if(starting||quitting)return;starting=true;
+      try{await ensureHost()}catch(error){startupState('failed',error.code);throw error}finally{starting=false}
+    },log,
+    onState:state=>{
+      for(const win of BrowserWindow.getAllWindows())if(!win.isDestroyed())win.webContents.send('qx:connection-state',state);
+      if(state.phase==='ready'&&!starting&&!quitting&&global.qxStartupState?.errorCode!=='PAGE_LOAD_FAILED'){
+        if(global.qxIsRecoveryPage?.())void global.qxReconnectHost();
+        else void restoreConnection();
+      }
+    },
   });
   global.qxConnection=connection;
   global.qxReconnectHost=async()=>{
@@ -134,11 +175,10 @@ else{
       }catch{global.qxUpdates=null;}
     }
     if((await store.status()).status==='saved'){
+      starting=true;
       try{await enter()}catch(error){
         log('initial_connection_failed',{errorName:error.name,errorCode:error.code});
-        // A slow or failed backend does not invalidate an already saved API key.
-        global.qxStartUnavailable=true;connection.reset();await showMain();
-      }
+      }finally{starting=false;void connection.tick()}
     }else showSetup();
   }).catch(()=>{dialog.showErrorBox('工作台暂未启动','无法初始化本机配置，请检查用户目录权限。');app.quit()});
 }

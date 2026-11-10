@@ -56,11 +56,12 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       async function act(task){setBusy(true);setError('');try{await task();}catch(e){if(alive.current)setError(e.message);}finally{if(alive.current)setBusy(false);}}
       async function upload(files){
         const selected=Array.from(files);if(!selected.length)return;
+        const session=document.documentElement.dataset.qxSessionId||'';
         await act(async()=>{
           const failed=[];let count=0;
           for(const item of selected){
             setNotice(`正在上传 ${count+failed.length+1}/${selected.length}：${item.name}`);
-            try{await api('upload',{method:'POST',headers:{'content-type':'application/octet-stream','x-qx-filename':encodeURIComponent(item.name),'x-qx-category':encodeURIComponent(category.trim()||'未分类')},body:item});count++;}
+            try{const result=await api('upload',{method:'POST',headers:{'content-type':'application/octet-stream','x-qx-filename':encodeURIComponent(item.name),...(session?{'x-qx-session':session}:{}),...(category.trim()?{'x-qx-category':encodeURIComponent(category.trim())}:{})},body:item});count++;if(result.linkWarning)failed.push(`${item.name}：${result.linkWarning}`);}
             catch(e){failed.push(`${item.name}：${e.message}`);}
           }
           setNotice(`已上传 ${count} 份，正在本机解析。${failed.length?'\n未完成：'+failed.join('\n'):''}`);setResults(null);setArchived(false);setOffset(0);await load();
@@ -96,21 +97,22 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       }
       return h('dialog',{className:'qx-kb',ref:dialog,'aria-labelledby':'qx-kb-heading',onCancel:e=>{e.preventDefault();if(!busy)onClose();}},
         h('style',null,css),
-        h('header',{className:'qx-kb-head'},h('div',null,h('h2',{id:'qx-kb-heading'},'律所知识库'),h('p',{className:'qx-kb-muted'},'本机保存 · 原文可追溯')),h('button',{className:'qx-kb-close',disabled:busy,onClick:onClose,'aria-label':'关闭知识库'},'×')),
+        h('header',{className:'qx-kb-head'},h('div',null,h('h2',{id:'qx-kb-heading'},'资料库'),h('p',{className:'qx-kb-muted'},'本机保存 · 原文可追溯')),h('button',{className:'qx-kb-close',disabled:busy,onClick:onClose,'aria-label':'关闭知识库'},'×')),
         h('div',{className:'qx-kb-body'},
-          h('div',{className:'qx-kb-toolbar'},h('button',{onClick:onGraph},'关系图与三层知识')),
+          h('div',{className:'qx-kb-toolbar'},h('button',{onClick:onGraph},'返回知识库')),
           h('p',{className:'qx-kb-muted'},'上传律所范本、办案经验、制度与研究资料。上传和检索在本机完成；用于 AI 问答的片段会发送给当前配置的模型。'),
-          h('div',{className:'qx-kb-toolbar'},h('input',{value:category,onChange:e=>setCategory(e.target.value),placeholder:'上传分类，如：合同范本',maxLength:80,'aria-label':'上传资料分类'}),
-            h('input',{ref:file,type:'file',multiple:true,hidden:true,accept:'.txt,.md,.csv,.tsv,.json,.html,.htm,.rtf,.doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.png,.jpg,.jpeg,.webp,.gif,.bmp,.tif,.tiff',onChange:e=>{void upload(e.target.files);e.target.value='';}}),
-            h('button',{className:'qx-kb-primary',disabled:busy,onClick:()=>file.current.click()},busy?'正在处理…':'上传资料'),
-            h('button',{disabled:busy,onClick:()=>{setArchived(!archived);setOffset(0);setResults(null);setSource(null);}},archived?'返回资料库':'已归档')),
           h('div',{className:'qx-kb-toolbar'},
+            h('input',{ref:file,type:'file',multiple:true,hidden:true,accept:'.txt,.md,.csv,.tsv,.json,.html,.htm,.rtf,.doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.png,.jpg,.jpeg,.webp,.gif,.bmp,.tif,.tiff',onChange:e=>{void upload(e.target.files);e.target.value='';}}),
+            h('button',{className:'qx-kb-primary',disabled:busy,onClick:()=>file.current.click()},busy?'正在处理…':'上传资料'),h('span',{className:'qx-kb-muted'},'自动分类，并关联当前工作。')),
+          h('details',null,h('summary',null,'资料管理与备份'),h('div',{className:'qx-kb-toolbar'},
+            h('input',{value:category,onChange:e=>setCategory(e.target.value),placeholder:'自动分类，可手动指定',maxLength:80,'aria-label':'上传资料分类'}),
+            h('button',{disabled:busy,onClick:()=>{setArchived(!archived);setOffset(0);setResults(null);setSource(null);}},archived?'返回资料库':'已归档'),
             h('button',{disabled:busy,onClick:backup},'备份知识库'),
             h('input',{ref:backupFile,type:'file',hidden:true,accept:'.zip',onChange:e=>{void restore(e.target.files[0]);e.target.value='';}}),
             h('button',{disabled:busy,onClick:()=>backupFile.current.click()},'从备份恢复'),
             backupUrl&&h('a',{href:backupUrl,download:true},'下载备份'),
             h('span',{className:'qx-kb-muted'},'仅备份已入库资料，文件未加密；恢复只合并，不覆盖已有资料。')),
-          h('details',{className:'qx-kb-muted'},h('summary',null,'备份范围与限制'),h('p',null,'包含知识库中已归档资料、入库文件和引用索引。不包含案件、对话，以及脱敏功能单独保管的原始文件和映射记录；脱敏后入库的资料只备份脱敏副本。仅恢复来源可信的本工作台备份；当前支持单份入库文件 512 MiB、展开总量 2 GiB、最多 10,000 份资料、清单 64 MiB。超过限制会停止并提示，不会生成不完整的知识库备份。恢复时请保持工作台开启。')),
+          h('p',{className:'qx-kb-muted'},'包含知识库中已归档资料、入库文件和引用索引。不包含案件、对话，以及脱敏功能单独保管的原始文件和映射记录；脱敏后入库的资料只备份脱敏副本。仅恢复来源可信的本工作台备份；当前支持单份入库文件 512 MiB、展开总量 2 GiB、最多 10,000 份资料、清单 64 MiB。超过限制会停止并提示，不会生成不完整的知识库备份。恢复时请保持工作台开启。')),
           h('form',{className:'qx-kb-toolbar',onSubmit:e=>{e.preventDefault();void search();}},h('input',{type:'search',value:query,onChange:e=>setQuery(e.target.value),maxLength:300,placeholder:'检索原文关键词，如：劳动合同 解除','aria-label':'检索知识库关键词'}),h('button',{type:'submit',disabled:busy||!query.trim()},'检索'),results&&h('button',{type:'button',onClick:()=>{setResults(null);setSource(null);}},'返回列表')),
           (error||loadError)&&h('div',{className:'qx-kb-notice qx-kb-error',role:'alert'},error||loadError),notice&&h('div',{className:'qx-kb-notice',role:'status'},notice),
           source&&h('section',{className:'qx-kb-source','aria-label':'资料原文'},h('div',{className:'qx-kb-pager'},h('h3',null,source.title),h('button',{onClick:()=>setSource(null)},'收起原文')),
@@ -128,11 +130,13 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
     };
   }
   const LibraryPanel=createKnowledgeView(React);
-  function KnowledgePanel({onClose}){
-    const [graph,setGraph]=React.useState(false),[ready,setReady]=React.useState(!!window.qxKnowledgePanel);
+  function KnowledgePanel({onClose,onMemory,initialProject='',onScopeChange}){
+    const [graph,setGraph]=React.useState(true),[ready,setReady]=React.useState(!!window.qxKnowledgePanel);
+    const [scope,setScope]=React.useState(initialProject);
+    const changeScope=value=>{setScope(value);onScopeChange?.(value);};
     React.useEffect(()=>{const loaded=()=>setReady(true);window.addEventListener('qx-knowledge-ready',loaded);return()=>window.removeEventListener('qx-knowledge-ready',loaded);},[]);
-    if(graph&&ready&&window.qxKnowledgePanel)return h(window.qxKnowledgePanel,{onClose,onLibrary:()=>setGraph(false)});
-    return h(LibraryPanel,{onClose,onGraph:()=>{if(window.qxKnowledgePanel){setReady(true);setGraph(true);}else window.alert('关系图组件正在加载；若一直未出现，请刷新工作台重试。');}});
+    if(graph&&ready&&window.qxKnowledgePanel)return h(window.qxKnowledgePanel,{onClose,onMemory,initialProject:scope,onScopeChange:changeScope,onLibrary:()=>setGraph(false)});
+    return h(LibraryPanel,{onClose,onGraph:()=>{if(window.qxKnowledgePanel){setReady(true);setGraph(true);}else window.alert('工作知识组件正在加载，请稍后重试。');}});
   }
   function createMemoryView(React){
     const h=React.createElement;
@@ -222,10 +226,10 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
           :h('p',{className:'empty'},loading?'正在读取本案记忆…':results?'没有匹配的本案记忆，请尝试其他关键词。':'本案还没有记忆。可选择一条案件记录，或手工填写有明确来源的内容。'),
         !results&&h('div',{className:'pager'},h('button',{type:'button',disabled:busy||offset===0,onClick:()=>setOffset(Math.max(0,offset-20))},'上一页记忆'),h('button',{type:'button',disabled:busy||catalog.next_offset==null,onClick:()=>setOffset(catalog.next_offset)},'下一页记忆')));
     }
-    return function MemoryPanel({onClose}){
+    return function MemoryPanel({onClose,initialCase=null}){
       const dialog=React.useRef(null),alive=React.useRef(true),generation=React.useRef(0),selectedCase=React.useRef(null);
       const [cases,setCases]=React.useState({cases:[],total:0,next_offset:null}),[caseOffset,setCaseOffset]=React.useState(0),[caseQuery,setCaseQuery]=React.useState(''),[caseSearch,setCaseSearch]=React.useState('');
-      const [chosen,setChosen]=React.useState(null),[status,setStatus]=React.useState(null),[runtime,setRuntime]=React.useState(null);
+      const [chosen,setChosen]=React.useState(initialCase),[status,setStatus]=React.useState(null),[runtime,setRuntime]=React.useState(null);
       const [busy,setBusy]=React.useState(false),[error,setError]=React.useState(''),[notice,setNotice]=React.useState('');
       selectedCase.current=chosen?.id||null;
       React.useEffect(()=>{alive.current=true;const element=dialog.current,previous=document.activeElement;element.showModal();return()=>{alive.current=false;if(element.open)element.close();previous?.focus?.();};},[]);
@@ -430,9 +434,82 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
           h('button',{type:'button',disabled:busy,onClick:()=>act('check')},'重新检查'),
           h('button',{type:'button',onClick:()=>setOpen(false)},'稍后再说'))));
   }
+  function createComponentEntry(React){
+    const h=React.createElement;
+    const labels={idle:'首次使用时下载',cached:'已下载，使用前校验',checking:'正在检查组件…',connecting:'正在连接下载服务…',downloading:'正在下载组件',verifying:'下载完成，正在校验…',installing:'正在安装组件…',cancelling:'正在取消，请稍候…',cancelled:'已取消准备',ready:'组件已就绪',error:'组件准备未完成',unavailable:'组件暂不可用',external:'自定义环境，调用时检查'};
+    const css=`.qx-components{position:fixed;inset:0;width:min(440px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;margin:auto;padding:24px;border:1px solid var(--dsw-alias-border-l,#bec7d2);border-radius:10px;background:var(--dsw-alias-bg-base,#fff);color:var(--dsw-alias-label-primary,#18202a);font:14px/1.65 system-ui;box-sizing:border-box}.qx-components::backdrop{background:#18202a66}.qx-components h2{font-size:19px;margin:0}.qx-components p{margin:10px 0;overflow-wrap:anywhere}.qx-components header,.qx-component-actions{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.qx-components button,.qx-component-notice button{font:inherit;min-height:36px;border:1px solid var(--dsw-alias-border-l,#bec7d2);border-radius:6px;padding:6px 12px;background:var(--dsw-alias-bg-base,#fff);color:inherit;cursor:pointer}.qx-components button:disabled{opacity:.6;cursor:default}.qx-components button:focus-visible,.qx-component-notice button:focus-visible{outline:2px solid var(--dsw-alias-state-business-primary,#3f6cdb);outline-offset:3px}.qx-components progress{width:100%;height:12px;accent-color:var(--dsw-alias-state-business-primary,#3f6cdb)}.qx-component-muted{color:var(--dsw-alias-label-secondary,#626b78)}.qx-component-error{color:var(--dsw-alias-state-error,#a12c2c)}.qx-component-notice{position:fixed;right:16px;bottom:16px;z-index:1000;width:min(360px,calc(100vw - 32px));padding:14px 16px;box-sizing:border-box;border:1px solid var(--dsw-alias-border-l,#bec7d2);border-radius:8px;background:var(--dsw-alias-bg-base,#fff);color:var(--dsw-alias-label-primary,#18202a);box-shadow:0 4px 18px #18202a20;font:14px/1.6 system-ui}.qx-component-notice p{margin:0 0 10px;overflow-wrap:anywhere}.qx-component-notice button{min-height:32px}.qx-component-block{border-top:1px solid var(--dsw-alias-border-l,#ddd);margin:16px 0;padding-top:16px}`;
+    const format=bytes=>(bytes/1024/1024).toFixed(1)+' MB';
+    return function ComponentEntry({wide}){
+      const [state,setState]=React.useState(null),[open,setOpen]=React.useState(false),[problem,setProblem]=React.useState('');
+      const [offline,setOffline]=React.useState(!navigator.onLine),[restored,setRestored]=React.useState(false),[acting,setActing]=React.useState(false),[dismissed,setDismissed]=React.useState('');
+      const panel=React.useRef(null),entry=React.useRef(null),refresh=React.useRef(()=>{}),alive=React.useRef(false),serial=React.useRef(0),mutating=React.useRef(false);
+      async function request(action,signal){
+        const response=await fetch('/api/qx-components/'+action,{method:action==='status'?'GET':'POST',credentials:'same-origin',signal,headers:{'x-qx-components':'1'}});
+        if(response.status===401||response.status===403)throw Error('工作台连接已失效，请在“工作台”菜单中重新连接。');
+        if(response.status===404)throw Error('当前会话未启用组件服务，请检查功能设置或重新连接工作台。');
+        if(!response.ok)throw Error('组件服务暂时无法连接，请重试。');
+        return await response.json();
+      }
+      React.useEffect(()=>{
+        alive.current=true;let timer;const controller=new AbortController();
+        refresh.current=async()=>{
+          if(controller.signal.aborted||mutating.current)return;
+          const order=++serial.current;
+          try{const next=await request('status',AbortSignal.any([controller.signal,AbortSignal.timeout(5000)]));if(alive.current&&order===serial.current){setState(next);setProblem('')}}
+          catch(error){if(alive.current&&order===serial.current&&!controller.signal.aborted)setProblem(error.name==='TimeoutError'?'组件状态读取超时，请重试。':error.message==='Failed to fetch'?'暂时无法读取本机组件状态，请重试。':error.message)}
+        };
+        const tick=async()=>{if(document.visibilityState!=='hidden')await refresh.current();if(!controller.signal.aborted)timer=setTimeout(tick,1200)};
+        const disconnected=()=>{setOffline(true);setRestored(false)};
+        const connected=()=>{setOffline(false);setRestored(true);void refresh.current()};
+        const visible=()=>{if(document.visibilityState==='visible')void refresh.current()};
+        window.addEventListener('offline',disconnected);window.addEventListener('online',connected);document.addEventListener('visibilitychange',visible);void tick();
+        return()=>{alive.current=false;controller.abort();clearTimeout(timer);window.removeEventListener('offline',disconnected);window.removeEventListener('online',connected);document.removeEventListener('visibilitychange',visible)};
+      },[]);
+      React.useEffect(()=>{
+        if(!open)return;const element=panel.current;element.showModal();
+        return()=>{if(element.open)element.close();entry.current?.focus()};
+      },[open]);
+      async function act(action){
+        if(mutating.current)return;mutating.current=true;serial.current++;setActing(true);setProblem('');setRestored(false);
+        setState(previous=>previous?{...previous,busy:true,phase:action==='cancel'?'cancelling':'checking',error:''}:previous);
+        try{const next=await request(action,AbortSignal.timeout(10000));if(alive.current)setState(next)}
+        catch(error){if(alive.current)setProblem(error.name==='TimeoutError'?'请求超时，正在核对后台状态。请勿重复点击。':error.message==='Failed to fetch'?'请求未能送达，请检查连接后重试。':error.message)}
+        finally{mutating.current=false;if(alive.current){setActing(false);void refresh.current()}}
+      }
+      const busy=Boolean(state?.busy),retry=['error','cancelled'].includes(state?.phase),ready=state?.phase==='ready',networkFailure=['NETWORK','TIMEOUT','DOWNLOAD_HTTP'].includes(state?.code);
+      const noticeKey=state?state.attempt+':'+(['error','ready','cancelled'].includes(state.phase)?state.phase:'working'):'';
+      const notice=state&&state.mode==='on-demand'&&state.attempt>0&&noticeKey!==dismissed;
+      const status=offline&&!ready?'网络已断开，尚未下载的组件需要联网；本机资料仍可查看。':labels[state?.phase]||'正在读取组件状态…';
+      const primary=busy?'取消准备':retry?'重新下载':state?.phase==='cached'?'校验组件':'下载并启用';
+      const canPrepare=state?.mode==='on-demand'&&!ready&&state.phase!=='unavailable';
+      return h(React.Fragment,null,h('style',null,css),
+        h('button',{ref:entry,type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'功能组件','aria-haspopup':'dialog',onClick:()=>{setOpen(true);void refresh.current()}},
+          h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,'aria-hidden':true},h('path',{d:'M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z'})),wide&&h('span',null,'功能组件')),
+        notice&&!open&&h('aside',{className:'qx-component-notice','aria-label':'组件准备状态'},h('p',{role:'status'},status),
+          h('div',{className:'qx-component-actions'},h('button',{type:'button',onClick:()=>setOpen(true)},busy?'查看进度':retry?'查看并重试':'查看详情'),h('button',{type:'button',onClick:()=>setDismissed(noticeKey)},'收起'))),
+        open&&h('dialog',{ref:panel,className:'qx-components','aria-labelledby':'qx-components-title',onCancel:event=>{event.preventDefault();setOpen(false)}},
+          h('header',null,h('h2',{id:'qx-components-title'},'功能组件'),h('button',{type:'button',onClick:()=>setOpen(false),'aria-label':'关闭功能组件'},'关闭')),
+          h('p',{className:'qx-component-muted'},'新安装默认全选、启用全部功能。已主动关闭的功能会保留你的设置。'),
+          h('p',null,'合同审查、客户接待、知识库、文档处理和基础桌面操作随程序提供。'),
+          h('section',{className:'qx-component-block','aria-label':'Windows 高级自动化'},h('strong',null,'Windows 高级自动化'),
+            h('p',{role:'status'},status),
+            state?.mode==='bundled'&&h('p',{className:'qx-component-muted'},'完整安装已包含此组件，无需首次下载。'),
+            state?.mode==='external'&&h('p',{className:'qx-component-muted'},'使用当前配置的运行环境。'),
+            state?.mode==='unavailable'&&h('p',{className:'qx-component-error'},'安装中缺少组件清单，请使用完整安装或联系维护人员修复。'),
+            state?.mode==='on-demand'&&h('p',{className:'qx-component-muted'},ready?'此组件已保存在本机，后续使用无需再次下载。':'首次使用需联网下载'+(state.total?'约 '+format(state.total):'组件')+'。可以继续使用其他功能；准备成功后保存在本机。'),
+            busy&&h('div',null,h('progress',{max:state.total||100,...(state.phase==='downloading'?{value:state.transferred}:{}),'aria-label':'组件准备进度'}),h('p',{className:'qx-component-muted'},state.phase==='downloading'?format(state.transferred)+' / '+format(state.total):'请稍候，完成后会显示结果。')),
+            state?.error&&h('p',{role:'alert',className:'qx-component-error'},state.error),
+            restored&&networkFailure&&h('p',{role:'status'},'网络连接已恢复，可以点击重新下载。'),
+            ready&&state.attempt>0&&h('p',null,'组件已准备好。如原任务已结束，请重新发起；重试安装不会自动重发任务。'),
+            problem&&h('p',{role:'alert',className:'qx-component-error'},problem),
+            h('div',{className:'qx-component-actions'},canPrepare&&h('button',{type:'button',disabled:acting||state.phase==='cancelling'||(!busy&&offline&&state.phase!=='cached')||state.code==='CACHE_INVALID',onClick:()=>act(busy?'cancel':'prepare')},primary),
+              h('button',{type:'button',disabled:acting,onClick:()=>void refresh.current()},'刷新状态')))));
+    };
+  }
+  const ComponentEntry=createComponentEntry(React);
   function AccountFooter({wide}){
-    const [knowledgeOpen,setKnowledgeOpen]=React.useState(false);
-    const [memoryOpen,setMemoryOpen]=React.useState(false);
+    const [knowledgeOpen,setKnowledgeOpen]=React.useState(false),[knowledgeScope,setKnowledgeScope]=React.useState('');
+    const [memoryOpen,setMemoryOpen]=React.useState(false),[memoryCase,setMemoryCase]=React.useState(null);
     const [wechatOpen,setWechatOpen]=React.useState(false);
     React.useEffect(()=>{
       const open=()=>{window.__qxOpenWechatRequested=false;setWechatOpen(true)};
@@ -442,10 +519,10 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
     },[]);
     return h('div',{className:'qx-sidebar-account'+(wide?'':' qx-sidebar-account-compact')},
       h(UpdateEntry,{wide}),
-      h('button',{type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'律所知识库',title:'律所知识库',onClick:()=>setKnowledgeOpen(true)},h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,'aria-hidden':true},h('path',{d:'M4 3h12a2 2 0 0 1 2 2v16H6a2 2 0 0 1-2-2V3zm0 13h14M8 7h6M8 11h6'})),wide&&h('span',null,'律所知识库')),
-      knowledgeOpen&&h(KnowledgeBoundary,{onClose:()=>setKnowledgeOpen(false)},h(KnowledgePanel,{onClose:()=>setKnowledgeOpen(false)})),
-      h('button',{type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'案件记忆',title:'案件记忆','aria-haspopup':'dialog',onClick:()=>setMemoryOpen(true)},h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,'aria-hidden':true},h('path',{d:'M5 4h14v16H5V4zm4 4h6m-6 4h6m-6 4h4M2 8h3m-3 4h3m-3 4h3'})),wide&&h('span',null,'案件记忆')),
-      memoryOpen&&h(MemoryPanel,{onClose:()=>setMemoryOpen(false)}),
+      h(ComponentEntry,{wide}),
+      h('button',{type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'知识库',title:'知识库',onClick:()=>setKnowledgeOpen(true)},h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,'aria-hidden':true},h('path',{d:'M4 3h12a2 2 0 0 1 2 2v16H6a2 2 0 0 1-2-2V3zm0 13h14M8 7h6M8 11h6'})),wide&&h('span',null,'知识库')),
+      knowledgeOpen&&h(KnowledgeBoundary,{onClose:()=>setKnowledgeOpen(false)},h(KnowledgePanel,{initialProject:knowledgeScope,onScopeChange:setKnowledgeScope,onClose:()=>{setKnowledgeOpen(false);setKnowledgeScope('');},onMemory:chosen=>{setMemoryCase(chosen);setKnowledgeOpen(false);setMemoryOpen(true);}})),
+      memoryOpen&&h(MemoryPanel,{initialCase:memoryCase,onClose:()=>{setMemoryOpen(false);setKnowledgeOpen(true);}}),
       h('button',{type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'微信连接',title:'微信连接','aria-haspopup':'dialog',onClick:()=>setWechatOpen(true)},h(PhoneIcon),wide&&h('span',null,'微信连接')),
       wechatOpen&&h(WechatPanel,{onClose:()=>setWechatOpen(false)}),
       h(Balance,{wide}));
@@ -510,7 +587,24 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
         typeof data?.note==='string'&&h('p',null,data.note),
         !data&&h('p',null,settled?'未取得可展示结果，可在调用轨迹中查看详情。':'正在检索，已返回的资料会保存在本机。')));
   }
+  function installReconnect(ctx){
+    const connection=ctx.get('connection');if(!connection)return()=>{};
+    let pending,cancel;
+    const reconnect=()=>pending??=(new Promise(resolve=>{
+      const previous=connection.generation.getSnapshot()?.id;
+      let done=false,stopState=()=>{},stopGeneration=()=>{},timer;
+      const finish=value=>{if(done)return;done=true;clearTimeout(timer);stopState();stopGeneration();resolve(value);};
+      cancel=()=>finish(false);
+      const check=()=>{const generation=connection.generation.getSnapshot();if(connection.state.getSnapshot()==='connected'&&generation&&generation.id!==previous)finish(true);};
+      stopState=connection.state.subscribe(check);stopGeneration=connection.generation.subscribe(check);
+      timer=setTimeout(()=>finish(false),15000);
+      try{connection.reconnect();check();}catch{finish(false);}
+    })).finally(()=>{pending=null;cancel=null;});
+    window.__qxReconnectInPlace=reconnect;
+    return()=>{cancel?.();if(window.__qxReconnectInPlace===reconnect)delete window.__qxReconnectInPlace;};
+  }
   return {inject:['sessions','uiWorkspace','slots','sidebarRight'],apply(ctx){
+    ctx.effect(()=>installReconnect(ctx),'qunxing: reconnect in place');
     ctx.effect(()=>{
       const css=document.createElement('style');css.textContent='.qx-legal-search-row{margin:6px 0;color:var(--dsw-alias-label-secondary,#687282);font-size:13px}.qx-legal-search-toggle{display:flex;align-items:center;gap:8px;width:100%;border:0;padding:6px 0;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit}.qx-legal-search-toggle:focus-visible{outline:2px solid #3563a5;outline-offset:2px}.qx-legal-search-detail{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.qx-legal-search-body{padding:4px 16px 8px;border-left:1px solid var(--dsw-alias-border-default,#d8dde5);overflow-wrap:anywhere}.qx-legal-search-body p{margin:6px 0}.qx-legal-search-body a{color:var(--dsw-alias-link,#3563a5)}';document.head.append(css);return()=>css.remove();
     },'qunxing: legal search cards');

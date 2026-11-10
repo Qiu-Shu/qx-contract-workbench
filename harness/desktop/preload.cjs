@@ -3,10 +3,18 @@ const expectedOrigin=process.argv.find(arg=>arg.startsWith('--qx-origin='))?.sli
 const unavailableUrl=process.argv.find(arg=>arg.startsWith('--qx-unavailable='))?.slice('--qx-unavailable='.length);
 if(process.isMainFrame&&(location.origin===expectedOrigin||location.href===unavailableUrl)){
   let current={phase:'connected'},host,text,button,busy=false,pagePhase=null;
+  let startup=null,startupReceived=false;
+  const localPage=location.href===unavailableUrl;
+  if(localPage){
+    ipcRenderer.on('qx:startup-state',(_event,state)=>{startupReceived=true;startup=state;render()});
+    ipcRenderer.invoke('qx:startup-state').then(state=>{if(!startupReceived){startup=state;render()}}).catch(()=>{});
+    const timer=setInterval(()=>render(),1000);addEventListener('pagehide',()=>clearInterval(timer),{once:true});
+  }
   const labels={
     recovering:['后台连接已断开，正在恢复。请保留当前页面，未发送的内容不会自动重发。',''],
     disconnected:['本机后台暂时无法连接，正在检查。请先保留未发送的内容。','重试连接'],
-    ready:['后台已恢复。请先复制未发送的文字，再重新连接。中断的任务不会自动重发。','重新连接'],
+    ready:['后台已恢复，正在自动连接。当前输入保留，中断的任务不会自动重发。',''],
+    'auto-reconnect-failed':['自动连接暂未完成，当前输入仍保留。可以重试连接。','重试连接'],
     failed:['后台未能恢复，已暂停自动重试。请先保留未发送的内容，再重试恢复。','重试恢复'],
     stopped:['后台已停止。如需继续使用，请先保留未发送的内容，再启动后台。','启动后台'],
     'page-loading':['正在打开工作台，请稍候…',''],
@@ -15,6 +23,29 @@ if(process.isMainFrame&&(location.origin===expectedOrigin||location.href===unava
   };
   function render(){
     if(!document.body)return;
+    if(localPage){
+      const heading=document.getElementById('qx-startup-heading'),detail=document.getElementById('qx-startup-detail');
+      const retry=document.getElementById('qx-startup-retry'),logs=document.getElementById('qx-startup-logs');
+      if(!heading||!retry)return;
+      const active=startup&&startup.phase!=='failed';
+      const stages={checking:'正在检查本机连接。',starting:'正在准备本机服务。首次启动或更新后可能需要更长时间。',connecting:'正在等待本机服务就绪。连接成功后会自动进入工作台。',opening:'本机服务已就绪，正在打开工作台。'};
+      heading.textContent=active?'正在打开工作台':'本机服务暂未连接';
+      detail.textContent=active?(stages[startup.phase]||'正在连接…'):startup?.errorCode==='SERVICE_UNAVAILABLE'
+        ?'后台进程已运行，但工作台组件未就绪。请打开运行日志查看组件加载错误，再重试连接。'
+        :startup?.errorCode==='HOST_EXITED'?'本机服务启动时退出了。请打开运行日志查看原因，再重试连接。'
+        :'暂时无法连接本机服务。可以重试连接，或打开运行日志查看原因。';
+      retry.disabled=Boolean(active||busy);retry.textContent=retry.disabled?'正在连接…':'重试连接';
+      const seconds=startup?.startedAt?Math.max(0,Math.floor((Date.now()-startup.startedAt)/1000)):0;
+      document.getElementById('qx-startup-time').textContent=active?`已等待 ${seconds} 秒${seconds>=20?' · 仍在准备，可打开日志查看进展':''}`:'';
+      if(!retry.dataset.bound){
+        retry.dataset.bound='1';retry.addEventListener('click',async()=>{
+          if(busy)return;busy=true;render();
+          try{await ipcRenderer.invoke('qx:reconnect')}finally{busy=false;render()}
+        });
+        logs.addEventListener('click',()=>void ipcRenderer.invoke('qx:open-logs').catch(()=>{}));
+      }
+      return;
+    }
     if(!host?.isConnected){
       host=document.createElement('div');host.id='qx-connection-notice';host.hidden=true;
       Object.assign(host.style,{position:'fixed',top:'12px',right:'16px',width:'min(560px, calc(100vw - 32px))',zIndex:'2147483000'});

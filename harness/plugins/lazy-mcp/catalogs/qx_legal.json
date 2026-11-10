@@ -1,0 +1,1786 @@
+{
+  "serverName": "qx_legal",
+  "instructions": "按需求读取业务方法。持续办理时明确案件ID，把本轮材料关联到该案再读取；原话、内部分析与客户回复分别追加保存，更正保留原记录。庭审发言是模拟记录，不是证据。工具保存失败时保留可用正文并说明，不能称保存成功。",
+  "tools": [
+    {
+      "name": "calculate_calendar_date",
+      "description": "按明确基准日和规则作自然日偏移。提前30日传-30，次日起第15日传15。\n\n    必须提供YYYY-MM-DD基准及规则来源说明，不代选起算事件、不查法、不调整节假日或工作日。\n    基准/期间规则未知时先核实，结果不能直接当已确认的法定期限；不读写任何案件。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "base_date": {
+            "title": "Base Date",
+            "type": "string"
+          },
+          "offset_days": {
+            "title": "Offset Days",
+            "type": "integer"
+          },
+          "rule_source": {
+            "title": "Rule Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base_date",
+          "offset_days",
+          "rule_source"
+        ],
+        "title": "calculate_calendar_dateArguments"
+      }
+    },
+    {
+      "name": "get_workflow",
+      "description": "按需读取reception/contract/case/hearing/evidence方法与来源；不调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "get_workflowArguments"
+      }
+    },
+    {
+      "name": "list_cases",
+      "description": "按题名查找案件。不要仅按最近时间猜案件归属，同名结果需结合当前会话或询问。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "default": "",
+            "title": "Query",
+            "type": "string"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "list_casesArguments"
+      }
+    },
+    {
+      "name": "create_case",
+      "description": "用户需要持续办理或保存时建案；our_role只录入已明确立场。request_id用于重复请求找回。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "our_role": {
+            "default": "",
+            "title": "Our Role",
+            "type": "string"
+          },
+          "request_id": {
+            "default": "",
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "title": "create_caseArguments"
+      }
+    },
+    {
+      "name": "get_case",
+      "description": "读取指定案件材料、笔记和变更提示；长笔记按返回next_start调用read_case_note。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 30,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "include_history": {
+            "default": false,
+            "title": "Include History",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "case_id"
+        ],
+        "title": "get_caseArguments"
+      }
+    },
+    {
+      "name": "link_case_materials",
+      "description": "把明确用于本案的材料按当前版本登记；先使用qx_materials导入和解析，不覆盖旧版关联。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "paths": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Paths",
+            "type": "array"
+          }
+        },
+        "required": [
+          "case_id",
+          "paths"
+        ],
+        "title": "link_case_materialsArguments"
+      }
+    },
+    {
+      "name": "record_case_note",
+      "description": "追加consultation/fact/inference/timeline/stance/todo/contract_review/client_reply/internal_note等记录。\n\n    content为自然语言，不限制回答格式或业务篇幅。更正用supersedes指向当前同类别笔记；只有用户明确更正才使用。\n    citations每项path、quote，可选sha256、chunk；程序核对原文，不要让模型计算字符偏移。\n    未匹配引用保留正文并标待核，材料陈述不等于事实已证实。客户正文与内部分析必须分两条保存。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "source": {
+            "default": "",
+            "title": "Source",
+            "type": "string"
+          },
+          "supersedes": {
+            "default": "",
+            "title": "Supersedes",
+            "type": "string"
+          },
+          "citations": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Citations"
+          },
+          "request_id": {
+            "default": "",
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "kind",
+          "content"
+        ],
+        "title": "record_case_noteArguments"
+      }
+    },
+    {
+      "name": "record_reception",
+      "description": "一次事务分别保存客户可转发正文与内部底稿；失败不留下单独半条，重试沿用request_id。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "client_reply": {
+            "title": "Client Reply",
+            "type": "string"
+          },
+          "internal_note": {
+            "title": "Internal Note",
+            "type": "string"
+          },
+          "source": {
+            "default": "",
+            "title": "Source",
+            "type": "string"
+          },
+          "request_id": {
+            "default": "",
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "client_reply",
+          "internal_note"
+        ],
+        "title": "record_receptionArguments"
+      }
+    },
+    {
+      "name": "read_case_note",
+      "description": "分段读取本案一条完整笔记，按next_start继续；不会把旧笔记改成最新事实。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "note_id": {
+            "title": "Note Id",
+            "type": "string"
+          },
+          "start": {
+            "default": 0,
+            "title": "Start",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 8000,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "case_id",
+          "note_id"
+        ],
+        "title": "read_case_noteArguments"
+      }
+    },
+    {
+      "name": "read_case_material",
+      "description": "读取本案关联材料；默认核对当前原件，指定version可回读已保存的历史解析文字快照。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "start": {
+            "default": 0,
+            "title": "Start",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 6,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Page"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Version"
+          }
+        },
+        "required": [
+          "case_id",
+          "path"
+        ],
+        "title": "read_case_materialArguments"
+      }
+    },
+    {
+      "name": "search_case_materials",
+      "description": "仅搜索本案已关联材料及笔记，kind区分二者。笔记是陈述/分析，不因命中变为原始证据。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 10,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "case_id",
+          "query"
+        ],
+        "title": "search_case_materialsArguments"
+      }
+    },
+    {
+      "name": "export_case",
+      "description": "从已保存当前记录生成真实Word。internal含来源；client仅客户回复，默认最新一条，不夹内部底稿。\n\n    note_ids可指定当前笔记；更正后的旧记录可get_case(include_history=True)回查，但不默认导出。\n    导出不发送到微信，文件同名另存。工具成功后再提供真实路径。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "filename": {
+            "default": "案件工作稿.docx",
+            "title": "Filename",
+            "type": "string"
+          },
+          "audience": {
+            "default": "internal",
+            "title": "Audience",
+            "type": "string"
+          },
+          "note_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Note Ids"
+          }
+        },
+        "required": [
+          "case_id"
+        ],
+        "title": "export_caseArguments"
+      }
+    },
+    {
+      "name": "start_hearing",
+      "description": "开始五阶段民事庭审演练，明确我方plaintiff/defendant。补件重开用previous_id关联，保留旧回合。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "our_role": {
+            "title": "Our Role",
+            "type": "string"
+          },
+          "focus": {
+            "default": "",
+            "title": "Focus",
+            "type": "string"
+          },
+          "request_id": {
+            "default": "",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "previous_id": {
+            "default": "",
+            "title": "Previous Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "our_role"
+        ],
+        "title": "start_hearingArguments"
+      }
+    },
+    {
+      "name": "get_hearing",
+      "description": "回读演练与下一阶段/角色；长发言按next_start调用read_hearing_turn，页末按next_offset续读。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "hearing_id": {
+            "title": "Hearing Id",
+            "type": "string"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 30,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "hearing_id"
+        ],
+        "title": "get_hearingArguments"
+      }
+    },
+    {
+      "name": "list_hearings",
+      "description": "按明确案件找回演练ID与已保存进度；多个演练结合当前任务选择，不自动按最近记录续接。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "case_id"
+        ],
+        "title": "list_hearingsArguments"
+      }
+    },
+    {
+      "name": "read_hearing_turn",
+      "description": "逐段回读本次演练已保存发言，按next_start读取全文；不会改变发言或推进阶段。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "hearing_id": {
+            "title": "Hearing Id",
+            "type": "string"
+          },
+          "turn_id": {
+            "title": "Turn Id",
+            "type": "string"
+          },
+          "start": {
+            "default": 0,
+            "title": "Start",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 8000,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "hearing_id",
+          "turn_id"
+        ],
+        "title": "read_hearing_turnArguments"
+      }
+    },
+    {
+      "name": "record_hearing_turn",
+      "description": "保存一次真实生成的角色发言；按get_hearing给出的顺序推进。不要预先填充未执行阶段。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "hearing_id": {
+            "title": "Hearing Id",
+            "type": "string"
+          },
+          "stage": {
+            "title": "Stage",
+            "type": "string"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "citations": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Citations"
+          },
+          "unresolved": {
+            "default": "",
+            "title": "Unresolved",
+            "type": "string"
+          },
+          "request_id": {
+            "default": "",
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "hearing_id",
+          "stage",
+          "role",
+          "text"
+        ],
+        "title": "record_hearing_turnArguments"
+      }
+    },
+    {
+      "name": "get_hearing_role_context",
+      "description": "生成指定角色的目标、材料版本与已发生发言摘要；供定向追问，不声称同模型角色上下文独立。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "hearing_id": {
+            "title": "Hearing Id",
+            "type": "string"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "hearing_id",
+          "role"
+        ],
+        "title": "get_hearing_role_contextArguments"
+      }
+    },
+    {
+      "name": "ground_case_extractions",
+      "description": "用本机LangExtract核对本案摘录出处，不另调模型。先read_case_material获取sha256和ordinal。\n\n    extractions每项仅label、quote逐字原文，最多30项；返回页/片段/字符位置及matched/unmatched/ambiguous。\n    不接受无出处事实，不做法律认定，不自动保存；未匹配或重复原句请回读补充上下文。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "source_sha256": {
+            "title": "Source Sha256",
+            "type": "string"
+          },
+          "chunk": {
+            "title": "Chunk",
+            "type": "integer"
+          },
+          "extractions": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Extractions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "case_id",
+          "path",
+          "source_sha256",
+          "chunk",
+          "extractions"
+        ],
+        "title": "ground_case_extractionsArguments"
+      }
+    },
+    {
+      "name": "save_evidence_analysis",
+      "description": "保存本案证据分析。每项proposition、finding_kind(material_statement/inference/unknown)、assessment、supporting/opposing列表、unknown/supplement文字列表、admissibility。\n\n    材料项statement/speaker/carrier/citations；admissibility有authenticity/legality/relevance待核问题列表。\n    引用必须本案path/quote，可带sha256/chunk/start/end，保留定位失败状态。不将引用匹配认定为法律事实；更正用supersedes。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "issues": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "request_id": {
+            "default": "",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "supersedes": {
+            "default": "",
+            "title": "Supersedes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "issues"
+        ],
+        "title": "save_evidence_analysisArguments"
+      }
+    },
+    {
+      "name": "generate_litigation_document",
+      "description": "生成真实Word正文草稿及独立内部来源稿，不发出/提交。类型civil_complaint/civil_defense/representation/evidence_list/cross_examination/labor_arbitration/lawyer_letter。\n\n    data可含parties[{role,text,citations}]、requests/facts[{heading,text,citations}]、sections[{heading,text,citations}]，title/authority/case_number/signatory/date；律师函mandate{client,issuer,recipient,authorized,citations}。\n    事实与理由及其分节放facts，sections仅其他章节；heading可省略。不要留空facts而把事实全放sections。\n    未知保留待核；引用必须本案材料，工作草稿不作证据；不冒称授权、签署或已完成审查。只向用户展示正文，内部稿单列。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "document_type": {
+            "title": "Document Type",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "case_id",
+          "document_type",
+          "filename",
+          "data"
+        ],
+        "title": "generate_litigation_documentArguments"
+      }
+    },
+    {
+      "name": "save_employment_review",
+      "description": "追加劳动用工审查，stage=hiring/change/termination/dispute。\n\n    findings每项fact/basis/source/risk/action文字，另可topic/pending/citations。未知事实保留待核，不从办公室开业等日期猜实际解除日。\n    引用按本案核对；具体法律适用和劳动关系状态由承办人复核。更正仅明确要求时用supersedes。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "stage": {
+            "title": "Stage",
+            "type": "string"
+          },
+          "findings": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Findings",
+            "type": "array"
+          },
+          "request_id": {
+            "default": "",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "supersedes": {
+            "default": "",
+            "title": "Supersedes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "stage",
+          "findings"
+        ],
+        "title": "save_employment_reviewArguments"
+      }
+    },
+    {
+      "name": "calculate_employment_amount",
+      "description": "精确计算已明确的基数×年限×倍数，参数为非负十进制字符串，assumptions注明情景条件。\n    只做算术，不认定N/2N适用，不推算工龄/工资基数/封顶；工资、补偿、赔偿、代通知金分别核定。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "base": {
+            "title": "Base",
+            "type": "string"
+          },
+          "years": {
+            "default": "1",
+            "title": "Years",
+            "type": "string"
+          },
+          "multiplier": {
+            "default": "1",
+            "title": "Multiplier",
+            "type": "string"
+          },
+          "assumptions": {
+            "default": "",
+            "title": "Assumptions",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base"
+        ],
+        "title": "calculate_employment_amountArguments"
+      }
+    },
+    {
+      "name": "build_source_bound_litigation",
+      "description": "按本案当前原文组装可编辑诉讼来源草稿及内部核对稿；不发送、不认定事实。\n\n    document_type支持civil_complaint/civil_defense/representation/evidence_list/cross_examination/labor_arbitration/lawyer_letter。\n    excerpts每项仅section(parties/requests/facts/sections)、citation{path,quote,sha256,chunk}。先read_case_material取得真实版本与原句。\n    不接收模型改写的text、角色全称或已立案/授权/客户知悉声明；未知元数据由程序留空。\n    calculations可选，每项{minuend:{citation,amount},subtrahends:[{citation,amount}]}；amount必须为原句中带单位完整金额如96000元或9.6万元。\n    brief可选：parties[{role,name,citation}]、claim_kind(payment/return/undetermined)、claim_amount{citation,amount}或calculation_index（两者互斥，指向本次算式）。\n    roles为plaintiff/defendant；劳动申请为applicant/respondent；律师函为client/issuer/recipient。name须原文逐字名称，角色对应仍待律师核实。\n    brief用于生成固定条件式拟请求；不给任意正文。representation必须有非空brief及requests、facts两类引文，分别保留主张与依据/限制，缺项拒绝生成。\n    差额不认定到期应付。引用失败拒绝生成。最终使用user_summary与实际文件；内部完整片段不等于正文已采用所有观点，不能另加事实或承诺。\n    issues可选最多20项：claim为主张原文引用，supporting/opposing/legal_basis各为引用列表；全部必须本案来源。逐项保留相反、限制材料及法源摘录，不接收自由结论；缺组只表示未选入，不判定不存在或主张成立。\n    多项诉求用claims，最多20项，每项request是诉求原文引用，issue_indices是本次issues的0起始索引列表；未确定关联时留空。程序分别保存请求、争点和缺组，不合并金额，不认证关联正确。\n    请求权/程序核查用legal_review：claims[{claim_index,basis,elements:[{key,supporting:[引用],opposing:[引用]}]}]对应本次claims。\n    basis=sale_price要件key为agreement/performance/due/balance/defenses；private_loan为agreement/delivery/due/balance/interest；unjust_enrichment为benefit/loss/no_basis/exceptions/scope。这是拟选路径，不能伪称事实成立。\n    legal_review.procedure={route,items:[{key,citations:[引用]}]}；route=civil_first_instance的key为standing/jurisdiction/arbitration/limitation/prior_proceedings/service/authority，labor_arbitration为scope/jurisdiction/limitation/prior_proceedings/service/authority。\n    复杂程序可选civil_appeal（decision/standing/service/scope/filing/prior_proceedings/authority）、labor_award_remedy（decision/standing/service/grounds/filing/prior_proceedings/authority）、jurisdiction_objection（jurisdiction/response/service/arbitration/standing/authority）。\n    前两者可加procedure.remedy={decision_kind,actor,classification_citations:[引用],service_citation:引用}；decision_kind=civil_judgment/civil_order/labor_final/labor_nonfinal/unknown，actor=party/worker/employer/unknown。分类来源须包含对应一审判决/可上诉裁定或终局/非终局裁决及救济主体；不明时用unknown，不伪选。service_citation可省，收到日期只识别完整行或分句“收到日期：YYYY-MM-DD”（亦支持送达日期/签收日期），不从作出日、发出日、预计日期补值；输出仅为未处理法定休假日的条件算术参考点，不是法律截止日。没有上诉状模板时用现有适当待审来源整理类型，不把其他文书说成完整上诉状。\n    未选入项自动列待补，支持与反证均原文保存；不得填established、satisfied或自由法律结论。不知道的路径不伪选，不据材料齐全宣布可起诉或未过时效。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "document_type": {
+            "title": "Document Type",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "excerpts": {
+            "items": {
+              "$ref": "#/$defs/Excerpt"
+            },
+            "title": "Excerpts",
+            "type": "array"
+          },
+          "calculations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/$defs/Calculation"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Calculations"
+          },
+          "brief": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LitigationBrief"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "issues": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/$defs/LitigationIssue"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Issues"
+          },
+          "claims": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/$defs/LitigationClaim"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Claims"
+          },
+          "legal_review": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LegalReview"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "case_id",
+          "document_type",
+          "filename",
+          "excerpts"
+        ],
+        "$defs": {
+          "Calculation": {
+            "additionalProperties": false,
+            "properties": {
+              "minuend": {
+                "$ref": "#/$defs/Money"
+              },
+              "subtrahends": {
+                "items": {
+                  "$ref": "#/$defs/Money"
+                },
+                "title": "Subtrahends",
+                "type": "array"
+              }
+            },
+            "required": [
+              "minuend",
+              "subtrahends"
+            ],
+            "title": "Calculation",
+            "type": "object"
+          },
+          "Citation": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "title": "Path",
+                "type": "string"
+              },
+              "quote": {
+                "title": "Quote",
+                "type": "string"
+              },
+              "sha256": {
+                "title": "Sha256",
+                "type": "string"
+              },
+              "chunk": {
+                "title": "Chunk",
+                "type": "integer"
+              },
+              "start": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Start"
+              },
+              "end": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "End"
+              }
+            },
+            "required": [
+              "path",
+              "quote",
+              "sha256",
+              "chunk"
+            ],
+            "title": "Citation",
+            "type": "object"
+          },
+          "ClaimElement": {
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "title": "Key",
+                "type": "string"
+              },
+              "supporting": {
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                },
+                "maxItems": 10,
+                "title": "Supporting",
+                "type": "array"
+              },
+              "opposing": {
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                },
+                "maxItems": 10,
+                "title": "Opposing",
+                "type": "array"
+              }
+            },
+            "required": [
+              "key"
+            ],
+            "title": "ClaimElement",
+            "type": "object"
+          },
+          "ClaimReview": {
+            "additionalProperties": false,
+            "properties": {
+              "claim_index": {
+                "title": "Claim Index",
+                "type": "integer"
+              },
+              "basis": {
+                "enum": [
+                  "sale_price",
+                  "private_loan",
+                  "unjust_enrichment",
+                  "service_fee"
+                ],
+                "title": "Basis",
+                "type": "string"
+              },
+              "elements": {
+                "items": {
+                  "$ref": "#/$defs/ClaimElement"
+                },
+                "maxItems": 5,
+                "title": "Elements",
+                "type": "array"
+              }
+            },
+            "required": [
+              "claim_index",
+              "basis"
+            ],
+            "title": "ClaimReview",
+            "type": "object"
+          },
+          "Excerpt": {
+            "additionalProperties": false,
+            "properties": {
+              "section": {
+                "enum": [
+                  "parties",
+                  "requests",
+                  "facts",
+                  "sections"
+                ],
+                "title": "Section",
+                "type": "string"
+              },
+              "citation": {
+                "$ref": "#/$defs/Citation"
+              }
+            },
+            "required": [
+              "section",
+              "citation"
+            ],
+            "title": "Excerpt",
+            "type": "object"
+          },
+          "LegalReview": {
+            "additionalProperties": false,
+            "properties": {
+              "claims": {
+                "items": {
+                  "$ref": "#/$defs/ClaimReview"
+                },
+                "maxItems": 20,
+                "title": "Claims",
+                "type": "array"
+              },
+              "procedure": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/ProcedureReview"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "title": "LegalReview",
+            "type": "object"
+          },
+          "LitigationBrief": {
+            "additionalProperties": false,
+            "properties": {
+              "parties": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "$ref": "#/$defs/Party"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Parties"
+              },
+              "claim_kind": {
+                "default": "undetermined",
+                "enum": [
+                  "payment",
+                  "return",
+                  "undetermined"
+                ],
+                "title": "Claim Kind",
+                "type": "string"
+              },
+              "claim_amount": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Money"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "原文金额及其引文；不能在这里放算式索引。"
+              },
+              "calculation_index": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "与claim_amount互斥；本次calculations的0起始索引，直接放在brief中。",
+                "title": "Calculation Index"
+              }
+            },
+            "title": "LitigationBrief",
+            "type": "object"
+          },
+          "LitigationClaim": {
+            "additionalProperties": false,
+            "properties": {
+              "request": {
+                "$ref": "#/$defs/Citation"
+              },
+              "issue_indices": {
+                "items": {
+                  "type": "integer"
+                },
+                "maxItems": 20,
+                "title": "Issue Indices",
+                "type": "array"
+              }
+            },
+            "required": [
+              "request"
+            ],
+            "title": "LitigationClaim",
+            "type": "object"
+          },
+          "LitigationIssue": {
+            "additionalProperties": false,
+            "properties": {
+              "claim": {
+                "$ref": "#/$defs/Citation"
+              },
+              "supporting": {
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                },
+                "maxItems": 10,
+                "title": "Supporting",
+                "type": "array"
+              },
+              "opposing": {
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                },
+                "maxItems": 10,
+                "title": "Opposing",
+                "type": "array"
+              },
+              "legal_basis": {
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                },
+                "maxItems": 10,
+                "title": "Legal Basis",
+                "type": "array"
+              }
+            },
+            "required": [
+              "claim"
+            ],
+            "title": "LitigationIssue",
+            "type": "object"
+          },
+          "Money": {
+            "additionalProperties": false,
+            "properties": {
+              "citation": {
+                "$ref": "#/$defs/Citation"
+              },
+              "amount": {
+                "title": "Amount",
+                "type": "string"
+              }
+            },
+            "required": [
+              "citation",
+              "amount"
+            ],
+            "title": "Money",
+            "type": "object"
+          },
+          "Party": {
+            "additionalProperties": false,
+            "properties": {
+              "role": {
+                "enum": [
+                  "plaintiff",
+                  "defendant",
+                  "appellant",
+                  "appellee",
+                  "applicant",
+                  "respondent",
+                  "client",
+                  "issuer",
+                  "recipient"
+                ],
+                "title": "Role",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "citation": {
+                "$ref": "#/$defs/Citation"
+              }
+            },
+            "required": [
+              "role",
+              "name",
+              "citation"
+            ],
+            "title": "Party",
+            "type": "object"
+          },
+          "ProcedureItem": {
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "title": "Key",
+                "type": "string"
+              },
+              "citations": {
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                },
+                "maxItems": 10,
+                "title": "Citations",
+                "type": "array"
+              }
+            },
+            "required": [
+              "key"
+            ],
+            "title": "ProcedureItem",
+            "type": "object"
+          },
+          "ProcedureReview": {
+            "additionalProperties": false,
+            "properties": {
+              "route": {
+                "enum": [
+                  "civil_first_instance",
+                  "labor_arbitration",
+                  "civil_appeal",
+                  "labor_award_remedy",
+                  "jurisdiction_objection"
+                ],
+                "title": "Route",
+                "type": "string"
+              },
+              "items": {
+                "items": {
+                  "$ref": "#/$defs/ProcedureItem"
+                },
+                "maxItems": 7,
+                "title": "Items",
+                "type": "array"
+              },
+              "remedy": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/RemedyReview"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "required": [
+              "route"
+            ],
+            "title": "ProcedureReview",
+            "type": "object"
+          },
+          "RemedyReview": {
+            "additionalProperties": false,
+            "properties": {
+              "decision_kind": {
+                "enum": [
+                  "civil_judgment",
+                  "civil_order",
+                  "labor_final",
+                  "labor_nonfinal",
+                  "labor_mixed",
+                  "unknown"
+                ],
+                "title": "Decision Kind",
+                "type": "string"
+              },
+              "actor": {
+                "enum": [
+                  "party",
+                  "worker",
+                  "employer",
+                  "unknown"
+                ],
+                "title": "Actor",
+                "type": "string"
+              },
+              "classification_citations": {
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                },
+                "maxItems": 10,
+                "title": "Classification Citations",
+                "type": "array"
+              },
+              "service_citation": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Citation"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "required": [
+              "decision_kind",
+              "actor"
+            ],
+            "title": "RemedyReview",
+            "type": "object"
+          }
+        },
+        "title": "build_source_bound_litigationArguments"
+      }
+    },
+    {
+      "name": "assess_employment_terms",
+      "description": "保存本案原文条款与阶段核验清单；review_stage为hiring录用、change变更、noncompete竞业。\n\n    先read_case_material；citations须1至30条path/quote/sha256/chunk真实引用，原句重复时可带精确start/end位置。保留拟议、否定和未知，拒绝跨案、过期及改写来源。\n    程序生成阶段条件与完整出处，不自动认定条款有效/无效、义务成立、实际应付款或行为状态。\n    recorded成功后用read_case_note回读，export_case(note_ids=[id],audience=\"internal\")导出同记录。\n    request_id仅同参数重试；supersedes仅明确更正。最终使用user_summary和真实文件，不补未归档判断。解除另用assess_employment_termination。\n    scenario_citations可选，至多10条来源中独立完整假设行；程序核算后与清单、Word和最终交付保持一致。只接受以下格式（数字据真实原文，不得伪造假设或截掉否定）：\n    hiring：“试用期核算假设：固定期限12个月，试用期6个月。”（固定期限12个月也可替换为无固定期限或以完成任务为期限）；\n    hiring：“试用工资假设：合同工资10000元，同岗最低档工资9000元，适用最低工资2500元，拟试用工资7000元。”；\n    noncompete：“竞业期限假设：离职后竞业36个月。”。change不接受核算。仅情景对照，不认定实际欠薪或约定整体效力。\n    自然语言材料可设extract_parameters=true（仅hiring/noncompete）。程序从引用所在完整片段逐行识别带标签和单位的合同期限、试用期、工资或离职后竞业期限候选，保留原文位置。跨行关联要求原文有“劳动者：姓名；合同编号：编号”（也支持相邻两行），其后连续纯参数行才做候选关联；Word连续段落须逐片段引用，缺片段、空行、新身份头或换来源隔开，不能跨文件猜同一人。否定、多个主体、重复、未知参数或未解析行保留并暂停关联核算。此分支无需伪造scenario_citations或把候选改写成用户已确认假设；最终原样交付包含候选边界的user_summary。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "review_stage": {
+            "title": "Review Stage",
+            "type": "string"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/$defs/Citation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "request_id": {
+            "default": "",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "supersedes": {
+            "default": "",
+            "title": "Supersedes",
+            "type": "string"
+          },
+          "scenario_citations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/$defs/Citation"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Scenario Citations"
+          },
+          "extract_parameters": {
+            "default": false,
+            "title": "Extract Parameters",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "case_id",
+          "review_stage",
+          "citations"
+        ],
+        "$defs": {
+          "Citation": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "title": "Path",
+                "type": "string"
+              },
+              "quote": {
+                "title": "Quote",
+                "type": "string"
+              },
+              "sha256": {
+                "title": "Sha256",
+                "type": "string"
+              },
+              "chunk": {
+                "title": "Chunk",
+                "type": "integer"
+              },
+              "start": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Start"
+              },
+              "end": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "End"
+              }
+            },
+            "required": [
+              "path",
+              "quote",
+              "sha256",
+              "chunk"
+            ],
+            "title": "Citation",
+            "type": "object"
+          }
+        },
+        "title": "assess_employment_termsArguments"
+      }
+    },
+    {
+      "name": "assess_employment_termination",
+      "description": "保存来源约束的劳动解除初审：逐字材料＋固定条件清单，不自动决定适用路径。\n\n    citations每项须path、quote、sha256、chunk；先read_case_material取原句和当前版本。拒绝跨案、失效或不匹配原文。\n    不接受模型自定true/false事实；未访谈不推无调查证据。程序列明协商解除、39/40/41条、期满、违法解除各自条件，不能简化为一律N/N+1/2N。\n    不自定工资基数、解除日或工龄；显式情景金额另用calculate_employment_amount。返回id可用export_case(note_ids=[id])生成Word，完成说明使用user_summary，不另改写路径或事实。\n    同时要求情景算术并归档时，scenario_citations引用原始材料中独立完整一行“情景假设：基数10000元，折算年限8.5年，倍数2。”（示例不能充当本案假设）。\n    各项从原句解析后调用同一精确计算程序，与清单存为同一笔记和Word，不相加、不认定实际应付；没有明确原句时拒绝而不猜参数。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/$defs/MaterialCitation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "request_id": {
+            "default": "",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "supersedes": {
+            "default": "",
+            "title": "Supersedes",
+            "type": "string"
+          },
+          "scenario_citations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/$defs/MaterialCitation"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Scenario Citations"
+          }
+        },
+        "required": [
+          "case_id",
+          "citations"
+        ],
+        "$defs": {
+          "MaterialCitation": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "title": "Path",
+                "type": "string"
+              },
+              "quote": {
+                "title": "Quote",
+                "type": "string"
+              },
+              "sha256": {
+                "title": "Sha256",
+                "type": "string"
+              },
+              "chunk": {
+                "title": "Chunk",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "path",
+              "quote",
+              "sha256",
+              "chunk"
+            ],
+            "title": "MaterialCitation",
+            "type": "object"
+          }
+        },
+        "title": "assess_employment_terminationArguments"
+      }
+    },
+    {
+      "name": "save_source_bound_register",
+      "description": "保存公司/合规/IP来源台账；仅登记本案原句和上下文，不把缺记录当未发生。\n\n    domain=corporate/compliance/ip；entries每项仅field与citation{path,quote,sha256,chunk}，先read_case_material。\n    corporate字段agenda/entity/participants/notice/meeting/votes/decision/signature/mandate/debt/follow_up；\n    compliance字段obligation/responsible_party/scope/deadline/feedback_deadline/report_deadline/decision/submission/implementation/acceptance/evidence_status；\n    ip候选分类asset_type/jurisdiction/intended_use/application_place/applicant/inventor/agent/registered_holder/licensor/licensee/license_scope/status/date_context/fees；也接受filing_date/certificate_term/internal_estimate候选。\n    所有领域的field都仅是模型未核验分类，单列classification_audit（不是事实字段）；实际保存条目均为source_excerpt原文，不把分类当事实值。\n    多议题/多义务/多资产用source_groups，最多20组，每组{subject_entry,entries}都是本次entries的0起始索引，entries必须含subject_entry。组内不重复相同原文，未分组或共享原文显式保留，不能靠分组认定法律关系或权利状态。输出正文及台账均保留该关联。\n    corporate需要纪要时填document_type=minutes及filename；proposal仅为任务已明确的股东会担保拟议案骨架，不用于其他议案或替用户选择有权机关。\n    正文由程序生成，完整出处保存在笔记；其余返回id可用export_case(note_ids=[id])导出。\n    合规跟踪可传tracking{as_of,as_of_entry,deadlines:[{entry,date,year_basis}]}；索引对应本次entries从0起，日期为YYYY-MM-DD。\n    参考日须有原文完整日期；截止日期year_basis=explicit须原文完整日期，same_as_reference_assumption须明确月日并显著标同年假设。\n    程序计算自然日差并保存条件建议；不判断法律期间或是否已履行。已有决定和发送记载照录，缺回执不改为未发送。\n    不接收模型自填实际状态、票数结论或法律有效性。IP附历史法条件，证载期限不等于当前有效。最终完成说明使用user_summary与实际文件。\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/$defs/RegisterEntry"
+            },
+            "title": "Entries",
+            "type": "array"
+          },
+          "request_id": {
+            "default": "",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "supersedes": {
+            "default": "",
+            "title": "Supersedes",
+            "type": "string"
+          },
+          "document_type": {
+            "default": "",
+            "title": "Document Type",
+            "type": "string"
+          },
+          "filename": {
+            "default": "",
+            "title": "Filename",
+            "type": "string"
+          },
+          "tracking": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ComplianceTracking"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "source_groups": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/$defs/SourceGroup"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Source Groups"
+          }
+        },
+        "required": [
+          "case_id",
+          "domain",
+          "entries"
+        ],
+        "$defs": {
+          "ComplianceTracking": {
+            "additionalProperties": false,
+            "properties": {
+              "as_of": {
+                "title": "As Of",
+                "type": "string"
+              },
+              "as_of_entry": {
+                "title": "As Of Entry",
+                "type": "integer"
+              },
+              "deadlines": {
+                "items": {
+                  "$ref": "#/$defs/Deadline"
+                },
+                "title": "Deadlines",
+                "type": "array"
+              }
+            },
+            "required": [
+              "as_of",
+              "as_of_entry",
+              "deadlines"
+            ],
+            "title": "ComplianceTracking",
+            "type": "object"
+          },
+          "Deadline": {
+            "additionalProperties": false,
+            "properties": {
+              "entry": {
+                "title": "Entry",
+                "type": "integer"
+              },
+              "date": {
+                "title": "Date",
+                "type": "string"
+              },
+              "year_basis": {
+                "enum": [
+                  "explicit",
+                  "same_as_reference_assumption"
+                ],
+                "title": "Year Basis",
+                "type": "string"
+              }
+            },
+            "required": [
+              "entry",
+              "date",
+              "year_basis"
+            ],
+            "title": "Deadline",
+            "type": "object"
+          },
+          "RegisterCitation": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "title": "Path",
+                "type": "string"
+              },
+              "quote": {
+                "title": "Quote",
+                "type": "string"
+              },
+              "sha256": {
+                "title": "Sha256",
+                "type": "string"
+              },
+              "chunk": {
+                "title": "Chunk",
+                "type": "integer"
+              },
+              "case_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Case Id"
+              }
+            },
+            "required": [
+              "path",
+              "quote",
+              "sha256",
+              "chunk"
+            ],
+            "title": "RegisterCitation",
+            "type": "object"
+          },
+          "RegisterEntry": {
+            "additionalProperties": false,
+            "properties": {
+              "field": {
+                "title": "Field",
+                "type": "string"
+              },
+              "citation": {
+                "$ref": "#/$defs/RegisterCitation"
+              }
+            },
+            "required": [
+              "field",
+              "citation"
+            ],
+            "title": "RegisterEntry",
+            "type": "object"
+          },
+          "SourceGroup": {
+            "additionalProperties": false,
+            "properties": {
+              "subject_entry": {
+                "title": "Subject Entry",
+                "type": "integer"
+              },
+              "entries": {
+                "items": {
+                  "type": "integer"
+                },
+                "maxItems": 40,
+                "minItems": 1,
+                "title": "Entries",
+                "type": "array"
+              }
+            },
+            "required": [
+              "subject_entry",
+              "entries"
+            ],
+            "title": "SourceGroup",
+            "type": "object"
+          }
+        },
+        "title": "save_source_bound_registerArguments"
+      }
+    }
+  ]
+}

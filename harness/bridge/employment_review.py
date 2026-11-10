@@ -30,10 +30,55 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
         raise ValueError('单次审查含引用超过200000字上限，请分批保存，不会截断正文。')
     lines = [f'劳动用工审查｜阶段：{stage}｜内部工作稿，事实及法律适用均待核']
     citations = []
+    rule_reviews=[]
+    from draft_review import DraftReview,save_review_audit
+    review=DraftReview(cases,case_id)
     labels = {'fact':'事实/陈述', 'basis':'依据及适用边界', 'source':'来源', 'risk':'风险', 'action':'行动'}
     for i, item in enumerate(findings, 1):
-        if not isinstance(item, dict) or set(item) - (set(labels) | {'topic', 'pending', 'citations'}):
+        if not isinstance(item, dict) or set(item) - (set(labels) | {'topic', 'pending', 'citations','rule','parameters'}):
             raise ValueError('审查项含不支持字段，请使用fact/basis/source/risk/action/topic/pending/citations。')
+        rule=item.get('rule')
+        if rule is not None and rule not in ('probation_pay','noncompete_comparison'):raise ValueError('不支持的程序审查规则。')
+        pay_topic=isinstance(item.get('topic'),str) and re.search(r'试用.{0,4}工资|工资.{0,4}试用',item['topic'])
+        program_owned=rule in ('probation_pay','noncompete_comparison') or (stage=='hiring' and pay_topic)
+        if rule=='noncompete_comparison':
+            from employment_rule_review import prepare_noncompete_comparison
+            item,rule_review=prepare_noncompete_comparison(cases,case_id,item,i-1);rule_reviews.append(rule_review)
+        elif rule=='probation_pay' or (stage=='hiring' and pay_topic):
+            if stage!='hiring':raise ValueError('试用工资规则用于hiring阶段。')
+            from employment_rule_review import prepare_probation_pay
+            item,rule_review=prepare_probation_pay(cases,case_id,item,i-1);rule_reviews.append(rule_review)
+        elif 'parameters' in item:raise ValueError('parameters须与支持的rule共同使用。')
+        # Correct only affected prose before persistence/export; source quotes and
+        # caller inputs remain separately inspectable in the internal audit.
+        item=dict(item)
+        refs=item.get('citations',[])
+        if not program_owned and refs==[] and any(re.search('竞业|补偿|对价',str(item.get(k,''))) for k in ('topic','fact','basis','risk','action')):
+            from noncompete_conditions import single_source_citation
+            recovered=single_source_citation(cases,case_id)
+            if recovered:
+                refs=recovered;item['citations']=recovered
+        nc=any('竞业' in str(item.get(k,'')) for k in ('topic','fact','basis','risk','action'))
+        if (not nc and isinstance(item.get('topic'),str) and '离职后经济补偿' in item['topic']
+                and re.search(r'第(?:36|三十六)条',str(item.get('basis','')))):
+            nc=any(re.search(r'竞业[^。！？\n]{0,30}补偿',text) for text in review.sources(refs if isinstance(refs,list) else []))
+        if not nc and not program_owned and isinstance(refs,list):
+            nc=any('竞业' in text for text in review.sources(refs))
+        release_issue=False
+        if nc and not program_owned:
+            from noncompete_conditions import release_requested
+            release_issue=release_requested(item)
+            from employment_rule_review import review_compensation_conditions
+            item=review_compensation_conditions(item,review,i)
+        for field in ('topic','fact','basis','risk','action','pending','source'):
+            if field in item and not program_owned:
+                item[field]=review.text(item[field],f'第{i}项{field}',refs if isinstance(refs,list) else [],
+                    noncompete=nc and field in ('topic','fact','risk','action'),proposal=field=='action')
+        if nc and not program_owned:
+            from noncompete_conditions import finalize_noncompete_conditions
+            item=finalize_noncompete_conditions(item,review,i,release_issue=release_issue)
+        if rule_reviews and rule_reviews[-1]['finding_index']==i-1:
+            rule_reviews[-1]['prepared_finding']=dict(item)
         lines.append(f'\n{i}. '+_text(item.get('topic', '审查事项'), 'topic'))
         lines.extend(f'{label}：{_text(item.get(key), key)}' for key, label in labels.items())
         lines.append('待核事项：'+_text(item.get('pending', '事实、来源及法律适用尚需核验'), 'pending'))
@@ -59,9 +104,20 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
                 citation['start'] = citation['end'] = None
                 lines.append('引用待核：草稿/模型输出不能作为原始证据；正文及原引用已保留，请补原始材料。')
             citations.append(citation)
-    return cases.add_note(case_id, 'employment_review', '\n'.join(lines),
+    result=cases.add_note(case_id, 'employment_review', '\n'.join(lines),
                           source='劳动用工审查；来源见各项；未作事实或法律认定',
                           supersedes=supersedes, citations=citations, request_id=request_id)
+    if result.get('recorded') is False:return result
+    # Read the stored revision, including idempotent retries, not a second model summary.
+    with cases.db() as db:
+        body=db.execute('SELECT content FROM legal_notes WHERE case_id=? AND id=?',
+                        (case_id,result['id'])).fetchone()['content']
+    summary='已保存劳动审查意见草稿；事实、规则适用及建议尚待律师复核，未对外发送。'
+    if review.changes:summary+=f'已修订{len(review.changes)}处事实状态或候选表述，原稿和修订理由见本次内部核对稿。'
+    summary+=('\n\n同一保存记录：\n'+body if len(body)<=150000 else
+              '\n记录超过聊天展示上限，请回读本次笔记或导出Word查看完整内容；未截断保存。')
+    return {**result,'user_summary':summary,'rule_reviews':rule_reviews,'review_changes':review.changes,
+            **save_review_audit(cases,case_id,review.changes)}
 
 
 def _decimal(value, label, places):

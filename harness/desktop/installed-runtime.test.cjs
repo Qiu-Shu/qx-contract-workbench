@@ -28,10 +28,11 @@ test('initialize Chinese/spaced path without overwriting user configuration or m
     initialize(payload,data);
     const patch=path.join(data,'.local/dsh-home/profiles/web/cordis.patch.yml');
     assert.match(fs.readFileSync(patch,'utf8'),/资料\/workspace/);assert.doesNotMatch(fs.readFileSync(patch,'utf8'),/@APP@|@DATA@/);
-    fs.writeFileSync(patch,'user settings');fs.writeFileSync(path.join(data,'workspace/AGENTS.md'),'user @APP@ instructions');
+    const userSettings='[{"id":"custom-user-settings","config":{"preserve":true}}]';
+    fs.writeFileSync(patch,userSettings);fs.writeFileSync(path.join(data,'workspace/AGENTS.md'),'user @APP@ instructions');
     fs.writeFileSync(path.join(data,'workspace/客户.txt'),'synthetic');
     initialize(payload,data);
-    assert.equal(fs.readFileSync(patch,'utf8'),'user settings');
+    assert.equal(fs.readFileSync(patch,'utf8'),userSettings);
     assert.equal(fs.readFileSync(path.join(data,'workspace/AGENTS.md'),'utf8'),'user @APP@ instructions');
     assert.equal(fs.readFileSync(path.join(data,'workspace/客户.txt'),'utf8'),'synthetic');
   }finally{fs.rmSync(temp,{recursive:true,force:true})}
@@ -42,7 +43,8 @@ test('settings and installer refuse an uncontrolled live backend instead of repo
   const data=fs.mkdtempSync(path.join(os.tmpdir(),'qx-orphan-test-'));
   try{
     fs.mkdirSync(path.join(data,'.local'));
-    fs.writeFileSync(path.join(data,'.local/runtime.json'),JSON.stringify({hostPid:process.pid,launcherPid:-1,url:'http://127.0.0.1:1'}));
+    // An old incomplete record cannot prove this live PID belongs to another app.
+    fs.writeFileSync(path.join(data,'.local/runtime.json'),JSON.stringify({hostPid:process.pid,launcherPid:-1}));
     await assert.rejects(async()=>stopInstalledHost(data),/Background control unavailable/);
     const stopped=require('node:child_process').spawnSync(process.execPath,[path.join(__dirname,'stop-installed.cjs')],{
       env:{...process.env,QX_INSTALL_DATA:data},windowsHide:true,encoding:'utf8'});

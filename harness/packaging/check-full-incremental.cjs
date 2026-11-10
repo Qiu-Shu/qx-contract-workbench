@@ -6,8 +6,9 @@ const {hash}=require('./incremental-package.cjs');
 const {applyUpdate,finalizeUpdate}=require('./incremental-install.cjs');
 async function main(){
   const base=path.resolve(process.argv[2]),release=path.resolve(process.argv[3]);
-  const parent=path.resolve(__dirname,'../.local/install-speed-check');
-  assert.ok(base.startsWith(parent+path.sep));
+  const parent=path.resolve(process.argv[4]||path.join(__dirname,'../.local/install-speed-check'));
+  fs.mkdirSync(parent,{recursive:true});
+  assert.ok(!parent.startsWith(base+path.sep)&&parent!==base,'Test output must be outside the immutable base');
   const out=path.join(parent,'full-apply-'+Date.now());fs.mkdirSync(out);
   const planFile=path.join(release,'incremental/plan.json');
   const plan=JSON.parse(fs.readFileSync(planFile,'utf8'));

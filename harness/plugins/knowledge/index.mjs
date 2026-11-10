@@ -6,6 +6,7 @@ import {resolve,join,extname,basename,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {Readable,Transform} from 'node:stream';
 import {pipeline} from 'node:stream/promises';
+import {materialCategory} from '../../desktop/integration/knowledge-materials.mjs';
 
 export const name='qx-local-knowledge';
 export const inject=['connection'];
@@ -145,11 +146,14 @@ export function apply(ctx,config={}){
     }finally{if(file)await rm(file,{force:true}).catch(()=>{});transferring=false;}
   },'streaming');
   route('upload',['POST'],async request=>{
+    const session=request.headers.get('x-qx-session')||'';
+    const scope=session?await ctx.serial('qx/knowledge/resolve-session',session):null;
+    if(session&&!scope)throw new Error('当前工作暂未就绪，请稍后重试。');
     const filename=decodeURIComponent(request.headers.get('x-qx-filename')||'');
     if(!filename||filename.length>180||basename(filename)!==filename||/[<>:"/\\|?*\x00-\x1f]/.test(filename)||/[. ]$/.test(filename)||/^(con|prn|aux|nul|com[0-9¹²³]|lpt[0-9¹²³])(?:\.|$)/i.test(filename))throw new Error('文件名无效，请重命名后上传。');
     if(!formats.has(extname(filename).toLowerCase()))throw new Error('请上传文档、表格、PDF 或图片。');
     if(!request.body)throw new Error('没有收到文件内容。');
-    const category=decodeURIComponent(request.headers.get('x-qx-category')||'')||'未分类';
+    const category=decodeURIComponent(request.headers.get('x-qx-category')||'')||materialCategory(filename);
     if(category.length>80)throw new Error('分类不超过 80 字。');
     const id=randomUUID();
     await mkdir(workspace,{recursive:true});const canonical=await realpath(workspace);
@@ -163,7 +167,9 @@ export function apply(ctx,config={}){
       await pipeline(Readable.fromWeb(request.body),createWriteStream(temporary,{flags:'wx'}));
       await rename(temporary,target);
       const document=await run('register',{document_id:id,title:filename,category});
-      startIndex(id);return json({...document,state:'indexing'},201);
+      let linkWarning;
+      if(session)try{await ctx.serial('qx/knowledge/document',{session,scope,document:id,title:filename.slice(0,120)});}catch{linkWarning='资料已保存；工作归属正在变化，可在管理中关联，无需重复上传。';}
+      startIndex(id);return json({...document,state:'indexing',...linkWarning?{linkWarning}:{}},201);
     }catch(error){await rm(temporary,{force:true}).catch(()=>{});throw error;}
   },'streaming');
   ctx.effect(()=>()=>{disposed=true;for(const child of children)stop(child);for(const id of downloads.keys())void discardDownload(id);},'qx knowledge worker cleanup');

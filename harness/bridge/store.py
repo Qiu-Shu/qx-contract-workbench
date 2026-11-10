@@ -2,6 +2,7 @@
 from contextlib import contextmanager
 from pathlib import Path
 import hashlib
+import json
 import os
 import sqlite3
 import stat
@@ -141,12 +142,19 @@ class MaterialStore:
             if page is not None:condition+=' AND page=?';params.append(page)
             total=db.execute('SELECT COUNT(*) FROM chunks WHERE '+condition,params).fetchone()[0]
             rows=db.execute('SELECT ordinal,page,location,text FROM chunks WHERE '+condition+' ORDER BY ordinal LIMIT ? OFFSET ?',(*params,limit,start)).fetchall()
+            failed_pages=([r[0] for r in db.execute('SELECT page FROM parse_failures WHERE path=? ORDER BY page',(key,))]
+                          if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='parse_failures'").fetchone() else [])
         # A single call stays small even with large stored paragraphs.
         used=0;result=[]
         for chunk in rows:
             if result and used+len(chunk['text'])>16000:break
             result.append(dict(chunk));used+=len(chunk['text'])
+        warnings=json.loads(row['warnings'])
         return {'path':key,'sha256':row['sha256'],'status':row['status'],'total_chunks':total,
+                'page_count':row['page_count'],
+                'page_out_of_range':bool(page is not None and row['page_count'] is not None and not 1<=page<=row['page_count']),
+                'next_page':page+1 if page is not None and row['page_count'] is not None and 1<=page<row['page_count'] else None,
+                'failed_pages':failed_pages,'warnings':warnings[:20],'warning_count':len(warnings),
                 'chunks':result,'next_start':start+len(result) if start+len(result)<total else None}
 
     def search(self,query,path=None,offset=0,limit=10):

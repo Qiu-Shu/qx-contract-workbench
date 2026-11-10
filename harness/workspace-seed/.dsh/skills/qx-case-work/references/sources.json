@@ -1,0 +1,32 @@
+{
+  "version": "qx-legal-methods-v1",
+  "sources": [
+    {
+      "name": "案件证据方法v1-v5语义改进",
+      "path": "src/cn_contract/assistant/case_evidence.py",
+      "repository": "https://github.com/Qiu-Shu/qx-contract-workbench",
+      "url": "https://github.com/Qiu-Shu/qx-contract-workbench/blob/a26ae24c494c23c5b5d4a68a774a0f158df37eb0/src/cn_contract/assistant/case_evidence.py",
+      "git_head": "a26ae24c494c23c5b5d4a68a774a0f158df37eb0",
+      "snapshot": "working_tree_bytes",
+      "sha256": "05e0a42356beca5147b6035172921b72a387565e8e4f7680108ab6a4995e5bc1",
+      "bytes": 14262,
+      "git_head_blob_sha256": "05e0a42356beca5147b6035172921b72a387565e8e4f7680108ab6a4995e5bc1",
+      "working_tree_changed": false,
+      "sections": {
+        "start_line": 9,
+        "end_line": 67,
+        "sha256": "79bcb26dea6f4fa057c1ac637636ba1da9ba2813183a9df95fe837be7446b074"
+      },
+      "usage": "提炼材料/推断/法律分析/拟稿分离、范围与否定、日期角色、相反材料；去掉JSON及字符偏移验收器。",
+      "license": "保留旧项目来源；本条不声明新的许可授权。"
+    }
+  ],
+  "adaptation": {
+    "delivery": "natural_language",
+    "legacy_execution": "not_imported",
+    "character_offsets": "not_required_from_model",
+    "changes": "静态提炼业务方法；通过新qx_legal案件记录与qx_materials材料工具编排，不调用旧拒收器。",
+    "quality_scope": "迁移方法不是法律质量认证，不继承旧实验评分或生产结论。",
+    "private_knowledge_packages": "not_connected"
+  }
+}

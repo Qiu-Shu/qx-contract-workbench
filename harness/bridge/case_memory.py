@@ -23,6 +23,10 @@ MAX_MEMORIES = 500
 LEASE_SECONDS = 900
 
 
+class MemoryConflict(ValueError):
+    pass
+
+
 def digest(text):
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
@@ -221,15 +225,26 @@ class CaseMemoryStore:
             raise ValueError('本案件不存在这条记忆。')
         return row
 
-    def list(self, case_id, offset=0, limit=20, require_enabled=False):
+    @staticmethod
+    def _knowledge_query(terms=()):
+        # Deduplicate before pagination/top-k; separate sources and manual records stay distinct.
+        match = ' AND ('+' OR '.join('instr(casefold(content),?)>0' for _ in terms)+')' if terms else ''
+        return '''WITH ranked AS (SELECT id,ROW_NUMBER() OVER (
+            PARTITION BY CASE WHEN source_note_id='' THEN id ELSE '' END,
+            source_note_id,revision,source_sha256,content ORDER BY created_at,id) AS occurrence
+            FROM case_memories WHERE case_id=? AND source_stale=0'''+match+''')
+            SELECT * FROM case_memories WHERE id IN (SELECT id FROM ranked WHERE occurrence=1)'''
+
+    def list(self, case_id, offset=0, limit=20, require_enabled=False, deduplicate=False):
         offset, limit = window(offset, limit, 50)
         with self.cases.db() as db:
             db.execute('BEGIN IMMEDIATE')
             state = self._state(db, case_id)
             if require_enabled and not self._enabled(db, state):
                 return {'enabled': False, 'memories': [], 'message': '案件记忆已关闭。'}
-            total = db.execute('SELECT COUNT(*) FROM case_memories WHERE case_id=?', (case_id,)).fetchone()[0]
-            rows = db.execute('SELECT * FROM case_memories WHERE case_id=? ORDER BY created_at,id LIMIT ? OFFSET ?', (case_id, limit, offset))
+            query = self._knowledge_query() if deduplicate else 'SELECT * FROM case_memories WHERE case_id=?'
+            total = db.execute('SELECT COUNT(*) FROM ('+query+')', (case_id,)).fetchone()[0]
+            rows = db.execute(query+' ORDER BY created_at,id LIMIT ? OFFSET ?', (case_id, limit, offset))
             return {'case_id': case_id, 'memories': [self._memory(r, db) for r in rows], 'total': total,
                     'offset': offset, 'next_offset': offset+limit if offset+limit < total else None, 'notice': NOTICE}
 
@@ -292,14 +307,19 @@ class CaseMemoryStore:
     @staticmethod
     def _revision(row, revision):
         if type(revision) is not int or revision != row['revision']:
-            raise ValueError('记忆已被修改，请刷新后再操作。')
+            raise MemoryConflict('记忆已被修改，请刷新后再操作。')
 
-    def update(self, case_id, memory_id, revision, content):
+    def update(self, case_id, memory_id, revision, content, require_current=False):
         content = bounded(content, '记忆正文', MAX_CONTENT)
         with self.cases.db() as db:
             db.execute('BEGIN IMMEDIATE')
             row = self._row(db, case_id, memory_id)
             self._revision(row, revision)
+            if require_current:
+                if not self._enabled(db, self._state(db, case_id)):
+                    raise MemoryConflict('案件记忆已关闭，请刷新后重试。')
+                if row['source_stale']:
+                    raise MemoryConflict('记忆来源已变化，请重新核对。')
             db.execute('UPDATE case_memories SET content=?,revision=revision+1,updated_at=? WHERE case_id=? AND id=?',
                        (content, stamp(), case_id, memory_id))
             self._invalidate(db, case_id)
@@ -329,7 +349,7 @@ class CaseMemoryStore:
                     self._invalidate(db, row['case_id'])
             return self._status(db, case_id)
 
-    def recall(self, case_id, query, limit=10, use_hindsight=True):
+    def recall(self, case_id, query, limit=10, use_hindsight=True, deduplicate=False):
         query = bounded(query, '检索词', 1000)
         _, limit = window(0, limit, 30)
         remote, mode = [], 'local_fallback'
@@ -337,6 +357,14 @@ class CaseMemoryStore:
             db.execute('BEGIN IMMEDIATE')
             status = self._status(db, case_id)
             state = self._state(db, case_id)
+            if deduplicate and status['enabled']:
+                db.create_function('casefold', 1, str.casefold)
+                terms = query.casefold().split()
+                rows = db.execute(self._knowledge_query(terms)+' ORDER BY created_at,id LIMIT ?',
+                                  (case_id, *terms, limit+1)).fetchall()
+                return {**status, 'matches': [self._memory(row) for row in rows[:limit]],
+                        'has_more': len(rows) > limit, 'mode': 'local_fallback', 'query': query,
+                        'retrieval_notice': '本机关键词匹配；相同来源的重复记录只返回一次。'}
         if not status['enabled']:
             return {**status, 'matches': [], 'mode': 'disabled'}
         if use_hindsight is True and status['sync_state'] == 'ready' and status['memory_count']:
@@ -467,4 +495,4 @@ if __name__ == '__main__':
         print(json.dumps({'ok': True, 'result': result}, ensure_ascii=False))
     except Exception as exc:
         message = str(exc) if isinstance(exc, ValueError) else '案件记忆操作未完成，请检查参数或本机服务。'
-        print(json.dumps({'ok': False, 'error': message}, ensure_ascii=False))
+        print(json.dumps({'ok': False, 'error': message, 'status': 409 if isinstance(exc, MemoryConflict) else 400}, ensure_ascii=False))

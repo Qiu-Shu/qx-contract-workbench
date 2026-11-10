@@ -236,9 +236,12 @@ async function createCaseMemoryRuntime({data,payload,python,secret='',model=proc
       if(request.method==='POST'&&request.url==='/prepare'){void prepare();send(202,state());return;}
       send(404,{error:'Not found'});return;
     }
-    if(phase!=='ready'||!enginePort){send(503,{error:'Memory engine is not ready'});return;}
     const target=request.url.slice('/engine'.length);
     if(!/^\/(?:health(?:\/ready)?(?:\?|$)|v1\/default\/banks(?:\/|\?|$))/.test(target)){send(404,{error:'Not found'});return;}
+    if(phase!=='ready'||!enginePort){
+      if(phase==='stopped'&&isInstalled())void prepare();
+      send(503,{error:'Memory engine is not ready'});return;
+    }
     const upstream=http.request({host:'127.0.0.1',port:enginePort,path:target,method:request.method,headers:{authorization:`Bearer ${engineToken}`,'content-type':'application/json'},timeout:360000},incoming=>{
       if(incoming.statusCode>=300&&incoming.statusCode<400){incoming.resume();send(502,{error:'Unexpected engine redirect'});return;}
       response.writeHead(incoming.statusCode,{'content-type':incoming.headers['content-type']||'application/json','cache-control':'no-store'});incoming.pipe(response);
@@ -252,7 +255,6 @@ async function createCaseMemoryRuntime({data,payload,python,secret='',model=proc
   setPhase(phase);
   const result={env:{QX_CASE_MEMORY_CONTROL_URL:base,QX_CASE_MEMORY_CONTROL_TOKEN:controlToken,QX_HINDSIGHT_URL:base+'/engine',QX_HINDSIGHT_TOKEN:engineToken,QX_HINDSIGHT_INSTANCE_ID:instance.id},status:state,prepare,
     async stop(){if(disposed)return;disposed=true;if(installer)await terminateOwned(installer);await stopEngine();server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}};
-  if(isInstalled())queueMicrotask(()=>void prepare());
   return result;
 }
 module.exports={createCaseMemoryRuntime,buildServiceEnvironment,lockFromPlan};

@@ -84,6 +84,26 @@ Var /GLOBAL qxDeltaMode
     SetErrorLevel 1
     Quit
   ${EndIf}
+  ; A full first installation must not mix application files into an unrelated
+  ; folder. Existing registered installations only use the verified delta above.
+  ${If} $qxDeltaMode != "1"
+    FindFirst $R0 $R1 "$INSTDIR\*.*"
+    qx_check_empty:
+      ${If} $R1 == ""
+        Goto qx_empty_done
+      ${EndIf}
+      ${If} $R1 != "."
+      ${AndIf} $R1 != ".."
+        FindClose $R0
+        MessageBox MB_OK|MB_ICONEXCLAMATION "首次安装请选择一个空文件夹，现有文件保持不变。" /SD IDOK
+        SetErrorLevel 1
+        Quit
+      ${EndIf}
+      FindNext $R0 $R1
+      Goto qx_check_empty
+    qx_empty_done:
+    FindClose $R0
+  ${EndIf}
 !macroend
 
 !macro qxFinishIncrementalFiles

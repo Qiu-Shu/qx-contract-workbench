@@ -9,3 +9,6 @@
 *.wasm binary
 *.png binary
 *.vsix binary
+
+# The release source manifest binds the measured vendor bytes, including CRLF.
+* -text

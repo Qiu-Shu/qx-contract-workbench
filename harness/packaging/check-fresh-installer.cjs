@@ -3,7 +3,7 @@ const fs=require('node:fs/promises');
 const path=require('node:path');
 const assert=require('node:assert/strict');
 const {spawn}=require('node:child_process');
-const root=path.resolve(__dirname,'../.local/install-speed-check');
+const root=path.resolve(process.env.QX_INSTALL_TEST_ROOT||path.join(__dirname,'../.local/install-speed-check'));
 async function run(file,args){const start=Date.now();await new Promise((resolve,reject)=>{const child=spawn(file,args,{windowsHide:true,windowsVerbatimArguments:true,stdio:'ignore'});child.once('error',reject);child.once('close',code=>code===0?resolve():reject(Error(path.basename(file)+' exited '+code)))});return(Date.now()-start)/1000;}
 async function main(){
   const previous=JSON.parse(await fs.readFile(path.join(root,'latest-nsis-test.json'),'utf8'));

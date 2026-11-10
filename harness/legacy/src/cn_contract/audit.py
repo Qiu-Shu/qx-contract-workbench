@@ -1,0 +1,30 @@
+"""Append-only audit serialization with fixed safe fields and hashed free text."""
+import hashlib
+import json
+from uuid import UUID
+
+from sqlalchemy.orm import Session
+
+from .domain import AuditEvent
+from .persistence import AuditRow
+
+ALLOWED_ACTIONS = frozenset({'authorization_denied', 'csrf_denied', 'document_created',
+                             'parse_saved', 'documents_reparsed', 'facts_changed', 'position_changed', 'state_changed', 'baseline_selected', 'party_changed',
+                             'authority_registered','authority_verified','rule_registered','rule_approved','rule_recheck',
+                             'policy_changed','policy_approved','review_saved','intake_saved',
+                             'patch_approved','patch_revoked','export_prepared','finding_decided','working_draft_confirmed','effective_text_reviewed',
+                             'case_bridge_granted','case_bridge_revoked','case_bridge_selection_cancelled',
+                             'case_bridge_read','case_bridge_submitted',
+                             'local_material_case_created','local_material_admitted','task_draft_resumed'})
+ALLOWED_ENTITIES = frozenset({'matter', 'document', 'facts', 'parse', 'party','authority','rule','policy','review','task_draft'})
+
+
+def append_event(event: AuditEvent, db: Session) -> UUID:
+    if event.action not in ALLOWED_ACTIONS or event.entity_type not in ALLOWED_ENTITIES:
+        raise ValueError('unknown audit action/entity type')
+    payload = event.model_dump(mode='json')
+    payload['reason_sha256'] = hashlib.sha256(payload.pop('reason').encode('utf-8')).hexdigest()
+    db.add(AuditRow(id=str(event.id), matter_id=str(event.matter_id), actor_id=str(event.actor_id),
+                    action=event.action, payload=json.dumps(payload, sort_keys=True, separators=(',', ':'))))
+    db.flush()
+    return event.id

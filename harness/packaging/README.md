@@ -1,48 +1,35 @@
-# 群兴 Windows 安装包
+# 0.2.15 Windows 安装包
 
-当前0.2.9：保留首次目录选择及变化文件安装；正式增量基线为0.2.7。旧版须依次升级至匹配基线，不匹配则停止并保留原程序。本机未公开0.2.8单独验证桥接升级。下文包含历史版本说明，当前发布范围以[0.2.9交接](../docs/2026-11-05-0.2.9发布.md)为准。
+Windows 10/11 x64，当前 Windows 用户安装；自带 Node、Python、文档与浏览器工具运行环境。首次运行填写自己的模型配置。资料与加密设置位于 `%APPDATA%/QunxingHarness`，程序目录可自选；业务代码从运行配置取得根目录。
 
-Windows x64 当前用户安装，首次启动配置 DeepSeek API Key。用户无需安装 Node 或 Python。API 验证通过官方余额接口完成，不提交模型任务。已发布 0.2.6 使用一键安装；已完成隔离验证的本地安装优化候选改为可选目录向导，并在匹配的旧版本上仅更新变化文件。
+新用户选择空文件夹。已有官方 0.2.14 沿原目录升级，只替换变化的程序文件；其他版本先升级 0.2.14。若程序文件曾被手工修改，严格基线核验会拒绝覆盖。当前安装器不是任意旧版本的全量修复器。
 
-## 文件边界
+## 从源码打包
 
-程序及独立运行环境在安装目录，用户材料和加密设置在 `%APPDATA%/QunxingHarness`。首次安装只复制法律库、Skill 和工作规则，不包含开发机的 `.local`、用户材料、微信会话、API Key、浏览器账号或测试数据。旧版工作台使用不同安装标识，保留原位。
+在 Windows x64 上准备 Node 24.9+、npm、Git，建议构建磁盘剩余 15 GB。以下均从 `harness` 目录执行，输出路径由你自行选择，不必安装到固定盘符。
 
-关闭桌面窗口后后台继续运行以接收微信。安装器和卸载器通过本安装实例的随机令牌控制接口停止后台进程树，不结束其他 Node 进程。卸载保留用户资料。
+```powershell
+npm ci --prefix packaging
+node packaging/stage.cjs ../.local/release-stage
+node packaging/build.cjs ../.local/release-stage ../.local/release-output
+```
 
-## 构建
+`stage.cjs` 下载并核验 `bootstrap.lock.json` 固定的官方 0.2.14 安装包和 7-Zip。也可在第二参数提供已下载的官方安装包；仍必须通过摘要校验。它提取基线、复制候选目录，然后叠加本仓库应用代码、默认 Skill、配置和三处第三方依赖修补，生成 ASAR 与 `source-manifest.json`。新建阶段拒绝覆盖已有目录；源码更改后可用 `node packaging/stage.cjs <stage> --refresh`，随后使用新的输出目录构建。
 
-`stage.py <新的暂存目录> --version 0.2.1` 从明确列出的本机依赖和项目源码生成分发内容。`refresh-stage.py <暂存目录> 0.2.1` 在并行开发完成后刷新业务源码和配置。`build.cjs <暂存目录> <输出目录>` 使用既有 electron-builder 26.15.3 / Electron 44.8.0 生成 NSIS EXE。构建工具来源路径固定在脚本中，仅构建机使用；最终运行路径由安装位置生成。
+**重建边界：** 此流程重建本项目应用代码对应的发行包，第三方 Node/Python/Electron/Office/browser 依赖复用已校验官方 0.2.14 二进制。不是对全部第三方组件的源码编译；不会读取开发者安装目录或用户资料。`legacy/` 为当前运行所需旧业务模块快照，仓库根旧工程不参与本入口。
 
-当前构建还须指定 `QX_BASE_DIR`（从已发布安装包提取的原始程序目录）和 `QX_BASE_VERSION`。不可使用实际安装后被修改过的目录作为基线。HDiffPatch 5.1.3 构建工具按固定摘要下载到 `.local/build-tools`；源码只保存许可证和来源。变更清单、补丁在最终归档输入就绪后生成。每次使用新的输出目录，避免复用中断的压缩缓存。
+构建工具固定版本在 `packaging/package-lock.json`。可通过 `QX_BUILD_MODULES` 指向已安装的构建依赖目录，`QX_BUILD_CACHE` 指定工具缓存；默认使用项目内目录。`QX_HDIFFPATCH_DIR` 如有指定也会核验摘要。历史 Python 打包入口已转发到新入口。
 
-升级分两步：原有 blockmap 仅下载变化块，本机重建安装器；新安装器随后只备份、替换或移除清单中的变化文件，未变程序文件留在原位。首次安装直接展开到用户所选目录。升级沿用已有目录；不匹配基线时保留旧程序并停止，不暗中卸载重装。候选暂只提供 0.2.6 → 0.2.7 的基线。
+## 签名与发布
 
-随包分别携带文档 Python 3.12、Scrapling Python 3.12、Windows-MCP Python 3.14，避免原生模块版本冲突。Node 依赖按版本解析，冲突依赖保留局部嵌套。Python `.dist-info` 和 npm 包内许可随依赖保留；法律库和 Skill 许可证保留原目录结构。
+正式发布者设置 `QX_UPDATE_SIGNING_KEY` 为原更新私钥的位置，再构建或运行 `node packaging/update-release.cjs sign <output> packaging/update-notes.txt`。私钥必须匹配 `desktop/update-config.json` 公钥，不能提交或上传。未提供私钥时仅生成 `latest.unsigned.yml`，不能作为自动更新元数据发布。这里的 Ed25519 更新签名不是 Windows Authenticode 证书。
+
+正式附件为安装器、`.blockmap`、已签名 `latest.yml` 与 `SHA256SUMS.txt`；Git 标签必须指向对应源码。发布前核对附件摘要、公钥验证和发布标签。
 
 ## 验证
 
-- `node --test packaging/incremental-package.test.cjs packaging/incremental-install.test.cjs`：真实 HDiffPatch、变更清单、未知文件保留、事务恢复和文件占用。
-- `node packaging/check-incremental-installer.cjs`：独立 QA 标识的真实 NSIS 首次安装与增量升级；不会替换正在使用的工作台。
-- `node packaging/check-fresh-installer.cjs`：在上述 QA 上卸载并测试新向导安装器首次展开，路径含中文和空格。
-- `node packaging/check-full-incremental.cjs <发布基线目录> <候选输出目录>`：完整程序目录的真实补丁应用，逐文件确认未变文件身份、时间戳和长度；不执行生产安装器。
+设 `QX_TEST_APP` 为候选目录的 `resources/workbench`，设置 `PYTHONDONTWRITEBYTECODE=1`，以其 `runtime/node.exe` 执行 `--test tests/*.test.mjs tests/*.test.cjs desktop/host-recovery.test.cjs desktop/installed-runtime.test.cjs packaging/incremental-package.test.cjs packaging/incremental-install.test.cjs packaging/verify-stage.test.cjs`。原生增量测试需设置 `QX_HPATCHZ_TEST_EXE` 为已校验 hpatchz.exe；跳过不算通过。不要在打包期间运行任何候选程序或测试。
 
-- `node --test desktop/setup-service.test.cjs desktop/installed-runtime.test.cjs desktop/installed-migrations.test.cjs desktop/installed-contract-migration.test.cjs`
-- `python -m unittest discover -s packaging -p test_stage.py`
-- `check-first-run.py`：真实 Electron 引导页、无效输入不保存、显示/隐藏及窄窗口。
-- `check-transition.py`：模拟服务商接受虚构密钥，但真实执行加密、IPC、独立后台启动、更换密钥及微信弹窗。**服务商验真在此用测试替代，未调用付费模型。**
-- `check-portable.py <分发运行目录>`：便携 MCP 握手、缺失样式的虚构 DOCX 读取、默认批注、意见书、四项工作方法、公开网页读取、Windows 控制状态。末尾可加 `documents legal` 只执行相关服务的验证。
-- `check-installed.py <安装目录> <隔离资料目录>`：实际安装程序的首次引导、无效输入拒绝、虚构密钥下主界面启动、桌面桥和微信入口顺序。
-- 同一命令末尾加 `upgrade` 检查已有配置启动；`check-upgrade.cjs <安装目录>` 比较升级前后材料、私有映射、加密凭据摘要，以及实际运行的 `settings/describe` 恢复策略。
+构建前核验整个基线目录摘要、全部仓库来源、生成物和未修改依赖；额外缓存/文件会阻止打包。归档前后再次比较整个候选目录，防止全量安装与增量计划不一致。
 
-打包完成前直接执行包内 Node 与 Harness 版本检查，避免遗漏运行依赖。从 0.2.3 起 NSIS 使用支持差分的非固实 7z，同时生成 blockmap 和签名更新清单；排除开发用 `.d.ts` 和 `.map`。内部程序名继续为 `QunxingWorkbench.exe`，桌面名称为中文。更新流程、首次安装边界和发布方法见 [UPDATES.md](UPDATES.md)。构建检查和运行验收均以最终文件为准。
-
-0.2.1升级仅替换摘要匹配0.2.0已发布默认值的合同Skill，AGENTS只替换已知旧合同段落；自定义内容保留。模型恢复迁移按补丁顺序合并同一provider设置，再补新增错误码，保留地址、凭据、自定义次数及模式。原设置先备份，完成后记录独立迁移标记。
-
-只使用隔离资料目录。实际程序的虚构凭据通过仅测试时开启的本机调试接口保存，并正常关闭程序以保存Windows加密环境；没有复制用户密钥，也未用真实模型测试密钥验真。测试引导 `check-transition.cjs`、`seed-packaged.cjs` 和测试脚本均不进入分发文件白名单。
-
-## 使用边界
-
-微信需要用户本人扫码。bb-browser 的浏览器连接需要用户安装/启用对应扩展；不会迁移开发机登录态。Scrapling 动态抓取优先检测本机 Chrome/Edge，普通 HTTP 读取可独立使用。Word 外部打开需要用户已有 WPS 或 Office；不随包安装办公软件。
-
-本构建没有商业代码签名证书，Windows 可能显示未知发布者提示。当前底层 Harness 为 0.2.2-alpha.2。不把本机隔离测试称为另一台干净电脑验收。
+`check-incremental-installer.cjs` 和 `check-fresh-installer.cjs` 用隔离 QA 安装标识与虚构数据验证真实 NSIS；`QX_INSTALL_TEST_ROOT` 指定测试目录。`check-full-incremental.cjs <stage/base> <output> <test-output-parent>` 对完整发行差异进行隔离回放，检查未变文件与自加文件保留。不能在用户真实目录运行测试安装。

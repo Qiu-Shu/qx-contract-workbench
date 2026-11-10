@@ -1,0 +1,112 @@
+{
+  "date": "2026-11-10",
+  "version": "0.2.15",
+  "tests": {
+    "command": "node --test tests/*.test.mjs tests/*.test.cjs desktop/host-recovery.test.cjs desktop/installed-runtime.test.cjs packaging/incremental-package.test.cjs packaging/incremental-install.test.cjs packaging/verify-stage.test.cjs",
+    "exitCode": 0,
+    "total": 96,
+    "passed": 96,
+    "failed": 0,
+    "skipped": 0
+  },
+  "cleanToolchain": {
+    "command": "npm ci --offline --ignore-scripts --no-audit --no-fund --prefix packaging",
+    "exitCode": 0,
+    "packages": 279
+  },
+  "qaInstallerUpgrade": {
+    "passed": true,
+    "fullSeconds": 4.041,
+    "incrementalSeconds": 3.692,
+    "unchangedRuntimeFileIdentityAndMtimePreserved": true,
+    "unmanagedFilePreserved": true,
+    "changedAddedDeletedVerified": true,
+    "stats": {
+      "oldFiles": 185,
+      "newFiles": 185,
+      "unchangedFiles": 183,
+      "unchangedBytes": 93803398,
+      "changedFiles": 3,
+      "oldChangedBytes": 33,
+      "newChangedBytes": 30,
+      "patchBytes": 233
+    }
+  },
+  "qaInstallerFresh": {
+    "passed": true,
+    "seconds": 2.849,
+    "customDirectoryWithChineseAndSpaces": true,
+    "newInstallerFreshExtractVerified": true
+  },
+  "qaNonempty": {
+    "passed": true,
+    "nonemptyFolderRejected": true,
+    "existingFileUnchanged": true
+  },
+  "fullIncremental": {
+    "passed": true,
+    "seconds": 1.113,
+    "applied": {
+      "status": "applied",
+      "version": "0.2.15",
+      "alreadyApplied": false,
+      "changedFiles": 114
+    },
+    "finalized": {
+      "status": "finalized",
+      "version": "0.2.15"
+    },
+    "stats": {
+      "oldFiles": 53131,
+      "newFiles": 53213,
+      "unchangedFiles": 53099,
+      "unchangedBytes": 1893475906,
+      "changedFiles": 114,
+      "oldChangedBytes": 2956023,
+      "newChangedBytes": 4259560,
+      "patchBytes": 850794
+    },
+    "unchangedFileIdentitiesMtimesAndSizesVerified": 53099,
+    "baselineChangedFileHashesPreserved": true,
+    "unmanagedFilePreserved": true,
+    "scope": "Real release patch on isolated full-size hardlinked baseline; no production installer execution"
+  },
+  "installer": {
+    "passed": true,
+    "version": "0.2.15",
+    "originalUpdateSignatureVerified": true,
+    "installerSha512Verified": true,
+    "fullArchiveMatchesDeltaInput": true,
+    "packagedFiles": 53213,
+    "files": [
+      {
+        "name": "Qunxing-Workbench-0.2.15-Setup.exe",
+        "sha256": "de78464b58c72cc7c95add2410ce01fbe1e0e81005f85e938b8ece7413190f1b",
+        "bytes": 590664446
+      },
+      {
+        "name": "Qunxing-Workbench-0.2.15-Setup.exe.blockmap",
+        "sha256": "5544d462f5f3a88e087d120256200ad080e70d89a57d63d3303a6fea1ceb3427",
+        "bytes": 589515
+      },
+      {
+        "name": "latest.yml",
+        "sha256": "729c2f9b863a20a292d20f30ddf2b7251ba2c08072fd3d6f6947386521e6c967",
+        "bytes": 1727
+      }
+    ]
+  },
+  "firstRun": {
+    "passed": true,
+    "firstRunShowsSetup": true,
+    "isolatedData": true,
+    "noModelRequests": true
+  },
+  "sourceOverlayFiles": 3373,
+  "gitBytesMatch": true,
+  "limitations": [
+    "Not tested on a second physical computer",
+    "No real-case model requests or legal-output certification",
+    "Third-party runtimes bootstrapped from the checksummed official 0.2.14 installer"
+  ]
+}

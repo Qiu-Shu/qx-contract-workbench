@@ -26,6 +26,9 @@ REPRESENTATION_AUTHORITY = re.compile(
     r'|(?:授权委托书|授权材料|授权文件|代理权限|代理手续|诉讼授权).{0,24}已.{0,12}(?:提交|递交|备案)'
     r'|已.{0,12}(?:提交|递交|备案).{0,24}(?:授权委托书|授权材料|授权文件|代理手续|诉讼授权)'
 )
+LETTER_AUTHORITY = re.compile(REPRESENTATION_AUTHORITY.pattern +
+    r'|(?:兹受|现受|受).{1,40}委托.{0,20}(?:发函|函告|致函)'
+    r'|(?:已获|获得|经).{0,20}授权.{0,12}(?:发函|函告|致函)')
 
 
 def _text(value, name):
@@ -75,22 +78,22 @@ def generate_litigation_document(cases, case_id, document_type, filename, data):
                '受理机关、管辖、时效及期限、要素式表格和电子提交格式须按具体案件另核；签名盖章须本人或有权主体完成。']
     checks, paths, body_paragraphs = [], set(), []
     withheld = []
+    from draft_review import DraftReview
+    review = DraftReview(cases,case_id)
 
-    def outward_text(value, label):
+    def outward_text(value, label, refs=()):
+        value=review.text(value,label,refs)
         # Metadata reaches the same outward draft as body text, so has the same boundary.
-        if document_type == 'lawyer_letter' and re.search(r'受托|委托|授权', value):
-            withheld.append((label, value))
-            pending.append(f'{label}涉及委托表述，未核实前不进入对外正文。')
-            return '【涉及委托或授权的原稿已保留在内部核对稿，核实后补入；未授权发函。】'
-        if document_type == 'representation':
+        if document_type in ('lawyer_letter','representation'):
             # Narrow lexical safeguard, not an authorization audit. Keep ordinary
             # mandate-contract facts, including adjacent sentences, in the draft.
             sentences = re.split(r'(?<=[。！？；\n])', value)
             for index, sentence in enumerate(sentences):
-                if REPRESENTATION_AUTHORITY.search(sentence):
+                pattern=LETTER_AUTHORITY if document_type=='lawyer_letter' else REPRESENTATION_AUTHORITY
+                if pattern.search(sentence):
                     withheld.append((label, sentence))
-                    pending.append(f'{label}涉及受托或代理授权提交声明；本工具未审核代理权，原稿仅供内部核对。')
-                    sentences[index] = '【代理授权声明待核；本工具未审核代理权，原稿已保留于内部核对稿。】'
+                    pending.append(f'{label}涉及委托或代理授权声明；本工具未审核权限，原稿仅供内部核对。')
+                    sentences[index] = '【委托或代理授权声明待核；本工具未审核权限，原稿已保留于内部核对稿。】'
             return ''.join(sentences)
         return value
 
@@ -166,7 +169,7 @@ def generate_litigation_document(cases, case_id, document_type, filename, data):
             row = verify(item, f'{heading}{index}')
             prefix = outward_text(_text(item.get('role' if key == 'parties' else 'heading', ''), '章节或角色'),
                                   row['label'] + '章节或角色')
-            text = outward_text(row['text'], row['label']) or '【待补正文】'
+            text = outward_text(row['text'], row['label'],item.get('citations',[])) or '【待补正文】'
             paragraph = draft.add_paragraph((prefix + '：' if prefix else '') + text)
             body_paragraphs.append((row, paragraph))
             if row['status'] != 'matched': draft.add_paragraph('【待核：本段来源或引文尚未核对通过。】')
@@ -202,6 +205,10 @@ def generate_litigation_document(cases, case_id, document_type, filename, data):
         audit.add_heading('未进入外观正文的委托表述（待核原稿）', 1)
         for label, text in withheld:
             audit.add_paragraph(label + '：' + text)
+    if review.changes:
+        audit.add_heading('事实状态修订（原稿未采用）',1)
+        for change in review.changes:
+            audit.add_paragraph(json.dumps(change,ensure_ascii=False))
     pending = list(dict.fromkeys(pending))
     audit.add_heading('待核事项', 1)
     for item in pending: audit.add_paragraph(item)
@@ -210,8 +217,15 @@ def generate_litigation_document(cases, case_id, document_type, filename, data):
     # Publish the audit first; a later output error leaves only an explicitly internal file.
     internal = _publish(cases.store, Path(filename).stem + '-内部核对.docx', _bytes(audit))
     output = _publish(cases.store, filename, _bytes(draft))
+    body_text='\n'.join(p.text for p in draft.paragraphs)
+    summary='已生成'+title+'待核正文及独立内部核对稿；未提交或发出，未认证事实或法律意见。'
+    if review.changes:summary+=f'已修订{len(review.changes)}处事实状态表述，原稿和理由见内部核对稿。'
+    summary+=('\n\n已保存正文：\n'+body_text if len(body_text)<=100000 else
+              '\n正文超过聊天展示上限，请打开本次生成的Word查看完整内容；未截断文件。')
     return {**output, 'case_id': case_id, 'document_type': document_type, 'status': 'draft',
+            'body_text':body_text,'user_summary':summary,
             'internal_path': internal['path'], 'internal_sha256': internal['sha256'],
             'citation_checks': checks, 'sources': sources, 'pending_checks': pending,
+            'review_changes':review.changes,
             'authorization_status': 'unverified' if document_type in ('lawyer_letter', 'representation') else 'not_applicable',
             'ready_to_submit': False, 'legal_verified': False, 'notice': NOTICE}

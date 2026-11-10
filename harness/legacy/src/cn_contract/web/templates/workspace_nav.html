@@ -1,0 +1,11 @@
+<a class="skip" href="#main">跳到工作内容</a>
+<header class="workspace-header"><a href="/workspace" class="brand">群兴法律工作台</a><span id="account-name"></span><button type="button" id="workspace-logout" class="secondary">退出登录</button></header>
+<nav class="workspace-nav" aria-label="业务导航">
+  <a href="/workspace"{% if not record %} aria-current="page"{% endif %}>工作区与接待</a>
+  <a href="/">合同审查</a>
+  {% if library_enabled %}<a href="/library">法律资料库</a>{% else %}<span>法律资料库 <small>请从应用菜单连接</small></span>{% endif %}
+  <span aria-disabled="true">案件办理 <small>其他业务待接入</small></span>
+  <span aria-disabled="true">庭审辅助 <small>待接入</small></span>
+  <span aria-disabled="true">内容创作 <small>待接入</small></span>
+  <span aria-disabled="true">个人知识 <small>待接入</small></span>
+</nav>
