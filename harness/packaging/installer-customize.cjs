@@ -39,14 +39,19 @@ async function customizeInstaller({output,templates,incremental,additionalIncrem
       '!define QX_PATCH_PLAN '+quoted(incremental.planFile),'!define QX_PATCH_FILE '+quoted(incremental.patchFile),
       '!define QX_PATCH_ENGINE '+quoted(incremental.hpatchz),'!define QX_PATCH_RUNNER '+quoted(path.join(__dirname,'incremental-install.cjs')));
     const versions=new Set();
-    lines.push('!macro qxSelectPatch','  StrCpy $qxPatchFrom ""');
+    lines.push('!macro qxSelectPatch','  StrCpy $qxPatchFrom ""','  ${StdUtils.HashFile} $R8 "SHA2-256" "$INSTDIR\\resources\\app.asar"');
     for(const [index,item] of [incremental,...additionalIncrementals].entries()){
       const other=JSON.parse(await fs.readFile(item.planFile,'utf8'));
       if(!/^\d+\.\d+\.\d+$/.test(other.fromVersion)||versions.has(other.fromVersion)||other.toVersion!==plan.toVersion||other.targetMarker.sha256!==plan.targetMarker.sha256||other.bootstrapNode.oldSha256!==plan.bootstrapNode.oldSha256)throw Error('Incompatible upgrade baseline');
       versions.add(other.fromVersion);
-      lines.push('  ${If} $0 == "'+other.fromVersion+'"');
-      if(index===0)lines.push('  ${OrIf} $0 == "'+plan.toVersion+'"');
-      lines.push('    StrCpy $qxPatchFrom $0',
+      if(!/^[a-f0-9]{64}$/.test(other.baseMarker.sha256))throw Error('Invalid baseline marker');
+      // Recovery can roll files back before NSIS repairs DisplayVersion; select by bytes.
+      lines.push('  ${If} $R8 == "'+other.baseMarker.sha256+'"');
+      if(index===0)lines.push('  ${OrIf} $R8 == "'+plan.targetMarker.sha256+'"');
+      lines.push('    StrCpy $qxPatchFrom "'+other.fromVersion+'"',
+        '    ${If} $R8 == "'+plan.targetMarker.sha256+'"',
+        '      StrCpy $qxPatchFrom "'+plan.toVersion+'"',
+        '    ${EndIf}',
         '    File "/oname=$PLUGINSDIR\\qx-plan.json" '+quoted(item.planFile),
         '    File "/oname=$PLUGINSDIR\\qx-changes.hdiff" '+quoted(item.patchFile),
         '  ${EndIf}');

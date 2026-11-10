@@ -22,7 +22,7 @@ node packaging/build.cjs ../.local/release-stage ../.local/release-output
 
 构建工具固定版本在 `packaging/package-lock.json`。可通过 `QX_BUILD_MODULES` 指向已安装的构建依赖目录，`QX_BUILD_CACHE` 指定工具缓存；默认使用项目内目录。`QX_HDIFFPATCH_DIR` 如有指定也会核验摘要。历史 Python 打包入口已转发到新入口。
 
-额外升级基线记录于同一锁文件的 `upgradeBases`，暂存时按摘要下载、解包，并校验整个目录。`QX_RELEASE_CACHE` 可指向存放官方安装器的缓存目录，文件名保持发布名；复用前仍验证摘要。构建时为每个已固定基线生成独立差异，安装时按原版本选择对应计划，路径由暂存与实际安装目录推导。
+额外升级基线记录于同一锁文件的 `upgradeBases`，暂存时按摘要下载、解包，并校验整个目录。`QX_RELEASE_CACHE` 可指向存放官方安装器的缓存目录，文件名保持发布名；复用前仍验证摘要。构建时为每个已固定基线生成独立差异，安装时按实际程序标记摘要选择对应计划，以兼容注册表已更新而文件事务未完成的中断恢复；路径由暂存与实际安装目录推导。
 
 ## 签名与发布
 

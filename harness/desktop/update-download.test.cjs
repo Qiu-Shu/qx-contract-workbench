@@ -27,8 +27,13 @@ async function fixture(t,mode='range'){
   const server=http.createServer((req,res)=>{
     requests.push({path:req.url,range:req.headers.range});
     if(req.url.startsWith('/latest.yml')){res.end(JSON.stringify({version:'0.2.4',files:[{url:'Qunxing-Workbench-0.2.4-Setup.exe',size:next.length,sha512:createHash('sha512').update(next).digest('base64')}]}));return;}
-    if(req.url.endsWith('.blockmap')){res.end(gzipSync(JSON.stringify(map(req.url==='/old.blockmap'||req.url.includes('0.2.3')?old:next))));return;}
+    if(req.url.endsWith('.blockmap')){if(mode==='map-fail'||mode==='map-error-stall'){res.writeHead(503,{'content-length':100});if(mode==='map-error-stall'){res.on('close',()=>{closed=true});res.flushHeaders();}else res.end();return;}res.end(gzipSync(JSON.stringify(map(req.url==='/old.blockmap'||req.url.includes('0.2.3')?old:next))));return;}
     if(mode==='disconnect-once'&&!disconnected){disconnected=true;req.socket.destroy();return;}
+    if(mode==='full-stall'||mode==='full-delayed'){
+      res.on('close',()=>{closed=true});
+      if(mode==='full-stall'){res.writeHead(200,{'content-length':next.length});res.flushHeaders();}
+      markStalled();return;
+    }
     if(mode==='no-range'){res.writeHead(200,{'content-length':next.length});res.end(next);return;}
     if(mode==='stall'){res.writeHead(206,{'content-length':blockSize,'content-range':`bytes ${3*blockSize}-${4*blockSize-1}/${next.length}`});res.flushHeaders();res.on('close',()=>{closed=true});markStalled();return;}
     const match=/^bytes=(\d+)-(\d+)$/.exec(req.headers.range||'');
@@ -49,8 +54,7 @@ async function fixture(t,mode='range'){
   const run=()=>updater.differentialDownloadInstaller({url:new URL(base+'/installer.exe'),info},{updateInfoAndProvider:{info:{version:'0.2.4'},provider},requestHeaders:{},cancellationToken:token},output,provider,'installer.exe');
   return {updater,old,next,output,directory,requests,run,token,stalled,base,closed:()=>closed,transferred:()=>transferred};
 }
-for(const mode of ['range','no-range','cache-mismatch','disconnect-once','corrupt'])test('full upstream check/download flow recovers when delta cannot complete: '+mode,async t=>{
-  const f=await fixture(t,mode);
+async function prepareUpstream(f){
   const config=path.join(f.directory,'app-update.yml');await fs.writeFile(config,JSON.stringify({updaterCacheDirName:'qx-test-updater'}));
   Object.assign(f.updater.app,{isPackaged:true,userDataPath:f.directory,baseCachePath:f.directory,appUpdateConfigPath:config,whenReady:async()=>{}});
   const {DownloadedUpdateHelper}=require('electron-updater/out/DownloadedUpdateHelper');
@@ -58,11 +62,35 @@ for(const mode of ['range','no-range','cache-mismatch','disconnect-once','corrup
   f.updater.setFeedURL({provider:'generic',url:f.base,useMultipleRangeRequest:false});
   f.updater.autoDownload=false;f.updater.autoInstallOnAppQuit=false;f.updater.disableWebInstaller=true;f.updater.disableDifferentialDownload=false;
   await f.updater.checkForUpdates();
+}
+for(const mode of ['range','no-range','cache-mismatch','disconnect-once','corrupt','map-fail','map-error-stall'])test('full upstream check/download flow recovers when delta cannot complete: '+mode,async t=>{
+  const f=await fixture(t,mode);await prepareUpstream(f);
   if(mode==='corrupt'){await assert.rejects(f.updater.downloadUpdate(),/checksum/i);assert.equal(f.updater.installerPath,null);return;}
   const [file]=await f.updater.downloadUpdate();assert.deepEqual(await fs.readFile(file),f.next);
   const full=f.requests.filter(r=>r.path.endsWith('.exe')&&!r.range);
   assert.equal(full.length,['range','disconnect-once'].includes(mode)?0:1);
   if(mode==='range')assert.equal(f.transferred(),blockSize);
+  if(mode==='map-fail')assert.equal(f.requests.filter(r=>r.path.endsWith('.blockmap')).length,1);
+  if(mode==='map-error-stall'){await new Promise(resolve=>setTimeout(resolve,100));assert.equal(f.closed(),true);assert.equal(f.token.listenerCount('cancel'),0);}
+});
+
+for(const mode of ['full-stall','full-delayed'])test('cancelling full fallback closes the real socket: '+mode,async t=>{
+  const streams=[],nativeFs=require('node:fs'),create=nativeFs.createWriteStream;
+  t.mock.method(nativeFs,'createWriteStream',(...args)=>{const stream=create(...args);streams.push(stream);return stream;});
+  const f=await fixture(t,mode);await fs.unlink(path.join(f.directory,'installer.exe'));await prepareUpstream(f);
+  const pending=f.updater.downloadUpdate(f.token);const rejected=assert.rejects(pending,/cancel/i);
+  await f.stalled;
+  if(mode==='full-stall'){for(let i=0;i<50&&!streams.length;i++)await new Promise(resolve=>setTimeout(resolve,10));assert.ok(streams.length>0);}
+  f.token.cancel();await rejected;
+  await new Promise(resolve=>setTimeout(resolve,100));
+  assert.equal(f.closed(),true);assert.equal(f.updater.installerPath,null);
+  assert.ok(streams.every(stream=>stream.closed&&stream.destroyed),'all output streams closed before cancellation settles');
+});
+
+test('cached installer permission failure does not masquerade as a missing cache',async t=>{
+  const f=await fixture(t);const access=fs.access;
+  t.mock.method(fs,'access',async file=>{if(file===path.join(f.directory,'installer.exe'))throw Object.assign(Error('denied'),{code:'EACCES'});return access(file);});
+  await assert.rejects(f.run(),{code:'EACCES'});assert.equal(f.requests.length,0);
 });
 test('cancellation closes a stalled HTTP Range and settles promptly',async t=>{
   const f=await fixture(t,'stall');let settled=false;

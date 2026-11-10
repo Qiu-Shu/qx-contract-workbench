@@ -1,7 +1,7 @@
 // Actual NSIS packages with an isolated app identity. Never uses the user's app/data.
 const fs=require('node:fs/promises');
 const path=require('node:path');
-const {spawn}=require('node:child_process');
+const {spawn,execFileSync}=require('node:child_process');
 const assert=require('node:assert/strict');
 const {load,packageDir,sevenZip:resolveSevenZip}=require('./toolchain.cjs');
 const {build}=load('electron-builder');
@@ -50,6 +50,12 @@ async function main(){
   const fullSeconds=await run(source,['/S','/D='+installDir]);
   await fs.writeFile(path.join(installDir,'用户自加文件.txt'),'keep me');
   const retained=path.join(installDir,'resources/workbench/runtime/node.exe');const before=await fs.stat(retained,{bigint:true});
+  if(index===1){
+    // Reproduce interruption after file commit and registry update, before finalize.
+    await require('./incremental-install.cjs').applyUpdate({installDir,planFile:alternate.planFile,patchFile:alternate.patchFile,hpatchz:alternate.hpatchz});
+    const setVersion="$ErrorActionPreference='Stop'; $qaExpected='\"'+[IO.Path]::Combine($env:QX_QA_INSTALL_DIR,'Uninstall QunxingInstallQa.exe')+'\" /currentuser'; $qaKeys=@(Get-ChildItem 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall' | Get-ItemProperty | Where-Object { $_.DisplayName -eq 'QunxingInstallQa 0.2.7' -and $_.UninstallString -eq $qaExpected }); if($qaKeys.Count -ne 1){throw 'Isolated QA registry entry missing'}; Set-ItemProperty -LiteralPath $qaKeys[0].PSPath -Name DisplayVersion -Value '0.2.8'";
+    execFileSync('powershell.exe',['-NoProfile','-NonInteractive','-Command',setVersion],{windowsHide:true,env:{...process.env,QX_QA_INSTALL_DIR:installDir},stdio:'pipe'});
+  }
   const incrementalSeconds=await run(files[2],['--updated','/S','/D='+installDir]);
   const after=await fs.stat(retained,{bigint:true});
   assert.equal(before.ino,after.ino);assert.equal(before.mtimeNs,after.mtimeNs);
@@ -60,7 +66,7 @@ async function main(){
   upgrades.push({from:index===0?'0.2.6':'0.2.7',to:'0.2.8',fullSeconds,incrementalSeconds});
   if(index===0)await run(path.join(installDir,'Uninstall QunxingInstallQa.exe'),['/S','_?='+installDir]);
   }
-  const report={passed:true,upgrades,unchangedRuntimeFileIdentityAndMtimePreserved:true,unmanagedFilePreserved:true,changedAddedDeletedVerified:true,installDir,installer:files[2],stats:delta.stats};
+  const report={passed:true,upgrades,interruptedAlternateBaselineRecovered:true,unchangedRuntimeFileIdentityAndMtimePreserved:true,unmanagedFilePreserved:true,changedAddedDeletedVerified:true,installDir,installer:files[2],stats:delta.stats};
   await fs.writeFile(path.join(out,'report.json'),JSON.stringify(report,null,2));
   await fs.writeFile(path.join(testRoot,'latest-nsis-test.json'),JSON.stringify(report,null,2));
   console.log(JSON.stringify(report));
