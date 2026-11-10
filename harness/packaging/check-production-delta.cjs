@@ -9,12 +9,12 @@ const {verifyInstaller}=require('../desktop/update-integrity.cjs');
 class Executor extends HttpExecutor{createRequest(options,callback){return http.request(options,callback)}download(){throw Error('FULL_DOWNLOAD_FORBIDDEN')}}
 async function main(){
   const oldDir=path.resolve(process.argv[2]),nextDir=path.resolve(process.argv[3]);
-  const out=await fs.mkdtemp(path.resolve(__dirname,'../.local/production-delta-'));
+  const out=await fs.mkdtemp(path.join(require('node:os').tmpdir(),'qx-production-delta-'));
   const readInfo=async dir=>yaml.load(await fs.readFile(path.join(dir,'latest.yml'),'utf8'));
   const old=await readInfo(oldDir),next=await readInfo(nextDir),key=require('../desktop/update-config.json').publicKey;
   const oldExe=path.join(oldDir,old.files[0].url),nextExe=path.join(nextDir,next.files[0].url);
   await verifyInstaller(oldExe,old,key);await verifyInstaller(nextExe,next,key);
-  await fs.link(oldExe,path.join(out,'installer.exe'));
+  await fs.copyFile(oldExe,path.join(out,'installer.exe'));
   let transferred=0,ranges=0;
   const server=http.createServer(async(request,response)=>{
     try{

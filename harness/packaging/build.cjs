@@ -24,6 +24,7 @@ const installerInclude=path.join(shim,'nsis','qx-installer-include.nsh');
 const thirdParty=path.join(__dirname,'vendor/hdiffpatch');
 async function main(){
 await require('./verify-stage.cjs').verifyBase(stage);
+await require('./verify-stage.cjs').verifyUpgradeBases(stage);
 const SEVEN_ZIP=await sevenZip();
 const sevenZipLicense=path.resolve(SEVEN_ZIP,'../../LICENSE.txt');
 if(prepackaged){
@@ -53,7 +54,9 @@ await build({publish:'never',projectDir:path.join(stage,'app'),prepackaged,
     if(!appOutDir)throw Error('Final application tree missing');
     if(JSON.stringify([...await inventory(appOutDir)])!==finalInputs)throw Error('Candidate changed while archiving; use a fresh stage/output and do not run tests inside the candidate during packaging');
     const incremental=await prepareIncrementalPackage({oldDir:baseDir,newDir:appOutDir,fromVersion:baseVersion,toVersion:packageInfo.version,output:path.join(output,'incremental'),toolsDir:await ensureHdiffTools(SEVEN_ZIP)});
-    await customizeInstaller({output:path.dirname(installerInclude),templates:path.join(packageDir('app-builder-lib'),'templates/nsis'),incremental,sevenZip:SEVEN_ZIP,sevenZipLicense});
+    const additionalIncrementals=[];
+    for(const base of require('./bootstrap.lock.json').upgradeBases||[])additionalIncrementals.push(await prepareIncrementalPackage({oldDir:path.join(stage,'upgrade-bases',base.version),newDir:appOutDir,fromVersion:base.version,toVersion:packageInfo.version,output:path.join(output,'from-'+base.version,'incremental'),toolsDir:await ensureHdiffTools(SEVEN_ZIP)}));
+    await customizeInstaller({output:path.dirname(installerInclude),templates:path.join(packageDir('app-builder-lib'),'templates/nsis'),incremental,additionalIncrementals,sevenZip:SEVEN_ZIP,sevenZipLicense});
     console.log('Changes-only installation package: '+JSON.stringify(incremental.stats));return false;
   },config:{
   appId:'cn.qunxing.harness.workbench',productName:'AI师兄法律助手平台',asar:true,compression:'normal',

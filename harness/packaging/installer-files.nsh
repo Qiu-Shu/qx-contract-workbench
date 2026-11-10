@@ -1,5 +1,6 @@
 ; This include runs after electron-builder has declared installApplicationFiles.
 Var /GLOBAL qxDeltaMode
+Var /GLOBAL qxPatchFrom
 
 ; Unpack once into the final application directory. The old program is only
 ; uninstalled on the full-install route; the delta route never calls this macro.
@@ -25,7 +26,7 @@ Var /GLOBAL qxDeltaMode
   Pop $0
   Pop $1
   ${If} $0 == 0
-    WriteRegStr SHELL_CONTEXT "${UNINSTALL_REGISTRY_KEY}" DisplayVersion "${QX_PATCH_FROM}"
+    WriteRegStr SHELL_CONTEXT "${UNINSTALL_REGISTRY_KEY}" DisplayVersion "$qxPatchFrom"
     MessageBox MB_OK|MB_ICONEXCLAMATION "更新未完成，已恢复原程序。请关闭占用程序文件的窗口后重试。" /SD IDOK
   ${ElseIf} $0 == 10
     MessageBox MB_OK|MB_ICONEXCLAMATION "程序文件已更新，安装信息尚待完成，请重新运行同一安装包完成更新。" /SD IDOK
@@ -53,11 +54,10 @@ Var /GLOBAL qxDeltaMode
     ReadRegStr $0 SHELL_CONTEXT "${UNINSTALL_REGISTRY_KEY}" DisplayVersion
     ${If} ${FileExists} "$INSTDIR\resources\app.asar"
     ${AndIf} ${FileExists} "$INSTDIR\resources\workbench\runtime\node.exe"
-      ${If} $0 == "${QX_PATCH_FROM}"
-      ${OrIf} $0 == "${QX_PATCH_TO}"
+      InitPluginsDir
+      !insertmacro qxSelectPatch
+      ${If} $qxPatchFrom != ""
         !insertmacro qxPrepareBootstrapNode
-        File "/oname=$PLUGINSDIR\qx-plan.json" "${QX_PATCH_PLAN}"
-        File "/oname=$PLUGINSDIR\qx-changes.hdiff" "${QX_PATCH_FILE}"
         File "/oname=$PLUGINSDIR\qx-hpatchz.exe" "${QX_PATCH_ENGINE}"
         DetailPrint "正在更新变化的程序文件，未变化文件保持原位…"
         nsExec::ExecToStack '"$PLUGINSDIR\qx-node.exe" "$PLUGINSDIR\qx-incremental.cjs" apply "$INSTDIR" "$PLUGINSDIR\qx-plan.json" "$PLUGINSDIR\qx-changes.hdiff" "$PLUGINSDIR\qx-hpatchz.exe"'

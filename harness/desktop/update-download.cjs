@@ -47,6 +47,21 @@ class StrictNsisUpdater extends NsisUpdater{
     this.app.quit();
   }
   async differentialDownloadInstaller(fileInfo,options,installerPath,provider,oldName){
+    for(let attempt=0;attempt<2;attempt++){
+      try{return await this.downloadDelta(fileInfo,options,installerPath,provider,oldName)}
+      catch(error){
+        if(options.cancellationToken.cancelled||['ENOSPC','EACCES','EPERM','EROFS'].includes(error.code))throw error;
+        // Retry transient transport failures once; an invalid cache/range cannot heal by retrying.
+        const transient=/ECONNRESET|ETIMEDOUT|ERR_(?:CONNECTION|NETWORK|TIMED_OUT)|aborted by the server/i.test(error.code||'')||/aborted by the server|net::ERR_(?:CONNECTION|NETWORK|TIMED_OUT)/i.test(error.message||'');
+        if(attempt===0&&transient){this.emit('qx-download-mode',{mode:'retry',total:0});continue;}
+        // Upstream performs a fresh full download with SHA-512 validation; the controller
+        // still checks the signed release before downloading and the bytes before installing.
+        this.emit('qx-download-mode',{mode:'full',total:fileInfo.info.size});
+        return true;
+      }
+    }
+  }
+  async downloadDelta(fileInfo,options,installerPath,provider,oldName){
     const oldFile=path.join(this.downloadedUpdateHelper.cacheDir,oldName);
     try{await fs.access(oldFile)}catch{throw Error('UPDATE_DELTA_ONLY')}
     const urls=await provider.getBlockMapFiles(fileInfo.url,this.app.version,options.updateInfoAndProvider.info.version,this.previousBlockmapBaseUrlOverride);
@@ -64,7 +79,7 @@ class StrictNsisUpdater extends NsisUpdater{
       onProgress:progress=>this.emit('download-progress',progress),
     }).download(oldMap,newMap);
     await fs.writeFile(path.join(this.downloadedUpdateHelper.cacheDirForPendingUpdate,'current.blockmap'),gzipSync(JSON.stringify(newMap)));
-    return false; // Never return true: upstream interprets true as permission to download the full installer.
+    return false;
   }
 }
 function validateFeed(feed){

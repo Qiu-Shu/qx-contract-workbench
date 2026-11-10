@@ -49,6 +49,19 @@ async function refresh(stage){
   const base=path.join(stage,'base'),candidate=path.join(stage,'win-unpacked');
   if(!fs.existsSync(path.join(base,'resources/app.asar'))||!fs.existsSync(path.join(candidate,'resources/workbench/runtime/node.exe')))throw Error('Not a release stage');
   await require('./verify-stage.cjs').verifyBase(stage);
+  for(const item of lock.upgradeBases||[]){
+    if(!/^\d+\.\d+\.\d+$/.test(item.version))throw Error('Invalid upgrade baseline');
+    const destination=path.join(stage,'upgrade-bases',item.version);
+    if(!fs.existsSync(destination)){
+      const cache=path.resolve(process.env.QX_RELEASE_CACHE||path.join(stage,'downloads'));fs.mkdirSync(cache,{recursive:true});
+      const installer=path.join(cache,path.basename(new URL(item.url).pathname));
+      await download(item.url,installer,item.sha256);
+      const seven=path.join(stage,'extractor/7z.exe'),container=path.join(stage,'upgrade-containers',item.version);
+      execFileSync(seven,['x',installer,'-o'+container,'-y','$PLUGINSDIR/app-64.7z'],{windowsHide:true,stdio:'pipe'});
+      execFileSync(seven,['x',path.join(container,'$PLUGINSDIR/app-64.7z'),'-o'+destination,'-y','-bso0','-bsp0'],{windowsHide:true,stdio:'pipe'});
+    }
+  }
+  await require('./verify-stage.cjs').verifyUpgradeBases(stage);
   const payload=path.join(candidate,'resources/workbench'),app=path.join(stage,'app'),asar=load('@electron/asar');
   asar.extractAll(path.join(base,'resources/app.asar'),app);
   const manifest=[];

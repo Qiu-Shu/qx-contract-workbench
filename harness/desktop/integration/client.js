@@ -422,15 +422,15 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
         state.notes&&h('p',{className:'qx-update-notes'},state.notes),
         state.phase==='checking'&&h('p',{role:'status'},'正在检查更新…'),
         state.phase==='idle'&&h('p',{role:'status'},'当前已是最新版本。'),
-        state.phase==='available'&&h('p',null,'仅下载变化部分，完成后由你决定何时安装。'),
-        ['downloading','cancelling'].includes(state.phase)&&h('div',null,h('progress',{max:100,value:state.progress,'aria-label':'增量下载进度'}),h('p',{role:'status'},state.phase==='cancelling'?'正在取消…':state.total?format(state.transferred)+' / '+format(state.total):'正在计算增量大小…')),
+        state.phase==='available'&&h('p',null,'优先下载变化部分，无法完成时自动下载完整安装包。完成后由你决定何时安装。'),
+        ['downloading','cancelling'].includes(state.phase)&&h('div',null,h('progress',{max:100,value:state.progress,'aria-label':'更新下载进度'}),h('p',{role:'status'},state.phase==='cancelling'?'正在取消…':state.downloadMode==='retry'?'连接中断，正在重新尝试增量下载…':state.total?(state.downloadMode==='full'?'已改为完整安装包：':'')+format(state.transferred)+' / '+format(state.total):'正在准备更新…')),
         state.ready&&h('p',null,'更新已下载并校验，可稍后安装。'),
         state.phase==='installing'&&h('p',{role:'status'},'正在关闭后台并启动安装…'),
         state.error&&h('p',{className:'qx-update-error',role:'alert'},state.error),
         h('div',{className:'qx-update-actions'},
           state.phase==='downloading'?h('button',{type:'button',onClick:()=>act('cancel')},'取消下载'):
           state.ready?h('button',{type:'button',disabled:busy,onClick:()=>act('install')},'安装并重启'):
-          available?h('button',{type:'button',disabled:busy,onClick:()=>act('download')},state.phase==='error'?'重试增量下载':'下载增量更新'):
+          available?h('button',{type:'button',disabled:busy,onClick:()=>act('download')},state.phase==='error'?'重试下载':'下载更新'):
           h('button',{type:'button',disabled:busy,onClick:()=>act('check')},'重新检查'),
           h('button',{type:'button',onClick:()=>setOpen(false)},'稍后再说'))));
   }

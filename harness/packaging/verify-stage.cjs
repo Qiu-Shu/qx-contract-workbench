@@ -8,6 +8,13 @@ async function verifyBase(stage){
   const files=[...await inventory(path.join(stage,'base'))].sort(([a],[b])=>a<b?-1:a>b?1:0);
   if(createHash('sha256').update(JSON.stringify(files)).digest('hex')!==lock.treeSha256)throw Error('Stage base differs from the pinned official installer');
 }
+async function verifyUpgradeBases(stage){
+  for(const item of lock.upgradeBases||[]){
+    if(!/^\d+\.\d+\.\d+$/.test(item.version))throw Error('Invalid upgrade baseline');
+    const files=[...await inventory(path.join(stage,'upgrade-bases',item.version))].sort(([a],[b])=>a<b?-1:a>b?1:0);
+    if(createHash('sha256').update(JSON.stringify(files)).digest('hex')!==item.treeSha256)throw Error('Upgrade base differs from the pinned official installer: '+item.version);
+  }
+}
 function child(root,relative){
   const result=path.resolve(root,relative);
   if(!result.startsWith(path.resolve(root)+path.sep))throw Error('Invalid source manifest path');
@@ -30,4 +37,4 @@ async function verifySources(stage){
   if(actual.size!==expected.size)throw Error('Candidate contains missing or unexpected files; create a clean stage before packaging');
   for(const [name,info] of actual)if(expected.get(name)!==info.sha256)throw Error('Candidate dependency or generated file changed: '+name);
 }
-module.exports={verifyBase,verifySources};
+module.exports={verifyBase,verifyUpgradeBases,verifySources};

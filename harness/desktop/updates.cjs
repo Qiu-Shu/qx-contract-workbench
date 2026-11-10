@@ -4,9 +4,11 @@ const {verifyRelease,verifyInstaller}=require('./update-integrity.cjs');
 function newer(a,b){const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<3;i++){if(x[i]!==y[i])return x[i]>y[i]}return false;}
 function message(error,action){
   if(error?.message==='UPDATE_SIGNATURE')return '更新校验未通过，已停止。当前版本仍可使用，请稍后重试。';
-  if(error?.message==='UPDATE_DELTA_ONLY')return '暂时无法完成增量更新，未改为下载整包。请保留当前版本并稍后重试。';
+  if(error?.code==='ERR_CHECKSUM_MISMATCH')return '下载文件校验未通过，已停止安装。请重试下载，当前版本和资料仍保留。';
+  if(error?.code==='ENOSPC')return '更新缓存所在磁盘空间不足，请释放空间后重试。当前版本和资料仍保留。';
+  if(['EACCES','EPERM','EROFS'].includes(error?.code))return '无法写入更新缓存，请检查文件权限或是否被其他程序占用后重试。';
   if(action==='install')return '安装未能开始，请确认任务已结束后重试。当前版本和资料仍保留。';
-  if(action==='download')return '增量下载未完成，未改为下载整包。请检查网络后重试。';
+  if(action==='download')return '更新下载未完成，请检查连接后重试，也可从正式发布页下载安装包。当前版本和资料仍保留。';
   return '暂时无法检查更新，请检查网络后重试。当前版本仍可使用。';
 }
 function createInstallHandoff({isStarting,setStarting,stop,restore}){
@@ -33,7 +35,8 @@ function createUpdateController({updater,version,publicKey,prepareInstall,confir
   // Download/check promise catches own the UI errors; never forward upstream URLs or credentials.
   updater.on('error',()=>{});
   updater.on('download-progress',progress=>{if(state.phase==='downloading')set({progress:Math.max(0,Math.min(100,progress.percent||0)),transferred:progress.transferred||0,total:progress.total||0});});
-  updater.on('qx-delta-plan',plan=>set({total:plan.downloadBytes,fullSize:plan.fullBytes}));
+  updater.on('qx-delta-plan',plan=>set({downloadMode:'delta',total:plan.downloadBytes,fullSize:plan.fullBytes}));
+  updater.on('qx-download-mode',({mode,total})=>{if(state.phase==='downloading')set({downloadMode:mode,total,progress:0,transferred:0});});
   const controller={state:snapshot,
     async check(){
       if(busy||file)return snapshot();busy=true;set({phase:'checking',error:''});info=null;
@@ -47,7 +50,7 @@ function createUpdateController({updater,version,publicKey,prepareInstall,confir
     },
     async download(){
       if(busy||!info||file)return snapshot();busy=true;cancelled=false;cancellation=new CancellationToken();
-      set({phase:'downloading',progress:0,transferred:0,total:0,error:''});
+      set({phase:'downloading',downloadMode:'delta',progress:0,transferred:0,total:0,error:''});
       try{
         verifyRelease(info,publicKey);
         const paths=await updater.downloadUpdate(cancellation);

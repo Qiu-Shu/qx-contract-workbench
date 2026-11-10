@@ -108,3 +108,24 @@ test('cancel does not allow an immediately repeated download before cleanup',asy
   await f.controller.download();finish([f.installer]);await pending;
   assert.equal(f.controller.state().phase,'available');assert.equal(f.controller.state().ready,false);
 });
+
+test('full fallback resets progress and remains cancellable without making a file installable',async t=>{
+  const f=await fixture(t);let finish;
+  f.updater.downloadUpdate=()=>new Promise(resolve=>{finish=resolve});
+  await f.controller.check();const pending=f.controller.download();
+  f.updater.emit('download-progress',{percent:87,transferred:31,total:36});
+  f.updater.emit('qx-download-mode',{mode:'full',total:590});
+  assert.equal(f.controller.state().progress,0);assert.equal(f.controller.state().transferred,0);
+  assert.equal(f.controller.state().downloadMode,'full');assert.equal(f.controller.state().total,590);
+  f.controller.cancel();finish([f.installer]);await pending;
+  assert.equal(f.controller.state().ready,false);assert.equal(f.controller.state().phase,'available');
+});
+
+test('disk and integrity errors are not reported as network failures',async t=>{
+  for(const code of ['ENOSPC','EACCES','ERR_CHECKSUM_MISMATCH']){
+    const f=await fixture(t,{downloadUpdate:async()=>{throw Object.assign(Error('private path'),{code})}});
+    await f.controller.check();await f.controller.download();
+    assert.doesNotMatch(f.controller.state().error,/网络|连接|private path/);
+    assert.equal(f.controller.state().ready,false);
+  }
+});

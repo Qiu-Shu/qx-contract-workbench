@@ -2,7 +2,7 @@ const fs=require('node:fs/promises');
 const path=require('node:path');
 function quoted(value){const text=path.resolve(value);if(/["$\r\n]/.test(text))throw Error('Unsupported NSIS build path');return '"'+text+'"';}
 function replaceOnce(text,from,to){if(text.split(from).length!==2)throw Error('NSIS template changed; review the installer integration');return text.replace(from,to);}
-async function customizeInstaller({output,templates,incremental,sevenZip,sevenZipLicense,include=path.join(__dirname,'installer.nsh')}){
+async function customizeInstaller({output,templates,incremental,additionalIncrementals=[],sevenZip,sevenZipLicense,include=path.join(__dirname,'installer.nsh')}){
   await fs.mkdir(output,{recursive:true});
   // NSIS's built-in Include directory otherwise shadows electron-builder's
   // identically named multiUser.nsh after !cd. Keep its top-level includes together.
@@ -38,6 +38,20 @@ async function customizeInstaller({output,templates,incremental,sevenZip,sevenZi
       '!define QX_OLD_NODE_SHA "'+plan.bootstrapNode.oldSha256+'"','!define QX_NEW_NODE_SHA "'+plan.bootstrapNode.newSha256+'"',
       '!define QX_PATCH_PLAN '+quoted(incremental.planFile),'!define QX_PATCH_FILE '+quoted(incremental.patchFile),
       '!define QX_PATCH_ENGINE '+quoted(incremental.hpatchz),'!define QX_PATCH_RUNNER '+quoted(path.join(__dirname,'incremental-install.cjs')));
+    const versions=new Set();
+    lines.push('!macro qxSelectPatch','  StrCpy $qxPatchFrom ""');
+    for(const [index,item] of [incremental,...additionalIncrementals].entries()){
+      const other=JSON.parse(await fs.readFile(item.planFile,'utf8'));
+      if(!/^\d+\.\d+\.\d+$/.test(other.fromVersion)||versions.has(other.fromVersion)||other.toVersion!==plan.toVersion||other.targetMarker.sha256!==plan.targetMarker.sha256||other.bootstrapNode.oldSha256!==plan.bootstrapNode.oldSha256)throw Error('Incompatible upgrade baseline');
+      versions.add(other.fromVersion);
+      lines.push('  ${If} $0 == "'+other.fromVersion+'"');
+      if(index===0)lines.push('  ${OrIf} $0 == "'+plan.toVersion+'"');
+      lines.push('    StrCpy $qxPatchFrom $0',
+        '    File "/oname=$PLUGINSDIR\\qx-plan.json" '+quoted(item.planFile),
+        '    File "/oname=$PLUGINSDIR\\qx-changes.hdiff" '+quoted(item.patchFile),
+        '  ${EndIf}');
+    }
+    lines.push('!macroend');
   }
   lines.push('!include '+quoted(path.join(__dirname,'installer-bootstrap.nsh')));
   const result=path.join(output,'qx-installer-include.nsh');await fs.writeFile(result,lines.join('\n')+'\n');return result;
