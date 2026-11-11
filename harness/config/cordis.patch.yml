@@ -208,3 +208,11 @@
         - TRANSPORT
         - MALFORMED_RESPONSE
         - STREAM_CLOSED
+
+# qx-content-watch-v1
+- insert:
+    - id: qx-content-watch
+      name: D:/qx-harness-workbench-20261102/plugins/content-watch/index.mjs
+      config:
+        workspace: D:/qx-harness-workbench-20261102/workspace
+        stateDir: D:/qx-harness-workbench-20261102/.local/content-watch

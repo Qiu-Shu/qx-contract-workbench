@@ -27,6 +27,13 @@ function copySource(from,to,target,manifest){
   fs.copyFileSync(from,to);
   manifest.push({source:path.relative(root,from).split(path.sep).join('/'),target,sha256:crypto.createHash('sha256').update(fs.readFileSync(from)).digest('hex')});
 }
+function copyContentWatchAssets(payload,manifest){
+  for(const relative of ['scripts/prepare-content-watch.mjs','sources/xiaohongshu-mcp-Apache-2.0.txt']){
+    const target=path.join(payload,relative);
+    fs.mkdirSync(path.dirname(target),{recursive:true});
+    copySource(path.join(root,relative),target,'resources/workbench/'+relative,manifest);
+  }
+}
 async function main(){
   if(process.platform!=='win32')throw Error('Windows x64 release staging requires Windows');
   if(!process.argv[2])throw Error('Usage: node stage.cjs <new-stage-directory> [verified-0.2.14-installer]');
@@ -69,6 +76,7 @@ async function refresh(stage){
   overlay(path.join(__dirname,'payload-config'),path.join(payload,'config'),manifest,'resources/workbench/config');
   overlay(path.join(__dirname,'runtime-overrides'),path.join(payload,'node_modules'),manifest,'resources/workbench/node_modules');
   for(const name of ['component-install.py','python-tool.py'])copySource(path.join(__dirname,name),path.join(payload,name),'resources/workbench/'+name,manifest);
+  copyContentWatchAssets(payload,manifest);
   const runner=path.join(payload,'desktop-runner');
   for(const name of fs.readdirSync(runner))if(fs.existsSync(path.join(root,'desktop',name)))copySource(path.join(root,'desktop',name),path.join(runner,name),'resources/workbench/desktop-runner/'+name,manifest);
   for(const name of fs.readdirSync(app))if(fs.statSync(path.join(app,name)).isFile()&&fs.existsSync(path.join(root,'desktop',name)))copySource(path.join(root,'desktop',name),path.join(app,name),'app.asar/'+name,manifest);
@@ -88,4 +96,4 @@ async function refresh(stage){
   console.log(JSON.stringify({stage,base,candidate,sourceFiles:manifest.length}));
 }
 if(require.main===module)main().catch(error=>{console.error(error);process.exitCode=1});
-module.exports={overlay,digest};
+module.exports={overlay,digest,copyContentWatchAssets};

@@ -643,6 +643,13 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       document.head.append(script);
       return()=>{window.qxPrivacy?.dispose();script.remove();};
     },'qunxing: optional upload privacy');
+    ctx.effect(()=>{
+      let dispose,stopped=false;const script=document.createElement('script');script.src='/api/qx-content-watch/client.js';
+      script.onload=()=>{if(!stopped&&typeof window.qxInstallContentWatch==='function')dispose=window.qxInstallContentWatch(ctx,React);};
+      script.onerror=()=>console.warn('拓客内容暂未加载，请刷新工作台后重试。');
+      document.head.append(script);
+      return()=>{stopped=true;dispose?.();script.remove();};
+    },'qunxing: content watch');
     ctx.effect(()=>{const style=document.createElement('style');style.dataset.qxChrome='true';style.textContent=styles;document.head.append(style);return()=>style.remove();},'qunxing: concise desktop chrome');
     ctx.slots.inject('sidebar.brand.mark',()=>ctx.slots.register({name:'sidebar.brand.mark',priority:-100},()=>h('span',{className:'qx-brand-compact'},h('img',{className:'qx-brand-logo',src:'/api/qx-brand/logo.png?v=20261103',alt:'群兴律师事务所标识',draggable:false}))));
     ctx.slots.inject('sidebar.brand.name',()=>ctx.slots.register({name:'sidebar.brand.name',priority:-100},()=>h('span',{className:'qx-wordmark'},'AI师兄法律助手平台')));
