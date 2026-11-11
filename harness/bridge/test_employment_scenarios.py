@@ -1,3 +1,4 @@
+import os
 """Explicit source-bound hypothetical arithmetic stays in the saved review."""
 import pytest
 from test_employment_decisions import source_case, api
@@ -66,7 +67,7 @@ def test_real_mcp_exports_calculation_and_verified_chat_together(tmp_path):
                 messages.extend([{'role':'assistant','tool_calls':[{'id':number,'type':'function','function':{'name':name,'arguments':json.dumps(args)}}]},
                     {'role':'tool','tool_call_id':number,'content':json.dumps({'executed':True,'is_error':False,'result':value})}])
             root=Path(__file__).resolve().parents[1]
-            audit=subprocess.run(['C:/Users/Lenovo/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe',str(root/'scripts/check_verified_delivery.mjs')],
+            audit=subprocess.run([os.environ.get('QX_TEST_NODE', 'node'),str(root/'scripts/check_verified_delivery.mjs')],
                 cwd=root,input=json.dumps({'workspace':str(tmp_path),'messages':messages,'result':{'choices':[{'message':{'content':'实际应付100000元。'},'finish_reason':'stop'}]}}),
                 capture_output=True,text=True,encoding='utf-8',check=True)
             delivered=json.loads(audit.stdout)

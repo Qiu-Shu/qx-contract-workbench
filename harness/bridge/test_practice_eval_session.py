@@ -1,16 +1,26 @@
 """Real MCP relay, synthetic-only, without a model or credential access."""
 import json
+import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 from uuid import uuid4
 
 
-def test_real_relay_isolates_case_and_reads_full_saved_artifacts():
-    script = Path(__file__).with_name('practice_eval_session.py')
+def test_real_relay_isolates_case_and_reads_full_saved_artifacts(tmp_path):
+    source_bridge = Path(__file__).parent
+    shutil.copytree(source_bridge, tmp_path/'bridge', ignore=shutil.ignore_patterns('__pycache__', 'test_*'))
+    cases = tmp_path/'docs/checks/practice-gaps/e2e-cases.json'
+    cases.parent.mkdir(parents=True)
+    cases.write_text(json.dumps([{'id':'corporate','material':'合成董事会记录：保留反对意见。',
+        'tools':['read_case_material','record_case_note','write_word_draft']}]), encoding='utf-8')
+    script = tmp_path/'bridge/practice_eval_session.py'
+    env = {**os.environ, 'QX_LEGACY_ROOT': str(source_bridge.parent/'legacy'),
+           'QX_SKILL_EVAL_CAMPAIGN': '', 'QX_SKILL_EVAL_SNAPSHOT': '', 'PYTHONDONTWRITEBYTECODE': '1'}
     child = subprocess.Popen([sys.executable, '-X', 'utf8', str(script), 'offline-review-'+uuid4().hex, 'corporate'],
                              stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-                             text=True, encoding='utf-8')
+                             text=True, encoding='utf-8', env=env)
     try:
         ready = json.loads(child.stdout.readline())
         assert ready['ready']

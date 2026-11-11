@@ -273,13 +273,13 @@ await check("project_build runs through the tool layer without a name that does 
 // The deploy script answers "which version am I?" with a hand-written $scriptVersion. Hand-written constants drift: forget
 // to bump one and the user is told a version they do not have - and they ask precisely because they cannot tell another
 // way (jsDelivr caches @main for up to 12 hours, so a stale copy is the normal case, not the exception). Pin it here.
-await check("the deploy script reports the version in package.json, with matching step count", () => {
-  const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+await check("the retained upstream deploy script matches its provenance version and step count", () => {
+  const upstream = JSON.parse(readFileSync(new URL("../../../sources/wechat-sources.json", import.meta.url), "utf8"));
   const script = readFileSync(new URL("../scripts/deploy-windows.ps1", import.meta.url), "utf8");
 
   const versionMatch = script.match(/^\$scriptVersion = "([^"]+)"/m);
   assert.ok(versionMatch, "deploy-windows.ps1 should declare $scriptVersion");
-  assert.equal(versionMatch[1], pkg.version, `script says ${versionMatch[1]}, package.json says ${pkg.version}`);
+  assert.equal(versionMatch[1], upstream.version, `script says ${versionMatch[1]}, upstream provenance says ${upstream.version}`);
 
   const totalMatch = script.match(/^\$total = (\d+)/m);
   assert.ok(totalMatch, "deploy-windows.ps1 should declare $total");

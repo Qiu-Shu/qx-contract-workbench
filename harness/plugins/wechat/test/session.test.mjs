@@ -1,12 +1,7 @@
 /**
- * Tests for the session ladder: the exact sequence of resume/create attempts that
- * stands between "a WeCom message arrived" and "a turn runs".
- *
- * The bug these cover was observed live on the WeCom long connection: resume
- * failed, create answered `session "…" already exists`, and every later message
- * to that chat died the same way - the bot simply stopped answering. The
- * important cases are therefore the *recovery* ones, and that nothing is
- * swallowed: whatever happened is reported in the returned issue.
+ * Tests for durable session identity: only a classified absence permits creation.
+ * Ambiguous restore failures and occupied identities must never discard history
+ * by replacing the requested conversation with an empty one.
  *
  * Run: node test/session.test.mjs
  */
@@ -79,105 +74,94 @@ await test("a resumable session is resumed and reported as clean", async () => {
   assert.equal(agents.calls.create.length, 0);
 });
 
-await test("a chat with no stored session is created, and the resume miss is reported", async () => {
-  const agents = stubAgents({ resume: [new Error('session "wechat-a" not found')], create: [{}] });
-  const { handle, sessionId, issue } = await openSessionAgent({ agents, sessionId: "wechat-a" });
+await test("a classified absent session creates exactly the requested identity", async () => {
+  class Missing extends Error {}
+  const agents = stubAgents({ resume: [new Missing('session "wechat-a" not found')], create: [{}] });
+  const { handle, sessionId } = await openSessionAgent({ agents, sessionId: "wechat-a", isMissingSession: error => error instanceof Missing });
   assert.equal(handle.id, "wechat-a");
   assert.equal(sessionId, "wechat-a");
-  assert.match(issue.resume, /not found/);
-  assert.equal(issue.create, null);
-  assert.equal(issue.freshId, null);
+  assert.deepEqual(agents.calls.create.map(options => options.sessionId), ["wechat-a"]);
 });
 
 await test("meta, agentOptions and setup reach whichever call succeeds", async () => {
   const setup = async () => {};
-  const agents = stubAgents({ resume: [new Error("nope")], create: [{}] });
-  const { issue } = await openSessionAgent({
+  const missing = new Error("classified absent");
+  const agents = stubAgents({ resume: [missing], create: [{}] });
+  await openSessionAgent({
     agents,
     sessionId: "wechat-b",
     meta: { cwd: "/inbox", agentPreset: "default" },
     agentOptions: { provider: "deepseek-official", model: "deepseek-flash" },
     setup,
+    isMissingSession: error => error === missing,
   });
-  assert.ok(issue);
   const [options] = agents.calls.create;
   assert.deepEqual(options.meta, { cwd: "/inbox", agentPreset: "default" });
   assert.equal(options.agentOptions.model, "deepseek-flash");
   assert.equal(options.setup, setup);
+  assert.deepEqual(agents.calls.resume[0].meta, options.meta);
+  assert.equal(agents.calls.resume[0].agentOptions.model, "deepseek-flash");
+  assert.equal(agents.calls.resume[0].setup, setup);
 });
 
 console.log("-- recovery: the live wedge --");
 
-await test("an occupied id that becomes resumable is resumed instead of abandoned", async () => {
-  // The historical failure: resume misses, create says "already exists", and a
-  // naive implementation gives up (or starts a throwaway session, losing history).
-  const agents = stubAgents({ resume: [new Error('session "wechat-c" not found'), {}], create: [alreadyExists("wechat-c")] });
-  const { handle, sessionId, issue } = await openSessionAgent({ agents, sessionId: "wechat-c" });
-  assert.equal(sessionId, "wechat-c", "the stored history must be kept");
-  assert.equal(handle.id, "wechat-c");
-  assert.match(issue.create, /already exists/);
-  assert.match(issue.retryResume, /resumed on the second attempt/);
-  assert.equal(issue.freshId, null);
-  assert.equal(agents.calls.resume.length, 2);
+await test("a creation conflict is surfaced without a replacement id or implicit retry", async () => {
+  const missing = new Error('session "wechat-c" not found');
+  const agents = stubAgents({ resume: [missing, {}], create: [alreadyExists("wechat-c")] });
+  await assert.rejects(() => openSessionAgent({ agents, sessionId: "wechat-c", isMissingSession: error => error === missing }), /already exists/);
+  assert.deepEqual(agents.calls.create.map(options => options.sessionId), ["wechat-c"]);
+  assert.equal(agents.calls.resume.length, 1);
 });
 
-await test("a wedged id with no way back gets a fresh session so the chat keeps working", async () => {
-  const warnings = [];
+await test("an unclassified not-found message cannot authorize a fresh empty session", async () => {
   const agents = stubAgents({
     resume: [new Error("not found"), alreadyExists("wechat-d")],
     create: [alreadyExists("wechat-d"), {}],
   });
-  const { handle, sessionId, issue } = await openSessionAgent({
-    agents,
-    sessionId: "wechat-d",
-    logger: { warn: (...args) => warnings.push(args.map(String).join(" ")) },
-    freshId: (base) => `${base}-r9zz`,
-  });
-  assert.equal(sessionId, "wechat-d-r9zz");
-  assert.equal(handle.id, "wechat-d-r9zz");
-  assert.equal(issue.freshId, "wechat-d-r9zz");
-  assert.match(issue.resume, /not found/);
-  assert.match(issue.create, /already exists/);
-  assert.equal(warnings.length, 1);
-  assert.match(warnings[0], /wechat-d-r9zz/);
+  await assert.rejects(() => openSessionAgent({ agents, sessionId: "wechat-d" }), /not found.*已保留原会话/);
+  assert.equal(agents.calls.create.length, 0);
+  assert.equal(agents.calls.resume.length, 1);
 });
 
-await test("every attempt is named when even a fresh session cannot be created", async () => {
+await test("an ambiguous restore keeps the original error and never reaches creation", async () => {
+  const original = new Error("corrupt persistence log");
   const agents = stubAgents({
-    resume: [new Error("not found"), alreadyExists("wechat-e")],
+    resume: [original, alreadyExists("wechat-e")],
     create: [alreadyExists("wechat-e"), new Error("no persistence backend")],
   });
   await assert.rejects(
-    () => openSessionAgent({ agents, sessionId: "wechat-e", freshId: (base) => `${base}-r1` }),
+    () => openSessionAgent({ agents, sessionId: "wechat-e" }),
     (error) => {
-      assert.match(error.message, /no persistence backend/);
-      assert.match(error.message, /already exists/);
-      assert.equal(error.issue.requested, "wechat-e");
+      assert.match(error.message, /wechat-e.*corrupt persistence log.*已保留原会话/);
+      assert.equal(error.cause, original);
       return true;
     },
   );
+  assert.equal(agents.calls.create.length, 0);
 });
 
 await test("a create failure that is not an id clash is reported, not papered over", async () => {
-  const agents = stubAgents({ resume: [new Error("resume exploded")], create: [new Error("provider is not configured")] });
+  const missing = new Error("classified absent");
+  const agents = stubAgents({ resume: [missing], create: [new Error("provider is not configured")] });
   await assert.rejects(
-    () => openSessionAgent({ agents, sessionId: "wechat-f" }),
+    () => openSessionAgent({ agents, sessionId: "wechat-f", isMissingSession: error => error === missing }),
     (error) => {
       assert.match(error.message, /provider is not configured/);
-      assert.match(error.message, /resume exploded/);
       return true;
     },
   );
   assert.equal(agents.calls.create.length, 1, "no pointless fresh-id attempt after a real failure");
   assert.equal(agents.calls.resume.length, 1);
+  assert.equal(agents.calls.create[0].sessionId, "wechat-f");
 });
 
 await test("a missing agents service is refused with a readable message", async () => {
-  await assert.rejects(() => openSessionAgent({ sessionId: "wechat-g" }), /ctx\.agents\.resume\/create are required/);
-  await assert.rejects(() => openSessionAgent({ agents: { resume: async () => {} }, sessionId: "x" }), /are required/);
+  await assert.rejects(() => openSessionAgent({ sessionId: "wechat-g" }), /session identity and agents service required/);
+  await assert.rejects(() => openSessionAgent({ agents: { resume: async () => {} }, sessionId: "x" }), /session identity and agents service required/);
   await assert.rejects(
     () => openSessionAgent({ agents: { resume: async () => {}, create: async () => {} }, sessionId: "" }),
-    /a session id is required/,
+    /session identity and agents service required/,
   );
 });
 

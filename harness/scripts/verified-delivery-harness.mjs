@@ -1,7 +1,7 @@
 // Evaluation adapter: exercise the installed LLM service and production plugin.
 // No credentials or network operations; caller supplies audited provider chunks.
 import {createRequire} from 'node:module';
-import {realpathSync,readdirSync} from 'node:fs';
+import {realpathSync} from 'node:fs';
 import {dirname,join,resolve} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import * as plugin from '../plugins/verified-delivery/index.mjs';
@@ -12,8 +12,7 @@ const dsh=createRequire(realpathSync(local.resolve('@deepseek-ai/dsh/package.jso
 const base=createRequire(dsh.resolve('@deepseek-ai/dsh-base/package.json'));
 const {Context}=await import(pathToFileURL(base.resolve('@deepseek-ai/cordis')).href);
 export const llm=await import(pathToFileURL(base.resolve('@deepseek-ai/dsh-llm')).href);
-const sessionDir=readdirSync(join(root,'node_modules/.pnpm')).find(n=>n.startsWith('@deepseek-ai+dsh-session@'));
-export const {Session}=await import(pathToFileURL(join(root,'node_modules/.pnpm',sessionDir,'node_modules/@deepseek-ai/dsh-session/lib/index.js')).href);
+export const {Session}=await import(pathToFileURL(base.resolve('@deepseek-ai/dsh-session')).href);
 export function providerMessages(messages){
  return messages.map(m=>{
   const content=m.content?[{type:'text',text:m.content}]:[];

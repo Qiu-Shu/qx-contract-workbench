@@ -1,6 +1,7 @@
 // The VS Code bridge: the routes the editor calls, and the extension that calls them. The extension is plain CommonJS
 // with no build step, so `node --check` on it is a real syntax test rather than a formality.
 import assert from "node:assert/strict";
+import { payloadFiles } from "../../../tests/helpers/wechat-payload.mjs";
 import { readFileSync } from "node:fs";
 import { dirname, join as joinPath } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -108,7 +109,7 @@ await test("the extension parses, activates, and ships with the package", () => 
   assert.match(source, /gui-port\.json/, "the port is discovered, not hard-coded");
   assert.ok(source.includes("dsh.askSelection"), "the selection command");
   for (const file of ["package.json", "extension.js", "media/icon.svg"]) {
-    assert.ok(pkg.files.includes(`vscode-extension/${file}`), `${file} is published`);
+    assert.ok(payloadFiles.includes(`vscode-extension/${file}`), `${file} is published`);
   }
   const manifest = JSON.parse(readFileSync(joinPath(extensionDir, "package.json"), "utf8"));
   assert.equal(manifest.main, "./extension.js");

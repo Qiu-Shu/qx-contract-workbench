@@ -3,6 +3,7 @@ import asyncio
 from contextlib import asynccontextmanager
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 from tempfile import TemporaryDirectory
@@ -16,7 +17,8 @@ from docx import Document
 async def client(script, workspace):
     params = StdioServerParameters(command=sys.executable,
         args=[str(Path(__file__).with_name(script)), '--workspace', str(workspace)],
-        env={'PYTHONIOENCODING': 'utf-8'})
+        env={'PYTHONIOENCODING': 'utf-8', 'PYTHONDONTWRITEBYTECODE': '1',
+             'QX_LEGACY_ROOT': os.environ.get('QX_LEGACY_ROOT', str(Path(__file__).resolve().parents[1]/'legacy'))})
     async with stdio_client(params) as streams:
         async with ClientSession(*streams) as session:
             await session.initialize()

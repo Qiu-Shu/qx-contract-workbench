@@ -28,7 +28,7 @@ async function test(name, fn) {
 
 const office = await import("../office.js");
 
-test("the extension decides the kind, and nothing else does", () => {
+await test("the extension decides the kind, and nothing else does", () => {
   assert.equal(office.kindOf("a.DOCX"), "docx");
   assert.equal(office.kindOf("b.xlsx"), "xlsx");
   assert.equal(office.kindOf("c.pptx"), "pptx");
@@ -37,7 +37,7 @@ test("the extension decides the kind, and nothing else does", () => {
   assert.equal(office.kindOf(undefined), undefined);
 });
 
-test("a write spec is refused before any process starts", () => {
+await test("a write spec is refused before any process starts", () => {
   assert.throws(() => office.parseWriteSpec("a.pdf", "{}"), /docx \/ \.xlsx \/ \.pptx/);
   assert.throws(() => office.parseWriteSpec("a.docx", "{not json"), /不是合法 JSON/);
   assert.throws(() => office.parseWriteSpec("a.docx", "[]"), /必须是一个 JSON 对象/);
@@ -50,7 +50,7 @@ test("a write spec is refused before any process starts", () => {
   assert.equal(okDocx.spec.blocks.length, 1, "a valid spec comes back parsed");
 });
 
-test("relative paths land in officeDir when it is set, and say so when it is not", () => {
+await test("relative paths land in officeDir when it is set, and say so when it is not", () => {
   // Built with `join`, not written as "C:\\...": on Linux those literals are *relative* paths, and the test
   // would be asserting Windows behaviour on a platform that does not have it.
   const root = resolve(tmpdir(), "office-base");
@@ -76,12 +76,12 @@ test("relative paths land in officeDir when it is set, and say so when it is not
   assert.equal(office.absolutePath("a.docx", fallback), resolve(fallback, "a.docx"), "a relative one joins the base");
 });
 
-test("a relative path is resolved, an empty one refused", () => {
+await test("a relative path is resolved, an empty one refused", () => {
   assert.match(office.absolutePath("out/a.docx", "C:\\\\work"), /[\\\\/]out[\\\\/]a\.docx$/);
   assert.throws(() => office.absolutePath("  "), /需要 path/);
 });
 
-test("the toolchain reports what it found instead of assuming", () => {
+await test("the toolchain reports what it found instead of assuming", () => {
   const dir = mkdtempSync(join(tmpdir(), "office-tool-"));
   const fakePython = join(dir, "python.exe");
   writeFileSync(fakePython, "x");
@@ -103,7 +103,7 @@ test("the toolchain reports what it found instead of assuming", () => {
   assert.equal(missing.ready, false, "but it still has to exist");
 });
 
-test("convert builds the kit command, and refuses a non-PDF target", async () => {
+await test("convert builds the kit command, and refuses a non-PDF target", async () => {
   const calls = [];
   const exec = async (command, args) => {
     calls.push({ command, args });
@@ -118,7 +118,7 @@ test("convert builds the kit command, and refuses a non-PDF target", async () =>
   await assert.rejects(() => office.convertOffice({ kit: "", node: "n", input: "a", output: "a.pdf", exec }), /找不到 LibreOffice Kit/);
 });
 
-test("render passes only the selectors it was given", async () => {
+await test("render passes only the selectors it was given", async () => {
   const calls = [];
   const exec = async (command, args) => {
     calls.push(args);
@@ -130,7 +130,7 @@ test("render passes only the selectors it was given", async () => {
   assert.deepEqual(calls[1], ["k", "render", "--input", "b.xlsx", "--output-dir", "o2", "--sheet", "报表", "--range", "A1:C9"]);
 });
 
-test("runOffice reads the last JSON line, and turns a refusal into an error", async () => {
+await test("runOffice reads the last JSON line, and turns a refusal into an error", async () => {
   const ok = await office.runOffice({
     python: "py",
     exec: async () => 'noise\n{"ok":true,"kind":"docx","bytes":12}\n',
@@ -145,7 +145,7 @@ test("runOffice reads the last JSON line, and turns a refusal into an error", as
   await assert.rejects(() => office.runOffice({ python: "", exec: async () => "", payload: {} }), /找不到 Python/);
 });
 
-test("the payload reaches Python as base64 on argv, never through a shell", async () => {
+await test("the payload reaches Python as base64 on argv, never through a shell", async () => {
   let seen;
   await office.runOffice({
     python: "py",

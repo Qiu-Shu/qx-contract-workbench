@@ -175,7 +175,7 @@ await test("a realistic answer comes out as a chat message", () => {
   assert.ok(!/\n{3,}/.test(plain), "no run of blank lines");
 });
 
-test("chunking never splits a surrogate pair or a code fence", async () => {
+await test("chunking never splits a surrogate pair or a code fence", async () => {
   // Measured: "aaaaaaaaa\ud83d" - a chunk ending in half an emoji - and a chunk holding an opening fence with no closing one.
   const { chunkText } = await import("../index.js");
   const lone = (value) => {

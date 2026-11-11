@@ -483,7 +483,7 @@ await test("a wiki node is resolved with the parameter the live API required", a
   await assert.rejects(() => feishuWikiResolve({ token: "t", nodeToken: "x", fetchImpl: async () => ({ json: async () => ({ code: 0, data: { node: {} } }) }) }), /no obj_token/);
 });
 
-test("the copied scopes are the ones this plugin calls, and no more", () => {
+await test("the copied scopes are the ones this plugin calls, and no more", () => {
   const payload = feishuScopePayload();
   assert.equal(payload.count, FEISHU_SCOPES.length);
   // The minimum set, named: messaging and its media, documents, spreadsheets, bitables, wiki lookup.

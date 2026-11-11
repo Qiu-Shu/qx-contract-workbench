@@ -7,6 +7,7 @@
  * lines, sending the body before the 354, forgetting STARTTLS).
  */
 import assert from "node:assert/strict";
+import { payloadFiles } from "../../../tests/helpers/wechat-payload.mjs";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -444,8 +445,8 @@ await testAsync("imapFetch with nothing unread does no FETCH", async () => {
 
 test("the module ships with the package", () => {
   const pkg = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf8"));
-  assert.ok(pkg.files.includes("email.js"), "email.js must be published");
-  assert.ok(pkg.files.includes("email-wire.js"), "email-wire.js must be published");
+  assert.ok(payloadFiles.includes("email.js"), "email.js must be published");
+  assert.ok(payloadFiles.includes("email-wire.js"), "email-wire.js must be published");
   assert.ok(!/node_modules/.test(tmpdir()), "sanity: the temp dir is not part of the repo");
 });
 

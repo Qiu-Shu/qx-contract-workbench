@@ -6,13 +6,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_template_contains_both_case_memory_plugins_and_no_credentials():
-    patch = yaml.safe_load((ROOT / 'config/cordis.patch.yml').read_text(encoding='utf-8-sig'))
+    patch = yaml.safe_load((ROOT / 'packaging/payload-config/portable.json').read_text(encoding='utf-8-sig'))
     entries = [entry for group in patch for entry in group.get('insert', [])]
     plugins = {entry['id']: entry for entry in entries}
     ui = plugins['qx-case-memory-ui']
     assert ui.get('disabled') is not True
     assert ui['config']['workspace'].replace('\\', '/').endswith('/workspace')
-    assert Path(ui['name']).is_file()
+    assert (ROOT / ui['name'].removeprefix('@APP@/')).is_file()
     mcp = plugins['qx-case-memory']
     assert mcp['config']['serverName'] == 'qx_case_memory'
     assert Path(mcp['config']['args'][0]).name == 'case_memory_server.py'

@@ -2,7 +2,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),vm=requir
 async function boot({saved=true,healthy=false}={}){
   const seen={setup:0,main:0,dialogs:0,secretWrites:0};
   const runtime={readRuntime:async()=>healthy?{url:'http://127.0.0.1:54321/'}:null,readControl:()=>null,
-    inspectHost:async()=>{throw Error('Synthetic startup failure')},readHostState:()=>null};
+    inspectHost:async()=>{if(healthy)return {runtime:{url:'http://127.0.0.1:54321/'}};throw Error('Synthetic startup failure')},readHostState:()=>null};
   const app={getPath:()=>path.resolve('.local/startup-unit'),setName(){},setPath(){},on(){},once(){},quit(){},
     whenReady:()=>Promise.resolve(),requestSingleInstanceLock:()=>true,isPackaged:false};
   class Window{constructor(){seen.setup++}webContents={setWindowOpenHandler(){},on(){}};on(){}loadFile(){}static getAllWindows(){return []}}
@@ -15,7 +15,7 @@ async function boot({saved=true,healthy=false}={}){
     if(name==='./setup-service.cjs')return {};
     if(name==='./installed-runtime.cjs')return runtime;
     if(name==='./host-recovery.cjs')return {createEventLog:()=>()=>{},createHostMonitor:()=>({connected(){},reset(){},tick(){}})};
-    if(name==='./main.cjs'){seen.main++;seen.unavailable=context.qxStartUnavailable===true;context.qxMainReady=Promise.resolve();return {}};
+    if(name==='./main.cjs'){seen.main++;seen.unavailable=context.qxStartUnavailable===true;context.qxMainReady=Promise.resolve();context.qxReloadMain=async()=>{seen.unavailable=false};return {}};
     return require(name);
   };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'installed.cjs'),'utf8'),context);

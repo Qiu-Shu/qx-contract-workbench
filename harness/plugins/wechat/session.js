@@ -2,7 +2,7 @@
 export function isSessionExistsError(error) {
   return /already\s*exists|already\s*owned|SessionAlreadyExists|SessionAlreadyOwned/i.test(`${error?.name ?? ''} ${error?.message ?? ''}`);
 }
-export function describeError(error) { return String(error?.message ?? error ?? 'unknown error'); }
+export function describeError(error) { return String(error?.message ?? error?.name ?? error ?? 'unknown error'); }
 export async function openSessionAgent({agents,sessionId,meta,agentOptions,setup,isMissingSession=()=>false}={}) {
   if (!sessionId || !agents?.resume || !agents?.create) throw new Error('session identity and agents service required');
   const common={meta,...(agentOptions?{agentOptions}:{}),...(setup?{setup}:{})};

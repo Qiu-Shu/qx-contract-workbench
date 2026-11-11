@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "checked_at": "2026-11-06",
+  "sources": [
+    {"id":"national","title":"新华网","url":"https://www.news.cn/","allowed_hosts":["www.news.cn"],"source_kind":"news","refresh_minutes":30,"verification":"index_page_read"},
+    {"id":"jilin","title":"吉林省政府 · 吉林要闻","url":"https://www.jl.gov.cn/szyw/jlyw/index.html","allowed_hosts":["www.jl.gov.cn"],"source_kind":"news","refresh_minutes":120,"verification":"index_page_read"},
+    {"id":"labor-contract-law","title":"国家市场监管总局 · 劳动合同法","url":"https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/bgt/art/2023/art_0abfdd261c03417b949df19d869add8d.html","allowed_hosts":["www.samr.gov.cn"],"source_kind":"law","refresh_minutes":120,"verification":"page_text_read_legal_effect_not_reviewed"}
+  ]
+}

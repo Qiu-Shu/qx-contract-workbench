@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,readFile,readdir,writeFile,rm,access} from 'node:fs/promises';
+import {mkdtemp,readFile,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
@@ -9,12 +9,10 @@ import {createHash,randomBytes} from 'node:crypto';
 
 const root=resolve(fileURLToPath(new URL('../../',import.meta.url)));
 async function installed(name){
-  for(const dir of await readdir(join(root,'node_modules/.pnpm'))){
-    if(!dir.startsWith(name.replace('/','+').slice(0,25)))continue;
-    const file=join(root,'node_modules/.pnpm',dir,'node_modules',name,'package.json');
-    try{await access(file);return createRequire(file);}catch{}
-  }
-  throw Error('Installed package not found: '+name);
+  const local=createRequire(join(root,'package.json'));
+  const dsh=createRequire(local.resolve('@deepseek-ai/dsh/package.json'));
+  const base=createRequire(dsh.resolve('@deepseek-ai/dsh-base/package.json'));
+  return createRequire(base.resolve(name));
 }
 const mcpRequire=await installed('@deepseek-ai/dsh-mcp-client');
 const loaderRequire=await installed('@deepseek-ai/cordis-plugin-loader');

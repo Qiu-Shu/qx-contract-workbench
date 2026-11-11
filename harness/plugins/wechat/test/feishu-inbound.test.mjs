@@ -13,7 +13,7 @@
  * Run: node test/feishu-inbound.test.mjs
  */
 import assert from "node:assert/strict";
-import { readFileSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { mkdtemp, rm, utimes } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -683,9 +683,12 @@ await test("/state says which build is answering, and where it was loaded from",
     // fails everything this test exists for (reporting loadedAt, only the manifest's own mtime, or a constant, are all
     // minutes or hours away from the newest file), while the deterministic version of the same question lives in the
     // next test, which moves one file to a known timestamp and expects builtAt to follow it exactly.
-    const shipped = manifest.files ?? [];
+    // A private desktop plugin has no npm files[]; the route reports its local directory tree instead.
+    const shipped = manifest.files ?? readdirSync(pluginRoot, { recursive: true, withFileTypes: true })
+      .filter(entry => entry.isFile() && !/[\\/](?:node_modules|\.git)(?:[\\/]|$)/.test(entry.parentPath))
+      .map(entry => join(entry.parentPath, entry.name));
     const newest = Math.max(
-      ...shipped.map((file) => statSync(join(pluginRoot, file)).mtimeMs),
+      ...shipped.map((file) => statSync(resolve(pluginRoot, file)).mtimeMs),
       statSync(join(pluginRoot, "package.json")).mtimeMs,
     );
     const skewMs = Math.abs(Date.parse(state.builtAt) - newest);

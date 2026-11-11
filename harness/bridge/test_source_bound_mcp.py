@@ -1,3 +1,4 @@
+import os
 """New source-bound methods must be usable through actual MCP, not only direct imports."""
 import asyncio
 import hashlib
@@ -70,7 +71,7 @@ def test_source_bound_tools_are_registered_and_case_scoped(tmp_path):
                     {'role':'tool','tool_call_id':identifier,'content':json.dumps({'executed':True,'is_error':False,'result':value})}])
             root=Path(__file__).resolve().parents[1]
             checked=subprocess.run([
-                'C:/Users/Lenovo/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe',
+                os.environ.get('QX_TEST_NODE', 'node'),
                 str(root/'scripts/check_verified_delivery.mjs')],cwd=root,input=json.dumps({
                     'workspace':str(tmp_path),'messages':messages,
                     'result':{'choices':[{'message':{'content':'按2028年前后计算赔偿。'},'finish_reason':'stop'}]}}),
@@ -110,7 +111,7 @@ def test_source_bound_tools_are_registered_and_case_scoped(tmp_path):
                 messages.extend([{'role':'assistant','tool_calls':[{'id':identifier,'type':'function','function':{'name':name,'arguments':json.dumps(args)}}]},
                     {'role':'tool','tool_call_id':identifier,'content':json.dumps({'executed':True,'is_error':False,'result':value})}])
             checked=subprocess.run([
-                'C:/Users/Lenovo/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe',str(root/'scripts/check_verified_delivery.mjs')],
+                os.environ.get('QX_TEST_NODE', 'node'),str(root/'scripts/check_verified_delivery.mjs')],
                 cwd=root,input=json.dumps({'workspace':str(tmp_path),'messages':messages,
                     'result':{'choices':[{'message':{'content':'只完成最后一份。'},'finish_reason':'stop'}]}}),
                 text=True,encoding='utf-8',capture_output=True,check=True)

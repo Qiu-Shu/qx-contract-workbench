@@ -1,51 +1,36 @@
+"""The Python compatibility entry forwards to the current release pipeline."""
 import json
-import hashlib
+import os
 from pathlib import Path
-import tempfile
-import unittest
-from stage import bundle_node,portable_config,verify_office_engine
+import runpy
+from unittest.mock import patch
+import pytest
 
-class StageTests(unittest.TestCase):
-    def test_missing_or_corrupt_office_engine_cannot_be_packaged(self):
-        with tempfile.TemporaryDirectory(prefix='qx-office-package-') as folder:
-            payload=Path(folder)
-            with self.assertRaisesRegex(RuntimeError,'Office'):verify_office_engine(payload)
-            engine=payload/'node_modules/@deepseek-ai/libreoffice-kit-win32-x64'
-            engine.mkdir(parents=True)
-            (engine/'package.json').write_text(json.dumps({'name':'@deepseek-ai/libreoffice-kit-win32-x64','version':'0.1.5'}))
-            (engine/'bin').mkdir();(engine/'bin/helper.exe').write_bytes(b'synthetic engine')
-            digest=hashlib.sha256(b'synthetic engine').hexdigest()
-            (engine/'prebuilds.json').write_text(json.dumps({'version':'0.1.5','platform':'win32-x64','status':'built','files':{'bin/helper.exe':digest}}))
-            verify_office_engine(payload)
-            (engine/'bin/helper.exe').write_bytes(b'broken')
-            with self.assertRaisesRegex(RuntimeError,'Office'):verify_office_engine(payload)
-    def test_nearer_other_version_cannot_shadow_required_dependency(self):
-        with tempfile.TemporaryDirectory(prefix='qx-stage-') as folder:
-            root=Path(folder)
-            def package(directory,name,version,deps=None):
-                directory.mkdir(parents=True)
-                (directory/'package.json').write_text(json.dumps({'name':name,'version':version,'dependencies':deps or {}}))
-                return directory
-            a=package(root/'a','a','1.0.0')
-            q=package(root/'q','q','1.0.0')
-            p=package(root/'p','p','1.0.0',{'a':'2.0.0','q':'2.0.0'})
-            package(p/'node_modules/a','a','2.0.0')
-            q2=package(p/'node_modules/q','q','2.0.0',{'a':'1.0.0'})
-            package(q2/'node_modules/a','a','1.0.0')
-            bundle_node([(a,'a'),(q,'q'),(p,'p')],root/'out')
-            nested=root/'out/node_modules/p/node_modules/q/node_modules/a/package.json'
-            self.assertEqual(json.loads(nested.read_text())['version'],'1.0.0')
-    def test_portable_config_has_no_development_paths(self):
-        config=json.dumps(portable_config())
-        self.assertNotIn('C:/Users/Lenovo',config)
-        self.assertNotIn('D:/qx-',config)
-        self.assertIn('@DATA@/workspace',config)
-        self.assertIn('@APP@/runtime/windows/python.exe',config)
-    def test_verified_delivery_uses_the_data_workspace(self):
-        plugins=[p for block in portable_config() for p in block.get('insert',[])
-                 if p.get('id')=='qx-verified-delivery']
-        self.assertEqual(len(plugins),1)
-        self.assertEqual(plugins[0]['name'],'@APP@/plugins/verified-delivery/index.mjs')
-        self.assertEqual(plugins[0]['config']['workspace'],'@DATA@/workspace')
+ROOT = Path(__file__).resolve().parent
 
-if __name__=='__main__':unittest.main()
+
+@pytest.mark.parametrize('node,found,expected', [('explicit-node', None, 'explicit-node'), ('', 'path-node', 'path-node')])
+def test_wrapper_forwards_arguments_and_child_failure(node, found, expected):
+    with patch.dict(os.environ, {'QX_BUILD_NODE': node}), patch('shutil.which', return_value=found), \
+         patch('sys.argv', [str(ROOT/'stage.py'), 'synthetic stage', '--refresh']), \
+         patch('subprocess.call', return_value=7) as call:
+        with pytest.raises(SystemExit) as result:
+            runpy.run_path(str(ROOT/'stage.py'), run_name='__main__')
+    assert result.value.code == 7
+    call.assert_called_once_with([expected, str(ROOT/'stage.cjs'), 'synthetic stage', '--refresh'])
+
+
+def test_wrapper_reports_missing_node_before_staging():
+    with patch.dict(os.environ, {'QX_BUILD_NODE': ''}), patch('shutil.which', return_value=None), \
+         patch('subprocess.call') as call:
+        with pytest.raises(SystemExit, match='Node.js 24 is required'):
+            runpy.run_path(str(ROOT/'stage.py'), run_name='__main__')
+    call.assert_not_called()
+
+
+def test_packaged_verified_delivery_uses_the_data_workspace():
+    rows = json.loads((ROOT/'payload-config/portable.json').read_text(encoding='utf-8'))
+    plugins = [p for block in rows for p in block.get('insert', []) if p.get('id') == 'qx-verified-delivery']
+    assert len(plugins) == 1
+    assert plugins[0]['name'] == '@APP@/plugins/verified-delivery/index.mjs'
+    assert plugins[0]['config']['workspace'] == '@DATA@/workspace'

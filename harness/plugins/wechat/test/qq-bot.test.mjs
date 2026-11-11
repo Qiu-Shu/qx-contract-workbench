@@ -4,6 +4,7 @@
  * wrong endpoint for groups).
  */
 import assert from "node:assert/strict";
+import { payloadFiles } from "../../../tests/helpers/wechat-payload.mjs";
 
 const qq = await import("../qq-bot.js");
 
@@ -179,12 +180,13 @@ await test("the constructor accepts the callbacks the way the other transports d
 await test("the module ships", async () => {
   const { readFileSync } = await import("node:fs");
   const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
-  assert.ok(pkg.files.includes("qq-bot.js"), "qq-bot.js must be in files[] or an install cannot import it");
+  assert.ok(payloadFiles.includes("qq-bot.js"), "qq-bot.js must be included in the desktop payload or an install cannot import it");
 });
 
-test("the reconnect schedule widens and is capped, and an explicit stop cancels it", async () => {
+await test("the reconnect schedule widens and is capped, and an explicit stop cancels it", async () => {
   // Before 1.5.16 nothing was scheduled at all: closed / error / op-7-reconnect were logged and forgotten, so the bot stayed offline
   // until the app restarted. The schedule is pure, so it is asserted here; the wiring is asserted next.
+  const { readFileSync } = await import("node:fs");
   const source = readFileSync(new URL("../index.js", import.meta.url), "utf8");
   assert.match(source, /function qqReconnectDelay\(attempts\)/, "there is a backoff function");
   assert.match(source, /Math\.min\(60_000, 1_000 \* 2 \*\* Math\.min\(step, 6\)\)/, "1s, 2s, 4s … capped at a minute");

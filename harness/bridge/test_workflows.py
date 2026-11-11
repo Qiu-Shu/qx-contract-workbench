@@ -70,7 +70,7 @@ class WorkflowTests(unittest.TestCase):
                 self.assertTrue(path.is_relative_to(directory.resolve()))
                 self.assertTrue(path.is_file(), relative)
             for name in workflows.workflow(skill)['suggested_skills']:
-                self.assertTrue((workflows.SKILLS.parents[1] / 'workspace/.dsh/skills' / name / 'SKILL.md').is_file(), name)
+                self.assertTrue((workflows.PACKAGED_SKILLS / name / 'SKILL.md').is_file(), name)
 
     def test_recorded_old_source_hashes_match_used_bytes(self):
         old = Path('D:/qx-contract-workbench-20261102')

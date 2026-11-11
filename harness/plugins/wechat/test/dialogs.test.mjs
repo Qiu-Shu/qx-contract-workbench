@@ -2,6 +2,7 @@
 // the panel. Nothing here opens a window - `run` is injected, which is the whole reason the dialog was written as a
 // pair of pure-ish functions rather than inline PowerShell in a route handler.
 import assert from "node:assert/strict";
+import { payloadFiles } from "../../../tests/helpers/wechat-payload.mjs";
 import { readFileSync } from "node:fs";
 import { dirname, join as joinPath } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -100,7 +101,7 @@ await test("a file filter reaches the dialog, because a list of every file is no
 });
 await test("dialogs.js is shipped with the package", () => {
   const pkg = JSON.parse(readFileSync(joinPath(pluginDir, "package.json"), "utf8"));
-  assert.ok(pkg.files.includes("dialogs.js"), "dialogs.js is in the published files");
+  assert.ok(payloadFiles.includes("dialogs.js"), "dialogs.js is in the published files");
 });
 
 console.log(`\n${passed.length} passed, ${failed.length} failed`);

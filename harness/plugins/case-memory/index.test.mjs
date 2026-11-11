@@ -73,7 +73,7 @@ test('isolated real Python roundtrip preserves sources, revisions and case isola
   const corrected=await post('update',{case_id:ids.a,memory_id:added.memory.id,revision:added.memory.revision,content:'修订记忆正文'});
   assert.equal(corrected.memory.source.snapshot,'合成来源原文');
   const stale=await request('update',{method:'POST',body:JSON.stringify({case_id:ids.a,memory_id:added.memory.id,revision:added.memory.revision,content:'过时覆盖'})});
-  assert.equal(stale.status,400);
+  assert.equal(stale.status,409);
   const found=await get('recall?case_id='+ids.a+'&query='+encodeURIComponent('修订'));
   assert.equal(found.matches.length,1);
   const read=await get('read?case_id='+ids.a+'&memory_id='+added.memory.id);assert.ok(read.memory||read.id);

@@ -2,6 +2,7 @@
 // reports. The session is a fake that answers Runtime.evaluate from a table, so the runner is exercised without a
 // browser - the shapes it sends are the same ones browser.js sends (see its header for the measured originals).
 import assert from "node:assert/strict";
+import { payloadFiles } from "../../../tests/helpers/wechat-payload.mjs";
 
 const { normalizeFlow, extractExpression, runFlow, formatFlowResult, startRecording, stopRecording, FLOW_STEP_TYPES, expandHome, exportFileName, resolveExportPath, pickPath, flattenRows, biggestObjectArray } = await import("../flow.js");
 import { join as joinPath0 } from "node:path";
@@ -216,7 +217,7 @@ await test("the flow tools are registered against the shared browser session", (
 
 await test("flow.js is shipped with the package", () => {
   const pkg = JSON.parse(readFileSync(joinPath(pluginDir, "package.json"), "utf8"));
-  assert.ok(pkg.files.includes("flow.js"), "flow.js is in the published files");
+  assert.ok(payloadFiles.includes("flow.js"), "flow.js is in the published files");
 });
 
 console.log(`\n${passed.length} passed, ${failed.length} failed`);

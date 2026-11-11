@@ -118,20 +118,19 @@ export function decryptSecrets(prefs, reveal) {
 /**
  * The PowerShell that does the DPAPI call.
  *
- * Both directions take base64 in `DSH_SECRET_IN` and decode it themselves: for `protect` that is base64 of the
- * plaintext (so any Unicode survives the command line), for `reveal` it is the ciphertext, which is already
+ * Both directions take base64 over stdin and decode it themselves: for `protect` that is base64 of the
+ * plaintext (so any Unicode survives), for `reveal` it is the ciphertext, which is already
  * base64. Encoding the ciphertext a second time is a mistake that *looks* like a working call - PowerShell
  * decodes to the base64 text instead of the blob and DPAPI rejects it with "invalid data".
  */
-export function dpapiScript(mode, base64Input) {
+export function dpapiScript(mode) {
   const body = mode === "protect"
     ? "[Convert]::ToBase64String([Security.Cryptography.ProtectedData]::Protect($bytes, $null, 'CurrentUser'))"
     : "[Text.Encoding]::UTF8.GetString([Security.Cryptography.ProtectedData]::Unprotect($bytes, $null, 'CurrentUser'))";
   return [
     "$ErrorActionPreference = 'Stop'",
     "Add-Type -AssemblyName System.Security",
-    `$env:DSH_SECRET_IN = '${base64Input}'`,
-    "$bytes = [Convert]::FromBase64String($env:DSH_SECRET_IN)",
+    "$bytes = [Convert]::FromBase64String([Console]::In.ReadToEnd())",
     body,
   ].join("\n");
 }
@@ -143,10 +142,11 @@ export function dpapiScript(mode, base64Input) {
 export function dpapi({ platform = process.platform, exec } = {}) {
   const supported = platform === "win32" && typeof exec === "function";
   const run = async (mode, text) => {
-    // protect: base64 the plaintext so Unicode survives the command line. reveal: the ciphertext is already
+    // protect: base64 the plaintext so Unicode survives stdin. reveal: the ciphertext is already
     // base64 - encoding it again would hand PowerShell the base64 text rather than the blob.
     const input = mode === "protect" ? Buffer.from(String(text), "utf8").toString("base64") : String(text);
-    const out = await exec("powershell", ["-NoProfile", "-NonInteractive", "-Command", dpapiScript(mode, input)], { timeoutMs: 15000 });
+    // Stdin also avoids Windows' command-line size limit and keeps credentials out of process arguments.
+    const out = await exec("powershell", ["-NoProfile", "-NonInteractive", "-Command", dpapiScript(mode)], { timeoutMs: 15000, stdin: input });
     const value = String(out ?? "").trim();
     if (!value) throw new Error("DPAPI 没有返回内容");
     return value;

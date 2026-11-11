@@ -7,9 +7,9 @@ import assert from "node:assert/strict";
 
 let passed = 0;
 let failed = 0;
-function test(name, fn) {
+async function test(name, fn) {
   try {
-    fn();
+    await fn();
     passed += 1;
     console.log(`  ok   ${name}`);
   } catch (error) {
@@ -39,14 +39,14 @@ const PREFS = {
   wecom: { botId: "aibo3S7u" },
 };
 
-test("an app id is an identifier, a secret is a secret", () => {
+await test("an app id is an identifier, a secret is a secret", () => {
   const names = SECRET_PATHS.map(([section, field]) => `${section}.${field}`);
   assert.ok(names.includes("feishu.appSecret"));
   assert.ok(names.includes("tavily.apiKey"));
   assert.equal(names.includes("feishu.appId"), false, "encrypting an app id buys nothing and hides it from debugging");
 });
 
-test("encrypting wraps every secret and touches nothing else", () => {
+await test("encrypting wraps every secret and touches nothing else", () => {
   const sealed = encryptSecrets(PREFS, (value) => Buffer.from(value).toString("base64"));
   assert.equal(sealed.feishu.appSecret.startsWith(CIPHER_PREFIX), true);
   assert.equal(sealed.tavily.apiKey.startsWith(CIPHER_PREFIX), true);
@@ -57,13 +57,13 @@ test("encrypting wraps every secret and touches nothing else", () => {
   assert.equal(PREFS.feishu.appSecret.length, 32, "and the original is not modified");
 });
 
-test("encrypting twice does not wrap twice", () => {
+await test("encrypting twice does not wrap twice", () => {
   const once = encryptSecrets(PREFS, (v) => Buffer.from(v).toString("base64"));
   const twice = encryptSecrets(once, (v) => Buffer.from(v).toString("base64"));
   assert.deepEqual(twice, once);
 });
 
-test("decrypting restores the plaintext, and plain values pass through", () => {
+await test("decrypting restores the plaintext, and plain values pass through", () => {
   const sealed = encryptSecrets(PREFS, (v) => Buffer.from(v).toString("base64"));
   const opened = decryptSecrets(sealed, (b64) => Buffer.from(b64, "base64").toString("utf8"));
   assert.equal(opened.feishu.appSecret, PREFS.feishu.appSecret);
@@ -74,14 +74,14 @@ test("decrypting restores the plaintext, and plain values pass through", () => {
   assert.equal(openedMixed.feishu.appSecret, "still-plain");
 });
 
-test("plaintextSecrets names what is still exposed", () => {
+await test("plaintextSecrets names what is still exposed", () => {
   assert.deepEqual(plaintextSecrets(PREFS).sort(), ["feishu.appSecret", "tavily.apiKey"]);
   const sealed = encryptSecrets(PREFS, (v) => Buffer.from(v).toString("base64"));
   assert.deepEqual(plaintextSecrets(sealed), []);
   assert.deepEqual(plaintextSecrets({}), [], "no blocks, nothing to report");
 });
 
-test("a block that is absent is not invented", () => {
+await test("a block that is absent is not invented", () => {
   const out = mapSecrets({ autoReply: true }, (v) => `x${v}`);
   assert.deepEqual(out, { autoReply: true }, "no feishu/wecom keys appear out of nowhere");
   const empty = mapSecrets({ feishu: { appId: "cli" } }, (v) => `x${v}`);
@@ -90,7 +90,7 @@ test("a block that is absent is not invented", () => {
   assert.equal(isEncrypted(null), false);
 });
 
-test("off Windows the protector says so instead of pretending", async () => {
+await test("off Windows the protector says so instead of pretending", async () => {
   const none = dpapi({ platform: "linux" });
   assert.equal(none.available, false);
   await assert.rejects(() => none.protect("x"), /没有 DPAPI/);
@@ -99,13 +99,28 @@ test("off Windows the protector says so instead of pretending", async () => {
   assert.equal(await win.protect("abc"), "QUJD");
 });
 
-test("the DPAPI script asks for the current user scope, in both directions", () => {
-  const protect = dpapiScript("protect", "QUJD");
+await test("the DPAPI script asks for the current user scope, in both directions", () => {
+  const protect = dpapiScript("protect");
   assert.match(protect, /ProtectedData\]::Protect\(\$bytes, \$null, 'CurrentUser'\)/);
-  const reveal = dpapiScript("reveal", "QUJD");
+  const reveal = dpapiScript("reveal");
   assert.match(reveal, /ProtectedData\]::Unprotect\(\$bytes, \$null, 'CurrentUser'\)/);
-  assert.match(protect, /\$env:DSH_SECRET_IN = 'QUJD'/);
+  assert.match(protect, /\[Console\]::In\.ReadToEnd\(\)/);
   assert.doesNotMatch(protect, /Unprotect/, "the two directions cannot drift into each other");
+});
+
+await test("DPAPI passes large input over stdin and keeps credentials out of process arguments", async () => {
+  const secret = 'synthetic-凭据-'.repeat(4000);
+  const plaintextInput = Buffer.from(secret, 'utf8').toString('base64');
+  let calls = 0;
+  const protector = dpapi({ platform: 'win32', exec: async (_file, args, options) => {
+    assert.ok(args.join(' ').length < 1024);
+    assert.equal(args.join(' ').includes(plaintextInput), false);
+    assert.equal(options.stdin, calls++ === 0 ? plaintextInput : 'QUJD');
+    return 'QUJD';
+  } });
+  assert.equal(await protector.protect(secret), 'QUJD');
+  assert.equal(await protector.reveal('QUJD'), 'QUJD');
+  assert.equal(calls, 2);
 });
 
 // ── the paths that arrived later ──────────────────────────────────────────
@@ -130,7 +145,7 @@ await test("the secret table covers the QQ client secret and the top-level webho
   assert.equal(encryptSecrets(sealed, (value) => `dpapi:${value}`).webhookSecret, "dpapi:s");
 });
 
-test("every secret path is masked by publicPrefs", async () => {
+await test("every secret path is masked by publicPrefs", async () => {
   // 1.6.5: the email passwords came back in the clear from /state, because publicPrefs kept a hand-written list per channel and the email
   // block was added without one. The masking loop now reads the store's own SECRET_PATHS; this test walks that list.
   const { maskSecretPrefs, SECRET_PATHS } = await import("../secrets.js");
@@ -145,7 +160,7 @@ test("every secret path is masked by publicPrefs", async () => {
   }
 });
 
-test("a block with two secrets masks both, not just the last one", async () => {
+await test("a block with two secrets masks both, not just the last one", async () => {
   // The loop copied { ...source } each time, so the second email field restored the first to plaintext. One secret per block had hidden it.
   const { maskSecretPrefs } = await import("../secrets.js");
   const safe = maskSecretPrefs({ email: { smtpPass: "smtp-secret", imapPass: "imap-secret", user: "a@b.c" } });

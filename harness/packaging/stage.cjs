@@ -27,6 +27,19 @@ function copySource(from,to,target,manifest){
   fs.copyFileSync(from,to);
   manifest.push({source:path.relative(root,from).split(path.sep).join('/'),target,sha256:crypto.createHash('sha256').update(fs.readFileSync(from)).digest('hex')});
 }
+function copyMediaRegistry(source,payload,manifest){
+  const registry=JSON.parse(fs.readFileSync(source,'utf8')),ids=new Set();
+  if(registry.version!==1||!Array.isArray(registry.sources)||!registry.sources.length)throw Error('Invalid media source registry');
+  for(const item of registry.sources){
+    let url;try{url=new URL(item.url);}catch{throw Error('Invalid media source registry URL');}
+    if(typeof item.id!=='string'||!item.id||ids.has(item.id)||typeof item.title!=='string'||!item.title||
+      url.protocol!=='https:'||url.username||url.password||!Array.isArray(item.allowed_hosts)||!item.allowed_hosts.includes(url.hostname)||
+      !['news','law'].includes(item.source_kind)||!Number.isInteger(item.refresh_minutes)||item.refresh_minutes<=0)throw Error('Invalid media source registry');
+    ids.add(item.id);
+  }
+  fs.mkdirSync(path.join(payload,'sources'),{recursive:true});
+  copySource(source,path.join(payload,'sources/media-source-registry.json'),'resources/workbench/sources/media-source-registry.json',manifest);
+}
 async function main(){
   if(process.platform!=='win32')throw Error('Windows x64 release staging requires Windows');
   if(!process.argv[2])throw Error('Usage: node stage.cjs <new-stage-directory> [verified-0.2.14-installer]');
@@ -66,6 +79,7 @@ async function refresh(stage){
   asar.extractAll(path.join(base,'resources/app.asar'),app);
   const manifest=[];
   for(const folder of ['bridge','plugins','legacy','workspace-seed'])overlay(path.join(root,folder),path.join(payload,folder),manifest,'resources/workbench/'+folder);
+  copyMediaRegistry(path.join(root,'sources/media-source-registry.json'),payload,manifest);
   overlay(path.join(__dirname,'payload-config'),path.join(payload,'config'),manifest,'resources/workbench/config');
   overlay(path.join(__dirname,'runtime-overrides'),path.join(payload,'node_modules'),manifest,'resources/workbench/node_modules');
   for(const name of ['component-install.py','python-tool.py'])copySource(path.join(__dirname,name),path.join(payload,name),'resources/workbench/'+name,manifest);
@@ -88,4 +102,4 @@ async function refresh(stage){
   console.log(JSON.stringify({stage,base,candidate,sourceFiles:manifest.length}));
 }
 if(require.main===module)main().catch(error=>{console.error(error);process.exitCode=1});
-module.exports={overlay,digest};
+module.exports={overlay,digest,copyMediaRegistry};

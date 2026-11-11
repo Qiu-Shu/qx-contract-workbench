@@ -37,6 +37,14 @@ function context({deferReplies=false,onFollowup=()=>{}}={}) {
 }
 async function getState(env){let payload;await env.routes.get('/qx-wechat/state')({method:'GET',headers:{host:'127.0.0.1:3080'},socket:{remoteAddress:'127.0.0.1'}},{writeHead(){},end(text){payload=JSON.parse(text);}});return payload;}
 
+async function waitFor(predicate, description) {
+  const deadline = Date.now() + 30000;
+  while (!await predicate()) {
+    assert.ok(Date.now() < deadline, `Timed out waiting for ${description}`);
+    await new Promise(resolve => setTimeout(resolve, 20));
+  }
+}
+
 test('fresh installation mounts personal file lookup/send tools and settings, with no requests',async()=>{
   const root=await mkdtemp(join(tmpdir(),'qx-empty-'));
   const original=globalThis.fetch;globalThis.fetch=()=>{throw new Error('network forbidden');};
@@ -140,7 +148,7 @@ test('synthetic owner burst preserves good text and attachment, flags failed med
   };
   const env=context();try{
     await apply(env.ctx,{workspace:join(root,'workspace'),stateDir,sessionId:'fixed-session',coalesceQuietMs:30,coalesceMediaQuietMs:50});
-    for(let i=0;i<100&&sends.length<1;i++)await new Promise(resolve=>setTimeout(resolve,10));
+    await waitFor(() => sends.length >= 1, 'the owner reply after protected credential persistence');
     assert.equal(sends.length,1);assert.ok(sends.every(s=>s.msg.to_user_id==='owner'));
     assert.deepEqual(env.counts(),{created:1,resumed:1,turn:1});
     assert.equal((await getState(env)).ignored,2);
@@ -179,15 +187,15 @@ test('actual plugin keeps polling and persists the next burst while the first mo
   };
   try{
     await apply(env.ctx,{workspace:join(root,'workspace'),stateDir,sessionId:'fixed-session',coalesceQuietMs:20,coalesceMediaQuietMs:30});
-    for(let i=0;i<150;i++){if((await getState(env)).batching.pendingMessages===2&&await state.loadCursor('bot')==='cursor-2')break;await new Promise(r=>setTimeout(r,10));}
+    await waitFor(async () => (await getState(env)).batching.pendingMessages === 2 && await state.loadCursor('bot') === 'cursor-2', 'the persisted second burst');
     let snapshot=await getState(env);assert.equal(snapshot.batching.active,true);assert.equal(snapshot.batching.pendingMessages,2);assert.equal(env.messages.length,1);assert.equal(sends.length,0);assert.ok(polls>=2);
     const pending=JSON.parse(await readFile(join(stateDir,'qx-pending.json'),'utf8'));
     assert.equal(pending.pending[0].items.length,2);assert.equal(await state.loadCursor('bot'),'cursor-2');
     assert.ok(!JSON.stringify(pending).includes('synthetic-context'));assert.ok(!JSON.stringify(pending).includes('synthetic-not-real'));
     env.completeNext();
-    for(let i=0;i<100&&env.messages.length<2;i++)await new Promise(r=>setTimeout(r,10));
+    await waitFor(() => env.messages.length >= 2, 'the second model turn');
     assert.equal(env.messages.length,2);assert.equal(sends.length,1);assert.ok(env.messages[1].content[0].text.includes('第二批上半段'));assert.ok(env.messages[1].content[0].text.includes('第二批补充'));assert.ok(!env.messages[1].content[0].text.includes('重复'));
-    env.completeNext();for(let i=0;i<100&&(await getState(env)).batching.active;i++)await new Promise(r=>setTimeout(r,10));
+    env.completeNext();await waitFor(async () => !(await getState(env)).batching.active, 'the completed second reply');
     assert.equal(sends.length,2);snapshot=await getState(env);assert.equal(snapshot.batching.pendingMessages,0);assert.equal(snapshot.batching.failed,0);
   }finally{env.completeNext();env.stop();globalThis.fetch=original;}
 });
@@ -204,7 +212,7 @@ test('an unreadable attachment-only batch reports failure without a model reques
  };
  try{
   await apply(env.ctx,{workspace:join(root,'workspace'),stateDir,sessionId:'fixed-session',coalesceMediaQuietMs:20});
-  for(let i=0;i<100&&(await getState(env)).batching.failed===0;i++)await new Promise(r=>setTimeout(r,10));
+  await waitFor(async () => (await getState(env)).batching.failed > 0, 'the unreadable-attachment failure reply');
   assert.equal(env.messages.length,0);assert.equal(sends.length,1);assert.equal((await getState(env)).batching.failed,1);assert.match(JSON.stringify(sends),/没有可读取内容/);
  }finally{env.stop();globalThis.fetch=original;}
 });

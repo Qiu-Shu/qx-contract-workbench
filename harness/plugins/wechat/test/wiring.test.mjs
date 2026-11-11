@@ -17,6 +17,7 @@
  * Run: node test/wiring.test.mjs
  */
 import assert from "node:assert/strict";
+import { payloadFiles } from "../../../tests/helpers/wechat-payload.mjs";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -545,13 +546,13 @@ await test("secrets are sealed at rest, and the state says how", () => {
   assert.match(host, /secrets: await state\.secretsStatus\(\)/, "/state reports the at-rest status");
   assert.match(host, /sealed %d secret\(s\) with DPAPI/, "startup seals what is still plaintext");
   const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
-  assert.ok(pkg.files.includes("secrets.js"), "the module ships");
+  assert.ok(payloadFiles.includes("secrets.js"), "the module ships");
 });
 
 await test("office tools are registered, honest about a missing toolchain, and reachable", () => {
   const officeSource = readFileSync(join(root, "office.js"), "utf8");
   const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
-  assert.ok(pkg.files.includes("office.js"), "the module ships");
+  assert.ok(payloadFiles.includes("office.js"), "the module ships");
   assert.match(host, /import \* as office from "\.\/office\.js"/, "the host imports it");
   for (const tool of ["office_read", "office_write", "office_convert", "office_render"]) {
     assert.match(host, new RegExp(`name: "${tool}"`), `${tool} exists`);

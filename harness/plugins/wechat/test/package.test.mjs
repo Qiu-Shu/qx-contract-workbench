@@ -1,9 +1,10 @@
 /**
- * Packaging checks: the things that silently break a published dsh plugin.
+ * Packaging checks for the private desktop plugin and retained upstream modules.
  *
  * Run: node test/package.test.mjs
  */
 import assert from "node:assert/strict";
+import { payloadFiles } from "../../../tests/helpers/wechat-payload.mjs";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -12,12 +13,12 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
 
 /**
- * Every shipped JavaScript module that runs on the host: taken from the manifest, so
- * a new module cannot be published without also being import-checked here. The client
+ * Every shipped JavaScript module that runs on the host: taken from the real desktop overlay, so
+ * a new module cannot be shipped without also being import-checked here. The client
  * half is excluded because it is bundled for the browser, not resolved by node.
  */
 function hostModules() {
-  return pkg.files.filter((file) => file.endsWith(".js") && file !== "client.js");
+  return payloadFiles.filter((file) => file.endsWith(".js") && file !== "client.js");
 }
 
 let passed = 0;
@@ -36,36 +37,38 @@ function test(name, fn) {
 console.log("packaging");
 
 test("manifest declares what dsh needs", () => {
-  assert.equal(pkg.name, "dsh-wechat-media");
+  assert.equal(pkg.name, "@qunxing/personal-wechat");
   assert.match(pkg.version, /^\d+\.\d+\.\d+$/);
   assert.equal(pkg.type, "module");
   assert.equal(pkg.license, "MIT");
-  assert.ok(pkg.repository?.url?.includes("dsh-wechat-media"));
+  assert.equal(pkg.private, true);
   assert.equal(pkg.dsh?.bundle?.patch, "./cordis.patch.yml");
-  assert.equal(pkg.dsh?.client?.platform, "web");
+  assert.equal(pkg.main, "qx-plugin.js");
 });
 
 test("every published file exists", () => {
-  for (const file of pkg.files) {
+  for (const file of payloadFiles) {
     assert.ok(existsSync(join(root, file)), `files entry missing on disk: ${file}`);
   }
 });
 
-test("exports point at real files and cover the client half", () => {
+test("exports point at the supported desktop entry and real payload files", () => {
   assert.ok(existsSync(join(root, pkg.main)), `main missing: ${pkg.main}`);
   for (const [key, target] of Object.entries(pkg.exports)) {
     if (key === "./package.json") continue;
     assert.ok(existsSync(join(root, target)), `exports["${key}"] missing: ${target}`);
+    assert.ok(payloadFiles.includes(target.replace(/^\.\//, "")), `export missing from desktop payload: ${target}`);
   }
-  assert.equal(pkg.exports["./client"], "./client.js");
+  assert.equal(pkg.exports["."], "./qx-plugin.js");
+  for (const file of ["state.js", "credential-files.js", "secrets.js", "qx-panel.html"]) {
+    assert.ok(payloadFiles.includes(file), `desktop credential/settings dependency missing: ${file}`);
+  }
 });
 
-test("the client inject list holds PACKAGE names", () => {
-  const inject = pkg.dsh.client.inject ?? [];
-  assert.ok(inject.length > 0, "dsh.client.inject must not be empty");
-  for (const name of inject) {
-    assert.ok(name.startsWith("@deepseek-ai/"), `unexpected package name: ${name}`);
-  }
+test("the desktop manifest does not activate the unrelated upstream client", () => {
+  assert.equal(pkg.dsh.client, undefined);
+  assert.equal(pkg.exports["./client"], undefined);
+  assert.ok(payloadFiles.includes("qx-panel.html"), "the supported personal-WeChat settings panel ships");
 });
 
 test("the client module inject list holds SERVICE names", () => {
@@ -91,7 +94,7 @@ test("every relative import resolves", () => {
   for (const source of hostModules()) {
     assert.ok(existsSync(join(root, source)), `published source missing: ${source}`);
     const text = readFileSync(join(root, source), "utf8");
-    for (const match of text.matchAll(/from\s+"(\.[^"]+)"/g)) {
+    for (const match of text.matchAll(/from\s+["'](\.[^"']+)["']/g)) {
       const target = join(root, dirname(source), match[1]);
       assert.ok(existsSync(target), `${source} imports missing module ${match[1]}`);
     }
@@ -99,24 +102,22 @@ test("every relative import resolves", () => {
 });
 
 test("every module a published module imports is published too", () => {
-  // `files[]` is a whitelist: a module that is imported but not listed still works in a checkout and is missing from
-  // every installed copy. Measured from a real `dsh plugin add github:` install: importing `index.js` died on
-  // `Cannot find module .../modelguard.js`, because `modelguard.js` was never added to the list when it was written.
-  const published = new Set(pkg.files.map((file) => file.replace(/\\/g, "/")));
+  // Check real staging output: a dependency present only in the checkout still breaks every installed copy.
+  const published = new Set(payloadFiles.map((file) => file.replace(/\\/g, "/")));
   for (const source of hostModules()) {
     const text = readFileSync(join(root, source), "utf8");
-    for (const match of text.matchAll(/from\s+"(\.[^"]+)"/g)) {
+    for (const match of text.matchAll(/from\s+["'](\.[^"']+)["']/g)) {
       const target = join(dirname(source), match[1]).replace(/\\/g, "/");
       assert.ok(
         published.has(target),
-        `${source} imports ${target}, which is missing from package.json files[]`,
+        `${source} imports ${target}, which is missing from the desktop payload`,
       );
     }
   }
   // The SILK encoder is loaded by path at runtime rather than imported by name, so it needs its own line: a missing
   // wasm makes every voice message silently unsendable in an installed copy.
   for (const asset of ["vendor/silk-wasm/index.mjs", "vendor/silk-wasm/silk.wasm"]) {
-    assert.ok(published.has(asset), `${asset} must be listed in package.json files[]`);
+    assert.ok(published.has(asset), `${asset} must be included by the desktop payload copy`);
     assert.ok(existsSync(join(root, asset)), `${asset} must exist on disk`);
   }
 });
@@ -126,18 +127,17 @@ test("the host half never statically imports a harness package", () => {
   // so those must go through the loader at runtime instead.
   for (const source of hostModules()) {
     const text = readFileSync(join(root, source), "utf8");
-    for (const match of text.matchAll(/^\s*import[^;]*from\s+"(@deepseek-ai\/[^"]+)"/gm)) {
+    for (const match of text.matchAll(/^\s*import[^;]*from\s+["'](@deepseek-ai\/[^"']+)["']/gm)) {
       assert.fail(`${source} statically imports ${match[1]}; use ctx.loader.internal.import`);
     }
   }
 });
 
 test("every document ships and the README links to it", () => {
-  // A document that is not in files[] never reaches an installed copy, and one nobody
-  // links to is never found - both are silent losses, so both are checked here.
+  // Check both the desktop payload and the README links.
   const readme = readFileSync(join(root, "README.md"), "utf8");
   for (const doc of ["docs/build-a-knowledge-base.md", "docs/proxy-and-domains.md"]) {
-    assert.ok(pkg.files.includes(doc), `${doc} must be listed in package.json files[]`);
+    assert.ok(payloadFiles.includes(doc), `${doc} must be included by the desktop payload copy`);
     assert.ok(existsSync(join(root, doc)), `${doc} must exist on disk`);
     assert.ok(readme.includes(`./${doc}`), `README.md must link to ./${doc}`);
   }
@@ -160,7 +160,8 @@ test("the proxy preset and the browser routes stay documented together", () => {
 test("the patch inserts exactly one row and carries no secret", () => {
   const yaml = readFileSync(join(root, "cordis.patch.yml"), "utf8");
   const inserts = [...yaml.matchAll(/- id: ([A-Za-z0-9_-]+)/g)].map((m) => m[1]);
-  assert.deepEqual(inserts, ["wechat-media"]);
+  assert.deepEqual(inserts, ["qx-personal-wechat"]);
+  assert.match(yaml, /plugins\/wechat\/qx-plugin\.js/);
   assert.ok(!/tvly-|Bearer\s+[A-Za-z0-9]/.test(yaml), "no credential may appear in the patch");
 });
 

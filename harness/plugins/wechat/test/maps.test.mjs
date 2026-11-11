@@ -4,6 +4,7 @@
 // there is no feed here - but "is it a valid expression, and does it still contain the selectors Maps uses". The
 // selectors are the part that breaks when Maps changes its markup, and the failure should be loud.
 import assert from "node:assert/strict";
+import { payloadFiles } from "../../../tests/helpers/wechat-payload.mjs";
 import { readFileSync } from "node:fs";
 import { dirname, join as joinPath } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -52,7 +53,7 @@ await test("the tool is registered and saves with the same rules as everything e
   assert.match(host, /"browser_maps_places"/);
   assert.match(host, /mapsPlacesExpression\(\{ limit \}\)/, "it uses the expression above");
   assert.match(host, /saveFlowRows\(target, all, \{ name: "maps" \}\)/, "and the shared export path");
-  assert.ok(pkg.files.includes("maps.js"), "maps.js is published");
+  assert.ok(payloadFiles.includes("maps.js"), "maps.js is published");
 });
 
 await test("several searches merge and de-duplicate, because one search stops at about 90", () => {

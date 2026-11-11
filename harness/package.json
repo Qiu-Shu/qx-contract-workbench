@@ -4,6 +4,12 @@
   "private": true,
   "description": "群兴本机法律工作台：Harness 与文档工具集成",
   "type": "module",
+  "scripts": {
+    "test": "node scripts/test-suite.cjs offline",
+    "test:offline": "node scripts/test-suite.cjs offline",
+    "test:windows": "node scripts/test-suite.cjs windows",
+    "test:quality": "node scripts/test-suite.cjs quality"
+  },
   "engines": {
     "node": ">=24.9.0"
   },

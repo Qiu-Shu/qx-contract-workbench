@@ -325,7 +325,8 @@ def test_representation_preserves_proposal_counter_basis_and_complete_internal_c
     assert result['completion_status'] == 'conditional_draft'
     assert request['quote'] in text(result['path']) and fact['quote'] in text(result['path'])
     assert source in text(result['internal_path'])
-    assert result['source_contexts'] == [{'path': ref['path'], 'sha256': ref['sha256'], 'chunk': 0, 'text': source}]
+    assert result['source_contexts'] == [{'path': ref['path'], 'sha256': ref['sha256'], 'chunk': 0, 'text': source,
+                                        'location': 'text:0:chars:0-40', 'parse_warnings': [], 'failed_pages': []}]
     assert result['selected_sections']['requests'] == 1 and result['selected_sections']['facts'] == 1
     assert result['missing_sections'] == ['parties', 'sections']
     assert '待审条件请求' in result['user_summary'] and '已确认' not in result['user_summary']

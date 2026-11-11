@@ -10,13 +10,15 @@ const vendor=path.resolve(__dirname,'../.local/install-speed-check/hdiff-proof/v
 const hpatchz=process.env.QX_HPATCHZ_TEST_EXE||path.join(vendor,'hpatchz.exe');
 const hdiffz=process.env.QX_HDIFFZ_TEST_EXE||path.join(path.dirname(hpatchz),'hdiffz.exe');
 const native=fs.existsSync(hpatchz)&&fs.existsSync(hdiffz);
+// Windows may return an 8.3 alias; fixtures must use the canonical install root.
+const temporaryRoot=fs.realpathSync.native(os.tmpdir());
 const digest=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 function tree(root){
   const output={};const walk=dir=>{for(const item of fs.readdirSync(dir,{withFileTypes:true})){if(item.name.startsWith('.qx-update'))continue;const file=path.join(dir,item.name);if(item.isDirectory())walk(file);else{const s=fs.statSync(file);output[path.relative(root,file).split(path.sep).join('/')]={sha256:digest(file),id:s.ino,mtime:s.mtimeMs};}}};walk(root);return output;
 }
 function fixture(t,extra={}){
-  const root=fs.mkdtempSync(path.join(os.tmpdir(),'qx-incremental-test-'));
-  t.after(()=>{assert.equal(path.dirname(root),path.resolve(os.tmpdir()));assert.ok(path.basename(root).startsWith('qx-incremental-test-'));fs.rmSync(root,{recursive:true,force:true,maxRetries:3});});
+  const root=fs.mkdtempSync(path.join(temporaryRoot,'qx-incremental-test-'));
+  t.after(()=>{assert.equal(path.dirname(root),temporaryRoot);assert.ok(path.basename(root).startsWith('qx-incremental-test-'));fs.rmSync(root,{recursive:true,force:true,maxRetries:3});});
   const app=path.join(root,'应用 中文 空格');fs.mkdirSync(path.join(app,'resources'),{recursive:true});
   const initial={'QunxingWorkbench.exe':'synthetic unchanged exe','resources/app.asar':'synthetic 0.2.6','change.txt':'old content','delete.txt':'old deletion','z-unchanged.txt':'duplicate reusable content',...extra};
   for(const [name,content] of Object.entries(initial)){fs.mkdirSync(path.dirname(path.join(app,name)),{recursive:true});fs.writeFileSync(path.join(app,name),content);}
@@ -149,6 +151,6 @@ test('junction in an updated path is rejected before modifications',{skip:!nativ
   await assert.rejects(applyUpdate(f.args),{code:'UPDATE_REPARSE_POINT'});assert.deepEqual(fs.readdirSync(outside),[]);fs.unlinkSync(path.join(f.app,'new'));assert.deepEqual(tree(f.app),f.before);
 });
 test('unrecognized folders are not accepted as application installations',async t=>{
-  const root=fs.mkdtempSync(path.join(os.tmpdir(),'qx-incremental-test-'));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
+  const root=fs.mkdtempSync(path.join(temporaryRoot,'qx-incremental-test-'));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
   await assert.rejects(applyUpdate({installDir:root}),{code:'UPDATE_INSTALL_DIR'});assert.deepEqual(fs.readdirSync(root),[]);
 });

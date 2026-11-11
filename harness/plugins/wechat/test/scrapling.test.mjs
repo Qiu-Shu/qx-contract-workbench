@@ -3,6 +3,7 @@
  * renderer. No network and no python - the script is exercised through an injected exec.
  */
 import assert from "node:assert/strict";
+import { payloadFiles } from "../../../tests/helpers/wechat-payload.mjs";
 
 const scrapling = await import("../scrapling.js");
 
@@ -98,10 +99,10 @@ await test("output that is not base64 JSON is an error, not a crash", () => {
   assert.deepEqual(scrapling.parseScraplingOutput(encode({ ok: true, status: 204 })), { ok: true, status: 204 });
 });
 
-await test("the module ships: scrapling.js is in files[]", async () => {
+await test("the module ships: scrapling.js is in the desktop payload", async () => {
   const { readFileSync } = await import("node:fs");
   const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
-  assert.ok(pkg.files.includes("scrapling.js"), "scrapling.js must be in files[] or an install has no tool");
+  assert.ok(payloadFiles.includes("scrapling.js"), "scrapling.js must be included in the desktop payload or an install has no tool");
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);

@@ -9,10 +9,10 @@
  * Layout under `<root>` (default `$DSH_HOME/dsh-wechat-media`):
  *
  *   accounts.json                     ["b0f5860fdecb-im-bot", ...]   (index only)
- *   accounts/<accountId>.json         { token, baseUrl, userId, botId, savedAt }
+ *   accounts/<accountId>.json         DPAPI envelope of { token, baseUrl, userId, botId, savedAt }
  *   accounts/<accountId>.sync.json    { getUpdatesBuf }              (receive cursor)
  *   accounts/<accountId>.context-tokens.json
- *                                     { "<peer>": { token, savedAt } }
+ *                                     DPAPI envelope of { "<peer>": { token, savedAt } }
  *   routes.json                       { "<accountId>": { "<chatId>": { sessionId, ... } } }
  *   peers.json                        { "<accountId>": { "<chatId>": { allowed, ... } } }
  *   prefs.json                        { autoReply, mediaDir, maxMediaMiB, ... }
@@ -31,23 +31,26 @@ import { join } from "node:path";
 import { accumulate, due, reset, setWindow } from "./tokens.js";
 import { CIPHER_PREFIX, SECRET_PATHS, TOP_LEVEL_SECRETS, dpapi, isEncrypted, plaintextSecrets } from "./secrets.js";
 import { execFile } from "node:child_process";
+import { createCredentialFiles } from "./credential-files.js";
 
 /**
  * The secret protector, built once.
  *
  * DPAPI is a PowerShell call, so it is a process per operation: prefs are revealed on first read and cached,
- * and encrypted on write. Off Windows `available` is false and the file keeps plaintext - which /state then
- * reports as `secrets.atRest: "plaintext"` rather than implying protection that does not exist.
+ * and encrypted on write. Preferences retain their existing platform policy; account and context
+ * credential files require protection and fail closed when it is unavailable.
  */
 let protector;
 function secretProtector() {
   if (!protector) {
     protector = dpapi({
       exec: (file, args, options) => new Promise((resolve, reject) => {
-        execFile(file, args, { timeout: options?.timeoutMs ?? 15000, windowsHide: true, maxBuffer: 1 << 20 }, (error, stdout) => {
+        const child = execFile(file, args, { timeout: options?.timeoutMs ?? 15000, windowsHide: true, maxBuffer: 1 << 20 }, (error, stdout) => {
           if (error) reject(error);
           else resolve(stdout);
         });
+        child.stdin.on("error", reject);
+        child.stdin.end(options?.stdin ?? "", "utf8");
       }),
     });
   }
@@ -107,10 +110,21 @@ async function writeJson(path, value, { secret = false } = {}) {
  * call concurrently because each mutation rewrites a whole small file.
  */
 export class WechatState {
-  /** @param {{ root: string }} options */
-  constructor({ root }) {
+  #credentialChain = Promise.resolve();
+  #credentialFiles;
+
+  /** @param {{ root: string, credentialProtector?: object }} options */
+  constructor({ root, credentialProtector = secretProtector() }) {
     this.root = root;
     this.accountsDir = join(root, "accounts");
+    this.#credentialFiles = createCredentialFiles(credentialProtector);
+  }
+
+  // Encryption awaits the OS; serialize migration, read-modify-write and removal across that wait.
+  #credentials(work) {
+    const run = this.#credentialChain.then(work, work);
+    this.#credentialChain = run.then(() => undefined, () => undefined);
+    return run;
   }
 
   /** Create the directory tree. */
@@ -147,39 +161,44 @@ export class WechatState {
   }
 
   async loadAccount(accountId) {
-    return readJson(this.accountFile(accountId), null);
+    return this.#credentials(() => this.#credentialFiles.read(this.accountFile(accountId), null));
   }
 
   /** Merge a login result into the account file and keep the index in sync. */
   async saveAccount(accountId, patch) {
-    const id = normalizeAccountId(accountId);
-    const existing = (await this.loadAccount(id)) ?? {};
-    const merged = {
-      ...existing,
-      ...patch,
-      savedAt: new Date().toISOString(),
-    };
-    await this.init();
-    await writeJson(this.accountFile(id), merged, { secret: true });
-    const ids = await this.listAccounts();
-    if (!ids.includes(id)) {
-      ids.push(id);
-      await writeJson(join(this.root, "accounts.json"), ids);
-    }
-    return merged;
+    return this.#credentials(async () => {
+      const id = normalizeAccountId(accountId);
+      const existing = (await this.#credentialFiles.read(this.accountFile(id), null)) ?? {};
+      const merged = {
+        ...existing,
+        ...patch,
+        savedAt: new Date().toISOString(),
+      };
+      await this.init();
+      await this.#credentialFiles.write(this.accountFile(id), merged);
+      const ids = await this.listAccounts();
+      if (!ids.includes(id)) {
+        ids.push(id);
+        await writeJson(join(this.root, "accounts.json"), ids);
+      }
+      return merged;
+    });
   }
 
   async removeAccount(accountId) {
-    const id = normalizeAccountId(accountId);
-    for (const path of [this.accountFile(id), this.cursorFile(id), this.contextTokenFile(id)]) {
-      try {
-        await unlink(path);
-      } catch {
-        // already gone
+    return this.#credentials(async () => {
+      const id = normalizeAccountId(accountId);
+      for (const path of [this.accountFile(id), this.cursorFile(id), this.contextTokenFile(id)]) {
+        this.#credentialFiles.forget(path);
+        try {
+          await unlink(path);
+        } catch {
+          // already gone
+        }
       }
-    }
-    const ids = (await this.listAccounts()).filter((entry) => entry !== id);
-    await writeJson(join(this.root, "accounts.json"), ids);
+      const ids = (await this.listAccounts()).filter((entry) => entry !== id);
+      await writeJson(join(this.root, "accounts.json"), ids);
+    });
   }
 
   /** The `get_updates_buf` cursor: only ever replaced by a non-empty value. */
@@ -196,16 +215,17 @@ export class WechatState {
 
   /** Per-peer tokens that let the bot push outside a conversation window. */
   async loadContextTokens(accountId) {
-    const file = await readJson(this.contextTokenFile(accountId), {});
-    return file && typeof file === "object" ? file : {};
+    return this.#credentials(() => this.#credentialFiles.read(this.contextTokenFile(accountId), {}));
   }
 
   async saveContextToken(accountId, peer, token) {
     if (!peer || typeof token !== "string" || token.length === 0) return;
-    const all = await this.loadContextTokens(accountId);
-    all[peer] = { token, savedAt: new Date().toISOString() };
-    await this.init();
-    await writeJson(this.contextTokenFile(accountId), all, { secret: true });
+    return this.#credentials(async () => {
+      const all = await this.#credentialFiles.read(this.contextTokenFile(accountId), {});
+      all[peer] = { token, savedAt: new Date().toISOString() };
+      await this.init();
+      await this.#credentialFiles.write(this.contextTokenFile(accountId), all);
+    });
   }
 
   // ── routing: one DSH session per WeChat chat ───────────────────────────────

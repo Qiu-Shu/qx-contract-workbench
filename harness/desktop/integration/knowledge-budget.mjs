@@ -13,5 +13,5 @@ export function takeKnowledge(budget,value,limit=knowledgeLimits.read){
   if(budget.used+bytes>knowledgeLimits.turn)throw Object.assign(Error('本轮知识片段已达到 16 KiB 上限，请先使用已返回内容；后续轮次可继续按位置读取。'),{status:413});
   budget.used+=bytes;budget.delivered.add(key);return output;
 }
-export function knowledgeIndex(entry){return {id:entry.id,kind:entry.kind,title:clipUtf8(entry.title,150),state:entry.state,revision:entry.revision};}
+export function knowledgeIndex(entry){return {id:entry.id,kind:entry.kind,title:clipUtf8(entry.title,150),state:entry.state,revision:entry.revision,...entry.sourceStatus==='unavailable'?{sourceStatus:'unavailable',sourceNotice:'来源对话未迁入，保存正文已保留；原文暂不可追溯。'}:{}};}
 export function knowledgeMatch(entry){return {...knowledgeIndex(entry),...entry.content?{content:clipUtf8(entry.content,420),hasMore:Buffer.byteLength(entry.content,'utf8')>420}:{},...entry.category?{category:entry.category,versions:entry.versions}:{}};}

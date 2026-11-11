@@ -118,15 +118,20 @@ export class KnowledgeRunner{
       if(live.has(session)){
         if(foreground&&this.source.metadata&&(await this.source.metadata(session)).records.length>60){await this.fresh(session);continue;}
         await this.syncMaterials(session);
-      }else this.store.invalidate(session,true);
+      }else this.store.missingSource(session);
     }
   }
-  async reconcile(){const all=await this.source.list();const set=new Set(all.map(r=>r.id));for(const row of all)this.store.ensureSession(row.id,row);for(const old of this.store.origins())if(!old.deleted&&!set.has(old.session))this.store.invalidate(old.session,true);return all;}
+  async reconcile(){
+    const all=await this.source.list(),set=new Set(all.map(r=>r.id));
+    for(const row of all){this.store.ensureSession(row.id,row);if(this.store.setting('source-unavailable:'+row.id))this.store.setting('source-unavailable:'+row.id,null);}
+    for(const old of this.store.origins())if(!old.deleted&&!set.has(old.session))this.store.missingSource(old.session);
+    return all;
+  }
   async fresh(session){
     const epoch=this.sourceEpochs.get(session)||0;
     const old=this.store.db.prepare('SELECT * FROM origins WHERE session=?').get(session);if(!old||old.deleted)return false;
-    const version=await this.source.current(session);if((this.sourceEpochs.get(session)||0)!==epoch)fail('资料来源正在更新，请稍后重试',409);if(version===old.version)return true;
-    if(version===null){await this.verifySnapshot(session,null,epoch);this.commitSnapshot(session,()=>this.store.invalidate(session,true));return false;}
+    const version=await this.source.current(session);if((this.sourceEpochs.get(session)||0)!==epoch)fail('资料来源正在更新，请稍后重试',409);if(version===old.version){this.store.setting('source-unavailable:'+session,null);return true;}
+    if(version===null){await this.verifySnapshot(session,null,epoch);this.commitSnapshot(session,()=>this.store.missingSource(session));return false;}
     if(this.source.metadata){const raw=await this.source.metadata(session),before=this.store.setting('source-raw:'+session);
       if(before&&raw.records.length>=before.length&&digest(raw.records.slice(0,before.length))===digest(before)){await this.verifySnapshot(session,raw.version,epoch);this.commitSnapshot(session,()=>{this.store.source(session,raw.version,{preserve:true});this.store.setting('source-raw:'+session,raw.records);});return true;}
       // Compaction and legacy metadata can change raw rows without changing effective source text.
