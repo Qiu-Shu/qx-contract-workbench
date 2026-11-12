@@ -130,6 +130,21 @@ c.execute('INSERT INTO materials VALUES(?,?,?)',('uncommitted',0,'bad'));os._exi
                 create_snapshot(source,root/'snapshot',plan)
             self.assertFalse((root/'snapshot').exists())
 
+    def test_empty_directories_are_verified_and_older_manifests_still_read(self):
+        from backup_snapshot import create_snapshot,verify_snapshot
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);source,plan=self.fixture(root)
+            (source/'workspace/empty/nested').mkdir(parents=True)
+            destination=root/'snapshot';create_snapshot(source,destination,plan)
+            self.assertTrue((destination/'workspace/empty/nested').is_dir())
+            (destination/'workspace/empty/nested').rmdir()
+            with self.assertRaisesRegex(ValueError,'BACKUP_DIRECTORY_SET_MISMATCH'):
+                verify_snapshot(destination)
+            manifest_path=destination/'backup-manifest.json'
+            manifest=json.loads(manifest_path.read_text(encoding='utf-8'));del manifest['directories']
+            manifest_path.write_text(json.dumps(manifest),encoding='utf-8')
+            self.assertEqual(verify_snapshot(destination)['fileCount'],1)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T10:20:18.088107+00:00",
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "baselineCommit": "58a4350ea87d2b1295d1d89f7af8f436dbe13487",
+  "scope": "PostgreSQL 18.1 cold engine-level business-data backup and isolated restore; applicationComplete=false",
+  "installerBuilt": false,
+  "productionInstalled": false,
+  "realBusinessDataRead": false,
+  "liveModelCalls": 0,
+  "remotePublished": false,
+  "engines": {
+    "restic": {
+      "version": "0.19.1 windows amd64",
+      "sha256": "b0dd1fd21eea5d8fe1325f55f7118213c21f36de8a261e04c0624a5ab9fd7830"
+    },
+    "postgres": {
+      "version": "18.1 windows x64",
+      "pgvectorVersion": "0.8.5",
+      "source": "pg0-embedded 0.15.2 locked wheel",
+      "downloadedThisTurn": true,
+      "wheelSha256": "1b47c938991243d938e28c7e1998c1298637fdb15c54ada6d853e02769d50d3e",
+      "pg0SourceCommit": "29191fbf00f218d09f271c33c3d8ec5525c3c4ab",
+      "runtimePin": "harness/config/postgres-backup-runtime.json",
+      "pinnedFiles": 32,
+      "signatureIndependentlyVerified": false,
+      "toolRoot": "C:/Users/Administrator/.pg0/installation/18.1.0",
+      "note": "PG0_HOME is unsupported in pinned source; only program cache used here, no user registry migration."
+    }
+  },
+  "results": {
+    "fullOffline": {
+      "command": "npm test",
+      "exitCode": 0,
+      "node": {
+        "passed": 449,
+        "failed": 0,
+        "skipped": 2
+      },
+      "python": {
+        "passed": 472,
+        "failed": 0,
+        "skipped": 1,
+        "subtestsPassed": 36
+      }
+    },
+    "target": [
+      {
+        "command": "node --test desktop/local-backup-postgres.test.cjs",
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "log": "pg-wal-green.log"
+      },
+      {
+        "command": "python -m pytest bridge/test_backup_snapshot.py -q",
+        "passed": 8,
+        "failed": 0,
+        "exitCode": 0,
+        "log": "snapshot-target.log"
+      },
+      {
+        "command": "node --test desktop/backup-preparation.test.cjs desktop/local-backup.test.cjs desktop/local-backup-postgres.test.cjs",
+        "passed": 19,
+        "failed": 0,
+        "exitCode": 0,
+        "log": "native-target.log",
+        "note": "Earlier target run before added WAL subtest; final PG and full offline include it."
+      }
+    ],
+    "nativeReadback": {
+      "records": 40,
+      "syntheticGroups": 2,
+      "chineseText": true,
+      "rolledBackRowAbsent": true,
+      "identityBytesPreserved": true,
+      "systemIdentifierPreserved": true,
+      "sourcePgBytesUnchanged": true,
+      "hnswIndexValidReadyAndUsed": true,
+      "hindsightApiTested": false
+    },
+    "review": {
+      "standards": {
+        "initialFindings": 1,
+        "highest": "P1",
+        "unresolved": 0,
+        "probeExitCode": 0,
+        "finding": "Missing checkpoint WAL accepted; fixed and independently rejected."
+      },
+      "spec": {
+        "initialFindings": 1,
+        "highest": "P2",
+        "unresolved": 0,
+        "probeExitCode": 0,
+        "finding": "Index use not proved; restored index/plan asserted; independent dropped-index probe fails."
+      },
+      "note": "Independent results reported by review agents; probe scripts retained, raw console logs not separately saved."
+    }
+  },
+  "environment": {
+    "setup": ". ./.local/audit-0216/build/test-env.ps1",
+    "QX_TEST_RESTIC": "harness/.local/audit-followups/downloads/restic_0.19.1_windows_amd64.exe",
+    "QX_TEST_PG_TOOLS": "C:/Users/Administrator/.pg0/installation/18.1.0",
+    "TEMP": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/tmp"
+  },
+  "failureEvidence": [
+    {
+      "log": "pg-public-red-v2.log",
+      "exitCode": 1,
+      "classification": "Valid RED: baseline public API refuses PG with BACKUP_POSTGRES_UNVERIFIED."
+    },
+    {
+      "log": "pg-opaque-red.log",
+      "exitCode": 1,
+      "classification": "Valid RED: PG opaque .db file incorrectly inferred as SQLite."
+    },
+    {
+      "log": "pg-wal-red.log",
+      "exitCode": 1,
+      "classification": "Valid RED: missing checkpoint WAL wrongly reaches completed backup."
+    },
+    {
+      "log": "pg-public-red.log",
+      "exitCode": 1,
+      "classification": "Fixture error: inherited pg_ctl output pipes time out; not behavior RED."
+    },
+    {
+      "log": null,
+      "exitCode": null,
+      "classification": "Auxiliary pg0 bootstrap UTF-8 error; no behavior RED or retained exit-code claim."
+    }
+  ],
+  "sources": [
+    {
+      "path": "harness/bridge/backup_snapshot.py",
+      "sha256": "553a8eabd52ba608463bcbb48311af33adfcb5ee0edf7cbe2eca193d4e453ade"
+    },
+    {
+      "path": "harness/bridge/test_backup_snapshot.py",
+      "sha256": "66edc57318b76959eae696b1c3a3f4b0c75d8d6f6b4c90a4f58d0b0b4841606c"
+    },
+    {
+      "path": "harness/config/postgres-backup-runtime.json",
+      "sha256": "857aa6a48e1bf58fc8e1c2860fa685447df37d72dfbb0156f203558c82a1e922"
+    },
+    {
+      "path": "harness/desktop/local-backup.cjs",
+      "sha256": "43457417dfab243dff031223ffeba34307dff7553165e1192d452e4fd05ff88f"
+    },
+    {
+      "path": "harness/desktop/local-backup-postgres.test.cjs",
+      "sha256": "aa27d289f077d7e00f0e664e63dabc85f521ceff7170fae1bb90d9cb8f036870"
+    },
+    {
+      "path": "harness/tests/pg-backup-fixture.py",
+      "sha256": "e036919254ab382091e254adf3c438b60a2cdf1b7c3d6f705d93906f342eada5"
+    }
+  ],
+  "logs": [
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/full-offline.log",
+      "bytes": 98167,
+      "sha256": "4dec17dc257ab1b00252dd2d824349c1108f29a67ed574ba1216b1abfe479bb3"
+    },
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/native-target.log",
+      "bytes": 2066,
+      "sha256": "8ac969bc50b2f10c46d888888b255e90f5cc66f137bb23df6baf662ab7a6727e"
+    },
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/pg-opaque-red.log",
+      "bytes": 1434,
+      "sha256": "46d9cffeca91534f4ff34e6c90a8a3d99cb34cb1111fc47e3a3605d05f245c03"
+    },
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/pg-public-first.log",
+      "bytes": 239,
+      "sha256": "2b43c9686dd84e758af006aafc339b26d1640c4dfad83d50e55c137401241396"
+    },
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/pg-public-red-v2.log",
+      "bytes": 1434,
+      "sha256": "9ac665e32dadb76afbb4fe1979b90b50da3586fce65e4bfa964a50bfc8c0694b"
+    },
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/pg-public-red.log",
+      "bytes": 3401,
+      "sha256": "1f7127ce018ce9b1827ee24d9709711c4096c86ea37b0a8fdd7a533470e0fce8"
+    },
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/pg-wal-green.log",
+      "bytes": 836,
+      "sha256": "a0208acce61ceaeac3cbad3ab89f9807705d5a32b55788f0362b48f3b5db794d"
+    },
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/pg-wal-red.log",
+      "bytes": 1871,
+      "sha256": "0566e082e1671095ab3980591b784145148009416d3d4c399331318fe00193f4"
+    },
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/snapshot-target.log",
+      "bytes": 100,
+      "sha256": "987833cd3aa148c1609ae01cd78cceceb4a40a232712f0688c59c2f3bef292a4"
+    }
+  ],
+  "independentProbes": [
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/spec-review/index_and_wal.py",
+      "bytes": 3096,
+      "sha256": "bfd6b60750716adc156e8db11a310c53c23deab99e633b00528fccc604e3e8e2"
+    },
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/spec-review/pg_gates.py",
+      "bytes": 3202,
+      "sha256": "7451e04d956644e9c766a299626f391ef230bfa8a382227013f777dda1af1e2c"
+    },
+    {
+      "path": "D:/CodexChecks/AI-Shixiong-postgres-backup-20261112/standards-review/missing-wal.py",
+      "bytes": 1496,
+      "sha256": "f461650bb8b47f2e401e46a4fafa1b5065cab91ee66e811369673282775e6e53"
+    }
+  ],
+  "limits": [
+    "No installed product update, installer build or distribution acceptance",
+    "No Hindsight API/schema migration or model semantic acceptance",
+    "No settings/cross-machine credentials/pg0 registry migration or activation",
+    "No hot backup, external tablespaces or checksum-disabled clusters",
+    "No power-loss, disk-full or large-volume acceptance; fixed 20k file / 512MiB file / 2GiB total limits",
+    "No full filesystem metadata or administrator/same-user tamper resistance; native checks do not prove absence of every possible defect"
+  ]
+}

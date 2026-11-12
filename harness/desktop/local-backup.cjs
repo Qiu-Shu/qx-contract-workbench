@@ -68,21 +68,21 @@ function removeOwned(root,parent,prefix){
   if(path.dirname(root)!==parent||!path.basename(root).startsWith(prefix))fail('BACKUP_CLEANUP_REFUSED');
   local(root);fs.rmSync(root,{recursive:true,force:true});
 }
-function validatePlan(plan){
+function validatePlan(plan,pgTools){
   if(plan.scopes.some(s=>s.linked||s.policy==='unclassified'))fail('BACKUP_SCOPE_UNSUPPORTED');
-  if(plan.scopes.some(s=>s.path==='.local/case-memory-runtime/database'))fail('BACKUP_POSTGRES_UNVERIFIED');
+  if(plan.scopes.some(s=>s.path==='.local/case-memory-runtime/database')&&!pgTools)fail('BACKUP_POSTGRES_UNVERIFIED');
 }
 async function createLocalBackup(options){
   const {python,restic,bundle}=configuration(options),data=local(options.data);
   absent(bundle);disjoint(data,bundle);
   // Each bundle is an independent repository: failed attempts cannot advance an older backup.
   return withBackupPause(data,async source=>{
-    const plan=inspectScope(source);validatePlan(plan);
+    const plan=inspectScope(source);validatePlan(plan,options.pgTools);
     const parent=path.dirname(bundle),stage=path.join(parent,'.qx-backup-'+crypto.randomUUID());
     let stageOwned=false,bundleOwned=false,complete=false;
     try{
       await worker(python,{action:'private-directory',path:stage});stageOwned=true;
-      const snapshot=await worker(python,{action:'create',source,destination:path.join(stage,'snapshot'),plan});
+      const snapshot=await worker(python,{action:'create',source,destination:path.join(stage,'snapshot'),plan,pgTools:options.pgTools});
       // Scope branches may gain new stores while the worker is running; reject changed inventories.
       if(JSON.stringify(inspectScope(source))!==JSON.stringify(plan))fail('BACKUP_SOURCE_CHANGED');
       const passwordFile=path.join(stage,'password');fs.writeFileSync(passwordFile,options.password,{flag:'wx'});
@@ -97,7 +97,7 @@ async function createLocalBackup(options){
       if(summaries.length!==1||! /^[a-f0-9]{64}$/.test(summary.snapshot_id)||summary.total_files_processed!==snapshot.archiveFiles)fail('BACKUP_SUMMARY_INVALID');
       await engine(restic,repo,passwordFile,['check','--read-data'],stage);
       const receipt={schema:1,snapshotId:summary.snapshot_id,manifestSha256:snapshot.manifestSha256,
-        fileCount:snapshot.fileCount,databaseCount:snapshot.databaseCount,applicationComplete:false,engineSha256:ENGINE_SHA};
+        fileCount:snapshot.fileCount,databaseCount:snapshot.databaseCount,postgresIncluded:snapshot.postgresIncluded,applicationComplete:false,engineSha256:ENGINE_SHA};
       fs.writeFileSync(path.join(bundle,'completed.json'),JSON.stringify(receipt,null,2),{flag:'wx'});
       complete=true;return receipt;
     }finally{
@@ -119,6 +119,7 @@ async function restoreLocalBackup(options){
   if(crypto.createHash('sha256').update(manifestText).digest('hex')!==receipt.manifestSha256)fail('BACKUP_RECEIPT_MISMATCH');
   let manifest;try{manifest=JSON.parse(manifestText);}catch{fail('BACKUP_INVALID_MANIFEST');}
   disjoint(local(manifest.sourceRoot),destination,bundle);
+  if(manifest.postgres&&!options.pgTools)fail('BACKUP_POSTGRES_TOOLS_REQUIRED');
   const parent=path.dirname(destination),stage=path.join(parent,'.qx-restore-'+crypto.randomUUID());
   let owned=false;
   try{
@@ -128,8 +129,8 @@ async function restoreLocalBackup(options){
     await engine(restic,repo,passwordFile,['restore',receipt.snapshotId,'--target',extracted,'--overwrite','never','--verify'],stage);
     if(JSON.stringify(fs.readdirSync(extracted))!==JSON.stringify(['snapshot']))fail('BACKUP_FILE_SET_MISMATCH');
     const restored=path.join(extracted,'snapshot');
-    const checked=await worker(python,{action:'verify',root:restored});
-    if(checked.manifestSha256!==receipt.manifestSha256||checked.fileCount!==receipt.fileCount||checked.databaseCount!==receipt.databaseCount)fail('BACKUP_RECEIPT_MISMATCH');
+    const checked=await worker(python,{action:'verify',root:restored,pgTools:options.pgTools});
+    if(checked.manifestSha256!==receipt.manifestSha256||checked.fileCount!==receipt.fileCount||checked.databaseCount!==receipt.databaseCount||checked.postgresIncluded!==Boolean(receipt.postgresIncluded))fail('BACKUP_RECEIPT_MISMATCH');
     disjoint(local(checked.sourceRoot),destination,bundle);
     absent(destination);
     // Re-create the published root with a protected DACL; restic's restored metadata is not trusted.
