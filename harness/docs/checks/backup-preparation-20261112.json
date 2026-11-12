@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T09:20:41.771Z",
+  "workspace": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目",
+  "baselineCommit": "e334db351cd71f6f6b9e93c8e11e01842d56d2b9",
+  "implementation": "offline scope inventory and managed-host maintenance window",
+  "backupComplete": false,
+  "installerBuilt": false,
+  "productionInstalled": false,
+  "realBusinessDataRead": false,
+  "liveModelCalls": 0,
+  "resticCalls": 0,
+  "results": {
+    "target": {
+      "command": "node --test desktop/backup-preparation.test.cjs",
+      "passed": 9,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "fullOffline": {
+      "command": "npm test",
+      "exitCode": 0,
+      "node": {
+        "pass": 437,
+        "skip": 2,
+        "fail": 0
+      },
+      "python": {
+        "pass": 464,
+        "skip": 1,
+        "subtestsPass": 36
+      },
+      "note": "Before final excluded-link correction; Python unchanged afterward"
+    },
+    "finalNode": {
+      "command": "test-suite.plan(offline).node via node --test --test-concurrency=4",
+      "exitCode": 0,
+      "pass": 438,
+      "skip": 2,
+      "fail": 0
+    },
+    "review": {
+      "standardsFindings": 0,
+      "specInitialP2": 1,
+      "specUnresolved": 0,
+      "independentProbeExitCode": 0
+    }
+  },
+  "failuresPreserved": [
+    {
+      "log": "pause-red.log",
+      "exitCode": 1,
+      "reason": "New module not yet implemented; not an existing product behavior regression"
+    },
+    {
+      "log": "scope-red.log",
+      "exitCode": 1,
+      "reason": "New exported preparation function not yet implemented"
+    },
+    {
+      "log": "linked-scope-red.log",
+      "exitCode": 1,
+      "reason": "Excluded link silently omitted from review requirement; then fixed"
+    }
+  ],
+  "sources": [
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\desktop\\backup-preparation.cjs",
+      "bytes": 6659,
+      "sha256": "d638c0fcb205619ea03ea0b17588047ce4db5c39781afccca53d6c5d6977abf8"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\desktop\\backup-preparation.test.cjs",
+      "bytes": 10867,
+      "sha256": "506a6a84ef46a5b3781e88d581a010a05e45e2df3cbc1f9baee9d37537ff47a9"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\scripts\\backup-preflight.cjs",
+      "bytes": 854,
+      "sha256": "163297321217cc1578c4db0590980dae7a30abfd8bb5e49b3220186bc70cd3a3"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\desktop\\installed-stop.cjs",
+      "bytes": 5970,
+      "sha256": "6f805b722b080a7ecc1b80c88e9ea7e46277936340f5ca886d6d01deee14d018"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\desktop\\installed-host.cjs",
+      "bytes": 1224,
+      "sha256": "34474d5c8374eda095a968047bf0a0bd332b14ab8f755e91aa303ec0923461e9"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\desktop\\installed-runtime.cjs",
+      "bytes": 13376,
+      "sha256": "328a305ebdfd562e3ca35352fe866ce0cc50554eee6b64fadfb05a0cbb88742c"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\desktop\\case-memory-runtime.cjs",
+      "bytes": 19105,
+      "sha256": "ff7b8e38dd67311574cf26272dca9d0bd9264738822c73b4b60f32a7740bcfbf"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\desktop\\integration\\knowledge-api.mjs",
+      "bytes": 23851,
+      "sha256": "45ca58c28338e1d31ae81fe394c31f48bb19e2dad7aaf92992e1b92d124f1a41"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\plugins\\wechat\\qx-plugin.js",
+      "bytes": 19927,
+      "sha256": "38520693bf319e40848564dde932361f59f3e73286d8e43bdd134a9d4634904d"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\packaging\\payload-config\\portable.json",
+      "bytes": 12813,
+      "sha256": "892f69f8023957574db0a8778011e057a17564ff71f7fba34d1b21a00fc60993"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\docs\\2026-11-12-backup-preparation-plan.md",
+      "bytes": 1655,
+      "sha256": "7a02c743a69305d96e7c243a8265f4c26a394d4f606a38018244919d28d6a0c0"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness\\docs\\2026-11-12-backup-data-scope.md",
+      "bytes": 7249,
+      "sha256": "99c12ec7393b810de9267d2407b9b0c2d20ebb64cce063eaad0b12b30d1f085a"
+    }
+  ],
+  "upstreamDefaultStorage": {
+    "file": "D:/Documents/ChatGPT/律所项目/.local/release-0216/stage/base/resources/workbench/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml",
+    "bytes": 20839,
+    "sha256": "e8269baedbd434f04a9ec3c9106e874e744e195d27fd8476a5006a85eab8d3f7"
+  },
+  "artifacts": [
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\full-node-final.log",
+      "bytes": 96229,
+      "sha256": "449afe148d86344145bea0840e0687aff9f68f76e08fc7b23dd5e0b18d4a4dce"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\full-offline.log",
+      "bytes": 96910,
+      "sha256": "6021ae01f041021f78ccbb7edc5f483078c5a147b7e2f796c428b0c3038aa5c6"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\linked-scope-red.log",
+      "bytes": 1870,
+      "sha256": "7330baf2c1ab5f3049ceacb249cbd2e9502a064ccf4be84c24b769c20fe2172d"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\pause-green.log",
+      "bytes": 226,
+      "sha256": "5f976f359a93a6368fcec813766f439a5b67525eaa8f321bfb0e7669678936a6"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\pause-red.log",
+      "bytes": 1564,
+      "sha256": "50cab937599e8014e90ee7f7db743ec5417116181003f5d677259eea6e1951b6"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\preparation-target-final.log",
+      "bytes": 1060,
+      "sha256": "ead455f6d91223a0e9909b85347242d0bfc38ae0a975313d98e4cb897b4480eb"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\preparation-target.log",
+      "bytes": 972,
+      "sha256": "a888b23a38db00219ba24d43459625926ce67d5548c8239bc427cd7a482bdb1d"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-spec\\linked-cache-jMaDeo\\.local\\host-state.json",
+      "bytes": 53,
+      "sha256": "62eb788b6a3f17305a49d9a0326aa2664555ffa87d6c28877ee768886e1be809"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-spec\\linked-cache-jMaDeo\\.local\\initialized-payload.json",
+      "bytes": 112,
+      "sha256": "5ae50eb63899a9171f0906fa929bc4fe1ca2b228203b7c56ad0c98a0ba4ca61a"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-spec\\linked-cache-jMaDeo\\.local\\runtime.json",
+      "bytes": 35,
+      "sha256": "fa43e8e4d8516273e35496157e99bac0ed5a876594111f65e85eb25e7afc4dc3"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-spec\\linked-cache-probe-fixed.json",
+      "bytes": 530,
+      "sha256": "03de65b8e7bf3482c222f5faafe59503df772366e697db4a18cf7284a379cf91"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-spec\\linked-cache-probe.json",
+      "bytes": 508,
+      "sha256": "70c9b69211a884ace90844436a6184e0fce241558c15b0fc4bc435fb7890e802"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-spec\\linked-cache-vJzhsR\\.local\\host-state.json",
+      "bytes": 53,
+      "sha256": "62eb788b6a3f17305a49d9a0326aa2664555ffa87d6c28877ee768886e1be809"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-spec\\linked-cache-vJzhsR\\.local\\initialized-payload.json",
+      "bytes": 112,
+      "sha256": "0879d82419ee5a0cf5ab286595962a8c538122c2d12a4bc3dca85c9250bea39f"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-spec\\linked-cache-vJzhsR\\.local\\runtime.json",
+      "bytes": 35,
+      "sha256": "fa43e8e4d8516273e35496157e99bac0ed5a876594111f65e85eb25e7afc4dc3"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-spec\\spec-review-fixed.md",
+      "bytes": 868,
+      "sha256": "2f56b11deb1e89206bfd614f9af601ba7e05b643368d8c6f17d079955db8efec"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-spec\\spec-review.md",
+      "bytes": 1654,
+      "sha256": "5dc6e7781e57dce85a75630ed879e8f8976b52e9410acffb37689589bf2ca700"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\review-standards\\standards-review.md",
+      "bytes": 1446,
+      "sha256": "e79723129104f1fda7b0ff195ccbfe76b89e0b9ce3c86d1a88be0ac34740fdfb"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\scope-green.log",
+      "bytes": 354,
+      "sha256": "18b807beb74706914a31703674c2ec98e207bb5916565f653aa3698b953ac061"
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-backup-preparation-20261112\\scope-red.log",
+      "bytes": 1248,
+      "sha256": "e5167913af09474526b36958bccc71f3eb04641ec660286984924ad5809494e0"
+    }
+  ],
+  "notVerified": [
+    "Recoverable snapshot or restic product integration",
+    "SQLite or PostgreSQL restore",
+    "Cross-database/file reference consistency",
+    "External editors or directly launched Python/CLI writers",
+    "Custom external storage",
+    "Private staging ACL and disk exhaustion",
+    "Cross-machine credential reauthorization",
+    "Installer or production update"
+  ]
+}
