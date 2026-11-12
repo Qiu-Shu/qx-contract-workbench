@@ -104,4 +104,4 @@ function inspectScope(data){
     restrictions:['managed-installed-host-only','external-editors-not-locked','no-snapshot-created','credentials-need-reauthorization']};
 }
 async function prepareBackup(data){return withBackupPause(data,inspectScope);}
-module.exports={withBackupPause,prepareBackup};
+module.exports={withBackupPause,prepareBackup,inspectScope};

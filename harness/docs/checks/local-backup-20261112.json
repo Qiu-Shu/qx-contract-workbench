@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T09:58:06.4981581Z",
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "baselineCommit": "444faf80a48181867b937528959919e176acc5db",
+  "scope": "business-data snapshot and isolated restore; applicationComplete=false",
+  "installerBuilt": false,
+  "productionInstalled": false,
+  "realBusinessDataRead": false,
+  "liveModelCalls": 0,
+  "remotePublished": false,
+  "engine": {
+    "version": "restic 0.19.1 windows amd64",
+    "sha256": "b0dd1fd21eea5d8fe1325f55f7118213c21f36de8a261e04c0624a5ab9fd7830",
+    "downloadedThisTurn": false,
+    "signatureIndependentlyVerified": false
+  },
+  "results": {
+    "finalNode": {
+      "passed": 442,
+      "command": "test-suite.plan(offline).node via node --test --test-concurrency=4",
+      "skipped": 2,
+      "exitCode": 0,
+      "failed": 0
+    },
+    "fullOffline": {
+      "node": {
+        "skipped": 2,
+        "failed": 0,
+        "passed": 441
+      },
+      "command": "npm test",
+      "exitCode": 0,
+      "python": {
+        "subtestsPassed": 36,
+        "skipped": 1,
+        "failed": 0,
+        "passed": 471
+      }
+    },
+    "review": {
+      "specInitial": 3,
+      "standardsInitial": 3,
+      "standardsUnresolved": 0,
+      "independentReverificationExitCode": 0,
+      "specUnresolved": 0,
+      "uniqueFixedFindings": 6,
+      "standardsAdditional": 1
+    },
+    "target": {
+      "nodeCommand": "node --test desktop/local-backup.test.cjs desktop/backup-preparation.test.cjs",
+      "nodePassed": 12,
+      "note": "Before final added absent-drive test; final Node includes that test",
+      "pythonCommand": "python -m pytest bridge/test_backup_snapshot.py -q",
+      "pythonPassed": 7,
+      "exitCode": 0
+    }
+  },
+  "failureEvidence": [
+    {
+      "exitCode": 1,
+      "classification": "new API absent, not historical behavior defect",
+      "log": "snapshot-red.log"
+    },
+    {
+      "exitCode": null,
+      "classification": "new API absent; child exit not preserved by initial wrapper; log contains two failed tests",
+      "shellExitCode": 0,
+      "log": "local-backup-red.log"
+    },
+    {
+      "exitCode": 1,
+      "classification": "fixture quoting error, not behavior RED",
+      "log": "multistore-first.log"
+    },
+    {
+      "exitCode": 1,
+      "classification": "material timestamp not preserved",
+      "log": "review-mtime-red.log"
+    },
+    {
+      "exitCode": 1,
+      "classification": "actual-format private references rejected",
+      "log": "review-private-red.log"
+    },
+    {
+      "exitCode": 1,
+      "classification": "plaintext staged under source before rejecting",
+      "log": "review-overlap-red.log"
+    },
+    {
+      "exitCode": 1,
+      "classification": "reviewed copy corruption not rejected",
+      "log": "review-reviewed-red.log"
+    },
+    {
+      "exitCode": 1,
+      "classification": "8.3 alias / trailing-dot normalization failures",
+      "log": "review-alias-red.log"
+    },
+    {
+      "exitCode": 1,
+      "classification": "absent drive loops until bounded child timeout",
+      "log": "review-absent-drive-red.log"
+    }
+  ],
+  "sources": [
+    {
+      "path": "harness/desktop/backup-preparation.cjs",
+      "sha256": "90ca44865ae73fc472362f3d3bfddca53515691147381e7d046fcf890d81dbc9"
+    },
+    {
+      "path": "harness/desktop/local-backup.cjs",
+      "sha256": "6a492c9143368a97c6398def0212f693e3616daad8d4ee3c7fb05322b008162a"
+    },
+    {
+      "path": "harness/desktop/local-backup.test.cjs",
+      "sha256": "5c4a7d8ed28dc6fdb99e41550f5d131a1754f7e9d7cb45c07b8afae9ba269504"
+    },
+    {
+      "path": "harness/bridge/backup_snapshot.py",
+      "sha256": "b2ddf65d2a3c0bc9cac8990d36d85dea0a7b6d8c331b9bf233fa4eab858c00b6"
+    },
+    {
+      "path": "harness/bridge/test_backup_snapshot.py",
+      "sha256": "6ec4e4de2dc236b5d8b6037b5208bf18122f1865c26bd66be0554cdd805d759c"
+    }
+  ],
+  "logs": [
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\final-node-root-path.log",
+      "bytes": 96565,
+      "sha256": "572e36a584a97ad25cb602377e27dad1ad5ec3723709399ef3957a20a0c918c4"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\final-node.log",
+      "bytes": 96612,
+      "sha256": "a832d2a92fa5fc3dd4f0949decfe5c2d4e5aa84104408a4612cf5bcc2c7cfe2e"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\full-offline.log",
+      "bytes": 97330,
+      "sha256": "2ee0b7d99b479c2357cc230f257ed3788089db8f2d624509ec224dd4cb003b90"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\local-backup-red.log",
+      "bytes": 2894,
+      "sha256": "fb55154101b2001ec2d01a7c83e041fe0375077fc5ce6ecb9116b31d1ba4681f"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\local-target.log",
+      "bytes": 1341,
+      "sha256": "77cb8c194d40d95740fa802711070cb186fbd238266557bece8a56821aecfc95"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\multistore-first.log",
+      "bytes": 1444,
+      "sha256": "6c11624a76defb14a1f2dbc403c54d0892fbee9f1a6fed2476e9eae77f56d02b"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\review-absent-drive-red.log",
+      "bytes": 1007,
+      "sha256": "b3968e605287836d23fd63f79ba5f891e4479b6d7860caa68b86fba8d5cb6fc8"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\review-alias-red.log",
+      "bytes": 3126,
+      "sha256": "d13cf60e05955455bb1ffc900c0812ac930ea8edad40bc9143763d5870268d21"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\review-mtime-red.log",
+      "bytes": 1265,
+      "sha256": "058a2d66d2a177e321f3e56c8b49f3be4df0d4be795735c4831ab49f643d63ae"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\review-overlap-red.log",
+      "bytes": 1043,
+      "sha256": "114644a5cebfe1522309ef023eb1a36a35cc0e217b77dfe890723d4fade99723"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\review-private-red.log",
+      "bytes": 1501,
+      "sha256": "f5ace8397d5f24b148feae328a4d40318d8367e79a715eb48b1d9b431da79544"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\review-reviewed-red.log",
+      "bytes": 1657,
+      "sha256": "083fce63b88d064b1db02e53657228f5e7fe1b4af13b1417103f882c560fe9d1"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\snapshot-red.log",
+      "bytes": 852,
+      "sha256": "69d225fb85795afb2f471cd9f0b177534d31f901df60bc0ee7852c861452df7a"
+    },
+    {
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\snapshot-target.log",
+      "bytes": 100,
+      "sha256": "12bce8c580f0d094af22879523af08427f95fdaedf9082eb22abb135b00457ed"
+    }
+  ],
+  "independentProbes": [
+    {
+      "sha256": "664c5384a474e925a3ff875bb23be44daf2ba4c875283c8ea5435c111bd318a5",
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\spec-review\\overlap.cjs"
+    },
+    {
+      "sha256": "995b2345bc88ac01117b0c5ae10dadf2615c671900e8db436c2796109d62e143",
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\spec-review\\private_refs.py"
+    },
+    {
+      "sha256": "59cc44deaface9f0461318104c1649ab770d45bbaeaa2a189fbff8dedcfdcdb7",
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\spec-review\\reviewed_refs.py"
+    },
+    {
+      "sha256": "d4d050bc1487d6520af198c3c1b769d5e3c16cdc7dcdd529a2f17ca01827e5dc",
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\spec-review\\short_alias.cjs"
+    },
+    {
+      "sha256": "4e2760f619e0e9dc0208f6465fae4865132128e7ae724162556aa34fb56ac3a2",
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\standards-review\\probe.py"
+    },
+    {
+      "sha256": "c3be19afd71a7683d68aecdcaf5c8d7671247a5ed5b021b2cacc1969b5abd673",
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\standards-review\\overlap.cjs"
+    },
+    {
+      "sha256": "24553a75702cd173c741ff77ad2961a6a5f1a01f75c8086a8b6e67dd05aee8ca",
+      "path": "D:\\CodexChecks\\AI-Shixiong-local-backup-20261112\\standards-review\\absent-drive.cjs"
+    }
+  ],
+  "limits": [
+    "PG data blocks backup",
+    "no app activation or credential/settings migration",
+    "no installer or installed-product update",
+    "no power-loss, disk-full or large-volume acceptance",
+    "empty directories and full filesystem metadata not preserved",
+    "same-user/admin tampering not resisted",
+    "new independent repository per backup; no retention/dedup scheduling"
+  ]
+}
