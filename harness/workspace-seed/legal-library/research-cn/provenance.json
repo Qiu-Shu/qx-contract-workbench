@@ -1,0 +1,72 @@
+{
+  "format": 1,
+  "repository": "https://github.com/CSlawyer1985/claude-for-legal-ZH",
+  "commit": "59f37f1c8851b8277e24f7a45f4e773bee97bab9",
+  "license": "Apache-2.0",
+  "licensePath": "legal-library/research-cn/LICENSE",
+  "author": "CSlawyer",
+  "authorHomepage": "https://chenshi.ai",
+  "retrievedAt": "2026-11-12T06:50:01Z",
+  "retrieval": "GitHub connector fetch_file at fixed commit; no upstream scripts executed.",
+  "notice": "No NOTICE file in the pinned recursive repository tree.",
+  "files": [
+    {
+      "path": "legal-library/research-cn/LICENSE",
+      "gitBlobSha": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+      "url": "https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/59f37f1c8851b8277e24f7a45f4e773bee97bab9/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "legal-library/research-cn/skills/authority-check/SKILL.md",
+      "gitBlobSha": "10a4ab737857d0cd4ffac21d8dd88e20c1233a23",
+      "url": "https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/59f37f1c8851b8277e24f7a45f4e773bee97bab9/legal-research-cn/skills/authority-check/SKILL.md",
+      "sha256": "315464a87d93342040e7f6ffbc1bef43354220a4a7e1ee9f1e7868a6cd90c9a8"
+    },
+    {
+      "path": "legal-library/research-cn/skills/case-comparison/SKILL.md",
+      "gitBlobSha": "1ec72fee11cd70175e4542d16a4133a93d1026b7",
+      "url": "https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/59f37f1c8851b8277e24f7a45f4e773bee97bab9/legal-research-cn/skills/case-comparison/SKILL.md",
+      "sha256": "4085217e63db80eb275e26084d1d9f8826bb80694caf0af2d09ba42362b7f613"
+    },
+    {
+      "path": "legal-library/research-cn/skills/issue-memo/SKILL.md",
+      "gitBlobSha": "16f87d687d3fb3ddf03d6f63c39ff46a73b1a768",
+      "url": "https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/59f37f1c8851b8277e24f7a45f4e773bee97bab9/legal-research-cn/skills/issue-memo/SKILL.md",
+      "sha256": "06acfb0ce117f4c245b268db12dc34965e6f5c6b7dfee4ea2bfa7d683e688a2c"
+    },
+    {
+      "path": "legal-library/research-cn/skills/lecture-source-pack/SKILL.md",
+      "gitBlobSha": "e2679d93f1b0bb58e822ba04f804fef7ea86aab4",
+      "url": "https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/59f37f1c8851b8277e24f7a45f4e773bee97bab9/legal-research-cn/skills/lecture-source-pack/SKILL.md",
+      "sha256": "e960ffa135f2d2730056baf3ffe2365b22ea5a0d8205bef35de399b409e6086a"
+    }
+  ],
+  "adapters": [
+    {
+      "name": "qx-authority-check",
+      "title": "法源与版本核验",
+      "source": "legal-library/research-cn/skills/authority-check/SKILL.md",
+      "skill": ".dsh/skills/qx-authority-check/SKILL.md"
+    },
+    {
+      "name": "qx-case-comparison",
+      "title": "类案对比",
+      "source": "legal-library/research-cn/skills/case-comparison/SKILL.md",
+      "skill": ".dsh/skills/qx-case-comparison/SKILL.md"
+    },
+    {
+      "name": "qx-issue-memo",
+      "title": "争点研究备忘录",
+      "source": "legal-library/research-cn/skills/issue-memo/SKILL.md",
+      "skill": ".dsh/skills/qx-issue-memo/SKILL.md"
+    },
+    {
+      "name": "qx-lecture-source-pack",
+      "title": "法律讲座来源包",
+      "source": "legal-library/research-cn/skills/lecture-source-pack/SKILL.md",
+      "skill": ".dsh/skills/qx-lecture-source-pack/SKILL.md"
+    }
+  ],
+  "modifications": "Harness-specific tool names and existing append-only case note persistence; evidence scope/status/time/region documented; reuse existing task context instead of mandatory cold-start interview; no external database connection assumed.",
+  "validationScope": "Offline discovery, configuration preservation and persisted evidence transport; no paid model or legal quality certification."
+}

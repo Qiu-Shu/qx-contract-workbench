@@ -1,0 +1,674 @@
+{
+  "checked_at": "2026-11-12",
+  "synthetic_only": true,
+  "scope": "isolated experiments; no product integration",
+  "backup": {
+    "schema": 1,
+    "synthetic_only": true,
+    "started_at": "2026-11-12T06:58:05.311720+00:00",
+    "restic_version": "0.19.1",
+    "archive_sha256": "da948ad707ed690426473aaba2046cd61f8f90f6f0e7dab6be0d5796531de67d",
+    "binary_sha256": "b0dd1fd21eea5d8fe1325f55f7118213c21f36de8a261e04c0624a5ab9fd7830",
+    "checks": [
+      {
+        "name": "verified_binary_reports_pinned_version",
+        "passed": true
+      },
+      {
+        "name": "committed_rows_exist_in_live_WAL",
+        "passed": true
+      },
+      {
+        "name": "snapshot_excludes_uncommitted_transaction",
+        "passed": true
+      },
+      {
+        "name": "snapshot_database_integrity",
+        "passed": true
+      },
+      {
+        "name": "snapshot_allowlist_excludes_credentials_and_WAL",
+        "passed": true
+      },
+      {
+        "name": "wrong_password_rejected",
+        "passed": true
+      },
+      {
+        "name": "missing_source_is_not_silent_success",
+        "passed": true
+      },
+      {
+        "name": "restore_guard_source",
+        "passed": true
+      },
+      {
+        "name": "restore_guard_source-child",
+        "passed": true
+      },
+      {
+        "name": "restore_guard_stage",
+        "passed": true
+      },
+      {
+        "name": "restore_guard_repository",
+        "passed": true
+      },
+      {
+        "name": "restore_guard_ancestor",
+        "passed": true
+      },
+      {
+        "name": "restore_guard_outside",
+        "passed": true
+      },
+      {
+        "name": "restore_guard_nonempty",
+        "passed": true
+      },
+      {
+        "name": "restore_guard_existing-empty",
+        "passed": true
+      },
+      {
+        "name": "existing_target_preserved",
+        "passed": true
+      },
+      {
+        "name": "exactly_one_restored_manifest",
+        "passed": true
+      },
+      {
+        "name": "restored_file_set_and_sha256_match",
+        "passed": true
+      },
+      {
+        "name": "restored_database_integrity",
+        "passed": true
+      },
+      {
+        "name": "restored_database_rows_and_file_links_match",
+        "passed": true
+      },
+      {
+        "name": "source_remains_unchanged",
+        "passed": true
+      },
+      {
+        "name": "verifier_detects_corruption",
+        "passed": true
+      },
+      {
+        "name": "verifier_detects_missing_file",
+        "passed": true
+      },
+      {
+        "name": "final_restored_hashes_match",
+        "passed": true
+      }
+    ],
+    "status": "passed",
+    "snapshot_id": "150aac24d5a17ea49b41d5c766ac3f366bf735dd3d31be814a9806251eec065d",
+    "backed_up_files": 4,
+    "backed_up_bytes": 17057,
+    "manifest": {
+      "synthetic_only": true,
+      "rows": 50,
+      "files": {
+        "business.sqlite": "05b53655b4ef67c704f9a27a82bb1789f72a40ba28d5f20cf52aae83a826de23",
+        "drafts/review.md": "7859280a46da8446a03b3bb2184a38a04a057029845cd85569427571c9293e58",
+        "inbox/contract.txt": "4d1332a198151b0719258df8b7497f029fc4b64da82acb197ff46c87108aa411"
+      },
+      "excluded": [
+        "credentials/",
+        "raw WAL/SHM",
+        "ephemeral passwords"
+      ],
+      "consistency": "immutable files; stopped file writers; SQLite backup API with open uncommitted transaction"
+    },
+    "restored_files": 4,
+    "database_rows": 50,
+    "password_files_removed": true,
+    "seconds": 6.328,
+    "repository_bytes": 5853,
+    "check_count": 24
+  },
+  "backup_commands": [
+    {
+      "args": [
+        "<restic>",
+        "--repo",
+        "<run>\\repository",
+        "--no-cache",
+        "version"
+      ],
+      "password": "ephemeral",
+      "exit_code": 0,
+      "seconds": 0.032
+    },
+    {
+      "args": [
+        "<restic>",
+        "--repo",
+        "<run>\\repository",
+        "--no-cache",
+        "init",
+        "--repository-version",
+        "2"
+      ],
+      "password": "ephemeral",
+      "exit_code": 0,
+      "seconds": 2.641
+    },
+    {
+      "args": [
+        "<restic>",
+        "--repo",
+        "<run>\\repository",
+        "--no-cache",
+        "backup",
+        "snapshot",
+        "--host",
+        "synthetic-audit-host",
+        "--tag",
+        "synthetic-only",
+        "--json"
+      ],
+      "password": "ephemeral",
+      "exit_code": 0,
+      "seconds": 0.734
+    },
+    {
+      "args": [
+        "<restic>",
+        "--repo",
+        "<run>\\repository",
+        "--no-cache",
+        "check",
+        "--read-data"
+      ],
+      "password": "ephemeral",
+      "exit_code": 0,
+      "seconds": 0.687
+    },
+    {
+      "args": [
+        "<restic>",
+        "--repo",
+        "<run>\\repository",
+        "--no-cache",
+        "snapshots",
+        "--json"
+      ],
+      "password": "wrong",
+      "exit_code": 12,
+      "seconds": 0.485
+    },
+    {
+      "args": [
+        "<restic>",
+        "--repo",
+        "<run>\\repository",
+        "--no-cache",
+        "backup",
+        "snapshot",
+        "missing-source",
+        "--host",
+        "synthetic-audit-host"
+      ],
+      "password": "ephemeral",
+      "exit_code": 3,
+      "seconds": 0.703
+    },
+    {
+      "args": [
+        "<restic>",
+        "--repo",
+        "<run>\\repository",
+        "--no-cache",
+        "restore",
+        "150aac24d5a17ea49b41d5c766ac3f366bf735dd3d31be814a9806251eec065d",
+        "--target",
+        "<run>\\restored-new",
+        "--overwrite",
+        "never",
+        "--verify"
+      ],
+      "password": "ephemeral",
+      "exit_code": 0,
+      "seconds": 0.703
+    }
+  ],
+  "baseline": {
+    "python": "3.12.14",
+    "source_hashes": {
+      "privacy.py": "d2021d1c8f99ee3a55de8679b67ce5ca5e001b630f52d8708a6a90651e34c155",
+      "reader.py": "ae022b1bbc9a1aa3c6b50d7ef1debb10939111896a20e7d81df7af43f76dfd25",
+      "material_tables.py": "c07c6f03dd176cb762373e4c9db624509e7fc5e8373c61c97d2b9c623eda4734"
+    },
+    "candidate_modules_available": {
+      "presidio_analyzer": false,
+      "spacy": false,
+      "docling": false,
+      "torch": false
+    },
+    "seconds": 2.39,
+    "privacy": [
+      {
+        "id": "labelled-control",
+        "text": "姓名：赵明远。甲方：昆陵合成科技有限公司。金额 12000 元，2026年11月12日付款。",
+        "entities": [
+          "赵明远",
+          "昆陵合成科技有限公司"
+        ],
+        "preserve": [
+          "12000",
+          "2026年11月12日"
+        ],
+        "candidates": {
+          "昆陵合成科技有限公司": "组织",
+          "赵明远": "姓名"
+        },
+        "safe_text": "姓名：【脱敏-8d84e4d47bc0-姓名-2】。甲方：【脱敏-8d84e4d47bc0-组织-1】。金额 12000 元，2026年11月12日付款。",
+        "replacements": 2,
+        "entity_covered": [
+          true,
+          true
+        ],
+        "facts_preserved": true
+      },
+      {
+        "id": "unlabelled-chinese-person",
+        "text": "赵明远于2026年11月12日签收虚构测试材料。",
+        "entities": [
+          "赵明远"
+        ],
+        "preserve": [
+          "2026年11月12日"
+        ],
+        "candidates": {},
+        "safe_text": "赵明远于2026年11月12日签收虚构测试材料。",
+        "replacements": 0,
+        "entity_covered": [
+          false
+        ],
+        "facts_preserved": true
+      },
+      {
+        "id": "ocr-linebreak-person",
+        "text": "姓名：赵\n明远。金额 12000 元。",
+        "entities": [
+          "赵\n明远"
+        ],
+        "preserve": [
+          "12000"
+        ],
+        "candidates": {},
+        "safe_text": "姓名：赵\n明远。金额 12000 元。",
+        "replacements": 0,
+        "entity_covered": [
+          false
+        ],
+        "facts_preserved": true
+      },
+      {
+        "id": "ocr-linebreak-organization",
+        "text": "昆陵合成科技有限\n公司于2026年11月12日签约。",
+        "entities": [
+          "昆陵合成科技有限\n公司"
+        ],
+        "preserve": [
+          "2026年11月12日"
+        ],
+        "candidates": {},
+        "safe_text": "昆陵合成科技有限\n公司于2026年11月12日签约。",
+        "replacements": 0,
+        "entity_covered": [
+          false
+        ],
+        "facts_preserved": true
+      },
+      {
+        "id": "generic-negative-control",
+        "text": "学校应在2026年11月12日前支付12000元。",
+        "entities": [],
+        "preserve": [
+          "学校",
+          "2026年11月12日",
+          "12000"
+        ],
+        "candidates": {},
+        "safe_text": "学校应在2026年11月12日前支付12000元。",
+        "replacements": 0,
+        "entity_covered": [],
+        "facts_preserved": true
+      }
+    ],
+    "documents": [
+      {
+        "sample": "gridspan-control.docx",
+        "sha256": "76f1053684e8af424c5712ab729e9c4632f7e837ceccc7799d7d8e4bcf342bec",
+        "unchanged": true,
+        "result": {
+          "path": "synthetic-inputs/gridspan-control.docx",
+          "status": "ready",
+          "chunks": 4,
+          "total_pages": null,
+          "next_page": null,
+          "failed_pages": [],
+          "warnings": [
+            "DOCX 修订视图：original"
+          ],
+          "next_step": "已提取内容可先 read_material 使用；未完成页可用 start_page 和 page_count=1 单独重试。"
+        },
+        "texts_preserved": true,
+        "first_row_merge_1_to_2_preserved": true
+      },
+      {
+        "sample": "legacy-hmerge.docx",
+        "sha256": "dea4870ea921cc0727314ddac73e3637b74983bbcb77e62377ab0231d6b46a14",
+        "unchanged": true,
+        "result": {
+          "path": "synthetic-inputs/legacy-hmerge.docx",
+          "status": "ready",
+          "chunks": 5,
+          "total_pages": null,
+          "next_page": null,
+          "failed_pages": [],
+          "warnings": [
+            "DOCX 修订视图：original",
+            "word/document.xml:body/tbl[1]/tr[1]：表格网格无法可靠解释，已保留原段落，请对照原件。"
+          ],
+          "next_step": "已提取内容可先 read_material 使用；未完成页可用 start_page 和 page_count=1 单独重试。"
+        },
+        "texts_preserved": true,
+        "first_row_merge_1_to_2_preserved": false
+      }
+    ]
+  },
+  "docling": {
+    "synthetic_only": true,
+    "candidate": "docling-slim",
+    "version": "2.150.0",
+    "python": "3.12.10",
+    "baseline_sha256": "908159f45a0809fe2ad53edaa7bdff66c129e0d5e7566585718d73848ea6f98c",
+    "network_blocked": true,
+    "models_used": [],
+    "seconds": 0.047,
+    "structure_improvements": 0,
+    "structure_regressions": 0,
+    "documents": [
+      {
+        "sample": "gridspan-control.docx",
+        "sha256": "76f1053684e8af424c5712ab729e9c4632f7e837ceccc7799d7d8e4bcf342bec",
+        "unchanged": true,
+        "status": "ConversionStatus.SUCCESS",
+        "seconds": 0.031,
+        "texts_preserved": true,
+        "first_row_merge_1_to_2_preserved": true
+      },
+      {
+        "sample": "legacy-hmerge.docx",
+        "sha256": "dea4870ea921cc0727314ddac73e3637b74983bbcb77e62377ab0231d6b46a14",
+        "unchanged": true,
+        "status": "ConversionStatus.SUCCESS",
+        "seconds": 0.016,
+        "texts_preserved": true,
+        "first_row_merge_1_to_2_preserved": false
+      }
+    ],
+    "wheel_count": 46,
+    "wheel_bytes": 80462349,
+    "venv_bytes": 352749203,
+    "venv_files": 12445
+  },
+  "presidio": {
+    "synthetic_only": true,
+    "candidate": "presidio-analyzer + spaCy zh_core_web_sm",
+    "versions": {
+      "presidio-analyzer": "2.2.366",
+      "spacy": "3.8.18",
+      "spacy-pkuseg": "1.0.2",
+      "zh-core-web-sm": "3.8.0"
+    },
+    "python": "3.12.10",
+    "baseline_sha256": "908159f45a0809fe2ad53edaa7bdff66c129e0d5e7566585718d73848ea6f98c",
+    "configuration": {
+      "language": "zh",
+      "entities": [
+        "PERSON",
+        "ORGANIZATION"
+      ],
+      "score_threshold": 0.5,
+      "recognizers": [
+        "SpacyRecognizer"
+      ],
+      "custom_patterns": [],
+      "GPU": false
+    },
+    "network_guard": "HF offline and Python socket connects rejected before model initialization",
+    "samples": [
+      {
+        "id": "labelled-control",
+        "text": "姓名：赵明远。甲方：昆陵合成科技有限公司。金额 12000 元，2026年11月12日付款。",
+        "entities": [
+          "赵明远",
+          "昆陵合成科技有限公司"
+        ],
+        "preserve": [
+          "12000",
+          "2026年11月12日"
+        ],
+        "spans": [
+          {
+            "start": 3,
+            "end": 6,
+            "entity_type": "PERSON",
+            "score": 0.85,
+            "text": "赵明远"
+          }
+        ],
+        "entity_covered": [
+          true,
+          false
+        ],
+        "baseline_entity_covered": [
+          true,
+          true
+        ],
+        "safe_text_from_spans": "姓名：[PII]。甲方：昆陵合成科技有限公司。金额 12000 元，2026年11月12日付款。",
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0,
+        "seconds": 0.016
+      },
+      {
+        "id": "unlabelled-chinese-person",
+        "text": "赵明远于2026年11月12日签收虚构测试材料。",
+        "entities": [
+          "赵明远"
+        ],
+        "preserve": [
+          "2026年11月12日"
+        ],
+        "spans": [
+          {
+            "start": 0,
+            "end": 3,
+            "entity_type": "PERSON",
+            "score": 0.85,
+            "text": "赵明远"
+          }
+        ],
+        "entity_covered": [
+          true
+        ],
+        "baseline_entity_covered": [
+          false
+        ],
+        "safe_text_from_spans": "[PII]于2026年11月12日签收虚构测试材料。",
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0,
+        "seconds": 0.0
+      },
+      {
+        "id": "ocr-linebreak-person",
+        "text": "姓名：赵\n明远。金额 12000 元。",
+        "entities": [
+          "赵\n明远"
+        ],
+        "preserve": [
+          "12000"
+        ],
+        "spans": [
+          {
+            "start": 3,
+            "end": 4,
+            "entity_type": "PERSON",
+            "score": 0.85,
+            "text": "赵"
+          }
+        ],
+        "entity_covered": [
+          false
+        ],
+        "baseline_entity_covered": [
+          false
+        ],
+        "safe_text_from_spans": "姓名：[PII]\n明远。金额 12000 元。",
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0,
+        "seconds": 0.0
+      },
+      {
+        "id": "ocr-linebreak-organization",
+        "text": "昆陵合成科技有限\n公司于2026年11月12日签约。",
+        "entities": [
+          "昆陵合成科技有限\n公司"
+        ],
+        "preserve": [
+          "2026年11月12日"
+        ],
+        "spans": [],
+        "entity_covered": [
+          false
+        ],
+        "baseline_entity_covered": [
+          false
+        ],
+        "safe_text_from_spans": "昆陵合成科技有限\n公司于2026年11月12日签约。",
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0,
+        "seconds": 0.0
+      },
+      {
+        "id": "generic-negative-control",
+        "text": "学校应在2026年11月12日前支付12000元。",
+        "entities": [],
+        "preserve": [
+          "学校",
+          "2026年11月12日",
+          "12000"
+        ],
+        "spans": [],
+        "entity_covered": [],
+        "baseline_entity_covered": [],
+        "safe_text_from_spans": "学校应在2026年11月12日前支付12000元。",
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0,
+        "seconds": 0.016
+      }
+    ],
+    "model_load_seconds": 1.187,
+    "inference_seconds": 0.032,
+    "total_seconds": 2.266,
+    "peak_working_set_bytes": 470323200,
+    "expected_entities": 5,
+    "covered_entities": 2,
+    "baseline_covered_entities": 2,
+    "facts_preserved_samples": 5,
+    "non_entity_characters_masked": 0,
+    "newly_covered_entities": 1,
+    "regressed_entities": 1,
+    "status": "completed",
+    "wheel_count": 54,
+    "wheel_bytes": 98429472,
+    "model_bytes": 48515003,
+    "venv_bytes": 382306039,
+    "venv_files": 9882,
+    "code_license": "MIT",
+    "model_license": "MIT",
+    "model_sha256": "7de3bd267176b9b2a8defb6997c1cd296da16c57b5e712f72ea44a51755421c8",
+    "overall_improvement_claimed": false,
+    "production_integration": false
+  },
+  "local_evidence": {
+    "harness\\.local\\audit-followups\\runs\\backup-3mfibqxw\\result.json": "2ef842353090d4f0bedd5e993d250805eabfa651b2f0e66b4410c069d8a3fcb3",
+    "harness\\.local\\audit-followups\\candidates-otcg2uh4\\baseline.json": "908159f45a0809fe2ad53edaa7bdff66c129e0d5e7566585718d73848ea6f98c",
+    "harness\\.local\\audit-followups\\candidates-otcg2uh4\\docling-comparison.json": "ba603165380984539401f551b5378894e346cd34a9975b82680a8fe1fbe0a00a",
+    "harness\\.local\\audit-followups\\candidates-otcg2uh4\\presidio-comparison.json": "2b79e983f326f1af66cbfb925fdbab31664bb13a5820860aeccea45f0f94b82b"
+  },
+  "development_failures": [
+    {
+      "run": "backup-6uphiu6q",
+      "exit_code": 1,
+      "cause": "SQLite backup destination connection remained open; fixed explicit closing"
+    },
+    {
+      "run": "backup-25b9bhnp",
+      "exit_code": 1,
+      "cause": "wrong-password return code is 12, not assumed 11; corrected verified expectation"
+    },
+    {
+      "run": "backup-5fzam_df",
+      "exit_code": 1,
+      "cause": "absolute tree restore generated a 262-character path unreadable by this Python path API; changed backup tree to relative snapshot and fail-loud stat"
+    }
+  ],
+  "script_sha256": {
+    "backup_experiment.py": "35d49194b60cb2bb136d9fbf80b955e620052560d8a681d61c135b445ec2e52f",
+    "candidate_experiment.py": "d80ac8891e071b1fbe4c9e5bb4977a878b2dc4d053aa4edf69ad1168394ad288",
+    "presidio_experiment.py": "66eb0aed7d198f5159defa17b317388bc5ffdc2ff04d1fb6635e425df3c30164"
+  },
+  "presidio_commands": [
+    {
+      "command": "python harness/experiments/audit-followups/presidio_experiment.py --download-model",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m venv harness/.local/audit-followups/presidio-venv",
+      "exit_code": 0
+    },
+    {
+      "command": "harness/.local/audit-followups/presidio-venv/Scripts/python.exe -m pip install --only-binary=:all: --require-hashes --find-links harness/.local/audit-followups/downloads -r harness/experiments/audit-followups/presidio-windows-py312.lock",
+      "exit_code": 0,
+      "cache_directory": "harness/.local/audit-followups/pip-cache"
+    },
+    {
+      "command": "harness/.local/audit-followups/presidio-venv/Scripts/python.exe harness/experiments/audit-followups/presidio_experiment.py --baseline harness/.local/audit-followups/candidates-otcg2uh4/baseline.json",
+      "exit_code": 0,
+      "outer_timeout_seconds": 180
+    },
+    {
+      "command": "harness/.local/audit-followups/presidio-venv/Scripts/python.exe -m pip check",
+      "exit_code": 0,
+      "result": "No broken requirements found."
+    }
+  ],
+  "dependency_manifest_sha256": {
+    "docling-windows-py312.lock": "81e9cb80d90049fcac0fa950da916de423b5e6d1ce12d69be92b19c8e4bf6c94",
+    "docling-artifacts.json": "3c93c3ed4b4e3237027b2fd563734345d6834b493b975c1a927c74a0e269f416",
+    "presidio-windows-py312.lock": "8060f81c52fff7ce6102957409f663fd20513c795cc3a94a0cdaeaa6579fbe41",
+    "presidio-artifacts.json": "3e22c7d99bdc48a91e924f7cc92ac84e8c7d5c4f02090ebf665b30af3e33619e"
+  },
+  "verification": {
+    "exit_code": 0,
+    "raw_reports_sha256_checked": 4,
+    "scripts_ast_and_sha256_checked": 3,
+    "dependency_files_sha256_checked": 4,
+    "locked_artifact_records_checked": 100,
+    "backup_checks_confirmed": 24,
+    "presidio_expected_metrics_confirmed": true,
+    "installed_presidio_dependencies_consistent": true,
+    "compiled_files_in_experiment_source": 0
+  }
+}

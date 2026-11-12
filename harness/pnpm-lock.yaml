@@ -9,7 +9,7 @@ patchedDependencies:
   '@deepseek-ai/dsh-client-ui-chat@0.2.2-alpha.2': 3bd46da47ae67334fae721ab7bdf100fb4ec795431d33abe39ba6108379c6e3a
   '@deepseek-ai/dsh-client-ui-conversation@0.2.2-alpha.2': c12c09a2193d895bee24ca7d2c14c1d16ed760d4bcdb68eba45dd0a10de7475b
   '@deepseek-ai/dsh-client-ui-settings-models@0.2.2-alpha.2': 76ab111317e3e1803249b993c09d2e68b90ed15db58112477c2b20402ca8da72
-  '@deepseek-ai/dsh-client-ui-skill@0.2.2-alpha.2': afcf5b17e0d9e06885e2f5fcb09f7c2abce870f7f77c5f46079e72c456aa692f
+  '@deepseek-ai/dsh-client-ui-skill@0.2.2-alpha.2': 845deee507a9fc41260737fb414dcc46c4f8c2ec109c3563692191706f45fe80
   '@deepseek-ai/dsh-client-ui-workspace@0.2.2-alpha.2': 48e90ec96529de7d4e97b9c9046b38df190c310c3f1012c2f51a289993d8c935
 
 importers:
@@ -19,6 +19,9 @@ importers:
       '@deepseek-ai/dsh':
         specifier: 0.2.2-alpha.2
         version: 0.2.2-alpha.2(a5f92f7e47b3c23c621c3f8a6856fcfe)
+      diff:
+        specifier: 9.0.0
+        version: 9.0.0
       electron-updater:
         specifier: 6.8.11
         version: 6.8.11
@@ -5151,7 +5154,7 @@ snapshots:
     dependencies:
       '@deepseek-ai/cordis': 4.0.6-alpha.1(@deepseek-ai/cordis-plugin-include@1.0.11-alpha.1)(@deepseek-ai/cordis-plugin-loader@1.0.7-alpha.1)
 
-  '@deepseek-ai/dsh-client-ui-skill@0.2.2-alpha.2(patch_hash=afcf5b17e0d9e06885e2f5fcb09f7c2abce870f7f77c5f46079e72c456aa692f)(@deepseek-ai/cordis@4.0.6-alpha.1)':
+  '@deepseek-ai/dsh-client-ui-skill@0.2.2-alpha.2(patch_hash=845deee507a9fc41260737fb414dcc46c4f8c2ec109c3563692191706f45fe80)(@deepseek-ai/cordis@4.0.6-alpha.1)':
     dependencies:
       '@deepseek-ai/cordis': 4.0.6-alpha.1(@deepseek-ai/cordis-plugin-include@1.0.11-alpha.1)(@deepseek-ai/cordis-plugin-loader@1.0.7-alpha.1)
 
@@ -7544,7 +7547,7 @@ snapshots:
       '@deepseek-ai/dsh-client-ui-sidebar-files': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-sidebar-right': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-sidebar-terminal': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
-      '@deepseek-ai/dsh-client-ui-skill': 0.2.2-alpha.2(patch_hash=afcf5b17e0d9e06885e2f5fcb09f7c2abce870f7f77c5f46079e72c456aa692f)(@deepseek-ai/cordis@4.0.6-alpha.1)
+      '@deepseek-ai/dsh-client-ui-skill': 0.2.2-alpha.2(patch_hash=845deee507a9fc41260737fb414dcc46c4f8c2ec109c3563692191706f45fe80)(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-subagent': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-theme': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-tool': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)

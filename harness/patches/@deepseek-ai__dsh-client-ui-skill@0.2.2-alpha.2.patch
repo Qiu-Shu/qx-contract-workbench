@@ -2,12 +2,16 @@ diff --git a/lib/client.js b/lib/client.js
 index 50bd020d7f960788ef47ad81e7d66895264800ef..dd7e4fff997dc248c5c39ed9f27fd34543bc78a9 100644
 --- a/lib/client.js
 +++ b/lib/client.js
-@@ -7,6 +7,201 @@ window.__ModuleLoader__.load({
+@@ -7,6 +7,205 @@ window.__ModuleLoader__.load({
  		let _deepseek_ai_dsh_client_ui_primitives = require("@deepseek-ai/dsh-client-ui-primitives");
  		let react_jsx_runtime = require("react/jsx-runtime");
  		let react = require("react");
 +		// Generated from config/skill-labels.zh-CN.json. Keep protocol IDs unchanged.
 +		const qxSkillLabels = {
++		  "qx-authority-check": "法源与版本核验",
++		  "qx-case-comparison": "类案对比",
++		  "qx-issue-memo": "争点研究备忘录",
++		  "qx-lecture-source-pack": "法律讲座来源包",
 +		  "bb-browser": "浏览器操作",
 +		  "chinese-legal-ai-governance": "AI 治理",
 +		  "chinese-legal-builder-hub": "法律技能运营",
@@ -204,7 +208,7 @@ index 50bd020d7f960788ef47ad81e7d66895264800ef..dd7e4fff997dc248c5c39ed9f27fd345
  		//#region ../../util/workspace-path/src/file-address.ts
  		/** The scheme and type every file address opens with. */
  		const FILE_ADDRESS_PREFIX = "dsh-resource://file/";
-@@ -190,7 +385,7 @@ window.__ModuleLoader__.load({
+@@ -190,7 +389,7 @@ window.__ModuleLoader__.load({
  			const open = expanded && expandable;
  			const status = stateStatus(model.state, t);
  			const running = model.state === "running";
@@ -213,7 +217,7 @@ index 50bd020d7f960788ef47ad81e7d66895264800ef..dd7e4fff997dc248c5c39ed9f27fd345
  			const toggleExpand = () => {
  				setExpanded((value) => !value);
  			};
-@@ -211,6 +406,7 @@ window.__ModuleLoader__.load({
+@@ -211,6 +410,7 @@ window.__ModuleLoader__.load({
  				className: SkillRow_module_css_default.card,
  				"data-tool": "skill",
  				"data-state": model.state,
@@ -221,7 +225,7 @@ index 50bd020d7f960788ef47ad81e7d66895264800ef..dd7e4fff997dc248c5c39ed9f27fd345
  				children: [(0, react_jsx_runtime.jsxs)("div", {
  					className: SkillRow_module_css_default.row,
  					"data-expandable": expandable || void 0,
-@@ -275,7 +471,7 @@ window.__ModuleLoader__.load({
+@@ -275,7 +475,7 @@ window.__ModuleLoader__.load({
  		function SkillReference({ node, raw, interactive, openSkill }) {
  			return (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.ReferenceChip, {
  				appearance: "skill",
@@ -230,7 +234,7 @@ index 50bd020d7f960788ef47ad81e7d66895264800ef..dd7e4fff997dc248c5c39ed9f27fd345
  				title: raw,
  				...interactive ? { onActivate: () => {
  					openSkill(node.data.name);
-@@ -315,10 +511,10 @@ window.__ModuleLoader__.load({
+@@ -315,10 +515,10 @@ window.__ModuleLoader__.load({
  		/** Simplified Chinese dictionary (the key-set source of truth). */
  		const zh = {
  			"row.title": "加载技能",
@@ -244,7 +248,7 @@ index 50bd020d7f960788ef47ad81e7d66895264800ef..dd7e4fff997dc248c5c39ed9f27fd345
  			"row.instructions": "说明",
  			"row.inspect": "查看",
  			"menu.userOnly": "仅用户"
-@@ -496,8 +692,9 @@ window.__ModuleLoader__.load({
+@@ -496,8 +696,9 @@ window.__ModuleLoader__.load({
  					if (sessions.subagentAddress(session.sessionId) !== void 0) return [];
  					const skills = await fetchCatalog(session.sessionId).promise;
  					if (signal.aborted) return [];

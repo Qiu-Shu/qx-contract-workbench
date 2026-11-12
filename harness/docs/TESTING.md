@@ -6,9 +6,12 @@
 | --- | --- |
 | `npm test` 或 `npm run test:offline` | 可移植源码回归：自动发现 Node 与 Python 测试，包括知识恢复、受控 OS 边界的凭据测试、媒体源和打包入口 |
 | `npm run test:windows` | 显式 Windows 集成：真实 DPAPI、原生增量程序、候选程序资源、现有 Windows 文档工具 |
+| `npm run eval:workflow` | 独立开发依赖下的 24 案离线 Harness/技能/真实 MCP/Word 基线；不等同真实模型或法律质量验收 |
 | `npm run test:quality -- <phase> <synthetic-scenarios.json> [...]` | 显式付费模型指令评测；还必须设置 `QX_REAL_MODEL_TEST=1` 和 `QX_TEST_ELECTRON` |
 
-`npm run test:offline -- --list` 和 `npm run test:windows -- --list` 只输出选中的文件。自动发现覆盖 `desktop`、`plugins`、`packaging`、`scripts`、`bridge`、`tests`，排除缓存、依赖、符号链接及专用评测脚本。原生组文件在 `scripts/test-suite.cjs` 中明确分类。增加测试后应核对分组。
+`npm run test:offline -- --list` 和 `npm run test:windows -- --list` 只输出选中的文件。自动发现覆盖 `desktop`、`plugins`、`packaging`、`scripts`、`bridge`、`tests`、`evals` 中的测试文件，排除缓存、依赖、符号链接及专用评测脚本。原生组文件在 `scripts/test-suite.cjs` 中明确分类。增加测试后应核对分组。
+
+新增工作流基线的环境、独立锁文件、离线/真实模式和预算边界见 [评测 README](../evals/quality-baseline/README.md)。`npm test` 只运行其无网络断言和预算测试，不自动启动 Promptfoo 或安装其依赖。
 
 Node 与 pytest 两组都会执行；任一子进程失败，统一入口返回非零退出码。依赖缺失也是失败。不能只看最后一组，也不能把跳过算作通过。部分旧测试有自定义内部计数，需同时读取其输出和 Node 文件包装结果。
 

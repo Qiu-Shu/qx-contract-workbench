@@ -1,0 +1,50 @@
+// Called only after the host has revalidated the source hash and exact anchor.
+window.qxContractPreview=function(ctx,sessionId,source){
+  window.qxContractPreview.cancel?.();
+  if(document.documentElement.dataset.qxSessionId!==sessionId)throw Error('对话已切换，请回原对话重新定位。');
+  const path=source.absolutePath.replace(/\\/g,'/'),address='dsh-resource://file/session/'+encodeURIComponent(sessionId)+'/'+path.split('/').map(encodeURIComponent).join('/');
+  ctx.sidebarRight.openResource(address,{params:source.reference.line?{line:source.reference.line}:{}});
+  if(!source.reference.page)return;
+  // The resident PDF renderer exposes page DOM, but no public page navigation method.
+  let timer,observer;
+  const stop=()=>{observer?.disconnect();clearTimeout(timer);};
+  window.qxContractPreview.cancel=stop;
+  const locate=()=>{
+    if(document.documentElement.dataset.qxSessionId!==sessionId){stop();return;}
+    for(const pane of document.querySelectorAll('[data-document-preview]')){
+      if(pane.dataset.textpreviewUrl!==address)continue;
+      const page=pane.querySelector('[data-pdf-page="'+source.reference.page+'"]');
+      if(page){page.scrollIntoView({block:'start',behavior:'instant'});stop();return;}
+    }
+  };
+  observer=new MutationObserver(locate);observer.observe(document.body,{childList:true,subtree:true});timer=setTimeout(stop,15000);locate();
+};
+window.qxInstallContractComparison=function(ctx,React){
+  const h=React.createElement,controller=new AbortController();
+  async function api(action,data){const response=await fetch('/api/qx-compare/'+action,{method:'POST',credentials:'same-origin',signal:controller.signal,headers:{'content-type':'application/json','x-qx-compare':'1'},body:JSON.stringify(data)});const value=await response.json();if(!response.ok)throw Error(value.error||'对比未完成，请重试。');return value;}
+  function Picker({label,sessionId,value,onChange,disabled}){
+    const [folder,setFolder]=React.useState(''),[files,setFiles]=React.useState(null),[error,setError]=React.useState('');
+    React.useEffect(()=>{let live=true;setFiles(null);setError('');api('list',{sessionId,path:folder}).then(data=>{if(live)setFiles(data)}).catch(e=>{if(live)setError(e.message)});return()=>{live=false};},[folder,sessionId]);
+    return h('div',{className:'qx-compare-picker'},h('label',null,label,h('select',{'aria-label':label,disabled:disabled||!files,value:'',onChange:event=>{const entry=files.entries[Number(event.target.value)];if(!entry)return;const path=entry.path||[folder,entry.name].filter(Boolean).join('/');entry.type==='directory'?setFolder(path):onChange(path);}},h('option',{value:''},files?'选择文件或进入文件夹':'正在读取文件…'),files?.entries.map((entry,i)=>h('option',{key:entry.path||entry.name,value:i},(entry.type==='directory'?'文件夹：':entry.indexed?'已解析：':'')+entry.name+(entry.indexed?' · '+entry.path.split('/').slice(-2,-1)[0]:''))))),folder&&h('button',{type:'button',disabled,onClick:()=>setFolder(folder.split('/').slice(0,-1).join('/'))},'返回上层'),h('p',null,value||'尚未选择'),error&&h('p',{role:'alert'},error),files?.truncated&&h('p',null,'文件较多，请从具体子文件夹选择。'));
+  }
+  const location=ref=>(ref.page?'第'+ref.page+'页 · ':'')+(ref.line?'第'+ref.line+'行':'提取段'+ref.paragraph);
+  function Panel({session,input,inputActions}){
+    const sessionId=session.sessionId||session.id,[open,setOpen]=React.useState(false),[before,setBefore]=React.useState(''),[after,setAfter]=React.useState(''),[result,setResult]=React.useState(null),[selected,setSelected]=React.useState(null),[busy,setBusy]=React.useState(false),[error,setError]=React.useState(''),[notice,setNotice]=React.useState('');
+    const generation=React.useRef(0),sourceRef=React.useRef();
+    React.useEffect(()=>()=>{generation.current++;window.qxContractPreview.cancel?.();},[]);
+    function choose(setter,value){generation.current++;setter(value);setResult(null);setSelected(null);setError('');setNotice('');}
+    async function run(){const stamp=++generation.current;setBusy(true);setResult(null);setError('');setSelected(null);setNotice('');try{const data=await api('compare',{sessionId,before,after});if(stamp===generation.current)setResult(data);}catch(e){if(stamp===generation.current)setError(e.message)}finally{if(stamp===generation.current)setBusy(false)}}
+    async function locate(reference){if(busy)return;const stamp=++generation.current;setError('');setSelected(null);try{const source=await api('locate',{sessionId,reference});if(stamp!==generation.current)return;setSelected(source);window.qxContractPreview(ctx,sessionId,source);setTimeout(()=>sourceRef.current?.focus(),0);}catch(e){if(stamp===generation.current)setError(e.message)}}
+    function draft(){
+      if(input.phase!=='plain'||input.draft.trim()||input.attachmentIds?.length){setNotice('请先保存或发送输入框中的内容，再准备批注说明。');return;}
+      const text='请基于本次合同文字对比，沿用现有合同审查流程准备批注意见。先重新核对原件摘要与引用；默认另存批注版，保留两份原件，未经我明确要求不要修改正文。\n原版本：'+before+'（SHA-256 '+result.before.sha256+'）\n新版本：'+after+'（SHA-256 '+result.after.sha256+'）\n对比范围：'+(result.status==='complete'?'已提取文字':'部分文字，仍需补充解析或人工核对');
+      inputActions.setDraft(text);inputActions.persistDraft();setNotice('批注说明已放入原输入框，可编辑后发送。');
+    }
+    return h('section',{className:'qx-compare','aria-label':'合同对比'},h('button',{type:'button','aria-expanded':open,onClick:()=>setOpen(!open)},'合同对比'),open&&h('div',{className:'qx-compare-body'},h('p',null,'比较两份合同的文字，点击变化回看原文。原件保留。'),h('div',{className:'qx-compare-pickers'},h(Picker,{label:'原版本',sessionId,value:before,onChange:value=>choose(setBefore,value),disabled:busy}),h(Picker,{label:'新版本',sessionId,value:after,onChange:value=>choose(setAfter,value),disabled:busy})),h('button',{type:'button',disabled:busy||!before||!after,onClick:run},busy?'正在对比…':'开始对比'),error&&h('p',{role:'alert',className:'qx-compare-error'},error),notice&&h('p',{role:'status'},notice),result&&h('div',null,h('p',{role:'status'},result.status==='unavailable'?'暂时没有足够的可读文字':result.status==='partial'?'仅部分文本结果 · 已发现 '+result.changes.length+' 处变化':result.equal?'已比较文字相同':'已发现 '+result.changes.length+' 处文字变化'),result.warnings.length>0&&h('details',{open:result.status!=='complete'},h('summary',null,'对比范围与待核对内容'),h('ul',null,result.warnings.map((warning,i)=>h('li',{key:i},warning)))),h('div',{className:'qx-compare-results'},result.changes.map((change,i)=>h('article',{key:i},h('div',{className:'qx-compare-versions'},['before','after'].map(side=>{const value=change[side];return h('div',{key:side},h('strong',null,side==='before'?'原版本 · 删除':'新版本 · 新增'),value?h('button',{type:'button',onClick:()=>locate(value.reference),'aria-label':(side==='before'?'回看原版本 ':'回看新版本 ')+location(value.reference)},location(value.reference)):h('span',null,'无对应段落'),h('div',{className:'qx-compare-text'},value?change.parts.filter(p=>side==='before'?!p.added:!p.removed).map((part,k)=>h(part.removed?'del':part.added?'ins':'span',{key:k},part.value)):'—'));})),!change.characterDetail&&h('p',null,'该段差异较大，显示整段增删。')))),selected&&h('section',{className:'qx-compare-source',tabIndex:-1,ref:sourceRef,'aria-label':'已核验原文位置'},h('h3',null,'原文回看 · '+location(selected.reference)),h('p',null,selected.reference.path),selected.context.map(row=>h(row.selected?'mark':'p',{key:row.paragraph},row.text)),h('p',{className:'qx-compare-muted'},'原件 SHA-256：'+selected.reference.sha256),!selected.reference.page&&!selected.reference.line&&h('p',null,'来源段落：'+selected.reference.location+'。Word 页码随排版变化，请在右侧原件中核对。')),result.status!=='unavailable'&&h('button',{type:'button',onClick:draft},'准备批注说明'))));
+  }
+  const dispose=ctx.slots.inject('conversation.input.dock',()=>ctx.slots.register({name:'conversation.input.dock',id:'qx-contract-compare',order:-90},props=>h(Panel,{...props,key:props.session.sessionId||props.session.id})));
+  const style=document.createElement('style');style.textContent=`
+  .qx-compare{margin:0 0 8px;font:13px/1.7 var(--dsw-font,'Microsoft YaHei',system-ui,sans-serif);color:var(--dsw-alias-label-primary,#29251f)}.qx-compare *{box-sizing:border-box}.qx-compare button,.qx-compare select{font:inherit;color:inherit;background:var(--dsw-alias-bg-base,#fff);border:1px solid var(--border-color,#cec7ba);border-radius:5px;padding:5px 9px;max-width:100%;min-height:34px}.qx-compare button{cursor:pointer}.qx-compare button:hover:enabled{background:var(--surface-hover,#ece9e3)}.qx-compare button:disabled{opacity:.55;cursor:default}.qx-compare :focus-visible{outline:2px solid #967943;outline-offset:2px}.qx-compare-body{border:1px solid var(--border-color,#ded9cf);padding:12px;margin-top:8px;max-height:60vh;overflow:auto;scrollbar-color:#b6ad9c transparent}.qx-compare p{margin:6px 0;overflow-wrap:anywhere}.qx-compare-pickers,.qx-compare-versions{display:grid;grid-template-columns:1fr 1fr;gap:16px}.qx-compare-picker{min-width:0}.qx-compare-picker label{display:grid;gap:4px}.qx-compare select{width:100%}.qx-compare-results article{border-top:1px solid var(--border-color,#ded9cf);margin-top:14px;padding-top:12px}.qx-compare-versions>div{min-width:0}.qx-compare-versions strong{display:block;font-size:13px}.qx-compare-versions button{margin:4px 0}.qx-compare-text,.qx-compare-source mark,.qx-compare-source>p{white-space:pre-wrap;overflow-wrap:anywhere}.qx-compare del{color:#8c2c20;background:#fff0ec;text-decoration-thickness:1px}.qx-compare ins{color:#195a38;background:#eaf7ef;text-decoration-thickness:1px}.qx-compare-source{border-top:1px solid #b6ad9c;margin:16px 0;padding:12px 0}.qx-compare-source mark{display:block;background:#fff2cd;color:#453c25;padding:8px}.qx-compare h3{font-size:15px;margin:0 0 8px}.qx-compare .qx-compare-muted{font-size:12px;color:var(--dsw-alias-label-secondary,#665e51)}.qx-compare .qx-compare-error{color:#9b3023}.qx-compare summary{cursor:pointer}.qx-compare ::selection{background:#eadbb9;color:#29251f}@media(max-width:620px){.qx-compare-pickers,.qx-compare-versions{grid-template-columns:1fr;gap:8px}.qx-compare-body{padding:8px}}
+  `;document.head.append(style);
+  return()=>{controller.abort();window.qxContractPreview.cancel?.();dispose();style.remove();};
+};

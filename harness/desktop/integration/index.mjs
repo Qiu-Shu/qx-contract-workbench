@@ -1,11 +1,12 @@
 import {readFile} from 'node:fs/promises';
-import {attachmentPreviewPath} from './attachment-preview.mjs';
+import {attachmentPreviewPath,installContractComparison} from './attachment-preview.mjs';
 import {installWorkflows} from './business-workflows.mjs';
 import {installKnowledge} from './knowledge-api.mjs';
 import {createKnowledgeModel} from './knowledge-model.mjs';
 export const name='qunxing-desktop-session';
-export const inject=['connection','attachments','sessions','systemPrompt','sessionQuery','tools','llm'];
+export const inject=['connection','attachments','sessions','systemPrompt','sessionQuery','tools','llm','workspaceFiles','workingDirectory'];
 export function apply(ctx){
+  installContractComparison(ctx);
   const workflows=installWorkflows(ctx);
   installKnowledge(ctx,{model:createKnowledgeModel(ctx),inheritFrom:session=>{
     const flow=workflows.get(session);return flow?.handoffConfirmedAt?flow.sourceSessionId:null;

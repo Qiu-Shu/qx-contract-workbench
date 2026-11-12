@@ -1,0 +1,296 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "scope": "v0.2.16 audit remaining implementation and synthetic experiments",
+  "baseCommit": "54064ac2fcee4e4729b4d56df23c2e602f4359f9",
+  "branch": "codex/audit-0216-fixes",
+  "syntheticOnly": true,
+  "legalQuality": "not_reviewed",
+  "installedOrPublished": false,
+  "checks": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "node": {
+        "total": 419,
+        "passed": 417,
+        "skipped": 2,
+        "failed": 0
+      },
+      "python": {
+        "passed": 463,
+        "skipped": 1,
+        "subtestsPassed": 36
+      },
+      "evidence": {
+        "path": ".local/audit-followups-offline-complete.log",
+        "sha256": "6ae7547d500875455252eee8756346436117676cb12d26c4f97dff1b4b34cfc7",
+        "bytes": 94822
+      }
+    },
+    {
+      "command": "npm run test:windows",
+      "exitCode": 0,
+      "node": {
+        "passed": 56,
+        "failed": 0,
+        "skipped": 0
+      },
+      "python": {
+        "passed": 57,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": ".local/audit-followups-windows.log",
+        "sha256": "baf9367afc781e4c710406a999733af2b7f28c3654e35b0a7dad683699e28501",
+        "bytes": 7049
+      }
+    },
+    {
+      "command": "npm run eval:workflow",
+      "exitCode": 0,
+      "evalId": "eval-fD6-2026-11-12T07:10:38",
+      "mode": "scripted",
+      "passed": 24,
+      "failed": 0,
+      "errors": 0,
+      "evidence": {
+        "path": ".local/quality-baseline/2026-11-12T07-10-36-740Z-0c046a2d/promptfoo.json",
+        "sha256": "d33e77c2f9a4e9b9fea8afd45019aae3ecc44b244e00b6fcc5f932df1ab155f3",
+        "bytes": 1870478
+      },
+      "manifest": {
+        "path": ".local/quality-baseline/2026-11-12T07-10-36-740Z-0c046a2d/manifest.json",
+        "sha256": "a6b9522a3292d433adfafba99b396683840052bfc3692870947c4f7ac6fa4a32",
+        "bytes": 2302
+      },
+      "log": {
+        "path": ".local/audit-followups-promptfoo-final-checked.log",
+        "sha256": "272b582015e2e0068c3a734bae3bb9a5adbf4802280de1350f88fb1c502c2330",
+        "bytes": 18030
+      },
+      "sourceHashesRechecked": [
+        {
+          "path": "evals/quality-baseline/cases.cjs",
+          "sha256": "e409a224ef40c2e930102897022f84b05d71ed3763996889f8bdcbf4c0722b9a"
+        },
+        {
+          "path": "evals/quality-baseline/provider.cjs",
+          "sha256": "d5c01b251daada5646ae449d995f30788059b6c039602cf2ccf89173047a19ea"
+        },
+        {
+          "path": "evals/quality-baseline/kernel.mjs",
+          "sha256": "4eef17176e15d260ea880047026c55e90a9e62fd39c860684a9425372d7a4aea"
+        },
+        {
+          "path": "evals/quality-baseline/relay.py",
+          "sha256": "7b0d0aad9d2e5e9c162265f195fcae3aedabce71a8706cc625f7e8ed378b2fec"
+        },
+        {
+          "path": "evals/quality-baseline/checks.cjs",
+          "sha256": "fa5c10add71600e2a7dddf287d1ae302c6960846a0650172c45434c6c8fba24a"
+        },
+        {
+          "path": "evals/quality-baseline/assertions.js",
+          "sha256": "2dda2acb303eb858e53b9ca734a9f7b0437cb62e3b0522fb1f902b8d4defbb69"
+        },
+        {
+          "path": "evals/quality-baseline/promptfooconfig.cjs",
+          "sha256": "fd217172b8ae614bbad1916d6e8083957eb2d2dbd990fc0071bb8bc80af84e40"
+        },
+        {
+          "path": "evals/quality-baseline/live.mjs",
+          "sha256": "592a530a7eab1cb9e83b974e506d5815b10b4c9161c67877969e162e861519fc"
+        },
+        {
+          "path": "evals/quality-baseline/package-lock.json",
+          "sha256": "a9b2595a4a1af1e8a83c26f30abfd3d3e1cce4725ba8f7c58ab61fb91c020a16"
+        },
+        {
+          "path": "config/skills/qx-authority-check/SKILL.md",
+          "sha256": "b6d921e547577f7721a07f3cbe4b9e857e2b4354c6f229937f335a037c498322"
+        },
+        {
+          "path": "config/skills/qx-case-comparison/SKILL.md",
+          "sha256": "b31fd35d01ec72d5ae3235066dacae3cbc92670329835736e8b87deaa1288f1c"
+        },
+        {
+          "path": "config/skills/qx-issue-memo/SKILL.md",
+          "sha256": "3991fc1c21c8435c8b340472dbea987623f68634b1aaa01caecafb0b0fb84329"
+        },
+        {
+          "path": "config/skills/qx-lecture-source-pack/SKILL.md",
+          "sha256": "cb18532bcff5c15a6c8ec5240c2b929c342d0d0cd7e1cc52d11e4123f0ceb9bd"
+        },
+        {
+          "path": "workspace-seed/legal-library/workbench/legal-research.md",
+          "sha256": "4f2e662943352dcff7df70b351845a239ac18f4ff1691dbd8ce656af4378a482"
+        }
+      ],
+      "cases": [
+        {
+          "id": "authority-check-1",
+          "passed": true
+        },
+        {
+          "id": "authority-check-2",
+          "passed": true
+        },
+        {
+          "id": "authority-check-3",
+          "passed": true
+        },
+        {
+          "id": "case-comparison-1",
+          "passed": true
+        },
+        {
+          "id": "case-comparison-2",
+          "passed": true
+        },
+        {
+          "id": "case-comparison-3",
+          "passed": true
+        },
+        {
+          "id": "issue-memo-1",
+          "passed": true
+        },
+        {
+          "id": "issue-memo-2",
+          "passed": true
+        },
+        {
+          "id": "issue-memo-3",
+          "passed": true
+        },
+        {
+          "id": "lecture-source-pack-1",
+          "passed": true
+        },
+        {
+          "id": "lecture-source-pack-2",
+          "passed": true
+        },
+        {
+          "id": "reopen-saved-note",
+          "passed": true
+        },
+        {
+          "id": "case-isolation-1",
+          "passed": true
+        },
+        {
+          "id": "case-isolation-2",
+          "passed": true
+        },
+        {
+          "id": "retry-saved-note",
+          "passed": true
+        },
+        {
+          "id": "money-1",
+          "passed": true
+        },
+        {
+          "id": "money-2",
+          "passed": true
+        },
+        {
+          "id": "date-1",
+          "passed": true
+        },
+        {
+          "id": "date-2",
+          "passed": true
+        },
+        {
+          "id": "stale-citation-1",
+          "passed": true
+        },
+        {
+          "id": "stale-citation-2",
+          "passed": true
+        },
+        {
+          "id": "partial-delivery",
+          "passed": true
+        },
+        {
+          "id": "interrupted-before-export",
+          "passed": true
+        },
+        {
+          "id": "unavailable-source",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "command": "node --test evals/quality-baseline/checks.test.cjs evals/quality-baseline/live.test.cjs",
+      "exitCode": 0,
+      "passed": 23,
+      "failed": 0,
+      "realNetwork": false,
+      "evidence": {
+        "path": ".local/audit-followups-eval-assertions-final.log",
+        "sha256": "8b8e706919b26bce0d0b1113ca00e7147f7c93889eeabe57dbd2aca88582f748",
+        "bytes": 1389
+      }
+    },
+    {
+      "command": "check_contract_compare_ui.py (real Harness/browser, synthetic workspace)",
+      "exitCode": 0,
+      "evidence": {
+        "path": ".local/audit-contract-compare/1794467240177/report.json",
+        "sha256": "643dde5b9a357c62a7c53162f609dbc8efadcc2a0841b8a2bde4b4193f215101",
+        "bytes": 432
+      },
+      "result": {
+        "pendingComparisonCannotUseOldLocation": true,
+        "textComparisonAndOriginalNavigation": true,
+        "draftPreservedWithoutSending": true,
+        "indexedUploadSelectable": true,
+        "docxOriginalParserComparison": true,
+        "pdfOriginalPage2": true,
+        "staleCitationRejected": true,
+        "widths": [
+          1440,
+          768,
+          390
+        ],
+        "otherFiveOriginalsUnchanged": true,
+        "uploadedOriginalUnchanged": true,
+        "pageErrors": []
+      }
+    },
+    {
+      "command": "backup_experiment.py (independent repeat)",
+      "exitCode": 0,
+      "checksPassed": 24,
+      "restoredFiles": 4,
+      "restoredRows": 50,
+      "evidence": {
+        "path": ".local/audit-followups/runs/backup-0ej_iphu/result.json",
+        "sha256": "552c5d6b49ebc77d51d2410ebc83cbc0e0e2cda62a640383c7868a8c7180a383",
+        "bytes": 7489
+      }
+    },
+    {
+      "command": "verify experiment report SHA-256",
+      "exitCode": 0,
+      "reports": 4,
+      "evidence": {
+        "path": "experiments/audit-followups/evidence-2026-11-12.json",
+        "sha256": "79f6314c6c078ff4eeeddc679e7f91c5f7c82d0c72a5202387cc0b86b7637787",
+        "bytes": 20669
+      }
+    }
+  ],
+  "limitations": [
+    "No actual model call or legal-quality acceptance",
+    "No new installer, production backup UI, remote publishing or real case data",
+    "Local raw reports are ignored development artifacts, not included in Git",
+    "Candidate comparison covers only five synthetic PII texts and two synthetic DOCX documents"
+  ]
+}

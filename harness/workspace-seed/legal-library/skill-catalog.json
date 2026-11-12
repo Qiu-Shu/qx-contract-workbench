@@ -1,5 +1,12 @@
 {
   "format": 1,
+  "research_adapters": [
+    {"name":"qx-authority-check","source":"legal-library/research-cn/skills/authority-check/SKILL.md","skill":".dsh/skills/qx-authority-check/SKILL.md"},
+    {"name":"qx-case-comparison","source":"legal-library/research-cn/skills/case-comparison/SKILL.md","skill":".dsh/skills/qx-case-comparison/SKILL.md"},
+    {"name":"qx-issue-memo","source":"legal-library/research-cn/skills/issue-memo/SKILL.md","skill":".dsh/skills/qx-issue-memo/SKILL.md"},
+    {"name":"qx-lecture-source-pack","source":"legal-library/research-cn/skills/lecture-source-pack/SKILL.md","skill":".dsh/skills/qx-lecture-source-pack/SKILL.md"}
+  ],
+  "research_provenance": "legal-library/research-cn/provenance.json",
   "harness_source_ref": "ce7073d51254c26cd63b22a60835b8f948deb447",
   "official_discovery_reference": "https://github.com/deepseek-ai/deepseek-harness/blob/ce7073d51254c26cd63b22a60835b8f948deb447/packages/skill/skill-filesystem/README.zh.md",
   "sources": {

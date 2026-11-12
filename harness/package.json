@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "node scripts/test-suite.cjs offline",
+    "eval:workflow": "node evals/quality-baseline/run.cjs",
     "test:offline": "node scripts/test-suite.cjs offline",
     "test:windows": "node scripts/test-suite.cjs windows",
     "test:quality": "node scripts/test-suite.cjs quality"
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.2.2-alpha.2",
+    "diff": "9.0.0",
     "electron-updater": "6.8.11"
   }
 }

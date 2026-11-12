@@ -21,7 +21,7 @@ function discover(){
       else if(/^test_.*\.py$/.test(entry.name))python.push(file);
     }
   }
-  for(const folder of ['desktop','plugins','packaging','scripts','bridge','tests'])visit(folder);
+  for(const folder of ['desktop','plugins','packaging','scripts','bridge','tests','evals'])visit(folder);
   return {node:node.sort(),python:python.sort()};
 }
 function plan(mode){

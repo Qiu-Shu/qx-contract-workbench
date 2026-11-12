@@ -1,3 +1,5 @@
+export {compareContracts,resolveContractReference} from './contract-compare.mjs';
+export {installContractComparison} from './contract-compare-api.mjs';
 // Resolve only an opaque upload reference; actual file access remains with workspaceFiles.
 export function attachmentPreviewPath(attachments,input){
   if(!input||typeof input!=='object'||Object.keys(input).some(key=>!['attachmentId','name','bytes'].includes(key))||

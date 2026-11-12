@@ -40,6 +40,20 @@ function copyMediaRegistry(source,payload,manifest){
   fs.mkdirSync(path.join(payload,'sources'),{recursive:true});
   copySource(source,path.join(payload,'sources/media-source-registry.json'),'resources/workbench/sources/media-source-registry.json',manifest);
 }
+function copySkillLabels(source,payload,manifest){
+  const catalog=JSON.parse(fs.readFileSync(source,'utf8'));
+  if(catalog.version!==1||!catalog.labels||Array.isArray(catalog.labels)||typeof catalog.labels!=='object'||
+    !Object.entries(catalog.labels).every(([id,label])=>/^[a-z0-9-]+$/.test(id)&&typeof label==='string'&&label.trim()))throw Error('Invalid Skill label catalog');
+  const relative='node_modules/@deepseek-ai/dsh-client-ui-skill/lib/client.js',file=path.join(payload,relative);
+  const original=fs.readFileSync(file,'utf8'),matches=[...original.matchAll(/const qxSkillLabels = (\{[\s\S]*?\});/g)];
+  if(matches.length!==1)throw Error('Skill label mapping differs from the pinned UI');
+  const labels={...JSON.parse(matches[0][1]),...catalog.labels};
+  const updated=original.replace(matches[0][0],()=>'const qxSkillLabels = '+JSON.stringify(labels,null,2)+';');
+  fs.mkdirSync(path.join(payload,'config'),{recursive:true});
+  copySource(source,path.join(payload,'config/skill-labels.zh-CN.json'),'resources/workbench/config/skill-labels.zh-CN.json',manifest);
+  fs.writeFileSync(file,updated);
+  return {target:'resources/workbench/'+relative,sha256:crypto.createHash('sha256').update(updated).digest('hex')};
+}
 async function main(){
   if(process.platform!=='win32')throw Error('Windows x64 release staging requires Windows');
   if(!process.argv[2])throw Error('Usage: node stage.cjs <new-stage-directory> [verified-0.2.14-installer]');
@@ -82,6 +96,7 @@ async function refresh(stage){
   copyMediaRegistry(path.join(root,'sources/media-source-registry.json'),payload,manifest);
   overlay(path.join(__dirname,'payload-config'),path.join(payload,'config'),manifest,'resources/workbench/config');
   overlay(path.join(__dirname,'runtime-overrides'),path.join(payload,'node_modules'),manifest,'resources/workbench/node_modules');
+  const skillLabels=copySkillLabels(path.join(root,'config/skill-labels.zh-CN.json'),payload,manifest);
   for(const name of ['component-install.py','python-tool.py'])copySource(path.join(__dirname,name),path.join(payload,name),'resources/workbench/'+name,manifest);
   const runner=path.join(payload,'desktop-runner');
   for(const name of fs.readdirSync(runner))if(fs.existsSync(path.join(root,'desktop',name)))copySource(path.join(root,'desktop',name),path.join(runner,name),'resources/workbench/desktop-runner/'+name,manifest);
@@ -95,6 +110,7 @@ async function refresh(stage){
   fs.writeFileSync(path.join(payload,'config/initialization.json'),JSON.stringify({schema:1,id:fingerprint})+'\n');
   await asar.createPackage(app,path.join(candidate,'resources/app.asar'));
   const generated=[
+    skillLabels,
     {target:'resources/workbench/config/initialization.json',sha256:await digest(path.join(payload,'config/initialization.json'))},
     {target:'resources/app.asar',sha256:await digest(path.join(candidate,'resources/app.asar'))},
   ];
@@ -102,4 +118,4 @@ async function refresh(stage){
   console.log(JSON.stringify({stage,base,candidate,sourceFiles:manifest.length}));
 }
 if(require.main===module)main().catch(error=>{console.error(error);process.exitCode=1});
-module.exports={overlay,digest,copyMediaRegistry};
+module.exports={overlay,digest,copyMediaRegistry,copySkillLabels};

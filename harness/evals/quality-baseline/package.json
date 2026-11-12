@@ -1,0 +1,15 @@
+{
+  "name": "qx-harness-quality-baseline",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Development-only synthetic Harness workflow evaluations",
+  "scripts": {
+    "eval": "node run.cjs",
+    "test": "node --test checks.test.cjs live.test.cjs"
+  },
+  "devDependencies": {
+    "@libsql/win32-x64-msvc": "0.5.29",
+    "hono": "4.13.18",
+    "promptfoo": "0.125.1"
+  }
+}

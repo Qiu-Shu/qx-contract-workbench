@@ -604,6 +604,12 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
     return()=>{cancel?.();if(window.__qxReconnectInPlace===reconnect)delete window.__qxReconnectInPlace;};
   }
   return {inject:['sessions','uiWorkspace','slots','sidebarRight'],apply(ctx){
+    ctx.effect(()=>{
+      let dispose,stopped=false;const script=document.createElement('script');script.src='/api/qx-compare/client.js';
+      script.onload=()=>{if(!stopped)dispose=window.qxInstallContractComparison(ctx,React);};
+      script.onerror=()=>console.warn('合同对比暂未加载，请刷新工作台后重试。');
+      document.head.append(script);return()=>{stopped=true;dispose?.();script.remove();};
+    },'qunxing: contract comparison');
     ctx.effect(()=>installReconnect(ctx),'qunxing: reconnect in place');
     ctx.effect(()=>{
       const css=document.createElement('style');css.textContent='.qx-legal-search-row{margin:6px 0;color:var(--dsw-alias-label-secondary,#687282);font-size:13px}.qx-legal-search-toggle{display:flex;align-items:center;gap:8px;width:100%;border:0;padding:6px 0;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit}.qx-legal-search-toggle:focus-visible{outline:2px solid #3563a5;outline-offset:2px}.qx-legal-search-detail{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.qx-legal-search-body{padding:4px 16px 8px;border-left:1px solid var(--dsw-alias-border-default,#d8dde5);overflow-wrap:anywhere}.qx-legal-search-body p{margin:6px 0}.qx-legal-search-body a{color:var(--dsw-alias-link,#3563a5)}';document.head.append(css);return()=>css.remove();
