@@ -34,6 +34,8 @@ Node 与 pytest 两组都会执行；任一子进程失败，统一入口返回�
 
 上游兼容模块 `plugins/wechat/test/office.test.mjs` 的真实文档往返另需 `DSH_OFFICE_PYTHON`（含 python-docx、openpyxl、python-pptx），PDF 转换另需 `DSH_OFFICE_KIT`。缺工具时会明确跳过真实部分。当前 QX 默认插件入口为 `qx-plugin.js`，不加载上游 `index.js` 的 `office_*` 工具。
 
+合同 UI 烟测入口 `tests/check_contract_compare_ui.py` 默认验证当前源码集成；验收实际安装包时须设置 `QX_TEST_PACKAGED=1`，使集成模块、材料解析和旧业务依赖都取自 `QX_TEST_APP` 指向的解包资源。`QX_TEST_OUTPUT_ROOT` 可将独立合成工作区、日志及截图放到其他磁盘。烟测报告的 `packagedIntegrationAndParser` 记录实际模式，不能用源码模式代替包内验证。不得在正在构建的候选目录内运行任何测试。
+
 ## 媒体源与打包回归
 
 `sources/media-source-registry.json` 是应用源码配置。`packaging/stage.cjs` 验证其版本、条目、来源 URL/允许域名和刷新周期后，明确覆盖 `resources/workbench/sources/media-source-registry.json`，并加入源码清单；不再依赖旧发行包偶然携带该文件。

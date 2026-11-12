@@ -1,4 +1,4 @@
-"""Real installed Harness shell + current integration, synthetic fixtures, network blocked."""
+"""Real Harness shell, source or packaged integration, synthetic fixtures, network blocked."""
 import hashlib,json,os,subprocess,sys,time
 from pathlib import Path
 from playwright.sync_api import sync_playwright,expect
@@ -14,7 +14,9 @@ host=subprocess.Popen(['node',str(ROOT/'contract-compare-smoke.cjs')],stdout=sub
 report={};browser=None
 try:
     runtime=json.loads(host.stdout.readline());folder=Path(runtime['data']);workspace=Path(runtime['workspace'])
-    os.environ['QX_LEGACY_ROOT']=str(ROOT.parent/'legacy');sys.path.insert(0,str(ROOT.parent/'bridge'))
+    code=Path(os.environ['QX_TEST_APP']) if runtime['packaged'] else ROOT.parent
+    os.environ['QX_LEGACY_ROOT']=str(code/'legacy');sys.path.insert(0,str(code/'bridge'))
+    report['packagedIntegrationAndParser']=runtime['packaged']
     from store import MaterialStore
     from reader import parse
     from docx import Document
