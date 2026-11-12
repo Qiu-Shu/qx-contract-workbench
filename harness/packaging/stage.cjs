@@ -97,6 +97,7 @@ async function refresh(stage){
   overlay(path.join(__dirname,'payload-config'),path.join(payload,'config'),manifest,'resources/workbench/config');
   overlay(path.join(__dirname,'runtime-overrides'),path.join(payload,'node_modules'),manifest,'resources/workbench/node_modules');
   const skillLabels=copySkillLabels(path.join(root,'config/skill-labels.zh-CN.json'),payload,manifest);
+  const toolLabels=require('../scripts/tool-labels.cjs').stageToolLabels(root,payload,manifest);
   for(const name of ['component-install.py','python-tool.py'])copySource(path.join(__dirname,name),path.join(payload,name),'resources/workbench/'+name,manifest);
   const runner=path.join(payload,'desktop-runner');
   for(const name of fs.readdirSync(runner))if(fs.existsSync(path.join(root,'desktop',name)))copySource(path.join(root,'desktop',name),path.join(runner,name),'resources/workbench/desktop-runner/'+name,manifest);
@@ -111,6 +112,7 @@ async function refresh(stage){
   await asar.createPackage(app,path.join(candidate,'resources/app.asar'));
   const generated=[
     skillLabels,
+    toolLabels,
     {target:'resources/workbench/config/initialization.json',sha256:await digest(path.join(payload,'config/initialization.json'))},
     {target:'resources/app.asar',sha256:await digest(path.join(candidate,'resources/app.asar'))},
   ];

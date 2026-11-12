@@ -10,6 +10,7 @@ patchedDependencies:
   '@deepseek-ai/dsh-client-ui-conversation@0.2.2-alpha.2': c12c09a2193d895bee24ca7d2c14c1d16ed760d4bcdb68eba45dd0a10de7475b
   '@deepseek-ai/dsh-client-ui-settings-models@0.2.2-alpha.2': 76ab111317e3e1803249b993c09d2e68b90ed15db58112477c2b20402ca8da72
   '@deepseek-ai/dsh-client-ui-skill@0.2.2-alpha.2': 845deee507a9fc41260737fb414dcc46c4f8c2ec109c3563692191706f45fe80
+  '@deepseek-ai/dsh-client-ui-tool@0.2.2-alpha.2': 3383a89cc4114ca109605dd9e18fa58ec7ef81cc29261f78c337b3f2fce43b49
   '@deepseek-ai/dsh-client-ui-workspace@0.2.2-alpha.2': 48e90ec96529de7d4e97b9c9046b38df190c310c3f1012c2f51a289993d8c935
 
 importers:
@@ -5167,7 +5168,7 @@ snapshots:
       '@deepseek-ai/cordis': 4.0.6-alpha.1(@deepseek-ai/cordis-plugin-include@1.0.11-alpha.1)(@deepseek-ai/cordis-plugin-loader@1.0.7-alpha.1)
       '@deepseek-ai/schemastery': 3.18.6-alpha.1
 
-  '@deepseek-ai/dsh-client-ui-tool@0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)':
+  '@deepseek-ai/dsh-client-ui-tool@0.2.2-alpha.2(patch_hash=3383a89cc4114ca109605dd9e18fa58ec7ef81cc29261f78c337b3f2fce43b49)(@deepseek-ai/cordis@4.0.6-alpha.1)':
     dependencies:
       '@deepseek-ai/cordis': 4.0.6-alpha.1(@deepseek-ai/cordis-plugin-include@1.0.11-alpha.1)(@deepseek-ai/cordis-plugin-loader@1.0.7-alpha.1)
 
@@ -7550,7 +7551,7 @@ snapshots:
       '@deepseek-ai/dsh-client-ui-skill': 0.2.2-alpha.2(patch_hash=845deee507a9fc41260737fb414dcc46c4f8c2ec109c3563692191706f45fe80)(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-subagent': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-theme': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
-      '@deepseek-ai/dsh-client-ui-tool': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
+      '@deepseek-ai/dsh-client-ui-tool': 0.2.2-alpha.2(patch_hash=3383a89cc4114ca109605dd9e18fa58ec7ef81cc29261f78c337b3f2fce43b49)(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-trajectory': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-user-questions': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)
       '@deepseek-ai/dsh-client-ui-workflow-run': 0.2.2-alpha.2(@deepseek-ai/cordis@4.0.6-alpha.1)

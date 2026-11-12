@@ -1,6 +1,8 @@
 * text=auto eol=lf
 # Release overlays and initialization/source fingerprints preserve measured bytes.
 harness/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Unified diff context has a required space before the original UI source tabs.
+harness/patches/@deepseek-ai__dsh-client-ui-tool@0.2.2-alpha.2.patch whitespace=blank-at-eol,blank-at-eof,cr-at-eol,-space-before-tab
 harness/workspace-seed/** -whitespace
 harness/legacy/** -whitespace
 # Public evidence and fingerprints retain the exact measured bytes.

@@ -1,5 +1,7 @@
 # 任务实际状态
 
+2026-11-12 AI师兄 Harness 具体工具名称中文显示已在独立 `codex/tool-labels-zh` 源码完成：171 条名称覆盖全部 153 个随包 MCP 工具，实际调用 ID、参数、结果及历史记录保留。最终 10 项目标/打包回归通过、独立审阅无未解决 P1/P2；用户授权纳入“整理2.16版本审核”候选版。当前安装版尚未更新，完整安装和视觉验收待审核聊天接续。[实施与验证记录](../harness/docs/2026-11-12-tool-labels-zh.md)。
+
 2026-11-12 Harness 0.2.16 审核后续：四项中国法研究方法、合同文字对比与原文回看、24 案开发评测基线已实现；restic 一致快照/独立恢复实验 24 项通过，Presidio/Docling 小样本未显示净改善，保留实验。附加分支 `codex/audit-0216-fixes`；最终离线 Node 417 通过/2 跳过、Python 463 通过/1 跳过（36 子测试通过），Windows Node 56/Python 57 全通过，Promptfoo 24/24 通过，各入口 exit 0。未进行真实模型/法律质量验收，未打包发布或安装新版。[后续交付与验证边界](../harness/docs/2026-11-12-audit-followups-delivery.md)。
 
 2026-11-11 Harness 0.2.16 审核首批整改：R01–R05 源码实现与独审问题闭环，涉及知识恢复保留与项目归属、个人微信 DPAPI 凭据、受控媒体来源及统一测试入口。隔离分支 `codex/audit-0216-fixes`；最终离线 Node 372 通过/2 跳过、Python 458 通过/1 跳过（36 子测试通过），Windows Node 56/Python 57 全通过，两个入口 exit 0。旧异步测试漏报已修复并通过失败注入验证；可选上游 Office 缺依赖实测失败保留。未打包、发布或安装新版，当前用户安装不变。[交付与验证边界](../harness/docs/2026-11-11-audit-reliability-delivery.md)。

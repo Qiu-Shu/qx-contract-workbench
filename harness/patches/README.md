@@ -1,5 +1,7 @@
 # 群兴界面文案补丁
 
+- `dsh-client-ui-tool`：具体工具名称中文显示，原始调用 ID 保留。目录与开发补丁通过 `scripts/tool-labels.cjs` 同步；`packaging/stage.cjs` 将同一目录应用于安装包依赖并记录摘要。验证与合入说明见 [2026-11-12-tool-labels-zh.md](../docs/2026-11-12-tool-labels-zh.md)。
+
 固定用于 Harness `0.2.2-alpha.2`，由 `pnpm patchedDependencies` 管理，执行 `pnpm install` 时自动应用。
 
 - `dsh-client-ui-settings-models`：中文首次使用弹窗改为工作台介绍、四项法律业务及资料/微信入口；按钮为“开始使用”。
