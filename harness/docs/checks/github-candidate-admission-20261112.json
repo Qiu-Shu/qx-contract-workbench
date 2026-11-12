@@ -1,0 +1,398 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T08:17:16.817Z",
+  "checkedDateLocal": "2026-11-12 Asia/Shanghai",
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "baselineCommit": "5e01b065e4a1de9c63aa9d2c51118812e442ec86",
+  "candidateCount": 8,
+  "referenceRepositoryCount": 1,
+  "packagingBuilt": false,
+  "newDependenciesInstalled": false,
+  "newModelsDownloaded": false,
+  "productionCodeModified": false,
+  "realMaterialsOrModelsUsed": false,
+  "publishedOrPushed": false,
+  "repositories": [
+    {
+      "repository": "CSlawyer1985/claude-for-legal-ZH",
+      "repositoryUrl": "https://github.com/CSlawyer1985/claude-for-legal-ZH",
+      "reviewPin": "59f37f1c8851b8277e24f7a45f4e773bee97bab9",
+      "selectedScope": "four legal-research-cn methods",
+      "licenseScope": "Apache-2.0",
+      "decision": "retain_existing_scoped_adaptation",
+      "retainExistingProductUse": true,
+      "limitsOrBlockers": [
+        "Legal quality and lawyer acceptance remain unverified"
+      ],
+      "role": "candidate",
+      "newRuntimeIntegrationThisTurn": false
+    },
+    {
+      "repository": "kpdecker/jsdiff",
+      "repositoryUrl": "https://github.com/kpdecker/jsdiff",
+      "reviewPin": "ed13aca03aa25735fafc0645d1185e7a1c68fd8c",
+      "selectedScope": "9.0.0",
+      "licenseScope": "BSD-3-Clause",
+      "decision": "retain_existing_dependency",
+      "retainExistingProductUse": true,
+      "limitsOrBlockers": [
+        "Text comparison only; no full Word layout or legal significance verdict"
+      ],
+      "role": "candidate",
+      "newRuntimeIntegrationThisTurn": false
+    },
+    {
+      "repository": "mozilla/pdf.js",
+      "repositoryUrl": "https://github.com/mozilla/pdf.js",
+      "reviewPin": "1c8020a7d4e43668ac287a3ecf9a8dbea17e4c56",
+      "selectedScope": "6.3.289 embedded in preview 0.2.2-alpha.2",
+      "licenseScope": "Apache-2.0",
+      "decision": "reuse_existing_embedded_component",
+      "retainExistingProductUse": true,
+      "limitsOrBlockers": [
+        "No duplicate dependency",
+        "6.5.438 upgrade and OCR coordinate overlays unverified"
+      ],
+      "role": "candidate",
+      "newRuntimeIntegrationThisTurn": false
+    },
+    {
+      "repository": "promptfoo/promptfoo",
+      "repositoryUrl": "https://github.com/promptfoo/promptfoo",
+      "reviewPin": "8569e72ed6cf7737082a6042be8d925e40f9739d",
+      "selectedScope": "0.125.1",
+      "licenseScope": "MIT",
+      "decision": "development_only_zero_egress_gate_failed",
+      "retainExistingProductUse": false,
+      "limitsOrBlockers": [
+        "Disabled telemetry still triggers POST intent",
+        "Whole-process default-deny egress and 24-case rerun pending"
+      ],
+      "role": "candidate",
+      "newRuntimeIntegrationThisTurn": false
+    },
+    {
+      "repository": "anthropics/skills",
+      "repositoryUrl": "https://github.com/anthropics/skills",
+      "reviewPin": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "selectedScope": "skills/skill-creator only",
+      "licenseScope": "Apache-2.0",
+      "decision": "development_method_reference_only",
+      "retainExistingProductUse": false,
+      "limitsOrBlockers": [
+        "Original scripts invoke Claude CLI",
+        "Original viewer has external fonts and CDN assets"
+      ],
+      "role": "candidate",
+      "newRuntimeIntegrationThisTurn": false
+    },
+    {
+      "repository": "restic/restic",
+      "repositoryUrl": "https://github.com/restic/restic",
+      "reviewPin": "6aa3a516ce654808a1f28f9fa21e9b7c8e6e90bf",
+      "selectedScope": "0.19.1",
+      "licenseScope": "BSD-2-Clause",
+      "decision": "eligible_for_controlled_integration_development",
+      "retainExistingProductUse": false,
+      "limitsOrBlockers": [
+        "Full data inventory and coordinated write pause missing",
+        "Multiple SQLite, PostgreSQL and file consistency",
+        "Private mappings, ACL and off-device credential recovery",
+        "Independent download signature verification pending"
+      ],
+      "role": "candidate",
+      "newRuntimeIntegrationThisTurn": false
+    },
+    {
+      "repository": "data-privacy-stack/presidio",
+      "repositoryUrl": "https://github.com/data-privacy-stack/presidio",
+      "reviewPin": "211afc337241aee8bf495f282e83ef639a5d015f",
+      "selectedScope": "2.2.366 + zh_core_web_sm 3.8.0",
+      "licenseScope": "MIT",
+      "decision": "defer_replacement_auxiliary_trial_only",
+      "retainExistingProductUse": false,
+      "limitsOrBlockers": [
+        "5 entity occurrences lost versus existing rules on new synthetic set",
+        "Combined recognizers and reversible mapping not implemented",
+        "OCR gaps and generic-word false positive in existing rules"
+      ],
+      "role": "candidate",
+      "newRuntimeIntegrationThisTurn": false
+    },
+    {
+      "repository": "docling-project/docling",
+      "repositoryUrl": "https://github.com/docling-project/docling",
+      "reviewPin": "6852c27fb87dafaaa1a564545a8ce78d4565b186",
+      "selectedScope": "2.150.0 DOCX trial",
+      "licenseScope": "MIT software; models require separate review",
+      "decision": "defer_default_docx_integration",
+      "retainExistingProductUse": false,
+      "limitsOrBlockers": [
+        "No added structure gain across 4 synthetic DOCX files",
+        "Nested-table source hierarchy requires adaptation",
+        "PDF/OCR pipeline, model pins, resources and redistribution not verified"
+      ],
+      "role": "candidate",
+      "newRuntimeIntegrationThisTurn": false
+    },
+    {
+      "repository": "anthropics/knowledge-work-plugins",
+      "repositoryUrl": "https://github.com/anthropics/knowledge-work-plugins",
+      "reviewPin": "877a617b435ee2edfb002d9a3703c0a1a03aa1ba",
+      "selectedScope": "legal reference; existing G01 pin 8444efcd48f7012f09797778a36a33e73d0861f4",
+      "licenseScope": "Apache-2.0",
+      "decision": "reference_only_no_direct_import",
+      "retainExistingProductUse": false,
+      "limitsOrBlockers": [
+        "Existing review-contract file unchanged",
+        "Do not import external connector configuration or foreign-law defaults"
+      ],
+      "role": "reference",
+      "newRuntimeIntegrationThisTurn": false
+    }
+  ],
+  "verification": {
+    "methodsAndEvaluationUnitTests": {
+      "targetCommand": "node --test tests/legal-research-skills.test.cjs evals/quality-baseline/checks.test.cjs evals/quality-baseline/live.test.cjs",
+      "cwd": "harness",
+      "exitCode": 0,
+      "tests": 26,
+      "pass": 26,
+      "fail": 0,
+      "skip": 0,
+      "environment": ".local/audit-0216/build/test-env.ps1"
+    },
+    "comparisonPreviewTests": {
+      "pass": 20,
+      "fail": 0,
+      "skip": 0,
+      "exitCode": 0
+    },
+    "browserPreview": {
+      "exitCode": 0,
+      "pageErrors": 0,
+      "pdfPage2": true,
+      "widths": [
+        1440,
+        768,
+        390
+      ]
+    },
+    "existingDependencyProvenance": {
+      "exitCode": 0,
+      "report": "diff-pdf-provenance-v2.json"
+    },
+    "promptfooTelemetry": {
+      "exitCode": 0,
+      "interpretation": "Gap reproduced, not admission passed",
+      "recordCalls": 2,
+      "capturedRequestIntents": 1,
+      "realNetworkCalls": 0,
+      "historicalTransmission": "not established"
+    },
+    "restic": {
+      "checks": 24,
+      "passed": 24,
+      "exitCode": 0,
+      "files": 4,
+      "sqliteRows": 50
+    },
+    "knowledgeTransfer": {
+      "exit_code": 0,
+      "tests": 15,
+      "seconds": 3.897,
+      "log": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/restic/knowledge-transfer-tests.log"
+    },
+    "privacy": {
+      "syntheticTexts": 12,
+      "entityOccurrences": 11,
+      "baselineCovered": 6,
+      "candidateCovered": 4,
+      "newlyCovered": 3,
+      "regressed": 5,
+      "existingRuleFalsePositiveCharacters": 5,
+      "combined9Of11": "inference only; not implemented"
+    },
+    "docling": {
+      "newDocx": 2,
+      "newStructureGains": 0,
+      "newRegressions": 0,
+      "totalIncludingPriorDocx": 4,
+      "pdfOcrRun": false
+    },
+    "candidateExperiments": {
+      "processes": 3,
+      "exitCodes": [
+        0,
+        0,
+        0
+      ],
+      "pipCheckProcesses": 2,
+      "pipCheckExitCodes": [
+        0,
+        0
+      ]
+    },
+    "historicalWorkflow": {
+      "run": ".local/quality-baseline/2026-11-12T07-10-36-740Z-0c046a2d",
+      "mode": "scripted",
+      "successes": 24,
+      "failures": 0,
+      "errors": 0,
+      "qualityStatus": "not_reviewed",
+      "sourceHashesMatched": 14,
+      "reportSHA256": "d33e77c2f9a4e9b9fea8afd45019aae3ecc44b244e00b6fcc5f932df1ab155f3",
+      "rerunThisReview": false
+    },
+    "evidenceHashAssertionsPassed": 52
+  },
+  "notVerified": [
+    "Live model legal quality",
+    "Complete vulnerability and transitive-license audit",
+    "Whole-product and cross-machine restore",
+    "Docling PDF/OCR or model weights",
+    "Product integration of Presidio anonymizer",
+    "New installer or production installation"
+  ],
+  "inputs": [
+    {
+      "file": "C:/Users/Administrator/Desktop/AI-Shixiong-v0.2.16-Audit-2026-11-11.html",
+      "bytes": 58274,
+      "sha256": "f3f3586256d266b70408c515d1351fdea6332144a61f3380415bfa0b764265bd"
+    },
+    {
+      "file": "C:/Users/Administrator/.codex/attachments/50965643-500b-41ac-b5ae-a943956461e2/已粘贴的文本.txt",
+      "bytes": 22382,
+      "sha256": "d5ebc6b5acb72219416c17e6156d7149a87a74fd0e1783bc2b4c90b8acbd8311"
+    }
+  ],
+  "repositoryEvidence": [
+    {
+      "file": "harness/docs/2026-11-12-github-candidate-admission.md",
+      "bytes": 9822,
+      "sha256": "1a6d55434ca59a838b2a275a95e6314dafec86479e4111b15676b7b5eee737f1"
+    },
+    {
+      "file": "harness/docs/research/2026-11-12-candidates-methods-eval.md",
+      "bytes": 14039,
+      "sha256": "dd31467823d51dbe1af3287e14a86713e638bb0b23c3b0103af7b702c0401855"
+    },
+    {
+      "file": "harness/docs/research/2026-11-12-candidates-methods-eval.json",
+      "bytes": 9741,
+      "sha256": "e7516e13f620576e4a307b0ff0a98ae5f7e3790187f17e7f51d90e328e138035"
+    },
+    {
+      "file": "harness/docs/research/2026-11-12-candidates-diff-pdf.md",
+      "bytes": 6298,
+      "sha256": "b9adcbb7373478cb1f01440a853ecfe33b24a305a0a491656bda71020107dfe0"
+    },
+    {
+      "file": "harness/docs/research/2026-11-12-candidate-restic-admission.md",
+      "bytes": 14706,
+      "sha256": "047bfde42602953e864d7e30003ff4c3c95e13053843f55ea3927cdff1f447c2"
+    },
+    {
+      "file": "harness/docs/research/2026-11-12-candidates-privacy-docling.md",
+      "bytes": 13847,
+      "sha256": "2095fac856420e8c4134e4ad79dcb0a71e6d0c6589e7664dbbcc14bd5483be67"
+    },
+    {
+      "file": "harness/experiments/candidate-admission/privacy-docling-fixtures.json",
+      "bytes": 2969,
+      "sha256": "cdbb21b7ae38578642a2998852ccc158c635ab132e4f72abebd268fb2f850797"
+    },
+    {
+      "file": "harness/experiments/candidate-admission/privacy-docling-check.py",
+      "bytes": 11644,
+      "sha256": "d5dc582b75e99bdb6760c8fe1c4aaab218e499985be9924307b7851884932999"
+    },
+    {
+      "file": "harness/experiments/candidate-admission/privacy-docling-evidence.json",
+      "bytes": 7091,
+      "sha256": "3e699486d1b334fd0c14ab453991696858ce55007a1cc12323135f2a581bbcc8"
+    },
+    {
+      "file": "harness/experiments/candidate-admission/promptfoo-telemetry-probe.cjs",
+      "bytes": 2602,
+      "sha256": "342762196d6a56990abe937218e5ce05a191f86fca0bbd6dbcefd0991e084c04"
+    },
+    {
+      "file": "harness/experiments/candidate-admission/verify-existing-diff-pdf.cjs",
+      "bytes": 3273,
+      "sha256": "23a896260528b34be272b9124bec090dd0c35aa6ffcc5266e0a6c672ab29f2b6"
+    }
+  ],
+  "localEvidence": [
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/pdf-diff-upstream.json",
+      "bytes": 24882,
+      "sha256": "a2d234a22fbe2e52bb0d8ff775fe19f003fd4224bf03bfd9c66ca0c34675b89a"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/diff-pdf-provenance-v2.json",
+      "bytes": 1779,
+      "sha256": "148f556c451dfd4424b662c3f47d9f1c96cca59161aae2b1bcdeae1c57af4645"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/logs/diff-preview-tests.log",
+      "bytes": 2148,
+      "sha256": "670379e24fb34747c22ffc83f02bd7fb7ce43b0eb241846a477f4860f8b8b1b6"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/logs/preview-ui.log",
+      "bytes": 529,
+      "sha256": "01fc30ad6e5d40595a72dc00d3cdaea032b95cb300ef9359d647db58473f9e0e"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/logs/promptfoo-independent-probe.log",
+      "bytes": 989,
+      "sha256": "54cbe93b5d8a81d57d194d7dadd89a1aceabc8b2db79df78f7698e45a0a153c4"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/preview-ui/1794470849682/report.json",
+      "bytes": 473,
+      "sha256": "90355e8f81af952ecfdd91c3ab88b99a4a4e0a4be351a2fa34b7ac8d6eb8d94d"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/restic/admission-evidence.json",
+      "bytes": 3208,
+      "sha256": "4101caf647fd8d78688f6ed8cccbf9ad6a301a8d9a694afaa4c52869124ea49b"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/restic/rerun-summary.json",
+      "bytes": 7489,
+      "sha256": "a3538aa05bea0f234290e027ef0cbbac8a4401e416e8b2480052e5ae564c31f1"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/restic/source-and-log-hashes.json",
+      "bytes": 3117,
+      "sha256": "07acdff837879f766bfd82166e51d0458983145aea7afd0ca144167d88699148"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/restic/knowledge-transfer-tests.log",
+      "bytes": 2661,
+      "sha256": "46ee6f59f6a74199764193f27c3b79a0df6ccb05273affa3e13c29f9c1a47f4c"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/privacy-docling/baseline.json",
+      "bytes": 15351,
+      "sha256": "4448cb86025406e811a32b905da2091a460831bdb3afde2f41fc665710ff7ab9"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/privacy-docling/presidio.json",
+      "bytes": 9114,
+      "sha256": "7a7e4cb3eb3573628ed20ec3caf9d5464ad52594bf4d92a9b7ca2936f5cd8300"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/privacy-docling/docling.json",
+      "bytes": 15948,
+      "sha256": "14b783f52a56c747d624591cf8d394b00946308c383bee6f7bb66aa38ec87f08"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/privacy-docling/spaCy-wheel-license.json",
+      "bytes": 2377,
+      "sha256": "b67bcf1b11eb79fd5939f5747aa5d844d57814c5b76a51603ce835a67f806638"
+    }
+  ]
+}

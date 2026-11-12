@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T08:06:51Z",
+  "checkedDateLocal": "2026-11-12 Asia/Shanghai",
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "baselineCommit": "5e01b065e4a1de9c63aa9d2c51118812e442ec86",
+  "scope": "Candidate admission review; no package build, dependency installation, real model call or production change",
+  "repositories": [
+    {
+      "repository": "CSlawyer1985/claude-for-legal-ZH",
+      "head": "59f37f1c8851b8277e24f7a45f4e773bee97bab9",
+      "headCommittedAt": "2026-09-28T17:34:32Z",
+      "reviewPin": "59f37f1c8851b8277e24f7a45f4e773bee97bab9",
+      "files": [
+        {
+          "path": "LICENSE",
+          "gitBlobSha": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+          "url": "https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/59f37f1c8851b8277e24f7a45f4e773bee97bab9/LICENSE"
+        },
+        {
+          "path": "legal-research-cn/skills/authority-check/SKILL.md",
+          "gitBlobSha": "10a4ab737857d0cd4ffac21d8dd88e20c1233a23",
+          "url": "https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/59f37f1c8851b8277e24f7a45f4e773bee97bab9/legal-research-cn/skills/authority-check/SKILL.md"
+        },
+        {
+          "path": "legal-research-cn/skills/case-comparison/SKILL.md",
+          "gitBlobSha": "1ec72fee11cd70175e4542d16a4133a93d1026b7",
+          "url": "https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/59f37f1c8851b8277e24f7a45f4e773bee97bab9/legal-research-cn/skills/case-comparison/SKILL.md"
+        },
+        {
+          "path": "legal-research-cn/skills/issue-memo/SKILL.md",
+          "gitBlobSha": "16f87d687d3fb3ddf03d6f63c39ff46a73b1a768",
+          "url": "https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/59f37f1c8851b8277e24f7a45f4e773bee97bab9/legal-research-cn/skills/issue-memo/SKILL.md"
+        },
+        {
+          "path": "legal-research-cn/skills/lecture-source-pack/SKILL.md",
+          "gitBlobSha": "e2679d93f1b0bb58e822ba04f804fef7ea86aab4",
+          "url": "https://github.com/CSlawyer1985/claude-for-legal-ZH/blob/59f37f1c8851b8277e24f7a45f4e773bee97bab9/legal-research-cn/skills/lecture-source-pack/SKILL.md"
+        }
+      ]
+    },
+    {
+      "repository": "promptfoo/promptfoo",
+      "head": "e4ecd0e48b08aedebe186b2ee868b0f31c62e3fe",
+      "headCommittedAt": "2026-11-12T07:12:47Z",
+      "reviewPin": "8569e72ed6cf7737082a6042be8d925e40f9739d",
+      "files": [
+        {
+          "path": "LICENSE",
+          "gitBlobSha": "af3fa111d9303b3041d225fb851534e50a4bbec2",
+          "url": "https://github.com/promptfoo/promptfoo/blob/8569e72ed6cf7737082a6042be8d925e40f9739d/LICENSE"
+        },
+        {
+          "path": "package.json",
+          "gitBlobSha": "f4b02783bfa2ad4eb3d749e9d7e2781376855cbc",
+          "url": "https://github.com/promptfoo/promptfoo/blob/8569e72ed6cf7737082a6042be8d925e40f9739d/package.json"
+        },
+        {
+          "path": "src/telemetry.ts",
+          "gitBlobSha": "e1e152f3010d8e83bc59fca9bf653214793546b2",
+          "url": "https://github.com/promptfoo/promptfoo/blob/8569e72ed6cf7737082a6042be8d925e40f9739d/src/telemetry.ts"
+        }
+      ]
+    },
+    {
+      "repository": "anthropics/skills",
+      "head": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "headCommittedAt": "2026-11-06T22:32:28Z",
+      "reviewPin": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "files": [
+        {
+          "path": "README.md",
+          "gitBlobSha": "4171c2c9eba15bf2bdefb496d941ba559368438b",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/README.md"
+        },
+        {
+          "path": "skills/skill-creator/LICENSE.txt",
+          "gitBlobSha": "4f881c52d1f72f4cfb720e339e2d35c3058d01a9",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/skills/skill-creator/LICENSE.txt"
+        },
+        {
+          "path": "skills/skill-creator/SKILL.md",
+          "gitBlobSha": "65b3a402dbd09b8e83f9d637c6b553875189085c",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/skills/skill-creator/SKILL.md"
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "gitBlobSha": "ffef92c48b351a3ed036556ed32dda934e8cf41a",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/THIRD_PARTY_NOTICES.md"
+        },
+        {
+          "path": "skills/skill-creator/scripts/run_eval.py",
+          "gitBlobSha": "e58c70bea39d5b252a1e819f242bbdcdf20e8b87",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/skills/skill-creator/scripts/run_eval.py"
+        },
+        {
+          "path": "skills/skill-creator/scripts/improve_description.py",
+          "gitBlobSha": "06bcec76122446986e3610c20a39c466de36f495",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/skills/skill-creator/scripts/improve_description.py"
+        },
+        {
+          "path": "skills/skill-creator/scripts/aggregate_benchmark.py",
+          "gitBlobSha": "3e66e8c105be9bab9f0e9c61f0d1482619401580",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/skills/skill-creator/scripts/aggregate_benchmark.py"
+        },
+        {
+          "path": "skills/skill-creator/eval-viewer/generate_review.py",
+          "gitBlobSha": "7fa5978631fed1ed545591dbb2b0eb21ce3f3d08",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/skills/skill-creator/eval-viewer/generate_review.py"
+        },
+        {
+          "path": "skills/skill-creator/eval-viewer/viewer.html",
+          "gitBlobSha": "6d8e96348a02e66c3363d2ff3b3ae58ac11e6382",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/skills/skill-creator/eval-viewer/viewer.html"
+        }
+      ]
+    },
+    {
+      "repository": "anthropics/knowledge-work-plugins",
+      "head": "877a617b435ee2edfb002d9a3703c0a1a03aa1ba",
+      "headCommittedAt": "2026-11-11T03:16:54Z",
+      "reviewPin": "877a617b435ee2edfb002d9a3703c0a1a03aa1ba",
+      "files": [
+        {
+          "path": "legal/LICENSE",
+          "gitBlobSha": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+          "url": "https://github.com/anthropics/knowledge-work-plugins/blob/877a617b435ee2edfb002d9a3703c0a1a03aa1ba/legal/LICENSE"
+        },
+        {
+          "path": "legal/.mcp.json",
+          "gitBlobSha": "739e69a2ca2e672404726615ae6e1463ffad4fca",
+          "url": "https://github.com/anthropics/knowledge-work-plugins/blob/877a617b435ee2edfb002d9a3703c0a1a03aa1ba/legal/.mcp.json"
+        },
+        {
+          "path": "legal/skills/review-contract/SKILL.md",
+          "gitBlobSha": "030204860ec70bf80254f9894721504df7c81bd5",
+          "url": "https://github.com/anthropics/knowledge-work-plugins/blob/877a617b435ee2edfb002d9a3703c0a1a03aa1ba/legal/skills/review-contract/SKILL.md"
+        }
+      ]
+    }
+  ],
+  "tests": {
+    "targetCommand": "node --test tests/legal-research-skills.test.cjs evals/quality-baseline/checks.test.cjs evals/quality-baseline/live.test.cjs",
+    "cwd": "harness",
+    "exitCode": 0,
+    "tests": 26,
+    "pass": 26,
+    "fail": 0,
+    "skip": 0,
+    "environment": ".local/audit-0216/build/test-env.ps1"
+  },
+  "telemetryProbe": {
+    "command": "node experiments/candidate-admission/promptfoo-telemetry-probe.cjs",
+    "exitCode": 0,
+    "meaning": "Problem reproduced; NOT offline admission passed",
+    "executedAt": "2026-11-12T08:05:39.785Z",
+    "source": "evals/quality-baseline/node_modules/promptfoo/dist/src/telemetry-CIqy4fSC.js",
+    "sourceSHA256": "36250d9ae7dfb037e357d0c1b0cbde8922b91d5225292743fadf4596a4a9a24d",
+    "probeSHA256": "342762196d6a56990abe937218e5ce05a191f86fca0bbd6dbcefd0991e084c04",
+    "telemetryDisabled": true,
+    "recordCalls": 2,
+    "capturedRequestIntents": 1,
+    "target": "https://r.promptfoo.app/",
+    "method": "POST",
+    "feature": "telemetry disabled",
+    "realNetworkCalls": 0,
+    "historicalTransmission": "not established"
+  },
+  "historicalWorkflow": {
+    "run": ".local/quality-baseline/2026-11-12T07-10-36-740Z-0c046a2d",
+    "mode": "scripted",
+    "successes": 24,
+    "failures": 0,
+    "errors": 0,
+    "qualityStatus": "not_reviewed",
+    "sourceHashesMatched": 14,
+    "reportSHA256": "d33e77c2f9a4e9b9fea8afd45019aae3ecc44b244e00b6fcc5f932df1ab155f3",
+    "rerunThisReview": false
+  },
+  "dependencyMetadata": {
+    "lockedEntriesExcludingRoot": 663,
+    "lockSHA256": "a9b2595a4a1af1e8a83c26f30abfd3d3e1cce4725ba8f7c58ab61fb91c020a16",
+    "promptfooLicenseSHA256": "bf813686553f451e1b833fbd827488aee49b60b189626915bf3108d10b754e44",
+    "note": "Lock metadata includes omitted optional/platform dependencies. Not an installed package count or full transitive license audit."
+  },
+  "decisions": [
+    {
+      "repository": "CSlawyer1985/claude-for-legal-ZH",
+      "classification": "适合产品（限已适配四项方法）",
+      "status": "已选择性加入，维持现状"
+    },
+    {
+      "repository": "promptfoo/promptfoo",
+      "classification": "仅开发（零外连准入受阻）",
+      "status": "已隔离加入；修复独立网络边界并复验前不标完全离线"
+    },
+    {
+      "repository": "anthropics/skills",
+      "classification": "仅开发",
+      "status": "仅方法借鉴；不原样导入脚本与联网查看器"
+    },
+    {
+      "repository": "anthropics/knowledge-work-plugins",
+      "classification": "暂不加入",
+      "status": "不直接导入；保留既有G01方法参考"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "synthetic_only": true,
+  "frozen_before_execution": "2026-11-12",
+  "privacy": [
+    {"id":"labelled-person","text":"完全虚构：姓名：林晓岚。合同价款为32000元，2026年12月31日交付。","entities":["林晓岚"],"preserve":["32000","2026年12月31日"]},
+    {"id":"unlabelled-person","text":"完全虚构：周景澄已签收材料，签收日期2026年12月1日，数量12份。","entities":["周景澄"],"preserve":["2026年12月1日","12份"]},
+    {"id":"two-persons","text":"完全虚构：沈沐言将8000元转交给许清禾，双方于2026年12月2日签字。","entities":["沈沐言","许清禾"],"preserve":["8000","2026年12月2日"]},
+    {"id":"labelled-organization","text":"完全虚构：甲方：青屿合成设备有限公司。价款为45000元，利率为3.5%。","entities":["青屿合成设备有限公司"],"preserve":["45000","3.5%"]},
+    {"id":"two-organizations","text":"完全虚构：青岚测试研究院与映川合成技术有限公司签订协议，期限24个月。","entities":["青岚测试研究院","映川合成技术有限公司"],"preserve":["24个月"]},
+    {"id":"ocr-person-split","text":"完全虚构：姓名：林晓\n岚。金额900元。","entities":["林晓\n岚"],"preserve":["900"]},
+    {"id":"ocr-organization-split","text":"完全虚构：甲方：青屿合成设备有限\n公司。付款日期为2026-12-03。","entities":["青屿合成设备有限\n公司"],"preserve":["2026-12-03"]},
+    {"id":"repeated-person","text":"完全虚构：姓名：陆星河。陆星河于2026年12月4日收到同一文件。","entities":["陆星河","陆星河"],"preserve":["2026年12月4日"]},
+    {"id":"negative-generic","text":"完全虚构：公司、学校和医院应在2026年12月31日前分别支付12000元。","entities":[],"preserve":["公司","学校","医院","2026年12月31日","12000"]},
+    {"id":"negative-place-common","text":"完全虚构：本合同约定向东运输，平安送达，费用1000元。","entities":[],"preserve":["向东","平安","1000"]},
+    {"id":"negative-numeric","text":"完全虚构：总价1234567890123456元，付款比例20%，期限2026-11-12至2027-11-12。","entities":[],"preserve":["1234567890123456","20%","2026-11-12","2027-11-12"]},
+    {"id":"negative-roles","text":"完全虚构：原告应承担举证责任，被告应在15日内答辩，法院应依法审理。","entities":[],"preserve":["原告","被告","法院","15日"]}
+  ],
+  "documents": [
+    {"name":"vertical-merge.docx","kind":"vertical","required_text":["完全虚构","项目","金额（元）","合成项目","首期","次期","12000","8000"],"required_structure":"first-column cell spans rows 2 through 3"},
+    {"name":"nested-table.docx","kind":"nested","required_text":["完全虚构","外层说明","内层项目","内层金额","合成配件","3000"],"required_structure":"inner table remains separately represented (does not assert parent relationship)"}
+  ]
+}

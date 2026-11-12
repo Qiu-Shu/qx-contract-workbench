@@ -2,6 +2,8 @@
 
 日期：2026-11-12。范围是开发侧合成工作流与证据保护，法律质量保持 `not_reviewed`。没有调用真实模型、在线法源或真实案件。
 
+后续准入核验更正：下文“离线”指脚本模型与合成业务流程。Promptfoo 0.125.1 的关闭遥测路径仍有一次出站请求意图，本轮在内存拦截器中复现，未真实发送；既有入口没有进程级出站阻断，不能称整个进程零外连。历史 24 案的工具/文件断言结果保留，不据该新发现推定历史网络请求成功或失败。完整入口的严格离线准入条件尚未通过，见 [专项核验](research/2026-11-12-candidates-methods-eval.md)。
+
 ## 实现及覆盖
 
 入口 `npm run eval:workflow`；实现与复现说明见 [评测 README](../evals/quality-baseline/README.md)。Promptfoo 0.125.1、完整锁文件、MIT 许可和 Windows SQLite 绑定独立保存在 `evals/quality-baseline`。产品依赖和打包源目录白名单不包含 Promptfoo、评测目录或候选实验目录。

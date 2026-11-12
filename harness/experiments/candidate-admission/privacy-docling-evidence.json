@@ -1,0 +1,242 @@
+{
+  "verified": true,
+  "synthetic_only": true,
+  "fixture_sha256": "cdbb21b7ae38578642a2998852ccc158c635ab132e4f72abebd268fb2f850797",
+  "script_sha256": "d5dc582b75e99bdb6760c8fe1c4aaab218e499985be9924307b7851884932999",
+  "commands": [
+    {
+      "mode": "baseline",
+      "runtime": "existing QX_TEST_PYTHON from test-env.ps1",
+      "exit_code": 0
+    },
+    {
+      "mode": "presidio",
+      "runtime": ".local/audit-followups/presidio-venv/Scripts/python.exe",
+      "exit_code": 0
+    },
+    {
+      "mode": "docling",
+      "runtime": ".local/audit-followups/candidate-venv/Scripts/python.exe",
+      "exit_code": 0
+    },
+    {
+      "mode": "pip check each of both isolated venvs",
+      "exit_code": 0,
+      "count": 2
+    }
+  ],
+  "baseline_source_hashes": {
+    "privacy.py": "d2021d1c8f99ee3a55de8679b67ce5ca5e001b630f52d8708a6a90651e34c155",
+    "reader.py": "ae022b1bbc9a1aa3c6b50d7ef1debb10939111896a20e7d81df7af43f76dfd25",
+    "material_tables.py": "c07c6f03dd176cb762373e4c9db624509e7fc5e8373c61c97d2b9c623eda4734"
+  },
+  "privacy": {
+    "versions": {
+      "presidio-analyzer": "2.2.366",
+      "spacy": "3.8.18",
+      "spacy-pkuseg": "1.0.2",
+      "zh-core-web-sm": "3.8.0"
+    },
+    "expected_entities": 11,
+    "covered_entities": 4,
+    "baseline_covered_entities": 6,
+    "newly_covered": 3,
+    "regressed": 5,
+    "facts_preserved_samples": 12,
+    "non_entity_characters_masked": 0,
+    "model_load_seconds": 0.985000000015134,
+    "inference_seconds": 0.0779999999795109,
+    "total_seconds": 2.7809999999881256,
+    "peak_working_set_bytes": 470376448,
+    "rows": [
+      {
+        "id": "labelled-person",
+        "baseline_entity_covered": [
+          true
+        ],
+        "entity_covered": [
+          true
+        ],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "unlabelled-person",
+        "baseline_entity_covered": [
+          false
+        ],
+        "entity_covered": [
+          true
+        ],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "two-persons",
+        "baseline_entity_covered": [
+          false,
+          false
+        ],
+        "entity_covered": [
+          true,
+          true
+        ],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "labelled-organization",
+        "baseline_entity_covered": [
+          true
+        ],
+        "entity_covered": [
+          false
+        ],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "two-organizations",
+        "baseline_entity_covered": [
+          true,
+          true
+        ],
+        "entity_covered": [
+          false,
+          false
+        ],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "ocr-person-split",
+        "baseline_entity_covered": [
+          false
+        ],
+        "entity_covered": [
+          false
+        ],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "ocr-organization-split",
+        "baseline_entity_covered": [
+          false
+        ],
+        "entity_covered": [
+          false
+        ],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "repeated-person",
+        "baseline_entity_covered": [
+          true,
+          true
+        ],
+        "entity_covered": [
+          false,
+          false
+        ],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "negative-generic",
+        "baseline_entity_covered": [],
+        "entity_covered": [],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "negative-place-common",
+        "baseline_entity_covered": [],
+        "entity_covered": [],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "negative-numeric",
+        "baseline_entity_covered": [],
+        "entity_covered": [],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      },
+      {
+        "id": "negative-roles",
+        "baseline_entity_covered": [],
+        "entity_covered": [],
+        "facts_preserved": true,
+        "non_entity_characters_masked": 0
+      }
+    ]
+  },
+  "baseline_facts_preserved_samples": 11,
+  "baseline_non_entity_characters_masked": 5,
+  "docling": {
+    "version": "2.150.0",
+    "improvements": 0,
+    "regressions": 0,
+    "total_seconds": 2.3280000000086147,
+    "peak_working_set_bytes": 158089216
+  },
+  "docling_conversion_seconds": 0.046999999991385266,
+  "old_reports_reverified": [
+    {
+      "file": "harness\\.local\\audit-followups\\candidates-otcg2uh4\\baseline.json",
+      "sha256": "908159f45a0809fe2ad53edaa7bdff66c129e0d5e7566585718d73848ea6f98c"
+    },
+    {
+      "file": "harness\\.local\\audit-followups\\candidates-otcg2uh4\\docling-comparison.json",
+      "sha256": "ba603165380984539401f551b5378894e346cd34a9975b82680a8fe1fbe0a00a"
+    },
+    {
+      "file": "harness\\.local\\audit-followups\\candidates-otcg2uh4\\presidio-comparison.json",
+      "sha256": "2b79e983f326f1af66cbfb925fdbab31664bb13a5820860aeccea45f0f94b82b"
+    }
+  ],
+  "raw_reports": [
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-candidate-admission-20261112\\privacy-docling\\baseline.json",
+      "sha256": "4448cb86025406e811a32b905da2091a460831bdb3afde2f41fc665710ff7ab9",
+      "bytes": 15351
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-candidate-admission-20261112\\privacy-docling\\presidio.json",
+      "sha256": "7a7e4cb3eb3573628ed20ec3caf9d5464ad52594bf4d92a9b7ca2936f5cd8300",
+      "bytes": 9114
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-candidate-admission-20261112\\privacy-docling\\docling.json",
+      "sha256": "14b783f52a56c747d624591cf8d394b00946308c383bee6f7bb66aa38ec87f08",
+      "bytes": 15948
+    },
+    {
+      "file": "D:\\CodexChecks\\AI-Shixiong-candidate-admission-20261112\\privacy-docling\\spaCy-wheel-license.json",
+      "sha256": "b67bcf1b11eb79fd5939f5747aa5d844d57814c5b76a51603ce835a67f806638",
+      "bytes": 2377
+    }
+  ],
+  "documents": [
+    {
+      "file": "vertical-merge.docx",
+      "sha256": "6f1d8fe6d23684db6cd291b6e5420d741139571fb5d8096f6edb9f69d698d6a4",
+      "bytes": 36896
+    },
+    {
+      "file": "nested-table.docx",
+      "sha256": "6d061ecafa5f60a4ffe477d27a1f4c63baa2b884f6ab5286a0a3815c71a2e1a4",
+      "bytes": 36874
+    }
+  ],
+  "not_run": [
+    "production integration",
+    "Presidio anonymizer or reversible mapping integration",
+    "Docling PDF/OCR/model weights",
+    "package build",
+    "real materials",
+    "live model services"
+  ]
+}
