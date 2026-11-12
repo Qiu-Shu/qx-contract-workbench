@@ -11,7 +11,7 @@
 
 这证明上游兼容 Office 模块在上述明确依赖条件下可运行，**不表示原始发行包原生支持该模块的 XLSX 全链路**。默认 QX 入口 `qx-plugin.js` 不加载上游 `index.js` 的 `office_*` 工具，因此没有把该可选模块的依赖缺口等同于默认 QX 微信调用链故障。
 
-最终 0.2.17 候选包已追加同样两组独立复核：原生 **5 通过、1 失败、1 跳过，exit 1**；只加既有隔离测试依赖后 **7 通过、0 失败、0 跳过，exit 0**。详细来源和证据见下文“最终 0.2.17 候选复核”。
+0.2.17 **首轮候选（中文名称合入前）**与**中文工具名合入后的最终包**均已分别实测，证据各自保留：两轮原生均为 **5 通过、1 失败、1 跳过，exit 1**；只加既有隔离测试依赖后均为 **7 通过、0 失败、0 跳过，exit 0**。最终包身份为 SHA-256 `7d97e21085f3c873f21cb604232fa4f269a64dd056e99216fe9e223a326dcbdd`，其独立测试见“最终 0.2.17 包复核（中文工具名已合入）”。首轮 `3520...` 包及证据保留在前一节，不能混用。
 
 ## 实际资源与版本
 
@@ -105,13 +105,13 @@ $env:PYTHONPATH=(Join-Path $officeQa 'python-test-deps')+';'+$env:PYTHONPATH
 
 日志及辅助元数据的摘要清单为 `evidence-hashes.json`。
 
-## 最终 0.2.17 候选复核
+## 0.2.17 首轮候选复核（中文名称合入前）
 
-主验收提供的最终候选已完成构建、解包与输入逐项比对。本专项只读使用：
+本节保留中文工具名合入前的首轮候选证据。该轮候选已由主验收完成构建、解包与输入逐项比对，本专项只读使用：
 
 `D:/CodexBuilds/AI-Shixiong-0.2.17-audit-20261112/candidate-extracted/application/resources/workbench`
 
-主验收提供的安装器身份：590844602 字节，SHA-256 `3520f52f10754c2624a967e5c1059224bbd3e9766916950362441b697383be5f`；53233 个包内文件逐项与构建输入相同。这些安装器与整树结论由主验收负责，本专项独立验证以下实际运行内容。
+主验收提供的首轮安装器身份：590844602 字节，SHA-256 `3520f52f10754c2624a967e5c1059224bbd3e9766916950362441b697383be5f`；53233 个包内文件逐项与构建输入相同。此安装器不是中文工具名合入后的最终包。这些安装器与整树结论由主验收负责，本专项独立验证以下实际运行内容。
 
 使用未修改的 `Run-OfficeQa.ps1` 和 `office-roundtrips.mjs`，新建两组 D 盘输出目录，启用 `PYTHONDONTWRITEBYTECODE=1`；Node、Python、Office 模块、Kit、PDF 核验用 pypdf 全部取自候选 payload。只有第二组前置既有隔离 `openpyxl` / `et_xmlfile` 测试目录。没有修改 payload、主包依赖或原有运行环境。
 
@@ -135,6 +135,42 @@ $officeCandidate='D:/CodexBuilds/AI-Shixiong-0.2.17-audit-20261112/candidate-ext
 
 候选结论仍只针对保留的上游可选 Office 模块：DOCX/PPTX 与转换器的上述场景可直接运行，XLSX 往返须有明确依赖条件。不能据此称整个主产品 XLSX 不可用，也不能把隔离依赖成功写成候选主包已包含该依赖。
 
+## 最终 0.2.17 包复核（中文工具名已合入）
+
+中文工具名合入后重新构建的最终 payload：
+
+`D:/CodexBuilds/AI-Shixiong-0.2.17-audit-20261112/candidate-final-extracted/application/resources/workbench`
+
+主验收提供的最终安装器身份为 **590859223 字节**，SHA-256 **`7d97e21085f3c873f21cb604232fa4f269a64dd056e99216fe9e223a326dcbdd`**。主验收报告构建与完整解包比对 exit 0，53234 个包内文件、3395 个来源文件。这里保留该来源说明；以下 Office 结果由本专项重新执行，并非沿用首轮候选结果。
+
+复用原测试脚本和原隔离 wheel，没有重复下载依赖。两组命令均取最终 payload 自带的 Node、Python、Office 模块和 Kit，启用 `PYTHONDONTWRITEBYTECODE=1`，新建 D 盘输出目录，保持 payload 只读：
+
+```powershell
+$officeQa='D:/CodexBuilds/AI-Shixiong-0.2.17-audit-20261112/office-qa'
+$officeFinal='D:/CodexBuilds/AI-Shixiong-0.2.17-audit-20261112/candidate-final-extracted/application/resources/workbench'
+& "$officeQa/Run-OfficeQa.ps1" -Payload $officeFinal -RunName '16-final-native'
+& "$officeQa/Run-OfficeQa.ps1" -Payload $officeFinal -RunName '17-final-isolated-green' -WithIsolatedXlsxDependencies
+```
+
+| 最终包条件 | 日志 / 输出目录 | 实际结果 |
+| --- | --- | --- |
+| 原生依赖 | `16-final-native.log` / `16-final-native/` | 5 通过、1 失败、1 跳过；7.08 秒；exit 1。上游可选模块 XLSX 写入因缺 openpyxl 失败，未生成 XLSX，故对应 PDF 跳过；其余 5 项通过。 |
+| 仅加隔离 XLSX 测试依赖 | `17-final-isolated-green.log` / `17-final-isolated-green/` | 7 通过、0 失败、0 跳过；9.29 秒；exit 0。DOCX/XLSX/PPTX 各自写入回读、缺失文件错误、三格式 PDF 转换均通过。 |
+
+最终成功组生成 3 份 Office 文件和 3 份 PDF，PDF 页数为 1、1、2；三份 PDF 的中英文文本均匹配预期，三个源文件在转换前后的 SHA-256 均相同。每组的 `artifacts.json` 保留实际内容回读与文件摘要。
+
+`18-final-runtime.json` 记录原生模块发现、有效依赖版本/路径及实际运行文件摘要。最终运行版本为 Node 24.22.1、Python 3.12.14、python-docx 1.2.0、python-pptx 1.0.2、LibreOffice Kit 0.1.5；PDF 检查使用最终包 `runtime/scrapling/Lib/site-packages` 中的 pypdf 6.19.0。第二组仅增加 `office-qa/python-test-deps` 中既有 openpyxl 3.1.5 与 et-xmlfile 2.0.0。原生主 Python 仍未包含这两个模块。
+
+已逐项核对最终 Node、Python、`office.js`、Kit CLI 和 Kit 原生程序 **5 个运行文件**，摘要与首轮对应文件一致；Office 模块 SHA-256 仍为 `d4e8f8c75ea9ccddd9350e32746087c9e4cbf5b559823b9ed280c82b81a9089b`。
+
+最终证据清单：
+
+`D:/CodexBuilds/AI-Shixiong-0.2.17-audit-20261112/office-qa/final-evidence-hashes.json`
+
+该清单包含 **17 项**：两份最终日志、最终运行元数据、两个复用测试脚本、两组虚构成果及回读 JSON。早期 `evidence-hashes.json` 的 13 项和首轮 `candidate-evidence-hashes.json` 的 15 项重新核对一致；没有覆盖、删除或弱化失败证据。
+
+本次最终包复核仍不改变依赖边界：只确认上游可选 Office 模块在记录的条件下运行；不将其 XLSX 原生失败扩展为整个主产品 XLSX 不可用，不将隔离依赖成功宣称为最终包已含这些依赖。
+
 ## 未验证
 
-本记录涵盖官方 0.2.16 资源、基线源码与最终 0.2.17 候选资源的可选 Office 模块，不替代整个安装包及产品的主验收。未验证真实 Microsoft Office GUI、复杂格式保真、宏、公式重新计算、加密文档、图片版式或所有字体；没有进行视觉排版验收。未运行默认 QX 工具调用链的模型任务或真实微信收发。主产品默认解析器的 XLSX 能力与本上游可选模块分属不同入口，不能根据此专项相互推定。
+本记录涵盖官方 0.2.16 资源、基线源码、中文名称合入前的 0.2.17 首轮候选及中文工具名合入后的最终包的可选 Office 模块。专项不替代整个安装包及产品的主验收。未验证真实 Microsoft Office GUI、复杂格式保真、宏、公式重新计算、加密文档、图片版式或所有字体；没有进行视觉排版验收。未运行默认 QX 工具调用链的模型任务或真实微信收发。主产品默认解析器的 XLSX 能力与本上游可选模块分属不同入口，不能根据此专项相互推定。

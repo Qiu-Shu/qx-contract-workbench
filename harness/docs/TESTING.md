@@ -36,6 +36,8 @@ Node 与 pytest 两组都会执行；任一子进程失败，统一入口返回�
 
 合同 UI 烟测入口 `tests/check_contract_compare_ui.py` 默认验证当前源码集成；验收实际安装包时须设置 `QX_TEST_PACKAGED=1`，使集成模块、材料解析和旧业务依赖都取自 `QX_TEST_APP` 指向的解包资源。`QX_TEST_OUTPUT_ROOT` 可将独立合成工作区、日志及截图放到其他磁盘。烟测报告的 `packagedIntegrationAndParser` 记录实际模式，不能用源码模式代替包内验证。不得在正在构建的候选目录内运行任何测试。
 
+`tests/check_tool_labels_ui.py` 从 `QX_TEST_APP` 加载真实包内 React 工具卡片，以合成记录检查具体中文标题、未知名称回退、参数/结果展开及查看回调；须显式指定绝对路径 `QX_TEST_OUTPUT_ROOT`。它复用上述隔离宿主、Playwright 与本机 Chrome，不调用模型、不执行业务工具，不证明会话持久化或法律质量。日志及完整截图保存在独立输出目录。
+
 ## 媒体源与打包回归
 
 `sources/media-source-registry.json` 是应用源码配置。`packaging/stage.cjs` 验证其版本、条目、来源 URL/允许域名和刷新周期后，明确覆盖 `resources/workbench/sources/media-source-registry.json`，并加入源码清单；不再依赖旧发行包偶然携带该文件。

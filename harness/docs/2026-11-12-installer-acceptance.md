@@ -56,4 +56,4 @@ Windows NSIS 的 `$LOCALAPPDATA` 使用系统已知目录，仍会写 QA 专属 
 
 完整原始证据保存在 [D 盘验收目录](D:/CodexBuilds/AI-Shixiong-0.2.17-audit-20261112/installer-qa)，包含 `preflight.json`、三个 `*-execution.json`、三个日志、`child-processes.jsonl`、`nsis-launches.json`、三份场景报告、`cleanup.json`、`codegraph-evidence.json`、差异计划、QA 安装器及 `evidence-manifest.json` 摘要清单。证据保持本地，不提交大型二进制。
 
-完整正式候选的文件比对、完整双基线差异回放、候选运行时测试及是否可发布由主任务单独记录；本记录不替代这些验收。
+完整候选的文件比对、官方 0.2.14/0.2.15/0.2.16 三条完整基线差异回放、候选运行时测试及发布边界由主任务单独记录；本记录不替代这些验收。

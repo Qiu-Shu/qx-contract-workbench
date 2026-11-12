@@ -1,0 +1,520 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "generatedAt": "2026-11-12T07:58:35.995Z",
+  "workspace": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目",
+  "branch": "codex/audit-0216-fixes",
+  "scope": "Local 0.2.17 audit candidate, three official upgrade baselines, isolated NSIS and packaged runtime acceptance including Chinese tool labels",
+  "implementationCommits": [
+    "7db8569",
+    "0d8a11fc"
+  ],
+  "priorAuditCommit": "dab11f2bf6fa300e0b488e5f4c14a9c86411faed",
+  "evidenceRoot": "D:\\CodexBuilds\\AI-Shixiong-0.2.17-audit-20261112",
+  "syntheticOnly": true,
+  "productionInstalledOrPublished": false,
+  "realModelRequests": 0,
+  "legalQuality": "not_reviewed",
+  "crossMachineAcceptance": false,
+  "package": {
+    "passed": true,
+    "version": "0.2.17",
+    "localUnsignedCandidate": true,
+    "productionUpdateVerifierRejectsUnsigned": true,
+    "originalUpdateSignatureVerified": false,
+    "installerSha512Verified": true,
+    "fullArchiveMatchesDeltaInput": true,
+    "packagedFiles": 53234,
+    "sourceFiles": 3395,
+    "developmentPackagesAbsent": true,
+    "newRuntimeFilesPresent": true,
+    "files": [
+      {
+        "name": "Qunxing-Workbench-0.2.17-Setup.exe",
+        "sha256": "7d97e21085f3c873f21cb604232fa4f269a64dd056e99216fe9e223a326dcbdd",
+        "bytes": 590859223
+      },
+      {
+        "name": "Qunxing-Workbench-0.2.17-Setup.exe.blockmap",
+        "sha256": "45ce65557ae62aa9f46bbc3f2e3b0c390c47819c9e5ffc1cc3f29eb819b5a1d2",
+        "bytes": 589653
+      },
+      {
+        "name": "latest.unsigned.yml",
+        "sha256": "8fe4b7443341a25a8d069fadc828c822af08dc63c2587ec21d430091f58b7606",
+        "bytes": 366
+      }
+    ],
+    "extracted": "D:\\CodexBuilds\\AI-Shixiong-0.2.17-audit-20261112\\candidate-final-extracted\\application",
+    "verifierSha256": "ad781421a1594e2164e7ea089845d149423aced1210f679c883987c1d504cb49",
+    "authenticode": "NotSigned"
+  },
+  "official0216": {
+    "installerSha256": "0f798a3721e092866f226bf17aad70d93e1ae1cebd52b749da1bd2acef022030",
+    "treeSha256": "33cec8bd6c8dcfa8cae5d19089e7c5ff9c3e6123dca7fd519f92b286b23268a1",
+    "files": 53213,
+    "officialUpdateMetadataSignatureVerified": true
+  },
+  "checks": [
+    {
+      "command": "node packaging/stage.cjs <stage> --refresh",
+      "exitCode": 0,
+      "sourceFiles": 3395
+    },
+    {
+      "command": "node packaging/build.cjs <stage> <candidate-final>",
+      "exitCode": 0,
+      "productionPublishing": false
+    },
+    {
+      "command": "node check-local-candidate.cjs <harness> <stage> <candidate-final> <extracted>",
+      "exitCode": 0,
+      "files": 53234
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "node": {
+        "total": 427,
+        "passed": 425,
+        "failed": 0,
+        "skipped": 2
+      },
+      "python": {
+        "passed": 463,
+        "failed": 0,
+        "skipped": 1,
+        "subtestsPassed": 36
+      }
+    },
+    {
+      "command": "node --test scripts/tool-labels.test.cjs packaging/stage.test.cjs packaging/verify-stage.test.cjs packaging/first-run-page.test.cjs",
+      "exitCode": 0,
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test packaging/stage.test.cjs packaging/verify-stage.test.cjs packaging/skill-labels.test.cjs packaging/incremental-package.test.cjs packaging/incremental-install.test.cjs desktop/updates.test.cjs desktop/update-download.test.cjs",
+      "exitCode": 0,
+      "passed": 62,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "Before additive Chinese-label merge; unchanged native installation/update code"
+    },
+    {
+      "command": "node packaging/check-first-run.cjs <final-extracted> <new-data>",
+      "exitCode": 0,
+      "passed": true,
+      "firstRunShowsSetup": true,
+      "isolatedData": true,
+      "noModelRequests": true
+    },
+    {
+      "command": "node check-packaged-research.cjs <final-payload> <official-16-payload> <new-data>",
+      "exitCode": 0,
+      "passed": true,
+      "packagedInitializerAndSkillProvider": true,
+      "freshDiscovered": 194,
+      "freshAutomatic": 158,
+      "methodsInvoked": [
+        "qx-authority-check",
+        "qx-case-comparison",
+        "qx-issue-memo",
+        "qx-lecture-source-pack"
+      ],
+      "upgradeCustomAndDisabledPreserved": true,
+      "userFileUnchanged": true,
+      "repeatedInitializationPreserved": true,
+      "packagedChineseLabels": true,
+      "oldVersion": "0.2.16",
+      "candidateVersion": "0.2.17",
+      "syntheticOnly": true,
+      "realModelRequests": 0,
+      "verifierSha256": "811262a662c54d59757eebb8020e8e3339b1c8e6030ca7d5a44e1c50a41c3ea8"
+    },
+    {
+      "command": "python tests/check_contract_compare_ui.py (QX_TEST_PACKAGED=1; QX_TEST_APP=final-payload)",
+      "exitCode": 0,
+      "report": {
+        "packagedIntegrationAndParser": true,
+        "pendingComparisonCannotUseOldLocation": true,
+        "textComparisonAndOriginalNavigation": true,
+        "draftPreservedWithoutSending": true,
+        "indexedUploadSelectable": true,
+        "docxOriginalParserComparison": true,
+        "pdfOriginalPage2": true,
+        "staleCitationRejected": true,
+        "widths": [
+          1440,
+          768,
+          390
+        ],
+        "otherFiveOriginalsUnchanged": true,
+        "uploadedOriginalUnchanged": true,
+        "pageErrors": []
+      }
+    },
+    {
+      "command": "python tests/check_tool_labels_ui.py (QX_TEST_APP=final-payload)",
+      "exitCode": 0,
+      "passed": 5,
+      "failed": 0,
+      "scope": "Real packaged React card browser interaction with synthetic records, not real business-tool execution or session persistence"
+    },
+    {
+      "command": "Run-OfficeQa.ps1 -Payload <final-payload> -RunName 16-final-native",
+      "exitCode": 1,
+      "passed": 5,
+      "failed": 1,
+      "skipped": 1,
+      "scope": "Retained optional upstream office.js; native XLSX missing openpyxl; not default QX plugin"
+    },
+    {
+      "command": "Run-OfficeQa.ps1 -Payload <final-payload> -RunName 17-final-isolated-green -WithIsolatedXlsxDependencies",
+      "exitCode": 0,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "conditional": true,
+      "productionDependencyChanged": false
+    },
+    {
+      "command": "node check-final-integrity.cjs <harness> <build-root>",
+      "exitCode": 0,
+      "report": {
+        "passed": true,
+        "sourceManifestRechecked": true,
+        "files": 53234,
+        "extractedPayloadUnchangedAfterTests": true,
+        "upgrades": [
+          {
+            "from": "0.2.14",
+            "allFileHashesMatch": true,
+            "managedFiles": 53234,
+            "unmanagedFilePreserved": true
+          },
+          {
+            "from": "0.2.15",
+            "allFileHashesMatch": true,
+            "managedFiles": 53234,
+            "unmanagedFilePreserved": true
+          },
+          {
+            "from": "0.2.16",
+            "allFileHashesMatch": true,
+            "managedFiles": 53234,
+            "unmanagedFilePreserved": true
+          }
+        ],
+        "verifierSha256": "93cc0331b1436d5cacc4d0d91db7a7289492e8fa938ec462423069e837963148"
+      }
+    }
+  ],
+  "upgrades": [
+    {
+      "from": "0.2.14",
+      "exitCode": 0,
+      "passed": true,
+      "seconds": 1.464,
+      "applied": {
+        "status": "applied",
+        "version": "0.2.17",
+        "alreadyApplied": false,
+        "changedFiles": 143
+      },
+      "finalized": {
+        "status": "finalized",
+        "version": "0.2.17"
+      },
+      "stats": {
+        "oldFiles": 53131,
+        "newFiles": 53234,
+        "unchangedFiles": 53091,
+        "unchangedBytes": 1892941554,
+        "changedFiles": 143,
+        "oldChangedBytes": 3490375,
+        "newChangedBytes": 4948220,
+        "patchBytes": 886350
+      },
+      "unchangedFileIdentitiesMtimesAndSizesVerified": 53091,
+      "baselineChangedFileHashesPreserved": true,
+      "unmanagedFilePreserved": true,
+      "scope": "Real release patch on isolated full-size hardlinked baseline; no production installer execution",
+      "output": "D:\\CodexBuilds\\AI-Shixiong-0.2.17-audit-20261112\\upgrade-final14\\full-apply-1794470004080"
+    },
+    {
+      "from": "0.2.15",
+      "exitCode": 0,
+      "passed": true,
+      "seconds": 0.677,
+      "applied": {
+        "status": "applied",
+        "version": "0.2.17",
+        "alreadyApplied": false,
+        "changedFiles": 51
+      },
+      "finalized": {
+        "status": "finalized",
+        "version": "0.2.17"
+      },
+      "stats": {
+        "oldFiles": 53213,
+        "newFiles": 53234,
+        "unchangedFiles": 53183,
+        "unchangedBytes": 1894407252,
+        "changedFiles": 51,
+        "oldChangedBytes": 3328214,
+        "newChangedBytes": 3482522,
+        "patchBytes": 44782
+      },
+      "unchangedFileIdentitiesMtimesAndSizesVerified": 53183,
+      "baselineChangedFileHashesPreserved": true,
+      "unmanagedFilePreserved": true,
+      "scope": "Real release patch on isolated full-size hardlinked baseline; no production installer execution",
+      "output": "D:\\CodexBuilds\\AI-Shixiong-0.2.17-audit-20261112\\upgrade-final15\\full-apply-1794470004085"
+    },
+    {
+      "from": "0.2.16",
+      "exitCode": 0,
+      "passed": true,
+      "seconds": 0.638,
+      "applied": {
+        "status": "applied",
+        "version": "0.2.17",
+        "alreadyApplied": false,
+        "changedFiles": 51
+      },
+      "finalized": {
+        "status": "finalized",
+        "version": "0.2.17"
+      },
+      "stats": {
+        "oldFiles": 53213,
+        "newFiles": 53234,
+        "unchangedFiles": 53183,
+        "unchangedBytes": 1894407252,
+        "changedFiles": 51,
+        "oldChangedBytes": 3332987,
+        "newChangedBytes": 3482522,
+        "patchBytes": 42351
+      },
+      "unchangedFileIdentitiesMtimesAndSizesVerified": 53183,
+      "baselineChangedFileHashesPreserved": true,
+      "unmanagedFilePreserved": true,
+      "scope": "Real release patch on isolated full-size hardlinked baseline; no production installer execution",
+      "output": "D:\\CodexBuilds\\AI-Shixiong-0.2.17-audit-20261112\\upgrade-final16\\full-apply-1794470004098"
+    }
+  ],
+  "nsis": {
+    "verified": true,
+    "manifestFiles": 30,
+    "entryScripts": 3,
+    "entryExitZero": 3,
+    "nsisScenarioLaunches": 9,
+    "expectedExitZero": 8,
+    "expectedRejectionExitOne": 1,
+    "qaRegistryPathsChecked": 8,
+    "qaRegistryRemaining": 0,
+    "qaProcessesRemaining": 0,
+    "qaInstallDirectoriesRemaining": 0,
+    "testedInstallationSourcesMatchHead": true,
+    "time": "2026-11-12T07:30:27.6173651Z",
+    "scope": "Real NSIS with isolated QA identity and synthetic 185-file payload; no full production installer execution"
+  },
+  "toolLabels": {
+    "catalogEntries": 171,
+    "bundledMcpTools": 153,
+    "clientSha256": "1706a72a66e4c38f6d294ef534005fde6f3e6ffa4298504e71066a4966b6ed9d"
+  },
+  "independentReview": {
+    "standards": "No unresolved substantive findings; includes merged labels and browser test",
+    "spec": "No substantive scope deviation; separate packaged-card browser acceptance completed"
+  },
+  "retainedFailures": [
+    "Initial TLS download failure; used hash-verified existing build tool cache",
+    "Initial native test variables missing: 20 skipped, corrected rerun 62 passed",
+    "Initial first-run probe error without original CDP response; precise cause unknown; early-DOM hazard reproduced and probe fixed",
+    "Research probe double-root registration corrected without product changes",
+    "pnpm offline frozen lock command failed due to missing registry metadata",
+    "Old candidate Chinese-label browser RED; final candidate GREEN",
+    "Native optional Office XLSX remains dependency-limited"
+  ],
+  "evidence": [
+    {
+      "path": "acceptance-env.ps1",
+      "bytes": 787,
+      "sha256": "bd7c8caa7459cf4beb85dda222a479fe28ff6b35d345d5fd7c221824a0ec1722"
+    },
+    {
+      "path": "stage/source-manifest.json",
+      "bytes": 1060592,
+      "sha256": "1a4f5682f8727cc45b87fb36bdd9acdc8130b581a412896d90aa09e0bd010425"
+    },
+    {
+      "path": "logs/stage-final.log",
+      "bytes": 249,
+      "sha256": "568686fc94f0ac4f653cbf4f4acc107255506af48a8f0ca1e313cb10ae178e36"
+    },
+    {
+      "path": "logs/build-final.log",
+      "bytes": 1538,
+      "sha256": "f376b3294835349754947889488ff57ea964e679066a9b2d3b578d3434e42537"
+    },
+    {
+      "path": "candidate-final/candidate-verification.json",
+      "bytes": 1089,
+      "sha256": "c36297d6f2597e39d2a02d5f474143ce72c2af45cf552db0f3403eb128560207"
+    },
+    {
+      "path": "candidate-final/authenticode.json",
+      "bytes": 169,
+      "sha256": "5b1cb97680d220abbdc07e4872c53f58b5922b243aa39aa6f8a6627db9b68213"
+    },
+    {
+      "path": "candidate-final/SHA256SUMS.txt",
+      "bytes": 297,
+      "sha256": "e1cbc99f33506a71a4ea7d559145ddae2a538af4c0830c6e10e5ece03e09a49a"
+    },
+    {
+      "path": "candidate-final/full-incremental-report.json",
+      "bytes": 834,
+      "sha256": "b809dedaef6a5cbacaac51ff8f3aaadfda11237aebb34120e9dc5fed11db7031"
+    },
+    {
+      "path": "candidate-final/from-0.2.15/full-incremental-report.json",
+      "bytes": 831,
+      "sha256": "610f78d825707260da7ef70e57ed2d380cbaf2e58ae775c818393c1d09f35e4a"
+    },
+    {
+      "path": "candidate-final/from-0.2.16/full-incremental-report.json",
+      "bytes": 831,
+      "sha256": "aeeb599e7f9e533d352ff62f0c6412c30291591481b1333daeabdd05bb0d8235"
+    },
+    {
+      "path": "logs/verify-final.log",
+      "bytes": 928,
+      "sha256": "a68546d57637614727196036371dc3680a0dc3498c1d2a91aae63e17da9294ed"
+    },
+    {
+      "path": "logs/upgrade-final14.log",
+      "bytes": 761,
+      "sha256": "d931a4a04ae67d3bc2445cab9655f77f3b686fcd426f00ab40162e0351020fae"
+    },
+    {
+      "path": "logs/upgrade-final15.log",
+      "bytes": 758,
+      "sha256": "1599e39e3ef45da2070d518a0bd0afd318875000808b0078b078f7cba2d6f501"
+    },
+    {
+      "path": "logs/upgrade-final16.log",
+      "bytes": 758,
+      "sha256": "cc3e0c1fcca60a8a398b7aeb92818619edbe1aa9cf5a4063614c2ea31b5cfe0c"
+    },
+    {
+      "path": "logs/offline-tool-labels-final.log",
+      "bytes": 95646,
+      "sha256": "2fde01d138dc1be6230f19585a46fa254c3b4a94a289c0721a070b115598e4db"
+    },
+    {
+      "path": "logs/tool-labels-merged.log",
+      "bytes": 1256,
+      "sha256": "322d9f781ad854677cbb36549c3124dd50317f09b9bf2ff71f86403fd1ba9f9b"
+    },
+    {
+      "path": "logs/package-targets-native.log",
+      "bytes": 5867,
+      "sha256": "7668e337567900b10a596b33240c99fffb88279275db66878cf81f5e7bd0149c"
+    },
+    {
+      "path": "first-run-final-labels/first-run-report.json",
+      "bytes": 101,
+      "sha256": "e82ede25a5de0b096998658907594591a9b6da12589b28b65d230ee4113b2218"
+    },
+    {
+      "path": "research-final-labels/report.json",
+      "bytes": 595,
+      "sha256": "1e303a26d3743a4af84e3795fb8e518a7fc4af0cbe30fee732e3108b4051c351"
+    },
+    {
+      "path": "contract-final-labels/1794470088218/report.json",
+      "bytes": 473,
+      "sha256": "90355e8f81af952ecfdd91c3ab88b99a4a4e0a4be351a2fa34b7ac8d6eb8d94d"
+    },
+    {
+      "path": "tool-labels-final-qa/1794470145304/tool-labels-report.json",
+      "bytes": 2249,
+      "sha256": "ab3b129ec674fb753b4cbe70398dad35d6ebc8611db40f5893721592779d7f5e"
+    },
+    {
+      "path": "tool-labels-final-qa/1794470145304/tool-labels.png",
+      "bytes": 54045,
+      "sha256": "a10f8358acb9fe7c882825d068b54cddea8415aa98735ddd27ea1d105025e01c"
+    },
+    {
+      "path": "installer-qa/final-verification.json",
+      "bytes": 405,
+      "sha256": "08c43ced5ee005fa8ef9419a371ea4ed1769641efceb6459978919d6c316822a"
+    },
+    {
+      "path": "installer-qa/evidence-manifest.json",
+      "bytes": 6738,
+      "sha256": "9608c0cbb0b4aaef7429b1f8fb93694c143457a3a8cf54c58d5b1f7b2e2d0133"
+    },
+    {
+      "path": "office-qa/final-evidence-hashes.json",
+      "bytes": 2790,
+      "sha256": "7468a1ba3124e1bcaffd8887eb674b447e193e55d21daf1e2e9f405460cad5a3"
+    },
+    {
+      "path": "office-qa/final-independent-crosscheck.json",
+      "bytes": 97,
+      "sha256": "27f52347fa9e5103b349e3e48dc621b64a3e58885564dd8e46166da4a22003b5"
+    },
+    {
+      "path": "office-qa/16-final-native.log",
+      "bytes": 1792,
+      "sha256": "b1b0b6000872c3012833b76aa190a6a6d70883d86a72f57221af2cc1f635aa7f"
+    },
+    {
+      "path": "office-qa/17-final-isolated-green.log",
+      "bytes": 846,
+      "sha256": "792071a886b61f3e5dcebf01861b4b593551539179c11c903f8cd068646a4dd6"
+    },
+    {
+      "path": "office-qa/18-final-runtime.json",
+      "bytes": 2970,
+      "sha256": "a720b38db4c4b66c410e124c55372cb018a2fb1dc09b68cac4983d0153b52afa"
+    },
+    {
+      "path": "evidence-crosscheck.json",
+      "bytes": 326,
+      "sha256": "985c9bfea8066dbe1aeddb51abd9ec4ebc5856fe5bd72f037d5f9c6d881cb9b2"
+    },
+    {
+      "path": "final-post-test-integrity.json",
+      "bytes": 640,
+      "sha256": "00f72b98a70f9347cdd880575cbd49e8bb5c64ed29ec4f9002985b459da9f478"
+    },
+    {
+      "path": "logs/final-post-test-integrity.log",
+      "bytes": 487,
+      "sha256": "aea12251c27945bcbe55ede23122623dcf271e534b7375ca301651edf5f897d9"
+    },
+    {
+      "path": "check-local-candidate.cjs",
+      "bytes": 4156,
+      "sha256": "ad781421a1594e2164e7ea089845d149423aced1210f679c883987c1d504cb49"
+    },
+    {
+      "path": "check-packaged-research.cjs",
+      "bytes": 4440,
+      "sha256": "811262a662c54d59757eebb8020e8e3339b1c8e6030ca7d5a44e1c50a41c3ea8"
+    },
+    {
+      "path": "check-final-integrity.cjs",
+      "bytes": 1830,
+      "sha256": "93cc0331b1436d5cacc4d0d91db7a7289492e8fa938ec462423069e837963148"
+    }
+  ]
+}
