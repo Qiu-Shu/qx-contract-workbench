@@ -1,0 +1,290 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T09:00:22.212Z",
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "baselineCommit": "54c8e3b0f5b47952f611a15f1559faa00d0b736f",
+  "scope": [
+    "evaluation egress",
+    "privacy generic organization false positive"
+  ],
+  "installerBuilt": false,
+  "newDependenciesInstalled": false,
+  "liveModelCalls": 0,
+  "productionInstalled": false,
+  "results": {
+    "workflow": {
+      "command": "node evals/quality-baseline/run.cjs",
+      "exitCode": 0,
+      "passed": 24,
+      "failed": 0,
+      "errors": 0,
+      "run": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/.local/quality-baseline/2026-11-12T08-54-24-702Z-876ae4b1",
+      "mode": "scripted",
+      "legalQuality": "not_reviewed",
+      "durationMs": 101399
+    },
+    "network": {
+      "passed": true,
+      "guardedProcesses": 122,
+      "nodeProcesses": 1,
+      "pythonProcesses": 121,
+      "deniedAttempts": 0,
+      "modelRequests": 0,
+      "telemetryPatched": true,
+      "configProbePatched": true,
+      "scope": "audited Node/Python runtime APIs; not an OS sandbox"
+    },
+    "fullOffline": {
+      "command": "npm test",
+      "exitCode": 0,
+      "node": {
+        "pass": 429,
+        "skip": 2,
+        "fail": 0
+      },
+      "python": {
+        "pass": 464,
+        "skip": 1,
+        "subtestsPass": 36
+      }
+    },
+    "privacyNative": {
+      "command": "python -m pytest bridge/test_privacy.py -q",
+      "exitCode": 0,
+      "passed": 44
+    },
+    "targetPrivacy": {
+      "passed": 19,
+      "exitCode": 0
+    },
+    "targetNetworkAndBudget": {
+      "passed": 6,
+      "exitCode": 0
+    },
+    "review": {
+      "standardsUnresolved": 0,
+      "specUnresolved": 0,
+      "additionalChecks": "TLS, HTTP2, WebSocket; fake live transport + budget; 4 optional config paths",
+      "realNetworkCalls": 0
+    }
+  },
+  "preservedFailures": [
+    {
+      "log": "privacy-red.log",
+      "exitCode": 2,
+      "meaning": "Environment QX_LEGACY_ROOT missing; not a behavior RED"
+    },
+    {
+      "log": "privacy-red-2.log",
+      "exitCode": 1,
+      "meaning": "Confirmed generic categories were masked"
+    },
+    {
+      "log": "network-red.log",
+      "exitCode": 1,
+      "meaning": "Without protection the synthetic local HTTP receiver was reached"
+    },
+    {
+      "log": "one-case.log",
+      "exitCode": 1,
+      "meaning": "Windows command-line representation was denied before controlled launcher adaptation"
+    },
+    {
+      "log": "one-case-2.log",
+      "exitCode": 1,
+      "meaning": "Reader subprocess denied before guarded reader entry added"
+    },
+    {
+      "log": "workflow-24.log",
+      "exitCode": 1,
+      "workflowPassed": 24,
+      "networkDenied": 2,
+      "meaning": "Two tsx parent IPC attempts denied; not internet requests. Fixed optional-config probe order"
+    }
+  ],
+  "sourceHashes": [
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/bridge/privacy.py",
+      "bytes": 32196,
+      "sha256": "517f268cc3ec612360149beb100dc40002a3022c7ff42a8d6c0530bed06ff64f"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/bridge/test_privacy_modes.py",
+      "bytes": 9853,
+      "sha256": "c31437f557a0c852a21fc0701be0135b4e5b599eff02fd8af00c8fcd62b1a0ae"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/evals/quality-baseline/run.cjs",
+      "bytes": 3559,
+      "sha256": "0d26c259e27458b432c1dc8cdcd5a019da18475639d018752cfc628f876e0053"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/evals/quality-baseline/network-policy.cjs",
+      "bytes": 4584,
+      "sha256": "7dea8cc4bd3544595d5951e7d23d603969fc386f6820dff871b9b742aa27e166"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/evals/quality-baseline/preload.cjs",
+      "bytes": 1942,
+      "sha256": "59d947c4f79154bf2dd7bdcffeeffa5c3a959055c5192577712eefa6b0e5cd9e"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/evals/quality-baseline/guarded-python.py",
+      "bytes": 3981,
+      "sha256": "112692dac00787f032aca5884316d6499689e71688e56ba2241f7372e85dd617"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/evals/quality-baseline/network.test.cjs",
+      "bytes": 6532,
+      "sha256": "166628d763e1c76e1bf4b4b26689d5d5db66820d6b111eb9ed8a113a92638db6"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/evals/quality-baseline/live.mjs",
+      "bytes": 2827,
+      "sha256": "1768c94877a9dd0a8ec19ce2ec75f7d17a9c939a0f7b345f9a6061032609becc"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/evals/quality-baseline/package.json",
+      "bytes": 400,
+      "sha256": "daae7a8d2ca635a23abee0ce98a24ef43889ccf65808da6934b9751d9d999255"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/evals/quality-baseline/README.md",
+      "bytes": 6401,
+      "sha256": "1295cb2aa19068e1e45e7abf7c98fa270073b44a347836b75029470f1baea8ea"
+    }
+  ],
+  "executedInputsVerified": 18,
+  "runEvidence": [
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/.local/quality-baseline/2026-11-12T08-54-24-702Z-876ae4b1/manifest.json",
+      "bytes": 2903,
+      "sha256": "b3ac7b975642427f120842a5e196da8774a6100ce1a2b561b60a283112e01b9a"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/.local/quality-baseline/2026-11-12T08-54-24-702Z-876ae4b1/promptfoo.json",
+      "bytes": 1870481,
+      "sha256": "fd7844ddc62b7508f77e971d221018dbc68cf02eb693c7c73765c9d4062a8b33"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/.local/quality-baseline/2026-11-12T08-54-24-702Z-876ae4b1/network.jsonl",
+      "bytes": 11186,
+      "sha256": "78855fe01c159c78057cb0db2474cbe719f6b5553579508dd6f0c980ec839369"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/.local/quality-baseline/2026-11-12T08-54-24-702Z-876ae4b1/network-summary.json",
+      "bytes": 15291,
+      "sha256": "a8d03b22e0686e425288c649ca4b4f1d61dbba8d9c210aaff8f64bf3c07fef51"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/.local/quality-baseline/2026-11-12T08-50-10-281Z-4ce94fed/network-summary.json",
+      "bytes": 15273,
+      "sha256": "9e053f435ffb8427711bff41a3cd82d8aefdefe74542b01a5eb8b6f0c04c658f"
+    },
+    {
+      "file": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness/.local/quality-baseline/2026-11-12T08-50-10-281Z-4ce94fed/network.jsonl",
+      "bytes": 11226,
+      "sha256": "5cffc558fe6d1a6a88231e622b61b2ae22f2dca8183203938c6b777d24bb26cf"
+    }
+  ],
+  "logs": [
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/privacy-red.log",
+      "bytes": 765,
+      "sha256": "87dfc35c0542d3fc0fe8b0d2217522f3074f023b8b8cf71381fc424f000064ef"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/privacy-red-2.log",
+      "bytes": 2921,
+      "sha256": "f3cf7b29a0c56b5fdbe9528daf778fa8137ee103c2a1b872566260a9777c9ecd"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/privacy-green.log",
+      "bytes": 101,
+      "sha256": "9419e239d21f15143fad017dcdc0b971cd5cc57b5a994deac9fbfb9282df6137"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/network-red.log",
+      "bytes": 1103,
+      "sha256": "871a876d1403793c59324b4c58faa595a8fe43ad1606ff896eb122f5f0f06f71"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/network-green.log",
+      "bytes": 709,
+      "sha256": "2d60ed33b8087ddfeff67c60844afcc9dccce8324b3146cd467a53abbd1683ba"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/one-case.log",
+      "bytes": 3380,
+      "sha256": "fbcbe3bd41de54a9999bb0a57a8277b140e358ec35e4f3d6355abe2541e05163"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/one-case-2.log",
+      "bytes": 3380,
+      "sha256": "a328597cb3ff4a200acabd4cb363fb565d6f0dc09aead245a5231d60f572dcd4"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/one-case-3.log",
+      "bytes": 13,
+      "sha256": "7d167dac6a0d1dcd20ac46505b63886dd6a8a972fc222a9c7eead0187976895c"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/one-case-network-3.jsonl",
+      "bytes": 529,
+      "sha256": "3ef97c5c855531de08d47a8b1f3a40ae90e74c3956f22cc3380c004b78be3864"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/workflow-24.log",
+      "bytes": 17954,
+      "sha256": "68d098620c09ffc427568670df083eb4f3ee71bead310b9a0e9409bd9c904695"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/diagnostic.log",
+      "bytes": 4221,
+      "sha256": "e0c6c03314f643420069cb27a9fc23e880a7efc6d7550335a8a426eae620ed78"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/workflow-24-final.log",
+      "bytes": 17890,
+      "sha256": "1e5ee1c86df3c22b9df39522567f7837d7f246cef14d359de124d2cf786ba383"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/full-offline.log",
+      "bytes": 96030,
+      "sha256": "e7a934868e91f25cf2e474f62089a127cdb0c6f1b36935028ead38b01a18f25c"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/privacy-native.log",
+      "bytes": 112,
+      "sha256": "9437daaa3d4a0aaf576ea420aae929285c7fb3e60d45172760572b667ff4efaf"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/review-spec/spec-review.md",
+      "bytes": 3355,
+      "sha256": "d3d4293ba66307d8b6df1a46f7057c8d43168b2e4164543f02f1e245bd63fab2"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/review-spec/node-extra-network-probes.json",
+      "bytes": 502,
+      "sha256": "0ff104eb99b46fbafc39d7c5a1d2ddd4ed2bc48f1c72533b22efc8f0e37f2536"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/review-spec/live-fake-guarded.json",
+      "bytes": 1053,
+      "sha256": "6c007bb78fbd3ecde5343b848af7ca2583186dd1e48e0793d9ded52970067684"
+    },
+    {
+      "file": "D:/CodexChecks/AI-Shixiong-egress-privacy-20261112/review-spec/config-probe-review.json",
+      "bytes": 700,
+      "sha256": "1cb04a1e7447183b408c964914816a698b14e15731d8b5bb8be876b9eff7bd41"
+    }
+  ],
+  "notVerified": [
+    "Real model endpoint connectivity or legal quality",
+    "Operating system/native-code sandbox",
+    "Cross-machine behavior",
+    "restic production integration",
+    "Presidio/Docling new integration",
+    "Installer/build/installation"
+  ]
+}

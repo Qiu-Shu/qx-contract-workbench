@@ -188,7 +188,10 @@ def _generic_organization(value):
     stripped = _GENERIC_ORG_PREFIX.sub('', value)
     quantified_category = re.search(r'[0-9一二三四五六七八九十百千万两]+(?:余|多)?(?:所|家|个)'
                                      + _GENERIC_ORG.pattern + r'$', value)
-    return value in _GENERIC_VALUES or bool(_GENERIC_ORG.fullmatch(stripped) or quantified_category)
+    categories = re.split(r'以及|和|与|及|或', value)
+    # Only a list made entirely of generic categories is generic; keep named organizations private.
+    coordinated = len(categories) > 1 and all(_generic_organization(part) for part in categories)
+    return value in _GENERIC_VALUES or bool(_GENERIC_ORG.fullmatch(stripped) or quantified_category or coordinated)
 
 
 def _specific_name(value):

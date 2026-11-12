@@ -4,6 +4,7 @@ import {dirname,join} from 'node:path';
 import {openSync,closeSync,unlinkSync} from 'node:fs';
 const require=createRequire(import.meta.url);
 const {createBudget,upperBound}=require('../../scripts/skill-eval-budget.cjs');
+const {modelFetch}=require('./network-policy.cjs');
 export function responder(directory){
  if(process.env.QX_REAL_MODEL_TEST!=='1'||!process.env.DEEPSEEK_API_KEY)throw Error('Real model disabled');
  const cap=Number(process.env.QX_EVAL_BUDGET_CNY);
@@ -22,7 +23,7 @@ export function responder(directory){
   const lock=openSync(lockFile,'wx');let budget,row,usage;
   try{
    budget=createBudget(budgetFile,cap);row=budget.reserve(directory+':'+(++count),upperBound(body,4096));
-   const response=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+process.env.DEEPSEEK_API_KEY},body:JSON.stringify(body),signal:AbortSignal.any([options.signal,AbortSignal.timeout(60000)])});
+   const response=await modelFetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+process.env.DEEPSEEK_API_KEY},body:JSON.stringify(body),signal:AbortSignal.any([options.signal,AbortSignal.timeout(60000)])});
    if(!response.ok)throw Error('Model HTTP '+response.status);
    const data=await response.json();usage=data.usage;const choice=data.choices?.[0];
    if(!choice||!['stop','tool_calls'].includes(choice.finish_reason))throw Error('Incomplete model response');

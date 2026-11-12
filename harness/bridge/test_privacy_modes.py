@@ -24,6 +24,19 @@ def test_standard_keeps_generic_organizations_and_business_facts(tmp_path):
     assert safe == text
 
 
+def test_coordinated_organization_categories_keep_facts_and_specific_names_stay_private(tmp_path):
+    text = ('完全虚构：公司、学校和医院应在2026年12月31日前分别支付12000元，比例12.5%。\n'
+            '公办学校及公立医院；研究院与研究所；学校以及医院；学校或医院。\n'
+            '甲方：示例青枫学校。乙方：示例远岸医院。联系人：林晓岚。')
+    for mode in ('standard', 'deep'):
+        _, safe = upload(tmp_path, text, privacy_mode=mode)
+        for fact in ('学校和医院', '公办学校及公立医院', '研究院与研究所', '学校以及医院',
+                     '学校或医院', '2026年12月31日', '12000元', '12.5%'):
+            assert fact in safe, (mode, fact, safe)
+        for name in ('示例青枫学校', '示例远岸医院', '林晓岚'):
+            assert name not in safe, (mode, name)
+
+
 def test_standard_redacts_explicit_named_brands_models_aliases_and_competitions(tmp_path):
     text = ('乙方：示例青枫科技有限公司（品牌：远岸成长），以下简称“青枫科技”。\n'
             '自主研发的星穹学习大模型已完成生成式人工智能服务备案'
@@ -91,9 +104,9 @@ def test_old_generic_and_removed_custom_mappings_do_not_keep_redacting(tmp_path)
     mapping = tmp_path / 'vault/contexts' / hashlib.sha256(context.encode()).hexdigest() / 'mapping.sqlite'
     with sqlite3.connect(mapping) as db:
         for number, (value, kind) in enumerate([('服务中小学校', '组织'), ('中小学校', '组织'),
-                                               ('技术服务', '自定义'), ('合同', '自定义')], 100):
+                                               ('学校和医院', '组织'), ('技术服务', '自定义'), ('合同', '自定义')], 100):
             db.execute('INSERT INTO replacements VALUES(?,?,?)', (value, kind, f'【old-{number}】'))
-    text = '服务中小学校，面向中小学校提供技术服务；合同履行期限30日。'
+    text = '服务中小学校，面向中小学校提供技术服务；学校和医院的合同履行期限30日。'
     _, safe = upload(tmp_path, text, context_id=context)
     assert safe == text
 

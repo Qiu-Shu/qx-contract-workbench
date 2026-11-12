@@ -5,7 +5,7 @@
   "description": "Development-only synthetic Harness workflow evaluations",
   "scripts": {
     "eval": "node run.cjs",
-    "test": "node --test checks.test.cjs live.test.cjs"
+    "test": "node --test checks.test.cjs live.test.cjs network.test.cjs"
   },
   "devDependencies": {
     "@libsql/win32-x64-msvc": "0.5.29",
