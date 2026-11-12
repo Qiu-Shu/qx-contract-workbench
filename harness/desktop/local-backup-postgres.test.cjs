@@ -2,7 +2,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path');
 const {spawnSync}=require('node:child_process');
 const crypto=require('node:crypto');
-const {createLocalBackup,restoreLocalBackup}=require('./local-backup.cjs');
+const {createLocalBackup,restoreLocalBackup,reviewLocalRestore}=require('./local-backup.cjs');
 const {python,restic,pgTools}={python:process.env.QX_TEST_PYTHON,restic:process.env.QX_TEST_RESTIC,pgTools:process.env.QX_TEST_PG_TOOLS};
 test('cold PostgreSQL identity, records, vector index and empty directories survive encrypted restore',{
   skip:process.platform!=='win32'||!python||!restic||!pgTools,
@@ -37,6 +37,10 @@ test('cold PostgreSQL identity, records, vector index and empty directories surv
   });
   const restored=await restoreLocalBackup(options);
   assert.equal(restored.activation,'manual-review-required');
+  const review=await reviewLocalRestore({destination,python,pgTools});
+  assert.equal(review.postgresIncluded,true);assert.equal(review.activation,'blocked');
+  assert.ok(review.blockers.includes('postgres-instance-registration'));assert.ok(review.blockers.includes('hindsight-api-validation'));
+  assert.equal(fs.existsSync(path.join(destination,'.local/case-memory-runtime/database/postmaster.pid')),false);
   assert.deepEqual(fixture('verify',destination),expected);
   assert.equal(fs.readFileSync(path.join(destination,'.local/case-memory-runtime/database/log/synthetic.db'),'utf8'),'opaque synthetic PostgreSQL log');
   assert.deepEqual(fs.readFileSync(path.join(destination,'.local/case-memory-runtime/instance.json')),fs.readFileSync(path.join(data,'.local/case-memory-runtime/instance.json')));

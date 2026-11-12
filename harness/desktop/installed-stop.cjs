@@ -2,6 +2,13 @@
 const fs=require('node:fs'),path=require('node:path'),net=require('node:net');
 const {createHash}=require('node:crypto');
 const execFile=require('node:util').promisify(require('node:child_process').execFile);
+function assertRestoreReviewed(data){
+  for(const name of ['backup-manifest.json','.qx-restore-review']){
+    try{fs.lstatSync(path.join(data,name));}
+    catch(error){if(error.code==='ENOENT')continue;throw error;}
+    throw Object.assign(Error('恢复副本尚未完成启用核对，不能直接作为运行目录。'),{code:'BACKUP_RESTORE_REVIEW_REQUIRED'});
+  }
+}
 function processAlive(pid){if(!Number.isInteger(pid)||pid<=0)return false;try{process.kill(pid,0);return true}catch{return false}}
 async function hostProcessAlive(record){
   if(!processAlive(record?.hostPid))return false;
@@ -98,4 +105,4 @@ async function stopInstalledHost(data){
   if(runtime)await stopRuntime(runtime,data);
   if(await hostProcessAlive(readHostRecord(data))||await launcherOwnsPipe(data))throw Error('Background control unavailable');
 }
-module.exports={processAlive,hostProcessAlive,readHostRecord,readHostState,hostPipe,claimLauncher,launcherOwnsPipe,readControl,restartRuntime,stopRuntime,stopInstalledHost};
+module.exports={assertRestoreReviewed,processAlive,hostProcessAlive,readHostRecord,readHostState,hostPipe,claimLauncher,launcherOwnsPipe,readControl,restartRuntime,stopRuntime,stopInstalledHost};

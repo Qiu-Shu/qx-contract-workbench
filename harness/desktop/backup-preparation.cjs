@@ -1,6 +1,7 @@
 // Preparation only: no archive, model call, process termination, or restore is performed here.
 const fs=require('node:fs'),path=require('node:path');
 const {claimLauncher}=require('./installed-stop.cjs');
+const settings=require('../config/backup-settings.json');
 function fail(code){throw Object.assign(Error(code),{code});}
 function plainPath(target){
   for(let current=target;;current=path.dirname(current)){
@@ -98,6 +99,12 @@ function inspectScope(data){
     }
   }
   visit('');
+  for(const {sourcePath} of settings){
+    const file=path.join(data,sourcePath);plainPath(file);
+    let stat;try{stat=fs.lstatSync(file);}catch(error){if(error.code==='ENOENT')continue;throw error;}
+    if(!stat.isFile()||stat.nlink!==1||stat.size>1024*1024)fail('BACKUP_SETTINGS_UNSUPPORTED');
+    scopes.push({path:sourcePath,policy:'review-settings'});walk(sourcePath,'review-settings');
+  }
   return {schema:1,mode:'offline-preparation',backupComplete:false,
     scopeReviewRequired:scopes.some(s=>s.linked||['unclassified','settings-review','reauthorize-review','cold-postgres'].includes(s.policy)),
     scopes,files,fileCount:files.length,bytes:files.reduce((sum,f)=>sum+f.bytes,0),

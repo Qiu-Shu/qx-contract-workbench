@@ -20,6 +20,7 @@ MAX_BYTES = 2 * 1024**3
 MAX_FILE = 512 * 1024**2
 MANIFEST = 'backup-manifest.json'
 PG_ROOT = '.local/case-memory-runtime'
+SETTINGS = json.loads((Path(__file__).resolve().parent.parent/'config/backup-settings.json').read_text(encoding='utf-8'))
 
 
 def fail(code):
@@ -308,9 +309,13 @@ def create_snapshot(source, destination, plan, pg_tools=None):
     has_postgres = any(s['path'] == PG_ROOT+'/database' for s in plan['scopes'])
     if has_postgres and not pg_tools:
         fail('BACKUP_POSTGRES_TOOLS_REQUIRED')
-    policies = ('protect','cold-postgres') if has_postgres else ('protect',)
+    policies = ('protect','review-settings','cold-postgres') if has_postgres else ('protect','review-settings')
     directories = set()
     before = inventory(source, plan['scopes'], policies, directories)
+    settings = [s for s in SETTINGS if s['sourcePath'] in before]
+    relocated = {s['sourcePath']:s['path'] for s in settings}
+    if any(before[name][0] > 1024*1024 for name in relocated):
+        fail('BACKUP_SETTINGS_UNSUPPORTED')
     selected = {member(f['path']): f['bytes'] for f in plan['files'] if f['policy'] in policies}
     if {k: v[0] for k, v in before.items()} != selected or len({k.casefold() for k in before}) != len(before):
         fail('BACKUP_SOURCE_CHANGED')
@@ -341,7 +346,7 @@ def create_snapshot(source, destination, plan, pg_tools=None):
             postgres_files = {n for n in before if has_postgres and n.startswith(PG_ROOT+'/database/')}
             databases = set()
             for name in before:
-                if name in postgres_files:
+                if name in postgres_files or name in relocated:
                     continue
                 with (raw / name).open('rb') as stream:
                     if stream.read(16) == b'SQLite format 3\x00':
@@ -354,7 +359,7 @@ def create_snapshot(source, destination, plan, pg_tools=None):
                     continue
                 if name not in postgres_files and re.search(r'\.(sqlite|db)-(wal|shm|journal)$', name, re.I):
                     fail('BACKUP_ORPHAN_DATABASE_SIDEFILE')
-                target = destination / name; target.parent.mkdir(parents=True, exist_ok=True)
+                target = destination / relocated.get(name,name); target.parent.mkdir(parents=True, exist_ok=True)
                 if name in databases:
                     deadline = time.monotonic() + 60
                     def progress(*_):
@@ -372,12 +377,13 @@ def create_snapshot(source, destination, plan, pg_tools=None):
             if inventory(source, plan['scopes'], policies, observed_dirs) != before or observed_dirs != directories:
                 fail('BACKUP_SOURCE_CHANGED')
             shutil.rmtree(raw)
-        files = [{'path': n, 'bytes': (destination/n).stat().st_size, 'sha256': digest(destination/n),
-                  'mtimeNs': (destination/n).stat().st_mtime_ns,
+        files = [{'path': relocated.get(n,n), 'bytes': (destination/relocated.get(n,n)).stat().st_size, 'sha256': digest(destination/relocated.get(n,n)),
+                  'mtimeNs': (destination/relocated.get(n,n)).stat().st_mtime_ns,
                   'kind': 'sqlite' if n in databases else 'file'} for n in sorted(before) if n not in sidefiles]
         manifest = {'schema': 1, 'scope': 'business-data', 'applicationComplete': False,
                     'activation': 'manual-review-required', 'sourceRoot': str(source),
                     'scopes': plan['scopes'], 'files': files,
+                    'settings': settings,
                     'directories': sorted(p.relative_to(destination).as_posix() for p in destination.rglob('*') if p.is_dir())}
         if postgres is not None:
             manifest['postgres'] = postgres
@@ -412,6 +418,9 @@ def verify_snapshot(root, pg_tools=None):
     actual = inventory(root, [{'path': p.name, 'policy': 'protect'} for p in root.iterdir()], directories=actual_dirs)
     if set(actual) != set(expected) | {MANIFEST}:
         fail('BACKUP_FILE_SET_MISMATCH')
+    settings = [s for s in SETTINGS if s['path'] in expected]
+    if manifest.get('settings',[]) != settings or any(n.startswith('.qx-restore-review/') and n not in {s['path'] for s in settings} for n in expected):
+        fail('BACKUP_SETTINGS_MANIFEST_INVALID')
     if 'directories' in manifest:
         declared = manifest['directories']
         if not isinstance(declared,list) or len(declared)>MAX_FILES or len(set(declared))!=len(declared) or {member(n) for n in declared} != actual_dirs:
@@ -435,7 +444,51 @@ def verify_snapshot(root, pg_tools=None):
         fail('BACKUP_POSTGRES_IDENTITY_MISMATCH')
     return {'fileCount': len(entries), 'databaseCount': sum(f['kind'] == 'sqlite' for f in entries),
             'archiveFiles': len(entries)+1, 'manifestSha256': digest(root/MANIFEST),
-            'sourceRoot': manifest['sourceRoot'], 'applicationComplete': False,'postgresIncluded':bool(postgres)}
+            'sourceRoot': manifest['sourceRoot'], 'applicationComplete': False,'postgresIncluded':bool(postgres),
+            'settingsCount':len(settings)}
+
+
+def review_snapshot(root, pg_tools=None):
+    root = local_path(root)
+    scopes = [{'path':p.name,'policy':'protect'} for p in root.iterdir()]
+    directories = set()
+    before = inventory(root,scopes,directories=directories)
+    with frozen([root,*(root/n for n in before),*(root/n for n in directories)]):
+        result = review_frozen_snapshot(root,pg_tools)
+        observed_dirs = set()
+        scopes = [{'path':p.name,'policy':'protect'} for p in root.iterdir()]
+        if inventory(root,scopes,directories=observed_dirs) != before or observed_dirs != directories:
+            fail('BACKUP_SOURCE_CHANGED')
+        return result
+
+
+def review_frozen_snapshot(root, pg_tools):
+    checked = verify_snapshot(root,pg_tools)
+    root = local_path(root)
+    manifest = read_json(root/MANIFEST)
+    settings = []
+    for entry in manifest.get('settings',[]):
+        item = {'id':entry['id'],'status':'review-required','suggested':{}}
+        try:
+            value = read_json(root/entry['path'])
+        except (ValueError,UnicodeError):
+            value = None
+        if isinstance(value,dict):
+            if entry['id'] == 'desktop-locale' and value.get('locale') in ('zh','zh-CN','zh-TW','en','en-US'):
+                item['suggested'] = {'locale':value['locale']}
+            if entry['id'] == 'wechat-preferences':
+                for key,choices in [('format',('plain','raw')),('delivery',('whole','stream'))]:
+                    if value.get(key) in choices:
+                        item['suggested'][key] = value[key]
+        settings.append(item)
+    blockers = ['settings-review','credentials-reauthorization','application-activation-not-implemented']
+    if (root/'.local/dsh-home/qx-wechat/qx-pending.json').exists() or (root/'.local/dsh-home/storages').exists():
+        blockers.append('pending-work-review')
+    if checked['postgresIncluded']:
+        blockers.extend(['postgres-instance-registration','hindsight-api-validation'])
+    return {'schema':1,'verified':True,'activation':'blocked','applicationComplete':False,
+            'fileCount':checked['fileCount'],'postgresIncluded':checked['postgresIncluded'],'settings':settings,
+            'reauthorization':['model-api-keys','wechat-login','other-profile-secrets'],'blockers':blockers}
 
 
 def main():
@@ -445,6 +498,8 @@ def main():
         result = create_snapshot(request['source'], request['destination'], request['plan'], request.get('pgTools'))
     elif action == 'verify':
         result = verify_snapshot(request['root'],request.get('pgTools'))
+    elif action == 'review':
+        result = review_snapshot(request['root'],request.get('pgTools'))
     elif action == 'private-directory':
         result = {'path': str(private_directory(request['path']))}
     elif action == 'publish':

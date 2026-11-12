@@ -4,6 +4,7 @@ const http=require('node:http');
 const net=require('node:net');
 const {spawn}=require('node:child_process');
 const {randomBytes,randomUUID,timingSafeEqual}=require('node:crypto');
+const {assertRestoreReviewed}=require('./installed-stop.cjs');
 
 const VERSION='1.2.0';
 const REQUIREMENTS='hindsight-api-slim[embedded-db,local-onnx]==1.2.0\npg0-embedded==0.15.2\n';
@@ -105,6 +106,7 @@ if __name__=='__main__': asyncio.run(main())
 `;
 
 async function createCaseMemoryRuntime({data,payload,python,secret='',model=process.env.QX_CASE_MEMORY_MODEL||'deepseek-flash',spawnProcess=spawn,startupTimeoutMs=900000}){
+  assertRestoreReviewed(data);
   data=path.resolve(data);const root=path.join(data,'.local/case-memory-runtime');noLinks(data,root);fs.mkdirSync(root,{recursive:true});
   for(const entry of fs.readdirSync(root))noLinks(root,path.join(root,entry));
   const instancePath=path.join(root,'instance.json');

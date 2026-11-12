@@ -4,12 +4,14 @@ const path=require('node:path');
 const {spawn}=require('node:child_process');
 const {pathToFileURL}=require('node:url');
 const {createModelCredentialStore}=require('./model-credentials.cjs');
+const {assertRestoreReviewed}=require('./installed-stop.cjs');
 const {validateKey}=require('./setup-service.cjs');
 const {readHostState,inspectHost,stopInstalledHost,restartRuntime}=require('./installed-runtime.cjs');
 const {createHostMonitor,createEventLog,hostStartupPending}=require('./host-recovery.cjs');
 
 const payload=process.env.QX_PAYLOAD_ROOT||path.join(process.resourcesPath,'workbench');
 const data=process.env.QX_INSTALL_DATA||path.join(app.getPath('appData'),'QunxingHarness');
+assertRestoreReviewed(data);
 fs.mkdirSync(path.join(data,'.local'),{recursive:true});
 app.setName('AI师兄法律助手平台');
 // Encryption uses Electron's profile key; UI and background must share this path.

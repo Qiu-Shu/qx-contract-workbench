@@ -27,6 +27,11 @@ function copySource(from,to,target,manifest){
   fs.copyFileSync(from,to);
   manifest.push({source:path.relative(root,from).split(path.sep).join('/'),target,sha256:crypto.createHash('sha256').update(fs.readFileSync(from)).digest('hex')});
 }
+function copyBackupConfiguration(sourceRoot,payload,manifest){
+  fs.mkdirSync(path.join(payload,'config'),{recursive:true});
+  for(const name of ['backup-settings.json','postgres-backup-runtime.json'])
+    copySource(path.join(sourceRoot,'config',name),path.join(payload,'config',name),'resources/workbench/config/'+name,manifest);
+}
 function copyMediaRegistry(source,payload,manifest){
   const registry=JSON.parse(fs.readFileSync(source,'utf8')),ids=new Set();
   if(registry.version!==1||!Array.isArray(registry.sources)||!registry.sources.length)throw Error('Invalid media source registry');
@@ -95,6 +100,7 @@ async function refresh(stage){
   for(const folder of ['bridge','plugins','legacy','workspace-seed'])overlay(path.join(root,folder),path.join(payload,folder),manifest,'resources/workbench/'+folder);
   copyMediaRegistry(path.join(root,'sources/media-source-registry.json'),payload,manifest);
   overlay(path.join(__dirname,'payload-config'),path.join(payload,'config'),manifest,'resources/workbench/config');
+  copyBackupConfiguration(root,payload,manifest);
   overlay(path.join(__dirname,'runtime-overrides'),path.join(payload,'node_modules'),manifest,'resources/workbench/node_modules');
   const skillLabels=copySkillLabels(path.join(root,'config/skill-labels.zh-CN.json'),payload,manifest);
   const toolLabels=require('../scripts/tool-labels.cjs').stageToolLabels(root,payload,manifest);
@@ -120,4 +126,4 @@ async function refresh(stage){
   console.log(JSON.stringify({stage,base,candidate,sourceFiles:manifest.length}));
 }
 if(require.main===module)main().catch(error=>{console.error(error);process.exitCode=1});
-module.exports={overlay,digest,copyMediaRegistry,copySkillLabels};
+module.exports={overlay,digest,copyMediaRegistry,copySkillLabels,copyBackupConfiguration};

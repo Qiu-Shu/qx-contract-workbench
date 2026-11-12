@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 1,
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "baselineCommit": "c6d99112188ea110f2f158996b0876384ee7294c",
+  "scope": "Three known settings retained as inert bytes, read-only restored-copy review and pre-write startup guards; activation remains blocked",
+  "installerBuilt": false,
+  "fullPayloadStaged": false,
+  "productionInstalled": false,
+  "realBusinessDataRead": false,
+  "liveModelCalls": 0,
+  "dependenciesDownloaded": false,
+  "remotePublished": false,
+  "applicationComplete": false,
+  "activation": "blocked",
+  "settings": {
+    "registry": "harness/config/backup-settings.json",
+    "knownFiles": 3,
+    "maximumBytesPerFile": 1048576,
+    "bytePreserving": true,
+    "automaticApplication": false,
+    "credentialStoresCopied": false,
+    "wechatLoginCopied": false,
+    "suggestedOnly": {
+      "locale": [
+        "zh",
+        "zh-CN",
+        "zh-TW",
+        "en",
+        "en-US"
+      ],
+      "format": [
+        "plain",
+        "raw"
+      ],
+      "delivery": [
+        "whole",
+        "stream"
+      ]
+    }
+  },
+  "results": {
+    "fullOffline": {
+      "command": "npm test",
+      "exitCode": 0,
+      "nodeFiles": 123,
+      "pythonFiles": 36,
+      "node": {
+        "passed": 453,
+        "failed": 0,
+        "skipped": 2
+      },
+      "python": {
+        "passed": 472,
+        "failed": 0,
+        "skipped": 1,
+        "subtestsPassed": 36
+      },
+      "log": "full-offline.log",
+      "nativeSettingsAndPgTestsRan": true
+    },
+    "targets": [
+      {
+        "command": "node --test desktop/restore-review.test.cjs desktop/backup-preparation.test.cjs desktop/local-backup.test.cjs desktop/installed-runtime.test.cjs desktop/case-memory-runtime.test.cjs",
+        "exitCode": 0,
+        "passed": 23,
+        "failed": 0,
+        "skipped": 0,
+        "log": "target-node.log",
+        "note": "Earlier code stage, before additional malformed-marker, hardlink/oversize and packaging tests; final full offline includes those."
+      },
+      {
+        "command": "node --test desktop/restore-review.test.cjs packaging/stage.test.cjs",
+        "exitCode": 0,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "log": "review-overlay-target.log"
+      }
+    ],
+    "developmentFailures": [
+      {
+        "command": "node --test desktop/restore-review.test.cjs",
+        "exitCode": 1,
+        "log": "review-red.log",
+        "reason": "Baseline silently omitted selected settings; settingsCount undefined instead of 3.",
+        "firstGreenLog": "review-green.log",
+        "firstGreenExitCode": 0,
+        "firstGreenPassed": 1
+      },
+      {
+        "command": "node --test desktop/restore-review.test.cjs",
+        "exitCode": 1,
+        "log": "review-writer-red.log",
+        "reason": "Review accepted a restored configuration with an open write handle; added freeze around full review.",
+        "finalVerification": "full-offline.log"
+      }
+    ]
+  },
+  "independentReviews": {
+    "Spec": {
+      "reviewer": "/root/local_backup_spec",
+      "unresolvedFindings": 0,
+      "summary": "Raw settings including invalid profile bytes preserved; secrets/commands absent from review; hashes and mtimes unchanged; open writer refused; legacy no-settings manifests supported; initialization, memory and Electron-stub desktop entry refuse before writes.",
+      "results": "spec-review/results.json",
+      "probes": [
+        {
+          "command": "node boundaries.cjs",
+          "exitCode": 1,
+          "log": "spec-review/boundaries.log",
+          "classification": "Auxiliary probe stub missing QX_PAYLOAD_ROOT; not a product RED."
+        },
+        {
+          "command": "node boundaries.cjs",
+          "exitCode": 0,
+          "log": "spec-review/boundaries-fixed-harness.log",
+          "note": "Corrected probe environment."
+        },
+        {
+          "command": "node writer.cjs",
+          "exitCode": 0,
+          "log": "spec-review/writer.log"
+        },
+        {
+          "command": "python old_manifest.py",
+          "exitCode": 0,
+          "log": "spec-review/old-manifest.log"
+        }
+      ]
+    },
+    "Standards": {
+      "reviewer": "/root/local_backup_standards",
+      "initialFindings": 1,
+      "severity": "P2",
+      "reason": "Existing payload overlay omitted configuration JSON required by snapshot worker.",
+      "fix": "Copy both backup-settings.json and postgres-backup-runtime.json with source manifest hashes; exercise copied worker without full stage/build.",
+      "unresolvedFindings": 0,
+      "probes": [
+        {
+          "command": "node stage-dependencies.cjs",
+          "probeExitCode": 0,
+          "workerExitCode": 1,
+          "log": "standards-review/stage-dependencies.log"
+        },
+        {
+          "command": "node stage-dependencies-green.cjs",
+          "probeExitCode": 0,
+          "workerExitCode": 0,
+          "log": "standards-review/stage-dependencies-green.log"
+        },
+        {
+          "command": "python legacy-readonly.py",
+          "exitCode": 0,
+          "log": "standards-review/legacy-readonly.log",
+          "note": "Exact baseline worker created legacy snapshot; current review accepted and bytes/mtime remained unchanged."
+        }
+      ]
+    }
+  },
+  "environment": {
+    "platform": "Windows",
+    "workingDirectory": "harness",
+    "setup": ". ./.local/audit-0216/build/test-env.ps1",
+    "QX_TEST_RESTIC": "harness/.local/audit-followups/downloads/restic_0.19.1_windows_amd64.exe",
+    "QX_TEST_PG_TOOLS": "C:/Users/Administrator/.pg0/installation/18.1.0",
+    "TEMP": "D:/CodexChecks/AI-Shixiong-restore-review-20261112/tmp",
+    "TMP": "D:/CodexChecks/AI-Shixiong-restore-review-20261112/tmp",
+    "resticVersion": "0.19.1",
+    "postgresVersion": "18.1",
+    "pgvectorVersion": "0.8.5",
+    "note": "Reused already pinned engines and synthetic fixtures; no user PG registry or installed app mutation."
+  },
+  "limits": [
+    "No settings application, credential decryption/import or application activation implemented.",
+    "verified=true describes present-copy integrity, not external provenance or approval.",
+    "No Hindsight business migration/API or real model semantics acceptance.",
+    "pg0 global registry/start paths, pending work policy and desktop review/activation UI remain pending.",
+    "Startup guard addresses ordinary entry; same-user deliberate marker deletion is outside its boundary.",
+    "No complete stage, installer build, installed UI, cross-machine, power-loss, disk-full or large-data acceptance this turn."
+  ],
+  "checkedAt": "2026-11-12T11:14:19.7330553Z",
+  "evidenceRoot": "D:/CodexChecks/AI-Shixiong-restore-review-20261112",
+  "sourceFiles": [
+    {
+      "path": "harness/bridge/backup_snapshot.py",
+      "sha256": "e208845ad8666b2a3efe099188c67f3bb11efde29f2a1608a01e2f2220434d80"
+    },
+    {
+      "path": "harness/config/backup-settings.json",
+      "sha256": "37d359bf1cad5382da8a79569378787edea7833f229e30ebbe1cee93308d81bc"
+    },
+    {
+      "path": "harness/config/postgres-backup-runtime.json",
+      "sha256": "857aa6a48e1bf58fc8e1c2860fa685447df37d72dfbb0156f203558c82a1e922"
+    },
+    {
+      "path": "harness/desktop/backup-preparation.cjs",
+      "sha256": "cafe85b46d6f1aa2acc2768f329683380e9de02fa470c04a8accd8ed02184358"
+    },
+    {
+      "path": "harness/desktop/case-memory-runtime.cjs",
+      "sha256": "86486bd8f1d87a967cde48daf6dd23cc83c54ae11273c9d72e330a3d2e02799b"
+    },
+    {
+      "path": "harness/desktop/installed-runtime.cjs",
+      "sha256": "63a36c48dd8d49c933c5b725087171c881e1e10f5327b267d1264a8293c1ebf5"
+    },
+    {
+      "path": "harness/desktop/installed-stop.cjs",
+      "sha256": "3a431d4810991d7ade9227b328d6ab35d83b216cdd772a9e34921d792fd264fb"
+    },
+    {
+      "path": "harness/desktop/installed.cjs",
+      "sha256": "fbaa9af3ea28535e23b0bc0d8b45500676364f9bd7464bfe450a7794ed140b39"
+    },
+    {
+      "path": "harness/desktop/local-backup-postgres.test.cjs",
+      "sha256": "b5f1511011163a0e4661907576ed518f3e55844e51bc9628c1c7e10ee23de945"
+    },
+    {
+      "path": "harness/desktop/local-backup.cjs",
+      "sha256": "5f12b2b7493113ab16a49a0cd092ff1cedb4445a8b06fba5f68c03b12bc1aa42"
+    },
+    {
+      "path": "harness/desktop/restore-review.test.cjs",
+      "sha256": "5fed0db3fffefb4ef9facefea13ee1cdc959307892cc51d3dbca4f9cd72c4cb9"
+    },
+    {
+      "path": "harness/packaging/stage.cjs",
+      "sha256": "4df5d77e44f58fd8ed78001c8fb6803a8147f1ed86c7addd0b3b86763f002a0e"
+    },
+    {
+      "path": "harness/packaging/stage.test.cjs",
+      "sha256": "df98086cf44985b8a4d269e16447f03178472304002700a7c62dc4088a99e229"
+    }
+  ],
+  "evidenceFiles": [
+    {
+      "path": "full-offline.log",
+      "sha256": "e7025aa9ffe5d72e2b1b6d9874977231b1f0280e94fbc34a7aecaebc109c3d4e"
+    },
+    {
+      "path": "target-node.log",
+      "sha256": "1372458547a7d367a77448526fda0def3353fada09e0c3515216a51aea7c9f76"
+    },
+    {
+      "path": "review-overlay-target.log",
+      "sha256": "419df278063ee9a68787ea8bdacae7152db493fa1e8007c3d9f6a8d934f92b82"
+    },
+    {
+      "path": "review-red.log",
+      "sha256": "2335ea8a9a06cd325b0ea85543f4e6aabafacd82260d35ff31feac49cd3d71b4"
+    },
+    {
+      "path": "review-green.log",
+      "sha256": "e3f838da8b2460d43cc19e700506ca4166febc2af1a6aa1f78ba99b34d16fa22"
+    },
+    {
+      "path": "review-writer-red.log",
+      "sha256": "07a1045f4f9ec287f8d4a23a0da5ee295999cc1cb9523453acf350cc88bae155"
+    },
+    {
+      "path": "spec-review/results.json",
+      "sha256": "796035ab6b424e23425ad16360258705d19aa0a7bc610809c00587c931e5377f"
+    },
+    {
+      "path": "spec-review/boundaries.cjs",
+      "sha256": "e48c060e5650699baf6b5231e28bd1cc7f9c7f3ca3b4e7c132bb346885436b1a"
+    },
+    {
+      "path": "spec-review/boundaries.log",
+      "sha256": "eb140e5944e378e6efce1ed186593614743a8db7ca0c4fb797661d5efa016e15"
+    },
+    {
+      "path": "spec-review/boundaries-fixed-harness.log",
+      "sha256": "8591922a1bc30db5e14a590d6f4b581c8ab9a0425bbca0b433d106c728574247"
+    },
+    {
+      "path": "spec-review/writer.cjs",
+      "sha256": "80906cfd968d027a823d02de93236f5b396058d4a64d3f1454078465d6445bf8"
+    },
+    {
+      "path": "spec-review/writer.log",
+      "sha256": "562256fffb08ebf3b74b3abcf047925536c2c0d52dd8b514b7e2e962471cd170"
+    },
+    {
+      "path": "spec-review/old_manifest.py",
+      "sha256": "16c66d08981d8d0bb0353cca5b745e3f75a441213cd7e7d8cfbe563d39b509c2"
+    },
+    {
+      "path": "spec-review/old-manifest.log",
+      "sha256": "fa26fa9bd741b2ac5519226859386212837295b68558c8d99fa0bb9b3099dd7e"
+    },
+    {
+      "path": "standards-review/stage-dependencies.cjs",
+      "sha256": "fefd1d25954aa7a12cf922e8fd26b2661d2cf63646f3173cf7b2db6975c7e121"
+    },
+    {
+      "path": "standards-review/stage-dependencies.log",
+      "sha256": "161577ce9a50f626df94ac603c7c3800497f55648400a07ee5ee8ed37ed3e70c"
+    },
+    {
+      "path": "standards-review/stage-dependencies-green.cjs",
+      "sha256": "5ced2d2bf785b101a8340de171fbd4ca32f0977ea7737f42516b631f21726479"
+    },
+    {
+      "path": "standards-review/stage-dependencies-green.log",
+      "sha256": "c5e746903a12720f05cbff20d67f1d15d5c8d8be6f1334c3fe39666a84fcd0ca"
+    },
+    {
+      "path": "standards-review/legacy-readonly.py",
+      "sha256": "93cbdf93784e8b347c287c05f45eb88e9b44d8f684934533ef24b43984124fbe"
+    },
+    {
+      "path": "standards-review/legacy-readonly.log",
+      "sha256": "5d28cd0e25b95cdba301fdcc10e8ed57964f88b0dd1ef42ef0c0eb888ba86ede"
+    }
+  ]
+}

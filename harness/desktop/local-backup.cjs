@@ -97,7 +97,7 @@ async function createLocalBackup(options){
       if(summaries.length!==1||! /^[a-f0-9]{64}$/.test(summary.snapshot_id)||summary.total_files_processed!==snapshot.archiveFiles)fail('BACKUP_SUMMARY_INVALID');
       await engine(restic,repo,passwordFile,['check','--read-data'],stage);
       const receipt={schema:1,snapshotId:summary.snapshot_id,manifestSha256:snapshot.manifestSha256,
-        fileCount:snapshot.fileCount,databaseCount:snapshot.databaseCount,postgresIncluded:snapshot.postgresIncluded,applicationComplete:false,engineSha256:ENGINE_SHA};
+        fileCount:snapshot.fileCount,databaseCount:snapshot.databaseCount,postgresIncluded:snapshot.postgresIncluded,settingsCount:snapshot.settingsCount,applicationComplete:false,engineSha256:ENGINE_SHA};
       fs.writeFileSync(path.join(bundle,'completed.json'),JSON.stringify(receipt,null,2),{flag:'wx'});
       complete=true;return receipt;
     }finally{
@@ -130,7 +130,7 @@ async function restoreLocalBackup(options){
     if(JSON.stringify(fs.readdirSync(extracted))!==JSON.stringify(['snapshot']))fail('BACKUP_FILE_SET_MISMATCH');
     const restored=path.join(extracted,'snapshot');
     const checked=await worker(python,{action:'verify',root:restored,pgTools:options.pgTools});
-    if(checked.manifestSha256!==receipt.manifestSha256||checked.fileCount!==receipt.fileCount||checked.databaseCount!==receipt.databaseCount||checked.postgresIncluded!==Boolean(receipt.postgresIncluded))fail('BACKUP_RECEIPT_MISMATCH');
+    if(checked.manifestSha256!==receipt.manifestSha256||checked.fileCount!==receipt.fileCount||checked.databaseCount!==receipt.databaseCount||checked.postgresIncluded!==Boolean(receipt.postgresIncluded)||checked.settingsCount!==(receipt.settingsCount??0))fail('BACKUP_RECEIPT_MISMATCH');
     disjoint(local(checked.sourceRoot),destination,bundle);
     absent(destination);
     // Re-create the published root with a protected DACL; restic's restored metadata is not trusted.
@@ -140,13 +140,18 @@ async function restoreLocalBackup(options){
     return {...receipt,activation:'manual-review-required',destination};
   }finally{if(owned)removeOwned(stage,parent,'.qx-restore-');}
 }
-module.exports={createLocalBackup,restoreLocalBackup};
+async function reviewLocalRestore(options){
+  const python=local(options.python,true),root=local(options.destination);
+  if(!fs.statSync(python).isFile())fail('BACKUP_ENGINE_UNVERIFIED');
+  return worker(python,{action:'review',root,pgTools:options.pgTools});
+}
+module.exports={createLocalBackup,restoreLocalBackup,reviewLocalRestore};
 if(require.main===module){
   let input='';process.stdin.setEncoding('utf8');
   process.stdin.on('data',chunk=>{input+=chunk;if(input.length>65536)process.exit(1);});
   process.stdin.on('end',async()=>{try{
     const request=JSON.parse(input);
-    const operation={backup:createLocalBackup,restore:restoreLocalBackup}[request.action];
+    const operation={backup:createLocalBackup,restore:restoreLocalBackup,review:reviewLocalRestore}[request.action];
     if(!operation)fail('BACKUP_INVALID_ACTION');
     console.log(JSON.stringify(await operation(request)));
   }catch(error){console.error(JSON.stringify({error:/^BACKUP_[A-Z_]+$/.test(error.code)?error.code:'BACKUP_FAILED'}));process.exitCode=1;}});

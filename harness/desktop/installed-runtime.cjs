@@ -6,7 +6,7 @@ const {randomBytes}=require('node:crypto');
 const {spawn}=require('node:child_process');
 const {createSupervisor,createEventLog}=require('./host-recovery.cjs');
 const {createCaseMemoryRuntime}=require('./case-memory-runtime.cjs');
-const {processAlive,hostProcessAlive,readHostRecord,readHostState,readControl,launcherOwnsPipe,stopRuntime,stopInstalledHost,restartRuntime}=require('./installed-stop.cjs');
+const {assertRestoreReviewed,processAlive,hostProcessAlive,readHostRecord,readHostState,readControl,launcherOwnsPipe,stopRuntime,stopInstalledHost,restartRuntime}=require('./installed-stop.cjs');
 const {migrateInstalledMedia,migrateInstalledLazyTools,relocateInstalledPaths,migrateInstalledAgentDesktop,migrateInstalledVerifiedDelivery,migrateInstalledSkillRoots}=require('./installed-migrations.cjs');
 const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory}=require('./installed-migrations.cjs');
 
@@ -27,6 +27,7 @@ function redactedLines(secret,write){
 }
 
 function initialize(payload,data){
+  assertRestoreReviewed(data);
   const local=path.join(data,'.local'),profile=path.join(local,'dsh-home/profiles/web');
   const marker=path.join(local,'initialized-payload.json');
   let identity=null,previous=null;
