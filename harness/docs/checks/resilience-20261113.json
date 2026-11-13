@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "baseline": "8c15b87c4f8b1c402a7c7b26d242c2754119e031",
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "evidenceRoot": "D:/CodexChecks/AI-Shixiong-resilience-20261113",
+  "recordedAt": "2026-11-13T11:20:25.7075513Z",
+  "productCodeChanged": false,
+  "installerBuilt": false,
+  "dailyInstallationChanged": false,
+  "realProviderCalls": 0,
+  "faults": {
+    "exitCode": 0,
+    "terminatedProcessTrees": 6,
+    "protectedFiles": 3,
+    "cwd": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目/harness",
+    "passed": 9,
+    "failed": 0,
+    "evidence": "faults/final-execution.json",
+    "physicalPowerLossTested": false,
+    "scenarioCount": 8,
+    "skipped": 0,
+    "command": [
+      "D:/CodexBuilds/AI-Shixiong-content-merge-20261113/stage/win-unpacked/resources/workbench/runtime/node.exe",
+      "--test",
+      "--test-concurrency=1",
+      "desktop/backup-faults.test.cjs"
+    ]
+  },
+  "capacity": {
+    "boundedVolumeMiB": 512,
+    "largestFileBytes": 134217728,
+    "exitCode": 0,
+    "failed": 0,
+    "command": [
+      "tests/backup-capacity-volume.ps1",
+      "-Node",
+      "D:/CodexBuilds/AI-Shixiong-content-merge-20261113/stage/win-unpacked/resources/workbench/runtime/node.exe",
+      "-Python",
+      "D:/Documents/ChatGPT/律所项目/.local/release-0216/stage/base/resources/workbench/runtime/python/python.exe",
+      "-Restic",
+      "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目/harness/.local/audit-followups/downloads/restic_0.19.1_windows_amd64.exe"
+    ],
+    "cwd": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目/harness",
+    "files": 10001,
+    "detached": true,
+    "backupFailure": "BACKUP_SPACE_REQUIRED: preflight",
+    "restoreFailure": "BACKUP_ENGINE_FAILED: restore writes",
+    "passed": 2,
+    "bytes": 144457728,
+    "hashAndMtimeUnchanged": true,
+    "evidence": "root/capacity-6a93c0d5-dc41-4074-a9a6-71fabd8a9576"
+  },
+  "contentTarget": {
+    "failed": 0,
+    "newChecks": 7,
+    "evidence": "content/target-regression-final.log",
+    "passed": 120,
+    "skipped": 0,
+    "index": "content/result-index.json",
+    "exitCode": 0
+  },
+  "finalSelfCheck": {
+    "checks": 3,
+    "exitCode": 0,
+    "networkDenials": 0,
+    "threeDayVerificationComplete": false,
+    "inspectExitCode": 0,
+    "elapsedMs": 80057,
+    "monotonicElapsedMs": 80056,
+    "status": "self-check-passed",
+    "evidence": "content/self-check-schedule-counts/summary.json",
+    "counts": {
+      "searches": 8,
+      "details": 1,
+      "summaries": 1
+    },
+    "inspectIdentityVerified": false,
+    "command": [
+      "D:/CodexBuilds/AI-Shixiong-content-merge-20261113/stage/win-unpacked/resources/workbench/runtime/node.exe",
+      "tests/content-watch-endurance/run.mjs",
+      "--self-check",
+      "D:/CodexChecks/AI-Shixiong-resilience-20261113/content/self-check-schedule-counts"
+    ]
+  },
+  "fullOffline": {
+    "startedAt": "2026-11-13T11:17:25.7416675Z",
+    "node": {
+      "total": 666,
+      "passed": 651,
+      "skipped": 15,
+      "failed": 0
+    },
+    "exitCode": 0,
+    "finishedAt": "2026-11-13T11:19:43.0461502Z",
+    "cwd": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目\\harness",
+    "command": "node scripts/test-suite.cjs offline",
+    "python": {
+      "subtestsPassed": 36,
+      "passed": 479,
+      "skipped": 1,
+      "failed": 0
+    },
+    "evidence": "root/full-offline-final.log"
+  },
+  "previousFailures": [
+    {
+      "pythonSubtestsPassed": 36,
+      "exitCode": 1,
+      "nodeFailed": 268,
+      "pythonSkipped": 1,
+      "nodeSkipped": 15,
+      "pythonPassed": 479,
+      "cause": "TEMP directory specified by test launcher did not exist; retained original log, created directory before complete rerun",
+      "evidence": "root/full-offline.log",
+      "nodePassed": 383
+    },
+    {
+      "failed": 4,
+      "passed": 4,
+      "exitCode": 1,
+      "evidence": "faults/run-01.log",
+      "cause": "Fixture payload missing restore activation runner; original unreliable child-failure summary preserved and corrected"
+    },
+    {
+      "failed": 4,
+      "passed": 0,
+      "exitCode": 1,
+      "evidence": "content/accelerated-initial.log",
+      "cause": "Synthetic fixture loopback DNS and Windows path setup"
+    },
+    {
+      "exitCode": 1,
+      "evidence": "content/self-check-final/summary.json",
+      "cause": "Source hash guard correctly rejected edits during run"
+    }
+  ],
+  "review": {
+    "standardsP3": "PID existence is not identity; inspect now states unverified, current long run independently verified by CIM",
+    "standardsBlocking": 0,
+    "latestIncrementIndependentlyReviewed": true,
+    "resolvedCoverageGap": "Assert total collection counts, second next due time, and absence of a third scheduled run",
+    "specUnresolved": 0
+  },
+  "longRun": {
+    "sourceHashes": {
+      "plugins/wechat/session.js": "a7772b5c3d1d9a08c00caad9aefa80735e792166807cc6872ca0b9fb0b98781a",
+      "plugins/content-watch/connection.mjs": "84151e2a94d45e612b63c84998d8697aac80bc20e4d109320254503d7e79129f",
+      "plugins/content-watch/core.mjs": "ed6d863bcd682a7b12f3edb4dbeffdcf1b21d7517e09f3eb2ecab029d9bbc604",
+      "plugins/content-watch/index.mjs": "da0fd76cd42cec20a03efb41d9cb44fba41e51c096b6530d87147d97c8ea582c",
+      "plugins/content-watch/justone.mjs": "d43b2e2766a6970fd11bda252e6e18d6469c8dad6c27219c069385a483970070",
+      "plugins/content-watch/session.mjs": "b7b29baa282819ea39c4ffaa0e8f82e58733fc582ec156be86c8f971b4417821",
+      "plugins/content-watch/xhs-runtime.mjs": "13100b63db10774fcd0ba1ee92fd624f51a1f4667fead4faf87e88d7db29bce7",
+      "plugins/content-watch/xiaohongshu.mjs": "74a3a3923ab3e480412a3056ed2367259b03ce1a20a616b5e226d9d6a637b385",
+      "scripts/prepare-content-watch.mjs": "3b46608a676f123db779155e5c510031e23f2c2276553583d73f340d9a0128f8",
+      "tests/content-watch-endurance/crash-worker.mjs": "9a9cfc45f6b471700ec06a6dd2aed0d1dba7469b074b8dcbc8abedc544eba0bf",
+      "tests/content-watch-endurance/fixture.mjs": "8a09a9efeb70eac9699d5f35e42034adbb496c02e8589e2adf60a318de29c67f",
+      "tests/content-watch-endurance/network-guard.mjs": "9ef8a2f6c3089b0409b881501873e0c30616df6d8860e4b203f9554854913884",
+      "tests/content-watch-endurance/run.mjs": "72df186bec346a9c5543f23260c3771e212e446691fc42ed0c96d584048b4121",
+      "tests/content-watch-endurance/timing.mjs": "ac625fe909a73772812653e22e4c9f8734ca621cc62df41441d732a4c96670b6"
+    },
+    "exitEvidence": "content/real-clock-73h-exit.json",
+    "identityEvidence": "content/real-clock-73h-identity.json",
+    "parentPid": 26752,
+    "command": [
+      "D:/CodexBuilds/AI-Shixiong-content-merge-20261113/stage/win-unpacked/resources/workbench/runtime/node.exe",
+      "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目/harness/tests/content-watch-endurance/run.mjs",
+      "--run",
+      "D:/CodexChecks/AI-Shixiong-resilience-20261113/content/real-clock-73h"
+    ],
+    "fullHarnessAgent": false,
+    "durationHours": 73,
+    "realProviders": false,
+    "startedAt": "2026-11-13T11:19:49.996Z",
+    "startedDeadline": "2026-11-16T12:19:49.996Z",
+    "creationTimeUtc": "2026-11-13T11:19:49.926543Z",
+    "productionIntervalHours": 72,
+    "identityVerifiedAt": "2026-11-13T11:19:57.4893952Z",
+    "status": "running",
+    "pid": 23604,
+    "threeDayVerificationComplete": false,
+    "evidence": "content/real-clock-73h/summary.json",
+    "firstScheduled": {
+      "actualAt": "2026-11-13T11:20:20.163Z",
+      "nextDueAt": "2026-11-16T11:20:20.163Z",
+      "reportId": "6346e822-a9ed-42d4-9afd-7ad36f178d61"
+    },
+    "snapshotUpdatedAt": "2026-11-13T11:20:30.132Z",
+    "automation": {
+      "notify": "completion, failure or required action only",
+      "interval": "hourly",
+      "kind": "heartbeat",
+      "name": "拓客 73 小时隔离验证",
+      "threadId": "01a1c98a-f529-7520-8d3c-5c65a92a5f56",
+      "id": "73",
+      "status": "ACTIVE"
+    }
+  },
+  "sourceHashes": {
+    "desktop/backup-capacity.test.cjs": "8206bb57748a8c02b7532eca3d67c1a37d18a0f1ada4a979b2ddec9b91eaf4c1",
+    "desktop/backup-faults.test.cjs": "c263954e6501603d685984b09e42e8ba5be568a2c273890e0d6f80766af83d4e",
+    "tests/backup-capacity-volume.ps1": "ef6a4f9aed760046207816a37d4df56ba0d13dc6ebac48a80a11afe278395a89",
+    "tests/content-watch-endurance.test.mjs": "76f7841361ad017117640d765e474625e765c1e3cd563a8b08417c89cf201533",
+    "tests/content-watch-endurance/run.mjs": "72df186bec346a9c5543f23260c3771e212e446691fc42ed0c96d584048b4121"
+  },
+  "limits": [
+    "Process termination at deterministic boundaries is not physical power loss",
+    "Backup disk-full case fails preflight; no claim of backup write-time ENOSPC cleanup",
+    "Capacity covers 10001 files and 128 MiB largest file, not all supported limits",
+    "73-hour observation is running, not completed",
+    "Local synthetic provider and summary boundary, not real accounts or full Harness Agent endurance",
+    "Manual lawyer acceptance, cross-machine and cross-version verification remain deferred"
+  ]
+}

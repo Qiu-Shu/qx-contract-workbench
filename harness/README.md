@@ -4,6 +4,8 @@
 
 2026-11-11 审核后的首批源码整改与验证见 [R01–R05 交付记录](docs/2026-11-11-audit-reliability-delivery.md)。审核分支尚未正式发布，日常使用的安装版未更新。
 
+2026-11-13 已完成异常退出、空间不足和一万级文件加大附件的备份恢复验证；拓客重启、断网及去重回归通过，真实73小时隔离观察已启动，预计北京时间11月16日20:20左右结束，三天结果仍待。此次仅新增验证工具，未构建安装包。[验证范围、结果与长期状态](docs/2026-11-13-resilience-delivery.md)。
+
 2026-11-13 已将“拓客内容”合入当前审核分支：配置业务方向及目标客户后，每 72 小时整理到专用会话，支持立即整理。完整隔离安装升级、配置保留、Electron 首开和安装载荷的配置/整理/会话界面已验证；Windows 凭据、状态并发、备份兼容和打包入口一并修复。此次外部内容与模型均用合成服务，未重新调用付费供应商，QA 包不作为正式发布。详见 [合并与 Windows 验证](docs/2026-11-13-content-watch-merge.md)。
 
 2026-11-12–13 新增源码侧[本地业务快照、加密保存与隔离恢复](docs/2026-11-12-local-backup-delivery.md)、[PostgreSQL冷备与恢复校验](docs/2026-11-12-postgres-backup-delivery.md)、[配置保留、只读审核与启动保护](docs/2026-11-12-restore-review-delivery.md)及[pg0目录绑定与停机确认](docs/2026-11-13-memory-database-binding-delivery.md)，复用[数据范围与离线维护检查](docs/2026-11-12-backup-data-scope.md)。固定组件下的合成数据已通过实际restic加密、数据库及向量索引恢复验证；[真实Hindsight同版本API/来源账本恢复](docs/2026-11-13-hindsight-restore-delivery.md)也已实测，外部模型为本机合成响应，不计语义质量。
