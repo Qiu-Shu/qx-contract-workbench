@@ -1,0 +1,336 @@
+{
+  "schemaVersion": 1,
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "baselineCommit": "6fdfb163326fbf321dbbce86400e1d571247f57c",
+  "scope": "Path-bound pg0 registration and verified shutdown for isolated restore prerequisites",
+  "installerBuilt": false,
+  "productionInstalled": false,
+  "realBusinessDataRead": false,
+  "dependenciesDownloaded": false,
+  "liveModelCalls": 0,
+  "remotePublished": false,
+  "hindsightApiValidated": false,
+  "applicationActivationImplemented": false,
+  "engines": {
+    "pg0": "0.15.2",
+    "postgres": "18.1",
+    "pgvector": "0.8.5",
+    "restic": "0.19.1",
+    "pg0SourceCommit": "29191fbf00f218d09f271c33c3d8ec5525c3c4ab",
+    "wheelSha256": "1b47c938991243d938e28c7e1998c1298637fdb15c54ada6d853e02769d50d3e",
+    "pg0ExeSha256": "8894575679886fef41e176608da16f4448fdeea4cc60c02380422adc147260b7"
+  },
+  "results": {
+    "fullOffline": {
+      "command": "npm test",
+      "exitCode": 0,
+      "nodeFiles": 124,
+      "pythonFiles": 36,
+      "node": {
+        "passed": 462,
+        "failed": 0,
+        "skipped": 2
+      },
+      "python": {
+        "passed": 472,
+        "failed": 0,
+        "skipped": 1,
+        "subtestsPassed": 36
+      },
+      "log": "full-offline.log"
+    },
+    "targets": [
+      {
+        "command": "node --test desktop/case-memory-runtime.test.cjs",
+        "exitCode": 0,
+        "passed": 8,
+        "failed": 0,
+        "log": "binding-green.log",
+        "note": "First directory rejection and cleanup correction, before path-specific names."
+      },
+      {
+        "command": "node --test desktop/case-memory-runtime.test.cjs",
+        "exitCode": 0,
+        "passed": 9,
+        "failed": 0,
+        "log": "name-green.log"
+      },
+      {
+        "command": "node --test desktop/case-memory-pg0.test.cjs",
+        "exitCode": 0,
+        "passed": 3,
+        "failed": 0,
+        "log": "native-green.log",
+        "note": "Before unhealthy and corrupt-running shutdown cases."
+      },
+      {
+        "command": "node --test desktop/case-memory-runtime.test.cjs desktop/case-memory-pg0.test.cjs desktop/local-backup-postgres.test.cjs desktop/restore-review.test.cjs",
+        "exitCode": 0,
+        "passed": 23,
+        "failed": 0,
+        "log": "target-green.log",
+        "note": "Before independent corrupt-running shutdown finding."
+      },
+      {
+        "command": "node --test desktop/case-memory-runtime.test.cjs desktop/case-memory-pg0.test.cjs desktop/installed-runtime.test.cjs",
+        "exitCode": 0,
+        "passed": 18,
+        "failed": 0,
+        "log": "stop-state-green.log",
+        "note": "Final shutdown behavior covered; last missing-interpreter/catch-all error handling is included in subsequent full offline run."
+      }
+    ],
+    "developmentFailures": [
+      {
+        "command": "node --test desktop/case-memory-runtime.test.cjs",
+        "exitCode": 1,
+        "passed": 5,
+        "failed": 3,
+        "log": "binding-red.log",
+        "reason": "Foreign/unreadable registration still stopped by fallback; parent plus two subtests fail."
+      },
+      {
+        "command": "node --test --test-name-pattern='copied datastore' desktop/case-memory-runtime.test.cjs",
+        "exitCode": 1,
+        "passed": 0,
+        "failed": 1,
+        "log": "name-red.log",
+        "reason": "Copied identity selected same global name."
+      },
+      {
+        "command": "node --test desktop/case-memory-pg0.test.cjs",
+        "exitCode": 1,
+        "passed": 2,
+        "failed": 2,
+        "log": "unhealthy-red.log",
+        "reason": "Health false did not mean postmaster stopped; parent and subtest fail."
+      },
+      {
+        "command": "node --test desktop/case-memory-pg0.test.cjs",
+        "exitCode": 1,
+        "passed": 3,
+        "failed": 2,
+        "log": "stop-state-red.log",
+        "reason": "Running corrupt registration falsely reported stopped; parent and subtest fail."
+      }
+    ],
+    "auxiliaryFailures": [
+      {
+        "command": "node --test desktop/case-memory-pg0.test.cjs",
+        "exitCode": 1,
+        "logs": [
+          "native-first.log",
+          "native-diagnostic.log"
+        ],
+        "reason": "Existing synthetic seed had qx_memory only, without pg0 bootstrap postgres role; corrected fixture, not counted as product RED."
+      },
+      {
+        "command": "node corrupt-stop-green.cjs",
+        "exitCode": 1,
+        "log": "standards-review/corrupt-stop-probe-harness-error.log",
+        "reason": "Reviewer probe rewrite missed line break and did not catch expected shutdown rejection; corrected probe passed."
+      }
+    ],
+    "nativeBehavior": {
+      "records": 40,
+      "syntheticGroups": 2,
+      "sourceAndCopyConcurrent": true,
+      "sameBackupSystemIdentifier": true,
+      "chineseReadback": true,
+      "sourceSurvivesCopyStopAndBadRegistry": true,
+      "copyRestart": true,
+      "unhealthyOwnedStop": true,
+      "corruptRunningStopRejected": true,
+      "ownerRetainedOnFailure": true,
+      "httpClosedOnFailure": true,
+      "retryAfterRepair": true,
+      "restoredReviewMarkersPreserved": true,
+      "httpApplication": "Explicit synthetic stand-in querying real PostgreSQL; NOT Hindsight API"
+    }
+  },
+  "independentReviews": {
+    "Spec": {
+      "reviewer": "/root/local_backup_spec",
+      "initialFindings": 1,
+      "severity": "P1",
+      "unresolvedFindings": 0,
+      "initial": "spec-review/results.json",
+      "recheck": "spec-review/recheck-results.json",
+      "recheckCommand": "node stop-state-recheck.cjs",
+      "recheckExitCode": 0,
+      "additionalProbe": "node uri-binding.cjs",
+      "additionalExitCode": 0,
+      "note": "Changed pid/port metadata in owned synthetic registries did not cause cross-database reads."
+    },
+    "Standards": {
+      "reviewer": "/root/local_backup_standards",
+      "initialFindings": 1,
+      "severity": "P2",
+      "unresolvedFindings": 0,
+      "initialCommand": "node corrupt-stop.cjs",
+      "initialProbeExitCode": 0,
+      "recheckCommand": "node corrupt-stop-green.cjs",
+      "recheckExitCode": 0,
+      "report": "standards-review/standards-final.md",
+      "note": "Same stop-status defect as Spec, not a second distinct defect. Backup pg_ctl cleanup exit1 after successful public stop means already stopped; PID absent."
+    }
+  },
+  "environment": {
+    "setup": ". ./.local/audit-0216/build/test-env.ps1",
+    "cwd": "harness",
+    "QX_TEST_PG_TOOLS": "C:/Users/Administrator/.pg0/installation/18.1.0",
+    "QX_TEST_PG0_MODULE": "harness/.local/pg-backup-runtime/wheel",
+    "QX_TEST_RESTIC": "harness/.local/audit-followups/downloads/restic_0.19.1_windows_amd64.exe",
+    "TEMP": "D:/CodexChecks/AI-Shixiong-memory-binding-20261113/tmp",
+    "TMP": "D:/CodexChecks/AI-Shixiong-memory-binding-20261113/tmp"
+  },
+  "limits": [
+    "Global pg0 registration/cache remain global; no scan or migration of real or legacy registrations.",
+    "Only random synthetic instance registrations created and removed by tests.",
+    "No real Hindsight API, schema migration or model semantics acceptance; checked development interpreters lack hindsight_api and asyncpg.",
+    "No real restored-copy activation, settings application, credential reauthorization or pending-work replay.",
+    "No installer build, installation change, power-loss, disk-full, large-data or cross-machine acceptance."
+  ],
+  "checkedAt": "2026-11-13T07:24:46.5072732Z",
+  "evidenceRoot": "D:/CodexChecks/AI-Shixiong-memory-binding-20261113",
+  "sourceFiles": [
+    {
+      "path": "harness/desktop/case-memory-runtime.cjs",
+      "sha256": "22ba683b6241b44597d97716ddf5e2fd69b3e5ab8be9f6b4357903a25145e310"
+    },
+    {
+      "path": "harness/desktop/case-memory-runtime.test.cjs",
+      "sha256": "adc2244d1c57fe344ff53dcc63deb9abcf339132610279531cd0251ee6456823"
+    },
+    {
+      "path": "harness/desktop/case-memory-pg0.test.cjs",
+      "sha256": "35ada901275e277a3440339c6e185adc9ce4899648c3a92a6af3b4aaba329243"
+    },
+    {
+      "path": "harness/desktop/installed-runtime.cjs",
+      "sha256": "251fb463e8c66fafef8160e96629d1eebcf36d66871c98df4a74e4db26658e4b"
+    },
+    {
+      "path": "harness/scripts/start-host.cjs",
+      "sha256": "760dda3c02cb0daffeb35bff0bd533c8f2f12dc0b0d0f0a26649fcb84da3f817"
+    },
+    {
+      "path": "harness/tests/memory-pg0-app.py",
+      "sha256": "d22fa2f1d81e9a1acdc160008ef313402799e5b30dc1a881b2e69880030ebe87"
+    },
+    {
+      "path": "harness/tests/pg-backup-fixture.py",
+      "sha256": "7d4ce0e4679010b4a1ef3fc631ce81673dfc2477f0cf9674745f012e33d02e25"
+    },
+    {
+      "path": "harness/config/postgres-backup-runtime.json",
+      "sha256": "857aa6a48e1bf58fc8e1c2860fa685447df37d72dfbb0156f203558c82a1e922"
+    }
+  ],
+  "evidenceFiles": [
+    {
+      "path": "binding-green.log",
+      "sha256": "91e94b5e108039c5926c274d7597138b1858897ed6b4b202200770d9ebc81240"
+    },
+    {
+      "path": "binding-red.log",
+      "sha256": "a931c6d33f817c912c3d468d0ae179f0e80752a6e9e4ab05bedbdca9ee05d998"
+    },
+    {
+      "path": "full-offline.log",
+      "sha256": "bc66fc3e9231d25c49267207880b871fb18e14d8ff2dbd55761bd95d193741f4"
+    },
+    {
+      "path": "name-green.log",
+      "sha256": "9c059a04c18b4ebc1f88c70e3a18703091f26fd8c1b20a06e7fc4ea777b23519"
+    },
+    {
+      "path": "name-red.log",
+      "sha256": "136fefb5b642141e5ca8e4392f70d0eab19de00cc5e18ea20c0541a202be4eef"
+    },
+    {
+      "path": "native-diagnostic.log",
+      "sha256": "5e0ecc8869225bb03cd9afcf07bffcd244e1d25c8f6437feb51538804ae76ff5"
+    },
+    {
+      "path": "native-first.log",
+      "sha256": "37f9a199f1a757dd6579e01231d15576ffc4f35a227aacbbc5f13e5b6ba10893"
+    },
+    {
+      "path": "native-green.log",
+      "sha256": "ac09ab014b088e5c4ad95d0e1ee48f138be57d9ea9eab77c247da791e5f2fee0"
+    },
+    {
+      "path": "spec-review/recheck-results.json",
+      "sha256": "6702e52f8803613f979a906084d4380de5bc3cfaee3588e40701a1715211181d"
+    },
+    {
+      "path": "spec-review/results.json",
+      "sha256": "6b2d47ae6d64193d4a8e375c5a8bd6293af0b4336596d6707c6d91eb870e5935"
+    },
+    {
+      "path": "spec-review/stop-state-recheck.cjs",
+      "sha256": "837d33ffb913a45fa8d5a49370bf5ac42c5594410065785049b8f4e32148c1c7"
+    },
+    {
+      "path": "spec-review/stop-state-recheck.log",
+      "sha256": "bfa2f59f30b64f1f9b40c0a8f8f151796a3db1d0e70bea8b7ba9116e25b8a4bc"
+    },
+    {
+      "path": "spec-review/stop-state.cjs",
+      "sha256": "eca15d554e1600444b015d4a835779edbff7f0d1e9d45a6f01ba74aa86e9703a"
+    },
+    {
+      "path": "spec-review/stop-state.log",
+      "sha256": "448bf6756eba1be6941f26e646938db171bb908674c60cac88c10e4bb806cf39"
+    },
+    {
+      "path": "spec-review/uri-binding.cjs",
+      "sha256": "b7507487ad0c40acb547a27962fe5afd8c0c01cd9c4c261766020a038327edab"
+    },
+    {
+      "path": "spec-review/uri-binding.log",
+      "sha256": "f1c1f945e2cdac7b34ef070665b3fe2542ab4fddd566fbdb6b1227d9cdc6f673"
+    },
+    {
+      "path": "standards-review/corrupt-stop-green.cjs",
+      "sha256": "d2023b3c6efc610f93b034d15439baffe537286359bdd170762e52d848c4bc4b"
+    },
+    {
+      "path": "standards-review/corrupt-stop-green.log",
+      "sha256": "ae29ddaa5c5f9d902b2e24b571e833ed02a8b657e43b51ceb405c0d8db769617"
+    },
+    {
+      "path": "standards-review/corrupt-stop-probe-harness-error.log",
+      "sha256": "24b377f02b09388ecbeb7f18a0e8ea6b39ab6fbaecddfb236488be3994ea7522"
+    },
+    {
+      "path": "standards-review/corrupt-stop.cjs",
+      "sha256": "5e4b5c1d74e7dc0e7079009e6f6919f9df8095375780611e9a55de1bd902d29c"
+    },
+    {
+      "path": "standards-review/corrupt-stop.log",
+      "sha256": "db7869fb03b24b8456da3fe94fe01dd223040b5681e79bda6b15d130c8ff755d"
+    },
+    {
+      "path": "standards-review/standards-final.md",
+      "sha256": "0166b9c44e3c19bcf51469b83c578a715336cca06ba3bcb45e7f6ef898f41cba"
+    },
+    {
+      "path": "stop-state-green.log",
+      "sha256": "7f6eaba466bf0b33b358eb69619408b17dc8c10ff7d8ee1f55d5f49daf42b11c"
+    },
+    {
+      "path": "stop-state-red.log",
+      "sha256": "dd40b188d0f7a8ac4ce745929f6dd0fbed941dfac98064c72d1b499c9aaa9a31"
+    },
+    {
+      "path": "target-green.log",
+      "sha256": "3401c5ba6836d4a98ee32c72384030adcda8b1703846453f68ea690303efa2e8"
+    },
+    {
+      "path": "unhealthy-red.log",
+      "sha256": "278f13ab45f9c141a6c4b41015efc46442aedfd0cd7787dc3c9bee5be6743f67"
+    }
+  ]
+}

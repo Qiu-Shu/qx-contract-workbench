@@ -151,7 +151,10 @@ async function runHost({payload,data,store,app}){
   const result=await store.withSecret(async secret=>{
     let memoryRuntime;
     try{memoryRuntime=await createCaseMemoryRuntime({data,payload,secret});}catch{events('case_memory_unavailable');}
-    supervisor=createSupervisor({log:events,kill,onStopped:()=>{void (async()=>{await memoryRuntime?.stop();control.close();log.end(()=>app.exit(0));})();},
+    supervisor=createSupervisor({log:events,kill,onStopped:()=>{void (async()=>{
+      let code=0;try{await memoryRuntime?.stop();}catch{code=1;events('case_memory_shutdown_unconfirmed');}
+      control.close();log.end(()=>app.exit(code));
+    })();},
       onState:state=>{
         if(state.phase!=='running')readyUrl=null;
         writeJson(path.join(local,'host-state.json'),{...state,launcherPid:process.pid,time:new Date().toISOString()});

@@ -21,7 +21,7 @@ app.whenReady().then(async()=>{
   if(!fs.existsSync(profilePatch))fs.copyFileSync(path.join(root,'config/cordis.patch.yml'),profilePatch);
   const store=createModelCredentialStore({dataParent,safeStorage});
   let child,memoryRuntime;
-  const finish=async code=>{await memoryRuntime?.stop().catch(()=>{});app.exit(code);};
+  const finish=async code=>{try{await memoryRuntime?.stop();}catch{code=1;console.error('增强记忆数据库尚未确认停止。');}app.exit(code);};
   const status=await store.withSecret(async secret=>{
     try{memoryRuntime=await createCaseMemoryRuntime({data:root,payload:root,
       python:path.join(legacy,'.venv/Scripts/python.exe'),secret});}

@@ -3,7 +3,7 @@ const path=require('node:path');
 const http=require('node:http');
 const net=require('node:net');
 const {spawn}=require('node:child_process');
-const {randomBytes,randomUUID,timingSafeEqual}=require('node:crypto');
+const {randomBytes,randomUUID,timingSafeEqual,createHash}=require('node:crypto');
 const {assertRestoreReviewed}=require('./installed-stop.cjs');
 
 const VERSION='1.2.0';
@@ -22,10 +22,12 @@ function safeEnvironment(){
   return {...env,PYTHONIOENCODING:'utf-8',PYTHONUNBUFFERED:'1',PYTHON_DOTENV_DISABLED:'1',PYTHONNOUSERSITE:'1'};
 }
 function buildServiceEnvironment({root,instance,secret,token,port,model}){
+  const directory=path.resolve(root),identity=process.platform==='win32'?directory.toLowerCase():directory;
+  const name=`qx-${instance.id}-${createHash('sha256').update(identity).digest('hex').slice(0,16)}`;
   return {...safeEnvironment(),QX_MEMORY_SERVICE_TOKEN:token,QX_MEMORY_SERVICE_PORT:String(port),
-    QX_MEMORY_DATABASE_DIR:path.join(root,'database'),PG0_HOME:path.join(root,'pg0'),HF_HOME:path.join(root,'models'),HF_HUB_DISABLE_TELEMETRY:'1',HF_HUB_DISABLE_XET:'1',DO_NOT_TRACK:'1',TOKENIZERS_PARALLELISM:'false',OMP_NUM_THREADS:'2',LITELLM_LOCAL_MODEL_COST_MAP:'True',
+    QX_MEMORY_DATABASE_DIR:path.join(root,'database'),HF_HOME:path.join(root,'models'),HF_HUB_DISABLE_TELEMETRY:'1',HF_HUB_DISABLE_XET:'1',DO_NOT_TRACK:'1',TOKENIZERS_PARALLELISM:'false',OMP_NUM_THREADS:'2',LITELLM_LOCAL_MODEL_COST_MAP:'True',
     HINDSIGHT_API_HOST:'127.0.0.1',HINDSIGHT_API_PORT:String(port),HINDSIGHT_API_WORKERS:'1',
-    HINDSIGHT_API_DATABASE_URL:`pg0://qx_memory:${instance.databasePassword}@qx-${instance.id}?listen_addresses=127.0.0.1&shared_buffers=128MB&work_mem=8MB`,
+    HINDSIGHT_API_DATABASE_URL:`pg0://qx_memory:${instance.databasePassword}@${name}?listen_addresses=127.0.0.1&shared_buffers=128MB&work_mem=8MB`,
     HINDSIGHT_API_TENANT_EXTENSION:'hindsight_api.extensions.builtin.tenant:ApiKeyTenantExtension',HINDSIGHT_API_TENANT_API_KEY:token,
     HINDSIGHT_API_LLM_PROVIDER:'openai',HINDSIGHT_API_LLM_BASE_URL:'https://api.deepseek.com/v1',HINDSIGHT_API_LLM_MODEL:model,HINDSIGHT_API_LLM_API_KEY:secret,
     HINDSIGHT_API_LLM_STRICT_SCHEMA:'false',HINDSIGHT_API_LLM_OPENAI_COMPATIBLE_JSON_MODE:'true',
@@ -51,6 +53,27 @@ const freePort=()=>new Promise((resolve,reject)=>{const server=net.createServer(
 // Native API authentication is enforced even on routes without tenant-extension hooks.
 // stdin EOF is a parent-death signal; graceful app shutdown also stops this instance's pg0.
 const SERVICE=String.raw`import asyncio, hmac, os, sys
+from pathlib import Path
+DATABASE_URL=os.environ['HINDSIGHT_API_DATABASE_URL']
+
+def owned_database():
+    from pg0 import Pg0
+    from urllib.parse import urlsplit, parse_qsl
+    parsed=urlsplit(DATABASE_URL)
+    directory=Path(os.environ['QX_MEMORY_DATABASE_DIR']).resolve()
+    pg=Pg0(name=parsed.hostname,username=parsed.username,password=parsed.password,database='hindsight',data_dir=str(directory),config=dict(parse_qsl(parsed.query)))
+    prior=pg.info()
+    if (prior.running and not prior.data_dir) or (prior.data_dir and Path(prior.data_dir).resolve()!=directory):
+        raise RuntimeError('Owned database path does not match runtime data directory')
+    return pg,prior
+
+def stop_database():
+    pid_file=Path(os.environ['QX_MEMORY_DATABASE_DIR'])/'postmaster.pid'
+    if not pid_file.exists(): return
+    pg,prior=owned_database()
+    # pg0 health can fail while its owned postmaster is still alive.
+    if prior.data_dir: pg.stop()
+    if pid_file.exists(): raise RuntimeError('Owned database shutdown could not be verified')
 
 def parent_stopped():
     if os.name=='nt':
@@ -63,18 +86,9 @@ def parent_stopped():
     import select
     return bool(select.select([sys.stdin],[],[],0)[0])
 async def main():
-    from pg0 import Pg0
-    from pathlib import Path
-    from urllib.parse import urlsplit, parse_qsl
-    parsed=urlsplit(os.environ['HINDSIGHT_API_DATABASE_URL'])
-    directory=Path(os.environ['QX_MEMORY_DATABASE_DIR']).resolve()
-    pg=Pg0(name=parsed.hostname,username=parsed.username,password=parsed.password,database='hindsight',data_dir=str(directory),config=dict(parse_qsl(parsed.query)))
+    pg,prior=owned_database()
     started=False
     try:
-        try: prior=pg.info()
-        except Exception: prior=None
-        if prior and prior.data_dir and Path(prior.data_dir).resolve()!=directory:
-            raise RuntimeError('Owned database path does not match runtime data directory')
         if parent_stopped(): return
         info=prior if prior and prior.running else await asyncio.to_thread(pg.start)
         started=True
@@ -100,14 +114,16 @@ async def main():
         finally: task.cancel()
     finally:
         if started:
-            try: await asyncio.to_thread(pg.stop)
+            try: await asyncio.to_thread(stop_database)
             except Exception: pass
-if __name__=='__main__': asyncio.run(main())
+if __name__=='__main__':
+    if sys.argv[1:]==['--stop-database']: stop_database()
+    else: asyncio.run(main())
 `;
 
 async function createCaseMemoryRuntime({data,payload,python,secret='',model=process.env.QX_CASE_MEMORY_MODEL||'deepseek-flash',spawnProcess=spawn,startupTimeoutMs=900000}){
   assertRestoreReviewed(data);
-  data=path.resolve(data);const root=path.join(data,'.local/case-memory-runtime');noLinks(data,root);fs.mkdirSync(root,{recursive:true});
+  data=path.resolve(data);let root=path.join(data,'.local/case-memory-runtime');noLinks(data,root);fs.mkdirSync(root,{recursive:true});root=fs.realpathSync.native(root);
   for(const entry of fs.readdirSync(root))noLinks(root,path.join(root,entry));
   const instancePath=path.join(root,'instance.json');
   if(!fs.existsSync(instancePath)){
@@ -167,7 +183,7 @@ async function createCaseMemoryRuntime({data,payload,python,secret='',model=proc
     }else current.kill('SIGKILL');
   }
   function stopEngine(){
-    if(!stopPromise)stopPromise=stopEngineOnce().finally(()=>{stopPromise=null;});
+    if(!stopPromise)stopPromise=stopEngineOnce().catch(error=>{setPhase('error');throw error;}).finally(()=>{stopPromise=null;});
     return stopPromise;
   }
   async function stopEngineOnce(){
@@ -181,11 +197,13 @@ async function createCaseMemoryRuntime({data,payload,python,secret='',model=proc
         await Promise.race([done,wait(2000)]);
       }
     }
-    if(serviceStarted&&ownsLock&&fs.existsSync(interpreter)){
-      await new Promise(resolve=>{
-        const cleaner=spawnProcess(interpreter,['-c',`from pg0 import Pg0; Pg0(name="qx-${instance.id}").stop()`],{cwd:root,windowsHide:true,stdio:'ignore',env:{...safeEnvironment(),PG0_HOME:path.join(root,'pg0')}});
-        const timer=setTimeout(()=>{cleaner.kill();resolve();},15000);cleaner.once('error',()=>{clearTimeout(timer);resolve();});cleaner.once('close',()=>{clearTimeout(timer);resolve();});
+    if(serviceStarted&&ownsLock){
+      if(!fs.existsSync(interpreter))throw Error('Owned database shutdown could not be verified');
+      const stopped=await new Promise(resolve=>{
+        const cleaner=spawnProcess(interpreter,['-u',path.join(root,'service.py'),'--stop-database'],{cwd:root,windowsHide:true,stdio:'ignore',env:buildServiceEnvironment({root,instance,secret:'',token:'',port:0,model})});
+        const timer=setTimeout(()=>{cleaner.kill();resolve(false);},15000);cleaner.once('error',()=>{clearTimeout(timer);resolve(false);});cleaner.once('close',code=>{clearTimeout(timer);resolve(code===0);});
       });
+      if(!stopped){setPhase('error');throw Error('Owned database shutdown could not be verified');}
     }
     serviceStarted=false;
     release();setPhase('stopped');
@@ -216,7 +234,7 @@ async function createCaseMemoryRuntime({data,payload,python,secret='',model=proc
     if(job)return job;if(disposed)return Promise.resolve(state());if(phase==='ready')return Promise.resolve(state());
     job=(async()=>{
       try{if(child)await stopEngine();claim();if(!isInstalled())await install();if(!disposed)await startEngine();}
-      catch{await stopEngine();if(!disposed)setPhase('error');}
+      catch{try{await stopEngine();}catch{}if(!disposed)setPhase('error');}
       finally{job=null;}return state();
     })();return job;
   }
@@ -256,7 +274,11 @@ async function createCaseMemoryRuntime({data,payload,python,secret='',model=proc
   const base=`http://127.0.0.1:${server.address().port}`;
   setPhase(phase);
   const result={env:{QX_CASE_MEMORY_CONTROL_URL:base,QX_CASE_MEMORY_CONTROL_TOKEN:controlToken,QX_HINDSIGHT_URL:base+'/engine',QX_HINDSIGHT_TOKEN:engineToken,QX_HINDSIGHT_INSTANCE_ID:instance.id},status:state,prepare,
-    async stop(){if(disposed)return;disposed=true;if(installer)await terminateOwned(installer);await stopEngine();server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}};
+    async stop(){
+      if(disposed&&!serviceStarted)return;disposed=true;
+      try{if(installer)await terminateOwned(installer);await stopEngine();}
+      finally{if(server.listening){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}}
+    }};
   return result;
 }
 module.exports={createCaseMemoryRuntime,buildServiceEnvironment,lockFromPlan};

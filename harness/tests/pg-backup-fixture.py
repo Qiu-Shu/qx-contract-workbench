@@ -47,6 +47,8 @@ def fixture(action, root, tools):
         started=True
         if action=='seed':
             query('CREATE DATABASE hindsight;','postgres')
+            # Match pg0's bootstrap administrator, in addition to the application's role.
+            query("CREATE ROLE postgres WITH SUPERUSER LOGIN PASSWORD '"+identity['databasePassword']+"';")
             query("""CREATE EXTENSION vector;
 CREATE TABLE synthetic_memories(id int PRIMARY KEY, bank text NOT NULL, content text, embedding vector(3));
 INSERT INTO synthetic_memories SELECT i,CASE WHEN i<=20 THEN 'case-a' ELSE 'case-b' END,'虚构记忆-'||i,('[1,'||i||',3]')::vector FROM generate_series(1,40) i;
