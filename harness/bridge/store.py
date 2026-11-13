@@ -12,6 +12,10 @@ SUPPORTED = {'.txt','.md','.csv','.tsv','.json','.html','.htm','.rtf','.doc','.d
              '.jpeg','.webp','.gif','.bmp','.tif','.tiff'}
 
 
+class MaterialNotRegistered(ValueError):
+    pass
+
+
 def io_path(path):
     """Adapt an already validated filename only at the Windows I/O boundary.
 
@@ -97,7 +101,7 @@ class MaterialStore:
     def key(self, path):
         return self.safe(path).relative_to(self.root).as_posix()
 
-    def register(self, path):
+    def register(self, path, *, if_missing=False):
         source = self.safe(path)
         if material_extension(source) not in SUPPORTED:
             raise ValueError('暂不支持此格式；支持常见文档、表格、幻灯片和图片，不处理音视频。')
@@ -108,8 +112,12 @@ class MaterialStore:
             raise ValueError('文件正在变化，请待保存完成后再导入。')
         key = source.relative_to(self.root).as_posix()
         with self.db() as db:
+            db.execute('BEGIN IMMEDIATE')
             old = db.execute('SELECT * FROM materials WHERE path=?',(key,)).fetchone()
-            if old is None or old['sha256'] != digest:
+            if if_missing and old is not None:
+                # A competing import must not turn automatic registration into re-import.
+                self.current(path, db)
+            elif old is None or old['sha256'] != digest:
                 db.execute('DELETE FROM chunks WHERE path=?',(key,))
                 db.execute('INSERT OR REPLACE INTO materials(path,size,mtime,sha256) VALUES(?,?,?,?)',
                            (key,after.st_size,after.st_mtime_ns,digest))
@@ -122,7 +130,7 @@ class MaterialStore:
         key = source.relative_to(self.root).as_posix()
         row = db.execute('SELECT * FROM materials WHERE path=?',(key,)).fetchone()
         info = source.stat()
-        if row is None: raise ValueError('请先调用 import_material 注册材料。')
+        if row is None: raise MaterialNotRegistered('请先调用 import_material 注册材料。')
         if (row['size'],row['mtime']) != (info.st_size,info.st_mtime_ns):
             raise ValueError('原文件已修改，请重新 import_material 和 parse_material。')
         return source,key,row

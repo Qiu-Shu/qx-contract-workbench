@@ -12,7 +12,7 @@ from uuid import uuid4
 
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
-from store import MaterialStore
+from store import MaterialStore, MaterialNotRegistered
 
 DEFAULT_WORKSPACE=Path(__file__).resolve().parents[1]/'workspace'
 mcp=MCPServer('qx_materials',instructions='材料只在工作区内处理。先列文件/导入，解析后分批读取或搜索，不一次塞入全文。PDF按next_page继续解析。生成的Word是待核草稿。',log_level='WARNING')
@@ -54,7 +54,10 @@ def import_material(path:str)->dict:
 def parse_material(path:str,start_page:int=1,page_count:int=20,force_ocr:bool=False,revision_mode:str='original')->dict:
     """解析已导入材料。PDF、图片及多帧扫描件按next_page逐批读取；failed_pages可用start_page及page_count=1单独重试，其余已提取内容先用。本机OCR保留文字框和置信信息，DOCX表格保留行列与合并范围。修订视图original或accepted_view。"""
     if revision_mode not in {'original','accepted_view'}:raise ValueError('revision_mode 只能为 original 或 accepted_view。')
-    with store.db() as db:store.current(path,db)
+    try:
+        with store.db() as db:store.current(path,db)
+    except MaterialNotRegistered:
+        store.register(path, if_missing=True)
     request={'workspace':str(store.root),'path':path,'start_page':start_page,'page_count':page_count,
              'force_ocr':force_ocr,'revision_mode':revision_mode}
     try:
