@@ -1,0 +1,146 @@
+{
+  "schema": 1,
+  "baseline": "6946cbb0075fcf8c0215bfa9056c4e39560623ea",
+  "workspace": "C:\\Users\\Administrator\\.codex\\worktrees\\audit-0216-fixes\\律所项目",
+  "evidenceRoot": "D:/CodexChecks/AI-Shixiong-long-path-20261113",
+  "recordedAt": "2026-11-13T12:09:29.4232955Z",
+  "installerBuilt": false,
+  "dailyInstallationChanged": false,
+  "realCustomerDataUsed": false,
+  "externalModelOrProviderCalls": 0,
+  "runtimeDependenciesAdded": 0,
+  "diagnostic": {
+    "journalMode": "delete",
+    "shortNormalPass": 2,
+    "longNormalFail": 4,
+    "extendedPass": 6,
+    "log": "probe-results.json",
+    "cases": 12
+  },
+  "red": {
+    "exitCode": 1,
+    "failed": 4,
+    "passed": 1,
+    "command": "python -m pytest harness/bridge/test_material_database_paths.py --basetemp=D:/CodexChecks/lp13-red -q",
+    "log": "red.log"
+  },
+  "finalTarget": {
+    "run": {
+      "command": [
+        "D:\\Documents\\ChatGPT\\律所项目\\.local\\release-0216\\stage\\base\\resources\\workbench\\runtime\\python\\python.exe",
+        "-m",
+        "pytest",
+        "harness/bridge/test_material_database_paths.py",
+        "--basetemp=D:/CodexChecks/lp13-final",
+        "-q"
+      ],
+      "exitCode": 0
+    },
+    "failed": 0,
+    "note": "WAL and symlink checks separated after full suite; only WinError1314 skips symlink test; product unchanged",
+    "skipped": 0,
+    "passed": 7,
+    "log": "final-target.log"
+  },
+  "originalRelay": {
+    "passed": 1,
+    "run": {
+      "basetemp": "D:/CodexChecks/AI-Shixiong-long-path-20261113/relay-long/rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+      "databases": [
+        {
+          "path": "D:\\CodexChecks\\AI-Shixiong-long-path-20261113\\relay-long\\rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\\test_real_relay_isolates_case_0\\docs\\checks\\practice-gaps\\e2e\\offline-review-98171560b29c4968b510fe8d8415e72d\\corporate\\workspace\\.qx-materials\\index.sqlite",
+          "length": 252
+        }
+      ],
+      "command": "pytest harness/bridge/test_practice_eval_session.py",
+      "exitCode": 0
+    },
+    "log": "relay-final.log",
+    "databasePathLength": 252
+  },
+  "fullOffline": {
+    "run": {
+      "command": [
+        "D:/CodexBuilds/AI-Shixiong-content-merge-20261113/stage/win-unpacked/resources/workbench/runtime/node.exe",
+        "scripts/test-suite.cjs",
+        "offline"
+      ],
+      "startedAt": "2026-11-13T12:05:49.9956088Z",
+      "finishedAt": "2026-11-13T12:08:15.2595431Z",
+      "cwd": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目/harness",
+      "exitCode": 0
+    },
+    "temp": "D:/CodexChecks/long-path-20261113/test-temp",
+    "node": {
+      "passed": 651,
+      "failed": 0,
+      "skipped": 15
+    },
+    "note": "Before splitting one combined test into two; final dedicated 7-case run passed after split",
+    "log": "full-offline.log",
+    "python": {
+      "passed": 534,
+      "subtestsPassed": 36,
+      "failed": 0,
+      "skipped": 5
+    }
+  },
+  "review": {
+    "standards": "standards/report.json",
+    "standardsUnresolved": 0,
+    "standardsIndependentChecks": 6,
+    "specUnresolved": 0,
+    "specIndependentCases": 5,
+    "spec": "spec/review-final.json",
+    "specNewProcessReopens": 3
+  },
+  "observation": {
+    "frozenFiles": 14,
+    "sourceMismatches": [],
+    "pid": 23604,
+    "identityVerified": true,
+    "threeDayVerificationComplete": false,
+    "checkedAt": "2026-11-13T12:09:10.3232569Z",
+    "status": "running"
+  },
+  "retainedFailures": [
+    {
+      "exitCode": 1,
+      "cause": "Review record filename still exceeded normal Windows file API limit; fixed at write boundary",
+      "failed": 2,
+      "passed": 3,
+      "log": "green.log"
+    },
+    {
+      "failed": 1,
+      "exitCode": 1,
+      "subtestsPassed": 8,
+      "passed": 101,
+      "log": "target.log",
+      "cause": "New WAL test read wrong nested CaseStore result shape"
+    },
+    {
+      "exitCode": 1,
+      "cause": "New WAL test did not pin a live read transaction; SQLite correctly removed idle WAL",
+      "failed": 1,
+      "passed": 5,
+      "log": "green3.log"
+    },
+    {
+      "exitCode": 1,
+      "cause": "Missing parent of explicit pytest basetemp; setup error fixed before original-path rerun",
+      "log": "relay.log"
+    }
+  ],
+  "limits": [
+    "320-character workspace is tested with existing extended input; not a global conversion of every ordinary file API or third-party parser",
+    "UNC conversion only; no network share accessed; no non-Windows execution",
+    "73-hour observation still running; real second machine/accounts, cross-version and legal acceptance pending"
+  ],
+  "sourceHashes": {
+    "harness/bridge/store.py": "636c6c2a4276b428456afcdd41e93ea18af7c6baf35f1cdf7fd6f4048e4c03e5",
+    "harness/bridge/privacy.py": "a2abe836c4df6ed975d437678aad3a6c7c75b6c222d85c9c4df3b5bada38100f",
+    "harness/bridge/test_material_database_paths.py": "1eb15534ab6c46ea824d7f3416bba9eda41018426643b3a8487e494da371d6cb",
+    "harness/docs/2026-11-13-material-path-plan.md": "779d57329f251e6820155206b57c8252b01c831bc16b63c9dc0c5724ca1e00fa"
+  }
+}

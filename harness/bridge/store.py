@@ -12,6 +12,21 @@ SUPPORTED = {'.txt','.md','.csv','.tsv','.json','.html','.htm','.rtf','.doc','.d
              '.jpeg','.webp','.gif','.bmp','.tif','.tiff'}
 
 
+def io_path(path):
+    """Adapt an already validated filename only at the Windows I/O boundary.
+
+    Journal/WAL suffixes can exceed MAX_PATH even when the database name fits.
+    Keep workspace identities and persisted relative keys in their original form.
+    """
+    value = os.fspath(path)
+    if os.name != 'nt':
+        return value
+    value = os.path.abspath(value)
+    if value.startswith(('\\\\?\\', '\\\\.\\')):
+        return value
+    return '\\\\?\\UNC\\' + value[2:] if value.startswith('\\\\') else '\\\\?\\' + value
+
+
 def material_extension(source):
     """Harness image objects have no suffix; inspect their header without copying."""
     if source.suffix:
@@ -52,7 +67,7 @@ class MaterialStore:
     @contextmanager
     def db(self):
         if self.db_path.exists(): self.safe(self.db_path, internal=True)
-        connection = sqlite3.connect(self.db_path, timeout=30)
+        connection = sqlite3.connect(io_path(self.db_path), timeout=30)
         connection.row_factory = sqlite3.Row
         try:
             with connection: yield connection

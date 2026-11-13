@@ -18,7 +18,7 @@ import unicodedata
 from uuid import UUID, uuid4
 
 import reader
-from store import MaterialStore, SUPPORTED
+from store import MaterialStore, SUPPORTED, io_path
 
 
 WARNINGS = [
@@ -333,7 +333,7 @@ def _candidates(text, custom_terms, privacy_mode='standard'):
 
 def _redact(text, custom_terms, mapping_path, privacy_mode='standard'):
     candidates = _candidates(text, custom_terms, privacy_mode)
-    with sqlite3.connect(mapping_path, timeout=60) as db:
+    with sqlite3.connect(io_path(mapping_path), timeout=60) as db:
         db.execute('BEGIN IMMEDIATE')
         db.execute('CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY,value TEXT NOT NULL)')
         db.execute('CREATE TABLE IF NOT EXISTS replacements(original TEXT PRIMARY KEY,kind TEXT NOT NULL,token TEXT UNIQUE NOT NULL)')
@@ -479,7 +479,7 @@ def prepare_upload(source_path, vault_dir, document_id=None, custom_terms=None, 
         result = {'status': 'ready', 'safe_path': str(safe_path), 'display_name': display_name,
                   'privacy_mode': privacy_mode, 'replacement_count': count, 'warnings': warnings}
         if review:
-            with sqlite3.connect(mapping_path) as db:
+            with sqlite3.connect(io_path(mapping_path)) as db:
                 replacements = [{'original': value, 'token': token} for value, token in
                                 db.execute('SELECT original,token FROM replacements') if token in safe]
             preview = {'document_id': identifier, 'review_token': uuid4().hex,
@@ -528,7 +528,7 @@ def finalize_review(vault_dir, document_id, review_token, text, manual_replaceme
         with safe.open('x', encoding='utf-8', newline='\n') as stream:
             stream.write(text)
         try:
-            with (document / ('reviewed-' + revision + '.json')).open('x', encoding='utf-8') as stream:
+            with Path(io_path(document / ('reviewed-' + revision + '.json'))).open('x', encoding='utf-8') as stream:
                 json.dump(record, stream, ensure_ascii=False)
         except Exception:
             safe.unlink(missing_ok=True)
