@@ -32,6 +32,13 @@ function copyBackupConfiguration(sourceRoot,payload,manifest){
   for(const name of ['backup-settings.json','postgres-backup-runtime.json'])
     copySource(path.join(sourceRoot,'config',name),path.join(payload,'config',name),'resources/workbench/config/'+name,manifest);
 }
+function copyDesktopRunners(sourceRoot,payload,manifest){
+  const runner=path.join(payload,'desktop-runner');
+  fs.mkdirSync(runner,{recursive:true});
+  for(const name of ['case-memory-runtime.cjs','host-recovery.cjs','installed-host.cjs','installed-migrations.cjs',
+    'installed-runtime.cjs','installed-stop.cjs','stop-installed.cjs','backup-preparation.cjs','local-backup.cjs'])
+    copySource(path.join(sourceRoot,'desktop',name),path.join(runner,name),'resources/workbench/desktop-runner/'+name,manifest);
+}
 function copyMediaRegistry(source,payload,manifest){
   const registry=JSON.parse(fs.readFileSync(source,'utf8')),ids=new Set();
   if(registry.version!==1||!Array.isArray(registry.sources)||!registry.sources.length)throw Error('Invalid media source registry');
@@ -58,6 +65,13 @@ function copySkillLabels(source,payload,manifest){
   copySource(source,path.join(payload,'config/skill-labels.zh-CN.json'),'resources/workbench/config/skill-labels.zh-CN.json',manifest);
   fs.writeFileSync(file,updated);
   return {target:'resources/workbench/'+relative,sha256:crypto.createHash('sha256').update(updated).digest('hex')};
+}
+function copyContentWatchAssets(payload,manifest){
+  for(const relative of ['scripts/prepare-content-watch.mjs','sources/xiaohongshu-mcp-Apache-2.0.txt']){
+    const target=path.join(payload,relative);
+    fs.mkdirSync(path.dirname(target),{recursive:true});
+    copySource(path.join(root,relative),target,'resources/workbench/'+relative,manifest);
+  }
 }
 async function main(){
   if(process.platform!=='win32')throw Error('Windows x64 release staging requires Windows');
@@ -105,8 +119,8 @@ async function refresh(stage){
   const skillLabels=copySkillLabels(path.join(root,'config/skill-labels.zh-CN.json'),payload,manifest);
   const toolLabels=require('../scripts/tool-labels.cjs').stageToolLabels(root,payload,manifest);
   for(const name of ['component-install.py','python-tool.py'])copySource(path.join(__dirname,name),path.join(payload,name),'resources/workbench/'+name,manifest);
-  const runner=path.join(payload,'desktop-runner');
-  for(const name of fs.readdirSync(runner))if(fs.existsSync(path.join(root,'desktop',name)))copySource(path.join(root,'desktop',name),path.join(runner,name),'resources/workbench/desktop-runner/'+name,manifest);
+  copyContentWatchAssets(payload,manifest);
+  copyDesktopRunners(root,payload,manifest);
   for(const name of fs.readdirSync(app))if(fs.statSync(path.join(app,name)).isFile()&&fs.existsSync(path.join(root,'desktop',name)))copySource(path.join(root,'desktop',name),path.join(app,name),'app.asar/'+name,manifest);
   copySource(path.join(__dirname,'app-template.json'),path.join(app,'package.json'),'app.asar/package.json',manifest);
   for(const target of ['desktop/integration','node_modules/@qunxing/desktop-session'])overlay(path.join(root,'desktop/integration'),path.join(payload,target),manifest,'resources/workbench/'+target);
@@ -126,4 +140,4 @@ async function refresh(stage){
   console.log(JSON.stringify({stage,base,candidate,sourceFiles:manifest.length}));
 }
 if(require.main===module)main().catch(error=>{console.error(error);process.exitCode=1});
-module.exports={overlay,digest,copyMediaRegistry,copySkillLabels,copyBackupConfiguration};
+module.exports={overlay,digest,copyMediaRegistry,copySkillLabels,copyBackupConfiguration,copyDesktopRunners,copyContentWatchAssets};

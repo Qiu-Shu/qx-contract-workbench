@@ -8,7 +8,7 @@ const {createSupervisor,createEventLog}=require('./host-recovery.cjs');
 const {createCaseMemoryRuntime}=require('./case-memory-runtime.cjs');
 const {assertRestoreReviewed,processAlive,hostProcessAlive,readHostRecord,readHostState,readControl,launcherOwnsPipe,stopRuntime,stopInstalledHost,restartRuntime}=require('./installed-stop.cjs');
 const {migrateInstalledMedia,migrateInstalledLazyTools,relocateInstalledPaths,migrateInstalledAgentDesktop,migrateInstalledVerifiedDelivery,migrateInstalledSkillRoots}=require('./installed-migrations.cjs');
-const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory}=require('./installed-migrations.cjs');
+const {migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContentWatch,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory}=require('./installed-migrations.cjs');
 
 function redactedLines(secret,write){
   let pending='',dropping=false;
@@ -67,6 +67,7 @@ function initialize(payload,data){
   migrateInstalledKnowledge({data,payload,portableConfig,
     seedInstructions:transform(fs.readFileSync(path.join(payload,'workspace-seed/AGENTS.md'),'utf8'))});
   migrateInstalledPrivacy({data,payload,portableConfig});
+  migrateInstalledContentWatch({data,payload,portableConfig});
   migrateInstalledAgentDesktop({data,payload,portableConfig});
   migrateInstalledVerifiedDelivery({data,payload,portableConfig});
   migrateInstalledMedia({data,payload,portableConfig});

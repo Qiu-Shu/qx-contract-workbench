@@ -38,6 +38,12 @@ Node 与 pytest 两组都会执行；任一子进程失败，统一入口返回�
 
 `tests/check_tool_labels_ui.py` 从 `QX_TEST_APP` 加载真实包内 React 工具卡片，以合成记录检查具体中文标题、未知名称回退、参数/结果展开及查看回调；须显式指定绝对路径 `QX_TEST_OUTPUT_ROOT`。它复用上述隔离宿主、Playwright 与本机 Chrome，不调用模型、不执行业务工具，不证明会话持久化或法律质量。日志及完整截图保存在独立输出目录。
 
+## 拓客内容安装界面验收
+
+`node tests/content-watch-windows-ui.mjs` 是显式 Windows 验收入口，不由普通离线测试自动启动。设置 `QX_TEST_PACKAGED=1`，并将 `QX_TEST_APP` 指向隔离安装的 `resources/workbench`；`QX_TEST_OUTPUT_ROOT` 使用 D 盘或其他非系统盘的独立证据目录。需要已有 Playwright（可用 `QX_TEST_PLAYWRIGHT_MODULE` 指定模块绝对路径）及 Chrome（可用 `QX_TEST_CHROME` 指定程序）。入口不下载依赖。
+
+六组检查通过真实浏览器点击保存连接、配置、立即整理和会话入口，并验证报告、72 小时下次运行状态及重启保留。Node、Harness、桌面集成和拓客模块来自安装载荷，凭据使用真实 Windows DPAPI；外部内容、模型、余额及隔离 profile 明确使用合成夹具，网络限制在本机。回执包含模块摘要、请求计数和截图，失败返回非零。该入口不替代 NSIS 安装升级、`installed-runtime` 配置迁移或 Electron 首次启动检查；这三项单独记录。实际结果见 [2026-11-13 合并验证](2026-11-13-content-watch-merge.md)。
+
 ## 媒体源与打包回归
 
 `sources/media-source-registry.json` 是应用源码配置。`packaging/stage.cjs` 验证其版本、条目、来源 URL/允许域名和刷新周期后，明确覆盖 `resources/workbench/sources/media-source-registry.json`，并加入源码清单；不再依赖旧发行包偶然携带该文件。

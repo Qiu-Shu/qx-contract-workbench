@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-13",
+  "status": "passed",
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "merge": {
+    "targetBranch": "codex/audit-0216-fixes",
+    "targetParent": "9512cb3f8ba1f4a1c6981d9789a5ca11c1eec108",
+    "sourceBranch": "codex/content-watch-justone-20261111",
+    "sourceCommit": "207caa4dd5103ed6b4fc3cbdcc63c6be891fb32a",
+    "mergeBase": "b802e214d66c694e91350e59d57917c611ae1581",
+    "userSelectedAuditBranch": true
+  },
+  "evidenceRoot": "D:/CodexChecks/AI-Shixiong-content-merge-20261113",
+  "dataPolicy": {
+    "businessData": "synthetic only",
+    "liveSupplierRequests": 0,
+    "productionInstallationUpdated": false,
+    "releasePublished": false
+  },
+  "fixes": [
+    "Windows DPAPI stdin completion and UTF-8 output",
+    "Serialized content state reload/save preserving current pause choice",
+    "Content records admitted to backup with exact known-file classification; credentials excluded",
+    "All nine desktop runners explicitly staged from current source",
+    "Windows harness test entry file URLs and host-specific test assumptions"
+  ],
+  "stage": {
+    "firstPartySourceRecords": 3412,
+    "sourceManifestSha256": "756f252ebdecc8da95894313688781425fd95af388864fa3aa03f7ad66505d5a",
+    "baseAndUpgradeBaseVerificationExit": 0,
+    "candidateSourcesVerificationExit": 0
+  },
+  "results": {
+    "offline": {
+      "command": "node scripts/test-suite.cjs offline",
+      "exitCode": 0,
+      "node": {
+        "passed": 585,
+        "failed": 0,
+        "skipped": 11
+      },
+      "python": {
+        "passed": 473,
+        "failed": 0,
+        "skipped": 1,
+        "subtestsPassed": 36
+      },
+      "log": "final-offline.log"
+    },
+    "windows": {
+      "command": "node scripts/test-suite.cjs windows",
+      "exitCode": 0,
+      "node": {
+        "passed": 56,
+        "failed": 0,
+        "skipped": 0
+      },
+      "python": {
+        "passed": 57,
+        "failed": 0
+      },
+      "log": "windows-suite.log",
+      "boundary": "Current sources with pinned baseline runtime/dependencies; not installed UI acceptance"
+    },
+    "nativeMemory": {
+      "command": "node --test --test-concurrency=1 desktop/case-memory-pg0.test.cjs desktop/hindsight-restore.test.cjs",
+      "exitCode": 0,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "log": "native-memory.log"
+    },
+    "nativePostgres": {
+      "command": "node --test desktop/local-backup-postgres.test.cjs",
+      "exitCode": 0,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "log": "native-postgres.log"
+    },
+    "realHarness": {
+      "command": "node tests/content-watch-harness/run.mjs",
+      "exitCode": 0,
+      "checks": 4,
+      "searches": 12,
+      "details": 2,
+      "syntheticModelCalls": 2,
+      "report": "real-harness-windows.json"
+    },
+    "targeted": {
+      "credentials": {
+        "passed": 9,
+        "report": "credentials-fix/summary.json"
+      },
+      "backup": {
+        "passed": 19,
+        "report": "backup-fix/verification.json"
+      },
+      "runnersAndAssets": {
+        "passed": 7,
+        "log": "runner-overlay-green-final.log"
+      },
+      "stateAndRuntime": {
+        "passed": 44,
+        "report": "state-fix/summary.md"
+      }
+    },
+    "independentReview": {
+      "stateCredentialsAndStaging": {
+        "passed": 38,
+        "log": "spec-review/independent-state-credentials-stage.log"
+      },
+      "backupBoundaries": {
+        "passed": 27,
+        "report": "spec-review/backup-integration-probe.json"
+      },
+      "remainingBlockers": 0
+    }
+  },
+  "installation": {
+    "mode": "Full payload, isolated QA identity and synthetic user data; production app not updated",
+    "oldVersion": "0.2.16",
+    "newCandidateVersion": "0.2.17",
+    "oldProductFiles": 53213,
+    "newProductFiles": 53251,
+    "allowedQaPayloadDifferences": [
+      {
+        "path": "QxContentMergeQa1311.exe",
+        "operation": "additional-byte-identical-copy",
+        "source": "QunxingWorkbench.exe"
+      }
+    ],
+    "firstInstallExit": 0,
+    "wrongDirectoryExit": 1,
+    "wrongDirectoryExitExpected": true,
+    "sameDirectoryIncrementalUpgradeExit": 0,
+    "checks": {
+      "fullOldBytes": true,
+      "fullNewBytes": true,
+      "qaExeIdentical": true,
+      "strictWrongDirectoryRejected": true,
+      "incrementalNodeIdentityPreserved": true,
+      "syntheticDataUnchanged": true,
+      "unmanagedFilePreserved": true,
+      "requiredFilesMatch": true,
+      "candidateAndOfficialSourceUnchanged": true,
+      "transactionFinalized": true
+    },
+    "report": "installer-qa/report.json",
+    "migration": {
+      "checks": 5,
+      "status": "passed",
+      "report": "installer-qa/installed-migration.json"
+    },
+    "electronFirstRun": {
+      "status": "passed",
+      "exitCode": 0,
+      "actualInstalledWindow": true,
+      "modelSubmitted": false,
+      "screenshotObtained": false,
+      "report": "installer-qa/native-first-run-retry1.json"
+    },
+    "ui": {
+      "status": "passed",
+      "exitCode": 0,
+      "checks": 6,
+      "calls": {
+        "search": 4,
+        "detail": 1,
+        "syntheticModel": 1
+      },
+      "nextIntervalMs": 259200000,
+      "pageErrors": 0,
+      "browser": "Chrome, installed payload modules and isolated fixture profile",
+      "report": "ui/installed-FnaoJk/report.json",
+      "verification": "ui/verification.json"
+    },
+    "oldQaWarningReview": {
+      "status": "passed",
+      "warningCodes": [
+        6001,
+        6001
+      ],
+      "variables": [
+        "qxNodeReady",
+        "qxPatchFrom"
+      ],
+      "newQaWarningsAsErrors": true,
+      "report": "installer-qa/old-qa-warning-review.json"
+    },
+    "cleanup": {
+      "status": "passed",
+      "uninstallExitCode": 0,
+      "registrationRemoved": true,
+      "cacheRemoved": true,
+      "syntheticDataPreserved": true,
+      "packagesAndReportsPreserved": true,
+      "report": "installer-qa/cleanup.json"
+    }
+  },
+  "limits": [
+    "Counts overlap; do not sum targeted and full groups",
+    "Native prerequisites tested separately; offline skips remain skips",
+    "72 hours verified with real startup timer and controlled due state, not three elapsed days",
+    "Supplier live integration is prior source-branch evidence, not rerun here",
+    "Restored backup still requires review and credential reauthorization before activation",
+    "QA installers are isolated acceptance artifacts, not a release"
+  ],
+  "retainedFailures": [
+    "merged-offline.log",
+    "real-harness.log",
+    "credentials-fix",
+    "runner-overlay-red.log",
+    "runner-overlay-green.log",
+    "installer-qa/run.log",
+    "installer-qa/old-qa-warning-audit.json",
+    "installer-qa/native-first-run.json",
+    "ui/source-preflight-YZSfns/report.json"
+  ],
+  "completedAt": "2026-11-13T09:04:01.388Z",
+  "finalSourceProvenance": {
+    "checkedAt": "2026-11-13T09:00:31.375Z",
+    "sourceRecords": 3412,
+    "changed": [],
+    "sourceManifestSha256": "756f252ebdecc8da95894313688781425fd95af388864fa3aa03f7ad66505d5a",
+    "boundary": "Current first-party inputs versus frozen manifest; full candidate and baseline byte verification recorded separately by installer acceptance"
+  },
+  "evidenceSha256": {
+    "final-offline.json": "521c0c9b9553d03cf3d15aea3fe19f3a843aeaca593f094c8f224368bfbd47fe",
+    "windows-suite.json": "2275c89f3845280f5bfd72329c57c206a0ea2edbda60a69797c3abdc8c1cff23",
+    "real-harness-windows.json": "1e9aa26ee6bac629273b9f807f14d0f3e66af3ed52353bbefb97df0e7d53b3d1",
+    "final-source-provenance.json": "2e68f3c7c1479f8845616c8997a1a5ce85597e1c080a063919908e3bf700d85c",
+    "installer-qa/report.json": "21e96e02c048f4ef3dfe73b833640b7abca0e06e09b6bc96bbe6d4770a150853",
+    "installer-qa/installed-migration.json": "ffe9ff21f4bce7a05afc7667e10a44e3fc0033e98477711060c45a3e9c99fee4",
+    "installer-qa/native-first-run-retry1.json": "03345c27949b4338740cf25483cd7858c11e2cee5ef4f29ceeea99789d792c12",
+    "installer-qa/old-qa-warning-review.json": "347cedb6ee619f941fb518e1659525f1e60d8d3d169b56c06dd44b669dff0640",
+    "installer-qa/cleanup.json": "4ad7e6a779d28caf5684859296cc683b24a98e9817d4186cb122d1540b83bc44",
+    "ui/installed-FnaoJk/report.json": "1716daaa0bacac204ae6ecc14c0f9bb2d41f35e257a1a0b8332267adc94d1718",
+    "ui/verification.json": "8d15dc9c04dba0ced6a109d3f26a8d075946f0f7e66d3b010c78192aed063291"
+  }
+}

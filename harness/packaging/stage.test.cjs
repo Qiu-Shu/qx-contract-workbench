@@ -3,6 +3,22 @@ const fs=require('node:fs'),path=require('node:path'),os=require('node:os');
 const {copyMediaRegistry}=require('./stage.cjs');
 const {spawnSync}=require('node:child_process');
 
+test('runner overlay includes new backup entry points without shipping development tests',t=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'qx-runner-overlay-'));
+  t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
+  const source=path.resolve(__dirname,'..'),payload=path.join(root,'payload'),manifest=[];
+  require('./stage.cjs').copyDesktopRunners(source,payload,manifest);
+  require('./stage.cjs').copyBackupConfiguration(source,payload,manifest);
+  const runner=path.join(payload,'desktop-runner');
+  for(const name of ['backup-preparation.cjs','local-backup.cjs','installed-stop.cjs','installed-runtime.cjs']){
+    assert.deepEqual(fs.readFileSync(path.join(runner,name)),fs.readFileSync(path.join(source,'desktop',name)));
+    assert.equal(manifest.filter(item=>item.target==='resources/workbench/desktop-runner/'+name).length,1);
+  }
+  assert.equal(typeof require(path.join(runner,'backup-preparation.cjs')).inspectScope,'function');
+  assert.equal(typeof require(path.join(runner,'local-backup.cjs')).createLocalBackup,'function');
+  assert.equal(fs.readdirSync(runner).some(name=>name.includes('.test.')||name.startsWith('check-')),false);
+});
+
 test('source overlay supplies the snapshot worker configurations without building an installer',{skip:process.platform!=='win32'||!process.env.QX_TEST_PYTHON},t=>{
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'qx-backup-overlay-'));
   t.after(()=>fs.rmSync(root,{recursive:true,force:true}));

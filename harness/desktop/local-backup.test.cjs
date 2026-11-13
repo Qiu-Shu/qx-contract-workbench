@@ -42,6 +42,14 @@ write('.local/dsh-home/.credentials.yaml',b'synthetic-login-not-for-backup')
 write('.local/dsh-home/profiles/profile.json',b'{"synthetic":true}')
 write('.local/case-memory-runtime/instance.json',b'{"synthetic":true}')
 write('.local/dsh-home/qx-wechat/qx-pending.json',b'[{"synthetic":true}]')
+write('.local/content-watch/state.json',b'{"version":1,"enabled":true,"seen":["synthetic-note"],"active":{"id":"synthetic-incomplete"}}')
+write('.local/content-watch/session.json',b'{"sessionId":"qx-content-watch"}')
+write('.local/content-watch/reports/11111111-1111-4111-8111-111111111111.json',b'{"items":[{"id":"synthetic-note"}]}')
+write('.local/content-watch/reports/11111111-1111-4111-8111-111111111111.md',b'synthetic content report')
+write('.local/content-watch/connection.json',b'synthetic-content-credential')
+write('.local/content-watch/auth/cookies.json',b'synthetic-content-login')
+write('.local/content-watch/runtime/xiaohongshu-mcp.exe',b'synthetic-component-never-executed')
+write('.local/content-watch/run.lock',b'{"pid":1234}')
 `,options.data],{encoding:'utf8',windowsHide:true});
   assert.equal(seed.status,0,seed.stderr);
   const saved=await createLocalBackup(options);
@@ -66,6 +74,13 @@ print(b.value)`,options.data],{encoding:'utf8',windowsHide:true});
   assert.equal(fs.existsSync(path.join(options.destination,'.local','dsh-home','.credentials.yaml')),false);
   const manifest=JSON.parse(fs.readFileSync(path.join(options.destination,'backup-manifest.json')));
   assert.equal(manifest.scopes.find(s=>s.path==='.local/dsh-home/.credentials.yaml').policy,'reauthorize');
+  for(const name of ['state.json','session.json','reports/11111111-1111-4111-8111-111111111111.json','reports/11111111-1111-4111-8111-111111111111.md']){
+    assert.deepEqual(fs.readFileSync(path.join(options.destination,'.local/content-watch',name)),fs.readFileSync(path.join(options.data,'.local/content-watch',name)));
+  }
+  for(const name of ['connection.json','auth','runtime','run.lock'])assert.equal(fs.existsSync(path.join(options.destination,'.local/content-watch',name)),false,name);
+  const {initialize}=require('./installed-runtime.cjs');
+  assert.throws(()=>initialize(path.join(options.root,'no-payload'),options.destination),{code:'BACKUP_RESTORE_REVIEW_REQUIRED'});
+  assert.equal(fs.existsSync(path.join(options.destination,'.local/runtime.json')),false,'restored enabled/active task must not start a host');
   assert.equal(fs.readFileSync(path.join(options.destination,'.qx-private','uploads','safe','d1.txt'),'utf8'),'[PERSON_1]');
   const query=spawnSync(python,['-c',`import sqlite3,sys,json
 from contextlib import closing
@@ -99,6 +114,10 @@ test('unknown paths and PostgreSQL data block backup before any repository is cr
   fs.writeFileSync(path.join(options.data,'unknown'),'synthetic');
   await assert.rejects(createLocalBackup(options),{code:'BACKUP_SCOPE_UNSUPPORTED'});
   fs.unlinkSync(path.join(options.data,'unknown'));
+  const unclassified=path.join(options.data,'.local/content-watch/reports/unknown.sqlite');
+  fs.mkdirSync(path.dirname(unclassified),{recursive:true});fs.writeFileSync(unclassified,'synthetic unknown content store');
+  await assert.rejects(createLocalBackup(options),{code:'BACKUP_SCOPE_UNSUPPORTED'});
+  fs.unlinkSync(unclassified);
   fs.mkdirSync(path.join(options.data,'.local','case-memory-runtime','database'),{recursive:true});
   await assert.rejects(createLocalBackup(options),{code:'BACKUP_POSTGRES_UNVERIFIED'});
   assert.equal(fs.existsSync(options.bundle),false);

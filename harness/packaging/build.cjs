@@ -34,7 +34,7 @@ if(prepackaged){
 fs.writeFileSync(path.join(stage,'app/package-lock.json'),JSON.stringify({name:packageInfo.name,version:packageInfo.version,lockfileVersion:3,packages:{'':{name:packageInfo.name,version:packageInfo.version}}}));
     // Differential NSIS packages use non-solid 7z archives for reusable blocks.
     const bundled=path.join(appOutDir,'resources/workbench');
-    for(const relative of ['bridge/case_memory.py','bridge/case_memory_server.py','plugins/case-memory/index.mjs','desktop-runner/case-memory-runtime.cjs','config/case-memory-requirements.lock']){
+    for(const relative of ['bridge/case_memory.py','bridge/case_memory_server.py','plugins/case-memory/index.mjs','desktop-runner/case-memory-runtime.cjs','config/case-memory-requirements.lock','plugins/content-watch/index.mjs','scripts/prepare-content-watch.mjs','sources/xiaohongshu-mcp-Apache-2.0.txt']){
       if(!fs.existsSync(path.join(bundled,relative)))throw Error('Required case memory file missing from package: '+relative);
     }
     for(const relative of ['node_modules/@deepseek-ai/dsh/lib/bin.js','node_modules/@deepseek-ai/libreoffice-kit-win32-x64/bin/libreoffice-kit.exe','node_modules/@deepseek-ai/libreoffice-kit-win32-x64/prebuilds.json','node_modules/@qunxing/desktop-session/attachment-preview.mjs','node_modules/@qunxing/desktop-session/client.js','browser/node_modules/bb-browser/dist/cli.js','runtime/python/python.exe','desktop-runner/installed-host.cjs','workspace-seed/AGENTS.md','config/templates/catalog.json','config/contract-0.2.0-defaults.json','plugins/privacy/client.js']){

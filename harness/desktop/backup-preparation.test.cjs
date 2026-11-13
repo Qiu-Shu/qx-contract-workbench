@@ -159,3 +159,47 @@ test('excluded cache and credential links remain visible as requiring review',as
   }
   assert.equal(report.files.length,0);assert.doesNotMatch(JSON.stringify(report),/outside-secret|do-not-read/);
 });
+
+test('an idle content watcher does not make an otherwise supported backup scope unknown',async t=>{
+  const {inspectScope}=require('./backup-preparation.cjs');
+  const {createContentWatch}=await import('../plugins/content-watch/core.mjs');
+  const data=fixture(t),watcher=await createContentWatch({stateDir:path.join(data,'.local/content-watch'),client:{},deliver:async()=>assert.fail('idle watcher must not deliver')});
+  t.after(()=>watcher.dispose());
+  assert.equal(watcher.status().enabled,false);
+  const report=inspectScope(data);
+  assert.equal(report.scopes.some(s=>s.policy==='unclassified'),false);
+  assert.equal(report.files.length,0);
+});
+
+test('content backups keep reports and durable task records while excluding credentials and runtime state',t=>{
+  const {inspectScope}=require('./backup-preparation.cjs'),data=fixture(t);
+  const uuid='11111111-1111-4111-8111-111111111111';
+  const kept=['state.json','session.json',`reports/${uuid}.json`,`reports/${uuid}.md`,`reports/${uuid}-draft-0.md`];
+  const excluded={
+    'connection.json':'reauthorize','auth/cookies.json':'reauthorize','auth/service-token':'reauthorize',
+    'runtime/xiaohongshu-mcp.exe':'rebuild','runtime/LICENSE.xiaohongshu-mcp.txt':'rebuild',
+    'run.lock':'runtime',[`state.json.${uuid}.tmp`]:'runtime',[`session.json.${uuid}.tmp`]:'runtime',
+    [`connection.json.${uuid}.tmp`]:'runtime',[`runtime/.component-${uuid}.tmp`]:'runtime',
+  };
+  for(const name of [...kept,...Object.keys(excluded)])write(data,'.local/content-watch/'+name,'synthetic-content-secret');
+  const report=inspectScope(data);
+  assert.deepEqual(report.files.map(f=>f.path).sort(),kept.map(n=>'.local/content-watch/'+n).sort());
+  assert.equal(report.scopes.some(s=>s.policy==='unclassified'),false);
+  for(const [name,policy] of Object.entries(excluded))assert.equal(report.scopes.find(s=>s.path==='.local/content-watch/'+name)?.policy,policy,name);
+  assert.doesNotMatch(JSON.stringify(report),/synthetic-content-secret/);
+});
+
+test('unknown content files, disguised report directories and credential links still require review',t=>{
+  const {inspectScope}=require('./backup-preparation.cjs'),data=fixture(t),outside=fixture(t);
+  const unknown=['unexpected.json','reports/new-store.sqlite','auth/new-account.json','runtime/unrecognized.bin','state.json.not-a-uuid.tmp'];
+  for(const name of unknown)write(data,'.local/content-watch/'+name);
+  const directory='reports/22222222-2222-4222-8222-222222222222.md';
+  fs.mkdirSync(path.join(data,'.local/content-watch',directory));
+  write(outside,'workspace/secret.txt','outside-synthetic-secret');
+  fs.linkSync(path.join(outside,'workspace/secret.txt'),path.join(data,'.local/content-watch/connection.json'));
+  const report=inspectScope(data);
+  assert.equal(report.scopeReviewRequired,true);
+  for(const name of [...unknown,directory])assert.equal(report.scopes.find(s=>s.path==='.local/content-watch/'+name)?.policy,'unclassified',name);
+  assert.equal(report.scopes.find(s=>s.path==='.local/content-watch/connection.json')?.linked,true);
+  assert.equal(report.files.length,0);
+});

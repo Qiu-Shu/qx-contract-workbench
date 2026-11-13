@@ -307,6 +307,10 @@ function migrateInstalledKnowledge(options){
 function migrateInstalledPrivacy(options){
   return migrateInstalled(options,{version:'upload-privacy-v1',ids:['qx-upload-privacy']});
 }
+function migrateInstalledContentWatch(options){
+  if(!findIds(options.portableConfig).has('qx-content-watch'))return {status:'deferred',changedFiles:[]};
+  return migrateInstalled(options,{version:'content-watch-v1',ids:['qx-content-watch']});
+}
 function migrateInstalledSkillRoots({data,payload,portableConfig}){
   const desired=findIds(portableConfig).get('skill-filesystem');
   if(!desired?.config?.customSkillDirs)return {status:'deferred'};
@@ -489,4 +493,4 @@ function migrateSkillFiles({data,payload},{version,defaults,targets={}}){
   return {status:pending.length?'deferred':'applied',backupDirectory,changedFiles,preservedCustom};
 }
 
-module.exports={migrateInstalledMedia,migrateInstalledLazyTools,relocateInstalledPaths,migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory,migrateInstalledAgentDesktop,migrateInstalledVerifiedDelivery,migrateInstalledSkillRoots};
+module.exports={migrateInstalledMedia,migrateInstalledLazyTools,relocateInstalledPaths,migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContentWatch,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory,migrateInstalledAgentDesktop,migrateInstalledVerifiedDelivery,migrateInstalledSkillRoots};

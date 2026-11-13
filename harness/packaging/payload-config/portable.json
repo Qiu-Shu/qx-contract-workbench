@@ -445,5 +445,17 @@
         ]
       }
     }
+  },
+  {
+    "insert": [
+      {
+        "id": "qx-content-watch",
+        "name": "@APP@/plugins/content-watch/index.mjs",
+        "config": {
+          "workspace": "@DATA@/workspace",
+          "stateDir": "@DATA@/.local/content-watch"
+        }
+      }
+    ]
   }
 ]

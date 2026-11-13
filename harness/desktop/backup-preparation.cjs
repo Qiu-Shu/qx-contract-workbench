@@ -61,6 +61,12 @@ const policy={
   '.local/dsh-home/.local/layered-knowledge.sqlite-wal':'protect','.local/dsh-home/.local/layered-knowledge.sqlite-shm':'protect',
   '.local/dsh-home/qx-wechat/qx-route.json':'protect','.local/dsh-home/qx-wechat/qx-seen.json':'protect',
   '.local/dsh-home/qx-wechat/qx-pending.json':'protect',
+  '.local/content-watch/state.json':'protect','.local/content-watch/session.json':'protect',
+  '.local/content-watch/connection.json':'reauthorize',
+  '.local/content-watch/auth/cookies.json':'reauthorize','.local/content-watch/auth/service-token':'reauthorize',
+  '.local/content-watch/runtime/xiaohongshu-mcp.exe':'rebuild',
+  '.local/content-watch/runtime/xiaohongshu-mcp':'rebuild','.local/content-watch/runtime/LICENSE.xiaohongshu-mcp.txt':'rebuild',
+  '.local/content-watch/run.lock':'runtime',
   '.local/case-memory-runtime/database':'cold-postgres','.local/case-memory-runtime/instance.json':'cold-postgres',
   '.local/case-memory-runtime/pg0':'rebuild','.local/case-memory-runtime/models':'rebuild',
   '.local/case-memory-runtime/venv':'rebuild','.local/case-memory-runtime/service.py':'rebuild',
@@ -73,7 +79,11 @@ const policy={
   '.local/initialized-payload.json':'runtime','.local/runtime.json':'runtime','.local/host-state.json':'runtime',
   ...Object.fromEntries(['host','desktop'].flatMap(name=>['.log','.log.1','-events.jsonl','-events.jsonl.1'].map(suffix=>[`.local/${name}${suffix}`,'runtime']))),
 };
-const branches=new Set(['','.local','.local/dsh-home','.local/dsh-home/.local','.local/dsh-home/qx-wechat','.local/case-memory-runtime']);
+const branches=new Set(['','.local','.local/dsh-home','.local/dsh-home/.local','.local/dsh-home/qx-wechat','.local/case-memory-runtime',
+  '.local/content-watch','.local/content-watch/reports','.local/content-watch/auth','.local/content-watch/runtime']);
+const contentUuid='[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}';
+const contentReport=new RegExp('^\\.local/content-watch/reports/'+contentUuid+'(?:\\.json|(?:-draft-[0-5])?\\.md)$');
+const contentTemporary=new RegExp('^\\.local/content-watch/(?:(?:state|session|connection)\\.json\\.'+contentUuid+'|runtime/\\.component-'+contentUuid+')\\.tmp$');
 function inspectScope(data){
   const scopes=[],files=[];
   function walk(relative,disposition,depth=0){
@@ -91,8 +101,14 @@ function inspectScope(data){
     for(const name of fs.readdirSync(absolute).sort()){
       const next=relative?relative+'/'+name:name;
       if(branches.has(next)){visit(next);continue;}
-      const disposition=policy[next]||(relative==='.local/dsh-home/qx-wechat'?'reauthorize-review':'unclassified');
       const stat=fs.lstatSync(path.join(data,next));
+      let disposition=policy[next]||(relative==='.local/dsh-home/qx-wechat'?'reauthorize-review':'unclassified');
+      if(next.startsWith('.local/content-watch/')){
+        // Preserve durable records without admitting unknown stores or restoring credentials and job locks.
+        if(!stat.isFile())disposition='unclassified';
+        else if(contentReport.test(next))disposition='protect';
+        else if(contentTemporary.test(next))disposition='runtime';
+      }
       const linked=stat.isSymbolicLink()||(!stat.isDirectory()&&(!stat.isFile()||stat.nlink!==1));
       scopes.push({path:next,policy:disposition,...(linked?{linked:true}:{})});
       if(['protect','cold-postgres'].includes(disposition))walk(next,disposition);
